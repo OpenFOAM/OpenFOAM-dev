@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,7 @@ SourceFiles
 #ifndef volFieldsFwd_H
 #define volFieldsFwd_H
 
+#include "GeometricFieldFwd.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,14 +49,11 @@ class volMesh;
 template<class Type>
 class fvPatchField;
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-class GeometricField;
-
-template<class Type>
-using VolField = GeometricField<Type, fvPatchField, volMesh>;
-
 template<class Type>
 class fvFieldSource;
+
+template<class Type>
+using VolField = GeometricField<Type, volMesh, Field>;
 
 template<class Type>
 using VolInternalField = typename VolField<Type>::Internal;

@@ -697,7 +697,7 @@ void Foam::phaseSystem::correctBoundaryFlux()
         tmp<volVectorField> tU(phase.U());
         const volVectorField::Boundary& UBf = tU().boundaryField();
 
-        FieldField<fvsPatchField, scalar> phiRelBf
+        FieldField<surfaceMesh::PatchField, scalar> phiRelBf
         (
             MRF_.relative(mesh_.Sf().boundaryField() & UBf)
         );

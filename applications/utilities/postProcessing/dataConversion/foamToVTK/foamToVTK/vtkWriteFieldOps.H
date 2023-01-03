@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,12 +85,12 @@ namespace vtkWriteOps
     );
 
     //- Write generic GeometricFields
-    template<class Type, template<class> class PatchField, class GeoMesh>
+    template<class Type, class GeoMesh>
     void write
     (
         std::ostream&,
         const bool binary,
-        const PtrList<GeometricField<Type, PatchField, GeoMesh>>&,
+        const PtrList<GeometricField<Type, GeoMesh>>&,
         const vtkMesh&
     );
 

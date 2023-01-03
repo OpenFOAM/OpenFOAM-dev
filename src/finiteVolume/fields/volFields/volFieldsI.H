@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,15 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-inline
-const typename
-Foam::GeometricField<Type, PatchField, GeoMesh>::Internal&
-Foam::GeometricField<Type, PatchField, GeoMesh>::
-v() const
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+inline const typename
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::Internal&
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::v() const
 {
     static_assert(isVolMesh<GeoMesh>::value, "Only valid for volFields");
     return *this;
+}
+
+
+template<>
+inline Foam::tmp<Foam::GeometricField<Foam::scalar, Foam::volMesh>>
+Foam::GeometricField<Foam::scalar, Foam::volMesh>::component
+(
+    const direction
+) const
+{
+    return *this;
+}
+
+
+template<>
+template<template<class> class PrimitiveField>
+inline void Foam::GeometricField<Foam::scalar, Foam::volMesh>::replace
+(
+    const direction,
+    const GeometricField<scalar, volMesh, PrimitiveField>& gsf
+)
+{
+    *this == gsf;
 }
 
 

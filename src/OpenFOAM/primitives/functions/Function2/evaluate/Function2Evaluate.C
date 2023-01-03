@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,24 +27,24 @@ License
 
 // * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * //
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh>
 void Foam::evaluate
 (
-    GeometricField<Type, PatchField, GeoMesh>& result,
+    GeometricField<Type, GeoMesh>& result,
     const Function2<Type>& func,
-    const GeometricField<Type, PatchField, GeoMesh>& x,
-    const GeometricField<Type, PatchField, GeoMesh>& y
+    const GeometricField<Type, GeoMesh>& x,
+    const GeometricField<Type, GeoMesh>& y
 )
 {
     result.primitiveFieldRef() = func.value(x(), y());
 
-    typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bresult =
+    typename GeometricField<Type, GeoMesh>::Boundary& bresult =
         result.boundaryFieldRef();
 
-    const typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bx =
+    const typename GeometricField<Type, GeoMesh>::Boundary& bx =
         x.boundaryField();
 
-    const typename GeometricField<Type, PatchField, GeoMesh>::Boundary& by =
+    const typename GeometricField<Type, GeoMesh>::Boundary& by =
         y.boundaryField();
 
     forAll(bresult, patchi)
@@ -54,18 +54,18 @@ void Foam::evaluate
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>> Foam::evaluate
+template<class Type, class GeoMesh>
+Foam::tmp<Foam::GeometricField<Type, GeoMesh>> Foam::evaluate
 (
     const Function2<Type>& func,
     const dimensionSet& dims,
-    const GeometricField<Type, PatchField, GeoMesh>& x,
-    const GeometricField<Type, PatchField, GeoMesh>& y
+    const GeometricField<Type, GeoMesh>& x,
+    const GeometricField<Type, GeoMesh>& y
 )
 {
-    tmp<GeometricField<Type, PatchField, GeoMesh>> tresult
+    tmp<GeometricField<Type, GeoMesh>> tresult
     (
-        GeometricField<Type, PatchField, GeoMesh>::New
+        GeometricField<Type, GeoMesh>::New
         (
             func.name() + '(' + x.name() + ',' + y.name() + ')',
             x.mesh(),

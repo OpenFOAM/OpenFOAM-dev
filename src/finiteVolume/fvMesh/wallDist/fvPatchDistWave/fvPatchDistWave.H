@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,6 @@ template
 <
     class FvWallInfoType,
     class TrackingData,
-    template<class> class PatchField,
     class GeoMesh,
     class ... DataType
 >
@@ -79,41 +78,41 @@ label wave
     const fvMesh& mesh,
     const List<labelPair>& changedPatchAndFaces,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    GeometricField<scalar, GeoMesh>& distance,
     TrackingData& td,
-    GeometricField<DataType, PatchField, GeoMesh>& ... data
+    GeometricField<DataType, GeoMesh>& ... data
 );
 
 //- Calculate distance data from patches
-template<template<class> class PatchField, class GeoMesh>
+template<class GeoMesh>
 label calculate
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
-    GeometricField<scalar, PatchField, GeoMesh>& distance
+    GeometricField<scalar, GeoMesh>& distance
 );
 
 //- Correct distance data from patches
-template<template<class> class PatchField, class GeoMesh>
+template<class GeoMesh>
 void correct
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance
+    GeometricField<scalar, GeoMesh>& distance
 );
 
 //- Calculate and correct distance data from patches
-template<template<class> class PatchField, class GeoMesh>
+template<class GeoMesh>
 label calculateAndCorrect
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance
+    GeometricField<scalar, GeoMesh>& distance
 );
 
 //- Calculate distance and additional data from patches, using an
@@ -122,7 +121,6 @@ template
 <
     template<class> class WallLocation,
     class DataType,
-    template<class> class PatchField,
     class GeoMesh,
     class TrackingData = int
 >
@@ -131,8 +129,8 @@ label calculate
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
 );
 
@@ -142,7 +140,6 @@ template
 <
     template<class> class WallLocation,
     class DataType,
-    template<class> class PatchField,
     class GeoMesh,
     class TrackingData = int
 >
@@ -152,8 +149,8 @@ void correct
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
 );
 
@@ -163,7 +160,6 @@ template
 <
     template<class> class WallLocation,
     class DataType,
-    template<class> class PatchField,
     class GeoMesh,
     class TrackingData = int
 >
@@ -173,64 +169,46 @@ label calculateAndCorrect
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
 );
 
 //- Calculate distance and additional data from patches
-template
-<
-    class DataType,
-    template<class> class PatchField,
-    class GeoMesh,
-    class TrackingData = int
->
+template<class DataType, class GeoMesh, class TrackingData = int>
 label calculate
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
 );
 
 //- Correct distance and additional data from patches
-template
-<
-    class DataType,
-    template<class> class PatchField,
-    class GeoMesh,
-    class TrackingData = int
->
+template<class DataType, class GeoMesh, class TrackingData = int>
 void correct
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
 );
 
 //- Calculate and correct distance and additional data from patches
-template
-<
-    class DataType,
-    template<class> class PatchField,
-    class GeoMesh,
-    class TrackingData = int
->
+template<class DataType, class GeoMesh, class TrackingData = int>
 label calculateAndCorrect
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
 );
 

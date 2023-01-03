@@ -72,6 +72,9 @@ template<class Type>
 class calculatedFvPatchField;
 
 template<class Type>
+class slicedFvPatchField;
+
+template<class Type>
 class fvMatrix;
 
 template<class Type>
@@ -109,12 +112,21 @@ class fvPatchField
 
 public:
 
-    typedef fvPatch Patch;
-    typedef calculatedFvPatchField<Type> Calculated;
+    // Public Typedefs
+
+        //- The patch type
+        typedef fvPatch Patch;
+
+        //- The calculated patch field type
+        typedef calculatedFvPatchField<Type> Calculated;
+
+        //- The sliced patch field type
+        typedef slicedFvPatchField<Type> Sliced;
 
 
     //- Runtime type information
     TypeName("fvPatchField");
+
 
     //- Debug switch to disallow the use of genericFvPatchField
     static int disallowGenericFvPatchField;

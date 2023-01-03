@@ -70,6 +70,9 @@ template<class Type>
 class calculatedFvsPatchField;
 
 template<class Type>
+class slicedFvsPatchField;
+
+template<class Type>
 Ostream& operator<<(Ostream&, const fvsPatchField<Type>&);
 
 
@@ -93,12 +96,21 @@ class fvsPatchField
 
 public:
 
-    typedef fvPatch Patch;
-    typedef calculatedFvsPatchField<Type> Calculated;
+    // Public Typedefs
+
+        //- The patch type
+        typedef fvPatch Patch;
+
+        //- The calculated patch field type
+        typedef calculatedFvsPatchField<Type> Calculated;
+
+        //- The sliced patch field type
+        typedef slicedFvsPatchField<Type> Sliced;
 
 
     //- Runtime type information
     TypeName("fvsPatchField");
+
 
     //- Debug switch to disallow the use of genericFvsPatchField
     static int disallowGenericFvsPatchField;

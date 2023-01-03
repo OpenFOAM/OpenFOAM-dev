@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,13 +48,13 @@ namespace Foam
                   Class GeometricFieldListSlicer Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh>
 class GeometricFieldListSlicer
 {
     // Private Typedefs
 
         // Type of the geometric field
-        typedef GeometricField<Type, PatchField, GeoMesh> geoFieldType;
+        typedef GeometricField<Type, GeoMesh> geoFieldType;
 
 
     // Private Data
@@ -151,7 +151,7 @@ public:
 
 //- Define volScalarFieldListSlicer, volVectorFieldListSlicer, etc...
 #define typedefVolTypeFieldListSlicer(Type, nullArg)                           \
-    typedef GeometricFieldListSlicer<Type, fvPatchField, volMesh>              \
+    typedef GeometricFieldListSlicer<Type, volMesh>                            \
         CAT3(vol, CAPITALIZE(Type), FieldListSlicer);
 FOR_ALL_FIELD_TYPES(typedefVolTypeFieldListSlicer);
 #undef typedefVolTypeFieldListSlicer
@@ -159,7 +159,7 @@ FOR_ALL_FIELD_TYPES(typedefVolTypeFieldListSlicer);
 
 //- Define surfaceScalarFieldListSlicer, surfaceVectorFieldListSlicer, etc...
 #define typedefSurfaceTypeFieldListSlicer(Type, nullArg)                       \
-    typedef GeometricFieldListSlicer<Type, fvPatchField, surfaceMesh>          \
+    typedef GeometricFieldListSlicer<Type, surfaceMesh>                        \
         CAT3(surface, CAPITALIZE(Type), FieldListSlicer);
 FOR_ALL_FIELD_TYPES(typedefSurfaceTypeFieldListSlicer);
 #undef typedefSurfaceTypeFieldListSlicer

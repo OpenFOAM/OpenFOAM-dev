@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,15 +203,15 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::relative
 }
 
 
-Foam::tmp<Foam::FieldField<Foam::fvsPatchField, Foam::scalar>>
+Foam::tmp<Foam::FieldField<Foam::surfaceMesh::PatchField, Foam::scalar>>
 Foam::MRFZoneList::relative
 (
-    const tmp<FieldField<fvsPatchField, scalar>>& tphi
+    const tmp<FieldField<surfaceMesh::PatchField, scalar>>& tphi
 ) const
 {
     if (size())
     {
-        tmp<FieldField<fvsPatchField, scalar>> rphi(New(tphi, true));
+        tmp<FieldField<surfaceMesh::PatchField, scalar>> rphi(New(tphi, true));
 
         forAll(*this, i)
         {
@@ -224,7 +224,7 @@ Foam::MRFZoneList::relative
     }
     else
     {
-        return tmp<FieldField<fvsPatchField, scalar>>(tphi, true);
+        return tmp<FieldField<surfaceMesh::PatchField, scalar>>(tphi, true);
     }
 }
 

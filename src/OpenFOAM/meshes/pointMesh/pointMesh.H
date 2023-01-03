@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class pointMesh
     public DemandDrivenMeshObject<polyMesh, RepatchableMeshObject, pointMesh>,
     public GeoMesh<polyMesh>
 {
-    // Permanent data
+    // Private Data
 
         //- Boundary mesh
         pointBoundaryMesh boundary_;
@@ -60,12 +60,15 @@ class pointMesh
 
 protected:
 
+    //- Declare friendship with the base mesh object so that it can use
+    //  this class' protected constructors
     friend class DemandDrivenMeshObject
     <
         polyMesh,
         RepatchableMeshObject,
         pointMesh
     >;
+
 
     // Protected Constructors
 
@@ -83,9 +86,13 @@ public:
         //- Boundary mesh type
         typedef pointBoundaryMesh BoundaryMesh;
 
+        //- Patch field type
+        template<class Type>
+        using PatchField = pointPatchField<Type>;
+
         //- Field source type
         template<class Type>
-        using FieldSource = pointFieldSource<Type>;
+        using FieldSource = NoFieldSource<Type>;
 
 
     // Declare name of the class and its debug switch
@@ -176,14 +183,16 @@ public:
         //- Disallow default bitwise assignment
         void operator=(const pointMesh&) = delete;
 
-        bool operator!=(const pointMesh& pm) const
-        {
-            return &pm != this;
-        }
-
+        //- Equality comparison
         bool operator==(const pointMesh& pm) const
         {
             return &pm == this;
+        }
+
+        //- Inequality comparison
+        bool operator!=(const pointMesh& pm) const
+        {
+            return &pm != this;
         }
 };
 

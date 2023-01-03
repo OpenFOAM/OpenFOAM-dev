@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,34 +46,15 @@ class fvPatchField;
 template<class Type>
 class slicedFvPatchField;
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
+template<class Type, class GeoMesh>
 class SlicedGeometricField;
 
-typedef
-SlicedGeometricField<scalar, fvPatchField, slicedFvPatchField, volMesh>
-    slicedVolScalarField;
-
-typedef
-SlicedGeometricField<vector, fvPatchField, slicedFvPatchField, volMesh>
-    slicedVolVectorField;
-
-typedef
-SlicedGeometricField<sphericalTensor, fvPatchField, slicedFvPatchField, volMesh>
+typedef SlicedGeometricField<scalar, volMesh> slicedVolScalarField;
+typedef SlicedGeometricField<vector, volMesh> slicedVolVectorField;
+typedef SlicedGeometricField<sphericalTensor, volMesh>
     slicedVolSphericalTensorField;
-
-typedef
-SlicedGeometricField<symmTensor, fvPatchField, slicedFvPatchField, volMesh>
-    slicedVolSymmTensorField;
-
-typedef
-SlicedGeometricField<tensor, fvPatchField, slicedFvPatchField, volMesh>
-    slicedVolTensorField;
+typedef SlicedGeometricField<symmTensor, volMesh> slicedVolSymmTensorField;
+typedef SlicedGeometricField<tensor, volMesh> slicedVolTensorField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

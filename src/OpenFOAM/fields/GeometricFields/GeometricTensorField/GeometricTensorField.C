@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,27 @@ License
 #include "GeometricTensorField.H"
 #include "tensorFieldField.H"
 
-#define TEMPLATE template<template<class> class PatchField, class GeoMesh>
+#define TEMPLATE                                                               \
+    template                                                                   \
+    <                                                                          \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField                                   \
+    >
+#define TEMPLATE2                                                              \
+    template                                                                   \
+    <                                                                          \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField1,                                 \
+        template<class> class PrimitiveField2                                  \
+    >
+#define TEMPLATE3                                                              \
+    template                                                                   \
+    <                                                                          \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField1,                                 \
+        template<class> class PrimitiveField2,                                 \
+        template<class> class PrimitiveField3                                  \
+    >
 #include "GeometricFieldFunctionsM.C"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

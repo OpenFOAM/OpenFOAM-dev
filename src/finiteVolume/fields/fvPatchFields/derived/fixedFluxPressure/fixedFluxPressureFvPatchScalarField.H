@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,7 @@ SourceFiles
 
 #include "fvPatchFields.H"
 #include "fixedGradientFvPatchFields.H"
+#include "surfaceMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -165,7 +166,7 @@ namespace Foam
     inline void setSnGrad
     (
         volScalarField::Boundary& bf,
-        const FieldField<fvsPatchField, scalar>& snGrad
+        const FieldField<surfaceMesh::PatchField, scalar>& snGrad
     )
     {
         forAll(bf, patchi)
@@ -181,7 +182,7 @@ namespace Foam
     inline void setSnGrad
     (
         volScalarField::Boundary& bf,
-        const tmp<FieldField<fvsPatchField, scalar>>& tsnGrad
+        const tmp<FieldField<surfaceMesh::PatchField, scalar>>& tsnGrad
     )
     {
         setSnGrad<GradBC>(bf, tsnGrad());

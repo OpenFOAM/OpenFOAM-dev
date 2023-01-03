@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,18 +27,20 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-Foam::GeometricFieldSources<Type, GeoMesh>::GeometricFieldSources()
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::
+GeometricFieldSources()
 :
     HashPtrTable<Source>(),
     errorLocation_()
 {}
 
 
-template<class Type, class GeoMesh>
-Foam::GeometricFieldSources<Type, GeoMesh>::GeometricFieldSources
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::
+GeometricFieldSources
 (
-    const DimensionedField<Type, GeoMesh>& iF,
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& iF,
     const HashPtrTable<Source>& mtf
 )
 :
@@ -52,21 +54,36 @@ Foam::GeometricFieldSources<Type, GeoMesh>::GeometricFieldSources
 }
 
 
-template<class Type, class GeoMesh>
-Foam::GeometricFieldSources<Type, GeoMesh>::GeometricFieldSources
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::
+GeometricFieldSources
 (
-    const DimensionedField<Type, GeoMesh>& iF,
-    const GeometricFieldSources<Type, GeoMesh>& mtf
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& iF,
+    const GeometricFieldSources<Type, GeoMesh, PrimitiveField>& mtf
 )
 :
     GeometricFieldSources(iF, static_cast<const HashPtrTable<Source>&>(mtf))
 {}
 
 
-template<class Type, class GeoMesh>
-Foam::GeometricFieldSources<Type, GeoMesh>::GeometricFieldSources
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::
+GeometricFieldSources
 (
-    const DimensionedField<Type, GeoMesh>& iF,
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& iF,
+    const GeometricFieldSources<Type, GeoMesh, PrimitiveField2>& mtf
+)
+:
+    GeometricFieldSources(iF, static_cast<const HashPtrTable<Source>&>(mtf))
+{}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::
+GeometricFieldSources
+(
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& iF,
     const dictionary& dict
 )
 :
@@ -77,10 +94,11 @@ Foam::GeometricFieldSources<Type, GeoMesh>::GeometricFieldSources
 }
 
 
-template<class Type, class GeoMesh>
-Foam::GeometricFieldSources<Type, GeoMesh>::GeometricFieldSources
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::
+GeometricFieldSources
 (
-    const DimensionedField<Type, GeoMesh>& iF,
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& iF,
     const HashTable<word>& types
 )
 :
@@ -100,39 +118,39 @@ Foam::GeometricFieldSources<Type, GeoMesh>::GeometricFieldSources
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-Foam::GeometricFieldSources<Type, GeoMesh>::
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::
 ~GeometricFieldSources()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 const Foam::HashPtrTable
 <
-    typename Foam::GeometricFieldSources<Type, GeoMesh>::Source
+    typename Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::Source
 >&
-Foam::GeometricFieldSources<Type, GeoMesh>::table() const
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::table() const
 {
     return *this;
 }
 
 
-template<class Type, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::HashPtrTable
 <
-    typename Foam::GeometricFieldSources<Type, GeoMesh>::Source
+    typename Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::Source
 >&
-Foam::GeometricFieldSources<Type, GeoMesh>::table()
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::table()
 {
     return *this;
 }
 
 
-template<class Type, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::HashTable<Foam::word>
-Foam::GeometricFieldSources<Type, GeoMesh>::types() const
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::types() const
 {
     HashTable<word> result;
 
@@ -145,10 +163,10 @@ Foam::GeometricFieldSources<Type, GeoMesh>::types() const
 }
 
 
-template<class Type, class GeoMesh>
-void Foam::GeometricFieldSources<Type, GeoMesh>::readField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::readField
 (
-    const DimensionedField<Type, GeoMesh>& field,
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& field,
     const dictionary& dict
 )
 {
@@ -170,30 +188,25 @@ void Foam::GeometricFieldSources<Type, GeoMesh>::readField
 }
 
 
-template<class Type, class GeoMesh>
-void Foam::GeometricFieldSources<Type, GeoMesh>::reset
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::reset
 (
-    const GeometricFieldSources<Type, GeoMesh>& mtf
+    const GeometricFieldSources<Type, GeoMesh, PrimitiveField>& mtf
 )
 {
     this->clear();
-
-    if (mtf.empty()) return;
-
-    const DimensionedField<Type, GeoMesh>& iF =
-        (**mtf.HashPtrTable<Source>::begin()).internalField();
 
     errorLocation_ = mtf.errorLocation_;
 
     forAllConstIter(typename HashPtrTable<Source>, mtf, iter)
     {
-        this->set(iter.key(), iter()->clone(iF).ptr());
+        this->set(iter.key(), iter()->clone(iter()->internalField()).ptr());
     }
 }
 
 
-template<class Type, class GeoMesh>
-void Foam::GeometricFieldSources<Type, GeoMesh>::writeEntry
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::writeEntry
 (
     const word& keyword,
     Ostream& os
@@ -214,7 +227,7 @@ void Foam::GeometricFieldSources<Type, GeoMesh>::writeEntry
     // Check state of IOstream
     os.check
     (
-        "GeometricFieldSources<Type, GeoMesh>::"
+        "GeometricFieldSources<Type, GeoMesh, PrimitiveField>::"
         "writeEntry(const word& keyword, Ostream& os) const"
     );
 }
@@ -222,9 +235,10 @@ void Foam::GeometricFieldSources<Type, GeoMesh>::writeEntry
 
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-const typename Foam::GeometricFieldSources<Type, GeoMesh>::Source&
-Foam::GeometricFieldSources<Type, GeoMesh>::operator[]
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+const typename
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::Source&
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::operator[]
 (
     const word& sourceName
 ) const
@@ -244,11 +258,11 @@ Foam::GeometricFieldSources<Type, GeoMesh>::operator[]
 
 // * * * * * * * * * * * * * * Friend Operators * * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const GeometricFieldSources<Type, GeoMesh>& bf
+    const GeometricFieldSources<Type, GeoMesh, PrimitiveField>& bf
 )
 {
     typedef typename GeoMesh::template FieldSource<Type> Source;

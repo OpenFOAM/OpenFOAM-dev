@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,30 @@ SourceFiles
 #include "GeometricField.H"
 #include "DimensionedScalarField.H"
 
-#define TEMPLATE template<template<class> class PatchField, class GeoMesh>
+#define TEMPLATE                                                               \
+    template                                                                   \
+    <                                                                          \
+        class Type,                                                            \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField                                   \
+    >
+#define TEMPLATE2                                                              \
+    template                                                                   \
+    <                                                                          \
+        class Type,                                                            \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField1,                                 \
+        template<class> class PrimitiveField2                                  \
+    >
+#define TEMPLATE3                                                              \
+    template                                                                   \
+    <                                                                          \
+        class Type,                                                            \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField1,                                 \
+        template<class> class PrimitiveField2                                  \
+        template<class> class PrimitiveField3                                  \
+    >
 #include "GeometricFieldFunctionsM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,25 +71,25 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<template<class> class PatchField, class GeoMesh>
+TEMPLATE2
 void stabilise
 (
-    GeometricField<scalar, PatchField, GeoMesh>&,
-    const GeometricField<scalar, PatchField, GeoMesh>&,
+    GeometricField<scalar, GeoMesh, PrimitiveField1>&,
+    const GeometricField<scalar, GeoMesh, PrimitiveField2>&,
     const dimensioned<scalar>&
 );
 
-template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
+TEMPLATE
+tmp<GeometricField<scalar, GeoMesh, Field>> stabilise
 (
-    const GeometricField<scalar, PatchField, GeoMesh>&,
+    const GeometricField<scalar, GeoMesh, PrimitiveField>&,
     const dimensioned<scalar>&
 );
 
-template<template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<scalar, PatchField, GeoMesh>> stabilise
+TEMPLATE
+tmp<GeometricField<scalar, GeoMesh, Field>> stabilise
 (
-    const tmp<GeometricField<scalar, PatchField, GeoMesh>>&,
+    const tmp<GeometricField<scalar, GeoMesh, PrimitiveField>>&,
     const dimensioned<scalar>&
 );
 
@@ -133,26 +156,26 @@ UNARY_FUNCTION(scalar, scalar, y1, trans)
 
 #define BesselFunc(func)                                                       \
                                                                                \
-template<template<class> class PatchField, class GeoMesh>                      \
+TEMPLATE2                                                                      \
 void func                                                                      \
 (                                                                              \
-    GeometricField<scalar, PatchField, GeoMesh>& Res,                          \
+    GeometricField<scalar, GeoMesh, PrimitiveField1>& Res,                     \
     const int n,                                                               \
-    const GeometricField<scalar, PatchField, GeoMesh>& sf                      \
+    const GeometricField<scalar, GeoMesh, PrimitiveField2>& sf                 \
 );                                                                             \
                                                                                \
-template<template<class> class PatchField, class GeoMesh>                      \
-tmp<GeometricField<scalar, PatchField, GeoMesh>> func                          \
+TEMPLATE                                                                       \
+tmp<GeometricField<scalar, GeoMesh, Field>> func                               \
 (                                                                              \
     const int n,                                                               \
-    const GeometricField<scalar, PatchField, GeoMesh>&                         \
+    const GeometricField<scalar, GeoMesh, PrimitiveField>&                     \
 );                                                                             \
                                                                                \
-template<template<class> class PatchField, class GeoMesh>                      \
-tmp<GeometricField<scalar, PatchField, GeoMesh>> func                          \
+TEMPLATE                                                                       \
+tmp<GeometricField<scalar, GeoMesh, Field>> func                               \
 (                                                                              \
     const int n,                                                               \
-    const tmp<GeometricField<scalar, PatchField, GeoMesh>>&                    \
+    const tmp<GeometricField<scalar, GeoMesh, PrimitiveField>>&                \
 );
 
 BesselFunc(jn)

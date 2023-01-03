@@ -26,7 +26,27 @@ License
 #include "GeometricVectorField.H"
 #include "vectorFieldField.H"
 
-#define TEMPLATE template<template<class> class PatchField, class GeoMesh>
+#define TEMPLATE                                                               \
+    template                                                                   \
+    <                                                                          \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField                                   \
+    >
+#define TEMPLATE2                                                              \
+    template                                                                   \
+    <                                                                          \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField1,                                 \
+        template<class> class PrimitiveField2                                  \
+    >
+#define TEMPLATE3                                                              \
+    template                                                                   \
+    <                                                                          \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField1,                                 \
+        template<class> class PrimitiveField2,                                 \
+        template<class> class PrimitiveField3                                  \
+    >
 #include "GeometricFieldFunctionsM.C"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

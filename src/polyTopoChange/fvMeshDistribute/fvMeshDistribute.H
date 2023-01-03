@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ class fvMeshDistribute
             template<class Type, class Mesh>
             void saveBoundaryFields
             (
-                PtrList<FieldField<fvsPatchField, Type>>& bflds
+                PtrList<FieldField<surfaceMesh::PatchField, Type>>&
             ) const;
 
             //- Map boundary fields
@@ -126,7 +126,7 @@ class fvMeshDistribute
             void mapBoundaryFields
             (
                 const polyTopoChangeMap& map,
-                const PtrList<FieldField<fvsPatchField, Type>>& oldBflds
+                const PtrList<FieldField<surfaceMesh::PatchField, Type>>&
             );
 
             //- Set value of exposed patch faces

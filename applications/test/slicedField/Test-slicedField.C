@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,8 +75,7 @@ int main(int argc, char *argv[])
         mesh
     );
 
-    SlicedGeometricField<vector, fvPatchField, slicedFvPatchField, volMesh>
-    C
+    SlicedGeometricField<vector, volMesh> C
     (
         IOobject
         (
@@ -93,14 +92,7 @@ int main(int argc, char *argv[])
     Info<< C << endl;
     Info<< (C & U) << endl;
 
-    SlicedGeometricField
-    <
-         vector,
-         fvsPatchField,
-         slicedFvsPatchField,
-         surfaceMesh
-    >
-    Sf
+    SlicedGeometricField<vector, surfaceMesh> Sf
     (
         IOobject
         (

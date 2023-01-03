@@ -38,8 +38,7 @@ SourceFiles
 #ifndef GeometricField_H
 #define GeometricField_H
 
-#include "lduInterfaceFieldPtrsList.H"
-#include "LduInterfaceFieldPtrsList.H"
+#include "GeometricFieldFwd.H"
 #include "GeometricBoundaryField.H"
 #include "GeometricFieldSources.H"
 
@@ -52,21 +51,18 @@ class dictionary;
 
 // Forward declaration of friend functions and operators
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-class GeometricField;
-
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Ostream& operator<<
 (
     Ostream&,
-    const GeometricField<Type, PatchField, GeoMesh>&
+    const GeometricField<Type, GeoMesh, PrimitiveField>&
 );
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Ostream& operator<<
 (
     Ostream&,
-    const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+    const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
 );
 
 
@@ -74,11 +70,11 @@ Ostream& operator<<
                        Class GeometricField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 class GeometricField
 :
-    public DimensionedField<Type, GeoMesh>,
-    public OldTimeField<GeometricField<Type, PatchField, GeoMesh>>
+    public DimensionedField<Type, GeoMesh, PrimitiveField>,
+    public OldTimeField<GeometricField<Type, GeoMesh, PrimitiveField>>
 {
     // Private Member Functions
 
@@ -94,22 +90,22 @@ public:
         typedef typename GeoMesh::Mesh Mesh;
 
         //- Type of the internal field from which this GeometricField is derived
-        typedef DimensionedField<Type, GeoMesh> Internal;
+        typedef DimensionedField<Type, GeoMesh, PrimitiveField> Internal;
 
         //- Type of the field from which this GeometricField is derived
-        typedef DimensionedField<Type, GeoMesh> Base;
+        typedef DimensionedField<Type, GeoMesh, PrimitiveField> Base;
 
         //- Type of the patch field of which the Boundary is composed
-        typedef PatchField<Type> Patch;
+        typedef typename GeoMesh::template PatchField<Type> Patch;
 
         //- Type of the boundary field
-        typedef GeometricBoundaryField<Type, PatchField, GeoMesh> Boundary;
+        typedef GeometricBoundaryField<Type, GeoMesh, PrimitiveField> Boundary;
 
         //- Type of the field source of which the Sources is composed
         typedef typename GeoMesh::template FieldSource<Type> Source;
 
         //- Type of the field sources
-        typedef GeometricFieldSources<Type, GeoMesh> Sources;
+        typedef GeometricFieldSources<Type, GeoMesh, PrimitiveField> Sources;
 
         //- Component type of the elements of the field
         typedef typename Field<Type>::cmptType cmptType;
@@ -120,7 +116,7 @@ private:
     // Private Data
 
         //-  Pointer to previous iteration (used for under-relaxation)
-        mutable GeometricField<Type, PatchField, GeoMesh>* fieldPrevIterPtr_;
+        mutable GeometricField<Type, GeoMesh, Field>* fieldPrevIterPtr_;
 
         //- Boundary Type field containing boundary field values
         Boundary boundaryField_;
@@ -144,10 +140,16 @@ public:
     TypeName("GeometricField");
 
 
+    //- Declare friendship with other geometric fields
+    template<class Type2, class GeoMesh2, template<class> class PrimitiveField2>
+    friend class GeometricField;
+
+
     // Static Member Functions
 
         //- Return a null geometric field
-        inline static const GeometricField<Type, PatchField, GeoMesh>& null();
+        inline static const
+            GeometricField<Type, GeoMesh, PrimitiveField>& null();
 
 
     // Constructors
@@ -160,7 +162,7 @@ public:
             const IOobject&,
             const Mesh&,
             const dimensionSet&,
-            const word& patchFieldType = PatchField<Type>::calculatedType()
+            const word& patchFieldType = Patch::calculatedType()
         );
 
         //- Constructor given IOobject, mesh, dimensions and patch field types.
@@ -183,7 +185,7 @@ public:
             const IOobject&,
             const Mesh&,
             const dimensioned<Type>&,
-            const word& patchFieldType = PatchField<Type>::calculatedType()
+            const word& patchFieldType = Patch::calculatedType()
         );
 
         //- Constructor given IOobject, mesh, dimensioned<Type>
@@ -203,7 +205,7 @@ public:
         (
             const IOobject&,
             const Internal&,
-            const PtrList<PatchField<Type>>&,
+            const PtrList<Patch>&,
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
@@ -213,68 +215,94 @@ public:
             const IOobject&,
             const Mesh&,
             const dimensionSet&,
-            const Field<Type>&,
-            const PtrList<PatchField<Type>>&,
+            const PrimitiveField<Type>&,
+            const PtrList<Patch>&,
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
         //- Construct and read given IOobject
-        GeometricField
-        (
-            const IOobject&,
-            const Mesh&
-        );
+        GeometricField(const IOobject&, const Mesh&);
 
         //- Construct from dictionary
-        GeometricField
-        (
-            const IOobject&,
-            const Mesh&,
-            const dictionary&
-        );
+        GeometricField(const IOobject&, const Mesh&, const dictionary&);
 
         //- Copy constructor
-        GeometricField(const GeometricField<Type, PatchField, GeoMesh>&);
+        GeometricField(const GeometricField<Type, GeoMesh, PrimitiveField>&);
+
+        //- Copy constructor
+        template<template<class> class PrimitiveField2>
+        explicit GeometricField
+        (
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&
+        );
 
         //- Move constructor
-        GeometricField(GeometricField<Type, PatchField, GeoMesh>&&);
+        GeometricField(GeometricField<Type, GeoMesh, PrimitiveField>&&);
 
         //- Construct as copy of tmp
-        GeometricField(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
+        GeometricField
+        (
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
+        );
 
         //- Construct as copy resetting IO parameters
         GeometricField
         (
             const IOobject&,
-            const GeometricField<Type, PatchField, GeoMesh>&
+            const GeometricField<Type, GeoMesh, PrimitiveField>&
+        );
+
+        //- Construct as copy resetting IO parameters
+        template<template<class> class PrimitiveField2>
+        explicit GeometricField
+        (
+            const IOobject&,
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&
         );
 
         //- Construct as copy of tmp resetting IO parameters
         GeometricField
         (
             const IOobject&,
-            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
         );
 
         //- Construct as copy resetting name
         GeometricField
         (
             const word& newName,
-            const GeometricField<Type, PatchField, GeoMesh>&
+            const GeometricField<Type, GeoMesh, PrimitiveField>&
+        );
+
+        //- Construct as copy resetting name
+        template<template<class> class PrimitiveField2>
+        explicit GeometricField
+        (
+            const word& newName,
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&
         );
 
         //- Construct as copy of tmp resetting name
         GeometricField
         (
             const word& newName,
-            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
         );
 
         //- Construct as copy resetting IO parameters and patch field type
         GeometricField
         (
             const IOobject&,
-            const GeometricField<Type, PatchField, GeoMesh>&,
+            const GeometricField<Type, GeoMesh, PrimitiveField>&,
+            const word& patchFieldType
+        );
+
+        //- Construct as copy resetting IO parameters and patch field type
+        template<template<class> class PrimitiveField2>
+        explicit GeometricField
+        (
+            const IOobject&,
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&,
             const word& patchFieldType
         );
 
@@ -282,7 +310,18 @@ public:
         GeometricField
         (
             const IOobject&,
-            const GeometricField<Type, PatchField, GeoMesh>&,
+            const GeometricField<Type, GeoMesh, PrimitiveField>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
+        );
+
+        //- Construct as copy resetting IO parameters and boundary types
+        template<template<class> class PrimitiveField2>
+        explicit GeometricField
+        (
+            const IOobject&,
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&,
             const wordList& patchFieldTypes,
             const wordList& actualPatchTypes = wordList(),
             const HashTable<word>& fieldSourceTypes = HashTable<word>()
@@ -292,51 +331,52 @@ public:
         GeometricField
         (
             const IOobject&,
-            const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&,
             const wordList& patchFieldTypes,
             const wordList& actualPatchTypes = wordList(),
             const HashTable<word>& fieldSourceTypes = HashTable<word>()
         );
 
         //- Clone
-        tmp<GeometricField<Type, PatchField, GeoMesh>> clone() const;
+        tmp<GeometricField<Type, GeoMesh, PrimitiveField>> clone() const;
 
         //- Clone un-sliced
-        tmp<GeometricField<Type, PatchField, GeoMesh>> cloneUnSliced() const;
+        tmp<GeometricField<Type, GeoMesh, PrimitiveField>>
+            cloneUnSliced() const;
 
         //- Return a temporary field constructed from name,
         //  internal field and list of patch fields
-        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
             const Internal&,
-            const PtrList<PatchField<Type>>&,
+            const PtrList<Patch>&,
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
         //- Return a temporary field constructed from name, mesh, dimensionSet
         //  and patch field type.
-        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
             const Mesh&,
             const dimensionSet&,
-            const word& patchFieldType = PatchField<Type>::calculatedType()
+            const word& patchFieldType = Patch::calculatedType()
         );
 
         //- Return a temporary field constructed from mesh, dimensioned<Type>
         //  and patch field type.
-        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
             const Mesh&,
             const dimensioned<Type>&,
-            const word& patchFieldType = PatchField<Type>::calculatedType()
+            const word& patchFieldType=Patch::calculatedType()
         );
 
         //- Return a temporary field constructed from mesh, dimensioned<Type>
         //  and patch field types.
-        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
             const Mesh&,
@@ -347,25 +387,36 @@ public:
         );
 
         //- Rename temporary field and return
-        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& newName,
-            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
         );
 
         //- Rename temporary field, reset patch field type and return
-        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& newName,
-            const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&,
             const word& patchFieldType
         );
 
         //- Rename and reset patch fields types of temporary field and return
-        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        template<template<class> class PrimitiveField2>
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& newName,
-            const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
+        );
+
+        //- Rename and reset patch fields types of temporary field and return
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& newName,
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&,
             const wordList& patchFieldTypes,
             const wordList& actualPatchTypes = wordList(),
             const HashTable<word>& fieldSourceTypes = HashTable<word>()
@@ -411,6 +462,11 @@ public:
         //- Return const-reference to the boundary field
         inline const Boundary& boundaryField() const;
 
+        //- Return a reference to the sources
+        //  Note: this increments the event counter and checks the
+        //  old-time fields; avoid in loops.
+        Sources& sourcesRef();
+
         //- Return const-reference to the sources
         inline const Sources& sources() const;
 
@@ -421,7 +477,7 @@ public:
         void clearPrevIter();
 
         //- Return previous iteration field
-        const GeometricField<Type, PatchField, GeoMesh>& prevIter() const;
+        const GeometricField<Type, GeoMesh, Field>& prevIter() const;
 
         //- Use old-time methods from the base class
         USING_OLD_TIME_FIELD(GeometricField);
@@ -431,13 +487,13 @@ public:
 
         //- Reset the field contents to the given field
         //  Used for mesh to mesh mapping
-        void reset(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
+        void reset(const tmp<GeometricField>&);
 
         //- Does the field need a reference level for solution
         bool needReference() const;
 
         //- Return a component of the field
-        tmp<GeometricField<cmptType, PatchField, GeoMesh>> component
+        tmp<GeometricField<cmptType, GeoMesh, Field>> component
         (
             const direction
         ) const;
@@ -446,7 +502,7 @@ public:
         bool writeData(Ostream&) const;
 
         //- Return transpose (only if it is a tensor field)
-        tmp<GeometricField<Type, PatchField, GeoMesh>> T() const;
+        tmp<GeometricField<Type, GeoMesh, Field>> T() const;
 
         //- Relax field (for steady-state solution).
         //  alpha >= 1 : no relaxation
@@ -463,16 +519,18 @@ public:
 
         //- Relax given field with respect to the current field
         //  and reset the field to the result
+        template<template<class> class PrimitiveField2>
         void relax
         (
-            const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField2>>&,
             const scalar alpha
         );
 
         //- Relax given field with respect to the current field
         //  and reset the field to the result
         //  Relaxation factor is read from fvSolution
-        void relax(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
+        template<template<class> class PrimitiveField2>
+        void relax(const tmp<GeometricField<Type, GeoMesh, PrimitiveField2>>&);
 
         //- Select the final iteration parameters if `final' is true
         //  by returning the field name + "Final"
@@ -487,17 +545,24 @@ public:
 
         void negate();
 
+        //- Replace a component field of the field
+        template<template<class> class PrimitiveField2>
         void replace
         (
             const direction,
-            const GeometricField<cmptType, PatchField, GeoMesh>&
+            const GeometricField<cmptType, GeoMesh, PrimitiveField2>&
         );
 
+        //- Replace a component field of the field
+        template<template<class> class PrimitiveField2>
         void replace
         (
             const direction,
-            const dimensioned<cmptType>&
+            const tmp<GeometricField<cmptType, GeoMesh, PrimitiveField2>>&
         );
+
+        //- Replace a component field of the field
+        void replace(const direction, const dimensioned<cmptType>&);
 
         void max(const dimensioned<Type>&);
 
@@ -516,56 +581,115 @@ public:
         //  Useful in the formulation of source-terms for FV equations
         inline const Internal& operator()() const;
 
-        void operator=(const GeometricField<Type, PatchField, GeoMesh>&);
-        void operator=(GeometricField<Type, PatchField, GeoMesh>&&);
-        void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
+        void operator=
+        (
+            const GeometricField<Type, GeoMesh, PrimitiveField>&
+        );
+        void operator=
+        (
+            GeometricField<Type, GeoMesh, PrimitiveField>&&
+        );
+        void operator=
+        (
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
+        );
+
+        template<template<class> class PrimitiveField2>
+        void operator=
+        (
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&
+        );
+        template<template<class> class PrimitiveField2>
+        void operator=
+        (
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField2>>&
+        );
         void operator=(const dimensioned<Type>&);
         void operator=(const zero&);
 
-        void operator==(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
+        template<template<class> class PrimitiveField2>
+        void operator==
+        (
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&
+        );
+        template<template<class> class PrimitiveField2>
+        void operator==
+        (
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField2>>&
+        );
         void operator==(const dimensioned<Type>&);
         void operator==(const zero&);
 
-        void operator+=(const GeometricField<Type, PatchField, GeoMesh>&);
-        void operator+=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
-
-        void operator-=(const GeometricField<Type, PatchField, GeoMesh>&);
-        void operator-=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
-
-        void operator*=(const GeometricField<scalar, PatchField, GeoMesh>&);
-        void operator*=(const tmp<GeometricField<scalar,PatchField,GeoMesh>>&);
-
-        void operator/=(const GeometricField<scalar, PatchField, GeoMesh>&);
-        void operator/=(const tmp<GeometricField<scalar,PatchField,GeoMesh>>&);
-
+        template<template<class> class PrimitiveField2>
+        void operator+=
+        (
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&
+        );
+        template<template<class> class PrimitiveField2>
+        void operator+=
+        (
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField2>>&
+        );
         void operator+=(const dimensioned<Type>&);
+
+        template<template<class> class PrimitiveField2>
+        void operator-=
+        (
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&
+        );
+        template<template<class> class PrimitiveField2>
+        void operator-=
+        (
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField2>>&
+        );
         void operator-=(const dimensioned<Type>&);
 
+        template<template<class> class PrimitiveField2>
+        void operator*=
+        (
+            const GeometricField<scalar, GeoMesh, PrimitiveField2>&
+        );
+        template<template<class> class PrimitiveField2>
+        void operator*=
+        (
+            const tmp<GeometricField<scalar, GeoMesh, PrimitiveField2>>&
+        );
         void operator*=(const dimensioned<scalar>&);
+
+        template<template<class> class PrimitiveField2>
+        void operator/=
+        (
+            const GeometricField<scalar, GeoMesh, PrimitiveField2>&
+        );
+        template<template<class> class PrimitiveField2>
+        void operator/=
+        (
+            const tmp<GeometricField<scalar, GeoMesh, PrimitiveField2>>&
+        );
         void operator/=(const dimensioned<scalar>&);
 
 
     // Ostream operators
 
-        friend Ostream& operator<< <Type, PatchField, GeoMesh>
+        friend Ostream& operator<< <Type, GeoMesh, PrimitiveField>
         (
             Ostream&,
-            const GeometricField<Type, PatchField, GeoMesh>&
+            const GeometricField<Type, GeoMesh, PrimitiveField>&
         );
 
-        friend Ostream& operator<< <Type, PatchField, GeoMesh>
+        friend Ostream& operator<< <Type, GeoMesh, PrimitiveField>
         (
             Ostream&,
-            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
         );
 };
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Ostream& operator<<
 (
     Ostream&,
-    const GeometricBoundaryField<Type, PatchField, GeoMesh>&
+    const GeometricBoundaryField<Type, GeoMesh, PrimitiveField>&
 );
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,6 @@ template
 <
     class FvWallInfoType,
     class TrackingData,
-    template<class> class PatchField,
     class GeoMesh,
     class ... DataType
 >
@@ -72,9 +71,9 @@ Foam::label Foam::fvPatchDistWave::wave
     const fvMesh& mesh,
     const List<labelPair>& changedPatchAndFaces,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    GeometricField<scalar, GeoMesh>& distance,
     TrackingData& td,
-    GeometricField<DataType, PatchField, GeoMesh>& ... data
+    GeometricField<DataType, GeoMesh>& ... data
 )
 {
     // If the number of corrections is less than 0 (i.e., -1) then this is a
@@ -199,13 +198,13 @@ Foam::label Foam::fvPatchDistWave::wave
 }
 
 
-template<template<class> class PatchField, class GeoMesh>
+template<class GeoMesh>
 Foam::label Foam::fvPatchDistWave::calculate
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
-    GeometricField<scalar, PatchField, GeoMesh>& distance
+    GeometricField<scalar, GeoMesh>& distance
 )
 {
     return
@@ -220,14 +219,14 @@ Foam::label Foam::fvPatchDistWave::calculate
 }
 
 
-template<template<class> class PatchField, class GeoMesh>
+template<class GeoMesh>
 void Foam::fvPatchDistWave::correct
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance
+    GeometricField<scalar, GeoMesh>& distance
 )
 {
     wave<FvWallInfo<wallFace>>
@@ -241,14 +240,14 @@ void Foam::fvPatchDistWave::correct
 }
 
 
-template<template<class> class PatchField, class GeoMesh>
+template<class GeoMesh>
 Foam::label Foam::fvPatchDistWave::calculateAndCorrect
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance
+    GeometricField<scalar, GeoMesh>& distance
 )
 {
     const List<labelPair> changedPatchAndFaces =
@@ -281,7 +280,6 @@ template
 <
     template<class> class WallLocation,
     class DataType,
-    template<class> class PatchField,
     class GeoMesh,
     class TrackingData
 >
@@ -290,8 +288,8 @@ Foam::label Foam::fvPatchDistWave::calculate
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td
 )
 {
@@ -312,7 +310,6 @@ template
 <
     template<class> class WallLocation,
     class DataType,
-    template<class> class PatchField,
     class GeoMesh,
     class TrackingData
 >
@@ -322,8 +319,8 @@ void Foam::fvPatchDistWave::correct
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td
 )
 {
@@ -343,7 +340,6 @@ template
 <
     template<class> class WallLocation,
     class DataType,
-    template<class> class PatchField,
     class GeoMesh,
     class TrackingData
 >
@@ -353,8 +349,8 @@ Foam::label Foam::fvPatchDistWave::calculateAndCorrect
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td
 )
 {
@@ -400,20 +396,14 @@ namespace fvPatchDistWave
 }
 
 
-template
-<
-    class DataType,
-    template<class> class PatchField,
-    class GeoMesh,
-    class TrackingData
->
+template<class DataType, class GeoMesh, class TrackingData>
 Foam::label Foam::fvPatchDistWave::calculate
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td
 )
 {
@@ -430,21 +420,15 @@ Foam::label Foam::fvPatchDistWave::calculate
 }
 
 
-template
-<
-    class DataType,
-    template<class> class PatchField,
-    class GeoMesh,
-    class TrackingData
->
+template<class DataType, class GeoMesh, class TrackingData>
 void Foam::fvPatchDistWave::correct
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td
 )
 {
@@ -460,21 +444,15 @@ void Foam::fvPatchDistWave::correct
 }
 
 
-template
-<
-    class DataType,
-    template<class> class PatchField,
-    class GeoMesh,
-    class TrackingData
->
+template<class DataType, class GeoMesh, class TrackingData>
 Foam::label Foam::fvPatchDistWave::calculateAndCorrect
 (
     const fvMesh& mesh,
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     const label nCorrections,
-    GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField<DataType, PatchField, GeoMesh>& data,
+    GeometricField<scalar, GeoMesh>& distance,
+    GeometricField<DataType, GeoMesh>& data,
     TrackingData& td
 )
 {

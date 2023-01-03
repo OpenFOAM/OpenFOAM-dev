@@ -383,7 +383,7 @@ class vtkPVFoam
             );
 
             //- Add objects of Type to paraview array selection
-            template<template<class> class patchType, class meshType>
+            template<class meshType>
             void addFieldsToSelection
             (
                 vtkDataArraySelection *select,
@@ -392,7 +392,7 @@ class vtkPVFoam
             );
 
             //- Add objects of Type to paraview array selection
-            template<template<class> class patchType, class meshType>
+            template<class meshType>
             void addInternalFieldsToSelection
             (
                 vtkDataArraySelection *select,

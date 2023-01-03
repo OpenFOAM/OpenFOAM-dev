@@ -472,10 +472,10 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::invADVs
 
 
 template<class BasePhaseSystem>
-template<template<class> class PatchField, class GeoMesh>
+template<class GeoMesh>
 void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::invADVs
 (
-    PtrList<PtrList<GeometricField<scalar, PatchField, GeoMesh>>>& ADVs
+    PtrList<PtrList<GeometricField<scalar, GeoMesh>>>& ADVs
 ) const
 {
     const label n = ADVs.size();

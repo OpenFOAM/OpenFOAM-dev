@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,16 +174,16 @@ namespace fvc
 
     //- Interpolate boundary field onto faces (simply a type conversion)
     template<class Type>
-    static tmp<FieldField<fvsPatchField, Type>> interpolate
+    static tmp<FieldField<surfaceMesh::PatchField, Type>> interpolate
     (
-        const FieldField<fvPatchField, Type>& fvpff
+        const FieldField<volMesh::PatchField, Type>& fvpff
     );
 
     //- Interpolate boundary field onto faces (simply a type conversion)
     template<class Type>
-    static tmp<FieldField<fvsPatchField, Type>> interpolate
+    static tmp<FieldField<surfaceMesh::PatchField, Type>> interpolate
     (
-        const tmp<FieldField<fvPatchField, Type>>& tfvpff
+        const tmp<FieldField<volMesh::PatchField, Type>>& tfvpff
     );
 
     //- Interpolate 'one' returning 'one'

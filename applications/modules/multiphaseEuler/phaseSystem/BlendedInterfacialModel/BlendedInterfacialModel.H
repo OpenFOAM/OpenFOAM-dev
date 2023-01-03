@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,26 +96,26 @@ class BlendedInterfacialModel
         void check() const;
 
         //- Calculate the blending coefficients
-        template<template<class> class PatchField, class GeoMesh>
+        template<class GeoMesh>
         void calculateBlendingCoeffs
         (
             const UPtrList<const volScalarField>& alphas,
-            tmp<GeometricField<scalar, PatchField, GeoMesh>>& fG,
-            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f1D2,
-            tmp<GeometricField<scalar, PatchField, GeoMesh>>& f2D1,
-            tmp<GeometricField<scalar, PatchField, GeoMesh>>& fS,
-            PtrList<GeometricField<scalar, PatchField, GeoMesh>>& fGD,
-            PtrList<GeometricField<scalar, PatchField, GeoMesh>>& f1D2D,
-            PtrList<GeometricField<scalar, PatchField, GeoMesh>>& f2D1D,
-            PtrList<GeometricField<scalar, PatchField, GeoMesh>>& fSD,
+            tmp<GeometricField<scalar, GeoMesh>>& fG,
+            tmp<GeometricField<scalar, GeoMesh>>& f1D2,
+            tmp<GeometricField<scalar, GeoMesh>>& f2D1,
+            tmp<GeometricField<scalar, GeoMesh>>& fS,
+            PtrList<GeometricField<scalar, GeoMesh>>& fGD,
+            PtrList<GeometricField<scalar, GeoMesh>>& f1D2D,
+            PtrList<GeometricField<scalar, GeoMesh>>& f2D1D,
+            PtrList<GeometricField<scalar, GeoMesh>>& fSD,
             const bool subtract
         ) const;
 
         //- Correct coeff/value on fixed flux boundary conditions
-        template<class Type, template<class> class PatchField, class GeoMesh>
+        template<class Type, class GeoMesh>
         void correctFixedFluxBCs
         (
-            GeometricField<Type, PatchField, GeoMesh>& field
+            GeometricField<Type, GeoMesh>& field
         ) const;
 
         //- Write out a set or surface that visualises the various models'
@@ -128,16 +128,10 @@ protected:
     // Protected Member Functions
 
         //- Return a blended field
-        template
-        <
-            class Type,
-            template<class> class PatchField,
-            class GeoMesh,
-            class ... Args
-        >
-        tmp<GeometricField<Type, PatchField, GeoMesh>> evaluate
+        template<class Type, class GeoMesh, class ... Args>
+        tmp<GeometricField<Type, GeoMesh>> evaluate
         (
-            tmp<GeometricField<Type, PatchField, GeoMesh>>
+            tmp<GeometricField<Type, GeoMesh>>
             (ModelType::*method)(Args ...) const,
             const word& name,
             const dimensionSet& dims,
@@ -146,16 +140,10 @@ protected:
         ) const;
 
         //- Return a table of blended fields
-        template
-        <
-            class Type,
-            template<class> class PatchField,
-            class GeoMesh,
-            class ... Args
-        >
-        HashPtrTable<GeometricField<Type, PatchField, GeoMesh>> evaluate
+        template<class Type, class GeoMesh, class ... Args>
+        HashPtrTable<GeometricField<Type, GeoMesh>> evaluate
         (
-            HashPtrTable<GeometricField<Type, PatchField, GeoMesh>>
+            HashPtrTable<GeometricField<Type, GeoMesh>>
             (ModelType::*method)(Args ...) const,
             const word& name,
             const dimensionSet& dims,

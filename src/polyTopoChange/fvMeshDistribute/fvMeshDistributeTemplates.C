@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void Foam::fvMeshDistribute::printFieldInfo(const fvMesh& mesh)
 template<class Type, class Mesh>
 void Foam::fvMeshDistribute::saveBoundaryFields
 (
-    PtrList<FieldField<fvsPatchField, Type>>& bfields
+    PtrList<FieldField<surfaceMesh::PatchField, Type>>& bfields
 ) const
 {
     // Save whole boundary field
@@ -80,7 +80,7 @@ template<class Type, class Mesh>
 void Foam::fvMeshDistribute::mapBoundaryFields
 (
     const polyTopoChangeMap& map,
-    const PtrList<FieldField<fvsPatchField, Type>>& oldBfields
+    const PtrList<FieldField<surfaceMesh::PatchField, Type>>& oldBfields
 )
 {
     // Map boundary field
@@ -96,10 +96,12 @@ void Foam::fvMeshDistribute::mapBoundaryFields
     forAll(fields, i)
     {
         SurfaceField<Type>& field = fields[i];
+
         typename SurfaceField<Type>::Boundary& bfield =
             field.boundaryFieldRef();
 
-        const FieldField<fvsPatchField, Type>& oldBfield = oldBfields[i];
+        const FieldField<surfaceMesh::PatchField, Type>& oldBfield =
+            oldBfields[i];
 
         // Pull from old boundary field into bfield.
 

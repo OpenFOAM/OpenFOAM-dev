@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,14 +103,10 @@ void MeshToMeshMapVolInternalFields
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-void NaNGeometricFields
-(
-    const fvMesh& mesh,
-    const fvMeshToFvMesh& mapper
-)
+template<class Type, class GeoMesh>
+void NaNGeometricFields(const fvMesh& mesh)
 {
-    typedef GeometricField<Type, PatchField, GeoMesh> GField;
+    typedef GeometricField<Type, GeoMesh> GField;
 
     UPtrList<GField> fields(mesh.curFields<GField>());
 
@@ -141,7 +137,7 @@ void NaNGeometricFields
                 field.boundaryFieldRef().set
                 (
                     patchi,
-                    PatchField<Type>::New
+                    GField::Patch::New
                     (
                         calculatedFvPatchField<Type>::typeName,
                         mesh.boundary()[patchi],

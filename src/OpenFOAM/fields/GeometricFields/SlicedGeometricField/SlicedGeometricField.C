@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,16 +28,9 @@ License
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * * //
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-Foam::tmp<Foam::FieldField<PatchField, Type>>
-Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-slicedBoundaryField
+template<class Type, class GeoMesh>
+Foam::tmp<Foam::FieldField<GeoMesh::template PatchField, Type>>
+Foam::SlicedGeometricField<Type, GeoMesh>::slicedBoundaryField
 (
     const Mesh& mesh,
     const Field<Type>& completeField,
@@ -45,11 +38,14 @@ slicedBoundaryField
     const bool preserveProcessorOnly
 )
 {
-    tmp<FieldField<PatchField, Type>> tbf
+    tmp<FieldField<GeoMesh::template PatchField, Type>> tbf
     (
-        new FieldField<PatchField, Type>(mesh.boundary().size())
+        new FieldField<GeoMesh::template PatchField, Type>
+        (
+            mesh.boundary().size()
+        )
     );
-    FieldField<PatchField, Type>& bf = tbf.ref();
+    FieldField<GeoMesh::template PatchField, Type>& bf = tbf.ref();
 
     forAll(mesh.boundary(), patchi)
     {
@@ -67,7 +63,7 @@ slicedBoundaryField
             bf.set
             (
                 patchi,
-                PatchField<Type>::New
+                Patch::New
                 (
                     mesh.boundary()[patchi].type(),
                     mesh.boundary()[patchi],
@@ -79,7 +75,7 @@ slicedBoundaryField
             // of the given field.
             // Note: these will usually be over-ridden by the boundary field
             // evaluation e.g. in the case of processor and cyclic patches.
-            bf[patchi] = SlicedPatchField<Type>
+            bf[patchi] = SlicedPatch
             (
                 mesh.boundary()[patchi],
                 DimensionedField<Type, GeoMesh>::null(),
@@ -91,7 +87,7 @@ slicedBoundaryField
             bf.set
             (
                 patchi,
-                new SlicedPatchField<Type>
+                new SlicedPatch
                 (
                     mesh.boundary()[patchi],
                     DimensionedField<Type, GeoMesh>::null(),
@@ -105,27 +101,23 @@ slicedBoundaryField
 }
 
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-Foam::tmp<Foam::FieldField<PatchField, Type>>
-Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-slicedBoundaryField
+template<class Type, class GeoMesh>
+Foam::tmp<Foam::FieldField<GeoMesh::template PatchField, Type>>
+Foam::SlicedGeometricField<Type, GeoMesh>::slicedBoundaryField
 (
     const Mesh& mesh,
-    const FieldField<PatchField, Type>& bField,
+    const FieldField<GeoMesh::template PatchField, Type>& bField,
     const bool preserveCouples
 )
 {
-    tmp<FieldField<PatchField, Type>> tbf
+    tmp<FieldField<GeoMesh::template PatchField, Type>> tbf
     (
-        new FieldField<PatchField, Type>(mesh.boundary().size())
+        new FieldField<GeoMesh::template PatchField, Type>
+        (
+            mesh.boundary().size()
+        )
     );
-    FieldField<PatchField, Type>& bf = tbf.ref();
+    FieldField<GeoMesh::template PatchField, Type>& bf = tbf.ref();
 
     forAll(mesh.boundary(), patchi)
     {
@@ -135,7 +127,7 @@ slicedBoundaryField
             bf.set
             (
                 patchi,
-                PatchField<Type>::New
+                Patch::New
                 (
                     mesh.boundary()[patchi].type(),
                     mesh.boundary()[patchi],
@@ -152,7 +144,7 @@ slicedBoundaryField
             bf.set
             (
                 patchi,
-                new SlicedPatchField<Type>
+                new SlicedPatch
                 (
                     mesh.boundary()[patchi],
                     DimensionedField<Type, GeoMesh>::null(),
@@ -168,15 +160,8 @@ slicedBoundaryField
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-SlicedGeometricField
+template<class Type, class GeoMesh>
+Foam::SlicedGeometricField<Type, GeoMesh>::SlicedGeometricField
 (
     const IOobject& io,
     const Mesh& mesh,
@@ -185,7 +170,7 @@ SlicedGeometricField
     const bool preserveCouples
 )
 :
-    GeometricField<Type, PatchField, GeoMesh>
+    GeometricField<Type, GeoMesh>
     (
         io,
         mesh,
@@ -204,15 +189,8 @@ SlicedGeometricField
 }
 
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-SlicedGeometricField
+template<class Type, class GeoMesh>
+Foam::SlicedGeometricField<Type, GeoMesh>::SlicedGeometricField
 (
     const IOobject& io,
     const Mesh& mesh,
@@ -223,7 +201,7 @@ SlicedGeometricField
     const bool preserveProcessorOnly
 )
 :
-    GeometricField<Type, PatchField, GeoMesh>
+    GeometricField<Type, GeoMesh>
     (
         io,
         mesh,
@@ -248,22 +226,15 @@ SlicedGeometricField
 }
 
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-SlicedGeometricField
+template<class Type, class GeoMesh>
+Foam::SlicedGeometricField<Type, GeoMesh>::SlicedGeometricField
 (
     const IOobject& io,
-    const GeometricField<Type, PatchField, GeoMesh>& gf,
+    const GeometricField<Type, GeoMesh>& gf,
     const bool preserveCouples
 )
 :
-    GeometricField<Type, PatchField, GeoMesh>
+    GeometricField<Type, GeoMesh>
     (
         io,
         gf.mesh(),
@@ -279,20 +250,13 @@ SlicedGeometricField
 }
 
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-SlicedGeometricField
+template<class Type, class GeoMesh>
+Foam::SlicedGeometricField<Type, GeoMesh>::SlicedGeometricField
 (
-    const SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>& gf
+    const SlicedGeometricField<Type, GeoMesh>& gf
 )
 :
-    GeometricField<Type, PatchField, GeoMesh>
+    GeometricField<Type, GeoMesh>
     (
         gf,
         gf.mesh(),
@@ -306,44 +270,21 @@ SlicedGeometricField
 }
 
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-Foam::tmp
-<
-    Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
->
-Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-clone() const
+template<class Type, class GeoMesh>
+Foam::tmp<Foam::SlicedGeometricField<Type, GeoMesh>>
+Foam::SlicedGeometricField<Type, GeoMesh>::clone() const
 {
-    return tmp
-    <
-        SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
-    >
+    return tmp<SlicedGeometricField<Type, GeoMesh>>
     (
-        new SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
-        (
-            *this
-        )
+        new SlicedGeometricField<Type, GeoMesh>(*this)
     );
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-~SlicedGeometricField()
+template<class Type, class GeoMesh>
+Foam::SlicedGeometricField<Type, GeoMesh>::~SlicedGeometricField()
 {
     // Set the internalField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
@@ -353,16 +294,9 @@ Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
+template<class Type, class GeoMesh>
 Foam::tmp<Foam::Field<Type>>
-Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-splice() const
+Foam::SlicedGeometricField<Type, GeoMesh>::splice() const
 {
     const Mesh& mesh = this->mesh();
 
@@ -413,17 +347,10 @@ splice() const
 }
 
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    template<class> class SlicedPatchField,
-    class GeoMesh
->
-void Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-correctBoundaryConditions()
+template<class Type, class GeoMesh>
+void Foam::SlicedGeometricField<Type, GeoMesh>::correctBoundaryConditions()
 {
-    GeometricField<Type, PatchField, GeoMesh>::correctBoundaryConditions();
+    GeometricField<Type, GeoMesh>::correctBoundaryConditions();
 }
 
 

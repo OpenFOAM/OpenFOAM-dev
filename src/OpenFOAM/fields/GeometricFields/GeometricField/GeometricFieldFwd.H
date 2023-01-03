@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,40 +23,52 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "volFields.H"
+#ifndef GeometricFieldFwd_H
+#define GeometricFieldFwd_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defineTemplate2TypeNameAndDebug(volLabelField::Internal, 0);
-defineTemplate2TypeNameAndDebug(volScalarField::Internal, 0);
-defineTemplate2TypeNameAndDebug(volVectorField::Internal, 0);
-defineTemplate2TypeNameAndDebug
-(
-    volSphericalTensorField::Internal,
-    0
-);
-defineTemplate2TypeNameAndDebug
-(
-    volSymmTensorField::Internal,
-    0
-);
-defineTemplate2TypeNameAndDebug(volTensorField::Internal, 0);
+template<class Type>
+class Field;
 
-defineTemplateTypeNameAndDebug(volLabelField, 0);
-defineTemplateTypeNameAndDebug(volScalarField, 0);
-defineTemplateTypeNameAndDebug(volVectorField, 0);
-defineTemplateTypeNameAndDebug(volSphericalTensorField, 0);
-defineTemplateTypeNameAndDebug(volSymmTensorField, 0);
-defineTemplateTypeNameAndDebug(volTensorField, 0);
+template
+<
+    class Type,
+    class GeoMesh,
+    template<class> class PrimitiveField = Field
+>
+class GeometricBoundaryField;
 
+template
+<
+    class Type,
+    class GeoMesh,
+    template<class> class PrimitiveField = Field
+>
+class GeometricFieldSources;
+
+template<class Type>
+class NoFieldSource;
+
+template
+<
+    class Type,
+    class GeoMesh,
+    template<class> class PrimitiveField = Field
+>
+class GeometricField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

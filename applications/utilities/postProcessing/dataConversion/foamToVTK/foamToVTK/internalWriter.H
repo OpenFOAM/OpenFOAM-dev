@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,11 +93,8 @@ public:
         void write(const UPtrList<const DimensionedField<Type, GeoMesh>>&);
 
         //- Write generic GeometricFields
-        template<class Type, template<class> class PatchField, class GeoMesh>
-        void write
-        (
-            const UPtrList<const GeometricField<Type, PatchField, GeoMesh>>&
-        );
+        template<class Type, class GeoMesh>
+        void write(const UPtrList<const GeometricField<Type, GeoMesh>>&);
 
         //- Interpolate and write volFields
         template<class Type>

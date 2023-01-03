@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,63 +45,63 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh>
 void transform
 (
-    GeometricField<Type, PatchField, GeoMesh>&,
-    const GeometricField<tensor, PatchField, GeoMesh>&,
-    const GeometricField<Type, PatchField, GeoMesh>&
+    GeometricField<Type, GeoMesh>&,
+    const GeometricField<tensor, GeoMesh>&,
+    const GeometricField<Type, GeoMesh>&
 );
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh>> transform
+template<class Type, class GeoMesh>
+tmp<GeometricField<Type, GeoMesh>> transform
 (
-    const GeometricField<tensor, PatchField, GeoMesh>&,
-    const GeometricField<Type, PatchField, GeoMesh>&
+    const GeometricField<tensor, GeoMesh>&,
+    const GeometricField<Type, GeoMesh>&
 );
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh>> transform
+template<class Type, class GeoMesh>
+tmp<GeometricField<Type, GeoMesh>> transform
 (
-    const GeometricField<tensor, PatchField, GeoMesh>&,
-    const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+    const GeometricField<tensor, GeoMesh>&,
+    const tmp<GeometricField<Type, GeoMesh>>&
 );
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh>> transform
+template<class Type, class GeoMesh>
+tmp<GeometricField<Type, GeoMesh>> transform
 (
-    const tmp<GeometricField<tensor, PatchField, GeoMesh>>&,
-    const GeometricField<Type, PatchField, GeoMesh>&
+    const tmp<GeometricField<tensor, GeoMesh>>&,
+    const GeometricField<Type, GeoMesh>&
 );
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh>> transform
+template<class Type, class GeoMesh>
+tmp<GeometricField<Type, GeoMesh>> transform
 (
-    const tmp<GeometricField<tensor, PatchField, GeoMesh>>&,
-    const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+    const tmp<GeometricField<tensor, GeoMesh>>&,
+    const tmp<GeometricField<Type, GeoMesh>>&
 );
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh>
 void transform
 (
-    GeometricField<Type, PatchField, GeoMesh>&,
+    GeometricField<Type, GeoMesh>&,
     const dimensionedTensor&,
-    const GeometricField<Type, PatchField, GeoMesh>&
+    const GeometricField<Type, GeoMesh>&
 );
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh>> transform
+template<class Type, class GeoMesh>
+tmp<GeometricField<Type, GeoMesh>> transform
 (
     const dimensionedTensor&,
-    const GeometricField<Type, PatchField, GeoMesh>&
+    const GeometricField<Type, GeoMesh>&
 );
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh>> transform
+template<class Type, class GeoMesh>
+tmp<GeometricField<Type, GeoMesh>> transform
 (
     const dimensionedTensor&,
-    const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+    const tmp<GeometricField<Type, GeoMesh>>&
 );
 
 

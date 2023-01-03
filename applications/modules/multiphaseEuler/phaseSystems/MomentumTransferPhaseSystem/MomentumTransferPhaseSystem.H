@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,10 +153,10 @@ protected:
         void invADVs(List<UPtrList<scalarField>>& ADVs) const;
 
         //- Invert the ADVs matrix inplace
-        template<template<class> class PatchField, class GeoMesh>
+        template<class GeoMesh>
         void invADVs
         (
-            PtrList<PtrList<GeometricField<scalar, PatchField, GeoMesh>>>& ADVs
+            PtrList<PtrList<GeometricField<scalar, GeoMesh>>>& ADVs
         ) const;
 
 

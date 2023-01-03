@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,22 +44,22 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh>
 void evaluate
 (
-    GeometricField<Type, PatchField, GeoMesh>& result,
+    GeometricField<Type, GeoMesh>& result,
     const Function2<Type>& func,
-    const GeometricField<Type, PatchField, GeoMesh>& x,
-    const GeometricField<Type, PatchField, GeoMesh>& y
+    const GeometricField<Type, GeoMesh>& x,
+    const GeometricField<Type, GeoMesh>& y
 );
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<Type, PatchField, GeoMesh>> evaluate
+template<class Type, class GeoMesh>
+tmp<GeometricField<Type, GeoMesh>> evaluate
 (
     const Function2<Type>& func,
     const dimensionSet& dims,
-    const GeometricField<Type, PatchField, GeoMesh>& x,
-    const GeometricField<Type, PatchField, GeoMesh>& y
+    const GeometricField<Type, GeoMesh>& x,
+    const GeometricField<Type, GeoMesh>& y
 );
 
 

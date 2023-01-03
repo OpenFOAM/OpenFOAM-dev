@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,7 @@ SourceFiles
 #ifndef pointFieldsFwd_H
 #define pointFieldsFwd_H
 
+#include "GeometricFieldFwd.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,17 +49,8 @@ class pointMesh;
 template<class Type>
 class pointPatchField;
 
-template<class Type, class GeoMesh>
-class NoFieldSource;
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-class GeometricField;
-
 template<class Type>
-using PointField = GeometricField<Type, pointPatchField, pointMesh>;
-
-template<class Type>
-using pointFieldSource = NoFieldSource<Type, pointMesh>;
+using PointField = GeometricField<Type, pointMesh, Field>;
 
 typedef PointField<label> pointLabelField;
 typedef PointField<scalar> pointScalarField;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,8 @@ License
 #ifndef GeometricFieldReuseFunctions_H
 #define GeometricFieldReuseFunctions_H
 
+#include "GeometricField.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -33,28 +35,24 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    class GeoMesh
->
-bool reusable(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+bool reusable(const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>& tgf)
 {
+    typedef GeometricField<Type, GeoMesh, PrimitiveField> geoField;
+
     if (tgf.isTmp())
     {
-        if (GeometricField<Type, PatchField, GeoMesh>::debug)
+        if (geoField::debug)
         {
-            const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
-            const typename GeometricField<Type, PatchField, GeoMesh>::
-                Boundary& gbf = gf.boundaryField();
+            const geoField& gf = tgf();
+            const typename geoField::Boundary& gbf = gf.boundaryField();
 
             forAll(gbf, patchi)
             {
                 if
                 (
                     !polyPatch::constraintType(gbf[patchi].patch().type())
-                 && !isA<typename PatchField<Type>::Calculated>(gbf[patchi])
+                 && !isA<typename geoField::Patch::Calculated>(gbf[patchi])
                 )
                 {
                     WarningInFunction
@@ -75,17 +73,17 @@ bool reusable(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
 }
 
 
-template<class TypeR, template<class> class PatchField, class GeoMesh>
-tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
+template<class TypeR, class GeoMesh>
+tmp<GeometricField<TypeR, GeoMesh, Field>> New
 (
-    const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf1,
+    const tmp<GeometricField<TypeR, GeoMesh, Field>>& tgf1,
     const word& name,
     const dimensionSet& dimensions,
     const bool initRet = false
 )
 {
-    GeometricField<TypeR, PatchField, GeoMesh>& gf1 =
-        const_cast<GeometricField<TypeR, PatchField, GeoMesh>& >(tgf1());
+    GeometricField<TypeR, GeoMesh, Field>& gf1 =
+        const_cast<GeometricField<TypeR, GeoMesh, Field>&>(tgf1());
 
     if (reusable(tgf1))
     {
@@ -95,9 +93,9 @@ tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
     }
     else
     {
-        tmp<GeometricField<TypeR, PatchField, GeoMesh>> rtgf
+        tmp<GeometricField<TypeR, GeoMesh, Field>> rtgf
         (
-            GeometricField<TypeR, PatchField, GeoMesh>::New
+            GeometricField<TypeR, GeoMesh, Field>::New
             (
                 name,
                 gf1.mesh(),
@@ -119,23 +117,23 @@ template
 <
     class TypeR,
     class Type1,
-    template<class> class PatchField,
-    class GeoMesh
+    class GeoMesh,
+    template<class> class PrimitiveField
 >
 class reuseTmpGeometricField
 {
 public:
 
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
+    static tmp<GeometricField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,
+        const tmp<GeometricField<Type1, GeoMesh, PrimitiveField>>& tgf1,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();
+        const GeometricField<Type1, GeoMesh, PrimitiveField>& gf1 = tgf1();
 
-        return GeometricField<TypeR, PatchField, GeoMesh>::New
+        return GeometricField<TypeR, GeoMesh, Field>::New
         (
             name,
             gf1.mesh(),
@@ -145,20 +143,20 @@ public:
 };
 
 
-template<class TypeR, template<class> class PatchField, class GeoMesh>
-class reuseTmpGeometricField<TypeR, TypeR, PatchField, GeoMesh>
+template<class TypeR, class GeoMesh>
+class reuseTmpGeometricField<TypeR, TypeR, GeoMesh, Field>
 {
 public:
 
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
+    static tmp<GeometricField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf1,
+        const tmp<GeometricField<TypeR, GeoMesh, Field>>& tgf1,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        GeometricField<TypeR, PatchField, GeoMesh>& gf1 =
-            const_cast<GeometricField<TypeR, PatchField, GeoMesh>& >(tgf1());
+        GeometricField<TypeR, GeoMesh, Field>& gf1 =
+            const_cast<GeometricField<TypeR, GeoMesh, Field>&>(tgf1());
 
         if (reusable(tgf1))
         {
@@ -168,7 +166,7 @@ public:
         }
         else
         {
-            return GeometricField<TypeR, PatchField, GeoMesh>::New
+            return GeometricField<TypeR, GeoMesh, Field>::New
             (
                 name,
                 gf1.mesh(),
@@ -184,24 +182,25 @@ template
     class TypeR,
     class Type1,
     class Type2,
-    template<class> class PatchField,
-    class GeoMesh
+    class GeoMesh,
+    template<class> class PrimitiveField1,
+    template<class> class PrimitiveField2
 >
 class reuseTmpTmpGeometricField
 {
 public:
 
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
+    static tmp<GeometricField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,
-        const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2,
+        const tmp<GeometricField<Type1, GeoMesh, PrimitiveField1>>& tgf1,
+        const tmp<GeometricField<Type2, GeoMesh, PrimitiveField2>>& tgf2,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();
+        const GeometricField<Type1, GeoMesh, PrimitiveField1>& gf1 = tgf1();
 
-        return GeometricField<TypeR, PatchField, GeoMesh>::New
+        return GeometricField<TypeR, GeoMesh, PrimitiveField1>::New
         (
             name,
             gf1.mesh(),
@@ -215,24 +214,26 @@ template
 <
     class TypeR,
     class Type1,
-    template<class> class PatchField,
-    class GeoMesh
+    class GeoMesh,
+    template<class> class PrimitiveField1
 >
-class reuseTmpTmpGeometricField<TypeR, Type1, TypeR, PatchField, GeoMesh>
+class reuseTmpTmpGeometricField
+<TypeR, Type1, TypeR, GeoMesh, PrimitiveField1, Field>
 {
 public:
 
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
+    static tmp<GeometricField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf2,
+        const tmp<GeometricField<Type1, GeoMesh, PrimitiveField1>>& tgf1,
+        const tmp<GeometricField<TypeR, GeoMesh, Field>>& tgf2,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();
-        GeometricField<TypeR, PatchField, GeoMesh>& gf2 =
-            const_cast<GeometricField<TypeR, PatchField, GeoMesh>& >(tgf2());
+        const GeometricField<Type1, GeoMesh, PrimitiveField1>& gf1 = tgf1();
+
+        GeometricField<TypeR, GeoMesh, Field>& gf2 =
+            const_cast<GeometricField<TypeR, GeoMesh, Field>&>(tgf2());
 
         if (reusable(tgf2))
         {
@@ -242,7 +243,7 @@ public:
         }
         else
         {
-            return GeometricField<TypeR, PatchField, GeoMesh>::New
+            return GeometricField<TypeR, GeoMesh, Field>::New
             (
                 name,
                 gf1.mesh(),
@@ -257,23 +258,24 @@ template
 <
     class TypeR,
     class Type2,
-    template<class> class PatchField,
-    class GeoMesh
+    class GeoMesh,
+    template<class> class PrimitiveField2
 >
-class reuseTmpTmpGeometricField<TypeR, TypeR, Type2, PatchField, GeoMesh>
+class reuseTmpTmpGeometricField
+<TypeR, TypeR, Type2, GeoMesh, Field, PrimitiveField2>
 {
 public:
 
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
+    static tmp<GeometricField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf1,
-        const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2,
+        const tmp<GeometricField<TypeR, GeoMesh, Field>>& tgf1,
+        const tmp<GeometricField<Type2, GeoMesh, PrimitiveField2>>& tgf2,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        GeometricField<TypeR, PatchField, GeoMesh>& gf1 =
-            const_cast<GeometricField<TypeR, PatchField, GeoMesh>& >(tgf1());
+        GeometricField<TypeR, GeoMesh, Field>& gf1 =
+            const_cast<GeometricField<TypeR, GeoMesh, Field>&>(tgf1());
 
         if (reusable(tgf1))
         {
@@ -283,7 +285,7 @@ public:
         }
         else
         {
-            return GeometricField<TypeR, PatchField, GeoMesh>::New
+            return GeometricField<TypeR, GeoMesh, Field>::New
             (
                 name,
                 gf1.mesh(),
@@ -294,23 +296,23 @@ public:
 };
 
 
-template<class TypeR, template<class> class PatchField, class GeoMesh>
-class reuseTmpTmpGeometricField<TypeR, TypeR, TypeR, PatchField, GeoMesh>
+template<class TypeR, class GeoMesh>
+class reuseTmpTmpGeometricField<TypeR, TypeR, TypeR, GeoMesh, Field, Field>
 {
 public:
 
-    static tmp<GeometricField<TypeR, PatchField, GeoMesh>> New
+    static tmp<GeometricField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf1,
-        const tmp<GeometricField<TypeR, PatchField, GeoMesh>>& tgf2,
+        const tmp<GeometricField<TypeR, GeoMesh, Field>>& tgf1,
+        const tmp<GeometricField<TypeR, GeoMesh, Field>>& tgf2,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        GeometricField<TypeR, PatchField, GeoMesh>& gf1 =
-            const_cast<GeometricField<TypeR, PatchField, GeoMesh>& >(tgf1());
-        GeometricField<TypeR, PatchField, GeoMesh>& gf2 =
-            const_cast<GeometricField<TypeR, PatchField, GeoMesh>& >(tgf2());
+        GeometricField<TypeR, GeoMesh, Field>& gf1 =
+            const_cast<GeometricField<TypeR, GeoMesh, Field>&>(tgf1());
+        GeometricField<TypeR, GeoMesh, Field>& gf2 =
+            const_cast<GeometricField<TypeR, GeoMesh, Field>&>(tgf2());
 
         if (reusable(tgf1))
         {
@@ -326,7 +328,7 @@ public:
         }
         else
         {
-            return GeometricField<TypeR, PatchField, GeoMesh>::New
+            return GeometricField<TypeR, GeoMesh, Field>::New
             (
                 name,
                 gf1.mesh(),

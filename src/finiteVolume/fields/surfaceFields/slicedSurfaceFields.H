@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,44 +43,27 @@ namespace Foam
 
 template<>
 inline void
-SlicedGeometricField<scalar, fvsPatchField, slicedFvsPatchField, surfaceMesh>::
-correctBoundaryConditions()
+SlicedGeometricField<scalar, surfaceMesh>::correctBoundaryConditions()
 {}
 
 template<>
 inline void
-SlicedGeometricField<vector, fvsPatchField, slicedFvsPatchField, surfaceMesh>::
-correctBoundaryConditions()
+SlicedGeometricField<vector, surfaceMesh>::correctBoundaryConditions()
 {}
 
 template<>
 inline void
-SlicedGeometricField
-<
-    sphericalTensor,
-    fvsPatchField,
-    slicedFvsPatchField,
-    surfaceMesh
->::
-correctBoundaryConditions()
+SlicedGeometricField<sphericalTensor, surfaceMesh>::correctBoundaryConditions()
 {}
 
 template<>
 inline void
-SlicedGeometricField
-<
-    symmTensor,
-    fvsPatchField,
-    slicedFvsPatchField,
-    surfaceMesh
->::
-correctBoundaryConditions()
+SlicedGeometricField<symmTensor, surfaceMesh>::correctBoundaryConditions()
 {}
 
 template<>
 inline void
-SlicedGeometricField<tensor, fvsPatchField, slicedFvsPatchField, surfaceMesh>::
-correctBoundaryConditions()
+SlicedGeometricField<tensor, surfaceMesh>::correctBoundaryConditions()
 {}
 
 

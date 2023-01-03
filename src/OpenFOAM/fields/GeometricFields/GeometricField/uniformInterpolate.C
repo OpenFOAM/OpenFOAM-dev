@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,21 +67,11 @@ Foam::tmp<GeoField> Foam::uniformInterpolate
 )
 {
     // Look up the first field
-    const objectRegistry& time0Fields = fieldsCache.lookupObject
-    <
-        const objectRegistry
-    >
-    (
-        times[0]
-    );
-    const GeoField& field0 = time0Fields.lookupObject
-    <
-        const GeoField
-    >
-    (
-        fieldName
-    );
+    const objectRegistry& time0Fields =
+        fieldsCache.lookupObject<const objectRegistry>(times[0]);
 
+    const GeoField& field0 =
+        time0Fields.lookupObject<const GeoField>(fieldName);
 
     // Interpolate
     tmp<GeoField> tfld(GeoField::New(fieldIO.name(), weights[0]*field0));
@@ -89,20 +79,11 @@ Foam::tmp<GeoField> Foam::uniformInterpolate
 
     for (label i = 1; i < times.size(); ++i)
     {
-        const objectRegistry& timeIFields = fieldsCache.lookupObject
-        <
-            const objectRegistry
-        >
-        (
-            times[i]
-        );
-        const GeoField& fieldi = timeIFields.lookupObject
-        <
-            const GeoField
-        >
-        (
-            fieldName
-        );
+        const objectRegistry& timeIFields =
+            fieldsCache.lookupObject<const objectRegistry>(times[i]);
+
+        const GeoField& fieldi =
+            timeIFields.lookupObject<const GeoField>(fieldName);
 
         fld += weights[i]*fieldi;
     }

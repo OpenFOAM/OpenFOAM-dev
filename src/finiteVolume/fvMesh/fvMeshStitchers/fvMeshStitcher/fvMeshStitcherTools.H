@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,8 +87,7 @@ tmp<Field<Type>> fieldRMapSum
 //- Alias for surface boundary fields to reduce verbosity of method
 //  definitions below
 template<class Type>
-using SurfaceFieldBoundary =
-    GeometricBoundaryField<Type, fvsPatchField, surfaceMesh>;
+using SurfaceFieldBoundary = GeometricBoundaryField<Type, surfaceMesh>;
 
 //- Return the total non-conformal area associated with each original face
 tmp<SurfaceFieldBoundary<scalar>> origNcMagSfb(const fvMesh& mesh);

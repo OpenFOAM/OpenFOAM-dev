@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ Foam::label Foam::vtkPVFoam::addToSelection
 }
 
 
-template<template<class> class patchType, class meshType>
+template<class meshType>
 void Foam::vtkPVFoam::addFieldsToSelection
 (
     vtkDataArraySelection *select,
@@ -76,35 +76,35 @@ void Foam::vtkPVFoam::addFieldsToSelection
     const string& suffix
 )
 {
-    addToSelection<GeometricField<scalar, patchType, meshType>>
+    addToSelection<GeometricField<scalar, meshType>>
     (
         select,
         objects,
         suffix
     );
 
-    addToSelection<GeometricField<vector, patchType, meshType>>
+    addToSelection<GeometricField<vector, meshType>>
     (
         select,
         objects,
         suffix
     );
 
-    addToSelection<GeometricField<sphericalTensor, patchType, meshType>>
+    addToSelection<GeometricField<sphericalTensor, meshType>>
     (
         select,
         objects,
         suffix
     );
 
-    addToSelection<GeometricField<symmTensor, patchType, meshType>>
+    addToSelection<GeometricField<symmTensor, meshType>>
     (
         select,
         objects,
         suffix
     );
 
-    addToSelection<GeometricField<tensor, patchType, meshType>>
+    addToSelection<GeometricField<tensor, meshType>>
     (
         select,
         objects,
@@ -113,7 +113,7 @@ void Foam::vtkPVFoam::addFieldsToSelection
 }
 
 
-template<template<class> class patchType, class meshType>
+template<class meshType>
 void Foam::vtkPVFoam::addInternalFieldsToSelection
 (
     vtkDataArraySelection *select,
@@ -121,55 +121,35 @@ void Foam::vtkPVFoam::addInternalFieldsToSelection
     const string& suffix
 )
 {
-    addToSelection
-    <
-        typename
-        GeometricField<scalar, patchType, meshType>::Internal
-    >
+    addToSelection<typename GeometricField<scalar, meshType>::Internal>
     (
         select,
         objects,
         suffix
     );
 
-    addToSelection
-    <
-        typename
-        GeometricField<vector, patchType, meshType>::Internal
-    >
+    addToSelection<typename GeometricField<vector, meshType>::Internal>
     (
         select,
         objects,
         suffix
     );
 
-    addToSelection
-    <
-        typename
-        GeometricField<sphericalTensor, patchType, meshType>::Internal
-    >
+    addToSelection<typename GeometricField<sphericalTensor, meshType>::Internal>
     (
         select,
         objects,
         suffix
     );
 
-    addToSelection
-    <
-        typename
-        GeometricField<symmTensor, patchType, meshType>::Internal
-    >
+    addToSelection<typename GeometricField<symmTensor, meshType>::Internal>
     (
         select,
         objects,
         suffix
     );
 
-    addToSelection
-    <
-        typename
-        GeometricField<tensor, patchType, meshType>::Internal
-    >
+    addToSelection<typename GeometricField<tensor, meshType>::Internal>
     (
         select,
         objects,

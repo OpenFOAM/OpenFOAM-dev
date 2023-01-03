@@ -731,29 +731,10 @@ void Foam::vtkPVFoam::updateInfoFields()
         // Search for list of objects for this time and mesh region
         IOobjectList objects(runTime, times[timei].name(), regionPrefix);
 
-        addFieldsToSelection<fvPatchField, volMesh>
-        (
-            fieldSelection,
-            objects
-        );
-
-        addInternalFieldsToSelection<fvPatchField, volMesh>
-        (
-            fieldSelection,
-            objects
-        );
-
-        addFieldsToSelection<fvsPatchField, surfaceMesh>
-        (
-            fieldSelection,
-            objects
-        );
-
-        addFieldsToSelection<pointPatchField, pointMesh>
-        (
-            fieldSelection,
-            objects
-        );
+        addFieldsToSelection<volMesh>(fieldSelection, objects);
+        addInternalFieldsToSelection<volMesh>(fieldSelection, objects);
+        addFieldsToSelection<surfaceMesh>(fieldSelection, objects);
+        addFieldsToSelection<pointMesh>(fieldSelection, objects);
     }
 
     // Restore the enabled selections

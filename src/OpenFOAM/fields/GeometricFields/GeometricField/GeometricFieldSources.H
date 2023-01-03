@@ -51,7 +51,7 @@ class dictionary;
                       Class GeometricFieldSources Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 class GeometricFieldSources
 :
     private HashPtrTable<typename GeoMesh::template FieldSource<Type>>
@@ -61,7 +61,7 @@ public:
     // Public Typedefs
 
         //- Type of the internal field from which this GeometricField is derived
-        typedef DimensionedField<Type, GeoMesh> Internal;
+        typedef DimensionedField<Type, GeoMesh, PrimitiveField> Internal;
 
         //- Type of the field source of which this field sources is composed
         typedef typename GeoMesh::template FieldSource<Type> Source;
@@ -77,6 +77,11 @@ private:
 
 public:
 
+    //- Declare friendship with other geometric field sources
+    template<class Type2, class GeoMesh2, template<class> class PrimitiveField2>
+    friend class GeometricFieldSources;
+
+
     // Constructors
 
         //- Construct null
@@ -87,6 +92,14 @@ public:
 
         //- Construct as copy setting the reference to the internal field
         GeometricFieldSources(const Internal&, const GeometricFieldSources&);
+
+        //- Construct as copy setting the reference to the internal field
+        template<template<class> class PrimitiveField2>
+        explicit GeometricFieldSources
+        (
+            const Internal&,
+            const GeometricFieldSources<Type, GeoMesh, PrimitiveField2>&
+        );
 
         //- Construct from dictionary
         GeometricFieldSources(const Internal&, const dictionary&);
@@ -139,11 +152,11 @@ public:
 };
 
 
-template<class Type, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Ostream& operator<<
 (
     Ostream&,
-    const GeometricFieldSources<Type, GeoMesh>&
+    const GeometricFieldSources<Type, GeoMesh, PrimitiveField>&
 );
 
 
@@ -151,85 +164,67 @@ Ostream& operator<<
                       Class NoFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type, class GeoMesh>
+template<class Type>
 class NoFieldSource
 {
-    // Private Data
-
-        //- Reference to internal field
-        const DimensionedField<Type, GeoMesh>& internalField_;
-
-
 public:
 
     // Constructors
 
+        //- Construct null
+        NoFieldSource()
+        {}
+
         //- Construct from internal field
-        NoFieldSource
-        (
-            const DimensionedField<Type, GeoMesh>& iF
-        )
-        :
-            internalField_(iF)
+        template<class InternalField>
+        NoFieldSource(const InternalField&)
         {}
 
         //- Dummy clone
-        autoPtr<NoFieldSource<Type, GeoMesh>> clone
-        (
-            const DimensionedField<Type, GeoMesh>& iF
-        ) const
+        template<class InternalField>
+        autoPtr<NoFieldSource<Type>> clone(const InternalField&) const
         {
-            return
-                autoPtr<NoFieldSource<Type, GeoMesh>>
-                (
-                    new NoFieldSource<Type, GeoMesh>(iF)
-                );
+            return autoPtr<NoFieldSource<Type>>(new NoFieldSource<Type>());
         }
 
 
     // Selectors
 
         //- Dummy selector
-        static autoPtr<NoFieldSource<Type, GeoMesh>> New
+        template<class InternalField>
+        static autoPtr<NoFieldSource<Type>> New
         (
-            const word& fieldSourceType,
-            const DimensionedField<Type, GeoMesh>& iF
+            const word&,
+            const InternalField&
         )
         {
-            return
-                autoPtr<NoFieldSource<Type, GeoMesh>>
-                (
-                    new NoFieldSource<Type, GeoMesh>(iF)
-                );
+            return autoPtr<NoFieldSource<Type>>(new NoFieldSource<Type>());
         }
 
         //- Dummy selector
-        static autoPtr<NoFieldSource<Type, GeoMesh>> New
+        template<class InternalField>
+        static autoPtr<NoFieldSource<Type>> New
         (
-            const DimensionedField<Type, GeoMesh>& iF,
-            const dictionary& dict
+            const InternalField&,
+            const dictionary&
         )
         {
-            return
-                autoPtr<NoFieldSource<Type, GeoMesh>>
-                (
-                    new NoFieldSource<Type, GeoMesh>(iF)
-                );
+            return autoPtr<NoFieldSource<Type>>(new NoFieldSource<Type>());
         }
 
 
     // Member Functions
 
-        //- Return the internal field reference
-        const DimensionedField<Type, GeoMesh>& internalField() const
+        //- Dummy return of the internal field reference
+        const nil internalField() const
         {
-            return internalField_;
+            return nil();
         }
 };
 
 
-template<class Type, class GeoMesh>
-Ostream& operator<<(Ostream& os, const NoFieldSource<Type, GeoMesh>&)
+template<class Type>
+Ostream& operator<<(Ostream& os, const NoFieldSource<Type>&)
 {
     return os;
 }

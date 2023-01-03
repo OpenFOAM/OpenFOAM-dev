@@ -31,8 +31,6 @@ Description
     The destructor is wrapped to avoid deallocation of the storage of the
     complete fields when this is destroyed.
 
-    Should only used as a template argument for SlicedGeometricField.
-
 See also
     Foam::fvPatchField
 

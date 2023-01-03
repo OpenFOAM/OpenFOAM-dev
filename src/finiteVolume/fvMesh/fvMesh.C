@@ -1080,13 +1080,12 @@ void Foam::fvMesh::mapFields(const polyTopoChangeMap& map)
 
     // Map all the volFields in the objectRegistry
     #define mapVolFieldType(Type, nullArg)                                     \
-        MapGeometricFields<Type, fvPatchField, fvMeshMapper, volMesh>(fvMap);
+        MapGeometricFields<Type, fvMeshMapper, volMesh>(fvMap);
     FOR_ALL_FIELD_TYPES(mapVolFieldType);
 
     // Map all the surfaceFields in the objectRegistry
     #define mapSurfaceFieldType(Type, nullArg)                                 \
-        MapGeometricFields<Type, fvsPatchField, fvMeshMapper, surfaceMesh>     \
-        (fvMap);
+        MapGeometricFields<Type, fvMeshMapper, surfaceMesh>(fvMap);
     FOR_ALL_FIELD_TYPES(mapSurfaceFieldType);
 
     // Map all the dimensionedFields in the objectRegistry
@@ -1100,14 +1099,7 @@ void Foam::fvMesh::mapFields(const polyTopoChangeMap& map)
         const pointMeshMapper mapper(pointMesh::New(*this), map);
 
         #define mapPointFieldType(Type, nullArg)                               \
-            MapGeometricFields                                                 \
-            <                                                                  \
-                Type,                                                          \
-                pointPatchField,                                               \
-                pointMeshMapper,                                               \
-                pointMesh                                                      \
-            >                                                                  \
-            (mapper);
+            MapGeometricFields<Type, pointMeshMapper, pointMesh>(mapper);
         FOR_ALL_FIELD_TYPES(mapPointFieldType);
     }
 }

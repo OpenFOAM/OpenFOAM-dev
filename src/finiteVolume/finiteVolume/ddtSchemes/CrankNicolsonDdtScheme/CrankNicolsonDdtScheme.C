@@ -269,9 +269,9 @@ tmp<GeoField> CrankNicolsonDdtScheme<Type>::offCentre_
 
 
 template<class Type>
-const FieldField<fvPatchField, Type>& ff
+const FieldField<volMesh::PatchField, Type>& ff
 (
-    const FieldField<fvPatchField, Type>& bf
+    const FieldField<volMesh::PatchField, Type>& bf
 )
 {
     return bf;

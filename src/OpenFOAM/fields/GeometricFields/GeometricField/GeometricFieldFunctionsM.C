@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,11 +34,11 @@ namespace Foam
 
 #define UNARY_FUNCTION(ReturnType, Type1, Func, Dfunc)                         \
                                                                                \
-TEMPLATE                                                                       \
+TEMPLATE2                                                                      \
 void Func                                                                      \
 (                                                                              \
-    GeometricField<ReturnType, PatchField, GeoMesh>& res,                      \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1                      \
+    GeometricField<ReturnType, GeoMesh, PrimitiveField1>& res,                 \
+    const GeometricField<Type1, GeoMesh, PrimitiveField2>& gf1                 \
 )                                                                              \
 {                                                                              \
     Foam::Func(res.primitiveFieldRef(), gf1.primitiveField());                 \
@@ -46,14 +46,14 @@ void Func                                                                      \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1                      \
+    const GeometricField<Type1, GeoMesh, PrimitiveField>& gf1                  \
 )                                                                              \
 {                                                                              \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
+        GeometricField<ReturnType, GeoMesh, Field>::New                        \
         (                                                                      \
             #Func "(" + gf1.name() + ')',                                      \
             gf1.mesh(),                                                        \
@@ -67,16 +67,17 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1                \
+    const tmp<GeometricField<Type1, GeoMesh, PrimitiveField>>& tgf1            \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();            \
+    const GeometricField<Type1, GeoMesh, PrimitiveField>& gf1 = tgf1();        \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        reuseTmpGeometricField<ReturnType, Type1, PatchField, GeoMesh>::New    \
+        reuseTmpGeometricField                                                 \
+        <ReturnType, Type1, GeoMesh, PrimitiveField>::New                      \
         (                                                                      \
             tgf1,                                                              \
             #Func "(" + gf1.name() + ')',                                      \
@@ -96,11 +97,11 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 
 #define UNARY_OPERATOR(ReturnType, Type1, Op, OpFunc, Dfunc)                   \
                                                                                \
-TEMPLATE                                                                       \
+TEMPLATE2                                                                      \
 void OpFunc                                                                    \
 (                                                                              \
-    GeometricField<ReturnType, PatchField, GeoMesh>& res,                      \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1                      \
+    GeometricField<ReturnType, GeoMesh, PrimitiveField1>& res,                 \
+    const GeometricField<Type1, GeoMesh, PrimitiveField2>& gf1                 \
 )                                                                              \
 {                                                                              \
     Foam::OpFunc(res.primitiveFieldRef(), gf1.primitiveField());               \
@@ -108,14 +109,14 @@ void OpFunc                                                                    \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1                      \
+    const GeometricField<Type1, GeoMesh, PrimitiveField>& gf1                  \
 )                                                                              \
 {                                                                              \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
+        GeometricField<ReturnType, GeoMesh, Field>::New                        \
         (                                                                      \
             #Op + gf1.name(),                                                  \
             gf1.mesh(),                                                        \
@@ -129,16 +130,17 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1                \
+    const tmp<GeometricField<Type1, GeoMesh, PrimitiveField>>& tgf1            \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();            \
+    const GeometricField<Type1, GeoMesh, PrimitiveField>& gf1 = tgf1();        \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        reuseTmpGeometricField<ReturnType, Type1, PatchField, GeoMesh>::New    \
+        reuseTmpGeometricField                                                 \
+        <ReturnType, Type1, GeoMesh, PrimitiveField>::New                      \
         (                                                                      \
             tgf1,                                                              \
             #Op + gf1.name(),                                                  \
@@ -158,12 +160,12 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 
 #define BINARY_FUNCTION(ReturnType, Type1, Type2, Func)                        \
                                                                                \
-TEMPLATE                                                                       \
+TEMPLATE3                                                                      \
 void Func                                                                      \
 (                                                                              \
-    GeometricField<ReturnType, PatchField, GeoMesh>& res,                      \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    GeometricField<ReturnType, GeoMesh, PrimitiveField1>& res,                 \
+    const GeometricField<Type1, GeoMesh, PrimitiveField2>& gf1,                \
+    const GeometricField<Type2, GeoMesh, PrimitiveField3>& gf2                 \
 )                                                                              \
 {                                                                              \
     Foam::Func                                                                 \
@@ -180,16 +182,16 @@ void Func                                                                      \
     );                                                                         \
 }                                                                              \
                                                                                \
-TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+TEMPLATE2                                                                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    const GeometricField<Type1, GeoMesh, PrimitiveField1>& gf1,                \
+    const GeometricField<Type2, GeoMesh, PrimitiveField2>& gf2                 \
 )                                                                              \
 {                                                                              \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
+        GeometricField<ReturnType, GeoMesh, Field>::New                        \
         (                                                                      \
             #Func "(" + gf1.name() + ',' + gf2.name() + ')',                   \
             gf1.mesh(),                                                        \
@@ -202,18 +204,19 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+TEMPLATE2                                                                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+    const GeometricField<Type1, GeoMesh, PrimitiveField1>& gf1,                \
+    const tmp<GeometricField<Type2, GeoMesh, PrimitiveField2>>& tgf2           \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();            \
+    const GeometricField<Type2, GeoMesh, PrimitiveField2>& gf2 = tgf2();       \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        reuseTmpGeometricField<ReturnType, Type2, PatchField, GeoMesh>::New    \
+        reuseTmpGeometricField                                                 \
+        <ReturnType, Type2, GeoMesh, PrimitiveField2>::New                     \
         (                                                                      \
             tgf2,                                                              \
             #Func "(" + gf1.name() + ',' + gf2.name() + ')',                   \
@@ -228,18 +231,19 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+TEMPLATE2                                                                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    const tmp<GeometricField<Type1, GeoMesh, PrimitiveField1>>& tgf1,          \
+    const GeometricField<Type2, GeoMesh, PrimitiveField2>& gf2                 \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();            \
+    const GeometricField<Type1, GeoMesh, PrimitiveField1>& gf1 = tgf1();       \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        reuseTmpGeometricField<ReturnType, Type1, PatchField, GeoMesh>::New    \
+        reuseTmpGeometricField                                                 \
+        <ReturnType, Type1, GeoMesh, PrimitiveField1>::New                     \
         (                                                                      \
             tgf1,                                                              \
             #Func "(" + gf1.name() + ',' + gf2.name() + ')',                   \
@@ -254,20 +258,27 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+TEMPLATE2                                                                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+    const tmp<GeometricField<Type1, GeoMesh, PrimitiveField1>>& tgf1,          \
+    const tmp<GeometricField<Type2, GeoMesh, PrimitiveField2>>& tgf2           \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();            \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();            \
+    const GeometricField<Type1, GeoMesh, PrimitiveField1>& gf1 = tgf1();       \
+    const GeometricField<Type2, GeoMesh, PrimitiveField2>& gf2 = tgf2();       \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
         reuseTmpTmpGeometricField                                              \
-        <ReturnType, Type1, Type2, PatchField, GeoMesh>::New                   \
+        <                                                                      \
+            ReturnType,                                                        \
+            Type1,                                                             \
+            Type2,                                                             \
+            GeoMesh,                                                           \
+            PrimitiveField1,                                                   \
+            PrimitiveField2                                                    \
+        >::New                                                                 \
         (                                                                      \
             tgf1,                                                              \
             tgf2,                                                              \
@@ -288,12 +299,12 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 
 #define BINARY_TYPE_FUNCTION_SF(ReturnType, Type1, Type2, Func)                \
                                                                                \
-TEMPLATE                                                                       \
+TEMPLATE2                                                                      \
 void Func                                                                      \
 (                                                                              \
-    GeometricField<ReturnType, PatchField, GeoMesh>& res,                      \
+    GeometricField<ReturnType, GeoMesh, PrimitiveField1>& res,                 \
     const dimensioned<Type1>& dt1,                                             \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    const GeometricField<Type2, GeoMesh, PrimitiveField2>& gf2                 \
 )                                                                              \
 {                                                                              \
     Foam::Func(res.primitiveFieldRef(), dt1.value(), gf2.primitiveField());    \
@@ -301,15 +312,15 @@ void Func                                                                      \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
     const dimensioned<Type1>& dt1,                                             \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    const GeometricField<Type2, GeoMesh, PrimitiveField>& gf2                  \
 )                                                                              \
 {                                                                              \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
+        GeometricField<ReturnType, GeoMesh, Field>::New                        \
         (                                                                      \
             #Func "(" + dt1.name() + ',' + gf2.name() + ')',                   \
             gf2.mesh(),                                                        \
@@ -323,10 +334,10 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
     const Type1& t1,                                                           \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    const GeometricField<Type2, GeoMesh, PrimitiveField>& gf2                  \
 )                                                                              \
 {                                                                              \
     return Func(dimensioned<Type1>(t1), gf2);                                  \
@@ -334,17 +345,18 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
                                                                                \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
     const dimensioned<Type1>& dt1,                                             \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+    const tmp<GeometricField<Type2, GeoMesh, PrimitiveField>>& tgf2            \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();            \
+    const GeometricField<Type2, GeoMesh, PrimitiveField>& gf2 = tgf2();        \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        reuseTmpGeometricField<ReturnType, Type2, PatchField, GeoMesh>::New    \
+        reuseTmpGeometricField                                                 \
+        <ReturnType, Type2, GeoMesh, PrimitiveField>::New                      \
         (                                                                      \
             tgf2,                                                              \
             #Func "(" + dt1.name() + gf2.name() + ',' + ')',                   \
@@ -360,10 +372,10 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
     const Type1& t1,                                                           \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+    const tmp<GeometricField<Type2, GeoMesh, PrimitiveField>>& tgf2            \
 )                                                                              \
 {                                                                              \
     return Func(dimensioned<Type1>(t1), tgf2);                                 \
@@ -372,11 +384,11 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 
 #define BINARY_TYPE_FUNCTION_FS(ReturnType, Type1, Type2, Func)                \
                                                                                \
-TEMPLATE                                                                       \
+TEMPLATE2                                                                      \
 void Func                                                                      \
 (                                                                              \
-    GeometricField<ReturnType, PatchField, GeoMesh>& res,                      \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    GeometricField<ReturnType, GeoMesh, PrimitiveField1>& res,                 \
+    const GeometricField<Type1, GeoMesh, PrimitiveField2>& gf1,                \
     const dimensioned<Type2>& dt2                                              \
 )                                                                              \
 {                                                                              \
@@ -385,15 +397,15 @@ void Func                                                                      \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    const GeometricField<Type1, GeoMesh, PrimitiveField>& gf1,                 \
     const dimensioned<Type2>& dt2                                              \
 )                                                                              \
 {                                                                              \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
+        GeometricField<ReturnType, GeoMesh, Field>::New                        \
         (                                                                      \
             #Func "(" + gf1.name() + ',' + dt2.name() + ')',                   \
             gf1.mesh(),                                                        \
@@ -407,9 +419,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    const GeometricField<Type1, GeoMesh, PrimitiveField>& gf1,                 \
     const Type2& t2                                                            \
 )                                                                              \
 {                                                                              \
@@ -418,17 +430,18 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
                                                                                \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
+    const tmp<GeometricField<Type1, GeoMesh, PrimitiveField>>& tgf1,           \
     const dimensioned<Type2>& dt2                                              \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();            \
+    const GeometricField<Type1, GeoMesh, PrimitiveField>& gf1 = tgf1();        \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        reuseTmpGeometricField<ReturnType, Type1, PatchField, GeoMesh>::New    \
+        reuseTmpGeometricField                                                 \
+        <ReturnType, Type1, GeoMesh, PrimitiveField>::New                      \
         (                                                                      \
             tgf1,                                                              \
             #Func "(" + gf1.name() + ',' + dt2.name() + ')',                   \
@@ -444,9 +457,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> Func                           \
 (                                                                              \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
+    const tmp<GeometricField<Type1, GeoMesh, PrimitiveField>>& tgf1,           \
     const Type2& t2                                                            \
 )                                                                              \
 {                                                                              \
@@ -463,12 +476,12 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
 
 #define BINARY_OPERATOR(ReturnType, Type1, Type2, Op, OpName, OpFunc)          \
                                                                                \
-TEMPLATE                                                                       \
+TEMPLATE3                                                                      \
 void OpFunc                                                                    \
 (                                                                              \
-    GeometricField<ReturnType, PatchField, GeoMesh>& res,                      \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    GeometricField<ReturnType, GeoMesh, PrimitiveField1>& res,                 \
+    const GeometricField<Type1, GeoMesh, PrimitiveField2>& gf1,                \
+    const GeometricField<Type2, GeoMesh, PrimitiveField3>& gf2                 \
 )                                                                              \
 {                                                                              \
     Foam::OpFunc                                                               \
@@ -477,16 +490,16 @@ void OpFunc                                                                    \
     (res.boundaryFieldRef(), gf1.boundaryField(), gf2.boundaryField());        \
 }                                                                              \
                                                                                \
-TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+TEMPLATE2                                                                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    const GeometricField<Type1, GeoMesh, PrimitiveField1>& gf1,                \
+    const GeometricField<Type2, GeoMesh, PrimitiveField2>& gf2                 \
 )                                                                              \
 {                                                                              \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
+        GeometricField<ReturnType, GeoMesh, Field>::New                        \
         (                                                                      \
             '(' + gf1.name() + OpName + gf2.name() + ')',                      \
             gf1.mesh(),                                                        \
@@ -499,18 +512,19 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+TEMPLATE2                                                                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+    const GeometricField<Type1, GeoMesh, PrimitiveField1>& gf1,                \
+    const tmp<GeometricField<Type2, GeoMesh, PrimitiveField2>>& tgf2           \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();            \
+    const GeometricField<Type2, GeoMesh, PrimitiveField2>& gf2 = tgf2();       \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        reuseTmpGeometricField<ReturnType, Type2, PatchField, GeoMesh>::New    \
+        reuseTmpGeometricField                                                 \
+        <ReturnType, Type2, GeoMesh, PrimitiveField2>::New                     \
         (                                                                      \
             tgf2,                                                              \
             '(' + gf1.name() + OpName + gf2.name() + ')',                      \
@@ -525,18 +539,19 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+TEMPLATE2                                                                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    const tmp<GeometricField<Type1, GeoMesh, PrimitiveField1>>& tgf1,          \
+    const GeometricField<Type2, GeoMesh, PrimitiveField2>& gf2                 \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();            \
+    const GeometricField<Type1, GeoMesh, PrimitiveField1>& gf1 = tgf1();       \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        reuseTmpGeometricField<ReturnType, Type1, PatchField, GeoMesh>::New    \
+        reuseTmpGeometricField                                                 \
+        <ReturnType, Type1, GeoMesh, PrimitiveField1>::New                     \
         (                                                                      \
             tgf1,                                                              \
             '(' + gf1.name() + OpName + gf2.name() + ')',                      \
@@ -551,20 +566,27 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
     return tRes;                                                               \
 }                                                                              \
                                                                                \
-TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+TEMPLATE2                                                                      \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+    const tmp<GeometricField<Type1, GeoMesh, PrimitiveField1>>& tgf1,          \
+    const tmp<GeometricField<Type2, GeoMesh, PrimitiveField2>>& tgf2           \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();            \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();            \
+    const GeometricField<Type1, GeoMesh, PrimitiveField1>& gf1 = tgf1();       \
+    const GeometricField<Type2, GeoMesh, PrimitiveField2>& gf2 = tgf2();       \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
         reuseTmpTmpGeometricField                                              \
-        <ReturnType, Type1, Type2, PatchField, GeoMesh>::New                   \
+        <                                                                      \
+            ReturnType,                                                        \
+            Type1,                                                             \
+            Type2,                                                             \
+            GeoMesh,                                                           \
+            PrimitiveField1,                                                   \
+            PrimitiveField2                                                    \
+        >::New                                                                 \
         (                                                                      \
             tgf1,                                                              \
             tgf2,                                                              \
@@ -586,12 +608,12 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 
 #define BINARY_TYPE_OPERATOR_SF(ReturnType, Type1, Type2, Op, OpName, OpFunc)  \
                                                                                \
-TEMPLATE                                                                       \
+TEMPLATE2                                                                      \
 void OpFunc                                                                    \
 (                                                                              \
-    GeometricField<ReturnType, PatchField, GeoMesh>& res,                      \
+    GeometricField<ReturnType, GeoMesh, PrimitiveField1>& res,                 \
     const dimensioned<Type1>& dt1,                                             \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    const GeometricField<Type2, GeoMesh, PrimitiveField2>& gf2                 \
 )                                                                              \
 {                                                                              \
     Foam::OpFunc(res.primitiveFieldRef(), dt1.value(), gf2.primitiveField());  \
@@ -599,15 +621,15 @@ void OpFunc                                                                    \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
     const dimensioned<Type1>& dt1,                                             \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    const GeometricField<Type2, GeoMesh, PrimitiveField>& gf2                  \
 )                                                                              \
 {                                                                              \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
+        GeometricField<ReturnType, GeoMesh, Field>::New                        \
         (                                                                      \
             '(' + dt1.name() + OpName + gf2.name() + ')',                      \
             gf2.mesh(),                                                        \
@@ -621,10 +643,10 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
     const Type1& t1,                                                           \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
+    const GeometricField<Type2, GeoMesh, PrimitiveField>& gf2                  \
 )                                                                              \
 {                                                                              \
     return dimensioned<Type1>(t1) Op gf2;                                      \
@@ -632,17 +654,18 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
                                                                                \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
     const dimensioned<Type1>& dt1,                                             \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+    const tmp<GeometricField<Type2, GeoMesh, PrimitiveField>>& tgf2            \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type2, PatchField, GeoMesh>& gf2 = tgf2();            \
+    const GeometricField<Type2, GeoMesh, PrimitiveField>& gf2 = tgf2();        \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        reuseTmpGeometricField<ReturnType, Type2, PatchField, GeoMesh>::New    \
+        reuseTmpGeometricField                                                 \
+        <ReturnType, Type2, GeoMesh, PrimitiveField>::New                      \
         (                                                                      \
             tgf2,                                                              \
             '(' + dt1.name() + OpName + gf2.name() + ')',                      \
@@ -658,10 +681,10 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
     const Type1& t1,                                                           \
-    const tmp<GeometricField<Type2, PatchField, GeoMesh>>& tgf2                \
+    const tmp<GeometricField<Type2, GeoMesh, PrimitiveField>>& tgf2\
 )                                                                              \
 {                                                                              \
     return dimensioned<Type1>(t1) Op tgf2;                                     \
@@ -670,11 +693,11 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 
 #define BINARY_TYPE_OPERATOR_FS(ReturnType, Type1, Type2, Op, OpName, OpFunc)  \
                                                                                \
-TEMPLATE                                                                       \
+TEMPLATE2                                                                      \
 void OpFunc                                                                    \
 (                                                                              \
-    GeometricField<ReturnType, PatchField, GeoMesh>& res,                      \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    GeometricField<ReturnType, GeoMesh, PrimitiveField1>& res,                 \
+    const GeometricField<Type1, GeoMesh, PrimitiveField2>& gf1,                \
     const dimensioned<Type2>& dt2                                              \
 )                                                                              \
 {                                                                              \
@@ -683,15 +706,15 @@ void OpFunc                                                                    \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    const GeometricField<Type1, GeoMesh, PrimitiveField>& gf1,                 \
     const dimensioned<Type2>& dt2                                              \
 )                                                                              \
 {                                                                              \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        GeometricField<ReturnType, PatchField, GeoMesh>::New                   \
+        GeometricField<ReturnType, GeoMesh, Field>::New                        \
         (                                                                      \
             '(' + gf1.name() + OpName + dt2.name() + ')',                      \
             gf1.mesh(),                                                        \
@@ -705,9 +728,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1,                     \
+    const GeometricField<Type1, GeoMesh, PrimitiveField>& gf1,                 \
     const Type2& t2                                                            \
 )                                                                              \
 {                                                                              \
@@ -716,17 +739,18 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
                                                                                \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
+    const tmp<GeometricField<Type1, GeoMesh, PrimitiveField>>& tgf1,           \
     const dimensioned<Type2>& dt2                                              \
 )                                                                              \
 {                                                                              \
-    const GeometricField<Type1, PatchField, GeoMesh>& gf1 = tgf1();            \
+    const GeometricField<Type1, GeoMesh, PrimitiveField>& gf1 = tgf1();        \
                                                                                \
-    tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
+    tmp<GeometricField<ReturnType, GeoMesh, Field>> tRes                       \
     (                                                                          \
-        reuseTmpGeometricField<ReturnType, Type1, PatchField, GeoMesh>::New    \
+        reuseTmpGeometricField                                                 \
+        <ReturnType, Type1, GeoMesh, PrimitiveField>::New                      \
         (                                                                      \
             tgf1,                                                              \
             '(' + gf1.name() + OpName + dt2.name() + ')',                      \
@@ -742,9 +766,9 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 }                                                                              \
                                                                                \
 TEMPLATE                                                                       \
-tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
+tmp<GeometricField<ReturnType, GeoMesh, Field>> operator Op                    \
 (                                                                              \
-    const tmp<GeometricField<Type1, PatchField, GeoMesh>>& tgf1,               \
+    const tmp<GeometricField<Type1, GeoMesh, PrimitiveField>>& tgf1,           \
     const Type2& t2                                                            \
 )                                                                              \
 {                                                                              \

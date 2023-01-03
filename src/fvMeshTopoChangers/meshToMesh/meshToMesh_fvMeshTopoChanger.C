@@ -282,16 +282,12 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
 
         // Set all the surfaceFields in the objectRegistry to NaN
         #define NaNSurfaceFieldType(Type, nullArg)                             \
-            NaNGeometricFields                                                 \
-            <Type, fvsPatchField, surfaceMesh>                                 \
-            (mesh(), mapper);
+            NaNGeometricFields<Type, surfaceMesh>(mesh());
         FOR_ALL_FIELD_TYPES(NaNSurfaceFieldType);
 
         // Set all the pointFields in the objectRegistry to NaN
         #define NaNPointFieldType(Type, nullArg)                               \
-            NaNGeometricFields                                                 \
-            <Type, pointPatchField, pointMesh>                                 \
-            (mesh(), mapper);
+            NaNGeometricFields<Type, pointMesh>(mesh());
         FOR_ALL_FIELD_TYPES(NaNPointFieldType);
 
         // Interpolate U's to Uf's

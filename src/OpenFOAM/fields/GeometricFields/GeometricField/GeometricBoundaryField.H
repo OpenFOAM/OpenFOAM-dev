@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,8 @@ SourceFiles
 #include "dimensionedTypes.H"
 #include "DimensionedField.H"
 #include "FieldField.H"
+#include "lduInterfaceFieldPtrsList.H"
+#include "LduInterfaceFieldPtrsList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,19 +48,14 @@ namespace Foam
 
 class dictionary;
 
-// Forward declaration of friend functions and operators
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-class GeometricField;
-
 /*---------------------------------------------------------------------------*\
                        Class GeometricBoundaryField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 class GeometricBoundaryField
 :
-    public FieldField<PatchField, Type>
+    public FieldField<GeoMesh::template PatchField, Type>
 {
 public:
 
@@ -68,7 +65,10 @@ public:
         typedef typename GeoMesh::BoundaryMesh BoundaryMesh;
 
         //- Type of the internal field from which this GeometricField is derived
-        typedef DimensionedField<Type, GeoMesh> Internal;
+        typedef DimensionedField<Type, GeoMesh, PrimitiveField> Internal;
+
+        //- Type of the patch field of which the Boundary is composed
+        typedef typename GeoMesh::template PatchField<Type> Patch;
 
 
 private:
@@ -80,6 +80,11 @@ private:
 
 
 public:
+
+    //- Declare friendship with other geometric boundary fields
+    template<class Type2, class GeoMesh2, template<class> class PrimitiveField2>
+    friend class GeometricBoundaryField;
+
 
     // Constructors
 
@@ -110,16 +115,24 @@ public:
 
         //- Construct from a BoundaryMesh,
         //  reference to the internal field
-        //  and a PtrList<PatchField<Type>>
+        //  and a PtrList<Patch>
         GeometricBoundaryField
         (
             const BoundaryMesh&,
             const Internal&,
-            const PtrList<PatchField<Type>>&
+            const PtrList<Patch>&
         );
 
         //- Construct as copy setting the reference to the internal field
         GeometricBoundaryField(const Internal&, const GeometricBoundaryField&);
+
+        //- Construct as copy setting the reference to the internal field
+        template<template<class> class PrimitiveField2>
+        explicit GeometricBoundaryField
+        (
+            const Internal& field,
+            const GeometricBoundaryField<Type, GeoMesh, PrimitiveField2>& btf
+        );
 
         //- Copy constructor deleted
         //  as it would not set the internalField reference correctly
@@ -169,7 +182,7 @@ public:
 
         //- Reset the boundary field contents to the given field
         //  Used for mesh to mesh mapping
-        void reset(const GeometricBoundaryField<Type, PatchField, GeoMesh>&);
+        void reset(const GeometricBoundaryField&);
 
         //- Write boundary field as dictionary entry
         void writeEntry(const word& keyword, Ostream& os) const;
@@ -183,8 +196,8 @@ public:
         //- Move assignment operator
         void operator=(GeometricBoundaryField&&);
 
-        //- Assignment to FieldField<PatchField, Type>
-        void operator=(const FieldField<PatchField, Type>&);
+        //- Assignment to FieldField<GeoMesh::template PatchField, Type>
+        void operator=(const FieldField<GeoMesh::template PatchField, Type>&);
 
         //- Assignment to FieldField<OtherPatchField, Type>
         template<template<class> class OtherPatchField>
@@ -193,13 +206,12 @@ public:
         //- Assignment to Type
         void operator=(const Type&);
 
-
         //- Forced assignment to
-        //  BoundaryField<Type, PatchField, BoundaryMesh>
+        //  BoundaryField<Type, GeoMesh::template PatchField, BoundaryMesh>
         void operator==(const GeometricBoundaryField&);
 
-        //- Forced assignment to FieldField<PatchField, Type>
-        void operator==(const FieldField<PatchField, Type>&);
+        //- Forced assignment to FieldField<GeoMesh::template PatchField, Type>
+        void operator==(const FieldField<GeoMesh::template PatchField, Type>&);
 
         //- Forced assignment to FieldField<OtherPatchField, Type>
         template<template<class> class OtherPatchField>
@@ -210,11 +222,11 @@ public:
 };
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Ostream& operator<<
 (
     Ostream&,
-    const GeometricBoundaryField<Type, PatchField, GeoMesh>&
+    const GeometricBoundaryField<Type, GeoMesh, PrimitiveField>&
 );
 
 

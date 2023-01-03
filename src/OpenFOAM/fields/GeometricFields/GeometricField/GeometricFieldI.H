@@ -27,46 +27,45 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-inline const Foam::GeometricField<Type, PatchField, GeoMesh>&
-Foam::GeometricField<Type, PatchField, GeoMesh>::null()
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+inline const Foam::GeometricField<Type, GeoMesh, PrimitiveField>&
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::null()
 {
-    return NullObjectRef<GeometricField<Type, PatchField, GeoMesh>>();
+    return NullObjectRef<GeometricField<Type, GeoMesh, PrimitiveField>>();
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 inline const typename
-Foam::GeometricField<Type, PatchField, GeoMesh>::Internal&
-Foam::GeometricField<Type, PatchField, GeoMesh>::
-internalField() const
-{
-    return *this;
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-inline const typename
-Foam::GeometricField<Type, PatchField, GeoMesh>::Internal::FieldType&
-Foam::GeometricField<Type, PatchField, GeoMesh>::primitiveField() const
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::Internal&
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::internalField() const
 {
     return *this;
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 inline const typename
-Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary&
-Foam::GeometricField<Type, PatchField, GeoMesh>::boundaryField() const
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::Internal::FieldType&
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::primitiveField() const
+{
+    return *this;
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+inline const typename
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::Boundary&
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::boundaryField() const
 {
     return boundaryField_;
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 inline const typename
-Foam::GeometricField<Type, PatchField, GeoMesh>::Sources&
-Foam::GeometricField<Type, PatchField, GeoMesh>::sources() const
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::Sources&
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::sources() const
 {
     return sources_;
 }
@@ -74,11 +73,10 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::sources() const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template<class Type, template<class> class PatchField, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 inline const typename
-Foam::GeometricField<Type, PatchField, GeoMesh>::Internal&
-Foam::GeometricField<Type, PatchField, GeoMesh>::
-operator()() const
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::Internal&
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::operator()() const
 {
     return *this;
 }

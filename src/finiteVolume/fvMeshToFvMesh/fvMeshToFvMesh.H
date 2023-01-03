@@ -58,8 +58,7 @@ private:
         //- Alias for surface boundary fields to reduce verbosity of method
         //  definitions below
         template<class Type>
-        using SurfaceFieldBoundary =
-            GeometricBoundaryField<Type, fvsPatchField, surfaceMesh>;
+        using SurfaceFieldBoundary = GeometricBoundaryField<Type, surfaceMesh>;
 
 
     // Private Data

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,7 @@ SourceFiles
 #ifndef volFields_H
 #define volFields_H
 
+#include "GeometricField.H"
 #include "GeometricFields.H"
 #include "volMesh.H"
 #include "fvMesh.H"
@@ -50,17 +51,18 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<>
-tmp<VolField<scalar>>
-VolField<scalar>::component
+inline tmp<VolField<scalar>>
+GeometricField<scalar, volMesh>::component
 (
     const direction
 ) const;
 
 template<>
-void VolField<scalar>::replace
+template<template<class> class PrimitiveField>
+inline void GeometricField<scalar, volMesh>::replace
 (
     const direction,
-    const VolField<scalar>& sf
+    const GeometricField<scalar, volMesh, PrimitiveField>& sf
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

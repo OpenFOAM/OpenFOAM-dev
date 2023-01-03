@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -270,15 +270,15 @@ Foam::fvc::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::FieldField<Foam::fvsPatchField, Type>>
+Foam::tmp<Foam::FieldField<Foam::surfaceMesh::PatchField, Type>>
 Foam::fvc::interpolate
 (
-    const FieldField<fvPatchField, Type>& fvpff
+    const FieldField<volMesh::PatchField, Type>& fvpff
 )
 {
-    FieldField<fvsPatchField, Type>* fvspffPtr
+    FieldField<surfaceMesh::PatchField, Type>* fvspffPtr
     (
-        new FieldField<fvsPatchField, Type>(fvpff.size())
+        new FieldField<surfaceMesh::PatchField, Type>(fvpff.size())
     );
 
     forAll(*fvspffPtr, patchi)
@@ -286,23 +286,27 @@ Foam::fvc::interpolate
         fvspffPtr->set
         (
             patchi,
-            fvsPatchField<Type>::NewCalculatedType(fvpff[patchi].patch()).ptr()
+            surfaceMesh::PatchField<Type>::NewCalculatedType
+            (
+                fvpff[patchi].patch()
+            ).ptr()
         );
         (*fvspffPtr)[patchi] = fvpff[patchi];
     }
 
-    return tmp<FieldField<fvsPatchField, Type>>(fvspffPtr);
+    return tmp<FieldField<surfaceMesh::PatchField, Type>>(fvspffPtr);
 }
 
 
 template<class Type>
-Foam::tmp<Foam::FieldField<Foam::fvsPatchField, Type>>
+Foam::tmp<Foam::FieldField<Foam::surfaceMesh::PatchField, Type>>
 Foam::fvc::interpolate
 (
-    const tmp<FieldField<fvPatchField, Type>>& tfvpff
+    const tmp<FieldField<volMesh::PatchField, Type>>& tfvpff
 )
 {
-    tmp<FieldField<fvsPatchField, Type>> tfvspff = interpolate(tfvpff());
+    tmp<FieldField<surfaceMesh::PatchField, Type>> tfvspff =
+        interpolate(tfvpff());
     tfvpff.clear();
     return tfvspff;
 }

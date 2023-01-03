@@ -368,14 +368,14 @@ inline void addField
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-PtrList<GeometricField<Type, PatchField, GeoMesh>> operator&
+template<class Type, class GeoMesh>
+PtrList<GeometricField<Type, GeoMesh>> operator&
 (
-    const PtrList<PtrList<GeometricField<scalar, PatchField, GeoMesh>>>& As,
-    const UPtrList<GeometricField<Type, PatchField, GeoMesh>>& fs
+    const PtrList<PtrList<GeometricField<scalar, GeoMesh>>>& As,
+    const UPtrList<GeometricField<Type, GeoMesh>>& fs
 )
 {
-    PtrList<GeometricField<Type, PatchField, GeoMesh >> Afs(fs.size());
+    PtrList<GeometricField<Type, GeoMesh>> Afs(fs.size());
 
     forAll(Afs, i)
     {
