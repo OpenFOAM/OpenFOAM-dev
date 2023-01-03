@@ -68,7 +68,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        alpha1*fvc::div(phi)
+        alpha1()*fvc::div(phi)()()
     ),
 
     pressureReference_

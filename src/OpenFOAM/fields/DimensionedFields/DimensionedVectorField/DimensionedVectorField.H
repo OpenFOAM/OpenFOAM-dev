@@ -38,7 +38,14 @@ SourceFiles
 #include "DimensionedField.H"
 #include "vector.H"
 
-#define TEMPLATE template<class GeoMesh>
+#define TEMPLATE template<class GeoMesh, template<class> class PrimitiveField>
+#define TEMPLATE2                                                              \
+    template                                                                   \
+    <                                                                          \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField1,                                 \
+        template<class> class PrimitiveField2                                  \
+    >
 #include "DimensionedFieldFunctionsM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -128,7 +128,7 @@ void Foam::solvers::compressibleMultiphaseVoF::prePredictor()
     forAll(mixture.phases(), phasei)
     {
         const volScalarField& rho = phases[phasei].thermo().rho();
-        contErr.ref() -= fvModels().source(phases[phasei], rho)&rho;
+        contErr.ref() -= (fvModels().source(phases[phasei], rho)&rho)();
     }
 
     if (pimple.predictTransport())

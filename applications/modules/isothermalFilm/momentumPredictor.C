@@ -79,7 +79,7 @@ Foam::solvers::isothermalFilm::pe() const
     // Add the pressure caused normal momentum sources (e.g., parcels impinging
     // with a normal velocity)
     p.internalFieldRef() +=
-        VbyA*(nHat & (fvModels().source(alpha, rho, U) & U));
+        VbyA.v()*(nHat.v() & (fvModels().source(alpha, rho, U) & U)->v());
 
     return p;
 }

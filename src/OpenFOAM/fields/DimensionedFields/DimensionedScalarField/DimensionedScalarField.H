@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,14 @@ SourceFiles
 #include "DimensionedField.H"
 #include "scalar.H"
 
-#define TEMPLATE template<class GeoMesh>
+#define TEMPLATE template<class GeoMesh, template<class> class PrimitiveField>
+#define TEMPLATE2                                                              \
+    template                                                                   \
+    <                                                                          \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField1,                                 \
+        template<class> class PrimitiveField2                                  \
+    >
 #include "DimensionedFieldFunctionsM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,17 +55,17 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> stabilise
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> stabilise
 (
-    const DimensionedField<scalar, GeoMesh>&,
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>&,
     const dimensioned<scalar>&
 );
 
 template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> stabilise
+tmp<DimensionedField<scalar, GeoMesh, Field>> stabilise
 (
-    const tmp<DimensionedField<scalar, GeoMesh>>&,
+    const tmp<DimensionedField<scalar, GeoMesh, Field>>&,
     const dimensioned<scalar>&
 );
 
@@ -125,18 +132,18 @@ UNARY_FUNCTION(scalar, scalar, y1, trans)
 
 #define BesselFunc(func)                                                       \
                                                                                \
-template<class GeoMesh>                                                        \
-tmp<DimensionedField<scalar, GeoMesh>> func                                    \
+template<class GeoMesh, template<class> class PrimitiveField>                  \
+tmp<DimensionedField<scalar, GeoMesh, Field>> func                             \
 (                                                                              \
     const int n,                                                               \
-    const DimensionedField<scalar, GeoMesh>&                                   \
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>&                   \
 );                                                                             \
                                                                                \
 template<class GeoMesh>                                                        \
-tmp<DimensionedField<scalar, GeoMesh>> func                                    \
+tmp<DimensionedField<scalar, GeoMesh, Field>> func                             \
 (                                                                              \
     const int n,                                                               \
-    const tmp<DimensionedField<scalar, GeoMesh>>&                              \
+    const tmp<DimensionedField<scalar, GeoMesh, Field>>&                       \
 );
 
 BesselFunc(jn)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,21 @@ License
 
 #include "DimensionedScalarField.H"
 
-#define TEMPLATE template<class Type, class GeoMesh>
+#define TEMPLATE                                                               \
+    template                                                                   \
+    <                                                                          \
+        class Type,                                                            \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField                                   \
+    >
+#define TEMPLATE2                                                              \
+    template                                                                   \
+    <                                                                          \
+        class Type,                                                            \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField1,                                 \
+        template<class> class PrimitiveField2                                  \
+    >
 #include "DimensionedFieldFunctionsM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -35,84 +49,120 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * Global functions  * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh, direction r>
-tmp<DimensionedField<typename powProduct<Type, r>::type, GeoMesh>>
+template
+<
+    class Type,
+    class GeoMesh,
+    template<class> class PrimitiveField,
+    direction r
+>
+tmp<DimensionedField<typename powProduct<Type, r>::type, GeoMesh, Field>>
 pow
 (
-    const DimensionedField<Type, GeoMesh>& df,
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df,
     typename powProduct<Type, r>::type
 );
 
-template<class Type, class GeoMesh, direction r>
-tmp<DimensionedField<typename powProduct<Type, r>::type, GeoMesh>>
+template
+<
+    class Type,
+    class GeoMesh,
+    template<class> class PrimitiveField,
+    direction r
+>
+tmp<DimensionedField<typename powProduct<Type, r>::type, GeoMesh, Field>>
 pow
 (
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf,
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf,
     typename powProduct<Type, r>::type
 );
 
-template<class Type, class GeoMesh>
-tmp<DimensionedField<typename outerProduct<Type, Type>::type, GeoMesh>>
-sqr(const DimensionedField<Type, GeoMesh>& df);
-
-template<class Type, class GeoMesh>
-tmp<DimensionedField<typename outerProduct<Type, Type>::type, GeoMesh>>
-sqr(const tmp<DimensionedField<Type, GeoMesh>>& tdf);
-
-template<class Type, class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> magSqr
-(
-    const DimensionedField<Type, GeoMesh>& df
-);
-
-template<class Type, class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> magSqr
-(
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf
-);
-
-template<class Type, class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> mag
-(
-    const DimensionedField<Type, GeoMesh>& df
-);
-
-template<class Type, class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> mag
-(
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf
-);
-
-template<class Type, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 tmp
 <
     DimensionedField
-        <typename DimensionedField<Type, GeoMesh>::cmptType, GeoMesh>
+    <
+        typename outerProduct<Type, Type>::type,
+        GeoMesh,
+        Field
+    >
 >
-cmptAv(const DimensionedField<Type, GeoMesh>& df);
+sqr(const DimensionedField<Type, GeoMesh, PrimitiveField>& df);
 
-template<class Type, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 tmp
 <
     DimensionedField
-        <typename DimensionedField<Type, GeoMesh>::cmptType, GeoMesh>
+    <
+        typename outerProduct<Type, Type>::type,
+        GeoMesh,
+        Field
+    >
 >
-cmptAv(const tmp<DimensionedField<Type, GeoMesh>>& tdf);
+sqr(const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf);
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> magSqr
+(
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df
+);
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> magSqr
+(
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf
+);
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> mag
+(
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df
+);
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> mag
+(
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf
+);
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+tmp
+<
+    DimensionedField
+    <
+        typename DimensionedField<Type, GeoMesh, PrimitiveField>::cmptType,
+        GeoMesh,
+        Field
+    >
+>
+cmptAv(const DimensionedField<Type, GeoMesh, PrimitiveField>& df);
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+tmp
+<
+    DimensionedField
+    <
+        typename DimensionedField<Type, GeoMesh, PrimitiveField>::cmptType,
+        GeoMesh,
+        Field
+    >
+>
+cmptAv(const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf);
 
 UNARY_FUNCTION(Type, Type, cmptMag, cmptMag);
 
 
 #define UNARY_REDUCTION_FUNCTION(returnType, func, dfunc)                      \
                                                                                \
-template<class Type, class GeoMesh>                                            \
+template<class Type, class GeoMesh, template<class> class PrimitiveField>      \
 dimensioned<returnType> func                                                   \
 (                                                                              \
-    const DimensionedField<Type, GeoMesh>& df                                  \
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df                  \
 );                                                                             \
-template<class Type, class GeoMesh>                                            \
+template<class Type, class GeoMesh, template<class> class PrimitiveField>      \
 dimensioned<returnType> func                                                   \
 (                                                                              \
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf1                           \
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf1           \
 );
 
 UNARY_REDUCTION_FUNCTION(Type, max, gMax)
@@ -153,100 +203,216 @@ BINARY_TYPE_OPERATOR_FS(Type, Type, scalar, /, '|', divide)
 
 #define PRODUCT_OPERATOR(product, op, opFunc)                                  \
                                                                                \
-template<class Type1, class Type2, class GeoMesh>                              \
-tmp<DimensionedField<typename product<Type1, Type2>::type, GeoMesh>>           \
+template                                                                       \
+<                                                                              \
+    class Type1,                                                               \
+    class Type2,                                                               \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField1,                                     \
+    template<class> class PrimitiveField2                                      \
+>                                                                              \
+tmp                                                                            \
+<                                                                              \
+    DimensionedField                                                           \
+    <                                                                          \
+        typename product<Type1, Type2>::type,                                  \
+        GeoMesh,                                                               \
+        Field                                                                  \
+    >                                                                          \
+>                                                                              \
 operator op                                                                    \
 (                                                                              \
-    const DimensionedField<Type1, GeoMesh>& df1,                               \
-    const DimensionedField<Type2, GeoMesh>& df2                                \
+    const DimensionedField<Type1, GeoMesh, PrimitiveField1>& df1,              \
+    const DimensionedField<Type2, GeoMesh, PrimitiveField2>& df2               \
 );                                                                             \
                                                                                \
-template<class Type1, class Type2, class GeoMesh>                              \
-tmp<DimensionedField<typename product<Type1, Type2>::type, GeoMesh>>           \
+template                                                                       \
+<                                                                              \
+    class Type1,                                                               \
+    class Type2,                                                               \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField1,                                     \
+    template<class> class PrimitiveField2                                      \
+>                                                                              \
+tmp                                                                            \
+<                                                                              \
+    DimensionedField                                                           \
+    <                                                                          \
+        typename product<Type1, Type2>::type,                                  \
+        GeoMesh,                                                               \
+        Field                                                                  \
+    >                                                                          \
+>                                                                              \
 operator op                                                                    \
 (                                                                              \
-    const DimensionedField<Type1, GeoMesh>& df1,                               \
-    const tmp<DimensionedField<Type2, GeoMesh>>& tdf2                          \
+    const DimensionedField<Type1, GeoMesh, PrimitiveField1>& df1,              \
+    const tmp<DimensionedField<Type2, GeoMesh, PrimitiveField2>>& tdf2         \
 );                                                                             \
                                                                                \
-template<class Type1, class Type2, class GeoMesh>                              \
-tmp<DimensionedField<typename product<Type1, Type2>::type, GeoMesh>>           \
+template                                                                       \
+<                                                                              \
+    class Type1,                                                               \
+    class Type2,                                                               \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField1,                                     \
+    template<class> class PrimitiveField2                                      \
+>                                                                              \
+tmp                                                                            \
+<                                                                              \
+    DimensionedField                                                           \
+    <                                                                          \
+        typename product<Type1, Type2>::type,                                  \
+        GeoMesh,                                                               \
+        Field                                                                  \
+    >                                                                          \
+>                                                                              \
 operator op                                                                    \
 (                                                                              \
-    const tmp<DimensionedField<Type1, GeoMesh>>& tdf1,                         \
-    const DimensionedField<Type2, GeoMesh>& df2                                \
+    const tmp<DimensionedField<Type1, GeoMesh, PrimitiveField1>>& tdf1,        \
+    const DimensionedField<Type2, GeoMesh, PrimitiveField2>& df2               \
 );                                                                             \
                                                                                \
-template<class Type1, class Type2, class GeoMesh>                              \
-tmp<DimensionedField<typename product<Type1, Type2>::type, GeoMesh>>           \
+template                                                                       \
+<                                                                              \
+    class Type1,                                                               \
+    class Type2,                                                               \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField1,                                     \
+    template<class> class PrimitiveField2                                      \
+>                                                                              \
+tmp                                                                            \
+<                                                                              \
+    DimensionedField                                                           \
+    <                                                                          \
+        typename product<Type1, Type2>::type,                                  \
+        GeoMesh,                                                               \
+        Field                                                                  \
+    >                                                                          \
+>                                                                              \
 operator op                                                                    \
 (                                                                              \
-    const tmp<DimensionedField<Type1, GeoMesh>>& tdf1,                         \
-    const tmp<DimensionedField<Type2, GeoMesh>>& tdf2                          \
+    const tmp<DimensionedField<Type1, GeoMesh, PrimitiveField1>>& tdf1,        \
+    const tmp<DimensionedField<Type2, GeoMesh, PrimitiveField2>>& tdf2         \
 );                                                                             \
                                                                                \
-template<class Form, class Type, class GeoMesh>                                \
-tmp<DimensionedField<typename product<Type, Form>::type, GeoMesh>>             \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Type,                                                                \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField                                       \
+>                                                                              \
+tmp<DimensionedField<typename product<Type, Form>::type, GeoMesh, Field>>      \
 operator op                                                                    \
 (                                                                              \
-    const DimensionedField<Type, GeoMesh>& df1,                                \
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df1,                \
     const dimensioned<Form>& dvs                                               \
 );                                                                             \
                                                                                \
-template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
-tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type,                                                                \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField                                       \
+>                                                                              \
+tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh, Field>>      \
 operator op                                                                    \
 (                                                                              \
-    const DimensionedField<Type, GeoMesh>& df1,                                \
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df1,                \
     const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
 );                                                                             \
                                                                                \
-template<class Form, class Type, class GeoMesh>                                \
-tmp<DimensionedField<typename product<Type, Form>::type, GeoMesh>>             \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Type,                                                                \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField                                       \
+>                                                                              \
+tmp<DimensionedField<typename product<Type, Form>::type, GeoMesh, Field>>      \
 operator op                                                                    \
 (                                                                              \
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf1,                          \
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf1,          \
     const dimensioned<Form>& dvs                                               \
 );                                                                             \
                                                                                \
-template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
-tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type,                                                                \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField                                       \
+>                                                                              \
+tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh, Field>>      \
 operator op                                                                    \
 (                                                                              \
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf1,                          \
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf1,          \
     const VectorSpace<Form,Cmpt,nCmpt>& vs                                     \
 );                                                                             \
                                                                                \
-template<class Form, class Type, class GeoMesh>                                \
-tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Type,                                                                \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField                                       \
+>                                                                              \
+tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh, Field>>      \
 operator op                                                                    \
 (                                                                              \
     const dimensioned<Form>& dvs,                                              \
-    const DimensionedField<Type, GeoMesh>& df1                                 \
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df1                 \
 );                                                                             \
                                                                                \
-template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
-tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type,                                                                \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField                                       \
+>                                                                              \
+tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh, Field>>      \
 operator op                                                                    \
 (                                                                              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
-    const DimensionedField<Type, GeoMesh>& df1                                 \
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df1                 \
 );                                                                             \
                                                                                \
-template<class Form, class Type, class GeoMesh>                                \
-tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Type,                                                                \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField                                       \
+>                                                                              \
+tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh, Field>>      \
 operator op                                                                    \
 (                                                                              \
     const dimensioned<Form>& dvs,                                              \
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf1                           \
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf1           \
 );                                                                             \
                                                                                \
-template<class Form, class Cmpt, direction nCmpt, class Type, class GeoMesh>   \
-tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh>>             \
+template                                                                       \
+<                                                                              \
+    class Form,                                                                \
+    class Cmpt,                                                                \
+    direction nCmpt,                                                           \
+    class Type,                                                                \
+    class GeoMesh,                                                             \
+    template<class> class PrimitiveField                                       \
+>                                                                              \
+tmp<DimensionedField<typename product<Form, Type>::type, GeoMesh, Field>>      \
 operator op                                                                    \
 (                                                                              \
     const VectorSpace<Form,Cmpt,nCmpt>& vs,                                    \
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf1                           \
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf1           \
 );
 
 PRODUCT_OPERATOR(typeOfSum, +, add)

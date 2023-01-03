@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #ifndef surfPointFieldsFwd_H
 #define surfPointFieldsFwd_H
 
+#include "DimensionedFieldFwd.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -37,21 +38,14 @@ namespace Foam
 
 class surfPointGeoMesh;
 
-template<class Type, class GeoMesh>
-class DimensionedField;
-
-typedef DimensionedField<label, surfPointGeoMesh>
-    surfPointLabelField;
-typedef DimensionedField<scalar, surfPointGeoMesh>
-    surfPointScalarField;
-typedef DimensionedField<vector, surfPointGeoMesh>
-    surfPointVectorField;
-typedef DimensionedField<sphericalTensor, surfPointGeoMesh>
+typedef DimensionedField<label, surfPointGeoMesh, Field> surfPointLabelField;
+typedef DimensionedField<scalar, surfPointGeoMesh, Field> surfPointScalarField;
+typedef DimensionedField<vector, surfPointGeoMesh, Field> surfPointVectorField;
+typedef DimensionedField<sphericalTensor, surfPointGeoMesh, Field>
     surfPointSphericalTensorField;
-typedef DimensionedField<symmTensor, surfPointGeoMesh>
+typedef DimensionedField<symmTensor, surfPointGeoMesh, Field>
     surfPointSymmTensorField;
-typedef DimensionedField<tensor, surfPointGeoMesh>
-    surfPointTensorField;
+typedef DimensionedField<tensor, surfPointGeoMesh, Field> surfPointTensorField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

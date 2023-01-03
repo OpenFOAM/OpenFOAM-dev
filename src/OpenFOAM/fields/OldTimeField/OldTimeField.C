@@ -49,15 +49,15 @@ void Foam::OldTimeField<FieldType>::storeOldTimesInner() const
         if (notNull(tfield0_()))
         {
             // Propagate to store the old-old field
-            tfield0_.ref().OldTimeField<FieldType>::storeOldTimesInner();
+            tfield0_.ref().OldTimeField<Field0Type>::storeOldTimesInner();
 
             // Set the old-field to this field
             tfield0_.ref() == field();
-            tfield0_.ref().OldTimeField<FieldType>::timeIndex_ = timeIndex_;
+            tfield0_.ref().OldTimeField<Field0Type>::timeIndex_ = timeIndex_;
 
             // If we have an old-old field, then the old field is state and
             // should be written in the same way as the field
-            if (tfield0_().OldTimeField<FieldType>::tfield0_.valid())
+            if (tfield0_().OldTimeField<Field0Type>::tfield0_.valid())
             {
                 tfield0_.ref().writeOpt() = field().writeOpt();
             }
@@ -76,9 +76,9 @@ void Foam::OldTimeField<FieldType>::nullOldestTimeInner()
 {
     if (tfield0_.valid() && notNull(tfield0_()))
     {
-        if (tfield0_().OldTimeField<FieldType>::tfield0_.valid())
+        if (tfield0_().OldTimeField<Field0Type>::tfield0_.valid())
         {
-            tfield0_.ref().OldTimeField<FieldType>::nullOldestTimeInner();
+            tfield0_.ref().OldTimeField<Field0Type>::nullOldestTimeInner();
         }
         else
         {
@@ -98,7 +98,7 @@ void Foam::OldTimeField<FieldType>::setBase(const OldTimeBaseField& otbf) const
     }
     else
     {
-        otbf.tfield0_ = tmp<typename FieldType::Base>(tfield0_());
+        otbf.tfield0_ = tmp<typename Field0Type::Base>(tfield0_());
     }
 
     otbf.timeIndex_ = timeIndex_;
@@ -124,7 +124,7 @@ void Foam::OldTimeField<FieldType>::setBase() const
 template<class FieldType>
 bool Foam::OldTimeField<FieldType>::readOldTimeIfPresent()
 {
-    typeIOobject<FieldType> io0
+    typeIOobject<Field0Type> io0
     (
         field().name() + "_0",
         field().time().name(),
@@ -136,15 +136,15 @@ bool Foam::OldTimeField<FieldType>::readOldTimeIfPresent()
 
     if (io0.headerOk())
     {
-        tfield0_ = new FieldType(io0, field().mesh());
+        tfield0_ = new Field0Type(io0, field().mesh());
         setBase();
 
-        tfield0_.ref().OldTimeField<FieldType>::timeIndex_ = timeIndex_ - 1;
-        tfield0_.ref().OldTimeField<FieldType>::setBase();
+        tfield0_.ref().OldTimeField<Field0Type>::timeIndex_ = timeIndex_ - 1;
+        tfield0_.ref().OldTimeField<Field0Type>::setBase();
 
-        if (!tfield0_.ref().OldTimeField<FieldType>::readOldTimeIfPresent())
+        if (!tfield0_.ref().OldTimeField<Field0Type>::readOldTimeIfPresent())
         {
-            tfield0_.ref().OldTimeField<FieldType>::oldTime();
+            tfield0_.ref().OldTimeField<Field0Type>::oldTime();
         }
 
         return true;
@@ -157,10 +157,11 @@ bool Foam::OldTimeField<FieldType>::readOldTimeIfPresent()
 
 
 template<class FieldType>
+template<template<class> class OtherPrimitiveField>
 void Foam::OldTimeField<FieldType>::copyOldTimes
 (
     const IOobject& io,
-    const OldTimeField<FieldType>& otf
+    const OtherOldTime<OtherPrimitiveField>& otf
 )
 {
     copyOldTimes(io.name(), otf);
@@ -168,15 +169,16 @@ void Foam::OldTimeField<FieldType>::copyOldTimes
 
 
 template<class FieldType>
+template<template<class> class OtherPrimitiveField>
 void Foam::OldTimeField<FieldType>::copyOldTimes
 (
     const word& newName,
-    const OldTimeField<FieldType>& otf
+    const OtherOldTime<OtherPrimitiveField>& otf
 )
 {
     if (otf.tfield0_.valid() && notNull(otf.tfield0_()))
     {
-        tfield0_ = new FieldType(newName + "_0", otf.tfield0_());
+        tfield0_ = new Field0Type(newName + "_0", otf.tfield0_());
         setBase();
     }
 }
@@ -200,7 +202,7 @@ Foam::OldTimeField<FieldType>::OldTimeField(const OldTimeField<FieldType>& otf)
 {
     if (otf.tfield0_.valid() && notNull(otf.tfield0_()))
     {
-        tfield0_ = new FieldType(otf.tfield0_());
+        tfield0_ = new Field0Type(otf.tfield0_());
         setBase();
     }
 }
@@ -214,7 +216,7 @@ Foam::OldTimeField<FieldType>::OldTimeField(OldTimeField<FieldType>&& otf)
 {
     if (otf.tfield0_.valid() && notNull(otf.tfield0_()))
     {
-        tfield0_ = tmp<FieldType>(move(otf.tfield0_));
+        tfield0_ = tmp<Field0Type>(move(otf.tfield0_));
         setBase();
     }
 }
@@ -312,7 +314,8 @@ Foam::label Foam::OldTimeField<FieldType>::nOldTimes
 
 
 template<class FieldType>
-const FieldType& Foam::OldTimeField<FieldType>::oldTime() const
+const typename Foam::OldTimeField<FieldType>::Field0Type&
+Foam::OldTimeField<FieldType>::oldTime() const
 {
     if (!tfield0_.valid() || isNull(tfield0_()))
     {
@@ -324,7 +327,7 @@ const FieldType& Foam::OldTimeField<FieldType>::oldTime() const
         setBase();
 
         // Construct a copy of the field
-        tfield0_ = new FieldType
+        tfield0_ = new Field0Type
         (
             IOobject
             (
@@ -350,26 +353,35 @@ const FieldType& Foam::OldTimeField<FieldType>::oldTime() const
 
 
 template<class FieldType>
-FieldType& Foam::OldTimeField<FieldType>::oldTimeRef()
+typename Foam::OldTimeField<FieldType>::Field0Type&
+Foam::OldTimeField<FieldType>::oldTimeRef()
 {
     static_cast<const OldTimeField<FieldType>&>(*this).oldTime();
 
     // Note: Not tfield0_.ref(), because this might be a base field storing a
     // reference only. It's valid to un-const this reference because the
     // derived field is guaranteed to store the non-const pointer.
-    return const_cast<FieldType&>(tfield0_());
+    return const_cast<Field0Type&>(tfield0_());
 }
 
 
 template<class FieldType>
-const FieldType& Foam::OldTimeField<FieldType>::oldTime(const label n) const
+const typename Foam::OldTimeField<FieldType>::Field0Type&
+Foam::OldTimeField<FieldType>::oldTime
+(
+    const label n
+) const
 {
     return n == 0 ? field() : oldTime().oldTime(n - 1);
 }
 
 
 template<class FieldType>
-FieldType& Foam::OldTimeField<FieldType>::oldTimeRef(const label n)
+typename Foam::OldTimeField<FieldType>::Field0Type&
+Foam::OldTimeField<FieldType>::oldTimeRef
+(
+    const label n
+)
 {
     return n == 0 ? fieldRef() : oldTimeRef().oldTimeRef(n - 1);
 }

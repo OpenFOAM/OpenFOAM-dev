@@ -29,8 +29,8 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-void Foam::DimensionedField<Type, GeoMesh>::readField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::readField
 (
     const dictionary& fieldDict,
     const word& fieldDictEntry
@@ -38,14 +38,20 @@ void Foam::DimensionedField<Type, GeoMesh>::readField
 {
     dimensions_.reset(dimensionSet(fieldDict.lookup("dimensions")));
 
-    Field<Type> f(fieldDictEntry, dimensions_, fieldDict, GeoMesh::size(mesh_));
+    PrimitiveField<Type> f
+    (
+        fieldDictEntry,
+        dimensions_,
+        fieldDict,
+        GeoMesh::size(mesh_)
+    );
 
     this->transfer(f);
 }
 
 
-template<class Type, class GeoMesh>
-bool Foam::DimensionedField<Type, GeoMesh>::readIfPresent
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+bool Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::readIfPresent
 (
     const word& fieldDictEntry
 )
@@ -80,8 +86,8 @@ bool Foam::DimensionedField<Type, GeoMesh>::readIfPresent
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-Foam::DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
     const Mesh& mesh,
@@ -89,7 +95,7 @@ Foam::DimensionedField<Type, GeoMesh>::DimensionedField
 )
 :
     regIOobject(io),
-    Field<Type>(0),
+    PrimitiveField<Type>(0),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(mesh),
     dimensions_(dimless)
@@ -98,8 +104,8 @@ Foam::DimensionedField<Type, GeoMesh>::DimensionedField
 }
 
 
-template<class Type, class GeoMesh>
-Foam::DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
     const Mesh& mesh,
@@ -108,7 +114,7 @@ Foam::DimensionedField<Type, GeoMesh>::DimensionedField
 )
 :
     regIOobject(io),
-    Field<Type>(0),
+    PrimitiveField<Type>(0),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(mesh),
     dimensions_(dimless)
@@ -119,8 +125,8 @@ Foam::DimensionedField<Type, GeoMesh>::DimensionedField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-bool Foam::DimensionedField<Type, GeoMesh>::writeData
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+bool Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::writeData
 (
     Ostream& os,
     const word& fieldDictEntry
@@ -129,12 +135,17 @@ bool Foam::DimensionedField<Type, GeoMesh>::writeData
     writeEntry(os, "dimensions", dimensions());
     os << nl;
 
-    writeEntry(os, fieldDictEntry, static_cast<const Field<Type>&>(*this));
+    writeEntry
+    (
+        os,
+        fieldDictEntry,
+        static_cast<const PrimitiveField<Type>&>(*this)
+    );
 
     // Check state of Ostream
     os.check
     (
-        "bool DimensionedField<Type, GeoMesh>::writeData"
+        "bool DimensionedField<Type, GeoMesh, PrimitiveField>::writeData"
         "(Ostream& os, const word& fieldDictEntry) const"
     );
 
@@ -142,8 +153,11 @@ bool Foam::DimensionedField<Type, GeoMesh>::writeData
 }
 
 
-template<class Type, class GeoMesh>
-bool Foam::DimensionedField<Type, GeoMesh>::writeData(Ostream& os) const
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+bool Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::writeData
+(
+    Ostream& os
+) const
 {
     return writeData(os, "value");
 }
@@ -151,11 +165,11 @@ bool Foam::DimensionedField<Type, GeoMesh>::writeData(Ostream& os) const
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const DimensionedField<Type, GeoMesh>& df
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df
 )
 {
     df.writeData(os);
@@ -164,11 +178,11 @@ Foam::Ostream& Foam::operator<<
 }
 
 
-template<class Type, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf
 )
 {
     tdf().writeData(os);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #ifndef triSurfaceFieldsFwd_H
 #define triSurfaceFieldsFwd_H
 
+#include "DimensionedFieldFwd.H"
 #include "fieldTypes.H"
 #include "triSurface.H"
 
@@ -36,37 +37,33 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-class DimensionedField;
-
 class triSurfaceGeoMesh;
 
-typedef Foam::DimensionedField<label, triSurfaceGeoMesh>
-    triSurfaceLabelField;
-typedef Foam::DimensionedField<scalar, triSurfaceGeoMesh>
+typedef DimensionedField<label, triSurfaceGeoMesh, Field> triSurfaceLabelField;
+typedef DimensionedField<scalar, triSurfaceGeoMesh, Field>
     triSurfaceScalarField;
-typedef Foam::DimensionedField<vector, triSurfaceGeoMesh>
+typedef DimensionedField<vector, triSurfaceGeoMesh, Field>
     triSurfaceVectorField;
-typedef Foam::DimensionedField<sphericalTensor, triSurfaceGeoMesh>
+typedef DimensionedField<sphericalTensor, triSurfaceGeoMesh, Field>
     triSurfaceSphericalTensorField;
-typedef Foam::DimensionedField<symmTensor, triSurfaceGeoMesh>
+typedef DimensionedField<symmTensor, triSurfaceGeoMesh, Field>
     triSurfaceSymmTensorField;
-typedef Foam::DimensionedField<tensor, triSurfaceGeoMesh>
+typedef DimensionedField<tensor, triSurfaceGeoMesh, Field>
     triSurfaceTensorField;
 
 class triSurfacePointGeoMesh;
 
-typedef Foam::DimensionedField<label, triSurfacePointGeoMesh>
+typedef DimensionedField<label, triSurfacePointGeoMesh, Field>
     triSurfacePointLabelField;
-typedef Foam::DimensionedField<scalar, triSurfacePointGeoMesh>
+typedef DimensionedField<scalar, triSurfacePointGeoMesh, Field>
     triSurfacePointScalarField;
-typedef Foam::DimensionedField<vector, triSurfacePointGeoMesh>
+typedef DimensionedField<vector, triSurfacePointGeoMesh, Field>
     triSurfacePointVectorField;
-typedef Foam::DimensionedField<sphericalTensor, triSurfacePointGeoMesh>
+typedef DimensionedField<sphericalTensor, triSurfacePointGeoMesh, Field>
     triSurfacePointSphericalTensorField;
-typedef Foam::DimensionedField<symmTensor, triSurfacePointGeoMesh>
+typedef DimensionedField<symmTensor, triSurfacePointGeoMesh, Field>
     triSurfacePointSymmTensorField;
-typedef Foam::DimensionedField<tensor, triSurfacePointGeoMesh>
+typedef DimensionedField<tensor, triSurfacePointGeoMesh, Field>
     triSurfacePointTensorField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

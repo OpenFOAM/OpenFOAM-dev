@@ -25,7 +25,14 @@ License
 
 #include "DimensionedScalarField.H"
 
-#define TEMPLATE template<class GeoMesh>
+#define TEMPLATE template<class GeoMesh, template<class> class PrimitiveField>
+#define TEMPLATE2                                                              \
+    template                                                                   \
+    <                                                                          \
+        class GeoMesh,                                                         \
+        template<class> class PrimitiveField1,                                 \
+        template<class> class PrimitiveField2                                  \
+    >
 #include "DimensionedFieldFunctionsM.C"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -35,16 +42,16 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> stabilise
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> stabilise
 (
-    const DimensionedField<scalar, GeoMesh>& dsf,
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf,
     const dimensioned<scalar>& ds
 )
 {
-    tmp<DimensionedField<scalar, GeoMesh>> tRes
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tRes
     (
-        DimensionedField<scalar, GeoMesh>::New
+        DimensionedField<scalar, GeoMesh, Field>::New
         (
             "stabilise(" + dsf.name() + ',' + ds.name() + ')',
             dsf.mesh(),
@@ -58,16 +65,16 @@ tmp<DimensionedField<scalar, GeoMesh>> stabilise
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> stabilise
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> stabilise
 (
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf,
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField>>& tdsf,
     const dimensioned<scalar>& ds
 )
 {
-    const DimensionedField<scalar, GeoMesh>& dsf = tdsf();
+    const DimensionedField<scalar, GeoMesh, Field>& dsf = tdsf();
 
-    tmp<DimensionedField<scalar, GeoMesh>> tRes = New
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tRes = New
     (
         tdsf,
         "stabilise(" + dsf.name() + ',' + ds.name() + ')',
@@ -94,11 +101,11 @@ BINARY_TYPE_OPERATOR_SF(scalar, scalar, scalar, /, '|', divide)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
-    const DimensionedField<scalar, GeoMesh>& dsf1,
-    const DimensionedField<scalar, GeoMesh>& dsf2
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf1,
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf2
 )
 {
     if (!dsf1.dimensions().dimensionless())
@@ -115,9 +122,9 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             << exit(FatalError);
     }
 
-    tmp<DimensionedField<scalar, GeoMesh>> tPow
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tPow
     (
-        DimensionedField<scalar, GeoMesh>::New
+        DimensionedField<scalar, GeoMesh, Field>::New
         (
             "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
             dsf1.mesh(),
@@ -136,14 +143,19 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template
+<
+    class GeoMesh,
+    template<class> class PrimitiveField1,
+    template<class> class PrimitiveField2
+>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf1,
-    const DimensionedField<scalar, GeoMesh>& dsf2
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField1>>& tdsf1,
+    const DimensionedField<scalar, GeoMesh, PrimitiveField2>& dsf2
 )
 {
-    const DimensionedField<scalar, GeoMesh>& dsf1 = tdsf1();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField1>& dsf1 = tdsf1();
 
     if (!dsf1.dimensions().dimensionless())
     {
@@ -159,7 +171,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             << exit(FatalError);
     }
 
-    tmp<DimensionedField<scalar, GeoMesh>> tPow = New
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tPow = New
     (
         tdsf1,
         "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
@@ -179,14 +191,19 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template
+<
+    class GeoMesh,
+    template<class> class PrimitiveField1,
+    template<class> class PrimitiveField2
+>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
-    const DimensionedField<scalar, GeoMesh>& dsf1,
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf2
+    const DimensionedField<scalar, GeoMesh, PrimitiveField1>& dsf1,
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField2>>& tdsf2
 )
 {
-    const DimensionedField<scalar, GeoMesh>& dsf2 = tdsf2();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField2>& dsf2 = tdsf2();
 
     if (!dsf1.dimensions().dimensionless())
     {
@@ -202,7 +219,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             << exit(FatalError);
     }
 
-    tmp<DimensionedField<scalar, GeoMesh>> tPow = New
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tPow = New
     (
         tdsf2,
         "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
@@ -222,15 +239,20 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template
+<
+    class GeoMesh,
+    template<class> class PrimitiveField1,
+    template<class> class PrimitiveField2
+>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf1,
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf2
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField1>>& tdsf1,
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField2>>& tdsf2
 )
 {
-    const DimensionedField<scalar, GeoMesh>& dsf1 = tdsf1();
-    const DimensionedField<scalar, GeoMesh>& dsf2 = tdsf2();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField1>& dsf1 = tdsf1();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField2>& dsf2 = tdsf2();
 
     if (!dsf1.dimensions().dimensionless())
     {
@@ -247,7 +269,15 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
     }
 
     tmp<DimensionedField<scalar, GeoMesh>> tPow =
-        reuseTmpTmpDimensionedField<scalar, scalar, scalar, GeoMesh>::New
+        reuseTmpTmpDimensionedField
+        <
+            scalar,
+            scalar,
+            scalar,
+            GeoMesh,
+            PrimitiveField1,
+            PrimitiveField2
+        >::New
         (
             tdsf1,
             tdsf2,
@@ -269,10 +299,10 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
-    const DimensionedField<scalar, GeoMesh>& dsf,
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf,
     const dimensionedScalar& ds
 )
 {
@@ -283,9 +313,9 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             << exit(FatalError);
     }
 
-    tmp<DimensionedField<scalar, GeoMesh>> tPow
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tPow
     (
-        DimensionedField<scalar, GeoMesh>::New
+        DimensionedField<scalar, GeoMesh, Field>::New
         (
             "pow(" + dsf.name() + ',' + ds.name() + ')',
             dsf.mesh(),
@@ -299,10 +329,10 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf,
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField>>& tdsf,
     const dimensionedScalar& ds
 )
 {
@@ -313,9 +343,9 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             << exit(FatalError);
     }
 
-    const DimensionedField<scalar, GeoMesh>& dsf = tdsf();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf = tdsf();
 
-    tmp<DimensionedField<scalar, GeoMesh>> tPow = New
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tPow = New
     (
         tdsf,
         "pow(" + dsf.name() + ',' + ds.name() + ')',
@@ -330,10 +360,10 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
-    const DimensionedField<scalar, GeoMesh>& dsf,
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf,
     const scalar& s
 )
 {
@@ -341,10 +371,10 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf,
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField>>& tdsf,
     const scalar& s
 )
 {
@@ -352,11 +382,11 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
     const dimensionedScalar& ds,
-    const DimensionedField<scalar, GeoMesh>& dsf
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf
 )
 {
     if (!ds.dimensions().dimensionless())
@@ -373,9 +403,9 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             << exit(FatalError);
     }
 
-    tmp<DimensionedField<scalar, GeoMesh>> tPow
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tPow
     (
-        DimensionedField<scalar, GeoMesh>::New
+        DimensionedField<scalar, GeoMesh, Field>::New
         (
             "pow(" + ds.name() + ',' + dsf.name() + ')',
             dsf.mesh(),
@@ -389,14 +419,14 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
     const dimensionedScalar& ds,
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField>>& tdsf
 )
 {
-    const DimensionedField<scalar, GeoMesh>& dsf = tdsf();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf = tdsf();
 
     if (!ds.dimensions().dimensionless())
     {
@@ -412,7 +442,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             << exit(FatalError);
     }
 
-    tmp<DimensionedField<scalar, GeoMesh>> tPow = New
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tPow = New
     (
         tdsf,
         "pow(" + ds.name() + ',' + dsf.name() + ')',
@@ -426,21 +456,21 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
     return tPow;
 }
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
     const scalar& s,
-    const DimensionedField<scalar, GeoMesh>& dsf
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf
 )
 {
     return pow(dimensionedScalar(s), dsf);
 }
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> pow
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> pow
 (
     const scalar& s,
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField>>& tdsf
 )
 {
     return pow(dimensionedScalar(s), tdsf);
@@ -449,16 +479,21 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template
+<
+    class GeoMesh,
+    template<class> class PrimitiveField1,
+    template<class> class PrimitiveField2
+>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
-    const DimensionedField<scalar, GeoMesh>& dsf1,
-    const DimensionedField<scalar, GeoMesh>& dsf2
+    const DimensionedField<scalar, GeoMesh, PrimitiveField1>& dsf1,
+    const DimensionedField<scalar, GeoMesh, PrimitiveField2>& dsf2
 )
 {
-    tmp<DimensionedField<scalar, GeoMesh>> tAtan2
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tAtan2
     (
-        DimensionedField<scalar, GeoMesh>::New
+        DimensionedField<scalar, GeoMesh, Field>::New
         (
             "atan2(" + dsf1.name() + ',' + dsf2.name() + ')',
             dsf1.mesh(),
@@ -477,16 +512,21 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template
+<
+    class GeoMesh,
+    template<class> class PrimitiveField1,
+    template<class> class PrimitiveField2
+>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf1,
-    const DimensionedField<scalar, GeoMesh>& dsf2
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField1>>& tdsf1,
+    const DimensionedField<scalar, GeoMesh, PrimitiveField2>& dsf2
 )
 {
-    const DimensionedField<scalar, GeoMesh>& dsf1 = tdsf1();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField1>& dsf1 = tdsf1();
 
-    tmp<DimensionedField<scalar, GeoMesh>> tAtan2 = New
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tAtan2 = New
     (
         tdsf1,
         "atan2(" + dsf1.name() + ',' + dsf2.name() + ')',
@@ -506,16 +546,21 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template
+<
+    class GeoMesh,
+    template<class> class PrimitiveField1,
+    template<class> class PrimitiveField2
+>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
-    const DimensionedField<scalar, GeoMesh>& dsf1,
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf2
+    const DimensionedField<scalar, GeoMesh, PrimitiveField1>& dsf1,
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField2>>& tdsf2
 )
 {
-    const DimensionedField<scalar, GeoMesh>& dsf2 = tdsf2();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField2>& dsf2 = tdsf2();
 
-    tmp<DimensionedField<scalar, GeoMesh>> tAtan2 = New
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tAtan2 = New
     (
         tdsf2,
         "atan2(" + dsf1.name() + ',' + dsf2.name() + ')',
@@ -534,18 +579,31 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
     return tAtan2;
 }
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template
+<
+    class GeoMesh,
+    template<class> class PrimitiveField1,
+    template<class> class PrimitiveField2
+>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf1,
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf2
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField1>>& tdsf1,
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField2>>& tdsf2
 )
 {
-    const DimensionedField<scalar, GeoMesh>& dsf1 = tdsf1();
-    const DimensionedField<scalar, GeoMesh>& dsf2 = tdsf2();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField1>& dsf1 = tdsf1();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField2>& dsf2 = tdsf2();
 
     tmp<DimensionedField<scalar, GeoMesh>> tAtan2 =
-        reuseTmpTmpDimensionedField<scalar, scalar, scalar, GeoMesh>::New
+        reuseTmpTmpDimensionedField
+        <
+            scalar,
+            scalar,
+            scalar,
+            GeoMesh,
+            PrimitiveField1,
+            PrimitiveField2
+        >::New
         (
             tdsf1,
             tdsf2,
@@ -567,16 +625,16 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
-    const DimensionedField<scalar, GeoMesh>& dsf,
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf,
     const dimensionedScalar& ds
 )
 {
-    tmp<DimensionedField<scalar, GeoMesh>> tAtan2
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tAtan2
     (
-        DimensionedField<scalar, GeoMesh>::New
+        DimensionedField<scalar, GeoMesh, Field>::New
         (
             "atan2(" + dsf.name() + ',' + ds.name() + ')',
             dsf.mesh(),
@@ -589,16 +647,16 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
     return tAtan2;
 }
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf,
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField>>& tdsf,
     const dimensionedScalar& ds
 )
 {
-    const DimensionedField<scalar, GeoMesh>& dsf = tdsf();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf = tdsf();
 
-    tmp<DimensionedField<scalar, GeoMesh>> tAtan2 = New
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tAtan2 = New
     (
         tdsf,
         "atan2(" + dsf.name() + ',' + ds.name() + ')',
@@ -612,20 +670,20 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
     return tAtan2;
 }
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
-    const DimensionedField<scalar, GeoMesh>& dsf,
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf,
     const scalar& s
 )
 {
     return atan2(dsf, dimensionedScalar(s));
 }
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf,
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField>>& tdsf,
     const scalar& s
 )
 {
@@ -633,16 +691,16 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
     const dimensionedScalar& ds,
-    const DimensionedField<scalar, GeoMesh>& dsf
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf
 )
 {
-    tmp<DimensionedField<scalar, GeoMesh>> tAtan2
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tAtan2
     (
-        DimensionedField<scalar, GeoMesh>::New
+        DimensionedField<scalar, GeoMesh, Field>::New
         (
             "atan2(" + ds.name() + ',' + dsf.name() + ')',
             dsf.mesh(),
@@ -656,16 +714,16 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
 }
 
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
     const dimensionedScalar& ds,
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField>>& tdsf
 )
 {
-    const DimensionedField<scalar, GeoMesh>& dsf = tdsf();
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf = tdsf();
 
-    tmp<DimensionedField<scalar, GeoMesh>> tAtan2 = New
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tAtan2 = New
     (
         tdsf,
         "atan2(" + ds.name() + ',' + dsf.name() + ')',
@@ -679,21 +737,21 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
     return tAtan2;
 }
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
     const scalar& s,
-    const DimensionedField<scalar, GeoMesh>& dsf
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf
 )
 {
     return atan2(dimensionedScalar(s), dsf);
 }
 
-template<class GeoMesh>
-tmp<DimensionedField<scalar, GeoMesh>> atan2
+template<class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<scalar, GeoMesh, Field>> atan2
 (
     const scalar& s,
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField>>& tdsf
 )
 {
     return atan2(dimensionedScalar(s), tdsf);
@@ -745,11 +803,11 @@ UNARY_FUNCTION(scalar, scalar, y1, trans)
 
 #define BesselFunc(func)                                                       \
                                                                                \
-template<class GeoMesh>                                                        \
-tmp<DimensionedField<scalar, GeoMesh>> func                                    \
+template<class GeoMesh, template<class> class PrimitiveField>                  \
+tmp<DimensionedField<scalar, GeoMesh, Field>> func                             \
 (                                                                              \
     const int n,                                                               \
-    const DimensionedField<scalar, GeoMesh>& dsf                               \
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf               \
 )                                                                              \
 {                                                                              \
     if (!dsf.dimensions().dimensionless())                                     \
@@ -759,9 +817,9 @@ tmp<DimensionedField<scalar, GeoMesh>> func                                    \
             << abort(FatalError);                                              \
     }                                                                          \
                                                                                \
-    tmp<DimensionedField<scalar, GeoMesh>> tFunc                               \
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tFunc                        \
     (                                                                          \
-        DimensionedField<scalar, GeoMesh>::New                                 \
+        DimensionedField<scalar, GeoMesh, Field>::New                          \
         (                                                                      \
             #func "(" + name(n) + ',' + dsf.name() + ')',                      \
             dsf.mesh(),                                                        \
@@ -774,14 +832,14 @@ tmp<DimensionedField<scalar, GeoMesh>> func                                    \
     return tFunc;                                                              \
 }                                                                              \
                                                                                \
-template<class GeoMesh>                                                        \
-tmp<DimensionedField<scalar, GeoMesh>> func                                    \
+template<class GeoMesh, template<class> class PrimitiveField>                  \
+tmp<DimensionedField<scalar, GeoMesh, Field>> func                             \
 (                                                                              \
     const int n,                                                               \
-    const tmp<DimensionedField<scalar, GeoMesh>>& tdsf                         \
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField>>& tdsf         \
 )                                                                              \
 {                                                                              \
-    const DimensionedField<scalar, GeoMesh>& dsf = tdsf();                     \
+    const DimensionedField<scalar, GeoMesh, PrimitiveField>& dsf = tdsf();     \
                                                                                \
     if (!dsf.dimensions().dimensionless())                                     \
     {                                                                          \
@@ -790,7 +848,7 @@ tmp<DimensionedField<scalar, GeoMesh>> func                                    \
             << abort(FatalError);                                              \
     }                                                                          \
                                                                                \
-    tmp<DimensionedField<scalar, GeoMesh>> tFunc                               \
+    tmp<DimensionedField<scalar, GeoMesh, Field>> tFunc                        \
     (                                                                          \
         New                                                                    \
         (                                                                      \

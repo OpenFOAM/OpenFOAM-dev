@@ -46,10 +46,6 @@ SourceFiles
 
 namespace Foam
 {
-
-template<class Type, class GeoMesh>
-class DimensionedField;
-
 namespace functionObjects
 {
 

@@ -48,17 +48,17 @@ if (&(df1).mesh() != &(df2).mesh())                                 \
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
     const Mesh& mesh,
     const dimensionSet& dims,
-    const Field<Type>& field
+    const PrimitiveField<Type>& field
 )
 :
     regIOobject(io),
-    Field<Type>(field),
+    PrimitiveField<Type>(field),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(mesh),
     dimensions_(dims)
@@ -74,8 +74,8 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 }
 
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
     const Mesh& mesh,
@@ -84,11 +84,14 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 )
 :
     regIOobject(io),
-    Field<Type>(GeoMesh::size(mesh)),
+    PrimitiveField<Type>(GeoMesh::size(mesh)),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(mesh),
     dimensions_(dims)
 {
+    // Expand dynamic primitive fields to their full size
+    PrimitiveField<Type>::setSize(GeoMesh::size(mesh));
+
     if (checkIOFlags)
     {
         readIfPresent();
@@ -96,8 +99,8 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 }
 
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
     const Mesh& mesh,
@@ -106,7 +109,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 )
 :
     regIOobject(io),
-    Field<Type>(GeoMesh::size(mesh), dt.value()),
+    PrimitiveField<Type>(GeoMesh::size(mesh), dt.value()),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(mesh),
     dimensions_(dt.dimensions())
@@ -118,59 +121,75 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 }
 
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
-    const DimensionedField<Type, GeoMesh>& df
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df
 )
 :
     regIOobject(df),
-    Field<Type>(df),
+    PrimitiveField<Type>(df),
     OldTimeField<DimensionedField>(df),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
 {}
 
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
-    DimensionedField<Type, GeoMesh>& df,
-    bool reuse
-)
-:
-    regIOobject(df, reuse && df.registered()),
-    Field<Type>(df, reuse),
-    OldTimeField<DimensionedField>(this->time().timeIndex()),
-    mesh_(df.mesh_),
-    dimensions_(df.dimensions_)
-{}
-
-
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
-(
-    DimensionedField<Type, GeoMesh>&& df
+    DimensionedField<Type, GeoMesh, PrimitiveField>&& df
 )
 :
     regIOobject(move(df)),
-    Field<Type>(move(df)),
+    PrimitiveField<Type>(move(df)),
     OldTimeField<DimensionedField>(move(df)),
     mesh_(df.mesh_),
     dimensions_(move(df.dimensions_))
 {}
 
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf
+    const DimensionedField<Type, GeoMesh, PrimitiveField2>& df
+)
+:
+    regIOobject(df),
+    PrimitiveField<Type>(df),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
+    mesh_(df.mesh()),
+    dimensions_(df.dimensions())
+{}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
+(
+    DimensionedField<Type, GeoMesh, PrimitiveField2>& df,
+    const bool reuse
+)
+:
+    regIOobject(df, reuse),
+    PrimitiveField<Type>(df, reuse),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
+    mesh_(df.mesh()),
+    dimensions_(df.dimensions())
+{}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
+(
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf
 )
 :
     regIOobject(tdf(), tdf.isTmp()),
-    Field<Type>
+    PrimitiveField<Type>
     (
-        const_cast<DimensionedField<Type, GeoMesh>&>(tdf()),
+        const_cast<DimensionedField<Type, GeoMesh, PrimitiveField>&>(tdf()),
         tdf.isTmp()
     ),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
@@ -181,16 +200,17 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 }
 
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
-    const DimensionedField<Type, GeoMesh>& df,
+    const DimensionedField<Type, GeoMesh, PrimitiveField2>& df,
     const bool checkIOFlags
 )
 :
     regIOobject(io),
-    Field<Type>(df),
+    PrimitiveField<Type>(df),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
@@ -202,17 +222,18 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 }
 
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
-    DimensionedField<Type, GeoMesh>& df,
-    bool reuse,
+    DimensionedField<Type, GeoMesh, PrimitiveField2>& df,
+    const bool reuse,
     const bool checkIOFlags
 )
 :
     regIOobject(io, df),
-    Field<Type>(df, reuse),
+    PrimitiveField<Type>(df, reuse),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
@@ -224,18 +245,18 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 }
 
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf,
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf,
     const bool checkIOFlags
 )
 :
     regIOobject(io),
-    Field<Type>
+    PrimitiveField<Type>
     (
-        const_cast<DimensionedField<Type, GeoMesh>&>(tdf()),
+        const_cast<DimensionedField<Type, GeoMesh, PrimitiveField>&>(tdf()),
         tdf.isTmp()
     ),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
@@ -251,15 +272,16 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 }
 
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const word& newName,
-    const DimensionedField<Type, GeoMesh>& df
+    const DimensionedField<Type, GeoMesh, PrimitiveField2>& df
 )
 :
     regIOobject(newName, df, newName != df.name()),
-    Field<Type>(df),
+    PrimitiveField<Type>(df),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
@@ -268,33 +290,34 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 }
 
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const word& newName,
-    DimensionedField<Type, GeoMesh>& df,
-    bool reuse
+    DimensionedField<Type, GeoMesh, PrimitiveField2>& df,
+    const bool reuse
 )
 :
     regIOobject(newName, df, true),
-    Field<Type>(df, reuse),
+    PrimitiveField<Type>(df, reuse),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
 {}
 
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const word& newName,
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf
 )
 :
     regIOobject(newName, tdf(), true),
-    Field<Type>
+    PrimitiveField<Type>
     (
-        const_cast<DimensionedField<Type, GeoMesh>&>(tdf()),
+        const_cast<DimensionedField<Type, GeoMesh, PrimitiveField>&>(tdf()),
         tdf.isTmp()
     ),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
@@ -305,32 +328,32 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 }
 
 
-template<class Type, class GeoMesh>
-tmp<DimensionedField<Type, GeoMesh>>
-DimensionedField<Type, GeoMesh>::clone() const
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>
+DimensionedField<Type, GeoMesh, PrimitiveField>::clone() const
 {
-    return tmp<DimensionedField<Type, GeoMesh>>
+    return tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>
     (
-        new DimensionedField<Type, GeoMesh>(*this)
+        new DimensionedField<Type, GeoMesh, PrimitiveField>(*this)
     );
 }
 
 
-template<class Type, class GeoMesh>
-Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
-DimensionedField<Type, GeoMesh>::New
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh, PrimitiveField>>
+DimensionedField<Type, GeoMesh, PrimitiveField>::New
 (
     const word& name,
     const Mesh& mesh,
     const dimensionSet& ds,
-    const Field<Type>& field
+    const PrimitiveField<Type>& field
 )
 {
     const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
 
-    return tmp<DimensionedField<Type, GeoMesh>>
+    return tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>
     (
-        new DimensionedField<Type, GeoMesh>
+        new DimensionedField<Type, GeoMesh, PrimitiveField>
         (
             IOobject
             (
@@ -350,9 +373,9 @@ DimensionedField<Type, GeoMesh>::New
 }
 
 
-template<class Type, class GeoMesh>
-Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
-DimensionedField<Type, GeoMesh>::New
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh, PrimitiveField>>
+DimensionedField<Type, GeoMesh, PrimitiveField>::New
 (
     const word& name,
     const Mesh& mesh,
@@ -361,9 +384,9 @@ DimensionedField<Type, GeoMesh>::New
 {
     const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
 
-    return tmp<DimensionedField<Type, GeoMesh>>
+    return tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>
     (
-        new DimensionedField<Type, GeoMesh>
+        new DimensionedField<Type, GeoMesh, PrimitiveField>
         (
             IOobject
             (
@@ -383,9 +406,9 @@ DimensionedField<Type, GeoMesh>::New
 }
 
 
-template<class Type, class GeoMesh>
-Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
-DimensionedField<Type, GeoMesh>::New
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh, PrimitiveField>>
+DimensionedField<Type, GeoMesh, PrimitiveField>::New
 (
     const word& name,
     const Mesh& mesh,
@@ -394,9 +417,9 @@ DimensionedField<Type, GeoMesh>::New
 {
     const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
 
-    return tmp<DimensionedField<Type, GeoMesh>>
+    return tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>
     (
-        new DimensionedField<Type, GeoMesh>
+        new DimensionedField<Type, GeoMesh, PrimitiveField>
         (
             IOobject
             (
@@ -416,19 +439,20 @@ DimensionedField<Type, GeoMesh>::New
 }
 
 
-template<class Type, class GeoMesh>
-Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
-DimensionedField<Type, GeoMesh>::New
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh, PrimitiveField>>
+DimensionedField<Type, GeoMesh, PrimitiveField>::New
 (
     const word& newName,
-    const DimensionedField<Type, GeoMesh>& df
+    const DimensionedField<Type, GeoMesh, PrimitiveField2>& df
 )
 {
     const bool cacheTmp = df.db().cacheTemporaryObject(newName);
 
-    return tmp<DimensionedField<Type, GeoMesh>>
+    return tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>
     (
-        new DimensionedField<Type, GeoMesh>
+        new DimensionedField<Type, GeoMesh, PrimitiveField>
         (
             IOobject
             (
@@ -447,19 +471,19 @@ DimensionedField<Type, GeoMesh>::New
 }
 
 
-template<class Type, class GeoMesh>
-Foam::tmp<Foam::DimensionedField<Type, GeoMesh>>
-DimensionedField<Type, GeoMesh>::New
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh, PrimitiveField>>
+DimensionedField<Type, GeoMesh, PrimitiveField>::New
 (
     const word& newName,
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf
 )
 {
     const bool cacheTmp = tdf().db().cacheTemporaryObject(newName);
 
-    return tmp<DimensionedField<Type, GeoMesh>>
+    return tmp<DimensionedField<Type, GeoMesh, Field>>
     (
-        new DimensionedField<Type, GeoMesh>
+        new DimensionedField<Type, GeoMesh, Field>
         (
             IOobject
             (
@@ -480,8 +504,8 @@ DimensionedField<Type, GeoMesh>::New
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::~DimensionedField()
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+DimensionedField<Type, GeoMesh, PrimitiveField>::~DimensionedField()
 {
     db().cacheTemporaryObject(*this);
 }
@@ -489,8 +513,9 @@ DimensionedField<Type, GeoMesh>::~DimensionedField()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-Foam::Field<Type>& Foam::DimensionedField<Type, GeoMesh>::primitiveFieldRef()
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+PrimitiveField<Type>&
+Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::primitiveFieldRef()
 {
     this->setUpToDate();
     storeOldTimes();
@@ -498,20 +523,24 @@ Foam::Field<Type>& Foam::DimensionedField<Type, GeoMesh>::primitiveFieldRef()
 }
 
 
-template<class Type, class GeoMesh>
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
 tmp
 <
     DimensionedField
-        <typename DimensionedField<Type, GeoMesh>::cmptType, GeoMesh>
+    <
+        typename DimensionedField<Type, GeoMesh, PrimitiveField>::cmptType,
+        GeoMesh,
+        Field
+    >
 >
-DimensionedField<Type, GeoMesh>::component
+DimensionedField<Type, GeoMesh, PrimitiveField>::component
 (
     const direction d
 ) const
 {
-    tmp<DimensionedField<cmptType, GeoMesh>> result
+    tmp<DimensionedField<cmptType, GeoMesh, Field>> result
     (
-        DimensionedField<cmptType, GeoMesh>::New
+        DimensionedField<cmptType, GeoMesh, Field>::New
         (
             name() + ".component(" + ::Foam::name(d) + ')',
             mesh_,
@@ -525,26 +554,36 @@ DimensionedField<Type, GeoMesh>::component
 }
 
 
-template<class Type, class GeoMesh>
-void DimensionedField<Type, GeoMesh>::replace
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::replace
 (
     const direction d,
     const DimensionedField
-        <typename DimensionedField<Type, GeoMesh>::cmptType, GeoMesh>& df
+    <
+        typename DimensionedField<Type, GeoMesh, PrimitiveField>::cmptType,
+        GeoMesh,
+        PrimitiveField2
+    >& df
 )
 {
-    Field<Type>::replace(d, df);
+    PrimitiveField<Type>::replace(d, df);
 }
 
 
-template<class Type, class GeoMesh>
-void DimensionedField<Type, GeoMesh>::replace
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::replace
 (
     const direction d,
     const tmp
     <
         DimensionedField
-            <typename DimensionedField<Type, GeoMesh>::cmptType, GeoMesh>
+        <
+            typename DimensionedField<Type, GeoMesh, PrimitiveField>::cmptType,
+            GeoMesh,
+            PrimitiveField2
+        >
     >& tdf
 )
 {
@@ -553,13 +592,13 @@ void DimensionedField<Type, GeoMesh>::replace
 }
 
 
-template<class Type, class GeoMesh>
-tmp<DimensionedField<Type, GeoMesh>>
-DimensionedField<Type, GeoMesh>::T() const
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+tmp<DimensionedField<Type, GeoMesh, Field>>
+DimensionedField<Type, GeoMesh, PrimitiveField>::T() const
 {
-    tmp<DimensionedField<Type, GeoMesh>> result
+    tmp<DimensionedField<Type, GeoMesh, Field>> result
     (
-        DimensionedField<Type, GeoMesh>::New
+        DimensionedField<Type, GeoMesh, Field>::New
         (
             name() + ".T()",
             mesh_,
@@ -573,8 +612,9 @@ DimensionedField<Type, GeoMesh>::T() const
 }
 
 
-template<class Type, class GeoMesh>
-dimensioned<Type> DimensionedField<Type, GeoMesh>::average() const
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+dimensioned<Type>
+DimensionedField<Type, GeoMesh, PrimitiveField>::average() const
 {
     dimensioned<Type> Average
     (
@@ -587,10 +627,12 @@ dimensioned<Type> DimensionedField<Type, GeoMesh>::average() const
 }
 
 
-template<class Type, class GeoMesh>
-dimensioned<Type> DimensionedField<Type, GeoMesh>::weightedAverage
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+dimensioned<Type>
+DimensionedField<Type, GeoMesh, PrimitiveField>::weightedAverage
 (
-    const DimensionedField<scalar, GeoMesh>& weightField
+    const DimensionedField<scalar, GeoMesh, PrimitiveField2>& weightField
 ) const
 {
     return
@@ -605,10 +647,12 @@ dimensioned<Type> DimensionedField<Type, GeoMesh>::weightedAverage
 }
 
 
-template<class Type, class GeoMesh>
-dimensioned<Type> DimensionedField<Type, GeoMesh>::weightedAverage
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+dimensioned<Type>
+DimensionedField<Type, GeoMesh, PrimitiveField>::weightedAverage
 (
-    const tmp<DimensionedField<scalar, GeoMesh>>& tweightField
+    const tmp<DimensionedField<scalar, GeoMesh, PrimitiveField2>>& tweightField
 ) const
 {
     dimensioned<Type> wa = weightedAverage(tweightField());
@@ -617,10 +661,10 @@ dimensioned<Type> DimensionedField<Type, GeoMesh>::weightedAverage
 }
 
 
-template<class Type, class GeoMesh>
-void DimensionedField<Type, GeoMesh>::reset
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::reset
 (
-    const DimensionedField<Type, GeoMesh>& df
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df
 )
 {
     // Check for assignment to self
@@ -632,16 +676,16 @@ void DimensionedField<Type, GeoMesh>::reset
     }
 
     dimensions_ = df.dimensions();
-    Field<Type>::operator=(df);
+    PrimitiveField<Type>::operator=(df);
 }
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-void DimensionedField<Type, GeoMesh>::operator=
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
 (
-    const DimensionedField<Type, GeoMesh>& df
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df
 )
 {
     // Check for assignment to self
@@ -655,14 +699,14 @@ void DimensionedField<Type, GeoMesh>::operator=
     checkField(*this, df, "=");
 
     dimensions_ = df.dimensions();
-    Field<Type>::operator=(df);
+    PrimitiveField<Type>::operator=(df);
 }
 
 
-template<class Type, class GeoMesh>
-void DimensionedField<Type, GeoMesh>::operator=
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
 (
-    DimensionedField<Type, GeoMesh>&& df
+    DimensionedField<Type, GeoMesh, PrimitiveField>&& df
 )
 {
     // Check for assignment to self
@@ -676,17 +720,17 @@ void DimensionedField<Type, GeoMesh>::operator=
     checkField(*this, df, "=");
 
     dimensions_ = move(df.dimensions());
-    Field<Type>::operator=(move(df));
+    PrimitiveField<Type>::operator=(move(df));
 }
 
 
-template<class Type, class GeoMesh>
-void DimensionedField<Type, GeoMesh>::operator=
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
 (
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf
 )
 {
-    const DimensionedField<Type, GeoMesh>& df = tdf();
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df = tdf();
 
     // Check for assignment to self
     if (this == &df)
@@ -702,118 +746,139 @@ void DimensionedField<Type, GeoMesh>::operator=
 
     if (tdf.isTmp())
     {
-        this->transfer(tdf.ref());
+        primitiveFieldRef().transfer(tdf.ref());
     }
     else
     {
-        Field<Type>::operator=(df);
+        primitiveFieldRef() = df.primitiveField();
     }
 
     tdf.clear();
 }
 
 
-template<class Type, class GeoMesh>
-void DimensionedField<Type, GeoMesh>::operator=
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
 (
-    const dimensioned<Type>& dt
+    const DimensionedField<Type, GeoMesh, PrimitiveField2>& df
 )
 {
-    dimensions_ = dt.dimensions();
-    Field<Type>::operator=(dt.value());
-}
-
-
-template<class Type, class GeoMesh>
-void DimensionedField<Type, GeoMesh>::operator=(const zero&)
-{
-    Field<Type>::operator=(Zero);
-}
-
-
-template<class Type, class GeoMesh>
-void DimensionedField<Type, GeoMesh>::operator==
-(
-    const tmp<DimensionedField<Type, GeoMesh>>& tdf
-)
-{
-    const DimensionedField<Type, GeoMesh>& df = tdf();
-
-    // Check for assignment to self
-    if (this == &df)
-    {
-        FatalErrorInFunction
-            << "attempted assignment to self"
-            << abort(FatalError);
-    }
-
-    checkField(*this, df, "==");
+    checkField(*this, df, "=");
 
     dimensions_ = df.dimensions();
+    PrimitiveField<Type>::operator=(df);
+}
 
-    if (tdf.isTmp())
-    {
-        this->transfer(tdf.ref());
-    }
-    else
-    {
-        Field<Type>::operator=(df);
-    }
 
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
+(
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField2>>& tdf
+)
+{
+    const DimensionedField<Type, GeoMesh, PrimitiveField2>& df = tdf();
+
+    checkField(*this, df, "=");
+
+    dimensions_ = df.dimensions();
+    PrimitiveField<Type>::operator=(df);
     tdf.clear();
 }
 
 
-template<class Type, class GeoMesh>
-void DimensionedField<Type, GeoMesh>::operator==
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
 (
     const dimensioned<Type>& dt
 )
 {
     dimensions_ = dt.dimensions();
-    Field<Type>::operator=(dt.value());
+    PrimitiveField<Type>::operator=(dt.value());
 }
 
 
-template<class Type, class GeoMesh>
-void DimensionedField<Type, GeoMesh>::operator==(const zero&)
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=(const zero&)
 {
-    Field<Type>::operator=(Zero);
+    PrimitiveField<Type>::operator=(Zero);
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator==
+(
+    const DimensionedField<Type, GeoMesh, PrimitiveField2>& df
+)
+{
+    this->operator=(df);
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator==
+(
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField2>>& tdf
+)
+{
+    this->operator=(tdf);
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator==
+(
+    const dimensioned<Type>& dt
+)
+{
+    this->operator=(dt);
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator==(const zero&)
+{
+    this->operator=(Zero);
 }
 
 
 #define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
                                                                                \
-template<class Type, class GeoMesh>                                            \
-void DimensionedField<Type, GeoMesh>::operator op                              \
+template<class Type, class GeoMesh, template<class> class PrimitiveField>      \
+template<template<class> class PrimitiveField2>                                \
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator op              \
 (                                                                              \
-    const DimensionedField<TYPE, GeoMesh>& df                                  \
+    const DimensionedField<TYPE, GeoMesh, PrimitiveField2>& df                 \
 )                                                                              \
 {                                                                              \
     checkField(*this, df, #op);                                                \
                                                                                \
     dimensions_ op df.dimensions();                                            \
-    Field<Type>::operator op(df);                                              \
+    PrimitiveField<Type>::operator op(df);                                     \
 }                                                                              \
                                                                                \
-template<class Type, class GeoMesh>                                            \
-void DimensionedField<Type, GeoMesh>::operator op                              \
+template<class Type, class GeoMesh, template<class> class PrimitiveField>      \
+template<template<class> class PrimitiveField2>                                \
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator op              \
 (                                                                              \
-    const tmp<DimensionedField<TYPE, GeoMesh>>& tdf                            \
+    const tmp<DimensionedField<TYPE, GeoMesh, PrimitiveField2>>& tdf           \
 )                                                                              \
 {                                                                              \
     operator op(tdf());                                                        \
     tdf.clear();                                                               \
 }                                                                              \
                                                                                \
-template<class Type, class GeoMesh>                                            \
-void DimensionedField<Type, GeoMesh>::operator op                              \
+template<class Type, class GeoMesh, template<class> class PrimitiveField>      \
+void DimensionedField<Type, GeoMesh, PrimitiveField>::operator op              \
 (                                                                              \
     const dimensioned<TYPE>& dt                                                \
 )                                                                              \
 {                                                                              \
     dimensions_ op dt.dimensions();                                            \
-    Field<Type>::operator op(dt.value());                                      \
+    PrimitiveField<Type>::operator op(dt.value());                             \
 }
 
 COMPUTED_ASSIGNMENT(Type, +=)

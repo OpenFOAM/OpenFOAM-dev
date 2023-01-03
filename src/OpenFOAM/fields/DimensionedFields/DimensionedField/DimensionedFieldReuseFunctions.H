@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,8 @@ License
 #ifndef DimensionedFieldReuseFunctions_H
 #define DimensionedFieldReuseFunctions_H
 
+#include "DimensionedField.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -34,15 +36,15 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class TypeR, class GeoMesh>
-tmp<DimensionedField<TypeR, GeoMesh>> New
+tmp<DimensionedField<TypeR, GeoMesh, Field>> New
 (
-    const tmp<DimensionedField<TypeR, GeoMesh>>& tdf1,
+    const tmp<DimensionedField<TypeR, GeoMesh, Field>>& tdf1,
     const word& name,
     const dimensionSet& dimensions
 )
 {
-    DimensionedField<TypeR, GeoMesh>& df1 =
-        const_cast<DimensionedField<TypeR, GeoMesh>& >(tdf1());
+    DimensionedField<TypeR, GeoMesh, Field>& df1 =
+        const_cast<DimensionedField<TypeR, GeoMesh, Field>&>(tdf1());
 
     if (tdf1.isTmp())
     {
@@ -52,7 +54,7 @@ tmp<DimensionedField<TypeR, GeoMesh>> New
     }
     else
     {
-        return DimensionedField<TypeR, GeoMesh>::New
+        return DimensionedField<TypeR, GeoMesh, Field>::New
         (
             name,
             df1.mesh(),
@@ -62,21 +64,27 @@ tmp<DimensionedField<TypeR, GeoMesh>> New
 }
 
 
-template<class TypeR, class Type1, class GeoMesh>
+template
+<
+    class TypeR,
+    class Type1,
+    class GeoMesh,
+    template<class> class PrimitiveField
+>
 class reuseTmpDimensionedField
 {
 public:
 
-    static tmp<DimensionedField<TypeR, GeoMesh>> New
+    static tmp<DimensionedField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<DimensionedField<Type1, GeoMesh>>& tdf1,
+        const tmp<DimensionedField<Type1, GeoMesh, PrimitiveField>>& tdf1,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        const DimensionedField<Type1, GeoMesh>& df1 = tdf1();
+        const DimensionedField<Type1, GeoMesh, PrimitiveField>& df1 = tdf1();
 
-        return DimensionedField<TypeR, GeoMesh>::New
+        return DimensionedField<TypeR, GeoMesh, Field>::New
         (
             name,
             df1.mesh(),
@@ -87,19 +95,19 @@ public:
 
 
 template<class TypeR, class GeoMesh>
-class reuseTmpDimensionedField<TypeR, TypeR, GeoMesh>
+class reuseTmpDimensionedField<TypeR, TypeR, GeoMesh, Field>
 {
 public:
 
-    static tmp<DimensionedField<TypeR, GeoMesh>> New
+    static tmp<DimensionedField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<DimensionedField<TypeR, GeoMesh>>& tdf1,
+        const tmp<DimensionedField<TypeR, GeoMesh, Field>>& tdf1,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        DimensionedField<TypeR, GeoMesh>& df1 =
-            const_cast<DimensionedField<TypeR, GeoMesh>& >(tdf1());
+        DimensionedField<TypeR, GeoMesh, Field>& df1 =
+            const_cast<DimensionedField<TypeR, GeoMesh, Field>&>(tdf1());
 
         if (tdf1.isTmp())
         {
@@ -109,7 +117,7 @@ public:
         }
         else
         {
-            return DimensionedField<TypeR, GeoMesh>::New
+            return DimensionedField<TypeR, GeoMesh, Field>::New
             (
                 name,
                 df1.mesh(),
@@ -120,22 +128,30 @@ public:
 };
 
 
-template<class TypeR, class Type1, class Type2, class GeoMesh>
+template
+<
+    class TypeR,
+    class Type1,
+    class Type2,
+    class GeoMesh,
+    template<class> class PrimitiveField1,
+    template<class> class PrimitiveField2
+>
 class reuseTmpTmpDimensionedField
 {
 public:
 
-    static tmp<DimensionedField<TypeR, GeoMesh>> New
+    static tmp<DimensionedField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<DimensionedField<Type1, GeoMesh>>& tdf1,
-        const tmp<DimensionedField<Type2, GeoMesh>>& tdf2,
+        const tmp<DimensionedField<Type1, GeoMesh, PrimitiveField1>>& tdf1,
+        const tmp<DimensionedField<Type2, GeoMesh, PrimitiveField2>>& tdf2,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        const DimensionedField<Type1, GeoMesh>& df1 = tdf1();
+        const DimensionedField<Type1, GeoMesh, PrimitiveField1>& df1 = tdf1();
 
-        return DimensionedField<TypeR, GeoMesh>::New
+        return DimensionedField<TypeR, GeoMesh, Field>::New
         (
             name,
             df1.mesh(),
@@ -145,22 +161,28 @@ public:
 };
 
 
-template<class TypeR, class Type1, class GeoMesh>
-class reuseTmpTmpDimensionedField<TypeR, Type1, TypeR, GeoMesh>
+template
+<
+    class TypeR,
+    class Type1,
+    class GeoMesh,
+    template<class> class PrimitiveField1
+>
+class reuseTmpTmpDimensionedField
+<TypeR, Type1, TypeR, GeoMesh, PrimitiveField1, Field>
 {
 public:
 
-    static tmp<DimensionedField<TypeR, GeoMesh>> New
+    static tmp<DimensionedField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<DimensionedField<Type1, GeoMesh>>& tdf1,
-        const tmp<DimensionedField<TypeR, GeoMesh>>& tdf2,
+        const tmp<DimensionedField<Type1, GeoMesh, PrimitiveField1>>& tdf1,
+        const tmp<DimensionedField<TypeR, GeoMesh, Field>>& tdf2,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        const DimensionedField<Type1, GeoMesh>& df1 = tdf1();
-        DimensionedField<TypeR, GeoMesh>& df2 =
-            const_cast<DimensionedField<TypeR, GeoMesh>& >(tdf2());
+        DimensionedField<TypeR, GeoMesh, Field>& df2 =
+            const_cast<DimensionedField<TypeR, GeoMesh, Field>&>(tdf2());
 
         if (tdf2.isTmp())
         {
@@ -170,10 +192,10 @@ public:
         }
         else
         {
-            return DimensionedField<TypeR, GeoMesh>::New
+            return DimensionedField<TypeR, GeoMesh, Field>::New
             (
                 name,
-                df1.mesh(),
+                df2.mesh(),
                 dimensions
             );
         }
@@ -181,21 +203,28 @@ public:
 };
 
 
-template<class TypeR, class Type2, class GeoMesh>
-class reuseTmpTmpDimensionedField<TypeR, TypeR, Type2, GeoMesh>
+template
+<
+    class TypeR,
+    class Type2,
+    class GeoMesh,
+    template<class> class PrimitiveField2
+>
+class reuseTmpTmpDimensionedField
+<TypeR, TypeR, Type2, GeoMesh, Field, PrimitiveField2>
 {
 public:
 
-    static tmp<DimensionedField<TypeR, GeoMesh>> New
+    static tmp<DimensionedField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<DimensionedField<TypeR, GeoMesh>>& tdf1,
-        const tmp<DimensionedField<Type2, GeoMesh>>& tdf2,
+        const tmp<DimensionedField<TypeR, GeoMesh, Field>>& tdf1,
+        const tmp<DimensionedField<Type2, GeoMesh, PrimitiveField2>>& tdf2,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        DimensionedField<TypeR, GeoMesh>& df1 =
-            const_cast<DimensionedField<TypeR, GeoMesh>& >(tdf1());
+        DimensionedField<TypeR, GeoMesh, Field>& df1 =
+            const_cast<DimensionedField<TypeR, GeoMesh, Field>&>(tdf1());
 
         if (tdf1.isTmp())
         {
@@ -205,7 +234,7 @@ public:
         }
         else
         {
-            return DimensionedField<TypeR, GeoMesh>::New
+            return DimensionedField<TypeR, GeoMesh, Field>::New
             (
                 name,
                 df1.mesh(),
@@ -217,22 +246,22 @@ public:
 
 
 template<class TypeR, class GeoMesh>
-class reuseTmpTmpDimensionedField<TypeR, TypeR, TypeR, GeoMesh>
+class reuseTmpTmpDimensionedField<TypeR, TypeR, TypeR, GeoMesh, Field, Field>
 {
 public:
 
-    static tmp<DimensionedField<TypeR, GeoMesh>> New
+    static tmp<DimensionedField<TypeR, GeoMesh, Field>> New
     (
-        const tmp<DimensionedField<TypeR, GeoMesh>>& tdf1,
-        const tmp<DimensionedField<TypeR, GeoMesh>>& tdf2,
+        const tmp<DimensionedField<TypeR, GeoMesh, Field>>& tdf1,
+        const tmp<DimensionedField<TypeR, GeoMesh, Field>>& tdf2,
         const word& name,
         const dimensionSet& dimensions
     )
     {
-        DimensionedField<TypeR, GeoMesh>& df1 =
-            const_cast<DimensionedField<TypeR, GeoMesh>& >(tdf1());
-        DimensionedField<TypeR, GeoMesh>& df2 =
-            const_cast<DimensionedField<TypeR, GeoMesh>& >(tdf2());
+        DimensionedField<TypeR, GeoMesh, Field>& df1 =
+            const_cast<DimensionedField<TypeR, GeoMesh, Field>&>(tdf1());
+        DimensionedField<TypeR, GeoMesh, Field>& df2 =
+            const_cast<DimensionedField<TypeR, GeoMesh, Field>&>(tdf2());
 
         if (tdf1.isTmp())
         {
@@ -248,7 +277,7 @@ public:
         }
         else
         {
-            return DimensionedField<TypeR, GeoMesh>::New
+            return DimensionedField<TypeR, GeoMesh, Field>::New
             (
                 name,
                 df1.mesh(),
