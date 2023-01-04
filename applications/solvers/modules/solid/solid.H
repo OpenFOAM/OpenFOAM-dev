@@ -25,9 +25,9 @@ Class
     Foam::solvers::solid
 
 Description
-    Solver module for turbulent flow of compressible fluids for conjugate heat
-    transfer, HVAC and similar applications, with optional mesh motion and mesh
-    topology changes.
+    Solver module for thermal transport is solid domains and regions for
+    conjugate heat transfer, HVAC and similar applications, with optional mesh
+    motion and mesh topology changes.
 
 SourceFiles
     solid.C
