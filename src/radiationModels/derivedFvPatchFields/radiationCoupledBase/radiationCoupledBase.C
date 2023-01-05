@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,38 +98,15 @@ Foam::radiationCoupledBase::radiationCoupledBase
     {
         case SOLIDRADIATION:
         {
-            if (!isA<mappedPatchBase>(patch_.patch()))
-            {
-                FatalIOErrorInFunction
-                (
-                    dict
-                )   << "\n    patch type '" << patch_.type()
-                    << "' not type '" << mappedPatchBase::typeName << "'"
-                    << "\n    for patch " << patch_.name()
-                    << exit(FatalIOError);
-            }
-
-            emissivity_ = scalarField(patch_.size(), 0.0);
+            emissivity_ = scalarField(patch_.size(), scalar(0));
+            break;
         }
-        break;
 
         case LOOKUP:
         {
-            if (!dict.found("emissivity"))
-            {
-                FatalIOErrorInFunction
-                (
-                    dict
-                )   << "\n    emissivity key does not exist for patch "
-                    << patch_.name()
-                    << exit(FatalIOError);
-            }
-            else
-            {
-                emissivity_ = scalarField("emissivity", dict, patch_.size());
-            }
+            emissivity_ = scalarField("emissivity", dict, patch_.size());
+            break;
         }
-        break;
     }
 }
 
@@ -150,7 +127,7 @@ Foam::tmp<Foam::scalarField> Foam::radiationCoupledBase::emissivity() const
         {
             // Get the coupling information from the mappedPatchBase
             const mappedPatchBase& mpp =
-                refCast<const mappedPatchBase>(patch_.patch());
+                mappedPatchBase::getMap(patch_.patch());
 
             const polyMesh& nbrMesh = mpp.nbrMesh();
 

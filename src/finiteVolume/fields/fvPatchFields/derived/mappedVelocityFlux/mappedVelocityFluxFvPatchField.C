@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,16 +53,12 @@ Foam::mappedVelocityFluxFvPatchField::mappedVelocityFluxFvPatchField
     fixedValueFvPatchVectorField(p, iF, dict),
     phiName_(dict.lookupOrDefault<word>("phi", "phi"))
 {
-    if (!isA<mappedPatchBase>(this->patch().patch()))
-    {
-        FatalErrorInFunction
-            << "Patch type '" << p.type()
-            << "' not type '" << mappedPatchBase::typeName << "'"
-            << " for patch " << p.name()
-            << " of field " << internalField().name()
-            << " in file " << internalField().objectPath()
-            << exit(FatalError);
-    }
+    mappedPatchBase::validateMapForField
+    (
+        *this,
+        dict,
+        mappedPatchBase::from::differentPatch
+    );
 }
 
 
@@ -76,18 +72,7 @@ Foam::mappedVelocityFluxFvPatchField::mappedVelocityFluxFvPatchField
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
     phiName_(ptf.phiName_)
-{
-    if (!isA<mappedPatchBase>(this->patch().patch()))
-    {
-        FatalErrorInFunction
-            << "Patch type '" << p.type()
-            << "' not type '" << mappedPatchBase::typeName << "'"
-            << " for patch " << p.name()
-            << " of field " << internalField().name()
-            << " in file " << internalField().objectPath()
-            << exit(FatalError);
-    }
-}
+{}
 
 
 Foam::mappedVelocityFluxFvPatchField::mappedVelocityFluxFvPatchField
@@ -115,8 +100,7 @@ void Foam::mappedVelocityFluxFvPatchField::updateCoeffs()
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag+1;
 
-    const mappedPatchBase& mapper =
-        refCast<const mappedPatchBase>(patch().patch());
+    const mappedPatchBase& mapper = mappedPatchBase::getMap(patch().patch());
     const fvMesh& nbrMesh = refCast<const fvMesh>(mapper.nbrMesh());
     const label nbrPatchi = mapper.nbrPolyPatch().index();
 

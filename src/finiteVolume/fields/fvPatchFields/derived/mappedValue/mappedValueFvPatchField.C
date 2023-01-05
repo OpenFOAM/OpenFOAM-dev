@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mappedValueFvPatchField.H"
+#include "mappedPolyPatch.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -32,25 +33,10 @@ template<class Type>
 const Foam::mappedPatchBase&
 Foam::mappedValueFvPatchField<Type>::mapper() const
 {
-    if (mapperPtr_.valid())
-    {
-        return mapperPtr_();
-    }
-
-    if (isA<mappedPatchBase>(this->patch().patch()))
-    {
-        return refCast<const mappedPatchBase>(this->patch().patch());
-    }
-
-    FatalErrorInFunction
-        << "Field " << this->internalField().name() << " on patch "
-        << this->patch().name() << " in file "
-        << this->internalField().objectPath()
-        << " has neither a mapper specified nor is the patch of "
-        << mappedPatchBase::typeName << " type"
-        << exit(FatalError);
-
-    return NullObjectRef<mappedPatchBase>();
+    return
+        mapperPtr_.valid()
+      ? mapperPtr_()
+      : mappedPatchBase::getMap(this->patch().patch());
 }
 
 
@@ -150,7 +136,30 @@ Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
       ? new mappedPatchBase(p.patch(), dict, false)
       : nullptr
     )
-{}
+{
+    if (!mapperPtr_.valid() && !isA<mappedPatchBase>(p.patch()))
+    {
+        OStringStream str;
+        str << "Field " << this->internalField().name() << " of type "
+            << type() << " on patch " << this->patch().name() << " does not "
+            << "have mapping specified (i.e., neighbourPatch, and/or "
+            << "neighbourRegion entries) nor is the patch of "
+            << mappedPolyPatch::typeName << " type";
+        FatalIOErrorInFunction(dict)
+            << stringOps::breakIntoIndentedLines(str.str()).c_str()
+            << exit(FatalIOError);
+    }
+
+    this->mapper().validateForField
+    (
+        *this,
+        dict,
+        this->mapper().sameUntransformedPatch()
+     && this->fieldName_ == this->internalField().name()
+      ? mappedPatchBase::from::differentPatch
+      : mappedPatchBase::from::any
+    );
+}
 
 
 template<class Type>

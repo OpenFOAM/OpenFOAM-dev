@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,15 +55,12 @@ semiPermeableBaffleMassFractionFvPatchScalarField
 :
     specieTransferMassFractionFvPatchScalarField(p, iF, dict)
 {
-    if (!isA<mappedPatchBase>(patch().patch()))
-    {
-        FatalErrorInFunction
-            << "' not type '" << mappedPatchBase::typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << internalField().name()
-            << " in file " << internalField().objectPath()
-            << exit(FatalError);
-    }
+    mappedPatchBase::validateMapForField
+    (
+        *this,
+        dict,
+        mappedPatchBase::from::differentPatch
+    );
 }
 
 
@@ -104,8 +101,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     const word& YName = internalField().name();
 
     // Get the coupling information from the mappedPatchBase
-    const mappedPatchBase& mpp =
-        refCast<const mappedPatchBase>(patch().patch());
+    const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
     const polyMesh& nbrMesh = mpp.nbrMesh();
     const label nbrPatchi = mpp.nbrPolyPatch().index();
     const fvPatch& nbrPatch =

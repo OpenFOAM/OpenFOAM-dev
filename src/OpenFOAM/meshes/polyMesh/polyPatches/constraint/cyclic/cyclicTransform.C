@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -455,7 +455,6 @@ Foam::cyclicTransform::cyclicTransform
                     );
             }
 
-            // Calculate the angle
             const tensor PerpA = tensor::I - sqr(rotationAxis_);
             const vector normalPerpA = normalised(PerpA & normal);
             const vector negNbrNormalPerpA = normalised(PerpA & negNbrNormal);
@@ -465,6 +464,7 @@ Foam::cyclicTransform::cyclicTransform
               - sign((normalPerpA ^ negNbrNormalPerpA) & rotationAxis_)
                *radToDeg(theta);
 
+            // Calculate the angle
             // Calculate the centre of rotation, if necessary
             if (transformType_ != oldTransformType)
             {

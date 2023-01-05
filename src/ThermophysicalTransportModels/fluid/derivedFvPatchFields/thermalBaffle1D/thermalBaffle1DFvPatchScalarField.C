@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,15 +79,13 @@ thermalBaffle1DFvPatchScalarField
     qrRelaxation_(dict.lookupOrDefault<scalar>("qrRelaxation", 1)),
     qrName_(dict.lookupOrDefault<word>("qr", "none"))
 {
-    if (!isA<mappedPatchBase>(this->patch().patch()))
-    {
-        FatalErrorInFunction
-            << "' not type '" << mappedPatchBase::typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << internalField().name()
-            << " in file " << internalField().objectPath()
-            << exit(FatalError);
-    }
+    mappedPatchBase::validateMapForField
+    (
+        *this,
+        dict,
+        mappedPatchBase::from::sameRegion
+      & mappedPatchBase::from::differentPatch
+    );
 
     fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
 
@@ -176,17 +174,7 @@ thermalBaffle1DFvPatchScalarField
 template<class solidType>
 bool thermalBaffle1DFvPatchScalarField<solidType>::owner() const
 {
-    const mappedPatchBase& mpp =
-        refCast<const mappedPatchBase>(patch().patch());
-
-    if (!mpp.sameRegion())
-    {
-        FatalErrorInFunction
-            << "A" << typeName
-            << " must map to a patch field in the same region"
-            << exit(FatalError);
-    }
-
+    const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
     return patch().patch().index() < mpp.nbrPolyPatch().index();
 }
 
@@ -195,8 +183,7 @@ template<class solidType>
 const thermalBaffle1DFvPatchScalarField<solidType>&
 thermalBaffle1DFvPatchScalarField<solidType>::nbrField() const
 {
-    const mappedPatchBase& mpp =
-        refCast<const mappedPatchBase>(patch().patch());
+    const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
     const polyMesh& nbrMesh = mpp.nbrMesh();
     const label nbrPatchi = mpp.nbrPolyPatch().index();
     const fvPatch& nbrPatch =
@@ -250,8 +237,7 @@ baffleThickness() const
     }
     else
     {
-        const mappedPatchBase& mpp =
-            refCast<const mappedPatchBase>(patch().patch());
+        const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
         return mpp.distribute(nbrField().baffleThickness());
     }
 }
@@ -266,8 +252,7 @@ tmp<scalarField> thermalBaffle1DFvPatchScalarField<solidType>::qs() const
     }
     else
     {
-        const mappedPatchBase& mpp =
-            refCast<const mappedPatchBase>(patch().patch());
+        const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
         return mpp.distribute(nbrField().qs());
     }
 }
@@ -341,8 +326,7 @@ void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag + 1;
 
-    const mappedPatchBase& mpp =
-        refCast<const mappedPatchBase>(patch().patch());
+    const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
 
     if (baffleActivated_)
     {

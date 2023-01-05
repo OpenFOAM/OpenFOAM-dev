@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,13 +24,87 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mappedPatchBase.H"
+#include "stringOps.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class PatchField>
+void Foam::mappedPatchBase::validateMapForField
+(
+    const PatchField& field,
+    const dictionary& context,
+    const label froms
+)
+{
+    const polyPatch& pp = field.patch().patch();
+
+    if (!isA<mappedPatchBase>(pp))
+    {
+        OStringStream str;
+        str << "Field " << field.internalField().name() << " of type "
+            << field.type() << " cannot apply to patch " << pp.name()
+            << " because the patch is not of " << typeName << " type";
+        FatalIOErrorInFunction(context)
+            << stringOps::breakIntoIndentedLines(str.str()).c_str()
+            << exit(FatalIOError);
+    }
+
+    refCast<const mappedPatchBase>(pp).validateForField(field, context, froms);
+}
+
+
+template<class PatchField>
+void Foam::mappedPatchBase::validateForField
+(
+    const PatchField& field,
+    const dictionary& context,
+    const label froms
+) const
+{
+    const bool isNotRegion = !sameRegion() && (froms & from::sameRegion);
+    const bool isRegion = sameRegion() && (froms & from::differentRegion);
+    const bool isPatch = samePatch() && (froms & from::differentPatch);
+
+    OStringStream str;
+
+    if (isNotRegion || isRegion || isPatch)
+    {
+        str << "Field " << field.internalField().name() << " of type "
+            << field.type() << " cannot apply to patch " << patch_.name()
+            << " because values are mapped from ";
+    }
+
+    if (isNotRegion)
+    {
+        str << "a different region";
+    }
+    else if (isRegion)
+    {
+        str << "within the same region";
+    }
+    else if (isPatch)
+    {
+        str << "the same patch";
+    }
+
+    if (isNotRegion || isRegion || isPatch)
+    {
+        FatalIOErrorInFunction(context)
+            << stringOps::breakIntoIndentedLines(str.str()).c_str()
+            << exit(FatalIOError);
+    }
+}
+
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::mappedPatchBase::distribute(const Field<Type>& fld) const
 {
+    if (sameUntransformedPatch())
+    {
+        return fld;
+    }
+
     if (!patchToPatchIsUsed_)
     {
         if (mapPtr_.empty())
@@ -83,6 +157,11 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::mappedPatchBase::reverseDistribute(const Field<Type>& fld) const
 {
+    if (sameUntransformedPatch())
+    {
+        return fld;
+    }
+
     if (!patchToPatchIsUsed_)
     {
         if (mapPtr_.empty())

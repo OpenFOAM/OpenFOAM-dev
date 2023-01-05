@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,14 +77,14 @@ protected:
         //- Patch to map to
         const polyPatch& patch_;
 
+        //- Couple group for the region/patch to map from
+        const coupleGroupIdentifier coupleGroup_;
+
         //- Name of the region to map from
         mutable word nbrRegionName_;
 
         //- Name of the patch to map from
         mutable word nbrPatchName_;
-
-        //- Couple group for the region/patch to map from
-        const coupleGroupIdentifier coupleGroup_;
 
         //- The transformation between the patches
         mutable cyclicTransform transform_;
@@ -184,6 +184,12 @@ public:
             //- Is the neighbour region the same as for this patch?
             inline bool sameRegion() const;
 
+            //- Is the neighbour patch the same as this patch?
+            inline bool samePatch() const;
+
+            //- Is the neighbour patch the same as this patch with no transform?
+            inline bool sameUntransformedPatch() const;
+
             //- Name of the patch to map from
             inline const word& nbrPatchName() const;
 
@@ -192,6 +198,41 @@ public:
 
             //- Get the patch to map from
             const polyPatch& nbrPolyPatch() const;
+
+
+        // Casting
+
+            //- Cast the given polyPatch to a mappedPatchBase. Handle errors.
+            static const mappedPatchBase& getMap(const polyPatch& patch);
+
+            //- Restrict use of the mapper to certain configurations
+            struct from
+            {
+                static const label any = 0;
+                static const label sameRegion = 1;
+                static const label differentRegion = 2;
+               static const label differentPatch = 4;
+            };
+
+            //- Validate that the map exists and is appropriate for the given
+            //  set of permitted configurations
+            template<class PatchField>
+            static void validateMapForField
+            (
+                const PatchField& field,
+                const dictionary& context,
+                const label froms = from::any
+            );
+
+            //- Validate that the map is appropriate for the given
+            //  set of permitted configurations
+            template<class PatchField>
+            void validateForField
+            (
+                const PatchField& field,
+                const dictionary& context,
+                const label froms = from::any
+            ) const;
 
 
         // Edit

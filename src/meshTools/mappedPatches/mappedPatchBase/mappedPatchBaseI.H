@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,18 +56,10 @@ inline bool Foam::mappedPatchBase::symmetric() const
 
 inline const Foam::word& Foam::mappedPatchBase::nbrRegionName() const
 {
-    if (nbrRegionName_.empty())
+    if (coupleGroup_.valid() && nbrRegionName_.empty())
     {
-        if (!coupleGroup_.valid())
-        {
-            FatalErrorInFunction
-                << "Supply either a regionName or a coupleGroup"
-                << " for patch " << patch_.name()
-                << " in region " << patch_.boundaryMesh().mesh().name()
-                << exit(FatalError);
-        }
-
-        // Try and use patchGroup to find nbrPatch and nbrRegion
+        // Try and use the couple group to find nbrPatch and nbrRegion. Note:
+        // This call sets nbrRegionName_.
         const label nbrPatchID =
             coupleGroup_.findOtherPatchID(patch_, nbrRegionName_);
 
@@ -92,6 +84,23 @@ inline const Foam::word& Foam::mappedPatchBase::nbrPatchName() const
 inline bool Foam::mappedPatchBase::sameRegion() const
 {
     return nbrRegionName() == patch_.boundaryMesh().mesh().name();
+}
+
+
+inline bool Foam::mappedPatchBase::samePatch() const
+{
+    return sameRegion() && nbrPatchName() == patch_.name();
+}
+
+
+inline bool Foam::mappedPatchBase::sameUntransformedPatch() const
+{
+    return
+        samePatch()
+     && (
+            !transform_.transformComplete()
+         || !transform_.transform().transformsPosition()
+        );
 }
 
 
