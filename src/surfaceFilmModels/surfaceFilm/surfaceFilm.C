@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,6 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-
 bool Foam::surfaceFilm::read()
 {
     if (regIOobject::read())
@@ -69,10 +68,9 @@ Foam::label Foam::surfaceFilm::nbrCoupledPatchID
     // region
     const fvMesh& nbrRegionMesh = nbrRegion.mesh();
 
-    // boundary mesh
-    const polyBoundaryMesh& nbrPbm = nbrRegionMesh.boundaryMesh();
-
+    // boundary meshes
     const polyBoundaryMesh& pbm = mesh().boundaryMesh();
+    const polyBoundaryMesh& nbrPbm = nbrRegionMesh.boundaryMesh();
 
     if (regionPatchi > pbm.size() - 1)
     {
@@ -83,16 +81,8 @@ Foam::label Foam::surfaceFilm::nbrCoupledPatchID
             << abort(FatalError);
     }
 
-    const polyPatch& pp = mesh().boundaryMesh()[regionPatchi];
-
-    if (!isA<mappedPatchBase>(pp))
-    {
-        FatalErrorInFunction
-            << "Expected a " << mappedPatchBase::typeName
-            << " patch, but found a " << pp.type() << abort(FatalError);
-    }
-
-    const mappedPatchBase& mpb = refCast<const mappedPatchBase>(pp);
+    const mappedPatchBase& mpb =
+        mappedPatchBase::getMap(pbm[regionPatchi]);
 
     // sample patch name on the primary region
     const word& primaryPatchName = mpb.nbrPatchName();
@@ -103,7 +93,7 @@ Foam::label Foam::surfaceFilm::nbrCoupledPatchID
         const label nbrRegionPatchi = nbrRegion.intCoupledPatchIDs()[j];
 
         const mappedPatchBase& mpb =
-            refCast<const mappedPatchBase>(nbrPbm[nbrRegionPatchi]);
+            mappedPatchBase::getMap(nbrPbm[nbrRegionPatchi]);
 
         if (mpb.nbrPatchName() == primaryPatchName)
         {
@@ -215,10 +205,6 @@ Foam::surfaceFilm::surfaceFilm
 
         if (isA<mappedPatchBase>(regionPatch))
         {
-            DebugInFunction
-                << "found " << mappedWallPolyPatch::typeName
-                <<  " " << regionPatch.name() << endl;
-
             intCoupledPatchIDs.append(patchi);
 
             nBoundaryFaces += regionPatch.faceCells().size();
@@ -234,7 +220,6 @@ Foam::surfaceFilm::surfaceFilm
                 )
             )
             {
-
                 const label primaryPatchi = mapPatch.nbrPolyPatch().index();
                 primaryPatchIDs.append(primaryPatchi);
             }

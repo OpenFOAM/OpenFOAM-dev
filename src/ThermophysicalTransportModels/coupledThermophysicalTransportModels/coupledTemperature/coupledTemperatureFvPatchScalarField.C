@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,15 +168,12 @@ coupledTemperatureFvPatchScalarField
     Qs_(0),
     wallKappaByDelta_(0)
 {
-    if (!isA<mappedPatchBase>(this->patch().patch()))
-    {
-        FatalErrorInFunction
-            << "' not type '" << mappedPatchBase::typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << internalField().name()
-            << " in file " << internalField().objectPath()
-            << exit(FatalError);
-    }
+    mappedPatchBase::validateMapForField
+    (
+        *this,
+        dict,
+        mappedPatchBase::from::differentPatch
+    );
 
     if (dict.found("thicknessLayers"))
     {
@@ -290,8 +287,7 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
     UPstream::msgType() = oldTag + 1;
 
     // Get the coupling information from the mappedPatchBase
-    const mappedPatchBase& mpp =
-        refCast<const mappedPatchBase>(patch().patch());
+    const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
     const label patchiNbr = mpp.nbrPolyPatch().index();
     const fvPatch& patchNbr =
         refCast<const fvMesh>(mpp.nbrMesh()).boundary()[patchiNbr];

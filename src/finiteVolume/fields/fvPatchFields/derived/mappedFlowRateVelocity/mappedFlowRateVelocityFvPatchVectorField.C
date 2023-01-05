@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,14 @@ mappedFlowRateVelocityFvPatchVectorField
     nbrPhiName_(dict.lookupOrDefault<word>("nbrPhi", "phi")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
-{}
+{
+    mappedPatchBase::validateMapForField
+    (
+        *this,
+        dict,
+        mappedPatchBase::from::differentPatch
+    );
+}
 
 
 Foam::mappedFlowRateVelocityFvPatchVectorField::
@@ -105,8 +112,7 @@ void Foam::mappedFlowRateVelocityFvPatchVectorField::updateCoeffs()
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag+1;
 
-    const mappedPatchBase& mapper =
-        refCast<const mappedPatchBase>(patch().patch());
+    const mappedPatchBase& mapper = mappedPatchBase::getMap(patch().patch());
     const fvMesh& nbrMesh = refCast<const fvMesh>(mapper.nbrMesh());
     const label nbrPatchi = mapper.nbrPolyPatch().index();
     const fvPatch& nbrPatch = nbrMesh.boundary()[nbrPatchi];

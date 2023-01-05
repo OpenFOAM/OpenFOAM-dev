@@ -34,8 +34,9 @@ boundaryField
     }
     wall
     {
-        type            copiedFixedValue;
-        sourceFieldName T.liquid;
+        type            mappedValue;
+        neighbourPatch  wall;
+        field           T.liquid;
         value           $internalField;
     }
     front
