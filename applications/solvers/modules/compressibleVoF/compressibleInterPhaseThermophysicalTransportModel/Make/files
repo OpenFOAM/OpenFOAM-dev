@@ -1,3 +1,0 @@
-compressibleInterPhaseThermophysicalTransportModel.C
-
-LIB = $(FOAM_LIBBIN)/libcompressibleInterPhaseThermophysicalTransportModel

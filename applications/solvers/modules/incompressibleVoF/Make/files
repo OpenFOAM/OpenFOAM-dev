@@ -1,3 +1,5 @@
+incompressibleTwoPhaseMixture/incompressibleTwoPhaseMixture.C
+incompressibleInterPhaseTransportModel/incompressibleInterPhaseTransportModel.C
 alphaSuSp.C
 pressureCorrector.C
 incompressibleVoF.C

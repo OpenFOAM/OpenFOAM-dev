@@ -1,15 +1,12 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
 
-wclean libso compressibleInterPhaseTransportModel
-wclean libso compressibleInterPhaseThermophysicalTransportModel
+wclean
 
 wclean libso fvModels/VoFTurbulenceDamping
 wclean libso fvModels/VoFClouds
 wclean libso fvModels/VoFSurfaceFilm
 wclean libso fvModels/VoFCavitation
 wclean libso fvModels/VoFSolidificationMeltingSource
-
-wclean
 
 #------------------------------------------------------------------------------

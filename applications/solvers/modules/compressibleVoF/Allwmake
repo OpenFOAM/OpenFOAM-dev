@@ -4,15 +4,12 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-wmake $targetType compressibleInterPhaseTransportModel
-wmake $targetType compressibleInterPhaseThermophysicalTransportModel
+wmake $targetType
 
 wmake $targetType fvModels/VoFTurbulenceDamping
 wmake $targetType fvModels/VoFClouds
 wmake $targetType fvModels/VoFSurfaceFilm
 wmake $targetType fvModels/VoFCavitation
 wmake $targetType fvModels/VoFSolidificationMeltingSource
-
-wmake $targetType
 
 #------------------------------------------------------------------------------

@@ -1,3 +1,7 @@
+compressibleTwoPhaseMixture/compressibleTwoPhaseMixture.C
+compressibleInterPhaseTransportModel/compressibleInterPhaseTransportModel.C
+compressibleInterPhaseThermophysicalTransportModel/compressibleInterPhaseThermophysicalTransportModel.C
+
 alphaSuSp.C
 thermophysicalPredictor.C
 pressureCorrector.C

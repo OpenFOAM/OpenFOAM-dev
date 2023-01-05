@@ -1,4 +1,0 @@
-incompressibleTwoPhases.C
-incompressibleTwoPhaseMixture.C
-
-LIB = $(FOAM_LIBBIN)/libincompressibleTwoPhaseMixture

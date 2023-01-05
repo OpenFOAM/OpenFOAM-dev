@@ -1,0 +1,3 @@
+incompressibleTwoPhases.C
+
+LIB = $(FOAM_LIBBIN)/libincompressibleTwoPhases
