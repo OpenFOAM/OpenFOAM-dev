@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,9 +32,6 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         Prt          | turbulent Prandtl number | no         | 0.85
-        Cmu          | model coefficient       | no          | 0.09
-        kappa        | Von Karman constant     | no          | 0.41
-        E            | model coefficient       | no          | 9.8
     \endtable
 
     Example of the boundary condition specification:
@@ -43,11 +40,12 @@ Usage
     {
         type            alphatJayatillekeWallFunction;
         Prt             0.85;
-        kappa           0.41;
-        E               9.8;
-        value           uniform 0; // optional value entry
+        value           uniform 0;
     }
     \endverbatim
+
+    Note that other model constants (i.e., Cmu, kappa and E) are obtained from
+    the corresponding turbulent viscosity boundary condition.
 
 See also
     Foam::fixedValueFvPatchField
@@ -67,6 +65,9 @@ SourceFiles
 
 namespace Foam
 {
+
+class fluidThermophysicalTransportModel;
+
 namespace compressible
 {
 
@@ -89,20 +90,6 @@ class alphatJayatillekeWallFunctionFvPatchScalarField
             static scalar maxExp_;
             static scalar tolerance_;
             static label maxIters_;
-
-
-    // Private Member Functions
-
-        //- `P' function
-        scalar Psmooth(const scalar Prat) const;
-
-        //- Calculate y+ at the edge of the thermal laminar sublayer
-        scalar yPlusTherm
-        (
-            const nutWallFunctionFvPatchScalarField& nutw,
-            const scalar P,
-            const scalar Prat
-        ) const;
 
 
 public:
@@ -172,6 +159,25 @@ public:
     // Member Functions
 
         // Evaluation functions
+
+            //- Calculate the smoothing function
+            static tmp<scalarField> P(const scalarField& Prat);
+
+            //- Calculate y+ at the edge of the thermal laminar sublayer
+            static tmp<scalarField> yPlusTherm
+            (
+                const nutWallFunctionFvPatchScalarField& nutw,
+                const scalarField& P,
+                const scalarField& Prat
+            );
+
+            //- Calculate the turbulent thermal diffusivity
+            static tmp<scalarField> alphat
+            (
+                const fluidThermophysicalTransportModel& ttm,
+                const scalar Prt,
+                const label patchi
+            );
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();

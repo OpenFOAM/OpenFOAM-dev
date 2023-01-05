@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,29 +66,25 @@ Description
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        phaseType    | 'vapor' or 'liquid'     | yes         |
-        relax        | wall boiling model relaxation| yes     |
-        Prt   | inherited from alphatPhaseChangeJayatillekeWallFunction | yes |
-        Cmu   | inherited from alphatPhaseChangeJayatillekeWallFunction | yes |
-        kappa | inherited from alphatPhaseChangeJayatillekeWallFunction | yes |
-        E     | inherited from alphatPhaseChangeJayatillekeWallFunction | yes |
-        dmdt         | phase change mass flux  | yes         |
-        value        | initial alphat value    | yes         |
+        Property       | Description              | Required    | Default value
+        phaseType      | 'vapor' or 'liquid'      | yes         |
+        relax          | relaxation factor        | no          | 1
+        dmdt           | phase change mass flux   | no          | uniform 0
+        Prt            | turbulent Prandtl number | no          | 0.85
     \endtable
 
         if phaseType 'vapor':
     \table
-        partitioningModel|                     | yes         |
+        partitioningModel |                       | yes         |
     \endtable
 
         if phaseType 'liquid':
     \table
-        partitioningModel|                     | yes         |
-        nucleationSiteModel|                   | yes         |
-        departureDiamModel|                    | yes         |
-        departureFreqModel|                    | yes         |
-        bubbleWaitingTime|                     | no          | yes
+        partitioningModel |                       | yes         |
+        nucleationSiteModel |                     | yes         |
+        departureDiamModel |                      | yes         |
+        departureFreqModel |                      | yes         |
+        bubbleWaitingTimeRatio |                  | no          | 0.8
     \endtable
 
     NOTE: Runtime selectable submodels may require model specific entries
@@ -99,12 +95,9 @@ Usage
     {
         type            compressible::alphatWallBoiling2WallFunction;
         phaseType       liquid;
-        Prt             0.85;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
         relax           0.1;
         dmdt            uniform 0;
+        Prt             0.85;
         partitioningModel
         {
             type        Lavieville;
@@ -124,9 +117,6 @@ Usage
         }
         value           uniform 0.01;
     \endverbatim
-
-See also
-    Foam::alphatPhaseChangeJayatillekeWallFunctionFvPatchField
 
 SourceFiles
     alphatWallBoilingWallFunctionFvPatchScalarField.C
@@ -178,6 +168,9 @@ private:
 
         //- Heat source type
         phaseType phaseType_;
+
+        //- Turbulent Prandtl number
+        scalar Prt_;
 
         //- Patch face area by cell volume
         scalarField AbyV_;

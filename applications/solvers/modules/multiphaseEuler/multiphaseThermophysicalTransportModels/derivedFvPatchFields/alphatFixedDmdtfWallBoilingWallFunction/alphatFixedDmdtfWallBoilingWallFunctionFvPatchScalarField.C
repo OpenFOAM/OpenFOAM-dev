@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField.H"
+#include "alphatJayatillekeWallFunctionFvPatchScalarField.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "fvPatchFieldMapper.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -70,13 +72,7 @@ alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
     const fvPatchFieldMapper& mapper
 )
 :
-    alphatPhaseChangeWallFunctionFvPatchScalarField
-    (
-        psf,
-        p,
-        iF,
-        mapper
-    ),
+    alphatPhaseChangeWallFunctionFvPatchScalarField(psf, p, iF, mapper),
     fixedDmdtf_(psf.fixedDmdtf_)
 {}
 
@@ -104,7 +100,18 @@ void alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
     dmdtf_ = (1 - relax_)*dmdtf_ + relax_*fixedDmdtf_;
 
-    operator==(calcAlphat(*this));
+    operator==
+    (
+        alphatJayatillekeWallFunctionFvPatchScalarField::alphat
+        (
+            db().lookupType<fluidThermophysicalTransportModel>
+            (
+                internalField().group()
+            ),
+            0.85,
+            patch().index()
+        )
+    );
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }

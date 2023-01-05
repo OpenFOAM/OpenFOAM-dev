@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,9 +27,6 @@ Class
 Description
     Abstract base-class for all alphatWallFunctions supporting phase-change.
 
-See also
-    Foam::alphatPhaseJayatillekeWallFunctionFvPatchScalarField
-
 SourceFiles
     alphatPhaseChangeWallFunctionFvPatchScalarField.C
 
@@ -38,7 +35,7 @@ SourceFiles
 #ifndef alphatPhaseChangeWallFunctionFvPatchScalarField_H
 #define alphatPhaseChangeWallFunctionFvPatchScalarField_H
 
-#include "alphatPhaseJayatillekeWallFunctionFvPatchScalarField.H"
+#include "fixedValueFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,7 +53,7 @@ namespace compressible
 
 class alphatPhaseChangeWallFunctionFvPatchScalarField
 :
-    public alphatPhaseJayatillekeWallFunctionFvPatchScalarField
+    public fixedValueFvPatchScalarField
 {
 protected:
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,7 @@ namespace compressible
 
 defineTypeNameAndDebug(alphatPhaseChangeWallFunctionFvPatchScalarField, 0);
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 alphatPhaseChangeWallFunctionFvPatchScalarField::
@@ -50,7 +51,7 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    alphatPhaseJayatillekeWallFunctionFvPatchScalarField(p, iF),
+    fixedValueFvPatchScalarField(p, iF),
     otherPhaseName_(word::null),
     relax_(1),
     dmdtf_(p.size(), 0)
@@ -65,7 +66,7 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     const dictionary& dict
 )
 :
-    alphatPhaseJayatillekeWallFunctionFvPatchScalarField(p, iF, dict),
+    fixedValueFvPatchScalarField(p, iF, dict),
     otherPhaseName_(dict.lookup("otherPhase")),
     relax_(dict.lookupOrDefault<scalar>("relax", 1)),
     dmdtf_(p.size(), 0)
@@ -97,7 +98,7 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     const fvPatchFieldMapper& mapper
 )
 :
-    alphatPhaseJayatillekeWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
     otherPhaseName_(ptf.otherPhaseName_),
     relax_(ptf.relax_),
     dmdtf_(mapper(ptf.dmdtf_))
@@ -111,7 +112,7 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    alphatPhaseJayatillekeWallFunctionFvPatchScalarField(awfpsf, iF),
+    fixedValueFvPatchScalarField(awfpsf, iF),
     otherPhaseName_(awfpsf.otherPhaseName_),
     relax_(awfpsf.relax_),
     dmdtf_(awfpsf.dmdtf_)
@@ -120,23 +121,16 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool alphatPhaseChangeWallFunctionFvPatchScalarField::
-activeInterface(const phaseInterface& interface) const
+bool alphatPhaseChangeWallFunctionFvPatchScalarField::activeInterface
+(
+    const phaseInterface& interface
+) const
 {
     const phaseSystem& fluid = interface.fluid();
 
-    if
-    (
+    return
         interface.contains(fluid.phases()[internalField().group()])
-     && interface.contains(fluid.phases()[otherPhaseName_])
-    )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+     && interface.contains(fluid.phases()[otherPhaseName_]);
 }
 
 
@@ -147,22 +141,20 @@ alphatPhaseChangeWallFunctionFvPatchScalarField::dmdtf() const
 }
 
 
-const scalarField& alphatPhaseChangeWallFunctionFvPatchScalarField::
-dmdtf(const phaseInterface& interface) const
+const scalarField& alphatPhaseChangeWallFunctionFvPatchScalarField::dmdtf
+(
+    const phaseInterface& interface
+) const
 {
-    if (activeInterface(interface))
-    {
-        return dmdtf_;
-    }
-    else
+    if (!activeInterface(interface))
     {
         FatalErrorInFunction
             << "Phase change mass transfer rate requested for interface on "
             << "which there is no phase change "
             << abort(FatalError);
-
-        return dmdtf_;
     }
+
+    return dmdtf_;
 }
 
 
@@ -171,7 +163,7 @@ void alphatPhaseChangeWallFunctionFvPatchScalarField::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    alphatPhaseJayatillekeWallFunctionFvPatchScalarField::autoMap(m);
+    fixedValueFvPatchScalarField::autoMap(m);
 
     m(dmdtf_, dmdtf_);
 }
@@ -183,7 +175,7 @@ void alphatPhaseChangeWallFunctionFvPatchScalarField::rmap
     const labelList& addr
 )
 {
-    alphatPhaseJayatillekeWallFunctionFvPatchScalarField::rmap(ptf, addr);
+    fixedValueFvPatchScalarField::rmap(ptf, addr);
 
     const alphatPhaseChangeWallFunctionFvPatchScalarField& tiptf =
         refCast<const alphatPhaseChangeWallFunctionFvPatchScalarField>(ptf);
@@ -197,7 +189,7 @@ void alphatPhaseChangeWallFunctionFvPatchScalarField::reset
     const fvPatchScalarField& ptf
 )
 {
-    alphatPhaseJayatillekeWallFunctionFvPatchScalarField::reset(ptf);
+    fixedValueFvPatchScalarField::reset(ptf);
 
     const alphatPhaseChangeWallFunctionFvPatchScalarField& tiptf =
         refCast<const alphatPhaseChangeWallFunctionFvPatchScalarField>(ptf);
@@ -208,7 +200,7 @@ void alphatPhaseChangeWallFunctionFvPatchScalarField::reset
 
 void alphatPhaseChangeWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
-    alphatPhaseJayatillekeWallFunctionFvPatchScalarField::write(os);
+    fixedValueFvPatchScalarField::write(os);
 
     writeEntry(os, "otherPhase", otherPhaseName_);
     writeEntry(os, "relax", relax_);
