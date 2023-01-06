@@ -10,9 +10,4 @@ wmake -all $targetType extrudeMesh
 wmake -all $targetType extrudeToRegionMesh
 wmake -all $targetType snappyHexMesh
 
-if [ -n "$FOAMY_HEX_MESH" ]
-then
-    foamyMesh/Allwmake $targetType $*
-fi
-
 #------------------------------------------------------------------------------

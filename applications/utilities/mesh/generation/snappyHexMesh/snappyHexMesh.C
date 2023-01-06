@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -853,76 +853,19 @@ int main(int argc, char *argv[])
     // Read refinement surfaces
     // ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    autoPtr<refinementSurfaces> surfacesPtr;
-
     Info<< "Reading refinement surfaces..." << endl;
 
-    if (surfaceSimplify)
-    {
-        IOdictionary foamyHexMeshDict
-        (
-           IOobject
-           (
-                "foamyHexMeshDict",
-                runTime.system(),
-                runTime,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE
-           )
-        );
+    refinementSurfaces surfaces
+    (
+        allGeometry,
+        refineDict.found("refinementSurfaces")
+      ? refineDict.subDict("refinementSurfaces")
+      : dictionary::null,
+        refineDict.lookupOrDefault("gapLevelIncrement", 0)
+    );
 
-        const dictionary& conformationDict =
-            foamyHexMeshDict.subDict("surfaceConformation").subDict
-            (
-                "geometryToConformTo"
-            );
-
-        const dictionary& motionDict =
-            foamyHexMeshDict.subDict("motionControl");
-
-        const dictionary& shapeControlDict =
-            motionDict.subDict("shapeControlFunctions");
-
-        // Calculate current ratio of hex cells v.s. wanted cell size
-        const scalar defaultCellSize =
-            motionDict.lookup<scalar>("defaultCellSize");
-
-        const scalar initialCellSize = ::pow(meshPtr().V()[0], 1.0/3.0);
-
-        // Info<< "Wanted cell size  = " << defaultCellSize << endl;
-        // Info<< "Current cell size = " << initialCellSize << endl;
-        // Info<< "Fraction          = " << initialCellSize/defaultCellSize
-        //    << endl;
-
-        surfacesPtr =
-            createRefinementSurfaces
-            (
-                allGeometry,
-                conformationDict,
-                shapeControlDict,
-                refineDict.lookupOrDefault("gapLevelIncrement", 0),
-                initialCellSize/defaultCellSize
-            );
-    }
-    else
-    {
-        surfacesPtr.set
-        (
-            new refinementSurfaces
-            (
-                allGeometry,
-                refineDict.found("refinementSurfaces")
-              ? refineDict.subDict("refinementSurfaces")
-              : dictionary::null,
-                refineDict.lookupOrDefault("gapLevelIncrement", 0)
-            )
-        );
-
-        Info<< "Read refinement surfaces in = "
-            << mesh.time().cpuTimeIncrement() << " s" << nl << endl;
-    }
-
-    refinementSurfaces& surfaces = surfacesPtr();
+    Info<< "Read refinement surfaces in = "
+        << mesh.time().cpuTimeIncrement() << " s" << nl << endl;
 
 
     // Checking only?

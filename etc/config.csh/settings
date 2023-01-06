@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -304,10 +304,6 @@ case ThirdParty:
         if ( $?mpc_version ) then
             _foamAddLib     $mpcDir/lib$WM_COMPILER_LIB_ARCH
         endif
-
-        # Used by boost/CGAL:
-        setenv MPFR_ARCH_PATH $mpfrDir
-        setenv GMP_ARCH_PATH $gmpDir
     endif
     unset gcc_version gccDir
     unset gmp_version gmpDir  mpfr_version mpfrDir  mpc_version mpcDir
