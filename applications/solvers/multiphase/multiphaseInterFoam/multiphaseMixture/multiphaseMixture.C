@@ -71,7 +71,7 @@ Foam::multiphaseMixture::multiphaseMixture
         )
     ),
 
-    phases_(lookup("phases"), phase::iNew(U, phi)),
+    phases_(lookup("phases"), phase::iNew(U.mesh())),
 
     mesh_(U.mesh()),
     U_(U),

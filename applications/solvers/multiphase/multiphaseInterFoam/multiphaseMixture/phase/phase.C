@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,27 +27,22 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::phase::phase
-(
-    const word& phaseName,
-    const volVectorField& U,
-    const surfaceScalarField& phi
-)
+Foam::phase::phase(const word& phaseName, const fvMesh& mesh)
 :
     volScalarField
     (
         IOobject
         (
             IOobject::groupName("alpha", phaseName),
-            U.mesh().time().name(),
-            U.mesh(),
+            mesh.time().name(),
+            mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        U.mesh()
+        mesh
     ),
     name_(phaseName),
-    nuModel_(viscosityModel::New(U.mesh(), phaseName)),
+    nuModel_(viscosityModel::New(mesh, phaseName)),
     rho_("rho", dimDensity, nuModel_())
 {}
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,8 +69,7 @@ public:
         phase
         (
             const word& name,
-            const volVectorField& U,
-            const surfaceScalarField& phi
+            const fvMesh& mesh
         );
 
         //- Return clone
@@ -80,25 +79,19 @@ public:
         //  from Istream
         class iNew
         {
-            const volVectorField& U_;
-            const surfaceScalarField& phi_;
+            const fvMesh& mesh_;
 
         public:
 
-            iNew
-            (
-                const volVectorField& U,
-                const surfaceScalarField& phi
-            )
+            iNew(const fvMesh& mesh)
             :
-                U_(U),
-                phi_(phi)
+                mesh_(mesh)
             {}
 
             autoPtr<phase> operator()(Istream& is) const
             {
                 const word name(is);
-                return autoPtr<phase>(new phase(name, U_, phi_));
+                return autoPtr<phase>(new phase(name, mesh_));
             }
         };
 
