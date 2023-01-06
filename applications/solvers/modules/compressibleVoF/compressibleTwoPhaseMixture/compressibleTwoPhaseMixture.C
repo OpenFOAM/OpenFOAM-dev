@@ -40,7 +40,7 @@ Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
     const fvMesh& mesh
 )
 :
-    twoPhaseMixture(mesh),
+    twoPhaseVoFMixture(mesh),
 
     totalInternalEnergy_
     (
@@ -205,7 +205,7 @@ Foam::tmp<Foam::scalarField> Foam::compressibleTwoPhaseMixture::nu
 
 bool Foam::compressibleTwoPhaseMixture::read()
 {
-    if (twoPhaseMixture::read())
+    if (twoPhaseVoFMixture::read())
     {
         totalInternalEnergy_ =
             lookupOrDefault<Switch>("totalInternalEnergy", true);

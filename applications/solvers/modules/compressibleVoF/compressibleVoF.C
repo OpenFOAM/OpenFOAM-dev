@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,13 +44,13 @@ namespace solvers
 
 Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
 :
-    VoFSolver
+    twoPhaseVoFSolver
     (
         mesh,
-        autoPtr<twoPhaseMixture>(new compressibleTwoPhaseMixture(mesh))
+        autoPtr<twoPhaseVoFMixture>(new compressibleTwoPhaseMixture(mesh))
     ),
 
-    mixture(refCast<compressibleTwoPhaseMixture>(VoFSolver::mixture)),
+    mixture(refCast<compressibleTwoPhaseMixture>(twoPhaseVoFSolver::mixture)),
 
     p(mixture.p()),
 
@@ -142,7 +142,7 @@ Foam::solvers::compressibleVoF::~compressibleVoF()
 
 void Foam::solvers::compressibleVoF::prePredictor()
 {
-    VoFSolver::prePredictor();
+    twoPhaseVoFSolver::prePredictor();
 
     const volScalarField& rho1 = mixture.thermo1().rho();
     const volScalarField& rho2 = mixture.thermo2().rho();
@@ -178,7 +178,7 @@ void Foam::solvers::compressibleVoF::prePredictor()
 
 void Foam::solvers::compressibleVoF::momentumPredictor()
 {
-    VoFSolver::momentumPredictor();
+    twoPhaseVoFSolver::momentumPredictor();
 
     if (pimple.momentumPredictor())
     {

@@ -35,7 +35,7 @@ SourceFiles
 #ifndef compressibleTwoPhaseMixture_H
 #define compressibleTwoPhaseMixture_H
 
-#include "twoPhaseMixture.H"
+#include "twoPhaseVoFMixture.H"
 #include "compressibleTwoPhases.H"
 #include "rhoThermo.H"
 
@@ -50,7 +50,7 @@ namespace Foam
 
 class compressibleTwoPhaseMixture
 :
-    public twoPhaseMixture,
+    public twoPhaseVoFMixture,
     virtual public compressibleTwoPhases,
     public viscosity
 {

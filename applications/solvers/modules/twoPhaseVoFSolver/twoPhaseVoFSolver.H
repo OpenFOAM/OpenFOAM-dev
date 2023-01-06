@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solvers::VoFSolver
+    Foam::solvers::twoPhaseVoFSolver
 
 Description
     Solver module base-class for for 2 immiscible fluids using a VOF (volume
@@ -45,18 +45,18 @@ Description
     particles, surface film etc. and constraining or limiting the solution.
 
 SourceFiles
-    VoFSolver.C
+    twoPhaseVoFSolver.C
 
 See also
     Foam::solvers::fluidSolver
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef VoFSolver_H
-#define VoFSolver_H
+#ifndef twoPhaseVoFSolver_H
+#define twoPhaseVoFSolver_H
 
-#include "fluidSolver.H"
-#include "VoFMixture.H"
+#include "VoFSolver.H"
+#include "twoPhaseVoFMixture.H"
 #include "interfaceProperties.H"
 #include "buoyancy.H"
 #include "pressureReference.H"
@@ -70,180 +70,116 @@ namespace solvers
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class VoFSolver Declaration
+                          Class twoPhaseVoFSolver Declaration
 \*---------------------------------------------------------------------------*/
 
-class VoFSolver
+class twoPhaseVoFSolver
 :
-    public fluidSolver
+    public VoFSolver
 {
 
 protected:
 
     // Phase properties
 
-        //- The compressible two-phase mixture
-        autoPtr<VoFMixture> mixture_;
+        //- Reference to the twoPhaseVoFMixture
+        twoPhaseVoFMixture& mixture;
 
-        VoFMixture& mixture;
+        //- Reference to the phase1-fraction
+        volScalarField& alpha1;
 
-        //- Name of the alpha convection scheme
-        const word divAlphaName;
+        //- Reference to the phase2-fraction
+        volScalarField& alpha2;
 
-        //- Phase-fraction flux Courant number
-        scalar alphaCoNum;
-
-
-    // Kinematic properties
-
-        //- Velocity field
-        volVectorField U;
-
-        //- Volumetric-flux field
-        surfaceScalarField phi;
+        //- Switch indicating if this is a restart
+        bool alphaRestart;
 
 
-    // Thermophysical properties
+    // Interface properties
 
-        //- Buoyancy force
-        solvers::buoyancy buoyancy;
-
-        //- Reference to the buoyant pressure for buoyant cases
-        //  otherwise to the pressure
-        volScalarField& p_rgh;
-
-        //- Reference to the mixture continuity density field
-        const volScalarField& rho;
+        interfaceProperties interface;
 
 
     // Kinematic properties
 
-        //- Mass flux field
-        surfaceScalarField rhoPhi;
-
-
-    // Optional models
-
-        //- MRF zone list
-        IOMRFZoneList MRF;
+        // Phase-1 volumetric flux
+        surfaceScalarField alphaPhi1;
 
 
     // Cached temporary fields
 
-        tmp<volScalarField> rAU;
-
-        //- Pointer to the surface momentum field
-        //  used to recreate the flux after mesh-change
-        autoPtr<surfaceVectorField> Uf;
-
-        //- Pointer to the momentum divergence field
-        //  used in correctPhi to ensure the corrected phi has the
-        //  same divergence
-        autoPtr<volScalarField> divU;
-
-        //- Optional LTS reciprocal time-step field
-        tmp<volScalarField> trDeltaT;
-
-        //- Cached momentum matrix
-        //  shared between the momentum predictor and pressure corrector
-        tmp<fvVectorMatrix> tUEqn;
-
+        //- MULES Correction
+        tmp<surfaceScalarField> talphaPhi1Corr0;
 
 
 private:
 
     // Private Member Functions
 
-        //- Set rDeltaT for LTS
-        void setRDeltaT();
+        //- Correct the cached Courant numbers
+        void correctCoNum();
+
+        //- Solve for the phase-fractions
+        void alphaSolve(const dictionary& alphaControls);
+
+        //- Solve for the phase-fractions
+        void alphaPredictor();
 
 
 protected:
 
     // Protected Member Functions
 
-        //- Correct the cached Courant numbers
-        virtual void correctCoNum() = 0;
-
         //- Adjust the rDeltaT in the vicinity of the interface
-        virtual void setInterfaceRDeltaT(volScalarField& rDeltaT) = 0;
+        virtual void setInterfaceRDeltaT(volScalarField& rDeltaT);
 
-        //- Calculate and print the continuity errors
-        void continuityErrors();
-
-        //- Return the pressure reference
-        virtual const Foam::pressureReference& pressureReference() const = 0;
-
-        //- Is the flow divergent?
-        //  i.e. compressible or include phase-fraction sources
-        virtual bool divergent() = 0;
-
-        //- Return the momentum equation stress term
-        virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U) = 0;
+        //- Calculate the alpha equation sources
+        virtual void alphaSuSp
+        (
+            tmp<volScalarField::Internal>& Su,
+            tmp<volScalarField::Internal>& Sp
+        ) = 0;
 
         //- Correct the interface properties following mesh-change
         //  and phase-fraction update
-        virtual void correctInterface() = 0;
+        virtual void correctInterface();
 
         //- Return the interface surface tension force for the momentum equation
-        virtual tmp<surfaceScalarField> surfaceTensionForce() const = 0;
+        virtual tmp<surfaceScalarField> surfaceTensionForce() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("VoFSolver");
+    TypeName("twoPhaseVoFSolver");
 
 
     // Constructors
 
         //- Construct from region mesh
-        VoFSolver(fvMesh& mesh, autoPtr<VoFMixture>);
+        twoPhaseVoFSolver(fvMesh& mesh, autoPtr<twoPhaseVoFMixture>);
 
         //- Disallow default bitwise copy construction
-        VoFSolver(const VoFSolver&) = delete;
+        twoPhaseVoFSolver(const twoPhaseVoFSolver&) = delete;
 
 
     //- Destructor
-    virtual ~VoFSolver();
+    virtual ~twoPhaseVoFSolver();
 
 
     // Member Functions
 
-        //- Return the current maximum time-step for stable solution
-        virtual scalar maxDeltaT() const;
-
         //- Called at the start of the time-step, before the PIMPLE loop
         virtual void preSolve();
 
-        //- Called at the start of the PIMPLE loop to move the mesh
-        virtual bool moveMesh();
-
         //- Called at the start of the PIMPLE loop
-        virtual void prePredictor() = 0;
-
-        //- Construct and optionally solve the momentum equation
-        virtual void momentumPredictor();
-
-        //- Construct and solve the energy equation,
-        //  convert to temperature
-        //  and update thermophysical and transport properties
-        virtual void thermophysicalPredictor() = 0;
-
-        //- Construct and solve the pressure equation in the PISO loop
-        virtual void pressureCorrector() = 0;
-
-        //- Correct the momentum transport modelling
-        virtual void postCorrector();
-
-        //- Called after the PIMPLE loop at the end of the time-step
-        virtual void postSolve();
+        virtual void prePredictor();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const VoFSolver&) = delete;
+        void operator=(const twoPhaseVoFSolver&) = delete;
 };
 
 

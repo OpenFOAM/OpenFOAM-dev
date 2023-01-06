@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,48 +23,22 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "VoFSolver.H"
-#include "fvmDiv.H"
-#include "fvcSnGrad.H"
-#include "fvcReconstruct.H"
+#include "twoPhaseVoFMixture.H"
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-void Foam::solvers::VoFSolver::momentumPredictor()
+namespace Foam
 {
-    tUEqn =
-    (
-        fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
-      + MRF.DDt(rho, U)
-      + divDevTau(U)
-     ==
-        fvModels().source(rho, U)
-    );
-    fvVectorMatrix& UEqn = tUEqn.ref();
-
-    UEqn.relax();
-
-    fvConstraints().constrain(UEqn);
-
-    if (pimple.momentumPredictor())
-    {
-        solve
-        (
-            UEqn
-         ==
-            fvc::reconstruct
-            (
-                (
-                    surfaceTensionForce()
-                  - buoyancy.ghf*fvc::snGrad(rho)
-                  - fvc::snGrad(p_rgh)
-                ) * mesh.magSf()
-            )
-        );
-
-        fvConstraints().constrain(U);
-    }
+    defineTypeNameAndDebug(twoPhaseVoFMixture, 0);
 }
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::twoPhaseVoFMixture::twoPhaseVoFMixture(const fvMesh& mesh)
+:
+    VoFMixture(mesh),
+    twoPhaseMixture(mesh)
+{}
 
 
 // ************************************************************************* //

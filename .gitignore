@@ -82,5 +82,8 @@ doc/Doxygen/DTAGS
 /.dir-locals.el
 /.ycm*
 
-# Ignore the test directory
+# Ignore the tutorials/log file
+/tutorials/log
+
+# Ignore the tutorialsTest directory
 /tutorialsTest

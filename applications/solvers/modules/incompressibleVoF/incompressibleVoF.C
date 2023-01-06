@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,13 +45,13 @@ namespace solvers
 
 Foam::solvers::incompressibleVoF::incompressibleVoF(fvMesh& mesh)
 :
-    VoFSolver
+    twoPhaseVoFSolver
     (
         mesh,
-        autoPtr<twoPhaseMixture>(new incompressibleTwoPhaseMixture(mesh))
+        autoPtr<twoPhaseVoFMixture>(new incompressibleTwoPhaseMixture(mesh))
     ),
 
-    mixture(refCast<incompressibleTwoPhaseMixture>(VoFSolver::mixture)),
+    mixture(refCast<incompressibleTwoPhaseMixture>(twoPhaseVoFSolver::mixture)),
 
     p
     (
@@ -145,7 +145,7 @@ Foam::solvers::incompressibleVoF::~incompressibleVoF()
 
 void Foam::solvers::incompressibleVoF::prePredictor()
 {
-    VoFSolver::prePredictor();
+    twoPhaseVoFSolver::prePredictor();
 
     const dimensionedScalar& rho1 = mixture.rho1();
     const dimensionedScalar& rho2 = mixture.rho2();

@@ -11,6 +11,7 @@ wmake $targetType fluid
 wmake $targetType multicomponentFluid
 wmake $targetType XiFluid
 wmake $targetType VoFSolver
+wmake $targetType twoPhaseVoFSolver
 incompressibleVoF/Allwmake $targetType $*
 compressibleVoF/Allwmake $targetType $*
 multiphaseEuler/Allwmake $targetType $*

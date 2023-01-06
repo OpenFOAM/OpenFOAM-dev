@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,7 @@ SourceFiles
 
 See also
     Foam::solvers::VoFSolver
+    Foam::solvers::twoPhaseVoFSolver
     Foam::solvers::incompressibleVoF
 
 \*---------------------------------------------------------------------------*/
@@ -57,7 +58,7 @@ See also
 #ifndef compressibleVoF_H
 #define compressibleVoF_H
 
-#include "VoFSolver.H"
+#include "twoPhaseVoFSolver.H"
 #include "compressibleTwoPhaseMixture.H"
 #include "compressibleInterPhaseTransportModel.H"
 #include "compressibleInterPhaseThermophysicalTransportModel.H"
@@ -78,7 +79,7 @@ namespace solvers
 
 class compressibleVoF
 :
-    public VoFSolver
+    public twoPhaseVoFSolver
 {
 
 protected:

@@ -42,7 +42,7 @@ Foam::incompressibleTwoPhaseMixture::incompressibleTwoPhaseMixture
     const fvMesh& mesh
 )
 :
-    twoPhaseMixture(mesh),
+    twoPhaseVoFMixture(mesh),
 
     nuModel1_(viscosityModel::New(mesh, phase1Name())),
     nuModel2_(viscosityModel::New(mesh, phase2Name())),
@@ -138,7 +138,7 @@ Foam::incompressibleTwoPhaseMixture::nuf() const
 
 bool Foam::incompressibleTwoPhaseMixture::read()
 {
-    if (twoPhaseMixture::read())
+    if (twoPhaseVoFMixture::read())
     {
         nuModel1_->lookup("rho") >> rho1_;
         nuModel2_->lookup("rho") >> rho2_;

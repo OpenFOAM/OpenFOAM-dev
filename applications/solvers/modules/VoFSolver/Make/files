@@ -1,6 +1,6 @@
+VoFMixture/VoFMixture.C
 setRDeltaT.C
 moveMesh.C
-alphaPredictor.C
 momentumPredictor.C
 VoFSolver.C
 

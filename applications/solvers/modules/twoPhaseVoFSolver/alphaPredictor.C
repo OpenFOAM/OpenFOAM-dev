@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "VoFSolver.H"
+#include "twoPhaseVoFSolver.H"
 #include "subCycle.H"
 #include "interfaceCompression.H"
 #include "CMULES.H"
@@ -33,7 +33,10 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::VoFSolver::alphaSolve(const dictionary& alphaControls)
+void Foam::solvers::twoPhaseVoFSolver::alphaSolve
+(
+    const dictionary& alphaControls
+)
 {
     const label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
 
@@ -339,7 +342,7 @@ void Foam::solvers::VoFSolver::alphaSolve(const dictionary& alphaControls)
 }
 
 
-void Foam::solvers::VoFSolver::alphaPredictor()
+void Foam::solvers::twoPhaseVoFSolver::alphaPredictor()
 {
     const dictionary& alphaControls = mesh.solution().solverDict(alpha1.name());
 

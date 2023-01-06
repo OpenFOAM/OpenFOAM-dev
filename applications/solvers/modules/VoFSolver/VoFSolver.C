@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,29 +41,17 @@ namespace solvers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solvers::VoFSolver::correctCoNum()
-{
-    fluidSolver::correctCoNum(phi);
-
-    const scalarField sumPhi
-    (
-        interface.nearInterface()().primitiveField()
-       *fvc::surfaceSum(mag(phi))().primitiveField()
-    );
-
-    alphaCoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
-
-    const scalar meanAlphaCoNum =
-        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
-
-    Info<< "Interface Courant Number mean: " << meanAlphaCoNum
-        << " max: " << alphaCoNum << endl;
-}
-
-
 void Foam::solvers::VoFSolver::continuityErrors()
 {
     fluidSolver::continuityErrors(phi);
+}
+
+
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+void Foam::solvers::VoFSolver::correctCoNum()
+{
+    fluidSolver::correctCoNum(phi);
 }
 
 
@@ -72,28 +60,13 @@ void Foam::solvers::VoFSolver::continuityErrors()
 Foam::solvers::VoFSolver::VoFSolver
 (
     fvMesh& mesh,
-    autoPtr<twoPhaseMixture> mixturePtr
+    autoPtr<VoFMixture> mixturePtr
 )
 :
     fluidSolver(mesh),
 
     mixture_(mixturePtr),
     mixture(mixture_()),
-
-    alpha1(mixture.alpha1()),
-    alpha2(mixture.alpha2()),
-
-    alphaRestart
-    (
-        typeIOobject<surfaceScalarField>
-        (
-            IOobject::groupName("alphaPhi", alpha1.group()),
-            runTime.name(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ).headerOk()
-    ),
 
     divAlphaName("div(phi,alpha)"),
 
@@ -123,8 +96,6 @@ Foam::solvers::VoFSolver::VoFSolver
         linearInterpolate(U) & mesh.Sf()
     ),
 
-    interface(mixture, alpha1, alpha2, U),
-
     buoyancy(mesh),
 
     p_rgh(buoyancy.p_rgh),
@@ -144,31 +115,9 @@ Foam::solvers::VoFSolver::VoFSolver
         fvc::interpolate(rho)*phi
     ),
 
-    alphaPhi1
-    (
-        IOobject
-        (
-            IOobject::groupName("alphaPhi", alpha1.group()),
-            runTime.name(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        phi*fvc::interpolate(alpha1)
-    ),
-
     MRF(mesh)
 {
-    // Read the controls
-    read();
-
     mesh.schemes().setFluxRequired(p_rgh.name());
-    mesh.schemes().setFluxRequired(alpha1.name());
-
-    if (alphaRestart)
-    {
-        Info << "Restarting alpha" << endl;
-    }
 
     if (mesh.dynamic())
     {
@@ -188,11 +137,7 @@ Foam::solvers::VoFSolver::VoFSolver
         );
     }
 
-    if (transient())
-    {
-        correctCoNum();
-    }
-    else if (LTS)
+    if (LTS)
     {
         Info<< "Using LTS" << endl;
 
@@ -268,11 +213,7 @@ void Foam::solvers::VoFSolver::preSolve()
     // Store divU from the previous mesh so that it can be mapped
     // and used in correctPhi to ensure the corrected phi has the
     // same divergence
-    if
-    (
-        correctPhi
-     && divergent()
-     && mesh.topoChanged())
+    if (correctPhi && divergent())
     {
         // Construct and register divU for mapping
         divU = new volScalarField
@@ -283,21 +224,13 @@ void Foam::solvers::VoFSolver::preSolve()
     }
 
     // Update the mesh for topology change, mesh to mesh mapping
-    const bool topoChanged = mesh.update();
-
-    // Do not apply previous time-step mesh compression flux
-    // if the mesh topology changed
-    if (topoChanged)
-    {
-        talphaPhi1Corr0.clear();
-    }
+    mesh.update();
 }
 
 
 void Foam::solvers::VoFSolver::prePredictor()
 {
     fvModels().correct();
-    alphaPredictor();
 }
 
 
