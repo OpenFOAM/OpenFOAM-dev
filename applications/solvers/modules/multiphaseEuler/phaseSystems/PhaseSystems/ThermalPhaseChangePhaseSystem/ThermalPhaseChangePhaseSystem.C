@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -420,9 +420,9 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
 
         addDmdts(dmdts);
 
-        forAllConstIter(phaseSystem::phaseModelList, this->phases(), phaseIter)
+        forAll(this->phases(), phasei)
         {
-            const phaseModel& phase = phaseIter();
+            const phaseModel& phase = this->phases()[phasei];
 
             if (dmdt0s_.set(phase.index()))
             {

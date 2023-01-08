@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::multiphaseMixture
 
 Description
-    Incompressible multi-phase mixture with built in solution for the
+    Incompressible multiphase mixture with built in solution for the
     phase fractions with interface compression for interface-capturing.
 
     Derived from viscosity so that it can be used in conjunction
@@ -45,7 +45,7 @@ SourceFiles
 #include "viscosity.H"
 #include "IOdictionary.H"
 #include "phase.H"
-#include "PtrDictionary.H"
+#include "UPtrListDictionary.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
@@ -60,8 +60,7 @@ namespace Foam
 
 class multiphaseMixture
 :
-    public IOdictionary,
-    public viscosity
+    public IOdictionary
 {
 public:
 
@@ -134,16 +133,11 @@ private:
     // Private Data
 
         //- Dictionary of phases
-        PtrDictionary<phase> phases_;
+        UPtrListDictionary<phase> phases_;
 
         const fvMesh& mesh_;
-        const volVectorField& U_;
-        const surfaceScalarField& phi_;
 
-        surfaceScalarField rhoPhi_;
         volScalarField alphas_;
-
-        volScalarField nu_;
 
         typedef HashTable<scalar, interfacePair, interfacePair::hash>
             sigmaTable;
@@ -159,8 +153,6 @@ private:
 
         void calcAlphas();
 
-        void solveAlphas(const scalar cAlpha);
-
         tmp<surfaceVectorField> nHatfv
         (
             const volScalarField& alpha1,
@@ -173,19 +165,20 @@ private:
             const volScalarField& alpha2
         ) const;
 
-        tmp<volScalarField> K(const phase& alpha1, const phase& alpha2) const;
+        tmp<volScalarField> K
+        (
+            const phase& alpha1,
+            const phase& alpha2,
+            const volVectorField& U
+        ) const;
 
 
 public:
 
     // Constructors
 
-        //- Construct from components
-        multiphaseMixture
-        (
-            const volVectorField& U,
-            const surfaceScalarField& phi
-        );
+        //- Construct from fvMesh
+        multiphaseMixture(const fvMesh& mesh);
 
 
     //- Destructor
@@ -196,60 +189,19 @@ public:
     // Member Functions
 
         //- Return the phases
-        const PtrDictionary<phase>& phases() const
+        const UPtrListDictionary<phase>& phases() const
         {
             return phases_;
         }
 
-        //- Return the velocity
-        const volVectorField& U() const
-        {
-            return U_;
-        }
-
-        //- Return the volumetric flux
-        const surfaceScalarField& phi() const
-        {
-            return phi_;
-        }
-
-        const surfaceScalarField& rhoPhi() const
-        {
-            return rhoPhi_;
-        }
-
-        //- Return the mixture density
-        tmp<volScalarField> rho() const;
-
-        //- Return the mixture density for patch
-        tmp<scalarField> rho(const label patchi) const;
-
-        //- Return the dynamic laminar viscosity
-        tmp<volScalarField> mu() const;
-
-        //- Return the dynamic laminar viscosity for patch
-        tmp<scalarField> mu(const label patchi) const;
-
-        //- Return the face-interpolated dynamic laminar viscosity
-        tmp<surfaceScalarField> muf() const;
-
-        //- Return the kinematic laminar viscosity
-        tmp<volScalarField> nu() const;
-
-        //- Return the laminar viscosity for patch
-        tmp<scalarField> nu(const label patchi) const;
-
-        //- Return the face-interpolated dynamic laminar viscosity
-        tmp<surfaceScalarField> nuf() const;
-
-        tmp<surfaceScalarField> surfaceTensionForce() const;
+        tmp<surfaceScalarField> surfaceTensionForce
+        (
+            const volVectorField& U
+        ) const;
 
         //- Indicator of the proximity of the interface
         //  Field values are 1 near and 0 away for the interface.
         tmp<volScalarField> nearInterface() const;
-
-        //- Solve for the mixture phase-fractions
-        void solve();
 
         //- Correct the mixture properties
         void correct();

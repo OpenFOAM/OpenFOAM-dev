@@ -1,4 +1,0 @@
-phase/phase.C
-multiphaseMixture.C
-
-LIB = $(FOAM_LIBBIN)/libmultiphaseInterFoam

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::phase
+    Foam::compressiblePhase
 
 Description
     Single incompressible phase derived from the phase-fraction.
@@ -30,16 +30,16 @@ Description
     simulations.
 
 SourceFiles
-    phase.C
+    compressiblePhase.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef phase_H
-#define phase_H
+#ifndef compressiblePhase_H
+#define compressiblePhase_H
 
-#include "volFields.H"
+#include "phase.H"
 #include "dictionaryEntry.H"
-#include "viscosityModel.H"
+#include "rhoThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,18 +47,18 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class phase Declaration
+                         Class compressiblePhase Declaration
 \*---------------------------------------------------------------------------*/
 
-class phase
+class compressiblePhase
 :
-    public volScalarField
+    public phase
 {
     // Private Data
 
-        word name_;
-        autoPtr<viscosityModel> nuModel_;
-        dimensionedScalar rho_;
+        autoPtr<rhoThermo> thermo_;
+        volScalarField Alpha_;
+        volScalarField::Internal dgdt_;
 
 
 public:
@@ -66,80 +66,84 @@ public:
     // Constructors
 
         //- Construct from components
-        phase
+        compressiblePhase
         (
-            const word& name,
-            const fvMesh& mesh
+            const word& phaseName,
+            const volScalarField& T
         );
 
         //- Return clone
-        autoPtr<phase> clone() const;
+        autoPtr<compressiblePhase> clone() const;
 
-        //- Return a pointer to a new phase created on freestore
+        //- Return a pointer to a new compressiblePhase created on freestore
         //  from Istream
         class iNew
         {
-            const fvMesh& mesh_;
+            const volScalarField& T_;
 
         public:
 
-            iNew(const fvMesh& mesh)
+            iNew
+            (
+                const volScalarField& T
+            )
             :
-                mesh_(mesh)
+                T_(T)
             {}
 
-            autoPtr<phase> operator()(Istream& is) const
+            autoPtr<compressiblePhase> operator()(Istream& is) const
             {
-                const word name(is);
-                return autoPtr<phase>(new phase(name, mesh_));
+                return autoPtr<compressiblePhase>
+                (
+                    new compressiblePhase(is, T_)
+                );
             }
         };
 
 
     // Member Functions
 
-        const word& name() const
+        //- Return const-access to phase rhoThermo
+        const rhoThermo& thermo() const
         {
-            return name_;
+            return thermo_();
         }
 
-        const word& keyword() const
+        //- Return access to phase rhoThermo
+        rhoThermo& thermo()
         {
-            return name();
+            return thermo_();
         }
 
-        //- Return const-access to phase1 viscosityModel
-        const viscosityModel& nuModel() const
+        //- Return const-access to phase mass-fraction
+        const volScalarField& Alpha() const
         {
-            return nuModel_();
+            return Alpha_;
         }
 
-        //- Return the kinematic laminar viscosity
-        tmp<volScalarField> nu() const
+        //- Return access to phase mass-fraction
+        volScalarField& Alpha()
         {
-            return nuModel_->nu();
+            return Alpha_;
         }
 
-        //- Return the laminar viscosity for patch
-        tmp<scalarField> nu(const label patchi) const
+        //- Return const-access to phase divergence
+        const volScalarField::Internal& dgdt() const
         {
-            return nuModel_->nu(patchi);
+            return dgdt_;
         }
 
-        //- Return const-access to phase1 density
-        const dimensionedScalar& rho() const
+        //- Return access to phase divergence
+        volScalarField::Internal& dgdt()
         {
-            return rho_;
+            return dgdt_;
         }
 
-        //- Correct the phase properties
-        void correct();
-
-        //-Inherit read from volScalarField
-        using volScalarField::read;
-
-        //- Read base phaseProperties dictionary
-        bool read(const dictionary& phaseDict);
+        void correct
+        (
+            const volScalarField& p,
+            const volScalarField& T
+        );
 };
 
 

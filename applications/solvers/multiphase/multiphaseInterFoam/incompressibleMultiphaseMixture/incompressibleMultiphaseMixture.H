@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,19 +22,29 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::compressibleMultiphaseMixture
+    Foam::incompressibleMultiphaseMixture
 
 Description
+    Incompressible multiphase mixture with built in solution for the
+    phase fractions with interface compression for interface-capturing.
+
+    Derived from viscosity so that it can be used in conjunction
+    with the incompressible turbulence models.
+
+    Surface tension and contact-angle is handled for the interface
+    between each phase-pair.
 
 SourceFiles
-    compressibleMultiphaseMixture.C
+    incompressibleMultiphaseMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compressibleMultiphaseMixture_H
-#define compressibleMultiphaseMixture_H
+#ifndef incompressibleMultiphaseMixture_H
+#define incompressibleMultiphaseMixture_H
 
-#include "compressiblePhase.H"
+#include "viscosity.H"
+#include "IOdictionary.H"
+#include "incompressiblePhase.H"
 #include "PtrListDictionary.H"
 #include "volFields.H"
 #include "surfaceFields.H"
@@ -45,10 +55,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class compressibleMultiphaseMixture Declaration
+                      Class incompressibleMultiphaseMixture Declaration
 \*---------------------------------------------------------------------------*/
 
-class compressibleMultiphaseMixture
+class incompressibleMultiphaseMixture
 :
     public IOdictionary,
     public viscosity
@@ -123,25 +133,17 @@ private:
 
     // Private Data
 
-        const fvMesh& mesh_;
-
-        //- Pressure
-        volScalarField p_;
-
-        //- Mixture temperature
-        volScalarField T_;
-
         //- Dictionary of phases
-        PtrListDictionary<compressiblePhase> phases_;
+        PtrListDictionary<incompressiblePhase> phases_;
 
-        volScalarField rho_;
-
+        const fvMesh& mesh_;
         const volVectorField& U_;
         const surfaceScalarField& phi_;
 
         surfaceScalarField rhoPhi_;
-
         volScalarField alphas_;
+
+        volScalarField nu_;
 
         typedef HashTable<scalar, interfacePair, interfacePair::hash>
             sigmaTable;
@@ -171,23 +173,15 @@ private:
             const volScalarField& alpha2
         ) const;
 
-        tmp<volScalarField> K
-        (
-            const phase& alpha1,
-            const phase& alpha2
-        ) const;
+        tmp<volScalarField> K(const phase& alpha1, const phase& alpha2) const;
 
 
 public:
 
-    //- Runtime type information
-    TypeName("compressibleMultiphaseMixture");
-
-
     // Constructors
 
         //- Construct from components
-        compressibleMultiphaseMixture
+        incompressibleMultiphaseMixture
         (
             const volVectorField& U,
             const surfaceScalarField& phi
@@ -195,43 +189,19 @@ public:
 
 
     //- Destructor
-    virtual ~compressibleMultiphaseMixture()
+    virtual ~incompressibleMultiphaseMixture()
     {}
 
 
     // Member Functions
 
         //- Return the phases
-        const PtrListDictionary<compressiblePhase>& phases() const
+        const PtrListDictionary<incompressiblePhase>& phases() const
         {
             return phases_;
         }
 
-        //- Return non-const access to the phases
-        PtrListDictionary<compressiblePhase>& phases()
-        {
-            return phases_;
-        }
-
-        //- Return pressure [Pa]
-        volScalarField& p()
-        {
-            return p_;
-        }
-
-        //- Return mixture temperature [K]
-        volScalarField& T()
-        {
-            return T_;
-        }
-
-        //- Return mixture density [kg/m^3]
-        const volScalarField& rho() const
-        {
-            return rho_;
-        }
-
-        //- Return mixture velocity
+        //- Return the velocity
         const volVectorField& U() const
         {
             return U_;
@@ -248,30 +218,29 @@ public:
             return rhoPhi_;
         }
 
-        //- Correct the thermodynamics of each phase
-        virtual void correctThermo();
+        //- Return the mixture density
+        tmp<volScalarField> rho() const;
 
-        //- Update properties
-        virtual void correct();
+        //- Return the mixture density for patch
+        tmp<scalarField> rho(const label patchi) const;
 
-        //- Update densities for given pressure change
-        void correctRho(const volScalarField& dp);
+        //- Return the dynamic laminar viscosity
+        tmp<volScalarField> mu() const;
 
-        //- Kinematic viscosity of mixture [m^2/s]
-        virtual tmp<volScalarField> nu() const;
+        //- Return the dynamic laminar viscosity for patch
+        tmp<scalarField> mu(const label patchi) const;
 
-        //- Kinematic viscosity of mixture for patch [m^2/s]
-        virtual tmp<scalarField> nu(const label patchi) const;
+        //- Return the face-interpolated dynamic laminar viscosity
+        tmp<surfaceScalarField> muf() const;
 
-        //- Return the effective temperature transport coefficient
-        //  derived from the phase internal energy equations i.e. <kappa/Cv>
-        virtual tmp<volScalarField> alphaEff
-        (
-            const volScalarField& nut
-        ) const;
+        //- Return the kinematic laminar viscosity
+        tmp<volScalarField> nu() const;
 
-        //- Return the phase-averaged reciprocal Cv
-        tmp<volScalarField> rCv() const;
+        //- Return the laminar viscosity for patch
+        tmp<scalarField> nu(const label patchi) const;
+
+        //- Return the face-interpolated dynamic laminar viscosity
+        tmp<surfaceScalarField> nuf() const;
 
         tmp<surfaceScalarField> surfaceTensionForce() const;
 
@@ -281,6 +250,12 @@ public:
 
         //- Solve for the mixture phase-fractions
         void solve();
+
+        //- Correct the mixture properties
+        void correct();
+
+        //- Read base phaseProperties dictionary
+        bool read();
 };
 
 

@@ -21,53 +21,74 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::phase
+
+Description
+    Single incompressible phase derived from the phase-fraction.
+    Used as part of the multiPhaseMixture for interface-capturing multi-phase
+    simulations.
+
+SourceFiles
+    phase.C
+
 \*---------------------------------------------------------------------------*/
 
-#include "phase.H"
+#ifndef phase_H
+#define phase_H
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+#include "volFields.H"
 
-Foam::phase::phase(const word& phaseName, const fvMesh& mesh)
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+/*---------------------------------------------------------------------------*\
+                            Class phase Declaration
+\*---------------------------------------------------------------------------*/
+
+class phase
 :
-    volScalarField
-    (
-        IOobject
+    public volScalarField
+{
+    // Private Data
+
+        word name_;
+
+
+public:
+
+    // Constructors
+
+        //- Construct from components
+        phase
         (
-            IOobject::groupName("alpha", phaseName),
-            mesh.time().name(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    ),
-    name_(phaseName),
-    nuModel_(viscosityModel::New(mesh, phaseName)),
-    rho_("rho", dimDensity, nuModel_())
-{}
+            const word& name,
+            const fvMesh& mesh
+        );
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+    // Member Functions
 
-Foam::autoPtr<Foam::phase> Foam::phase::clone() const
-{
-    NotImplemented;
-    return autoPtr<phase>(nullptr);
-}
+        const word& name() const
+        {
+            return name_;
+        }
+
+        const word& keyword() const
+        {
+            return name();
+        }
+};
 
 
-void Foam::phase::correct()
-{
-    nuModel_->correct();
-}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace Foam
 
-bool Foam::phase::read(const dictionary& phaseDict)
-{
-    phaseDict.lookup("rho") >> rho_;
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    return true;
-}
-
+#endif
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,84 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "phaseModel.H"
+#include "phase.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::phaseModel::phaseModel
-(
-    const word& phaseName,
-    const volScalarField& p,
-    const volScalarField& T
-)
+Foam::phase::phase(const word& phaseName, const fvMesh& mesh)
 :
     volScalarField
     (
         IOobject
         (
             IOobject::groupName("alpha", phaseName),
-            p.mesh().time().name(),
-            p.mesh(),
+            mesh.time().name(),
+            mesh,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        p.mesh()
+        mesh
     ),
-    name_(phaseName),
-    p_(p),
-    T_(T),
-    thermo_(nullptr),
-    Alpha_
-    (
-        IOobject
-        (
-            IOobject::groupName("Alpha", phaseName),
-            p.mesh().time().name(),
-            p.mesh()
-        ),
-        p.mesh(),
-        dimensionedScalar(dimless, 0)
-    ),
-    dgdt_
-    (
-        IOobject
-        (
-            IOobject::groupName("dgdt", phaseName),
-            p.mesh().time().name(),
-            p.mesh(),
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        p.mesh(),
-        dimensionedScalar(dimless/dimTime, 0)
-    )
-{
-    {
-        volScalarField Tp(IOobject::groupName("T", phaseName), T);
-        Tp.write();
-    }
-
-    thermo_ = rhoThermo::New(p.mesh(), phaseName);
-    thermo_->validate(phaseName, "e");
-
-    correct();
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::clone() const
-{
-    NotImplemented;
-    return autoPtr<phaseModel>(nullptr);
-}
-
-
-void Foam::phaseModel::correct()
-{
-    thermo_->he() = thermo_->he(p_, T_);
-    thermo_->correct();
-}
+    name_(phaseName)
+{}
 
 
 // ************************************************************************* //

@@ -51,9 +51,9 @@ void Foam::compressibleMultiphaseMixture::calcAlphas()
     scalar level = 0.0;
     alphas_ == 0.0;
 
-    forAllIter(PtrDictionary<phaseModel>, phases_, phase)
+    forAll(phases_, phasei)
     {
-        alphas_ += level*phase();
+        alphas_ += level*phases_[phasei];
         level += 1.0;
     }
 }
@@ -107,7 +107,7 @@ Foam::compressibleMultiphaseMixture::compressibleMultiphaseMixture
         U.mesh()
     ),
 
-    phases_(lookup("phases"), phaseModel::iNew(p_, T_)),
+    phases_(lookup("phases"), compressiblePhase::iNew(T_)),
 
     rho_
     (
@@ -173,49 +173,46 @@ Foam::compressibleMultiphaseMixture::compressibleMultiphaseMixture
 
 void Foam::compressibleMultiphaseMixture::correctThermo()
 {
-    forAllIter(PtrDictionary<phaseModel>, phases_, phasei)
+    forAll(phases_, phasei)
     {
-        phasei().correct();
+        phases_[phasei].correct(p_, T_);
     }
 }
 
 
 void Foam::compressibleMultiphaseMixture::correct()
 {
-    PtrDictionary<phaseModel>::iterator phasei = phases_.begin();
+    rho_ = phases_[0]*phases_[0].thermo().rho();
 
-    rho_ = phasei()*phasei().thermo().rho();
-
-    for (++phasei; phasei != phases_.end(); ++phasei)
+    for (label phasei=1; phasei<phases_.size(); phasei++)
     {
-        rho_ += phasei()*phasei().thermo().rho();
+        rho_ += phases_[phasei]*phases_[phasei].thermo().rho();
     }
 
-    forAllIter(PtrDictionary<phaseModel>, phases_, phasei)
+    forAll(phases_, phasei)
     {
-        phasei().Alpha() = phasei()*phasei().thermo().rho()/rho_;
+        phases_[phasei].Alpha() =
+            phases_[phasei]*phases_[phasei].thermo().rho()/rho_;
     }
 }
 
 
 void Foam::compressibleMultiphaseMixture::correctRho(const volScalarField& dp)
 {
-    forAllIter(PtrDictionary<phaseModel>, phases_, phasei)
+    forAll(phases_, phasei)
     {
-        phasei().thermo().rho() += phasei().thermo().psi()*dp;
+        phases_[phasei].thermo().rho() += phases_[phasei].thermo().psi()*dp;
     }
 }
 
 
 Foam::tmp<Foam::volScalarField> Foam::compressibleMultiphaseMixture::nu() const
 {
-    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
+    volScalarField mu(phases_[0].Alpha()*phases_[0].thermo().mu());
 
-    volScalarField mu(phasei().Alpha()*phasei().thermo().mu());
-
-    for (++phasei; phasei != phases_.end(); ++phasei)
+    for (label phasei=1; phasei<phases_.size(); phasei++)
     {
-        mu += phasei().Alpha()*phasei().thermo().mu();
+        mu += phases_[phasei].Alpha()*phases_[phasei].thermo().mu();
     }
 
     return mu/rho_;
@@ -227,18 +224,17 @@ Foam::tmp<Foam::scalarField> Foam::compressibleMultiphaseMixture::nu
     const label patchi
 ) const
 {
-    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
-
     scalarField mu
     (
-        phasei().Alpha().boundaryField()[patchi]*phasei().thermo().mu(patchi)
+        phases_[0].Alpha().boundaryField()[patchi]
+       *phases_[0].thermo().mu(patchi)
     );
 
-    for (++phasei; phasei != phases_.end(); ++phasei)
+    for (label phasei=1; phasei<phases_.size(); phasei++)
     {
         mu +=
-            phasei().Alpha().boundaryField()[patchi]
-           *phasei().thermo().mu(patchi);
+            phases_[phasei].Alpha().boundaryField()[patchi]
+           *phases_[phasei].thermo().mu(patchi);
     }
 
     return mu/rho_.boundaryField()[patchi];
@@ -250,25 +246,23 @@ Foam::tmp<Foam::volScalarField> Foam::compressibleMultiphaseMixture::alphaEff
     const volScalarField& nut
 ) const
 {
-    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
-
     tmp<volScalarField> talphaEff
     (
-        phasei()
+        phases_[0]
        *(
-           phasei().thermo().kappa()
-         + phasei().thermo().rho()*phasei().thermo().Cp()*nut
-        )/phasei().thermo().Cv()
+           phases_[0].thermo().kappa()
+         + phases_[0].thermo().rho()*phases_[0].thermo().Cp()*nut
+        )/phases_[0].thermo().Cv()
     );
 
-    for (++phasei; phasei != phases_.end(); ++phasei)
+    for (label phasei=1; phasei<phases_.size(); phasei++)
     {
         talphaEff.ref() +=
-            phasei()
+            phases_[phasei]
            *(
-               phasei().thermo().kappa()
-             + phasei().thermo().rho()*phasei().thermo().Cp()*nut
-            )/phasei().thermo().Cv();
+               phases_[phasei].thermo().kappa()
+             + phases_[phasei].thermo().rho()*phases_[phasei].thermo().Cp()*nut
+            )/phases_[phasei].thermo().Cv();
     }
 
     return talphaEff;
@@ -277,13 +271,11 @@ Foam::tmp<Foam::volScalarField> Foam::compressibleMultiphaseMixture::alphaEff
 
 Foam::tmp<Foam::volScalarField> Foam::compressibleMultiphaseMixture::rCv() const
 {
-    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
+    tmp<volScalarField> trCv(phases_[0]/phases_[0].thermo().Cv());
 
-    tmp<volScalarField> trCv(phasei()/phasei().thermo().Cv());
-
-    for (++phasei; phasei != phases_.end(); ++phasei)
+    for (label phasei=1; phasei<phases_.size(); phasei++)
     {
-        trCv.ref() += phasei()/phasei().thermo().Cv();
+        trCv.ref() += phases_[phasei]/phases_[phasei].thermo().Cv();
     }
 
     return trCv;
@@ -305,16 +297,13 @@ Foam::compressibleMultiphaseMixture::surfaceTensionForce() const
 
     surfaceScalarField& stf = tstf.ref();
 
-    forAllConstIter(PtrDictionary<phaseModel>, phases_, phase1)
+    forAll(phases_, phasei)
     {
-        const phaseModel& alpha1 = phase1();
+        const compressiblePhase& alpha1 = phases_[phasei];
 
-        PtrDictionary<phaseModel>::const_iterator phase2 = phase1;
-        ++phase2;
-
-        for (; phase2 != phases_.end(); ++phase2)
+        for (label phasej = phasei+1; phasej<phases_.size(); phasej++)
         {
-            const phaseModel& alpha2 = phase2();
+            const compressiblePhase& alpha2 = phases_[phasej];
 
             sigmaTable::const_iterator sigma =
                 sigmas_.find(interfacePair(alpha1, alpha2));
@@ -348,16 +337,24 @@ void Foam::compressibleMultiphaseMixture::solve()
     label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
     scalar cAlpha(alphaControls.lookup<scalar>("cAlpha"));
 
-    volScalarField& alpha = phases_.first();
-
     if (nAlphaSubCycles > 1)
     {
         surfaceScalarField rhoPhiSum(0.0*rhoPhi_);
         dimensionedScalar totalDeltaT = runTime.deltaT();
 
+        List<volScalarField*> alphaPtrs(phases_.size());
+        forAll(phases_, phasei)
+        {
+            alphaPtrs[phasei] = &phases_[phasei];
+        }
+
         for
         (
-            subCycle<volScalarField> alphaSubCycle(alpha, nAlphaSubCycles);
+            subCycle<volScalarField, subCycleFields> alphaSubCycle
+            (
+                alphaPtrs,
+                nAlphaSubCycles
+            );
             !(++alphaSubCycle).end();
         )
         {
@@ -415,8 +412,8 @@ Foam::tmp<Foam::surfaceScalarField> Foam::compressibleMultiphaseMixture::nHatf
 
 Foam::tmp<Foam::volScalarField> Foam::compressibleMultiphaseMixture::K
 (
-    const phaseModel& alpha1,
-    const phaseModel& alpha2
+    const phase& alpha1,
+    const phase& alpha2
 ) const
 {
     tmp<surfaceVectorField> tnHatfv = nHatfv(alpha1, alpha2);
@@ -448,10 +445,13 @@ Foam::compressibleMultiphaseMixture::nearInterface() const
         )
     );
 
-    forAllConstIter(PtrDictionary<phaseModel>, phases_, phase)
+    forAll(phases_, phasei)
     {
-        tnearInt.ref() =
-            max(tnearInt(), pos0(phase() - 0.01)*pos0(0.99 - phase()));
+        tnearInt.ref() = max
+        (
+            tnearInt(),
+            pos0(phases_[phasei] - 0.01)*pos0(0.99 - phases_[phasei])
+        );
     }
 
     return tnearInt;
@@ -471,11 +471,10 @@ void Foam::compressibleMultiphaseMixture::solveAlphas
 
     UPtrList<const volScalarField> alphas(phases_.size());
     PtrList<surfaceScalarField> alphaPhis(phases_.size());
-    int phasei = 0;
 
-    forAllIter(PtrDictionary<phaseModel>, phases_, phase)
+    forAll(phases_, phasei)
     {
-        const phaseModel& alpha = phase();
+        const compressiblePhase& alpha = phases_[phasei];
 
         alphas.set(phasei, &alpha);
 
@@ -496,9 +495,9 @@ void Foam::compressibleMultiphaseMixture::solveAlphas
 
         surfaceScalarField& alphaPhi = alphaPhis[phasei];
 
-        forAllIter(PtrDictionary<phaseModel>, phases_, phase2)
+        forAll(phases_, phasej)
         {
-            phaseModel& alpha2 = phase2();
+            compressiblePhase& alpha2 = phases_[phasej];
 
             if (&alpha2 == &alpha) continue;
 
@@ -526,8 +525,6 @@ void Foam::compressibleMultiphaseMixture::solveAlphas
             zeroField(),
             false
         );
-
-        phasei++;
     }
 
     MULES::limitSum(alphas, alphaPhis, phi_);
@@ -548,11 +545,9 @@ void Foam::compressibleMultiphaseMixture::solveAlphas
 
     volScalarField divU(fvc::div(fvc::absolute(phi_, U_)));
 
-    phasei = 0;
-
-    forAllIter(PtrDictionary<phaseModel>, phases_, phase)
+    forAll(phases_, phasei)
     {
-        phaseModel& alpha = phase();
+        compressiblePhase& alpha = phases_[phasei];
 
         surfaceScalarField& alphaPhi = alphaPhis[phasei];
 
@@ -598,9 +593,9 @@ void Foam::compressibleMultiphaseMixture::solveAlphas
             }
         }
 
-        forAllConstIter(PtrDictionary<phaseModel>, phases_, phase2)
+        forAll(phases_, phasej)
         {
-            const phaseModel& alpha2 = phase2();
+            const compressiblePhase& alpha2 = phases_[phasej];
 
             if (&alpha2 == &alpha) continue;
 
@@ -638,8 +633,6 @@ void Foam::compressibleMultiphaseMixture::solveAlphas
             << endl;
 
         sumAlpha += alpha;
-
-        phasei++;
     }
 
     Info<< "Phase-sum volume fraction, min, max = "

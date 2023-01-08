@@ -1,6 +1,5 @@
 EXE_INC = \
-    -I. \
-    -I../interFoam \
+    -I$(FOAM_SOLVERS)/multiphase/multiphaseInterFoam/incompressibleMultiphaseMixture/lnInclude \
     -IcompressibleMultiphaseMixture/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \

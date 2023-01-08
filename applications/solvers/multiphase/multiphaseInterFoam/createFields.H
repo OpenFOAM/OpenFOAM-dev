@@ -28,7 +28,7 @@ volVectorField U
 
 #include "createPhi.H"
 
-multiphaseMixture mixture(U, phi);
+incompressibleMultiphaseMixture mixture(U, phi);
 
 // Need to store rho for ddt(rho, U)
 volScalarField rho

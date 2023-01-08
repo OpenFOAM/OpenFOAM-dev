@@ -1,0 +1,5 @@
+phase/phase.C
+incompressiblePhase/incompressiblePhase.C
+incompressibleMultiphaseMixture.C
+
+LIB = $(FOAM_LIBBIN)/libincompressibleMultiphaseMixture
