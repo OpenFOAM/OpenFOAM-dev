@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ SourceFiles
 #define UPtrDictionary_H
 
 #include "DictionaryBase.H"
-#include "DLList.H"
+#include "UDLPtrList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,7 +54,7 @@ namespace Foam
 template<class T>
 class UPtrDictionary
 :
-    public DictionaryBase<DLList<T*>, T>
+    public DictionaryBase<UDLPtrList<T>, T>
 {
 
 public:
@@ -66,6 +66,21 @@ public:
 
         //- Copy construct
         UPtrDictionary(const UPtrDictionary&);
+
+
+    // Member Operators
+
+        //- Find and return entry
+        const T& operator[](const word& key) const
+        {
+            return *DictionaryBase<UDLPtrList<T>, T>::operator[](key);
+        }
+
+        //- Find and return entry
+        T& operator[](const word& key)
+        {
+            return *DictionaryBase<UDLPtrList<T>, T>::operator[](key);
+        }
 };
 
 

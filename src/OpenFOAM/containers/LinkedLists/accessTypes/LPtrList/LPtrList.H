@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ SourceFiles
 #ifndef LPtrList_H
 #define LPtrList_H
 
-#include "LList.H"
+#include "ULPtrList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,13 +54,6 @@ Istream& operator>>
     LPtrList<LListBase, T>&
 );
 
-template<class LListBase, class T>
-Ostream& operator<<
-(
-    Ostream&,
-    const LPtrList<LListBase, T>&
-);
-
 
 /*---------------------------------------------------------------------------*\
                           Class LPtrList Declaration
@@ -69,7 +62,7 @@ Ostream& operator<<
 template<class LListBase, class T>
 class LPtrList
 :
-    public LList<LListBase, T*>
+    public ULPtrList<LListBase, T>
 {
     // Private Member Functions
 
@@ -80,15 +73,6 @@ class LPtrList
 
 public:
 
-    // Forward declaration of STL iterators
-
-        class iterator;
-        friend class iterator;
-
-        class const_iterator;
-        friend class const_iterator;
-
-
     // Constructors
 
         //- Null construct
@@ -98,7 +82,7 @@ public:
         //- Construct given initial T
         LPtrList(T* a)
         :
-            LList<LListBase, T*>(a)
+            ULPtrList<LListBase, T>(a)
         {}
 
         //- Construct from Istream using given Istream constructor class
@@ -120,33 +104,6 @@ public:
 
 
     // Member Functions
-
-        // Access
-
-            //- Return the first entry added
-            T& first()
-            {
-                return *LList<LListBase, T*>::first();
-            }
-
-            //- Return const access to the first entry added
-            const T& first() const
-            {
-                return *LList<LListBase, T*>::first();
-            }
-
-            //- Return the last entry added
-            T& last()
-            {
-                return *LList<LListBase, T*>::last();
-            }
-
-            //- Return const access to the last entry added
-            const T& last() const
-            {
-                return *LList<LListBase, T*>::last();
-            }
-
 
         // Edit
 
@@ -170,101 +127,12 @@ public:
         void operator=(LPtrList<LListBase, T>&&);
 
 
-    // STL type definitions
-
-        //- Type that can be used for storing into LPtrList::value_type
-        //  objects.
-        typedef T& reference;
-
-        //- Type that can be used for storing into constant
-        //  LPtrList::value_type objects.
-        typedef T& const_reference;
-
-
-    // STL iterator
-
-        typedef typename LListBase::iterator LListBase_iterator;
-
-        //- An STL-conforming iterator
-        class iterator
-        :
-            public LList<LListBase, T*>::iterator
-        {
-
-        public:
-
-            //- Construct from base iterator
-            iterator(LListBase_iterator baseIter)
-            :
-                LList<LListBase, T*>::iterator(baseIter)
-            {}
-
-
-            // Member Operators
-
-                T& operator*()
-                {
-                    return *(LList<LListBase, T*>::iterator::operator*());
-                }
-
-                T& operator()()
-                {
-                    return operator*();
-                }
-        };
-
-
-    // STL const_iterator
-
-        typedef typename LListBase::const_iterator LListBase_const_iterator;
-
-        //- An STL-conforming const_iterator
-        class const_iterator
-        :
-            public LList<LListBase, T*>::const_iterator
-        {
-
-        public:
-
-            //- Construct from base const_iterator
-            const_iterator(LListBase_const_iterator baseIter)
-            :
-                LList<LListBase, T*>::const_iterator(baseIter)
-            {}
-
-            //- Construct from base iterator
-            const_iterator(LListBase_iterator baseIter)
-            :
-                LList<LListBase, T*>::const_iterator(baseIter)
-            {}
-
-
-            // Member Operators
-
-                const T& operator*()
-                {
-                    return *(LList<LListBase, T*>::const_iterator::operator*());
-                }
-
-                const T& operator()()
-                {
-                    return operator*();
-                }
-        };
-
-
     // IOstream Operators
 
         friend Istream& operator>> <LListBase, T>
         (
             Istream&,
             LPtrList<LListBase, T>&
-        );
-
-        friend Ostream& operator<< <LListBase, T>
-        (
-            Ostream&,
-            const LPtrList<LListBase, T>&
         );
 };
 

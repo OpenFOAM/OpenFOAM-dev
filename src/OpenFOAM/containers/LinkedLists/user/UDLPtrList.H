@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,26 +21,30 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Alias
+    Foam::UDLPtrList
+
+Description
+    Non-intrusive doubly-linked pointer list.
+
 \*---------------------------------------------------------------------------*/
 
-#include "UPtrDictionary.H"
+#ifndef UDLPtrList_H
+#define UDLPtrList_H
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class T>
-Foam::UPtrDictionary<T>::UPtrDictionary(const label size)
-:
-    DictionaryBase<UDLPtrList<T>, T>(size)
-{}
-
-
-template<class T>
-Foam::UPtrDictionary<T>::UPtrDictionary(const UPtrDictionary& dict)
-:
-    DictionaryBase<UDLPtrList<T>, T>(dict)
-{}
-
+#include "ULPtrList.H"
+#include "DLListBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    template<class T>
+    using UDLPtrList = ULPtrList<DLListBase, T>;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

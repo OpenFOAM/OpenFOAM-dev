@@ -23,24 +23,38 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "UPtrDictionary.H"
+#include "ULPtrList.H"
+#include "Ostream.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Ostream Operators * * * * * * * * * * * * * //
 
-template<class T>
-Foam::UPtrDictionary<T>::UPtrDictionary(const label size)
-:
-    DictionaryBase<UDLPtrList<T>, T>(size)
-{}
+template<class LListBase, class T>
+Foam::Ostream& Foam::operator<<(Ostream& os, const ULPtrList<LListBase, T>& lst)
+{
+    // Write size
+    os << nl << lst.size();
 
+    // Write beginning of contents
+    os << nl << token::BEGIN_LIST << nl;
 
-template<class T>
-Foam::UPtrDictionary<T>::UPtrDictionary(const UPtrDictionary& dict)
-:
-    DictionaryBase<UDLPtrList<T>, T>(dict)
-{}
+    // Write contents
+    for
+    (
+        typename ULPtrList<LListBase, T>::const_iterator iter = lst.begin();
+        iter != lst.end();
+        ++iter
+    )
+    {
+        os << iter() << nl;
+    }
 
+    // Write end of contents
+    os << token::END_LIST;
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Check state of IOstream
+    os.check("Ostream& operator<<(Ostream&, const ULPtrList<LListBase, T>&)");
+
+    return os;
+}
 
 // ************************************************************************* //

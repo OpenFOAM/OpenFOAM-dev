@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "LPtrList.H"
 #include "Istream.H"
-#include "Ostream.H"
 #include "INew.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
@@ -164,36 +163,5 @@ Foam::Istream& Foam::operator>>(Istream& is, LPtrList<LListBase, T>& L)
     return is;
 }
 
-
-// * * * * * * * * * * * * * * * Ostream Operators * * * * * * * * * * * * * //
-
-template<class LListBase, class T>
-Foam::Ostream& Foam::operator<<(Ostream& os, const LPtrList<LListBase, T>& lst)
-{
-    // Write size
-    os << nl << lst.size();
-
-    // Write beginning of contents
-    os << nl << token::BEGIN_LIST << nl;
-
-    // Write contents
-    for
-    (
-        typename LPtrList<LListBase, T>::const_iterator iter = lst.begin();
-        iter != lst.end();
-        ++iter
-    )
-    {
-        os << iter() << nl;
-    }
-
-    // Write end of contents
-    os << token::END_LIST;
-
-    // Check state of IOstream
-    os.check("Ostream& operator<<(Ostream&, const LPtrList<LListBase, T>&)");
-
-    return os;
-}
 
 // ************************************************************************* //

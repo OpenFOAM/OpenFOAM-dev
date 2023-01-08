@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,15 @@ License
 
 template<class LListBase, class T>
 Foam::LPtrList<LListBase, T>::LPtrList(const LPtrList<LListBase, T>& lst)
+:
+    ULPtrList<LListBase, T>()
 {
-    for (const_iterator iter = lst.begin(); iter != lst.end(); ++iter)
+    for
+    (
+        typename ULPtrList<LListBase, T>::const_iterator iter = lst.begin();
+        iter != lst.end();
+        ++iter
+    )
     {
         this->append(iter().clone().ptr());
     }
@@ -39,6 +46,8 @@ Foam::LPtrList<LListBase, T>::LPtrList(const LPtrList<LListBase, T>& lst)
 
 template<class LListBase, class T>
 Foam::LPtrList<LListBase, T>::LPtrList(LPtrList<LListBase, T>&& lst)
+:
+    ULPtrList<LListBase, T>()
 {
     transfer(lst);
 }
@@ -99,7 +108,12 @@ void Foam::LPtrList<LListBase, T>::operator=(const LPtrList<LListBase, T>& lst)
 {
     clear();
 
-    for (const_iterator iter = lst.begin(); iter != lst.end(); ++iter)
+    for
+    (
+        typename ULPtrList<LListBase, T>::const_iterator iter = lst.begin();
+        iter != lst.end();
+        ++iter
+    )
     {
         this->append(iter().clone().ptr());
     }

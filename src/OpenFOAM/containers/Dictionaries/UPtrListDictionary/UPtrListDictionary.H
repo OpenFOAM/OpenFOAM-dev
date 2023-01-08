@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,24 +22,24 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::PtrListDictionary
+    Foam::UPtrListDictionary
 
 Description
     Template dictionary class which manages the storage associated with it.
 
-    It is derived from DictionaryBase instantiated on the memory managed PtrList
-    of \<T\> to provide ordered indexing in addition to the dictionary lookup.
+    It is derived from DictionaryBase instantiated on the UPtrList of \<T\> to
+    provide ordered indexing in addition to the dictionary lookup.
 
 SourceFiles
-    PtrListDictionary.C
+    UPtrListDictionary.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef PtrListDictionary_H
-#define PtrListDictionary_H
+#ifndef UPtrListDictionary_H
+#define UPtrListDictionary_H
 
 #include "DictionaryBase.H"
-#include "PtrList.H"
+#include "UPtrList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,71 +47,59 @@ namespace Foam
 {
 
 template<class T>
-class UPtrListDictionary;
+class PtrListDictionary;
 
 /*---------------------------------------------------------------------------*\
-                      Class PtrListDictionary Declaration
+                      Class UPtrListDictionary Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class T>
-class PtrListDictionary
+class UPtrListDictionary
 :
-    public DictionaryBase<PtrList<T>, T>
+    public DictionaryBase<UPtrList<T>, T>
 {
 
 public:
 
-    // Related types
-
-        //- Declare friendship with the UPtrListDictionary class
-        friend class UPtrListDictionary<T>;
-
-
     // Constructors
 
         //- Construct given initial list size
-        PtrListDictionary(const label size);
+        UPtrListDictionary(const label size);
 
         //- Copy constructor
-        PtrListDictionary(const PtrListDictionary&);
+        UPtrListDictionary(const UPtrListDictionary&);
+
+        //- Copy constructor of PtrListDictionary
+        UPtrListDictionary(const PtrListDictionary<T>&);
 
         //- Move constructor
-        PtrListDictionary(PtrListDictionary&&);
-
-        //- Construct from Istream using given Istream constructor class
-        template<class INew>
-        PtrListDictionary(Istream&, const INew&);
-
-        //- Construct from Istream
-        PtrListDictionary(Istream&);
+        UPtrListDictionary(UPtrListDictionary&&);
 
 
     // Member Functions
 
-        //- Set element to pointer provided and return old element
-        autoPtr<T> set(const label, const word& key, T*);
+        //- Is element set
+        inline bool set(const label) const;
 
-        //- Set element to autoPtr value provided and return old element
-        autoPtr<T> set(const label, const word& key, autoPtr<T>&);
-
-        //- Set element to tmp value provided and return old element
-        autoPtr<T> set(const label, const word& key, tmp<T>&);
+        //- Set element. Return old element (can be nullptr).
+        //  No checks on new element
+        inline T* set(const label, const word& key, T*);
 
 
     // Member Operators
 
-        using PtrList<T>::operator[];
+        using UPtrList<T>::operator[];
 
         //- Find and return entry
         const T& operator[](const word& key) const
         {
-            return *DictionaryBase<PtrList<T>, T>::operator[](key);
+            return *DictionaryBase<UPtrList<T>, T>::operator[](key);
         }
 
         //- Find and return entry
         T& operator[](const word& key)
         {
-            return *DictionaryBase<PtrList<T>, T>::operator[](key);
+            return *DictionaryBase<UPtrList<T>, T>::operator[](key);
         }
 };
 
@@ -123,7 +111,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "PtrListDictionary.C"
+    #include "UPtrListDictionary.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
