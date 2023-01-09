@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,6 +126,13 @@ inline T& Foam::UPtrList<T>::operator[](const label i)
 
 template<class T>
 inline const T* Foam::UPtrList<T>::operator()(const label i) const
+{
+    return ptrs_[i];
+}
+
+
+template<class T>
+inline T* Foam::UPtrList<T>::operator()(const label i)
 {
     return ptrs_[i];
 }

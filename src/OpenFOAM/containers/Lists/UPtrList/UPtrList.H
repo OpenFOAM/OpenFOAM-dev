@@ -172,6 +172,9 @@ public:
         //- Return element const pointer
         inline const T* operator()(const label) const;
 
+        //- Return element const pointer
+        inline T* operator()(const label);
+
 
     // STL type definitions
 
