@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ SourceFiles
 namespace Foam
 {
 
-class compressibleTwoPhaseMixture;
+class compressibleTwoPhaseVoFMixture;
 
 namespace fv
 {
@@ -123,7 +123,7 @@ class VoFSolidificationMeltingSource
         scalar q_;
 
         //- VoF thermo
-        const compressibleTwoPhaseMixture& thermo_;
+        const compressibleTwoPhaseVoFMixture& thermo_;
 
         //- Solid phase fraction
         mutable volScalarField alphaSolid_;

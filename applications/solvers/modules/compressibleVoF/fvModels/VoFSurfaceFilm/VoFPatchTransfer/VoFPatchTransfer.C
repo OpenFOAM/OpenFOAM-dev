@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VoFPatchTransfer.H"
-#include "compressibleTwoPhaseMixture.H"
+#include "compressibleTwoPhaseVoFMixture.H"
 #include "thermoSurfaceFilm.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -153,9 +153,9 @@ void VoFPatchTransfer::correct
     const polyBoundaryMesh& pbm = film.mesh().boundaryMesh();
 
 
-    const compressibleTwoPhaseMixture& thermo
+    const compressibleTwoPhaseVoFMixture& thermo
     (
-        film.primaryMesh().lookupObject<compressibleTwoPhaseMixture>
+        film.primaryMesh().lookupObject<compressibleTwoPhaseVoFMixture>
         (
             "phaseProperties"
         )

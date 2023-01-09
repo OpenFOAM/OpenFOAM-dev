@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ SourceFiles
 namespace Foam
 {
 
-class incompressibleTwoPhaseMixture;
+class incompressibleTwoPhaseVoFMixture;
 
 namespace fv
 {
@@ -102,7 +102,7 @@ class VoFCavitation
     // Private Data
 
         //- Reference to the mixture properties
-        const incompressibleTwoPhaseMixture& mixture_;
+        const incompressibleTwoPhaseVoFMixture& mixture_;
 
         autoPtr<cavitationModel> cavitation_;
 

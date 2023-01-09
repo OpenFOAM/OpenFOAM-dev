@@ -48,10 +48,13 @@ Foam::solvers::incompressibleVoF::incompressibleVoF(fvMesh& mesh)
     twoPhaseVoFSolver
     (
         mesh,
-        autoPtr<twoPhaseVoFMixture>(new incompressibleTwoPhaseMixture(mesh))
+        autoPtr<twoPhaseVoFMixture>(new incompressibleTwoPhaseVoFMixture(mesh))
     ),
 
-    mixture(refCast<incompressibleTwoPhaseMixture>(twoPhaseVoFSolver::mixture)),
+    mixture
+    (
+        refCast<incompressibleTwoPhaseVoFMixture>(twoPhaseVoFSolver::mixture)
+    ),
 
     p
     (
@@ -152,11 +155,25 @@ void Foam::solvers::incompressibleVoF::prePredictor()
 
     // Calculate the mass-flux from the accumulated alphaPhi1
     rhoPhi = (alphaPhi1*(rho1 - rho2) + phi*rho2);
+
+    if (pimple.predictTransport())
+    {
+        momentumTransport.predict();
+    }
 }
 
 
 void Foam::solvers::incompressibleVoF::thermophysicalPredictor()
 {}
+
+
+void Foam::solvers::incompressibleVoF::postCorrector()
+{
+    if (pimple.correctTransport())
+    {
+        momentumTransport.correct();
+    }
+}
 
 
 // ************************************************************************* //

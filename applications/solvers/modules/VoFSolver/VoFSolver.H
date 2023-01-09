@@ -57,7 +57,6 @@ See also
 
 #include "fluidSolver.H"
 #include "VoFMixture.H"
-#include "interfaceProperties.H"
 #include "buoyancy.H"
 #include "pressureReference.H"
 #include "IOMRFZoneList.H"
@@ -232,9 +231,6 @@ public:
 
         //- Construct and solve the pressure equation in the PISO loop
         virtual void pressureCorrector() = 0;
-
-        //- Correct the momentum transport modelling
-        virtual void postCorrector();
 
         //- Called after the PIMPLE loop at the end of the time-step
         virtual void postSolve();

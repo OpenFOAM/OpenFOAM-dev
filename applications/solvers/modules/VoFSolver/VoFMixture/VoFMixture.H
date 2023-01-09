@@ -25,7 +25,7 @@ Class
     Foam::VoFMixture
 
 Description
-    Class to represent a VoF mixture
+    Two-phase VoF mixture
 
 SourceFiles
     VoFMixture.C

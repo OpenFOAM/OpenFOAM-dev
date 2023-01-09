@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VoFCavitation.H"
-#include "compressibleTwoPhaseMixture.H"
+#include "compressibleTwoPhaseVoFMixture.H"
 #include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -63,7 +63,7 @@ Foam::fv::compressible::VoFCavitation::VoFCavitation
 
     mixture_
     (
-        mesh.lookupObjectRef<compressibleTwoPhaseMixture>
+        mesh.lookupObjectRef<compressibleTwoPhaseVoFMixture>
         (
             "phaseProperties"
         )

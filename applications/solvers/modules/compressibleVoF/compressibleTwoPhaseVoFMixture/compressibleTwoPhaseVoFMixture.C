@@ -23,19 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "compressibleTwoPhaseMixture.H"
+#include "compressibleTwoPhaseVoFMixture.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(compressibleTwoPhaseMixture, 0);
+    defineTypeNameAndDebug(compressibleTwoPhaseVoFMixture, 0);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
+Foam::compressibleTwoPhaseVoFMixture::compressibleTwoPhaseVoFMixture
 (
     const fvMesh& mesh
 )
@@ -155,13 +155,13 @@ Foam::compressibleTwoPhaseMixture::compressibleTwoPhaseMixture
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::compressibleTwoPhaseMixture::~compressibleTwoPhaseMixture()
+Foam::compressibleTwoPhaseVoFMixture::~compressibleTwoPhaseVoFMixture()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::compressibleTwoPhaseMixture::correctThermo()
+void Foam::compressibleTwoPhaseVoFMixture::correctThermo()
 {
     thermo1_->T() = T_;
     thermo1_->he() = thermo1_->he(p_, T_);
@@ -173,7 +173,7 @@ void Foam::compressibleTwoPhaseMixture::correctThermo()
 }
 
 
-void Foam::compressibleTwoPhaseMixture::correct()
+void Foam::compressibleTwoPhaseVoFMixture::correct()
 {
     const volScalarField alphaRho1(alpha1()*thermo1_->rho());
     const volScalarField alphaRho2(alpha2()*thermo2_->rho());
@@ -184,13 +184,13 @@ void Foam::compressibleTwoPhaseMixture::correct()
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::compressibleTwoPhaseMixture::nu() const
+Foam::tmp<Foam::volScalarField> Foam::compressibleTwoPhaseVoFMixture::nu() const
 {
     return (alpha1()*thermo1_->mu() + alpha2()*thermo2_->mu())/rho_;
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::compressibleTwoPhaseMixture::nu
+Foam::tmp<Foam::scalarField> Foam::compressibleTwoPhaseVoFMixture::nu
 (
     const label patchi
 ) const
@@ -203,7 +203,7 @@ Foam::tmp<Foam::scalarField> Foam::compressibleTwoPhaseMixture::nu
 }
 
 
-bool Foam::compressibleTwoPhaseMixture::read()
+bool Foam::compressibleTwoPhaseVoFMixture::read()
 {
     if (twoPhaseVoFMixture::read())
     {

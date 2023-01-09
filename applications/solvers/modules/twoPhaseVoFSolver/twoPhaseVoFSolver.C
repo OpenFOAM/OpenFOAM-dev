@@ -65,7 +65,7 @@ void Foam::solvers::twoPhaseVoFSolver::correctCoNum()
 
 void Foam::solvers::twoPhaseVoFSolver::correctInterface()
 {
-    return interface.correct();
+    interface.correct();
 }
 
 

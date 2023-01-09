@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
     const surfaceScalarField& alphaPhi1,
     const surfaceScalarField& alphaRhoPhi1,
     const surfaceScalarField& alphaRhoPhi2,
-    const compressibleTwoPhaseMixture& mixture
+    const compressibleTwoPhaseVoFMixture& mixture
 )
 :
     twoPhaseTransport_(false),

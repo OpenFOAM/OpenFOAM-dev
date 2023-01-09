@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ SourceFiles
 namespace Foam
 {
 
-class compressibleTwoPhaseMixture;
+class compressibleTwoPhaseVoFMixture;
 class compressibleMomentumTransportModel;
 
 namespace fv
@@ -110,7 +110,7 @@ class VoFTurbulenceDamping
         dimensionedScalar delta_;
 
         //- Reference to the mixture properties
-        const compressibleTwoPhaseMixture& mixture_;
+        const compressibleTwoPhaseVoFMixture& mixture_;
 
         //- Reference to the mixture momentumTransport model
         const compressibleMomentumTransportModel& momentumTransport_;

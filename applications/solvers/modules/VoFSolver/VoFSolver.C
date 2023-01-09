@@ -234,10 +234,6 @@ void Foam::solvers::VoFSolver::prePredictor()
 }
 
 
-void Foam::solvers::VoFSolver::postCorrector()
-{}
-
-
 void Foam::solvers::VoFSolver::postSolve()
 {
     divU.clear();

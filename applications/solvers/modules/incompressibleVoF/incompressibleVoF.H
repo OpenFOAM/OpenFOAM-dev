@@ -59,7 +59,7 @@ See also
 #define incompressibleVoF_H
 
 #include "twoPhaseVoFSolver.H"
-#include "incompressibleTwoPhaseMixture.H"
+#include "incompressibleTwoPhaseVoFMixture.H"
 #include "incompressibleInterPhaseTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -83,7 +83,7 @@ protected:
     // Phase properties
 
         //- The compressible two-phase mixture
-        incompressibleTwoPhaseMixture& mixture;
+        incompressibleTwoPhaseVoFMixture& mixture;
 
 
     // Thermophysical properties
@@ -164,6 +164,9 @@ public:
 
         //- Construct and solve the pressure equation in the PISO loop
         virtual void pressureCorrector();
+
+        //- Correct the momentum and thermophysical transport modelling
+        virtual void postCorrector();
 
 
     // Member Operators

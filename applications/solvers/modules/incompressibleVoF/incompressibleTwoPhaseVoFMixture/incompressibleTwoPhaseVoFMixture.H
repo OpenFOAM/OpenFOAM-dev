@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::incompressibleTwoPhaseMixture
+    Foam::incompressibleTwoPhaseVoFMixture
 
 Description
     Class to represent a mixture of two constant density phases
 
 SourceFiles
-    incompressibleTwoPhaseMixture.C
+    incompressibleTwoPhaseVoFMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef incompressibleTwoPhaseMixture_H
-#define incompressibleTwoPhaseMixture_H
+#ifndef incompressibleTwoPhaseVoFMixture_H
+#define incompressibleTwoPhaseVoFMixture_H
 
 #include "twoPhaseVoFMixture.H"
 #include "incompressibleTwoPhases.H"
@@ -45,10 +45,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                Class incompressibleTwoPhaseMixture Declaration
+                Class incompressibleTwoPhaseVoFMixture Declaration
 \*---------------------------------------------------------------------------*/
 
-class incompressibleTwoPhaseMixture
+class incompressibleTwoPhaseVoFMixture
 :
     public twoPhaseVoFMixture,
     virtual public incompressibleTwoPhases,
@@ -77,17 +77,17 @@ class incompressibleTwoPhaseMixture
 
 public:
 
-    TypeName("incompressibleTwoPhaseMixture");
+    TypeName("incompressibleTwoPhaseVoFMixture");
 
 
     // Constructors
 
         //- Construct from a mesh
-        incompressibleTwoPhaseMixture(const fvMesh& mesh);
+        incompressibleTwoPhaseVoFMixture(const fvMesh& mesh);
 
 
     //- Destructor
-    virtual ~incompressibleTwoPhaseMixture()
+    virtual ~incompressibleTwoPhaseVoFMixture()
     {}
 
 

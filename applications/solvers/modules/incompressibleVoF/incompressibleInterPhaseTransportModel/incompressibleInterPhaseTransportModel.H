@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ SourceFiles
 #ifndef incompressibleInterPhaseTransportModel_H
 #define incompressibleInterPhaseTransportModel_H
 
-#include "incompressibleTwoPhaseMixture.H"
+#include "incompressibleTwoPhaseVoFMixture.H"
 #include "incompressibleMomentumTransportModels.H"
 #include "phaseIncompressibleMomentumTransportModel.H"
 
@@ -64,7 +64,7 @@ class incompressibleInterPhaseTransportModel
         Switch twoPhaseTransport_;
 
         //- Two-phase mixture
-        const incompressibleTwoPhaseMixture& mixture_;
+        const incompressibleTwoPhaseVoFMixture& mixture_;
 
         //- Mixture volumetric flux
         const surfaceScalarField& phi_;
@@ -95,7 +95,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& phi,
             const surfaceScalarField& alphaPhi1,
-            const incompressibleTwoPhaseMixture& mixture
+            const incompressibleTwoPhaseVoFMixture& mixture
         );
 
         //- Disallow default bitwise copy construction

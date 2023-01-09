@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,8 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::coeffDict() const
 Foam::tmp<Foam::volScalarField>
 Foam::compressibleInterPhaseThermophysicalTransportModel::kappaEff() const
 {
-    const compressibleTwoPhaseMixture& mixture_ = momentumTransport_.mixture_;
+    const compressibleTwoPhaseVoFMixture& mixture_ =
+        momentumTransport_.mixture_;
 
     if (momentumTransport_.twoPhaseTransport_)
     {
@@ -101,7 +102,8 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::kappaEff
     const label patchi
 ) const
 {
-    const compressibleTwoPhaseMixture& mixture_ = momentumTransport_.mixture_;
+    const compressibleTwoPhaseVoFMixture& mixture_ =
+        momentumTransport_.mixture_;
 
     if (momentumTransport_.twoPhaseTransport_)
     {
@@ -145,7 +147,8 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::kappaEff
 Foam::tmp<Foam::volScalarField>
 Foam::compressibleInterPhaseThermophysicalTransportModel::alphaEff() const
 {
-    const compressibleTwoPhaseMixture& mixture_ = momentumTransport_.mixture_;
+    const compressibleTwoPhaseVoFMixture& mixture_ =
+        momentumTransport_.mixture_;
 
     if (momentumTransport_.twoPhaseTransport_)
     {

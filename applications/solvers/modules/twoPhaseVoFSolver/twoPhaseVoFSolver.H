@@ -58,9 +58,6 @@ See also
 #include "VoFSolver.H"
 #include "twoPhaseVoFMixture.H"
 #include "interfaceProperties.H"
-#include "buoyancy.H"
-#include "pressureReference.H"
-#include "IOMRFZoneList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

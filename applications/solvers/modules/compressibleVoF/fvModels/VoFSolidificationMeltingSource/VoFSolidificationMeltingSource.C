@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VoFSolidificationMeltingSource.H"
-#include "compressibleTwoPhaseMixture.H"
+#include "compressibleTwoPhaseVoFMixture.H"
 #include "fvcDdt.H"
 #include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -61,9 +61,9 @@ void Foam::fv::VoFSolidificationMeltingSource::readCoeffs()
 
 Foam::word Foam::fv::VoFSolidificationMeltingSource::alphaSolidName() const
 {
-    const compressibleTwoPhaseMixture& thermo
+    const compressibleTwoPhaseVoFMixture& thermo
     (
-        mesh().lookupObject<compressibleTwoPhaseMixture>
+        mesh().lookupObject<compressibleTwoPhaseVoFMixture>
         (
             "phaseProperties"
         )
@@ -95,7 +95,7 @@ Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
 
     thermo_
     (
-        mesh().lookupObject<compressibleTwoPhaseMixture>
+        mesh().lookupObject<compressibleTwoPhaseVoFMixture>
         (
             "phaseProperties"
         )
@@ -185,9 +185,9 @@ void Foam::fv::VoFSolidificationMeltingSource::correct()
 
     alphaSolid_.oldTime();
 
-    const compressibleTwoPhaseMixture& thermo
+    const compressibleTwoPhaseVoFMixture& thermo
     (
-        mesh().lookupObject<compressibleTwoPhaseMixture>
+        mesh().lookupObject<compressibleTwoPhaseVoFMixture>
         (
             "phaseProperties"
         )

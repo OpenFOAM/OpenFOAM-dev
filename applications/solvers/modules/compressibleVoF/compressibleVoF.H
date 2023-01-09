@@ -59,7 +59,7 @@ See also
 #define compressibleVoF_H
 
 #include "twoPhaseVoFSolver.H"
-#include "compressibleTwoPhaseMixture.H"
+#include "compressibleTwoPhaseVoFMixture.H"
 #include "compressibleInterPhaseTransportModel.H"
 #include "compressibleInterPhaseThermophysicalTransportModel.H"
 #include "buoyancy.H"
@@ -87,7 +87,7 @@ protected:
     // Phase properties
 
         //- The compressible two-phase mixture
-        compressibleTwoPhaseMixture& mixture;
+        compressibleTwoPhaseVoFMixture& mixture;
 
 
     // Thermophysical properties

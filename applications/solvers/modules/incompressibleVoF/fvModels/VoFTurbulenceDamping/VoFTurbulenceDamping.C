@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VoFTurbulenceDamping.H"
-#include "incompressibleTwoPhaseMixture.H"
+#include "incompressibleTwoPhaseVoFMixture.H"
 #include "incompressibleMomentumTransportModel.H"
 #include "fvMatrix.H"
 #include "addToRunTimeSelectionTable.H"
@@ -62,7 +62,7 @@ Foam::fv::VoFTurbulenceDamping::VoFTurbulenceDamping
     delta_("delta", dimLength, dict),
     mixture_
     (
-        mesh.lookupObject<incompressibleTwoPhaseMixture>
+        mesh.lookupObject<incompressibleTwoPhaseVoFMixture>
         (
             "phaseProperties"
         )

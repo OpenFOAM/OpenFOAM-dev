@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "incompressibleTwoPhaseMixture.H"
+#include "incompressibleTwoPhaseVoFMixture.H"
 #include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -31,13 +31,13 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(incompressibleTwoPhaseMixture, 0);
+    defineTypeNameAndDebug(incompressibleTwoPhaseVoFMixture, 0);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::incompressibleTwoPhaseMixture::incompressibleTwoPhaseMixture
+Foam::incompressibleTwoPhaseVoFMixture::incompressibleTwoPhaseVoFMixture
 (
     const fvMesh& mesh
 )
@@ -84,7 +84,7 @@ Foam::incompressibleTwoPhaseMixture::incompressibleTwoPhaseMixture
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::incompressibleTwoPhaseMixture::mu() const
+Foam::incompressibleTwoPhaseVoFMixture::mu() const
 {
     const volScalarField limitedAlpha1
     (
@@ -101,7 +101,7 @@ Foam::incompressibleTwoPhaseMixture::mu() const
 
 
 Foam::tmp<Foam::surfaceScalarField>
-Foam::incompressibleTwoPhaseMixture::muf() const
+Foam::incompressibleTwoPhaseVoFMixture::muf() const
 {
     const surfaceScalarField alpha1f
     (
@@ -118,7 +118,7 @@ Foam::incompressibleTwoPhaseMixture::muf() const
 
 
 Foam::tmp<Foam::surfaceScalarField>
-Foam::incompressibleTwoPhaseMixture::nuf() const
+Foam::incompressibleTwoPhaseVoFMixture::nuf() const
 {
     const surfaceScalarField alpha1f
     (
@@ -136,7 +136,7 @@ Foam::incompressibleTwoPhaseMixture::nuf() const
 }
 
 
-bool Foam::incompressibleTwoPhaseMixture::read()
+bool Foam::incompressibleTwoPhaseVoFMixture::read()
 {
     if (twoPhaseVoFMixture::read())
     {
@@ -152,7 +152,7 @@ bool Foam::incompressibleTwoPhaseMixture::read()
 }
 
 
-void Foam::incompressibleTwoPhaseMixture::correct()
+void Foam::incompressibleTwoPhaseVoFMixture::correct()
 {
     rho_ = alpha1()*rho1_ + alpha2()*rho2_;
 

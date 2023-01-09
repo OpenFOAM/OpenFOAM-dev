@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::compressibleTwoPhaseMixture
+    Foam::compressibleTwoPhaseVoFMixture
 
 Description
     Class to represent a mixture of two rhoThermo-based phases
 
 SourceFiles
-    compressibleTwoPhaseMixture.C
+    compressibleTwoPhaseVoFMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compressibleTwoPhaseMixture_H
-#define compressibleTwoPhaseMixture_H
+#ifndef compressibleTwoPhaseVoFMixture_H
+#define compressibleTwoPhaseVoFMixture_H
 
 #include "twoPhaseVoFMixture.H"
 #include "compressibleTwoPhases.H"
@@ -45,10 +45,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class compressibleTwoPhaseMixture Declaration
+                    Class compressibleTwoPhaseVoFMixture Declaration
 \*---------------------------------------------------------------------------*/
 
-class compressibleTwoPhaseMixture
+class compressibleTwoPhaseVoFMixture
 :
     public twoPhaseVoFMixture,
     virtual public compressibleTwoPhases,
@@ -85,17 +85,17 @@ class compressibleTwoPhaseMixture
 public:
 
     //- Runtime type information
-    TypeName("compressibleTwoPhaseMixture");
+    TypeName("compressibleTwoPhaseVoFMixture");
 
 
     // Constructors
 
         //- Construct from a mesh
-        compressibleTwoPhaseMixture(const fvMesh& mesh);
+        compressibleTwoPhaseVoFMixture(const fvMesh& mesh);
 
 
     //- Destructor
-    virtual ~compressibleTwoPhaseMixture();
+    virtual ~compressibleTwoPhaseVoFMixture();
 
 
     // Member Functions

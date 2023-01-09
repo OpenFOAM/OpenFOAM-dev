@@ -47,10 +47,13 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
     twoPhaseVoFSolver
     (
         mesh,
-        autoPtr<twoPhaseVoFMixture>(new compressibleTwoPhaseMixture(mesh))
+        autoPtr<twoPhaseVoFMixture>(new compressibleTwoPhaseVoFMixture(mesh))
     ),
 
-    mixture(refCast<compressibleTwoPhaseMixture>(twoPhaseVoFSolver::mixture)),
+    mixture
+    (
+        refCast<compressibleTwoPhaseVoFMixture>(twoPhaseVoFSolver::mixture)
+    ),
 
     p(mixture.p()),
 
