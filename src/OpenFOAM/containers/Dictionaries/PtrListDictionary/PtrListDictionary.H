@@ -98,6 +98,13 @@ public:
         autoPtr<T> set(const label, const word& key, tmp<T>&);
 
 
+        // Conversion
+
+            //- Convert to list of different pointer type
+            template<class T2>
+            UPtrListDictionary<T2> convert();
+
+
     // Member Operators
 
         using PtrList<T>::operator[];

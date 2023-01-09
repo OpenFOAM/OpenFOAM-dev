@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -934,7 +934,8 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
     PtrList<scalarGeoField> fSD(nPhases);
     calculateBlendingCoeffs
     (
-        interface_.fluid().phases().template convert<const volScalarField>(),
+        interface_.fluid().phases()
+       .PtrList<phaseModel>::convert<const volScalarField>(),
         fG, f1D2, f2D1, fS,
         fGD, f1D2D, f2D1D, fSD,
         subtract
@@ -1038,7 +1039,8 @@ Foam::BlendedInterfacialModel<ModelType>::evaluate
     PtrList<scalarGeoField> fSD(nPhases);
     calculateBlendingCoeffs
     (
-        interface_.fluid().phases().template convert<const volScalarField>(),
+        interface_.fluid().phases()
+       .PtrList<phaseModel>::convert<const volScalarField>(),
         fG, f1D2, f2D1, fS,
         fGD, f1D2D, f2D1D, fSD,
         subtract

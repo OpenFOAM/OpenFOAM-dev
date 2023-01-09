@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PtrListDictionary.H"
+#include "UPtrListDictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -120,6 +121,26 @@ inline Foam::autoPtr<T> Foam::PtrListDictionary<T>::set
             << abort(FatalError);
     }
     return PtrList<T>::set(i, ptr);
+}
+
+
+template<class T>
+template<class T2>
+Foam::UPtrListDictionary<T2> Foam::PtrListDictionary<T>::convert()
+{
+    UPtrListDictionary<T2> result(this->size());
+
+    forAll(*this, i)
+    {
+        result.set
+        (
+            i,
+            this->operator()(i)->keyword(),
+            dynamic_cast<T2*>(this->operator()(i))
+        );
+    }
+
+    return result;
 }
 
 
