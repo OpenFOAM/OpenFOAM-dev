@@ -23,24 +23,24 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     multiphaseInterFoam
+#     compressibleMultiphaseInterFoam
 #
 # Description
-#     Script to inform the user that multiphaseInterFoam has been superseded and
-#     replaced by the more general incompressibleMultiphaseVoF solver module
-#     executed by the foamRun application.
+#     Script to inform the user that compressibleMultiphaseInterFoam has been
+#     superseded and replaced by the more general compressibleMultiphaseVoF
+#     solver module executed by the foamRun application.
 #
 #------------------------------------------------------------------------------
 
 cat <<EOF
 
-multiphaseInterFoam has been superseded and replaced by the more general
-incompressibleMultiphaseVoF solver module executed by the foamRun application:
+compressibleMultiphaseInterFoam has been superseded and replaced by the more general
+compressibleMultiphaseVoF solver module executed by the foamRun application:
 
-    foamRun -solver incompressibleMultiphaseVoF
+    foamRun -solver compressibleMultiphaseVoF
 
 EOF
 
-exec env foamRun -solver incompressibleMultiphaseVoF "$@"
+exec env foamRun -solver compressibleMultiphaseVoF "$@"
 
 #------------------------------------------------------------------------------

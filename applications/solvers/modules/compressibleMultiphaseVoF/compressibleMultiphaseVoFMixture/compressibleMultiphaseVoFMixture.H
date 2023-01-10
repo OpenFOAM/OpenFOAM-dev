@@ -22,33 +22,34 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::incompressibleMultiphaseVoFMixture
+    Foam::compressibleMultiphaseVoFMixture
 
 Description
-    Incompressible multiphase mixture for interface-capturing simulations.
+    Compressible multiphase mixture for interface-capturing simulations.
 
     Derived from viscosity so that it can be used in conjunction with the
-    incompressible turbulence models.
+    compressible turbulence models.
 
     Surface tension and contact-angle is handled for the interface between each
     phase-pair.
 
 SourceFiles
-    incompressibleMultiphaseVoFMixture.C
+    compressibleMultiphaseVoFMixture.C
 
 See also
     Foam::multiphaseVoFMixture
-    Foam::incompressibleVoFphase
+    Foam::compressibleVoFphase
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef incompressibleMultiphaseVoFMixture_H
-#define incompressibleMultiphaseVoFMixture_H
+#ifndef compressibleMultiphaseVoFMixture_H
+#define compressibleMultiphaseVoFMixture_H
 
+#include "compressibleMultiphaseVoFMixtureThermo.H"
 #include "multiphaseVoFMixture.H"
 #include "viscosity.H"
 #include "UPtrListDictionary.H"
-#include "incompressibleVoFphase.H"
+#include "compressibleVoFphase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,52 +57,43 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class incompressibleMultiphaseVoFMixture Declaration
+                      Class compressibleMultiphaseVoFMixture Declaration
 \*---------------------------------------------------------------------------*/
 
-class incompressibleMultiphaseVoFMixture
+class compressibleMultiphaseVoFMixture
 :
+    public compressibleMultiphaseVoFMixtureThermo,
     public multiphaseVoFMixture,
     public viscosity
 {
     // Private Data
 
         //- Dictionary of phases
-        UPtrListDictionary<incompressibleVoFphase> phases_;
+        UPtrListDictionary<compressibleVoFphase> phases_;
 
-        //- Mixture density
         volScalarField rho_;
-
-        //- Mixture viscosity
-        volScalarField nu_;
-
-
-    // Private Member Functions
-
-        //- Return the dynamic laminar viscosity
-        tmp<volScalarField> mu() const;
 
 
 public:
 
-    TypeName("incompressibleMultiphaseVoFMixture");
+    TypeName("compressibleMultiphaseVoFMixture");
 
 
     // Constructors
 
-        //- Construct from components
-        incompressibleMultiphaseVoFMixture(const fvMesh& mesh);
+        //- Construct from fvMesh
+        compressibleMultiphaseVoFMixture(const fvMesh& mesh);
 
 
     //- Destructor
-    virtual ~incompressibleMultiphaseVoFMixture()
+    virtual ~compressibleMultiphaseVoFMixture()
     {}
 
 
     // Member Functions
 
         //- Return the phases
-        UPtrListDictionary<incompressibleVoFphase>& phases()
+        UPtrListDictionary<compressibleVoFphase>& phases()
         {
             return phases_;
         }
@@ -118,11 +110,27 @@ public:
         //- Return the laminar viscosity for patch
         virtual tmp<scalarField> nu(const label patchi) const;
 
-        //- Correct the mixture properties
+        //- Return the face-interpolated dynamic laminar viscosity
+        tmp<surfaceScalarField> nuf() const;
+
+        //- Correct the thermodynamics of each phase
+        virtual void correctThermo();
+
+        //- Return the effective temperature transport coefficient
+        //  derived from the phase internal energy equations i.e. <kappa/Cv>
+        virtual tmp<volScalarField> alphaEff
+        (
+            const volScalarField& nut
+        ) const;
+
+        //- Return the phase-averaged reciprocal Cv
+        tmp<volScalarField> rCv() const;
+
+        //- Update properties
         virtual void correct();
 
-        //- Read base phaseProperties dictionary
-        virtual bool read();
+        //- Update densities for given pressure change
+        void correctRho(const volScalarField& dp);
 };
 
 

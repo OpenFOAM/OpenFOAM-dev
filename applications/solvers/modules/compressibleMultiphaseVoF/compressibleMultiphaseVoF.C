@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "compressibleVoF.H"
-#include "localEulerDdtScheme.H"
+#include "compressibleMultiphaseVoF.H"
+#include "CorrectPhi.H"
+#include "geometricZeroField.H"
 #include "fvcDdt.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -34,41 +35,39 @@ namespace Foam
 {
 namespace solvers
 {
-    defineTypeNameAndDebug(compressibleVoF, 0);
-    addToRunTimeSelectionTable(solver, compressibleVoF, fvMesh);
+    defineTypeNameAndDebug(compressibleMultiphaseVoF, 0);
+    addToRunTimeSelectionTable(solver, compressibleMultiphaseVoF, fvMesh);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
+Foam::solvers::compressibleMultiphaseVoF::compressibleMultiphaseVoF
+(
+    fvMesh& mesh
+)
 :
-    twoPhaseVoFSolver
+    multiphaseVoFSolver
     (
         mesh,
-        autoPtr<twoPhaseVoFMixture>(new compressibleTwoPhaseVoFMixture(mesh))
+        autoPtr<multiphaseVoFMixture>
+        (
+            new compressibleMultiphaseVoFMixture(mesh)
+        )
     ),
 
     mixture
     (
-        refCast<compressibleTwoPhaseVoFMixture>(twoPhaseVoFSolver::mixture)
+        refCast<compressibleMultiphaseVoFMixture>
+        (
+            multiphaseVoFSolver::mixture
+        )
     ),
+
+    phases(mixture.phases()),
 
     p(mixture.p()),
-
-    dgdt
-    (
-        IOobject
-        (
-            "dgdt",
-            runTime.name(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        alpha1*fvc::div(phi)
-    ),
 
     pressureReference_
     (
@@ -85,33 +84,20 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         mixture
     ),
 
-    alphaRhoPhi1
-    (
-        IOobject::groupName("alphaRhoPhi", alpha1.group()),
-        fvc::interpolate(mixture.thermo1().rho())*alphaPhi1
-    ),
-
-    alphaRhoPhi2
-    (
-        IOobject::groupName("alphaRhoPhi", alpha2.group()),
-        fvc::interpolate(mixture.thermo2().rho())*(phi - alphaPhi1)
-    ),
-
     K("K", 0.5*magSqr(U)),
 
-    momentumTransport
+    momentumTransport_
     (
-        rho,
-        U,
-        phi,
-        rhoPhi,
-        alphaPhi1,
-        alphaRhoPhi1,
-        alphaRhoPhi2,
-        mixture
+        compressible::momentumTransportModel::New
+        (
+            rho,
+            U,
+            rhoPhi,
+            mixture
+        )
     ),
 
-    thermophysicalTransport(momentumTransport)
+    momentumTransport(momentumTransport_())
 {
     // Read the controls
     read();
@@ -137,54 +123,36 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::solvers::compressibleVoF::~compressibleVoF()
+Foam::solvers::compressibleMultiphaseVoF::~compressibleMultiphaseVoF()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::compressibleVoF::prePredictor()
+void Foam::solvers::compressibleMultiphaseVoF::prePredictor()
 {
-    twoPhaseVoFSolver::prePredictor();
+    multiphaseVoFSolver::prePredictor();
 
-    const volScalarField& rho1 = mixture.thermo1().rho();
-    const volScalarField& rho2 = mixture.thermo2().rho();
+    contErr = fvc::ddt(rho)()() + fvc::div(rhoPhi)()();
 
-    alphaRhoPhi1 = fvc::interpolate(rho1)*alphaPhi1;
-    alphaRhoPhi2 = fvc::interpolate(rho2)*(phi - alphaPhi1);
-
-    rhoPhi = alphaRhoPhi1 + alphaRhoPhi2;
-
-    contErr1 =
-    (
-        fvc::ddt(alpha1, rho1)()() + fvc::div(alphaRhoPhi1)()()
-      - (fvModels().source(alpha1, rho1)&rho1)()
-    );
-
-    contErr2 =
-    (
-        fvc::ddt(alpha2, rho2)()() + fvc::div(alphaRhoPhi2)()()
-      - (fvModels().source(alpha2, rho2)&rho2)()
-    );
+    forAll(mixture.phases(), phasei)
+    {
+        const volScalarField& rho = phases[phasei].thermo().rho();
+        contErr.ref() -= fvModels().source(phases[phasei], rho)&rho;
+    }
 
     if (pimple.predictTransport())
     {
         momentumTransport.predict();
     }
-
-    if (pimple.predictTransport())
-    {
-        thermophysicalTransport.predict();
-    }
 }
 
 
-void Foam::solvers::compressibleVoF::postCorrector()
+void Foam::solvers::compressibleMultiphaseVoF::postCorrector()
 {
     if (pimple.correctTransport())
     {
         momentumTransport.correct();
-        thermophysicalTransport.correct();
     }
 }
 

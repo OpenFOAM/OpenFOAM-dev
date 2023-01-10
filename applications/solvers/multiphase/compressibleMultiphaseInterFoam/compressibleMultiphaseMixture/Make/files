@@ -1,5 +1,0 @@
-phase/phase.C
-compressiblePhase/compressiblePhase.C
-compressibleMultiphaseMixture.C
-
-LIB = $(FOAM_LIBBIN)/libcompressibleMultiphaseMixture

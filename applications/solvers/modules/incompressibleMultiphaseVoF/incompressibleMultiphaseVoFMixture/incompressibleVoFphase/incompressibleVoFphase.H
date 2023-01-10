@@ -134,9 +134,6 @@ public:
 
         //- Correct the incompressibleVoFphase properties
         void correct();
-
-        //- Read base incompressibleVoFphaseProperties dictionary
-        bool read(const dictionary& incompressibleVoFphaseDict);
 };
 
 

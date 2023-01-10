@@ -23,34 +23,41 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "incompressibleVoFphase.H"
+#include "compressibleMultiphaseVoF.H"
+#include "fvcMeshPhi.H"
+#include "fvcDdt.H"
+#include "fvmDiv.H"
+#include "fvmSup.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::incompressibleVoFphase::incompressibleVoFphase
-(
-    const word& name,
-    const fvMesh& mesh
-)
-:
-    VoFphase(name, mesh),
-    nuModel_(viscosityModel::New(mesh, name)),
-    rho_("rho", dimDensity, nuModel_())
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::VoFphase> Foam::incompressibleVoFphase::clone() const
+void Foam::solvers::compressibleMultiphaseVoF::thermophysicalPredictor()
 {
-    NotImplemented;
-    return autoPtr<VoFphase>(nullptr);
-}
+    volScalarField& T = mixture.T();
 
+    fvScalarMatrix TEqn
+    (
+        fvm::ddt(rho, T) + fvm::div(rhoPhi, T) - fvm::Sp(contErr(), T)
+      - fvm::laplacian(mixture.alphaEff(momentumTransport.nut()), T)
+      + (
+            fvc::div(fvc::absolute(phi, U), p)()() // - contErr()/rho*p
+          + (fvc::ddt(rho, K) + fvc::div(rhoPhi, K))()()
+          - (U()&(fvModels().source(rho, U)&U)()) - contErr()*K
+        )*mixture.rCv()()
+     ==
+        fvModels().source(rho, T)
+    );
 
-void Foam::incompressibleVoFphase::correct()
-{
-    nuModel_->correct();
+    TEqn.relax();
+
+    fvConstraints().constrain(TEqn);
+
+    TEqn.solve();
+
+    fvConstraints().constrain(T);
+
+    mixture.correctThermo();
+    mixture.correct();
 }
 
 

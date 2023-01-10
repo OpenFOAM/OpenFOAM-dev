@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,71 +23,42 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "compressiblePhase.H"
+#include "compressibleMultiphaseVoFMixtureThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::compressiblePhase::compressiblePhase
+Foam::compressibleMultiphaseVoFMixtureThermo::
+compressibleMultiphaseVoFMixtureThermo
 (
-    const word& name,
-    const volScalarField& T
+    const fvMesh& mesh
 )
 :
-    phase(name, T.mesh()),
-    thermo_(nullptr),
-    Alpha_
+    p_
     (
         IOobject
         (
-            IOobject::groupName("Alpha", name),
-            T.mesh().time().name(),
-            T.mesh()
-        ),
-        T.mesh(),
-        dimensionedScalar(dimless, 0)
-    ),
-    dgdt_
-    (
-        IOobject
-        (
-            IOobject::groupName("dgdt", name),
-            T.mesh().time().name(),
-            T.mesh(),
-            IOobject::READ_IF_PRESENT,
+            "p",
+            mesh.time().name(),
+            mesh,
+            IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        T.mesh(),
-        dimensionedScalar(dimless/dimTime, 0)
+        mesh
+    ),
+
+    T_
+    (
+        IOobject
+        (
+            "T",
+            mesh.time().name(),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh
     )
-{
-    {
-        volScalarField Tp(IOobject::groupName("T", name), T);
-        Tp.write();
-    }
-
-    thermo_ = rhoThermo::New(T.mesh(), name);
-    thermo_->validate(name, "e");
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::compressiblePhase> Foam::compressiblePhase::clone() const
-{
-    NotImplemented;
-    return autoPtr<compressiblePhase>(nullptr);
-}
-
-
-void Foam::compressiblePhase::correct
-(
-    const volScalarField& p,
-    const volScalarField& T
-)
-{
-    thermo_->he() = thermo_->he(p, T);
-    thermo_->correct();
-}
+{}
 
 
 // ************************************************************************* //

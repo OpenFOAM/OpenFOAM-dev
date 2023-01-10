@@ -23,34 +23,30 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "incompressibleVoFphase.H"
+#include "compressibleVoF.H"
+#include "fvmSup.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::incompressibleVoFphase::incompressibleVoFphase
+Foam::tmp<Foam::fvVectorMatrix> Foam::solvers::compressibleVoF::divDevTau
 (
-    const word& name,
-    const fvMesh& mesh
+    volVectorField& U
 )
-:
-    VoFphase(name, mesh),
-    nuModel_(viscosityModel::New(mesh, name)),
-    rho_("rho", dimDensity, nuModel_())
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::VoFphase> Foam::incompressibleVoFphase::clone() const
 {
-    NotImplemented;
-    return autoPtr<VoFphase>(nullptr);
+    return
+        momentumTransport.divDevTau(U)
+      - fvm::Sp(contErr1() + contErr2(), U);
 }
 
 
-void Foam::incompressibleVoFphase::correct()
+void Foam::solvers::compressibleVoF::momentumPredictor()
 {
-    nuModel_->correct();
+    twoPhaseVoFSolver::momentumPredictor();
+
+    if (pimple.momentumPredictor())
+    {
+        K = 0.5*magSqr(U);
+    }
 }
 
 

@@ -14,7 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     compressibleMultiphaseInterFoam;
+application     foamRun;
+
+solver          compressibleMultiphaseVoF;
 
 startFrom       startTime;
 

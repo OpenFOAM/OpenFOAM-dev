@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::phase
+    Foam::compressibleMultiphaseVoFMixtureThermo
 
 Description
-    Single incompressible phase derived from the phase-fraction.
-    Used as part of the multiPhaseMixture for interface-capturing multi-phase
-    simulations.
 
 SourceFiles
-    phase.C
+    compressibleMultiphaseVoFMixtureThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef phase_H
-#define phase_H
+#ifndef compressibleMultiphaseVoFMixtureThermo_H
+#define compressibleMultiphaseVoFMixtureThermo_H
 
 #include "volFields.H"
 
@@ -45,40 +42,43 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class phase Declaration
+                   Class compressibleMultiphaseVoFMixtureThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-class phase
-:
-    public volScalarField
+class compressibleMultiphaseVoFMixtureThermo
 {
+
+private:
+
     // Private Data
 
-        word name_;
+        //- Pressure
+        volScalarField p_;
+
+        //- Mixture temperature
+        volScalarField T_;
 
 
 public:
 
     // Constructors
 
-        //- Construct from components
-        phase
-        (
-            const word& name,
-            const fvMesh& mesh
-        );
+        //- Construct from fvMesh
+        compressibleMultiphaseVoFMixtureThermo(const fvMesh& mesh);
 
 
     // Member Functions
 
-        const word& name() const
+        //- Return pressure [Pa]
+        volScalarField& p()
         {
-            return name_;
+            return p_;
         }
 
-        const word& keyword() const
+        //- Return mixture temperature [K]
+        volScalarField& T()
         {
-            return name();
+            return T_;
         }
 };
 

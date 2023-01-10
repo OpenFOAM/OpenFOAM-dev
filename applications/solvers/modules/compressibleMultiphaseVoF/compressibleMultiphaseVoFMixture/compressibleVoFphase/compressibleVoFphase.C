@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,26 +23,72 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "phase.H"
+#include "compressibleVoFphase.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::phase::phase(const word& phaseName, const fvMesh& mesh)
+Foam::compressibleVoFphase::compressibleVoFphase
+(
+    const word& name,
+    const fvMesh& mesh,
+    const volScalarField& T
+)
 :
-    volScalarField
+    VoFphase(name, mesh),
+    thermo_(nullptr),
+    Alpha_
     (
         IOobject
         (
-            IOobject::groupName("alpha", phaseName),
+            IOobject::groupName("Alpha", name),
+            mesh.time().name(),
+            mesh
+        ),
+        mesh,
+        dimensionedScalar(dimless, 0)
+    ),
+    dgdt_
+    (
+        IOobject
+        (
+            IOobject::groupName("dgdt", name),
             mesh.time().name(),
             mesh,
-            IOobject::MUST_READ,
+            IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        mesh
-    ),
-    name_(phaseName)
-{}
+        mesh,
+        dimensionedScalar(dimless/dimTime, 0)
+    )
+{
+    {
+        volScalarField Tp(IOobject::groupName("T", name), T);
+        Tp.write();
+    }
+
+    thermo_ = rhoThermo::New(mesh, name);
+    thermo_->validate(name, "e");
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::VoFphase> Foam::compressibleVoFphase::clone() const
+{
+    NotImplemented;
+    return autoPtr<VoFphase>(nullptr);
+}
+
+
+void Foam::compressibleVoFphase::correct
+(
+    const volScalarField& p,
+    const volScalarField& T
+)
+{
+    thermo_->he() = thermo_->he(p, T);
+    thermo_->correct();
+}
 
 
 // ************************************************************************* //

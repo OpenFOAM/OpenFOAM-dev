@@ -34,6 +34,26 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::incompressibleMultiphaseVoFMixture::mu() const
+{
+    tmp<volScalarField> tmu
+    (
+        phases_[0]*phases_[0].rho()*phases_[0].nu()
+    );
+    volScalarField& mu = tmu.ref();
+
+    for (label phasei=1; phasei<phases_.size(); phasei++)
+    {
+        mu += phases_[phasei]*phases_[phasei].rho()*phases_[phasei].nu();
+    }
+
+    return tmu;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::incompressibleMultiphaseVoFMixture::incompressibleMultiphaseVoFMixture
@@ -79,68 +99,6 @@ Foam::incompressibleMultiphaseVoFMixture::incompressibleMultiphaseVoFMixture
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::incompressibleMultiphaseVoFMixture::mu() const
-{
-    tmp<volScalarField> tmu
-    (
-        phases_[0]*phases_[0].rho()*phases_[0].nu()
-    );
-    volScalarField& mu = tmu.ref();
-
-    for (label phasei=1; phasei<phases_.size(); phasei++)
-    {
-        mu += phases_[phasei]*phases_[phasei].rho()*phases_[phasei].nu();
-    }
-
-    return tmu;
-}
-
-
-Foam::tmp<Foam::scalarField>
-Foam::incompressibleMultiphaseVoFMixture::mu(const label patchi) const
-{
-    tmp<scalarField> tmu
-    (
-        phases_[0].boundaryField()[patchi]
-       *phases_[0].rho().value()
-       *phases_[0].nu(patchi)
-    );
-    scalarField& mu = tmu.ref();
-
-    for (label phasei=1; phasei<phases_.size(); phasei++)
-    {
-        mu +=
-            phases_[phasei].boundaryField()[patchi]
-           *phases_[phasei].rho().value()
-           *phases_[phasei].nu(patchi);
-    }
-
-    return tmu;
-}
-
-
-Foam::tmp<Foam::surfaceScalarField>
-Foam::incompressibleMultiphaseVoFMixture::muf() const
-{
-    tmp<surfaceScalarField> tmuf
-    (
-        fvc::interpolate(phases_[0])
-       *phases_[0].rho()*fvc::interpolate(phases_[0].nu())
-    );
-    surfaceScalarField& muf = tmuf.ref();
-
-    for (label phasei=1; phasei<phases_.size(); phasei++)
-    {
-        muf +=
-            fvc::interpolate(phases_[phasei])
-           *phases_[phasei].rho()*fvc::interpolate(phases_[phasei].nu());
-    }
-
-    return tmuf;
-}
-
-
-Foam::tmp<Foam::volScalarField>
 Foam::incompressibleMultiphaseVoFMixture::nu() const
 {
     return nu_;
@@ -151,13 +109,6 @@ Foam::tmp<Foam::scalarField>
 Foam::incompressibleMultiphaseVoFMixture::nu(const label patchi) const
 {
     return nu_.boundaryField()[patchi];
-}
-
-
-Foam::tmp<Foam::surfaceScalarField>
-Foam::incompressibleMultiphaseVoFMixture::nuf() const
-{
-    return muf()/fvc::interpolate(rho());
 }
 
 
@@ -176,7 +127,7 @@ void Foam::incompressibleMultiphaseVoFMixture::correct()
     }
 
     // Update the mixture kinematic viscosity
-    nu_ = mu()/rho();
+    nu_ = mu()/rho_;
 
     calcAlphas();
 }

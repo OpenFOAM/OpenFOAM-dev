@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,23 +22,27 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::compressiblePhase
+    Foam::compressibleVoFphase
 
 Description
-    Single incompressible phase derived from the phase-fraction.
-    Used as part of the multiPhaseMixture for interface-capturing multi-phase
-    simulations.
+    Single compressible phase derived from the VoFphase.
+
+    Used in compressibleMultiphaseVoFMixture for multiphase
+    interface-capturing simulations.
 
 SourceFiles
-    compressiblePhase.C
+    compressibleVoFphase.C
+
+See also
+    Foam::VoFphase
+    Foam::compressibleMultiphaseVoFMixture
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compressiblePhase_H
-#define compressiblePhase_H
+#ifndef compressibleVoFphase_H
+#define compressibleVoFphase_H
 
-#include "phase.H"
-#include "dictionaryEntry.H"
+#include "VoFphase.H"
 #include "rhoThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,17 +51,22 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class compressiblePhase Declaration
+                            Class compressibleVoFphase Declaration
 \*---------------------------------------------------------------------------*/
 
-class compressiblePhase
+class compressibleVoFphase
 :
-    public phase
+    public VoFphase
 {
     // Private Data
 
+        //- Phase thermo
         autoPtr<rhoThermo> thermo_;
+
+        //- Phase mass-fraction
         volScalarField Alpha_;
+
+        //- Phase compressibility contribution
         volScalarField::Internal dgdt_;
 
 
@@ -66,36 +75,39 @@ public:
     // Constructors
 
         //- Construct from components
-        compressiblePhase
+        compressibleVoFphase
         (
-            const word& phaseName,
+            const word& name,
+            const fvMesh& mesh,
             const volScalarField& T
         );
 
         //- Return clone
-        autoPtr<compressiblePhase> clone() const;
+        virtual autoPtr<VoFphase> clone() const;
 
-        //- Return a pointer to a new compressiblePhase created on freestore
-        //  from Istream
+        //- Return a pointer to a new compressibleVoFphase
+        //  created on freestore from Istream
         class iNew
+        :
+            public VoFphase::iNew
         {
             const volScalarField& T_;
 
         public:
 
-            iNew
-            (
-                const volScalarField& T
-            )
+            iNew(const fvMesh& mesh, const volScalarField& T)
             :
+                VoFphase::iNew(mesh),
                 T_(T)
             {}
 
-            autoPtr<compressiblePhase> operator()(Istream& is) const
+            virtual autoPtr<VoFphase> operator()(Istream& is) const
             {
-                return autoPtr<compressiblePhase>
+                const word name(is);
+
+                return autoPtr<VoFphase>
                 (
-                    new compressiblePhase(is, T_)
+                    new compressibleVoFphase(name, mesh_, T_)
                 );
             }
         };
