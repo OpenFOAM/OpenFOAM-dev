@@ -1,0 +1,7 @@
+incompressibleMultiphaseVoFMixture/incompressibleVoFphase/incompressibleVoFphase.C
+incompressibleMultiphaseVoFMixture/incompressibleMultiphaseVoFMixture.C
+alphaPredictor.C
+pressureCorrector.C
+incompressibleMultiphaseVoF.C
+
+LIB = $(FOAM_LIBBIN)/libincompressibleMultiphaseVoF

@@ -25,17 +25,13 @@ Class
     Foam::solvers::VoFSolver
 
 Description
-    Solver module base-class for for 2 immiscible fluids using a VOF (volume
-    of fluid) phase-fraction based interface capturing approach, with optional
-    mesh motion and mesh topology changes including adaptive re-meshing.
+    Base solver module base-class for the solution of immiscible fluids using
+    a VOF (volume of fluid) phase-fraction based interface capturing approach,
+    with optional mesh motion and mesh topology changes including adaptive
+    re-meshing.
 
     The momentum and other fluid properties are of the "mixture" and a single
     momentum equation is solved.
-
-    Either mixture or two-phase transport modelling may be selected.  In the
-    mixture approach a single laminar, RAS or LES model is selected to model the
-    momentum stress.  In the Euler-Euler two-phase approach separate laminar,
-    RAS or LES selected models are selected for each of the phases.
 
     Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
     pseudo-transient and steady simulations.

@@ -1,0 +1,20 @@
+EXE_INC = \
+    -I$(FOAM_SOLVERS)/modules/VoFSolver/lnInclude \
+    -I$(FOAM_SOLVERS)/modules/fluidSolver/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/multiphaseModels/multiphaseProperties/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude
+
+LIB_LIBS = \
+    -lVoFSolver \
+    -lfluidSolver \
+    -lphysicalProperties \
+    -lmultiphaseProperties \
+    -linterfaceCompression \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lfvModels \
+    -lfvConstraints \
+    -lsampling

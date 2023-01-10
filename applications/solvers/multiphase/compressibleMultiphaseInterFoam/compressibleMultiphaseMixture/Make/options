@@ -1,5 +1,4 @@
 EXE_INC = \
-    -I$(FOAM_SOLVERS)/multiphase/multiphaseInterFoam/incompressibleMultiphaseMixture/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/multiphaseModels/multiphaseProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
@@ -7,7 +6,6 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 LIB_LIBS = \
-    -lincompressibleMultiphaseMixture \
     -lfluidThermophysicalModels \
     -lmultiphaseProperties \
     -lspecie \

@@ -14,6 +14,8 @@ wmake $targetType VoFSolver
 wmake $targetType twoPhaseVoFSolver
 incompressibleVoF/Allwmake $targetType $*
 compressibleVoF/Allwmake $targetType $*
+wmake $targetType multiphaseVoFSolver
+wmake $targetType incompressibleMultiphaseVoF
 multiphaseEuler/Allwmake $targetType $*
 wmake $targetType solid
 solidDisplacement/Allwmake $targetType $*

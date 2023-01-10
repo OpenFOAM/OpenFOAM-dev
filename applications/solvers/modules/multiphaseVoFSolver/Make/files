@@ -1,0 +1,7 @@
+multiphaseVoFMixture/VoFphase/VoFphase.C
+multiphaseVoFMixture/multiphaseVoFMixture.C
+setInterfaceRDeltaT.C
+#alphaPredictor.C
+multiphaseVoFSolver.C
+
+LIB = $(FOAM_LIBBIN)/libmultiphaseVoFSolver
