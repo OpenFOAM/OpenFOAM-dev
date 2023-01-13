@@ -68,6 +68,8 @@ Usage
     \table
         Property       | Description              | Required    | Default value
         phaseType      | 'vapor' or 'liquid'      | yes         |
+        useLiquidTemperatureWallFunction | \\
+        Use wall function to calculate liquid temperature? | no | yes
         relax          | relaxation factor        | no          | 1
         dmdt           | phase change mass flux   | no          | uniform 0
         Prt            | turbulent Prandtl number | no          | 0.85
@@ -168,6 +170,9 @@ private:
 
         //- Heat source type
         phaseType phaseType_;
+
+        //- Estimate liquid temperature using logarithmic wall function?
+        Switch useLiquidTemperatureWallFunction_;
 
         //- Turbulent Prandtl number
         scalar Prt_;

@@ -74,6 +74,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
 :
     alphatPhaseChangeWallFunctionFvPatchScalarField(p, iF),
     phaseType_(liquidPhase),
+    useLiquidTemperatureWallFunction_(true),
     Prt_(0.85),
     AbyV_(p.size(), 0),
     alphatConv_(p.size(), 0),
@@ -108,6 +109,10 @@ alphatWallBoilingWallFunctionFvPatchScalarField
 :
     alphatPhaseChangeWallFunctionFvPatchScalarField(p, iF, dict),
     phaseType_(phaseTypeNames_.read(dict.lookup("phaseType"))),
+    useLiquidTemperatureWallFunction_
+    (
+        dict.lookupOrDefault<Switch>("useLiquidTemperatureWallFunction", true)
+    ),
     Prt_(dict.lookupOrDefault<scalar>("Prt", 0.85)),
     AbyV_(p.size(), 0),
     alphatConv_(p.size(), 0),
@@ -233,6 +238,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
 :
     alphatPhaseChangeWallFunctionFvPatchScalarField(psf, p, iF, mapper),
     phaseType_(psf.phaseType_),
+    useLiquidTemperatureWallFunction_(psf.useLiquidTemperatureWallFunction_),
     Prt_(psf.Prt_),
     AbyV_(mapper(psf.AbyV_)),
     alphatConv_(mapper(psf.alphatConv_)),
@@ -259,6 +265,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
 :
     alphatPhaseChangeWallFunctionFvPatchScalarField(psf, iF),
     phaseType_(psf.phaseType_),
+    useLiquidTemperatureWallFunction_(psf.useLiquidTemperatureWallFunction_),
     Prt_(psf.Prt_),
     AbyV_(psf.AbyV_),
     alphatConv_(psf.alphatConv_),
@@ -541,27 +548,30 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 label maxIter(10);
                 for (label i=0; i<maxIter; i++)
                 {
-                    // Liquid temperature at y+=250 is estimated from
-                    // logarithmic thermal wall function (Koncar, Krepper &
-                    // Egorov, 2005)
-                    const scalarField Tplus_y250
-                    (
-                        Prt_*(log(nutw.E()*250)/nutw.kappa() + P)
-                    );
+                    scalarField Tl(Tc);
 
-                    const scalarField Tplus
-                    (
-                        Prt_*(log(nutw.E()*yPlus)/nutw.kappa() + P)
-                    );
-
-                    const scalarField Tl
-                    (
-                        max
+                    if (useLiquidTemperatureWallFunction_)
+                    {
+                        // Liquid temperature at y+=250 is estimated from the
+                        // logarithmic thermal wall function of Koncar, Krepper
+                        // & Egorov (2005)
+                        const scalarField TyPlus250
                         (
-                            Tc - 40,
-                            Tw - (Tplus_y250/Tplus)*(Tw - Tc)
-                        )
-                    );
+                            Prt_*(log(nutw.E()*250)/nutw.kappa() + P)
+                        );
+
+                        const scalarField TyPlus
+                        (
+                            Prt_
+                           *(
+                                log(nutw.E()*max(yPlus, scalar(11)))
+                               /nutw.kappa()
+                              + P
+                            )
+                        );
+
+                        Tl = Tw - (TyPlus250/TyPlus)*(Tw - Tc);
+                    }
 
                     // Bubble departure diameter:
                     dDep_ = departureDiamModel_->dDeparture
@@ -669,50 +679,6 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
                     const scalar maxErr(gMax(mag(TsupPrev - TsupNew)));
 
-                    if (debug)
-                    {
-                        const scalarField qc
-                        (
-                            fLiquid_*A1*(alphatConv_ + alphaw)*hew.snGrad()
-                        );
-
-                        const scalarField qEff
-                        (
-                            liquidw*(*this + alphaw)*hew.snGrad()
-                        );
-
-                        Info<< "  L: " << gMin(L) << " - " << gMax(L) << endl;
-                        Info<< "  Tl: " << gMin(Tl) << " - " << gMax(Tl)
-                            << endl;
-                        Info<< "  N: " << gMin(N_) << " - " << gMax(N_) << endl;
-                        Info<< "  dDep_: " << gMin(dDep_) << " - "
-                            << gMax(dDep_) << endl;
-                        Info<< "  fDep: " << gMin(fDep_) << " - "
-                            << gMax(fDep_) << endl;
-                        Info<< "  Al: " << gMin(Al) << " - " << gMax(Al)
-                            << endl;
-                        Info<< "  A1: " << gMin(A1) << " - " << gMax(A1)
-                            << endl;
-                        Info<< "  A2: " << gMin(A2) << " - " << gMax(A2)
-                            << endl;
-                        Info<< "  A2E: " << gMin(A2E) << " - "
-                            << gMax(A2E) << endl;
-                        Info<< "  dmdtW: " << gMin(dmdtf_) << " - "
-                            << gMax(dmdtf_) << endl;
-                        Info<< "  qc: " << gMin(qc) << " - " << gMax(qc)
-                            << endl;
-                        Info<< "  qq: " << gMin(fLiquid_*qq_) << " - "
-                            << gMax(fLiquid_*qq_) << endl;
-                        Info<< "  qe: " << gMin(fLiquid_*qe_) << " - "
-                            << gMax(fLiquid_*qe_) << endl;
-                        Info<< "  qEff: " << gMin(qEff) << " - "
-                            << gMax(qEff) << endl;
-                        Info<< "  alphat: " << gMin(*this) << " - "
-                            << gMax(*this) << endl;
-                        Info<< "  alphatConv: " << gMin(alphatConv_)
-                            << " - " << gMax(alphatConv_) << endl;
-                    }
-
                     if (maxErr < 1e-1)
                     {
                         if (i > 0)
@@ -759,6 +725,12 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
     alphatPhaseChangeWallFunctionFvPatchScalarField::write(os);
 
     writeEntry(os, "phaseType", phaseTypeNames_[phaseType_]);
+    writeEntry
+    (
+        os,
+        "useLiquidTemperatureWallFunction",
+        useLiquidTemperatureWallFunction_
+    );
     writeEntry(os, "bubbleWaitingTimeRatio", tau_);
     writeEntry(os, "alphatConv", alphatConv_);
     writeEntry(os, "dDeparture", dDep_);
