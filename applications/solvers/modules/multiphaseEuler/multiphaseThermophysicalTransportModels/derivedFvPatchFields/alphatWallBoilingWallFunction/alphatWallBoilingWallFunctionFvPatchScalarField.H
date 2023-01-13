@@ -128,7 +128,8 @@ SourceFiles
 #ifndef compressible_alphatWallBoilingWallFunctionFvPatchScalarField_H
 #define compressible_alphatWallBoilingWallFunctionFvPatchScalarField_H
 
-#include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
+#include "alphatPhaseChangeWallFunctionBase.H"
+#include "fixedValueFvPatchFields.H"
 #include "partitioningModel.H"
 #include "nucleationSiteModel.H"
 #include "departureDiameterModel.H"
@@ -147,7 +148,8 @@ namespace compressible
 
 class alphatWallBoilingWallFunctionFvPatchScalarField
 :
-    public alphatPhaseChangeWallFunctionFvPatchScalarField
+    public fixedValueFvPatchScalarField,
+    public alphatPhaseChangeWallFunctionBase
 {
 public:
 
@@ -168,57 +170,65 @@ private:
 
     // Private Data
 
-        //- Heat source type
-        phaseType phaseType_;
+        // Controls
 
-        //- Estimate liquid temperature using logarithmic wall function?
-        Switch useLiquidTemperatureWallFunction_;
+            //- Heat source type
+            phaseType phaseType_;
 
-        //- Turbulent Prandtl number
-        scalar Prt_;
+            //- Estimate liquid temperature using logarithmic wall function?
+            Switch useLiquidTemperatureWallFunction_;
 
-        //- Patch face area by cell volume
-        scalarField AbyV_;
+            //- Relaxation factor
+            scalar relax_;
 
-        //- Convective turbulent thermal diffusivity
-        scalarField alphatConv_;
+            //- Turbulent Prandtl number
+            scalar Prt_;
 
-        //- Departure diameter
-        scalarField dDep_;
+            //- Bubble waiting time ratio
+            scalar tau_;
 
-        //- Departure frequency
-        scalarField fDep_;
 
-        //- Nucleation site density
-        scalarField N_;
+        // Sub-Models
 
-        //- Wall liquid fraction
-        scalarField fLiquid_;
+            //- Heat flux partitioning model
+            autoPtr<wallBoilingModels::partitioningModel>
+                partitioningModel_;
 
-        //- Quenching surface heat flux
-        scalarField qq_;
+            //- Nucleation site density model
+            autoPtr<wallBoilingModels::nucleationSiteModel>
+                nucleationSiteModel_;
 
-        //- Evaporative surface heat flux
-        scalarField qe_;
+            //- Bubble departure diameter model
+            autoPtr<wallBoilingModels::departureDiameterModel>
+                departureDiameterModel_;
 
-        //- Bubble waiting time ratio
-        scalar tau_;
+            //- Bubble departure frequency model
+            autoPtr<wallBoilingModels::departureFrequencyModel>
+                departureFrequencyModel_;
 
-        //- Run-time selected heat flux partitioning model
-        autoPtr<wallBoilingModels::partitioningModel>
-            partitioningModel_;
 
-        //- Run-time selected nucleation site density model
-        autoPtr<wallBoilingModels::nucleationSiteModel>
-            nucleationSiteModel_;
+        // State
 
-        //- Run-time selected bubble departure diameter model
-        autoPtr<wallBoilingModels::departureDiameterModel>
-            departureDiamModel_;
+            //- Wall liquid fraction
+            scalarField fLiquid_;
 
-        //- Run-time selected bubble departure frequency model
-        autoPtr<wallBoilingModels::departureFrequencyModel>
-            departureFreqModel_;
+            //- Departure diameter
+            scalarField dDep_;
+
+            //- Departure frequency
+            scalarField fDep_;
+
+            //- Nucleation site density
+            scalarField N_;
+
+            //- Quenching surface heat flux
+            scalarField qq_;
+
+            //- Evaporative surface heat flux
+            scalarField qe_;
+
+            //- Mass transfer rate
+            scalarField dmdtf_;
 
 
 public:
@@ -283,6 +293,12 @@ public:
 
     // Member Functions
 
+        //- Return the wall liquid fraction field [-]
+        const scalarField& wetFraction() const
+        {
+            return fLiquid_;
+        }
+
         //- Return the departure diameter field [m]
         const scalarField& dDeparture() const
         {
@@ -301,12 +317,6 @@ public:
             return N_;
         }
 
-        //- Return the wall liquid fraction field [-]
-        const scalarField& wetFraction() const
-        {
-            return fLiquid_;
-        }
-
         //- Return the quenching surface heat flux field [W/m^2]
         const scalarField& qQuenching() const
         {
@@ -317,6 +327,12 @@ public:
         const scalarField& qEvaporative() const
         {
             return qe_;
+        }
+
+        //- Return the rate of phase change
+        virtual const scalarField& dmdtf() const
+        {
+            return dmdtf_;
         }
 
 

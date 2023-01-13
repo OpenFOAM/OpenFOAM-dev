@@ -25,7 +25,7 @@ License
 
 #include "ThermalPhaseChangePhaseSystem.H"
 #include "heatTransferModel.H"
-#include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
+#include "alphatPhaseChangeWallFunctionBase.H"
 #include "fvcVolumeIntegrate.H"
 #include "fvmSup.H"
 #include "rhoMulticomponentThermo.H"
@@ -513,9 +513,6 @@ template<class BasePhaseSystem>
 void
 Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
 {
-    typedef compressible::alphatPhaseChangeWallFunctionFvPatchScalarField
-        alphatPhaseChangeWallFunction;
-
     forAllConstIter
     (
         saturationModelTable,
@@ -627,8 +624,9 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
 
         // Nucleation mass transfer update
         {
-            volScalarField& nDmdtf(*this->nDmdtfs_[interface]);
+            typedef compressible::alphatPhaseChangeWallFunctionBase alphatwType;
 
+            volScalarField& nDmdtf(*this->nDmdtfs_[interface]);
             nDmdtf = Zero;
 
             bool wallBoilingActive = false;
@@ -640,43 +638,36 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                 const word alphatName =
                     IOobject::groupName("alphat", phase.name());
 
-                if (phase.mesh().foundObject<volScalarField>(alphatName))
+                if (!phase.mesh().foundObject<volScalarField>(alphatName))
+                    continue;
+
+                const volScalarField& alphat =
+                    phase.mesh().lookupObject<volScalarField>(alphatName);
+
+                forAll(alphat.boundaryField(), patchi)
                 {
-                    const volScalarField& alphat =
-                        phase.mesh().lookupObject<volScalarField>(alphatName);
+                    const fvPatchScalarField& alphatp =
+                        alphat.boundaryField()[patchi];
 
-                    forAll(alphat.boundaryField(), patchi)
-                    {
-                        const fvPatchScalarField& alphatp =
-                            alphat.boundaryField()[patchi];
+                    if (!isA<alphatwType>(alphatp)) continue;
 
-                        if (isA<alphatPhaseChangeWallFunction>(alphatp))
-                        {
-                            const alphatPhaseChangeWallFunction& alphatw =
-                                refCast<const alphatPhaseChangeWallFunction>
-                                (
-                                    alphatp
-                                );
+                    const alphatwType& alphatw =
+                        refCast<const alphatwType>(alphatp);
 
-                            if (alphatw.activeInterface(interface))
-                            {
-                                wallBoilingActive = true;
+                    if (!alphatw.activeInterface(interface)) continue;
 
-                                const scalarField& patchDmdtf =
-                                    alphatw.dmdtf(interface);
+                    wallBoilingActive = true;
 
-                                const scalar sign =
-                                    interfaceIter.index() == 0 ? +1 : -1;
+                    UIndirectList<scalar> nDmdtfp
+                    (
+                        nDmdtf.primitiveFieldRef(),
+                        alphatp.patch().faceCells()
+                    );
 
-                                forAll(patchDmdtf, facei)
-                                {
-                                    const label celli =
-                                        alphatw.patch().faceCells()[facei];
-                                    nDmdtf[celli] -= sign*patchDmdtf[facei];
-                                }
-                            }
-                        }
-                    }
+                    nDmdtfp =
+                        scalarField(nDmdtfp)
+                      - (interfaceIter.index() == 0 ? +1 : -1)
+                       *alphatw.dmdtf(interface);
                 }
             }
 
