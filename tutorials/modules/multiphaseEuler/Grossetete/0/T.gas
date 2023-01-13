@@ -35,7 +35,7 @@ boundaryField
     walls
     {
         type            mappedValue;
-        neighbourPatch  walls;
+        samePatch       yes;
         field           T.liquid;
         value           $internalField;
     }

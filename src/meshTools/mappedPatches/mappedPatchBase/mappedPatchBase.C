@@ -354,20 +354,17 @@ Foam::mappedPatchBase::mappedPatchBase
     coupleGroup_(dict),
     nbrRegionName_
     (
-        dict.lookupOrDefaultBackwardsCompatible<word>
+        coupleGroup_.valid() ? word::null
+      : dict.lookupOrDefaultBackwardsCompatible<word>
         (
             {"neighbourRegion", "sampleRegion"},
-            coupleGroup_.valid() ? word::null : pp.boundaryMesh().mesh().name()
+            pp.boundaryMesh().mesh().name()
         )
     ),
     nbrPatchName_
     (
-        coupleGroup_.valid()
-      ? dict.lookupOrDefaultBackwardsCompatible<word>
-        (
-            {"neighbourPatch", "samplePatch"},
-            word::null
-        )
+        coupleGroup_.valid() ? word::null
+      : dict.lookupOrDefault<bool>("samePatch", false) ? pp.name()
       : dict.lookupBackwardsCompatible<word>({"neighbourPatch", "samplePatch"})
     ),
     transform_
@@ -392,15 +389,27 @@ Foam::mappedPatchBase::mappedPatchBase
     ),
     matchTol_(dict.lookupOrDefault("matchTolerance", defaultMatchTol_))
 {
-    if
-    (
-        coupleGroup_.valid()
-     && (nbrRegionName_ != word::null || nbrPatchName_ != word::null)
-    )
+    const bool haveCoupleGroup = coupleGroup_.valid();
+
+    const bool haveNbrRegion =
+        dict.found("neighbourRegion") || dict.found("sampleRegion");
+    const bool haveNbrPatch =
+        dict.found("neighbourPatch") || dict.found("samplePatch");
+
+    const bool isSamePatch = dict.lookupOrDefault<bool>("samePatch", false);
+
+    if ((haveNbrRegion || haveNbrPatch || isSamePatch) && haveCoupleGroup)
     {
         FatalIOErrorInFunction(dict)
-            << "Either a coupleGroup or a neighbourRegion/Patch should be "
-            << "specified, not both" << exit(FatalIOError);
+            << "Either neighbourRegion/Patch information or a coupleGroup "
+            << "should be specified, not both" << exit(FatalIOError);
+    }
+
+    if (haveNbrPatch && isSamePatch)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Either a neighbourPatch should be specified, or samePatch "
+            << "should be set to true, not both" << exit(FatalIOError);
     }
 }
 
@@ -493,11 +502,12 @@ void Foam::mappedPatchBase::clearOut()
 bool Foam::mappedPatchBase::specified(const dictionary& dict)
 {
     return
-        dict.found("neighbourRegion")
+        dict.found("coupleGroup")
+     || dict.found("neighbourRegion")
      || dict.found("sampleRegion")
      || dict.found("neighbourPatch")
      || dict.found("samplePatch")
-     || dict.found("coupleGroup");
+     || dict.found("samePatch");
 }
 
 
