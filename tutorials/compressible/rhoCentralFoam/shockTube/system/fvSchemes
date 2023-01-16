@@ -29,25 +29,27 @@ gradSchemes
 divSchemes
 {
     default         none;
-    div(tauMC)      Gauss linear;
 }
 
 laplacianSchemes
 {
-    default         Gauss linear corrected;
+    default         Gauss linear orthogonal;
 }
 
 interpolationSchemes
 {
-    default         linear;
+    default         none;
+
     reconstruct(rho) vanAlbada;
     reconstruct(U)  vanAlbadaV;
     reconstruct(T)  vanAlbada;
+
+    flux(rhoU)      linear;
 }
 
 snGradSchemes
 {
-    default         corrected;
+    default         orthogonal;
 }
 
 
