@@ -63,7 +63,6 @@ int main(int argc, char *argv[])
 
     // Courant numbers used to adjust the time-step
     scalar CoNum = 0.0;
-    scalar meanCoNum = 0.0;
 
     Info<< "\nStarting time loop\n" << endl;
 
@@ -92,15 +91,12 @@ int main(int argc, char *argv[])
         const surfaceVectorField rhoU_pos(interpolate(rhoU, pos, U.name()));
         const surfaceVectorField rhoU_neg(interpolate(rhoU, neg, U.name()));
 
+        const surfaceVectorField U_pos("U_pos", rhoU_pos/rho_pos);
+        const surfaceVectorField U_neg("U_neg", rhoU_neg/rho_neg);
+
         const volScalarField rPsi("rPsi", 1.0/psi);
         const surfaceScalarField rPsi_pos(interpolate(rPsi, pos, T.name()));
         const surfaceScalarField rPsi_neg(interpolate(rPsi, neg, T.name()));
-
-        const surfaceScalarField e_pos(interpolate(e, pos, T.name()));
-        const surfaceScalarField e_neg(interpolate(e, neg, T.name()));
-
-        const surfaceVectorField U_pos("U_pos", rhoU_pos/rho_pos);
-        const surfaceVectorField U_neg("U_neg", rhoU_neg/rho_neg);
 
         const surfaceScalarField p_pos("p_pos", rho_pos*rPsi_pos);
         const surfaceScalarField p_neg("p_neg", rho_neg*rPsi_neg);
@@ -138,36 +134,43 @@ int main(int argc, char *argv[])
             min(min(phiv_pos - cSf_pos, phiv_neg - cSf_neg), v_zero)
         );
 
-        surfaceScalarField a_pos("a_pos", ap/(ap - am));
-
-        surfaceScalarField amaxSf("amaxSf", max(mag(am), mag(ap)));
-
-        surfaceScalarField aSf("aSf", am*a_pos);
-
-        if (fluxScheme == "Tadmor")
-        {
-            aSf = -0.5*amaxSf;
-            a_pos = 0.5;
-        }
+        const surfaceScalarField a_pos
+        (
+            "a_pos",
+            fluxScheme == "Tadmor"
+              ? surfaceScalarField::New("a_pos", mesh, 0.5)
+              : ap/(ap - am)
+        );
 
         const surfaceScalarField a_neg("a_neg", 1.0 - a_pos);
 
         phiv_pos *= a_pos;
         phiv_neg *= a_neg;
 
+        const surfaceScalarField aSf
+        (
+            "aSf",
+            fluxScheme == "Tadmor"
+              ? -0.5*max(mag(am), mag(ap))
+              : am*a_pos
+        );
+
         const surfaceScalarField aphiv_pos("aphiv_pos", phiv_pos - aSf);
         const surfaceScalarField aphiv_neg("aphiv_neg", phiv_neg + aSf);
 
-        // Reuse amaxSf for the maximum positive and negative fluxes
-        // estimated by the central scheme
-        amaxSf = max(mag(aphiv_pos), mag(aphiv_neg));
-
-        #include "centralCourantNo.H"
-
-        if (LTS)
         {
-            #include "setRDeltaT.H"
-            runTime++;
+            const surfaceScalarField amaxSf
+            (
+                max(mag(aphiv_pos), mag(aphiv_neg))
+            );
+
+            #include "centralCourantNo.H"
+
+            if (LTS)
+            {
+                #include "setRDeltaT.H"
+                runTime++;
+            }
         }
 
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
@@ -213,6 +216,9 @@ int main(int argc, char *argv[])
 
         // --- Solve energy
         {
+            const surfaceScalarField e_pos(interpolate(e, pos, T.name()));
+            const surfaceScalarField e_neg(interpolate(e, neg, T.name()));
+
             surfaceScalarField phiEp
             (
                 "phiEp",
@@ -227,21 +233,10 @@ int main(int argc, char *argv[])
                 phiEp += mesh.phi()*(a_pos*p_pos + a_neg*p_neg);
             }
 
-            const surfaceScalarField sigmaDotU
-            (
-                "sigmaDotU",
-                (
-                    fvc::interpolate(muEff)*mesh.magSf()*fvc::snGrad(U)
-                  + fvc::dotInterpolate(mesh.Sf(), tauMC)
-                )
-              & (a_pos*U_pos + a_neg*U_neg)
-            );
-
             solve
             (
                 fvm::ddt(rhoE)
               + fvc::div(phiEp)
-              - fvc::div(sigmaDotU)
             );
 
             e = rhoE/rho - 0.5*magSqr(U);
@@ -255,10 +250,21 @@ int main(int argc, char *argv[])
 
             if (!inviscid)
             {
+                const surfaceScalarField sigmaDotU
+                (
+                    "sigmaDotU",
+                    (
+                        fvc::interpolate(muEff)*mesh.magSf()*fvc::snGrad(U)
+                      + fvc::dotInterpolate(mesh.Sf(), tauMC)
+                    )
+                  & (a_pos*U_pos + a_neg*U_neg)
+                );
+
                 solve
                 (
                     fvm::ddt(rho, e) - fvc::ddt(rho, e)
                   + thermophysicalTransport->divq(e)
+                  - fvc::div(sigmaDotU)
                 );
                 thermo.correct();
                 rhoE = rho*(e + 0.5*magSqr(U));
