@@ -16,26 +16,25 @@ FoamFile
 
 solvers
 {
+    "rho.*"
+    {
+        solver          diagonal;
+    }
+
     "p.*"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-06;
+
+        tolerance       1e-7;
         relTol          0;
     }
 
     "(U|e).*"
     {
         $p;
-        tolerance       1e-05;
-        relTol          0;
-    }
 
-    "rho.*"
-    {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-05;
+        tolerance       1e-7;
         relTol          0;
     }
 }

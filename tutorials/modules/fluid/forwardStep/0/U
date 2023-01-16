@@ -42,7 +42,7 @@ boundaryField
 
     obstacle
     {
-        type            noSlip;
+        type            slip;
     }
 
     defaultFaces
