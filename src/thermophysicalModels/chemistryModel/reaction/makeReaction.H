@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,26 +95,6 @@ Description
         Reaction##ThermoPhysics,                                               \
         ReactionType##ThermoPhysics##ReactionRate,                             \
         objectRegistry                                                         \
-    );
-
-
-#define makePressureDependentReaction\
-(                                                                              \
-    ReactionType,                                                              \
-    PressureDependentReactionRate,                                             \
-    ReactionRate,                                                              \
-    FallOffFunction,                                                           \
-    ThermoPhysics                                                              \
-)                                                                              \
-                                                                               \
-    typedef PressureDependentReactionRate<ReactionRate, FallOffFunction>       \
-        PressureDependentReactionRate##ReactionRate##FallOffFunction;          \
-                                                                               \
-    makeReaction                                                               \
-    (                                                                          \
-        ReactionType,                                                          \
-        PressureDependentReactionRate##ReactionRate##FallOffFunction,          \
-        ThermoPhysics                                                          \
     )
 
 
@@ -135,31 +115,52 @@ Description
     makeReaction(NonEquilibriumReversibleReaction, ReactionRate, ThermoPhysics)
 
 
-#define makeIRRPressureDependentReactions\
-(                                                                              \
-    PressureDependentReactionRate,                                             \
-    ReactionRate,                                                              \
-    FallOffFunction,                                                           \
-    ThermoPhysics                                                              \
-)                                                                              \
+#define makeITemplate1Reactions(ReactionRate, Param, ThermoPhysics)            \
                                                                                \
-    makePressureDependentReaction                                              \
+    typedef ReactionRate<Param> ReactionRate##Param;                           \
+                                                                               \
+    makeReaction                                                               \
     (                                                                          \
         IrreversibleReaction,                                                  \
-        PressureDependentReactionRate,                                         \
-        ReactionRate,                                                          \
-        FallOffFunction,                                                       \
-        ThermoPhysics                                                          \
-    );                                                                         \
-    makePressureDependentReaction                                              \
-    (                                                                          \
-        ReversibleReaction,                                                    \
-        PressureDependentReactionRate,                                         \
-        ReactionRate,                                                          \
-        FallOffFunction,                                                       \
+        ReactionRate##Param,                                                   \
         ThermoPhysics                                                          \
     )
 
+
+#define makeIRTemplate1Reactions(ReactionRate, Param, ThermoPhysics)           \
+                                                                               \
+    makeITemplate1Reactions(ReactionRate, Param, ThermoPhysics);               \
+                                                                               \
+    makeReaction                                                               \
+    (                                                                          \
+        ReversibleReaction,                                                    \
+        ReactionRate##Param,                                                   \
+        ThermoPhysics                                                          \
+    )
+
+
+#define makeITemplate2Reactions(ReactionRate, Param1, Param2, ThermoPhysics)   \
+                                                                               \
+    typedef ReactionRate<Param1, Param2> ReactionRate##Param1##Param2;         \
+                                                                               \
+    makeReaction                                                               \
+    (                                                                          \
+        IrreversibleReaction,                                                  \
+        ReactionRate##Param1##Param2,                                          \
+        ThermoPhysics                                                          \
+    )
+
+
+#define makeIRTemplate2Reactions(ReactionRate, Param1, Param2, ThermoPhysics)  \
+                                                                               \
+    makeITemplate2Reactions(ReactionRate, Param1, Param2, ThermoPhysics);      \
+                                                                               \
+    makeReaction                                                               \
+    (                                                                          \
+        ReversibleReaction,                                                    \
+        ReactionRate##Param1##Param2,                                          \
+        ThermoPhysics                                                          \
+    )
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

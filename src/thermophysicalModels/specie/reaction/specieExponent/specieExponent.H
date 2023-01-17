@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,11 +25,11 @@ Class
     Foam::specieExponent
 
 Description
+    Type for exponents of species in reaction. Can take either integer or
+    scalar value, and powers are optimised in the integer case.
 
 SourceFiles
     specieExponentI.H
-    specieExponent.C
-    specieExponentIO.C
 
 \*---------------------------------------------------------------------------*/
 

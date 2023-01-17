@@ -211,7 +211,7 @@ public:
                 static const label any = 0;
                 static const label sameRegion = 1;
                 static const label differentRegion = 2;
-               static const label differentPatch = 4;
+                static const label differentPatch = 4;
             };
 
             //- Validate that the map exists and is appropriate for the given

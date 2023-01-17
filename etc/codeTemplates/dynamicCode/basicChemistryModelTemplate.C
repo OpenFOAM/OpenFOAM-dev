@@ -23,10 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "makeChemistrySolver.H"
-#include "${method}.H"
-#include "${solver}.H"
-
 #include "typedefThermo.H"
 
 #include "${specie}.H"
@@ -42,6 +38,7 @@ License
 
 // Transport
 #include "${transport}Transport.H"
+
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
@@ -81,21 +78,29 @@ namespace Foam
         ${equationOfState},
         ${specie}
     );
+}
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "makeChemistrySolver.H"
+#include "${method}.H"
+#include "${solver}.H"
+
+namespace Foam
+{
     defineChemistrySolver(${method}, ThermoPhysics);
     makeChemistrySolver(${solver}, ${method}, ThermoPhysics);
 }
 
-#define chemistryModelCppTest 0
 
-#if ${method}CppTest == chemistryModelCppTest
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define chemistryModelMethod 0
+
+#if ${method}Method == chemistryModelMethod
 
 #include "makeChemistryReductionMethod.H"
-
-namespace Foam
-{
-    defineChemistryReductionMethod(nullArg, ThermoPhysics);
-}
 
 #include "noChemistryReduction.H"
 #include "DAC.H"
@@ -106,6 +111,8 @@ namespace Foam
 
 namespace Foam
 {
+    defineChemistryReductionMethod(nullArg, ThermoPhysics);
+
     makeChemistryReductionMethod(none, ThermoPhysics);
     makeChemistryReductionMethod(DAC, ThermoPhysics);
     makeChemistryReductionMethod(DRG, ThermoPhysics);
@@ -119,6 +126,10 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#define chemistryModelMethod 0
+
+#if ${method}Method == chemistryModelMethod
+
 #include "makeReaction.H"
 
 #include "ArrheniusReactionRate.H"
@@ -128,92 +139,100 @@ namespace Foam
 #include "JanevReactionRate.H"
 #include "powerSeriesReactionRate.H"
 
-#include "LangmuirHinshelwoodReactionRate.H"
-#include "MichaelisMentenReactionRate.H"
-
-#include "ChemicallyActivatedReactionRate.H"
 #include "FallOffReactionRate.H"
-
+#include "ChemicallyActivatedReactionRate.H"
 #include "LindemannFallOffFunction.H"
 #include "SRIFallOffFunction.H"
 #include "TroeFallOffFunction.H"
+
+#include "MichaelisMentenReactionRate.H"
+#include "LangmuirHinshelwoodReactionRate.H"
+#include "fluxLimitedLangmuirHinshelwoodReactionRate.H"
+#include "surfaceArrheniusReactionRate.H"
 
 namespace Foam
 {
     defineReaction(nullArg, ThermoPhysics);
 
+    // Irreversible/reversible/non-equilibrium-reversible reactions
     makeIRNReactions(ArrheniusReactionRate, ThermoPhysics);
     makeIRNReactions(LandauTellerReactionRate, ThermoPhysics);
     makeIRNReactions(thirdBodyArrheniusReactionRate, ThermoPhysics);
+
+    // Irreversible/reversible reactions
     makeIRReactions(JanevReactionRate, ThermoPhysics);
     makeIRReactions(powerSeriesReactionRate, ThermoPhysics);
 
-    makeIRReactions(LangmuirHinshelwoodReactionRate, ThermoPhysics);
+    // Irreversible/reversible fall-off reactions
+    makeIRTemplate2Reactions
+    (
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        LindemannFallOffFunction,
+        ThermoPhysics
+    );
+    makeIRTemplate2Reactions
+    (
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        TroeFallOffFunction,
+        ThermoPhysics
+    );
+    makeIRTemplate2Reactions
+    (
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        SRIFallOffFunction,
+        ThermoPhysics
+    );
+
+    // Irreversible/reversible chemically activated reactions
+    makeIRTemplate2Reactions
+    (
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        LindemannFallOffFunction,
+        ThermoPhysics
+    );
+    makeIRTemplate2Reactions
+    (
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        TroeFallOffFunction,
+        ThermoPhysics
+    );
+    makeIRTemplate2Reactions
+    (
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        SRIFallOffFunction,
+        ThermoPhysics
+    );
+
+    // Michaelis-Menten Reactions
     makeIReactions(MichaelisMentenReactionRate, ThermoPhysics);
 
-    makeIRRPressureDependentReactions
-    (
-        FallOffReactionRate,
-        ArrheniusReactionRate,
-        LindemannFallOffFunction,
-        ThermoPhysics
-    );
+    // Langmuir-Hinshelwood Reactions
+    makeIRReactions(LangmuirHinshelwoodReactionRate, ThermoPhysics);
 
-    makeIRRPressureDependentReactions
-    (
-        FallOffReactionRate,
-        ArrheniusReactionRate,
-        TroeFallOffFunction,
-        ThermoPhysics
-    );
-
-    makeIRRPressureDependentReactions
-    (
-        FallOffReactionRate,
-        ArrheniusReactionRate,
-        SRIFallOffFunction,
-        ThermoPhysics
-    );
-
-    makeIRRPressureDependentReactions
-    (
-        ChemicallyActivatedReactionRate,
-        ArrheniusReactionRate,
-        LindemannFallOffFunction,
-        ThermoPhysics
-    );
-
-    makeIRRPressureDependentReactions
-    (
-        ChemicallyActivatedReactionRate,
-        ArrheniusReactionRate,
-        TroeFallOffFunction,
-        ThermoPhysics
-    );
-
-    makeIRRPressureDependentReactions
-    (
-        ChemicallyActivatedReactionRate,
-        ArrheniusReactionRate,
-        SRIFallOffFunction,
-        ThermoPhysics
-    );
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "fluxLimitedLangmuirHinshelwoodReactionRate.H"
-
-namespace Foam
-{
+    // Flux-limited Langmuir-Hinshelwood Reactions
     makeGeneralReaction
     (
         IrreversibleReaction,
         fluxLimitedLangmuirHinshelwoodReactionRate,
         ThermoPhysics
     );
+
+    // Surface-Arrhenius Reactions
+    makeGeneralReaction
+    (
+        IrreversibleReaction,
+        surfaceArrheniusReactionRate,
+        ThermoPhysics
+    );
 }
+
+#endif
 
 
 // ************************************************************************* //

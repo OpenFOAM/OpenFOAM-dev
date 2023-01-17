@@ -24,12 +24,7 @@ chemistryModel/tabulation/ISAT/chemPointISAT/chemPointISAT.C
 chemistryModel/tabulation/ISAT/binaryNode/binaryNode.C
 chemistryModel/tabulation/ISAT/binaryTree/binaryTree.C
 
-reactions/makeReactions.C
-
-reactions/makeLangmuirHinshelwoodReactions.C
-reactions/makeMichaelisMentenReactions.C
-reactions/fluxLimitedLangmuirHinshelwood/makefluxLimitedLangmuirHinshelwoodReactions.C
-reactions/surfaceArrheniusReactionRate/makesurfaceArrheniusReactions.C
+reaction/makeReactions.C
 
 functionObjects/specieReactionRates/specieReactionRates.C
 

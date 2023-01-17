@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,26 +22,33 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::surfaceArrheniusReactionRate
+    Foam::fluxLimitedLangmuirHinshelwoodReactionRate
 
 Description
-    A modified Arrhenius reaction rate given by:
+    Langmuir-Hinshelwood reaction rate for gaseous reactions on surfaces
+    including the optional flux limiter of Waletzko and Schmidt.
 
-        k = (A * T^beta * exp(-Ta/T))*a
+    References:
+    \verbatim
+        Hinshelwood, C.N. (1940).
+        The Kinetics of Chemical Change.
+        Oxford Clarendon Press
 
-    Where a is the surface area per unit volume, the name of which is
-    specified by the user.
+        Waletzko, N., & Schmidt, L. D. (1988).
+        Modeling catalytic gauze reactors: HCN synthesis.
+        AIChE journal, 34(7), 1146-1156.
+    \endverbatim
 
 SourceFiles
-    surfaceArrheniusReactionRateI.H
+    fluxLimitedLangmuirHinshelwoodReactionRateI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef surfaceArrheniusReactionRate_H
-#define surfaceArrheniusReactionRate_H
+#ifndef fluxLimitedLangmuirHinshelwoodReactionRate_H
+#define fluxLimitedLangmuirHinshelwoodReactionRate_H
 
-#include "ArrheniusReactionRate.H"
-#include "volFields.H"
+#include "scalarField.H"
+#include "typeInfo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,25 +57,53 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-class surfaceArrheniusReactionRate;
+class fluxLimitedLangmuirHinshelwoodReactionRate;
 
-Ostream& operator<<(Ostream&, const surfaceArrheniusReactionRate&);
+Ostream& operator<<
+(
+    Ostream&,
+    const fluxLimitedLangmuirHinshelwoodReactionRate&
+);
+
 
 /*---------------------------------------------------------------------------*\
-                Class surfaceArrheniusReactionRate Declaration
+         Class fluxLimitedLangmuirHinshelwoodReactionRate Declaration
 \*---------------------------------------------------------------------------*/
 
-class surfaceArrheniusReactionRate
-:
-    public ArrheniusReactionRate
+class fluxLimitedLangmuirHinshelwoodReactionRate
 {
-    // Private Data
+    // Private data
 
-        //- Name of the surface area per unit volume field
-        const word aName_;
+        //- Number reactants (1 or 2)
+        label nReactants_;
 
-        //- The surface area per unit volume field
-        const scalarField& aField_;
+        //- Additional adsorbable specie names
+        wordList additionalAdsorbableSpecieNames_;
+
+        //- Reactant and additional adsorbable specie indices
+        labelList ra_;
+
+        scalar a_;
+        scalarList A_;
+        scalarList Ta_;
+        scalarList beta_;
+        scalarList m_;
+
+        bool limited_;
+        bool AvUniform_;
+        scalar Av_;
+        const word AvName_;
+        const scalarField& AvField_;
+        scalarList nu_;
+        scalarList exp_;
+        scalarList s_;
+        scalarList W_;
+
+
+    // Private Member Functions
+
+        //- Return either the uniform Av value or the field element
+        inline scalar Av(const label li) const;
 
 
 public:
@@ -76,7 +111,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        inline surfaceArrheniusReactionRate
+        inline fluxLimitedLangmuirHinshelwoodReactionRate
         (
             const speciesTable& species,
             const objectRegistry& ob,
@@ -89,7 +124,7 @@ public:
         //- Return the type name
         static word type()
         {
-            return "surfaceArrhenius";
+            return "fluxLimitedLangmuirHinshelwood";
         }
 
         //- Pre-evaluation hook
@@ -98,7 +133,6 @@ public:
         //- Post-evaluation hook
         inline void postEvaluate() const;
 
-        //- Evaluate the rate
         inline scalar operator()
         (
             const scalar p,
@@ -107,13 +141,23 @@ public:
             const label li
         ) const;
 
-        //- Evaluate the derivative
         inline scalar ddT
         (
             const scalar p,
             const scalar T,
             const scalarField& c,
             const label li
+        ) const;
+
+        inline bool hasDdc() const;
+
+        inline void ddc
+        (
+            const scalar p,
+            const scalar T,
+            const scalarField& c,
+            const label li,
+            scalarField& ddc
         ) const;
 
         //- Write to stream
@@ -125,7 +169,7 @@ public:
         inline friend Ostream& operator<<
         (
             Ostream&,
-            const surfaceArrheniusReactionRate&
+            const fluxLimitedLangmuirHinshelwoodReactionRate&
         );
 };
 
@@ -136,7 +180,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "surfaceArrheniusReactionRateI.H"
+#include "fluxLimitedLangmuirHinshelwoodReactionRateI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

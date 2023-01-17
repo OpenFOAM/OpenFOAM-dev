@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,16 +32,16 @@ License
 #include "JanevReactionRate.H"
 #include "powerSeriesReactionRate.H"
 
-#include "ChemicallyActivatedReactionRate.H"
 #include "FallOffReactionRate.H"
-
+#include "ChemicallyActivatedReactionRate.H"
 #include "LindemannFallOffFunction.H"
 #include "SRIFallOffFunction.H"
 #include "TroeFallOffFunction.H"
 
-#include "LangmuirHinshelwoodReactionRate.H"
-
 #include "MichaelisMentenReactionRate.H"
+#include "LangmuirHinshelwoodReactionRate.H"
+#include "fluxLimitedLangmuirHinshelwoodReactionRate.H"
+#include "surfaceArrheniusReactionRate.H"
 
 #include "forGases.H"
 #include "forLiquids.H"
@@ -54,6 +54,7 @@ const char* const Foam::Tuple2<Foam::word, Foam::scalar>::typeName
     "Tuple2<word,scalar>"
 );
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -61,119 +62,137 @@ namespace Foam
     forCoeffGases(defineReaction, nullArg);
     forCoeffLiquids(defineReaction, nullArg);
 
-
     // Irreversible/reversible/non-equilibrium-reversible reactions
-
     forCoeffGases(makeIRNReactions, ArrheniusReactionRate);
     forCoeffLiquids(makeIRNReactions, ArrheniusReactionRate);
-
     forCoeffGases(makeIRNReactions, LandauTellerReactionRate);
     forCoeffLiquids(makeIRNReactions, LandauTellerReactionRate);
-
     forCoeffGases(makeIRNReactions, thirdBodyArrheniusReactionRate);
     forCoeffLiquids(makeIRNReactions, thirdBodyArrheniusReactionRate);
 
-
     // Irreversible/reversible reactions
-
     forCoeffGases(makeIRReactions, JanevReactionRate);
     forCoeffLiquids(makeIRReactions, JanevReactionRate);
-
     forCoeffGases(makeIRReactions, powerSeriesReactionRate);
     forCoeffLiquids(makeIRReactions, powerSeriesReactionRate);
 
-
-    // Pressure dependent reactions
-
+    // Irreversible/reversible fall-off reactions
     forCoeffGases
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         LindemannFallOffFunction
     );
     forCoeffLiquids
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         LindemannFallOffFunction
     );
-
     forCoeffGases
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         TroeFallOffFunction
     );
     forCoeffLiquids
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         TroeFallOffFunction
     );
-
     forCoeffGases
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         SRIFallOffFunction
     );
     forCoeffLiquids
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         SRIFallOffFunction
     );
 
+    // Irreversible/reversible chemically activated reactions
     forCoeffGases
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         LindemannFallOffFunction
     );
     forCoeffLiquids
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         LindemannFallOffFunction
     );
-
     forCoeffGases
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         TroeFallOffFunction
     );
     forCoeffLiquids
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         TroeFallOffFunction
     );
-
     forCoeffGases
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         SRIFallOffFunction
     );
     forCoeffLiquids
     (
-        makeIRRPressureDependentReactions,
+        makeIRTemplate2Reactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         SRIFallOffFunction
+    );
+
+    // Michaelis-Menten Reactions
+    forCoeffLiquids(makeIReactions, MichaelisMentenReactionRate);
+
+    // Langmuir-Hinshelwood Reactions
+    forCoeffGases(makeIRReactions, LangmuirHinshelwoodReactionRate);
+    forCoeffLiquids(makeIRReactions, LangmuirHinshelwoodReactionRate);
+
+    // Flux-limited Langmuir-Hinshelwood Reactions
+    forCoeffGases
+    (
+        makeGeneralReaction,
+        IrreversibleReaction,
+        fluxLimitedLangmuirHinshelwoodReactionRate
+    );
+
+    // Surface-Arrhenius Reactions
+    forCoeffGases
+    (
+        makeGeneralReaction,
+        IrreversibleReaction,
+        surfaceArrheniusReactionRate
+    );
+    forCoeffLiquids
+    (
+        makeGeneralReaction,
+        IrreversibleReaction,
+        surfaceArrheniusReactionRate
     );
 }
+
 
 // ************************************************************************* //
