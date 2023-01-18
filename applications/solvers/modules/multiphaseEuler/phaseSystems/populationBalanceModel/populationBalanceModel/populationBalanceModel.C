@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1136,7 +1136,9 @@ void Foam::diameterModels::populationBalanceModel::solve()
         const scalar tolerance =
             mesh_.solution().solverDict(name_).lookup<scalar>("tolerance");
 
-        if (nCorr > 0)
+        const bool updateSrc = updateSources();
+
+        if (nCorr > 0 && updateSrc)
         {
             precompute();
         }
@@ -1152,7 +1154,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
                 << iCorr
                 << endl;
 
-            if (updateSources())
+            if (updateSrc)
             {
                 sources();
             }
