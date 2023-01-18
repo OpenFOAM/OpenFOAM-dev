@@ -1,0 +1,16 @@
+setRDeltaT.C
+moveMesh.C
+prePredictor.C
+fluxPredictor.C
+correctDensity.C
+momentumPredictor.C
+thermophysicalPredictor.C
+pressureCorrector.C
+shockFluid.C
+
+derivedFvPatchFields/mixedFixedValueSlip/mixedFixedValueSlipFvPatchFields.C
+derivedFvPatchFields/U/maxwellSlipUFvPatchVectorField.C
+derivedFvPatchFields/T/smoluchowskiJumpTFvPatchScalarField.C
+derivedFvPatchFields/rho/fixedRhoFvPatchScalarField.C
+
+LIB = $(FOAM_LIBBIN)/libshockFluid

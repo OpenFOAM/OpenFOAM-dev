@@ -1,0 +1,42 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+mover
+{
+    type            motionSolver;
+
+    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
+
+    motionSolver    velocityComponentLaplacian;
+
+    component       x;
+    diffusivity     directional (1 200 0);
+}
+
+
+topoChanger
+{
+    type    meshToMesh;
+
+    libs    ("libmeshToMeshTopoChanger.so");
+
+    times   (1e-5 2e-5);
+
+    timeDelta 1e-9;
+}
+
+
+// ************************************************************************* //

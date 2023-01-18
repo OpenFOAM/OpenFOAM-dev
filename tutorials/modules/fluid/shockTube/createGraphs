@@ -1,0 +1,49 @@
+#!/bin/sh
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo 'gnuplot not found - skipping graph creation' >&2
+    exit 1
+fi
+
+time=$(foamListTimes -latestTime)
+
+graphFile=postProcessing/sample/$time/data.xy
+
+gnuplot<<EOF
+    set terminal postscript eps color enhanced font "Helvetica,20"
+    set output 'T.eps'
+
+    set xlabel 'l (m)'
+    set ylabel 'T (K)'
+    set ytics nomirror
+    set key center
+
+    plot "$graphFile" u 1:2 w l t 'T'
+EOF
+
+gnuplot<<EOF
+    set terminal postscript eps color enhanced font "Helvetica,20"
+    set output 'U.eps'
+
+    set xlabel 'l (m)'
+    set ylabel 'T (K)'
+    set ytics nomirror
+    set key center
+
+    plot "$graphFile" u 1:3 w l t 'U'
+EOF
+
+gnuplot<<EOF
+    set terminal postscript eps color enhanced font "Helvetica,20"
+    set output 'p.eps'
+
+    set xlabel 'l (m)'
+    set ylabel 'p (Pa)'
+    set ytics nomirror
+    set key center
+
+    plot "$graphFile" u 1:4 w l t 'p'
+EOF
+
+#------------------------------------------------------------------------------

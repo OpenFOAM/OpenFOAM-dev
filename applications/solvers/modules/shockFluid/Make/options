@@ -1,0 +1,23 @@
+EXE_INC = \
+    -I$(FOAM_SOLVERS)/modules/fluidSolver/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/thermophysicalTransportModel/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/fluid/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/fluidThermo/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/cfdTools \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -lfluidSolver \
+    -lfluidThermophysicalModels \
+    -lmomentumTransportModels \
+    -lcompressibleMomentumTransportModels \
+    -lcoupledThermophysicalTransportModels \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lfvModels \
+    -lfvConstraints
