@@ -24,7 +24,7 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         0.5;
+endTime         4;
 
 deltaT          0.0001;
 
@@ -61,48 +61,6 @@ functions
         writeControl    writeTime;
         phase           liquid;
     }
-    volumeDensity.diameter.bubbles
-    {
-        type            populationBalanceSizeDistribution;
-        functionObjectLibs ( "libmultiphaseEulerFoamFunctionObjects.so" );
-        writeControl    runTime;
-        writeInterval   0.5;
-        setFormat       raw;
-        log             yes;
-        functionType    volumeConcentration;
-        coordinateType  diameter;
-        regionType      cellZone;
-        name            x349;
-        populationBalance bubbles;
-    }
-    volumeDensity_bulk.diameter.bubbles
-    {
-        type            populationBalanceSizeDistribution;
-        functionObjectLibs ( "libmultiphaseEulerFoamFunctionObjects.so" );
-        writeControl    runTime;
-        writeInterval   0.5;
-        setFormat       raw;
-        log             yes;
-        functionType    volumeConcentration;
-        coordinateType  diameter;
-        regionType      cellZone;
-        name            x349_bulk;
-        populationBalance bubbles;
-    }
-    volumeDensity_wall.diameter.bubbles
-    {
-        type            populationBalanceSizeDistribution;
-        functionObjectLibs ( "libmultiphaseEulerFoamFunctionObjects.so" );
-        writeControl    runTime;
-        writeInterval   0.5;
-        setFormat       raw;
-        log             yes;
-        functionType    volumeConcentration;
-        coordinateType  diameter;
-        regionType      cellZone;
-        name            x349_wall;
-        populationBalance bubbles;
-    }
     outflow
     {
         type            surfaceFieldValue;
@@ -112,7 +70,7 @@ functions
         regionType      patch;
         name            outlet;
         operation       sum;
-        fields          ( alphaRhoPhi.gas alphaRhoPhi.liquid );
+        fields          ( alphaRhoPhi.gas  alphaRhoPhi.liquid);
     }
     inflow
     {
@@ -123,7 +81,7 @@ functions
         regionType      patch;
         name            inlet;
         operation       sum;
-        fields          ( alphaRhoPhi.gas alphaRhoPhi.liquid );
+        fields          ( alphaRhoPhi.gas alphaRhoPhi.liquid);
     }
     outletGas
     {

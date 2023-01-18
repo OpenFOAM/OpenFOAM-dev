@@ -70,7 +70,7 @@ Usage
         phaseType      | 'vapor' or 'liquid'      | yes         |
         useLiquidTemperatureWallFunction | \\
         Use wall function to calculate liquid temperature? | no | yes
-        relax          | relaxation factor        | no          | 1
+        tolerance      | solution tolerance       | no          | rootSmall
         dmdt           | phase change mass flux   | no          | uniform 0
         Prt            | turbulent Prandtl number | no          | 0.85
     \endtable
@@ -95,9 +95,8 @@ Usage
     \verbatim
     hotWall
     {
-        type            compressible::alphatWallBoiling2WallFunction;
+        type            compressible::alphatWallBoilingWallFunction;
         phaseType       liquid;
-        relax           0.1;
         dmdt            uniform 0;
         Prt             0.85;
         partitioningModel
@@ -168,6 +167,15 @@ public:
 
 private:
 
+    // Private classes
+
+        //- Struct to hold cached properties for one of the phases
+        struct properties;
+
+        //- Struct to hold cached properties for the liquid when it is boiling
+        struct boilingLiquidProperties;
+
+
     // Private Data
 
         // Controls
@@ -178,8 +186,11 @@ private:
             //- Estimate liquid temperature using logarithmic wall function?
             Switch useLiquidTemperatureWallFunction_;
 
-            //- Relaxation factor
-            scalar relax_;
+            //- Solution tolerance
+            scalar tolerance_;
+
+
+        // Parameters
 
             //- Turbulent Prandtl number
             scalar Prt_;
@@ -229,6 +240,57 @@ private:
 
             //- Mass transfer rate
             scalarField dmdtf_;
+
+
+        // Private Member Functions
+
+            //- Calculate the boiling for the given wall temperature. Return
+            //  the total sum of all heat fluxes. Set the properties passed by
+            //  non-const reference. Used by the functions below.
+            tmp<scalarField> calcBoiling
+            (
+                const boilingLiquidProperties& props,
+                const scalarField& Tw,
+                scalarField& dDep,
+                scalarField& fDep,
+                scalarField& N,
+                scalarField& qq,
+                scalarField& qe,
+                scalarField& dmdtf
+            ) const;
+
+            //- Calculate the boiling for the given wall temperature. Return
+            //  the total sum of all heat fluxes. Use this to solve the balance
+            //  between the heat fluxes specified by the boiling models and the
+            //  temperature boundary condition without changing the stored
+            //  boiling state.
+            tmp<scalarField> calcBoiling
+            (
+                const boilingLiquidProperties& props,
+                const scalarField& Tw
+            ) const;
+
+            //- Calculate the boiling for the given wall temperature. Return
+            //  the total sum of all heat fluxes. Also set the stored boiling
+            //  state. Use this after solving with the final wall temperature
+            //  to set the boiling state.
+            tmp<scalarField> evaluateBoiling
+            (
+                const boilingLiquidProperties& props,
+                const scalarField& Tw
+            );
+
+            //- Get the temperature patch field and the parameters associated
+            //  with its boundary condition that are necessary for
+            //  approximately evaluating the boundary condition's heat flux at
+            //  a given wall temperature.
+            const fvPatchScalarField& getTemperaturePatchField
+            (
+                const boilingLiquidProperties& props,
+                scalarField& isFixed,
+                scalarField& h,
+                scalarField& hTaPlusQa
+            ) const;
 
 
 public:

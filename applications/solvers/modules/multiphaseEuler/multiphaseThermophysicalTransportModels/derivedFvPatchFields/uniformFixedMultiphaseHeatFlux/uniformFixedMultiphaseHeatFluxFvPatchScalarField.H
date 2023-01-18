@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,29 +22,44 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fixedMultiphaseHeatFluxFvPatchScalarField
+    Foam::uniformFixedMultiphaseHeatFluxFvPatchScalarField
 
 Description
-    Calculates a wall temperature that produces the specified overall wall heat
-    flux across all the phases in an Eulerian multi-phase simulation.
+    Uniform fixed heat flux boundary condition for Eulerian multi-phase cases.
+    Constructs a mixed constraint which portions the heat flux between the
+    phases in such a way as to keep the boundary temperature uniform across all
+    phases. The heat flux can be specified as a time-varying function, and an
+    under-relaxation factor can be supplied if this is necessary to maintain
+    stability.
 
-    Intended to be used with copiedFixedValue to ensure that phase wall
-    temperature are consistent:
-        - Set 'fixedMultiphaseHeatFlux' boundary for one of the phases
-        - Use 'copiedFixedValue' for all the other phases.
+Usage
+    \table
+        Property     | Description                | Required | Default value
+        q            | Heat flux [w/m^2]          | yes      |
+        relax        | Relaxation factor          | no       | 1
+    \endtable
 
-See also
-    Foam::fixedValueFvPatchField
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            uniformFixedMultiphaseHeatFlux;
+        q               1000;
+        relax           0.3;
+        value           $internalField;
+    }
+    \endverbatim
 
 SourceFiles
-    fixedMultiphaseHeatFluxFvPatchScalarField.C
+    uniformFixedMultiphaseHeatFluxFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fixedMultiphaseHeatFluxFvPatchScalarField_H
-#define fixedMultiphaseHeatFluxFvPatchScalarField_H
+#ifndef uniformFixedMultiphaseHeatFluxFvPatchScalarField_H
+#define uniformFixedMultiphaseHeatFluxFvPatchScalarField_H
 
-#include "fixedValueFvPatchFields.H"
+#include "mixedFvPatchFields.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,42 +67,39 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-          Class fixedMultiphaseHeatFluxFvPatchScalarField Declaration
+          Class uniformFixedMultiphaseHeatFluxFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class fixedMultiphaseHeatFluxFvPatchScalarField
+class uniformFixedMultiphaseHeatFluxFvPatchScalarField
 :
-    public fixedValueFvPatchScalarField
+    public mixedFvPatchScalarField
 {
     // Private Data
 
-        //- Heat power [W] or flux [W/m^2]
-        scalarField q_;
+        //- Heat flux [W/m^2]
+        autoPtr<Function1<scalar>> q_;
 
         //- Relaxation factor
         scalar relax_;
-
-        //- Minimum temperature limit [K]
-        scalar Tmin_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("fixedMultiphaseHeatFlux");
+    TypeName("uniformFixedMultiphaseHeatFlux");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        fixedMultiphaseHeatFluxFvPatchScalarField
+        uniformFixedMultiphaseHeatFluxFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        fixedMultiphaseHeatFluxFvPatchScalarField
+        uniformFixedMultiphaseHeatFluxFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -95,26 +107,26 @@ public:
         );
 
         //- Construct by mapping given
-        //  fixedMultiphaseHeatFluxFvPatchScalarField
+        //  uniformFixedMultiphaseHeatFluxFvPatchScalarField
         //  onto a new patch
-        fixedMultiphaseHeatFluxFvPatchScalarField
+        uniformFixedMultiphaseHeatFluxFvPatchScalarField
         (
-            const fixedMultiphaseHeatFluxFvPatchScalarField&,
+            const uniformFixedMultiphaseHeatFluxFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        fixedMultiphaseHeatFluxFvPatchScalarField
+        uniformFixedMultiphaseHeatFluxFvPatchScalarField
         (
-            const fixedMultiphaseHeatFluxFvPatchScalarField&
+            const uniformFixedMultiphaseHeatFluxFvPatchScalarField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        fixedMultiphaseHeatFluxFvPatchScalarField
+        uniformFixedMultiphaseHeatFluxFvPatchScalarField
         (
-            const fixedMultiphaseHeatFluxFvPatchScalarField&,
+            const uniformFixedMultiphaseHeatFluxFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -126,27 +138,12 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new fixedMultiphaseHeatFluxFvPatchScalarField(*this, iF)
+                new uniformFixedMultiphaseHeatFluxFvPatchScalarField(*this, iF)
             );
         }
 
 
     // Member Functions
-
-        // Mapping functions
-
-            //- Map (and resize as needed) from self given a mapping object
-            //  Used to update fields following mesh topology change
-            virtual void autoMap(const fvPatchFieldMapper&);
-
-            //- Reverse map the given fvPatchField onto this fvPatchField
-            //  Used to reconstruct fields
-            virtual void rmap(const fvPatchScalarField&, const labelList&);
-
-            //- Reset the fvPatchField to the given fvPatchField
-            //  Used for mesh to mesh mapping
-            virtual void reset(const fvPatchScalarField&);
-
 
         // Evaluation functions
 

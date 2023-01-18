@@ -94,23 +94,6 @@ bool alphatPhaseChangeWallFunctionBase::activeInterface
 }
 
 
-const scalarField& alphatPhaseChangeWallFunctionBase::dmdtf
-(
-    const phaseInterface& interface
-) const
-{
-    if (!activeInterface(interface))
-    {
-        FatalErrorInFunction
-            << "Phase change mass transfer rate requested for interface on "
-            << "which there is no phase change "
-            << abort(FatalError);
-    }
-
-    return dmdtf();
-}
-
-
 void alphatPhaseChangeWallFunctionBase::write(Ostream& os) const
 {
     writeEntry(os, "otherPhase", otherPhaseName_);
