@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvcFlux.H"
-#include "fvMesh.H"
+#include "surfaceInterpolate.H"
 #include "convectionScheme.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -38,6 +38,35 @@ namespace fvc
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type>
+tmp<SurfaceField<typename innerProduct<vector, Type>::type>> flux
+(
+    const VolField<Type>& vf
+)
+{
+    return scheme<Type>
+    (
+        vf.mesh(),
+        "flux(" + vf.name() + ')'
+    )().dotInterpolate(vf.mesh().Sf(), vf);
+}
+
+
+template<class Type>
+tmp<SurfaceField<typename innerProduct<vector, Type>::type>>  flux
+(
+    const tmp<VolField<Type>>& tvf
+)
+{
+    tmp<SurfaceField<typename innerProduct<vector, Type>::type>> Flux
+    (
+        fvc::flux(tvf())
+    );
+    tvf.clear();
+    return Flux;
+}
+
 
 template<class Type>
 tmp<SurfaceField<Type>>
