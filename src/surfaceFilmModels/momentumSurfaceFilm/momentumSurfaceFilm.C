@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -310,11 +310,6 @@ Foam::momentumSurfaceFilm::solveMomentum
 
     // Evaluate viscosity from user-model
     viscosity_->correct(thermo_->p(), thermo_->T());
-
-    const volScalarField::Internal rVDt
-    (
-        1/(time().deltaT()*mesh().V())
-    );
 
     // Momentum equation
     tmp<fvVectorMatrix> tUEqn
