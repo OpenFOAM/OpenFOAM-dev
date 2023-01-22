@@ -394,15 +394,9 @@ void Foam::momentumSurfaceFilm::solveAlpha
         )
     );
 
-    surfaceScalarField phid
+    const surfaceScalarField phid
     (
         "phid",
-        // constrainFilmField
-        // (
-        //     rhof
-        //    *constrainPhiHbyA(fvc::flux(HbyA) - alpharAUf*phiu, U_, alpha_),
-        //     0
-        // )
         rhof*constrainPhiHbyA(fvc::flux(HbyA) - alpharAUf*phiu, U_, alpha_)
     );
 
@@ -411,8 +405,6 @@ void Foam::momentumSurfaceFilm::solveAlpha
         "alphaCoeff",
         alphaf*rhof*alpharAUf*rhogf
     );
-
-    mesh().schemes().setFluxRequired(alpha_.name());
 
     while (pimple_.correctNonOrthogonal())
     {
@@ -832,6 +824,8 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
     addedMassTotal_(0)
 {
     alpha_ == delta_/VbyA();
+
+    mesh().schemes().setFluxRequired(alpha_.name());
 
     if (readFields)
     {
