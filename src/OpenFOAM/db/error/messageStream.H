@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ Description
     Class to handle messaging in a simple, consistent stream-based
     manner.
 
-    The messageStream class is globaly instantiated with a title string a
+    The messageStream class is globally instantiated with a title string a
     given severity, which controls the program termination, and a number of
     errors before termination.  Errors, messages and other data are piped to
     the messageStream class in the standard manner.

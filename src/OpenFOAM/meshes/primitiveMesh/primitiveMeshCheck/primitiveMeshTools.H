@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ public:
         const vectorField& cellCtrs
     );
 
-    //- Generate cell openness and cell ascpect ratio field
+    //- Generate cell openness and cell aspect ratio field
     static void cellClosedness
     (
         const primitiveMesh& mesh,

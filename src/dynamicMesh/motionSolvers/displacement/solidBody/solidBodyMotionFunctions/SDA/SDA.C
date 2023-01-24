@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ bool Foam::solidBodyMotionFunctions::SDA::read(const dictionary& SBMFCoeffs)
     solidBodyMotionFunction::read(SBMFCoeffs);
 
     SBMFCoeffs_.lookup("CofG") >> CofG_;
-    SBMFCoeffs_.lookup("lamda") >> lamda_;
+    SBMFCoeffs_.lookup("lambda") >> lambda_;
     SBMFCoeffs_.lookup("rollAmax") >> rollAmax_;
     SBMFCoeffs_.lookup("rollAmin") >> rollAmin_;
     SBMFCoeffs_.lookup("heaveA") >> heaveA_;
@@ -116,14 +116,14 @@ bool Foam::solidBodyMotionFunctions::SDA::read(const dictionary& SBMFCoeffs)
     SBMFCoeffs_.lookup("dTp") >> dTp_;
 
     // Rescale parameters according to the given scale parameter
-    if (lamda_ > 1 + small)
+    if (lambda_ > 1 + small)
     {
-        heaveA_ /= lamda_;
-        swayA_ /= lamda_;
-        Tp_ /= sqrt(lamda_);
-        Tpn_ /= sqrt(lamda_);
-        dTi_ /= sqrt(lamda_);
-        dTp_ /= sqrt(lamda_);
+        heaveA_ /= lambda_;
+        swayA_ /= lambda_;
+        Tp_ /= sqrt(lambda_);
+        Tpn_ /= sqrt(lambda_);
+        dTi_ /= sqrt(lambda_);
+        dTp_ /= sqrt(lambda_);
     }
 
     return true;

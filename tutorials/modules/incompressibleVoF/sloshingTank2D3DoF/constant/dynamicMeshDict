@@ -27,7 +27,7 @@ mover
     solidBodyMotionFunction SDA;
 
     CofG            (0 0 0);
-    lamda           50;
+    lambda           50;
     rollAmax        0.2;
     rollAmin        0.1;
     heaveA          4;

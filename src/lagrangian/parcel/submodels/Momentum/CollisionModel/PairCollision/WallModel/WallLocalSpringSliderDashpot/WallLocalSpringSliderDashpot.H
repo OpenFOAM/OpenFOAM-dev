@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ class WallLocalSpringSliderDashpot
         //      parcelEquivD = cbrt(volumeFactor*nParticles)*p.d()
         //  + When volumeFactor = 1, the particles are compressed
         //    together so that the equivalent volume of the parcel is
-        //    the sum of the constitutent particles
+        //    the sum of the constituent particles
         //  + When volumeFactor = 3*sqrt(2)/pi, the particles are
         //    close packed, but uncompressed.
         //  + When volumeFactor > 3*sqrt(2)/pi, the particles loosely

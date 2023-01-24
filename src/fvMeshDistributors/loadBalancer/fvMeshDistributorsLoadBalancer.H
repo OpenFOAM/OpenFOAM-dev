@@ -80,7 +80,7 @@ class loadBalancer
         //- Enable multi-constraint load-balancing in which separate weights
         //  are provided to the distributor for each of the CPU loads.
         //  When disabled the CPU loads are summed and a single weight per cell
-        //  is provided to the distrubutor.
+        //  is provided to the distributor.
         //  Defaults to true.
         Switch multiConstraint_;
 

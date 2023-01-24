@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ private:
             const bPatch& patchLevel
         );
 
-        //- Combine leves
+        //- Combine levels
         void combineLevels(const label curLevel);
 
         //- Shrink the number of levels to that specified

@@ -1,4 +1,4 @@
-// Parametres geometriques
+// Parameters geometriques
 r1 = 200*Cos(Pi/4)/1000;
 r2 = 200*Cos(Pi/4)/1000;
 
@@ -7,7 +7,7 @@ h2 = 360/1000;
 h3 = 900/1000;
 h4 = 1900/1000;
 
-// Parametres de maillage
+// Parameters de maillage
 // selon le rayon
 rCells = 10/2; 	rRatio = 0.85;
 // selon S1

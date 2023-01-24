@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -688,7 +688,7 @@ void Foam::removePoints::getUnrefimentSet
         // So now if any of the points-to-restore is used by any coupled face
         // anywhere the corresponding index in faceVertexRestore will be set.
 
-        // Now combine the localPointSet and the (sychronised)
+        // Now combine the localPointSet and the (synchronised)
         // boundary-points-to-restore.
 
         forAll(savedFaces_, saveI)

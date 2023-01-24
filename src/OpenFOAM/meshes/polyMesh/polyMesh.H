@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -410,7 +410,7 @@ public:
             fileName meshDir() const;
 
             //- Return the current instance directory for points
-            //  Used in the construction of gemometric mesh data dependent
+            //  Used in the construction of geometric mesh data dependent
             //  on points
             const fileName& pointsInstance() const;
 

@@ -26,7 +26,7 @@ Class
 
 Description
     Calculates the estimated flow heat transfer coefficient at wall patches
-    as the volScalarField field 'kappaEff' using one of equations bellow.
+    as the volScalarField field 'kappaEff' using one of equations below.
 
     kappaEff model, given by:
 

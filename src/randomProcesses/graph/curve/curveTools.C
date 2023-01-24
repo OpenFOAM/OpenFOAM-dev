@@ -91,16 +91,16 @@ bool interpolate
     {
         scalar srb2m4ac = sqrt(b2m4ac);
 
-        scalar lamda = (-b - srb2m4ac)/(2.0*a);
+        scalar lambda = (-b - srb2m4ac)/(2.0*a);
 
-        if (lamda > 1.0+curveSmall || lamda < -curveSmall)
+        if (lambda > 1.0+curveSmall || lambda < -curveSmall)
         {
-            lamda = (-b + srb2m4ac)/(2.0*a);
+            lambda = (-b + srb2m4ac)/(2.0*a);
         }
 
-        if (lamda < 1.0+curveSmall && lamda > -curveSmall)
+        if (lambda < 1.0+curveSmall && lambda > -curveSmall)
         {
-            n = p2 + lamda*(p1 - p2);
+            n = p2 + lambda*(p1 - p2);
 
             return false;
         }
@@ -168,8 +168,8 @@ bool Xinterpolate
     }
 
     vector D = p2 - p1;
-    scalar lamda = (n.x() - p1.x())/D.x();
-    n.y() = p1.y() + lamda*D.y();
+    scalar lambda = (n.x() - p1.x())/D.x();
+    n.y() = p1.y() + lambda*D.y();
     return false;
 
 }

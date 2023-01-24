@@ -38,7 +38,7 @@ int USERD_set_filenames
 
     rootDir = the_path;
 
-    // the path is pre-pended to filename_1
+    // the path is prepended to filename_1
     // 1 is the 'Geometry' : 2 the 'Result' which is null here
     // since two_field is FALSE
     for (label i=0; i<lCase-lRoot;i++)

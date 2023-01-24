@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,10 +72,10 @@ class DarcyForchheimer
 {
     // Private Data
 
-        //- Darcy coeffient XYZ components (user-supplied) [1/m^2]
+        //- Darcy coefficient XYZ components (user-supplied) [1/m^2]
         dimensionedVector dXYZ_;
 
-        //- Forchheimer coeffient XYZ components (user-supplied) [1/m]
+        //- Forchheimer coefficient XYZ components (user-supplied) [1/m]
         dimensionedVector fXYZ_;
 
         //- Darcy coefficient - converted from dXYZ [1/m^2]

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ License
 
 void Foam::solvers::isothermalFluid::correctBuoyantPressure()
 {
-    // Local references to the buoyancy paramaters
+    // Local references to the buoyancy parameters
     const volScalarField& gh = buoyancy->gh;
     const surfaceScalarField& ghf = buoyancy->ghf;
     const uniformDimensionedScalarField pRef = buoyancy->pRef;

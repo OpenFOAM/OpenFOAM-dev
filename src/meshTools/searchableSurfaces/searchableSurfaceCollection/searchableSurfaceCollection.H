@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Usage
     \c scale parameter and then rotated and translated by the mandatory
     \c transform.  In the example below, two geometries are included named
     \c buildingB and \c buildingC which are both formed by a translation
-    of \c buildingA according to the \c origin paramater. No rotation is
+    of \c buildingA according to the \c origin parameter. No rotation is
     applied (by setting e1 and e2 to the global x and y axis directions,
     respectively).
 

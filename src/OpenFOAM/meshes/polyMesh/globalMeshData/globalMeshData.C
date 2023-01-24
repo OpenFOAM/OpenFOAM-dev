@@ -2411,7 +2411,7 @@ Foam::autoPtr<Foam::globalIndex> Foam::globalMeshData::mergePoints
         // Send back
         pointSlavesMap.reverseDistribute(cpp.nPoints(), masterToGlobal);
 
-        // On slave copy master index into overal map.
+        // On slave copy master index into overall map.
         forAll(pointSlaves, pointi)
         {
             label meshPointi = cpp.meshPoints()[pointi];

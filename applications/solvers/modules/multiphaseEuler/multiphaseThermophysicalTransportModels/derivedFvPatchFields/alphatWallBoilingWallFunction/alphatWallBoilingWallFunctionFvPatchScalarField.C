@@ -133,7 +133,7 @@ struct alphatWallBoilingWallFunctionFvPatchScalarField::properties
     {}
 
 
-    // Member Fuctions
+    // Member Functions
 
         //- Patch
         inline const fvPatch& patch() const

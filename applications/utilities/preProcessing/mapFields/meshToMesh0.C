@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -283,7 +283,7 @@ void Foam::meshToMesh0::cellAddresses
         else
         {
             // If curCell is a boundary cell then the point maybe either outside
-            // the domain or in an other region of the doamin, either way use
+            // the domain or in an other region of the domain, either way use
             // the octree search to find it.
             if (boundaryCell[curCell])
             {
