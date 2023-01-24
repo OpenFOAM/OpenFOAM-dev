@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,8 @@ License
 #include "fvMesh.H"
 #include "fvMatrix.H"
 #include "convectionScheme.H"
+#include "fvmSup.H"
+#include "fvcDiv.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,9 +68,9 @@ div
     const word& name
 )
 {
-    tmp<fvMatrix<Type>> Div(fvm::div(tflux(), vf, name));
+    tmp<fvMatrix<Type>> tdiv(fvm::div(tflux(), vf, name));
     tflux.clear();
-    return Div;
+    return tdiv;
 }
 
 
@@ -91,9 +93,32 @@ div
     const VolField<Type>& vf
 )
 {
-    tmp<fvMatrix<Type>> Div(fvm::div(tflux(), vf));
+    tmp<fvMatrix<Type>> tdiv(fvm::div(tflux(), vf));
     tflux.clear();
-    return Div;
+    return tdiv;
+}
+
+
+template<class Type>
+tmp<fvMatrix<Type>>
+divc
+(
+    const tmp<SurfaceField<Type>>& tflux,
+    const VolField<Type>& vf
+)
+{
+    tmp<fvMatrix<Type>> tdivc(fvm::Su(fvc::div(tflux()), vf));
+
+    if (vf.mesh().schemes().fluxRequired(vf.name()))
+    {
+        tdivc.ref().faceFluxCorrectionPtr() = tflux.ptr();
+    }
+    else
+    {
+        tflux.clear();
+    }
+
+    return tdivc;
 }
 
 
