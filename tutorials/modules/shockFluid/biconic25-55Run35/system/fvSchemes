@@ -29,7 +29,6 @@ gradSchemes
 divSchemes
 {
     default         none;
-    div(tauMC)      Gauss linear;
 }
 
 laplacianSchemes
@@ -40,6 +39,7 @@ laplacianSchemes
 interpolationSchemes
 {
     default         linear;
+
     reconstruct(rho) vanLeer;
     reconstruct(U)  vanLeerV;
     reconstruct(T)  vanLeer;

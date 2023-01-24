@@ -50,43 +50,34 @@ void Foam::solvers::shockFluid::thermophysicalPredictor()
         phiEp += mesh.phi()*(a_pos()*p_pos() + a_neg()*p_neg());
     }
 
-    solve(fvm::ddt(rhoE) + fvc::div(phiEp));
-
-    e = rhoE/rho - 0.5*magSqr(U);
-    e.correctBoundaryConditions();
-    thermo.correct();
-    rhoE.boundaryFieldRef() ==
-        rho.boundaryField()*
-        (
-            e.boundaryField() + 0.5*magSqr(U.boundaryField())
-        );
+    fvScalarMatrix EEqn
+    (
+        fvm::ddt(rho, e) + fvc::div(phiEp)
+      + fvc::ddt(rho, K)
+     ==
+        fvModels().source(rho, e)
+    );
 
     if (!inviscid)
     {
-        const surfaceScalarField sigmaDotU
+        const surfaceScalarField devTauDotU
         (
-            "sigmaDotU",
-            (
-                fvc::interpolate(muEff())*mesh.magSf()*fvc::snGrad(U)
-              + fvc::dotInterpolate(mesh.Sf(), tauMC())
-            )
-          & (a_pos()*U_pos() + a_neg()*U_neg())
+            "devTauDotU",
+            devTau() & (a_pos()*U_pos() + a_neg()*U_neg())
         );
 
-        solve
-        (
-            fvm::ddt(rho, e) - fvc::ddt(rho, e)
-          + thermophysicalTransport->divq(e)
-          - fvc::div(sigmaDotU)
-         ==
-            fvModels().source(rho, e)
-        );
-
-        fvConstraints().constrain(e);
-
-        thermo.correct();
-        rhoE = rho*(e + 0.5*magSqr(U));
+        EEqn += thermophysicalTransport->divq(e) + fvc::div(devTauDotU);
     }
+
+    EEqn.relax();
+
+    fvConstraints().constrain(EEqn);
+
+    EEqn.solve();
+
+    fvConstraints().constrain(e);
+
+    thermo.correct();
 }
 
 

@@ -84,8 +84,7 @@ void Foam::solvers::shockFluid::clearTemporaryFields()
     aphiv_pos.clear();
     aphiv_neg.clear();
 
-    muEff.clear();
-    tauMC.clear();
+    devTau.clear();
 }
 
 
@@ -127,32 +126,6 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
         mesh
     ),
 
-    rhoU
-    (
-        IOobject
-        (
-            "rhoU",
-            runTime.name(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        rho*U
-    ),
-
-    rhoE
-    (
-        IOobject
-        (
-            "rhoE",
-            runTime.name(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        rho*(thermo.he() + 0.5*magSqr(U))
-    ),
-
     phi
     (
         IOobject
@@ -165,6 +138,8 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
         ),
         linearInterpolate(rho*U) & mesh.Sf()
     ),
+
+    K("K", 0.5*magSqr(U)),
 
     inviscid
     (
@@ -210,6 +185,7 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
     if (momentumTransport.valid())
     {
         momentumTransport->validate();
+        mesh.schemes().setFluxRequired(U.name());
     }
 
     fluxPredictor();

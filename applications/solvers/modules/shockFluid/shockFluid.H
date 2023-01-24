@@ -89,20 +89,18 @@ protected:
         //- The continuity density field
         volScalarField rho;
 
-        //- Velocity field
-        volVectorField U;
-
-        //- The momentum field
-        volVectorField rhoU;
-
-        //- The energy field
-        volScalarField rhoE;
-
 
     // Kinematic properties
 
+        //- Velocity field
+        volVectorField U;
+
         //- Mass-flux field
         surfaceScalarField phi;
+
+        //- Kinetic energy field
+        //  Used in the energy equation
+        volScalarField K;
 
 
     // Momentum transport
@@ -149,8 +147,7 @@ protected:
         tmp<surfaceScalarField> aphiv_pos;
         tmp<surfaceScalarField> aphiv_neg;
 
-        tmp<volScalarField> muEff;
-        tmp<volTensorField> tauMC;
+        tmp<surfaceVectorField> devTau;
 
         //- Optional LTS reciprocal time-step field
         tmp<volScalarField> trDeltaT;

@@ -66,9 +66,6 @@ class maxwellSlipUFvPatchVectorField
         //- Dynamic viscosity field name, default = "mu"
         word muName_;
 
-        //- tauMC field name, default = "tauMC"
-        word tauMCName_;
-
         // Accommodation coefficient
         scalar accommodationCoeff_;
 

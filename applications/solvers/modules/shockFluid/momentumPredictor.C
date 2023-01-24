@@ -32,49 +32,45 @@ License
 
 void Foam::solvers::shockFluid::momentumPredictor()
 {
-    if (!inviscid)
-    {
-        muEff.clear();
-        tauMC.clear();
-
-        muEff = volScalarField::New("muEff", rho*momentumTransport->nuEff());
-        tauMC = new volTensorField
-        (
-            "tauMC",
-            muEff()*dev2(Foam::T(fvc::grad(U)))
-        );
-    }
-
     const surfaceVectorField phiUp
     (
         (aphiv_pos()*rhoU_pos() + aphiv_neg()*rhoU_neg())
       + (a_pos()*p_pos() + a_neg()*p_neg())*mesh.Sf()
     );
 
-    solve(fvm::ddt(rhoU) + fvc::div(phiUp));
+    // Construct the divDevTau matrix first
+    // so that the maxwellSlipU BC can access the explicit part
+    tmp<fvVectorMatrix> divDevTau;
+    if (!inviscid)
+    {
+        divDevTau = momentumTransport->divDevTau(U);
+    }
 
-    U.ref() = rhoU()/rho();
-    U.correctBoundaryConditions();
+    fvVectorMatrix UEqn
+    (
+        fvm::ddt(rho, U) + fvc::div(phiUp)
+      ==
+        fvModels().source(rho, U)
+    );
 
     if (!inviscid)
     {
-        solve
-        (
-            fvm::ddt(rho, U) - fvc::ddt(rho, U)
-          - fvm::laplacian(muEff(), U)
-          - fvc::div(tauMC())
-         ==
-            fvModels().source(rho, U)
-        );
+        UEqn += divDevTau();
+    }
 
-        rhoU == rho*U;
-    }
-    else
-    {
-        rhoU.boundaryFieldRef() == rho.boundaryField()*U.boundaryField();
-    }
+    UEqn.relax();
+
+    fvConstraints().constrain(UEqn);
+
+    solve(UEqn);
 
     fvConstraints().constrain(U);
+    K = 0.5*magSqr(U);
+
+    if (!inviscid)
+    {
+        devTau = divDevTau->flux();
+    }
 }
 
 

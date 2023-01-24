@@ -16,7 +16,7 @@ FoamFile
 
 solvers
 {
-    "(rho|rhoU|rhoE).*"
+    "rho.*"
     {
         solver          diagonal;
     }
@@ -25,16 +25,16 @@ solvers
     {
         solver          smoothSolver;
         smoother        GaussSeidel;
-        nSweeps         2;
-        tolerance       1e-09;
-        relTol          0.01;
+
+        tolerance       1e-9;
+        relTol          0;
     }
 
-    "h.*"
+    "e.*"
     {
         $U;
+
         tolerance       1e-10;
-        relTol          0;
     }
 }
 

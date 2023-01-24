@@ -43,7 +43,6 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
     rhoName_("rho"),
     psiName_("psi"),
     muName_("mu"),
-    tauMCName_("tauMC"),
     accommodationCoeff_(1.0),
     Uwall_(p.size(), vector(0.0, 0.0, 0.0)),
     thermalCreep_(true),
@@ -63,7 +62,6 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "psi")),
     muName_(dict.lookupOrDefault<word>("mu", "mu")),
-    tauMCName_(dict.lookupOrDefault<word>("tauMC", "tauMC")),
     accommodationCoeff_(dict.lookup<scalar>("accommodationCoeff")),
     Uwall_("Uwall", dict, p.size()),
     thermalCreep_(dict.lookupOrDefault("thermalCreep", true)),
@@ -118,7 +116,6 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
     rhoName_(mspvf.rhoName_),
     psiName_(mspvf.psiName_),
     muName_(mspvf.muName_),
-    tauMCName_(mspvf.tauMCName_),
     accommodationCoeff_(mspvf.accommodationCoeff_),
     Uwall_(mapper(mspvf.Uwall_)),
     thermalCreep_(mspvf.thermalCreep_),
@@ -137,7 +134,6 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
     rhoName_(mspvf.rhoName_),
     psiName_(mspvf.psiName_),
     muName_(mspvf.muName_),
-    tauMCName_(mspvf.tauMCName_),
     accommodationCoeff_(mspvf.accommodationCoeff_),
     Uwall_(mspvf.Uwall_),
     thermalCreep_(mspvf.thermalCreep_),
@@ -200,36 +196,39 @@ void Foam::maxwellSlipUFvPatchVectorField::updateCoeffs()
     const fvPatchField<scalar>& ppsi =
         patch().lookupPatchField<volScalarField, scalar>(psiName_);
 
-    Field<scalar> C1
+    const Field<scalar> C1
     (
         sqrt(ppsi*constant::mathematical::piByTwo)
       * (2.0 - accommodationCoeff_)/accommodationCoeff_
     );
 
-    Field<scalar> pnu(pmu/prho);
+    const Field<scalar> pnu(pmu/prho);
     valueFraction() = (1.0/(1.0 + patch().deltaCoeffs()*C1*pnu));
 
     refValue() = Uwall_;
+
+    const vectorField n(patch().nf());
 
     if (thermalCreep_)
     {
         const volScalarField& vsfT =
             this->db().objectRegistry::lookupObject<volScalarField>(TName_);
-        label patchi = this->patch().index();
+        const label patchi = this->patch().index();
         const fvPatchScalarField& pT = vsfT.boundaryField()[patchi];
-        Field<vector> gradpT(fvc::grad(vsfT)().boundaryField()[patchi]);
-        vectorField n(patch().nf());
+        const Field<vector> gradpT(fvc::grad(vsfT)().boundaryField()[patchi]);
 
         refValue() -= 3.0*pnu/(4.0*pT)*transform(I - n*n, gradpT);
     }
 
     if (curvature_)
     {
-        const fvPatchTensorField& ptauMC =
-            patch().lookupPatchField<volTensorField, tensor>(tauMCName_);
-        vectorField n(patch().nf());
+        const fvsPatchVectorField& divDevTauFlux =
+            patch().lookupPatchField<surfaceVectorField, vector>
+            (
+                IOobject::groupName("devTauCorrFlux", internalField().group())
+            );
 
-        refValue() -= C1/prho*transform(I - n*n, (n & ptauMC));
+        refValue() += C1/prho*transform(I - n*n, divDevTauFlux/patch().magSf());
     }
 
     mixedFixedValueSlipFvPatchVectorField::updateCoeffs();
@@ -243,7 +242,6 @@ void Foam::maxwellSlipUFvPatchVectorField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
     writeEntryIfDifferent<word>(os, "psi", "psi", psiName_);
     writeEntryIfDifferent<word>(os, "mu", "mu", muName_);
-    writeEntryIfDifferent<word>(os, "tauMC", "tauMC", tauMCName_);
 
     writeEntry(os, "accommodationCoeff", accommodationCoeff_);
     writeEntry(os, "Uwall", Uwall_);

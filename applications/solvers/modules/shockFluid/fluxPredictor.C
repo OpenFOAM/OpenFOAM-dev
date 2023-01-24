@@ -49,6 +49,7 @@ void Foam::solvers::shockFluid::fluxPredictor()
     rho_pos = interpolate(rho, pos());
     rho_neg = interpolate(rho, neg());
 
+    const volVectorField rhoU(rho*U);
     rhoU_pos = interpolate(rhoU, pos(), U.name());
     rhoU_neg = interpolate(rhoU, neg(), U.name());
 
