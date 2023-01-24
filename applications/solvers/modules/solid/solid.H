@@ -25,7 +25,7 @@ Class
     Foam::solvers::solid
 
 Description
-    Solver module for thermal transport is solid domains and regions for
+    Solver module for thermal transport in solid domains and regions for
     conjugate heat transfer, HVAC and similar applications, with optional mesh
     motion and mesh topology changes.
 

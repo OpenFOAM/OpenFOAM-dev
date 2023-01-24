@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -292,7 +292,7 @@ class vtkPVFoam
         //  TODO: regions
         List<polyDecomp> regionPolyDecomp_;
 
-        //- Decomposed cells information (cellZonas)
+        //- Decomposed cells information (cellZones)
         List<polyDecomp> zonePolyDecomp_;
 
         //- Decomposed cells information (cellSets)

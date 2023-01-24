@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -481,7 +481,7 @@ protected:
         );
 
         //- Helper: check IO for local existence. Like filePathInfo but
-        //  without parent searchign and instance searching
+        //  without parent searching and instance searching
         bool exists(const dirIndexList&, IOobject& io) const;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::exponentialDiffusivity
 
 Description
-    Mesh motion diffusivity maipulator which returns the exp(-alpha/D)
+    Mesh motion diffusivity manipulator which returns the exp(-alpha/D)
     of the given diffusivity D.
 
 SourceFiles

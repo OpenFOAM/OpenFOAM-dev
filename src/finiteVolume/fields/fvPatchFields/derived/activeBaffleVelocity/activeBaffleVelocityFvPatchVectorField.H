@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Usage
         p            | pressure field name     | no          | p
         cyclicPatch  | cyclic patch name      | yes         |
         orientation  | 1 or -1 used to switch flow direction | yes|
-        openFraction | current opatch open fraction [0-1]| yes |
+        openFraction | current patch open fraction [0-1]| yes |
         openingTime  | time taken to open the baffle | yes |
         maxOpenFractionDelta | max open fraction change per timestep | yes |
     \endtable

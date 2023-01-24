@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ class CrankNicolsonDdtScheme
                 const fvMesh& mesh
             );
 
-            //- Constructor from components, initisalised to zero with given
+            //- Constructor from components, initialised to zero with given
             //  dimensions.
             DDt0Field
             (
@@ -191,7 +191,7 @@ class CrankNicolsonDdtScheme
         template<class GeoField>
         dimensionedScalar rDtCoef0_(const DDt0Field<GeoField>&) const;
 
-        //- Return ddt0 multiplied by the off-centreing coefficient
+        //- Return ddt0 multiplied by the off-centering coefficient
         template<class GeoField>
         tmp<GeoField> offCentre_(const GeoField& ddt0) const;
 
@@ -222,7 +222,7 @@ public:
             return fv::ddtScheme<Type>::mesh();
         }
 
-        //- Return the current off-centreing coefficient
+        //- Return the current off-centering coefficient
         scalar ocCoeff() const
         {
             return ocCoeff_->value(mesh().time().value());

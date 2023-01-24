@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -221,9 +221,9 @@ void Foam::SprayCloud<CloudType>::info()
     scalar dMax = 1.0e+6*this->Dmax();
     scalar pen = this->penetration(0.95);
 
-    Info << "    D10, D32, Dmax (mu)             = " << d10 << ", " << d32
-         << ", " << dMax << nl
-         << "    Liquid penetration 95% mass (m) = " << pen << endl;
+    Info<< "    D10, D32, Dmax (mu)             = " << d10 << ", " << d32
+        << ", " << dMax << nl
+        << "    Liquid penetration 95% mass (m) = " << pen << endl;
 }
 
 

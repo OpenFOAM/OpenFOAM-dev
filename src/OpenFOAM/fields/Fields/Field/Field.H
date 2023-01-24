@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ public:
         //- Construct given size and initial value
         Field(const label, const Type&);
 
-        //- Construct given size and initialed to zero
+        //- Construct given size and initialised to zero
         Field(const label, const zero);
 
         //- Copy constructor of a UList\<Type\>

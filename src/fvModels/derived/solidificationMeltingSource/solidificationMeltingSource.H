@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ Usage
         Cu         | Model coefficient [1/s]             | no       | 100000
         q          | Model coefficient                   | no       | 0.001
         beta       | Thermal expansion coefficient [1/K] | yes      |
-        g          | Accelerartion due to gravity        | no       |
+        g          | Acceleration due to gravity         | no       |
     \endtable
 
 SourceFiles

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,7 @@ Class
     Foam::NonEquilibriumReversibleReaction
 
 Description
-    Simple extension of Reaction to handle reversible reactions using
-    equilibrium thermodynamics.
+    Simple extension of Reaction to handle non-equilibrium reversible reactions.
 
 SourceFiles
     NonEquilibriumReversibleReaction.C

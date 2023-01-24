@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,7 +132,7 @@ class comfort
         //- Maximum number of correctors for cloth temperature
         int maxClothIter_;
 
-        //- Switch to use volume weighted velocity field for caluclation
+        //- Switch to use volume weighted velocity field for calculation
         Switch meanVelocity_;
 
 

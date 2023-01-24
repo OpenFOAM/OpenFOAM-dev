@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ inline void Foam::pointConstraint::combine(const pointConstraint& pc)
     {
         // Save single normal
         vector n = second();
-        // Apply to supplied point constaint
+        // Apply to supplied point constant
         operator=(pc);
         applyConstraint(n);
     }

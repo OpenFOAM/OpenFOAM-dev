@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -312,11 +312,11 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
         );
         uCorrect_->correctBoundaryConditions();
 
-        // Info << endl;
-        // Info << "     alpha: " << alpha_.primitiveField() << endl;
-        // Info << "phiCorrect: " << phiCorrect_->primitiveField() << endl;
-        // Info << "  uCorrect: " << uCorrect_->primitiveField() << endl;
-        // Info << endl;
+        // Info<< endl;
+        // Info<< "     alpha: " << alpha_.primitiveField() << endl;
+        // Info<< "phiCorrect: " << phiCorrect_->primitiveField() << endl;
+        // Info<< "  uCorrect: " << uCorrect_->primitiveField() << endl;
+        // Info<< endl;
     }
     else
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Calculates the estimated flow heat transfer coefficient at wall patches
-    as the volScalarField field 'kappaEff' using one of equeations bellow.
+    as the volScalarField field 'kappaEff' using one of equations bellow.
 
     kappaEff model, given by:
 
@@ -99,7 +99,7 @@ Usage
     \endtable
 
     Note:
-        Cp and rho are required only for incompressible flow calclulations.
+        Cp and rho are required only for incompressible flow calculations.
 
 SourceFiles
     kappaEff.C

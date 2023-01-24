@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Description
 
     The \c Foam::solvers::buoyancy::New function returns an \c autoPtr<buoyancy>
     pointer containing either a \c buoyancy class pointer if the \c p_rgh field
-    file is available othewise a \c nullptr which can be checked using
+    file is available otherwise a \c nullptr which can be checked using
     the \c autoPtr::valid() member function.
 
 SourceFiles
