@@ -34,10 +34,19 @@ boundaryField
     }
     wall
     {
-        type            fixedMultiphaseHeatFlux;
-        relax           0.6;
-        q               uniform 0;
-        phase           "liquid";
+        type            uniformFixedMultiphaseHeatFlux;
+        q
+        {
+            type            scale;
+            value           73890;
+            scale
+            {
+                type            linearRamp;
+                start           0.5;
+                duration        0.01;
+            }
+        }
+        relax           0.3;
         value           $internalField;
     }
     front

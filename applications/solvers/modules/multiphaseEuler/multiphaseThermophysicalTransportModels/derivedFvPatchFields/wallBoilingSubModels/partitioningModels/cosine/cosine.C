@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,36 +48,38 @@ namespace partitioningModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::partitioningModels::
-cosine::cosine(const dictionary& dict)
+Foam::wallBoilingModels::partitioningModels::cosine::cosine
+(
+    const dictionary& dict
+)
 :
     partitioningModel(),
-    alphaLiquid1_(dict.lookup<scalar>("alphaLiquid1")),
-    alphaLiquid0_(dict.lookup<scalar>("alphaLiquid0"))
+    alphaLiquid0_(dict.lookup<scalar>("alphaLiquid0")),
+    alphaLiquid1_(dict.lookup<scalar>("alphaLiquid1"))
 {}
 
 
-Foam::wallBoilingModels::partitioningModels::
-cosine::cosine(const cosine& model)
+Foam::wallBoilingModels::partitioningModels::cosine::cosine
+(
+    const cosine& model
+)
 :
     partitioningModel(model),
-    alphaLiquid1_(model.alphaLiquid1_),
-    alphaLiquid0_(model.alphaLiquid0_)
+    alphaLiquid0_(model.alphaLiquid0_),
+    alphaLiquid1_(model.alphaLiquid1_)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::partitioningModels::
-cosine::~cosine()
+Foam::wallBoilingModels::partitioningModels::cosine::~cosine()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::scalarField>
-Foam::wallBoilingModels::partitioningModels::
-cosine::fLiquid
+Foam::wallBoilingModels::partitioningModels::cosine::wetFraction
 (
     const scalarField& alphaLiquid
 ) const
@@ -102,12 +104,14 @@ cosine::fLiquid
 }
 
 
-void Foam::wallBoilingModels::partitioningModels::
-cosine::write(Ostream& os) const
+void Foam::wallBoilingModels::partitioningModels::cosine::write
+(
+    Ostream& os
+) const
 {
     partitioningModel::write(os);
-    writeEntry(os, "alphaLiquid1", alphaLiquid1_);
     writeEntry(os, "alphaLiquid0", alphaLiquid0_);
+    writeEntry(os, "alphaLiquid1", alphaLiquid1_);
 }
 
 

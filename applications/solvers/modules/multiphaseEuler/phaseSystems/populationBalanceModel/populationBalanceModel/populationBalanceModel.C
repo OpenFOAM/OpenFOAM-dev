@@ -1176,7 +1176,8 @@ void Foam::diameterModels::populationBalanceModel::solve()
                 (
                     fvm::ddt(alpha, fi)
                   + fvm::div(phase.alphaPhi(), fi)
-                  - fvm::Sp(dilatationError, fi)
+                  + fvm::Sp(-(1 - small)*dilatationError, fi)
+                  + fvm::SuSp(-small*dilatationError, fi)
                 ==
                     fvc::Su(Su_[i], fi)
                   - fvm::Sp(Sp_[i], fi)
@@ -1193,6 +1194,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
                 );
 
                 sizeGroupEqn.relax();
+
                 fluid_.fvConstraints().constrain(sizeGroupEqn);
 
                 maxInitialResidual = max

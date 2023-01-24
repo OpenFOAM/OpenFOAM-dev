@@ -624,7 +624,9 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
 
         // Nucleation mass transfer update
         {
-            typedef compressible::alphatPhaseChangeWallFunctionBase alphatwType;
+            typedef
+                compressible::alphatPhaseChangeWallFunctionBase
+                alphatWallFunction;
 
             volScalarField& nDmdtf(*this->nDmdtfs_[interface]);
             nDmdtf = Zero;
@@ -649,10 +651,10 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                     const fvPatchScalarField& alphatp =
                         alphat.boundaryField()[patchi];
 
-                    if (!isA<alphatwType>(alphatp)) continue;
+                    if (!isA<alphatWallFunction>(alphatp)) continue;
 
-                    const alphatwType& alphatw =
-                        refCast<const alphatwType>(alphatp);
+                    const alphatWallFunction& alphatw =
+                        refCast<const alphatWallFunction>(alphatp);
 
                     if (!alphatw.activeInterface(interface)) continue;
 
@@ -667,7 +669,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                     nDmdtfp =
                         scalarField(nDmdtfp)
                       - (interfaceIter.index() == 0 ? +1 : -1)
-                       *alphatw.dmdtf(interface);
+                       *alphatw.dmdtf();
                 }
             }
 

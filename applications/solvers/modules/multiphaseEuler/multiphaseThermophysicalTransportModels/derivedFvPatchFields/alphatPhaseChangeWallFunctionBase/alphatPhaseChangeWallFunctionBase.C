@@ -64,7 +64,7 @@ alphatPhaseChangeWallFunctionBase::alphatPhaseChangeWallFunctionBase
     if (phaseName_== otherPhaseName_)
     {
         FatalErrorInFunction
-            << "otherPhase should be the name of the vapor phase that "
+            << "otherPhase should be the name of the vapour phase that "
             << "corresponds to the liquid base or vice versa" << nl
             << "This phase: " << phaseName_ << nl
             << "otherPhase: " << otherPhaseName_
@@ -91,23 +91,6 @@ bool alphatPhaseChangeWallFunctionBase::activeInterface
     return
         interface.contains(fluid.phases()[phaseName_])
      && interface.contains(fluid.phases()[otherPhaseName_]);
-}
-
-
-const scalarField& alphatPhaseChangeWallFunctionBase::dmdtf
-(
-    const phaseInterface& interface
-) const
-{
-    if (!activeInterface(interface))
-    {
-        FatalErrorInFunction
-            << "Phase change mass transfer rate requested for interface on "
-            << "which there is no phase change "
-            << abort(FatalError);
-    }
-
-    return dmdtf();
 }
 
 

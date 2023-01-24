@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class LemmertChawla
 :
     public nucleationSiteModel
 {
-    // Private Data:
+    // Private Data
 
         //- Coefficient for nucleation site density
         scalar Cn_;
@@ -106,10 +106,10 @@ public:
     // Member Functions
 
         //- Calculate and return the nucleation-site density
-        virtual tmp<scalarField> N
+        virtual tmp<scalarField> nucleationSiteDensity
         (
             const phaseModel& liquid,
-            const phaseModel& vapor,
+            const phaseModel& vapour,
             const label patchi,
             const scalarField& Tl,
             const scalarField& Tsatw,
@@ -118,6 +118,7 @@ public:
             const scalarField& fDep
         ) const;
 
+        //- Write
         virtual void write(Ostream& os) const;
 };
 

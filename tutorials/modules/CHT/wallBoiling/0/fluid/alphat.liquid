@@ -32,33 +32,29 @@ boundaryField
     wall
     {
         type            compressible::alphatWallBoilingWallFunction;
-        Prt             0.85;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
-        relax           1.0;
         otherPhase      gas;
         phaseType       liquid;
+        Prt             0.85;
         partitioningModel
         {
-            type        Lavieville;
-            alphaCrit   0.2;
+            type            Lavieville;
+            alphaCrit       0.2;
         }
         nucleationSiteModel
         {
-            type        LemmertChawla;
-            Cn          1;
-            NRef        30000000;
-            deltaTRef   10;
+            type            LemmertChawla;
+            Cn              1;
+            NRef            30000000;
+            deltaTRef       10;
         }
-        departureDiamModel
+        departureDiameterModel
         {
-            type        TolubinskiKostanchuk;
-            dRef        0.00024;
-            dMax        0.0014;
-            dMin        1e-06;
+            type            TolubinskiKostanchuk;
+            dRef            0.00024;
+            dMax            0.0014;
+            dMin            1e-06;
         }
-        departureFreqModel
+        departureFrequencyModel
         {
             type            KocamustafaogullariIshii;
             Cf              1.18;

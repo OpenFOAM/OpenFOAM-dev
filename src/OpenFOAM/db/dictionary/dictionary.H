@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -520,6 +520,10 @@ public:
 
             //- Find and return a sub-dictionary for manipulation
             dictionary& subDict(const word&);
+
+            //- Find and return a sub-dictionary, trying a list of keywords in
+            //  sequence, otherwise error.
+            const dictionary& subDictBackwardsCompatible(const wordList&) const;
 
             //- Find and return a sub-dictionary as a copy, or
             //  return an empty dictionary if the sub-dictionary does not exist

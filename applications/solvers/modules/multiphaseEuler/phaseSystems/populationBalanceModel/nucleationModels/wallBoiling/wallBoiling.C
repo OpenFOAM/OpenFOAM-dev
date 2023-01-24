@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,10 +78,7 @@ void Foam::diameterModels::nucleationModels::wallBoiling::precompute()
 
     forAll(alphatBf, patchi)
     {
-        if
-        (
-            isA<alphatWallBoilingWallFunction>(alphatBf[patchi])
-        )
+        if (isA<alphatWallBoilingWallFunction>(alphatBf[patchi]))
         {
             const alphatWallBoilingWallFunction& alphatw =
                 refCast<const alphatWallBoilingWallFunction>(alphatBf[patchi]);

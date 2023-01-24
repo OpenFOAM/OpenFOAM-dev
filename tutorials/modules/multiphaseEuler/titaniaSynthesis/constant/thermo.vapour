@@ -1,0 +1,156 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermo.vapour;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+species
+(
+    O2
+    TiCl4
+    TiO2
+    Cl2
+    Ar
+    N2
+);
+
+// Data from NASA Technical Memorandum 4513
+Ar
+{
+    specie
+    {
+        molWeight   39.948;
+    }
+    thermodynamics
+    {
+        Tlow            200;
+        Thigh           6000;
+        Tcommon         1000;
+        highCpCoeffs    ( 2.50000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 -7.4537500e+02 4.37967491e+00 );
+        lowCpCoeffs     ( 2.50000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00 -7.4537500e+02 4.37967491e+00 );
+    }
+    transport
+    {
+        As          2.038169524e-06;
+        Ts          165;
+    }
+}
+
+N2
+{
+    specie
+    {
+        molWeight   28.0134;
+    }
+    thermodynamics
+    {
+        Tlow            0;
+        Thigh           5000;
+        Tcommon         1000;
+        highCpCoeffs    ( 2.92664 0.00148798 -5.68476e-07 1.0097e-10 -6.75335e-15 -922.798 5.98053 );
+        lowCpCoeffs     ( 3.29868 0.00140824 -3.96322e-06 5.64152e-09 -2.44485e-12 -1020.9 3.95037 );
+    }
+    transport
+    {
+        As          1.406732195e-06;
+        Ts          111;
+    }
+}
+
+O2
+{
+    specie
+    {
+        molWeight   31.99825;
+    }
+    thermodynamics
+    {
+        Tlow            200;
+        Thigh           6000;
+        Tcommon         1000;
+        highCpCoeffs    ( 3.66096083e+00 6.56365523e-04 -1.41149485e-07 2.05797658e-11 -1.29913248e-15 -1.21597725e+03 3.41536184e+00 );
+        lowCpCoeffs     ( 3.78245636e+00 -2.99673415e-03 9.84730200e-06 -9.68129508e-09 3.24372836e-12 -1.06394356e+03 3.65767573e+00 );
+    }
+    transport
+    {
+        As          1.6934113e-06;
+        Ts          127;
+    }
+}
+
+
+TiCl4
+{
+    specie
+    {
+        molWeight   189.6908;
+    }
+    thermodynamics
+    {
+        Tlow            280;
+        Thigh           5000;
+        Tcommon         1000;
+        highCpCoeffs    ( 1.71426430e+01 1.09370870e-03 -1.06903110e-09 2.66167570e-13 -2.27944800e-17 -1.01880270e+05 -6.76401420e+01 );
+        lowCpCoeffs     ( 1.70660420e+01 1.57771680e-03 -1.08703760e-06 1.03903080e-09 -3.60225300e-13 -1.01871340e+05 -6.73082280e+01 );
+    }
+    transport
+    {
+        As          1.6934113e-06; // Taken from oxygen
+        Ts          127;
+    }
+}
+
+TiO2
+{
+    specie
+    {
+        molWeight   79.87880;
+    }
+    thermodynamics
+    {
+        Tlow            280;
+        Thigh           5000;
+        Tcommon         1000;
+        highCpCoeffs    (  6.84891510e+00 4.24634610e-03 -3.00889840e-06 1.06025190e-09 -1.43795970e-13 -1.15992460e+05 -3.45141060e+01 );
+        lowCpCoeffs     ( -1.61175170e-01 3.79666600e-02 -6.51547500e-05 5.25521360e-08 -1.62000510e-11 -1.14788970e+05 -1.88740350e+00 );
+    }
+    transport
+    {
+        As          1.6934113e-06; // Taken from oxygen
+        Ts          127;
+    }
+}
+
+Cl2
+{
+    specie
+    {
+        molWeight   70.90540;
+    }
+    thermodynamics
+    {
+        Tlow            200;
+        Thigh           6000;
+        Tcommon         1000;
+        highCpCoeffs    ( 4.74727508e+00 -4.88581710e-04 2.68444871e-07 -2.43476083e-11 -1.03683148e-15 -1.51101862e+03 -3.44551305e-01 );
+        lowCpCoeffs     ( 2.73638114e+00 7.83525799e-03 -1.45104963e-05 1.25730834e-08 -4.13247145e-12 -1.05880114e+03 9.44555879e+00 );
+    }
+    transport
+    {
+        As          1.6934113e-06; // Taken from oxygen
+        Ts          127;
+    }
+}
+
+
+// ************************************************************************* //

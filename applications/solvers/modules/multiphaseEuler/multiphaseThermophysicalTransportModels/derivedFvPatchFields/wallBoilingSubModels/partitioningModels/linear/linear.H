@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,9 +69,11 @@ class linear
 {
     // Private Data
 
-        //- Model parameters, threshold liquid phase fractions
-        scalar alphaLiquid1_;
+        //- Lower threshold liquid phase fraction
         scalar alphaLiquid0_;
+
+        //- Upper threshold liquid phase fraction
+        scalar alphaLiquid1_;
 
 
 public:
@@ -101,9 +103,13 @@ public:
 
     // Member Functions
 
-        //- Calculate and return the wall heat-flux partitioning
-        virtual tmp<scalarField> fLiquid(const scalarField& alphaLiquid) const;
+        //- Return the wet fraction
+        virtual tmp<scalarField> wetFraction
+        (
+            const scalarField& alphaLiquid
+        ) const;
 
+        //- Write
         virtual void write(Ostream& os) const;
 };
 

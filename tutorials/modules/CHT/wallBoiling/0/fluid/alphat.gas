@@ -33,15 +33,12 @@ boundaryField
     {
         type            compressible::alphatWallBoilingWallFunction;
         otherPhase      liquid;
-        phaseType       vapor;
+        phaseType       vapour;
         Prt             0.85;
-        Cmu             0.09;
-        kappa           0.41;
-        E               9.8;
         partitioningModel
         {
-            type        Lavieville;
-            alphaCrit   0.2;
+            type            Lavieville;
+            alphaCrit       0.2;
         }
         value           uniform 0;
     }

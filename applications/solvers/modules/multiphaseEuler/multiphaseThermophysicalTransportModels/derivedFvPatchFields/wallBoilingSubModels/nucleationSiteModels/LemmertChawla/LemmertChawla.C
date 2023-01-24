@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,10 +81,11 @@ Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::~LemmertChawla()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::scalarField>
-Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::N
+Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::
+nucleationSiteDensity
 (
     const phaseModel& liquid,
-    const phaseModel& vapor,
+    const phaseModel& vapour,
     const label patchi,
     const scalarField& Tl,
     const scalarField& Tsatw,
@@ -100,8 +101,10 @@ Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::N
 }
 
 
-void Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::
-    write(Ostream& os) const
+void Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::write
+(
+    Ostream& os
+) const
 {
     nucleationSiteModel::write(os);
     writeKeyword(os, "Cn") << Cn_ << token::END_STATEMENT << nl;

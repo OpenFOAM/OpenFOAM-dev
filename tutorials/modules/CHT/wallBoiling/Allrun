@@ -7,7 +7,7 @@ cd ${0%/*} || exit 1    # run from this directory
 runApplication blockMesh
 runApplication extrudeMesh
 runApplication splitMeshRegions -cellZones -overwrite
-runApplication foamDictionary constant/fluid/polyMesh/boundary -entry entry0/inlet/neighbourRegion -set "fluid"
+
 paraFoam -region fluid -touch
 paraFoam -region solid -touch
 
@@ -16,6 +16,7 @@ runApplication decomposePar -allRegions
 runParallel $(getApplication)
 
 runApplication reconstructPar -latestTime -allRegions
+
 runApplication foamPostProcess -latestTime -region fluid -func "
     graphCell
     (
@@ -24,9 +25,6 @@ runApplication foamPostProcess -latestTime -region fluid -func "
         end=(3.4901 0.0096 0),
         fields=(alpha.gas T.liquid T.gas)
     )"
-
-./validation/createGraphs
-
 runApplication -append foamPostProcess  -region fluid -latestTime -func "
     patchSurface
     (
@@ -37,6 +35,10 @@ runApplication -append foamPostProcess  -region fluid -latestTime -func "
         fields=(dDeparture.liquid fDeparture.liquid nucleationSiteDensity.liquid wetFraction.liquid qQuenching.liquid qEvaporative.liquid)
     )"
 
-./validation/createWallBoilingPropertiesGraphs
+if ! isTest "$@"
+then
+    ./validation/createGraphs
+    ./validation/createWallBoilingPropertiesGraphs
+fi
 
 #------------------------------------------------------------------------------

@@ -96,9 +96,6 @@ public:
         //- Return the rate of phase-change
         virtual const scalarField& dmdtf() const = 0;
 
-        //- Return the rate of phase-change for the given interface
-        const scalarField& dmdtf(const phaseInterface&) const;
-
         //- Write
         virtual void write(Ostream&) const;
 };

@@ -67,15 +67,14 @@ Description
 Usage
     \table
         Property       | Description              | Required    | Default value
-        phaseType      | 'vapor' or 'liquid'      | yes         |
+        phaseType      | 'vapour' or 'liquid'     | yes         |
         useLiquidTemperatureWallFunction | \\
         Use wall function to calculate liquid temperature? | no | yes
-        relax          | relaxation factor        | no          | 1
-        dmdt           | phase change mass flux   | no          | uniform 0
+        tolerance      | solution tolerance       | no          | rootSmall
         Prt            | turbulent Prandtl number | no          | 0.85
     \endtable
 
-        if phaseType 'vapor':
+        if phaseType 'vapour':
     \table
         partitioningModel |                       | yes         |
     \endtable
@@ -84,8 +83,8 @@ Usage
     \table
         partitioningModel |                       | yes         |
         nucleationSiteModel |                     | yes         |
-        departureDiamModel |                      | yes         |
-        departureFreqModel |                      | yes         |
+        departureDiameterModel |                  | yes         |
+        departureFrequenctModel |                 | yes         |
         bubbleWaitingTimeRatio |                  | no          | 0.8
     \endtable
 
@@ -95,9 +94,8 @@ Usage
     \verbatim
     hotWall
     {
-        type            compressible::alphatWallBoiling2WallFunction;
+        type            compressible::alphatWallBoilingWallFunction;
         phaseType       liquid;
-        relax           0.1;
         dmdt            uniform 0;
         Prt             0.85;
         partitioningModel
@@ -109,11 +107,11 @@ Usage
         {
             type        LemmertChawla;
         }
-        departureDiamModel
+        departureDiameterModel
         {
             type        TolubinskiKostanchuk;
         }
-        departureFreqModel
+        departureFrequencyModel
         {
             type        Cole;
         }
@@ -158,15 +156,25 @@ public:
         //- Enumeration listing the possible operational modes
         enum phaseType
         {
-            vaporPhase,
+            vapourPhase,
+            vaporPhase, // <-- backwards compatibility
             liquidPhase
         };
 
         //- Heat source type names
-        static const NamedEnum<phaseType, 2> phaseTypeNames_;
+        static const NamedEnum<phaseType, 3> phaseTypeNames_;
 
 
 private:
+
+    // Private classes
+
+        //- Struct to hold cached properties for one of the phases
+        struct properties;
+
+        //- Struct to hold cached properties for the liquid when it is boiling
+        struct boilingLiquidProperties;
+
 
     // Private Data
 
@@ -178,8 +186,11 @@ private:
             //- Estimate liquid temperature using logarithmic wall function?
             Switch useLiquidTemperatureWallFunction_;
 
-            //- Relaxation factor
-            scalar relax_;
+            //- Solution tolerance
+            scalar tolerance_;
+
+
+        // Parameters
 
             //- Turbulent Prandtl number
             scalar Prt_;
@@ -210,25 +221,76 @@ private:
         // State
 
             //- Wall liquid fraction
-            scalarField fLiquid_;
+            scalarField wetFraction_;
 
             //- Departure diameter
-            scalarField dDep_;
+            scalarField dDeparture_;
 
             //- Departure frequency
-            scalarField fDep_;
+            scalarField fDeparture_;
 
             //- Nucleation site density
-            scalarField N_;
+            scalarField nucleationSiteDensity_;
 
             //- Quenching surface heat flux
-            scalarField qq_;
+            scalarField qQuenching_;
 
             //- Evaporative surface heat flux
-            scalarField qe_;
+            scalarField qEvaporative_;
 
             //- Mass transfer rate
             scalarField dmdtf_;
+
+
+        // Private Member Functions
+
+            //- Calculate the boiling for the given wall temperature. Return
+            //  the total sum of all heat fluxes. Set the properties passed by
+            //  non-const reference. Used by the functions below.
+            tmp<scalarField> calcBoiling
+            (
+                const boilingLiquidProperties& props,
+                const scalarField& Tw,
+                scalarField& dDeparture,
+                scalarField& fDeparture,
+                scalarField& nucleationSiteDensity,
+                scalarField& qQuenching,
+                scalarField& qEvaporative,
+                scalarField& dmdtf
+            ) const;
+
+            //- Calculate the boiling for the given wall temperature. Return
+            //  the total sum of all heat fluxes. Use this to solve the balance
+            //  between the heat fluxes specified by the boiling models and the
+            //  temperature boundary condition without changing the stored
+            //  boiling state.
+            tmp<scalarField> calcBoiling
+            (
+                const boilingLiquidProperties& props,
+                const scalarField& Tw
+            ) const;
+
+            //- Calculate the boiling for the given wall temperature. Return
+            //  the total sum of all heat fluxes. Also set the stored boiling
+            //  state. Use this after solving with the final wall temperature
+            //  to set the boiling state.
+            tmp<scalarField> evaluateBoiling
+            (
+                const boilingLiquidProperties& props,
+                const scalarField& Tw
+            );
+
+            //- Get the temperature patch field and the parameters associated
+            //  with its boundary condition that are necessary for
+            //  approximately evaluating the boundary condition's heat flux at
+            //  a given wall temperature.
+            const fvPatchScalarField& getTemperaturePatchField
+            (
+                const boilingLiquidProperties& props,
+                scalarField& isFixed,
+                scalarField& h,
+                scalarField& hTaPlusQa
+            ) const;
 
 
 public:
@@ -296,37 +358,37 @@ public:
         //- Return the wall liquid fraction field [-]
         const scalarField& wetFraction() const
         {
-            return fLiquid_;
+            return wetFraction_;
         }
 
         //- Return the departure diameter field [m]
         const scalarField& dDeparture() const
         {
-            return dDep_;
+            return dDeparture_;
         }
 
         //- Return the departure frequency field [Hz]
         const scalarField& fDeparture() const
         {
-            return fDep_;
+            return fDeparture_;
         }
 
         //- Return the nucleation site density field [1/m^2]
         const scalarField& nucleationSiteDensity() const
         {
-            return N_;
+            return nucleationSiteDensity_;
         }
 
         //- Return the quenching surface heat flux field [W/m^2]
         const scalarField& qQuenching() const
         {
-            return qq_;
+            return qQuenching_;
         }
 
         //- Return the evaporative surface heat flux field [W/m^2]
         const scalarField& qEvaporative() const
         {
-            return qe_;
+            return qEvaporative_;
         }
 
         //- Return the rate of phase change

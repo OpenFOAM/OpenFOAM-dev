@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,10 +165,8 @@ bool Foam::functionObjects::wallBoilingProperties::write()
                 if (isA<alphatWallBoilingWallFunction>(alphatBf[patchi]))
                 {
                     const alphatWallBoilingWallFunction& alphatw =
-                        refCast
-                        <
-                            const alphatWallBoilingWallFunction
-                        >(alphatBf[patchi]);
+                        refCast<const alphatWallBoilingWallFunction>
+                        (alphatBf[patchi]);
 
                     dDeparture.boundaryFieldRef()[patchi] =
                         alphatw.dDeparture();

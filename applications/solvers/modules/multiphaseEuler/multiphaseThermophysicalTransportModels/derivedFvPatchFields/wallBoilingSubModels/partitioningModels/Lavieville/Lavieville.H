@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,9 +98,13 @@ public:
 
     // Member Functions
 
-        //- Liquid blending function
-        virtual tmp<scalarField> fLiquid(const scalarField& alphaLiquid) const;
+        //- Return the wet fraction
+        virtual tmp<scalarField> wetFraction
+        (
+            const scalarField& alphaLiquid
+        ) const;
 
+        //- Write
         virtual void write(Ostream& os) const;
 };
 

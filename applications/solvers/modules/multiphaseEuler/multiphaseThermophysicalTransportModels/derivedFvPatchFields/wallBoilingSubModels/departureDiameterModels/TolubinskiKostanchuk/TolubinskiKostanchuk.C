@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,8 @@ namespace departureDiameterModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::departureDiameterModels::
-TolubinskiKostanchuk::TolubinskiKostanchuk
+Foam::wallBoilingModels::departureDiameterModels::TolubinskiKostanchuk::
+TolubinskiKostanchuk
 (
     const dictionary& dict
 )
@@ -61,8 +61,8 @@ TolubinskiKostanchuk::TolubinskiKostanchuk
 {}
 
 
-Foam::wallBoilingModels::departureDiameterModels::
-TolubinskiKostanchuk::TolubinskiKostanchuk
+Foam::wallBoilingModels::departureDiameterModels::TolubinskiKostanchuk::
+TolubinskiKostanchuk
 (
     const TolubinskiKostanchuk& model
 )
@@ -76,19 +76,19 @@ TolubinskiKostanchuk::TolubinskiKostanchuk
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::departureDiameterModels::
-TolubinskiKostanchuk::~TolubinskiKostanchuk()
+Foam::wallBoilingModels::departureDiameterModels::TolubinskiKostanchuk::
+~TolubinskiKostanchuk()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::scalarField>
-Foam::wallBoilingModels::departureDiameterModels::
-TolubinskiKostanchuk::dDeparture
+Foam::wallBoilingModels::departureDiameterModels::TolubinskiKostanchuk::
+dDeparture
 (
     const phaseModel& liquid,
-    const phaseModel& vapor,
+    const phaseModel& vapour,
     const label patchi,
     const scalarField& Tl,
     const scalarField& Tsatw,
@@ -99,8 +99,8 @@ TolubinskiKostanchuk::dDeparture
 }
 
 
-void Foam::wallBoilingModels::departureDiameterModels::
-TolubinskiKostanchuk::write(Ostream& os) const
+void Foam::wallBoilingModels::departureDiameterModels::TolubinskiKostanchuk::
+write(Ostream& os) const
 {
     departureDiameterModel::write(os);
     writeEntry(os, "dRef", dRef_);
