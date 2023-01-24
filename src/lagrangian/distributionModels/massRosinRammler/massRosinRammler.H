@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,14 +25,18 @@ Class
     Foam::distributionModels::massRosinRammler
 
 Description
-    Mass-based Rosin-Rammler distributionModel.
+    Corrected form of the Rosin-Rammler distribution which applies
+    coefficients relating to a number (q0) distribution of particle
+    diameters to parcels of fixed mass.
 
-    Corrected form of the Rosin-Rammler distribution taking into account the
-    varying number of particles per parcel for for fixed-mass parcels.  This
-    distribution should be used when
+    Parcels of fixed mass are specified by the following setting:
     \verbatim
         parcelBasisType mass;
     \endverbatim
+
+    If coefficients for a mass/volume (q3) distribution are given
+    instead, then the standard Rosin-Rammler distribution can be applied
+    to parcels of fixed mass.
 
     See equation 10 in reference:
     \verbatim
