@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,15 +48,19 @@ namespace partitioningModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::partitioningModels::
-phaseFraction::phaseFraction(const dictionary& dict)
+Foam::wallBoilingModels::partitioningModels::phaseFraction::phaseFraction
+(
+    const dictionary& dict
+)
 :
     partitioningModel()
 {}
 
 
-Foam::wallBoilingModels::partitioningModels::
-phaseFraction::phaseFraction(const phaseFraction& model)
+Foam::wallBoilingModels::partitioningModels::phaseFraction::phaseFraction
+(
+    const phaseFraction& model
+)
 :
     partitioningModel(model)
 {}
@@ -64,16 +68,14 @@ phaseFraction::phaseFraction(const phaseFraction& model)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::partitioningModels::
-phaseFraction::~phaseFraction()
+Foam::wallBoilingModels::partitioningModels::phaseFraction::~phaseFraction()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::scalarField>
-Foam::wallBoilingModels::partitioningModels::
-phaseFraction::fLiquid
+Foam::wallBoilingModels::partitioningModels::phaseFraction::wetFraction
 (
     const scalarField& alphaLiquid
 ) const

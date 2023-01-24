@@ -49,14 +49,14 @@ const char* Foam::NamedEnum
 <
     Foam::compressible::alphatWallBoilingWallFunctionFvPatchScalarField::
         phaseType,
-    2
->::names[] = {"vapor", "liquid"};
+    3
+>::names[] = {"vapour", "vapor", "liquid"};
 
 const Foam::NamedEnum
 <
     Foam::compressible::alphatWallBoilingWallFunctionFvPatchScalarField::
         phaseType,
-    2
+    3
 >
 Foam::compressible::alphatWallBoilingWallFunctionFvPatchScalarField::
     phaseTypeNames_;
@@ -302,11 +302,11 @@ alphatWallBoilingWallFunctionFvPatchScalarField::calcBoiling
 (
     const boilingLiquidProperties& props,
     const scalarField& Tw,
-    scalarField& dDep,
-    scalarField& fDep,
-    scalarField& N,
-    scalarField& qq,
-    scalarField& qe,
+    scalarField& dDeparture,
+    scalarField& fDeparture,
+    scalarField& nucleationSiteDensity,
+    scalarField& qQuenching,
+    scalarField& qEvaporative,
     scalarField& dmdtf
 ) const
 {
@@ -344,7 +344,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField::calcBoiling
     }
 
     // Bubble departure diameter
-    dDep =
+    dDeparture =
         departureDiameterModel_->dDeparture
         (
             props.phase,
@@ -356,7 +356,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField::calcBoiling
         );
 
     // Bubble departure frequency
-    fDep =
+    fDeparture =
         departureFrequencyModel_->fDeparture
         (
             props.phase,
@@ -365,12 +365,12 @@ alphatWallBoilingWallFunctionFvPatchScalarField::calcBoiling
             Tl,
             props.Tsat,
             props.L,
-            dDep
+            dDeparture
         );
 
     // Nucleation site density
-    N =
-        nucleationSiteModel_->N
+    nucleationSiteDensity =
+        nucleationSiteModel_->nucleationSiteDensity
         (
             props.phase,
             props.otherPhase,
@@ -378,8 +378,8 @@ alphatWallBoilingWallFunctionFvPatchScalarField::calcBoiling
             Tl,
             props.Tsat,
             props.L,
-            dDep,
-            fDep
+            dDeparture,
+            fDeparture
         );
 
     // Del Valle & Kenning (1985)
@@ -393,12 +393,18 @@ alphatWallBoilingWallFunctionFvPatchScalarField::calcBoiling
 
     const scalarField Al
     (
-        fLiquid_*4.8*exp(min(-Ja/80, log(vGreat)))
+        wetFraction_*4.8*exp(min(-Ja/80, log(vGreat)))
     );
 
-    scalarField A2(min(pi*sqr(dDep)*N*Al/4, scalar(1)));
+    scalarField A2
+    (
+        min(pi*sqr(dDeparture)*nucleationSiteDensity*Al/4, scalar(1))
+    );
     const scalarField A1(max(1 - A2, scalar(1e-4)));
-    scalarField A2E(min(pi*sqr(dDep)*N*Al/4, scalar(5)));
+    scalarField A2E
+    (
+        min(pi*sqr(dDeparture)*nucleationSiteDensity*Al/4, scalar(5))
+    );
 
     if (props.volatileSpecie != "none" && !props.phase.pure())
     {
@@ -412,27 +418,32 @@ alphatWallBoilingWallFunctionFvPatchScalarField::calcBoiling
 
     // Volumetric mass source in the near wall cell due to the
     // wall boiling
-    dmdtf = (1.0/6.0)*A2E*dDep*props.rhoVapourw*fDep*props.AbyV;
+    dmdtf = (1.0/6.0)*A2E*dDeparture*props.rhoVapourw*fDeparture*props.AbyV;
 
     // Quenching heat transfer coefficient
     const scalarField hQ
     (
-        2*props.kappaByCp*props.Cpw*fDep
-       *sqrt((tau_/max(fDep, small))/(pi*props.kappaByCp/props.rhoLiquidw))
+        2*props.kappaByCp*props.Cpw*fDeparture
+       *sqrt
+        (
+            tau_
+           /max(fDeparture, small)
+           /(pi*props.kappaByCp/props.rhoLiquidw)
+        )
     );
 
     // Quenching heat flux
-    qq = A2*hQ*max(Tw - Tl, scalar(0));
+    qQuenching = A2*hQ*max(Tw - Tl, scalar(0));
 
     // Evaporation heat flux
-    qe = dmdtf*props.L/props.AbyV;
+    qEvaporative = dmdtf*props.L/props.AbyV;
 
     // Return total sum of convective, quenching and evaporative heat fluxes
     const scalarField gradTw
     (
         patch().deltaCoeffs()*max(Tw - props.Tc, small*props.Tc)
     );
-    return A1*props.alphatConv*props.Cpw*gradTw + qq_ + qe_;
+    return A1*props.alphatConv*props.Cpw*gradTw + qQuenching_ + qEvaporative_;
 }
 
 
@@ -443,14 +454,25 @@ alphatWallBoilingWallFunctionFvPatchScalarField::calcBoiling
     const scalarField& Tw
 ) const
 {
-    scalarField dDep(dDep_);
-    scalarField fDep(fDep_);
-    scalarField N(N_);
-    scalarField qq(qq_);
-    scalarField qe(qe_);
+    scalarField dDeparture(dDeparture_);
+    scalarField fDeparture(fDeparture_);
+    scalarField nucleationSiteDensity(nucleationSiteDensity_);
+    scalarField qQuenching(qQuenching_);
+    scalarField qEvaporative(qEvaporative_);
     scalarField dmdtf(dmdtf_);
 
-    return calcBoiling(props, Tw, dDep, fDep, N, qq, qe, dmdtf);
+    return
+        calcBoiling
+        (
+            props,
+            Tw,
+            dDeparture,
+            fDeparture,
+            nucleationSiteDensity,
+            qQuenching,
+            qEvaporative,
+            dmdtf
+        );
 }
 
 
@@ -461,7 +483,18 @@ alphatWallBoilingWallFunctionFvPatchScalarField::evaluateBoiling
     const scalarField& Tw
 )
 {
-    return calcBoiling(props, Tw, dDep_, fDep_, N_, qq_, qe_, dmdtf_);
+    return
+        calcBoiling
+        (
+            props,
+            Tw,
+            dDeparture_,
+            fDeparture_,
+            nucleationSiteDensity_,
+            qQuenching_,
+            qEvaporative_,
+            dmdtf_
+        );
 }
 
 
@@ -551,12 +584,12 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     departureDiameterModel_(nullptr),
     departureFrequencyModel_(nullptr),
 
-    fLiquid_(p.size(), 0),
-    dDep_(p.size(), 1e-5),
-    fDep_(p.size(), 0),
-    N_(p.size(), 0),
-    qq_(p.size(), 0),
-    qe_(p.size(), 0),
+    wetFraction_(p.size(), 0),
+    dDeparture_(p.size(), 1e-5),
+    fDeparture_(p.size(), 0),
+    nucleationSiteDensity_(p.size(), 0),
+    qQuenching_(p.size(), 0),
+    qEvaporative_(p.size(), 0),
     dmdtf_(p.size(), 0)
 {}
 
@@ -587,12 +620,12 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     departureDiameterModel_(nullptr),
     departureFrequencyModel_(nullptr),
 
-    fLiquid_(p.size(), 0),
-    dDep_(p.size(), 1e-5),
-    fDep_(p.size(), 0),
-    N_(p.size(), 0),
-    qq_(p.size(), 0),
-    qe_(p.size(), 0),
+    wetFraction_(p.size(), 0),
+    dDeparture_(p.size(), 1e-5),
+    fDeparture_(p.size(), 0),
+    nucleationSiteDensity_(p.size(), 0),
+    qQuenching_(p.size(), 0),
+    qEvaporative_(p.size(), 0),
     dmdtf_(p.size(), 0)
 {
     // Sub-Models
@@ -612,47 +645,70 @@ alphatWallBoilingWallFunctionFvPatchScalarField
         departureDiameterModel_ =
             wallBoilingModels::departureDiameterModel::New
             (
-                dict.subDict("departureDiamModel")
+                dict.subDictBackwardsCompatible
+                (
+                    {"departureDiameterModel", "departureDiamModel"}
+                )
             );
         departureFrequencyModel_ =
             wallBoilingModels::departureFrequencyModel::New
             (
-                dict.subDict("departureFreqModel")
+                dict.subDictBackwardsCompatible
+                (
+                    {"departureFrequencyModel", "departureFreqModel"}
+                )
             );
     }
 
-    // State
-    if (dict.found("wallLiquidFraction"))
+    // Backwards compatible reading for old field keywords
+    auto readFieldBackwardsCompatible = [&p]
+    (
+        const dictionary& dict,
+        const wordList& keywords,
+        scalarField& field
+    )
     {
-        fLiquid_ = scalarField("wallLiquidFraction", dict, p.size());
-    }
+        forAll(keywords, i)
+        {
+            if (dict.found(keywords[i]))
+            {
+                field = scalarField(keywords[i], dict, p.size());
+                return;
+            }
+        }
+    };
+
+    // State
+    readFieldBackwardsCompatible
+    (
+        dict,
+        {"wetFraction", "wallLiquidFraction"},
+        wetFraction_
+    );
 
     if (phaseType_ == liquidPhase)
     {
-        if (dict.found("dDeparture"))
-        {
-            dDep_ = scalarField("dDeparture", dict, p.size());
-        }
-        if (dict.found("depFrequency"))
-        {
-            fDep_ = scalarField("depFrequency", dict, p.size());
-        }
-        if (dict.found("nucSiteDensity"))
-        {
-            N_ = scalarField("nucSiteDensity", dict, p.size());
-        }
-        if (dict.found("qQuenching"))
-        {
-            qq_ = scalarField("qQuenching", dict, p.size());
-        }
-        if (dict.found("qEvaporative"))
-        {
-            qe_ = scalarField("qEvaporative", dict, p.size());
-        }
-        if (dict.found("dmdtf"))
-        {
-            dmdtf_ = scalarField("dmdtf", dict, p.size());
-        }
+        readFieldBackwardsCompatible(dict, {"dDeparture"}, dDeparture_);
+
+        readFieldBackwardsCompatible
+        (
+            dict,
+            {"fDeparture", "depFrequency"},
+            fDeparture_
+        );
+
+        readFieldBackwardsCompatible
+        (
+            dict,
+            {"nucleationSiteDensity", "nucSiteDensity"},
+            nucleationSiteDensity_
+        );
+
+        readFieldBackwardsCompatible(dict, {"qQuenching"}, qQuenching_);
+
+        readFieldBackwardsCompatible(dict, {"qEvaporative"}, qEvaporative_);
+
+        readFieldBackwardsCompatible(dict, {"dmdtf"}, dmdtf_);
     }
 }
 
@@ -681,12 +737,12 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     departureDiameterModel_(psf.departureDiameterModel_, false),
     departureFrequencyModel_(psf.departureFrequencyModel_, false),
 
-    fLiquid_(mapper(psf.fLiquid_)),
-    dDep_(mapper(psf.dDep_)),
-    fDep_(mapper(psf.fDep_)),
-    N_(mapper(psf.N_)),
-    qq_(mapper(psf.qq_)),
-    qe_(mapper(psf.qe_)),
+    wetFraction_(mapper(psf.wetFraction_)),
+    dDeparture_(mapper(psf.dDeparture_)),
+    fDeparture_(mapper(psf.fDeparture_)),
+    nucleationSiteDensity_(mapper(psf.nucleationSiteDensity_)),
+    qQuenching_(mapper(psf.qQuenching_)),
+    qEvaporative_(mapper(psf.qEvaporative_)),
     dmdtf_(mapper(psf.dmdtf_))
 {}
 
@@ -713,12 +769,12 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     departureDiameterModel_(psf.departureDiameterModel_, false),
     departureFrequencyModel_(psf.departureFrequencyModel_, false),
 
-    fLiquid_(psf.fLiquid_),
-    dDep_(psf.dDep_),
-    fDep_(psf.fDep_),
-    N_(psf.N_),
-    qq_(psf.qq_),
-    qe_(psf.qe_),
+    wetFraction_(psf.wetFraction_),
+    dDeparture_(psf.dDeparture_),
+    fDeparture_(psf.fDeparture_),
+    nucleationSiteDensity_(psf.nucleationSiteDensity_),
+    qQuenching_(psf.qQuenching_),
+    qEvaporative_(psf.qEvaporative_),
     dmdtf_(psf.dmdtf_)
 {}
 
@@ -732,12 +788,12 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::autoMap
 {
     fixedValueFvPatchScalarField::autoMap(m);
 
-    m(fLiquid_, fLiquid_);
-    m(dDep_, dDep_);
-    m(fDep_, fDep_);
-    m(N_, N_);
-    m(qq_, qq_);
-    m(qe_, qe_);
+    m(wetFraction_, wetFraction_);
+    m(dDeparture_, dDeparture_);
+    m(fDeparture_, fDeparture_);
+    m(nucleationSiteDensity_, nucleationSiteDensity_);
+    m(qQuenching_, qQuenching_);
+    m(qEvaporative_, qEvaporative_);
     m(dmdtf_, dmdtf_);
 }
 
@@ -753,12 +809,12 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::rmap
     const alphatWallBoilingWallFunctionFvPatchScalarField& tiptf =
         refCast<const alphatWallBoilingWallFunctionFvPatchScalarField>(ptf);
 
-    fLiquid_.rmap(tiptf.fLiquid_, addr);
-    dDep_.rmap(tiptf.dDep_, addr);
-    fDep_.rmap(tiptf.fDep_, addr);
-    N_.rmap(tiptf.N_, addr);
-    qq_.rmap(tiptf.qq_, addr);
-    qe_.rmap(tiptf.qe_, addr);
+    wetFraction_.rmap(tiptf.wetFraction_, addr);
+    dDeparture_.rmap(tiptf.dDeparture_, addr);
+    fDeparture_.rmap(tiptf.fDeparture_, addr);
+    nucleationSiteDensity_.rmap(tiptf.nucleationSiteDensity_, addr);
+    qQuenching_.rmap(tiptf.qQuenching_, addr);
+    qEvaporative_.rmap(tiptf.qEvaporative_, addr);
     dmdtf_.rmap(tiptf.dmdtf_, addr);
 }
 
@@ -773,12 +829,12 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::reset
     const alphatWallBoilingWallFunctionFvPatchScalarField& tiptf =
         refCast<const alphatWallBoilingWallFunctionFvPatchScalarField>(ptf);
 
-    fLiquid_.reset(tiptf.fLiquid_);
-    dDep_.reset(tiptf.dDep_);
-    fDep_.reset(tiptf.fDep_);
-    N_.reset(tiptf.N_);
-    qq_.reset(tiptf.qq_);
-    qe_.reset(tiptf.qe_);
+    wetFraction_.reset(tiptf.wetFraction_);
+    dDeparture_.reset(tiptf.dDeparture_);
+    fDeparture_.reset(tiptf.fDeparture_);
+    nucleationSiteDensity_.reset(tiptf.nucleationSiteDensity_);
+    qQuenching_.reset(tiptf.qQuenching_);
+    qEvaporative_.reset(tiptf.qEvaporative_);
     dmdtf_.reset(tiptf.dmdtf_);
 }
 
@@ -796,21 +852,22 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
     switch (phaseType_)
     {
+        case vapourPhase:
         case vaporPhase:
         {
-            const phaseModel& vapor = fluid.phases()[internalField().group()];
+            const phaseModel& vapour = fluid.phases()[internalField().group()];
             const phaseModel& liquid = fluid.phases()[otherPhaseName_];
 
             // Construct boiling properties
-            const properties props(*this, vapor, liquid);
+            const properties props(*this, vapour, liquid);
 
             // Partitioning. Note: Assumes that there is only only one liquid
-            // phase and all other phases are vapor.
-            fLiquid_ = partitioningModel_->fLiquid(props.otherAlphaw);
+            // phase and all other phases are vapour.
+            wetFraction_ = partitioningModel_->wetFraction(props.otherAlphaw);
 
             operator==
             (
-                (1 - fLiquid_)
+                (1 - wetFraction_)
                /max(1 - props.otherAlphaw, rootSmall)
                *props.alphatConv
             );
@@ -821,7 +878,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
         case liquidPhase:
         {
             const phaseModel& liquid = fluid.phases()[internalField().group()];
-            const phaseModel& vapor = fluid.phases()[otherPhaseName_];
+            const phaseModel& vapour = fluid.phases()[otherPhaseName_];
 
             // Boiling is enabled by the presence of saturation temperature
             // modelling. This is consistent with interfacial thermal phase
@@ -831,11 +888,11 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                !fluid.foundInterfacialModel
                 <
                     interfaceSaturationTemperatureModel
-                >(phaseInterface(liquid, vapor))
+                >(phaseInterface(liquid, vapour))
             )
             {
                 // Construct non-boiling properties
-                const properties props(*this, liquid, vapor);
+                const properties props(*this, liquid, vapour);
 
                 Info<< "Saturation model for interface "
                     << props.interface.name()
@@ -846,11 +903,11 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             else
             {
                 // Construct boiling properties
-                const boilingLiquidProperties props(*this, liquid, vapor);
+                const boilingLiquidProperties props(*this, liquid, vapour);
 
                 // Partitioning. Note: Assumes that there is only only one
-                // liquid phase and all other phases are vapor.
-                fLiquid_ = partitioningModel_->fLiquid(props.alphaw);
+                // liquid phase and all other phases are vapour.
+                wetFraction_ = partitioningModel_->wetFraction(props.alphaw);
 
                 // Get the temperature boundary condition and extract its
                 // physical parameters
@@ -964,27 +1021,27 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
         nucleationSiteModel_->write(os);
         os  << decrIndent << indent << token::END_BLOCK << nl;
 
-        writeKeyword(os, "departureDiamModel") << nl;
+        writeKeyword(os, "departureDiameterModel") << nl;
         os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
         departureDiameterModel_->write(os);
         os  << decrIndent << indent << token::END_BLOCK << nl;
 
-        writeKeyword(os, "departureFreqModel") << nl;
+        writeKeyword(os, "departureFrequencyModel") << nl;
         os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
         departureFrequencyModel_->write(os);
         os  << decrIndent << indent << token::END_BLOCK << nl;
     }
 
     // State
-    writeEntry(os, "wallLiquidFraction", fLiquid_);
+    writeEntry(os, "wetFraction", wetFraction_);
 
     if (phaseType_ == liquidPhase)
     {
-        writeEntry(os, "dDeparture", dDep_);
-        writeEntry(os, "depFrequency", fDep_);
-        writeEntry(os, "nucSiteDensity", N_);
-        writeEntry(os, "qQuenching", qq_);
-        writeEntry(os, "qEvaporative", qe_);
+        writeEntry(os, "dDeparture", dDeparture_);
+        writeEntry(os, "fDeparture", fDeparture_);
+        writeEntry(os, "nucleationSiteDensity", nucleationSiteDensity_);
+        writeEntry(os, "qQuenching", qQuenching_);
+        writeEntry(os, "qEvaporative", qEvaporative_);
         writeEntry(os, "dmdtf", dmdtf_);
     }
 }

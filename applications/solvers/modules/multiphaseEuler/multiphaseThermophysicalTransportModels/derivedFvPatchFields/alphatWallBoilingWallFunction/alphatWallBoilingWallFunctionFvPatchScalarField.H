@@ -67,15 +67,14 @@ Description
 Usage
     \table
         Property       | Description              | Required    | Default value
-        phaseType      | 'vapor' or 'liquid'      | yes         |
+        phaseType      | 'vapour' or 'liquid'     | yes         |
         useLiquidTemperatureWallFunction | \\
         Use wall function to calculate liquid temperature? | no | yes
         tolerance      | solution tolerance       | no          | rootSmall
-        dmdt           | phase change mass flux   | no          | uniform 0
         Prt            | turbulent Prandtl number | no          | 0.85
     \endtable
 
-        if phaseType 'vapor':
+        if phaseType 'vapour':
     \table
         partitioningModel |                       | yes         |
     \endtable
@@ -84,8 +83,8 @@ Usage
     \table
         partitioningModel |                       | yes         |
         nucleationSiteModel |                     | yes         |
-        departureDiamModel |                      | yes         |
-        departureFreqModel |                      | yes         |
+        departureDiameterModel |                  | yes         |
+        departureFrequenctModel |                 | yes         |
         bubbleWaitingTimeRatio |                  | no          | 0.8
     \endtable
 
@@ -108,11 +107,11 @@ Usage
         {
             type        LemmertChawla;
         }
-        departureDiamModel
+        departureDiameterModel
         {
             type        TolubinskiKostanchuk;
         }
-        departureFreqModel
+        departureFrequencyModel
         {
             type        Cole;
         }
@@ -157,12 +156,13 @@ public:
         //- Enumeration listing the possible operational modes
         enum phaseType
         {
-            vaporPhase,
+            vapourPhase,
+            vaporPhase, // <-- backwards compatibility
             liquidPhase
         };
 
         //- Heat source type names
-        static const NamedEnum<phaseType, 2> phaseTypeNames_;
+        static const NamedEnum<phaseType, 3> phaseTypeNames_;
 
 
 private:
@@ -221,22 +221,22 @@ private:
         // State
 
             //- Wall liquid fraction
-            scalarField fLiquid_;
+            scalarField wetFraction_;
 
             //- Departure diameter
-            scalarField dDep_;
+            scalarField dDeparture_;
 
             //- Departure frequency
-            scalarField fDep_;
+            scalarField fDeparture_;
 
             //- Nucleation site density
-            scalarField N_;
+            scalarField nucleationSiteDensity_;
 
             //- Quenching surface heat flux
-            scalarField qq_;
+            scalarField qQuenching_;
 
             //- Evaporative surface heat flux
-            scalarField qe_;
+            scalarField qEvaporative_;
 
             //- Mass transfer rate
             scalarField dmdtf_;
@@ -251,11 +251,11 @@ private:
             (
                 const boilingLiquidProperties& props,
                 const scalarField& Tw,
-                scalarField& dDep,
-                scalarField& fDep,
-                scalarField& N,
-                scalarField& qq,
-                scalarField& qe,
+                scalarField& dDeparture,
+                scalarField& fDeparture,
+                scalarField& nucleationSiteDensity,
+                scalarField& qQuenching,
+                scalarField& qEvaporative,
                 scalarField& dmdtf
             ) const;
 
@@ -358,37 +358,37 @@ public:
         //- Return the wall liquid fraction field [-]
         const scalarField& wetFraction() const
         {
-            return fLiquid_;
+            return wetFraction_;
         }
 
         //- Return the departure diameter field [m]
         const scalarField& dDeparture() const
         {
-            return dDep_;
+            return dDeparture_;
         }
 
         //- Return the departure frequency field [Hz]
         const scalarField& fDeparture() const
         {
-            return fDep_;
+            return fDeparture_;
         }
 
         //- Return the nucleation site density field [1/m^2]
         const scalarField& nucleationSiteDensity() const
         {
-            return N_;
+            return nucleationSiteDensity_;
         }
 
         //- Return the quenching surface heat flux field [W/m^2]
         const scalarField& qQuenching() const
         {
-            return qq_;
+            return qQuenching_;
         }
 
         //- Return the evaporative surface heat flux field [W/m^2]
         const scalarField& qEvaporative() const
         {
-            return qe_;
+            return qEvaporative_;
         }
 
         //- Return the rate of phase change

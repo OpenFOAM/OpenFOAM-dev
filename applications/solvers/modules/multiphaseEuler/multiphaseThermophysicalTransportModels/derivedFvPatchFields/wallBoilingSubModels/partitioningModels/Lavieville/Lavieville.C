@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,16 +48,20 @@ namespace partitioningModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::partitioningModels::
-Lavieville::Lavieville(const dictionary& dict)
+Foam::wallBoilingModels::partitioningModels::Lavieville::Lavieville
+(
+    const dictionary& dict
+)
 :
     partitioningModel(),
     alphaCrit_(dict.lookup<scalar>("alphaCrit"))
 {}
 
 
-Foam::wallBoilingModels::partitioningModels::
-Lavieville::Lavieville(const Lavieville& model)
+Foam::wallBoilingModels::partitioningModels::Lavieville::Lavieville
+(
+    const Lavieville& model
+)
 :
     partitioningModel(model),
     alphaCrit_(model.alphaCrit_)
@@ -66,16 +70,14 @@ Lavieville::Lavieville(const Lavieville& model)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::wallBoilingModels::partitioningModels::
-Lavieville::~Lavieville()
+Foam::wallBoilingModels::partitioningModels::Lavieville::~Lavieville()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::scalarField>
-Foam::wallBoilingModels::partitioningModels::
-Lavieville::fLiquid
+Foam::wallBoilingModels::partitioningModels::Lavieville::wetFraction
 (
     const scalarField& alphaLiquid
 ) const
@@ -92,8 +94,10 @@ Lavieville::fLiquid
 }
 
 
-void Foam::wallBoilingModels::partitioningModels::
-Lavieville::write(Ostream& os) const
+void Foam::wallBoilingModels::partitioningModels::Lavieville::write
+(
+    Ostream& os
+) const
 {
     partitioningModel::write(os);
     writeEntry(os, "alphaCrit", alphaCrit_);

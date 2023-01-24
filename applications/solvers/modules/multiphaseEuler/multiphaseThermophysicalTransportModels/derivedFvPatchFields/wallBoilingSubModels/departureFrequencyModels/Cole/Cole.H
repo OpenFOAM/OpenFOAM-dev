@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ public:
         virtual tmp<scalarField> fDeparture
         (
             const phaseModel& liquid,
-            const phaseModel& vapor,
+            const phaseModel& vapour,
             const label patchi,
             const scalarField& Tl,
             const scalarField& Tsatw,

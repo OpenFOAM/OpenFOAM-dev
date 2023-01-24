@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ Foam::wallBoilingModels::departureDiameterModels::
 KocamustafaogullariIshiiDepartureDiameter::dDeparture
 (
     const phaseModel& liquid,
-    const phaseModel& vapor,
+    const phaseModel& vapour,
     const label patchi,
     const scalarField& Tl,
     const scalarField& Tsatw,
@@ -103,13 +103,13 @@ KocamustafaogullariIshiiDepartureDiameter::dDeparture
         liquid.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
     const scalarField rhoLiquid(liquid.thermo().rho(patchi));
-    const scalarField rhoVapor(vapor.thermo().rho(patchi));
+    const scalarField rhoVapor(vapour.thermo().rho(patchi));
 
     const scalarField rhoM((rhoLiquid - rhoVapor)/rhoVapor);
 
     const scalarField sigmaw
     (
-        liquid.fluid().sigma(phaseInterface(liquid, vapor), patchi)
+        liquid.fluid().sigma(phaseInterface(liquid, vapour), patchi)
     );
 
     return

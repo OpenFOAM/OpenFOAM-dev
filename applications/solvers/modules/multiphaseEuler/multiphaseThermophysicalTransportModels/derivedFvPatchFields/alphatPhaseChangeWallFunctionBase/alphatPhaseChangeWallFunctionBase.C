@@ -64,7 +64,7 @@ alphatPhaseChangeWallFunctionBase::alphatPhaseChangeWallFunctionBase
     if (phaseName_== otherPhaseName_)
     {
         FatalErrorInFunction
-            << "otherPhase should be the name of the vapor phase that "
+            << "otherPhase should be the name of the vapour phase that "
             << "corresponds to the liquid base or vice versa" << nl
             << "This phase: " << phaseName_ << nl
             << "otherPhase: " << otherPhaseName_
