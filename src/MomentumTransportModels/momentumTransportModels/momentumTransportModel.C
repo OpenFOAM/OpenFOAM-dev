@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,8 @@ License
 #include "surfaceFields.H"
 #include "wallFvPatch.H"
 #include "nearWallDist.H"
+#include "fvcFlux.H"
+#include "fvmDiv.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -127,6 +129,28 @@ const Foam::volScalarField::Boundary& Foam::momentumTransportModel::y() const
 bool Foam::momentumTransportModel::read()
 {
     return regIOobject::read();
+}
+
+
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::momentumTransportModel::divDevTauCorr
+(
+    const tmp<volTensorField>& devTauCorr,
+    volVectorField& U
+) const
+{
+    return fvm::divc
+    (
+        tmp<surfaceVectorField>
+        (
+            new surfaceVectorField
+            (
+                groupName("devTauCorrFlux"),
+                fvc::flux(devTauCorr)
+            )
+        ),
+        U
+    );
 }
 
 

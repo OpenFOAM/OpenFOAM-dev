@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ SourceFiles
 #include "IOdictionary.H"
 #include "primitiveFieldsFwd.H"
 #include "volFields.H"
-#include "surfaceFieldsFwd.H"
+#include "surfaceFields.H"
 #include "fvMatricesFwd.H"
 #include "geometricOneField.H"
 #include "viscosity.H"
@@ -139,6 +139,11 @@ public:
         //- Const access to the coefficients dictionary
         virtual const dictionary& coeffDict() const = 0;
 
+        inline word groupName(const word& name) const
+        {
+            return IOobject::groupName(name, alphaRhoPhi_.group());
+        }
+
         //- Helper function to return the name of the turbulence G field
         inline word GName() const
         {
@@ -204,6 +209,17 @@ public:
 
         //- Return the stress tensor [m^2/s^2]
         virtual tmp<volSymmTensorField> sigma() const = 0;
+
+        //- Return the explicit stress correction matrix
+        //  for the momentum equation.
+        //  Combined with the implicit part by divDevTau
+        //  Also creates and registers the devTauCorrFlux field
+        //  which is cached in the matrix if fluxRequired.
+        virtual tmp<fvVectorMatrix> divDevTauCorr
+        (
+            const tmp<volTensorField>& devTauCorr,
+            volVectorField& U
+        ) const;
 
         //- Validate the fields after construction
         //  Update derived fields as required
