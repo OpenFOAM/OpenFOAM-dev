@@ -8,35 +8,13 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      TiO2.vapor;
+    class       dictionary;
+    location    "constant";
+    object      momentumTransport.vapour;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
-
-internalField   uniform 0.0;
-
-boundaryField
-{
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    inlet
-    {
-        type            fixedValue;
-        value           uniform 0.0;
-    }
-
-    outlet
-    {
-        type            zeroGradient;
-    }
-
-    wall
-    {
-        type            zeroGradient;
-    }
-}
+simulationType  laminar;
 
 
 // ************************************************************************* //

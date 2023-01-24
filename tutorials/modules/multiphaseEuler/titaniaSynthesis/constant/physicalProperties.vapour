@@ -10,11 +10,24 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      combustionProperties.vapor;
+    object      physicalProperties.vapour;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-combustionModel  laminar;
+thermoType
+{
+    type            heRhoThermo;
+    mixture         multicomponentMixture;
+    transport       sutherland;
+    thermo          janaf;
+    equationOfState perfectGas;
+    specie          specie;
+    energy          sensibleEnthalpy;
+}
+
+defaultSpecie Ar;
+
+#include "$FOAM_CASE/constant/thermo.vapour"
 
 
 // ************************************************************************* //

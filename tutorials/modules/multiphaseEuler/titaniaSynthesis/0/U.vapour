@@ -8,14 +8,14 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      N2.vapor;
+    class       volVectorField;
+    object      U.vapour;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
+dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform 0.0;
+internalField   uniform (0 0 0);
 
 boundaryField
 {
@@ -23,8 +23,11 @@ boundaryField
 
     inlet
     {
-        type            fixedValue;
-        value           uniform 0.0;
+        type            flowRateInletVelocity;
+        massFlowRate    2.173893e-07;
+        rho             rho.vapour;
+        profile         laminarBL;
+        value           $internalField;
     }
 
     outlet
@@ -34,9 +37,8 @@ boundaryField
 
     wall
     {
-        type            zeroGradient;
+        type            noSlip;
     }
 }
-
 
 // ************************************************************************* //

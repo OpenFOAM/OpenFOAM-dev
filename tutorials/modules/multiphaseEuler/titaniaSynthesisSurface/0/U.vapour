@@ -8,13 +8,37 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      combustionProperties.vapor;
+    class       volVectorField;
+    object      U.vapour;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-combustionModel  laminar;
+dimensions      [0 1 -1 0 0 0 0];
 
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet
+    {
+        type            flowRateInletVelocity;
+        massFlowRate    2.173893e-07;
+        rho             rho.vapour;
+        profile         laminarBL;
+        value           $internalField;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    wall
+    {
+        type            noSlip;
+    }
+}
 
 // ************************************************************************* //

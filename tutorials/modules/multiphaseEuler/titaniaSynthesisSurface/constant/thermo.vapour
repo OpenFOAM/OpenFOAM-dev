@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      thermo.vapor;
+    object      thermo.vapour;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -19,6 +19,7 @@ species
     O2
     TiCl4
     TiO2
+    TiO2_s
     Cl2
     Ar
     N2
@@ -129,6 +130,11 @@ TiO2
         As          1.6934113e-06; // Taken from oxygen
         Ts          127;
     }
+}
+
+TiO2_s
+{
+    $TiO2
 }
 
 Cl2

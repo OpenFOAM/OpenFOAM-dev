@@ -16,7 +16,7 @@ FoamFile
 
 type populationBalanceMultiphaseSystem;
 
-phases (particles vapor);
+phases (particles vapour);
 
 populationBalances (aggregates);
 
@@ -84,7 +84,7 @@ particles
     residualAlpha   1e-15;
 }
 
-vapor
+vapour
 {
     type            reactingPhaseModel;
 
@@ -99,7 +99,7 @@ populationBalanceCoeffs
 {
     aggregates
     {
-        continuousPhase vapor;
+        continuousPhase vapour;
 
         coalescenceModels
         (
@@ -119,7 +119,7 @@ populationBalanceCoeffs
         (
             phaseChange
             {
-                interfaces          (particles_vapor);
+                interfaces          (particles_vapour);
                 dmdtf               phaseTransfer:dmidtf;
                 specie              TiO2_s;
                 surfaceGrowthType   ParkRogak;
@@ -132,7 +132,7 @@ populationBalanceCoeffs
             {
                 nucleationDiameter  4E-10;
                 velocityGroup       particles;
-                reactingPhase       vapor;
+                reactingPhase       vapour;
                 dmdtf               phaseTransfer:dmidtf;
                 specie              TiO2;
             }
@@ -145,7 +145,7 @@ blending
     default
     {
         type            continuous;
-        phase           vapor;
+        phase           vapour;
     }
 }
 
@@ -157,7 +157,7 @@ surfaceTension
 
 drag
 {
-    particles_dispersedIn_vapor
+    particles_dispersedIn_vapour
     {
         type            timeScaleFiltered;
         minRelaxTime    1e-4;
@@ -174,7 +174,7 @@ virtualMass
 
 heatTransfer
 {
-    particles_dispersedIn_vapor
+    particles_dispersedIn_vapour
     {
         type            timeScaleFiltered;
         minRelaxTime    1e-4;
@@ -189,10 +189,10 @@ heatTransfer
 
 phaseTransfer
 {
-    particles_dispersedIn_vapor
+    particles_dispersedIn_vapour
     {
         type reactionDriven;
-        reactingPhase vapor;
+        reactingPhase vapour;
         targetPhase particles;
         species (TiO2 TiO2_s);
     }

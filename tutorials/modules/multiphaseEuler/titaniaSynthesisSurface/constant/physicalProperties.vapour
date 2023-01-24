@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      physicalProperties.vapor;
+    object      physicalProperties.vapour;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -27,7 +27,7 @@ thermoType
 
 defaultSpecie Ar;
 
-#include "$FOAM_CASE/constant/thermo.vapor"
+#include "$FOAM_CASE/constant/thermo.vapour"
 
 
 // ************************************************************************* //

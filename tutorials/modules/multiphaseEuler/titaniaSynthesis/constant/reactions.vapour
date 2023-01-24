@@ -5,14 +5,10 @@
     \\  /    A nd           | Version:  dev
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
-References:
+Reference:
     Akhtar, M. K., Xiong, Y., & Pratsinis, S. E. (1991).
     Vapor synthesis of titania powder by titanium tetrachloride oxidation.
     AIChE Journal, 37(10), 1561-1570.
-
-    Spicer, P. T., Chaoul, O., Tsantilis, S., Pratsinis, S. E. (2002).
-    Titania formation by TiCl4 gas phase oxidation, surface growth
-    and coagulation. Journal of Aerosol Science, 33(1), 17-34.
 
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -20,7 +16,7 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      reactions.vapor;
+    object      reactions.vapour;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -35,19 +31,6 @@ reactions
         A           8.29e4;
         beta        0.0;
         Ta          10680;
-    }
-
-    oxidationAtSurface
-    {
-        type        irreversiblePhaseSurfaceArrhenius;
-
-        reaction    "O2^0 + TiCl4 = TiO2_s + 2Cl2";
-
-        A           4.9e1; //converted from cm/s->m/s
-        beta        0.0;
-        Ta          8993;
-
-        phase       particles;
     }
 }
 

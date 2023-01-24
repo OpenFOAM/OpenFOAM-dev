@@ -10,24 +10,31 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      physicalProperties.vapor;
+    object      chemistryProperties.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-thermoType
+chemistryType
 {
-    type            heRhoThermo;
-    mixture         multicomponentMixture;
-    transport       sutherland;
-    thermo          janaf;
-    equationOfState perfectGas;
-    specie          specie;
-    energy          sensibleEnthalpy;
+    solver  EulerImplicit;
 }
 
-defaultSpecie Ar;
+chemistry   on;
 
-#include "$FOAM_CASE/constant/thermo.vapor"
+initialChemicalTimeStep 1e-07;
 
+EulerImplicitCoeffs
+{
+    cTauChem                1;
+}
+
+odeCoeffs
+{
+    solver      Rosenbrock43;
+    absTol      1e-8;
+    relTol      0.01;
+}
+
+#include "reactions.vapour"
 
 // ************************************************************************* //

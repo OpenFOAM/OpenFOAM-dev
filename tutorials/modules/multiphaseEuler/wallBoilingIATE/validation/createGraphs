@@ -57,7 +57,7 @@ gnuplot<<EOF
         './postProcessing/outflow/$surfaceFile' \
         every ::4::10000 u 1:(360*\$3) w l lt 3 t 'liquid outflow', \
         './postProcessing/outflow/$surfaceFile' \
-        every ::4::10000 u 1:(360*\$2+360*\$3) w l lt 4 t 'liquid + vapor outflow'
+        every ::4::10000 u 1:(360*\$2+360*\$3) w l lt 4 t 'liquid + vapour outflow'
 
     set ylabel 'Enthalpy in- and outflow (J/s)'
     set yrange [1.5e5:2.0e5]
@@ -71,7 +71,7 @@ gnuplot<<EOF
         "<paste \
         ./postProcessing/outletLiquid/$surfaceFile \
         ./postProcessing/outletGas/$surfaceFile" \
-        every ::4::10000 u 1:(360*\$2+360*\$4) w l lt 4 t 'liquid + vapor outflow'
+        every ::4::10000 u 1:(360*\$2+360*\$4) w l lt 4 t 'liquid + vapour outflow'
 
     unset multiplot
 

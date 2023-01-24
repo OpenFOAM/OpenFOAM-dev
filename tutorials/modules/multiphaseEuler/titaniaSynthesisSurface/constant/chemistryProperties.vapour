@@ -8,37 +8,33 @@
 FoamFile
 {
     format      ascii;
-    class       volVectorField;
-    object      U.vapor;
+    class       dictionary;
+    location    "constant";
+    object      chemistryProperties.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
-
-internalField   uniform (0 0 0);
-
-boundaryField
+chemistryType
 {
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    inlet
-    {
-        type            flowRateInletVelocity;
-        massFlowRate    2.173893e-07;
-        rho             rho.vapor;
-        profile         laminarBL;
-        value           $internalField;
-    }
-
-    outlet
-    {
-        type            zeroGradient;
-    }
-
-    wall
-    {
-        type            noSlip;
-    }
+    solver  EulerImplicit;
 }
+
+chemistry   on;
+
+initialChemicalTimeStep 1e-07;
+
+EulerImplicitCoeffs
+{
+    cTauChem                1;
+}
+
+odeCoeffs
+{
+    solver      Rosenbrock43;
+    absTol      1e-8;
+    relTol      0.01;
+}
+
+#include "reactions.vapour"
 
 // ************************************************************************* //

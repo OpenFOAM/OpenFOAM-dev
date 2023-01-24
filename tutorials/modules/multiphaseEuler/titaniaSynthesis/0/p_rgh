@@ -30,9 +30,9 @@ boundaryField
     outlet
     {
         type            prghTotalPressure;
-        U               U.vapor;
-        phi             phi.vapor;
-        rho             rho.vapor;
+        U               U.vapour;
+        phi             phi.vapour;
+        rho             rho.vapour;
         p0              uniform 1e5;
         value           $internalField;
     }

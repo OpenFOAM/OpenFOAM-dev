@@ -33,7 +33,7 @@ boundaryField
     {
         type            compressible::alphatWallBoilingWallFunction;
         otherPhase      liquid;
-        phaseType       vapor;
+        phaseType       vapour;
         Prt             0.85;
         partitioningModel
         {

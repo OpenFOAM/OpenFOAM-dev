@@ -8,33 +8,35 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      chemistryProperties.gas;
+    class       volScalarField;
+    object      TiCl4.vapour;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-chemistryType
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
 {
-    solver  EulerImplicit;
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 8.572434E-03;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    wall
+    {
+        type            zeroGradient;
+    }
 }
 
-chemistry   on;
-
-initialChemicalTimeStep 1e-07;
-
-EulerImplicitCoeffs
-{
-    cTauChem                1;
-}
-
-odeCoeffs
-{
-    solver      Rosenbrock43;
-    absTol      1e-8;
-    relTol      0.01;
-}
-
-#include "reactions.vapor"
 
 // ************************************************************************* //

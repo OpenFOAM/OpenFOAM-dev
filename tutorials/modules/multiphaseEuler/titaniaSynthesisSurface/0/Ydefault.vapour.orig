@@ -9,13 +9,13 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    object      O2.vapor;
+    object      Ydefault.vapour;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform 0.0;
 
 boundaryField
 {
@@ -24,7 +24,7 @@ boundaryField
     inlet
     {
         type            fixedValue;
-        value           uniform 1.551577E-02;
+        value           uniform 0.0;
     }
 
     outlet
