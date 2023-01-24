@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ tmp<volScalarField> Stokes<BasicMomentumTransportModel>::nuEff() const
 {
     return volScalarField::New
     (
-        IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
+        this->groupName("nuEff"),
         this->nu()
     );
 }

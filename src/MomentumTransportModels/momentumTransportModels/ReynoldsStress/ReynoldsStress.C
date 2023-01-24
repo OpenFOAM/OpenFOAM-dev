@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,7 +154,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::ReynoldsStress
     (
         IOobject
         (
-            IOobject::groupName("R", alphaRhoPhi.group()),
+            this->groupName("R"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -167,7 +167,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::ReynoldsStress
     (
         IOobject
         (
-            IOobject::groupName("nut", alphaRhoPhi.group()),
+            this->groupName("nut"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -219,7 +219,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::devTau() const
 {
     return volSymmTensorField::New
     (
-        IOobject::groupName("devTau", this->alphaRhoPhi_.group()),
+        this->groupName("devTau"),
         this->alpha_*this->rho_*R_
       - (this->alpha_*this->rho_*this->nu())
        *dev(twoSymm(fvc::grad(this->U_)))

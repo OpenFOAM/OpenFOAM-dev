@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,7 +183,7 @@ v2f<BasicMomentumTransportModel>::v2f
     (
         IOobject
         (
-            IOobject::groupName("k", alphaRhoPhi.group()),
+            this->groupName("k"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -195,7 +195,7 @@ v2f<BasicMomentumTransportModel>::v2f
     (
         IOobject
         (
-            IOobject::groupName("epsilon", alphaRhoPhi.group()),
+            this->groupName("epsilon"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -207,7 +207,7 @@ v2f<BasicMomentumTransportModel>::v2f
     (
         IOobject
         (
-            IOobject::groupName("v2", alphaRhoPhi.group()),
+            this->groupName("v2"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -219,7 +219,7 @@ v2f<BasicMomentumTransportModel>::v2f
     (
         IOobject
         (
-            IOobject::groupName("f", alphaRhoPhi.group()),
+            this->groupName("f"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,

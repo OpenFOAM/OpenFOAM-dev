@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -199,7 +199,7 @@ SSG<BasicMomentumTransportModel>::SSG
     (
         IOobject
         (
-            IOobject::groupName("k", alphaRhoPhi.group()),
+            this->groupName("k"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::NO_READ,
@@ -211,7 +211,7 @@ SSG<BasicMomentumTransportModel>::SSG
     (
         IOobject
         (
-            IOobject::groupName("epsilon", alphaRhoPhi.group()),
+            this->groupName("epsilon"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,

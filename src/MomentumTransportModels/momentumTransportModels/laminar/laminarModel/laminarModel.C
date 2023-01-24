@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,7 +183,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::nut() const
 {
     return volScalarField::New
     (
-        IOobject::groupName("nut", this->alphaRhoPhi_.group()),
+        this->groupName("nut"),
         this->mesh_,
         dimensionedScalar(dimViscosity, 0)
     );
@@ -210,7 +210,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::k() const
 {
     return volScalarField::New
     (
-        IOobject::groupName("k", this->alphaRhoPhi_.group()),
+        this->groupName("k"),
         this->mesh_,
         dimensionedScalar(sqr(dimVelocity), 0)
     );
@@ -223,7 +223,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::epsilon() const
 {
     return volScalarField::New
     (
-        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
+        this->groupName("epsilon"),
         this->mesh_,
         dimensionedScalar(sqr(dimVelocity)/dimTime, 0)
     );
@@ -236,7 +236,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::omega() const
 {
     return volScalarField::New
     (
-        IOobject::groupName("omega", this->alphaRhoPhi_.group()),
+        this->groupName("omega"),
         this->mesh_,
         dimensionedScalar(dimless/dimTime, 0)
     );
@@ -249,7 +249,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::sigma() const
 {
     return volSymmTensorField::New
     (
-        IOobject::groupName("sigma", this->alphaRhoPhi_.group()),
+        this->groupName("sigma"),
         this->mesh_,
         dimensionedSymmTensor(sqr(this->U_.dimensions()), Zero)
     );

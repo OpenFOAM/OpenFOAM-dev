@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -299,7 +299,7 @@ LienCubicKE::LienCubicKE
     (
         IOobject
         (
-            IOobject::groupName("k", alphaRhoPhi.group()),
+            this->groupName("k"),
             runTime_.name(),
             mesh_,
             IOobject::MUST_READ,
@@ -312,7 +312,7 @@ LienCubicKE::LienCubicKE
     (
         IOobject
         (
-            IOobject::groupName("epsilon", alphaRhoPhi.group()),
+            this->groupName("epsilon"),
             runTime_.name(),
             mesh_,
             IOobject::MUST_READ,

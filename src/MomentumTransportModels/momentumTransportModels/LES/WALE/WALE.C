@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ tmp<volScalarField> WALE<BasicMomentumTransportModel>::k
 
     return volScalarField::New
     (
-        IOobject::groupName("k", this->alphaRhoPhi_.group()),
+        this->groupName("k"),
         sqr(sqr(Cw_)*this->delta()/Ck_)*
         (
             pow3(magSqrSd)
@@ -165,7 +165,7 @@ tmp<volScalarField> WALE<BasicMomentumTransportModel>::epsilon() const
 
     return volScalarField::New
     (
-        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
+        this->groupName("epsilon"),
         this->Ce_*k*sqrt(k)/this->delta()
     );
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,7 +144,7 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
     (
         IOobject
         (
-            IOobject::groupName("sigma", alphaRhoPhi.group()),
+            this->groupName("sigma"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -161,7 +161,7 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
         {
             typeIOobject<volSymmTensorField> header
             (
-                IOobject::groupName("sigma" + name(modei), alphaRhoPhi.group()),
+                this->groupName("sigma" + name(modei)),
                 this->runTime_.name(),
                 this->mesh_,
                 IOobject::NO_READ
@@ -249,7 +249,7 @@ tmp<volScalarField> Maxwell<BasicMomentumTransportModel>::nuEff() const
 {
     return volScalarField::New
     (
-        IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
+        this->groupName("nuEff"),
         this->nu()
     );
 }
@@ -277,7 +277,7 @@ tmp<volSymmTensorField> Maxwell<BasicMomentumTransportModel>::devTau() const
 {
     return volSymmTensorField::New
     (
-        IOobject::groupName("devTau", this->alphaRhoPhi_.group()),
+        this->groupName("devTau"),
         this->alpha_*this->rho_*sigma_
       - (this->alpha_*this->rho_*this->nu())
        *dev(twoSymm(fvc::grad(this->U_)))
@@ -352,11 +352,10 @@ void Maxwell<BasicMomentumTransportModel>::correct()
         (
             IOobject
             (
-                IOobject::groupName
+                this->groupName
                 (
                     "rLambda"
-                  + (nModes_ == 1 ? word::null : name(modei)),
-                    this->alphaRhoPhi_.group()
+                  + (nModes_ == 1 ? word::null : name(modei))
                 ),
                 this->runTime_.constant(),
                 this->mesh_

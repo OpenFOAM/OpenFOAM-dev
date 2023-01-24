@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Fthetat
 
     return volScalarField::Internal::New
     (
-        IOobject::groupName("Fthetat", this->alphaRhoPhi_.group()),
+        this->groupName("Fthetat"),
         min
         (
             max
@@ -110,7 +110,7 @@ kOmegaSSTLM<BasicMomentumTransportModel>::ReThetac() const
     (
         volScalarField::Internal::New
         (
-            IOobject::groupName("ReThetac", this->alphaRhoPhi_.group()),
+            this->groupName("ReThetac"),
             this->mesh_,
             dimless
         )
@@ -148,7 +148,7 @@ tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Flength
     (
         volScalarField::Internal::New
         (
-            IOobject::groupName("Flength", this->alphaRhoPhi_.group()),
+            this->groupName("Flength"),
             this->mesh_,
             dimless
         )
@@ -209,7 +209,7 @@ kOmegaSSTLM<BasicMomentumTransportModel>::ReThetat0
     (
         volScalarField::Internal::New
         (
-            IOobject::groupName("ReThetat0", this->alphaRhoPhi_.group()),
+            this->groupName("ReThetat0"),
             this->mesh_,
             dimless
         )
@@ -325,7 +325,7 @@ tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Fonset
 
     return volScalarField::Internal::New
     (
-        IOobject::groupName("Fonset", this->alphaRhoPhi_.group()),
+        this->groupName("Fonset"),
         max(Fonset2 - Fonset3, scalar(0))
     );
 }
@@ -423,7 +423,7 @@ kOmegaSSTLM<BasicMomentumTransportModel>::kOmegaSSTLM
     (
         IOobject
         (
-            IOobject::groupName("ReThetat", alphaRhoPhi.group()),
+            this->groupName("ReThetat"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -436,7 +436,7 @@ kOmegaSSTLM<BasicMomentumTransportModel>::kOmegaSSTLM
     (
         IOobject
         (
-            IOobject::groupName("gammaInt", alphaRhoPhi.group()),
+            this->groupName("gammaInt"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -449,7 +449,7 @@ kOmegaSSTLM<BasicMomentumTransportModel>::kOmegaSSTLM
     (
         IOobject
         (
-            IOobject::groupName("gammaIntEff", alphaRhoPhi.group()),
+            this->groupName("gammaIntEff"),
             this->runTime_.name(),
             this->mesh_
         ),

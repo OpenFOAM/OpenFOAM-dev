@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ kEqn<BasicMomentumTransportModel>::kEqn
     (
         IOobject
         (
-            IOobject::groupName("k", this->alphaRhoPhi_.group()),
+            this->groupName("k"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -140,7 +140,7 @@ tmp<volScalarField> kEqn<BasicMomentumTransportModel>::epsilon() const
 {
     return volScalarField::New
     (
-        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
+        this->groupName("epsilon"),
         this->Ce_*k()*sqrt(k())/this->delta()
     );
 }

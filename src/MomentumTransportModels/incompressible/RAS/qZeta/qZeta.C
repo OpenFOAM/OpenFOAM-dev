@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,7 +152,7 @@ qZeta::qZeta
     (
         IOobject
         (
-            IOobject::groupName("k", alphaRhoPhi.group()),
+            this->groupName("k"),
             runTime_.name(),
             mesh_,
             IOobject::MUST_READ,
@@ -165,7 +165,7 @@ qZeta::qZeta
     (
         IOobject
         (
-            IOobject::groupName("epsilon", alphaRhoPhi.group()),
+            this->groupName("epsilon"),
             runTime_.name(),
             mesh_,
             IOobject::MUST_READ,
@@ -178,7 +178,7 @@ qZeta::qZeta
     (
         IOobject
         (
-            IOobject::groupName("q", alphaRhoPhi.group()),
+            this->groupName("q"),
             runTime_.name(),
             mesh_,
             IOobject::NO_READ,
@@ -192,7 +192,7 @@ qZeta::qZeta
     (
         IOobject
         (
-            IOobject::groupName("zeta", alphaRhoPhi.group()),
+            this->groupName("zeta"),
             runTime_.name(),
             mesh_,
             IOobject::NO_READ,

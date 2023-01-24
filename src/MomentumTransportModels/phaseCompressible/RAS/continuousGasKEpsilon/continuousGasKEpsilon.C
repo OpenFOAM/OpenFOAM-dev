@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::continuousGasKEpsilon
     (
         IOobject
         (
-            IOobject::groupName("nutEff", alphaRhoPhi.group()),
+            this->groupName("nutEff"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::READ_IF_PRESENT,
@@ -188,7 +188,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::nuEff() const
 
     return volScalarField::New
     (
-        IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
+        this->groupName("nuEff"),
         blend*this->nut_
       + (1.0 - blend)*rhoEff()*nutEff_/this->rho_
       + this->nu()
@@ -211,7 +211,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::rhoEff() const
 
     return volScalarField::New
     (
-        IOobject::groupName("rhoEff", this->alphaRhoPhi_.group()),
+        this->groupName("rhoEff"),
         gas.rho() + (virtualMass.Cvm() + 3.0/20.0)*liquid.rho()
     );
 }
@@ -274,7 +274,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::sigma() const
 
     return volSymmTensorField::New
     (
-        IOobject::groupName("R", this->alphaRhoPhi_.group()),
+        this->groupName("R"),
         ((2.0/3.0)*I)*tk() - (nutEff_)*dev(twoSymm(fvc::grad(this->U_))),
         tk().boundaryField().types()
     );

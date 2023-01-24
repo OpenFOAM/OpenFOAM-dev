@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::eddyViscosity<BasicMomentumTransportModel>::eddyViscosity
     (
         IOobject
         (
-            IOobject::groupName("nut", alphaRhoPhi.group()),
+            this->groupName("nut"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -102,7 +102,7 @@ Foam::eddyViscosity<BasicMomentumTransportModel>::sigma() const
 
     return volSymmTensorField::New
     (
-        IOobject::groupName("R", this->alphaRhoPhi_.group()),
+        this->groupName("R"),
         ((2.0/3.0)*I)*tk() - (nut_)*dev(twoSymm(fvc::grad(this->U_))),
         patchFieldTypes
     );

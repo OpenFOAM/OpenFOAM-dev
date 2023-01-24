@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -216,7 +216,7 @@ kOmega2006<BasicMomentumTransportModel>::kOmega2006
     (
         IOobject
         (
-            IOobject::groupName("k", alphaRhoPhi.group()),
+            this->groupName("k"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -228,7 +228,7 @@ kOmega2006<BasicMomentumTransportModel>::kOmega2006
     (
         IOobject
         (
-            IOobject::groupName("omega", alphaRhoPhi.group()),
+            this->groupName("omega"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,

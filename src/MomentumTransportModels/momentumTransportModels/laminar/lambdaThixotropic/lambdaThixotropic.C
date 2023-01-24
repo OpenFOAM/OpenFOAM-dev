@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,11 +73,7 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
     (
         IOobject
         (
-            IOobject::groupName
-            (
-                typedName("lambda"),
-                alphaRhoPhi.group()
-            ),
+            this->groupName(typedName("lambda")),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -90,11 +86,7 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
     (
         IOobject
         (
-            IOobject::groupName
-            (
-                typedName("nu"),
-                alphaRhoPhi.group()
-            ),
+            this->groupName(typedName("nu")),
             this->runTime_.name(),
             this->mesh_,
             IOobject::NO_READ,
@@ -161,7 +153,7 @@ lambdaThixotropic<BasicMomentumTransportModel>::nuEff() const
 {
     return volScalarField::New
     (
-        IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
+        this->groupName("nuEff"),
         nu_
     );
 }

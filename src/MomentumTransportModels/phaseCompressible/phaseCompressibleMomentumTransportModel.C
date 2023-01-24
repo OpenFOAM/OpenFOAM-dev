@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ Foam::phaseCompressibleMomentumTransportModel::pPrime() const
 {
     return volScalarField::New
     (
-        IOobject::groupName("pPrime", this->alphaRhoPhi_.group()),
+        this->groupName("pPrime"),
         this->mesh_,
         dimensionedScalar(dimPressure, 0)
     );
@@ -101,7 +101,7 @@ Foam::phaseCompressibleMomentumTransportModel::pPrimef() const
 {
     return surfaceScalarField::New
     (
-        IOobject::groupName("pPrimef", this->alphaRhoPhi_.group()),
+        this->groupName("pPrimef"),
         this->mesh_,
         dimensionedScalar(dimPressure, 0)
     );

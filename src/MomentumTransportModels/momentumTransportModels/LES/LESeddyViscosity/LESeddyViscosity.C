@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ LESeddyViscosity<BasicMomentumTransportModel>::epsilon() const
 
     return volScalarField::New
     (
-        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
+        this->groupName("epsilon"),
         Ce_*tk()*sqrt(tk())/this->delta()
     );
 }
@@ -120,7 +120,7 @@ LESeddyViscosity<BasicMomentumTransportModel>::omega() const
 
     return volScalarField::New
     (
-        IOobject::groupName("omega", this->alphaRhoPhi_.group()),
+        this->groupName("omega"),
         (Ce_/Ck_)*sqrt(tk())/this->delta()
     );
 }

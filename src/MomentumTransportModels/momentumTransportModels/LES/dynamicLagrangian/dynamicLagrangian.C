@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ dynamicLagrangian<BasicMomentumTransportModel>::dynamicLagrangian
     (
         IOobject
         (
-            IOobject::groupName("flm", this->alphaRhoPhi_.group()),
+            this->groupName("flm"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -96,7 +96,7 @@ dynamicLagrangian<BasicMomentumTransportModel>::dynamicLagrangian
     (
         IOobject
         (
-            IOobject::groupName("fmm", this->alphaRhoPhi_.group()),
+            this->groupName("fmm"),
             this->runTime_.name(),
             this->mesh_,
             IOobject::MUST_READ,

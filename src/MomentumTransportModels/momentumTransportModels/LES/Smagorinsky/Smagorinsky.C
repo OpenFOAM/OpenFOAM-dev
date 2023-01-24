@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ tmp<volScalarField> Smagorinsky<BasicMomentumTransportModel>::k
 
     return volScalarField::New
     (
-        IOobject::groupName("k", this->alphaRhoPhi_.group()),
+        this->groupName("k"),
         sqr((-b + sqrt(sqr(b) + 4*a*c))/(2*a))
     );
 }
