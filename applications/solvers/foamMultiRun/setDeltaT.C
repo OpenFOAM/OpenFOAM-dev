@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,17 +35,19 @@ void Foam::setDeltaT(Time& runTime, const PtrList<solver>& solvers)
      && runTime.controlDict().lookupOrDefault("adjustTimeStep", false)
     )
     {
-        scalar deltaT = great;
+        bool transient = false;
+        scalar deltaT = vGreat;
 
         forAll(solvers, i)
         {
             if (solvers[i].transient())
             {
+                transient = true;
                 deltaT = min(deltaT, solvers[i].maxDeltaT());
             }
         }
 
-        if (deltaT != great)
+        if (transient && deltaT < rootVGreat)
         {
             runTime.setDeltaT(min(runTime.deltaTValue(), deltaT));
         }
@@ -58,9 +60,8 @@ void Foam::adjustDeltaT(Time& runTime, const PtrList<solver>& solvers)
     // Update the time-step limited by the solvers maxDeltaT
     if (runTime.controlDict().lookupOrDefault("adjustTimeStep", false))
     {
-        scalar deltaT = 1.2*runTime.deltaTValue();
-
         bool transient = false;
+        scalar deltaT = vGreat;
 
         forAll(solvers, i)
         {
@@ -71,9 +72,9 @@ void Foam::adjustDeltaT(Time& runTime, const PtrList<solver>& solvers)
             }
         }
 
-        if (transient)
+        if (transient && deltaT < rootVGreat)
         {
-            runTime.setDeltaT(deltaT);
+            runTime.setDeltaT(min(1.2*runTime.deltaTValue(), deltaT));
             Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
         }
     }

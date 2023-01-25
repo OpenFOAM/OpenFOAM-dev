@@ -48,18 +48,12 @@ void Foam::solvers::shockFluid::setRDeltaT(const surfaceScalarField& amaxSf)
         )
     );
 
-    const scalar maxDeltaT
-    (
-        pimpleDict.lookupOrDefault<scalar>("maxDeltaT", great)
-    );
-
     // Set the reciprocal time-step from the local Courant number
-    rDeltaT.ref() = max
-    (
-        1/dimensionedScalar(dimTime, maxDeltaT),
-        fvc::surfaceSum(amaxSf)()()
-       /((2*maxCo)*mesh.V())
-    );
+    rDeltaT.ref() = fvc::surfaceSum(amaxSf)()()/((2*maxCo)*mesh.V());
+    if (pimpleDict.found("maxDeltaT"))
+    {
+        rDeltaT.max(1/pimpleDict.lookup<scalar>("maxDeltaT"));
+    }
 
     // Update the boundary values of the reciprocal time-step
     rDeltaT.correctBoundaryConditions();

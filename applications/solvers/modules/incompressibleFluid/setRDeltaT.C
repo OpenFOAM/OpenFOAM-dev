@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,30 +49,19 @@ void Foam::solvers::incompressibleFluid::setRDeltaT()
         pimpleDict.lookupOrDefault<scalar>("rDeltaTDampingCoeff", 1.0)
     );
 
-    const scalar maxDeltaT
-    (
-        pimpleDict.lookupOrDefault<scalar>("maxDeltaT", great)
-    );
-
-    const scalar minDeltaT
-    (
-        pimpleDict.lookupOrDefault<scalar>("minDeltaT", small)
-    );
-
     const volScalarField rDeltaT0("rDeltaT0", rDeltaT);
 
     // Set the reciprocal time-step from the local Courant number
     // and maximum and minimum time-steps
-    rDeltaT.ref() = min
-    (
-        1/dimensionedScalar(dimTime, minDeltaT),
-        max
-        (
-            1/dimensionedScalar(dimTime, maxDeltaT),
-            fvc::surfaceSum(mag(phi))()()
-           /((2*maxCo)*mesh.V())
-        )
-    );
+    rDeltaT.ref() = fvc::surfaceSum(mag(phi))()()/((2*maxCo)*mesh.V());
+    if (pimpleDict.found("maxDeltaT"))
+    {
+        rDeltaT.max(1/pimpleDict.lookup<scalar>("maxDeltaT"));
+    }
+    if (pimpleDict.found("minDeltaT"))
+    {
+        rDeltaT.min(1/pimpleDict.lookup<scalar>("minDeltaT"));
+    }
 
     // Update the boundary values of the reciprocal time-step
     rDeltaT.correctBoundaryConditions();

@@ -39,30 +39,19 @@ void Foam::solvers::VoFSolver::setRDeltaT()
         pimpleDict.lookupOrDefault<scalar>("maxCo", 0.9)
     );
 
-    const scalar maxDeltaT
-    (
-        pimpleDict.lookupOrDefault<scalar>("maxDeltaT", great)
-    );
-
-    const scalar minDeltaT
-    (
-        pimpleDict.lookupOrDefault<scalar>("minDeltaT", small)
-    );
-
     const volScalarField rDeltaT0("rDeltaT0", rDeltaT);
 
     // Set the reciprocal time-step from the local Courant number
     // and maximum and minimum time-steps
-    rDeltaT.ref() = min
-    (
-        1/dimensionedScalar(dimTime, minDeltaT),
-        max
-        (
-            1/dimensionedScalar(dimTime, maxDeltaT),
-            fvc::surfaceSum(mag(phi))()()
-           /((2*maxCo)*mesh.V())
-        )
-    );
+    rDeltaT.ref() = fvc::surfaceSum(mag(phi))()()/((2*maxCo)*mesh.V());
+    if (pimpleDict.found("maxDeltaT"))
+    {
+        rDeltaT.max(1/pimpleDict.lookup<scalar>("maxDeltaT"));
+    }
+    if (pimpleDict.found("minDeltaT"))
+    {
+        rDeltaT.min(1/pimpleDict.lookup<scalar>("minDeltaT"));
+    }
 
     Info<< "Flow time scale min/max = "
         << gMin(1/rDeltaT.primitiveField())

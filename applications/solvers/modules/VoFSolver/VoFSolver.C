@@ -172,25 +172,17 @@ Foam::solvers::VoFSolver::~VoFSolver()
 
 Foam::scalar Foam::solvers::VoFSolver::maxDeltaT() const
 {
-    const scalar maxAlphaCo
-    (
-        runTime.controlDict().lookup<scalar>("maxAlphaCo")
-    );
+    const scalar maxAlphaCo =
+        runTime.controlDict().lookup<scalar>("maxAlphaCo");
 
-    const scalar deltaT = fluidSolver::maxDeltaT();
+    scalar deltaT = fluidSolver::maxDeltaT();
 
     if (alphaCoNum > small)
     {
-        return min
-        (
-            deltaT,
-            maxAlphaCo/(alphaCoNum + small)*runTime.deltaTValue()
-        );
+        deltaT = min(deltaT, maxAlphaCo/alphaCoNum*runTime.deltaTValue());
     }
-    else
-    {
-        return deltaT;
-    }
+
+    return deltaT;
 }
 
 

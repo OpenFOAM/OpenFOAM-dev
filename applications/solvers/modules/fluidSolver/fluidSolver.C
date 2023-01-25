@@ -48,7 +48,7 @@ void Foam::solvers::fluidSolver::readControls()
         runTime.controlDict().lookupOrDefault<scalar>("maxCo", 1.0);
 
     maxDeltaT_ =
-        runTime.controlDict().lookupOrDefault<scalar>("maxDeltaT", great);
+        runTime.controlDict().lookupOrDefault<scalar>("maxDeltaT", vGreat);
 
     correctPhi = pimple.dict().lookupOrDefault
     (
@@ -205,15 +205,14 @@ Foam::solvers::fluidSolver::~fluidSolver()
 
 Foam::scalar Foam::solvers::fluidSolver::maxDeltaT() const
 {
+    scalar deltaT = min(fvModels().maxDeltaT(), maxDeltaT_);
+
     if (CoNum > small)
     {
-        const scalar deltaT = maxCo*runTime.deltaTValue()/CoNum;
-        return min(min(deltaT, fvModels().maxDeltaT()), maxDeltaT_);
+        deltaT = min(deltaT, maxCo/CoNum*runTime.deltaTValue());
     }
-    else
-    {
-        return runTime.deltaTValue();
-    }
+
+    return deltaT;
 }
 
 

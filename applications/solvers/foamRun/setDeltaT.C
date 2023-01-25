@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,9 @@ void Foam::setDeltaT(Time& runTime, const solver& solver)
     if
     (
         runTime.timeIndex() == 0
-     && solver.transient()
      && runTime.controlDict().lookupOrDefault("adjustTimeStep", false)
+     && solver.transient()
+     && solver.maxDeltaT() < rootVGreat
     )
     {
         runTime.setDeltaT(min(runTime.deltaTValue(), solver.maxDeltaT()));
@@ -46,8 +47,9 @@ void Foam::adjustDeltaT(Time& runTime, const solver& solver)
     // Update the time-step limited by the solver maxDeltaT
     if
     (
-        solver.transient()
-     && runTime.controlDict().lookupOrDefault("adjustTimeStep", false)
+        runTime.controlDict().lookupOrDefault("adjustTimeStep", false)
+     && solver.transient()
+     && solver.maxDeltaT() < rootVGreat
     )
     {
         runTime.setDeltaT(min(1.2*runTime.deltaTValue(), solver.maxDeltaT()));

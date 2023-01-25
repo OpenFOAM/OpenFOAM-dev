@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,19 +44,14 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
         // Maximum flow Courant number
         const scalar maxCo(pimpleDict.lookup<scalar>("maxCo"));
 
+        // Set the reciprocal time-step from the local Courant number
+        // and maximum and minimum time-steps
         rDeltaT.ref() =
-        (
-            fvc::surfaceSum(mag(phi))()()
-           /((2*maxCo)*mesh.V()*rho())
-        );
-
-        // Limit the largest time step
+            fvc::surfaceSum(mag(phi))()()/((2*maxCo)*mesh.V()*rho());
         if (pimpleDict.found("maxDeltaT"))
         {
             rDeltaT.max(1/pimpleDict.lookup<scalar>("maxDeltaT"));
         }
-
-        // Limit the smallest time step
         if (pimpleDict.found("minDeltaT"))
         {
             rDeltaT.min(1/pimpleDict.lookup<scalar>("minDeltaT"));
