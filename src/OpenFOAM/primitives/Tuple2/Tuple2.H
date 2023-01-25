@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ inline Ostream& operator<<(Ostream&, const Tuple2<Type1, Type2>&);
 
 
 /*---------------------------------------------------------------------------*\
-                           class Tuple2 Declaration
+                           Class Tuple2 Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type1, class Type2>
