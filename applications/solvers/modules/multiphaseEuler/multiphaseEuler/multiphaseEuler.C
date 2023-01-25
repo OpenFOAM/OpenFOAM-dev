@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,9 +45,9 @@ namespace solvers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solvers::multiphaseEuler::read()
+void Foam::solvers::multiphaseEuler::readControls()
 {
-    fluidSolver::read();
+    fluidSolver::readControls();
 
     faceMomentum =
         pimple.dict().lookupOrDefault<Switch>("faceMomentum", false);
@@ -171,7 +171,7 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
     MRF(fluid.MRF())
 {
     // Read the controls
-    read();
+    readControls();
 
     mesh.schemes().setFluxRequired(p_rgh.name());
 
@@ -193,7 +193,7 @@ Foam::solvers::multiphaseEuler::~multiphaseEuler()
 void Foam::solvers::multiphaseEuler::preSolve()
 {
     // Read the controls
-    read();
+    readControls();
 
     if (transient())
     {

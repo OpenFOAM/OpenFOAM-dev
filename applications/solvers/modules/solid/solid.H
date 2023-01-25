@@ -88,7 +88,7 @@ protected:
     // Protected Member Functions
 
         //- Read controls
-        virtual void read();
+        virtual void readControls();
 
 
 private:

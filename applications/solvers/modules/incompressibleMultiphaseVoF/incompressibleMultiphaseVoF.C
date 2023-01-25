@@ -100,7 +100,7 @@ Foam::solvers::incompressibleMultiphaseVoF::incompressibleMultiphaseVoF
     momentumTransport(momentumTransport_())
 {
     // Read the controls
-    read();
+    readControls();
 
     if (!runTime.restart() || !divergent())
     {

@@ -41,7 +41,7 @@ namespace solvers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solvers::solid::read()
+void Foam::solvers::solid::readControls()
 {
     maxDi =
         runTime.controlDict().lookupOrDefault<scalar>("maxDi", 1.0);
@@ -117,7 +117,7 @@ Foam::solvers::solid::solid(fvMesh& mesh)
     solid(mesh, solidThermo::New(mesh))
 {
     // Read the controls
-    read();
+    readControls();
 }
 
 
@@ -146,7 +146,7 @@ Foam::scalar Foam::solvers::solid::maxDeltaT() const
 void Foam::solvers::solid::preSolve()
 {
     // Read the controls
-    read();
+    readControls();
 
     fvModels().preUpdateMesh();
 

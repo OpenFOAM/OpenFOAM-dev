@@ -100,7 +100,7 @@ Foam::solvers::compressibleMultiphaseVoF::compressibleMultiphaseVoF
     momentumTransport(momentumTransport_())
 {
     // Read the controls
-    read();
+    readControls();
 
     if (correctPhi)
     {

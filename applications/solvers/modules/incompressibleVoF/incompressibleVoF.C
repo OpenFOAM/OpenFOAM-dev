@@ -86,7 +86,7 @@ Foam::solvers::incompressibleVoF::incompressibleVoF(fvMesh& mesh)
     )
 {
     // Read the controls
-    read();
+    readControls();
 
     if (!runTime.restart() || !divergent())
     {

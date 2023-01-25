@@ -178,7 +178,7 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
     )
 {
     // Read the controls
-    read();
+    readControls();
 
     thermo.validate(type(), "e");
 
@@ -235,7 +235,7 @@ Foam::solvers::shockFluid::~shockFluid()
 void Foam::solvers::shockFluid::preSolve()
 {
     // Read the controls
-    read();
+    readControls();
 
     {
         const surfaceScalarField amaxSf

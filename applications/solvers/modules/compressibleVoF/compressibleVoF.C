@@ -114,7 +114,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
     thermophysicalTransport(momentumTransport)
 {
     // Read the controls
-    read();
+    readControls();
 
     if (correctPhi)
     {

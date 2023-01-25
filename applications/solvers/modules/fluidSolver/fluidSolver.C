@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ namespace solvers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solvers::fluidSolver::read()
+void Foam::solvers::fluidSolver::readControls()
 {
     maxCo =
         runTime.controlDict().lookupOrDefault<scalar>("maxCo", 1.0);
@@ -191,7 +191,7 @@ Foam::solvers::fluidSolver::fluidSolver(fvMesh& mesh)
     CoNum(0)
 {
     // Read the controls
-    read();
+    readControls();
 }
 
 

@@ -197,7 +197,7 @@ Foam::scalar Foam::solvers::VoFSolver::maxDeltaT() const
 void Foam::solvers::VoFSolver::preSolve()
 {
     // Read the controls
-    read();
+    readControls();
 
     if (transient())
     {

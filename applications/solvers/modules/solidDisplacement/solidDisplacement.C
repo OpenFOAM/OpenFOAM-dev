@@ -45,9 +45,9 @@ namespace solvers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solvers::solidDisplacement::read()
+void Foam::solvers::solidDisplacement::readControls()
 {
-    solid::read();
+    solid::readControls();
 
     nCorr = pimple.dict().lookupOrDefault<int>("nCorrectors", 1);
     convergenceTolerance = pimple.dict().lookupOrDefault<scalar>("D", 0);
@@ -134,7 +134,7 @@ Foam::solvers::solidDisplacement::solidDisplacement(fvMesh& mesh)
     mesh.schemes().setFluxRequired(D.name());
 
     // Read the controls
-    read();
+    readControls();
 }
 
 
