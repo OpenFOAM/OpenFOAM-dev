@@ -25,8 +25,7 @@ License
 
 #include "shockFluid.H"
 #include "fvmDdt.H"
-#include "fvmDiv.H"
-#include "fvcDdt.H"
+#include "fvcDiv.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
