@@ -9,7 +9,7 @@ cd ${0%/*} || exit 1
 gYs="air.gas H2O.gas C3H8O.gas"
 lYs="H2O.liquid C3H8O.liquid"
 
-runApplication blockMesh
+runApplication zeroDimensionalMesh
 
 setInertY()
 {

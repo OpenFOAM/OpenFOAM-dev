@@ -25,7 +25,7 @@ setThermoAndEnergy()
         constant/physicalProperties.$phase
 }
 
-runApplication blockMesh
+runApplication zeroDimensionalMesh
 
 for gHe in $gHes
 do

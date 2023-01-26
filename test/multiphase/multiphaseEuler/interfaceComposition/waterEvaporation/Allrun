@@ -47,7 +47,7 @@ setThermoAndEnergy()
         constant/physicalProperties.$phase
 }
 
-runApplication blockMesh
+runApplication zeroDimensionalMesh
 
 for gY in $gYs
 do
