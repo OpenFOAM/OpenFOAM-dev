@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::heatTransferModel
+    Foam::fv::heatTransferCoefficientModel
 
 Description
     Base class for heat transfer coefficient modelling used in heat transfer
-    fvModels. Area per unit volume [1/m] (AoV) must be provided as a value in
-    the coefficients dictionary or as a field in constant.
+    fvModels
 
 SourceFiles
-    heatTransferModel.C
+    heatTransferCoefficientModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef heatTransferModel_H
-#define heatTransferModel_H
+#ifndef heatTransferCoefficientModel_H
+#define heatTransferCoefficientModel_H
 
 #include "volFields.H"
 #include "interRegionModel.H"
@@ -49,36 +48,23 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class heatTransferModel Declaration
+                          Class heatTransferCoefficientModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class heatTransferModel
+class heatTransferCoefficientModel
 {
-    // Private Member Data
+protected:
+
+    // Protected Member Data
 
         //- Reference to the mesh
         const fvMesh& mesh_;
-
-        //- Dictionary containing source coefficients
-        dictionary coeffs_;
-
-        //- Area per unit volume [1/m]
-        dimensionedScalar AoV_;
-
-        //- Area per unit volume [1/m]
-        autoPtr<volScalarField> AoVPtr_;
-
-
-    // Private Member Functions
-
-        //- Non-virtual read
-        void readCoeffs();
 
 
 public:
 
     //- Runtime type information
-    TypeName("heatTransferModel");
+    TypeName("heatTransferCoefficientModel");
 
 
     // Declare runtime construction
@@ -86,7 +72,7 @@ public:
         declareRunTimeSelectionTable
         (
             autoPtr,
-            heatTransferModel,
+            heatTransferCoefficientModel,
             mesh,
             (
                 const dictionary& dict,
@@ -98,7 +84,7 @@ public:
         declareRunTimeSelectionTable
         (
             autoPtr,
-            heatTransferModel,
+            heatTransferCoefficientModel,
             model,
             (
                 const dictionary& dict,
@@ -111,7 +97,7 @@ public:
     // Constructors
 
         //- Construct from dictionary and mesh
-        heatTransferModel
+        heatTransferCoefficientModel
         (
             const word& modelType,
             const dictionary& dict,
@@ -119,7 +105,7 @@ public:
         );
 
         //- Construct from dictionary and model
-        heatTransferModel
+        heatTransferCoefficientModel
         (
             const word& modelType,
             const dictionary& dict,
@@ -127,20 +113,23 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        heatTransferModel(const heatTransferModel&) = delete;
+        heatTransferCoefficientModel
+        (
+            const heatTransferCoefficientModel&
+        ) = delete;
 
 
     // Selectors
 
         //- Select from dictionary and mesh
-        static autoPtr<heatTransferModel> New
+        static autoPtr<heatTransferCoefficientModel> New
         (
             const dictionary& dict,
             const fvMesh& mesh
         );
 
         //- Select from dictionary and model
-        static autoPtr<heatTransferModel> New
+        static autoPtr<heatTransferCoefficientModel> New
         (
             const dictionary& dict,
             const interRegionModel& model
@@ -148,25 +137,10 @@ public:
 
 
     //- Destructor
-    virtual ~heatTransferModel();
+    virtual ~heatTransferCoefficientModel();
 
 
     // Member Functions
-
-        //- Return reference to the mesh
-        inline const fvMesh& mesh() const
-        {
-            return mesh_;
-        }
-
-        //- Return coeffs dictionary
-        inline const dictionary& coeffs() const
-        {
-            return coeffs_;
-        }
-
-        //- Get the area per unit volume
-        tmp<volScalarField> AoV() const;
 
         //- Get the heat transfer coefficient
         virtual tmp<volScalarField> htc() const = 0;

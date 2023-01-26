@@ -18,15 +18,12 @@ airToporous
 {
     type            interRegionHeatTransfer;
 
-    interRegionHeatTransferCoeffs
-    {
-        nbrRegion       porous;
+    nbrRegion       porous;
+    master          false;
 
-        interpolationMethod cellVolumeWeight;
-        master          false;
+    interpolationMethod cellVolumeWeight;
 
-        semiImplicit    no;
-    }
+    semiImplicit    no;
 }
 
 porosityBlockage

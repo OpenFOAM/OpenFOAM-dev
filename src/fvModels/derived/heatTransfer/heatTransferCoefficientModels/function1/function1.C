@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constant.H"
+#include "function1.H"
 #include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,113 +33,95 @@ namespace Foam
 {
 namespace fv
 {
-namespace heatTransferModels
+namespace heatTransferCoefficientModels
 {
-    defineTypeNameAndDebug(constant, 0);
-    addToRunTimeSelectionTable(heatTransferModel, constant, mesh);
-    addToRunTimeSelectionTable(heatTransferModel, constant, model);
+    defineTypeNameAndDebug(function1, 0);
+    addToRunTimeSelectionTable(heatTransferCoefficientModel, function1, mesh);
+    addToRunTimeSelectionTable(heatTransferCoefficientModel, function1, model);
 }
 }
 }
-
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::heatTransferModels::constant::readCoeffs()
+void Foam::fv::heatTransferCoefficientModels::function1::readCoeffs
+(
+    const dictionary& dict
+)
 {
-    typeIOobject<volScalarField> htcIO
-    (
-        "htc",
-        mesh().time().constant(),
-        mesh(),
-        IOobject::MUST_READ,
-        IOobject::NO_WRITE
-    );
+    UName_ = dict.lookupOrDefault<word>("U", "U");
 
-    if (coeffs().found("htc"))
-    {
-        htc_ =
-            dimensionedScalar
-            (
-                "htc",
-                dimPower/dimTemperature/dimArea,
-                coeffs()
-            );
-        htcPtr_.clear();
-    }
-    else if (htcIO.headerOk())
-    {
-        htc_ = dimensionedScalar("htc", dimPower/dimTemperature/dimArea, NaN);
-        htcPtr_.set(new volScalarField(htcIO, mesh()));
-    }
-    else
-    {
-        FatalIOErrorInFunction(coeffs())
-            << "Heat transfer coefficient (htc) not found. A uniform htc "
-            << "value should be specified, or a non-uniform field should "
-            << "exist at " << htcIO.objectPath()
-            << exit(FatalIOError);
-    }
+    htcFunc_.reset(Function1<scalar>::New("htcFunc", dict).ptr());
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::heatTransferModels::constant::constant
+Foam::fv::heatTransferCoefficientModels::function1::function1
 (
     const dictionary& dict,
     const fvMesh& mesh
 )
 :
-    heatTransferModel(typeName, dict, mesh),
-    htc_("htc", dimPower/dimTemperature/dimArea, NaN),
-    htcPtr_(nullptr)
+    heatTransferCoefficientModel(typeName, dict, mesh),
+    UName_(word::null),
+    htcFunc_(nullptr)
 {
-    readCoeffs();
+    readCoeffs(dict);
 }
 
 
-Foam::fv::heatTransferModels::constant::constant
+Foam::fv::heatTransferCoefficientModels::function1::function1
 (
     const dictionary& dict,
     const interRegionModel& model
 )
 :
-    constant(dict, model.mesh())
+    function1(dict, model.mesh())
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fv::heatTransferModels::constant::~constant()
+Foam::fv::heatTransferCoefficientModels::function1::~function1()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::fv::heatTransferModels::constant::htc() const
+Foam::fv::heatTransferCoefficientModels::function1::htc() const
 {
-    if (!htcPtr_.valid())
-    {
-        return volScalarField::New(typedName("htc"), mesh(), htc_);
-    }
-    else
-    {
-        return htcPtr_();
-    }
+    const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
+
+    tmp<volScalarField> tHtc =
+        volScalarField::New
+        (
+            typedName("htc"),
+            mesh_,
+            dimPower/dimTemperature/dimArea,
+            zeroGradientFvPatchScalarField::typeName
+        );
+
+    tHtc->primitiveFieldRef() = htcFunc_->value(mag(U));
+    tHtc->correctBoundaryConditions();
+
+    return tHtc;
 }
 
 
-void Foam::fv::heatTransferModels::constant::correct()
+void Foam::fv::heatTransferCoefficientModels::function1::correct()
 {}
 
 
-bool Foam::fv::heatTransferModels::constant::read(const dictionary& dict)
+bool Foam::fv::heatTransferCoefficientModels::function1::read
+(
+    const dictionary& dict
+)
 {
-    if (heatTransferModel::read(dict))
+    if (heatTransferCoefficientModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(dict);
         return true;
     }
     else

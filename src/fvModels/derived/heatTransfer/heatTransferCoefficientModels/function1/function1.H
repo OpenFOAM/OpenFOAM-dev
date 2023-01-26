@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,31 +22,33 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::heatTransferModels::constant
+    Foam::fv::heatTransferCoefficientModels::function1
 
 Description
-    Constant heat transfer model. The heat transfer coefficient [W/m^2/K] (htc)
-    must be provided as a value in the coefficients dictionary or as a field in
-    constant.
+    Function1 heat transfer model. The 1D function returns the heat transfer
+    coefficient as a function of the local velocity magnitude.
 
 Usage
     Example usage:
     \verbatim
     {
-        type        constant;
+        heatTransferCoefficientModel function1;
 
-        AoV         1e3;
-
-        htc         1e5;
+        htcFunc
+        {
+            type        constant;
+            value       1e5;
+        }
     }
     \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef constant_H
-#define constant_H
+#ifndef function1_H
+#define function1_H
 
-#include "heatTransferModel.H"
+#include "heatTransferCoefficientModel.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,49 +56,49 @@ namespace Foam
 {
 namespace fv
 {
-namespace heatTransferModels
+namespace heatTransferCoefficientModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class constant Declaration
+                           Class function1 Declaration
 \*---------------------------------------------------------------------------*/
 
-class constant
+class function1
 :
-    public heatTransferModel
+    public heatTransferCoefficientModel
 {
     // Private Data
 
-        //- Heat transfer coefficient [W/m^2/K]
-        dimensionedScalar htc_;
+        //- Name of velocity field; default = U
+        word UName_;
 
         //- Heat transfer coefficient [W/m^2/K]
-        autoPtr<volScalarField> htcPtr_;
+        autoPtr<Function1<scalar>> htcFunc_;
 
 
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
 
 public:
 
     //- Runtime type information
-    TypeName("constant");
+    TypeName("function1");
 
 
     // Constructors
 
         //- Construct from dictionary and mesh
-        constant(const dictionary& dict, const fvMesh& mesh);
+        function1(const dictionary& dict, const fvMesh& mesh);
 
         //- Construct from dictionary and model
-        constant(const dictionary& dict, const interRegionModel& model);
+        function1(const dictionary& dict, const interRegionModel& model);
 
 
     //- Destructor
-    virtual ~constant();
+    virtual ~function1();
 
 
     // Member Functions
@@ -114,7 +116,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace heatTransferModels
+} // End namespace heatTransferCoefficientModels
 } // End namespace fv
 } // End namespace Foam
 

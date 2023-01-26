@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,35 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::heatTransferModels::function1
+    Foam::fv::heatTransferAoV
 
 Description
-    Function1 heat transfer model. The 1D function returns the heat transfer
-    coefficient as a function of the local velocity magnitude.
+    Class to handle area per unit volume [1/m] (AoV) for heat transfer
+    fvModels, which must be provided as a value in the coefficients dictionary
+    or as a field in constant.
 
-Usage
-    Example usage:
-    \verbatim
-    {
-        type        function1;
-
-        AoV         1e3;
-
-        htcFunc
-        {
-            type        constant;
-            value       1e5;
-        }
-    }
-    \endverbatim
+SourceFiles
+    heatTransferAoV.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef function1_H
-#define function1_H
+#ifndef heatTransferAoV_H
+#define heatTransferAoV_H
 
-#include "heatTransferModel.H"
-#include "Function1.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,58 +45,51 @@ namespace Foam
 {
 namespace fv
 {
-namespace heatTransferModels
-{
 
 /*---------------------------------------------------------------------------*\
-                           Class function1 Declaration
+                          Class heatTransferAoV Declaration
 \*---------------------------------------------------------------------------*/
 
-class function1
-:
-    public heatTransferModel
+class heatTransferAoV
 {
-    // Private Data
+    // Private Member Data
 
-        //- Name of velocity field; default = U
-        word UName_;
+        //- Reference to the mesh
+        const fvMesh& mesh_;
 
-        //- Heat transfer coefficient [W/m^2/K]
-        autoPtr<Function1<scalar>> htcFunc_;
+        //- Area per unit volume [1/m]
+        dimensionedScalar AoV_;
+
+        //- Area per unit volume [1/m]
+        autoPtr<volScalarField> AoVPtr_;
 
 
     // Private Member Functions
 
-        //- Non-virtual read
-        void readCoeffs();
+        //- Read the area per unit volume
+        void readCoeffs(const dictionary& dict);
 
 
 public:
 
-    //- Runtime type information
-    TypeName("function1");
-
-
     // Constructors
 
         //- Construct from dictionary and mesh
-        function1(const dictionary& dict, const fvMesh& mesh);
-
-        //- Construct from dictionary and model
-        function1(const dictionary& dict, const interRegionModel& model);
+        heatTransferAoV
+        (
+            const dictionary& dict,
+            const fvMesh& mesh
+        );
 
 
     //- Destructor
-    virtual ~function1();
+    virtual ~heatTransferAoV();
 
 
     // Member Functions
 
-        //- Get the heat transfer coefficient
-        virtual tmp<volScalarField> htc() const;
-
-        //- Correct the heat transfer coefficient
-        virtual void correct();
+        //- Get the area per unit volume
+        tmp<volScalarField> AoV() const;
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
@@ -118,7 +98,6 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace heatTransferModels
 } // End namespace fv
 } // End namespace Foam
 

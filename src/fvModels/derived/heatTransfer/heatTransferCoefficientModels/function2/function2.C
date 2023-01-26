@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "variable.H"
-#include "fluidThermophysicalTransportModel.H"
+#include "function2.H"
 #include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -34,11 +33,10 @@ namespace Foam
 {
 namespace fv
 {
-namespace heatTransferModels
+namespace heatTransferCoefficientModels
 {
-    defineTypeNameAndDebug(variable, 0);
-    addToRunTimeSelectionTable(heatTransferModel, variable, mesh);
-    addToRunTimeSelectionTable(heatTransferModel, variable, model);
+    defineTypeNameAndDebug(function2, 0);
+    addToRunTimeSelectionTable(heatTransferCoefficientModel, function2, model);
 }
 }
 }
@@ -46,96 +44,95 @@ namespace heatTransferModels
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::heatTransferModels::variable::readCoeffs()
+void Foam::fv::heatTransferCoefficientModels::function2::readCoeffs
+(
+    const dictionary& dict
+)
 {
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
+    UName_ = dict.lookupOrDefault<word>("U", "U");
+    UNbrName_ = dict.lookupOrDefault<word>("UNbr", "U");
 
-    a_ = coeffs().lookup<scalar>("a");
-    b_ = coeffs().lookup<scalar>("b");
-    c_ = coeffs().lookup<scalar>("c");
-    L_ = dimensionedScalar("L", dimLength, coeffs());
-    Pr_ = dimensionedScalar("Pr", dimless, coeffs());
+    htcFunc_.reset(Function2<scalar>::New("htcFunc", dict).ptr());
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::heatTransferModels::variable::variable
-(
-    const dictionary& dict,
-    const fvMesh& mesh
-)
-:
-    heatTransferModel(typeName, dict, mesh),
-    UName_(word::null),
-    a_(NaN),
-    b_(NaN),
-    c_(NaN),
-    L_("L", dimLength, NaN),
-    Pr_("Pr", dimless, NaN),
-    htc_
-    (
-        IOobject
-        (
-            typedName("htc"),
-            mesh.time().name(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimensionedScalar(dimPower/dimTemperature/dimArea, 0),
-        zeroGradientFvPatchScalarField::typeName
-    )
-{
-    readCoeffs();
-}
-
-
-Foam::fv::heatTransferModels::variable::variable
+Foam::fv::heatTransferCoefficientModels::function2::function2
 (
     const dictionary& dict,
     const interRegionModel& model
 )
 :
-    variable(dict, model.mesh())
+    heatTransferCoefficientModel(typeName, dict, model),
+    model_(model),
+    UName_(word::null),
+    UNbrName_(word::null),
+    htcFunc_(),
+    htc_
+    (
+        IOobject
+        (
+            typedName("htc"),
+            model.mesh().time().name(),
+            model.mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        model.mesh(),
+        dimensionedScalar(dimPower/dimTemperature/dimArea, 0),
+        zeroGradientFvPatchScalarField::typeName
+    )
 {
-    readCoeffs();
+    readCoeffs(dict);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fv::heatTransferModels::variable::~variable()
+Foam::fv::heatTransferCoefficientModels::function2::~function2()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::heatTransferModels::variable::correct()
+void Foam::fv::heatTransferCoefficientModels::function2::correct()
 {
-    const fluidThermophysicalTransportModel& ttm =
-        mesh().lookupType<fluidThermophysicalTransportModel>();
+    const scalarField UMag
+    (
+        mag
+        (
+            model_.mesh()
+           .lookupObject<volVectorField>(UName_)
+           .primitiveField()
+        )
+    );
+    const scalarField UMagNbr
+    (
+        model_.interpolate
+        (
+            mag
+            (
+                model_.nbrMesh()
+               .lookupObject<volVectorField>(UNbrName_)
+               .primitiveField()
+            )()
+        )
+    );
 
-    const compressibleMomentumTransportModel& mtm =
-        ttm.momentumTransport();
-
-    const volVectorField& U =
-        mesh().lookupObject<volVectorField>(UName_);
-
-    const volScalarField Re(mag(U)*L_/mtm.nuEff());
-    const volScalarField Nu(a_*pow(Re, b_)*pow(Pr_, c_));
-
-    htc_ = Nu*ttm.kappaEff()/L_;
+    htc_.primitiveFieldRef() = htcFunc_->value(UMag, UMagNbr);
     htc_.correctBoundaryConditions();
 }
 
 
-bool Foam::fv::heatTransferModels::variable::read(const dictionary& dict)
+bool Foam::fv::heatTransferCoefficientModels::function2::read
+(
+    const dictionary& dict
+)
 {
-    if (heatTransferModel::read(dict))
+    if (heatTransferCoefficientModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(dict);
         return true;
     }
     else

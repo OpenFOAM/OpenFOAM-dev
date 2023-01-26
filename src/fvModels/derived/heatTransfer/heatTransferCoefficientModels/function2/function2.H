@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::heatTransferModels::function2
+    Foam::fv::heatTransferCoefficientModels::function2
 
 Description
     Function2 heat transfer model. The 2D function returns the heat transfer
     coefficient as a function of the local and neighbouring velocity
-    magnitudes. An area-per-unit-volume [1/m] field (AoV) must be provided in
-    constant.
+    magnitudes.
 
 Usage
     Example usage:
     \verbatim
     {
-        type        function2;
-
-        AoV         1e3;
+        heatTransferCoefficientModel function2;
 
         htcFunc
         {
@@ -51,7 +48,7 @@ Usage
 #ifndef function2_H
 #define function2_H
 
-#include "heatTransferModel.H"
+#include "heatTransferCoefficientModel.H"
 #include "Function2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -60,7 +57,7 @@ namespace Foam
 {
 namespace fv
 {
-namespace heatTransferModels
+namespace heatTransferCoefficientModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -69,7 +66,7 @@ namespace heatTransferModels
 
 class function2
 :
-    public heatTransferModel
+    public heatTransferCoefficientModel
 {
     // Private Data
 
@@ -92,7 +89,7 @@ class function2
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
 
 public:
@@ -129,7 +126,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace heatTransferModels
+} // End namespace heatTransferCoefficientModels
 } // End namespace fv
 } // End namespace Foam
 

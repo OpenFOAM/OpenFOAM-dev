@@ -58,7 +58,10 @@ void Foam::fv::heatTransfer::readCoeffs()
 
     Ta_ = dimensionedScalar("Ta", dimTemperature, coeffs());
 
-    heatTransferModel_ = heatTransferModel::New(coeffs(), mesh());
+    heatTransferAoV_.reset(new heatTransferAoV(coeffs(), mesh()));
+
+    heatTransferCoefficientModel_ =
+        heatTransferCoefficientModel::New(coeffs(), mesh());
 }
 
 
@@ -77,7 +80,8 @@ Foam::fv::heatTransfer::heatTransfer
     semiImplicit_(false),
     TName_(word::null),
     Ta_("Ta", dimTemperature, NaN),
-    heatTransferModel_(nullptr)
+    heatTransferAoV_(nullptr),
+    heatTransferCoefficientModel_(nullptr)
 {
     readCoeffs();
 }
@@ -116,7 +120,7 @@ void Foam::fv::heatTransfer::addSup
     UIndirectList<scalar>(mask.ref().primitiveFieldRef(), set_.cells()) = 1;
     const volScalarField htcAoV
     (
-        mask*heatTransferModel_->htc()*heatTransferModel_->AoV()
+        mask*heatTransferCoefficientModel_->htc()*heatTransferAoV_->AoV()
     );
 
     if (semiImplicit_)
@@ -155,7 +159,7 @@ void Foam::fv::heatTransfer::addSup
 
 void Foam::fv::heatTransfer::correct()
 {
-    heatTransferModel_->correct();
+    heatTransferCoefficientModel_->correct();
 }
 
 

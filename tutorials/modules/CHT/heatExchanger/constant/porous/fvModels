@@ -18,19 +18,20 @@ porousToair
 {
     type            interRegionHeatTransfer;
 
-    interRegionHeatTransferCoeffs
+    nbrRegion       air;
+    master          true;
+
+    interpolationMethod cellVolumeWeight;
+
+    semiImplicit    no;
+
+    AoV             200;
+
+    heatTransferCoefficientModel constant;
+
+    constantCoeffs
     {
-        nbrRegion       air;
-
-        interpolationMethod cellVolumeWeight;
-        master          true;
-
-        semiImplicit    no;
-
-        type            constant;
-
         htc             10;
-        AoV             200;
     }
 }
 

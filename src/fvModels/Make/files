@@ -25,17 +25,20 @@ derived/volumeFractionSource/volumeFractionSource.C
 derived/solidEquilibriumEnergySource/solidEquilibriumEnergySource.C
 derived/massSource/massSource.C
 derived/heatSource/heatSource.C
+
 derived/heatTransfer/heatTransfer.C
 
 interRegion/interRegionModel/interRegionModel.C
 interRegion/interRegionExplicitPorositySource/interRegionExplicitPorositySource.C
 interRegion/interRegionHeatTransfer/interRegionHeatTransfer.C
 
-derived/heatTransfer/heatTransferModels/heatTransferModel/heatTransferModel.C
-derived/heatTransfer/heatTransferModels/constant/constant.C
-derived/heatTransfer/heatTransferModels/function1/function1.C
-derived/heatTransfer/heatTransferModels/function2/function2.C
-derived/heatTransfer/heatTransferModels/variable/variable.C
+derived/heatTransfer/heatTransferAoV/heatTransferAoV.C
+
+derived/heatTransfer/heatTransferCoefficientModels/heatTransferCoefficientModel/heatTransferCoefficientModel.C
+derived/heatTransfer/heatTransferCoefficientModels/constant/constant.C
+derived/heatTransfer/heatTransferCoefficientModels/function1/function1.C
+derived/heatTransfer/heatTransferCoefficientModels/function2/function2.C
+derived/heatTransfer/heatTransferCoefficientModels/variable/variable.C
 
 zeroDimensional/zeroDimensionalFvModel/zeroDimensionalFvModel.C
 zeroDimensional/constraintSource/constraintSource.C

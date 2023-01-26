@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,51 +22,29 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::heatTransferModels::variable
+    Foam::fv::heatTransferCoefficientModels::constant
 
 Description
-    Variable heat transfer model depending on local values. The Nusselt number
-    is calculated as:
-
-        \f[
-            Nu = a*Re^b*Pr^c
-        \f]
-
-    And the heat transfer coefficient is calculated as:
-
-        \f[
-            htc = Nu*\kappa/L
-        \f]
-
-    Where:
-
-    \vartable
-        \kappa | Conductivity
-        L      | Length scale
-    \endvartable
+    Constant heat transfer model. The heat transfer coefficient [W/m^2/K] (htc)
+    must be provided as a value in the coefficients dictionary or as a field in
+    constant.
 
 Usage
     Example usage:
     \verbatim
     {
-        type        variable;
+        heatTransferCoefficientModel constant;
 
-        AoV         1e3;
-
-        a           1;
-        b           2;
-        c           3;
-        Pr          0.7;
-        L           1e-3;
+        htc         1e5;
     }
     \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef heatTransferModels_variable_H
-#define heatTransferModels_variable_H
+#ifndef constant_H
+#define constant_H
 
-#include "heatTransferModel.H"
+#include "heatTransferCoefficientModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,73 +52,55 @@ namespace Foam
 {
 namespace fv
 {
-namespace heatTransferModels
+namespace heatTransferCoefficientModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class variable Declaration
+                           Class constant Declaration
 \*---------------------------------------------------------------------------*/
 
-class variable
+class constant
 :
-    public heatTransferModel
+    public heatTransferCoefficientModel
 {
     // Private Data
 
-        //- Name of neighbour velocity field; default = U
-        word UName_;
-
-        //- Model constant
-        scalar a_;
-
-        //- Model constant
-        scalar b_;
-
-        //- Model constant
-        scalar c_;
-
-        //- Length scale
-        dimensionedScalar L_;
-
-        //- Fluid Prandtl number
-        dimensionedScalar Pr_;
+        //- Heat transfer coefficient [W/m^2/K]
+        dimensionedScalar htc_;
 
         //- Heat transfer coefficient [W/m^2/K]
-        volScalarField htc_;
+        autoPtr<volScalarField> htcPtr_;
 
 
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
 
 public:
 
     //- Runtime type information
-    TypeName("variable");
+    TypeName("constant");
 
 
     // Constructors
 
         //- Construct from dictionary and mesh
-        variable(const dictionary& dict, const fvMesh& mesh);
+        constant(const dictionary& dict, const fvMesh& mesh);
 
         //- Construct from dictionary and model
-        variable(const dictionary& dict, const interRegionModel& model);
+        constant(const dictionary& dict, const interRegionModel& model);
 
 
     //- Destructor
-    virtual ~variable();
+    virtual ~constant();
 
 
     // Member Functions
 
         //- Get the heat transfer coefficient
-        virtual tmp<volScalarField> htc() const
-        {
-            return htc_;
-        }
+        virtual tmp<volScalarField> htc() const;
 
         //- Correct the heat transfer coefficient
         virtual void correct();
@@ -152,7 +112,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace heatTransferModels
+} // End namespace heatTransferCoefficientModels
 } // End namespace fv
 } // End namespace Foam
 

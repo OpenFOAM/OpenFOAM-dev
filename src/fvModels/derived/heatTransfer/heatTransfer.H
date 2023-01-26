@@ -47,25 +47,23 @@ Usage
     {
         type            heatTransfer;
 
-        heatTransferCoeffs
-        {
-            selectionMode   cellSet;
-            cellSet         c0;
+        selectionMode   cellSet;
+        cellSet         c0;
 
-            semiImplicit    no;
+        semiImplicit    no;
 
-            Ta              300;
+        Ta              300;
 
-            type            constant;
+        AoV             200;
 
-            AoV             200;
-            htc             10;
-        }
+        heatTransferCoefficientModel constant;
+
+        htc             10;
     }
     \endverbatim
 
 See also
-    fv::heatTransferModel
+    Foam::fv::heatTransferCoefficientModel
 
 SourceFiles
     heatTransfer.C
@@ -77,7 +75,8 @@ SourceFiles
 
 #include "fvModel.H"
 #include "fvCellSet.H"
-#include "heatTransferModel.H"
+#include "heatTransferCoefficientModel.H"
+#include "heatTransferAoV.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -108,8 +107,11 @@ class heatTransfer
         //- Ambient temperature
         dimensionedScalar Ta_;
 
+        //- The heat transfer area per unit volume
+        autoPtr<heatTransferAoV> heatTransferAoV_;
+
         //- The heat transfer model
-        autoPtr<heatTransferModel> heatTransferModel_;
+        autoPtr<heatTransferCoefficientModel> heatTransferCoefficientModel_;
 
 
     // Private member functions
