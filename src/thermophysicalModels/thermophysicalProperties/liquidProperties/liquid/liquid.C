@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,6 +81,27 @@ Foam::liquid::liquid(const dictionary& dict)
     D_(New("D", dict)),
     Hf_(h_->value(Tstd))
 {}
+
+
+Foam::liquid::liquid(const liquid& lm)
+:
+    liquidProperties(lm),
+    rho_(lm.rho_, false),
+    pv_(lm.pv_, false),
+    hl_(lm.hl_, false),
+    Cp_(lm.Cp_, false),
+    h_(lm.h_, false),
+    Cpg_(lm.Cpg_, false),
+    B_(lm.B_, false),
+    mu_(lm.mu_, false),
+    mug_(lm.mug_, false),
+    kappa_(lm.kappa_, false),
+    kappag_(lm.kappag_, false),
+    sigma_(lm.sigma_, false),
+    D_(lm.D_, false),
+    Hf_(lm.Hf_)
+{}
+
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
