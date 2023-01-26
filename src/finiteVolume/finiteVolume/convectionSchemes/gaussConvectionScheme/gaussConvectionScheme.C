@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,17 @@ gaussConvectionScheme<Type>::fvmDiv
 
     if (tinterpScheme_().corrected())
     {
-        fvm += fvc::surfaceIntegrate(faceFlux*tinterpScheme_().correction(vf));
+        tmp<SurfaceField<Type>> tfaceFluxCorrection
+        (
+            faceFlux*tinterpScheme_().correction(vf)
+        );
+
+        fvm += fvc::surfaceIntegrate(tfaceFluxCorrection());
+
+        if (vf.mesh().schemes().fluxRequired(vf.name()))
+        {
+            fvm.faceFluxCorrectionPtr() = tfaceFluxCorrection.ptr();
+        }
     }
 
     return tfvm;
