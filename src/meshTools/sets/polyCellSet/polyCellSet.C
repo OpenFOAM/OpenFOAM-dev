@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,11 +194,7 @@ bool Foam::polyCellSet::read(const dictionary& dict)
     }
     else
     {
-        FatalIOErrorInFunction(dict)
-            << "selectionMode, cellZone, cellSet or points not specified."
-            << nl << "Valid selectionModes:"
-            << selectionModeTypeNames_.sortedToc()
-            << exit(FatalIOError);
+        dict.lookup("selectionMode");
     }
 
     switch (selectionMode_)
