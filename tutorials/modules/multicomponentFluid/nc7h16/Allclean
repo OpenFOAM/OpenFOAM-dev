@@ -1,0 +1,13 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+cleanCase
+
+rm -rf constant/reactions constant/speciesThermo validation.eps
+
+(cd 0 && for file in n_*; do rm -f ${file#n_}; done)
+
+#------------------------------------------------------------------------------

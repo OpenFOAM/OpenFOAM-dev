@@ -1,0 +1,42 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication zeroDimensionalMesh
+
+chemkin=$FOAM_TUTORIALS/combustion/chemFoam/nc7h16/chemkin
+
+runApplication chemkinToFoam \
+    $chemkin/chem.inp $chemkin/therm.dat $chemkin/transportProperties \
+    constant/reactions constant/speciesThermo
+
+runApplication foamPostProcess -func massFractions
+
+runApplication $(getApplication)
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo "gnuplot not found - skipping graph creation" >&2
+    exit 1
+fi
+
+gnuplot << EOF
+    set terminal postscript eps color enhanced "Helvetica,20"
+    set output "validation.eps"
+    set xlabel "Time / [s]" font "Helvetica,24"
+    set ylabel "Temperature / [K]" font "Helvetica,24"
+    set grid
+    set key left top
+    set xrange [0:0.001]
+    set yrange [750:2750]
+    set ytics 250
+    plot \
+        "postProcessing/probe/0/T" t "OpenFOAM" w p lt 1 pt 6 ps 1.5, \
+        "<(sed -n \
+        's/ Time (sec) =  \\\\(.*\\\\)   T (K) =  \\\\(.*\\\\)/\\\\1 \\\\2/p' \
+        $chemkin/senk.out)" t "Chemkin II" w l lt -1
+EOF
+
+#------------------------------------------------------------------------------

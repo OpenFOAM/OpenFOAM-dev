@@ -37,4 +37,9 @@ derived/heatTransfer/heatTransferModels/function1/function1.C
 derived/heatTransfer/heatTransferModels/function2/function2.C
 derived/heatTransfer/heatTransferModels/variable/variable.C
 
+zeroDimensional/zeroDimensionalFvModel/zeroDimensionalFvModel.C
+zeroDimensional/constraintSource/constraintSource.C
+zeroDimensional/densityConstraintSource/densityConstraintSource.C
+zeroDimensional/pressureConstraintSource/pressureConstraintSource.C
+
 LIB = $(FOAM_LIBBIN)/libfvModels
