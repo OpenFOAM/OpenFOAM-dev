@@ -52,7 +52,14 @@ void Foam::adjustDeltaT(Time& runTime, const solver& solver)
      && solver.maxDeltaT() < rootVGreat
     )
     {
-        runTime.setDeltaT(min(1.2*runTime.deltaTValue(), solver.maxDeltaT()));
+        runTime.setDeltaT
+        (
+            min
+            (
+                solver::maxIncreaseDeltaT*runTime.deltaTValue(),
+                solver.maxDeltaT()
+            )
+        );
         Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
     }
 }

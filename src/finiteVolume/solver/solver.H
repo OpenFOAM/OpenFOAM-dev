@@ -76,6 +76,12 @@ public:
         bool LTS;
 
 
+    // Public Static Data
+
+        //- Maximum fractional increase in deltaT
+        static const scalar maxIncreaseDeltaT;
+
+
 private:
 
     // Private Member Data

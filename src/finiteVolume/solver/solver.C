@@ -35,6 +35,9 @@ namespace Foam
 }
 
 
+const Foam::scalar Foam::solver::maxIncreaseDeltaT = 1.2;
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 bool Foam::solver::writeData(Ostream&) const

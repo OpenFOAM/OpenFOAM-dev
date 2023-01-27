@@ -74,7 +74,14 @@ void Foam::adjustDeltaT(Time& runTime, const PtrList<solver>& solvers)
 
         if (transient && deltaT < rootVGreat)
         {
-            runTime.setDeltaT(min(1.2*runTime.deltaTValue(), deltaT));
+            runTime.setDeltaT
+            (
+                min
+                (
+                    solver::maxIncreaseDeltaT*runTime.deltaTValue(),
+                    deltaT
+                )
+            );
             Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
         }
     }
