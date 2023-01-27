@@ -14,7 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     moveMesh;
+application     foamRun;
+
+solver          movingMesh;
 
 startFrom       startTime;
 

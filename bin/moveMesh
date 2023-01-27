@@ -23,10 +23,10 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     moveDynamicMesh
+#     moveMesh
 #
 # Description
-#     Script to inform the user that moveDynamicMesh has been superseded
+#     Script to inform the user that moveMesh has been superseded
 #     and replaced by the more general movingMesh solver module
 #     executed by the foamRun application.
 #
@@ -34,7 +34,7 @@
 
 cat <<EOF
 
-moveDynamicMesh has been superseded and replaced by the more general
+moveMesh has been superseded and replaced by the more general
 movingMesh solver module executed by the foamRun application:
 
     foamRun -solver movingMesh
