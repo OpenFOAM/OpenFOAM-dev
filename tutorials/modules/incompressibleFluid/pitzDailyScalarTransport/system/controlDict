@@ -10,25 +10,47 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      fvSolution;
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
-{
-    T
-    {
-        solver          PBiCGStab;
-        preconditioner  DILU;
-        tolerance       1e-06;
-        relTol          0;
-    }
-}
+application     foamRun;
 
-SIMPLE
-{
-    nNonOrthogonalCorrectors 0;
-}
+solver          functions;
 
+subSolver       incompressibleFluid;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.1;
+
+deltaT          0.0001;
+
+writeControl    timeStep;
+
+writeInterval   50;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+functions
+{
+    #includeFunc scalarTransport(T, diffusion=constant, D = 0.01)
+}
 
 // ************************************************************************* //

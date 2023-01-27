@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,10 +30,10 @@ Description
     - To specify the field name set the \c field entry
     - To employ the same numerical schemes as another field set
       the \c schemesField entry,
-    - The \c diffusivity entry can be set to \c none, \c constant, \c viscosity
+    - The \c diffusion entry can be set to \c none, \c constant, \c viscosity
     - A constant diffusivity is specified with the \c D entry,
     - If a momentum transport model is available and the \c viscosity
-      diffusivity option specified an effective diffusivity may be constructed
+      diffusion option specified an effective diffusivity may be constructed
       from the laminar and turbulent viscosities using the diffusivity
       coefficients \c alphal and \c alphat:
       \verbatim

@@ -9,12 +9,41 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      physicalProperties;
+    location    "system";
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-DT              DT [0 2 -1 0 0 0 0] 0.01;
+ddtSchemes
+{
+    default         Euler;
+}
+
+gradSchemes
+{
+    default         Gauss linear;
+}
+
+divSchemes
+{
+    default         none;
+    div(phi,T)      Gauss linearUpwind grad(T);
+}
+
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         corrected;
+}
 
 
 // ************************************************************************* //

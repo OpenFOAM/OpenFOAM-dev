@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,9 +98,6 @@ int main(int argc, char *argv[])
             << "solver not specified in the controlDict or on the command-line"
             << exit(FatalError);
     }
-
-    // Load the solver library
-    libs.open("lib" + solverName + ".so");
 
     // Create the default single region mesh
     #include "createMesh.H"
