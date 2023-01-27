@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,10 +65,21 @@ void Foam::combustionModels::noCombustion::correct()
 {}
 
 
-Foam::tmp<Foam::fvScalarMatrix> Foam::combustionModels::noCombustion::R
-(
-    volScalarField& Y
-) const
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::combustionModels::noCombustion::R(const label speciei) const
+{
+    return
+        volScalarField::Internal::New
+        (
+            typedName("R_" + this->thermo().composition().Y()[speciei].name()),
+            this->mesh(),
+            dimensionedScalar(dimDensity/dimTime, 0)
+        );
+}
+
+
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::combustionModels::noCombustion::R(volScalarField& Y) const
 {
     return tmp<fvScalarMatrix>(new fvScalarMatrix(Y, dimMass/dimTime));
 }

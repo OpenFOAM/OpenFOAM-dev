@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "fvSolution.H"
 #include "singleStepCombustion.H"
 #include "fvmSup.H"
 
@@ -201,6 +202,13 @@ Foam::combustionModels::singleStepCombustion::~singleStepCombustion()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::combustionModels::singleStepCombustion::R(const label speciei) const
+{
+    return wFuel_()*specieStoichCoeffs()[speciei];
+}
+
 
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::combustionModels::singleStepCombustion::R(volScalarField& Y) const

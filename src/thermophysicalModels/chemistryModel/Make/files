@@ -26,6 +26,7 @@ chemistryModel/tabulation/ISAT/binaryTree/binaryTree.C
 
 reaction/makeReactions.C
 
+functionObjects/adjustTimeStepToChemistry/adjustTimeStepToChemistry.C
 functionObjects/specieReactionRates/specieReactionRates.C
 
 LIB = $(FOAM_LIBBIN)/libchemistryModel

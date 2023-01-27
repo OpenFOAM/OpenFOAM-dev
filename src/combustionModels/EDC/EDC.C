@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,14 +198,21 @@ void Foam::combustionModels::EDC::correct()
 }
 
 
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::combustionModels::EDC::R(const label speciei) const
+{
+    return chemistryPtr_->RR()[speciei];
+}
+
+
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::combustionModels::EDC::R(volScalarField& Y) const
 {
     tmp<fvScalarMatrix> tSu(new fvScalarMatrix(Y, dimMass/dimTime));
     fvScalarMatrix& Su = tSu.ref();
 
-    const label specieI = this->thermo().composition().species()[Y.member()];
-    Su += chemistryPtr_->RR()[specieI];
+    const label speciei = this->thermo().composition().species()[Y.member()];
+    Su += chemistryPtr_->RR()[speciei];
 
     return kappa_*tSu;
 }

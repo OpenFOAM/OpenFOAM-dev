@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,10 +84,11 @@ Foam::combustionModels::zoneCombustion::filter
 }
 
 
-Foam::tmp<Foam::volScalarField>
+template<class GeoField>
+inline Foam::tmp<GeoField>
 Foam::combustionModels::zoneCombustion::filter
 (
-    const tmp<volScalarField>& tS
+    const tmp<GeoField>& tS
 ) const
 {
     scalarField& S = tS.ref();
@@ -150,6 +151,13 @@ Foam::combustionModels::zoneCombustion::~zoneCombustion()
 void Foam::combustionModels::zoneCombustion::correct()
 {
     combustionModelPtr_->correct();
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::combustionModels::zoneCombustion::R(const label speciei) const
+{
+    return filter(combustionModelPtr_->R(speciei));
 }
 
 

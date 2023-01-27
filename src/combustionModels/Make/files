@@ -23,6 +23,7 @@ zoneCombustion/zoneCombustion.C
 
 noCombustion/noCombustion.C
 
+functionObjects/adjustTimeStepToCombustion/adjustTimeStepToCombustion.C
 functionObjects/Qdot/Qdot.C
 
 radiationModels/absorptionEmissionModels/greyMeanCombustion/greyMeanCombustion.C

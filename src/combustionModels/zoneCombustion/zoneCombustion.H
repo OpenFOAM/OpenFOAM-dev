@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,8 @@ class zoneCombustion
         tmp<fvScalarMatrix> filter(const tmp<fvScalarMatrix>& tR) const;
 
         //- Filter the given field on the cellZones
-        tmp<volScalarField> filter(const tmp<volScalarField>& tS) const;
+        template<class GeoField>
+        inline tmp<GeoField> filter(const tmp<GeoField>& tS) const;
 
 
 public:
@@ -103,7 +104,10 @@ public:
         //- Correct combustion rate
         virtual void correct();
 
-        //- Fuel consumption rate matrix.
+        //- Specie consumption rate field
+        virtual tmp<volScalarField::Internal> R(const label speciei) const;
+
+        //- Specie consumption rate matrix
         virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
 
         //- Heat release rate [kg/m/s^3]

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,7 +160,10 @@ public:
         //- Correct combustion rate
         virtual void correct() = 0;
 
-        //- Fuel consumption rate matrix, i.e. source term for fuel equation
+        //- Consumption rate, i.e. source term for specie equation
+        virtual tmp<volScalarField::Internal> R(const label speciei) const = 0;
+
+        //- Consumption rate matrix, i.e. source term for specie equation
         virtual tmp<fvScalarMatrix> R(volScalarField& Y) const = 0;
 
         //- Heat release rate [kg/m/s^3]

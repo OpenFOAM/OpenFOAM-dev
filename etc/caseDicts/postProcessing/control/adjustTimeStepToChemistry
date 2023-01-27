@@ -1,0 +1,19 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Adjusts the time step to a chemistry model's bulk chemical time scales
+
+\*---------------------------------------------------------------------------*/
+
+type            adjustTimeStepToChemistry;
+libs            ("libchemistryModel.so");
+
+//phase         <phaseName>; // Optional name of the phase to which the
+                             // chemistry model applies
+
+// ************************************************************************* //
