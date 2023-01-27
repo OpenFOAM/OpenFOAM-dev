@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ namespace functionObjects
 template<>
 const char* Foam::NamedEnum
 <
-    Foam::functionObjects::scalarTransport::diffusionType,
+    Foam::functionObjects::scalarTransport::diffusivityType,
     3
 >::names[] =
 {
@@ -77,9 +77,9 @@ const char* Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::scalarTransport::diffusionType,
+    Foam::functionObjects::scalarTransport::diffusivityType,
     3
-> Foam::functionObjects::scalarTransport::diffusionTypeNames_;
+> Foam::functionObjects::scalarTransport::diffusivityTypeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -89,7 +89,7 @@ Foam::functionObjects::scalarTransport::D() const
 {
     const word Dname("D" + fieldName_);
 
-    if (diffusion_ == diffusionType::constant)
+    if (diffusivity_ == diffusivityType::constant)
     {
         return volScalarField::New
         (
@@ -119,7 +119,7 @@ Foam::functionObjects::scalarTransport::scalarTransport
 :
     fvMeshFunctionObject(name, runTime, dict),
     fieldName_(dict.lookupOrDefault<word>("field", "s")),
-    diffusion_(diffusionType::none),
+    diffusivity_(diffusivityType::none),
     D_(0),
     nCorr_(0),
     s_
@@ -203,18 +203,18 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
     rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
     schemesField_ = dict.lookupOrDefault<word>("schemesField", fieldName_);
 
-    diffusion_ = diffusionTypeNames_.read(dict.lookup("diffusion"));
+    diffusivity_ = diffusivityTypeNames_.read(dict.lookup("diffusivity"));
 
-    switch(diffusion_)
+    switch(diffusivity_)
     {
-        case diffusionType::none:
+        case diffusivityType::none:
             break;
 
-        case diffusionType::constant:
+        case diffusivityType::constant:
             dict.lookup("D") >> D_;
             break;
 
-        case diffusionType::viscosity:
+        case diffusivityType::viscosity:
             dict.lookup("alphal") >> alphal_;
             dict.lookup("alphat") >> alphat_;
             break;
@@ -274,7 +274,7 @@ bool Foam::functionObjects::scalarTransport::execute()
                     fvModels.source(s_)
                 );
 
-                if (diffusion_ != diffusionType::none)
+                if (diffusivity_ != diffusivityType::none)
                 {
                     sEqn -= fvm::laplacian(D(), s_);
                 }
@@ -304,7 +304,7 @@ bool Foam::functionObjects::scalarTransport::execute()
                 fvModels.source(rho, s_)
             );
 
-            if (diffusion_ != diffusionType::none)
+            if (diffusivity_ != diffusivityType::none)
             {
                 sEqn -= fvm::laplacian(rho*D(), s_);
             }
@@ -363,9 +363,9 @@ void Foam::functionObjects::scalarTransport::subCycleMULES()
     }
 
 
-    // Apply the diffusion term separately to allow implicit solution
+    // Apply the diffusivity term separately to allow implicit solution
     // and boundedness of the explicit advection
-    if (diffusion_ != diffusionType::none)
+    if (diffusivity_ != diffusivityType::none)
     {
         fvScalarMatrix sEqn
         (
@@ -373,7 +373,7 @@ void Foam::functionObjects::scalarTransport::subCycleMULES()
           - fvm::laplacian(D(), s_)
         );
 
-        sEqn.solve(controls.subDict("diffusion"));
+        sEqn.solve(controls.subDict("diffusivity"));
 
         Info<< fieldName_ << " volume fraction = "
             << s_.weightedAverage(mesh_.V()).value()

@@ -50,7 +50,7 @@ runTimeModifiable true;
 
 functions
 {
-    #includeFunc scalarTransport(T, diffusion=constant, D = 0.01)
+    #includeFunc scalarTransport(T, diffusivity=constant, D = 0.01)
 }
 
 // ************************************************************************* //

@@ -30,10 +30,10 @@ Description
     - To specify the field name set the \c field entry
     - To employ the same numerical schemes as another field set
       the \c schemesField entry,
-    - The \c diffusion entry can be set to \c none, \c constant, \c viscosity
+    - The \c diffusivity entry can be set to \c none, \c constant, \c viscosity
     - A constant diffusivity is specified with the \c D entry,
     - If a momentum transport model is available and the \c viscosity
-      diffusion option specified an effective diffusivity may be constructed
+      diffusivity option specified an effective diffusivity may be constructed
       from the laminar and turbulent viscosities using the diffusivity
       coefficients \c alphal and \c alphat:
       \verbatim
@@ -52,7 +52,7 @@ Description
 
     Example:
     \verbatim
-        #includeFunc scalarTransport(tracer, diffusion=none)
+        #includeFunc scalarTransport(tracer, diffusivity=none)
 
     with scheme specification:
         div(phi,tracer)     Gauss interfaceCompression vanLeer 1;
@@ -72,7 +72,7 @@ Description
             tolerance       1e-8;
             relTol          0;
 
-            diffusion
+            diffusivity
             {
                 solver          smoothSolver;
                 smoother        symGaussSeidel;
@@ -113,8 +113,8 @@ class scalarTransport
 {
 public:
 
-        //- Enumeration defining the type of the diffusion
-        enum class diffusionType
+        //- Enumeration defining the type of the diffusivity
+        enum class diffusivityType
         {
             none,
             constant,
@@ -135,19 +135,19 @@ private:
         //- Name of density field (optional)
         word rhoName_;
 
-        //- Diffusion type names
-        static const NamedEnum<diffusionType, 3> diffusionTypeNames_;
+        //- diffusivity type names
+        static const NamedEnum<diffusivityType, 3> diffusivityTypeNames_;
 
-        //- The type of diffusion
-        diffusionType diffusion_;
+        //- The type of diffusivity
+        diffusivityType diffusivity_;
 
-        //- Constant diffusion coefficient (optional)
+        //- Constant diffusivity coefficient (optional)
         scalar D_;
 
-        //- Laminar diffusion coefficient (optional)
+        //- Laminar diffusivity coefficient (optional)
         scalar alphal_;
 
-        //- Turbulent diffusion coefficient (optional)
+        //- Turbulent diffusivity coefficient (optional)
         scalar alphat_;
 
         //- Number of corrector iterations (optional)
