@@ -23,39 +23,31 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     scalarTransportFoam
+#     rhoParticleFoam
 #
 # Description
-#     Script to inform the user that scalarTransportFoam has been superseded
+#     Script to inform the user that rhoParticleFoam has been superseded
 #     and replaced by the more general functions solver module
 #     executed by the foamRun application.
 #
-#     The solver specified by either the subSolver or if not present the solver
-#     entry in the controlDict is instantiated to provide the physical fields
-#     needed by the functionObjects.  The scalarTransport functionObject is then
-#     instantiated from the functions entry in the controlDict and executed in a
-#     time-loop also controlled by entries in controlDict and the maxDeltaT()
-#     returned by the sub-solver.  See:
-#
-#         tutorials/modules/incompressibleFluid/pitzDailyScalarTransport
+#     The isothermalFluid solver specified by either the subSolver or if not
+#     present the solver entry in the controlDict is instantiated to provide the
+#     physical fields needed by fvModel functionObject in which the clouds
+#     fvModel is selected to evolve the Lagrangian particles.
 #
 #------------------------------------------------------------------------------
 
 cat <<EOF
 
-scalarTransportFoam has been superseded and replaced by the more general
-functions solver module executed by the foamRun application:
+rhoParticleFoam has been superseded and replaced by the more general functions
+solver module executed by the foamRun application:
 
     foamRun -solver functions
 
-The solver specified by either the subSolver or if not present the solver entry
-in the controlDict is instantiated to provide the physical fields needed by the
-functionObjects.  The scalarTransport functionObject is then instantiated from
-the functions entry in the controlDict and executed in a time-loop also
-controlled by entries in controlDict and the maxDeltaT() returned by the
-sub-solver.  See:
-
-    tutorials/modules/incompressibleFluid/pitzDailyScalarTransport
+The isothermalFluid solver specified by either the subSolver or if not present
+the solver entry in the controlDict is instantiated to provide the physical
+fields needed by fvModel functionObject in which the clouds fvModel is selected
+to evolve the Lagrangian particles.
 
 EOF
 
