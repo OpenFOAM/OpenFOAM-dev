@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,11 +66,11 @@ Foam::fv::buoyancyForce::buoyancyForce
 (
     const word& name,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
-    fvModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, mesh, dict),
     phaseName_(word::null),
     UName_(word::null),
     g_

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,11 +132,11 @@ Foam::fv::phaseTurbulenceStabilisation::phaseTurbulenceStabilisation
 (
     const word& sourceName,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
-    fvModel(sourceName, modelType, dict, mesh),
+    fvModel(sourceName, modelType, mesh, dict),
     phaseName_(dict.lookup("phase")),
     alphaInversion_("alphaInversion", dimless, dict),
     phase_

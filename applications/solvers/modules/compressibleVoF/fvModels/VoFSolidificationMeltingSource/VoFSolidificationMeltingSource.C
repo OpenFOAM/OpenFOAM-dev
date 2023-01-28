@@ -81,11 +81,11 @@ Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
 (
     const word& name,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
-    fvModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, mesh, dict),
     set_(mesh, coeffs()),
     alphaSolidT_(),
     L_("L", dimEnergy/dimMass, NaN),

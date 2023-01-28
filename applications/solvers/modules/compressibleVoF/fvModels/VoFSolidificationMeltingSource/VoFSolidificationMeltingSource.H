@@ -155,8 +155,8 @@ public:
         (
             const word& name,
             const word& modelType,
-            const dictionary& dict,
-            const fvMesh& mesh
+            const fvMesh& mesh,
+            const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction

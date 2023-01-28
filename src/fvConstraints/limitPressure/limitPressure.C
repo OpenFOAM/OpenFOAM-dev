@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,11 +159,11 @@ Foam::fv::limitPressure::limitPressure
 (
     const word& name,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
-    fvConstraint(name, modelType, dict, mesh),
+    fvConstraint(name, modelType, mesh, dict),
     pName_(word::null),
     pMin_("pMin", dimPressure, 0),
     pMax_("pMax", dimPressure, great),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,11 +90,11 @@ Foam::fv::meanVelocityForce::meanVelocityForce
 (
     const word& name,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
-    fvConstraint(name, modelType, dict, mesh),
+    fvConstraint(name, modelType, mesh, dict),
     set_(mesh, coeffs()),
     UName_(word::null),
     Ubar_(vector::uniform(NaN)),

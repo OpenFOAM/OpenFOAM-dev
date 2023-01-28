@@ -55,11 +55,11 @@ Foam::fv::compressible::VoFCavitation::VoFCavitation
 (
     const word& sourceName,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
-    fvModel(sourceName, modelType, dict, mesh),
+    fvModel(sourceName, modelType, mesh, dict),
 
     mixture_
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,8 +151,8 @@ Foam::fvModel& Foam::fv::codedFvModel::redirectFvModel() const
         redirectFvModelPtr_ = fvModel::New
         (
             name(),
-            constructDict,
-            mesh()
+            mesh(),
+            constructDict
         );
     }
     return redirectFvModelPtr_();
@@ -228,11 +228,11 @@ Foam::fv::codedFvModel::codedFvModel
 (
     const word& name,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
-    fvModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, mesh, dict),
     fieldName_(word::null)
 {
     readCoeffs();

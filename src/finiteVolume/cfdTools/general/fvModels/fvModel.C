@@ -73,8 +73,8 @@ Foam::fvModel::fvModel
 (
     const word& name,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
     name_(name),
@@ -93,8 +93,8 @@ Foam::fvModel::fvModel
 Foam::autoPtr<Foam::fvModel> Foam::fvModel::New
 (
     const word& name,
-    const dictionary& coeffs,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& coeffs
 )
 {
     const word modelType(coeffs.lookup("type"));
@@ -123,7 +123,7 @@ Foam::autoPtr<Foam::fvModel> Foam::fvModel::New
 
     return autoPtr<fvModel>
     (
-        cstrIter()(name, modelType, coeffs, mesh)
+        cstrIter()(name, modelType, mesh, coeffs)
     );
 }
 

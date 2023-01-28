@@ -56,11 +56,11 @@ Foam::fv::compressible::VoFTurbulenceDamping::VoFTurbulenceDamping
 (
     const word& sourceName,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
-    fvModel(sourceName, modelType, dict, mesh),
+    fvModel(sourceName, modelType, mesh, dict),
     phaseName_(dict.lookupOrDefault("phase", word::null)),
     delta_("delta", dimLength, dict),
     mixture_

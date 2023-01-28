@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,8 +61,8 @@ Foam::fvConstraint::fvConstraint
 (
     const word& name,
     const word& constraintType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
     name_(name),
@@ -81,8 +81,8 @@ Foam::fvConstraint::fvConstraint
 Foam::autoPtr<Foam::fvConstraint> Foam::fvConstraint::New
 (
     const word& name,
-    const dictionary& coeffs,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& coeffs
 )
 {
     const word constraintType(coeffs.lookup("type"));
@@ -111,7 +111,7 @@ Foam::autoPtr<Foam::fvConstraint> Foam::fvConstraint::New
 
     return autoPtr<fvConstraint>
     (
-        cstrIter()(name, constraintType, coeffs, mesh)
+        cstrIter()(name, constraintType, mesh, coeffs)
     );
 }
 

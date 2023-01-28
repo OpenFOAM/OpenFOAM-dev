@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,11 +50,11 @@ Foam::fv::waveForcing::waveForcing
 (
     const word& name,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
-    forcing(name, modelType, dict, mesh),
+    forcing(name, modelType, mesh, dict),
     waves_(waveSuperposition::New(mesh)),
     liquidPhaseName_(coeffs().lookup<word>("liquidPhase")),
     alphaName_(IOobject::groupName("alpha", liquidPhaseName_)),

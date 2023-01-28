@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,11 +57,11 @@ Foam::fv::surfaceFilms::surfaceFilms
 (
     const word& sourceName,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
-    fvModel(sourceName, modelType, dict, mesh),
+    fvModel(sourceName, modelType, mesh, dict),
     surfaceFilms_(),
     surfaceFilmPrimaryRhoNames_(),
     fieldNames_(),

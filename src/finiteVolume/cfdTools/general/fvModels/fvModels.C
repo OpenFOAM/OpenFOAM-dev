@@ -192,7 +192,7 @@ Foam::fvModels::fvModels
                 (
                     i,
                     name,
-                    fvModel::New(name, modelDict, mesh).ptr()
+                    fvModel::New(name, mesh, modelDict).ptr()
                 );
 
                 addSupFields_.set(i, new wordHashSet());

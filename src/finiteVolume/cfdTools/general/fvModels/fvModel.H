@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,10 +135,10 @@ public:
             (
                 const word& name,
                 const word& modelType,
-                const dictionary& dict,
-                const fvMesh& mesh
+                const fvMesh& mesh,
+                const dictionary& dict
             ),
-            (name, modelType, dict, mesh)
+            (name, modelType, mesh, dict)
         );
 
 
@@ -176,8 +176,8 @@ public:
         (
             const word& name,
             const word& modelType,
-            const dictionary& dict,
-            const fvMesh& mesh
+            const fvMesh& mesh,
+            const dictionary& dict
         );
 
         //- Return clone
@@ -215,7 +215,7 @@ public:
 
                 return autoPtr<fvModel>
                 (
-                    fvModel::New(name_, dict, mesh_)
+                    fvModel::New(name_, mesh_, dict)
                 );
             }
         };
@@ -227,8 +227,8 @@ public:
         static autoPtr<fvModel> New
         (
             const word& name,
-            const dictionary& dict,
-            const fvMesh& mesh
+            const fvMesh& mesh,
+            const dictionary& dict
         );
 
 

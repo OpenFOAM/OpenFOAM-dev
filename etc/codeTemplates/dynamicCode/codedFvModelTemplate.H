@@ -53,7 +53,7 @@ class ${typeName}FvModel${SourceType}
 {
     // Private Data
 
-        //- The set of cells the fvConstraint applies to
+        //- The set of cells the fvModel applies to
         fvCellSet set_;
 
 
@@ -73,8 +73,8 @@ public:
         (
             const word& name,
             const word& modelType,
-            const dictionary& dict,
-            const fvMesh& mesh
+            const fvMesh& mesh,
+            const dictionary& dict
         );
 
 

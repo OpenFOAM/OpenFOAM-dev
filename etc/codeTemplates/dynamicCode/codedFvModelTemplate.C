@@ -96,11 +96,11 @@ ${typeName}FvModel${SourceType}
 (
     const word& name,
     const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
+    const fvMesh& mesh,
+    const dictionary& dict
 )
 :
-    fvModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, mesh, dict),
     set_(mesh, coeffs())
 {
     if (${verbose:-false})
