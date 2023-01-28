@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,17 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    financialFoam
+    mdFoam
 
 Description
-    Solves the Black-Scholes equation to price commodities.
+    Molecular dynamics solver for fluid dynamics.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "OSspecific.H"
-#include "setWriter.H"
-#include "writeFile.H"
+#include "md.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,49 +43,30 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createMesh.H"
     #include "createFields.H"
+    #include "temperatureAndPressureVariables.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    Info<< nl << "Calculating value(price of commodities)" << endl;
+    label nAveragingSteps = 0;
 
-    surfaceScalarField phi("phi", (sigmaSqr - r)*(Pf & mesh.Sf()));
-
-    volScalarField DV("DV", 0.5*sigmaSqr*sqr(P.component(Foam::vector::X)));
-
-    Info<< "Starting time loop\n" << endl;
+    Info<< "\nStarting time loop\n" << endl;
 
     while (runTime.loop())
     {
-        delta == fvc::grad(V)().component(Foam::vector::X);
+        nAveragingSteps++;
 
-        solve
-        (
-            fvm::ddt(V)
-          + fvm::div(phi, V)
-          - fvm::Sp(fvc::div(phi), V)
-          - fvm::laplacian(DV, V)
-         ==
-          - fvm::Sp(r, V)
-        );
+        Info<< "Time = " << runTime.userTimeName() << endl;
+
+        molecules.evolve();
+
+        #include "meanMomentumEnergyAndNMols.H"
+        #include "temperatureAndPressure.H"
 
         runTime.write();
 
         if (runTime.writeTime())
         {
-            setWriter::New(runTime.graphFormat())->write
-            (
-                runTime.globalPath()
-               /functionObjects::writeFile::outputPrefix
-               /args.executable()
-               /runTime.name(),
-
-                args.executable(),
-
-                coordSet(true, word::null, mesh.C().primitiveField(), "x"),
-
-                "V", V.primitiveField(),
-                "delta", delta.primitiveField()
-            );
+            nAveragingSteps = 0;
         }
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"

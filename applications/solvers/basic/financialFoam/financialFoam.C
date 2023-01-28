@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    thermoFoam
+    financialFoam
 
 Description
-    Solver for energy transport and thermodynamics on a frozen flow field.
+    Solves the Black-Scholes equation to price commodities.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "fluidThermo.H"
-#include "compressibleMomentumTransportModels.H"
-#include "fluidThermoThermophysicalTransportModel.H"
-#include "LESModel.H"
-#include "fvModels.H"
-#include "fvConstraints.H"
-#include "simpleControl.H"
-#include "pimpleControl.H"
+#include "OSspecific.H"
+#include "setWriter.H"
+#include "writeFile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,51 +48,51 @@ int main(int argc, char *argv[])
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    Info<< "\nEvolving thermodynamics\n" << endl;
+    Info<< nl << "Calculating value(price of commodities)" << endl;
 
-    if (mesh.solution().dict().found("SIMPLE"))
+    surfaceScalarField phi("phi", (sigmaSqr - r)*(Pf & mesh.Sf()));
+
+    volScalarField DV("DV", 0.5*sigmaSqr*sqr(P.component(Foam::vector::X)));
+
+    Info<< "Starting time loop\n" << endl;
+
+    while (runTime.loop())
     {
-        simpleControl simple(mesh);
+        delta == fvc::grad(V)().component(Foam::vector::X);
 
-        while (simple.loop(runTime))
+        solve
+        (
+            fvm::ddt(V)
+          + fvm::div(phi, V)
+          - fvm::Sp(fvc::div(phi), V)
+          - fvm::laplacian(DV, V)
+         ==
+          - fvm::Sp(r, V)
+        );
+
+        runTime.write();
+
+        if (runTime.writeTime())
         {
-            Info<< "Time = " << runTime.userTimeName() << nl << endl;
+            setWriter::New(runTime.graphFormat())->write
+            (
+                runTime.globalPath()
+               /functionObjects::writeFile::outputPrefix
+               /args.executable()
+               /runTime.name(),
 
-            while (simple.correctNonOrthogonal())
-            {
-                #include "EEqn.H"
-            }
+                args.executable(),
 
-            Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-                << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-                << nl << endl;
+                coordSet(true, word::null, mesh.C().primitiveField(), "x"),
 
-            runTime.write();
+                "V", V.primitiveField(),
+                "delta", delta.primitiveField()
+            );
         }
-    }
-    else
-    {
-        pimpleControl pimple(mesh);
 
-        while (runTime.run())
-        {
-            runTime++;
-
-            Info<< "Time = " << runTime.userTimeName() << nl << endl;
-
-            fvModels.correct();
-
-            while (pimple.correctNonOrthogonal())
-            {
-                #include "EEqn.H"
-            }
-
-            Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-                << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-                << nl << endl;
-
-            runTime.write();
-        }
+        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+            << nl << endl;
     }
 
     Info<< "End\n" << endl;

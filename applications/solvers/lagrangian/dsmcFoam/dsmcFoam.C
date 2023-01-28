@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,72 +22,44 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    mdEquilibrationFoam
+    dsmcFoam
 
 Description
-    Solver to equilibrate and/or precondition molecular dynamics systems.
+    Direct simulation Monte Carlo (DSMC) solver for, transient, multi-species
+    flows.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "md.H"
+#include "dsmcCloud.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
+    #define NO_CONTROL
+    #include "postProcess.H"
+
     #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createMesh.H"
+    #include "createFields.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-    Info<< "\nReading field U\n" << endl;
-    volVectorField U
-    (
-        IOobject
-        (
-            "U",
-            runTime.name(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
-
-    potential pot(mesh);
-
-    moleculeCloud molecules(mesh, pot);
-
-    #include "temperatureAndPressureVariables.H"
-
-    #include "readmdEquilibrationDict.H"
-
-    label nAveragingSteps = 0;
 
     Info<< "\nStarting time loop\n" << endl;
 
     while (runTime.loop())
     {
-        nAveragingSteps++;
+        Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
-        Info<< "Time = " << runTime.userTimeName() << endl;
+        dsmc.evolve();
 
-        molecules.evolve();
-
-        #include "meanMomentumEnergyAndNMols.H"
-
-        #include "temperatureAndPressure.H"
-
-        #include "temperatureEquilibration.H"
+        dsmc.info();
 
         runTime.write();
 
-        if (runTime.writeTime())
-        {
-            nAveragingSteps = 0;
-        }
-
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+        Info<< nl << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
             << nl << endl;
     }

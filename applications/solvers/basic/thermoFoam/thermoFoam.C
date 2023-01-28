@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,15 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    mdFoam
+    thermoFoam
 
 Description
-    Molecular dynamics solver for fluid dynamics.
+    Solver for energy transport and thermodynamics on a frozen flow field.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "md.H"
+#include "fluidThermo.H"
+#include "compressibleMomentumTransportModels.H"
+#include "fluidThermoThermophysicalTransportModel.H"
+#include "LESModel.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
+#include "simpleControl.H"
+#include "pimpleControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,35 +50,54 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createMesh.H"
     #include "createFields.H"
-    #include "temperatureAndPressureVariables.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    label nAveragingSteps = 0;
+    Info<< "\nEvolving thermodynamics\n" << endl;
 
-    Info<< "\nStarting time loop\n" << endl;
-
-    while (runTime.loop())
+    if (mesh.solution().dict().found("SIMPLE"))
     {
-        nAveragingSteps++;
+        simpleControl simple(mesh);
 
-        Info<< "Time = " << runTime.userTimeName() << endl;
-
-        molecules.evolve();
-
-        #include "meanMomentumEnergyAndNMols.H"
-        #include "temperatureAndPressure.H"
-
-        runTime.write();
-
-        if (runTime.writeTime())
+        while (simple.loop(runTime))
         {
-            nAveragingSteps = 0;
-        }
+            Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << endl;
+            while (simple.correctNonOrthogonal())
+            {
+                #include "EEqn.H"
+            }
+
+            Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+                << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+                << nl << endl;
+
+            runTime.write();
+        }
+    }
+    else
+    {
+        pimpleControl pimple(mesh);
+
+        while (runTime.run())
+        {
+            runTime++;
+
+            Info<< "Time = " << runTime.userTimeName() << nl << endl;
+
+            fvModels.correct();
+
+            while (pimple.correctNonOrthogonal())
+            {
+                #include "EEqn.H"
+            }
+
+            Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+                << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+                << nl << endl;
+
+            runTime.write();
+        }
     }
 
     Info<< "End\n" << endl;
