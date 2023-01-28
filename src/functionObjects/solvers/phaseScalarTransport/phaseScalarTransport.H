@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,16 +138,16 @@ class phaseScalarTransport
         //- Name of the pressure field (optional)
         word pName_;
 
-        //- Diffusion coefficient (optional)
+        //- Diffusivity (optional)
         scalar D_;
 
         //- Flag to indicate whether a constant, uniform D_ is specified
         bool constantD_;
 
-        //- Laminar diffusion coefficient (optional)
+        //- Laminar diffusivity coefficient (optional)
         scalar alphaD_;
 
-        //- Turbulent diffusion coefficient (optional)
+        //- Turbulent diffusivity coefficient (optional)
         scalar alphaDt_;
 
         //- Number of corrector iterations (optional)
