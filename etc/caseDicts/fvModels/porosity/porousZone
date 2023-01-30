@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      porousZone;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type           explicitPorositySource;
+
+explicitPorositySourceCoeffs
+{
+    type           DarcyForchheimer;
+    selectionMode  cellZone;
+    cellZone       <cellZoneName>; // Specify the name of the cellZone
+
+    DarcyForchheimerCoeffs
+    {
+        // Negative coeffs are multiplied by largest positive coeff,
+        // taking the magnitude, e.g. for -1000, coeff = |1e7*-1000| = 1e10
+
+        d          [0 -2 0 0 0 0 0] (1e7 -1000 -1000);
+        f          [0 -1 0 0 0 0 0] (0 0 0);
+
+        coordinateSystem // Cartesian coordinates for the cellZone
+        {
+            x          (1 0 0);
+            y          (0 1 0);
+            #includeEtc "caseDicts/general/coordinateSystem/cartesianXY"
+        }
+    }
+
+    fixedCoeffCoeffs
+    {
+        alpha      [0 0 -1 0 0 0 0] (100 -1000 -1000);
+        beta       [0 -1 0 0 0 0 0] (0 0 0);
+        rhoRef     1.205;
+
+        coordinateSystem // Cylindrical coordinates for the cellZone
+        {
+            origin     (0 0 0);
+            axis       (0 0 1);
+            #includeEtc "caseDicts/general/coordinateSystem/cylindrical"
+        }
+    }
+}
+
+//************************************************************************** //

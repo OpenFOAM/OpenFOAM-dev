@@ -9,12 +9,14 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      fvModels;
+    object      limitPressure;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeModel clouds
-#includeModel surfaceFilms
+type       limitPressure;
 
-// ************************************************************************* //
+selectionMode all;
+
+min        <1e4>;
+
+//************************************************************************** //

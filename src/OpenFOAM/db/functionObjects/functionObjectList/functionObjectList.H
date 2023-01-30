@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,9 +43,8 @@ SourceFiles
 #include "PtrList.H"
 #include "functionObject.H"
 #include "SHA1Digest.H"
-#include "HashTable.H"
 #include "HashSet.H"
-#include "dictionary.H"
+#include "includeFuncEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -94,25 +93,8 @@ class functionObjectList
         //  Returns a nullptr (and index -1) if it didn't exist
         functionObject* remove(const word&, label& oldIndex);
 
-        //- Search the specified directory for functionObject
-        //  configuration files, add to the given map and recurse
-        static void listDir(const fileName& dir, HashSet<word>& foMap);
-
-        //- Return unset entries and their placeholder values
-        static List<Tuple2<word, string>> unsetEntries
-        (
-            const dictionary& funcDict
-        );
-
 
 public:
-
-    // Static Data Members
-
-        //- Default relative path to the directory structure
-        //  containing the functionObject dictionary files
-        static fileName functionObjectDictPath;
-
 
     // Constructors
 
@@ -178,75 +160,6 @@ public:
 
         //- Find the ID of a given function object by name
         label findObjectID(const word& name) const;
-
-        //- Return the list of functionObject configuration files in
-        //  user/group/shipped directories.
-        //  The search scheme allows for version-specific and
-        //  version-independent files using the following hierarchy:
-        //  - \b user settings:
-        //    - ~/.OpenFOAM/\<VERSION\>/caseDicts/postProcessing
-        //    - ~/.OpenFOAM/caseDicts/postProcessing
-        //  - \b group (site) settings (when $WM_PROJECT_SITE is set):
-        //    - $WM_PROJECT_SITE/\<VERSION\>/etc/caseDicts/postProcessing
-        //    - $WM_PROJECT_SITE/etc/caseDicts/postProcessing
-        //  - \b group (site) settings (when $WM_PROJECT_SITE is not set):
-        //    - $WM_PROJECT_INST_DIR/site/\<VERSION\>/etc/
-        //          caseDicts/postProcessing
-        //    - $WM_PROJECT_INST_DIR/site/etc/caseDicts/postProcessing
-        //  - \b other (shipped) settings:
-        //    - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
-        static wordList list();
-
-        //- Search for functionObject dictionary file for given region
-        //  and if not present also search the case directory as well as the
-        //  user/group/shipped directories.
-        //  The search scheme allows for version-specific and
-        //  version-independent files using the following hierarchy:
-        //  - \b user settings:
-        //    - ~/.OpenFOAM/\<VERSION\>/caseDicts/postProcessing
-        //    - ~/.OpenFOAM/caseDicts/postProcessing
-        //  - \b group (site) settings (when $WM_PROJECT_SITE is set):
-        //    - $WM_PROJECT_SITE/\<VERSION\>/etc/caseDicts/postProcessing
-        //    - $WM_PROJECT_SITE/etc/caseDicts/postProcessing
-        //  - \b group (site) settings (when $WM_PROJECT_SITE is not set):
-        //    - $WM_PROJECT_INST_DIR/site/\<VERSION\>/etc/
-        //          caseDicts/postProcessing
-        //    - $WM_PROJECT_INST_DIR/site/etc/caseDicts/postProcessing
-        //  - \b other (shipped) settings:
-        //    - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
-        //
-        //  \return The path of the functionObject dictionary file if found
-        //  otherwise null
-        static fileName findDict
-        (
-            const word& funcName,
-            const word& region = word::null
-        );
-
-        //- Read the specified functionObject configuration dictionary
-        //  parsing the optional arguments included in the string 'funcArgs',
-        //  inserting 'field' or 'fields' entries as required and merging the
-        //  resulting functionObject dictionary into 'functionsDict'.
-        //
-        //  Parses the optional functionObject arguments:
-        //      'Q(U)' -> funcName = Q; args = (U)
-        //             -> field U;
-        //
-        //  Supports named arguments:
-        //      'patchAverage(patch=inlet, p,U)'
-        //  or
-        //      'patchAverage(patch=inlet, field=(p U))'
-        //       -> funcName = patchAverage;
-        //          args = (patch=inlet, p,U)
-        //       -> patch inlet;
-        //          fields (p U);
-        static bool readFunctionObject
-        (
-            const string& funcArgs,
-            dictionary& functionsDict,
-            const Pair<string>& contextTypeAndValue,
-            const word& region = word::null
-        );
 
         //- Read and set the function objects if their data have changed
         bool read();

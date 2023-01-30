@@ -9,16 +9,16 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      limitTemperature;
+    object      clouds;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-limitT
-{
-    type       limitTemperature;
-    min        200;
-    max        6000;
-    selectionMode all;
-}
+type    clouds;
 
-//************************************************************************** //
+libs
+(
+    "liblagrangianParcel.so"
+    "liblagrangianParcelTurbulence.so"
+);
+
+// ************************************************************************* //

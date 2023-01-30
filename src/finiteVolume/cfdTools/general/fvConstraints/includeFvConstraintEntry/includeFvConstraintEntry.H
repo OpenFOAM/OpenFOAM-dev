@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,48 +22,56 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionEntries::includeFuncEntry
+    Foam::functionEntries::includeFvConstraintEntry
 
 Description
-    Specify a functionObject dictionary file to include, expects the
-    functionObject name to follow with option arguments (without quotes).
+    Specify a fvConstraint dictionary file to include, expects the
+    fvConstraint name to follow with option arguments (without quotes).
 
-    Searches for functionObject dictionary file in user/group/shipped
+    Searches for fvConstraint dictionary file in user/group/shipped
     directories allowing for version-specific and version-independent files
     using the following hierarchy:
     - \b user settings:
-      - ~/.OpenFOAM/\<VERSION\>/caseDicts/postProcessing
-      - ~/.OpenFOAM/caseDicts/postProcessing
+      - ~/.OpenFOAM/\<VERSION\>/caseDicts/fvConstraints
+      - ~/.OpenFOAM/caseDicts/fvConstraints
     - \b group (site) settings (when $WM_PROJECT_SITE is set):
-      - $WM_PROJECT_SITE/\<VERSION\>/etc/caseDicts/postProcessing
-      - $WM_PROJECT_SITE/etc/caseDicts/postProcessing
+      - $WM_PROJECT_SITE/\<VERSION\>/etc/caseDicts/fvConstraints
+      - $WM_PROJECT_SITE/etc/caseDicts/fvConstraints
     - \b group (site) settings (when $WM_PROJECT_SITE is not set):
-      - $WM_PROJECT_INST_DIR/site/\<VERSION\>/etc/caseDicts/postProcessing
-      - $WM_PROJECT_INST_DIR/site/etc/caseDicts/postProcessing
+      - $WM_PROJECT_INST_DIR/site/\<VERSION\>/etc/caseDicts/fvConstraints
+      - $WM_PROJECT_INST_DIR/site/etc/caseDicts/fvConstraints
     - \b other (shipped) settings:
-      - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
+      - $WM_PROJECT_DIR/etc/caseDicts/fvConstraints
 
     The optional field arguments included in the name are inserted in 'field' or
-    'fields' entries in the functionObject dictionary and included in the name
-    of the functionObject entry to avoid conflict.
+    'fields' entries in the fvConstraint dictionary and included in the name
+    of the fvConstraint entry to avoid conflict.
 
     Examples:
     \verbatim
-        #includeFunc Q
-        #includeFunc components(U)
-        #includeFunc mag(Ux)
-        #includeFunc mag(p)
+        #includeConstraint limitPressure(minFactor=0.1, maxFactor=2)
+        #includeConstraint limitTemperature(min=101, max=1000)
+    \endverbatim
+    or for a multiphase case:
+    \verbatim
+        #includeConstraint limitLowPressure(min=1e4)
+        #includeConstraint limitTemperature(phase=steam, min=270, max=2000)
+        #includeConstraint limitTemperature(phase=water, min=270, max=2000)
     \endverbatim
 
     Other dictionary entries may also be specified using named arguments.
 
+See also
+    Foam::includeFvModelEntry
+    Foam::includeFuncEntry
+
 SourceFiles
-    includeFuncEntry.C
+    includeFvConstraintEntry.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef includeFuncEntry_H
-#define includeFuncEntry_H
+#ifndef includeFvConstraintEntry_H
+#define includeFvConstraintEntry_H
 
 #include "functionEntry.H"
 
@@ -75,10 +83,10 @@ namespace functionEntries
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class includeFuncEntry Declaration
+                      Class includeFvConstraintEntry Declaration
 \*---------------------------------------------------------------------------*/
 
-class includeFuncEntry
+class includeFvConstraintEntry
 :
     public functionEntry
 {
@@ -86,14 +94,14 @@ class includeFuncEntry
 public:
 
     //- Runtime type information
-    ClassName("includeFunc");
+    ClassName("includeConstraint");
 
 
     // Static Data Members
 
         //- Default relative path to the directory structure
-        //  containing the functionObject dictionary files
-        static fileName functionObjectDictPath;
+        //  containing the fvConstraint dictionary files
+        static fileName fvConstraintDictPath;
 
 
     // Member Functions

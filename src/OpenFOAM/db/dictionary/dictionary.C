@@ -24,14 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dictionary.H"
-#include "primitiveEntry.H"
 #include "dictionaryEntry.H"
 #include "regExp.H"
 #include "OSHA1stream.H"
-#include "DynamicList.H"
 #include "inputSyntaxEntry.H"
-#include "fileOperation.H"
-#include "stringOps.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -1655,13 +1651,13 @@ Foam::dictionary Foam::operator|
 
 void Foam::dictArgList
 (
-    const string& funcArgs,
+    const string& argString,
     word& funcName,
     wordReList& args,
     List<Tuple2<word, string>>& namedArgs
 )
 {
-    funcName = funcArgs;
+    funcName = argString;
 
     int argLevel = 0;
     bool namedArg = false;
@@ -1672,8 +1668,8 @@ void Foam::dictArgList
 
     for
     (
-        word::const_iterator iter = funcArgs.begin();
-        iter != funcArgs.end();
+        word::const_iterator iter = argString.begin();
+        iter != argString.end();
         ++iter
     )
     {
@@ -1683,7 +1679,7 @@ void Foam::dictArgList
         {
             if (argLevel == 0)
             {
-                funcName = funcArgs(start, i - start);
+                funcName = argString(start, i - start);
                 start = i+1;
             }
             ++argLevel;
@@ -1699,14 +1695,14 @@ void Foam::dictArgList
                         Tuple2<word, string>
                         (
                             argName,
-                            funcArgs(start, i - start)
+                            argString(start, i - start)
                         )
                     );
                     namedArg = false;
                 }
                 else
                 {
-                    args.append(wordRe(funcArgs(start, i - start)));
+                    args.append(wordRe(argString(start, i - start)));
                 }
                 start = i+1;
             }
@@ -1722,7 +1718,7 @@ void Foam::dictArgList
         }
         else if (c == '=')
         {
-            argName = funcArgs(start, i - start);
+            argName = argString(start, i - start);
             string::stripInvalid<variable>(argName);
             start = i+1;
             namedArg = true;
@@ -1738,7 +1734,7 @@ void Foam::dictArgList
 
 void Foam::dictArgList
 (
-    const string& funcArgs,
+    const string& argString,
     wordReList& args,
     List<Tuple2<word, string>>& namedArgs
 )
@@ -1752,8 +1748,8 @@ void Foam::dictArgList
 
     for
     (
-        word::const_iterator iter = funcArgs.begin();
-        iter != funcArgs.end();
+        word::const_iterator iter = argString.begin();
+        iter != argString.end();
         ++iter
     )
     {
@@ -1763,9 +1759,9 @@ void Foam::dictArgList
         {
             ++argLevel;
         }
-        else if (c == ',' || std::next(iter) == funcArgs.end())
+        else if (c == ',' || std::next(iter) == argString.end())
         {
-            if (std::next(iter) == funcArgs.end())
+            if (std::next(iter) == argString.end())
             {
                 if (c == ')')
                 {
@@ -1784,21 +1780,21 @@ void Foam::dictArgList
                         Tuple2<word, string>
                         (
                             argName,
-                            funcArgs(start, i - start)
+                            argString(start, i - start)
                         )
                     );
                     namedArg = false;
                 }
                 else
                 {
-                    args.append(wordRe(funcArgs(start, i - start)));
+                    args.append(wordRe(argString(start, i - start)));
                 }
                 start = i+1;
             }
         }
         else if (c == '=')
         {
-            argName = funcArgs(start, i - start);
+            argName = argString(start, i - start);
             string::stripInvalid<variable>(argName);
             start = i+1;
             namedArg = true;

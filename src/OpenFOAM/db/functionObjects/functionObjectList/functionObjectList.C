@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,17 +27,6 @@ License
 #include "argList.H"
 #include "timeControlFunctionObject.H"
 #include "dictionaryEntry.H"
-#include "stringOps.H"
-#include "etcFiles.H"
-#include "wordAndDictionary.H"
-
-/* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
-
-Foam::fileName Foam::functionObjectList::functionObjectDictPath
-(
-    "caseDicts/postProcessing"
-);
-
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
@@ -66,391 +55,6 @@ Foam::functionObject* Foam::functionObjectList::remove
     }
 
     return ptr;
-}
-
-
-void Foam::functionObjectList::listDir
-(
-    const fileName& dir,
-    HashSet<word>& foMap
-)
-{
-    // Search specified directory for functionObject configuration files
-    {
-        fileNameList foFiles(fileHandler().readDir(dir));
-        forAll(foFiles, f)
-        {
-            if (foFiles[f].ext().empty())
-            {
-                foMap.insert(foFiles[f]);
-            }
-        }
-    }
-
-    // Recurse into sub-directories
-    {
-        fileNameList foDirs(fileHandler().readDir(dir, fileType::directory));
-        forAll(foDirs, fd)
-        {
-            listDir(dir/foDirs[fd], foMap);
-        }
-    }
-}
-
-
-Foam::wordList Foam::functionObjectList::list()
-{
-    HashSet<word> foMap;
-
-    fileNameList etcDirs(findEtcDirs(functionObjectDictPath));
-
-    forAll(etcDirs, ed)
-    {
-        listDir(etcDirs[ed], foMap);
-    }
-
-    return foMap.sortedToc();
-}
-
-
-Foam::fileName Foam::functionObjectList::findDict
-(
-    const word& funcName,
-    const word& region
-)
-{
-    // First check if there is a functionObject dictionary file in the
-    // region system directory
-    {
-        const fileName dictFile
-        (
-            stringOps::expand("$FOAM_CASE")/"system"/region/funcName
-        );
-
-        if (isFile(dictFile))
-        {
-            return dictFile;
-        }
-    }
-
-    // Next, if the region is specified, check if there is a functionObject
-    // dictionary file in the global system directory
-    if (region != word::null)
-    {
-        const fileName dictFile
-        (
-            stringOps::expand("$FOAM_CASE")/"system"/funcName
-        );
-
-        if (isFile(dictFile))
-        {
-            return dictFile;
-        }
-    }
-
-    // Finally, check etc directories
-    {
-        const fileNameList etcDirs(findEtcDirs(functionObjectDictPath));
-
-        forAll(etcDirs, i)
-        {
-            const fileName dictFile(search(funcName, etcDirs[i]));
-
-            if (!dictFile.empty())
-            {
-                return dictFile;
-            }
-        }
-    }
-
-    return fileName::null;
-}
-
-
-Foam::List<Foam::Tuple2<Foam::word, Foam::string>>
-Foam::functionObjectList::unsetEntries(const dictionary& funcDict)
-{
-    const wordRe unsetPattern("<.*>");
-    unsetPattern.compile();
-
-    List<Tuple2<word, string>> unsetArgs;
-
-    forAllConstIter(IDLList<entry>, funcDict, iter)
-    {
-        if (iter().isStream())
-        {
-            ITstream& its = iter().stream();
-            OStringStream oss;
-            bool isUnset = false;
-
-            forAll(its, i)
-            {
-                oss << its[i];
-                if (its[i].isWord() && unsetPattern.match(its[i].wordToken()))
-                {
-                    isUnset = true;
-                }
-            }
-
-            if (isUnset)
-            {
-                unsetArgs.append
-                (
-                    Tuple2<word, string>
-                    (
-                        iter().keyword(),
-                        oss.str()
-                    )
-                );
-            }
-        }
-        else
-        {
-            List<Tuple2<word, string>> subUnsetArgs =
-                unsetEntries(iter().dict());
-
-            forAll(subUnsetArgs, i)
-            {
-                unsetArgs.append
-                (
-                    Tuple2<word, string>
-                    (
-                        iter().keyword() + '/' + subUnsetArgs[i].first(),
-                        subUnsetArgs[i].second()
-                    )
-                );
-            }
-        }
-    }
-
-    return unsetArgs;
-}
-
-
-bool Foam::functionObjectList::readFunctionObject
-(
-    const string& funcArgs,
-    dictionary& functionsDict,
-    const Pair<string>& contextTypeAndValue,
-    const word& region
-)
-{
-    word funcType;
-    wordReList args;
-    List<Tuple2<word, string>> namedArgs;
-
-    dictArgList(funcArgs, funcType, args, namedArgs);
-
-    // Search for the functionObject dictionary
-    fileName path = findDict(funcType, region);
-
-    if (path == fileName::null)
-    {
-        if (funcType == word::null)
-        {
-            FatalIOErrorInFunction(functionsDict)
-                << "functionObject configuration file name not specified"
-                << nl << nl
-                << "Available configured functionObjects:"
-                << list()
-                << exit(FatalIOError);
-        }
-        else
-        {
-            FatalIOErrorInFunction(functionsDict)
-                << "Cannot find functionObject configuration file "
-                << funcType << nl << nl
-                << "Available configured functionObjects:"
-                << list()
-                << exit(FatalIOError);
-        }
-
-        return false;
-    }
-
-    // Read the functionObject dictionary
-    // IFstream fileStream(path);
-    autoPtr<ISstream> fileStreamPtr(fileHandler().NewIFstream(path));
-    ISstream& fileStream = fileStreamPtr();
-
-    // Delay processing the functionEntries
-    // until after the function argument entries have been added
-    entry::disableFunctionEntries = true;
-    dictionary funcsDict(funcType, functionsDict, fileStream);
-    entry::disableFunctionEntries = false;
-
-    dictionary* funcDictPtr = &funcsDict;
-
-    if (funcsDict.found(funcType) && funcsDict.isDict(funcType))
-    {
-        funcDictPtr = &funcsDict.subDict(funcType);
-    }
-
-    dictionary& funcDict = *funcDictPtr;
-
-    // Store the funcDict as read for error reporting context
-    const dictionary funcDict0(funcDict);
-
-    // Insert the 'field' and/or 'fields' and 'objects' entries corresponding
-    // to both the arguments and the named arguments
-    DynamicList<wordAndDictionary> fieldArgs;
-    forAll(args, i)
-    {
-        fieldArgs.append(wordAndDictionary(args[i], dictionary::null));
-    }
-    forAll(namedArgs, i)
-    {
-        if (namedArgs[i].first() == "field")
-        {
-            IStringStream iss(namedArgs[i].second());
-            fieldArgs.append(wordAndDictionary(iss));
-        }
-        if
-        (
-            namedArgs[i].first() == "fields"
-         || namedArgs[i].first() == "objects"
-        )
-        {
-            IStringStream iss(namedArgs[i].second());
-            fieldArgs.append(List<wordAndDictionary>(iss));
-        }
-    }
-    if (fieldArgs.size() == 1)
-    {
-        funcDict.set("field", fieldArgs[0].first());
-        funcDict.merge(fieldArgs[0].second());
-    }
-    if (fieldArgs.size() >= 1)
-    {
-        funcDict.set("fields", fieldArgs);
-        funcDict.set("objects", fieldArgs);
-    }
-
-    // Insert non-field arguments
-    forAll(namedArgs, i)
-    {
-        if
-        (
-            namedArgs[i].first() != "field"
-         && namedArgs[i].first() != "fields"
-         && namedArgs[i].first() != "objects"
-        )
-        {
-            const Pair<word> dAk(dictAndKeyword(namedArgs[i].first()));
-            dictionary& subDict(funcDict.scopedDict(dAk.first()));
-            IStringStream entryStream
-            (
-                dAk.second() + ' ' + namedArgs[i].second() + ';'
-            );
-            subDict.set(entry::New(entryStream).ptr());
-        }
-    }
-
-    // Insert the region name if specified
-    if (region != word::null)
-    {
-        funcDict.set("region", region);
-    }
-
-    // Set the name of the function entry to that specified by the optional
-    // funcName argument otherwise automatically generate a unique name
-    // from the function type and arguments
-    const word funcName
-    (
-        funcDict.lookupOrDefault("funcName", string::validate<word>(funcArgs))
-    );
-
-    // Check for anything in the configuration that has not been set
-    List<Tuple2<word, string>> unsetArgs = unsetEntries(funcDict);
-    bool hasUnsetError = false;
-    forAll(unsetArgs, i)
-    {
-        if
-        (
-            unsetArgs[i].first() != "fields"
-         && unsetArgs[i].first() != "objects"
-        )
-        {
-            hasUnsetError = true;
-        }
-    }
-    if (!hasUnsetError)
-    {
-        forAll(unsetArgs, i)
-        {
-            funcDict.set(unsetArgs[i].first(), wordList());
-        }
-    }
-    else
-    {
-        FatalIOErrorInFunction(funcDict0)
-            << nl;
-
-        forAll(unsetArgs, i)
-        {
-            FatalIOErrorInFunction(funcDict0)
-                << "Essential value for keyword '" << unsetArgs[i].first()
-                << "' not set" << nl;
-        }
-
-        FatalIOErrorInFunction(funcDict0)
-            << nl << "In function entry:" << nl
-            << "    " << funcArgs.c_str() << nl
-            << nl << "In " << contextTypeAndValue.first().c_str() << ":" << nl
-            << "    " << contextTypeAndValue.second().c_str() << nl;
-
-        word funcType;
-        wordReList args;
-        List<Tuple2<word, string>> namedArgs;
-        dictArgList(funcArgs, funcType, args, namedArgs);
-
-        string argList;
-        forAll(args, i)
-        {
-            args[i].strip(" \n");
-            argList += (argList.size() ? ", " : "") + args[i];
-        }
-        forAll(namedArgs, i)
-        {
-            namedArgs[i].second().strip(" \n");
-            argList +=
-                (argList.size() ? ", " : "")
-              + namedArgs[i].first() + " = " + namedArgs[i].second();
-        }
-        forAll(unsetArgs, i)
-        {
-            unsetArgs[i].second().strip(" \n");
-            argList +=
-                (argList.size() ? ", " : "")
-              + unsetArgs[i].first() + " = " + unsetArgs[i].second();
-        }
-
-        FatalIOErrorInFunction(funcDict0)
-            << nl << "The function entry should be:" << nl
-            << "    " << funcType << '(' << argList.c_str() << ')'
-            << exit(FatalIOError);
-    }
-
-    // Re-parse the funcDict to execute the functionEntries
-    // now that the function argument entries have been added
-    dictionary funcArgsDict;
-    funcArgsDict.add(funcName, funcDict);
-    {
-        OStringStream os;
-        funcArgsDict.write(os);
-        funcArgsDict = dictionary
-        (
-            funcType,
-            functionsDict,
-            IStringStream(os.str())()
-        );
-    }
-
-    // Merge this functionObject dictionary into functionsDict
-    functionsDict.merge(funcArgsDict);
-    functionsDict.subDict(funcName).name() = funcDict.name();
-
-    return true;
 }
 
 
@@ -538,10 +142,11 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
 
         if (args.optionFound("func"))
         {
-            readFunctionObject
+            readConfigFile
             (
                 args["func"],
                 functionsDict,
+                functionEntries::includeFuncEntry::functionObjectDictPath,
                 {"command", args.commandLine()},
                 region
             );
@@ -553,10 +158,11 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
 
             forAll(funcs, i)
             {
-                readFunctionObject
+                readConfigFile
                 (
                     funcs[i],
                     functionsDict,
+                    functionEntries::includeFuncEntry::functionObjectDictPath,
                     {"command", args.commandLine()},
                     region
                 );

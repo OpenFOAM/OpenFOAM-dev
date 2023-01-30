@@ -13,17 +13,16 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-limitp
-{
-    type       limitPressure;
+type       limitPressure;
 
-    // limits can be specified absolute
-    // min        200;
-    // max        500;
+selectionMode all;
 
-    // ... or as multipliers on initial min/max values
-    minFactor  0.1;
-    maxFactor  1.5;
-}
+// limits can be specified absolute
+// min        <200>;
+// max        <500>;
+
+// ... or as multipliers on initial min/max values
+minFactor  <0.1>;
+maxFactor  <1.5>;
 
 //************************************************************************** //

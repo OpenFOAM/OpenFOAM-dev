@@ -500,10 +500,12 @@ $(MRF)/derivedFvPatchFields/MRFFreestreamVelocity/MRFFreestreamVelocityFvPatchVe
 fvModels = $(general)/fvModels
 $(fvModels)/fvModel.C
 $(fvModels)/fvModels.C
+$(fvModels)/includeFvModelEntry/includeFvModelEntry.C
 
 fvConstraints = $(general)/fvConstraints
 $(fvConstraints)/fvConstraint.C
 $(fvConstraints)/fvConstraints.C
+$(fvConstraints)/includeFvConstraintEntry/includeFvConstraintEntry.C
 
 cellSources = sets/cellSources
 $(cellSources)/fieldToCell/fieldToCell.C

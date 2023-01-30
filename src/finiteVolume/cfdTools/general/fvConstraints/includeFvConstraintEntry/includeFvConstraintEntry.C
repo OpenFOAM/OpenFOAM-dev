@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "includeFuncEntry.H"
+#include "includeFvConstraintEntry.H"
 #include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,12 +32,12 @@ namespace Foam
 {
 namespace functionEntries
 {
-    defineTypeNameAndDebug(includeFuncEntry, 0);
+    defineTypeNameAndDebug(includeFvConstraintEntry, 0);
 
     addToMemberFunctionSelectionTable
     (
         functionEntry,
-        includeFuncEntry,
+        includeFvConstraintEntry,
         execute,
         dictionaryIstream
     );
@@ -45,15 +45,16 @@ namespace functionEntries
 }
 
 
-Foam::fileName Foam::functionEntries::includeFuncEntry::functionObjectDictPath
+Foam::fileName
+Foam::functionEntries::includeFvConstraintEntry::fvConstraintDictPath
 (
-    "caseDicts/postProcessing"
+    "caseDicts/fvConstraints"
 );
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionEntries::includeFuncEntry::execute
+bool Foam::functionEntries::includeFvConstraintEntry::execute
 (
     dictionary& parentDict,
     Istream& is
@@ -66,7 +67,7 @@ bool Foam::functionEntries::includeFuncEntry::execute
     (
         fNameArgs,
         parentDict,
-        functionObjectDictPath,
+        fvConstraintDictPath,
         {"file", is.name() + " at line " + Foam::name(is.lineNumber())}
     );
 }

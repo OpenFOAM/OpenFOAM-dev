@@ -14,29 +14,8 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-limitp
-{
-    type       limitPressure;
-
-    min        1e4;
-}
-
-limitTsteam
-{
-    type            limitTemperature;
-    selectionMode   all;
-    min             270;
-    max             2000;
-    phase           steam;
-}
-
-limitTwater
-{
-    type            limitTemperature;
-    selectionMode   all;
-    min             270;
-    max             2000;
-    phase           water;
-}
+#includeConstraint limitLowPressure(min=1e4)
+#includeConstraint limitTemperature(phase=steam, min=270, max=2000)
+#includeConstraint limitTemperature(phase=water, min=270, max=2000)
 
 // ************************************************************************* //

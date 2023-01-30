@@ -9,12 +9,12 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      fvModels;
+    object      surfaceFilms;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeModel clouds
-#includeModel surfaceFilms
+type    surfaceFilms;
+
+libs    ("libsurfaceFilmModels.so");
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,10 @@ License
 #include "IOobject.H"
 #include "inputSyntaxEntry.H"
 #include "inputModeEntry.H"
+#include "stringOps.H"
+#include "etcFiles.H"
+#include "wordAndDictionary.H"
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -176,13 +180,6 @@ bool Foam::dictionary::substituteKeyword(const word& keyword)
 }
 
 
-// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
-
-void Foam::writeEntry(Ostream& os, const dictionary& value)
-{
-    os << value;
-}
-
 
 // * * * * * * * * * * * * * * Istream Operator  * * * * * * * * * * * * * * //
 
@@ -245,6 +242,416 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const dictionary& dict)
 {
     dict.write(os, true);
     return os;
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+Foam::List<Foam::Tuple2<Foam::word, Foam::string>>
+unsetConfigEntries(const dictionary& configDict)
+{
+    const wordRe unsetPattern("<.*>");
+    unsetPattern.compile();
+
+    List<Tuple2<word, string>> unsetArgs;
+
+    forAllConstIter(IDLList<entry>, configDict, iter)
+    {
+        if (iter().isStream())
+        {
+            ITstream& its = iter().stream();
+            OStringStream oss;
+            bool isUnset = false;
+
+            forAll(its, i)
+            {
+                oss << its[i];
+                if (its[i].isWord() && unsetPattern.match(its[i].wordToken()))
+                {
+                    isUnset = true;
+                }
+            }
+
+            if (isUnset)
+            {
+                unsetArgs.append
+                (
+                    Tuple2<word, string>
+                    (
+                        iter().keyword(),
+                        oss.str()
+                    )
+                );
+            }
+        }
+        else
+        {
+            List<Tuple2<word, string>> subUnsetArgs =
+                unsetConfigEntries(iter().dict());
+
+            forAll(subUnsetArgs, i)
+            {
+                unsetArgs.append
+                (
+                    Tuple2<word, string>
+                    (
+                        iter().keyword() + '/' + subUnsetArgs[i].first(),
+                        subUnsetArgs[i].second()
+                    )
+                );
+            }
+        }
+    }
+
+    return unsetArgs;
+}
+
+
+void listConfigFiles
+(
+    const fileName& dir,
+    HashSet<word>& foMap
+)
+{
+    // Search specified directory for configuration files
+    {
+        fileNameList foFiles(fileHandler().readDir(dir));
+        forAll(foFiles, f)
+        {
+            if (foFiles[f].ext().empty())
+            {
+                foMap.insert(foFiles[f]);
+            }
+        }
+    }
+
+    // Recurse into sub-directories
+    {
+        fileNameList foDirs(fileHandler().readDir(dir, fileType::directory));
+        forAll(foDirs, fd)
+        {
+            listConfigFiles(dir/foDirs[fd], foMap);
+        }
+    }
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+Foam::fileName Foam::findConfigFile
+(
+    const word& funcName,
+    const fileName& configFilesPath,
+    const word& region
+)
+{
+    // First check if there is a configuration file in the
+    // region system directory
+    {
+        const fileName dictFile
+        (
+            stringOps::expand("$FOAM_CASE")/"system"/region/funcName
+        );
+
+        if (isFile(dictFile))
+        {
+            return dictFile;
+        }
+    }
+
+    // Next, if the region is specified, check if there is a configuration file
+    // in the global system directory
+    if (region != word::null)
+    {
+        const fileName dictFile
+        (
+            stringOps::expand("$FOAM_CASE")/"system"/funcName
+        );
+
+        if (isFile(dictFile))
+        {
+            return dictFile;
+        }
+    }
+
+    // Finally, check etc directories
+    {
+        const fileNameList etcDirs(findEtcDirs(configFilesPath));
+
+        forAll(etcDirs, i)
+        {
+            const fileName dictFile(search(funcName, etcDirs[i]));
+
+            if (!dictFile.empty())
+            {
+                return dictFile;
+            }
+        }
+    }
+
+    return fileName::null;
+}
+
+
+Foam::wordList Foam::listAllConfigFiles
+(
+    const fileName& configFilesPath
+)
+{
+    HashSet<word> foMap;
+
+    fileNameList etcDirs(findEtcDirs(configFilesPath));
+
+    forAll(etcDirs, ed)
+    {
+        listConfigFiles(etcDirs[ed], foMap);
+    }
+
+    return foMap.sortedToc();
+}
+
+
+bool Foam::readConfigFile
+(
+    const string& argString,
+    dictionary& parentDict,
+    const fileName& configFilesPath,
+    const Pair<string>& contextTypeAndValue,
+    const word& region
+)
+{
+    word funcType;
+    wordReList args;
+    List<Tuple2<word, string>> namedArgs;
+
+    dictArgList(argString, funcType, args, namedArgs);
+
+    // Search for the configuration file
+    fileName path = findConfigFile(funcType, configFilesPath, region);
+
+    if (path == fileName::null)
+    {
+        if (funcType == word::null)
+        {
+            FatalIOErrorInFunction(parentDict)
+                << "configuration file name not specified"
+                << nl << nl
+                << "Available configured objects:"
+                << listAllConfigFiles(configFilesPath)
+                << exit(FatalIOError);
+        }
+        else
+        {
+            FatalIOErrorInFunction(parentDict)
+                << "Cannot find configuration file "
+                << funcType << nl << nl
+                << "Available configured objects:"
+                << listAllConfigFiles(configFilesPath)
+                << exit(FatalIOError);
+        }
+
+        return false;
+    }
+
+    // Read the configuration file
+    autoPtr<ISstream> fileStreamPtr(fileHandler().NewIFstream(path));
+    ISstream& fileStream = fileStreamPtr();
+
+    // Delay processing the functionEntries
+    // until after the function argument entries have been added
+    entry::disableFunctionEntries = true;
+    dictionary funcsDict(funcType, parentDict, fileStream);
+    entry::disableFunctionEntries = false;
+
+    dictionary* funcDictPtr = &funcsDict;
+
+    if (funcsDict.found(funcType) && funcsDict.isDict(funcType))
+    {
+        funcDictPtr = &funcsDict.subDict(funcType);
+    }
+
+    dictionary& funcDict = *funcDictPtr;
+
+    // Store the funcDict as read for error reporting context
+    const dictionary funcDict0(funcDict);
+
+    // Insert the 'field' and/or 'fields' and 'objects' entries corresponding
+    // to both the arguments and the named arguments
+    DynamicList<wordAndDictionary> fieldArgs;
+    forAll(args, i)
+    {
+        fieldArgs.append(wordAndDictionary(args[i], dictionary::null));
+    }
+    forAll(namedArgs, i)
+    {
+        if (namedArgs[i].first() == "field")
+        {
+            IStringStream iss(namedArgs[i].second());
+            fieldArgs.append(wordAndDictionary(iss));
+        }
+        if
+        (
+            namedArgs[i].first() == "fields"
+         || namedArgs[i].first() == "objects"
+        )
+        {
+            IStringStream iss(namedArgs[i].second());
+            fieldArgs.append(List<wordAndDictionary>(iss));
+        }
+    }
+    if (fieldArgs.size() == 1)
+    {
+        funcDict.set("field", fieldArgs[0].first());
+        funcDict.merge(fieldArgs[0].second());
+    }
+    if (fieldArgs.size() >= 1)
+    {
+        funcDict.set("fields", fieldArgs);
+        funcDict.set("objects", fieldArgs);
+    }
+
+    // Insert non-field arguments
+    forAll(namedArgs, i)
+    {
+        if
+        (
+            namedArgs[i].first() != "field"
+         && namedArgs[i].first() != "fields"
+         && namedArgs[i].first() != "objects"
+        )
+        {
+            const Pair<word> dAk(dictAndKeyword(namedArgs[i].first()));
+            dictionary& subDict(funcDict.scopedDict(dAk.first()));
+            IStringStream entryStream
+            (
+                dAk.second() + ' ' + namedArgs[i].second() + ';'
+            );
+            subDict.set(entry::New(entryStream).ptr());
+        }
+    }
+
+    // Insert the region name if specified
+    if (region != word::null)
+    {
+        funcDict.set("region", region);
+    }
+
+    // Set the name of the function entry to that specified by the optional
+    // funcName argument otherwise automatically generate a unique name
+    // from the function type and arguments
+    const word funcName
+    (
+        funcDict.lookupOrDefault("funcName", string::validate<word>(argString))
+    );
+
+    // Check for anything in the configuration that has not been set
+    List<Tuple2<word, string>> unsetArgs = unsetConfigEntries(funcDict);
+    bool hasUnsetError = false;
+    forAll(unsetArgs, i)
+    {
+        if
+        (
+            unsetArgs[i].first() != "fields"
+         && unsetArgs[i].first() != "objects"
+        )
+        {
+            hasUnsetError = true;
+        }
+    }
+    if (!hasUnsetError)
+    {
+        forAll(unsetArgs, i)
+        {
+            funcDict.set(unsetArgs[i].first(), wordList());
+        }
+    }
+    else
+    {
+        FatalIOErrorInFunction(funcDict0)
+            << nl;
+
+        forAll(unsetArgs, i)
+        {
+            FatalIOErrorInFunction(funcDict0)
+                << "Essential value for keyword '" << unsetArgs[i].first()
+                << "' not set" << nl;
+        }
+
+        FatalIOErrorInFunction(funcDict0)
+            << nl << "In function entry:" << nl
+            << "    " << argString.c_str() << nl
+            << nl << "In " << contextTypeAndValue.first().c_str() << ":" << nl
+            << "    " << contextTypeAndValue.second().c_str() << nl;
+
+        word funcType;
+        wordReList args;
+        List<Tuple2<word, string>> namedArgs;
+        dictArgList(argString, funcType, args, namedArgs);
+
+        string argList;
+        forAll(args, i)
+        {
+            args[i].strip(" \n");
+            argList += (argList.size() ? ", " : "") + args[i];
+        }
+        forAll(namedArgs, i)
+        {
+            namedArgs[i].second().strip(" \n");
+            argList +=
+                (argList.size() ? ", " : "")
+              + namedArgs[i].first() + " = " + namedArgs[i].second();
+        }
+        forAll(unsetArgs, i)
+        {
+            unsetArgs[i].second().strip(" \n");
+            argList +=
+                (argList.size() ? ", " : "")
+              + unsetArgs[i].first() + " = " + unsetArgs[i].second();
+        }
+
+        FatalIOErrorInFunction(funcDict0)
+            << nl << "The function entry should be:" << nl
+            << "    " << funcType << '(' << argList.c_str() << ')'
+            << exit(FatalIOError);
+    }
+
+    // Re-parse the funcDict to execute the functionEntries
+    // now that the function argument entries have been added
+    dictionary funcArgsDict;
+    funcArgsDict.add(funcName, funcDict);
+    {
+        OStringStream os;
+        funcArgsDict.write(os);
+        funcArgsDict = dictionary
+        (
+            funcType,
+            parentDict,
+            IStringStream(os.str())()
+        );
+    }
+
+    // Merge this configuration dictionary into parentDict
+    parentDict.merge(funcArgsDict);
+    parentDict.subDict(funcName).name() = funcDict.name();
+
+    return true;
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+void Foam::writeEntry(Ostream& os, const dictionary& value)
+{
+    os << value;
 }
 
 
