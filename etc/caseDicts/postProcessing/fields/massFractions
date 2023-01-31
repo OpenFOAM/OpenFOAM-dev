@@ -1,0 +1,20 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates mass-fraction fields from mole-fraction fields, or moles fields,
+    and a multicomponent thermo.
+
+\*---------------------------------------------------------------------------*/
+
+type            massFractions;
+libs            ("libmulticomponentThermophysicalModels.so");
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //

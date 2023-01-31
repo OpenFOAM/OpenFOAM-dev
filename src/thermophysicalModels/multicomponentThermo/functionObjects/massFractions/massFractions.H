@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::moleFractions
+    Foam::functionObjects::massFractions
 
 Description
-    This function object calculates mole-fraction fields from the mass-fraction
-    fields of the multicomponent thermo. The names of the mole-fraction fields
-    are obtained from the corresponding mass-fraction fields prepended by "X_".
+    This function object calculates mass-fraction fields from mole-fraction or
+    moles fields present on disk. This is intended to be used for
+    initialisation where mole-fractions are known. If any mass fraction fields
+    are found (other than Ydefault) then an error will be generated and the
+    fields will not be overwritten. The names of the mole-fraction fields are
+    obtained from the corresponding mass-fraction fields prepended by "X_", and
+    the moles fields are prepended by "n_". Either mole-fraction fields or
+    moles fields should be present, not both.
 
     Example of function object specification:
     \verbatim
-    moleFractions
+    massFractions
     {
-        type moleFractions;
+        type massFractions;
     }
     \endverbatim
 
@@ -43,12 +48,12 @@ See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
-    moleFractions.C
+    massFractions.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_moleFractions_H
-#define functionObjects_moleFractions_H
+#ifndef functionObjects_massFractions_H
+#define functionObjects_massFractions_H
 
 #include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
@@ -61,10 +66,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class moleFractions Declaration
+                        Class massFractions Declaration
 \*---------------------------------------------------------------------------*/
 
-class moleFractions
+class massFractions
 :
     public functionObjects::fvMeshFunctionObject
 {
@@ -73,32 +78,32 @@ class moleFractions
         //- Optional phase name
         word phaseName_;
 
-        //- Species mole fractions
-        PtrList<volScalarField> X_;
+        //- Species mass fractions
+        PtrList<volScalarField> Y_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("moleFractions");
+    TypeName("massFractions");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        moleFractions(const word& name, const Time& t, const dictionary& dict);
+        massFractions(const word& name, const Time& t, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        moleFractions(const moleFractions&) = delete;
+        massFractions(const massFractions&) = delete;
 
 
     //- Destructor
-    virtual ~moleFractions();
+    virtual ~massFractions();
 
 
     // Member Functions
 
-        //- Read the moleFractions data
+        //- Read the massFractions data
         virtual bool read(const dictionary&);
 
         //- Return the list of fields required
@@ -107,17 +112,17 @@ public:
             return wordList::null();
         }
 
-        //- Calculate the mole-fraction fields
+        //- Calculate the mass-fraction fields
         virtual bool execute();
 
-        //- The mole-fraction fields auto-write
+        //- The mass-fraction fields auto-write
         virtual bool write();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const moleFractions&) = delete;
+        void operator=(const massFractions&) = delete;
 };
 
 

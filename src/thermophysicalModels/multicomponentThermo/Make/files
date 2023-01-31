@@ -16,6 +16,7 @@ derivedFvPatchFields/fixedUnburntEnthalpy/fixedUnburntEnthalpyFvPatchScalarField
 derivedFvPatchFields/gradientUnburntEnthalpy/gradientUnburntEnthalpyFvPatchScalarField.C
 derivedFvPatchFields/mixedUnburntEnthalpy/mixedUnburntEnthalpyFvPatchScalarField.C
 
-functionObjects/moleFractions/moleFractionsFunctionObjects.C
+functionObjects/moleFractions/moleFractions.C
+functionObjects/massFractions/massFractions.C
 
 LIB = $(FOAM_LIBBIN)/libmulticomponentThermophysicalModels

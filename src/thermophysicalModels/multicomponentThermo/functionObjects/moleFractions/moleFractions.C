@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,41 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "moleFractions.H"
-#include "basicThermo.H"
+#include "fluidMulticomponentThermo.H"
+#include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template<class ThermoType>
-void Foam::moleFractions<ThermoType>::calculateMoleFractions()
+namespace Foam
 {
-    const ThermoType& thermo =
-        mesh_.lookupObject<ThermoType>
-        (
-            IOobject::groupName(physicalProperties::typeName, phaseName_)
-        );
-
-    const PtrList<volScalarField>& Y = thermo.composition().Y();
-
-    const volScalarField W(thermo.W());
-
-    forAll(Y, i)
-    {
-        const dimensionedScalar Wi
-        (
-            "Wi",
-            dimMass/dimMoles,
-            thermo.composition().Wi(i)
-        );
-
-        X_[i] = W*Y[i]/Wi;
-    }
+namespace functionObjects
+{
+    defineTypeNameAndDebug(moleFractions, 0);
+    addToRunTimeSelectionTable(functionObject, moleFractions, dictionary);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::moleFractions<ThermoType>::moleFractions
+Foam::functionObjects::moleFractions::moleFractions
 (
     const word& name,
     const Time& runTime,
@@ -66,19 +49,45 @@ Foam::moleFractions<ThermoType>::moleFractions
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    phaseName_(dict.lookupOrDefault<word>("phase", word::null))
+    phaseName_(dict.lookupOrDefault<word>("phase", word::null)),
+    X_()
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::moleFractions::~moleFractions()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::functionObjects::moleFractions::read(const dictionary& dict)
 {
-    const word dictName
+    return true;
+}
+
+
+bool Foam::functionObjects::moleFractions::execute()
+{
+    // Lookup or construct a multicomponent thermo. Lookup is likely to be
+    // appropriate if this is being used at run-time. Construction if this is
+    // being called as a one-off post-process.
+    const word thermoName =
+        IOobject::groupName(physicalProperties::typeName, phaseName_);
+    autoPtr<fluidMulticomponentThermo> thermoPtr
     (
-        IOobject::groupName(physicalProperties::typeName, phaseName_)
+        mesh_.foundObject<fluidMulticomponentThermo>(thermoName)
+      ? autoPtr<fluidMulticomponentThermo>(nullptr)
+      : fluidMulticomponentThermo::New(mesh_)
     );
+    const fluidMulticomponentThermo& thermo =
+        mesh_.lookupObject<fluidMulticomponentThermo>(thermoName);
 
-    if (mesh_.foundObject<ThermoType>(dictName))
+    // Construct mole fraction fields corresponding to the mass fraction fields
+    const PtrList<volScalarField>& Y = thermo.composition().Y();
+    if (X_.empty())
     {
-        const ThermoType& thermo = mesh_.lookupObject<ThermoType>(dictName);
-
-        const PtrList<volScalarField>& Y = thermo.composition().Y();
-
         X_.setSize(Y.size());
 
         forAll(Y, i)
@@ -99,60 +108,29 @@ Foam::moleFractions<ThermoType>::moleFractions
                 )
             );
         }
-
-        calculateMoleFractions();
     }
-    else
+
+    // Get the mixture molar mass
+    const volScalarField W(thermo.W());
+
+    // Calculate the mole fractions
+    forAll(Y, i)
     {
-        if (phaseName_ != word::null)
-        {
-            FatalErrorInFunction
-                << "Cannot find thermodynamics model of type "
-                << ThermoType::typeName
-                << " for phase "
-                << phaseName_
-                << exit(FatalError);
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Cannot find thermodynamics model of type "
-                << ThermoType::typeName
-                << exit(FatalError);
-        }
+        const dimensionedScalar Wi
+        (
+            "Wi",
+            dimMass/dimMoles,
+            thermo.composition().Wi(i)
+        );
+
+        X_[i] = Y[i]*W/Wi;
     }
-}
 
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class ThermoType>
-Foam::moleFractions<ThermoType>::~moleFractions()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class ThermoType>
-bool Foam::moleFractions<ThermoType>::read
-(
-    const dictionary& dict
-)
-{
     return true;
 }
 
 
-template<class ThermoType>
-bool Foam::moleFractions<ThermoType>::execute()
-{
-    calculateMoleFractions();
-    return true;
-}
-
-
-template<class ThermoType>
-bool Foam::moleFractions<ThermoType>::write()
+bool Foam::functionObjects::moleFractions::write()
 {
     forAll(X_, i)
     {
