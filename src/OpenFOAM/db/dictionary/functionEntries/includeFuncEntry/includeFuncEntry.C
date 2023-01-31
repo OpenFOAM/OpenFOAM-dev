@@ -64,6 +64,7 @@ bool Foam::functionEntries::includeFuncEntry::execute
 
     return readConfigFile
     (
+        "function",
         fNameArgs,
         parentDict,
         functionObjectDictPath,

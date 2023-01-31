@@ -52,8 +52,8 @@ maxCo           0.5;
 
 functions
 {
-    #includeFunc patchFlowRate(patch=inlet, funcName=inletFlowRate)
-    #includeFunc patchFlowRate(patch=outlet, funcName=outletFlowRate)
+    #includeFunc patchFlowRate(patch=inlet, entryName=inletFlowRate)
+    #includeFunc patchFlowRate(patch=outlet, entryName=outletFlowRate)
 }
 
 

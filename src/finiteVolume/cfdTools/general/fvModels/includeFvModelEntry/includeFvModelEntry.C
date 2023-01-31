@@ -64,6 +64,7 @@ bool Foam::functionEntries::includeFvModelEntry::execute
 
     return readConfigFile
     (
+        "model",
         fNameArgs,
         parentDict,
         fvModelDictPath,

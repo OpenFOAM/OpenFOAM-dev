@@ -53,12 +53,7 @@ functions
     clouds
     {
         type            fvModel;
-
-        fvModel
-        {
-            type    clouds;
-            libs    ("liblagrangianParcel.so");
-        }
+        #includeModel clouds(entryName=fvModel)
     }
 }
 

@@ -60,7 +60,7 @@ functions
         functionType=numberDensity,
         coordinateType=diameter,
         normalise=yes,
-        funcName=numberDensity
+        entryName=numberDensity
     )
 
     #includeFunc populationBalanceSizeDistribution
@@ -69,7 +69,7 @@ functions
         functionType=volumeDensity,
         coordinateType=diameter,
         normalise=yes,
-        funcName=volumeDensity
+        entryName=volumeDensity
     )
 }
 

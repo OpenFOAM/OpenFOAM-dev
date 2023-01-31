@@ -52,7 +52,7 @@ functions
 
     #includeFunc graphUniform
     (
-        funcName=wallShearStressGraph,
+        entryName=wallShearStressGraph,
         start=(0.04075 0.00075 0),
         end=(3.04 0.00075 0),
         nPoints=100,
@@ -62,7 +62,7 @@ functions
 
     #includeFunc graphUniform
     (
-        funcName=kGraph,
+        entryName=kGraph,
         start=(0.04075 0.05 0),
         end=(3.04 0.05 0),
         nPoints=100,

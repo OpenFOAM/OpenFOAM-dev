@@ -65,6 +65,7 @@ bool Foam::functionEntries::includeFvConstraintEntry::execute
 
     return readConfigFile
     (
+        "constraint",
         fNameArgs,
         parentDict,
         fvConstraintDictPath,

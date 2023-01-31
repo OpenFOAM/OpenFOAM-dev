@@ -59,7 +59,7 @@ functions
         populationBalance=bubbles,
         functionType=numberDensity,
         coordinateType=volume,
-        funcName=numberDensity
+        entryName=numberDensity
     )
 }
 

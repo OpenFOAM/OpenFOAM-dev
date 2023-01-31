@@ -60,9 +60,9 @@ maxDeltaT       0.005;
 
 functions
 {
-    #includeFunc wallHeatFlux(funcName=WHFliquid, writeFields=false, phase=liquid, region=fluid)
-    #includeFunc wallHeatFlux(funcName=WHFgas, writeFields=false, phase=gas, region=fluid)
-    #includeFunc wallHeatFlux(funcName=WHFsolid, writeFields=false, region=solid, log=yes)
+    #includeFunc wallHeatFlux(entryName=WHFliquid, writeFields=false, phase=liquid, region=fluid)
+    #includeFunc wallHeatFlux(entryName=WHFgas, writeFields=false, phase=gas, region=fluid)
+    #includeFunc wallHeatFlux(entryName=WHFsolid, writeFields=false, region=solid, log=yes)
 
     writeWallBoilingProperties
     {

@@ -56,7 +56,7 @@ functions
 {
     #includeFunc graphCell
     (
-        funcName=graph,
+        entryName=graph,
         start=(0 0 1e-3),
         end=(0.44 0 1e-3),
         fields=(TiCl4.vapour O2.vapour Cl2.vapour alpha.particles)
@@ -72,7 +72,7 @@ functions
         allCoordinates=yes,
         normalise=yes,
         logTransform=yes,
-        funcName=numberDensity
+        entryName=numberDensity
     )
 
     #includeFunc writeObjects

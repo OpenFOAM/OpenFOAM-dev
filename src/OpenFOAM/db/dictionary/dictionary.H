@@ -751,7 +751,7 @@ dictionary operator|(const dictionary& dict1, const dictionary& dict2);
 void dictArgList
 (
     const string& argString,
-    word& funcName,
+    word& configName,
     wordReList& args,
     List<Tuple2<word, string>>& namedArgs
 );
@@ -810,7 +810,7 @@ wordList listAllConfigFiles
 //  otherwise null
 fileName findConfigFile
 (
-    const word& funcName,
+    const word& configName,
     const fileName& configFilesPath,
     const word& region = word::null
 );
@@ -822,19 +822,20 @@ fileName findConfigFile
 //  'parentDict'.
 //
 //  Parses the optional arguments:
-//      'Q(U)' -> funcName = Q; args = (U)
+//      'Q(U)' -> configFileName = Q; args = (U)
 //             -> field U;
 //
 //  Supports named arguments:
 //      'patchAverage(patch=inlet, p,U)'
 //  or
 //      'patchAverage(patch=inlet, field=(p U))'
-//       -> funcName = patchAverage;
+//       -> configFileName = patchAverage;
 //          args = (patch=inlet, p,U)
 //       -> patch inlet;
 //          fields (p U);
 bool readConfigFile
 (
+    const word& configType,
     const string& argString,
     dictionary& parentDict,
     const fileName& configFilesPath,

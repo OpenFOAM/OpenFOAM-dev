@@ -11,7 +11,7 @@ runApplication -s age foamPostProcess -solver $(getSolver) -latestTime \
 runApplication -s probes1 foamPostProcess -func probes1 -latestTime
 runApplication -s probes2 foamPostProcess -func probes2 -latestTime
 runApplication -s patchFlowRate foamPostProcess -latestTime \
-    -func "patchFlowRate(funcName=inletFlowRate,patch=inlet)" -latestTime
+    -func "patchFlowRate(entryName=inletFlowRate,patch=inlet)" -latestTime
 
 (cd validation && ./Allrun $*)
 

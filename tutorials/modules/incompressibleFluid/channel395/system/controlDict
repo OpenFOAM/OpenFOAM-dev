@@ -64,7 +64,7 @@ functions
 
     #includeFunc graphLayerAverage
     (
-        funcName = layerAverage,
+        entryName = layerAverage,
         patches = (bottomWall),
         axis = y,
         symmetric = yes,

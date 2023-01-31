@@ -17,7 +17,7 @@ runApplication reconstructPar -latestTime
 runApplication foamPostProcess -func "
     graphLayerAverage
     (
-        funcName=graphCrossSection,
+        entryName=graphCrossSection,
         patches=(inlet),
         axis=distance,
         d.particles

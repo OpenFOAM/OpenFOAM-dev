@@ -349,7 +349,7 @@ void listConfigFiles
 
 Foam::fileName Foam::findConfigFile
 (
-    const word& funcName,
+    const word& configName,
     const fileName& configFilesPath,
     const word& region
 )
@@ -359,7 +359,7 @@ Foam::fileName Foam::findConfigFile
     {
         const fileName dictFile
         (
-            stringOps::expand("$FOAM_CASE")/"system"/region/funcName
+            stringOps::expand("$FOAM_CASE")/"system"/region/configName
         );
 
         if (isFile(dictFile))
@@ -374,7 +374,7 @@ Foam::fileName Foam::findConfigFile
     {
         const fileName dictFile
         (
-            stringOps::expand("$FOAM_CASE")/"system"/funcName
+            stringOps::expand("$FOAM_CASE")/"system"/configName
         );
 
         if (isFile(dictFile))
@@ -389,7 +389,7 @@ Foam::fileName Foam::findConfigFile
 
         forAll(etcDirs, i)
         {
-            const fileName dictFile(search(funcName, etcDirs[i]));
+            const fileName dictFile(search(configName, etcDirs[i]));
 
             if (!dictFile.empty())
             {
@@ -422,6 +422,7 @@ Foam::wordList Foam::listAllConfigFiles
 
 bool Foam::readConfigFile
 (
+    const word& configType,
     const string& argString,
     dictionary& parentDict,
     const fileName& configFilesPath,
@@ -467,7 +468,7 @@ bool Foam::readConfigFile
     ISstream& fileStream = fileStreamPtr();
 
     // Delay processing the functionEntries
-    // until after the function argument entries have been added
+    // until after the argument entries have been added
     entry::disableFunctionEntries = true;
     dictionary funcsDict(funcType, parentDict, fileStream);
     entry::disableFunctionEntries = false;
@@ -545,12 +546,16 @@ bool Foam::readConfigFile
         funcDict.set("region", region);
     }
 
-    // Set the name of the function entry to that specified by the optional
-    // funcName argument otherwise automatically generate a unique name
-    // from the function type and arguments
-    const word funcName
+    // Set the name of the entry to that specified by the optional
+    // entryName argument otherwise automatically generate a unique name
+    // from the type and arguments
+    const word entryName
     (
-        funcDict.lookupOrDefault("funcName", string::validate<word>(argString))
+        funcDict.lookupOrDefaultBackwardsCompatible
+        (
+            {"entryName", "funcName"},
+            string::validate<word>(argString)
+        )
     );
 
     // Check for anything in the configuration that has not been set
@@ -587,7 +592,7 @@ bool Foam::readConfigFile
         }
 
         FatalIOErrorInFunction(funcDict0)
-            << nl << "In function entry:" << nl
+            << nl << "In " << configType << " entry:" << nl
             << "    " << argString.c_str() << nl
             << nl << "In " << contextTypeAndValue.first().c_str() << ":" << nl
             << "    " << contextTypeAndValue.second().c_str() << nl;
@@ -619,15 +624,15 @@ bool Foam::readConfigFile
         }
 
         FatalIOErrorInFunction(funcDict0)
-            << nl << "The function entry should be:" << nl
+            << nl << "The " << configType << " entry should be:" << nl
             << "    " << funcType << '(' << argList.c_str() << ')'
             << exit(FatalIOError);
     }
 
     // Re-parse the funcDict to execute the functionEntries
-    // now that the function argument entries have been added
+    // now that the argument entries have been added
     dictionary funcArgsDict;
-    funcArgsDict.add(funcName, funcDict);
+    funcArgsDict.add(entryName, funcDict);
     {
         OStringStream os;
         funcArgsDict.write(os);
@@ -641,7 +646,7 @@ bool Foam::readConfigFile
 
     // Merge this configuration dictionary into parentDict
     parentDict.merge(funcArgsDict);
-    parentDict.subDict(funcName).name() = funcDict.name();
+    parentDict.subDict(entryName).name() = funcDict.name();
 
     return true;
 }

@@ -144,6 +144,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
         {
             readConfigFile
             (
+                "function",
                 args["func"],
                 functionsDict,
                 functionEntries::includeFuncEntry::functionObjectDictPath,
@@ -160,6 +161,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
             {
                 readConfigFile
                 (
+                    "function",
                     funcs[i],
                     functionsDict,
                     functionEntries::includeFuncEntry::functionObjectDictPath,

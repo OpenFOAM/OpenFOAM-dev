@@ -60,7 +60,7 @@ functions
     #includeFunc    phaseForces(phase=water)
     #includeFunc    graphUniform
     (
-        funcName=graph,
+        entryName=graph,
         start=(0 0 0.89),
         end=(0.025 0 0.89),
         nPoints=100,
@@ -83,7 +83,7 @@ functions
         functionType=volumeDensity,
         coordinateType=diameter,
         normalise=yes,
-        funcName=probabilityDensity.injection
+        entryName=probabilityDensity.injection
     )
 
     #includeFunc populationBalanceSizeDistribution
@@ -94,7 +94,7 @@ functions
         functionType=volumeDensity,
         coordinateType=diameter,
         normalise=yes,
-        funcName=probabilityDensity.outlet
+        entryName=probabilityDensity.outlet
     )
 }
 

@@ -63,7 +63,7 @@ functions
         functionType=volumeDensity,
         coordinateType=diameter,
         normalise=yes,
-        funcName=probabilityDensity.afterBend_1d
+        entryName=probabilityDensity.afterBend_1d
     )
 
     #includeFunc populationBalanceSizeDistribution
@@ -74,7 +74,7 @@ functions
         functionType=volumeDensity,
         coordinateType=diameter,
         normalise=yes,
-        funcName=probabilityDensity.afterBend_5d
+        entryName=probabilityDensity.afterBend_5d
     )
 
     #includeFunc populationBalanceSizeDistribution
@@ -85,7 +85,7 @@ functions
         functionType=volumeDensity,
         coordinateType=diameter,
         normalise=yes,
-        funcName=probabilityDensity.afterBend_9d
+        entryName=probabilityDensity.afterBend_9d
     )
 
     #includeFunc populationBalanceSizeDistribution
@@ -96,7 +96,7 @@ functions
         functionType=volumeDensity,
         coordinateType=diameter,
         normalise=yes,
-        funcName=probabilityDensity.beforeBend_1d
+        entryName=probabilityDensity.beforeBend_1d
     )
 }
 
