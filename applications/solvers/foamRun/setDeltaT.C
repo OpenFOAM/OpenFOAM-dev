@@ -56,7 +56,7 @@ void Foam::adjustDeltaT(Time& runTime, const solver& solver)
         (
             min
             (
-                solver::maxIncreaseDeltaT*runTime.deltaTValue(),
+                solver::deltaTFactor*runTime.deltaTValue(),
                 solver.maxDeltaT()
             )
         );
