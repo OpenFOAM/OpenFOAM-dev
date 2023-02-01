@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Foam::functionObjects::uniform::uniform
 :
     fvMeshFunctionObject(name, runTime, dict),
     fieldType_(word::null),
-    name_(word::null),
+    fieldName_(word::null),
     dimensions_(dimless)
 {
     read(dict);
@@ -71,7 +71,7 @@ bool Foam::functionObjects::uniform::read(const dictionary& dict)
     fvMeshFunctionObject::read(dict);
 
     fieldType_ = dict.lookup<word>("fieldType");
-    name_ = dict.lookup<word>("name");
+    fieldName_ = dict.lookupBackwardsCompatible<word>({"field", "name"});
     dimensions_.reset(dict.lookup<dimensionSet>("dimensions"));
 
     bool ok = false;
@@ -114,10 +114,10 @@ bool Foam::functionObjects::uniform::execute()
         {                                                                      \
             store                                                              \
             (                                                                  \
-                name_,                                                         \
+                fieldName_,                                                    \
                 GeoField<Type>::New                                            \
                 (                                                              \
-                    name_,                                                     \
+                    fieldName_,                                                \
                     mesh_,                                                     \
                     dimensioned<Type>(dimensions_, Type##Value_)               \
                 )                                                              \
@@ -133,13 +133,13 @@ bool Foam::functionObjects::uniform::execute()
 
 bool Foam::functionObjects::uniform::write()
 {
-    return writeObject(name_);
+    return writeObject(fieldName_);
 }
 
 
 bool Foam::functionObjects::uniform::clear()
 {
-    return clearObject(name_);
+    return clearObject(fieldName_);
 }
 
 

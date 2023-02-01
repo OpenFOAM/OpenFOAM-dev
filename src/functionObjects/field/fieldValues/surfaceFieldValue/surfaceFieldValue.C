@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -418,13 +418,13 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
     {
         case regionTypes::faceZone:
         {
-            dict.lookup("name") >> regionName_;
+            dict.lookupBackwardsCompatible({"faceZone", "name"}) >> regionName_;
             setFaceZoneFaces();
             break;
         }
         case regionTypes::patch:
         {
-            dict.lookup("name") >> regionName_;
+            dict.lookupBackwardsCompatible({"patch", "name"}) >> regionName_;
             setPatchFaces();
             break;
         }

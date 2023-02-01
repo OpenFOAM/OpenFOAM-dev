@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ bool Foam::functionObjects::volRegion::read
     {
         case vrtCellZone:
         {
-            dict.lookup("name") >> regionName_;
+            dict.lookupBackwardsCompatible({"cellZone", "name"}) >> regionName_;
 
             regionID_ = mesh_.cellZones().findZoneID(regionName_);
 
