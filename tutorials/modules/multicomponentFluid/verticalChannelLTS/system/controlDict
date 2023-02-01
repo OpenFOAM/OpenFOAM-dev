@@ -56,7 +56,7 @@ functions
         writeControl    writeTime;
         log             yes;
         writeFields     no;
-        regionType      patch;
+        select          patch;
         name            outlet;
         operation       average;
         weightField     phi;

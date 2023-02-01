@@ -34,7 +34,7 @@ Usage
     {
         type            limitTemperature;
 
-        selectionMode   all;
+        select          all;
 
         // field           T;   // Optional energy/temperature field name
                                 // Set to T for compressibleVoF

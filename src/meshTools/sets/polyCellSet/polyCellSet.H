@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,26 +30,26 @@ Description
 
     Currently supports cell selection from a set of points, a specified cellSet
     or cellZone or all of the cells.  The selection method can either be
-    specified explicitly using the \c selectionMode entry or inferred from the
+    specified explicitly using the \c select entry or inferred from the
     presence of either a \c cellSet, \c cellZone or \c points entry.  The \c
-    selectionMode entry is required to select \c all cells.
+    select entry is required to select \c all cells.
 
 Usage
     Examples:
     \verbatim
         // Apply everywhere
-        selectionMode   all;
+        select   all;
 
         // Apply within a given cellSet
-        selectionMode   cellSet; // Optional
+        select   cellSet; // Optional
         cellSet         rotor;
 
         // Apply within a given cellZone
-        selectionMode   cellZone; // Optional
-        cellSet         rotor;
+        select   cellZone; // Optional
+        cellZone        rotor;
 
         // Apply in cells containing a list of points
-        selectionMode   points; // Optional
+        select   points; // Optional
         points
         (
             (2.25 0.5 0)
@@ -87,7 +87,7 @@ public:
     // Public data
 
         //- Enumeration for selection mode types
-        enum class selectionModeType
+        enum class selectionTypes
         {
             points,
             cellSet,
@@ -95,27 +95,28 @@ public:
             all
         };
 
-        //- Word list of selection mode type names
-        static const NamedEnum<selectionModeType, 4>
-            selectionModeTypeNames_;
+        //- Word list of selection type names
+        static const NamedEnum<selectionTypes, 4>
+            selectionTypeNames_;
 
 
 private:
 
     // Private data
 
+        //- Reference to the mesh
         const polyMesh& mesh_;
 
-        //- Cell selection mode
-        selectionModeType selectionMode_;
+        //- Cell selection type
+        selectionTypes selectionType_;
 
-        //- Name of cell set for "cellSet" and "cellZone" selectionMode
+        //- Optional name of cell set or zone
         word cellSetName_;
 
-        //- List of points for "points" selectionMode
+        //- Optional list of points
         List<point> points_;
 
-        //- Set of cells to apply source to
+        //- Set of selected cells
         mutable labelList cells_;
 
 
@@ -145,11 +146,10 @@ public:
 
         // Access
 
-            //- Return const access to the cell selection mode
-            inline const selectionModeType& selectionMode() const;
+            //- Return const access to the cell selection type
+            inline const selectionTypes& selectionType() const;
 
-            //- Return const access to the name of cell set for "cellSet"
-            //  selectionMode
+            //- Return const access to the name of cellSet
             inline const word& cellSetName() const;
 
             //- Return const access to the cell set

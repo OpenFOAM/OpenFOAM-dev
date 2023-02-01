@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -250,8 +250,8 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             (
                 IOobject
                 (
-                    fieldName + '_' + regionTypeNames_[regionType_]
-                  + '-' + volRegion::regionName_,
+                    fieldName + '_' + selectionTypeNames_[selectionType_]
+                  + '-' + volRegion::cellZoneName_,
                     obr_.time().name(),
                     obr_,
                     IOobject::NO_READ,
@@ -318,7 +318,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             file() << tab << result.value;
 
             Log << "    " << operationTypeNames_[operation_]
-                << "(" << volRegion::regionName_ << ") of " << fieldName
+                << "(" << volRegion::cellZoneName_ << ") of " << fieldName
                 <<  " = " << result.value;
 
             if (result.celli != -1)

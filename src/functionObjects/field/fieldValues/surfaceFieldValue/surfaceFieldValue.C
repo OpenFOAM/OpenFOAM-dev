@@ -54,7 +54,7 @@ namespace fieldValues
 template<>
 const char* Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::surfaceFieldValue::regionTypes,
+    Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypes,
     3
 >::names[] =
 {
@@ -90,9 +90,9 @@ const char* Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::surfaceFieldValue::regionTypes,
+    Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypes,
     3
-> Foam::functionObjects::fieldValues::surfaceFieldValue::regionTypeNames_;
+> Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypeNames_;
 
 const Foam::NamedEnum
 <
@@ -105,14 +105,15 @@ const Foam::NamedEnum
 
 void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
 {
-    label zoneId = mesh_.faceZones().findZoneID(regionName_);
+    label zoneId = mesh_.faceZones().findZoneID(selectionName_);
 
     if (zoneId < 0)
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
-            << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
-            << "    Unknown face zone name: " << regionName_
+            << selectionTypeNames_[selectionType_]
+            << "(" << selectionName_ << "):" << nl
+            << "    Unknown face zone name: " << selectionName_
             << ". Valid face zones are: " << mesh_.faceZones().names()
             << nl << exit(FatalError);
     }
@@ -175,14 +176,15 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
 
 void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
 {
-    const label patchId = mesh_.boundaryMesh().findPatchID(regionName_);
+    const label patchId = mesh_.boundaryMesh().findPatchID(selectionName_);
 
     if (patchId < 0)
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
-            << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
-            << "    Unknown patch name: " << regionName_
+            << selectionTypeNames_[selectionType_]
+            << "(" << selectionName_ << "):" << nl
+            << "    Unknown patch name: " << selectionName_
             << ". Valid patch names are: "
             << mesh_.boundaryMesh().names() << nl
             << exit(FatalError);
@@ -360,7 +362,7 @@ combineSurfaceGeometry
     pointField& points
 ) const
 {
-    if (regionType_ == regionTypes::sampledSurface)
+    if (selectionType_ == selectionTypes::sampledSurface)
     {
         const sampledSurface& s = surfacePtr_();
 
@@ -396,7 +398,7 @@ combineSurfaceGeometry
 Foam::scalar
 Foam::functionObjects::fieldValues::surfaceFieldValue::totalArea() const
 {
-    if (regionType_ == regionTypes::sampledSurface)
+    if (selectionType_ == selectionTypes::sampledSurface)
     {
         return gSum(surfacePtr_().magSf());
     }
@@ -414,33 +416,35 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
     const dictionary& dict
 )
 {
-    switch (regionType_)
+    switch (selectionType_)
     {
-        case regionTypes::faceZone:
+        case selectionTypes::faceZone:
         {
-            dict.lookupBackwardsCompatible({"faceZone", "name"}) >> regionName_;
+            dict.lookupBackwardsCompatible({"faceZone", "name"})
+                >> selectionName_;
             setFaceZoneFaces();
             break;
         }
-        case regionTypes::patch:
+        case selectionTypes::patch:
         {
-            dict.lookupBackwardsCompatible({"patch", "name"}) >> regionName_;
+            dict.lookupBackwardsCompatible({"patch", "name"}) >> selectionName_;
             setPatchFaces();
             break;
         }
-        case regionTypes::sampledSurface:
+        case selectionTypes::sampledSurface:
         {
             sampledSurfaceFaces(dict);
-            regionName_ = surfacePtr_().name();
+            selectionName_ = surfacePtr_().name();
             break;
         }
         default:
         {
             FatalErrorInFunction
                 << type() << " " << name() << ": "
-                << regionTypeNames_[regionType_] << "(" << regionName_ << "):"
-                << nl << "    Unknown region type. Valid region types are:"
-                << regionTypeNames_.sortedToc() << nl << exit(FatalError);
+                << selectionTypeNames_[selectionType_]
+                << "(" << selectionName_ << "):" << nl
+                << "    Unknown selection type. Valid selection types are:"
+                << selectionTypeNames_.sortedToc() << nl << exit(FatalError);
         }
     }
 
@@ -448,11 +452,12 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
-            << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
-            << "    Region has no faces" << exit(FatalError);
+            << selectionTypeNames_[selectionType_]
+            << "(" << selectionName_ << "):" << nl
+            << " selection has no faces" << exit(FatalError);
     }
 
-    if (regionType_ == regionTypes::sampledSurface)
+    if (selectionType_ == selectionTypes::sampledSurface)
     {
         surfacePtr_().update();
     }
@@ -505,8 +510,10 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::writeFileHeader
 {
     if (operation_ != operationType::none)
     {
-        writeCommented(file(), "Region type : ");
-        file() << regionTypeNames_[regionType_] << " " << regionName_ << endl;
+        writeCommented(file(), "Selection type : ");
+        file()
+            << selectionTypeNames_[selectionType_] << " "
+            << selectionName_ << endl;
         writeCommented(file(), "Faces  : ");
         file() << nFaces_ << endl;
         writeCommented(file(), "Area   : ");
@@ -652,7 +659,14 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     fieldValue(name, runTime, dict, typeName),
     dict_(dict),
     surfaceWriterPtr_(nullptr),
-    regionType_(regionTypeNames_.read(dict.lookup("regionType"))),
+    selectionType_
+    (
+        selectionTypeNames_.read
+        (
+            dict.lookupBackwardsCompatible({"select", "regionType"})
+        )
+    ),
+    selectionName_(word::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
     scaleFactor_(1),
@@ -675,7 +689,14 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     fieldValue(name, obr, dict, typeName),
     dict_(dict),
     surfaceWriterPtr_(nullptr),
-    regionType_(regionTypeNames_.read(dict.lookup("regionType"))),
+    selectionType_
+    (
+        selectionTypeNames_.read
+        (
+            dict.lookupBackwardsCompatible({"select", "regionType"})
+        )
+    ),
+    selectionName_(word::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
     scaleFactor_(1),
@@ -716,7 +737,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         fieldValue::write();
     }
 
-    if (regionType_ == regionTypes::sampledSurface)
+    if (selectionType_ == selectionTypes::sampledSurface)
     {
         surfacePtr_().update();
     }
@@ -742,7 +763,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         faceList faces;
         pointField points;
 
-        if (regionType_ == regionTypes::sampledSurface)
+        if (selectionType_ == selectionTypes::sampledSurface)
         {
             combineSurfaceGeometry(faces, points);
         }
@@ -756,7 +777,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
             surfaceWriterPtr_->write
             (
                 outputDir(),
-                regionTypeNames_[regionType_] + ("_" + regionName_),
+                selectionTypeNames_[selectionType_] + ("_" + selectionName_),
                 points,
                 faces
             );
@@ -766,7 +787,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
     // Construct the sign and weight fields and the surface normals
     const scalarField signs
     (
-        regionType_ == regionTypes::sampledSurface
+        selectionType_ == selectionTypes::sampledSurface
       ? scalarField(surfacePtr_().Sf().size(), 1)
       : List<scalar>(faceSign_)
     );
@@ -777,7 +798,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
     }
     const vectorField Sf
     (
-        regionType_ == regionTypes::sampledSurface
+        selectionType_ == selectionTypes::sampledSurface
       ? surfacePtr_().Sf()
       : (signs*filterField(mesh_.Sf()))()
     );

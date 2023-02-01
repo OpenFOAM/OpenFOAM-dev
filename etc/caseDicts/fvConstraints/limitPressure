@@ -15,7 +15,7 @@ FoamFile
 
 type       limitPressure;
 
-selectionMode all;
+select        all;
 
 // limits can be specified absolute
 // min        <200>;

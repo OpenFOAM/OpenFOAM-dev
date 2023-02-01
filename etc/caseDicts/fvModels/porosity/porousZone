@@ -18,7 +18,7 @@ type           explicitPorositySource;
 explicitPorositySourceCoeffs
 {
     type           DarcyForchheimer;
-    selectionMode  cellZone;
+    select         cellZone;
     cellZone       <cellZoneName>; // Specify the name of the cellZone
 
     DarcyForchheimerCoeffs

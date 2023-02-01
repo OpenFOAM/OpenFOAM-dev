@@ -17,7 +17,7 @@ cylinderHeat
 {
     type            heatSource;
 
-    selectionMode   all;
+    select          all;
 
     q               5e6;
 }

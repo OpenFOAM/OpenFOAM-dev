@@ -17,7 +17,7 @@ FoamFile
 fixedPower
 {
     type            heatSource;
-    selectionMode   all;
+    select          all;
 
     Q               100;          // Set power (W)
 }

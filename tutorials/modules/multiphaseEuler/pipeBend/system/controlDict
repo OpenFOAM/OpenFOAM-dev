@@ -59,7 +59,7 @@ functions
     (
         name=probabilityDensity.afterBend_1d,
         populationBalance=agglomerates,
-        regionType=cellZone,
+        select=cellZone,
         cellZone=afterBend_1d,
         functionType=volumeDensity,
         coordinateType=diameter,
@@ -70,7 +70,7 @@ functions
     (
         name=probabilityDensity.afterBend_5d,
         populationBalance=agglomerates,
-        regionType=cellZone,
+        select=cellZone,
         cellZone=afterBend_5d,
         functionType=volumeDensity,
         coordinateType=diameter,
@@ -81,7 +81,7 @@ functions
     (
         name=probabilityDensity.afterBend_9d,
         populationBalance=agglomerates,
-        regionType=cellZone,
+        select=cellZone,
         cellZone=afterBend_9d,
         functionType=volumeDensity,
         coordinateType=diameter,
@@ -92,7 +92,7 @@ functions
     (
         name=probabilityDensity.beforeBend_1d,
         populationBalance=agglomerates,
-        regionType=cellZone,
+        select=cellZone,
         cellZone=beforeBend_1d,
         functionType=volumeDensity,
         coordinateType=diameter,

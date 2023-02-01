@@ -16,7 +16,7 @@ FoamFile
 // fixedTemperature
 // {
 //     type            fixedTemperatureConstraint;
-//     selectionMode   all;
+//     select          all;
 
 //     mode            uniform;
 

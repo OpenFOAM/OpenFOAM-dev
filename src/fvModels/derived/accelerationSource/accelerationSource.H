@@ -35,7 +35,7 @@ Usage
     {
         type            accelerationSource;
 
-        selectionMode   all;
+        select          all;
 
         U               U;
 

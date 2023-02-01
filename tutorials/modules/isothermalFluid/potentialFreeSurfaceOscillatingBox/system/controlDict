@@ -75,8 +75,8 @@ functions
         log             yes;
         writeTotalArea  no;
         writeFields     no;
-        regionType      faceZone;
-        name            f0;
+        select          faceZone;
+        faceZone        f0;
         operation       areaAverage;
         fields
         (

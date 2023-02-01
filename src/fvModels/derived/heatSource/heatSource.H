@@ -35,7 +35,7 @@ Usage
     {
         type            heatSource;
 
-        selectionMode   cellSet;
+        select          cellSet;
         cellSet         heater;
 
         Q               1e6;

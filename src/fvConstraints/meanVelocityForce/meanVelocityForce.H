@@ -35,7 +35,7 @@ Usage
     {
         type            meanVelocityForce;
 
-        selectionMode   all;
+        select          all;
 
         U               U;          // Name of velocity field
 

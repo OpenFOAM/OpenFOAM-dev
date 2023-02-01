@@ -49,7 +49,7 @@ Usage
     {
         type            actuationDiskSource;
 
-        selectionMode   cellSet;
+        select          cellSet;
         cellSet         actuationDisk1;
 
         diskDir         (-1 0 0);   // Disk direction

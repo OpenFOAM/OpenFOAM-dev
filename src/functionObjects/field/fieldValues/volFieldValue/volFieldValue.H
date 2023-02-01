@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,8 +41,8 @@ Description
         writeControl    writeTime;
         writeFields     true;
 
-        regionType      cellZone;
-        name            c0;
+        select          cellZone;
+        cellZone        c0;
         operation       volAverage;
 
         weightField     alpha1;
@@ -62,7 +62,7 @@ Usage
         log          | Write data to standard output       | no    | no
         writeFields  | Write the region field values       | yes   |
         writeLocation| Write the location (if available)   | no    | no
-        regionType   | volRegion type: see below           | yes   |
+        select       | volRegion type: see below           | yes   |
         name         | Name of volRegion if required       | no    |
         operation    | Operation to perform                | yes   |
         weightField  | Name of field to apply weighting    | no    |
@@ -70,7 +70,7 @@ Usage
         fields       | List of fields to operate on        | yes   |
     \endtable
 
-    Where \c regionType is defined by
+    Where \c select options are:
     \plaintable
         cellZone     | requires a 'name' entry to specify the cellZone
         all          | all cells

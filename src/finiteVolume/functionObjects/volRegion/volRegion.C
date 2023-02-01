@@ -41,15 +41,15 @@ template<>
 const char*
 Foam::NamedEnum
 <
-    Foam::functionObjects::volRegion::regionTypes,
+    Foam::functionObjects::volRegion::selectionTypes,
     2
 >::names[] = {"cellZone", "all"};
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::volRegion::regionTypes,
+    Foam::functionObjects::volRegion::selectionTypes,
     2
-> Foam::functionObjects::volRegion::regionTypeNames_;
+> Foam::functionObjects::volRegion::selectionTypeNames_;
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -60,9 +60,9 @@ void Foam::functionObjects::volRegion::writeFileHeader
     Ostream& file
 )
 {
-    wf.writeCommented(file, "Region");
+    wf.writeCommented(file, "Selection");
     file<< setw(1) << ':' << setw(1) << ' '
-        << regionTypeNames_[regionType_] << " " << regionName_ << endl;
+        << selectionTypeNames_[selectionType_] << " " << cellZoneName_ << endl;
     wf.writeHeaderValue(file, "Cells", nCells_);
     wf.writeHeaderValue(file, "Volume", V_);
 }
@@ -77,13 +77,18 @@ Foam::functionObjects::volRegion::volRegion
 )
 :
     mesh_(mesh),
-    regionType_
+    selectionType_
     (
-        dict.found("regionType")
-      ? regionTypeNames_.read(dict.lookup("regionType"))
-      : vrtAll
+        selectionTypeNames_
+        [
+            dict.lookupOrDefaultBackwardsCompatible<word>
+            (
+                {"select", "regionType"},
+                "all"
+            )
+        ]
     ),
-    regionID_(-1)
+    cellZoneID_(-1)
 {
     read(dict);
 
@@ -106,18 +111,19 @@ bool Foam::functionObjects::volRegion::read
     const dictionary& dict
 )
 {
-    switch (regionType_)
+    switch (selectionType_)
     {
         case vrtCellZone:
         {
-            dict.lookupBackwardsCompatible({"cellZone", "name"}) >> regionName_;
+            dict.lookupBackwardsCompatible({"cellZone", "name"})
+                >> cellZoneName_;
 
-            regionID_ = mesh_.cellZones().findZoneID(regionName_);
+            cellZoneID_ = mesh_.cellZones().findZoneID(cellZoneName_);
 
-            if (regionID_ < 0)
+            if (cellZoneID_ < 0)
             {
                 FatalIOErrorInFunction(dict)
-                    << "Unknown cell zone name: " << regionName_
+                    << "Unknown cell zone: " << cellZoneName_
                     << ". Valid cell zones are: " << mesh_.cellZones().names()
                     << exit(FatalIOError);
             }
@@ -125,9 +131,9 @@ bool Foam::functionObjects::volRegion::read
             if (nCells() == 0)
             {
                 FatalIOErrorInFunction(dict)
-                    << regionTypeNames_[regionType_]
-                    << "(" << regionName_ << "):" << nl
-                    << "    Region has no cells"
+                    << selectionTypeNames_[selectionType_]
+                    << "(" << cellZoneName_ << "):" << nl
+                    << " Selection has no cells"
                     << exit(FatalIOError);
             }
 
@@ -142,8 +148,8 @@ bool Foam::functionObjects::volRegion::read
         default:
         {
             FatalIOErrorInFunction(dict)
-                << "Unknown region type. Valid region types are:"
-                << regionTypeNames_
+                << "Unknown selection. Valid selections are:"
+                << selectionTypeNames_
                 << exit(FatalIOError);
         }
     }
@@ -154,20 +160,20 @@ bool Foam::functionObjects::volRegion::read
 
 const Foam::labelList& Foam::functionObjects::volRegion::cellIDs() const
 {
-    if (regionType_ == vrtAll)
+    if (selectionType_ == vrtAll)
     {
         return labelList::null();
     }
     else
     {
-        return mesh_.cellZones()[regionID_];
+        return mesh_.cellZones()[cellZoneID_];
     }
 }
 
 
 Foam::label Foam::functionObjects::volRegion::nCells() const
 {
-    if (regionType_ == vrtAll)
+    if (selectionType_ == vrtAll)
     {
         return mesh_.globalData().nTotalCells();
     }
@@ -180,7 +186,7 @@ Foam::label Foam::functionObjects::volRegion::nCells() const
 
 Foam::scalar Foam::functionObjects::volRegion::V() const
 {
-    if (regionType_ == vrtAll)
+    if (selectionType_ == vrtAll)
     {
         return gSum(mesh_.V());
     }

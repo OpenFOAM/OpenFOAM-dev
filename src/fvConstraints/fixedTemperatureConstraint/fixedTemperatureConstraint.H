@@ -33,7 +33,7 @@ Usage
     {
         type            fixedTemperatureConstraint;
 
-        selectionMode   all;
+        select          all;
 
         phase           gas; // Optional phase name
 

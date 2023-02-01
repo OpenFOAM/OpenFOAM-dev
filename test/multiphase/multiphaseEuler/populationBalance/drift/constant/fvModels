@@ -18,7 +18,7 @@ waterSink
 {
     type            massSource;
 
-    selectionMode   all;
+    select          all;
 
     massFlowRate    -21.86682;
 

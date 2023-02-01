@@ -62,8 +62,8 @@ functions
         log             true;
         // Output field values as well
         writeFields     false;
-        regionType      patch;
-        name            inlet;
+        select          patch;
+        patch           inlet;
         operation       sum;
 
         fields
@@ -77,13 +77,13 @@ functions
     outletFlux
     {
         $inletFlux;
-        name            outlet;
+        patch           outlet;
     }
 
     atmosphereFlux
     {
         $inletFlux;
-        name            atmosphere;
+        patch           atmosphere;
     }
 }
 

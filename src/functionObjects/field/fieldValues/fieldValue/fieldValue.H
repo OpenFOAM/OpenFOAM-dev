@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,9 +75,6 @@ protected:
 
         //- The name of the type of value (volFieldValue, or surfaceFieldValue)
         const word valueType_;
-
-        //- Name of region (patch, zone, etc.)
-        word regionName_;
 
         //- List of field names to operate on
         wordList fields_;
@@ -159,9 +156,6 @@ public:
 
         //- Return the reference to the construction dictionary
         inline const dictionary& dict() const;
-
-        //- Return the region name
-        inline const word& regionName() const;
 
         //- Return the list of fields required
         inline virtual wordList fields() const;

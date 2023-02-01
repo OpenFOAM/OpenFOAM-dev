@@ -66,7 +66,7 @@ functions
     (
         name=numberDensity,
         populationBalance=aggregates,
-        regionType=cellZone,
+        select=cellZone,
         cellZone=outlet,
         functionType=numberDensity,
         coordinateType=projectedAreaDiameter,

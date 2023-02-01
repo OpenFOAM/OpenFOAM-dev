@@ -22,7 +22,7 @@ mover
 
     motionSolver    solidBody;
 
-    selectionMode   all;
+    select          all;
 
     solidBodyMotionFunction sixDoFMotion;
 

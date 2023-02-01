@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,26 +30,26 @@ Description
 
     Currently supports cell selection from a set of points, a specified cellSet
     or cellZone or all of the cells.  The selection method can either be
-    specified explicitly using the \c selectionMode entry or inferred from the
-    presence of either a \c cellSet, \c cellZone or \c points entry.  The \c
-    selectionMode entry is required to select \c all cells.
+    specified explicitly using the \c select entry or inferred from the presence
+    of either a \c cellSet, \c cellZone or \c points entry.  The \c select entry
+    is required to select \c all cells.
 
 Usage
     Examples:
     \verbatim
         // Apply everywhere
-        selectionMode   all;
+        select          all;
 
         // Apply within a given cellSet
-        selectionMode   cellSet; // Optional
+        select          cellSet; // Optional
         cellSet         rotor;
 
         // Apply within a given cellZone
-        selectionMode   cellZone; // Optional
+        select          cellZone; // Optional
         cellSet         rotor;
 
         // Apply in cells containing a list of points
-        selectionMode   points; // Optional
+        select          points; // Optional
         points
         (
             (2.25 0.5 0)

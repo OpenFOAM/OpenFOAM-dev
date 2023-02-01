@@ -16,7 +16,7 @@ FoamFile
 
 SRF
 {
-    selectionMode   all;
+    select          all;
 
     origin    (0 0 0);
     axis      (0 0 1);

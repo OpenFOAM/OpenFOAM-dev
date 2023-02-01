@@ -35,7 +35,7 @@ Usage
     {
         type            massSource;
 
-        selectionMode   cellSet;
+        select          cellSet;
         cellSet         massSource;
 
         massFlowRate    1e-4;

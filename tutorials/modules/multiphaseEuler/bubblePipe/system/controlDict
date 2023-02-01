@@ -79,7 +79,7 @@ functions
     (
         name=probabilityDensity.injection,
         populationBalance=bubbles,
-        regionType=cellZone,
+        select=cellZone,
         cellZone=injection,
         functionType=volumeDensity,
         coordinateType=diameter,
@@ -90,7 +90,7 @@ functions
     (
         name=probabilityDensity.outlet,
         populationBalance=bubbles,
-        regionType=cellZone,
+        select=cellZone,
         cellZone=outlet,
         functionType=volumeDensity,
         coordinateType=diameter,

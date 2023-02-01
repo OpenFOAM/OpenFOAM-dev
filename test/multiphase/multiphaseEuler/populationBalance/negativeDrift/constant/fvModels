@@ -18,7 +18,7 @@ waterSource
 {
     type            massSource;
 
-    selectionMode   all;
+    select          all;
 
     massFlowRate    30.785654;
 

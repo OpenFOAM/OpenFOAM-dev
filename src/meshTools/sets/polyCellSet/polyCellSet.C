@@ -32,7 +32,7 @@ namespace Foam
 {
     template<> const char* NamedEnum
     <
-        polyCellSet::selectionModeType,
+        polyCellSet::selectionTypes,
         4
         >::names[] =
     {
@@ -42,8 +42,8 @@ namespace Foam
         "all"
     };
 
-    const NamedEnum<polyCellSet::selectionModeType, 4>
-        polyCellSet::selectionModeTypeNames_;
+    const NamedEnum<polyCellSet::selectionTypes, 4>
+        polyCellSet::selectionTypeNames_;
 }
 
 
@@ -53,9 +53,9 @@ void Foam::polyCellSet::setCells()
 {
     Info<< incrIndent;
 
-    switch (selectionMode_)
+    switch (selectionType_)
     {
-        case selectionModeType::points:
+        case selectionTypes::points:
         {
             Info<< indent << "- selecting cells using points" << endl;
 
@@ -83,7 +83,7 @@ void Foam::polyCellSet::setCells()
 
             break;
         }
-        case selectionModeType::cellSet:
+        case selectionTypes::cellSet:
         {
             Info<< indent
                 << "- selecting cells using cellSet " << cellSetName_ << endl;
@@ -92,7 +92,7 @@ void Foam::polyCellSet::setCells()
 
             break;
         }
-        case selectionModeType::cellZone:
+        case selectionTypes::cellZone:
         {
             Info<< indent
                 << "- selecting cells using cellZone " << cellSetName_ << endl;
@@ -109,7 +109,7 @@ void Foam::polyCellSet::setCells()
 
             break;
         }
-        case selectionModeType::all:
+        case selectionTypes::all:
         {
             Info<< indent << "- selecting all cells" << endl;
             cells_ = identity(mesh_.nCells());
@@ -131,7 +131,7 @@ Foam::polyCellSet::polyCellSet
 )
 :
     mesh_(mesh),
-    selectionMode_(selectionModeType::all),
+    selectionType_(selectionTypes::all),
     cellSetName_(word::null)
 {
     read(dict);
@@ -148,7 +148,7 @@ Foam::polyCellSet::~polyCellSet()
 
 void Foam::polyCellSet::movePoints()
 {
-    if (selectionMode_ == selectionModeType::points)
+    if (selectionType_ == selectionTypes::points)
     {
         setCells();
     }
@@ -175,56 +175,58 @@ void Foam::polyCellSet::distribute(const polyDistributionMap&)
 
 bool Foam::polyCellSet::read(const dictionary& dict)
 {
-    if (dict.found("selectionMode"))
+    if (dict.found("select") || dict.found("selectionMode"))
     {
-        selectionMode_ =
-            selectionModeTypeNames_.read(dict.lookup("selectionMode"));
+        selectionType_ = selectionTypeNames_.read
+        (
+            dict.lookupBackwardsCompatible({"select", "selectionMode"})
+        );
     }
     else if (dict.found("points"))
     {
-        selectionMode_ = selectionModeType::points;
+        selectionType_ = selectionTypes::points;
     }
     else if (dict.found("cellSet"))
     {
-        selectionMode_ = selectionModeType::cellSet;
+        selectionType_ = selectionTypes::cellSet;
     }
     else if (dict.found("cellZone"))
     {
-        selectionMode_ = selectionModeType::cellZone;
+        selectionType_ = selectionTypes::cellZone;
     }
     else
     {
-        dict.lookup("selectionMode");
+        dict.lookup("select");
     }
 
-    switch (selectionMode_)
+    switch (selectionType_)
     {
-        case selectionModeType::points:
+        case selectionTypes::points:
         {
             dict.lookup("points") >> points_;
             break;
         }
-        case selectionModeType::cellSet:
+        case selectionTypes::cellSet:
         {
             dict.lookup("cellSet") >> cellSetName_;
             break;
         }
-        case selectionModeType::cellZone:
+        case selectionTypes::cellZone:
         {
             dict.lookup("cellZone") >> cellSetName_;
             break;
         }
-        case selectionModeType::all:
+        case selectionTypes::all:
         {
             break;
         }
         default:
         {
             FatalErrorInFunction
-                << "Unknown selectionMode "
-                << selectionModeTypeNames_[selectionMode_]
-                << nl << "Valid selectionModes:"
-                << selectionModeTypeNames_.toc()
+                << "Unknown selection type "
+                << selectionTypeNames_[selectionType_]
+                << nl << "Valid selection type:"
+                << selectionTypeNames_.toc()
                 << exit(FatalError);
         }
     }

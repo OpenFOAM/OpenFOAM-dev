@@ -24,7 +24,7 @@ mover
 
     solidBodyMotionFunction multiMotion;
 
-    selectionMode   all;
+    select          all;
 
     // Table rotating in z axis
     rotatingTable

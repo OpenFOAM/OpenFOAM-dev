@@ -60,7 +60,7 @@ Usage
     {
         type            radialActuationDiskSource;
 
-        selectionMode   cellSet;
+        select          cellSet;
         cellSet         radialActuationDisk1;
 
         U               U;              // Name of the velocity field

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,8 +33,8 @@ Description
     {
         .
         .
-        regionType      cellZone;
-        name            c0;
+        select          cellZone;
+        cellZone        c0;
         .
         .
     }
@@ -43,7 +43,7 @@ Description
     {
         .
         .
-        regionType      all;
+        select          all;
         .
         .
     }
@@ -51,9 +51,9 @@ Description
 
 Usage
     \table
-        Property     | Description                | Required     | Default value
-        regionType   | cellZone or all              | no | all
-        name         | Name of cellZone if required | no |
+        Property     | Description                  | Required | Default value
+        select       | cellZone or all              | no | all
+        cellZone     | Name of cellZone if required | no |
     \endtable
 
 See also
@@ -101,28 +101,28 @@ public:
     // Public data types
 
         //- Region type enumeration
-        enum regionTypes
+        enum selectionTypes
         {
             vrtCellZone,
             vrtAll
         };
 
         //- Region type names
-        static const NamedEnum<regionTypes, 2> regionTypeNames_;
+        static const NamedEnum<selectionTypes, 2> selectionTypeNames_;
 
 
 protected:
 
     // Protected data
 
-        //- Region type
-        regionTypes regionType_;
+        //- Selection type
+        selectionTypes selectionType_;
 
-        //- Region name (patch, zone, etc.)
-        word regionName_;
+        //- Optional cellZone name
+        word cellZoneName_;
 
-        //- Region ID (patch ID, zone ID, etc.)
-        label regionID_;
+        //- Optional cellZone ID
+        label cellZoneID_;
 
 
     // Protected Member Functions
@@ -157,7 +157,7 @@ public:
         bool read(const dictionary&);
 
         //- Return the region type
-        inline const regionTypes& regionType() const;
+        inline const selectionTypes& selectionType() const;
 
         //- Return the local list of cell IDs
         const labelList& cellIDs() const;

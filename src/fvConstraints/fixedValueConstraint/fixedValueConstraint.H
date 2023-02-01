@@ -34,7 +34,7 @@ Usage
     {
         type            fixedValueConstraint;
 
-        selectionMode   cellZone;
+        select          cellZone;
         cellZone        porosity;
 
         fieldValues

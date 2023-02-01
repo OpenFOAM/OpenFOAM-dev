@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,10 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::functionObjects::volRegion::regionTypes&
-Foam::functionObjects::volRegion::regionType() const
+inline const Foam::functionObjects::volRegion::selectionTypes&
+Foam::functionObjects::volRegion::selectionType() const
 {
-    return regionType_;
+    return selectionType_;
 }
 
 // ************************************************************************* //

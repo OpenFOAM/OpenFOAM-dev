@@ -66,7 +66,7 @@ Usage
     {
         type                    effectivenessHeatExchangerSource;
 
-        selectionMode           cellZone;
+        select                  cellZone;
         cellZone                porosity;
 
         secondaryMassFlowRate   1.0;

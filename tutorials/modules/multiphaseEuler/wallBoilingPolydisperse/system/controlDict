@@ -71,8 +71,8 @@ functions
         log             yes;
         functionType    volumeConcentration;
         coordinateType  diameter;
-        regionType      cellZone;
-        name            x349;
+        select          cellZone;
+        cellZone        x349;
         populationBalance bubbles;
     }
     volumeDensity_bulk.diameter.bubbles
@@ -85,8 +85,8 @@ functions
         log             yes;
         functionType    volumeConcentration;
         coordinateType  diameter;
-        regionType      cellZone;
-        name            x349_bulk;
+        select          cellZone;
+        cellZone        x349_bulk;
         populationBalance bubbles;
     }
     volumeDensity_wall.diameter.bubbles
@@ -99,8 +99,8 @@ functions
         log             yes;
         functionType    volumeConcentration;
         coordinateType  diameter;
-        regionType      cellZone;
-        name            x349_wall;
+        select          cellZone;
+        cellZone        x349_wall;
         populationBalance bubbles;
     }
     outflow
@@ -109,8 +109,8 @@ functions
         functionObjectLibs ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
-        regionType      patch;
-        name            outlet;
+        select          patch;
+        patch           outlet;
         operation       sum;
         fields          ( alphaRhoPhi.gas alphaRhoPhi.liquid );
     }
@@ -120,8 +120,8 @@ functions
         functionObjectLibs ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
-        regionType      patch;
-        name            inlet;
+        select          patch;
+        patch           inlet;
         operation       sum;
         fields          ( alphaRhoPhi.gas alphaRhoPhi.liquid );
     }
@@ -131,8 +131,8 @@ functions
         functionObjectLibs ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
-        regionType      patch;
-        name            outlet;
+        select          patch;
+        patch           outlet;
         operation       sum;
         weightField     alphaRhoPhi.gas;
         fields          ( h.gas );
@@ -143,8 +143,8 @@ functions
         functionObjectLibs ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
-        regionType      patch;
-        name            outlet;
+        select          patch;
+        patch           outlet;
         operation       sum;
         weightField     alphaRhoPhi.liquid;
         fields          ( h.liquid );
@@ -155,8 +155,8 @@ functions
         functionObjectLibs ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
-        regionType      patch;
-        name            inlet;
+        select          patch;
+        patch           inlet;
         operation       sum;
         weightField     alphaRhoPhi.gas;
         fields          ( h.gas );
@@ -167,8 +167,8 @@ functions
         functionObjectLibs ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
-        regionType      patch;
-        name            inlet;
+        select          patch;
+        patch           inlet;
         operation       sum;
         weightField     alphaRhoPhi.liquid;
         fields          ( h.liquid );

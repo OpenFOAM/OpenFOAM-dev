@@ -18,7 +18,7 @@ momentumSource
 {
     type            semiImplicitSource;
 
-    selectionMode   all;
+    select          all;
 
     volumeMode      specific;
 

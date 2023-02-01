@@ -80,7 +80,7 @@ Usage
     {
         type            solidificationMeltingSource;
 
-        selectionMode   cellZone;
+        select          cellZone;
         cellZone        iceZone;
 
         Tsol            273;

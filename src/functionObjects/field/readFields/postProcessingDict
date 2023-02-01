@@ -38,8 +38,8 @@ functions
         writeInterval   1;
         log             true;
         writeFields     true;
-        regionType      faceZone;
-        name            f0;
+        select          faceZone;
+        faceZone        f0;
         operation       areaAverage;
 
         fields

@@ -78,7 +78,7 @@ inline bool Foam::fv::limitMag::constrainType
     }
 
     // handle boundaries in the case of 'all'
-    if (set_.selectionMode() == fvCellSet::selectionModeType::all)
+    if (set_.selectionType() == fvCellSet::selectionTypes::all)
     {
         typename VolField<Type>::Boundary& psibf =
             psi.boundaryFieldRef();

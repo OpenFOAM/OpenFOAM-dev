@@ -53,7 +53,6 @@ Foam::functionObjects::fieldValue::fieldValue
     logFiles(obr_, name),
     dict_(dict),
     valueType_(valueType),
-    regionName_(word::null),
     resultDict_(fileName("result"), dictionary::null)
 {
     read(dict);
@@ -72,7 +71,6 @@ Foam::functionObjects::fieldValue::fieldValue
     logFiles(obr_, name),
     dict_(dict),
     valueType_(valueType),
-    regionName_(word::null),
     resultDict_(fileName("result"), dictionary::null)
 {
     read(dict);

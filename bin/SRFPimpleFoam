@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -41,11 +41,11 @@ incompressibleFluid solver module executed by the foamRun application:
 
 The MRF functionality has been further developed to replace SRF, enabled by
 setting the MRF zone to all the cells in the mesh using the optional
-'selectionMode' entry to 'all' in the constant/MRFProperties dictionary, e.g.
+'select' entry to 'all' in the constant/MRFProperties dictionary, e.g.
 
 SRF
 {
-    selectionMode   all;
+    select          all;
 
     origin    (0 0 0);
     axis      (0 0 1);

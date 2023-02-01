@@ -42,7 +42,7 @@ Usage
     {
         type            VoFSolidificationMeltingSource;
 
-        selectionMode   cellZone;
+        select          cellZone;
         cellZone        solidZone;
 
         alphaSolidT     table

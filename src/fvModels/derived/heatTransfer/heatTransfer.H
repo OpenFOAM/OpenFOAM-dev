@@ -47,7 +47,7 @@ Usage
     {
         type            heatTransfer;
 
-        selectionMode   cellSet;
+        select          cellSet;
         cellSet         c0;
 
         semiImplicit    no;

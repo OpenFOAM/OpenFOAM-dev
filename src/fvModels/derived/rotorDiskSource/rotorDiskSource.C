@@ -111,11 +111,11 @@ void Foam::fv::rotorDiskSource::readCoeffs()
 void Foam::fv::rotorDiskSource::checkData()
 {
     // Set inflow type
-    switch (set_.selectionMode())
+    switch (set_.selectionType())
     {
-        case fvCellSet::selectionModeType::cellSet:
-        case fvCellSet::selectionModeType::cellZone:
-        case fvCellSet::selectionModeType::all:
+        case fvCellSet::selectionTypes::cellSet:
+        case fvCellSet::selectionTypes::cellZone:
+        case fvCellSet::selectionTypes::all:
         {
             // Set the profile ID for each blade section
             profiles_.connectBlades(blade_.profileName(), blade_.profileID());
@@ -151,14 +151,14 @@ void Foam::fv::rotorDiskSource::checkData()
         {
             FatalErrorInFunction
                 << "Source cannot be used with '"
-                << fvCellSet::selectionModeTypeNames_[set_.selectionMode()]
+                << fvCellSet::selectionTypeNames_[set_.selectionType()]
                 << "' mode.  Please use one of: " << nl
-                << fvCellSet::selectionModeTypeNames_
-                   [fvCellSet::selectionModeType::cellSet] << nl
-                << fvCellSet::selectionModeTypeNames_
-                   [fvCellSet::selectionModeType::cellZone] << nl
-                << fvCellSet::selectionModeTypeNames_
-                   [fvCellSet::selectionModeType::all]
+                << fvCellSet::selectionTypeNames_
+                   [fvCellSet::selectionTypes::cellSet] << nl
+                << fvCellSet::selectionTypeNames_
+                   [fvCellSet::selectionTypes::cellZone] << nl
+                << fvCellSet::selectionTypeNames_
+                   [fvCellSet::selectionTypes::all]
                 << exit(FatalError);
         }
     }

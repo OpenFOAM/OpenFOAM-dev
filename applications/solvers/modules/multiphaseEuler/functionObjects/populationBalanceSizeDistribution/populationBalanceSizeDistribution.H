@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ Usage
         weightType        | weighting in case of field-dependent particle\\
                             properties                     | no\\
                                                            | numberConcentration
-        regionType        | cellZone or all                | no        | all
+        select            | cellZone or all                | no        | all
         name              | name of cellZone if required   | no        |
         setFormat         | output format                  | yes       |
     \endtable

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::fieldValues::surfaceFieldValue
 
 Description
-    Provides a 'face regionType' variant of the fieldValues function object.
+    Surface (face) region selection class.
 
     Given a list of user-specified fields and a selection of mesh (or general
     surface) faces, a number of operations can be performed, such as sums,
@@ -45,7 +45,7 @@ Description
         writeControl    writeTime;
         writeFields     true;
 
-        regionType      patch;
+        select          patch;
         name            movingWall;
 
         operation       areaAverage;
@@ -68,7 +68,8 @@ Description
         writeFields     true;
 
         surfaceFormat   none;
-        regionType      faceZone;
+
+        select          faceZone;
         name            f0;
 
         operation       sum;
@@ -89,11 +90,11 @@ Usage
         Property     | Description             | Required    | Default value
         type         | type name: surfaceFieldValue   | yes         |
         log          | write data to standard output | no    | no
-        writeFields  | Write the region field values  | yes     |
+        writeFields  | Write the field values  | yes     |
         writeArea    | Write the area of the surfaceFieldValue | no |
         surfaceFormat | output value format    | no          |
-        regionType   | face regionType: see below  | yes         |
-        name         | name of face regionType if required  | no |
+        select       | face selection: see below | yes         |
+        name         | name of face select if required  | no |
         operation    | operation to perform    | yes         |
         weightField  | name of field to apply weighting | no |
         weightFields | Names of fields to apply weighting | no |
@@ -101,7 +102,7 @@ Usage
         fields       | list of fields to operate on | yes    |
     \endtable
 
-    Where \c regionType is defined by
+    Where the supported \c select options are:
     \plaintable
         faceZone     | requires a 'name' entry to specify the faceZone
         patch        | requires a 'name' entry to specify the patch
@@ -136,7 +137,7 @@ Usage
       - If the field is a volField then a \c faceZone can only consist of
         boundary faces, because only these faces have a value associated with
         them. No cell-to-face interpolation is performed.
-      - If the field is a surfaceField then the region cannot be a \c
+      - If the field is a surfaceField then the selection cannot be a \c
         sampledSurface
       - If a sampledSurface has interpolation set to false then the surface
         face values will be taken directly from the cell that contains the
@@ -187,16 +188,16 @@ public:
 
     // Public data types
 
-        //- region type enumeration
-        enum class regionTypes
+        //- Selection type enumeration
+        enum class selectionTypes
         {
             faceZone,
             patch,
             sampledSurface
         };
 
-        //- region type names
-        static const NamedEnum<regionTypes, 3> regionTypeNames_;
+        //- Selection type names
+        static const NamedEnum<selectionTypes, 3> selectionTypeNames_;
 
 
         //- Operation type enumeration
@@ -265,8 +266,11 @@ protected:
         //- Surface writer
         autoPtr<surfaceWriter> surfaceWriterPtr_;
 
-        //- region type
-        regionTypes regionType_;
+        //- Selection type
+        selectionTypes selectionType_;
+
+        //- Name of face selection (patch, faceZone, etc.)
+        word selectionName_;
 
         //- Operation to apply to values
         operationType operation_;
@@ -434,8 +438,11 @@ public:
 
     // Public Member Functions
 
-        //- Return the region type
-        inline const regionTypes& regionType() const;
+        //- Return the selection type
+        inline const selectionTypes& selectionType() const;
+
+        //- Return the selection name
+        inline const word& selectionName() const;
 
         //- Return the local list of face IDs
         inline const labelList& faceId() const;

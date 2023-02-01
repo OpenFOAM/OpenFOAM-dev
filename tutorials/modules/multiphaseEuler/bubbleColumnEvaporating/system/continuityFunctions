@@ -21,7 +21,7 @@ inletMassFlowRate
     log             true;
     surfaceFormat   none;
 
-    regionType      patch;
+    select          patch;
     name            inlet;
 
     operation       sum;
@@ -44,7 +44,7 @@ outletMassFlowRate
     log             true;
     surfaceFormat   none;
 
-    regionType      patch;
+    select          patch;
     name            outlet;
 
     operation       sum;

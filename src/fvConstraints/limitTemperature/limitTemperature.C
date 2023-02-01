@@ -112,7 +112,7 @@ bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
         }
 
         // Handle boundaries in the case of 'all'
-        if (set_.selectionMode() == fvCellSet::selectionModeType::all)
+        if (set_.selectionType() == fvCellSet::selectionTypes::all)
         {
             volScalarField::Boundary& Tbf = he.boundaryFieldRef();
 
@@ -153,7 +153,7 @@ bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
         }
 
         // Handle boundaries in the case of 'all'
-        if (set_.selectionMode() == fvCellSet::selectionModeType::all)
+        if (set_.selectionType() == fvCellSet::selectionTypes::all)
         {
             volScalarField::Boundary& bf = he.boundaryFieldRef();
 

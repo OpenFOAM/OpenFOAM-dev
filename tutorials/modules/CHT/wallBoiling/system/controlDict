@@ -80,8 +80,8 @@ functions
         log             yes;
         writeFields     false;
         region          fluid;
-        regionType      patch;
-        name            outlet;
+        select          patch;
+        patch           outlet;
         operation       sum;
         fields          ( alphaRhoPhi.gas  alphaRhoPhi.liquid);
     }
@@ -92,8 +92,8 @@ functions
         log             yes;
         writeFields     false;
         region          fluid;
-        regionType      patch;
-        name            inlet;
+        select          patch;
+        patch           inlet;
         operation       sum;
         fields          ( alphaRhoPhi.gas alphaRhoPhi.liquid);
     }
@@ -104,8 +104,8 @@ functions
         log             yes;
         writeFields     false;
         region          fluid;
-        regionType      patch;
-        name            outlet;
+        select          patch;
+        patch           outlet;
         operation       sum;
         weightField     alphaRhoPhi.gas;
         fields          ( h.gas );
@@ -117,8 +117,8 @@ functions
         log             yes;
         writeFields     false;
         region          fluid;
-        regionType      patch;
-        name            outlet;
+        select          patch;
+        patch           outlet;
         operation       sum;
         weightField     alphaRhoPhi.liquid;
         fields          ( h.liquid );
@@ -130,8 +130,8 @@ functions
         log             yes;
         writeFields     false;
         region          fluid;
-        regionType      patch;
-        name            inlet;
+        select          patch;
+        patch           inlet;
         operation       sum;
         weightField     alphaRhoPhi.gas;
         fields          ( h.gas );
@@ -143,8 +143,8 @@ functions
         log             yes;
         writeFields     false;
         region          fluid;
-        regionType      patch;
-        name            inlet;
+        select          patch;
+        patch           inlet;
         operation       sum;
         weightField     alphaRhoPhi.liquid;
         fields          ( h.liquid );

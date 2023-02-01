@@ -18,7 +18,7 @@ massSource
 {
     type            massSource;
 
-    selectionMode   cellZone;
+    select          cellZone;
     cellZone        injection;
 
     massFlowRate    1e-3;

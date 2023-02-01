@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::validField
 {
     if
     (
-        regionType_ != regionTypes::sampledSurface
+        selectionType_ != selectionTypes::sampledSurface
      && obr_.foundObject<SurfaceField<Type>>(fieldName)
     )
     {
@@ -62,7 +62,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::getFieldValues
     const word& fieldName
 ) const
 {
-    if (regionType_ == regionTypes::sampledSurface)
+    if (selectionType_ == selectionTypes::sampledSurface)
     {
         if (obr_.foundObject<VolField<Type>>(fieldName))
         {
@@ -302,7 +302,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
             faceList faces;
             pointField points;
 
-            if (regionType_ == regionTypes::sampledSurface)
+            if (selectionType_ == selectionTypes::sampledSurface)
             {
                 combineSurfaceGeometry(faces, points);
             }
@@ -320,8 +320,8 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
                 (
                     outputDir(),
                     fieldName
-                  + '_' + regionTypeNames_[regionType_]
-                  + '_' + regionName_,
+                  + '_' + selectionTypeNames_[selectionType_]
+                  + '_' + selectionName_,
                     points,
                     faces,
                     false,
@@ -390,7 +390,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
             file() << tab << result;
 
             Log << "    " << operationTypeNames_[operation_]
-                << "(" << regionName_ << ") of " << fieldName
+                << "(" << selectionName_ << ") of " << fieldName
                 <<  " = " << result << endl;
         }
 
@@ -424,7 +424,8 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::filterField
         {
             FatalErrorInFunction
                 << type() << " " << name() << ": "
-                << regionTypeNames_[regionType_] << "(" << regionName_ << "):"
+                << selectionTypeNames_[selectionType_]
+                << "(" << selectionName_ << "):"
                 << nl
                 << "    Unable to process internal faces for volume field "
                 << field.name() << nl << abort(FatalError);

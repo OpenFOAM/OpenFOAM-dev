@@ -34,7 +34,7 @@ Usage
     {
         type            coded;
 
-        selectionMode   all;
+        select          all;
 
         field           h;
 

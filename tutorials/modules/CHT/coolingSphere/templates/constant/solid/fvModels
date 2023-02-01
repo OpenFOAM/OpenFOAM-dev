@@ -17,7 +17,7 @@ FoamFile
 fixedTemperature
 {
     type            fixedTemperatureConstraint;
-    selectionMode   all;
+    select          all;
 
     mode            uniform;
 
@@ -29,7 +29,7 @@ fixedTemperature
 fixedPower
 {
     type            heatSource;
-    selectionMode   all;
+    select          all;
 
     Q               100;          // Set power (W)
 }

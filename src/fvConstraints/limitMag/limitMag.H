@@ -34,7 +34,7 @@ Usage
     {
         type            limitMag;
 
-        selectionMode   all;
+        select          all;
 
         field           U;
 
