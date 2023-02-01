@@ -201,7 +201,7 @@ void Foam::combustionModels::EDC::correct()
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::combustionModels::EDC::R(const label speciei) const
 {
-    return chemistryPtr_->RR()[speciei];
+    return kappa_*chemistryPtr_->RR()[speciei];
 }
 
 
