@@ -52,8 +52,8 @@ maxCo           1.0;
 
 functions
 {
-    #includeFunc patchFlowRate(patch=inlet, entryName=inletFlowRate)
-    #includeFunc patchFlowRate(patch=outlet, entryName=outletFlowRate)
+    #includeFunc patchFlowRate(name=inletFlowRate, patch=inlet)
+    #includeFunc patchFlowRate(name=outletFlowRate, patch=outlet)
 
     cartesianToCylindrical
     {

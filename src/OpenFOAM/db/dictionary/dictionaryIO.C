@@ -528,6 +528,8 @@ bool Foam::readConfigFile
             namedArgs[i].first() != "field"
          && namedArgs[i].first() != "fields"
          && namedArgs[i].first() != "objects"
+         && namedArgs[i].first() != "funcName"
+         && namedArgs[i].first() != "name"
         )
         {
             const Pair<word> dAk(dictAndKeyword(namedArgs[i].first()));
@@ -547,16 +549,21 @@ bool Foam::readConfigFile
     }
 
     // Set the name of the entry to that specified by the optional
-    // entryName argument otherwise automatically generate a unique name
+    // name argument otherwise automatically generate a unique name
     // from the type and arguments
-    const word entryName
-    (
-        funcDict.lookupOrDefaultBackwardsCompatible
+    word entryName(string::validate<word>(argString));
+    forAll(namedArgs, i)
+    {
+        if
         (
-            {"entryName", "funcName"},
-            string::validate<word>(argString)
+            namedArgs[i].first() == "funcName"
+         || namedArgs[i].first() == "name"
         )
-    );
+        {
+            entryName = namedArgs[i].second();
+            entryName.strip(" \n");
+        }
+    }
 
     // Check for anything in the configuration that has not been set
     List<Tuple2<word, string>> unsetArgs = unsetConfigEntries(funcDict);

@@ -12,7 +12,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-name    <faceZoneName>;
+faceZone <faceZoneName>;
 
 fields  (phi);
 

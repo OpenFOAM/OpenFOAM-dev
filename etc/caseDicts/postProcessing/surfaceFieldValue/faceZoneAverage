@@ -10,7 +10,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-name    <faceZoneName>;
+faceZone <faceZoneName>;
 
 fields  (<fieldNames>);
 

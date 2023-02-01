@@ -167,7 +167,7 @@ fieldsOperationsFunctions
     #includeFunc uniform
     (
         fieldType=volScalarField,
-        name=mag(smallU),
+        field=mag(smallU),
         dimensions=[0 1 -1 0 0 0 0],
         value=1e-16
     )
@@ -182,7 +182,7 @@ fieldsOperationsFunctions
     #includeFunc uniform
     (
         fieldType=volScalarField,
-        name=Ta,
+        field=Ta,
         dimensions=[0 0 0 1 0 0 0],
         value=297
     )
@@ -314,7 +314,7 @@ probesFunctions
     #includeFunc uniform
     (
         fieldType=volScalarField,
-        name=alpha.dummy,
+        field=alpha.dummy,
         dimensions=[0 0 0 0 0 0 0],
         value=0.2
     )
@@ -394,13 +394,13 @@ surfaceFieldValueFunctions
 
     #includeFunc patchDifference(patch1=inlet, patch2=outlet, p)
 
-    #includeFunc faceZoneAverage(name=f0, U)
+    #includeFunc faceZoneAverage(faceZone=f0, U)
 
-    #includeFunc faceZoneFlowRate(name=f0)
+    #includeFunc faceZoneFlowRate(faceZone=f0)
 
-    #includeFunc triSurfaceAverage(name=mid.obj, p)
+    #includeFunc triSurfaceAverage(triSurface=mid.obj, p)
 
-    #includeFunc triSurfaceVolumetricFlowRate(name=mid.obj)
+    #includeFunc triSurfaceVolumetricFlowRate(triSurface=mid.obj)
 
     #includeFunc triSurfaceDifference
     (

@@ -31,7 +31,7 @@ weightType          numberConcentration;  // volumeConcentration,
                                           // numberConcentration
 regionType          all;                  // cellZone
                                           // defaults to all
-name                cellZoneName;         // relevant for regionType all
+cellZone            cellZoneName;         // relevant for regionType all
 
 
 setFormat           raw;

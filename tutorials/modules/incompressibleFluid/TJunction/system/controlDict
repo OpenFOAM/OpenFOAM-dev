@@ -82,9 +82,9 @@ functions
     }
 
     #includeFunc patchFlowRate(patch=outlet1)
-    #includeFunc faceZoneFlowRate(name=fz1)
+    #includeFunc faceZoneFlowRate(faceZone=fz1)
     #includeFunc patchFlowRate(patch=outlet2)
-    #includeFunc faceZoneFlowRate(name=fz2)
+    #includeFunc faceZoneFlowRate(faceZone=fz2)
 }
 
 // ************************************************************************* //

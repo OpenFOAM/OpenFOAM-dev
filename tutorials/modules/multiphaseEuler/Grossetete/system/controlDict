@@ -56,7 +56,7 @@ functions
 {
     #includeFunc graphCell
     (
-        entryName=graph,
+        name=graph,
         start=(0.0101 0 0),
         end=(0.0101 0.01905 0),
         fields=(alpha.gas)

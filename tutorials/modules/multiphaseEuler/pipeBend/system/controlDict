@@ -57,46 +57,46 @@ functions
 
     #includeFunc populationBalanceSizeDistribution
     (
+        name=probabilityDensity.afterBend_1d,
         populationBalance=agglomerates,
         regionType=cellZone,
-        name=afterBend_1d,
+        cellZone=afterBend_1d,
         functionType=volumeDensity,
         coordinateType=diameter,
-        normalise=yes,
-        entryName=probabilityDensity.afterBend_1d
+        normalise=yes
     )
 
     #includeFunc populationBalanceSizeDistribution
     (
+        name=probabilityDensity.afterBend_5d,
         populationBalance=agglomerates,
         regionType=cellZone,
-        name=afterBend_5d,
+        cellZone=afterBend_5d,
         functionType=volumeDensity,
         coordinateType=diameter,
-        normalise=yes,
-        entryName=probabilityDensity.afterBend_5d
+        normalise=yes
     )
 
     #includeFunc populationBalanceSizeDistribution
     (
+        name=probabilityDensity.afterBend_9d,
         populationBalance=agglomerates,
         regionType=cellZone,
-        name=afterBend_9d,
+        cellZone=afterBend_9d,
         functionType=volumeDensity,
         coordinateType=diameter,
-        normalise=yes,
-        entryName=probabilityDensity.afterBend_9d
+        normalise=yes
     )
 
     #includeFunc populationBalanceSizeDistribution
     (
+        name=probabilityDensity.beforeBend_1d,
         populationBalance=agglomerates,
         regionType=cellZone,
-        name=beforeBend_1d,
+        cellZone=beforeBend_1d,
         functionType=volumeDensity,
         coordinateType=diameter,
-        normalise=yes,
-        entryName=probabilityDensity.beforeBend_1d
+        normalise=yes
     )
 }
 

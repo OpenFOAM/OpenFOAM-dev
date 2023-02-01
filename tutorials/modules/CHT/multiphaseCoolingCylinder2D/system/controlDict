@@ -61,7 +61,7 @@ functions
 {
     #includeFunc patchAverage
     (
-        entryName=cylinderToil,
+        name=cylinderToil,
         region=fluid,
         patch=fluid_to_solid,
         field=T.oil
@@ -69,7 +69,7 @@ functions
 
     #includeFunc patchAverage
     (
-        entryName=cylinderTwater,
+        name=cylinderTwater,
         region=fluid,
         patch=fluid_to_solid,
         field=T.water

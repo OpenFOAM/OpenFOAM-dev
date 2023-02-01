@@ -14,7 +14,7 @@ type            uniform;
 libs            ("libfieldFunctionObjects.so");
 
 fieldType       <fieldType>;
-name            <name>;
+field           <fieldName>;
 dimensions      <dimensions>;
 value           <value>;
 

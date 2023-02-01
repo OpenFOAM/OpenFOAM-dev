@@ -56,7 +56,7 @@ DebugSwitches
 functions
 {
     #includeFunc adjustTimeStepToChemistry
-    #includeFunc probes(funcName=probe, points=((0 0 0)), T, p)
+    #includeFunc probes(name=probe, points=((0 0 0)), T, p)
 }
 
 // ************************************************************************* //

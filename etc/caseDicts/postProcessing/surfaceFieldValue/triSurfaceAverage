@@ -12,7 +12,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-name    <triSurfaceFileName>;
+triSurface <triSurfaceFileName>;
 
 fields  (<fieldNames>);
 

@@ -53,7 +53,7 @@ functions
     clouds
     {
         type            fvModel;
-        #includeModel clouds(entryName=fvModel)
+        #includeModel clouds(name=fvModel)
     }
 }
 

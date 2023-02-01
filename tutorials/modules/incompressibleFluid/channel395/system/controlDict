@@ -53,7 +53,7 @@ functions
     #includeFunc uniform
     (
         fieldType = volScalarField,
-        name = half,
+        field = half,
         dimensions = [0 0 0 0 0 0 0],
         value = 0.5
     )
@@ -64,7 +64,7 @@ functions
 
     #includeFunc graphLayerAverage
     (
-        entryName = layerAverage,
+        name = layerAverage,
         patches = (bottomWall),
         axis = y,
         symmetric = yes,

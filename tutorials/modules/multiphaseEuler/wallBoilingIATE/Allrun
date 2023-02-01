@@ -15,7 +15,7 @@ runApplication reconstructPar -latestTime
 runApplication foamPostProcess -latestTime -func "
     graphCell
     (
-        entryName=graph,
+        name=graph,
         start=(3.4901 0 0),
         end=(3.4901 0.0096 0),
         fields=(alpha.gas T.liquid T.gas d.gas)
@@ -23,7 +23,7 @@ runApplication foamPostProcess -latestTime -func "
 runApplication -append foamPostProcess -latestTime -func "
     patchSurface
     (
-        entryName=patchWallBoilingProperties,
+        name=patchWallBoilingProperties,
         patch=wall,
         surfaceFormat=raw,
         interpolate=false,

@@ -48,7 +48,7 @@ functions
 {
     #includeFunc patchFlowRate(patch=lowerInlet, cloud:massFlux)
     #includeFunc patchFlowRate(patch=upperInlet, cloud:massFlux)
-    #includeFunc faceZoneFlowRate(name=mid, cloud:massFlux)
+    #includeFunc faceZoneFlowRate(faceZone=mid, cloud:massFlux)
     #includeFunc patchFlowRate(patch=outlet, cloud:massFlux)
 }
 

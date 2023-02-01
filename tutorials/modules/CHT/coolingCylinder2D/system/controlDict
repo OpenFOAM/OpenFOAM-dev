@@ -61,14 +61,14 @@ functions
 {
     #includeFunc patchAverage
     (
-        entryName=cylinderT,
+        name=cylinderT,
         region=fluid,
         patch=fluid_to_solid,
         field=T
     )
     #includeFunc patchAverage
     (
-        entryName=inletU,
+        name=inletU,
         region=fluid,
         patch=inlet,
         field=U

@@ -57,7 +57,7 @@ functions
 
     #includeFunc streamlinesSphere
     (
-        entryName=streamlines,
+        name=streamlines,
         centre=(4 0 0.7),
         radius=1,
         nPoints=30,
@@ -66,7 +66,7 @@ functions
 
     #includeFunc cutPlaneSurface
     (
-        entryName=xNormal,
+        name=xNormal,
         point=(4 0 1),
         normal=(1 0 0),
         fields=(p U)
@@ -74,13 +74,13 @@ functions
 
     #includeFunc cutPlaneSurface
     (
-        entryName=yNormal,
+        name=yNormal,
         point=(-5 0.02 1),
         normal=(0 1 0),
         fields=(p U)
     )
 
-    #includeFunc patchSurface(entryName=car, patch=".*(body|Wheels)", p)
+    #includeFunc patchSurface(name=car, patch=".*(body|Wheels)", p)
 }
 
 // ************************************************************************* //
