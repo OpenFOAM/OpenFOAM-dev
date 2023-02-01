@@ -35,7 +35,7 @@ namespace Foam
 }
 
 
-const Foam::scalar Foam::solver::maxIncreaseDeltaT = 1.2;
+Foam::scalar Foam::solver::deltaTFactor = 1.2;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

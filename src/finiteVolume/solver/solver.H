@@ -78,8 +78,8 @@ public:
 
     // Public Static Data
 
-        //- Maximum fractional increase in deltaT
-        static const scalar maxIncreaseDeltaT;
+        //- deltaT increase factor
+        static scalar deltaTFactor;
 
 
 private:

@@ -192,7 +192,7 @@ bool Foam::functionObjects::adjustTimeStepToCombustion::execute()
     // time-step if it can.
     const_cast<Time&>(time_).setDeltaTNoAdjust
     (
-        min(deltaT/solver::maxIncreaseDeltaT, time_.deltaTValue())
+        min(deltaT/solver::deltaTFactor, time_.deltaTValue())
     );
 
     return true;
