@@ -94,7 +94,7 @@ protected:
         //- Velocity field
         volVectorField U;
 
-        //- Volumetric-flux field
+        //- Volumetric flux field
         surfaceScalarField phi;
 
 
