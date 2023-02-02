@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,8 +80,6 @@ template<class T> class SortableList;
 template<class T> class IndirectList;
 template<class T> class UIndirectList;
 template<class T> class BiIndirectList;
-
-typedef UList<label> unallocLabelList;
 
 /*---------------------------------------------------------------------------*\
                             Class List Declaration

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,8 @@ void Foam::LduMatrix<Type, DType, LUType>::sumDiag()
     const Field<LUType>& Upper = const_cast<const LduMatrix&>(*this).upper();
     Field<DType>& Diag = diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     for (label face=0; face<l.size(); face++)
     {
@@ -62,8 +62,8 @@ void Foam::LduMatrix<Type, DType, LUType>::negSumDiag()
     const Field<LUType>& Upper = const_cast<const LduMatrix&>(*this).upper();
     Field<DType>& Diag = diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     for (label face=0; face<l.size(); face++)
     {
@@ -87,8 +87,8 @@ void Foam::LduMatrix<Type, DType, LUType>::sumMagOffDiag
     const Field<LUType>& Lower = const_cast<const LduMatrix&>(*this).lower();
     const Field<LUType>& Upper = const_cast<const LduMatrix&>(*this).upper();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     for (label face = 0; face < l.size(); face++)
     {
@@ -151,8 +151,8 @@ Foam::LduMatrix<Type, DType, LUType>::faceH(const Field<Type>& psi) const
     const Field<LUType>& Upper = const_cast<const LduMatrix&>(*this).upper();
 
     // Take references to addressing
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     tmp<Field<Type>> tfaceHpsi(new Field<Type> (Lower.size()));
     Field<Type> & faceHpsi = tfaceHpsi();
@@ -428,8 +428,8 @@ void Foam::LduMatrix<Type, DType, LUType>::operator*=
         Field<LUType>& upper = this->upper();
         Field<LUType>& lower = this->lower();
 
-        const unallocLabelList& l = lduAddr().lowerAddr();
-        const unallocLabelList& u = lduAddr().upperAddr();
+        const labelUList& l = lduAddr().lowerAddr();
+        const labelUList& u = lduAddr().upperAddr();
 
         for (label face=0; face<upper.size(); face++)
         {

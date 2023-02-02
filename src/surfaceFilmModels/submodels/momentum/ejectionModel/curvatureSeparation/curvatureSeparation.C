@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,8 +101,8 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
 {
     const fvMesh& mesh = film().mesh();
     const vectorField nf(mesh.Sf()/mesh.magSf());
-    const unallocLabelList& own = mesh.owner();
-    const unallocLabelList& nbr = mesh.neighbour();
+    const labelUList& own = mesh.owner();
+    const labelUList& nbr = mesh.neighbour();
 
     scalarField phiMax(mesh.nCells(), -great);
     scalarField cosAngle(mesh.nCells(), 0);

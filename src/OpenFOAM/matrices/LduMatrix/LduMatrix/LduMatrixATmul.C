@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -202,7 +202,7 @@ void Foam::LduMatrix<Type, DType, LUType>::sumA
     {
         if (interfaces_.set(patchi))
         {
-            const unallocLabelList& pa = lduAddr().patchAddr(patchi);
+            const labelUList& pa = lduAddr().patchAddr(patchi);
             const Field<LUType>& pCoeffs = interfacesUpper_[patchi];
 
             forAll(pa, face)

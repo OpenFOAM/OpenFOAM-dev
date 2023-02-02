@@ -1069,7 +1069,7 @@ Foam::momentumSurfaceFilm::Srho() const
         toPrimary(filmPatchi, patchMass);
 
         const label primaryPatchi = primaryPatchIDs()[i];
-        const unallocLabelList& cells =
+        const labelUList& cells =
             primaryMesh().boundaryMesh()[primaryPatchi].faceCells();
 
         forAll(patchMass, j)
@@ -1123,7 +1123,7 @@ Foam::momentumSurfaceFilm::SU() const
 
         toPrimary(filmPatchi, patchMomentum);
 
-        const unallocLabelList& cells =
+        const labelUList& cells =
             primaryMesh().boundaryMesh()[primaryPatchIDs()[i]].faceCells();
 
         forAll(patchMomentum, j)

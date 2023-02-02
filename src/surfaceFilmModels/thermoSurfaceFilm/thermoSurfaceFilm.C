@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -590,7 +590,7 @@ Foam::thermoSurfaceFilm::SYi(const label i) const
             toPrimary(filmPatchi, patchMass);
 
             const label primaryPatchi = primaryPatchIDs()[i];
-            const unallocLabelList& cells =
+            const labelUList& cells =
                 primaryMesh().boundaryMesh()[primaryPatchi].faceCells();
 
             forAll(patchMass, j)
@@ -630,7 +630,7 @@ Foam::thermoSurfaceFilm::Sh() const
 
         toPrimary(filmPatchi, patchEnergy);
 
-        const unallocLabelList& cells =
+        const labelUList& cells =
             primaryMesh().boundaryMesh()[primaryPatchIDs()[i]].faceCells();
 
         forAll(patchEnergy, j)
