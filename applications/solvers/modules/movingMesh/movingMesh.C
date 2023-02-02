@@ -71,16 +71,12 @@ void Foam::solvers::movingMesh::preSolve()
 }
 
 
-bool Foam::solvers::movingMesh::moveMesh()
+void Foam::solvers::movingMesh::moveMesh()
 {
     if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
         mesh.move();
-
-        return true;
     }
-
-    return false;
 }
 
 

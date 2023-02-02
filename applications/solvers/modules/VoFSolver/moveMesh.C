@@ -29,7 +29,7 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::solvers::VoFSolver::moveMesh()
+void Foam::solvers::VoFSolver::moveMesh()
 {
     if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
@@ -102,16 +102,10 @@ bool Foam::solvers::VoFSolver::moveMesh()
             meshCourantNo();
 
             correctInterface();
-
-            divU.clear();
-
-            return true;
         }
 
         divU.clear();
     }
-
-    return false;
 }
 
 

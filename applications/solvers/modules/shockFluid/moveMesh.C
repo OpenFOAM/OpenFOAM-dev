@@ -27,7 +27,7 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::solvers::shockFluid::moveMesh()
+void Foam::solvers::shockFluid::moveMesh()
 {
     if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
@@ -41,12 +41,8 @@ bool Foam::solvers::shockFluid::moveMesh()
             }
 
             meshCourantNo();
-
-            return true;
         }
     }
-
-    return false;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,7 +174,7 @@ public:
         virtual void preSolve();
 
         //- Called at the start of the PIMPLE loop to move the mesh
-        virtual bool moveMesh();
+        virtual void moveMesh();
 
         //- Called at the start of the PIMPLE loop
         virtual void prePredictor();

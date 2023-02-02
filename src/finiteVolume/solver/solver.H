@@ -160,7 +160,7 @@ public:
         virtual void preSolve() = 0;
 
         //- Called at the start of the PIMPLE loop to move the mesh
-        virtual bool moveMesh() = 0;
+        virtual void moveMesh() = 0;
 
         //- Called at the start of the PIMPLE loop
         virtual void prePredictor() = 0;

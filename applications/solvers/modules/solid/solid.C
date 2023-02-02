@@ -160,7 +160,7 @@ void Foam::solvers::solid::preSolve()
 }
 
 
-bool Foam::solvers::solid::moveMesh()
+void Foam::solvers::solid::moveMesh()
 {
     if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
@@ -173,14 +173,7 @@ bool Foam::solvers::solid::moveMesh()
         }
 
         mesh.move();
-
-        if (mesh.changing())
-        {
-            return mesh.moving();
-        }
     }
-
-    return false;
 }
 
 

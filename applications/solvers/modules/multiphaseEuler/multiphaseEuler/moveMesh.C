@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::solvers::multiphaseEuler::moveMesh()
+void Foam::solvers::multiphaseEuler::moveMesh()
 {
     if
     (
@@ -69,16 +69,10 @@ bool Foam::solvers::multiphaseEuler::moveMesh()
             );
 
             meshCourantNo();
-
-            divU.clear();
-
-            return true;
         }
 
         divU.clear();
     }
-
-    return false;
 }
 
 
