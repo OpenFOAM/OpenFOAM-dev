@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,7 +152,16 @@ public:
         //- Provide current points for motion.  Uses current motion field
         virtual tmp<pointField> curPoints() const = 0;
 
+        //- Correct point field for reduced-dimensionality cases
         virtual void twoDCorrectPoints(pointField&) const;
+
+        //- Is the motion solid body? I.e., are the volumes and area magnitudes
+        //  unchanged? Defaults to false. Set to true by
+        //  motionSolvers::solidBody.
+        virtual bool solidBody() const
+        {
+            return false;
+        }
 
         //- Solve for motion
         virtual void solve() = 0;

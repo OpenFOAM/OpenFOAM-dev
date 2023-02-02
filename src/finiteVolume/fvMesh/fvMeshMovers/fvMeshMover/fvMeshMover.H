@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,6 +152,14 @@ public:
         virtual bool dynamic() const
         {
             return true;
+        }
+
+        //- Is the motion solid body? I.e., are the volumes and area magnitudes
+        //  unchanged? Defaults to false. Set to true by fvMeshMovers::none and
+        //  delegated to the motion solver by fvMeshMovers::motionSolver.
+        virtual bool solidBody() const
+        {
+            return false;
         }
 
         //- Update the mesh for both mesh motion and topology change

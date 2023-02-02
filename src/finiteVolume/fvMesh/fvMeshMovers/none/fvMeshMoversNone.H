@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,6 +77,12 @@ public:
         virtual bool dynamic() const
         {
             return false;
+        }
+
+        //- The mesh is static, which meets the criteria of a solid body motion
+        virtual bool solidBody() const
+        {
+            return true;
         }
 
         //- Dummy update function which does not change the mesh
