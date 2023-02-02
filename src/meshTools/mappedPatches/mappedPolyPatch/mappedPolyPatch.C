@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,8 @@ Foam::mappedPolyPatch::mappedPolyPatch
 )
 :
     polyPatch(name, size, start, index, bm, patchType),
-    mappedPatchBase(static_cast<const polyPatch&>(*this))
+    mappedPatchBase(static_cast<const polyPatch&>(*this)),
+    reMapAfterMove_(true)
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), typeName) == -1)
@@ -70,7 +71,8 @@ Foam::mappedPolyPatch::mappedPolyPatch
 )
 :
     polyPatch(name, dict, index, bm, patchType),
-    mappedPatchBase(*this, dict, false)
+    mappedPatchBase(*this, dict, false),
+    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true))
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), typeName) == -1)
@@ -87,7 +89,8 @@ Foam::mappedPolyPatch::mappedPolyPatch
 )
 :
     polyPatch(pp, bm),
-    mappedPatchBase(*this, pp)
+    mappedPatchBase(*this, pp),
+    reMapAfterMove_(true)
 {}
 
 
@@ -101,7 +104,8 @@ Foam::mappedPolyPatch::mappedPolyPatch
 )
 :
     polyPatch(pp, bm, index, newSize, newStart),
-    mappedPatchBase(*this, pp)
+    mappedPatchBase(*this, pp),
+    reMapAfterMove_(true)
 {}
 
 
@@ -143,7 +147,10 @@ void Foam::mappedPolyPatch::movePoints
 )
 {
     polyPatch::movePoints(pBufs, p);
-    mappedPatchBase::clearOut();
+    if (reMapAfterMove_)
+    {
+        mappedPatchBase::clearOut();
+    }
 }
 
 
@@ -164,6 +171,7 @@ void Foam::mappedPolyPatch::write(Ostream& os) const
 {
     polyPatch::write(os);
     mappedPatchBase::write(os);
+    writeEntryIfDifferent<bool>(os, "reMapAfterMove", true, reMapAfterMove_);
 }
 
 

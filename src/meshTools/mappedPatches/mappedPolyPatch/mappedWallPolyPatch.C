@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,8 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 )
 :
     wallPolyPatch(name, size, start, index, bm, patchType),
-    mappedPatchBase(static_cast<const polyPatch&>(*this))
+    mappedPatchBase(static_cast<const polyPatch&>(*this)),
+    reMapAfterMove_(true)
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)
@@ -84,7 +85,8 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
         neighbourRegion,
         neighbourPatch,
         cyclicTransform(true)
-    )
+    ),
+    reMapAfterMove_(true)
 {}
 
 
@@ -98,7 +100,8 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 )
 :
     wallPolyPatch(name, dict, index, bm, patchType),
-    mappedPatchBase(*this, dict, true)
+    mappedPatchBase(*this, dict, true),
+    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true))
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)
@@ -115,7 +118,8 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 )
 :
     wallPolyPatch(pp, bm),
-    mappedPatchBase(*this, pp)
+    mappedPatchBase(*this, pp),
+    reMapAfterMove_(true)
 {}
 
 
@@ -129,7 +133,8 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 )
 :
     wallPolyPatch(pp, bm, index, newSize, newStart),
-    mappedPatchBase(*this, pp)
+    mappedPatchBase(*this, pp),
+    reMapAfterMove_(true)
 {}
 
 
@@ -171,7 +176,10 @@ void Foam::mappedWallPolyPatch::movePoints
 )
 {
     wallPolyPatch::movePoints(pBufs, p);
-    mappedPatchBase::clearOut();
+    if (reMapAfterMove_)
+    {
+        mappedPatchBase::clearOut();
+    }
 }
 
 
@@ -192,6 +200,7 @@ void Foam::mappedWallPolyPatch::write(Ostream& os) const
 {
     wallPolyPatch::write(os);
     mappedPatchBase::write(os);
+    writeEntryIfDifferent<bool>(os, "reMapAfterMove", true, reMapAfterMove_);
 }
 
 
