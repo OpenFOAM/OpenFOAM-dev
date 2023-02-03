@@ -145,7 +145,7 @@ public:
 
         //- Copy constructor from list containing another type
         template<class T2>
-        explicit List(const List<T2>&);
+        explicit List(const UList<T2>&);
 
         //- Move constructor
         List(List<T>&&);
