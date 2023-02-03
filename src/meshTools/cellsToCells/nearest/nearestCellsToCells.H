@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,39 +22,35 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mapNearestMethod
+    Foam::cellsToCellss::nearest
 
 Description
-    Map nearest mesh-to-mesh interpolation class
-
-    Not volume conservative.
-    - cells outside other meshes bounding box do not get mapped
-      (initial filtering)
-    - all remaining cells will be mapped (with weight 1!)
-    - so take care when mapping meshes with different bounding boxes!
+    Nearest cells-to-cells interpolation class.
 
 SourceFiles
-    mapNearestMethod.C
+    nearestCellsToCells.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mapNearestMethod_H
-#define mapNearestMethod_H
+#ifndef nearestCellsToCells_H
+#define nearestCellsToCells_H
 
-#include "meshToMeshMethod.H"
+#include "cellsToCells.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace cellsToCellss
+{
 
 /*---------------------------------------------------------------------------*\
-                      Class mapNearestMethod Declaration
+                           Class nearest Declaration
 \*---------------------------------------------------------------------------*/
 
-class mapNearestMethod
+class nearest
 :
-    public meshToMeshMethod
+    public cellsToCells
 {
 private:
 
@@ -64,6 +60,8 @@ private:
         //  true if found a matching pair
         bool findInitialSeeds
         (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
             const labelList& srcCellIDs,
             const boolList& mapFlag,
             const label startSeedI,
@@ -74,6 +72,8 @@ private:
         //- Calculate the mesh-to-mesh addressing and weights
         scalar calculateAddressing
         (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
             labelListList& srcToTgtCellAddr,
             scalarListList& srcToTgtCellWght,
             labelListList& tgtToSrcCellAddr,
@@ -97,6 +97,8 @@ private:
         //- Set the next cells for the marching front algorithm
         void setNextNearestCells
         (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
             label& startSeedI,
             label& srcCelli,
             label& tgtCelli,
@@ -107,53 +109,55 @@ private:
         //- Find a source cell mapped to target cell tgtCelli
         label findMappedSrcCell
         (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
             const label tgtCelli,
             const List<DynamicList<label>>& tgtToSrc
         ) const;
 
 
+protected:
+
+    // Protected Member Functions
+
+        // Intersection
+
+            //- Calculate the addressing and weights
+            virtual scalar calculate
+            (
+                const polyMesh& srcMesh,
+                const polyMesh& tgtMesh
+            );
+
+            //- Normalise the weights for a given mesh
+            virtual void normalise
+            (
+                const polyMesh& mesh,
+                labelListList& localOtherCells,
+                scalarListList& weights
+            ) const;
+
+
 public:
 
     //- Run-time type information
-    TypeName("mapNearest");
+    TypeName("nearest");
 
 
     // Constructors
 
-        //- Construct from source and target meshes
-        mapNearestMethod(const polyMesh& src, const polyMesh& tgt);
+        //- Construct null
+        nearest();
 
 
     //- Destructor
-    virtual ~mapNearestMethod();
-
-
-    // Member Functions
-
-        //- Get the corresponding patchToPatch method
-        virtual const word& patchToPatchMethod() const;
-
-        //- Calculate addressing and weights
-        virtual scalar calculate
-        (
-            labelListList& srcToTgtAddr,
-            scalarListList& srcToTgtWght,
-            labelListList& tgtToTgtAddr,
-            scalarListList& tgtToTgtWght
-        );
-
-        //- Normalise the weights for a given mesh
-        virtual void normalise
-        (
-            const polyMesh& srcMesh,
-            labelListList& srcToTgtAddr,
-            scalarListList& srcToTgtWght
-        ) const;
+    virtual ~nearest();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace cellsToCellss
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

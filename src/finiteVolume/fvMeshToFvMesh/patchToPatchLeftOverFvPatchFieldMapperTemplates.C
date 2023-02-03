@@ -23,32 +23,30 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "patchToPatchFvPatchFieldMapper.H"
+#include "patchToPatchLeftOverFvPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::patchToPatchFvPatchFieldMapper::operator()
+void Foam::patchToPatchLeftOverFvPatchFieldMapper::map
 (
     Field<Type>& f,
-    const tmp<Field<Type>>& tmapF
+    const Field<Type>& mapF
 ) const
 {
-    operator()(f, tmapF());
-    tmapF.clear();
+    f = forward_ ? pToP_.srcToTgt(mapF, f) : pToP_.tgtToSrc(mapF, f);
 }
 
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::patchToPatchFvPatchFieldMapper::operator()
+Foam::patchToPatchLeftOverFvPatchFieldMapper::map
 (
-    const tmp<Field<Type>>& tmapF
+    const Field<Type>& mapF
 ) const
 {
-    tmp<Foam::Field<Type>> tf(operator()(tmapF()));
-    tmapF.clear();
-    return tf;
+    NotImplemented;
+    return tmp<Field<Type>>(nullptr);
 }
 
 

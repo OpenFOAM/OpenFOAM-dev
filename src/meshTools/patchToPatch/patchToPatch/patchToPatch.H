@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,16 +30,17 @@ Description
 SourceFiles
     patchToPatch.C
     patchToPatchParallelOps.C
+    patchToPatchTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef patchToPatch_H
 #define patchToPatch_H
 
+#include "remote.H"
 #include "distributionMap.H"
 #include "primitivePatch.H"
 #include "primitiveOldTimePatch.H"
-#include "remote.H"
 #include "runTimeSelectionTables.H"
 #include "treeBoundBox.H"
 
@@ -253,31 +254,6 @@ protected:
 
             //- For each target face, the coupled source weights
             virtual tmpNrc<List<DynamicList<scalar>>> tgtWeights() const = 0;
-
-            //- Return a primitive with all components set to NaN
-            template<class Type>
-            static Type NaN();
-
-            //- Interpolate with normalisation
-            template<class Type>
-            static tmp<Field<Type>> interpolate
-            (
-                const List<DynamicList<label>>& localOtherFaces,
-                const List<DynamicList<scalar>>& weights,
-                const autoPtr<distributionMap>& otherMapPtr,
-                const Field<Type>& otherFld
-            );
-
-            //- Interpolate without normalisation
-            template<class Type>
-            static tmp<Field<Type>> interpolate
-            (
-                const List<DynamicList<label>>& localOtherFaces,
-                const List<DynamicList<scalar>>& weights,
-                const autoPtr<distributionMap>& otherMapPtr,
-                const Field<Type>& otherFld,
-                const Field<Type>& leftOverFld
-            );
 
 
 public:

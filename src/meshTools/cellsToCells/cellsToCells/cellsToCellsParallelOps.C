@@ -23,16 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "meshToMesh.H"
-#include "OFstream.H"
-#include "Time.H"
-#include "globalIndex.H"
+#include "cellsToCells.H"
 #include "processorPolyPatch.H"
 #include "SubField.H"
+#include "Time.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+inline void offset(label& lst, const label o)
+{
+    lst += o;
+}
+
+template<class ListType>
+void offset(ListType& lst, const label o)
+{
+    forAll(lst, i)
+    {
+        offset(lst[i], o);
+    }
+}
+
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::labelListList Foam::meshToMesh::tgtMeshSendCells
+Foam::labelListList Foam::cellsToCells::tgtMeshSendCells
 (
     const polyMesh& srcMesh,
     const polyMesh& tgtMesh
@@ -85,7 +105,7 @@ Foam::labelListList Foam::meshToMesh::tgtMeshSendCells
 }
 
 
-Foam::List<Foam::remote> Foam::meshToMesh::distributeMesh
+Foam::List<Foam::remote> Foam::cellsToCells::distributeMesh
 (
     const distributionMap& map,
     const polyMesh& mesh,
@@ -414,10 +434,7 @@ Foam::List<Foam::remote> Foam::meshToMesh::distributeMesh
             internalFaceOffset[proci]
         );
         slice = SubList<face>(fcs, allNInternalFaces[proci]);
-        forAll(slice, i)
-        {
-            add(slice[i], pointOffset[proci]);
-        }
+        offset(slice, pointOffset[proci]);
 
         SubField<label> ownSlice
         (
@@ -426,7 +443,7 @@ Foam::List<Foam::remote> Foam::meshToMesh::distributeMesh
             internalFaceOffset[proci]
         );
         ownSlice = SubField<label>(faceOs, allNInternalFaces[proci]);
-        add(ownSlice, cellOffset[proci]);
+        offset(ownSlice, cellOffset[proci]);
 
         SubField<label> nbrSlice
         (
@@ -435,7 +452,7 @@ Foam::List<Foam::remote> Foam::meshToMesh::distributeMesh
             internalFaceOffset[proci]
         );
         nbrSlice = SubField<label>(faceNs, allNInternalFaces[proci]);
-        add(nbrSlice, cellOffset[proci]);
+        offset(nbrSlice, cellOffset[proci]);
 
         internalFaceOffset[proci] += allNInternalFaces[proci];
     }
@@ -499,7 +516,7 @@ Foam::List<Foam::remote> Foam::meshToMesh::distributeMesh
                             localFaceNeighbours[localFacei] = newOwn;
                         }
 
-                        add(localFaces[localFacei], pointOffset[proci]);
+                        offset(localFaces[localFacei], pointOffset[proci]);
 
                         // mark with unique value
                         fnd() = -2;
@@ -549,7 +566,7 @@ Foam::List<Foam::remote> Foam::meshToMesh::distributeMesh
                     }
 
                     localFaces[localFacei] = fcs[i];
-                    add(localFaces[localFacei], pointOffset[proci]);
+                    offset(localFaces[localFacei], pointOffset[proci]);
 
                     localFaceOwners[localFacei] = newOwn;
                     localFaceNeighbours[localFacei] = -1;
@@ -568,7 +585,7 @@ Foam::List<Foam::remote> Foam::meshToMesh::distributeMesh
                     const label localFacei = nIntFaces++;
 
                     localFaces[localFacei] = fcs[i];
-                    add(localFaces[localFacei], pointOffset[proci]);
+                    offset(localFaces[localFacei], pointOffset[proci]);
 
                     localFaceOwners[localFacei] = newOwn;
                     localFaceNeighbours[localFacei] = -1;
@@ -617,7 +634,7 @@ Foam::List<Foam::remote> Foam::meshToMesh::distributeMesh
 }
 
 
-void Foam::meshToMesh::trimLocalTgt()
+void Foam::cellsToCells::trimLocalTgt()
 {
     // Determine which local target cells are actually used
     boolList oldLocalTgtCellIsUsed(localTgtProcCellsPtr_().size(), false);

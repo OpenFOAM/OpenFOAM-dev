@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mapNearestMethod.H"
-#include "nearestPatchToPatch.H"
+#include "nearestCellsToCells.H"
 #include "pointIndexHit.H"
 #include "indexedOctree.H"
 #include "treeDataCell.H"
@@ -34,15 +33,20 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(mapNearestMethod, 0);
-    addToRunTimeSelectionTable(meshToMeshMethod, mapNearestMethod, components);
+namespace cellsToCellss
+{
+    defineTypeNameAndDebug(nearest, 0);
+    addToRunTimeSelectionTable(cellsToCells, nearest, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::mapNearestMethod::findInitialSeeds
+bool Foam::cellsToCellss::nearest::findInitialSeeds
 (
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh,
     const labelList& srcCellIDs,
     const boolList& mapFlag,
     const label startSeedI,
@@ -50,7 +54,7 @@ bool Foam::mapNearestMethod::findInitialSeeds
     label& tgtSeedI
 ) const
 {
-    const vectorField& srcCcs = src_.cellCentres();
+    const vectorField& srcCcs = srcMesh.cellCentres();
 
     for (label i = startSeedI; i < srcCellIDs.size(); i++)
     {
@@ -60,7 +64,7 @@ bool Foam::mapNearestMethod::findInitialSeeds
         {
             const point& srcCc = srcCcs[srcI];
             pointIndexHit hit =
-                tgt_.cellTree().findNearest(srcCc, great);
+                tgtMesh.cellTree().findNearest(srcCc, great);
 
             if (hit.hit())
             {
@@ -91,8 +95,10 @@ bool Foam::mapNearestMethod::findInitialSeeds
 }
 
 
-Foam::scalar Foam::mapNearestMethod::calculateAddressing
+Foam::scalar Foam::cellsToCellss::nearest::calculateAddressing
 (
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh,
     labelListList& srcToTgtCellAddr,
     scalarListList& srcToTgtCellWght,
     labelListList& tgtToSrcCellAddr,
@@ -106,11 +112,11 @@ Foam::scalar Foam::mapNearestMethod::calculateAddressing
 {
     scalar V = 0;
 
-    List<DynamicList<label>> srcToTgt(src_.nCells());
-    List<DynamicList<label>> tgtToSrc(tgt_.nCells());
+    List<DynamicList<label>> srcToTgt(srcMesh.nCells());
+    List<DynamicList<label>> tgtToSrc(tgtMesh.nCells());
 
-    const scalarField& srcVc = src_.cellVolumes();
-    const scalarField& tgtVc = tgt_.cellVolumes();
+    const scalarField& srcVc = srcMesh.cellVolumes();
+    const scalarField& tgtVc = tgtMesh.cellVolumes();
 
     {
         label srcCelli = srcSeedI;
@@ -119,7 +125,7 @@ Foam::scalar Foam::mapNearestMethod::calculateAddressing
         do
         {
             // find nearest tgt cell
-            findNearestCell(src_, tgt_, srcCelli, tgtCelli);
+            findNearestCell(srcMesh, tgtMesh, srcCelli, tgtCelli);
 
            // store src/tgt cell pair
             srcToTgt[srcCelli].append(tgtCelli);
@@ -134,6 +140,8 @@ Foam::scalar Foam::mapNearestMethod::calculateAddressing
             // find new source cell
             setNextNearestCells
             (
+                srcMesh,
+                tgtMesh,
                 startSeedI,
                 srcCelli,
                 tgtCelli,
@@ -146,8 +154,8 @@ Foam::scalar Foam::mapNearestMethod::calculateAddressing
 
     // for the case of multiple source cells per target cell, select the
     // nearest source cell only and discard the others
-    const vectorField& srcCc = src_.cellCentres();
-    const vectorField& tgtCc = tgt_.cellCentres();
+    const vectorField& srcCc = srcMesh.cellCentres();
+    const vectorField& tgtCc = tgtMesh.cellCentres();
 
     forAll(tgtToSrc, targetCelli)
     {
@@ -182,9 +190,10 @@ Foam::scalar Foam::mapNearestMethod::calculateAddressing
     {
         if (tgtToSrc[tgtCelli].empty())
         {
-            label srcCelli = findMappedSrcCell(tgtCelli, tgtToSrc);
+            label srcCelli =
+                findMappedSrcCell(srcMesh, tgtMesh, tgtCelli, tgtToSrc);
 
-            findNearestCell(tgt_, src_, tgtCelli, srcCelli);
+            findNearestCell(tgtMesh, srcMesh, tgtCelli, srcCelli);
 
             tgtToSrc[tgtCelli].append(srcCelli);
         }
@@ -207,7 +216,7 @@ Foam::scalar Foam::mapNearestMethod::calculateAddressing
 }
 
 
-void Foam::mapNearestMethod::findNearestCell
+void Foam::cellsToCellss::nearest::findNearestCell
 (
     const polyMesh& mesh1,
     const polyMesh& mesh2,
@@ -244,8 +253,10 @@ void Foam::mapNearestMethod::findNearestCell
 }
 
 
-void Foam::mapNearestMethod::setNextNearestCells
+void Foam::cellsToCellss::nearest::setNextNearestCells
 (
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh,
     label& startSeedI,
     label& srcCelli,
     label& tgtCelli,
@@ -253,7 +264,7 @@ void Foam::mapNearestMethod::setNextNearestCells
     const labelList& srcCellIDs
 ) const
 {
-    const labelList& srcNbr = src_.cellCells()[srcCelli];
+    const labelList& srcNbr = srcMesh.cellCells()[srcCelli];
 
     srcCelli = -1;
     forAll(srcNbr, i)
@@ -276,8 +287,10 @@ void Foam::mapNearestMethod::setNextNearestCells
         }
     }
 
-    (void)findInitialSeeds
+    findInitialSeeds
     (
+        srcMesh,
+        tgtMesh,
         srcCellIDs,
         mapFlag,
         startSeedI,
@@ -287,8 +300,10 @@ void Foam::mapNearestMethod::setNextNearestCells
 }
 
 
-Foam::label Foam::mapNearestMethod::findMappedSrcCell
+Foam::label Foam::cellsToCellss::nearest::findMappedSrcCell
 (
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh,
     const label tgtCelli,
     const List<DynamicList<label>>& tgtToSrc
 ) const
@@ -313,7 +328,7 @@ Foam::label Foam::mapNearestMethod::findMappedSrcCell
             }
             else
             {
-                const labelList& nbrCells = tgt_.cellCells()[tgtI];
+                const labelList& nbrCells = tgtMesh.cellCells()[tgtI];
 
                 forAll(nbrCells, i)
                 {
@@ -331,68 +346,32 @@ Foam::label Foam::mapNearestMethod::findMappedSrcCell
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-Foam::mapNearestMethod::mapNearestMethod
+Foam::scalar Foam::cellsToCellss::nearest::calculate
 (
-    const polyMesh& src,
-    const polyMesh& tgt
-)
-:
-    meshToMeshMethod(src, tgt)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * //
-
-Foam::mapNearestMethod::~mapNearestMethod()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::word& Foam::mapNearestMethod::patchToPatchMethod() const
-{
-    return patchToPatches::nearest::typeName;
-}
-
-
-Foam::scalar Foam::mapNearestMethod::calculate
-(
-    labelListList& srcToTgtAddr,
-    scalarListList& srcToTgtWght,
-    labelListList& tgtToSrcAddr,
-    scalarListList& tgtToSrcWght
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh
 )
 {
-    bool ok = initialise
-    (
-        srcToTgtAddr,
-        srcToTgtWght,
-        tgtToSrcAddr,
-        tgtToSrcWght
-    );
+    initialise(srcMesh, tgtMesh);
 
-    if (!ok)
-    {
-        return 0;
-    }
+    // Determine (potentially) participating source mesh cells
+    const labelList srcCellIDs(maskCells(srcMesh, tgtMesh));
 
-    // (potentially) participating source mesh cells
-    const labelList srcCellIDs(maskCells());
-
-    // list to keep track of whether src cell can be mapped
-    boolList mapFlag(src_.nCells(), false);
+    // Initialise list to keep track of whether src cell can be mapped
+    boolList mapFlag(srcMesh.nCells(), false);
     UIndirectList<bool>(mapFlag, srcCellIDs) = true;
 
-    // find initial point in tgt mesh
+    // Find initial point in tgt mesh
     label srcSeedI = -1;
     label tgtSeedI = -1;
     label startSeedI = 0;
-
     bool startWalk =
         findInitialSeeds
         (
+            srcMesh,
+            tgtMesh,
             srcCellIDs,
             mapFlag,
             startSeedI,
@@ -402,26 +381,21 @@ Foam::scalar Foam::mapNearestMethod::calculate
 
     if (startWalk)
     {
-        const scalar V =
+        return
             calculateAddressing
             (
-                srcToTgtAddr,
-                srcToTgtWght,
-                tgtToSrcAddr,
-                tgtToSrcWght,
+                srcMesh,
+                tgtMesh,
+                srcLocalTgtCells_,
+                srcWeights_,
+                tgtLocalSrcCells_,
+                tgtWeights_,
                 srcSeedI,
                 tgtSeedI,
                 srcCellIDs,
                 mapFlag,
                 startSeedI
             );
-
-        if (debug > 1)
-        {
-            writeConnectivity(src_, tgt_, srcToTgtAddr);
-        }
-
-        return V;
     }
     else
     {
@@ -430,7 +404,7 @@ Foam::scalar Foam::mapNearestMethod::calculate
 }
 
 
-void Foam::mapNearestMethod::normalise
+void Foam::cellsToCellss::nearest::normalise
 (
     const polyMesh& srcMesh,
     labelListList& srcToTgtAddr,
@@ -447,6 +421,20 @@ void Foam::mapNearestMethod::normalise
         }
     }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::cellsToCellss::nearest::nearest()
+:
+    cellsToCells()
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * //
+
+Foam::cellsToCellss::nearest::~nearest()
+{}
 
 
 // ************************************************************************* //

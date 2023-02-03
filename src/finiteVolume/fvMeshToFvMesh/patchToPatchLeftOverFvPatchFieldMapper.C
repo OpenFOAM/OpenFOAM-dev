@@ -23,33 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "patchToPatchFvPatchFieldMapper.H"
+#include "patchToPatchLeftOverFvPatchFieldMapper.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::patchToPatchFvPatchFieldMapper::operator()
+FOR_ALL_FIELD_TYPES
 (
-    Field<Type>& f,
-    const tmp<Field<Type>>& tmapF
-) const
-{
-    operator()(f, tmapF());
-    tmapF.clear();
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::patchToPatchFvPatchFieldMapper::operator()
-(
-    const tmp<Field<Type>>& tmapF
-) const
-{
-    tmp<Foam::Field<Type>> tf(operator()(tmapF()));
-    tmapF.clear();
-    return tf;
-}
+    IMPLEMENT_FIELD_MAPPER_OPERATOR,
+    patchToPatchLeftOverFvPatchFieldMapper
+)
 
 
 // ************************************************************************* //

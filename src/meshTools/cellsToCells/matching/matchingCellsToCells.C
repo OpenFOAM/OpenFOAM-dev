@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "directMethod.H"
-#include "matchingPatchToPatch.H"
+#include "matchingCellsToCells.H"
 #include "indexedOctree.H"
 #include "treeDataCell.H"
 #include "addToRunTimeSelectionTable.H"
@@ -33,30 +32,37 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(directMethod, 0);
-    addToRunTimeSelectionTable(meshToMeshMethod, directMethod, components);
+namespace cellsToCellss
+{
+    defineTypeNameAndDebug(matching, 0);
+    addToRunTimeSelectionTable(cellsToCells, matching, word);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::directMethod::intersect
+bool Foam::cellsToCellss::matching::intersect
 (
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh,
     const label srcCelli,
     const label tgtCelli
 ) const
 {
-    return tgt_.pointInCell
+    return tgtMesh.pointInCell
     (
-        src_.cellCentres()[srcCelli],
+        srcMesh.cellCentres()[srcCelli],
         tgtCelli,
         polyMesh::FACE_PLANES
     );
 }
 
 
-bool Foam::directMethod::findInitialSeeds
+bool Foam::cellsToCellss::matching::findInitialSeeds
 (
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh,
     const labelList& srcCellIDs,
     const boolList& mapFlag,
     const label startSeedI,
@@ -64,9 +70,9 @@ bool Foam::directMethod::findInitialSeeds
     label& tgtSeedI
 ) const
 {
-    const cellList& srcCells = src_.cells();
-    const faceList& srcFaces = src_.faces();
-    const pointField& srcPts = src_.points();
+    const cellList& srcCells = srcMesh.cells();
+    const faceList& srcFaces = srcMesh.faces();
+    const pointField& srcPts = srcMesh.points();
 
     for (label i = startSeedI; i < srcCellIDs.size(); i++)
     {
@@ -75,9 +81,9 @@ bool Foam::directMethod::findInitialSeeds
         if (mapFlag[srcI])
         {
             const point srcCtr(srcCells[srcI].centre(srcPts, srcFaces));
-            label tgtI = tgt_.cellTree().findInside(srcCtr);
+            label tgtI = tgtMesh.cellTree().findInside(srcCtr);
 
-            if (tgtI != -1 && intersect(srcI, tgtI))
+            if (tgtI != -1 && intersect(srcMesh, tgtMesh, srcI, tgtI))
             {
                 srcSeedI = srcI;
                 tgtSeedI = tgtI;
@@ -96,8 +102,10 @@ bool Foam::directMethod::findInitialSeeds
 }
 
 
-Foam::scalar Foam::directMethod::calculateAddressing
+Foam::scalar Foam::cellsToCellss::matching::calculateAddressing
 (
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh,
     labelListList& srcToTgtCellAddr,
     scalarListList& srcToTgtCellWght,
     labelListList& tgtToSrcCellAddr,
@@ -112,15 +120,15 @@ Foam::scalar Foam::directMethod::calculateAddressing
     scalar V = 0;
 
     // store a list of src cells already mapped
-    labelList srcTgtSeed(src_.nCells(), -1);
+    labelList srcTgtSeed(srcMesh.nCells(), -1);
 
-    List<DynamicList<label>> srcToTgt(src_.nCells());
-    List<DynamicList<label>> tgtToSrc(tgt_.nCells());
+    List<DynamicList<label>> srcToTgt(srcMesh.nCells());
+    List<DynamicList<label>> tgtToSrc(tgtMesh.nCells());
 
     DynamicList<label> srcSeeds(10);
 
-    const scalarField& srcVc = src_.cellVolumes();
-    const scalarField& tgtVc = tgt_.cellVolumes();
+    const scalarField& srcVc = srcMesh.cellVolumes();
+    const scalarField& tgtVc = tgtMesh.cellVolumes();
 
     label srcCelli = srcSeedI;
     label tgtCelli = tgtSeedI;
@@ -140,6 +148,8 @@ Foam::scalar Foam::directMethod::calculateAddressing
         // find new source seed cell
         appendToDirectSeeds
         (
+            srcMesh,
+            tgtMesh,
             mapFlag,
             srcTgtSeed,
             srcSeeds,
@@ -166,8 +176,10 @@ Foam::scalar Foam::directMethod::calculateAddressing
 }
 
 
-void Foam::directMethod::appendToDirectSeeds
+void Foam::cellsToCellss::matching::appendToDirectSeeds
 (
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh,
     boolList& mapFlag,
     labelList& srcTgtSeed,
     DynamicList<label>& srcSeeds,
@@ -175,8 +187,8 @@ void Foam::directMethod::appendToDirectSeeds
     label& tgtSeedI
 ) const
 {
-    const labelList& srcNbr = src_.cellCells()[srcSeedI];
-    const labelList& tgtNbr = tgt_.cellCells()[tgtSeedI];
+    const labelList& srcNbr = srcMesh.cellCells()[srcSeedI];
+    const labelList& tgtNbr = tgtMesh.cellCells()[tgtSeedI];
 
     forAll(srcNbr, i)
     {
@@ -192,7 +204,7 @@ void Foam::directMethod::appendToDirectSeeds
             {
                 label tgtI = tgtNbr[j];
 
-                if (intersect(srcI, tgtI))
+                if (intersect(srcMesh, tgtMesh, srcI, tgtI))
                 {
                     // new match - append to lists
                     found = true;
@@ -224,67 +236,32 @@ void Foam::directMethod::appendToDirectSeeds
     }
 }
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-Foam::directMethod::directMethod
+Foam::scalar Foam::cellsToCellss::matching::calculate
 (
-    const polyMesh& src,
-    const polyMesh& tgt
-)
-:
-    meshToMeshMethod(src, tgt)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::directMethod::~directMethod()
-{}
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::word& Foam::directMethod::patchToPatchMethod() const
-{
-    return patchToPatches::matching::typeName;
-}
-
-
-Foam::scalar Foam::directMethod::calculate
-(
-    labelListList& srcToTgtAddr,
-    scalarListList& srcToTgtWght,
-    labelListList& tgtToSrcAddr,
-    scalarListList& tgtToSrcWght
+    const polyMesh& srcMesh,
+    const polyMesh& tgtMesh
 )
 {
-    bool ok = initialise
-    (
-        srcToTgtAddr,
-        srcToTgtWght,
-        tgtToSrcAddr,
-        tgtToSrcWght
-    );
+    initialise(srcMesh, tgtMesh);
 
-    if (!ok)
-    {
-        return 0;
-    }
+    // Determine (potentially) participating source mesh cells
+    const labelList srcCellIDs(maskCells(srcMesh, tgtMesh));
 
-    // (potentially) participating source mesh cells
-    const labelList srcCellIDs(maskCells());
-
-    // list to keep track of whether src cell can be mapped
-    boolList mapFlag(src_.nCells(), false);
+    // Initialise list to keep track of whether src cell can be mapped
+    boolList mapFlag(srcMesh.nCells(), false);
     UIndirectList<bool>(mapFlag, srcCellIDs) = true;
 
-    // find initial point in tgt mesh
+    // Find initial point in tgt mesh
     label srcSeedI = -1;
     label tgtSeedI = -1;
     label startSeedI = 0;
-
     bool startWalk =
         findInitialSeeds
         (
+            srcMesh,
+            tgtMesh,
             srcCellIDs,
             mapFlag,
             startSeedI,
@@ -294,26 +271,21 @@ Foam::scalar Foam::directMethod::calculate
 
     if (startWalk)
     {
-        const scalar V =
+        return
             calculateAddressing
             (
-                srcToTgtAddr,
-                srcToTgtWght,
-                tgtToSrcAddr,
-                tgtToSrcWght,
+                srcMesh,
+                tgtMesh,
+                srcLocalTgtCells_,
+                srcWeights_,
+                tgtLocalSrcCells_,
+                tgtWeights_,
                 srcSeedI,
                 tgtSeedI,
                 srcCellIDs,
                 mapFlag,
                 startSeedI
             );
-
-        if (debug > 1)
-        {
-            writeConnectivity(src_, tgt_, srcToTgtAddr);
-        }
-
-        return V;
     }
     else
     {
@@ -322,7 +294,7 @@ Foam::scalar Foam::directMethod::calculate
 }
 
 
-void Foam::directMethod::normalise
+void Foam::cellsToCellss::matching::normalise
 (
     const polyMesh& srcMesh,
     labelListList& srcToTgtAddr,
@@ -339,6 +311,20 @@ void Foam::directMethod::normalise
         }
     }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::cellsToCellss::matching::matching()
+:
+    cellsToCells()
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::cellsToCellss::matching::~matching()
+{}
 
 
 // ************************************************************************* //

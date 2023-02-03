@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::patchToPatchFvPatchFieldMapper
+    Foam::patchToPatchNormalisedFvPatchFieldMapper
 
 Description
     FieldMapper which uses a patchToPatch object to map from another patch. The
@@ -31,11 +31,10 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef patchToPatchFvPatchFieldMapper_H
-#define patchToPatchFvPatchFieldMapper_H
+#ifndef patchToPatchNormalisedFvPatchFieldMapper_H
+#define patchToPatchNormalisedFvPatchFieldMapper_H
 
-#include "fvPatchFieldMapper.H"
-#include "patchToPatch.H"
+#include "patchToPatchFvPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,28 +42,22 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-            Class patchToPatchFvPatchFieldMapper Declaration
+            Class patchToPatchNormalisedFvPatchFieldMapper Declaration
 \*---------------------------------------------------------------------------*/
 
-class patchToPatchFvPatchFieldMapper
+class patchToPatchNormalisedFvPatchFieldMapper
 :
-    public fvPatchFieldMapper
+    public patchToPatchFvPatchFieldMapper
 {
-protected:
+    // Private Member Functions
 
-    // Protected Data
+        //- Map from one field to another
+        template<class Type>
+        void map(Field<Type>& f, const Field<Type>& mapF) const;
 
-        //- Patch-to-patch mapping engine
-        const patchToPatch& pToP_;
-
-        //- Mapping direction
-        const bool forward_;
-
-        //- Size of the mapped field
-        label size_;
-
-        //- Does the mapping engine leave anything unmapped?
-        bool hasUnmapped_;
+        //- Map a field and return the result as tmp
+        template<class Type>
+        tmp<Field<Type>> map(const Field<Type>& mapF) const;
 
 
 public:
@@ -72,59 +65,25 @@ public:
     // Constructors
 
         //- Construct given a patch-to-patch and a mapping direction
-        patchToPatchFvPatchFieldMapper
+        patchToPatchNormalisedFvPatchFieldMapper
         (
             const patchToPatch& pToP,
             const bool forward
         )
         :
-            fvPatchFieldMapper(),
-            pToP_(pToP),
-            forward_(forward),
-            size_(-1),
-            hasUnmapped_(false)
-        {
-            const List<List<remote>> procFaces =
-                forward_ ? pToP_.tgtSrcProcFaces() : pToP_.srcTgtProcFaces();
-
-            size_ = procFaces.size();
-
-            forAll(procFaces, i)
-            {
-                if (procFaces[i].size() == 0)
-                {
-                    hasUnmapped_ = true;
-                }
-            }
-        }
+            patchToPatchFvPatchFieldMapper(pToP, forward)
+        {}
 
 
     //- Destructor
-    virtual ~patchToPatchFvPatchFieldMapper()
+    virtual ~patchToPatchNormalisedFvPatchFieldMapper()
     {}
-
-
-    // Member Functions
-
-        //- Return whether or not all faces receive a mapped value
-        virtual bool hasUnmapped() const
-        {
-            return hasUnmapped_;
-        }
 
 
     // Member Operators
 
-        //- Map a label field
-        DEFINE_FIELD_MAPPER_OPERATOR(label, );
-
-        //- Map a temporary field
-        template<class Type>
-        void operator()(Field<Type>& f, const tmp<Field<Type>>& tmapF) const;
-
-        //- Map a temporary field
-        template<class Type>
-        tmp<Field<Type>> operator()(const tmp<Field<Type>>& tmapF) const;
+        //- Map a field
+        FOR_ALL_FIELD_TYPES(DEFINE_FIELD_MAPPER_OPERATOR, );
 };
 
 
@@ -135,7 +94,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "patchToPatchFvPatchFieldMapperTemplates.C"
+    #include "patchToPatchNormalisedFvPatchFieldMapperTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

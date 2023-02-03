@@ -21,7 +21,7 @@ airToporous
     nbrRegion       porous;
     master          false;
 
-    interpolationMethod cellVolumeWeight;
+    interpolationMethod intersection;
 
     semiImplicit    no;
 }
@@ -34,7 +34,7 @@ porosityBlockage
     {
         nbrRegion       porous;
 
-        interpolationMethod cellVolumeWeight;
+        interpolationMethod intersection;
 
         type            DarcyForchheimer;
 

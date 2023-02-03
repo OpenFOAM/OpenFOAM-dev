@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,15 @@ class fvMeshToFvMesh
 :
     public meshToMesh
 {
+private:
+
+    // Private Member Functions
+
+        //- Evaluate constraint types for the given vol field
+        template<class Type>
+        static void evaluateConstraintTypes(VolField<Type>& fld);
+
+
 public:
 
     //- Run-time type information
@@ -68,48 +77,47 @@ public:
 
     // Member Functions
 
-        // Evaluation
+        // Interpolation
 
-            // Source-to-target volume field mapping
+            //- Interpolate a source vol field to the target with no left
+            //  over values specified. If the interpolation weight sum is less
+            //  than one for a face then they will be normalised. If the
+            //  interpolation weight sum is zero for a face then that face's
+            //  value will be NaN.
+            template<class Type>
+            tmp<VolField<Type>> srcToTgt
+            (
+                const VolField<Type>& srcFld
+            ) const;
 
-                //- Interpolate a field with a defined operation. Values
-                //  passed in via 'result' are used to initialise the return
-                //  value.
-                template<class Type>
-                void mapSrcToTgt
-                (
-                    const VolField<Type>& field,
-                    VolField<Type>& result
-                ) const;
+            //- Interpolate a source vol field to the target with left over
+            //  values specified. If the interpolation weight sum is less than
+            //  one for a face then the average will include the left over
+            //  value multiplied by one minus the weight sum.
+            template<class Type>
+            tmp<VolField<Type>> srcToTgt
+            (
+                const VolField<Type>& srcFld,
+                const VolField<Type>& leftOverTgtFld,
+                const UList<wordRe>& tgtCuttingPatches
+            ) const;
 
-                //- Interpolate a field with a defined operation. The initial
-                //  values of the result are set to zero.
-                template<class Type>
-                tmp<VolField<Type>> mapSrcToTgt
-                (
-                    const VolField<Type>& field
-                ) const;
+            //- Interpolate a source vol internal field to the target with no
+            //  left over values specified. As the corresponding srcToTgt.
+            template<class Type>
+            tmp<VolInternalField<Type>> srcToTgt
+            (
+                const VolInternalField<Type>& srcFld
+            ) const;
 
-
-            // Source-to-target volume internal field mapping
-
-                //- Interpolate a field with a defined operation. Values
-                //  passed in via 'result' are used to initialise the return
-                //  value.
-                template<class Type>
-                void mapSrcToTgt
-                (
-                    const VolInternalField<Type>& field,
-                    VolInternalField<Type>& result
-                ) const;
-
-                //- Interpolate a field with a defined operation. The initial
-                //  values of the result are set to zero.
-                template<class Type>
-                tmp<VolInternalField<Type>> mapSrcToTgt
-                (
-                    const VolInternalField<Type>& field
-                ) const;
+            //- Interpolate a source vol internal field to the target with left
+            //  over values specified. As the corresponding srcToTgt.
+            template<class Type>
+            tmp<VolInternalField<Type>> srcToTgt
+            (
+                const VolInternalField<Type>& srcFld,
+                const VolInternalField<Type>& leftOverTgtFld
+            ) const;
 };
 
 

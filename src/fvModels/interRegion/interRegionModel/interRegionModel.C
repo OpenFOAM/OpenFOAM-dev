@@ -25,7 +25,7 @@ License
 
 #include "interRegionModel.H"
 #include "fvModels.H"
-#include "directMethod.H"
+#include "matchingCellsToCells.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -55,47 +55,44 @@ void Foam::fv::interRegionModel::readCoeffs()
 }
 
 
-void Foam::fv::interRegionModel::setMapper() const
+const Foam::cellsToCells& Foam::fv::interRegionModel::interpolation() const
 {
-    Info<< incrIndent;
-
-    if (master_)
+    if (!interpolationPtr_.valid())
     {
-        Info<< indent << "- selecting inter region mapping" << endl;
+        Info<< incrIndent;
 
-        if (mesh().name() == nbrMesh().name())
+        if (master_)
         {
-            FatalErrorInFunction
-                << "Inter-region model selected, but local and "
-                << "neighbour regions are the same: " << nl
-                << "    local region: " << mesh().name() << nl
-                << "    secondary region: " << nbrMesh().name() << nl
-                << exit(FatalError);
+            Info<< indent << "- selecting inter region mapping" << endl;
+
+            if (mesh().name() == nbrMesh().name())
+            {
+                FatalErrorInFunction
+                    << "Inter-region model selected, but local and "
+                    << "neighbour regions are the same: " << nl
+                    << "    local region: " << mesh().name() << nl
+                    << "    secondary region: " << nbrMesh().name() << nl
+                    << exit(FatalError);
+            }
+
+            if (mesh().bounds().overlaps(nbrMesh().bounds()))
+            {
+                interpolationPtr_ = cellsToCells::New(interpolationMethod_);
+                interpolationPtr_->update(mesh(), nbrMesh());
+            }
+            else
+            {
+                FatalErrorInFunction
+                    << "regions " << mesh().name() << " and "
+                    << nbrMesh().name() <<  " do not intersect"
+                    << exit(FatalError);
+            }
         }
 
-        if (mesh().bounds().overlaps(nbrMesh().bounds()))
-        {
-            meshInterpPtr_.reset
-            (
-                new meshToMesh
-                (
-                    mesh(),
-                    nbrMesh(),
-                    interpolationMethod_,
-                    false // not interpolating patches
-                )
-            );
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "regions " << mesh().name() << " and "
-                << nbrMesh().name() <<  " do not intersect"
-                << exit(FatalError);
-        }
+        Info<< decrIndent;
     }
 
-    Info<< decrIndent;
+    return interpolationPtr_();
 }
 
 
@@ -140,8 +137,8 @@ Foam::fv::interRegionModel::interRegionModel
     fvModel(name, modelType, mesh, dict),
     master_(false),
     nbrRegionName_(word::null),
-    interpolationMethod_(directMethod::typeName),
-    meshInterpPtr_()
+    interpolationMethod_(cellsToCellss::matching::typeName),
+    interpolationPtr_()
 {
     readCoeffs();
 }
@@ -160,7 +157,7 @@ bool Foam::fv::interRegionModel::read(const dictionary& dict)
     if (fvModel::read(dict))
     {
         readCoeffs();
-        setMapper();
+        interpolationPtr_.clear();
         return true;
     }
     else

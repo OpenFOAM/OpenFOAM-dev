@@ -226,13 +226,13 @@ patchToPatch/inverseDistance/inverseDistancePatchToPatch.C
 patchToPatch/intersection/intersectionPatchToPatch.C
 patchToPatch/rays/raysPatchToPatch.C
 
+cellsToCells/cellsToCells/cellsToCells.C
+cellsToCells/cellsToCells/cellsToCellsParallelOps.C
+cellsToCells/matching/matchingCellsToCells.C
+cellsToCells/nearest/nearestCellsToCells.C
+cellsToCells/intersection/intersectionCellsToCells.C
+
 meshToMesh/meshToMesh.C
-meshToMesh/meshToMeshParallelOps.C
-meshToMesh/calcMethod/meshToMeshMethod/meshToMeshMethod.C
-meshToMesh/calcMethod/meshToMeshMethod/meshToMeshMethodNew.C
-meshToMesh/calcMethod/cellVolumeWeight/cellVolumeWeightMethod.C
-meshToMesh/calcMethod/direct/directMethod.C
-meshToMesh/calcMethod/mapNearest/mapNearestMethod.C
 
 mappedPatches/mappedPatchBase/mappedPatchBase.C
 mappedPatches/mappedPolyPatch/mappedPolyPatch.C

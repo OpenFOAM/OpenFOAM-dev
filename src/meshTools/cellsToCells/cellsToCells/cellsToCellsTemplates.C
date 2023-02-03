@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,43 +23,76 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "interRegionModel.H"
+#include "cellsToCells.H"
+#include "patchToPatchTools.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::fv::interRegionModel::interpolate
-(
-    const Field<Type>& field
-) const
+Foam::cellsToCells::srcToTgt(const Field<Type>& srcFld) const
 {
-    if (master())
-    {
-        return interpolation().tgtToSrc(field);
-    }
-    else
-    {
-        return nbrModel().interpolation().srcToTgt(field);
-    }
+    return
+        patchToPatchTools::interpolate
+        (
+            tgtLocalSrcCells_,
+            tgtWeights_,
+            srcMapPtr_,
+            srcFld
+        );
 }
 
 
 template<class Type>
-void Foam::fv::interRegionModel::interpolate
+Foam::tmp<Foam::Field<Type>> Foam::cellsToCells::srcToTgt
 (
-    const Field<Type>& field,
-    Field<Type>& result
+    const Field<Type>& srcFld,
+    const Field<Type>& leftOverTgtFld
 ) const
 {
-    if (master())
-    {
-        result = interpolation().tgtToSrc(field, result);
-    }
-    else
-    {
-        result = nbrModel().interpolation().srcToTgt(field, result);
-    }
+    return
+        patchToPatchTools::interpolate
+        (
+            tgtLocalSrcCells_,
+            tgtWeights_,
+            srcMapPtr_,
+            srcFld,
+            leftOverTgtFld
+        );
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::cellsToCells::tgtToSrc(const Field<Type>& tgtFld) const
+{
+    return
+        patchToPatchTools::interpolate
+        (
+            srcLocalTgtCells_,
+            srcWeights_,
+            tgtMapPtr_,
+            tgtFld
+        );
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::cellsToCells::tgtToSrc
+(
+    const Field<Type>& tgtFld,
+    const Field<Type>& leftOverSrcFld
+) const
+{
+    return
+        patchToPatchTools::interpolate
+        (
+            srcLocalTgtCells_,
+            srcWeights_,
+            tgtMapPtr_,
+            tgtFld,
+            leftOverSrcFld
+        );
 }
 
 

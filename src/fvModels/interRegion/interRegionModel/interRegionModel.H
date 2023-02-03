@@ -29,14 +29,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef interRegionModel_H
-#define interRegionModel_H
-
 #include "fvModel.H"
 #include "volFields.H"
-#include "autoPtr.H"
-#include "meshToMesh.H"
+#include "cellsToCells.H"
 
+#ifndef interRegionModel_H
+#define interRegionModel_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,16 +63,13 @@ class interRegionModel
         word interpolationMethod_;
 
         //- Mesh to mesh interpolation object
-        mutable autoPtr<meshToMesh> meshInterpPtr_;
+        mutable autoPtr<cellsToCells> interpolationPtr_;
 
 
     // Private member functions
 
         //- Non-virtual read
         void readCoeffs();
-
-        //- Set the mesh to mesh interpolation object
-        void setMapper() const;
 
 
 protected:
@@ -120,8 +115,8 @@ public:
             //- Return const access to the neighbour mesh
             inline const fvMesh& nbrMesh() const;
 
-            //- Return const access to the mapToMap pointer
-            inline const meshToMesh& meshInterp() const;
+            //- Return const access to the interpolation engine
+            const cellsToCells& interpolation() const;
 
 
         // Interpolation

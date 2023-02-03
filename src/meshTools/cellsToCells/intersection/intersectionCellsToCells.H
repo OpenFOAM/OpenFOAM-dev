@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,39 +22,39 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::cellVolumeWeightMethod
+    Foam::cellsToCellss::intersection
 
 Description
-    Cell-volume-weighted mesh-to-mesh interpolation class
-
-    Volume conservative.
+    Intersection-based cells-to-cells interpolation class. Volume conservative.
 
 SourceFiles
-    cellVolumeWeightMethod.C
+    intersectionCellsToCells.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cellVolumeWeightMethod_H
-#define cellVolumeWeightMethod_H
+#ifndef intersectionCellsToCells_H
+#define intersectionCellsToCells_H
 
-#include "meshToMeshMethod.H"
+#include "cellsToCells.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace cellsToCellss
+{
 
 /*---------------------------------------------------------------------------*\
-                   Class cellVolumeWeightMethod Declaration
+                        Class intersection Declaration
 \*---------------------------------------------------------------------------*/
 
-class cellVolumeWeightMethod
+class intersection
 :
-    public meshToMeshMethod
+    public cellsToCells
 {
 private:
 
-    // Private static data
+    // Private Static Data
 
         //- Tolerance used in volume overlap calculations
         static const scalar tolerance_;
@@ -63,15 +63,29 @@ private:
     // Private Member Functions
 
         //- Return the true if cells intersect
-        bool intersect(const label srcCelli, const label tgtCelli) const;
+        bool intersect
+        (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
+            const label srcCelli,
+            const label tgtCelli
+        ) const;
 
         //- Return the intersection volume between two cells
-        scalar interVol(const label srcCelli, const label tgtCelli) const;
+        scalar interVol
+        (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
+            const label srcCelli,
+            const label tgtCelli
+        ) const;
 
         //- Find indices of overlapping cells in src and tgt meshes - returns
         //  true if found a matching pair
         bool findInitialSeeds
         (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
             const labelList& srcCellIDs,
             const boolList& mapFlag,
             const label startSeedI,
@@ -82,6 +96,8 @@ private:
         //- Calculate the mesh-to-mesh addressing and weights
         scalar calculateAddressing
         (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
             labelListList& srcToTgtCellAddr,
             scalarListList& srcToTgtCellWght,
             labelListList& tgtToSrcCellAddr,
@@ -96,6 +112,8 @@ private:
         //- Set the next cells in the advancing front algorithm
         void setNextCells
         (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
             label& startSeedI,
             label& srcCelli,
             label& tgtCelli,
@@ -106,48 +124,48 @@ private:
         ) const;
 
 
+protected:
+
+    // Protected Member Functions
+
+        // Intersection
+
+            //- Calculate the addressing and weights
+            virtual scalar calculate
+            (
+                const polyMesh& srcMesh,
+                const polyMesh& tgtMesh
+            );
+
+            //- Normalise the weights for a given mesh
+            virtual void normalise
+            (
+                const polyMesh& mesh,
+                labelListList& localOtherCells,
+                scalarListList& weights
+            ) const;
+
+
 public:
 
     //- Run-time type information
-    TypeName("cellVolumeWeight");
+    TypeName("intersection");
 
 
     // Constructors
 
-        //- Construct from source and target meshes
-        cellVolumeWeightMethod(const polyMesh& src, const polyMesh& tgt);
+        //- Construct null
+        intersection();
 
 
     //- Destructor
-    virtual ~cellVolumeWeightMethod();
-
-
-    // Member Functions
-
-        //- Get the corresponding patchToPatch method
-        virtual const word& patchToPatchMethod() const;
-
-        //- Calculate addressing and weights
-        virtual scalar calculate
-        (
-            labelListList& srcToTgtAddr,
-            scalarListList& srcToTgtWght,
-            labelListList& tgtToTgtAddr,
-            scalarListList& tgtToTgtWght
-        );
-
-        //- Normalise the weights for a given mesh
-        virtual void normalise
-        (
-            const polyMesh& srcMesh,
-            labelListList& srcToTgtAddr,
-            scalarListList& srcToTgtWght
-        ) const;
+    virtual ~intersection();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace cellsToCellss
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

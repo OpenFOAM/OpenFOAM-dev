@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "autoPtr.H"
 #include "patchToPatch.H"
-#include "treeBoundBoxList.H"
 #include "uindirectPrimitivePatch.H"
 #include "uindirectPrimitiveOldTimePatch.H"
 
@@ -40,11 +38,11 @@ Foam::labelListList Foam::patchToPatch::tgtPatchSendFaces
 ) const
 {
     // Get the bound boxes for the source patch. Just a single box for now.
-    List<treeBoundBoxList> srcPatchProcBbs(Pstream::nProcs());
+    List<List<treeBoundBox>> srcPatchProcBbs(Pstream::nProcs());
     if (srcPatch.size())
     {
         srcPatchProcBbs[Pstream::myProcNo()] =
-            treeBoundBoxList
+            List<treeBoundBox>
             (
                 1,
                 srcBox(srcPatch, srcPointNormals, srcPointNormals0)
@@ -52,7 +50,7 @@ Foam::labelListList Foam::patchToPatch::tgtPatchSendFaces
     }
     else
     {
-        srcPatchProcBbs[Pstream::myProcNo()] = treeBoundBoxList();
+        srcPatchProcBbs[Pstream::myProcNo()] = List<treeBoundBox>();
     }
 
     // Distribute the boxes

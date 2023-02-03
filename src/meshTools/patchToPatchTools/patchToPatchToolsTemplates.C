@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,6 +79,110 @@ void Foam::patchToPatchTools::rDistributeListList
     transferListList(tData, data);
     rDistributeListList(size, map, tData);
     transferListList(data, tData);
+}
+
+
+template<class Type>
+Type Foam::patchToPatchTools::NaN()
+{
+    Type result;
+
+    for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
+    {
+        setComponent(result, cmpt) = Foam::NaN;
+    }
+
+    return result;
+}
+
+
+template<class Type, class LabelList, class ScalarList>
+Foam::tmp<Foam::Field<Type>> Foam::patchToPatchTools::interpolate
+(
+    const List<LabelList>& localOtherFaces,
+    const List<ScalarList>& weights,
+    const autoPtr<distributionMap>& otherMapPtr,
+    const Field<Type>& otherFld
+)
+{
+    // Distribute the other field if necessary
+    tmp<Field<Type>> tLocalOtherFld;
+    if (otherMapPtr.valid())
+    {
+        tLocalOtherFld = tmp<Field<Type>>(new Field<Type>(otherFld));
+        otherMapPtr->distribute(tLocalOtherFld.ref());
+    }
+    const Field<Type>& localOtherFld =
+        otherMapPtr.valid() ? tLocalOtherFld() : otherFld;
+
+    // Allocate the result
+    tmp<Field<Type>> tFld(new Field<Type>(localOtherFaces.size(), NaN<Type>()));
+    Field<Type>& fld = tFld.ref();
+
+    // Compute the result as a weighted sum
+    forAll(localOtherFaces, facei)
+    {
+        scalar sumW = 0;
+        Type sumWF = Zero;
+
+        forAll(localOtherFaces[facei], i)
+        {
+            const scalar w = weights[facei][i];
+            sumW += w;
+            sumWF += w*localOtherFld[localOtherFaces[facei][i]];
+        }
+
+        if (localOtherFaces[facei].size())
+        {
+            fld[facei] = sumWF/sumW;
+        }
+    }
+
+    return tFld;
+}
+
+
+template<class Type, class LabelList, class ScalarList>
+Foam::tmp<Foam::Field<Type>> Foam::patchToPatchTools::interpolate
+(
+    const List<LabelList>& localOtherFaces,
+    const List<ScalarList>& weights,
+    const autoPtr<distributionMap>& otherMapPtr,
+    const Field<Type>& otherFld,
+    const Field<Type>& leftOverFld
+)
+{
+    // Distribute the other field if necessary
+    tmp<Field<Type>> tLocalOtherFld;
+    if (otherMapPtr.valid())
+    {
+        tLocalOtherFld = tmp<Field<Type>>(new Field<Type>(otherFld));
+        otherMapPtr->distribute(tLocalOtherFld.ref());
+    }
+    const Field<Type>& localOtherFld =
+        otherMapPtr.valid() ? tLocalOtherFld() : otherFld;
+
+    // Allocate the result
+    tmp<Field<Type>> tFld(new Field<Type>(localOtherFaces.size(), NaN<Type>()));
+    Field<Type>& fld = tFld.ref();
+
+    // Compute the result as a weighted sum
+    forAll(localOtherFaces, facei)
+    {
+        scalar sumW = 0;
+        Type sumWF = Zero;
+
+        forAll(localOtherFaces[facei], i)
+        {
+            const scalar w = weights[facei][i];
+            sumW += w;
+            sumWF += w*localOtherFld[localOtherFaces[facei][i]];
+        }
+
+        fld[facei] = sumWF + (1 - sumW)*leftOverFld[facei];
+    }
+
+    return tFld;
 }
 
 

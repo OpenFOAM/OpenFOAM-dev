@@ -26,78 +26,105 @@ License
 #include "fvMeshToFvMesh.H"
 #include "directFvPatchFieldMapper.H"
 #include "identityFvPatchFieldMapper.H"
-#include "patchToPatchFvPatchFieldMapper.H"
+#include "patchToPatchNormalisedFvPatchFieldMapper.H"
+#include "patchToPatchLeftOverFvPatchFieldMapper.H"
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::fvMeshToFvMesh::mapSrcToTgt
-(
-    const VolField<Type>& field,
-    VolField<Type>& result
-) const
+void Foam::fvMeshToFvMesh::evaluateConstraintTypes(VolField<Type>& fld)
 {
-    meshToMesh::mapSrcToTgt(field, result.primitiveFieldRef());
+    typename VolField<Type>::Boundary& fldBf = fld.boundaryFieldRef();
 
-    typename VolField<Type>::
-        Boundary& resultBf = result.boundaryFieldRef();
-
-    forAll(srcToTgtPatchIDs(), i)
+    if
+    (
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
+    )
     {
-        const label srcPatchi = srcToTgtPatchIDs()[i].first();
-        const label tgtPatchi = srcToTgtPatchIDs()[i].second();
+        label nReq = Pstream::nRequests();
 
-        const fvPatchField<Type>& srcField = field.boundaryField()[srcPatchi];
-        fvPatchField<Type>& tgtField = resultBf[tgtPatchi];
+        forAll(fldBf, patchi)
+        {
+            fvPatchField<Type>& tgtField = fldBf[patchi];
 
-        // Clone and map
-        tmp<fvPatchField<Type>> tnewTgt
-        (
-            fvPatchField<Type>::New
+            if
             (
-                srcField,
-                tgtField.patch(),
-                result(),
-                patchToPatchFvPatchFieldMapper
-                (
-                    srcToTgtPatchToPatches()[i],
-                    true
-                )
+                tgtField.type() == tgtField.patch().patch().type()
+             && polyPatch::constraintType(tgtField.patch().patch().type())
             )
-        );
+            {
+                tgtField.initEvaluate(Pstream::defaultCommsType);
+            }
+        }
 
-        // Transfer all mapped quantities (value and e.g. gradient) onto
-        // tgtField. Value will get overwritten below.
-        tgtField.map(tnewTgt(), identityFvPatchFieldMapper());
+        // Block for any outstanding requests
+        if
+        (
+            Pstream::parRun()
+         && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
+        )
+        {
+            Pstream::waitRequests(nReq);
+        }
+
+        forAll(fldBf, patchi)
+        {
+            fvPatchField<Type>& tgtField = fldBf[patchi];
+
+            if
+            (
+                tgtField.type() == tgtField.patch().patch().type()
+             && polyPatch::constraintType(tgtField.patch().patch().type())
+            )
+            {
+                tgtField.evaluate(Pstream::defaultCommsType);
+            }
+        }
     }
-
-    forAll(tgtCuttingPatchIDs(), i)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
-        const label patchi = tgtCuttingPatchIDs()[i];
-        fvPatchField<Type>& pf = resultBf[patchi];
-        pf == pf.patchInternalField();
+        const lduSchedule& patchSchedule =
+            fld.mesh().globalData().patchSchedule();
+
+        forAll(patchSchedule, patchEvali)
+        {
+            label patchi = patchSchedule[patchEvali].patch;
+            fvPatchField<Type>& tgtField = fldBf[patchi];
+
+            if
+            (
+                tgtField.type() == tgtField.patch().patch().type()
+             && polyPatch::constraintType(tgtField.patch().patch().type())
+            )
+            {
+                if (patchSchedule[patchEvali].init)
+                {
+                    tgtField.initEvaluate(Pstream::commsTypes::scheduled);
+                }
+                else
+                {
+                    tgtField.evaluate(Pstream::commsTypes::scheduled);
+                }
+            }
+        }
     }
 }
 
 
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
 template<class Type>
-Foam::tmp<Foam::VolField<Type>>
-Foam::fvMeshToFvMesh::mapSrcToTgt
+Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
 (
-    const VolField<Type>& field
+    const VolField<Type>& srcFld
 ) const
 {
     const fvMesh& tgtMesh = static_cast<const fvMesh&>(meshToMesh::tgtMesh());
 
-    const fvBoundaryMesh& tgtBm = tgtMesh.boundary();
-    const typename VolField<Type>::Boundary& srcBfld =
-        field.boundaryField();
-
-    PtrList<fvPatchField<Type>> tgtPatchFields(tgtBm.size());
-
-    // construct tgt boundary patch types as copy of 'field' boundary types
-    // note: this will provide place holders for fields with additional
-    // entries, but these values will need to be reset
+    // Construct target patch fields as copies of source patch fields, but do
+    // not map values yet
+    PtrList<fvPatchField<Type>> tgtPatchFields(tgtMesh.boundary().size());
     forAll(srcToTgtPatchIDs(), i)
     {
         const label srcPatchi = srcToTgtPatchIDs()[i].first();
@@ -110,7 +137,7 @@ Foam::fvMeshToFvMesh::mapSrcToTgt
                 tgtPatchi,
                 fvPatchField<Type>::New
                 (
-                    srcBfld[srcPatchi],
+                    srcFld.boundaryField()[srcPatchi],
                     tgtMesh.boundary()[tgtPatchi],
                     DimensionedField<Type, volMesh>::null(),
                     directFvPatchFieldMapper
@@ -122,13 +149,14 @@ Foam::fvMeshToFvMesh::mapSrcToTgt
         }
     }
 
-    // Any unset tgtPatchFields become calculated
+    // Create calculated patch fields for any unset target patches. Use
+    // fvPatchField<Type>::New to construct these, rather than using the
+    // calculated constructor directly, so that constraints are maintained.
+    labelList tgtPatchFieldIsUnMapped(tgtPatchFields.size(), false);
     forAll(tgtPatchFields, tgtPatchi)
     {
         if (!tgtPatchFields.set(tgtPatchi))
         {
-            // Note: use factory New method instead of direct generation of
-            //       calculated so we keep constraints
             tgtPatchFields.set
             (
                 tgtPatchi,
@@ -139,75 +167,148 @@ Foam::fvMeshToFvMesh::mapSrcToTgt
                     DimensionedField<Type, volMesh>::null()
                 )
             );
+
+            tgtPatchFieldIsUnMapped[tgtPatchi] =
+                polyPatch::constraintType
+                (
+                    tgtMesh.boundary()[tgtPatchi].patch().type()
+                );
         }
     }
 
-    tmp<VolField<Type>> tresult
-    (
-        new VolField<Type>
+    // Construct the result field
+    tmp<VolField<Type>> ttgtFld =
+        VolField<Type>::New
         (
-            IOobject
-            (
-                typedName("interpolate(" + field.name() + ")"),
-                tgtMesh.time().name(),
-                tgtMesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            tgtMesh,
-            field.dimensions(),
-            Field<Type>(tgtMesh.nCells(), Zero),
+            typedName("interpolate(" + srcFld.name() + ")"),
+            srcToTgt<Type>(srcFld.internalField())(),
             tgtPatchFields
-        )
-    );
+        );
+    typename VolField<Type>::Boundary& tgtBfld =
+        ttgtFld.ref().boundaryFieldRef();
 
-    fvMeshToFvMesh::mapSrcToTgt<Type>(field, tresult.ref());
+    // Mapped patches
+    forAll(srcToTgtPatchIDs(), i)
+    {
+        const label srcPatchi = srcToTgtPatchIDs()[i].first();
+        const label tgtPatchi = srcToTgtPatchIDs()[i].second();
 
-    return tresult;
-}
-
-
-template<class Type>
-void Foam::fvMeshToFvMesh::mapSrcToTgt
-(
-    const VolInternalField<Type>& field,
-    VolInternalField<Type>& result
-) const
-{
-    meshToMesh::mapSrcToTgt(field, result);
-}
-
-
-template<class Type>
-Foam::tmp<Foam::VolInternalField<Type>>
-Foam::fvMeshToFvMesh::mapSrcToTgt
-(
-    const VolInternalField<Type>& field
-) const
-{
-    const fvMesh& tgtMesh = static_cast<const fvMesh&>(meshToMesh::tgtMesh());
-
-    tmp<VolInternalField<Type>> tresult
-    (
-        new VolInternalField<Type>
+        tgtBfld[tgtPatchi].map
         (
-            IOobject
+            srcFld.boundaryField()[srcPatchi],
+            patchToPatchNormalisedFvPatchFieldMapper
             (
-                typedName("interpolate(" + field.name() + ")"),
-                tgtMesh.time().name(),
-                tgtMesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            tgtMesh,
-            field.dimensions(),
-            Field<Type>(tgtMesh.nCells(), Zero)
-        )
-    );
+                srcToTgtPatchToPatches()[i],
+                true
+            )
+        );
+    }
 
-    fvMeshToFvMesh::mapSrcToTgt<Type>(field, tresult.ref());
+    // Un-mapped patches. Set values to that of the internal cell field.
+    forAll(tgtBfld, patchi)
+    {
+        if (tgtPatchFieldIsUnMapped[patchi])
+        {
+            fvPatchField<Type>& tgtPfld = tgtBfld[patchi];
+            tgtPfld == tgtPfld.patchInternalField();
+        }
+    }
 
-    return tresult;
+    // Evaluate constraints
+    evaluateConstraintTypes(ttgtFld.ref());
+
+    return ttgtFld;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
+(
+    const VolField<Type>& srcFld,
+    const VolField<Type>& leftOverTgtFld,
+    const UList<wordRe>& tgtCuttingPatchNames
+) const
+{
+    // Construct the result field
+    tmp<VolField<Type>> ttgtFld =
+        VolField<Type>::New
+        (
+            typedName("interpolate(" + srcFld.name() + ")"),
+            srcToTgt<Type>(srcFld.v(), leftOverTgtFld.v())(),
+            leftOverTgtFld.boundaryField()
+        );
+    typename VolField<Type>::Boundary& tgtBfld =
+        ttgtFld.ref().boundaryFieldRef();
+
+    // Mapped patches
+    forAll(srcToTgtPatchIDs(), i)
+    {
+        const label srcPatchi = srcToTgtPatchIDs()[i].first();
+        const label tgtPatchi = srcToTgtPatchIDs()[i].second();
+
+        tgtBfld[tgtPatchi].map
+        (
+            leftOverTgtFld.boundaryField()[tgtPatchi],
+            identityFvPatchFieldMapper()
+        );
+        tgtBfld[tgtPatchi].map
+        (
+            srcFld.boundaryField()[srcPatchi],
+            patchToPatchLeftOverFvPatchFieldMapper
+            (
+                srcToTgtPatchToPatches()[i],
+                true
+            )
+        );
+    }
+
+    // Cutting patches. Set values to that of the internal cell field.
+    const labelHashSet tgtCuttingPatchIDs =
+        leftOverTgtFld.mesh().boundaryMesh().patchSet(tgtCuttingPatchNames);
+    forAllConstIter(labelHashSet, tgtCuttingPatchIDs, iter)
+    {
+        tgtBfld[iter.key()] == tgtBfld[iter.key()].patchInternalField();
+    }
+
+    // Evaluate constraints
+    evaluateConstraintTypes(ttgtFld.ref());
+
+    return ttgtFld;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMeshToFvMesh::srcToTgt
+(
+    const VolInternalField<Type>& srcFld
+) const
+{
+    return
+        VolInternalField<Type>::New
+        (
+            typedName("interpolate(" + srcFld.name() + ")"),
+            static_cast<const fvMesh&>(meshToMesh::tgtMesh()),
+            srcFld.dimensions(),
+            srcToTgtCellsToCells().srcToTgt(srcFld)
+        );
+}
+
+
+template<class Type>
+Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMeshToFvMesh::srcToTgt
+(
+    const VolInternalField<Type>& srcFld,
+    const VolInternalField<Type>& leftOverTgtFld
+) const
+{
+    return
+        VolInternalField<Type>::New
+        (
+            typedName("interpolate(" + srcFld.name() + ")"),
+            static_cast<const fvMesh&>(meshToMesh::tgtMesh()),
+            leftOverTgtFld.dimensions(),
+            srcToTgtCellsToCells().srcToTgt(srcFld, leftOverTgtFld)
+        );
 }
 
 

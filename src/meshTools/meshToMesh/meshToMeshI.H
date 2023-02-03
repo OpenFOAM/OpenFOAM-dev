@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,12 @@ License
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
+inline const Foam::cellsToCells& Foam::meshToMesh::srcToTgtCellsToCells() const
+{
+    return srcToTgtCellsToCells_();
+}
+
+
 inline const Foam::List<Foam::labelPair>&
 Foam::meshToMesh::srcToTgtPatchIDs() const
 {
@@ -41,12 +47,6 @@ Foam::meshToMesh::srcToTgtPatchToPatches() const
 }
 
 
-inline const Foam::labelList& Foam::meshToMesh::tgtCuttingPatchIDs() const
-{
-    return tgtCuttingPatchIDs_;
-}
-
-
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 inline const Foam::polyMesh& Foam::meshToMesh::srcMesh() const
@@ -58,18 +58,6 @@ inline const Foam::polyMesh& Foam::meshToMesh::srcMesh() const
 inline const Foam::polyMesh& Foam::meshToMesh::tgtMesh() const
 {
     return tgtMesh_;
-}
-
-
-inline Foam::label Foam::meshToMesh::singleProcess() const
-{
-    return singleProcess_;
-}
-
-
-inline bool Foam::meshToMesh::isSingleProcess() const
-{
-    return singleProcess_ != -1;
 }
 
 

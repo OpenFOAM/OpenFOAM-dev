@@ -21,7 +21,7 @@ porousToair
     nbrRegion       air;
     master          true;
 
-    interpolationMethod cellVolumeWeight;
+    interpolationMethod intersection;
 
     semiImplicit    no;
 

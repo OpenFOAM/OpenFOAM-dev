@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Description
 #include "fvMeshToFvMesh.H"
 #include "mapGeometricFields.H"
 #include "mapClouds.H"
-#include "cellVolumeWeightMethod.H"
+#include "intersectionCellsToCells.H"
 
 using namespace Foam;
 
@@ -56,12 +56,7 @@ void mapConsistentMesh
 
     Info<< nl << "Mapping geometric fields" << endl;
 
-    mapGeometricFields
-    (
-        interp,
-        selectedFields,
-        noLagrangian
-    );
+    mapGeometricFields(interp, wordReList(), selectedFields, noLagrangian);
 
     if (!noLagrangian)
     {
@@ -70,12 +65,12 @@ void mapConsistentMesh
 }
 
 
-void mapSubMesh
+void mapMesh
 (
     const fvMesh& srcMesh,
     const fvMesh& tgtMesh,
     const HashTable<word>& patchMap,
-    const wordList& cuttingPatches,
+    const wordReList& cuttingPatches,
     const word& mapMethod,
     const HashSet<word>& selectedFields,
     const bool noLagrangian
@@ -84,23 +79,11 @@ void mapSubMesh
     Info<< nl << "Creating and mapping fields for time "
         << srcMesh.time().name() << nl << endl;
 
-    fvMeshToFvMesh interp
-    (
-        srcMesh,
-        tgtMesh,
-        mapMethod,
-        patchMap,
-        cuttingPatches
-    );
+    fvMeshToFvMesh interp(srcMesh, tgtMesh, mapMethod, patchMap);
 
     Info<< nl << "Mapping geometric fields" << endl;
 
-    mapGeometricFields
-    (
-        interp,
-        selectedFields,
-        noLagrangian
-    );
+    mapGeometricFields(interp, cuttingPatches, selectedFields, noLagrangian);
 
     if (!noLagrangian)
     {
@@ -194,7 +177,7 @@ int main(int argc, char *argv[])
         args.optionLookupOrDefault<word>
         (
             "mapMethod",
-            cellVolumeWeightMethod::typeName
+            cellsToCellss::intersection::typeName
         )
     );
     Info<< "Mapping method: " << mapMethod << endl;
@@ -210,7 +193,7 @@ int main(int argc, char *argv[])
     #include "createTimes.H"
 
     HashTable<word> patchMap;
-    wordList cuttingPatches;
+    wordReList cuttingPatches;
 
     if (!consistent)
     {
@@ -276,7 +259,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        mapSubMesh
+        mapMesh
         (
             srcMesh,
             tgtMesh,

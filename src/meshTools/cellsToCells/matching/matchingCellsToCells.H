@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,35 +22,35 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::directMethod
+    Foam::cellsToCellss::matching
 
 Description
-    Direct (one-to-one cell correspondence) mesh-to-mesh interpolation class
-
-    Volume conservative.
+    Matching, one-to-one, cells-to-cells interpolation class.
 
 SourceFiles
-    directMethod.C
+    matchingCellsToCells.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef directMethod_H
-#define directMethod_H
+#ifndef matchingCellsToCells_H
+#define matchingCellsToCells_H
 
-#include "meshToMeshMethod.H"
+#include "cellsToCells.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace cellsToCellss
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class directMethod Declaration
+                        Class matching Declaration
 \*---------------------------------------------------------------------------*/
 
-class directMethod
+class matching
 :
-    public meshToMeshMethod
+    public cellsToCells
 {
 private:
 
@@ -59,6 +59,8 @@ private:
         //- Return the true if cells intersect
         bool intersect
         (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
             const label srcCelli,
             const label tgtCelli
         ) const;
@@ -67,6 +69,8 @@ private:
         //  true if found a matching pair
         bool findInitialSeeds
         (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
             const labelList& srcCellIDs,
             const boolList& mapFlag,
             const label startSeedI,
@@ -77,6 +81,8 @@ private:
         //- Calculate the mesh-to-mesh addressing and weights
         scalar calculateAddressing
         (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
             labelListList& srcToTgtCellAddr,
             scalarListList& srcToTgtCellWght,
             labelListList& tgtToSrcCellAddr,
@@ -91,6 +97,8 @@ private:
         //- Append to list of src mesh seed indices
         void appendToDirectSeeds
         (
+            const polyMesh& srcMesh,
+            const polyMesh& tgtMesh,
             boolList& mapFlag,
             labelList& srcTgtSeed,
             DynamicList<label>& srcSeeds,
@@ -99,48 +107,48 @@ private:
         ) const;
 
 
+protected:
+
+    // Protected Member Functions
+
+        // Intersection
+
+            //- Calculate the addressing and weights
+            virtual scalar calculate
+            (
+                const polyMesh& srcMesh,
+                const polyMesh& tgtMesh
+            );
+
+            //- Normalise the weights for a given mesh
+            virtual void normalise
+            (
+                const polyMesh& mesh,
+                labelListList& localOtherCells,
+                scalarListList& weights
+            ) const;
+
+
 public:
 
     //- Run-time type information
-    TypeName("direct");
+    TypeName("matching");
 
 
     // Constructors
 
-        //- Construct from source and target meshes
-        directMethod(const polyMesh& src, const polyMesh& tgt);
+        //- Construct null
+        matching();
 
 
     //- Destructor
-    virtual ~directMethod();
-
-
-    // Member Functions
-
-        //- Get the corresponding patchToPatch method
-        virtual const word& patchToPatchMethod() const;
-
-        //- Calculate addressing and weights
-        virtual scalar calculate
-        (
-            labelListList& srcToTgtAddr,
-            scalarListList& srcToTgtWght,
-            labelListList& tgtToTgtAddr,
-            scalarListList& tgtToTgtWght
-        );
-
-        //- Normalise the weights for a given mesh
-        virtual void normalise
-        (
-            const polyMesh& srcMesh,
-            labelListList& srcToTgtAddr,
-            scalarListList& srcToTgtWght
-        ) const;
+    virtual ~matching();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace cellsToCellss
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

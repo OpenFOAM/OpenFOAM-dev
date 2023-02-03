@@ -30,7 +30,7 @@ License
 #include "pointFields.H"
 #include "meshToMeshAdjustTimeStepFunctionObject.H"
 #include "fvMeshToFvMesh.H"
-#include "cellVolumeWeightMethod.H"
+#include "intersectionCellsToCells.H"
 #include "surfaceToVolVelocity.H"
 #include "MeshToMeshMapGeometricFields.H"
 #include "polyMeshMap.H"
@@ -86,7 +86,6 @@ Foam::fvMeshTopoChangers::meshToMesh::meshToMesh
 :
     fvMeshTopoChanger(mesh),
     dict_(dict),
-    cuttingPatches_(dict.lookupOrDefault("cuttingPatches", wordList::null())),
     times_(dict.lookup("times")),
     timeDelta_(dict.lookup<scalar>("timeDelta")),
     timeIndex_(-1)
@@ -121,8 +120,6 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         );
     }
 
-    bool hasChanged = false;
-
     // Only refine on the first call in a time-step
     if (timeIndex_ != mesh().time().timeIndex())
     {
@@ -130,7 +127,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
     }
     else
     {
-        return hasChanged;
+        return false;
     }
 
     const scalar userTime = mesh().time().userTimeValue();
@@ -140,8 +137,6 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         const word meshDir = "meshToMesh_" + mesh().time().timeName(userTime);
 
         Info << "Mapping to mesh " << meshDir << endl;
-
-        hasChanged = true;
 
         fvMesh newMesh
         (
@@ -156,52 +151,12 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
             fvMesh::stitchType::none
         );
 
-        autoPtr<Foam::fvMeshToFvMesh> mapper;
-
-        // Create mesh-to-mesh mapper with support for cuttingPatches
-        // if specified
-        if (cuttingPatches_.size())
-        {
-            HashSet<word> cuttingPatchTable;
-            forAll(cuttingPatches_, i)
-            {
-                cuttingPatchTable.insert(cuttingPatches_[i]);
-            }
-
-            HashTable<word> patchMap(mesh().boundary().size());
-
-            const polyBoundaryMesh& pbm = mesh().boundaryMesh();
-
-            forAll(pbm, i)
-            {
-                if
-                (
-                    !cuttingPatchTable.found(pbm[i].name())
-                 && !isA<processorPolyPatch>(pbm[i])
-                )
-                {
-                    patchMap.insert(pbm[i].name(), pbm[i].name());
-                }
-            }
-
-            mapper = new Foam::fvMeshToFvMesh
-            (
-                mesh(),
-                newMesh,
-                cellVolumeWeightMethod::typeName,
-                patchMap,
-                cuttingPatches_
-            );
-        }
-        else
-        {
-            mapper = new Foam::fvMeshToFvMesh
-            (
-                mesh(),
-                newMesh,
-                cellVolumeWeightMethod::typeName
-            );
-        }
+        fvMeshToFvMesh mapper
+        (
+            mesh(),
+            newMesh,
+            cellsToCellss::intersection::typeName
+        );
 
         mesh().reset(newMesh);
 
@@ -234,11 +189,16 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         // Interpolate U's to Uf's
         interpolateUfs();
 
-        polyMeshMap map(mesh(), mapper());
-        mesh().mapMesh(map);
-    }
+        polyMeshMap map(mesh(), mapper);
 
-    return hasChanged;
+        mesh().mapMesh(map);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

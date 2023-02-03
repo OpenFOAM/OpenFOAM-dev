@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,6 +135,31 @@ void rDistributeTgtAddressing
     const distributionMap& tgtMap,
     const List<remote>& localSrcProcFaces,
     List<DynamicList<label>>& tgtLocalSrcFaces
+);
+
+//- Return a primitive with all components set to NaN
+template<class Type>
+static Type NaN();
+
+//- Interpolate with normalisation
+template<class Type, class LabelList, class ScalarList>
+static tmp<Field<Type>> interpolate
+(
+    const List<LabelList>& localOtherFaces,
+    const List<ScalarList>& weights,
+    const autoPtr<distributionMap>& otherMapPtr,
+    const Field<Type>& otherFld
+);
+
+//- Interpolate without normalisation
+template<class Type, class LabelList, class ScalarList>
+static tmp<Field<Type>> interpolate
+(
+    const List<LabelList>& localOtherFaces,
+    const List<ScalarList>& weights,
+    const autoPtr<distributionMap>& otherMapPtr,
+    const Field<Type>& otherFld,
+    const Field<Type>& leftOverFld
 );
 
 } // End namespace patchToPatchTools

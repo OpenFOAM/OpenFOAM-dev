@@ -47,87 +47,6 @@ namespace Foam
 {
 
 template<class Type>
-void evaluateConstraintTypes(VolField<Type>& fld)
-{
-    typename VolField<Type>::Boundary& fldBf = fld.boundaryFieldRef();
-
-    if
-    (
-        Pstream::defaultCommsType == Pstream::commsTypes::blocking
-     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
-    )
-    {
-        label nReq = Pstream::nRequests();
-
-        forAll(fldBf, patchi)
-        {
-            fvPatchField<Type>& tgtField = fldBf[patchi];
-
-            if
-            (
-                tgtField.type() == tgtField.patch().patch().type()
-             && polyPatch::constraintType(tgtField.patch().patch().type())
-            )
-            {
-                tgtField.initEvaluate(Pstream::defaultCommsType);
-            }
-        }
-
-        // Block for any outstanding requests
-        if
-        (
-            Pstream::parRun()
-         && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
-        )
-        {
-            Pstream::waitRequests(nReq);
-        }
-
-        forAll(fldBf, patchi)
-        {
-            fvPatchField<Type>& tgtField = fldBf[patchi];
-
-            if
-            (
-                tgtField.type() == tgtField.patch().patch().type()
-             && polyPatch::constraintType(tgtField.patch().patch().type())
-            )
-            {
-                tgtField.evaluate(Pstream::defaultCommsType);
-            }
-        }
-    }
-    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
-    {
-        const lduSchedule& patchSchedule =
-            fld.mesh().globalData().patchSchedule();
-
-        forAll(patchSchedule, patchEvali)
-        {
-            label patchi = patchSchedule[patchEvali].patch;
-            fvPatchField<Type>& tgtField = fldBf[patchi];
-
-            if
-            (
-                tgtField.type() == tgtField.patch().patch().type()
-             && polyPatch::constraintType(tgtField.patch().patch().type())
-            )
-            {
-                if (patchSchedule[patchEvali].init)
-                {
-                    tgtField.initEvaluate(Pstream::commsTypes::scheduled);
-                }
-                else
-                {
-                    tgtField.evaluate(Pstream::commsTypes::scheduled);
-                }
-            }
-        }
-    }
-}
-
-
-template<class Type>
 void MeshToMeshMapVolFields
 (
     const fvMesh& mesh,
@@ -169,8 +88,7 @@ void MeshToMeshMapVolFields
     )
     {
         VolField<Type>& field =
-            const_cast<VolField<Type>&>
-            (*fieldIter());
+            const_cast<VolField<Type>&>(*fieldIter());
 
         if (fvMeshToFvMesh::debug)
         {
@@ -178,8 +96,8 @@ void MeshToMeshMapVolFields
                 << endl;
         }
 
-        field.reset(mapper.mapSrcToTgt(field));
-        evaluateConstraintTypes(field);
+        field.reset(mapper.srcToTgt(field));
+
         field.instance() = field.time().name();
     }
 }
@@ -207,8 +125,7 @@ void MeshToMeshMapVolInternalFields
     )
     {
         VolInternalField<Type>& field =
-            const_cast<VolInternalField<Type>&>
-            (*fieldIter());
+            const_cast<VolInternalField<Type>&>(*fieldIter());
 
         if (fvMeshToFvMesh::debug)
         {
@@ -216,7 +133,8 @@ void MeshToMeshMapVolInternalFields
                 << endl;
         }
 
-        field.reset(mapper.mapSrcToTgt<Type>(field));
+        field.reset(mapper.srcToTgt<Type>(field));
+
         field.instance() = field.time().name();
     }
 }

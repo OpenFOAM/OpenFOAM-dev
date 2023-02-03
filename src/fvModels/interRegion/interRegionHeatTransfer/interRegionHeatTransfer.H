@@ -48,7 +48,7 @@ Usage
 
         nbrRegion       other;
 
-        interpolationMethod cellVolumeWeight;
+        interpolationMethod intersection;
         master          true;
 
         semiImplicit    no;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,35 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "meshToMeshMethod.H"
+#include "cellsToCells.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::meshToMeshMethod> Foam::meshToMeshMethod::New
-(
-    const word& methodName,
-    const polyMesh& src,
-    const polyMesh& tgt
-)
+inline Foam::label Foam::cellsToCells::singleProcess() const
 {
-    if (debug)
-    {
-        Info<< "Selecting meshToMeshMethod " << methodName << endl;
-    }
+    return singleProcess_;
+}
 
-    componentsConstructorTable::iterator cstrIter =
-        componentsConstructorTablePtr_->find(methodName);
 
-    if (cstrIter == componentsConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown meshToMesh type "
-            << methodName << nl << nl
-            << "Valid meshToMesh types are:" << nl
-            << componentsConstructorTablePtr_->sortedToc() << exit(FatalError);
-    }
-
-    return autoPtr<meshToMeshMethod>(cstrIter()(src, tgt));
+inline bool Foam::cellsToCells::isSingleProcess() const
+{
+    return singleProcess_ != -1;
 }
 
 

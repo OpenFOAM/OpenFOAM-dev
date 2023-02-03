@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,93 +36,12 @@ namespace Foam
 {
 
 template<class Type>
-void evaluateConstraintTypes(VolField<Type>& fld)
-{
-    typename VolField<Type>::
-        Boundary& fldBf = fld.boundaryFieldRef();
-
-    if
-    (
-        Pstream::defaultCommsType == Pstream::commsTypes::blocking
-     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
-    )
-    {
-        label nReq = Pstream::nRequests();
-
-        forAll(fldBf, patchi)
-        {
-            fvPatchField<Type>& tgtField = fldBf[patchi];
-
-            if
-            (
-                tgtField.type() == tgtField.patch().patch().type()
-             && polyPatch::constraintType(tgtField.patch().patch().type())
-            )
-            {
-                tgtField.initEvaluate(Pstream::defaultCommsType);
-            }
-        }
-
-        // Block for any outstanding requests
-        if
-        (
-            Pstream::parRun()
-         && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
-        )
-        {
-            Pstream::waitRequests(nReq);
-        }
-
-        forAll(fldBf, patchi)
-        {
-            fvPatchField<Type>& tgtField = fldBf[patchi];
-
-            if
-            (
-                tgtField.type() == tgtField.patch().patch().type()
-             && polyPatch::constraintType(tgtField.patch().patch().type())
-            )
-            {
-                tgtField.evaluate(Pstream::defaultCommsType);
-            }
-        }
-    }
-    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
-    {
-        const lduSchedule& patchSchedule =
-            fld.mesh().globalData().patchSchedule();
-
-        forAll(patchSchedule, patchEvali)
-        {
-            label patchi = patchSchedule[patchEvali].patch;
-            fvPatchField<Type>& tgtField = fldBf[patchi];
-
-            if
-            (
-                tgtField.type() == tgtField.patch().patch().type()
-             && polyPatch::constraintType(tgtField.patch().patch().type())
-            )
-            {
-                if (patchSchedule[patchEvali].init)
-                {
-                    tgtField.initEvaluate(Pstream::commsTypes::scheduled);
-                }
-                else
-                {
-                    tgtField.evaluate(Pstream::commsTypes::scheduled);
-                }
-            }
-        }
-    }
-}
-
-
-template<class Type>
 void mapVolTypeFields
 (
-    const IOobjectList& objects,
+    const fvMeshToFvMesh& interp,
+    const wordReList& cuttingPatches,
     const HashSet<word>& selectedFields,
-    const fvMeshToFvMesh& interp
+    const IOobjectList& objects
 )
 {
     const fvMesh& srcMesh = static_cast<const fvMesh&>(interp.srcMesh());
@@ -134,106 +53,95 @@ void mapVolTypeFields
     {
         const word& fieldName = fieldIter()->name();
 
-        if (selectedFields.empty() || selectedFields.found(fieldName))
+        if (!selectedFields.empty() && !selectedFields.found(fieldName))
         {
-            const VolField<Type> fieldSource(*fieldIter(), srcMesh);
+            continue;
+        }
 
-            typeIOobject<VolField<Type>> targetIO
+        const VolField<Type> fieldSource(*fieldIter(), srcMesh);
+
+        typeIOobject<VolField<Type>> targetIO
+        (
+            fieldName,
+            tgtMesh.time().name(),
+            tgtMesh,
+            IOobject::READ_IF_PRESENT
+        );
+
+        // Warnings about inconsistent execution
+        if (targetIO.headerOk() && interp.consistent())
+        {
+            WarningInFunction
+                << "Mapping of field " << fieldName << " will not utilise "
+                << "the corresponding field in the target case, as the map is "
+                << "consistent (i.e., all patches are mapped)" << endl;
+        }
+        if (!targetIO.headerOk() && !interp.consistent())
+        {
+            WarningInFunction
+                << "Cannot map field " << fieldName << " because the "
+                << "map is not consistent (i.e., not all patches are "
+                << "mapped), and there is no corresponding field in "
+                << "the target case" << endl;
+            continue;
+        }
+        if (!targetIO.headerOk() && !cuttingPatches.empty())
+        {
+            WarningInFunction
+                << "Cutting patches will not be used for field " << fieldName
+                << " because no there is no corresponding field in the target "
+                << "case" << endl;
+        }
+
+        if (targetIO.headerOk())
+        {
+            Info<< "    mapping into existing field " << fieldName << endl;
+
+            VolField<Type> fieldTarget(targetIO, tgtMesh);
+
+            fieldTarget.reset
             (
-                fieldName,
-                tgtMesh.time().name(),
-                tgtMesh,
-                IOobject::MUST_READ
+                interp.srcToTgt(fieldSource, fieldTarget, cuttingPatches)
             );
 
-            if (targetIO.headerOk())
-            {
-                Info<< "    interpolating onto existing field "
-                    << fieldName << endl;
-                VolField<Type> fieldTarget(targetIO, tgtMesh);
+            fieldTarget.write();
+        }
+        else
+        {
+            Info<< "    creating new field " << fieldName << endl;
 
-                interp.mapSrcToTgt(fieldSource, fieldTarget);
-
-                evaluateConstraintTypes(fieldTarget);
-
-                fieldTarget.write();
-            }
-            else
-            {
-                Info<< "    creating new field "
-                    << fieldName << endl;
-
-                targetIO.readOpt() = IOobject::NO_READ;
-
-                tmp<VolField<Type>> tfieldTarget
-                (
-                    interp.mapSrcToTgt(fieldSource)
-                );
-
-                VolField<Type> fieldTarget(targetIO, tfieldTarget);
-
-                evaluateConstraintTypes(fieldTarget);
-
-                fieldTarget.write();
-            }
+            VolField<Type>(targetIO, interp.srcToTgt(fieldSource)).write();
         }
     }
 }
 
-
-template<class Type, template<class> class GeoField>
-void unMappedTypeFields(const IOobjectList& objects)
-{
-    IOobjectList fields = objects.lookupClass(GeoField<Type>::typeName);
-
-    forAllConstIter(IOobjectList, fields, fieldIter)
-    {
-        mvBak(fieldIter()->objectPath(false), "unmapped");
-    }
 }
-
-} // End namespace Foam
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 void Foam::mapGeometricFields
 (
     const fvMeshToFvMesh& interp,
+    const wordReList& cuttingPatches,
     const HashSet<word>& selectedFields,
     const bool noLagrangian
 )
 {
+    // Search for list of source objects for this time
     const polyMesh& srcMesh = interp.srcMesh();
-    const polyMesh& tgtMesh = interp.tgtMesh();
+    IOobjectList objects(srcMesh, srcMesh.time().name());
 
-    {
-        // Search for list of source objects for this time
-        IOobjectList objects(srcMesh, srcMesh.time().name());
-
-        // Map the fields
-        #define MapVolTypeFields(Type, nullArg)                                \
-            mapVolTypeFields<Type>                                             \
-            (                                                                  \
-                objects,                                                       \
-                selectedFields,                                                \
-                interp                                                         \
-            );
-        FOR_ALL_FIELD_TYPES(MapVolTypeFields);
-        #undef MapVolTypeFields
-    }
-
-    {
-        // Search for list of target objects for this time
-        IOobjectList objects(tgtMesh, tgtMesh.time().name());
-
-        // Mark surface and point fields as unmapped
-        #define UnMappedTypeFields(Type, GeoField)                             \
-            unMappedTypeFields<Type, GeoField>(objects);
-        FOR_ALL_FIELD_TYPES(UnMappedTypeFields, SurfaceField);
-        FOR_ALL_FIELD_TYPES(UnMappedTypeFields, PointField);
-        #undef UnMappedTypeFields
-    }
+    // Map the fields
+    #define MapVolTypeFields(Type, nullArg)                                    \
+        mapVolTypeFields<Type>                                                 \
+        (                                                                      \
+            interp,                                                            \
+            cuttingPatches,                                                    \
+            selectedFields,                                                    \
+            objects                                                            \
+        );
+    FOR_ALL_FIELD_TYPES(MapVolTypeFields);
+    #undef MapVolTypeFields
 }
 
 
