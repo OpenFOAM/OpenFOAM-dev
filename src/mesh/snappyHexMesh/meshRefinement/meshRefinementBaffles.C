@@ -761,7 +761,7 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
 
         surfaces_.findNearestIntersection
         (
-            identity(surfaces_.surfaces().size()),
+            identityMap(surfaces_.surfaces().size()),
             start,
             end,
 

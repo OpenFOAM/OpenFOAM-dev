@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
     {
         if (finalAgglom[patchid].size() == 0)
         {
-            finalAgglom[patchid] = identity(boundary[patchid].size());
+            finalAgglom[patchid] = identityMap(boundary[patchid].size());
         }
     }
 
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
         const polyPatch& pp = boundary[patchid];
         if (pp.coupled())
         {
-            finalAgglom[patchid] = identity(pp.size());
+            finalAgglom[patchid] = identityMap(pp.size());
             forAll(pp, i)
             {
                 nbrAgglom[pp.start() - mesh.nInternalFaces() + i] =

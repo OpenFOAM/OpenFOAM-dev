@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ void Foam::sampledSets::arcUniform::calcSamples
     const scalar radius = mag(axis1);
 
     // Compute all point locations
-    const scalarField ts(scalarList(identity(nPoints_))/(nPoints_ - 1));
+    const scalarField ts(scalarList(identityMap(nPoints_))/(nPoints_ - 1));
     const scalarField theta((1 - ts)*startAngle_ + ts*endAngle_);
     const scalarField c(cos(theta)), s(sin(theta));
     const pointField points(centre_ + c*axis1 + s*axis2);

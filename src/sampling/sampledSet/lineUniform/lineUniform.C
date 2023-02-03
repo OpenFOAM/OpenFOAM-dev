@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void Foam::sampledSets::lineUniform::calcSamples
 ) const
 {
     // Calculate all sampling points
-    const scalarField ts(scalarList(identity(nPoints_))/(nPoints_ - 1));
+    const scalarField ts(scalarList(identityMap(nPoints_))/(nPoints_ - 1));
     const pointField points((1 - ts)*start_ + ts*end_);
 
     // Calculate the sampling topology

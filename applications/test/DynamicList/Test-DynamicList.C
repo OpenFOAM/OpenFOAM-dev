@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
     dlE3 = dlE2;   // assign identical
     printInfo("dlE3", dlE3, true);
 
-    DynamicList<label> dlE4(reorder(identity(dlE3.size()), dlE3));
+    DynamicList<label> dlE4(reorder(identityMap(dlE3.size()), dlE3));
     printInfo("dlE4", dlE4, true);
 
     printInfo("dlE3", dlE3, true);

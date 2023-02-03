@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -202,7 +202,7 @@ Foam::List<Foam::point> Foam::polygonTriangulate::randomPolygon
     }
 
     // Initialise intersected polygon
-    labelList pointis(identity(n));
+    labelList pointis(identityMap(n));
 
     // Reorder until non-intersected
     bool incomplete = true;

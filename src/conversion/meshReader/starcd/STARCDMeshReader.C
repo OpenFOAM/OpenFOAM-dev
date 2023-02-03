@@ -798,7 +798,7 @@ void Foam::meshReaders::STARCD::readBoundary(const fileName& inputName)
         labelList sortedIndices;
         sortedOrder(SubList<label>(origRegion, nPatches-1), sortedIndices);
 
-        labelList oldToNew = identity(nPatches);
+        labelList oldToNew = identityMap(nPatches);
         forAll(sortedIndices, i)
         {
             oldToNew[sortedIndices[i]] = i;
@@ -814,7 +814,7 @@ void Foam::meshReaders::STARCD::readBoundary(const fileName& inputName)
     nBafflePatches = 1;
     if (nBafflePatches)
     {
-        labelList oldToNew = identity(nPatches);
+        labelList oldToNew = identityMap(nPatches);
         label newIndex = 0;
         label baffleIndex = (nPatches-1 - nBafflePatches);
 

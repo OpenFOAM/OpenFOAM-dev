@@ -86,7 +86,7 @@ void Foam::meshRefinement::findNearest
         fc[i] = mesh_.faceCentres()[meshFaces[i]];
     }
 
-    const labelList allSurfaces(identity(surfaces_.surfaces().size()));
+    const labelList allSurfaces(identityMap(surfaces_.surfaces().size()));
 
     surfaces_.findNearest
     (
@@ -1172,7 +1172,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             // Just check the errors from squashing
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-            const labelList allFaces(identity(mesh_.nFaces()));
+            const labelList allFaces(identityMap(mesh_.nFaces()));
             label nWrongFaces = 0;
 
             // const scalar minV(motionDict.lookup<scalar>("minVol", true));

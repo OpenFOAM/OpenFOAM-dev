@@ -181,7 +181,7 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
     // Calculate cell addressing for selected cells
     labelList cellAddr(mesh().nCells(), -1);
     UIndirectList<label>(cellAddr, set_.cells()) =
-        identity(set_.cells().size());
+        identityMap(set_.cells().size());
     labelList nbrFaceCellAddr(mesh().nFaces() - nInternalFaces, -1);
     forAll(pbm, patchi)
     {

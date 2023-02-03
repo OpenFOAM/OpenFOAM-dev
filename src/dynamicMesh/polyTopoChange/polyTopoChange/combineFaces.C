@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -422,7 +422,7 @@ Foam::labelListList Foam::combineFaces::getMergeSets
     const scalar minConcaveCos
 ) const
 {
-    const labelHashSet patchIDs(identity(mesh_.boundaryMesh().size()));
+    const labelHashSet patchIDs(identityMap(mesh_.boundaryMesh().size()));
 
     return getMergeSets(featureCos, minConcaveCos, patchIDs);
 }

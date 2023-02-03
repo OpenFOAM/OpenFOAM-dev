@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,7 +184,7 @@ void Foam::fvMeshStitchers::moving::createNonConformalCorrectMeshPhiGeometry
         const label errorPatchi = errorPatchIDs[i];
 
         polyFacesBf[errorPatchi] =
-            repeat((identity(origPp.size()) + origPp.start())());
+            repeat((identityMap(origPp.size()) + origPp.start())());
 
         SfSf.boundaryFieldRef()[errorPatchi] =
             repeat

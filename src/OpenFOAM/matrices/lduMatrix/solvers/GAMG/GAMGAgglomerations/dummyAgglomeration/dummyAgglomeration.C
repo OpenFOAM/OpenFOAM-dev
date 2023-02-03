@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ Foam::dummyAgglomeration::dummyAgglomeration
         restrictAddressing_.set
         (
             nCreatedLevels,
-            new labelField(identity(nCoarseCells))
+            new labelField(identityMap(nCoarseCells))
         );
 
         agglomerateLduAddressing(nCreatedLevels);

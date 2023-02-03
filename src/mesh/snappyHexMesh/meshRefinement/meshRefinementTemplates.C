@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,7 +165,7 @@ void Foam::meshRefinement::collectAndPrint
     globalPoints.gather
     (
         Pstream::worldComm,
-        identity(Pstream::nProcs()),
+        identityMap(Pstream::nProcs()),
         points,
         allPoints,
         UPstream::msgType(),
@@ -176,7 +176,7 @@ void Foam::meshRefinement::collectAndPrint
     globalPoints.gather
     (
         Pstream::worldComm,
-        identity(Pstream::nProcs()),
+        identityMap(Pstream::nProcs()),
         data,
         allData,
         UPstream::msgType(),

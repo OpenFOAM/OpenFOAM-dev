@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1928,7 +1928,7 @@ void Foam::polyTopoChange::reorderCoupledFaces
 {
     // Mapping for faces (old to new). Extends over all mesh faces for
     // convenience (could be just the external faces)
-    labelList oldToNew(identity(faces_.size()));
+    labelList oldToNew(identityMap(faces_.size()));
 
     // Rotation on new faces.
     labelList rotation(faces_.size(), 0);
@@ -2236,10 +2236,10 @@ Foam::polyTopoChange::polyTopoChange
     addMesh
     (
         mesh,
-        identity(mesh.boundaryMesh().size()),
-        identity(mesh.pointZones().size()),
-        identity(mesh.faceZones().size()),
-        identity(mesh.cellZones().size())
+        identityMap(mesh.boundaryMesh().size()),
+        identityMap(mesh.pointZones().size()),
+        identityMap(mesh.faceZones().size()),
+        identityMap(mesh.cellZones().size())
     );
 }
 

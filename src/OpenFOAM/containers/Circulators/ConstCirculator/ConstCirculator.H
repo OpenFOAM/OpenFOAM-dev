@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
     Examples:
 
     \code
-        face f(identity(5));
+        face f(identityMap(5));
 
         // Construct circulator from the face
         ConstCirculator<face> circ(f);
@@ -51,7 +51,7 @@ Description
     \endcode
 
     \code
-        face f(identity(5));
+        face f(identityMap(5));
 
         ConstCirculator<face> circClockwise(f);
         ConstCirculator<face> circAnticlockwise(f);

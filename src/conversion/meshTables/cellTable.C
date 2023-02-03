@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -512,7 +512,7 @@ void Foam::cellTable::combine(const dictionary& mapDict, labelList& tableIds)
     }
 
     Map<word> origNames(names());
-    labelList mapping(identity(max(origNames.toc()) + 1));
+    labelList mapping(identityMap(max(origNames.toc()) + 1));
 
     bool remap = false;
     forAllConstIter(dictionary, mapDict, iter)

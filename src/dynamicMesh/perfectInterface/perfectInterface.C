@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -457,14 +457,14 @@ void Foam::perfectInterface::setRefinement(polyTopoChange& ref) const
         const polyPatch& patch1 = patches[slavePatchID_.index()];
 
 
-        labelList pp0Labels(identity(patch0.size())+patch0.start());
+        labelList pp0Labels(identityMap(patch0.size())+patch0.start());
         indirectPrimitivePatch pp0
         (
             IndirectList<face>(mesh.faces(), pp0Labels),
             mesh.points()
         );
 
-        labelList pp1Labels(identity(patch1.size())+patch1.start());
+        labelList pp1Labels(identityMap(patch1.size())+patch1.start());
         indirectPrimitivePatch pp1
         (
             IndirectList<face>(mesh.faces(), pp1Labels),

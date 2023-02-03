@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -302,7 +302,7 @@ Foam::OFstreamCollator::OFstreamCollator(const off_t maxBufferSize)
         UPstream::allocateCommunicator
         (
             localComm_,
-            identity(UPstream::nProcs(localComm_))
+            identityMap(UPstream::nProcs(localComm_))
         )
     )
 {}
@@ -322,7 +322,7 @@ Foam::OFstreamCollator::OFstreamCollator
         UPstream::allocateCommunicator
         (
             localComm_,
-            identity(UPstream::nProcs(localComm_))
+            identityMap(UPstream::nProcs(localComm_))
         )
     )
 {}

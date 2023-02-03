@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,7 +141,7 @@ void Foam::planeToFaceZone::combine(faceZoneSet& fzSet, const bool add) const
 
         // Step 2: Create a region map which combines regions which are
         // connected across coupled interfaces
-        labelList regionMap(identity(nRegions));
+        labelList regionMap(identityMap(nRegions));
         {
             // Put region labels on connected boundary edges and synchronise to
             // create a list of all regions connected to a given edge

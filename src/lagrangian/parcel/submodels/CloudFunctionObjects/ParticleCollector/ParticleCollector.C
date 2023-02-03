@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,7 +136,7 @@ void Foam::ParticleCollector<CloudType>::initPolygons
     forAll(faces_, facei)
     {
         const Field<point>& polyPoints = polygons[facei];
-        face f(identity(polyPoints.size()) + pointOffset);
+        face f(identityMap(polyPoints.size()) + pointOffset);
         UIndirectList<point>(points_, f) = polyPoints;
         area_[facei] = f.mag(points_);
         faces_[facei].transfer(f);
@@ -199,7 +199,7 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
         false
     );
 
-    List<label> ptIDs(identity(nPointPerRadius));
+    List<label> ptIDs(identityMap(nPointPerRadius));
 
     points_[0] = origin;
 

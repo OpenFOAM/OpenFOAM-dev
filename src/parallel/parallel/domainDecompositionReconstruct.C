@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,9 +170,10 @@ void Foam::domainDecomposition::reconstruct()
         masterMesh.setPointsInstance(procMeshes()[0].pointsInstance());
 
         // Initialise the addressing
-        procPointAddressing_[proci] = identity(procMeshes()[proci].nPoints());
-        procFaceAddressing_[proci] = identity(procMeshes()[proci].nFaces());
-        procCellAddressing_[proci] = identity(procMeshes()[proci].nCells());
+        procPointAddressing_[proci] =
+            identityMap(procMeshes()[proci].nPoints());
+        procFaceAddressing_[proci] = identityMap(procMeshes()[proci].nFaces());
+        procCellAddressing_[proci] = identityMap(procMeshes()[proci].nCells());
 
         // Find shared points and faces
         autoPtr<faceCoupleInfo> couples = determineCoupledFaces
@@ -362,7 +363,7 @@ void Foam::domainDecomposition::reconstruct()
         labelList newPatchStarts(patches.size());
         labelList newToOldFace(masterMeshes[0].nFaces());
         SubList<label>(newToOldFace, masterMeshes[0].nInternalFaces()) =
-            identity(masterMeshes[0].nInternalFaces());
+            identityMap(masterMeshes[0].nInternalFaces());
         forAll(patches, patchi)
         {
             newPatchSizes[patchi] = 0;
@@ -380,7 +381,7 @@ void Foam::domainDecomposition::reconstruct()
                     newToOldFace,
                     pp.size(),
                     newPatchStarts[patchi] + newPatchSizes[patchi]
-                ) = pp.start() + identity(pp.size());
+                ) = pp.start() + identityMap(pp.size());
 
                 newPatchSizes[patchi] += pp.size();
             }

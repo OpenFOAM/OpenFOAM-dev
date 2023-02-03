@@ -2659,7 +2659,7 @@ void Foam::globalMeshData::topoChange()
     label comm = UPstream::allocateCommunicator
     (
         UPstream::worldComm,
-        identity(UPstream::nProcs()),
+        identityMap(UPstream::nProcs()),
         true
     );
 

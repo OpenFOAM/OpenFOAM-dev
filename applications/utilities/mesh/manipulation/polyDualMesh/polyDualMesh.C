@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -462,8 +462,8 @@ int main(int argc, char *argv[])
     // split.
     if (splitAllFaces)
     {
-        featureEdges = identity(mesh.nEdges());
-        featureFaces = identity(mesh.nFaces());
+        featureEdges = identityMap(mesh.nEdges());
+        featureFaces = identityMap(mesh.nFaces());
     }
 
     // Write obj files for debugging

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,7 @@ void Foam::searchableSurfacesQueries::findAnyIntersection
     hitInfo.setSize(start.size());
 
     // Work arrays
-    labelList hitMap(identity(start.size()));
+    labelList hitMap(identityMap(start.size()));
     pointField p0(start);
     pointField p1(end);
     List<pointIndexHit> intersectInfo(start.size());

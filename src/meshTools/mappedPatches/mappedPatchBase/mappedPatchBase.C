@@ -154,7 +154,7 @@ void Foam::mappedPatchBase::calcMapping() const
             {
                 const polyPatch& pp = nbrPolyPatch();
 
-                const labelList patchFaces(identity(pp.size()) + pp.start());
+                const labelList patchFaces(identityMap(pp.size()) + pp.start());
 
                 const treeBoundBox patchBb
                 (

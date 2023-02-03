@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ void Foam::refinementFeatures::read
                 labelListList(0),   // edgeNormals
                 labelListList(0),   // featurePointNormals
                 labelListList(0),   // featurePointEdges
-                identity(newEdges.size())   // regionEdges
+                identityMap(newEdges.size())   // regionEdges
             );
 
             // Info<< "Constructed extendedFeatureEdgeMesh " << featObj.name()
@@ -268,7 +268,7 @@ void Foam::refinementFeatures::buildTrees(const label feati)
                 false,                  // do not cache bb
                 edges,
                 points,
-                identity(edges.size())
+                identityMap(edges.size())
             ),
             bb,     // overall search domain
             8,      // maxLevel
@@ -278,7 +278,7 @@ void Foam::refinementFeatures::buildTrees(const label feati)
     );
 
 
-    labelList featurePoints(identity(eMesh.nonFeatureStart()));
+    labelList featurePoints(identityMap(eMesh.nonFeatureStart()));
 
     pointTrees_.set
     (

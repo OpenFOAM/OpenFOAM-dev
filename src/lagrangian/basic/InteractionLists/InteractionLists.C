@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -322,7 +322,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
         if (isA<wallPolyPatch>(patch))
         {
-            localWallFaces.append(identity(patch.size()) + patch.start());
+            localWallFaces.append(identityMap(patch.size()) + patch.start());
         }
     }
 
@@ -550,7 +550,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
         referredWallFaces_[rWFI] = referredWallFace
         (
-            face(identity(f.size())),
+            face(identityMap(f.size())),
             transform.invTransformPosition(f.points(mesh_.points())),
             patchi
         );
@@ -874,7 +874,7 @@ void Foam::InteractionLists<ParticleType>::buildMap
     labelListList constructMap(Pstream::nProcs());
 
     // Local transfers first
-    constructMap[Pstream::myProcNo()] = identity
+    constructMap[Pstream::myProcNo()] = identityMap
     (
         sendMap[Pstream::myProcNo()].size()
     );

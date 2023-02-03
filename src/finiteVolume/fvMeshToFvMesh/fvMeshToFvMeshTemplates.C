@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ void Foam::fvMeshToFvMesh::mapSrcToTgt
 
         // Transfer all mapped quantities (value and e.g. gradient) onto
         // tgtField. Value will get overwritten below.
-        tgtField.rmap(tnewTgt(), identity(tgtField.size()));
+        tgtField.rmap(tnewTgt(), identityMap(tgtField.size()));
     }
 
     forAll(tgtCuttingPatchIDs(), i)

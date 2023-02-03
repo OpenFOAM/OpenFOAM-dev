@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -321,7 +321,7 @@ Foam::distributedTriSurfaceMesh::distributeSegments
     labelListList constructMap(Pstream::nProcs());
 
     // My local segments first
-    constructMap[Pstream::myProcNo()] = identity
+    constructMap[Pstream::myProcNo()] = identityMap
     (
         sendMap[Pstream::myProcNo()].size()
     );
@@ -610,7 +610,7 @@ Foam::distributedTriSurfaceMesh::calcLocalQueries
     labelListList constructMap(Pstream::nProcs());
 
     // My local segments first
-    constructMap[Pstream::myProcNo()] = identity
+    constructMap[Pstream::myProcNo()] = identityMap
     (
         sendMap[Pstream::myProcNo()].size()
     );
@@ -767,7 +767,7 @@ Foam::distributedTriSurfaceMesh::calcLocalQueries
     labelListList constructMap(Pstream::nProcs());
 
     // My local segments first
-    constructMap[Pstream::myProcNo()] = identity
+    constructMap[Pstream::myProcNo()] = identityMap
     (
         sendMap[Pstream::myProcNo()].size()
     );
@@ -2203,11 +2203,11 @@ void Foam::distributedTriSurfaceMesh::distribute
         allTris = subSurface;
         allPoints = subSurface.points();
 
-        faceConstructMap[Pstream::myProcNo()] = identity
+        faceConstructMap[Pstream::myProcNo()] = identityMap
         (
             faceSendMap[Pstream::myProcNo()].size()
         );
-        pointConstructMap[Pstream::myProcNo()] = identity
+        pointConstructMap[Pstream::myProcNo()] = identityMap
         (
             pointSendMap[Pstream::myProcNo()].size()
         );

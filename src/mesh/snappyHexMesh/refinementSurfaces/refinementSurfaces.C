@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -482,7 +482,7 @@ void Foam::refinementSurfaces::findHigherIntersection
     // Work arrays
     pointField p0(start);
     pointField p1(end);
-    labelList intersectionToPoint(identity(start.size()));
+    labelList intersectionToPoint(identityMap(start.size()));
     List<pointIndexHit> intersectionInfo(start.size());
 
     forAll(surfaces_, surfi)

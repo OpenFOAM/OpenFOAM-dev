@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -475,7 +475,7 @@ Foam::singleCellFvMesh::singleCellFvMesh
 
     forAll(oldPatches, patchi)
     {
-        agglom[patchi] = identity(oldPatches[patchi].size());
+        agglom[patchi] = identityMap(oldPatches[patchi].size());
     }
 
     agglomerateMesh(mesh, agglom);

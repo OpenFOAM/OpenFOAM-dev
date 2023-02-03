@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -455,7 +455,7 @@ void Foam::functionObjects::patchCutLayerAverage::initialise()
     const scalar xMin = gMin(pointXs), xMax = gMax(pointXs);
     scalarField plotXs
     (
-        (xMin + scalarList(identity(nPlot))/(nPlot - 1)*(xMax - xMin))
+        (xMin + scalarList(identityMap(nPlot))/(nPlot - 1)*(xMax - xMin))
     );
 
     // Names and fields for debug output of the counts, to observe the effect
@@ -754,7 +754,7 @@ bool Foam::functionObjects::patchCutLayerAverage::write()
             typeName,
             coordSet
             (
-                identity(layerPositions_.size()),
+                identityMap(layerPositions_.size()),
                 word::null,
                 layerPositions_,
                 coordSet::axisTypeNames_[coordSet::axisType::DISTANCE],

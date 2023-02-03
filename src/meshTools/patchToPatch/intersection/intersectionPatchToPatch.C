@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -297,14 +297,14 @@ bool Foam::patchToPatches::intersection::intersectFaces
                 debugPoints_.append(ictTgtPoints_);
                 debugFaces_.append
                 (
-                    debugSrcPoint0 + identity(ictSrcPoints_.size())
+                    debugSrcPoint0 + identityMap(ictSrcPoints_.size())
                 );
                 debugFaceSrcFaces_.append(srcFacei);
                 debugFaceTgtFaces_.append(tgtFacei);
                 debugFaceSides_.append(1);
                 debugFaces_.append
                 (
-                    debugTgtPoint0 + identity(ictTgtPoints_.size())
+                    debugTgtPoint0 + identityMap(ictTgtPoints_.size())
                 );
                 debugFaceSrcFaces_.append(srcFacei);
                 debugFaceTgtFaces_.append(tgtFacei);

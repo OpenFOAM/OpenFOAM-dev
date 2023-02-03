@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ Foam::coordSet::coordSet
     (
         contiguous
       ? labelList(positions.size(), 0)
-      : identity(positions.size()),
+      : identityMap(positions.size()),
         positionName,
         positions,
         word::null,
@@ -123,7 +123,7 @@ Foam::coordSet::coordSet
     (
         contiguous
       ? labelList(distances.size(), 0)
-      : identity(distances.size()),
+      : identityMap(distances.size()),
         word::null,
         pointField::null(),
         distanceName,
@@ -465,7 +465,7 @@ Foam::Tuple2<Foam::coordSet, Foam::labelList> Foam::coordSet::gather() const
     Tuple2<coordSet, labelList> result
     (
         coordSet(),
-        identity(allSegments.size())
+        identityMap(allSegments.size())
     );
     coordSet& set = result.first();
     labelList& order = result.second();

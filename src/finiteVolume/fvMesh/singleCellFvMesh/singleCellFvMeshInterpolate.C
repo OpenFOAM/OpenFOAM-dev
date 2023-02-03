@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ tmp<VolField<Type>> singleCellFvMesh::interpolate
     {
         forAll(vf.boundaryField(), patchi)
         {
-            labelList map(identity(vf.boundaryField()[patchi].size()));
+            labelList map(identityMap(vf.boundaryField()[patchi].size()));
 
             bf.set
             (

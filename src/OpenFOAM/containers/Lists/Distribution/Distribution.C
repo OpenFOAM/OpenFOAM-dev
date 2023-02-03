@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ Foam::scalar Foam::Distribution<Type>::totalWeight(direction cmpt) const
 template<class Type>
 Foam::List<Foam::label> Foam::Distribution<Type>::keys(direction cmpt) const
 {
-    List<label> keys = identity((*this)[cmpt].size());
+    List<label> keys = identityMap((*this)[cmpt].size());
 
     forAll(keys, k)
     {

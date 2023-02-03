@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -815,7 +815,7 @@ void Foam::hexRef8::checkInternalOrientation
     const face& newFace
 )
 {
-    const face compactFace(identity(newFace.size()));
+    const face compactFace(identityMap(newFace.size()));
     const pointField compactPoints(meshMod.points(), newFace);
 
     const vector a(compactFace.area(compactPoints));
@@ -861,7 +861,7 @@ void Foam::hexRef8::checkBoundaryOrientation
     const face& newFace
 )
 {
-    const face compactFace(identity(newFace.size()));
+    const face compactFace(identityMap(newFace.size()));
     const pointField compactPoints(meshMod.points(), newFace);
 
     const vector a(compactFace.area(compactPoints));

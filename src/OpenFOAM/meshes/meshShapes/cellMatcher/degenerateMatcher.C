@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ Foam::cellShape Foam::degenerateMatcher::match(const faceList& faces)
         faces,
         labelList(faces.size(), 0),    // cell 0 is owner of all faces
         0,                             // cell 0
-        identity(faces.size())         // cell 0 consists of all faces
+        identityMap(faces.size())         // cell 0 consists of all faces
     );
 }
 

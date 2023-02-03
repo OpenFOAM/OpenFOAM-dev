@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,7 +146,7 @@ Foam::label Foam::polyMeshFilter::filterFacesLoop(const label nOriginalBadFaces)
         scalarField newMeshFaceFilterFactor = faceFilterFactor_;
         pointPriority_.reset(new labelList(originalPointPriority_));
 
-        labelList origToCurrentPointMap(identity(newMesh.nPoints()));
+        labelList origToCurrentPointMap(identityMap(newMesh.nPoints()));
 
         {
             label nInnerIterations = 0;
@@ -1040,7 +1040,7 @@ Foam::label Foam::polyMeshFilter::filterEdges
         scalarField newMeshMinEdgeLen = minEdgeLen_;
         pointPriority_.reset(new labelList(originalPointPriority_));
 
-        labelList origToCurrentPointMap(identity(newMesh.nPoints()));
+        labelList origToCurrentPointMap(identityMap(newMesh.nPoints()));
 
         Info<< incrIndent;
 

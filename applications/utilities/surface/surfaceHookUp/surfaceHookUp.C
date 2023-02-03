@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,7 +164,7 @@ void createBoundaryEdgeTrees
         treeBoundaryEdges[surfI] =
             labelList
             (
-                identity(surf.nEdges() - surf.nInternalEdges())
+                identityMap(surf.nEdges() - surf.nInternalEdges())
               + surf.nInternalEdges()
             );
 

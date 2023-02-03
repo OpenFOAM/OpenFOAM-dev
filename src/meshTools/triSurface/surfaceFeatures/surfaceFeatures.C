@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1432,7 +1432,7 @@ void Foam::surfaceFeatures::nearestFeatEdge
             false,
             edges,
             points,
-            identity(edges.size())
+            identityMap(edges.size())
         ),          // all information needed to do geometric checks
         searchDomain,  // overall search domain
         8,      // maxLevel

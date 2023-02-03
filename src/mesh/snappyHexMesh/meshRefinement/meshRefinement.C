@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -576,7 +576,7 @@ void Foam::meshRefinement::checkData()
         localPointRegion::findDuplicateFaces
         (
             mesh_,
-            identity(mesh_.nFaces() - mesh_.nInternalFaces())
+            identityMap(mesh_.nFaces() - mesh_.nInternalFaces())
           + mesh_.nInternalFaces()
         )
     );
@@ -1204,7 +1204,7 @@ Foam::meshRefinement::meshRefinement
     );
 
     // recalculate intersections for all faces
-    updateIntersections(identity(mesh_.nFaces()));
+    updateIntersections(identityMap(mesh_.nFaces()));
 }
 
 

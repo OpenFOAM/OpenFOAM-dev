@@ -192,7 +192,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
 
     const fvPatch& fvp = mesh_.boundary()[patchId];
 
-    faceId_ = identity(fvp.size());
+    faceId_ = identityMap(fvp.size());
     facePatchId_ = labelList(fvp.size(), patchId);
     faceSign_ = labelList(fvp.size(), 1);
 
@@ -208,7 +208,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
          && refCast<const processorCyclicFvPatch>(fvp).referPatchID() == patchId
         )
         {
-            faceId_.append(identity(fvp.size()));
+            faceId_.append(identityMap(fvp.size()));
             facePatchId_.append(labelList(fvp.size(), patchi));
             faceSign_.append(labelList(fvp.size(), 1));
         }

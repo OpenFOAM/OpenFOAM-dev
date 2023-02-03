@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -426,8 +426,8 @@ void Foam::distributionMapBase::exchangeAddressing
         {
             // All my own elements are used
             label nLocal = globalNumbering.localSize();
-            wantedRemoteElements[proci] = identity(nLocal);
-            constructMap_[proci] = identity(nLocal);
+            wantedRemoteElements[proci] = identityMap(nLocal);
+            constructMap_[proci] = identityMap(nLocal);
         }
         else
         {
@@ -504,8 +504,8 @@ void Foam::distributionMapBase::exchangeAddressing
         {
             // All my own elements are used
             label nLocal = globalNumbering.localSize();
-            wantedRemoteElements[proci] = identity(nLocal);
-            constructMap_[proci] = identity(nLocal);
+            wantedRemoteElements[proci] = identityMap(nLocal);
+            constructMap_[proci] = identityMap(nLocal);
         }
         else
         {

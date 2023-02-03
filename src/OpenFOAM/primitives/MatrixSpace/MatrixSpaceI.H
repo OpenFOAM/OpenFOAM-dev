@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -270,7 +270,7 @@ inline Cmpt& Foam::MatrixSpace<Form, Cmpt, Mrows, Ncols>::zz()
 
 template<class Form, class Cmpt, Foam::direction Mrows, Foam::direction Ncols>
 inline Foam::MatrixSpace<Form, Cmpt, Mrows, Ncols>
-Foam::MatrixSpace<Form, Cmpt, Mrows, Ncols>::identity()
+Foam::MatrixSpace<Form, Cmpt, Mrows, Ncols>::identityMap()
 {
     static_assert(Mrows == Ncols, "Matrix is not square");
     msType result(Zero);

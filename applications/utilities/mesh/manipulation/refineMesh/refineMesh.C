@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
         Info<< "Refining all cells" << nl << endl;
 
         // Select all cells
-        refCells = identity(mesh.nCells());
+        refCells = identityMap(mesh.nCells());
 
         if (mesh.nGeometricD() == 3)
         {

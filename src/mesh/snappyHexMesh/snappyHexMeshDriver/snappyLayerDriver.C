@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2261,7 +2261,7 @@ Foam::label Foam::snappyLayerDriver::checkAndUnmark
         false,
         newMesh,
         meshQualityDict,
-        identity(newMesh.nFaces()),
+        identityMap(newMesh.nFaces()),
         baffles,
         wrongFaces
     );
@@ -3209,7 +3209,7 @@ void Foam::snappyLayerDriver::addLayers
                 // Where to get minThickness from
                 combinedDict.add("minThicknessName", minThickness.name());
 
-                labelList checkFaces(identity(mesh.nFaces()));
+                labelList checkFaces(identityMap(mesh.nFaces()));
                 medialAxisMoverPtr().move
                 (
                     combinedDict,
@@ -3368,8 +3368,8 @@ void Foam::snappyLayerDriver::addLayers
             addLayer.topoChange
             (
                 map,
-                identity(pp().size()),
-                identity(pp().nPoints())
+                identityMap(pp().size()),
+                identityMap(pp().nPoints())
             );
 
             // Update numbering of baffles

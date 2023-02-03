@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2168,7 +2168,7 @@ Foam::indexedOctree<Type>::indexedOctree
     // Start off with one node with all shapes in it.
     DynamicList<node> nodes(label(shapes.size() / maxLeafRatio));
     DynamicList<labelList> contents(label(shapes.size() / maxLeafRatio));
-    contents.append(identity(shapes.size()));
+    contents.append(identityMap(shapes.size()));
 
     // Create topnode.
     node topNode(divide(bb, contents, 0));

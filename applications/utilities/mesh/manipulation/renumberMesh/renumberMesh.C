@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -441,7 +441,7 @@ autoPtr<polyTopoChangeMap> reorderMesh
         patchSizes[patchi] = patches[patchi].size();
         patchStarts[patchi] = patches[patchi].start();
         oldPatchNMeshPoints[patchi] = patches[patchi].nPoints();
-        patchPointMap[patchi] = identity(patches[patchi].nPoints());
+        patchPointMap[patchi] = identityMap(patches[patchi].nPoints());
     }
 
     mesh.resetPrimitives
@@ -511,7 +511,7 @@ autoPtr<polyTopoChangeMap> reorderMesh
             mesh.nPoints(),             // nOldPoints,
             mesh.nFaces(),              // nOldFaces,
             mesh.nCells(),              // nOldCells,
-            identity(mesh.nPoints()),   // pointMap,
+            identityMap(mesh.nPoints()),   // pointMap,
             List<objectMap>(0),         // pointsFromPoints,
             faceOrder,                  // faceMap,
             List<objectMap>(0),         // facesFromPoints,
@@ -522,7 +522,7 @@ autoPtr<polyTopoChangeMap> reorderMesh
             List<objectMap>(0),         // cellsFromEdges,
             List<objectMap>(0),         // cellsFromFaces,
             List<objectMap>(0),         // cellsFromCells,
-            identity(mesh.nPoints()),   // reversePointMap,
+            identityMap(mesh.nPoints()),   // reversePointMap,
             reverseFaceOrder,           // reverseFaceMap,
             reverseCellOrder,           // reverseCellMap,
             flipFaceFlux,               // flipFaceFlux,
@@ -1243,7 +1243,7 @@ int main(int argc, char *argv[])
         (
             mesh,
             "cellID",
-            identity(mesh.nCells())
+            identityMap(mesh.nCells())
         );
 
         Info<< nl << "Written current cellID and origCellID as volScalarField"

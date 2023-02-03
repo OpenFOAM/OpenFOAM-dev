@@ -112,7 +112,7 @@ void Foam::polyCellSet::setCells()
         case selectionTypes::all:
         {
             Info<< indent << "- selecting all cells" << endl;
-            cells_ = identity(mesh_.nCells());
+            cells_ = identityMap(mesh_.nCells());
 
             break;
         }

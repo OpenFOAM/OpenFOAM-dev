@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     Info<< "Test const circulator. First go forwards, then backwards."
         << nl << endl;
 
-    face f(identity(4));
+    face f(identityMap(4));
 
     ConstCirculator<face> cStart(f);
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 
 
     Info<< nl << nl << "Compare two faces: " << endl;
-    face a(identity(5));
+    face a(identityMap(5));
     Info<< "Compare " << a << " and " << a << " Match = " << face::compare(a, a)
         << endl;
 
@@ -127,11 +127,11 @@ int main(int argc, char *argv[])
     Info<< "Compare " << g << " and " << h << " Match = " << face::compare(g, h)
         << endl;
 
-    face face1(identity(1));
+    face face1(identityMap(1));
     Info<< "Compare " << face1 << " and " << face1
         << " Match = " << face::compare(face1, face1) << endl;
 
-    face face2(identity(1)+1);
+    face face2(identityMap(1)+1);
     Info<< "Compare " << face1 << " and " << face2
         << " Match = " << face::compare(face1, face2) << endl;
 
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 
     } while (cZero.circulate(CirculatorBase::direction::clockwise));
 
-    fZero = face(identity(5));
+    fZero = face(identityMap(5));
 
     // circulator was invalidated so reset
     cZero = Circulator<face>(fZero);

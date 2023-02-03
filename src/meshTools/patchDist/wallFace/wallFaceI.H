@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ inline bool Foam::WallFaceBase<Derived>::update
     const scalar dist2 =
         sqr
         (
-            face(identity(w2.points().size()))
+            face(identityMap(w2.points().size()))
            .nearestPoint(pt, w2.points())
            .distance()
         );

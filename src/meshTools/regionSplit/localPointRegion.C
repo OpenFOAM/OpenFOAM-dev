@@ -587,7 +587,7 @@ Foam::List<Foam::labelPair> Foam::localPointRegion::findDuplicateFacePairs
     // Faces to test: all boundary faces
     labelList testFaces
     (
-        identity(mesh.nFaces()-mesh.nInternalFaces())
+        identityMap(mesh.nFaces()-mesh.nInternalFaces())
       + mesh.nInternalFaces()
     );
 

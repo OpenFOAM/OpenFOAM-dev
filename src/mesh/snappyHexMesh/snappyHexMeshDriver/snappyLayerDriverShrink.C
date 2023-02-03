@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -368,8 +368,8 @@ void Foam::snappyLayerDriver::smoothNormals
 
 
     // Correspondence between local edges/points and mesh edges/points
-    const labelList meshEdges(identity(mesh.nEdges()));
-    const labelList meshPoints(identity(mesh.nPoints()));
+    const labelList meshEdges(identityMap(mesh.nEdges()));
+    const labelList meshPoints(identityMap(mesh.nPoints()));
 
     // Calculate inverse sum of weights
 
@@ -1633,8 +1633,8 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
         sumWeights
         (
             isMasterEdge,
-            identity(mesh.nEdges()),
-            identity(mesh.nPoints()),
+            identityMap(mesh.nEdges()),
+            identityMap(mesh.nPoints()),
             mesh.edges(),
             invSumWeight
         );
@@ -1654,8 +1654,8 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
             (
                 mesh,
                 isMasterEdge,
-                identity(mesh.nEdges()),    // meshEdges,
-                identity(mesh.nPoints()),   // meshPoints,
+                identityMap(mesh.nEdges()),    // meshEdges,
+                identityMap(mesh.nPoints()),   // meshPoints,
                 mesh.edges(),               // edges,
                 invSumWeight,
                 displacement,
@@ -1678,8 +1678,8 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
             (
                 mesh,
                 isMasterEdge,
-                identity(mesh.nEdges()),    // meshEdges,
-                identity(mesh.nPoints()),   // meshPoints,
+                identityMap(mesh.nEdges()),    // meshEdges,
+                identityMap(mesh.nPoints()),   // meshPoints,
                 mesh.edges(),               // edges,
                 invSumWeight,
                 displacement,
@@ -1791,7 +1791,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
 
 
     // Current faces to check. Gets modified in meshMover.scaleMesh
-    labelList checkFaces(identity(mesh.nFaces()));
+    labelList checkFaces(identityMap(mesh.nFaces()));
 
     Info<< "shrinkMeshMedialDistance : Moving mesh ..." << endl;
     scalar oldErrorReduction = -1;

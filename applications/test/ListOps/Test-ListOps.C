@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
 {
     Info<< "Test Rotations:" << nl << endl;
 
-    List<label> forwardRotate(identity(5));
-    face testFace(identity(4));
+    List<label> forwardRotate(identityMap(5));
+    face testFace(identityMap(4));
 
     for (label i = 0; i < 8; ++i)
     {
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     inplaceRotateList(forwardRotate, -2);
     Info<< "Rotate to the left by 2  : " << forwardRotate << endl;
 
-    List<label> subRotate(identity(10));
+    List<label> subRotate(identityMap(10));
     SubList<label> subL(subRotate, 5, 3);
 
     Info<< "Test inplace rotate on sublist : " << subRotate << endl;
@@ -80,32 +80,32 @@ int main(int argc, char *argv[])
 
     Info<< nl << nl << "Test Reversing:" << nl << endl;
 
-    Info<< "List    : " << identity(5) << endl;
-    Info<< "Reverse : " << reverseList(identity(5)) << endl;
-    Info<< "List    : " << identity(6) << endl;
-    Info<< "Reverse : " << reverseList(identity(6)) << nl << endl;
+    Info<< "List    : " << identityMap(5) << endl;
+    Info<< "Reverse : " << reverseList(identityMap(5)) << endl;
+    Info<< "List    : " << identityMap(6) << endl;
+    Info<< "Reverse : " << reverseList(identityMap(6)) << nl << endl;
 
-    List<label> test1(identity(5));
+    List<label> test1(identityMap(5));
     Info<< "List            : " << test1 << endl;
     inplaceReverseList(test1);
     Info<< "Inplace Reverse : " << test1 << nl << endl;
 
-    List<label> test2(identity(6));
+    List<label> test2(identityMap(6));
     Info<< "List            : " << test2 << endl;
     inplaceReverseList(test2);
     Info<< "Inplace Reverse : " << test2 << nl << endl;
 
-    face test3(identity(6));
+    face test3(identityMap(6));
     Info<< "Face            : " << test3 << endl;
     inplaceReverseList(test3);
     Info<< "Inplace Reverse : " << test3 << nl << endl;
 
-    FixedList<label, 6> test4(identity(6));
+    FixedList<label, 6> test4(identityMap(6));
     Info<< "FixedList       : " << test4 << endl;
     inplaceReverseList(test4);
     Info<< "Inplace Reverse : " << test4 << nl << endl;
 
-    List<label> test5(identity(9));
+    List<label> test5(identityMap(9));
     SubList<label> test5SubList(test5, 4, 3);
     Info<< "List                            : " << test5 << endl;
     inplaceReverseList(test5SubList);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,7 +206,7 @@ Foam::ensightPart::localPoints Foam::ensightPartFaces::calcLocalPoints() const
     if (contiguousPoints_)
     {
         localPoints ptList;
-        ptList.list = identity(points_.size());
+        ptList.list = identityMap(points_.size());
         ptList.nPoints = points_.size();
         return ptList;
     }

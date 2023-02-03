@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ void Foam::displacementMeshMoverMotionSolver::solve()
     pointDisplacement().boundaryFieldRef().updateCoeffs();
 
     label nAllowableErrors = 0;
-    labelList checkFaces(identity(mesh().nFaces()));
+    labelList checkFaces(identityMap(mesh().nFaces()));
     meshMover().move
     (
         coeffDict().optionalSubDict(meshMover().type() + "Coeffs"),

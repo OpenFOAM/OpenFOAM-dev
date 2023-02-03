@@ -541,7 +541,7 @@ void Foam::BlendedInterfacialModel<ModelType>::postProcessBlendingCoefficients
     {
         // Single axis, using the first phase as the x-coordinate
         static const label nDivisions = 128;
-        const scalarField divisionis(scalarList(identity(nDivisions)));
+        const scalarField divisionis(scalarList(identityMap(nDivisions)));
         fieldNames[0] = fluid.phases()[0].volScalarField::name();
         fieldNames[1] = fluid.phases()[1].volScalarField::name();
         fields.set(0, new scalarField(divisionis/(nDivisions - 1)));

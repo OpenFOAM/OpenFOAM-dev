@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
         pts[4] = point(4.294, 4.024, -4.317);
         pts[5] = point(4.409, 3.687, -4.317);
 
-        face f(identity(nPts));
+        face f(identityMap(nPts));
 
         point Cf = f.centre(pts);
 

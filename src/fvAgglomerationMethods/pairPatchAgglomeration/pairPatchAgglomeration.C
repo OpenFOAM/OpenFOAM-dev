@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,7 +208,7 @@ Foam::pairPatchAgglomeration::pairPatchAgglomeration
     ),
     nFaces_(maxLevels_),
     restrictAddressing_(maxLevels_),
-    restrictTopBottomAddressing_(identity(patch.size())),
+    restrictTopBottomAddressing_(identityMap(patch.size())),
     patchLevels_(maxLevels_),
     facePairWeight_(patch.size())
 {

@@ -488,7 +488,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::deleteProcPatches
 
     // Delete (now empty) processor patches.
     {
-        labelList oldToNew(identity(mesh_.boundaryMesh().size()));
+        labelList oldToNew(identityMap(mesh_.boundaryMesh().size()));
         label newI = 0;
         // Non processor patches first
         forAll(mesh_.boundaryMesh(), patchi)
@@ -1801,15 +1801,15 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
                 move(oldPatchStarts),
                 move(oldPatchNMeshPoints),
 
-                labelListList(1, identity(mesh_.nPoints())),
-                labelListList(1, identity(mesh_.nFaces())),
-                labelListList(1, identity(mesh_.nCells())),
-                labelListList(1, identity(patches.size())),
+                labelListList(1, identityMap(mesh_.nPoints())),
+                labelListList(1, identityMap(mesh_.nFaces())),
+                labelListList(1, identityMap(mesh_.nCells())),
+                labelListList(1, identityMap(patches.size())),
 
-                labelListList(1, identity(mesh_.nPoints())),
-                labelListList(1, identity(mesh_.nFaces())),
-                labelListList(1, identity(mesh_.nCells())),
-                labelListList(1, identity(patches.size()))
+                labelListList(1, identityMap(mesh_.nPoints())),
+                labelListList(1, identityMap(mesh_.nFaces())),
+                labelListList(1, identityMap(mesh_.nCells())),
+                labelListList(1, identityMap(patches.size()))
             )
         );
     }
@@ -2350,13 +2350,13 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
             faceMap[facei] = -faceMap[facei];
         }
         subPointMap[Pstream::myProcNo()] = subMap().pointMap();
-        subPatchMap[Pstream::myProcNo()] = identity(patches.size());
+        subPatchMap[Pstream::myProcNo()] = identityMap(patches.size());
 
         // Initialise all addressing into current mesh
-        constructCellMap[Pstream::myProcNo()] = identity(mesh_.nCells());
-        constructFaceMap[Pstream::myProcNo()] = identity(mesh_.nFaces()) + 1;
-        constructPointMap[Pstream::myProcNo()] = identity(mesh_.nPoints());
-        constructPatchMap[Pstream::myProcNo()] = identity(patches.size());
+        constructCellMap[Pstream::myProcNo()] = identityMap(mesh_.nCells());
+        constructFaceMap[Pstream::myProcNo()] = identityMap(mesh_.nFaces()) + 1;
+        constructPointMap[Pstream::myProcNo()] = identityMap(mesh_.nPoints());
+        constructPatchMap[Pstream::myProcNo()] = identityMap(patches.size());
 
         // Subset the mesh data: neighbourCell/neighbourProc
         // fields
@@ -2708,11 +2708,11 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
             const fvMesh& domainMesh = domainMeshPtr();
 
 
-            constructCellMap[sendProc] = identity(domainMesh.nCells());
-            constructFaceMap[sendProc] = identity(domainMesh.nFaces()) + 1;
-            constructPointMap[sendProc] = identity(domainMesh.nPoints());
+            constructCellMap[sendProc] = identityMap(domainMesh.nCells());
+            constructFaceMap[sendProc] = identityMap(domainMesh.nFaces()) + 1;
+            constructPointMap[sendProc] = identityMap(domainMesh.nPoints());
             constructPatchMap[sendProc] =
-                identity(domainMesh.boundaryMesh().size());
+                identityMap(domainMesh.boundaryMesh().size());
 
 
             // Print a bit.

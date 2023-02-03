@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -401,7 +401,7 @@ Foam::extendedEdgeMesh::extendedEdgeMesh
     const labelList& featurePoints = sFeat.featurePoints();
 
     // Get a labelList of all the featureEdges that are region edges
-    const labelList regionFeatureEdges(identity(sFeat.nRegionEdges()));
+    const labelList regionFeatureEdges(identityMap(sFeat.nRegionEdges()));
 
     sortPointsAndEdges
     (
@@ -854,7 +854,7 @@ Foam::extendedEdgeMesh::pointTree() const
         // geometry there are less face/edge aligned items.
         treeBoundBox bb(treeBoundBox(points()).extend(1e-4));
 
-        const labelList featurePointLabels = identity(nonFeatureStart_);
+        const labelList featurePointLabels = identityMap(nonFeatureStart_);
 
         pointTree_.reset
         (
@@ -886,7 +886,7 @@ Foam::extendedEdgeMesh::edgeTree() const
         // geometry there are less face/edge aligned items.
         treeBoundBox bb(treeBoundBox(points()).extend(1e-4));
 
-        labelList allEdges(identity(edges().size()));
+        labelList allEdges(identityMap(edges().size()));
 
         edgeTree_.reset
         (
@@ -926,20 +926,21 @@ Foam::extendedEdgeMesh::edgeTreesByType() const
 
         // External edges
         sliceEdges[0] =
-            identity(internalStart_ - externalStart_) + externalStart_;
+            identityMap(internalStart_ - externalStart_) + externalStart_;
 
         // Internal edges
-        sliceEdges[1] = identity(flatStart_ - internalStart_) + internalStart_;
+        sliceEdges[1] =
+            identityMap(flatStart_ - internalStart_) + internalStart_;
 
         // Flat edges
-        sliceEdges[2] = identity(openStart_ - flatStart_) + flatStart_;
+        sliceEdges[2] = identityMap(openStart_ - flatStart_) + flatStart_;
 
         // Open edges
-        sliceEdges[3] = identity(multipleStart_ - openStart_) + openStart_;
+        sliceEdges[3] = identityMap(multipleStart_ - openStart_) + openStart_;
 
         // Multiple edges
         sliceEdges[4] =
-            identity(edges().size() - multipleStart_) + multipleStart_;
+            identityMap(edges().size() - multipleStart_) + multipleStart_;
 
         forAll(edgeTreesByType_, i)
         {
@@ -1271,7 +1272,7 @@ void Foam::extendedEdgeMesh::flipNormals()
     // ~~~~~~
 
     // From current points into new points
-    labelList reversePointMap(identity(points().size()));
+    labelList reversePointMap(identityMap(points().size()));
 
     // Flip convex and concave points
 
@@ -1293,7 +1294,7 @@ void Foam::extendedEdgeMesh::flipNormals()
     // ~~~~~~
 
     // From current edges into new edges
-    labelList reverseEdgeMap(identity(edges().size()));
+    labelList reverseEdgeMap(identityMap(edges().size()));
 
     // Flip external and internal edges
 

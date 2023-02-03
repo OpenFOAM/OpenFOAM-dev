@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -297,7 +297,7 @@ bool Foam::hexMatcher::isA(const faceList& faces)
         faces,                      // all faces in mesh
         labelList(faces.size(), 0), // cell 0 is owner of all faces
         0,                          // cell label
-        identity(faces.size())      // faces of cell 0
+        identityMap(faces.size())      // faces of cell 0
     );
 }
 

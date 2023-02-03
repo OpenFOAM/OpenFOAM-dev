@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -376,7 +376,7 @@ Foam::meshReader::polyBoundaryPatches(const polyMesh& mesh)
     label nPatches = patchStarts_.size();
 
     // avoid empty patches - move to the end of the lists and truncate
-    labelList oldToNew = identity(nPatches);
+    labelList oldToNew = identityMap(nPatches);
     forAll(patchSizes_, patchi)
     {
         if (patchSizes_[patchi] > 0)

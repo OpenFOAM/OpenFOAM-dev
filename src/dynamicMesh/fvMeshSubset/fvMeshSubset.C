@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1047,7 +1047,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
         nextPatchID = wantedPatchID + 1;
 
         // old to new patches
-        globalPatchMap = identity(oldPatches.size());
+        globalPatchMap = identityMap(oldPatches.size());
     }
 
     labelList boundaryPatchSizes(nbSize, 0);
@@ -1555,7 +1555,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
     pointMap_ = map().pointMap();
     faceMap_ = map().faceMap();
     cellMap_ = map().cellMap();
-    patchMap_ = identity(baseMesh().boundaryMesh().size());
+    patchMap_ = identityMap(baseMesh().boundaryMesh().size());
 }
 
 

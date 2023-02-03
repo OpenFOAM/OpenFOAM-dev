@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ Foam::searchableSurfaces::searchableSurfaces(const label size)
 :
     PtrList<searchableSurface>(size),
     regionNames_(size),
-    allSurfaces_(identity(size))
+    allSurfaces_(identityMap(size))
 {}
 
 
@@ -83,7 +83,7 @@ Foam::searchableSurfaces::searchableSurfaces(const label size)
 //:
 //    PtrList<searchableSurface>(dicts.size()),
 //    regionNames_(dicts.size()),
-//    allSurfaces_(identity(dicts.size()))
+//    allSurfaces_(identityMap(dicts.size()))
 //{
 //    forAll(dicts, surfI)
 //    {
@@ -177,7 +177,7 @@ Foam::searchableSurfaces::searchableSurfaces
     PtrList<searchableSurface>(topDict.size()),
     names_(topDict.size()),
     regionNames_(topDict.size()),
-    allSurfaces_(identity(topDict.size()))
+    allSurfaces_(identityMap(topDict.size()))
 {
     label surfI = 0;
     forAllConstIter(dictionary, topDict, iter)
@@ -681,7 +681,7 @@ bool Foam::searchableSurfaces::checkIntersection
                             names()[i] + '_' + names()[j],
                             false,
                             intersections,
-                            identity(intersections.size()),
+                            identityMap(intersections.size()),
                             edgeList(),
                             faceList(),
                             "edgeIndex",

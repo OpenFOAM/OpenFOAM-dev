@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -306,7 +306,7 @@ void Foam::cutPoly::writeCellCuts
             cutPs[i] = edgeCutValue(e, pAlphas, isoAlpha, ps);
         }
 
-        obj.write(face(identity(cCuts[cuti].size())), cutPs, false);
+        obj.write(face(identityMap(cCuts[cuti].size())), cutPs, false);
     }
 }
 

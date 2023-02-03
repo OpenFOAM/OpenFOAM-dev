@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -379,10 +379,10 @@ Foam::labelList Foam::multiLevelDecomp::decompose
 )
 {
     CompactListList<label> cellCells;
-    calcCellCells(mesh, identity(cc.size()), cc.size(), true, cellCells);
+    calcCellCells(mesh, identityMap(cc.size()), cc.size(), true, cellCells);
 
     labelField finalDecomp(cc.size(), 0);
-    labelList cellMap(identity(cc.size()));
+    labelList cellMap(identityMap(cc.size()));
 
     decompose
     (
@@ -407,7 +407,7 @@ Foam::labelList Foam::multiLevelDecomp::decompose
 )
 {
     labelField finalDecomp(points.size(), 0);
-    labelList pointMap(identity(points.size()));
+    labelList pointMap(identityMap(points.size()));
 
     decompose
     (
