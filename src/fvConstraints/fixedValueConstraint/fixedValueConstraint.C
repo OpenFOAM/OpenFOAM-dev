@@ -83,7 +83,7 @@ bool Foam::fv::fixedValueConstraint::constrainType
 
     const List<Type> values
     (
-        set_.cells().size(),
+        set_.nCells(),
         fieldValues_[fieldName]->value<Type>(t)
     );
 
@@ -93,7 +93,7 @@ bool Foam::fv::fixedValueConstraint::constrainType
         (
             set_.cells(),
             values,
-            scalarList(set_.cells().size(), fraction_->value(t))
+            scalarList(set_.nCells(), fraction_->value(t))
         );
     }
     else
@@ -101,7 +101,7 @@ bool Foam::fv::fixedValueConstraint::constrainType
         eqn.setValues(set_.cells(), values);
     }
 
-    return set_.cells().size();
+    return set_.nCells();
 }
 
 

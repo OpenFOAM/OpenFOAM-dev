@@ -151,13 +151,13 @@ void Foam::fv::rotorDiskSource::checkData()
         {
             FatalErrorInFunction
                 << "Source cannot be used with '"
-                << fvCellSet::selectionTypeNames_[set_.selectionType()]
+                << fvCellSet::selectionTypeNames[set_.selectionType()]
                 << "' mode.  Please use one of: " << nl
-                << fvCellSet::selectionTypeNames_
+                << fvCellSet::selectionTypeNames
                    [fvCellSet::selectionTypes::cellSet] << nl
-                << fvCellSet::selectionTypeNames_
+                << fvCellSet::selectionTypeNames
                    [fvCellSet::selectionTypes::cellZone] << nl
-                << fvCellSet::selectionTypeNames_
+                << fvCellSet::selectionTypeNames
                    [fvCellSet::selectionTypes::all]
                 << exit(FatalError);
         }
@@ -181,7 +181,7 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
     // Calculate cell addressing for selected cells
     labelList cellAddr(mesh().nCells(), -1);
     UIndirectList<label>(cellAddr, set_.cells()) =
-        identityMap(set_.cells().size());
+        identityMap(set_.nCells());
     labelList nbrFaceCellAddr(mesh().nFaces() - nInternalFaces, -1);
     forAll(pbm, patchi)
     {
@@ -321,7 +321,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
             const scalarField& V = mesh().V();
             const vectorField& C = mesh().C();
 
-            const labelList& cells = set_.cells();
+            const labelUList cells = set_.cells();
 
             forAll(cells, i)
             {
@@ -437,7 +437,7 @@ void Foam::fv::rotorDiskSource::constructGeometry()
 {
     const vectorField& C = mesh().C();
 
-    const labelList& cells = set_.cells();
+    const labelUList cells = set_.cells();
 
     forAll(cells, i)
     {
@@ -522,10 +522,10 @@ Foam::fv::rotorDiskSource::rotorDiskSource
     inletVelocity_(Zero),
     tipEffect_(1),
     flap_(),
-    x_(set_.cells().size(), Zero),
-    R_(set_.cells().size(), I),
-    invR_(set_.cells().size(), I),
-    area_(set_.cells().size(), Zero),
+    x_(set_.nCells(), Zero),
+    R_(set_.nCells(), I),
+    invR_(set_.nCells(), I),
+    area_(set_.nCells(), Zero),
     coordSys_("rotorCoordSys", vector::zero, axesRotation(sphericalTensor::I)),
     cylindrical_(),
     rMax_(0),

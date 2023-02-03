@@ -92,7 +92,7 @@ const Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypes,
     3
-> Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypeNames_;
+> Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypeNames;
 
 const Foam::NamedEnum
 <
@@ -111,7 +111,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
-            << selectionTypeNames_[selectionType_]
+            << selectionTypeNames[selectionType_]
             << "(" << selectionName_ << "):" << nl
             << "    Unknown face zone name: " << selectionName_
             << ". Valid face zones are: " << mesh_.faceZones().names()
@@ -182,7 +182,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
-            << selectionTypeNames_[selectionType_]
+            << selectionTypeNames[selectionType_]
             << "(" << selectionName_ << "):" << nl
             << "    Unknown patch name: " << selectionName_
             << ". Valid patch names are: "
@@ -441,10 +441,10 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
         {
             FatalErrorInFunction
                 << type() << " " << name() << ": "
-                << selectionTypeNames_[selectionType_]
+                << selectionTypeNames[selectionType_]
                 << "(" << selectionName_ << "):" << nl
                 << "    Unknown selection type. Valid selection types are:"
-                << selectionTypeNames_.sortedToc() << nl << exit(FatalError);
+                << selectionTypeNames.sortedToc() << nl << exit(FatalError);
         }
     }
 
@@ -452,7 +452,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
-            << selectionTypeNames_[selectionType_]
+            << selectionTypeNames[selectionType_]
             << "(" << selectionName_ << "):" << nl
             << " selection has no faces" << exit(FatalError);
     }
@@ -512,7 +512,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::writeFileHeader
     {
         writeCommented(file(), "Selection type : ");
         file()
-            << selectionTypeNames_[selectionType_] << " "
+            << selectionTypeNames[selectionType_] << " "
             << selectionName_ << endl;
         writeCommented(file(), "Faces  : ");
         file() << nFaces_ << endl;
@@ -661,7 +661,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     surfaceWriterPtr_(nullptr),
     selectionType_
     (
-        selectionTypeNames_.read
+        selectionTypeNames.read
         (
             dict.lookupBackwardsCompatible({"select", "regionType"})
         )
@@ -691,7 +691,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     surfaceWriterPtr_(nullptr),
     selectionType_
     (
-        selectionTypeNames_.read
+        selectionTypeNames.read
         (
             dict.lookupBackwardsCompatible({"select", "regionType"})
         )
@@ -777,7 +777,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
             surfaceWriterPtr_->write
             (
                 outputDir(),
-                selectionTypeNames_[selectionType_] + ("_" + selectionName_),
+                selectionTypeNames[selectionType_] + ("_" + selectionName_),
                 points,
                 faces
             );

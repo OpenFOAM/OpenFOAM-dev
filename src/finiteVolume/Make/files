@@ -127,7 +127,6 @@ $(fvMeshStitchers)/fvMeshStitcher/fvMeshStitcherNew.C
 $(fvMeshStitchers)/stationary/fvMeshStitchersStationary.C
 
 functionObjects/fvMeshFunctionObject/fvMeshFunctionObject.C
-functionObjects/volRegion/volRegion.C
 functionObjects/fvModelFunctionObject/fvModelFunctionObject.C
 
 fvPatchFields = fields/fvPatchFields

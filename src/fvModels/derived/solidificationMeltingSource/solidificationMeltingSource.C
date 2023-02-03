@@ -176,7 +176,7 @@ void Foam::fv::solidificationMeltingSource::update
 
     const volScalarField& T = mesh().lookupObject<volScalarField>(TName_);
 
-    const labelList& cells = set_.cells();
+    const labelUList cells = set_.cells();
 
     forAll(cells, i)
     {
@@ -255,7 +255,7 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
         zeroGradientFvPatchScalarField::typeName
     ),
     curTimeIndex_(-1),
-    deltaT_(set_.cells().size(), 0)
+    deltaT_(set_.nCells(), 0)
 {
     readCoeffs();
 }
@@ -326,7 +326,7 @@ void Foam::fv::solidificationMeltingSource::addSup
     vectorField& Su = eqn.source();
     const scalarField& V = mesh().V();
 
-    const labelList& cells = set_.cells();
+    const labelUList cells = set_.cells();
 
     forAll(cells, i)
     {

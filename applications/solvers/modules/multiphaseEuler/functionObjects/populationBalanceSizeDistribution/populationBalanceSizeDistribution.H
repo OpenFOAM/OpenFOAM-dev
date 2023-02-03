@@ -67,7 +67,7 @@ Usage
 See also
     Foam::diameterModels::populationBalanceModel
     Foam::functionObjects::fvMeshFunctionObject
-    Foam::functionObjects::volRegion
+    Foam::fvCellSet
     Foam::functionObject
 
 SourceFiles
@@ -79,7 +79,7 @@ SourceFiles
 #define populationBalanceSizeDistribution_H
 
 #include "fvMeshFunctionObject.H"
-#include "volRegion.H"
+#include "fvCellSet.H"
 #include "populationBalanceModel.H"
 #include "writeFile.H"
 #include "setWriter.H"
@@ -98,7 +98,7 @@ namespace functionObjects
 class populationBalanceSizeDistribution
 :
     public fvMeshFunctionObject,
-    public volRegion
+    public fvCellSet
 {
 public:
 

@@ -69,6 +69,7 @@ SourceFiles
 #define fvCellSet_H
 
 #include "polyCellSet.H"
+#include "writeFile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -99,6 +100,18 @@ class fvCellSet
 
         //- Set the sum of scalar volumes
         void setV();
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Output file header information
+        void writeFileHeader
+        (
+            const functionObjects::writeFile& wf,
+            Ostream& file
+        );
 
 
 public:

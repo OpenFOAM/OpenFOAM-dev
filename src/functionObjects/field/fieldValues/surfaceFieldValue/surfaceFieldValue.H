@@ -197,7 +197,7 @@ public:
         };
 
         //- Selection type names
-        static const NamedEnum<selectionTypes, 3> selectionTypeNames_;
+        static const NamedEnum<selectionTypes, 3> selectionTypeNames;
 
 
         //- Operation type enumeration

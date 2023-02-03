@@ -127,7 +127,7 @@ void Foam::fv::heatSource::addSup
     const word& fieldName
 ) const
 {
-    const labelList& cells = set_.cells();
+    const labelUList cells = set_.cells();
 
     const scalar t = mesh().time().userTimeValue();
     const scalar q = q_->value(t);

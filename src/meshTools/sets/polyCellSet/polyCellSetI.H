@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "polyMesh.H"
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 inline const Foam::polyCellSet::selectionTypes&
@@ -38,9 +40,56 @@ inline const Foam::word& Foam::polyCellSet::cellSetName() const
 }
 
 
-inline const Foam::labelList& Foam::polyCellSet::cells() const
+inline Foam::labelUList Foam::polyCellSet::cells() const
 {
-    return cells_;
+    if (selectionType_ == selectionTypes::all)
+    {
+        return identityMap(mesh_.nCells());
+    }
+    else if (selectionType_ == selectionTypes::cellZone)
+    {
+        return mesh_.cellZones()[cellSetName_];
+    }
+    else
+    {
+        return cells_;
+    }
+}
+
+
+inline Foam::label Foam::polyCellSet::nCells() const
+{
+    if (selectionType_ == selectionTypes::all)
+    {
+        return mesh_.nCells();
+    }
+    else
+    {
+        return cells().size();
+    }
+}
+
+
+inline bool Foam::polyCellSet::all() const
+{
+    return selectionType_ == selectionTypes::all;
+}
+
+
+inline Foam::label Foam::polyCellSet::celli(const label i) const
+{
+    if (selectionType_ == selectionTypes::all)
+    {
+        return i;
+    }
+    else if (selectionType_ == selectionTypes::cellZone)
+    {
+        return mesh_.cellZones()[cellSetName_][i];
+    }
+    else
+    {
+        return cells_[i];
+    }
 }
 
 

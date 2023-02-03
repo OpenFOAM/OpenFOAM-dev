@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,13 +212,13 @@ Foam::functionObjects::populationBalanceSizeDistribution::filterField
     const scalarField& field
 ) const
 {
-    if (isNull(cellIDs()))
+    if (all())
     {
         return field;
     }
     else
     {
-        return tmp<scalarField>(new scalarField(field, cellIDs()));
+        return tmp<scalarField>(new scalarField(field, cells()));
     }
 }
 
@@ -353,7 +353,7 @@ populationBalanceSizeDistribution
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    volRegion(fvMeshFunctionObject::mesh_, dict),
+    fvCellSet(fvMeshFunctionObject::mesh_, dict),
     file_(obr_, name),
     mesh_(fvMeshFunctionObject::mesh_),
     popBal_

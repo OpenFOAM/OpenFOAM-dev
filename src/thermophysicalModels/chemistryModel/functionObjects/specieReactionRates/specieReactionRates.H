@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 
 See also
     Foam::functionObjects::fvMeshFunctionObject
-    Foam::functionObjects::volRegion
+    Foam::fvCellSet
     Foam::functionObjects::logFiles
 
 SourceFiles
@@ -42,7 +42,7 @@ SourceFiles
 #define functionObjects_specieReactionRates_H
 
 #include "fvMeshFunctionObject.H"
-#include "volRegion.H"
+#include "fvCellSet.H"
 #include "logFiles.H"
 #include "basicChemistryModel.H"
 
@@ -60,7 +60,7 @@ namespace functionObjects
 class specieReactionRates
 :
     public fvMeshFunctionObject,
-    public volRegion,
+    public fvCellSet,
     public logFiles
 {
     // Private Member Data

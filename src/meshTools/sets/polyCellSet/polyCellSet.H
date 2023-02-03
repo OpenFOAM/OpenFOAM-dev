@@ -96,8 +96,7 @@ public:
         };
 
         //- Word list of selection type names
-        static const NamedEnum<selectionTypes, 4>
-            selectionTypeNames_;
+        static const NamedEnum<selectionTypes, 4> selectionTypeNames;
 
 
 private:
@@ -116,7 +115,7 @@ private:
         //- Optional list of points
         List<point> points_;
 
-        //- Set of selected cells
+        //- Set of selected cells (not used for all or cellZone)
         mutable labelList cells_;
 
 
@@ -124,6 +123,9 @@ private:
 
         //- Set the cells
         void setCells();
+
+        //- Return the identity map of length len
+        labelUList identityMap(const label len) const;
 
 
 public:
@@ -153,7 +155,16 @@ public:
             inline const word& cellSetName() const;
 
             //- Return const access to the cell set
-            inline const labelList& cells() const;
+            inline labelUList cells() const;
+
+            //- Return the number of cells in the set
+            inline label nCells() const;
+
+            //- Return true if the set comprises all the cells
+            inline bool all() const;
+
+            //- Return the cell index corresponding to the cell set index
+            inline label celli(const label i) const;
 
 
         // Mesh changes

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ namespace functionObjects
 void Foam::functionObjects::specieReactionRates::writeFileHeader(const label i)
 {
     writeHeader(file(), "Specie reaction rates");
-    volRegion::writeFileHeader(*this, file());
+    fvCellSet::writeFileHeader(*this, file());
     writeHeaderValue(file(), "nSpecie", chemistryModel_.nSpecie());
     writeHeaderValue(file(), "nReaction", chemistryModel_.nReaction());
 
@@ -79,7 +79,7 @@ Foam::functionObjects::specieReactionRates::specieReactionRates
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    volRegion(fvMeshFunctionObject::mesh_, dict),
+    fvCellSet(fvMeshFunctionObject::mesh_, dict),
     logFiles(obr_, name),
     chemistryModel_
     (
@@ -144,7 +144,7 @@ bool Foam::functionObjects::specieReactionRates::write()
         {
             scalar sumVRRi = 0;
 
-            if (isNull(cellIDs()))
+            if (all())
             {
                 sumVRRi = fvc::domainIntegrate(RR[speciei]).value();
             }
@@ -156,7 +156,7 @@ bool Foam::functionObjects::specieReactionRates::write()
                         scalarField
                         (
                             fvMeshFunctionObject::mesh_.V()*RR[speciei],
-                            cellIDs()
+                            cells()
                         )
                     );
             }

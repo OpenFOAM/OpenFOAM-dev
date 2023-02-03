@@ -134,7 +134,7 @@ Foam::scalar Foam::fv::meanVelocityForce::magUbarAve
     const volVectorField& U
 ) const
 {
-    const labelList& cells = set_.cells();
+    const labelUList cells = set_.cells();
     const scalarField& cv = mesh().V();
 
     scalar magUbarAve = 0;
@@ -211,7 +211,7 @@ bool Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
 {
     const scalarField& rAU = rAPtr_();
 
-    const labelList& cells = set_.cells();
+    const labelUList cells = set_.cells();
     const scalarField& cv = mesh().V();
 
     // Average rAU over the cell set

@@ -43,7 +43,7 @@ namespace Foam
     };
 
     const NamedEnum<polyCellSet::selectionTypes, 4>
-        polyCellSet::selectionTypeNames_;
+        polyCellSet::selectionTypeNames;
 }
 
 
@@ -69,7 +69,7 @@ void Foam::polyCellSet::setCells()
                     selectedCells.insert(celli);
                 }
 
-                label globalCelli = returnReduce(celli, maxOp<label>());
+                const label globalCelli = returnReduce(celli, maxOp<label>());
                 if (globalCelli < 0)
                 {
                     WarningInFunction
@@ -97,7 +97,7 @@ void Foam::polyCellSet::setCells()
             Info<< indent
                 << "- selecting cells using cellZone " << cellSetName_ << endl;
 
-            label zoneID = mesh_.cellZones().findZoneID(cellSetName_);
+            const label zoneID = mesh_.cellZones().findZoneID(cellSetName_);
             if (zoneID == -1)
             {
                 FatalErrorInFunction
@@ -105,20 +105,41 @@ void Foam::polyCellSet::setCells()
                     << "Valid cellZones are " << mesh_.cellZones().names()
                     << exit(FatalError);
             }
-            cells_ = mesh_.cellZones()[zoneID];
+
+            // cells_ not required for cellZone
 
             break;
         }
         case selectionTypes::all:
         {
             Info<< indent << "- selecting all cells" << endl;
-            cells_ = identityMap(mesh_.nCells());
+
+            // cells_ not required for cellZone
 
             break;
         }
     }
 
     Info<< decrIndent;
+}
+
+
+Foam::labelUList Foam::polyCellSet::identityMap(const label len) const
+{
+    // Static identity list, resized as required
+    static labelList map;
+
+    if (len > map.size())
+    {
+        map.resize(len);
+
+        forAll(map, i)
+        {
+            map[i] = i;
+        }
+    }
+
+    return SubList<label>(map, len);
 }
 
 
@@ -177,7 +198,7 @@ bool Foam::polyCellSet::read(const dictionary& dict)
 {
     if (dict.found("select") || dict.found("selectionMode"))
     {
-        selectionType_ = selectionTypeNames_.read
+        selectionType_ = selectionTypeNames.read
         (
             dict.lookupBackwardsCompatible({"select", "selectionMode"})
         );
@@ -224,9 +245,9 @@ bool Foam::polyCellSet::read(const dictionary& dict)
         {
             FatalErrorInFunction
                 << "Unknown selection type "
-                << selectionTypeNames_[selectionType_]
+                << selectionTypeNames[selectionType_]
                 << nl << "Valid selection type:"
-                << selectionTypeNames_.toc()
+                << selectionTypeNames.toc()
                 << exit(FatalError);
         }
     }

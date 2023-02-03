@@ -96,7 +96,7 @@ void Foam::fv::massSource::addGeneralSupType
     const scalar massFlowRate = massFlowRate_->value(t);
     const Type value = fieldValues_[fieldName]->value<Type>(t);
 
-    const labelList& cells = set_.cells();
+    const labelUList cells = set_.cells();
 
     forAll(cells, i)
     {
@@ -123,7 +123,7 @@ void Foam::fv::massSource::addSupType
     const word& fieldName
 ) const
 {
-    const labelList& cells = set_.cells();
+    const labelUList cells = set_.cells();
 
     if (fieldName == rhoName_)
     {

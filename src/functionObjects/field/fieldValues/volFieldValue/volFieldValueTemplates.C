@@ -81,7 +81,7 @@ void Foam::functionObjects::fieldValues::volFieldValue::compareScalars
     }
 
     result.value = values[i];
-    result.celli = isNull(cellIDs()) ? i : cellIDs()[i];
+    result.celli = celli(i);
     result.proci = Pstream::parRun() ? Pstream::myProcNo() : -1;
     result.cc = fieldValue::mesh_.C()[result.celli];
 
@@ -250,8 +250,8 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             (
                 IOobject
                 (
-                    fieldName + '_' + selectionTypeNames_[selectionType_]
-                  + '-' + volRegion::cellZoneName_,
+                    fieldName + '_' + selectionTypeNames[selectionType()]
+                  + '-' + cellSetName(),
                     obr_.time().name(),
                     obr_,
                     IOobject::NO_READ,
@@ -318,7 +318,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             file() << tab << result.value;
 
             Log << "    " << operationTypeNames_[operation_]
-                << "(" << volRegion::cellZoneName_ << ") of " << fieldName
+                << "(" << cellSetName() << ") of " << fieldName
                 <<  " = " << result.value;
 
             if (result.celli != -1)
@@ -356,13 +356,13 @@ Foam::functionObjects::fieldValues::volFieldValue::filterField
     const Field<Type>& field
 ) const
 {
-    if (isNull(cellIDs()))
+    if (all())
     {
         return field;
     }
     else
     {
-        return tmp<Field<Type>>(new Field<Type>(field, cellIDs()));
+        return tmp<Field<Type>>(new Field<Type>(field, cells()));
     }
 }
 

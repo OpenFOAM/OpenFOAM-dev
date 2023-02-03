@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ void Foam::fvCellSet::setV()
 {
     Info<< incrIndent;
 
-    const labelList& cells = this->cells();
+    const labelUList cells(this->cells());
 
     V_ = 0;
     forAll(cells, i)
@@ -46,6 +46,22 @@ void Foam::fvCellSet::setV()
         << " cell(s) with volume " << V_ << endl;
 
     Info<< decrIndent;
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+void Foam::fvCellSet::writeFileHeader
+(
+    const functionObjects::writeFile& wf,
+    Ostream& file
+)
+{
+    wf.writeCommented(file, "Selection");
+    file<< setw(1) << ':' << setw(1) << ' '
+        << selectionTypeNames[selectionType()] << " " << cellSetName() << endl;
+    wf.writeHeaderValue(file, "Cells", nCells());
+    wf.writeHeaderValue(file, "Volume", V());
 }
 
 

@@ -250,7 +250,7 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
        *(secondaryInletT_ - primaryInletT_)
        *(CpfMean/faceZoneArea_)*mag(totalphi);
 
-    const labelList& cells = set_.cells();
+    const labelUList cells = set_.cells();
 
     const volScalarField& T = mesh().lookupObject<volScalarField>(TName_);
     const scalarField TCells(T, cells);

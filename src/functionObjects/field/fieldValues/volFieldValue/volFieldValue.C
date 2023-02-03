@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "volFieldValue.H"
 #include "fvMesh.H"
 #include "volFields.H"
+#include "writeFile.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -150,7 +151,7 @@ void Foam::functionObjects::fieldValues::volFieldValue::writeFileHeader
     const label i
 )
 {
-    volRegion::writeFileHeader(*this, file());
+    fvCellSet::writeFileHeader(*this, file());
 
     writeCommented(file(), "Time");
 
@@ -230,7 +231,7 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 )
 :
     fieldValue(name, runTime, dict, typeName),
-    volRegion(fieldValue::mesh_, dict),
+    fvCellSet(fieldValue::mesh_, dict),
     writeLocation_(false),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     scaleFactor_(1)
@@ -247,7 +248,7 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 )
 :
     fieldValue(name, obr, dict, typeName),
-    volRegion(fieldValue::mesh_, dict),
+    fvCellSet(fieldValue::mesh_, dict),
     writeLocation_(false),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     scaleFactor_(1)
@@ -288,11 +289,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::write()
     }
 
     // Construct the weight field and the volumes
-    scalarField weights
-    (
-        isNull(cellIDs()) ? fieldValue::mesh_.nCells() : cellIDs().size(),
-        1
-    );
+    scalarField weights(nCells(), 1);
     forAll(weightFieldNames_, i)
     {
         weights *= getFieldValues<scalar>(weightFieldNames_[i]);

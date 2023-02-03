@@ -320,7 +320,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
                 (
                     outputDir(),
                     fieldName
-                  + '_' + selectionTypeNames_[selectionType_]
+                  + '_' + selectionTypeNames[selectionType_]
                   + '_' + selectionName_,
                     points,
                     faces,
@@ -424,7 +424,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::filterField
         {
             FatalErrorInFunction
                 << type() << " " << name() << ": "
-                << selectionTypeNames_[selectionType_]
+                << selectionTypeNames[selectionType_]
                 << "(" << selectionName_ << "):"
                 << nl
                 << "    Unable to process internal faces for volume field "
