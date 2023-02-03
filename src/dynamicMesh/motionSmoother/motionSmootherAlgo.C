@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -718,7 +718,7 @@ Foam::scalar Foam::motionSmootherAlgo::setErrorReduction
 
 bool Foam::motionSmootherAlgo::scaleMesh
 (
-    labelList& checkFaces,
+    const labelList& checkFaces,
     const bool smoothMesh,
     const label nAllowableErrors
 )
@@ -736,7 +736,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
 
 bool Foam::motionSmootherAlgo::scaleMesh
 (
-    labelList& checkFaces,
+    const labelList& checkFaces,
     const List<labelPair>& baffles,
     const bool smoothMesh,
     const label nAllowableErrors
@@ -829,7 +829,7 @@ Foam::tmp<Foam::pointField> Foam::motionSmootherAlgo::curPoints() const
 
 bool Foam::motionSmootherAlgo::scaleMesh
 (
-    labelList& checkFaces,
+    const labelList& checkFaces,
     const List<labelPair>& baffles,
     const dictionary& paramDict,
     const dictionary& meshQualityDict,
@@ -955,11 +955,12 @@ bool Foam::motionSmootherAlgo::scaleMesh
         // - points to be smoothed
         // - faces to be checked in next iteration
         PackedBoolList isAffectedPoint(mesh_.nPoints());
+        labelList affectedFaces(checkFaces);
         getAffectedFacesAndPoints
         (
             nSmoothScale,       // smoothing iterations
             wrongFaces,         // error faces
-            checkFaces,
+            affectedFaces,
             isAffectedPoint
         );
 

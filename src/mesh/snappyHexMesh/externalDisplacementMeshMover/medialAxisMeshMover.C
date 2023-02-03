@@ -1964,14 +1964,11 @@ bool Foam::medialAxisMeshMover::shrinkMesh
 (
     const dictionary& meshQualityDict,
     const label nAllowableErrors,
-    labelList& checkFaces
+    const labelList& checkFaces
 )
 {
     //- Number of attempts shrinking the mesh
     const label nSnap  = meshQualityDict.lookup<label>("nRelaxIter");
-
-
-
 
     // Make sure displacement boundary conditions is up-to-date with
     // internal field
@@ -2028,7 +2025,7 @@ bool Foam::medialAxisMeshMover::move
 (
     const dictionary& moveDict,
     const label nAllowableErrors,
-    labelList& checkFaces
+    const labelList& checkFaces
 )
 {
     // Read a few settings

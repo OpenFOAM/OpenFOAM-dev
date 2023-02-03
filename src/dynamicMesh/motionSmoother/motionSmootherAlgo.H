@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -390,7 +390,7 @@ public:
             //  across patches)
             bool scaleMesh
             (
-                labelList& checkFaces,
+                const labelList& checkFaces,
                 const bool smoothMesh = true,
                 const label nAllow = 0
             );
@@ -398,7 +398,7 @@ public:
             //- Move mesh (with baffles) with given scale.
             bool scaleMesh
             (
-                labelList& checkFaces,
+                const labelList& checkFaces,
                 const List<labelPair>& baffles,
                 const bool smoothMesh = true,
                 const label nAllow = 0
@@ -407,7 +407,7 @@ public:
             //- Move mesh with externally provided mesh constraints
             bool scaleMesh
             (
-                labelList& checkFaces,
+                const labelList& checkFaces,
                 const List<labelPair>& baffles,
                 const dictionary& paramDict,
                 const dictionary& meshQualityDict,
