@@ -51,7 +51,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Renumber with special handling for merged items (marked with <-1)
 void Foam::polyTopoChange::renumberReverseMap
 (
     const labelList& map,
@@ -97,7 +96,6 @@ void Foam::polyTopoChange::renumber
 }
 
 
-// Renumber and remove -1 elements.
 void Foam::polyTopoChange::renumberCompact
 (
     const labelList& map,
@@ -531,8 +529,6 @@ void Foam::polyTopoChange::makeCells
 }
 
 
-// Create cell-cell addressing. Called after compaction (but before ordering)
-// of faces
 void Foam::polyTopoChange::makeCellCells
 (
     const label nActiveFaces,
@@ -576,8 +572,6 @@ void Foam::polyTopoChange::makeCellCells
 }
 
 
-// Cell ordering (based on bandCompression).
-// Handles removed cells. Returns number of remaining cells.
 Foam::label Foam::polyTopoChange::getCellOrder
 (
     const CompactListList<label>& cellCellAddressing,
@@ -695,9 +689,6 @@ Foam::label Foam::polyTopoChange::getCellOrder
 }
 
 
-// Determine order for faces:
-// - upper-triangular order for internal faces
-// - external faces after internal faces and in patch order.
 void Foam::polyTopoChange::getFaceOrder
 (
     const label nActiveFaces,
@@ -863,7 +854,6 @@ void Foam::polyTopoChange::getFaceOrder
 }
 
 
-// Reorder and compact faces according to map.
 void Foam::polyTopoChange::reorderCompactFaces
 (
     const label newSize,
@@ -898,10 +888,6 @@ void Foam::polyTopoChange::reorderCompactFaces
 }
 
 
-// Compact all and orders points and faces:
-// - points into internal followed by external points
-// - internalfaces upper-triangular
-// - externalfaces after internal ones.
 void Foam::polyTopoChange::compact
 (
     const bool orderCells,
@@ -1258,13 +1244,6 @@ void Foam::polyTopoChange::compact
 }
 
 
-// Find faces to interpolate to create value for new face. Only used if
-// face was inflated from edge or point. Internal faces should only be
-// created from internal faces, external faces only from external faces
-// (and ideally the same patch)
-// Is bit problematic if there are no faces to select, i.e. in polyDualMesh
-// an internal face can be created from a boundary edge with no internal
-// faces connected to it.
 Foam::labelList Foam::polyTopoChange::selectFaces
 (
     const primitiveMesh& mesh,
@@ -1313,8 +1292,6 @@ Foam::labelList Foam::polyTopoChange::selectFaces
 }
 
 
-// Calculate pointMap per patch (so from patch point label to old patch point
-// label)
 void Foam::polyTopoChange::calcPatchPointMap
 (
     const List<Map<label>>& oldPatchMeshPointMaps,
@@ -2167,7 +2144,6 @@ void Foam::polyTopoChange::compactAndReorder
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::polyTopoChange::polyTopoChange(const label nPatches, const bool strict)
 :
     strict_(strict),
@@ -2199,7 +2175,6 @@ Foam::polyTopoChange::polyTopoChange(const label nPatches, const bool strict)
 {}
 
 
-// Construct from components
 Foam::polyTopoChange::polyTopoChange
 (
     const polyMesh& mesh,

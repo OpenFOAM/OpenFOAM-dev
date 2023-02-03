@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -306,6 +306,11 @@ class polyTopoChange
         //  orderCells=true),
         //  point ordering (sorted into internal and boundary points,
         //  orderPoints=true)
+        //
+        //  Compact all and orders points and faces:
+        //  - points into internal followed by external points
+        //  - internalfaces upper-triangular
+        //  - externalfaces after internal ones.
         void compact
         (
             const bool orderCells,
@@ -316,6 +321,14 @@ class polyTopoChange
         );
 
         //- Select either internal or external faces out of faceLabels
+        //
+        // Find faces to interpolate to create value for new face. Only used if
+        // face was inflated from edge or point. Internal faces should only be
+        // created from internal faces, external faces only from external faces
+        // (and ideally the same patch)
+        // Is bit problematic if there are no faces to select, i.e. in
+        // polyDualMesh an internal face can be created from a boundary edge
+        // with no internal faces connected to it.
         static labelList selectFaces
         (
             const primitiveMesh&,
