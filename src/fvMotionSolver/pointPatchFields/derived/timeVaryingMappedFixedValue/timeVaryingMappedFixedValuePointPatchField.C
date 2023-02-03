@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,38 +178,19 @@ timeVaryingMappedFixedValuePointPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::autoMap
-(
-    const pointPatchFieldMapper& m
-)
-{
-    fixedValuePointPatchField<Type>::autoMap(m);
-    if (startSampledValues_.size())
-    {
-        m(startSampledValues_, startSampledValues_);
-        m(endSampledValues_, endSampledValues_);
-    }
-    // Clear interpolator
-    mapperPtr_.clear();
-    startSampleTime_ = -1;
-    endSampleTime_ = -1;
-}
-
-
-template<class Type>
-void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::rmap
+void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::map
 (
     const pointPatchField<Type>& ptf,
-    const labelList& addr
+    const pointPatchFieldMapper& mapper
 )
 {
-    fixedValuePointPatchField<Type>::rmap(ptf, addr);
+    fixedValuePointPatchField<Type>::map(ptf, mapper);
 
     const timeVaryingMappedFixedValuePointPatchField<Type>& tiptf =
         refCast<const timeVaryingMappedFixedValuePointPatchField<Type>>(ptf);
 
-    startSampledValues_.rmap(tiptf.startSampledValues_, addr);
-    endSampledValues_.rmap(tiptf.endSampledValues_, addr);
+    mapper(startSampledValues_, tiptf.startSampledValues_);
+    mapper(endSampledValues_, tiptf.endSampledValues_);
 
     // Clear interpolator
     mapperPtr_.clear();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 #include "surfaceFields.H"
 #include "fvPatchFieldMapper.H"
 #include "fvMeshStitcher.H"
-#include "setSizeFieldMapper.H"
+#include "setSizeFvPatchFieldMapper.H"
 #include "nonConformalBoundary.H"
 #include "nonConformalCyclicFvPatch.H"
 #include "nonConformalProcessorCyclicFvPatch.H"
@@ -43,17 +43,6 @@ Description
 template<class Type, template<class> class GeoField>
 void Foam::fvMeshStitcher::resizePatchFields()
 {
-    struct fvPatchFieldSetSizer
-    :
-        public fvPatchFieldMapper,
-        public setSizeFieldMapper
-    {
-        fvPatchFieldSetSizer(const label size)
-        :
-            setSizeFieldMapper(size)
-        {}
-    };
-
     HashTable<GeoField<Type>*> fields(mesh_.lookupClass<GeoField<Type>>());
     forAllIter(typename HashTable<GeoField<Type>*>, fields, iter)
     {
@@ -64,7 +53,7 @@ void Foam::fvMeshStitcher::resizePatchFields()
 
             if (isA<nonConformalFvPatch>(pf.patch()))
             {
-                pf.autoMap(fvPatchFieldSetSizer(pf.patch().size()));
+                pf.map(pf, setSizeFvPatchFieldMapper(pf.patch().size()));
             }
         }
     }
@@ -327,24 +316,14 @@ void Foam::fvMeshStitcher::resizeBoundaryFieldPatchFields
     GeoBoundaryField& fieldBf
 )
 {
-    struct fvPatchFieldSetSizer
-    :
-        public fvPatchFieldMapper,
-        public setSizeFieldMapper
-    {
-        fvPatchFieldSetSizer(const label size)
-        :
-            setSizeFieldMapper(size)
-        {}
-    };
-
     forAll(polyFacesBf, nccPatchi)
     {
         if (isA<nonConformalFvPatch>(polyFacesBf[nccPatchi].patch()))
         {
-            fieldBf[nccPatchi].autoMap
+            fieldBf[nccPatchi].map
             (
-                fvPatchFieldSetSizer(polyFacesBf[nccPatchi].size())
+                fieldBf[nccPatchi],
+                setSizeFvPatchFieldMapper(polyFacesBf[nccPatchi].size())
             );
         }
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ License
 #include "emptyFvPatchField.H"
 #include "emptyFvsPatchField.H"
 #include "processorCyclicFvPatch.H"
+#include "reverseFvPatchFieldMapper.H"
 #include "stringOps.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -183,7 +184,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
                             procField.boundaryField()[procPatchi],
                             completeMesh_.boundary()[completePatchi],
                             DimensionedField<Type, volMesh>::null(),
-                            fvPatchFieldReconstructor
+                            setSizeFvPatchFieldMapper
                             (
                                 completeMesh_.boundary()[completePatchi].size()
                             )
@@ -191,10 +192,13 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
                     );
                 }
 
-                patchFields[completePatchi].rmap
+                patchFields[completePatchi].map
                 (
                     procField.boundaryField()[procPatchi],
-                    faceProcAddressingBf_[proci][procPatchi] - 1
+                    reverseFvPatchFieldMapper
+                    (
+                        faceProcAddressingBf_[proci][procPatchi] - 1
+                    )
                 );
             }
             else if (isA<processorCyclicFvPatch>(procPatch))
@@ -230,10 +234,13 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
                         << exit(FatalError);
                 }
 
-                patchFields[completePatchi].rmap
+                patchFields[completePatchi].map
                 (
                     procField.boundaryField()[procPatchi],
-                    faceProcAddressingBf_[proci][procPatchi] - 1
+                    reverseFvPatchFieldMapper
+                    (
+                        faceProcAddressingBf_[proci][procPatchi] - 1
+                    )
                 );
             }
         }
@@ -353,7 +360,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
                             procField.boundaryField()[procPatchi],
                             completeMesh_.boundary()[completePatchi],
                             DimensionedField<Type, surfaceMesh>::null(),
-                            fvPatchFieldReconstructor
+                            setSizeFvPatchFieldMapper
                             (
                                 completeMesh_.boundary()[completePatchi].size()
                             )
@@ -361,10 +368,13 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
                     );
                 }
 
-                patchFields[completePatchi].rmap
+                patchFields[completePatchi].map
                 (
                     procField.boundaryField()[procPatchi],
-                    faceProcAddressingBf_[proci][procPatchi] - 1
+                    reverseFvPatchFieldMapper
+                    (
+                        faceProcAddressingBf_[proci][procPatchi] - 1
+                    )
                 );
             }
             else if (isA<processorCyclicFvPatch>(procPatch))
@@ -383,10 +393,13 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
                     );
                 }
 
-                patchFields[completePatchi].rmap
+                patchFields[completePatchi].map
                 (
                     procField.boundaryField()[procPatchi],
-                    faceProcAddressingBf_[proci][procPatchi] - 1
+                    reverseFvPatchFieldMapper
+                    (
+                        faceProcAddressingBf_[proci][procPatchi] - 1
+                    )
                 );
             }
             else if (isA<processorFvPatch>(procPatch))

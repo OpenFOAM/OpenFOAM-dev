@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,29 +101,19 @@ pressureDirectedInletOutletVelocityFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::pressureDirectedInletOutletVelocityFvPatchVectorField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    mixedFvPatchVectorField::autoMap(m);
-    m(inletDir_, inletDir_);
-}
-
-
-void Foam::pressureDirectedInletOutletVelocityFvPatchVectorField::rmap
+void Foam::pressureDirectedInletOutletVelocityFvPatchVectorField::map
 (
     const fvPatchVectorField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    mixedFvPatchVectorField::rmap(ptf, addr);
+    mixedFvPatchVectorField::map(ptf, mapper);
 
     const pressureDirectedInletOutletVelocityFvPatchVectorField& tiptf =
         refCast<const pressureDirectedInletOutletVelocityFvPatchVectorField>
         (ptf);
 
-    inletDir_.rmap(tiptf.inletDir_, addr);
+    mapper(inletDir_, tiptf.inletDir_);
 }
 
 

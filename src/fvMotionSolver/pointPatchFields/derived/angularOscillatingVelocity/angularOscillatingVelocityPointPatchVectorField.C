@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,29 +122,18 @@ angularOscillatingVelocityPointPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void angularOscillatingVelocityPointPatchVectorField::autoMap
-(
-    const pointPatchFieldMapper& m
-)
-{
-    fixedValuePointPatchField<vector>::autoMap(m);
-
-    m(p0_, p0_);
-}
-
-
-void angularOscillatingVelocityPointPatchVectorField::rmap
+void angularOscillatingVelocityPointPatchVectorField::map
 (
     const pointPatchField<vector>& ptf,
-    const labelList& addr
+    const pointPatchFieldMapper& mapper
 )
 {
     const angularOscillatingVelocityPointPatchVectorField& aOVptf =
         refCast<const angularOscillatingVelocityPointPatchVectorField>(ptf);
 
-    fixedValuePointPatchField<vector>::rmap(aOVptf, addr);
+    fixedValuePointPatchField<vector>::map(aOVptf, mapper);
 
-    p0_.rmap(aOVptf.p0_, addr);
+    mapper(p0_, aOVptf.p0_);
 }
 
 

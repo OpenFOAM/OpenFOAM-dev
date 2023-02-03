@@ -143,28 +143,18 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::maxwellSlipUFvPatchVectorField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    mixedFixedValueSlipFvPatchVectorField::autoMap(m);
-    m(Uwall_, Uwall_);
-}
-
-
-void Foam::maxwellSlipUFvPatchVectorField::rmap
+void Foam::maxwellSlipUFvPatchVectorField::map
 (
     const fvPatchVectorField& pvf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    mixedFixedValueSlipFvPatchVectorField::rmap(pvf, addr);
+    mixedFixedValueSlipFvPatchVectorField::map(pvf, mapper);
 
     const maxwellSlipUFvPatchVectorField& mspvf =
         refCast<const maxwellSlipUFvPatchVectorField>(pvf);
 
-    Uwall_.rmap(mspvf.Uwall_, addr);
+    mapper(Uwall_, mspvf.Uwall_);
 }
 
 

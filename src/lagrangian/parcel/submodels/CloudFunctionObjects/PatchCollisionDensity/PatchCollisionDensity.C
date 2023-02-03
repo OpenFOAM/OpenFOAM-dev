@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 #include "ListListOps.H"
 #include "nonConformalFvPatch.H"
 #include "fvPatchFieldMapper.H"
-#include "setSizeFieldMapper.H"
+#include "setSizeFvPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -246,23 +246,28 @@ void Foam::PatchCollisionDensity<CloudType>::preEvolve()
 
             if (isA<nonConformalFvPatch>(fvp))
             {
-                struct fvPatchFieldSetSizer
-                :
-                    public fvPatchFieldMapper,
-                    public setSizeFieldMapper
-                {
-                    fvPatchFieldSetSizer(const label size)
-                    :
-                        setSizeFieldMapper(size)
-                    {}
-                };
+                const setSizeFvPatchFieldMapper mapper(fvp.size());
 
-                const fvPatchFieldSetSizer mapper(fvp.size());
-
-                numberCollisionDensity_[patchi].autoMap(mapper);
-                numberCollisionDensity0_[patchi].autoMap(mapper);
-                massCollisionDensity_[patchi].autoMap(mapper);
-                massCollisionDensity0_[patchi].autoMap(mapper);
+                numberCollisionDensity_[patchi].map
+                (
+                    numberCollisionDensity_[patchi],
+                    mapper
+                );
+                numberCollisionDensity0_[patchi].map
+                (
+                    numberCollisionDensity0_[patchi],
+                    mapper
+                );
+                massCollisionDensity_[patchi].map
+                (
+                    massCollisionDensity_[patchi],
+                    mapper
+                );
+                massCollisionDensity0_[patchi].map
+                (
+                    massCollisionDensity0_[patchi],
+                    mapper
+                );
 
                 numberCollisionDensity_[patchi] == 0;
                 numberCollisionDensity0_[patchi] == 0;

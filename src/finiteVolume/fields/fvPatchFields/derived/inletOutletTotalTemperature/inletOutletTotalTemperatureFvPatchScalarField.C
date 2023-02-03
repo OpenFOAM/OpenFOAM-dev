@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,28 +118,18 @@ inletOutletTotalTemperatureFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::inletOutletTotalTemperatureFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    inletOutletFvPatchScalarField::autoMap(m);
-    m(T0_, T0_);
-}
-
-
-void Foam::inletOutletTotalTemperatureFvPatchScalarField::rmap
+void Foam::inletOutletTotalTemperatureFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    inletOutletFvPatchScalarField::rmap(ptf, addr);
+    inletOutletFvPatchScalarField::map(ptf, mapper);
 
     const inletOutletTotalTemperatureFvPatchScalarField& tiptf =
         refCast<const inletOutletTotalTemperatureFvPatchScalarField>(ptf);
 
-    T0_.rmap(tiptf.T0_, addr);
+    mapper(T0_, tiptf.T0_);
 }
 
 

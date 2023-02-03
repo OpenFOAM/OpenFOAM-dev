@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "pointFieldReconstructor.H"
 #include "fvMesh.H"
+#include "reversePointPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -93,14 +94,15 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
             {
                 if (!patchFields(curBPatch))
                 {
-                    patchFields.set(
+                    patchFields.set
+                    (
                         curBPatch,
                         pointPatchField<Type>::New
                         (
                             procField.boundaryField()[patchi],
                             completeMesh_.boundary()[curBPatch],
                             DimensionedField<Type, pointMesh>::null(),
-                            pointPatchFieldReconstructor
+                            setSizePointPatchFieldMapper
                             (
                                 completeMesh_.boundary()[curBPatch].size()
                             )
@@ -108,10 +110,13 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
                     );
                 }
 
-                patchFields[curBPatch].rmap
+                patchFields[curBPatch].map
                 (
                     procField.boundaryField()[patchi],
-                    patchPointAddressing_[proci][patchi]
+                    reversePointPatchFieldMapper
+                    (
+                        patchPointAddressing_[proci][patchi]
+                    )
                 );
             }
         }

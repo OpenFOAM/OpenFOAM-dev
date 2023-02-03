@@ -25,6 +25,7 @@ License
 
 #include "fvMeshToFvMesh.H"
 #include "directFvPatchFieldMapper.H"
+#include "identityFvPatchFieldMapper.H"
 #include "patchToPatchFvPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
@@ -49,7 +50,7 @@ void Foam::fvMeshToFvMesh::mapSrcToTgt
         const fvPatchField<Type>& srcField = field.boundaryField()[srcPatchi];
         fvPatchField<Type>& tgtField = resultBf[tgtPatchi];
 
-        // Clone and map (since rmap does not do general mapping)
+        // Clone and map
         tmp<fvPatchField<Type>> tnewTgt
         (
             fvPatchField<Type>::New
@@ -67,7 +68,7 @@ void Foam::fvMeshToFvMesh::mapSrcToTgt
 
         // Transfer all mapped quantities (value and e.g. gradient) onto
         // tgtField. Value will get overwritten below.
-        tgtField.rmap(tnewTgt(), identityMap(tgtField.size()));
+        tgtField.map(tnewTgt(), identityFvPatchFieldMapper());
     }
 
     forAll(tgtCuttingPatchIDs(), i)

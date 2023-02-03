@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -383,32 +383,14 @@ timeVaryingMappedFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::timeVaryingMappedFvPatchField<Type>::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    if (startSampledValues_.size())
-    {
-        m(startSampledValues_, startSampledValues_);
-        m(endSampledValues_, endSampledValues_);
-    }
-    // Clear interpolator
-    mapperPtr_.clear();
-    startSampleTime_ = -1;
-    endSampleTime_ = -1;
-}
-
-
-template<class Type>
-void Foam::timeVaryingMappedFvPatchField<Type>::rmap
+void Foam::timeVaryingMappedFvPatchField<Type>::map
 (
     const timeVaryingMappedFvPatchField<Type>& tiptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    startSampledValues_.rmap(tiptf.startSampledValues_, addr);
-    endSampledValues_.rmap(tiptf.endSampledValues_, addr);
+    mapper(startSampledValues_, tiptf.startSampledValues_);
+    mapper(endSampledValues_, tiptf.endSampledValues_);
 
     // Clear interpolator
     mapperPtr_.clear();

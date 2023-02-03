@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,29 +114,18 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    mixedFvPatchScalarField::autoMap(m);
-    radiationCoupledBase::autoMap(m);
-    m(Trad_, Trad_);
-}
-
-
-void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::rmap
+void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    mixedFvPatchScalarField::rmap(ptf, addr);
-    radiationCoupledBase::rmap(ptf, addr);
+    mixedFvPatchScalarField::map(ptf, mapper);
+    radiationCoupledBase::map(ptf, mapper);
     const MarshakRadiationFixedTemperatureFvPatchScalarField& mrptf =
         refCast<const MarshakRadiationFixedTemperatureFvPatchScalarField>(ptf);
 
-    Trad_.rmap(mrptf.Trad_, addr);
+    mapper(Trad_, mrptf.Trad_);
 }
 
 

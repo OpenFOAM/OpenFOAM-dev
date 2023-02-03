@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -517,73 +517,13 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::genericFvPatchField<Type>::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    calculatedFvPatchField<Type>::autoMap(m);
-
-    forAllIter
-    (
-        HashPtrTable<scalarField>,
-        scalarFields_,
-        iter
-    )
-    {
-        m(*iter(), *iter());
-    }
-
-    forAllIter
-    (
-        HashPtrTable<vectorField>,
-        vectorFields_,
-        iter
-    )
-    {
-        m(*iter(), *iter());
-    }
-
-    forAllIter
-    (
-        HashPtrTable<sphericalTensorField>,
-        sphericalTensorFields_,
-        iter
-    )
-    {
-        m(*iter(), *iter());
-    }
-
-    forAllIter
-    (
-        HashPtrTable<symmTensorField>,
-        symmTensorFields_,
-        iter
-    )
-    {
-        m(*iter(), *iter());
-    }
-
-    forAllIter
-    (
-        HashPtrTable<tensorField>,
-        tensorFields_,
-        iter
-    )
-    {
-        m(*iter(), *iter());
-    }
-}
-
-
-template<class Type>
-void Foam::genericFvPatchField<Type>::rmap
+void Foam::genericFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    calculatedFvPatchField<Type>::rmap(ptf, addr);
+    calculatedFvPatchField<Type>::map(ptf, mapper);
 
     const genericFvPatchField<Type>& dptf =
         refCast<const genericFvPatchField<Type>>(ptf);
@@ -600,7 +540,7 @@ void Foam::genericFvPatchField<Type>::rmap
 
         if (dptfIter != dptf.scalarFields_.end())
         {
-            iter()->rmap(*dptfIter(), addr);
+            mapper(*iter(), *dptfIter());
         }
     }
 
@@ -616,7 +556,7 @@ void Foam::genericFvPatchField<Type>::rmap
 
         if (dptfIter != dptf.vectorFields_.end())
         {
-            iter()->rmap(*dptfIter(), addr);
+            mapper(*iter(), *dptfIter());
         }
     }
 
@@ -632,7 +572,7 @@ void Foam::genericFvPatchField<Type>::rmap
 
         if (dptfIter != dptf.sphericalTensorFields_.end())
         {
-            iter()->rmap(*dptfIter(), addr);
+            mapper(*iter(), *dptfIter());
         }
     }
 
@@ -648,7 +588,7 @@ void Foam::genericFvPatchField<Type>::rmap
 
         if (dptfIter != dptf.symmTensorFields_.end())
         {
-            iter()->rmap(*dptfIter(), addr);
+            mapper(*iter(), *dptfIter());
         }
     }
 
@@ -664,7 +604,7 @@ void Foam::genericFvPatchField<Type>::rmap
 
         if (dptfIter != dptf.tensorFields_.end())
         {
-            iter()->rmap(*dptfIter(), addr);
+            mapper(*iter(), *dptfIter());
         }
     }
 }

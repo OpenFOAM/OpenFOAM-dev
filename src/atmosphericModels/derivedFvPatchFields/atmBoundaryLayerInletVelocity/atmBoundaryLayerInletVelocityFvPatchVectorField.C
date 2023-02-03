@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,28 +104,18 @@ atmBoundaryLayerInletVelocityFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void atmBoundaryLayerInletVelocityFvPatchVectorField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    inletOutletFvPatchVectorField::autoMap(m);
-    atmBoundaryLayer::autoMap(m);
-}
-
-
-void atmBoundaryLayerInletVelocityFvPatchVectorField::rmap
+void atmBoundaryLayerInletVelocityFvPatchVectorField::map
 (
     const fvPatchVectorField& pvf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    inletOutletFvPatchVectorField::rmap(pvf, addr);
+    inletOutletFvPatchVectorField::map(pvf, mapper);
 
     const atmBoundaryLayerInletVelocityFvPatchVectorField& blpvf =
         refCast<const atmBoundaryLayerInletVelocityFvPatchVectorField>(pvf);
 
-    atmBoundaryLayer::rmap(blpvf, addr);
+    atmBoundaryLayer::map(blpvf, mapper);
 }
 
 

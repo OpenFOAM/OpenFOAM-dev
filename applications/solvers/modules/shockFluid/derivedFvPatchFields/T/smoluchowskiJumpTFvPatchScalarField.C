@@ -135,28 +135,18 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::smoluchowskiJumpTFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    mixedFvPatchScalarField::autoMap(m);
-    m(Twall_, Twall_);
-}
-
-
-void Foam::smoluchowskiJumpTFvPatchScalarField::rmap
+void Foam::smoluchowskiJumpTFvPatchScalarField::map
 (
     const fvPatchField<scalar>& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    mixedFvPatchField<scalar>::rmap(ptf, addr);
+    mixedFvPatchField<scalar>::map(ptf, mapper);
 
     const smoluchowskiJumpTFvPatchScalarField& ptpsf =
         refCast<const smoluchowskiJumpTFvPatchScalarField>(ptf);
 
-    Twall_.rmap(ptpsf.Twall_, addr);
+    mapper(Twall_, ptpsf.Twall_);
 }
 
 

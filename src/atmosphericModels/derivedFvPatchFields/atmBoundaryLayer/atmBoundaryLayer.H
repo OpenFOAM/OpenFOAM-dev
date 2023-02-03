@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -249,12 +249,8 @@ public:
 
         // Mapping functions
 
-            //- Map (and resize as needed) from self given a mapping object
-            void autoMap(const fvPatchFieldMapper&);
-
-            //- Reverse map the given atmBoundaryLayer onto this
-            //  atmBoundaryLayer
-            void rmap(const atmBoundaryLayer&, const labelList&);
+            //- Map the given atmBoundaryLayer onto this atmBoundaryLayer
+            void map(const atmBoundaryLayer&, const fvPatchFieldMapper&);
 
             //- Reset the atmBoundaryLayer to the given atmBoundaryLayer
             //  Used for mesh to mesh mapping

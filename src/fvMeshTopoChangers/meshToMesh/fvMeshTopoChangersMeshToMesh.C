@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,8 @@ License
 #include "MeshToMeshMapGeometricFields.H"
 #include "polyMeshMap.H"
 #include "processorPolyPatch.H"
+#include "setSizeFvPatchFieldMapper.H"
+#include "setSizePointPatchFieldMapper.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -218,14 +220,14 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         // Set all the surfaceFields in the objectRegistry to NaN
         #define NaNSurfaceFieldType(Type, nullArg)                             \
             NaNGeometricFields                                                 \
-            <Type, fvsPatchField, surfaceMesh, fvPatchFieldMapper>             \
+            <Type, fvsPatchField, surfaceMesh, setSizeFvPatchFieldMapper>      \
             (mesh(), mapper);
         FOR_ALL_FIELD_TYPES(NaNSurfaceFieldType);
 
         // Set all the pointFields in the objectRegistry to NaN
         #define NaNPointFieldType(Type, nullArg)                               \
             NaNGeometricFields                                                 \
-            <Type, pointPatchField, pointMesh, pointPatchFieldMapper>          \
+            <Type, pointPatchField, pointMesh, setSizePointPatchFieldMapper>   \
             (mesh(), mapper);
         FOR_ALL_FIELD_TYPES(NaNPointFieldType);
 

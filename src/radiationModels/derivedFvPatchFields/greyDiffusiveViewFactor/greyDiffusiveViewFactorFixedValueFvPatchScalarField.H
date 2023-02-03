@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ public:
         );
 
         //- Construct by mapping given a
-        // greyDiffusiveViewFactorFixedValueFvPatchScalarField onto a new patch
+        //  greyDiffusiveViewFactorFixedValueFvPatchScalarField onto a new patch
         greyDiffusiveViewFactorFixedValueFvPatchScalarField
         (
             const greyDiffusiveViewFactorFixedValueFvPatchScalarField&,
@@ -159,13 +159,12 @@ public:
 
         // Mapping functions
 
-            //- Map (and resize as needed) from self given a mapping object
-            //  Used to update fields following mesh topology change
-            virtual void autoMap(const fvPatchFieldMapper&);
-
-            //- Reverse map the given fvPatchField onto this fvPatchField
-            //  Used to reconstruct fields
-            virtual void rmap(const fvPatchScalarField&, const labelList&);
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map
+            (
+                const fvPatchScalarField&,
+                const fvPatchFieldMapper&
+            );
 
             //- Reset the fvPatchField to the given fvPatchField
             //  Used for mesh to mesh mapping

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,33 +92,20 @@ Foam::directionMixedFvPatchField<Type>::directionMixedFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::directionMixedFvPatchField<Type>::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    transformFvPatchField<Type>::autoMap(m);
-    m(refValue_, refValue_);
-    m(refGrad_, refGrad_);
-    m(valueFraction_, valueFraction_);
-}
-
-
-template<class Type>
-void Foam::directionMixedFvPatchField<Type>::rmap
+void Foam::directionMixedFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    transformFvPatchField<Type>::rmap(ptf, addr);
+    transformFvPatchField<Type>::map(ptf, mapper);
 
     const directionMixedFvPatchField<Type>& dmptf =
         refCast<const directionMixedFvPatchField<Type>>(ptf);
 
-    refValue_.rmap(dmptf.refValue_, addr);
-    refGrad_.rmap(dmptf.refGrad_, addr);
-    valueFraction_.rmap(dmptf.valueFraction_, addr);
+    mapper(refValue_, dmptf.refValue_);
+    mapper(refGrad_, dmptf.refGrad_);
+    mapper(valueFraction_, dmptf.valueFraction_);
 }
 
 

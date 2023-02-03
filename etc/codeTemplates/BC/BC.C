@@ -143,29 +143,18 @@ CONSTRUCT
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::CLASS::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    PARENT::autoMap(m);
-    m(fieldData_, fieldData_);
-}
-
-
-template<class Type>
-void Foam::CLASS::rmap
+void Foam::CLASS::map
 (
     const FVPATCHF& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    PARENT::rmap(ptf, addr);
+    PARENT::map(ptf, mapper);
 
     const CLASS& tiptf =
         refCast<const CLASS>(ptf);
 
-    fieldData_.rmap(tiptf.fieldData_, addr);
+    mapper(fieldData_, tiptf.fieldData_);
 }
 
 

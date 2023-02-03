@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,29 +109,18 @@ Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::fixedGradientFvPatchField<Type>::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fvPatchField<Type>::autoMap(m);
-    m(gradient_, gradient_);
-}
-
-
-template<class Type>
-void Foam::fixedGradientFvPatchField<Type>::rmap
+void Foam::fixedGradientFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    fvPatchField<Type>::rmap(ptf, addr);
+    fvPatchField<Type>::map(ptf, mapper);
 
     const fixedGradientFvPatchField<Type>& fgptf =
         refCast<const fixedGradientFvPatchField<Type>>(ptf);
 
-    gradient_.rmap(fgptf.gradient_, addr);
+    mapper(gradient_, fgptf.gradient_);
 }
 
 

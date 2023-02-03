@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -251,23 +251,30 @@ public:
 
     // Member Functions
 
-        //- Map (and resize as needed) from self given a mapping object
-        //  Used to update fields following mesh topology change
-        virtual void autoMap(const fvPatchFieldMapper&);
+        // Mapping functions
 
-        //- Reverse map the given fvPatchField onto this fvPatchField
-        //  Used to reconstruct fields
-        virtual void rmap(const fvPatchVectorField&, const labelList&);
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map
+            (
+                const fvPatchVectorField&,
+                const fvPatchFieldMapper&
+            );
 
-        //- Reset the fvPatchField to the given fvPatchField
-        //  Used for mesh to mesh mapping
-        virtual void reset(const fvPatchVectorField&);
+            //- Reset the fvPatchField to the given fvPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const fvPatchVectorField&);
 
-        //- Update the coefficients associated with the patch field
-        virtual void updateCoeffs();
 
-        //- Write
-        virtual void write(Ostream&) const;
+        // Evaluation functions
+
+            //- Update the coefficients associated with the patch field
+            virtual void updateCoeffs();
+
+
+        // I-O
+
+            //- Write
+            virtual void write(Ostream&) const;
 };
 
 

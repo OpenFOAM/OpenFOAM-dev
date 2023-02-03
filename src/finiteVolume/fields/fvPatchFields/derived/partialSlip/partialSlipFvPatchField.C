@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,29 +84,18 @@ Foam::partialSlipFvPatchField<Type>::partialSlipFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::partialSlipFvPatchField<Type>::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    transformFvPatchField<Type>::autoMap(m);
-    m(valueFraction_, valueFraction_);
-}
-
-
-template<class Type>
-void Foam::partialSlipFvPatchField<Type>::rmap
+void Foam::partialSlipFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    transformFvPatchField<Type>::rmap(ptf, addr);
+    transformFvPatchField<Type>::map(ptf, mapper);
 
     const partialSlipFvPatchField<Type>& dmptf =
         refCast<const partialSlipFvPatchField<Type>>(ptf);
 
-    valueFraction_.rmap(dmptf.valueFraction_, addr);
+    mapper(valueFraction_, dmptf.valueFraction_);
 }
 
 

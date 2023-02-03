@@ -781,41 +781,24 @@ alphatWallBoilingWallFunctionFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void alphatWallBoilingWallFunctionFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fixedValueFvPatchScalarField::autoMap(m);
-
-    m(wetFraction_, wetFraction_);
-    m(dDeparture_, dDeparture_);
-    m(fDeparture_, fDeparture_);
-    m(nucleationSiteDensity_, nucleationSiteDensity_);
-    m(qQuenching_, qQuenching_);
-    m(qEvaporative_, qEvaporative_);
-    m(dmdtf_, dmdtf_);
-}
-
-
-void alphatWallBoilingWallFunctionFvPatchScalarField::rmap
+void alphatWallBoilingWallFunctionFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    fixedValueFvPatchScalarField::rmap(ptf, addr);
+    fixedValueFvPatchScalarField::map(ptf, mapper);
 
     const alphatWallBoilingWallFunctionFvPatchScalarField& tiptf =
         refCast<const alphatWallBoilingWallFunctionFvPatchScalarField>(ptf);
 
-    wetFraction_.rmap(tiptf.wetFraction_, addr);
-    dDeparture_.rmap(tiptf.dDeparture_, addr);
-    fDeparture_.rmap(tiptf.fDeparture_, addr);
-    nucleationSiteDensity_.rmap(tiptf.nucleationSiteDensity_, addr);
-    qQuenching_.rmap(tiptf.qQuenching_, addr);
-    qEvaporative_.rmap(tiptf.qEvaporative_, addr);
-    dmdtf_.rmap(tiptf.dmdtf_, addr);
+    mapper(wetFraction_, tiptf.wetFraction_);
+    mapper(dDeparture_, tiptf.dDeparture_);
+    mapper(fDeparture_, tiptf.fDeparture_);
+    mapper(nucleationSiteDensity_, tiptf.nucleationSiteDensity_);
+    mapper(qQuenching_, tiptf.qQuenching_);
+    mapper(qEvaporative_, tiptf.qEvaporative_);
+    mapper(dmdtf_, tiptf.dmdtf_);
 }
 
 

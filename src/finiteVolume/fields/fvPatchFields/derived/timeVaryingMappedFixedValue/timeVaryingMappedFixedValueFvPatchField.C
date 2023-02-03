@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,31 +99,18 @@ timeVaryingMappedFixedValueFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fixedValueFvPatchField<Type>::autoMap(m);
-    fieldMapper_.autoMap(m);
-}
-
-
-template<class Type>
-void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::rmap
+void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    fixedValueFvPatchField<Type>::rmap(ptf, addr);
-    fieldMapper_.rmap
+    fixedValueFvPatchField<Type>::map(ptf, mapper);
+    fieldMapper_.map
     (
-        refCast
-        <
-            const timeVaryingMappedFixedValueFvPatchField<Type>
-        >(ptf).fieldMapper_,
-        addr
+        refCast<const timeVaryingMappedFixedValueFvPatchField<Type>>(ptf)
+       .fieldMapper_,
+        mapper
     );
 }
 
@@ -137,10 +124,8 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::reset
     fixedValueFvPatchField<Type>::reset(ptf);
     fieldMapper_.reset
     (
-        refCast
-        <
-            const timeVaryingMappedFixedValueFvPatchField<Type>
-        >(ptf).fieldMapper_
+        refCast<const timeVaryingMappedFixedValueFvPatchField<Type>>(ptf)
+       .fieldMapper_
     );
 }
 
