@@ -25,31 +25,30 @@ Class
     Foam::polyCellSet
 
 Description
-    General cell set selection class for models that apply to sub-sets
-    of the mesh.
+    General run-time selected cell set selection class for polyMesh
 
-    Currently supports cell selection from a set of points, a specified cellSet
-    or cellZone or all of the cells.  The selection method can either be
-    specified explicitly using the \c select entry or inferred from the
-    presence of either a \c cellSet, \c cellZone or \c points entry.  The \c
-    select entry is required to select \c all cells.
+    Currently supports cell selection from:
+      - a set of points
+      - a cellSet
+      - a cellZone
+      - all of the cells.
 
 Usage
     Examples:
     \verbatim
-        // Apply everywhere
+        // Select all cells
         select   all;
 
-        // Apply within a given cellSet
-        select   cellSet; // Optional
-        cellSet         rotor;
+        // Select the cells within the given cellSet
+        select   cellSet;   // Optional
+        cellSet  rotor;
 
-        // Apply within a given cellZone
-        select   cellZone; // Optional
-        cellZone        rotor;
+        // Select the cells within the given cellZone
+        select   cellZone;  // Optional
+        cellZone rotor;
 
-        // Apply in cells containing a list of points
-        select   points; // Optional
+        // Select the cells containing a list of points
+        select   points;    // Optional
         points
         (
             (2.25 0.5 0)
