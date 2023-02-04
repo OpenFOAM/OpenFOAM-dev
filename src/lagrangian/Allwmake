@@ -13,4 +13,6 @@ wmake $targetType DSMC
 
 molecularDynamics/Allwmake $targetType $*
 
+wmake $targetType functionObjects
+
 #------------------------------------------------------------------------------

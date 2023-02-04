@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,28 +22,48 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::dsmcFields
+    Foam::functionObjects::stopAtEmptyClouds
 
 Description
-    Calculate intensive fields:
-    - UMean
-    - translationalT
-    - internalT
-    - overallT
-    from averaged extensive fields from a DSMC calculation.
+    Stops the run when all parcel clouds are empty.
 
-See also
-    Foam::functionObjects::fvMeshFunctionObject
+    The following actions are supported:
+    - noWriteNow
+    - writeNow
+    - nextWrite (default)
+
+    Example of function object specification:
+    \verbatim
+    stop
+    {
+        type            stopAtEmptyClouds;
+        libs            ("liblagrangianFunctionObjects.so");
+
+        executeControl  timeStep; // <-- Likely only to be needed if injection
+        startTime       0.500001; // starts after time zero. In which case the
+                                  // startTime should be slightly after the
+                                  // injection start time.
+
+        action          nextWrite;
+    }
+    \endverbatim
+
+Usage
+    \table
+        Property | Description                  | Required | Default value
+        type     | type name: stopAtEmptyClouds | yes      |
+        action   | Action executed              | no       | nextWrite
+    \endtable
 
 SourceFiles
-    dsmcFields.C
+    stopAtEmptyClouds.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_dsmcFields_H
-#define functionObjects_dsmcFields_H
+#ifndef stopAtEmptyClouds_H
+#define stopAtEmptyClouds_H
 
-#include "fvMeshFunctionObject.H"
+#include "stopAt.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,62 +73,38 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class dsmcFields Declaration
+                       Class stopAtEmptyClouds Declaration
 \*---------------------------------------------------------------------------*/
 
-class dsmcFields
+class stopAtEmptyClouds
 :
-    public fvMeshFunctionObject
+    public stopAt
 {
+    // Private Member Functions
+
+        //- Return true when the stop condition is achieved
+        virtual bool condition() const;
+
+
 public:
 
     //- Runtime type information
-    TypeName("dsmcFields");
+    TypeName("stopAtEmptyClouds");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        dsmcFields
+        stopAtEmptyClouds
         (
             const word& name,
             const Time& runTime,
             const dictionary& dict
         );
 
-        //- Disallow default bitwise copy construction
-        dsmcFields(const dsmcFields&) = delete;
-
 
     //- Destructor
-    virtual ~dsmcFields();
-
-
-    // Member Functions
-
-        //- Read the dsmcFields data
-        virtual bool read(const dictionary&);
-
-        //- Return the list of fields required
-        virtual wordList fields() const;
-
-        //- Do not evaluate the state at the start of the run
-        virtual bool executeAtStart() const
-        {
-            return false;
-        }
-
-        //- Do nothing
-        virtual bool execute();
-
-        //- Calculate and write the DSMC fields
-        virtual bool write();
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const dsmcFields&) = delete;
+    virtual ~stopAtEmptyClouds();
 };
 
 
