@@ -160,7 +160,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
     scalarField& Sp = eqn.diag();
     const scalarField& V = mesh().V();
 
-    const labelList& cells = set_.cells();
+    const labelUList cells = set_.cells();
 
     forAll(cells, i)
     {
@@ -197,7 +197,7 @@ void Foam::fv::VoFSolidificationMeltingSource::correct()
     const volScalarField CpVoF(thermo.thermo1().Cp());
     const volScalarField& alphaVoF = thermo.alpha1();
 
-    const labelList& cells = set_.cells();
+    const labelUList cells = set_.cells();
 
     forAll(cells, i)
     {
