@@ -67,16 +67,16 @@ ThermophysicalTransportModels/Allwmake $targetType $*
 wmake $targetType radiationModels
 wmake $targetType combustionModels
 wmake $targetType surfaceFilmModels
-lagrangian/Allwmake $targetType $*
 mesh/Allwmake $targetType $*
 renumber/Allwmake $targetType $*
 fvAgglomerationMethods/Allwmake $targetType $*
-
 wmake $targetType fvMotionSolver
+
 wmake $targetType fvModels
 wmake $targetType fvConstraints
-
 functionObjects/Allwmake $targetType $*
+
+lagrangian/Allwmake $targetType $*
 
 wmake $targetType sixDoFRigidBodyMotion
 wmake $targetType sixDoFRigidBodyState
