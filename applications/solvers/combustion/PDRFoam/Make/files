@@ -27,7 +27,6 @@ PDRModels/XiGModels/basicXiSubG/basicXiSubG.C
 
 laminarFlameSpeed/SCOPE/SCOPELaminarFlameSpeed.C
 
-# PDRFoamAutoRefine.C
 PDRFoam.C
 
 EXE = $(FOAM_APPBIN)/PDRFoam
