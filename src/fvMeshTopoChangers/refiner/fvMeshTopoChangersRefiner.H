@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,15 +238,15 @@ class refiner
             const polyTopoChangeMap& map
         );
 
-        void refineUfs
-        (
-            const labelHashSet& masterFaces,
-            const polyTopoChangeMap& map
-        );
-
         void unrefineFluxes
         (
             const Map<label>& faceToSplitPoint,
+            const polyTopoChangeMap& map
+        );
+
+        void refineUfs
+        (
+            const labelHashSet& masterFaces,
             const polyTopoChangeMap& map
         );
 

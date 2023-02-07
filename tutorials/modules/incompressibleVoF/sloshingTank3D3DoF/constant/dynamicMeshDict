@@ -65,20 +65,6 @@ topoChanger
     // Stop refinement if maxCells reached
     maxCells        200000;
 
-    // Flux field and corresponding velocity field. Fluxes on changed
-    // faces get recalculated by interpolating the velocity. Use 'none'
-    // on surfaceScalarFields that do not need to be reinterpolated.
-    correctFluxes
-    (
-        (phi none)
-        (nHatf none)
-        (rhoPhi none)
-        (alphaPhi.water none)
-        (meshPhi none)
-        (meshPhi_0 none)
-        (ghf none)
-    );
-
     // Write the refinement level as a volScalarField
     dumpLevel       true;
 }
