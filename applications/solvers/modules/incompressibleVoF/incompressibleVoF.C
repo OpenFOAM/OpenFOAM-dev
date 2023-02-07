@@ -73,8 +73,7 @@ Foam::solvers::incompressibleVoF::incompressibleVoF(fvMesh& mesh)
     (
         p,
         p_rgh,
-        pimple.dict(),
-        false
+        pimple.dict()
     ),
 
     momentumTransport
