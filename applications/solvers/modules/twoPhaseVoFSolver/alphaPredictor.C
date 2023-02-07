@@ -311,7 +311,13 @@ void Foam::solvers::twoPhaseVoFSolver::alphaSolve
     if (alphaApplyPrevCorr && MULESCorr)
     {
         talphaPhi1Corr0 = alphaPhi1 - talphaPhi1Corr0;
-        talphaPhi1Corr0.ref().rename("alphaPhi1Corr0");
+
+        // Register alphaPhiCorr0.<phase1> for redistribution
+        talphaPhi1Corr0.ref().rename
+        (
+            IOobject::groupName("alphaPhiCorr0", alpha1.group())
+        );
+        talphaPhi1Corr0.ref().checkIn();
     }
     else
     {
