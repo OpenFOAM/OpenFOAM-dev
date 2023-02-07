@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,9 +65,6 @@ Usage
       - \par -force \n
         Remove any existing \a processor subdirectories before decomposing the
         geometry.
-
-      - \par -dict \<filename\>
-        Specify alternative dictionary for the decomposition.
 
 \*---------------------------------------------------------------------------*/
 
@@ -200,7 +197,6 @@ int main(int argc, char *argv[])
     );
 
     argList::noParallel();
-    #include "addDictOption.H"
     #include "addRegionOption.H"
     #include "addAllRegionsOption.H"
     argList::addBoolOption
