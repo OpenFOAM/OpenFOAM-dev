@@ -91,28 +91,18 @@ tractionDisplacementFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::tractionDisplacementFvPatchVectorField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fixedGradientFvPatchVectorField::autoMap(m);
-    m(traction_, traction_);
-}
-
-
-void Foam::tractionDisplacementFvPatchVectorField::rmap
+void Foam::tractionDisplacementFvPatchVectorField::map
 (
     const fvPatchVectorField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    fixedGradientFvPatchVectorField::rmap(ptf, addr);
+    fixedGradientFvPatchVectorField::map(ptf, mapper);
 
     const tractionDisplacementFvPatchVectorField& dmptf =
         refCast<const tractionDisplacementFvPatchVectorField>(ptf);
 
-    traction_.rmap(dmptf.traction_, addr);
+    mapper(traction_, dmptf.traction_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,23 +188,13 @@ void Foam::fvPatchField<Type>::patchInternalField(Field<Type>& pif) const
 
 
 template<class Type>
-void Foam::fvPatchField<Type>::autoMap
+void Foam::fvPatchField<Type>::map
 (
+    const fvPatchField<Type>& ptf,
     const fvPatchFieldMapper& mapper
 )
 {
-    mapper(*this, *this);
-}
-
-
-template<class Type>
-void Foam::fvPatchField<Type>::rmap
-(
-    const fvPatchField<Type>& ptf,
-    const labelList& addr
-)
-{
-    Field<Type>::rmap(ptf, addr);
+    mapper(*this, ptf);
 }
 
 

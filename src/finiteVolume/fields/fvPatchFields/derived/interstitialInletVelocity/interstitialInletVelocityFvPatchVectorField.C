@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,28 +88,18 @@ interstitialInletVelocityFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::interstitialInletVelocityFvPatchVectorField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fixedValueFvPatchVectorField::autoMap(m);
-    m(inletVelocity_, inletVelocity_);
-}
-
-
-void Foam::interstitialInletVelocityFvPatchVectorField::rmap
+void Foam::interstitialInletVelocityFvPatchVectorField::map
 (
     const fvPatchVectorField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    fixedValueFvPatchVectorField::rmap(ptf, addr);
+    fixedValueFvPatchVectorField::map(ptf, mapper);
 
     const interstitialInletVelocityFvPatchVectorField& tiptf =
         refCast<const interstitialInletVelocityFvPatchVectorField>(ptf);
 
-    inletVelocity_.rmap(tiptf.inletVelocity_, addr);
+    mapper(inletVelocity_, tiptf.inletVelocity_);
 }
 
 

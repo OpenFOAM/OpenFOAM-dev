@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,30 +119,16 @@ Foam::valuePointPatchField<Type>::valuePointPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::valuePointPatchField<Type>::autoMap
-(
-    const pointPatchFieldMapper& m
-)
-{
-    m(*this, *this);
-}
-
-
-template<class Type>
-void Foam::valuePointPatchField<Type>::rmap
+void Foam::valuePointPatchField<Type>::map
 (
     const pointPatchField<Type>& ptf,
-    const labelList& addr
+    const pointPatchFieldMapper& mapper
 )
 {
-    Field<Type>::rmap
-    (
-        refCast<const valuePointPatchField<Type>>
-        (
-            ptf
-        ),
-        addr
-    );
+    const valuePointPatchField<Type>& vptf =
+        refCast<const valuePointPatchField<Type>>(ptf);
+
+    mapper(*this, vptf);
 }
 
 

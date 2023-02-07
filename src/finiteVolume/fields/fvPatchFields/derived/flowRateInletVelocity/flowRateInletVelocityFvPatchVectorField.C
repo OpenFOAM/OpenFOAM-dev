@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -266,34 +266,20 @@ flowRateInletVelocityFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::flowRateInletVelocityFvPatchVectorField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fixedValueFvPatchVectorField::autoMap(m);
-
-    if (canEvaluate())
-    {
-        setWallDist();
-    }
-}
-
-
-void Foam::flowRateInletVelocityFvPatchVectorField::rmap
+void Foam::flowRateInletVelocityFvPatchVectorField::map
 (
     const fvPatchVectorField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    fixedValueFvPatchVectorField::rmap(ptf, addr);
+    fixedValueFvPatchVectorField::map(ptf, mapper);
 
     const flowRateInletVelocityFvPatchVectorField& tiptf =
         refCast<const flowRateInletVelocityFvPatchVectorField>(ptf);
 
     if (profile_.valid() && canEvaluate())
     {
-        y_.rmap(tiptf.y_, addr);
+        mapper(y_, tiptf.y_);
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ SourceFiles
 #include "pointMesh.H"
 #include "pointFields.H"
 #include "pointPatchFieldMapper.H"
-#include "setSizeFieldMapper.H"
+#include "setSizePointPatchFieldMapper.H"
 #include "IOobjectList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -73,24 +73,6 @@ class pointFieldReconstructor
 
 
 public:
-
-        //- Mapper for sizing only - does not do any actual mapping.
-        class pointPatchFieldReconstructor
-        :
-            public pointPatchFieldMapper,
-            public setSizeFieldMapper
-        {
-        public:
-
-            // Constructors
-
-                //- Construct given size
-                pointPatchFieldReconstructor(const label size)
-                :
-                    setSizeFieldMapper(size)
-                {}
-        };
-
 
     // Constructors
 

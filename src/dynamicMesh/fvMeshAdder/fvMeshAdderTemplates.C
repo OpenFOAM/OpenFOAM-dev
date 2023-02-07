@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,8 @@ License
 #include "pointFields.H"
 #include "directFvPatchFieldMapper.H"
 #include "directPointPatchFieldMapper.H"
+#include "reverseFvPatchFieldMapper.H"
+#include "reversePointPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -236,10 +238,10 @@ void Foam::fvMeshAdder::MapVolField
                         }
                     }
 
-                    bfld[newPatchi].rmap
+                    bfld[newPatchi].map
                     (
                         fldToAdd.boundaryField()[patchi],
-                        addedToNew
+                        reverseFvPatchFieldMapper(addedToNew)
                     );
                 }
             }
@@ -529,10 +531,10 @@ void Foam::fvMeshAdder::MapSurfaceField
                         }
                     }
 
-                    bfld[newPatchi].rmap
+                    bfld[newPatchi].map
                     (
                         fldToAdd.boundaryField()[patchi],
-                        addedToNew
+                        reverseFvPatchFieldMapper(addedToNew)
                     );
                 }
             }
@@ -829,10 +831,10 @@ void Foam::fvMeshAdder::MapPointField
                         }
                     }
 
-                    bfld[newPatchi].rmap
+                    bfld[newPatchi].map
                     (
                         fldToAdd.boundaryField()[patchi],
-                        oldToNew
+                        reversePointPatchFieldMapper(oldToNew)
                     );
                 }
             }

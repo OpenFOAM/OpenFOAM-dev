@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -408,68 +408,10 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::genericPointPatchField<Type>::autoMap
-(
-    const pointPatchFieldMapper& m
-)
-{
-    forAllIter
-    (
-        HashPtrTable<scalarField>,
-        scalarFields_,
-        iter
-    )
-    {
-        m(*iter(), *iter());
-    }
-
-    forAllIter
-    (
-        HashPtrTable<vectorField>,
-        vectorFields_,
-        iter
-    )
-    {
-        m(*iter(), *iter());
-    }
-
-    forAllIter
-    (
-        HashPtrTable<sphericalTensorField>,
-        sphericalTensorFields_,
-        iter
-    )
-    {
-        m(*iter(), *iter());
-    }
-
-    forAllIter
-    (
-        HashPtrTable<symmTensorField>,
-        symmTensorFields_,
-        iter
-    )
-    {
-        m(*iter(), *iter());
-    }
-
-    forAllIter
-    (
-        HashPtrTable<tensorField>,
-        tensorFields_,
-        iter
-    )
-    {
-        m(*iter(), *iter());
-    }
-}
-
-
-template<class Type>
-void Foam::genericPointPatchField<Type>::rmap
+void Foam::genericPointPatchField<Type>::map
 (
     const pointPatchField<Type>& ptf,
-    const labelList& addr
+    const pointPatchFieldMapper& mapper
 )
 {
     const genericPointPatchField<Type>& dptf =
@@ -487,7 +429,7 @@ void Foam::genericPointPatchField<Type>::rmap
 
         if (dptfIter != scalarFields_.end())
         {
-            iter()->rmap(*dptfIter(), addr);
+            mapper(*iter(), *dptfIter());
         }
     }
 
@@ -503,7 +445,7 @@ void Foam::genericPointPatchField<Type>::rmap
 
         if (dptfIter != vectorFields_.end())
         {
-            iter()->rmap(*dptfIter(), addr);
+            mapper(*iter(), *dptfIter());
         }
     }
 
@@ -519,7 +461,7 @@ void Foam::genericPointPatchField<Type>::rmap
 
         if (dptfIter != sphericalTensorFields_.end())
         {
-            iter()->rmap(*dptfIter(), addr);
+            mapper(*iter(), *dptfIter());
         }
     }
 
@@ -535,7 +477,7 @@ void Foam::genericPointPatchField<Type>::rmap
 
         if (dptfIter != symmTensorFields_.end())
         {
-            iter()->rmap(*dptfIter(), addr);
+            mapper(*iter(), *dptfIter());
         }
     }
 
@@ -551,7 +493,7 @@ void Foam::genericPointPatchField<Type>::rmap
 
         if (dptfIter != tensorFields_.end())
         {
-            iter()->rmap(*dptfIter(), addr);
+            mapper(*iter(), *dptfIter());
         }
     }
 }

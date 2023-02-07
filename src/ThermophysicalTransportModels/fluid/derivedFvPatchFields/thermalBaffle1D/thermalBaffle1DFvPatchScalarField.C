@@ -259,37 +259,21 @@ tmp<scalarField> thermalBaffle1DFvPatchScalarField<solidType>::qs() const
 
 
 template<class solidType>
-void thermalBaffle1DFvPatchScalarField<solidType>::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    mixedFvPatchScalarField::autoMap(m);
-
-    if (this->owner())
-    {
-        m(thickness_, thickness_);
-        m(qs_, qs_);
-    }
-}
-
-
-template<class solidType>
-void thermalBaffle1DFvPatchScalarField<solidType>::rmap
+void thermalBaffle1DFvPatchScalarField<solidType>::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    mixedFvPatchScalarField::rmap(ptf, addr);
+    mixedFvPatchScalarField::map(ptf, mapper);
 
     const thermalBaffle1DFvPatchScalarField& tiptf =
         refCast<const thermalBaffle1DFvPatchScalarField>(ptf);
 
     if (this->owner())
     {
-        thickness_.rmap(tiptf.thickness_, addr);
-        qs_.rmap(tiptf.qs_, addr);
+        mapper(thickness_, tiptf.thickness_);
+        mapper(qs_, tiptf.qs_);
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,28 +118,18 @@ transonicEntrainmentPressureFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::transonicEntrainmentPressureFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    mixedFvPatchScalarField::autoMap(m);
-    m(p0_, p0_);
-}
-
-
-void Foam::transonicEntrainmentPressureFvPatchScalarField::rmap
+void Foam::transonicEntrainmentPressureFvPatchScalarField::map
 (
     const fvPatchScalarField& psf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    mixedFvPatchScalarField::rmap(psf, addr);
+    mixedFvPatchScalarField::map(psf, mapper);
 
     const transonicEntrainmentPressureFvPatchScalarField& toppsf =
         refCast<const transonicEntrainmentPressureFvPatchScalarField>(psf);
 
-    p0_.rmap(toppsf.p0_, addr);
+    mapper(p0_, toppsf.p0_);
 }
 
 

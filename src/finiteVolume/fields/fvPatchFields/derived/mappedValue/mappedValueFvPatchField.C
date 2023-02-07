@@ -207,28 +207,13 @@ Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::mappedValueFvPatchField<Type>::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fixedValueFvPatchField<Type>::autoMap(m);
-
-    if (mapperPtr_.valid())
-    {
-        mapperPtr_->clearOut();
-    }
-}
-
-
-template<class Type>
-void Foam::mappedValueFvPatchField<Type>::rmap
+void Foam::mappedValueFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    fixedValueFvPatchField<Type>::rmap(ptf, addr);
+    fixedValueFvPatchField<Type>::map(ptf, mapper);
 
     if (mapperPtr_.valid())
     {

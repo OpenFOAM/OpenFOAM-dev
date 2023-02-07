@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,27 +156,13 @@ void Foam::uniformInletOutletFvPatchField<Type>::write(Ostream& os) const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::uniformInletOutletFvPatchField<Type>::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    mixedFvPatchField<Type>::autoMap(m);
-
-    // Override
-    this->refValue() =
-        uniformInletValue_->value(this->db().time().userTimeValue());
-}
-
-
-template<class Type>
-void Foam::uniformInletOutletFvPatchField<Type>::rmap
+void Foam::uniformInletOutletFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    mixedFvPatchField<Type>::rmap(ptf, addr);
+    mixedFvPatchField<Type>::map(ptf, mapper);
 
     // Override
     this->refValue() =

@@ -177,22 +177,16 @@ Foam::tmp<Foam::scalarField> Foam::radiationCoupledBase::emissivity() const
 }
 
 
-void Foam::radiationCoupledBase::autoMap(const fvPatchFieldMapper& m)
-{
-    m(emissivity_, emissivity_);
-}
-
-
-void Foam::radiationCoupledBase::rmap
+void Foam::radiationCoupledBase::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
     const radiationCoupledBase& mrptf =
         refCast<const radiationCoupledBase>(ptf);
 
-    emissivity_.rmap(mrptf.emissivity_, addr);
+    mapper(emissivity_, mrptf.emissivity_);
 }
 
 

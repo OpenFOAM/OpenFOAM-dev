@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,23 +170,15 @@ Foam::atmBoundaryLayer::atmBoundaryLayer(const atmBoundaryLayer& abl)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::atmBoundaryLayer::autoMap(const fvPatchFieldMapper& m)
-{
-    m(z0_, z0_);
-    m(zGround_, zGround_);
-    m(Ustar_, Ustar_);
-}
-
-
-void Foam::atmBoundaryLayer::rmap
+void Foam::atmBoundaryLayer::map
 (
     const atmBoundaryLayer& blptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    z0_.rmap(blptf.z0_, addr);
-    zGround_.rmap(blptf.zGround_, addr);
-    Ustar_.rmap(blptf.Ustar_, addr);
+    mapper(z0_, blptf.z0_);
+    mapper(zGround_, blptf.zGround_);
+    mapper(Ustar_, blptf.Ustar_);
 }
 
 

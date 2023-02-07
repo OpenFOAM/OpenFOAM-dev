@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,33 +129,20 @@ Foam::mixedFvPatchField<Type>::mixedFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::mixedFvPatchField<Type>::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fvPatchField<Type>::autoMap(m);
-    m(refValue_, refValue_);
-    m(refGrad_, refGrad_);
-    m(valueFraction_, valueFraction_);
-}
-
-
-template<class Type>
-void Foam::mixedFvPatchField<Type>::rmap
+void Foam::mixedFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    fvPatchField<Type>::rmap(ptf, addr);
+    fvPatchField<Type>::map(ptf, mapper);
 
     const mixedFvPatchField<Type>& mptf =
         refCast<const mixedFvPatchField<Type>>(ptf);
 
-    refValue_.rmap(mptf.refValue_, addr);
-    refGrad_.rmap(mptf.refGrad_, addr);
-    valueFraction_.rmap(mptf.valueFraction_, addr);
+    mapper(refValue_, mptf.refValue_);
+    mapper(refGrad_, mptf.refGrad_);
+    mapper(valueFraction_, mptf.valueFraction_);
 }
 
 

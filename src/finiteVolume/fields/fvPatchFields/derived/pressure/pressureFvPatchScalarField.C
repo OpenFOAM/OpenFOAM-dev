@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,28 +92,18 @@ Foam::pressureFvPatchScalarField::pressureFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::pressureFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fixedValueFvPatchScalarField::autoMap(m);
-    m(p_, p_);
-}
-
-
-void Foam::pressureFvPatchScalarField::rmap
+void Foam::pressureFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    fixedValueFvPatchScalarField::rmap(ptf, addr);
+    fixedValueFvPatchScalarField::map(ptf, mapper);
 
     const pressureFvPatchScalarField& tiptf =
         refCast<const pressureFvPatchScalarField>(ptf);
 
-    p_.rmap(tiptf.p_, addr);
+    mapper(p_, tiptf.p_);
 }
 
 

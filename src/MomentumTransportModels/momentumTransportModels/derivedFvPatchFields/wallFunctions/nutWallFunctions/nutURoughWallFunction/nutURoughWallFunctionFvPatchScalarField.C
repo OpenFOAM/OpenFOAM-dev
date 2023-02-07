@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -262,30 +262,19 @@ nutURoughWallFunctionFvPatchScalarField::nutURoughWallFunctionFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void nutURoughWallFunctionFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    nutUWallFunctionFvPatchScalarField::autoMap(m);
-    m(Ks_, Ks_);
-    m(Cs_, Cs_);
-}
-
-
-void nutURoughWallFunctionFvPatchScalarField::rmap
+void nutURoughWallFunctionFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    nutUWallFunctionFvPatchScalarField::rmap(ptf, addr);
+    nutUWallFunctionFvPatchScalarField::map(ptf, mapper);
 
     const nutURoughWallFunctionFvPatchScalarField& nrwfpsf =
         refCast<const nutURoughWallFunctionFvPatchScalarField>(ptf);
 
-    Ks_.rmap(nrwfpsf.Ks_, addr);
-    Cs_.rmap(nrwfpsf.Cs_, addr);
+    mapper(Ks_, nrwfpsf.Ks_);
+    mapper(Cs_, nrwfpsf.Cs_);
 }
 
 

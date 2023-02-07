@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ SourceFiles
 #include "surfaceFields.H"
 #include "IOobjectList.H"
 #include "fvPatchFieldMapper.H"
-#include "setSizeFieldMapper.H"
+#include "setSizeFvPatchFieldMapper.H"
 #include "labelIOList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -92,24 +92,6 @@ class fvFieldReconstructor
 
 
 public:
-
-        //- Mapper for sizing only - does not do any actual mapping.
-        class fvPatchFieldReconstructor
-        :
-            public fvPatchFieldMapper,
-            public setSizeFieldMapper
-        {
-        public:
-
-            // Constructors
-
-                //- Construct given size
-                fvPatchFieldReconstructor(const label size)
-                :
-                    setSizeFieldMapper(size)
-                {}
-        };
-
 
     // Constructors
 

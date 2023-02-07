@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,28 +108,18 @@ Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::totalTemperatureFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fixedValueFvPatchScalarField::autoMap(m);
-    m(T0_, T0_);
-}
-
-
-void Foam::totalTemperatureFvPatchScalarField::rmap
+void Foam::totalTemperatureFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    fixedValueFvPatchScalarField::rmap(ptf, addr);
+    fixedValueFvPatchScalarField::map(ptf, mapper);
 
     const totalTemperatureFvPatchScalarField& tiptf =
         refCast<const totalTemperatureFvPatchScalarField>(ptf);
 
-    T0_.rmap(tiptf.T0_, addr);
+    mapper(T0_, tiptf.T0_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,29 +112,18 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::greyDiffusiveViewFactorFixedValueFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fixedValueFvPatchScalarField::autoMap(m);
-    radiationCoupledBase::autoMap(m);
-    m(qro_, qro_);
-}
-
-
-void Foam::greyDiffusiveViewFactorFixedValueFvPatchScalarField::rmap
+void Foam::greyDiffusiveViewFactorFixedValueFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    fixedValueFvPatchScalarField::rmap(ptf, addr);
-    radiationCoupledBase::rmap(ptf, addr);
+    fixedValueFvPatchScalarField::map(ptf, mapper);
+    radiationCoupledBase::map(ptf, mapper);
     const greyDiffusiveViewFactorFixedValueFvPatchScalarField& mrptf =
         refCast<const greyDiffusiveViewFactorFixedValueFvPatchScalarField>(ptf);
 
-    qro_.rmap(mrptf.qro_, addr);
+    mapper(qro_, mrptf.qro_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -193,54 +193,30 @@ externalTemperatureFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::externalTemperatureFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    mixedFvPatchScalarField::autoMap(m);
-
-    if (haveq_)
-    {
-        m(q_, q_);
-    }
-
-    if (haveh_)
-    {
-        m(h_, h_);
-    }
-
-    if (qrName_ != word::null)
-    {
-        m(qrPrevious_, qrPrevious_);
-    }
-}
-
-
-void Foam::externalTemperatureFvPatchScalarField::rmap
+void Foam::externalTemperatureFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    mixedFvPatchScalarField::rmap(ptf, addr);
+    mixedFvPatchScalarField::map(ptf, mapper);
 
     const externalTemperatureFvPatchScalarField& tiptf =
         refCast<const externalTemperatureFvPatchScalarField>(ptf);
 
     if (haveq_)
     {
-        q_.rmap(tiptf.q_, addr);
+        mapper(q_, tiptf.q_);
     }
 
     if (haveh_)
     {
-        h_.rmap(tiptf.h_, addr);
+        mapper(h_, tiptf.h_);
     }
 
     if (qrName_ != word::null)
     {
-        qrPrevious_.rmap(tiptf.qrPrevious_, addr);
+        mapper(qrPrevious_, tiptf.qrPrevious_);
     }
 }
 

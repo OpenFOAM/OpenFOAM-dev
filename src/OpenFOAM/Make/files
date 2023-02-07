@@ -640,7 +640,9 @@ fields/UniformGeometricFields/uniformGeometricFields.C
 Fields = fields/Fields
 
 $(Fields)/fieldMappers/directFieldMapper/directFieldMapper.C
+$(Fields)/fieldMappers/identityFieldMapper/identityFieldMapper.C
 $(Fields)/fieldMappers/generalFieldMapper/generalFieldMapper.C
+$(Fields)/fieldMappers/reverseFieldMapper/reverseFieldMapper.C
 $(Fields)/fieldMappers/setSizeFieldMapper/setSizeFieldMapper.C
 $(Fields)/labelField/labelField.C
 $(Fields)/scalarField/scalarField.C

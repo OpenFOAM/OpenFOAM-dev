@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,28 +110,18 @@ fixedNormalInletOutletVelocityFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fixedNormalInletOutletVelocityFvPatchVectorField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    directionMixedFvPatchVectorField::autoMap(m);
-    normalVelocity_->autoMap(m);
-}
-
-
-void Foam::fixedNormalInletOutletVelocityFvPatchVectorField::rmap
+void Foam::fixedNormalInletOutletVelocityFvPatchVectorField::map
 (
     const fvPatchVectorField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    directionMixedFvPatchVectorField::rmap(ptf, addr);
+    directionMixedFvPatchVectorField::map(ptf, mapper);
 
     const fixedNormalInletOutletVelocityFvPatchVectorField& fniovptf =
         refCast<const fixedNormalInletOutletVelocityFvPatchVectorField>(ptf);
 
-    normalVelocity_->rmap(fniovptf.normalVelocity(), addr);
+    mapper(normalVelocity_.ref(), fniovptf.normalVelocity());
 }
 
 

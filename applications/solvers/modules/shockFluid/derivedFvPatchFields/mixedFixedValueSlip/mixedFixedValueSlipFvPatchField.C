@@ -86,31 +86,19 @@ Foam::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::mixedFixedValueSlipFvPatchField<Type>::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    m(*this, *this);
-    m(refValue_, refValue_);
-    m(valueFraction_, valueFraction_);
-}
-
-
-template<class Type>
-void Foam::mixedFixedValueSlipFvPatchField<Type>::rmap
+void Foam::mixedFixedValueSlipFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    transformFvPatchField<Type>::rmap(ptf, addr);
+    transformFvPatchField<Type>::map(ptf, mapper);
 
     const mixedFixedValueSlipFvPatchField<Type>& dmptf =
         refCast<const mixedFixedValueSlipFvPatchField<Type>>(ptf);
 
-    refValue_.rmap(dmptf.refValue_, addr);
-    valueFraction_.rmap(dmptf.valueFraction_, addr);
+    mapper(refValue_, dmptf.refValue_);
+    mapper(valueFraction_, dmptf.valueFraction_);
 }
 
 

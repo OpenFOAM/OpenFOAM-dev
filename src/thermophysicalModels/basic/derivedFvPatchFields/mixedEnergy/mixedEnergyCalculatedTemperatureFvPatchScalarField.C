@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,32 +102,20 @@ mixedEnergyCalculatedTemperatureFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::mixedEnergyCalculatedTemperatureFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    calculatedFvPatchScalarField::autoMap(m);
-    m(heRefValue_, heRefValue_);
-    m(heRefGrad_, heRefGrad_);
-    m(heValueFraction_, heValueFraction_);
-}
-
-
-void Foam::mixedEnergyCalculatedTemperatureFvPatchScalarField::rmap
+void Foam::mixedEnergyCalculatedTemperatureFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    calculatedFvPatchScalarField::rmap(ptf, addr);
+    calculatedFvPatchScalarField::map(ptf, mapper);
 
     const mixedEnergyCalculatedTemperatureFvPatchScalarField& mptf =
         refCast<const mixedEnergyCalculatedTemperatureFvPatchScalarField>(ptf);
 
-    heRefValue_.rmap(mptf.heRefValue_, addr);
-    heRefGrad_.rmap(mptf.heRefGrad_, addr);
-    heValueFraction_.rmap(mptf.heValueFraction_, addr);
+    mapper(heRefValue_, mptf.heRefValue_);
+    mapper(heRefGrad_, mptf.heRefGrad_);
+    mapper(heValueFraction_, mptf.heValueFraction_);
 }
 
 

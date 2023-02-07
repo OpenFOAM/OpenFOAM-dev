@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,29 +159,18 @@ specieTransferMassFractionFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::specieTransferMassFractionFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    mixedFvPatchScalarField::autoMap(m);
-
-    m(phiYp_, phiYp_);
-}
-
-
-void Foam::specieTransferMassFractionFvPatchScalarField::rmap
+void Foam::specieTransferMassFractionFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const labelList& addr
+    const fvPatchFieldMapper& mapper
 )
 {
-    mixedFvPatchScalarField::rmap(ptf, addr);
+    mixedFvPatchScalarField::map(ptf, mapper);
 
     const specieTransferMassFractionFvPatchScalarField& tiptf =
         refCast<const specieTransferMassFractionFvPatchScalarField>(ptf);
 
-    phiYp_.rmap(tiptf.phiYp_, addr);
+    mapper(phiYp_, tiptf.phiYp_);
 }
 
 

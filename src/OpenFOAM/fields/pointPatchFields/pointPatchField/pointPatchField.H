@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,7 +164,7 @@ public:
             const dictionary&
         );
 
-        //- Construct by mapping given patchField<Type> onto a new patch
+        //- Construct by mapping given pointPatchField<Type> onto a new patch
         pointPatchField
         (
             const pointPatchField<Type>&,
@@ -398,14 +398,12 @@ public:
 
         // Mapping functions
 
-            //- Map (and resize as needed) from self given a mapping object
-            //  Used to update fields following mesh topology change
-            virtual void autoMap(const pointPatchFieldMapper&)
-            {}
-
-            //- Reverse map the given pointPatchField onto this pointPatchField
-            //  Used to reconstruct fields
-            virtual void rmap(const pointPatchField<Type>&, const labelList&)
+            //- Map the given pointPatchField onto this pointPatchField
+            virtual void map
+            (
+                const pointPatchField<Type>&,
+                const pointPatchFieldMapper&
+            )
             {}
 
             //- Reset the pointPatchField to the given pointPatchField

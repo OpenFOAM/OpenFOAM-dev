@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -227,7 +227,7 @@ template
     class Type,
     template<class> class PatchField,
     class GeoMesh,
-    class PatchMapper
+    class SetSizePatchFieldMapper
 >
 void NaNGeometricFields
 (
@@ -236,23 +236,6 @@ void NaNGeometricFields
 )
 {
     typedef GeometricField<Type, PatchField, GeoMesh> GField;
-
-    //- Mapper for sizing only - does not do any actual mapping.
-    class patchFieldResizeMapper
-    :
-        public PatchMapper,
-        public setSizeFieldMapper
-    {
-    public:
-
-        // Constructors
-
-            //- Construct given size
-            patchFieldResizeMapper(const label size)
-            :
-                setSizeFieldMapper(size)
-            {}
-    };
 
     HashTable<const GField*> fields
     (
@@ -321,7 +304,7 @@ void NaNGeometricFields
             else
             {
                 typename GField::Patch& pf = field.boundaryFieldRef()[patchi];
-                pf.autoMap(patchFieldResizeMapper(pf.patch().size()));
+                pf.map(pf, SetSizePatchFieldMapper(pf.patch().size()));
             }
 
             field.boundaryFieldRef()[patchi] == NaN;
