@@ -8,45 +8,20 @@
 FoamFile
 {
     format      ascii;
-    class       volVectorField;
-    object      U;
+    class       dictionary;
+    location    "system";
+    object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+numberOfSubdomains 4;
 
-internalField   uniform (0 0 0);
+method          hierarchical;
 
-boundaryField
+hierarchicalCoeffs
 {
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    movingWall
-    {
-        type            movingWallVelocity;
-        value           $internalField;
-    }
-
-    farFieldMoving
-    {
-        type            noSlip;
-    }
-
-    fixedWall
-    {
-        type            noSlip;
-    }
-
-    left
-    {
-        type            pressureInletOutletVelocity;
-        value           $internalField;
-    }
-
-    farField
-    {
-        type            noSlip;
-    }
+    n               (4 1 1);
+    order           xyz;
 }
 
 // ************************************************************************* //

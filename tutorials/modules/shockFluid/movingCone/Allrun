@@ -4,22 +4,13 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-application=$(getApplication)
+runApplication blockMesh
 
-mapTimes="1e-05 2e-05"
-
-# Iterate the string variable using for loop
-for mapTime in $mapTimes; do
-
-    runApplication -a blockMesh -dict blockMeshDict_$mapTime
-    rm -rf constant/meshToMesh_$mapTime
-    mkdir constant/meshToMesh_$mapTime
-    mv constant/polyMesh constant/meshToMesh_$mapTime
-
+for mapTime in 1e-05 2e-05
+do
+    runApplication -s $mapTime blockMesh -region meshToMesh_$mapTime
 done
 
-runApplication -a blockMesh
-
-runApplication $application
+runApplication $(getApplication)
 
 #------------------------------------------------------------------------------

@@ -18,25 +18,10 @@ numberOfSubdomains 4;
 
 method          hierarchical;
 
-simpleCoeffs
-{
-    n               (2 1 1);
-}
-
 hierarchicalCoeffs
 {
-    n               (4 1 1);
+    n               (2 2 1);
     order           xyz;
 }
-
-manualCoeffs
-{
-    dataFile        "";
-}
-
-distributed     no;
-
-roots           ( );
-
 
 // ************************************************************************* //
