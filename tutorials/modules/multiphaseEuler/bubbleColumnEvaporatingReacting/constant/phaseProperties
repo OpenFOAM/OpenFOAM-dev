@@ -151,7 +151,6 @@ diffusiveMassTransfer
     gas_dispersedIn_liquid_inThe_gas
     {
         type spherical;
-        Le 1.0;
     }
 
     liquid_dispersedIn_gas_inThe_gas
