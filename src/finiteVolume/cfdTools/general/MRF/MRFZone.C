@@ -44,48 +44,39 @@ namespace Foam
 
 void Foam::MRFZone::setMRFFaces()
 {
-    const polyBoundaryMesh& patches = mesh_.boundaryMesh();
+    const polyBoundaryMesh& pbMesh = mesh_.boundaryMesh();
+    const fvBoundaryMesh& fvbMesh = mesh_.boundary();
 
-    // Is face in MRF zone:
-    //     false: not in MRF zone
-    //     true: in MRF zone
+    // Determine cells and faces in the MRF zone
     boolList faceInMRF(mesh_.nFaces(), false);
-
-    // Determine faces in cell zone
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // (without constructing cells)
-
-    const labelList& own = mesh_.faceOwner();
-    const labelList& nei = mesh_.faceNeighbour();
-
-    // Cells in zone
-    boolList zoneCell(mesh_.nCells(), false);
-
-    const labelUList cells = cellSet_.cells();
-    forAll(cells, i)
+    boolList cellInMRF(mesh_.nCells(), false);
     {
-        zoneCell[cells[i]] = true;
-    }
+        const labelUList MRFCells = cellSet_.cells();
 
-    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
-    {
-        if (zoneCell[own[facei]] || zoneCell[nei[facei]])
+        forAll(MRFCells, i)
         {
-            faceInMRF[facei] = true;
+            cellInMRF[MRFCells[i]] = true;
         }
-    }
 
-    forAll(patches, patchi)
-    {
-        const polyPatch& pp = patches[patchi];
-
-        if (!isA<emptyPolyPatch>(pp))
+        for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
         {
-            forAll(pp, i)
+            if
+            (
+                cellInMRF[mesh_.faceOwner()[facei]]
+             || cellInMRF[mesh_.faceNeighbour()[facei]]
+            )
             {
-                const label facei = pp.start() + i;
+                faceInMRF[facei] = true;
+            }
+        }
 
-                if (zoneCell[own[facei]])
+        forAll(pbMesh, patchi)
+        {
+            forAll(pbMesh[patchi], patchFacei)
+            {
+                const label facei = pbMesh[patchi].start() + patchFacei;
+
+                if (cellInMRF[mesh_.faceOwner()[facei]])
                 {
                     faceInMRF[facei] = true;
                 }
@@ -96,85 +87,48 @@ void Foam::MRFZone::setMRFFaces()
     // Synchronise the faceInMRF across processor patches
     syncTools::syncFaceList(mesh_, faceInMRF, orEqOp<bool>());
 
-    // Sort into lists per patch.
+    // Construct a list of all internal FV faces in the MRF zone
+    internalFaces_ =
+        findIndices
+        (
+            SubList<bool>(faceInMRF, mesh_.nInternalFaces()),
+            true
+        );
 
-    internalFaces_.setSize(mesh_.nFaces());
-    label nInternal = 0;
-
-    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
+    // Construct lists of patch FV faces in the MRF zone
     {
-        if (faceInMRF[facei])
+        patchFaces_.setSize(fvbMesh.size());
+
+        forAll(fvbMesh, patchi)
         {
-            internalFaces_[nInternal++] = facei;
+            patchFaces_[patchi].setSize(fvbMesh[patchi].size());
         }
-    }
-    internalFaces_.setSize(nInternal);
 
-    labelList nPatchFaces(patches.size(), 0);
+        labelList patchNFaces(fvbMesh.size(), 0);
 
-    forAll(patches, patchi)
-    {
-        const polyPatch& pp = patches[patchi];
-
-        forAll(pp, patchFacei)
+        for
+        (
+            label facei = mesh_.nInternalFaces(), bFacei = 0;
+            facei < mesh_.nFaces();
+            ++ facei, ++ bFacei
+        )
         {
-            const label facei = pp.start() + patchFacei;
+            if (!faceInMRF[facei]) continue;
 
-            if (faceInMRF[facei])
+            const labelUList patches = mesh_.polyBFacePatches()[bFacei];
+            const labelUList patchFaces = mesh_.polyBFacePatchFaces()[bFacei];
+
+            forAll(patches, i)
             {
-                nPatchFaces[patchi]++;
-            }
-        }
-    }
-
-    patchFaces_.setSize(patches.size());
-    forAll(patchFaces_, patchi)
-    {
-        patchFaces_[patchi].setSize(nPatchFaces[patchi]);
-    }
-    nPatchFaces = 0;
-
-    forAll(patches, patchi)
-    {
-        const polyPatch& pp = patches[patchi];
-
-        forAll(pp, patchFacei)
-        {
-            const label facei = pp.start() + patchFacei;
-
-            if (faceInMRF[facei])
-            {
-                patchFaces_[patchi][nPatchFaces[patchi]++] = patchFacei;
-            }
-        }
-    }
-
-
-    if (debug)
-    {
-        faceSet internalFaces(mesh_, "internalFaces", internalFaces_);
-
-        Pout<< "Writing " << internalFaces.size()
-            << " internal faces in MRF zone to faceSet "
-            << internalFaces.name() << endl;
-
-        internalFaces.write();
-
-        faceSet patchFaces(mesh_, "patchFaces", 100);
-        forAll(patchFaces_, patchi)
-        {
-            forAll(patchFaces_[patchi], i)
-            {
-                const label patchFacei = patchFaces_[patchi][i];
-                patchFaces.insert(patches[patchi].start()+patchFacei);
+                patchFaces_[patches[i]][patchNFaces[patches[i]] ++] =
+                    patchFaces[i];
             }
         }
 
-        Pout<< "Writing " << patchFaces.size()
-            << " faces in MRF zone with special handling to faceSet "
-            << patchFaces.name() << endl;
-
-        patchFaces.write();
+        forAll(fvbMesh, patchi)
+        {
+            patchFaces_[patchi].setSize(patchNFaces[patchi]);
+        }
     }
 }
 
