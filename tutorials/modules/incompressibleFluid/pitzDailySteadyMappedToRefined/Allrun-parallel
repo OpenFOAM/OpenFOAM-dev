@@ -1,0 +1,35 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run and clean functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+# Copy the source case
+isTest "$@" && path=.. || path=$FOAM_TUTORIALS/modules/incompressibleFluid
+cp -r $path/pitzDailySteady/constant .
+cp -r $path/pitzDailySteady/system/* system
+cp -r $path/pitzDailySteady .
+
+# Run the source case in parallel
+(
+    cd pitzDailySteady
+    isTest "$@" && cleanCase
+    cp ../system/decomposeParDict system
+    runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/pitzDaily
+    runApplication decomposePar
+    runParallel foamRun
+)
+
+# Mesh
+./Allmesh
+runApplication decomposePar
+
+# Map from the source case into this case and run
+runParallel mapFieldsPar pitzDailySteady -consistent -sourceTime latestTime
+runParallel foamRun
+
+# Reconstruct, including the values mapped to the zero directory
+runApplication reconstructPar -withZero
+
+#------------------------------------------------------------------------------

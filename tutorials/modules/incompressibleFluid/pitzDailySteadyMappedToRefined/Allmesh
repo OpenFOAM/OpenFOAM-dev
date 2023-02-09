@@ -1,0 +1,30 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Get the standard mesh dictionary
+cp -f $FOAM_TUTORIALS/resources/blockMesh/pitzDaily system
+
+# Decrease the mesh spacings by a factor
+factor=5/4
+for nX in 18 180 25
+do
+    for nY in 27 30
+    do
+        nXYZ0="($nX $nY 1)"
+        nXYZ1="($(echo $nX*$factor | bc) $(echo $nY*$factor | bc) 1)"
+        sed -i "s/$nXYZ0/$nXYZ1/g" system/blockMeshDict
+    done
+done
+
+# Create a slightly inconsistent geometry, with some cells and patch faces
+# falling outside the source case. This tests the stabilisation of the
+# mesh-to-mesh interpolations.
+sed -i 's/(0 0 \(.*\))/(-1.2 0 \1)/g' system/blockMeshDict
+
+# Mesh
+runApplication blockMesh
+
+#------------------------------------------------------------------------------

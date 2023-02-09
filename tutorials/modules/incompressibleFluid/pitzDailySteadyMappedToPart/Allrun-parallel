@@ -1,0 +1,46 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run and clean functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+# Copy the source case
+isTest "$@" && path=.. || path=$FOAM_TUTORIALS/modules/incompressibleFluid
+cp -r $path/pitzDailySteady/constant .
+cp -r $path/pitzDailySteady/system/controlDict system
+cp -r $path/pitzDailySteady/system/fv* system
+cp -r $path/pitzDailySteady .
+
+# Run the source case in parallel
+(
+    cd pitzDailySteady
+    isTest "$@" && cleanCase
+    cp ../system/decomposeParDict system
+    runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/pitzDaily
+    runApplication decomposePar
+    runParallel foamRun
+)
+
+# Mesh
+runApplication blockMesh
+runApplication decomposePar
+
+# Map from the source case into this case and run in parallel
+#
+# !!! Smooth interpolative mapping from a coarse to a fine case is not
+# available within mapFieldsPar. All current options create fields with step
+# changes at the boundaries between coarse source cells. This poor
+# initialisation results in a large transient at the start of the part
+# simulation. We need a lot of under-relaxation to overcome this. In future, it
+# is desired to introduce smooth interpolative mapping, which should resolve
+# this issue and the need for additional under-relaxation.
+#
+runParallel mapFieldsPar pitzDailySteady -sourceTime latestTime -fields "(epsilon k nut p U)"
+runApplication foamDictionary system/fvSolution -entry relaxationFactors/equations -set '{ ".*" 0.1; }'
+runParallel foamRun
+
+# Reconstruct, including the values mapped to the zero directory
+runApplication reconstructPar -withZero
+
+#------------------------------------------------------------------------------
