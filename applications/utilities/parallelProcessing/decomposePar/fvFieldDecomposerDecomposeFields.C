@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::tmp<Foam::Field<Type>> Foam::fvFieldDecomposer::mapCellToFace
             [
                 addressing[i] > 0
               ? neighbour[addressing[i] - 1]
-              : owner[- addressing[i] + 1]
+              : owner[- addressing[i] - 1]
             ];
     }
 
