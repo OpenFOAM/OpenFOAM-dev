@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,6 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 #include "fvPatchDistWave.H"
-#include "FvWallInfoData.H"
 #include "emptyFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -103,7 +102,7 @@ bool Foam::patchDistMethods::meshWave::correct
     y = dimensionedScalar(dimLength, great);
 
     const label nUnset =
-        fvPatchDistWave::calculateAndCorrect<FvWallInfoVector>
+        fvPatchDistWave::calculateAndCorrect
         (
             mesh_,
             patchIDs_,

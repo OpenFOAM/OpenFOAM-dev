@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,8 @@ SourceFiles
 #include "volFields.H"
 #include "wallPoint.H"
 #include "wallFace.H"
+#include "WallLocationData.H"
+#include "FvWallInfo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,7 +68,7 @@ List<labelPair> getChangedPatchAndFaces
 //  calculate/correct/calculateAndCorrect functions below.
 template
 <
-    class WallInfo,
+    class FvWallInfoType,
     class TrackingData,
     template<class> class PatchField,
     class GeoMesh,
@@ -114,10 +116,12 @@ label calculateAndCorrect
     GeometricField<scalar, PatchField, GeoMesh>& distance
 );
 
-//- Calculate distance and additional data from patches
+//- Calculate distance and additional data from patches, using an
+//  arbitrary wall location wave class
 template
 <
-    template<class> class WallInfoData,
+    template<class> class WallLocation,
+    class DataType,
     template<class> class PatchField,
     class GeoMesh,
     class TrackingData = int
@@ -128,17 +132,16 @@ label calculate
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField
-        <typename WallInfoData<wallPoint>::dataType, PatchField, GeoMesh>&
-        data,
-    TrackingData& td =
-        FvFaceCellWave<WallInfoData<wallPoint>>::defaultTrackingData_
+    GeometricField<DataType, PatchField, GeoMesh>& data,
+    TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
 );
 
-//- Correct distance and additional data from patches
+//- Correct distance and additional data from patches, using an
+//  arbitrary wall location wave class
 template
 <
-    template<class> class WallInfoData,
+    template<class> class WallLocation,
+    class DataType,
     template<class> class PatchField,
     class GeoMesh,
     class TrackingData = int
@@ -150,17 +153,16 @@ void correct
     const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField
-        <typename WallInfoData<wallPoint>::dataType, PatchField, GeoMesh>&
-        data,
-    TrackingData& td =
-        FvFaceCellWave<WallInfoData<wallPoint>>::defaultTrackingData_
+    GeometricField<DataType, PatchField, GeoMesh>& data,
+    TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
 );
 
-//- Calculate and correct distance and additional data from patches
+//- Calculate and correct distance and additional data from patches, using an
+//  arbitrary wall location wave class
 template
 <
-    template<class> class WallInfoData,
+    template<class> class WallLocation,
+    class DataType,
     template<class> class PatchField,
     class GeoMesh,
     class TrackingData = int
@@ -172,11 +174,64 @@ label calculateAndCorrect
     const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField
-        <typename WallInfoData<wallPoint>::dataType, PatchField, GeoMesh>&
-        data,
-    TrackingData& td =
-        FvFaceCellWave<WallInfoData<wallPoint>>::defaultTrackingData_
+    GeometricField<DataType, PatchField, GeoMesh>& data,
+    TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
+);
+
+//- Calculate distance and additional data from patches
+template
+<
+    class DataType,
+    template<class> class PatchField,
+    class GeoMesh,
+    class TrackingData = int
+>
+label calculate
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
+    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    GeometricField<DataType, PatchField, GeoMesh>& data,
+    TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
+);
+
+//- Correct distance and additional data from patches
+template
+<
+    class DataType,
+    template<class> class PatchField,
+    class GeoMesh,
+    class TrackingData = int
+>
+void correct
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
+    const label nCorrections,
+    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    GeometricField<DataType, PatchField, GeoMesh>& data,
+    TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
+);
+
+//- Calculate and correct distance and additional data from patches
+template
+<
+    class DataType,
+    template<class> class PatchField,
+    class GeoMesh,
+    class TrackingData = int
+>
+label calculateAndCorrect
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
+    const label nCorrections,
+    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    GeometricField<DataType, PatchField, GeoMesh>& data,
+    TrackingData& td = FvFaceCellWave<nil>::defaultTrackingData_
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

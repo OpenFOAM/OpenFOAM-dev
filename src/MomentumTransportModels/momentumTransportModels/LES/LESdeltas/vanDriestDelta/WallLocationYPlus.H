@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::FvWallInfoYPlus
+    Foam::WallLocationYPlus
 
 Description
     Holds information (coordinate and yStar) regarding nearest wall point.
@@ -33,58 +33,60 @@ Description
     yStar to 1.
 
 SourceFiles
-    FvWallInfoYPlusI.H
+    WallLocationYPlusI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef FvWallInfoYPlus_H
-#define FvWallInfoYPlus_H
+#ifndef WallLocationYPlus_H
+#define WallLocationYPlus_H
 
-#include "FvWallInfoData.H"
+#include "WallLocationData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+// Forward declaration of classes
+class transformer;
+
 /*---------------------------------------------------------------------------*\
-                       Class FvWallInfoYPlusBase Declaration
+                          Class WallLocationYPlus Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class WallInfo, class Derived>
-class FvWallInfoYPlusBase
+template<class WallLocation>
+class WallLocationYPlus
 :
-    public FvWallInfoDataBase<WallInfo, scalar, Derived>
+    public WallLocationData<WallLocation, scalar>
 {
 public:
 
-    //- Class used to pass additional data in
-    class trackData
-    {
-    public:
+    // Public Classes
 
-        //- Cut off distance
-        scalar yPlusCutOff;
-    };
+        //- Class used to pass additional data in
+        class trackData
+        {
+        public:
+
+            //- Cut off distance
+            scalar yPlusCutOff;
+        };
 
 
 protected:
 
-    friend class FvWallInfoBase<WallInfo, Derived>;
-
-
     // Protected Member Functions
 
         //- Evaluate distance to point. Update distSqr, origin from whomever
-        //  is nearer pt. Return true if w2 is closer to point,
-        //  false otherwise.
-        template<class TrackingData>
+        //  is nearer pt. Return true if w2 is closer to point, false
+        //  otherwise.
+        template<class TrackingYPlus>
         inline bool update
         (
-            const point& pt,
-            const FvWallInfoYPlusBase<WallInfo, Derived>& w2,
+            const point&,
+            const WallLocationYPlus<WallLocation>& w2,
             const scalar tol,
-            TrackingData& td
+            TrackingYPlus& td
         );
 
 
@@ -93,28 +95,25 @@ public:
     // Constructors
 
         //- Construct null
-        inline FvWallInfoYPlusBase();
+        inline WallLocationYPlus();
 
         //- Inherit constructors
-        using FvWallInfoDataBase<WallInfo, scalar, Derived>::FvWallInfoDataBase;
+        using WallLocationData<WallLocation, scalar>::WallLocationData;
 };
 
 
-/*---------------------------------------------------------------------------*\
-                       Class FvWallInfoYPlus Declaration
-\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class WallInfo>
-class FvWallInfoYPlus
-:
-    public FvWallInfoYPlusBase<WallInfo, FvWallInfoYPlus<WallInfo>>
+class wallPoint;
+
+template<class WallLocation>
+class FvWallInfo;
+
+template<>
+inline bool contiguous<FvWallInfo<WallLocationYPlus<wallPoint>>>()
 {
-    public:
-
-        using
-            FvWallInfoYPlusBase<WallInfo, FvWallInfoYPlus<WallInfo>>::
-            FvWallInfoYPlusBase;
-};
+    return true;
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -123,7 +122,7 @@ class FvWallInfoYPlus
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "FvWallInfoYPlusI.H"
+#include "WallLocationYPlusI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

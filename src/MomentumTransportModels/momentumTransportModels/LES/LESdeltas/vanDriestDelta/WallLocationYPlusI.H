@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,34 +23,29 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "FvWallInfoYPlus.H"
+#include "WallLocationYPlus.H"
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
-template<class WallInfo, class Derived>
-template<class TrackingData>
-inline bool Foam::FvWallInfoYPlusBase<WallInfo, Derived>::update
+template<class WallLocation>
+template<class TrackingYPlus>
+inline bool Foam::WallLocationYPlus<WallLocation>::update
 (
     const point& pt,
-    const FvWallInfoYPlusBase<WallInfo, Derived>& w2,
+    const WallLocationYPlus<WallLocation>& w2,
     const scalar tol,
-    TrackingData& td
+    TrackingYPlus& td
 )
 {
-    FvWallInfoYPlusBase<WallInfo, Derived> copy(*this);
+    WallLocationYPlus<WallLocation> copy(*this);
 
     bool result =
-        FvWallInfoDataBase<WallInfo, scalar, Derived>::update(pt, w2, tol, td);
+        WallLocationData<WallLocation, scalar>::update(pt, w2, tol, td);
 
-    if (result)
+    if (result && sqrt(this->distSqr())/w2.data() >= td.yPlusCutOff)
     {
-        const scalar yPlus = sqrt(this->distSqr())/w2.data();
-
-        if (yPlus >= td.yPlusCutOff)
-        {
-            *this = copy;
-            result = false;
-        }
+        *this = copy;
+        result = false;
     }
 
     return result;
@@ -59,10 +54,10 @@ inline bool Foam::FvWallInfoYPlusBase<WallInfo, Derived>::update
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class WallInfo, class Derived>
-inline Foam::FvWallInfoYPlusBase<WallInfo, Derived>::FvWallInfoYPlusBase()
+template<class WallLocation>
+inline Foam::WallLocationYPlus<WallLocation>::WallLocationYPlus()
 :
-    FvWallInfoDataBase<WallInfo, scalar, Derived>()
+    WallLocationData<WallLocation, scalar>()
 {
     // Important: The value of yStar where the meshWave does not come.
     this->data() = 1.0;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "patchDistWave.H"
 #include "FaceCellWave.H"
 #include "wallPoint.H"
+#include "WallInfo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -72,18 +73,18 @@ Foam::label Foam::patchDistWave::wave
 )
 {
     // Initialise changedFacesInfo to face centres on patches
-    List<wallPoint> changedFacesInfo(changedFaces.size());
+    List<WallInfo<wallPoint>> changedFacesInfo(changedFaces.size());
     forAll(changedFaces, changedFacei)
     {
         const label facei = changedFaces[changedFacei];
 
         changedFacesInfo[changedFacei] =
-            wallPoint(mesh.faceCentres()[facei], scalar(0));
+            WallInfo<wallPoint>(mesh.faceCentres()[facei], scalar(0));
     }
 
     // Do calculate patch distance by 'growing' from faces.
-    List<wallPoint> faceInfo(mesh.nFaces()), cellInfo(mesh.nCells());
-    FaceCellWave<wallPoint> wave
+    List<WallInfo<wallPoint>> faceInfo(mesh.nFaces()), cellInfo(mesh.nCells());
+    FaceCellWave<WallInfo<wallPoint>> wave
     (
         mesh,
         changedFaces,

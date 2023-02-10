@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::FvWallInfo
+    Foam::WallInfo
 
 Description
     Holds information regarding nearest wall point. Used in wall distance
     calculation.
 
 SourceFiles
-    FvWallInfoI.H
+    WallInfoI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef FvWallInfo_H
-#define FvWallInfo_H
+#ifndef WallInfo_H
+#define WallInfo_H
 
 #include "fieldTypes.H"
-#include "labelPair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,16 +44,16 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class fvPatch;
-class fvMesh;
+class polyPatch;
+class polyMesh;
 class transformer;
 
 /*---------------------------------------------------------------------------*\
-                          Class FvWallInfo Declaration
+                          Class WallInfo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class WallLocation>
-class FvWallInfo
+class WallInfo
 :
     public WallLocation
 {
@@ -68,14 +67,14 @@ public:
 
     // Member Functions
 
-        // Needed by FvFaceCellWave
+        // Needed by FaceCellWave
 
             //- Check for identical geometrical data. Used for cyclics checking.
             template<class TrackingData>
             inline bool sameGeometry
             (
-                const fvMesh& mesh,
-                const FvWallInfo<WallLocation>& w2,
+                const polyMesh& mesh,
+                const WallInfo<WallLocation>& w2,
                 const scalar tol,
                 TrackingData& td
             ) const;
@@ -84,7 +83,7 @@ public:
             template<class TrackingData>
             inline void transform
             (
-                const fvPatch& patch,
+                const polyPatch& patch,
                 const label patchFacei,
                 const transformer& transform,
                 TrackingData& td
@@ -94,10 +93,10 @@ public:
             template<class TrackingData>
             inline bool updateCell
             (
-                const fvMesh&,
+                const polyMesh&,
                 const label thisCelli,
-                const labelPair& neighbourPatchAndFacei,
-                const FvWallInfo<WallLocation>& neighbourInfo,
+                const label neighbourFacei,
+                const WallInfo<WallLocation>& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
@@ -106,10 +105,10 @@ public:
             template<class TrackingData>
             inline bool updateFace
             (
-                const fvMesh&,
-                const labelPair& thisPatchAndFacei,
+                const polyMesh&,
+                const label thisFacei,
                 const label neighbourCelli,
-                const FvWallInfo<WallLocation>& neighbourInfo,
+                const WallInfo<WallLocation>& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
@@ -118,9 +117,9 @@ public:
             template<class TrackingData>
             inline bool updateFace
             (
-                const fvMesh&,
-                const labelPair& thisPatchAndFacei,
-                const FvWallInfo<WallLocation>& neighbourInfo,
+                const polyMesh&,
+                const label thisFacei,
+                const WallInfo<WallLocation>& neighbourInfo,
                 const scalar tol,
                 TrackingData& td
             );
@@ -132,7 +131,7 @@ public:
 class wallPoint;
 
 template<>
-inline bool contiguous<FvWallInfo<wallPoint>>()
+inline bool contiguous<WallInfo<wallPoint>>()
 {
     return true;
 }
@@ -143,18 +142,18 @@ inline bool contiguous<FvWallInfo<wallPoint>>()
 template<class WallLocation, class Type>
 class WallLocationData;
 
-#define DefineContiguousFvWallLocationDataType(Type, nullArg)                 \
+#define DefineContiguousWallLocationDataType(Type, nullArg)                   \
     template<>                                                                \
-    inline bool contiguous<FvWallInfo<WallLocationData<wallPoint, Type>>>()   \
+    inline bool contiguous<WallInfo<WallLocationData<wallPoint, Type>>>()     \
     {                                                                         \
         return true;                                                          \
     }
 
-DefineContiguousFvWallLocationDataType(bool, );
-DefineContiguousFvWallLocationDataType(label, );
-FOR_ALL_FIELD_TYPES(DefineContiguousFvWallLocationDataType);
+DefineContiguousWallLocationDataType(bool, );
+DefineContiguousWallLocationDataType(label, );
+FOR_ALL_FIELD_TYPES(DefineContiguousWallLocationDataType);
 
-#undef DefineContiguousFvWallLocationDataType
+#undef DefineContiguousWallLocationDataType
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -163,7 +162,7 @@ FOR_ALL_FIELD_TYPES(DefineContiguousFvWallLocationDataType);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "FvWallInfoI.H"
+#include "WallInfoI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

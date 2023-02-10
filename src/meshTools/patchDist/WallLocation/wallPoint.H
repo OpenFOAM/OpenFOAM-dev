@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,24 +45,18 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class polyPatch;
-class polyMesh;
 class transformer;
 
 // Forward declaration of friend functions and operators
-template<class Derived>
-class WallPointBase;
-template<class Derived>
-Ostream& operator<<(Ostream&, const WallPointBase<Derived>&);
-template<class Derived>
-Istream& operator>>(Istream&, WallPointBase<Derived>&);
+class wallPoint;
+Ostream& operator<<(Ostream&, const wallPoint&);
+Istream& operator>>(Istream&, wallPoint&);
 
 /*---------------------------------------------------------------------------*\
-                          Class WallPointBase Declaration
+                          Class wallPoint Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Derived>
-class WallPointBase
+class wallPoint
 {
     // Private Data
 
@@ -78,13 +72,13 @@ protected:
     // Protected Member Functions
 
         //- Evaluate distance to point. Update distSqr, origin from whomever
-        //  is nearer pt. Return true if w2 is closer to point,
-        //  false otherwise.
+        //  is nearer pt. Return true if w2 is closer to point, false
+        //  otherwise.
         template<class TrackingData>
         inline bool update
         (
             const point&,
-            const WallPointBase<Derived>& w2,
+            const wallPoint& w2,
             const scalar tol,
             TrackingData& td
         );
@@ -95,13 +89,13 @@ public:
     // Constructors
 
         //- Construct null
-        inline WallPointBase();
+        inline wallPoint();
 
         //- Construct from origin, distance
-        inline WallPointBase(const point& origin, const scalar distSqr);
+        inline wallPoint(const point& origin, const scalar distSqr);
 
         //- Construct from face, distance
-        inline WallPointBase
+        inline wallPoint
         (
             const face& f,
             const pointField& ps,
@@ -137,8 +131,7 @@ public:
             template<class TrackingData>
             inline bool sameGeometry
             (
-                const polyMesh&,
-                const WallPointBase<Derived>&,
+                const wallPoint&,
                 const scalar,
                 TrackingData& td
             ) const;
@@ -147,44 +140,7 @@ public:
             template<class TrackingData>
             inline void transform
             (
-                const polyPatch& patch,
-                const label patchFacei,
                 const transformer& transform,
-                TrackingData& td
-            );
-
-            //- Influence of neighbouring face.
-            template<class TrackingData>
-            inline bool updateCell
-            (
-                const polyMesh&,
-                const label thisCelli,
-                const label neighbourFacei,
-                const WallPointBase<Derived>& neighbourInfo,
-                const scalar tol,
-                TrackingData& td
-            );
-
-            //- Influence of neighbouring cell.
-            template<class TrackingData>
-            inline bool updateFace
-            (
-                const polyMesh&,
-                const label thisFacei,
-                const label neighbourCelli,
-                const WallPointBase<Derived>& neighbourInfo,
-                const scalar tol,
-                TrackingData& td
-            );
-
-            //- Influence of different value on same face.
-            template<class TrackingData>
-            inline bool updateFace
-            (
-                const polyMesh&,
-                const label thisFacei,
-                const WallPointBase<Derived>& neighbourInfo,
-                const scalar tol,
                 TrackingData& td
             );
 
@@ -192,55 +148,22 @@ public:
             template<class TrackingData>
             inline bool equal
             (
-                const WallPointBase<Derived>&,
+                const wallPoint&,
                 TrackingData& td
             ) const;
 
 
     // Member Operators
 
-        inline bool operator==(const WallPointBase<Derived>&) const;
-        inline bool operator!=(const WallPointBase<Derived>&) const;
+        inline bool operator==(const wallPoint&) const;
+        inline bool operator!=(const wallPoint&) const;
 
 
     // IOstream Operators
 
-        friend Ostream& operator<< <Derived>
-        (
-            Ostream&,
-            const WallPointBase<Derived>&
-        );
-
-        friend Istream& operator>> <Derived>
-        (
-            Istream&,
-            WallPointBase<Derived>&
-        );
+        inline friend Ostream& operator<<(Ostream&, const wallPoint&);
+        inline friend Istream& operator>>(Istream&, wallPoint&);
 };
-
-
-/*---------------------------------------------------------------------------*\
-                          Class wallPoint Declaration
-\*---------------------------------------------------------------------------*/
-
-class wallPoint
-:
-    public WallPointBase<wallPoint>
-{
-    public:
-
-        using WallPointBase<wallPoint>::WallPointBase;
-
-        template<class Derived> using type = WallPointBase<Derived>;
-};
-
-
-//- Data associated with wallPoint type are contiguous
-template<>
-inline bool contiguous<wallPoint>()
-{
-    return true;
-}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

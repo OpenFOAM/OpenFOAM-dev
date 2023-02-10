@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "vanDriestDelta.H"
 #include "wallFvPatch.H"
 #include "fvPatchDistWave.H"
-#include "FvWallInfoYPlus.H"
+#include "WallLocationYPlus.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -84,10 +84,10 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
         volScalarField::New("y", mesh, dimensionedScalar(dimLength, great))
     );
 
-    FvWallInfoYPlus<wallPoint>::trackData td;
+    WallLocationYPlus<wallPoint>::trackData td;
     td.yPlusCutOff = yPlusCutOff_;
 
-    fvPatchDistWave::calculateAndCorrect<FvWallInfoYPlus>
+    fvPatchDistWave::calculateAndCorrect<WallLocationYPlus>
     (
         mesh,
         mesh.boundaryMesh().findPatchIDs<wallPolyPatch>(),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,24 +45,18 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class polyPatch;
-class polyMesh;
 class transformer;
 
 // Forward declaration of friend functions and operators
-template<class Derived>
-class WallFaceBase;
-template<class Derived>
-Ostream& operator<<(Ostream&, const WallFaceBase<Derived>&);
-template<class Derived>
-Istream& operator>>(Istream&, WallFaceBase<Derived>&);
+class wallFace;
+Ostream& operator<<(Ostream&, const wallFace&);
+Istream& operator>>(Istream&, wallFace&);
 
 /*---------------------------------------------------------------------------*\
-                          Class WallFaceBase Declaration
+                          Class wallFace Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Derived>
-class WallFaceBase
+class wallFace
 {
     // Private Data
 
@@ -77,12 +71,14 @@ protected:
 
     // Protected Member Functions
 
-        //- ...
+        //- Evaluate distance to point. Update distSqr, origin from whomever
+        //  is nearer pt. Return true if w2 is closer to point, false
+        //  otherwise.
         template<class TrackingData>
         inline bool update
         (
             const point& pt,
-            const WallFaceBase<Derived>& w2,
+            const wallFace& w2,
             const scalar tol,
             TrackingData& td
         );
@@ -93,10 +89,10 @@ public:
     // Constructors
 
         //- Construct null
-        inline WallFaceBase();
+        inline wallFace();
 
         //- Construct from face, distance
-        inline WallFaceBase
+        inline wallFace
         (
             const face& f,
             const pointField& points,
@@ -104,7 +100,7 @@ public:
         );
 
         //- Construct from face, distance
-        inline WallFaceBase
+        inline wallFace
         (
             const face& f,
             const pointField& points,
@@ -131,7 +127,7 @@ public:
 
         // Needed by FaceCellWave
 
-            //- Check whether the WallFaceBase has been changed at all or still
+            //- Check whether the wallFace has been changed at all or still
             //  contains original (invalid) value.
             template<class TrackingData>
             inline bool valid(TrackingData& td) const;
@@ -141,8 +137,7 @@ public:
             template<class TrackingData>
             inline bool sameGeometry
             (
-                const polyMesh&,
-                const WallFaceBase<Derived>&,
+                const wallFace&,
                 const scalar,
                 TrackingData& td
             ) const;
@@ -151,44 +146,7 @@ public:
             template<class TrackingData>
             inline void transform
             (
-                const polyPatch& patch,
-                const label patchFacei,
                 const transformer& transform,
-                TrackingData& td
-            );
-
-            //- Influence of neighbouring face
-            template<class TrackingData>
-            inline bool updateCell
-            (
-                const polyMesh&,
-                const label thisCelli,
-                const label neighbourFacei,
-                const WallFaceBase<Derived>& neighbourInfo,
-                const scalar tol,
-                TrackingData& td
-            );
-
-            //- Influence of neighbouring cell
-            template<class TrackingData>
-            inline bool updateFace
-            (
-                const polyMesh&,
-                const label thisFacei,
-                const label neighbourCelli,
-                const WallFaceBase<Derived>& neighbourInfo,
-                const scalar tol,
-                TrackingData& td
-            );
-
-            //- Influence of different value on same face
-            template<class TrackingData>
-            inline bool updateFace
-            (
-                const polyMesh&,
-                const label thisFacei,
-                const WallFaceBase<Derived>& neighbourInfo,
-                const scalar tol,
                 TrackingData& td
             );
 
@@ -196,45 +154,21 @@ public:
             template<class TrackingData>
             inline bool equal
             (
-                const WallFaceBase<Derived>&,
+                const wallFace&,
                 TrackingData& td
             ) const;
 
 
     // Member Operators
 
-        inline bool operator==(const WallFaceBase<Derived>&) const;
-        inline bool operator!=(const WallFaceBase<Derived>&) const;
+        inline bool operator==(const wallFace&) const;
+        inline bool operator!=(const wallFace&) const;
 
 
     // IOstream Operators
 
-        friend Ostream& operator<< <Derived>
-        (
-            Ostream&,
-            const WallFaceBase<Derived>&
-        );
-
-        friend Istream& operator>> <Derived>
-        (
-            Istream&,
-            WallFaceBase<Derived>&
-        );
-};
-
-/*---------------------------------------------------------------------------*\
-                          Class wallFace Declaration
-\*---------------------------------------------------------------------------*/
-
-class wallFace
-:
-    public WallFaceBase<wallFace>
-{
-    public:
-
-        using WallFaceBase<wallFace>::WallFaceBase;
-
-        template<class Derived> using type = WallFaceBase<Derived>;
+        inline friend Ostream& operator<<(Ostream&, const wallFace&);
+        inline friend Istream& operator>>(Istream&, wallFace&);
 };
 
 

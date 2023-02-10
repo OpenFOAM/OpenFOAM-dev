@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,21 +33,21 @@ namespace Foam
 namespace fvPatchDistWave
 {
 
-template<class WallInfo, class TrackingData>
-const List<WallInfo>& getInternalInfo
+template<class FvWallInfoType, class TrackingData>
+const List<FvWallInfoType>& getInternalInfo
 (
     const volScalarField& distance,
-    FvFaceCellWave<WallInfo, TrackingData>& wave
+    FvFaceCellWave<FvWallInfoType, TrackingData>& wave
 )
 {
     return wave.cellInfo();
 }
 
-template<class WallInfo, class TrackingData>
-const List<WallInfo>& getInternalInfo
+template<class FvWallInfoType, class TrackingData>
+const List<FvWallInfoType>& getInternalInfo
 (
     const surfaceScalarField& distance,
-    FvFaceCellWave<WallInfo, TrackingData>& wave
+    FvFaceCellWave<FvWallInfoType, TrackingData>& wave
 )
 {
     return wave.internalFaceInfo();
@@ -61,7 +61,7 @@ const List<WallInfo>& getInternalInfo
 
 template
 <
-    class WallInfo,
+    class FvWallInfoType,
     class TrackingData,
     template<class> class PatchField,
     class GeoMesh,
@@ -86,7 +86,7 @@ Foam::label Foam::fvPatchDistWave::wave
     if (!calculate && nCorrections == 0) return 0;
 
     // Initialise changedFacesInfo to face centres on patches
-    List<WallInfo> changedFacesInfo(changedPatchAndFaces.size());
+    List<FvWallInfoType> changedFacesInfo(changedPatchAndFaces.size());
     forAll(changedPatchAndFaces, changedFacei)
     {
         const label patchi =
@@ -95,7 +95,7 @@ Foam::label Foam::fvPatchDistWave::wave
             changedPatchAndFaces[changedFacei].second();
 
         changedFacesInfo[changedFacei] =
-            WallInfo
+            FvWallInfoType
             (
                 data.boundaryField()[patchi][patchFacei] ...,
                 mesh.boundaryMesh()[patchi][patchFacei],
@@ -106,25 +106,25 @@ Foam::label Foam::fvPatchDistWave::wave
     }
 
     // Do calculate patch distance by 'growing' from faces.
-    List<WallInfo> internalFaceInfo(mesh.nInternalFaces());
-    List<List<WallInfo>> patchFaceInfo
+    List<FvWallInfoType> internalFaceInfo(mesh.nInternalFaces());
+    List<List<FvWallInfoType>> patchFaceInfo
     (
-        FvFaceCellWave<WallInfo, TrackingData>::template
-        sizesListList<List<List<WallInfo>>>
+        FvFaceCellWave<FvWallInfoType, TrackingData>::template
+        sizesListList<List<List<FvWallInfoType>>>
         (
-            FvFaceCellWave<WallInfo, TrackingData>::template
+            FvFaceCellWave<FvWallInfoType, TrackingData>::template
             listListSizes(mesh.boundary()),
-            WallInfo()
+            FvWallInfoType()
         )
     );
-    List<WallInfo> cellInfo(mesh.nCells());
+    List<FvWallInfoType> cellInfo(mesh.nCells());
 
     // Prevent hangs associated with generation of on-demand geometry
     mesh.C();
     mesh.Cf();
 
     // Do the wave
-    FvFaceCellWave<WallInfo, TrackingData> wave
+    FvFaceCellWave<FvWallInfoType, TrackingData> wave
     (
         mesh,
         internalFaceInfo,
@@ -148,7 +148,7 @@ Foam::label Foam::fvPatchDistWave::wave
     }
 
     // Copy distances into field
-    const List<WallInfo>& internalInfo = getInternalInfo(distance, wave);
+    const List<FvWallInfoType>& internalInfo = getInternalInfo(distance, wave);
     label nUnset = 0;
     forAll(internalInfo, internali)
     {
@@ -276,7 +276,8 @@ Foam::label Foam::fvPatchDistWave::calculateAndCorrect
 
 template
 <
-    template<class> class WallInfoData,
+    template<class> class WallLocation,
+    class DataType,
     template<class> class PatchField,
     class GeoMesh,
     class TrackingData
@@ -287,14 +288,12 @@ Foam::label Foam::fvPatchDistWave::calculate
     const labelHashSet& patchIDs,
     const scalar minFaceFraction,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField
-        <typename WallInfoData<wallPoint>::dataType, PatchField, GeoMesh>&
-        data,
+    GeometricField<DataType, PatchField, GeoMesh>& data,
     TrackingData& td
 )
 {
     return
-        wave<WallInfoData<wallPoint>, TrackingData>
+        wave<FvWallInfo<WallLocation<wallPoint>>, TrackingData>
         (
             mesh,
             getChangedPatchAndFaces(mesh, patchIDs, minFaceFraction),
@@ -308,7 +307,8 @@ Foam::label Foam::fvPatchDistWave::calculate
 
 template
 <
-    template<class> class WallInfoData,
+    template<class> class WallLocation,
+    class DataType,
     template<class> class PatchField,
     class GeoMesh,
     class TrackingData
@@ -320,13 +320,11 @@ void Foam::fvPatchDistWave::correct
     const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField
-        <typename WallInfoData<wallPoint>::dataType, PatchField, GeoMesh>&
-        data,
+    GeometricField<DataType, PatchField, GeoMesh>& data,
     TrackingData& td
 )
 {
-    wave<WallInfoData<wallFace>, TrackingData>
+    wave<FvWallInfo<WallLocation<wallFace>>, TrackingData>
     (
         mesh,
         getChangedPatchAndFaces(mesh, patchIDs, minFaceFraction),
@@ -340,7 +338,8 @@ void Foam::fvPatchDistWave::correct
 
 template
 <
-    template<class> class WallInfoData,
+    template<class> class WallLocation,
+    class DataType,
     template<class> class PatchField,
     class GeoMesh,
     class TrackingData
@@ -352,9 +351,7 @@ Foam::label Foam::fvPatchDistWave::calculateAndCorrect
     const scalar minFaceFraction,
     const label nCorrections,
     GeometricField<scalar, PatchField, GeoMesh>& distance,
-    GeometricField
-        <typename WallInfoData<wallPoint>::dataType, PatchField, GeoMesh>&
-        data,
+    GeometricField<DataType, PatchField, GeoMesh>& data,
     TrackingData& td
 )
 {
@@ -362,7 +359,7 @@ Foam::label Foam::fvPatchDistWave::calculateAndCorrect
         getChangedPatchAndFaces(mesh, patchIDs, minFaceFraction);
 
     const label nUnset =
-        wave<WallInfoData<wallPoint>, TrackingData>
+        wave<FvWallInfo<WallLocation<wallPoint>>, TrackingData>
         (
             mesh,
             changedPatchAndFaces,
@@ -372,7 +369,7 @@ Foam::label Foam::fvPatchDistWave::calculateAndCorrect
             data
         );
 
-    wave<WallInfoData<wallFace>, TrackingData>
+    wave<FvWallInfo<WallLocation<wallFace>>, TrackingData>
     (
         mesh,
         changedPatchAndFaces,
@@ -383,6 +380,112 @@ Foam::label Foam::fvPatchDistWave::calculateAndCorrect
     );
 
     return nUnset;
+}
+
+
+namespace Foam
+{
+namespace fvPatchDistWave
+{
+    template<class Type>
+    struct WallLocationDataType
+    {
+        template<class WallLocation>
+        using type = WallLocationData<WallLocation, Type>;
+    };
+}
+}
+
+
+template
+<
+    class DataType,
+    template<class> class PatchField,
+    class GeoMesh,
+    class TrackingData
+>
+Foam::label Foam::fvPatchDistWave::calculate
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
+    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    GeometricField<DataType, PatchField, GeoMesh>& data,
+    TrackingData& td
+)
+{
+    return
+        calculate<WallLocationDataType<DataType>::template type>
+        (
+            mesh,
+            getChangedPatchAndFaces(mesh, patchIDs, minFaceFraction),
+            -1,
+            distance,
+            td,
+            data
+        );
+}
+
+
+template
+<
+    class DataType,
+    template<class> class PatchField,
+    class GeoMesh,
+    class TrackingData
+>
+void Foam::fvPatchDistWave::correct
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
+    const label nCorrections,
+    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    GeometricField<DataType, PatchField, GeoMesh>& data,
+    TrackingData& td
+)
+{
+    correct<WallLocationDataType<DataType>::template type>
+    (
+        mesh,
+        getChangedPatchAndFaces(mesh, patchIDs, minFaceFraction),
+        nCorrections,
+        distance,
+        td,
+        data
+    );
+}
+
+
+template
+<
+    class DataType,
+    template<class> class PatchField,
+    class GeoMesh,
+    class TrackingData
+>
+Foam::label Foam::fvPatchDistWave::calculateAndCorrect
+(
+    const fvMesh& mesh,
+    const labelHashSet& patchIDs,
+    const scalar minFaceFraction,
+    const label nCorrections,
+    GeometricField<scalar, PatchField, GeoMesh>& distance,
+    GeometricField<DataType, PatchField, GeoMesh>& data,
+    TrackingData& td
+)
+{
+    return
+        calculateAndCorrect<WallLocationDataType<DataType>::template type>
+        (
+            mesh,
+            patchIDs,
+            minFaceFraction,
+            nCorrections,
+            distance,
+            data,
+            td
+        );
 }
 
 

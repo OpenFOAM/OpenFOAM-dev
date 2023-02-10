@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,17 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "FvWallInfo.H"
-#include "fvMesh.H"
-#include "volFields.H"
-#include "surfaceFields.H"
+#include "WallInfo.H"
+#include "polyMesh.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class WallLocation>
 template<class TrackingData>
-inline bool Foam::FvWallInfo<WallLocation>::sameGeometry
+inline bool Foam::WallInfo<WallLocation>::sameGeometry
 (
-    const fvMesh& mesh,
-    const FvWallInfo<WallLocation>& w2,
+    const polyMesh& mesh,
+    const WallInfo<WallLocation>& w2,
     const scalar tol,
     TrackingData& td
 ) const
@@ -46,9 +44,9 @@ inline bool Foam::FvWallInfo<WallLocation>::sameGeometry
 
 template<class WallLocation>
 template<class TrackingData>
-inline void Foam::FvWallInfo<WallLocation>::transform
+inline void Foam::WallInfo<WallLocation>::transform
 (
-    const fvPatch& patch,
+    const polyPatch& patch,
     const label patchFacei,
     const transformer& transform,
     TrackingData& td
@@ -60,12 +58,12 @@ inline void Foam::FvWallInfo<WallLocation>::transform
 
 template<class WallLocation>
 template<class TrackingData>
-inline bool Foam::FvWallInfo<WallLocation>::updateCell
+inline bool Foam::WallInfo<WallLocation>::updateCell
 (
-    const fvMesh& mesh,
+    const polyMesh& mesh,
     const label thisCelli,
-    const labelPair& neighbourPatchAndFacei,
-    const FvWallInfo<WallLocation>& neighbourWallInfo,
+    const label neighbourFacei,
+    const WallInfo<WallLocation>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
@@ -73,7 +71,7 @@ inline bool Foam::FvWallInfo<WallLocation>::updateCell
     return
         WallLocation::update
         (
-            mesh.C()[thisCelli],
+            mesh.cellCentres()[thisCelli],
             neighbourWallInfo,
             tol,
             td
@@ -83,25 +81,20 @@ inline bool Foam::FvWallInfo<WallLocation>::updateCell
 
 template<class WallLocation>
 template<class TrackingData>
-inline bool Foam::FvWallInfo<WallLocation>::updateFace
+inline bool Foam::WallInfo<WallLocation>::updateFace
 (
-    const fvMesh& mesh,
-    const labelPair& thisPatchAndFacei,
+    const polyMesh& mesh,
+    const label thisFacei,
     const label neighbourCelli,
-    const FvWallInfo<WallLocation>& neighbourWallInfo,
+    const WallInfo<WallLocation>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    const label thisPatchi = thisPatchAndFacei.first();
-    const label thisFacei = thisPatchAndFacei.second();
-
     return
         WallLocation::update
         (
-            thisPatchi == -1
-          ? mesh.Cf()[thisFacei]
-          : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
+            mesh.faceCentres()[thisFacei],
             neighbourWallInfo,
             tol,
             td
@@ -111,24 +104,19 @@ inline bool Foam::FvWallInfo<WallLocation>::updateFace
 
 template<class WallLocation>
 template<class TrackingData>
-inline bool Foam::FvWallInfo<WallLocation>::updateFace
+inline bool Foam::WallInfo<WallLocation>::updateFace
 (
-    const fvMesh& mesh,
-    const labelPair& thisPatchAndFacei,
-    const FvWallInfo<WallLocation>& neighbourWallInfo,
+    const polyMesh& mesh,
+    const label thisFacei,
+    const WallInfo<WallLocation>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    const label thisPatchi = thisPatchAndFacei.first();
-    const label thisFacei = thisPatchAndFacei.second();
-
     return
         WallLocation::update
         (
-            thisPatchi == -1
-          ? mesh.Cf()[thisFacei]
-          : mesh.Cf().boundaryField()[thisPatchi][thisFacei],
+            mesh.faceCentres()[thisFacei],
             neighbourWallInfo,
             tol,
             td
