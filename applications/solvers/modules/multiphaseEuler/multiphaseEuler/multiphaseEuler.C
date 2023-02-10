@@ -245,11 +245,6 @@ void Foam::solvers::multiphaseEuler::prePredictor()
     {
         fluid.predictMomentumTransport();
     }
-
-    if (pimple.thermophysics())
-    {
-        compositionPredictor();
-    }
 }
 
 

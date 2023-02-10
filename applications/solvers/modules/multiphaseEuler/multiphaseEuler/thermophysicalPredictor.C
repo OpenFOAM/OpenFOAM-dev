@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,46 +74,38 @@ void Foam::solvers::multiphaseEuler::compositionPredictor()
 
 void Foam::solvers::multiphaseEuler::energyPredictor()
 {
-    for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
+    autoPtr<phaseSystem::heatTransferTable>
+        heatTransferPtr(fluid.heatTransfer());
+
+    phaseSystem::heatTransferTable& heatTransfer = heatTransferPtr();
+
+    forAll(fluid.anisothermalPhases(), anisothermalPhasei)
     {
-        if (pimple.predictTransport())
-        {
-            fluid.predictThermophysicalTransport();
-        }
+        phaseModel& phase = fluid.anisothermalPhases()[anisothermalPhasei];
 
-        autoPtr<phaseSystem::heatTransferTable>
-            heatTransferPtr(fluid.heatTransfer());
+        const volScalarField& alpha = phase;
+        tmp<volScalarField> tRho = phase.rho();
+        const volScalarField& rho = tRho();
+        tmp<volVectorField> tU = phase.U();
+        const volVectorField& U = tU();
 
-        phaseSystem::heatTransferTable& heatTransfer = heatTransferPtr();
+        fvScalarMatrix EEqn
+        (
+            phase.heEqn()
+         ==
+           *heatTransfer[phase.name()]
+          + alpha*rho*(U&buoyancy.g)
+          + fvModels().source(alpha, rho, phase.thermoRef().he())
+        );
 
-        forAll(fluid.anisothermalPhases(), anisothermalPhasei)
-        {
-            phaseModel& phase = fluid.anisothermalPhases()[anisothermalPhasei];
-
-            const volScalarField& alpha = phase;
-            tmp<volScalarField> tRho = phase.rho();
-            const volScalarField& rho = tRho();
-            tmp<volVectorField> tU = phase.U();
-            const volVectorField& U = tU();
-
-            fvScalarMatrix EEqn
-            (
-                phase.heEqn()
-             ==
-               *heatTransfer[phase.name()]
-              + alpha*rho*(U&buoyancy.g)
-              + fvModels().source(alpha, rho, phase.thermoRef().he())
-            );
-
-            EEqn.relax();
-            fvConstraints().constrain(EEqn);
-            EEqn.solve();
-            fvConstraints().constrain(phase.thermoRef().he());
-        }
-
-        fluid.correctThermo();
-        fluid.correctContinuityError();
+        EEqn.relax();
+        fvConstraints().constrain(EEqn);
+        EEqn.solve();
+        fvConstraints().constrain(phase.thermoRef().he());
     }
+
+    fluid.correctThermo();
+    fluid.correctContinuityError();
 }
 
 
@@ -123,17 +115,22 @@ void Foam::solvers::multiphaseEuler::thermophysicalPredictor()
 {
     if (pimple.thermophysics())
     {
-        energyPredictor();
-
-        forAll(phases, phasei)
+        for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
         {
-            phaseModel& phase = phases[phasei];
+            fluid.predictThermophysicalTransport();
+            compositionPredictor();
+            energyPredictor();
 
-            Info<< phase.name() << " min/max T "
-                << min(phase.thermo().T()).value()
-                << " - "
-                << max(phase.thermo().T()).value()
-                << endl;
+            forAll(phases, phasei)
+            {
+                phaseModel& phase = phases[phasei];
+
+                Info<< phase.name() << " min/max T "
+                    << min(phase.thermo().T()).value()
+                    << " - "
+                    << max(phase.thermo().T()).value()
+                    << endl;
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,7 +136,11 @@ public:
         //- Return the heat transfer matrices
         virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 
-        //- Correct the energy transport e.g. alphat and Tf
+        //- Predict the energy transport e.g. alphat
+        //  and interface properties e.g. Tf
+        virtual void predictThermophysicalTransport();
+
+        //- Correct the energy transport e.g. alphat
         virtual void correctThermophysicalTransport();
 
         //- Correct the interface thermodynamics
