@@ -387,7 +387,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField::calcBoiling
     (
         props.rhoLiquidw
        *props.Cpw
-       *(props.Tsat - Tl)
+       *max(props.Tsat - Tl, scalar(0))
        /(props.rhoVapourw*props.L)
     );
 
