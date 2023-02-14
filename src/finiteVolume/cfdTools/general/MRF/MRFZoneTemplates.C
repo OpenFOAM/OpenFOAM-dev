@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ template<class RhoFieldType>
 void Foam::MRFZone::makeRelativeRhoFlux
 (
     const RhoFieldType& rho,
-    FieldField<fvsPatchField, scalar>& phi
+    FieldField<fvsPatchField, scalar>& phiBf
 ) const
 {
     const surfaceVectorField& Cf = mesh_.Cf();
@@ -72,14 +72,17 @@ void Foam::MRFZone::makeRelativeRhoFlux
 
     forAll(patchFaces_, patchi)
     {
-        forAll(patchFaces_[patchi], i)
+        if (!phiBf[patchi].fixesValue())
         {
-            label patchFacei = patchFaces_[patchi][i];
+            forAll(patchFaces_[patchi], i)
+            {
+                const label patchFacei = patchFaces_[patchi][i];
 
-            phi[patchi][patchFacei] -=
-                rho[patchi][patchFacei]
-              * (Omega ^ (Cf.boundaryField()[patchi][patchFacei] - origin_))
-              & Sf.boundaryField()[patchi][patchFacei];
+                phiBf[patchi][patchFacei] -=
+                    rho[patchi][patchFacei]
+                   *(Omega ^ (Cf.boundaryField()[patchi][patchFacei] - origin_))
+                  & Sf.boundaryField()[patchi][patchFacei];
+            }
         }
     }
 }
@@ -100,7 +103,7 @@ void Foam::MRFZone::makeRelativeRhoFlux
 
     forAll(patchFaces_[patchi], i)
     {
-        label patchFacei = patchFaces_[patchi][i];
+        const label patchFacei = patchFaces_[patchi][i];
 
         phi[patchFacei] -=
             rho[patchFacei]
@@ -129,22 +132,25 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
     // Internal faces
     forAll(internalFaces_, i)
     {
-        label facei = internalFaces_[i];
+        const label facei = internalFaces_[i];
         phii[facei] += rho[facei]*(Omega ^ (Cfi[facei] - origin_)) & Sfi[facei];
     }
 
-    surfaceScalarField::Boundary& phibf = phi.boundaryFieldRef();
+    surfaceScalarField::Boundary& phiBf = phi.boundaryFieldRef();
 
     forAll(patchFaces_, patchi)
     {
-        forAll(patchFaces_[patchi], i)
+        if (!phiBf[patchi].fixesValue())
         {
-            label patchFacei = patchFaces_[patchi][i];
+            forAll(patchFaces_[patchi], i)
+            {
+                const label patchFacei = patchFaces_[patchi][i];
 
-            phibf[patchi][patchFacei] +=
-                rho.boundaryField()[patchi][patchFacei]
-              * (Omega ^ (Cf.boundaryField()[patchi][patchFacei] - origin_))
-              & Sf.boundaryField()[patchi][patchFacei];
+                phiBf[patchi][patchFacei] +=
+                    rho.boundaryField()[patchi][patchFacei]
+                   *(Omega ^ (Cf.boundaryField()[patchi][patchFacei] - origin_))
+                  & Sf.boundaryField()[patchi][patchFacei];
+            }
         }
     }
 }
