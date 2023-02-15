@@ -206,13 +206,13 @@ inline bool Foam::wallFace::operator!=
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const wallFace& w)
+inline Foam::Ostream& Foam::operator<<(Ostream& os, const wallFace& w)
 {
     return os << w.points() << token::SPACE << w.distSqr();
 }
 
 
-Foam::Istream& Foam::operator>>(Istream& is, wallFace& w)
+inline Foam::Istream& Foam::operator>>(Istream& is, wallFace& w)
 {
     return is >> w.points() >> w.distSqr();
 }

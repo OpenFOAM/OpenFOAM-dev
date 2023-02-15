@@ -116,7 +116,7 @@ inline void Foam::WallLocationData<WallLocation, Type>::transform
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
 template<class WallLocation, class Type>
-Foam::Ostream& Foam::operator<<
+inline Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
     const WallLocationData<WallLocation, Type>& w
@@ -128,7 +128,7 @@ Foam::Ostream& Foam::operator<<
 
 
 template<class WallLocation, class Type>
-Foam::Istream& Foam::operator>>
+inline Foam::Istream& Foam::operator>>
 (
     Istream& is,
     WallLocationData<WallLocation, Type>& w
