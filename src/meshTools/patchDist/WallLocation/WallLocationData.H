@@ -129,12 +129,12 @@ public:
 
     // IOstream Operators
 
-        inline friend Ostream& operator<< <WallLocation, Type>
+        friend Ostream& operator<< <WallLocation, Type>
         (
             Ostream&,
             const WallLocationData<WallLocation, Type>&
         );
-        inline friend Istream& operator>> <WallLocation, Type>
+        friend Istream& operator>> <WallLocation, Type>
         (
             Istream&,
             WallLocationData<WallLocation, Type>&
