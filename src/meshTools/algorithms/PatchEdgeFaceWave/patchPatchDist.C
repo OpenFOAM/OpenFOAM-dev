@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "PatchEdgeFaceWave.H"
 #include "syncTools.H"
 #include "polyMesh.H"
-#include "patchEdgeFaceInfo.H"
+#include "patchEdgeFacePoint.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -76,12 +76,12 @@ void Foam::patchPatchDist::correct()
 
         for
         (
-            label edgeI = nbrPatch.nInternalEdges();
-            edgeI < nbrPatch.nEdges();
-            edgeI++
+            label edgei = nbrPatch.nInternalEdges();
+            edgei < nbrPatch.nEdges();
+            edgei++
         )
         {
-            const edge& e = nbrPatch.edges()[edgeI];
+            const edge& e = nbrPatch.edges()[edgei];
             const edge meshE = edge(nbrMp[e[0]], nbrMp[e[1]]);
             nbrEdges.insert(meshE, nbrPatchi);
         }
@@ -98,13 +98,13 @@ void Foam::patchPatchDist::correct()
 
 
     // Data on all edges and faces
-    List<patchEdgeFaceInfo> allEdgeInfo(patch_.nEdges());
-    List<patchEdgeFaceInfo> allFaceInfo(patch_.size());
+    List<patchEdgeFacePoint> allEdgeInfo(patch_.nEdges());
+    List<patchEdgeFacePoint> allFaceInfo(patch_.size());
 
     // Initial seed
     label nBndEdges = patch_.nEdges() - patch_.nInternalEdges();
     DynamicList<label> initialEdges(2*nBndEdges);
-    DynamicList<patchEdgeFaceInfo> initialEdgesInfo(2*nBndEdges);
+    DynamicList<patchEdgeFacePoint> initialEdgesInfo(2*nBndEdges);
 
 
     // Seed all my edges that are also nbrEdges
@@ -113,20 +113,20 @@ void Foam::patchPatchDist::correct()
 
     for
     (
-        label edgeI = patch_.nInternalEdges();
-        edgeI < patch_.nEdges();
-        edgeI++
+        label edgei = patch_.nInternalEdges();
+        edgei < patch_.nEdges();
+        edgei++
     )
     {
-        const edge& e = patch_.edges()[edgeI];
+        const edge& e = patch_.edges()[edgei];
         const edge meshE = edge(mp[e[0]], mp[e[1]]);
         EdgeMap<label>::const_iterator edgeFnd = nbrEdges.find(meshE);
         if (edgeFnd != nbrEdges.end())
         {
-            initialEdges.append(edgeI);
+            initialEdges.append(edgei);
             initialEdgesInfo.append
             (
-                patchEdgeFaceInfo
+                patchEdgeFacePoint
                 (
                     e.centre(patch_.localPoints()),
                     0.0
@@ -137,11 +137,7 @@ void Foam::patchPatchDist::correct()
 
 
     // Walk
-    PatchEdgeFaceWave
-    <
-        primitivePatch,
-        patchEdgeFaceInfo
-    > calc
+    PatchEdgeFaceWave<primitivePatch, patchEdgeFacePoint> calc
     (
         patch_.boundaryMesh().mesh(),
         patch_,

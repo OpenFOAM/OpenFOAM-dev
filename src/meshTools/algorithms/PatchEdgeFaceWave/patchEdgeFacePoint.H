@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,24 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::patchEdgeFaceRegions
+    Foam::patchEdgeFacePoint
 
 Description
-    Transport of regions for use in PatchEdgeFaceWave.
-    Set element to -1 to denote blocked.
+    Transport of nearest point location for use in PatchEdgeFaceWave.
 
 SourceFiles
-    patchEdgeFaceRegionsI.H
+    patchEdgeFacePointI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef patchEdgeFaceRegions_H
-#define patchEdgeFaceRegions_H
+#ifndef patchEdgeFacePoint_H
+#define patchEdgeFacePoint_H
 
-#include "labelList.H"
+#include "point.H"
+#include "label.H"
 #include "scalar.H"
 #include "tensor.H"
-#include "labelPair.H"
+#include "pTraits.H"
+#include "primitivePatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,47 +48,77 @@ namespace Foam
 {
 
 // Forward declaration of classes
+
+class polyPatch;
 class polyMesh;
 
 
 // Forward declaration of friend functions and operators
 
-class patchEdgeFaceRegions;
+class patchEdgeFacePoint;
 
-Istream& operator>>(Istream&, patchEdgeFaceRegions&);
-Ostream& operator<<(Ostream&, const patchEdgeFaceRegions&);
+Istream& operator>>(Istream&, patchEdgeFacePoint&);
+Ostream& operator<<(Ostream&, const patchEdgeFacePoint&);
 
 
 /*---------------------------------------------------------------------------*\
-                    Class patchEdgeFaceRegions Declaration
+                      Class patchEdgeFacePoint Declaration
 \*---------------------------------------------------------------------------*/
 
-class patchEdgeFaceRegions
+class patchEdgeFacePoint
 {
     // Private Data
 
-        //- Region per point
-        labelList regions_;
+        //- Position of nearest wall center
+        point origin_;
+
+        //- Normal distance (squared) from point to origin
+        scalar distSqr_;
+
+
+    // Private Member Functions
+
+        //- Evaluate distance to point. Update distSqr, origin from whomever
+        //  is nearer pt. Return true if w2 is closer to point,
+        //  false otherwise.
+        template<class TrackingData>
+        inline bool update
+        (
+            const point&,
+            const patchEdgeFacePoint& w2,
+            const scalar tol,
+            TrackingData& td
+        );
+
+        //- Combine current with w2. Update distSqr, origin if w2 has smaller
+        //  quantities and returns true.
+        template<class TrackingData>
+        inline bool update
+        (
+            const patchEdgeFacePoint& w2,
+            const scalar tol,
+            TrackingData& td
+        );
+
 
 public:
 
     // Constructors
 
         //- Construct null
-        inline patchEdgeFaceRegions();
+        inline patchEdgeFacePoint();
 
-        //- Construct from regions
-        inline patchEdgeFaceRegions(const labelList&);
-
-        //- Construct from regions (on edge)
-        inline patchEdgeFaceRegions(const labelPair&);
+        //- Construct from origin, distance
+        inline patchEdgeFacePoint(const point&, const scalar);
 
 
     // Member Functions
 
         // Access
 
-            inline const labelList& regions() const;
+            inline const point& origin() const;
+
+            inline scalar distSqr() const;
 
 
         // Needed by meshWave
@@ -98,79 +129,83 @@ public:
             inline bool valid(TrackingData& td) const;
 
             //- Apply rotation matrix
-            template<class Patch, class TrackingData>
+            template<class TrackingData>
             inline void transform
             (
                 const polyMesh& mesh,
-                const Patch& patch,
+                const primitivePatch& patch,
                 const tensor& rotTensor,
                 const scalar tol,
                 TrackingData& td
             );
 
             //- Influence of face on edge
-            template<class Patch, class TrackingData>
+            template<class TrackingData>
             inline bool updateEdge
             (
                 const polyMesh& mesh,
-                const Patch& patch,
+                const primitivePatch& patch,
                 const label edgei,
                 const label facei,
-                const patchEdgeFaceRegions& faceInfo,
+                const patchEdgeFacePoint& faceInfo,
                 const scalar tol,
                 TrackingData& td
             );
 
             //- New information for edge (from e.g. coupled edge)
-            template<class Patch, class TrackingData>
+            template<class TrackingData>
             inline bool updateEdge
             (
                 const polyMesh& mesh,
-                const Patch& patch,
-                const patchEdgeFaceRegions& edgeInfo,
+                const primitivePatch& patch,
+                const patchEdgeFacePoint& edgeInfo,
                 const bool sameOrientation,
                 const scalar tol,
                 TrackingData& td
             );
 
             //- Influence of edge on face.
-            template<class Patch, class TrackingData>
+            template<class TrackingData>
             inline bool updateFace
             (
                 const polyMesh& mesh,
-                const Patch& patch,
+                const primitivePatch& patch,
                 const label facei,
                 const label edgei,
-                const patchEdgeFaceRegions& edgeInfo,
+                const patchEdgeFacePoint& edgeInfo,
                 const scalar tol,
                 TrackingData& td
             );
 
             //- Same (like operator==)
             template<class TrackingData>
-            inline bool equal(const patchEdgeFaceRegions&, TrackingData&) const;
+            inline bool equal
+            (
+                const patchEdgeFacePoint&,
+                TrackingData& td
+            ) const;
 
 
     // Member Operators
 
         // Needed for List IO
-        inline bool operator==(const patchEdgeFaceRegions&) const;
-        inline bool operator!=(const patchEdgeFaceRegions&) const;
+        inline bool operator==(const patchEdgeFacePoint&) const;
+        inline bool operator!=(const patchEdgeFacePoint&) const;
 
 
     // IOstream Operators
 
-        inline friend Ostream& operator<<
-        (
-            Ostream&,
-            const patchEdgeFaceRegions&
-        );
-        inline friend Istream& operator>>
-        (
-            Istream&,
-            patchEdgeFaceRegions&
-        );
+        inline friend Ostream& operator<<(Ostream&, const patchEdgeFacePoint&);
+        inline friend Istream& operator>>(Istream&, patchEdgeFacePoint&);
 };
+
+
+//- Data associated with patchEdgeFacePoint type are contiguous
+template<>
+inline bool contiguous<patchEdgeFacePoint>()
+{
+    return true;
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -179,7 +214,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "patchEdgeFaceRegionsI.H"
+#include "patchEdgeFacePointI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

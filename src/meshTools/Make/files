@@ -71,21 +71,10 @@ meshSearch/meshSearchMeshObject.C
 
 meshTools/meshTools.C
 
-algorithms = algorithms
-
-pWave = $(algorithms)/PointEdgeWave
-$(pWave)/PointEdgeWaveName.C
-$(pWave)/pointEdgePoint.C
-
-patchWave = $(algorithms)/PatchEdgeFaceWave
-$(patchWave)/PatchEdgeFaceWaveName.C
-$(patchWave)/patchEdgeFaceInfo.C
-$(patchWave)/patchPatchDist.C
-$(patchWave)/patchEdgeFaceRegion.C
-$(patchWave)/patchEdgeFaceRegions.C
-
-meshWave = $(algorithms)/FaceCellWave
-$(meshWave)/FaceCellWaveName.C
+algorithms/FaceCellWave/FaceCellWaveName.C
+algorithms/PointEdgeWave/PointEdgeWaveName.C
+algorithms/PatchEdgeFaceWave/PatchEdgeFaceWaveName.C
+algorithms/PatchEdgeFaceWave/patchPatchDist.C
 
 regionSplit/regionSplit.C
 regionSplit/localPointRegion.C

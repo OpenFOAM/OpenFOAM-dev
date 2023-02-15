@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,12 +26,10 @@ Class
 
 Description
     Transport of region for use in PatchEdgeFaceWave.
-
     Set element to -2 to denote blocked.
 
 SourceFiles
     patchEdgeFaceRegionI.H
-    patchEdgeFaceRegion.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -128,7 +126,7 @@ public:
             (
                 const polyMesh& mesh,
                 const indirectPrimitivePatch& patch,
-                const label edgeI,
+                const label edgei,
                 const label facei,
                 const patchEdgeFaceRegion& faceInfo,
                 const scalar tol,
@@ -154,7 +152,7 @@ public:
                 const polyMesh& mesh,
                 const indirectPrimitivePatch& patch,
                 const label facei,
-                const label edgeI,
+                const label edgei,
                 const patchEdgeFaceRegion& edgeInfo,
                 const scalar tol,
                 TrackingData& td
@@ -174,8 +172,8 @@ public:
 
     // IOstream Operators
 
-        friend Ostream& operator<<(Ostream&, const patchEdgeFaceRegion&);
-        friend Istream& operator>>(Istream&, patchEdgeFaceRegion&);
+        inline friend Ostream& operator<<(Ostream&, const patchEdgeFaceRegion&);
+        inline friend Istream& operator>>(Istream&, patchEdgeFaceRegion&);
 };
 
 

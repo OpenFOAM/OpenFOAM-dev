@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,25 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::patchEdgeFaceInfo
+    Foam::PatchEdgeFacePointData
 
 Description
+    Transport of nearest point location, plus data, for use in
+    PatchEdgeFaceWave
 
 SourceFiles
-    patchEdgeFaceInfoI.H
-    patchEdgeFaceInfo.C
+    PatchEdgeFacePointDataI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef patchEdgeFaceInfo_H
-#define patchEdgeFaceInfo_H
+#ifndef PatchEdgeFacePointData_H
+#define PatchEdgeFacePointData_H
 
-#include "point.H"
-#include "label.H"
-#include "scalar.H"
-#include "tensor.H"
-#include "pTraits.H"
-#include "primitivePatch.H"
+#include "patchEdgeFacePoint.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,57 +44,30 @@ namespace Foam
 {
 
 // Forward declaration of classes
-
 class polyPatch;
 class polyMesh;
 
-
 // Forward declaration of friend functions and operators
-
-class patchEdgeFaceInfo;
-
-Istream& operator>>(Istream&, patchEdgeFaceInfo&);
-Ostream& operator<<(Ostream&, const patchEdgeFaceInfo&);
-
+template<class Type>
+class PatchEdgeFacePointData;
+template<class Type>
+Istream& operator>>(Istream&, PatchEdgeFacePointData<Type>&);
+template<class Type>
+Ostream& operator<<(Ostream&, const PatchEdgeFacePointData<Type>&);
 
 /*---------------------------------------------------------------------------*\
-                      Class patchEdgeFaceInfo Declaration
+                      Class PatchEdgeFacePointData Declaration
 \*---------------------------------------------------------------------------*/
 
-class patchEdgeFaceInfo
+template<class Type>
+class PatchEdgeFacePointData
+:
+    public patchEdgeFacePoint
 {
     // Private Data
 
-        //- Position of nearest wall center
-        point origin_;
-
-        //- Normal distance (squared) from point to origin
-        scalar distSqr_;
-
-
-    // Private Member Functions
-
-        //- Evaluate distance to point. Update distSqr, origin from whomever
-        //  is nearer pt. Return true if w2 is closer to point,
-        //  false otherwise.
-        template<class TrackingData>
-        inline bool update
-        (
-            const point&,
-            const patchEdgeFaceInfo& w2,
-            const scalar tol,
-            TrackingData& td
-        );
-
-        //- Combine current with w2. Update distSqr, origin if w2 has smaller
-        //  quantities and returns true.
-        template<class TrackingData>
-        inline bool update
-        (
-            const patchEdgeFaceInfo& w2,
-            const scalar tol,
-            TrackingData& td
-        );
+        //- Data at nearest wall centre
+        Type data_;
 
 
 public:
@@ -106,27 +75,25 @@ public:
     // Constructors
 
         //- Construct null
-        inline patchEdgeFaceInfo();
+        inline PatchEdgeFacePointData();
 
-        //- Construct from origin, distance
-        inline patchEdgeFaceInfo(const point&, const scalar);
+        //- Construct from data, origin, distance
+        inline PatchEdgeFacePointData(const Type&, const point&, const scalar);
 
 
     // Member Functions
 
         // Access
 
-            inline const point& origin() const;
+            inline const Type& data() const;
 
-            inline scalar distSqr() const;
+            inline Type& data();
+
+            template<class TrackingData>
+            inline const Type& data(TrackingData& td) const;
 
 
         // Needed by meshWave
-
-            //- Check whether origin has been changed at all or
-            //  still contains original (invalid) value.
-            template<class TrackingData>
-            inline bool valid(TrackingData& td) const;
 
             //- Apply rotation matrix
             template<class TrackingData>
@@ -145,9 +112,9 @@ public:
             (
                 const polyMesh& mesh,
                 const primitivePatch& patch,
-                const label edgeI,
+                const label edgei,
                 const label facei,
-                const patchEdgeFaceInfo& faceInfo,
+                const PatchEdgeFacePointData<Type>& faceInfo,
                 const scalar tol,
                 TrackingData& td
             );
@@ -158,50 +125,55 @@ public:
             (
                 const polyMesh& mesh,
                 const primitivePatch& patch,
-                const patchEdgeFaceInfo& edgeInfo,
+                const PatchEdgeFacePointData<Type>& edgeInfo,
                 const bool sameOrientation,
                 const scalar tol,
                 TrackingData& td
             );
 
-            //- Influence of edge on face.
+            //- Influence of edge on face
             template<class TrackingData>
             inline bool updateFace
             (
                 const polyMesh& mesh,
                 const primitivePatch& patch,
                 const label facei,
-                const label edgeI,
-                const patchEdgeFaceInfo& edgeInfo,
+                const label edgei,
+                const PatchEdgeFacePointData<Type>& edgeInfo,
                 const scalar tol,
                 TrackingData& td
             );
 
-            //- Same (like operator==)
-            template<class TrackingData>
-            inline bool equal(const patchEdgeFaceInfo&, TrackingData& td) const;
-
-
-    // Member Operators
-
-        // Needed for List IO
-        inline bool operator==(const patchEdgeFaceInfo&) const;
-        inline bool operator!=(const patchEdgeFaceInfo&) const;
-
 
     // IOstream Operators
 
-        friend Ostream& operator<<(Ostream&, const patchEdgeFaceInfo&);
-        friend Istream& operator>>(Istream&, patchEdgeFaceInfo&);
+        friend Ostream& operator<< <Type>
+        (
+            Ostream&,
+            const PatchEdgeFacePointData<Type>&
+        );
+        friend Istream& operator>> <Type>
+        (
+            Istream&,
+            PatchEdgeFacePointData<Type>&
+        );
 };
 
 
-//- Data associated with patchEdgeFaceInfo type are contiguous
-template<>
-inline bool contiguous<patchEdgeFaceInfo>()
-{
-    return true;
-}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define DefineContiguousPatchEdgeFacePointDataType(Type, nullArg)             \
+    template<>                                                                \
+    inline bool contiguous<PatchEdgeFacePointData<Type>>()                    \
+    {                                                                         \
+        return true;                                                          \
+    }
+
+DefineContiguousPatchEdgeFacePointDataType(bool, );
+DefineContiguousPatchEdgeFacePointDataType(label, );
+FOR_ALL_FIELD_TYPES(DefineContiguousPatchEdgeFacePointDataType);
+
+#undef DefineContiguousPatchEdgeFacePointDataType
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -210,7 +182,7 @@ inline bool contiguous<patchEdgeFaceInfo>()
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "patchEdgeFaceInfoI.H"
+#include "PatchEdgeFacePointDataI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ inline bool Foam::patchEdgeFaceRegion::updateEdge
 (
     const polyMesh& mesh,
     const indirectPrimitivePatch& patch,
-    const label edgeI,
+    const label edgei,
     const label facei,
     const patchEdgeFaceRegion& faceInfo,
     const scalar tol,
@@ -153,7 +153,7 @@ inline bool Foam::patchEdgeFaceRegion::updateFace
     const polyMesh& mesh,
     const indirectPrimitivePatch& patch,
     const label facei,
-    const label edgeI,
+    const label edgei,
     const patchEdgeFaceRegion& edgeInfo,
     const scalar tol,
     TrackingData& td
@@ -191,6 +191,28 @@ inline bool Foam::patchEdgeFaceRegion::operator!=
 ) const
 {
     return !(*this == rhs);
+}
+
+
+// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
+
+inline Foam::Ostream& Foam::operator<<
+(
+    Foam::Ostream& os,
+    const Foam::patchEdgeFaceRegion& wDist
+)
+{
+    return os << wDist.region_;
+}
+
+
+inline Foam::Istream& Foam::operator>>
+(
+    Foam::Istream& is,
+    Foam::patchEdgeFaceRegion& wDist
+)
+{
+    return is >> wDist.region_;
 }
 
 

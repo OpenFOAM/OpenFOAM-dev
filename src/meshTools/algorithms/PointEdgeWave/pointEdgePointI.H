@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -284,6 +284,28 @@ inline bool Foam::pointEdgePoint::operator!=(const Foam::pointEdgePoint& rhs)
 const
 {
     return !(*this == rhs);
+}
+
+
+// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
+
+inline Foam::Ostream& Foam::operator<<
+(
+    Foam::Ostream& os,
+    const Foam::pointEdgePoint& wDist
+)
+{
+    return os << wDist.origin() << token::SPACE << wDist.distSqr();
+}
+
+
+inline Foam::Istream& Foam::operator>>
+(
+    Foam::Istream& is,
+    Foam::pointEdgePoint& wDist
+)
+{
+    return is >> wDist.origin_ >> wDist.distSqr_;
 }
 
 
