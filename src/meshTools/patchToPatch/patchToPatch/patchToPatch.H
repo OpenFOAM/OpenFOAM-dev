@@ -311,11 +311,17 @@ public:
             //- Is this intersection on a single process?
             inline bool isSingleProcess() const;
 
+            //- Return a list indicating which source faces are coupled
+            PackedBoolList srcCoupled() const;
+
+            //- Return a list indicating which target faces are coupled
+            PackedBoolList tgtCoupled() const;
+
             //- For each source face, the coupled target procs and faces
-            inline List<List<remote>> srcTgtProcFaces() const;
+            List<List<remote>> srcTgtProcFaces() const;
 
             //- For each target face, the coupled source procs and faces
-            inline List<List<remote>> tgtSrcProcFaces() const;
+            List<List<remote>> tgtSrcProcFaces() const;
 
 
         // Interpolation

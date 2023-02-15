@@ -26,8 +26,7 @@ License
 #include "fvMeshToFvMesh.H"
 #include "directFvPatchFieldMapper.H"
 #include "identityFvPatchFieldMapper.H"
-#include "patchToPatchNormalisedFvPatchFieldMapper.H"
-#include "patchToPatchLeftOverFvPatchFieldMapper.H"
+#include "patchToPatchFvPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -125,10 +124,10 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
     // Construct target patch fields as copies of source patch fields, but do
     // not map values yet
     PtrList<fvPatchField<Type>> tgtPatchFields(tgtMesh.boundary().size());
-    forAll(srcToTgtPatchIDs(), i)
+    forAll(patchIDs(), i)
     {
-        const label srcPatchi = srcToTgtPatchIDs()[i].first();
-        const label tgtPatchi = srcToTgtPatchIDs()[i].second();
+        const label srcPatchi = patchIDs()[i].first();
+        const label tgtPatchi = patchIDs()[i].second();
 
         if (!tgtPatchFields.set(tgtPatchi))
         {
@@ -188,18 +187,18 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         ttgtFld.ref().boundaryFieldRef();
 
     // Mapped patches
-    forAll(srcToTgtPatchIDs(), i)
+    forAll(patchIDs(), i)
     {
-        const label srcPatchi = srcToTgtPatchIDs()[i].first();
-        const label tgtPatchi = srcToTgtPatchIDs()[i].second();
+        const label srcPatchi = patchIDs()[i].first();
+        const label tgtPatchi = patchIDs()[i].second();
 
         tgtBfld[tgtPatchi].map
         (
             srcFld.boundaryField()[srcPatchi],
             patchToPatchNormalisedFvPatchFieldMapper
             (
-                srcToTgtPatchToPatches()[i],
-                true
+                patchInterpolation(i),
+                tgtPatchStabilisation(i)
             )
         );
     }
@@ -241,10 +240,10 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         ttgtFld.ref().boundaryFieldRef();
 
     // Mapped patches
-    forAll(srcToTgtPatchIDs(), i)
+    forAll(patchIDs(), i)
     {
-        const label srcPatchi = srcToTgtPatchIDs()[i].first();
-        const label tgtPatchi = srcToTgtPatchIDs()[i].second();
+        const label srcPatchi = patchIDs()[i].first();
+        const label tgtPatchi = patchIDs()[i].second();
 
         tgtBfld[tgtPatchi].map
         (
@@ -254,11 +253,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         tgtBfld[tgtPatchi].map
         (
             srcFld.boundaryField()[srcPatchi],
-            patchToPatchLeftOverFvPatchFieldMapper
-            (
-                srcToTgtPatchToPatches()[i],
-                true
-            )
+            patchToPatchLeftOverFvPatchFieldMapper(patchInterpolation(i))
         );
     }
 
@@ -283,14 +278,18 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMeshToFvMesh::srcToTgt
     const VolInternalField<Type>& srcFld
 ) const
 {
-    return
+    tmp<VolInternalField<Type>> ttgtFld =
         VolInternalField<Type>::New
         (
             typedName("interpolate(" + srcFld.name() + ")"),
             static_cast<const fvMesh&>(meshToMesh::tgtMesh()),
             srcFld.dimensions(),
-            srcToTgtCellsToCells().srcToTgt(srcFld)
+            cellsInterpolation().srcToTgt(srcFld)
         );
+
+    tgtCellsStabilisation().stabilise(ttgtFld.ref());
+
+    return ttgtFld;
 }
 
 
@@ -307,7 +306,7 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMeshToFvMesh::srcToTgt
             typedName("interpolate(" + srcFld.name() + ")"),
             static_cast<const fvMesh&>(meshToMesh::tgtMesh()),
             leftOverTgtFld.dimensions(),
-            srcToTgtCellsToCells().srcToTgt(srcFld, leftOverTgtFld)
+            cellsInterpolation().srcToTgt(srcFld, leftOverTgtFld)
         );
 }
 

@@ -209,6 +209,12 @@ public:
             //- Is this intersection on a single process?
             inline bool isSingleProcess() const;
 
+            //- Return a list indicating which source cells are coupled
+            PackedBoolList srcCoupled() const;
+
+            //- Return a list indicating which target cells are coupled
+            PackedBoolList tgtCoupled() const;
+
 
         // Interpolation
 

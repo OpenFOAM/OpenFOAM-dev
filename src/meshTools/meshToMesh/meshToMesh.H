@@ -37,8 +37,10 @@ SourceFiles
 #define meshToMesh_H
 
 #include "polyMesh.H"
-#include "patchToPatch.H"
 #include "cellsToCells.H"
+#include "cellsToCellsStabilisation.H"
+#include "patchToPatch.H"
+#include "patchToPatchStabilisation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,15 +62,25 @@ class meshToMesh
         const polyMesh& tgtMesh_;
 
         //- Interpolation engine between source and target cells
-        autoPtr<cellsToCells> srcToTgtCellsToCells_;
+        autoPtr<cellsToCells> cellsInterpolation_;
 
-        //- List of corresponding source and target patches that are to be
-        //  mapped to each other
-        List<labelPair> srcToTgtPatchIDs_;
+        //- Stabilisation engine for the source cells
+        mutable autoPtr<cellsToCellsStabilisation> srcCellsStabilisation_;
 
-        //- List of patchToPatch interpolation engines between source and
-        //  target patches
-        PtrList<patchToPatch> srcToTgtPatchToPatches_;
+        //- Stabilisation engine for the target cells
+        mutable autoPtr<cellsToCellsStabilisation> tgtCellsStabilisation_;
+
+        //- List of corresponding source and target patch indices
+        List<labelPair> patchIDs_;
+
+        //- List of interpolation engines between source and target patches
+        PtrList<patchToPatch> patchInterpolations_;
+
+        //- List of stabilisation engines for the source patches
+        mutable PtrList<patchToPatchStabilisation> srcPatchStabilisations_;
+
+        //- List of stabilisation engines for the source patches
+        mutable PtrList<patchToPatchStabilisation> tgtPatchStabilisations_;
 
 
 protected:
@@ -78,14 +90,37 @@ protected:
         // Access
 
             //- Return the interpolation engine between source and target cells
-            inline const cellsToCells& srcToTgtCellsToCells() const;
+            inline const cellsToCells& cellsInterpolation() const;
 
-            //- Return the source patch indices
-            inline const List<labelPair>& srcToTgtPatchIDs() const;
+            //- Return the stabilisation engine for the source cells
+            inline const cellsToCellsStabilisation&
+                srcCellsStabilisation() const;
 
-            //- Return the list of patchToPatch interpolation engines between
-            //  source and target patches
-            inline const PtrList<patchToPatch>& srcToTgtPatchToPatches() const;
+            //- Return the stabilisation engine for the target cells
+            inline const cellsToCellsStabilisation&
+                tgtCellsStabilisation() const;
+
+            //- Return the list of corresponding source and target patch indices
+            inline const List<labelPair>& patchIDs() const;
+
+            //- Return the interpolation engine between a source and a target
+            //  patch
+            inline const patchToPatch& patchInterpolation
+            (
+                const label i
+            ) const;
+
+            //- Return the stabilisation engine for a source patch
+            inline const patchToPatchStabilisation& srcPatchStabilisation
+            (
+                const label i
+            ) const;
+
+            //- Return the stabilisation engine for a target patch
+            inline const patchToPatchStabilisation& tgtPatchStabilisation
+            (
+                const label i
+            ) const;
 
 
 public:
@@ -97,8 +132,9 @@ public:
     // Constructors
 
         //- Construct from source and target meshes. If a patchMap is supplied,
-        //  then map between the specified patches. If not, then assume a
-        //  consistent mesh and map all patches 1-to-1.
+        //  then interpolate between the specified patches. If not, then assume
+        //  a consistent mesh with consistently named patches and interpolate
+        //  1-to-1 between patches with the same name.
         meshToMesh
         (
             const polyMesh& srcMesh,
@@ -125,8 +161,8 @@ public:
             //- Return const access to the target mesh
             inline const polyMesh& tgtMesh() const;
 
-            //- Is the map between consistent meshes? I.e., are all
-            //  (non-processor) patches mapped one-to-one?
+            //- Is the interpolation between consistent meshes? I.e., are all
+            //  (non-processor) patches coupled one-to-one?
             bool consistent() const;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -806,6 +806,56 @@ Foam::autoPtr<Foam::patchToPatch> Foam::patchToPatch::New
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::PackedBoolList Foam::patchToPatch::srcCoupled() const
+{
+    PackedBoolList result(srcLocalTgtFaces_.size());
+    forAll(srcLocalTgtFaces_, srcFacei)
+    {
+        result[srcFacei] = !srcLocalTgtFaces_[srcFacei].empty();
+    }
+    return result;
+}
+
+
+Foam::PackedBoolList Foam::patchToPatch::tgtCoupled() const
+{
+    PackedBoolList result(tgtLocalSrcFaces_.size());
+    forAll(tgtLocalSrcFaces_, tgtFacei)
+    {
+        result[tgtFacei] = !tgtLocalSrcFaces_[tgtFacei].empty();
+    }
+    return result;
+}
+
+
+Foam::List<Foam::List<Foam::remote>>
+Foam::patchToPatch::srcTgtProcFaces() const
+{
+    return
+        isSingleProcess()
+      ? patchToPatchTools::localToRemote(srcLocalTgtFaces_)
+      : patchToPatchTools::localToRemote
+        (
+            srcLocalTgtFaces_,
+            localTgtProcFacesPtr_()
+        );
+}
+
+
+Foam::List<Foam::List<Foam::remote>>
+Foam::patchToPatch::tgtSrcProcFaces() const
+{
+    return
+        isSingleProcess()
+      ? patchToPatchTools::localToRemote(tgtLocalSrcFaces_)
+      : patchToPatchTools::localToRemote
+        (
+            tgtLocalSrcFaces_,
+            localSrcProcFacesPtr_()
+        );
+}
+
 
 void Foam::patchToPatch::update
 (

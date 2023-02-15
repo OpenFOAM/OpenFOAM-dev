@@ -176,8 +176,8 @@ inline bool Foam::PatchEdgeFacePointData<Type>::updateFace
         (
             mesh,
             patch,
-            edgei,
             facei,
+            edgei,
             edgeInfo,
             tol,
             td

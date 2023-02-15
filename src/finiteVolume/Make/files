@@ -517,7 +517,5 @@ solver/solverNew.C
 
 fvMeshToFvMesh/fvMeshToFvMesh.C
 fvMeshToFvMesh/patchToPatchFvPatchFieldMapper.C
-fvMeshToFvMesh/patchToPatchLeftOverFvPatchFieldMapper.C
-fvMeshToFvMesh/patchToPatchNormalisedFvPatchFieldMapper.C
 
 LIB = $(FOAM_LIBBIN)/libfiniteVolume

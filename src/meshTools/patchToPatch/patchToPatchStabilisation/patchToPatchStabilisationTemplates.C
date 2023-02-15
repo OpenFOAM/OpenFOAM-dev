@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,15 +23,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "patchToPatchNormalisedFvPatchFieldMapper.H"
+#include "patchToPatchStabilisation.H"
 
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-FOR_ALL_FIELD_TYPES
-(
-    IMPLEMENT_FIELD_MAPPER_OPERATOR,
-    patchToPatchNormalisedFvPatchFieldMapper
-)
+template<class Type>
+void Foam::patchToPatchStabilisation::stabilise(Field<Type>& fld) const
+{
+    if (stabilisation_)
+    {
+        if (Pstream::parRun())
+        {
+            stabilisationMapPtr_->distribute(fld);
+        }
+
+        fld.map(fld, localStabilisationCells_);
+    }
+}
 
 
 // ************************************************************************* //

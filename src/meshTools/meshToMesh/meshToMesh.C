@@ -49,15 +49,19 @@ Foam::meshToMesh::meshToMesh
 :
     srcMesh_(srcMesh),
     tgtMesh_(tgtMesh),
-    srcToTgtCellsToCells_(),
-    srcToTgtPatchIDs_(),
-    srcToTgtPatchToPatches_()
+    cellsInterpolation_(),
+    srcCellsStabilisation_(),
+    tgtCellsStabilisation_(),
+    patchIDs_(),
+    patchInterpolations_(),
+    srcPatchStabilisations_(),
+    tgtPatchStabilisations_()
 {
     // If no patch map was supplied, then assume a consistent pair of meshes in
     // which corresponding patches have the same name
     if (isNull(patchMap))
     {
-        DynamicList<labelPair> srcToTgtPatchIDs;
+        DynamicList<labelPair> patchIDs;
 
         forAll(srcMesh_.boundaryMesh(), srcPatchi)
         {
@@ -89,17 +93,17 @@ Foam::meshToMesh::meshToMesh
                         << exit(FatalError);
                 }
 
-                srcToTgtPatchIDs.append(labelPair(srcPatchi, tgtPatchi));
+                patchIDs.append(labelPair(srcPatchi, tgtPatchi));
             }
         }
 
-        srcToTgtPatchIDs_.transfer(srcToTgtPatchIDs);
+        patchIDs_.transfer(patchIDs);
     }
 
     // If a patch mas was supplied then convert it to pairs of patch indices
     else
     {
-        srcToTgtPatchIDs_.setSize(patchMap.size());
+        patchIDs_.setSize(patchMap.size());
         label i = 0;
         forAllConstIter(HashTable<word>, patchMap, iter)
         {
@@ -130,7 +134,7 @@ Foam::meshToMesh::meshToMesh
                     << exit(FatalError);
             }
 
-            srcToTgtPatchIDs_[i ++] = labelPair(srcPatchi, tgtPatchi);
+            patchIDs_[i ++] = labelPair(srcPatchi, tgtPatchi);
         }
     }
 
@@ -139,36 +143,41 @@ Foam::meshToMesh::meshToMesh
         << srcMesh_.name() << " and target mesh " << tgtMesh_.name()
         << " using " << engineType << endl << incrIndent;
 
-    srcToTgtCellsToCells_ = cellsToCells::New(engineType);
-    srcToTgtCellsToCells_->update(srcMesh_, tgtMesh_);
+    cellsInterpolation_ = cellsToCells::New(engineType);
+    cellsInterpolation_->update(srcMesh_, tgtMesh_);
+
+    srcCellsStabilisation_.clear();
+    tgtCellsStabilisation_.clear();
 
     Info<< decrIndent;
 
     // Calculate patch addressing and weights
-    srcToTgtPatchToPatches_.setSize(srcToTgtPatchIDs_.size());
-    forAll(srcToTgtPatchIDs_, i)
+    patchInterpolations_.setSize(patchIDs_.size());
+    srcPatchStabilisations_.setSize(patchIDs_.size());
+    tgtPatchStabilisations_.setSize(patchIDs_.size());
+    forAll(patchIDs_, i)
     {
-        const label srcPatchi = srcToTgtPatchIDs_[i].first();
-        const label tgtPatchi = srcToTgtPatchIDs_[i].second();
+        const label srcPatchi = patchIDs_[i].first();
+        const label tgtPatchi = patchIDs_[i].second();
 
-        const polyPatch& srcPP = srcMesh_.boundaryMesh()[srcPatchi];
-        const polyPatch& tgtPP = tgtMesh_.boundaryMesh()[tgtPatchi];
+        const polyPatch& srcPp = srcMesh_.boundaryMesh()[srcPatchi];
+        const polyPatch& tgtPp = tgtMesh_.boundaryMesh()[tgtPatchi];
 
         Info<< "Creating patchToPatch between source patch "
-            << srcPP.name() << " and target patch " << tgtPP.name()
+            << srcPp.name() << " and target patch " << tgtPp.name()
             << " using " << engineType << endl << incrIndent;
 
-        srcToTgtPatchToPatches_.set
+        patchInterpolations_.set
         (
             i,
             patchToPatch::New(engineType, true)
         );
 
-        srcToTgtPatchToPatches_[i].update
+        patchInterpolations_[i].update
         (
-            srcPP,
-            PatchTools::pointNormals(srcMesh_, srcPP),
-            tgtPP
+            srcPp,
+            PatchTools::pointNormals(srcMesh_, srcPp),
+            tgtPp
         );
 
         Info<< decrIndent;
@@ -190,10 +199,10 @@ bool Foam::meshToMesh::consistent() const
     boolList tgtPatchIsMapped(tgtMesh_.boundaryMesh().size(), false);
 
     // Mark anything paired as mapped
-    forAll(srcToTgtPatchIDs_, i)
+    forAll(patchIDs_, i)
     {
-        const label srcPatchi = srcToTgtPatchIDs_[i].first();
-        const label tgtPatchi = srcToTgtPatchIDs_[i].second();
+        const label srcPatchi = patchIDs_[i].first();
+        const label tgtPatchi = patchIDs_[i].second();
 
         srcPatchIsMapped[srcPatchi] = true;
         tgtPatchIsMapped[tgtPatchi] = true;
@@ -242,7 +251,7 @@ Foam::remote Foam::meshToMesh::srcToTgtPoint
     const point& p
 ) const
 {
-    return srcToTgtCellsToCells_().srcToTgtPoint(tgtMesh_, srcCelli, p);
+    return cellsInterpolation_().srcToTgtPoint(tgtMesh_, srcCelli, p);
 }
 
 

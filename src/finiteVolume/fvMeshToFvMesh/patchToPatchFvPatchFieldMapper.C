@@ -48,4 +48,18 @@ Foam::patchToPatchFvPatchFieldMapper::operator()
 }
 
 
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FIELD_MAPPER_OPERATOR,
+    patchToPatchLeftOverFvPatchFieldMapper
+)
+
+
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FIELD_MAPPER_OPERATOR,
+    patchToPatchNormalisedFvPatchFieldMapper
+)
+
+
 // ************************************************************************* //

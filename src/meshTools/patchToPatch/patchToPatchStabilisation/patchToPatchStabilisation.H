@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,19 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::patchToPatchLeftOverFvPatchFieldMapper
+    Foam::patchToPatchStabilisation
 
 Description
-    FieldMapper which uses a patchToPatch object to map from another patch. The
-    source patch may be differently decomposed and/or geometrically and
-    topologically different from the target.
+    Stabilisation data and routines for patch-to-patch interpolations
+
+SourceFiles
+    patchToPatchStabilisation.C
+    patchToPatchStabilisationTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef patchToPatchLeftOverFvPatchFieldMapper_H
-#define patchToPatchLeftOverFvPatchFieldMapper_H
+#ifndef patchToPatchStabilisation_H
+#define patchToPatchStabilisation_H
 
-#include "patchToPatchFvPatchFieldMapper.H"
+#include "patchToPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -42,48 +44,51 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-            Class patchToPatchLeftOverFvPatchFieldMapper Declaration
+                  Class patchToPatchStabilisation Declaration
 \*---------------------------------------------------------------------------*/
 
-class patchToPatchLeftOverFvPatchFieldMapper
-:
-    public patchToPatchFvPatchFieldMapper
+class patchToPatchStabilisation
 {
-    // Private Member Functions
+    // Private Data
 
-        //- Map from one field to another
-        template<class Type>
-        void map(Field<Type>& f, const Field<Type>& mapF) const;
+        //- Is stabilisation occurring?
+        bool stabilisation_;
 
-        //- Map a field and return the result as tmp
-        template<class Type>
-        tmp<Field<Type>> map(const Field<Type>& mapF) const;
+        //- For each face, the local face used to stabilise the interpolation
+        labelList localStabilisationCells_;
+
+        //- Map from faces to local stabilisation faces
+        autoPtr<distributionMap> stabilisationMapPtr_;
 
 
 public:
 
+    //- Run-time type information
+    TypeName("patchToPatchStabilisation");
+
+
     // Constructors
 
-        //- Construct given a patch-to-patch and a mapping direction
-        patchToPatchLeftOverFvPatchFieldMapper
-        (
-            const patchToPatch& pToP,
-            const bool forward
-        )
-        :
-            patchToPatchFvPatchFieldMapper(pToP, forward)
-        {}
+        //- Construct null
+        patchToPatchStabilisation();
 
 
     //- Destructor
-    virtual ~patchToPatchLeftOverFvPatchFieldMapper()
-    {}
+    virtual ~patchToPatchStabilisation();
 
 
-    // Member Operators
+    // Member Functions
 
-        //- Map a field
-        FOR_ALL_FIELD_TYPES(DEFINE_FIELD_MAPPER_OPERATOR, );
+        //- Compute the stabilisation addressing if necessary
+        void update
+        (
+            const polyPatch& patch,
+            const PackedBoolList& faceCoupleds
+        );
+
+        //- Stabilise the given field if necessary
+        template<class Type>
+        void stabilise(Field<Type>& fld) const;
 };
 
 
@@ -94,7 +99,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "patchToPatchLeftOverFvPatchFieldMapperTemplates.C"
+    #include "patchToPatchStabilisationTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

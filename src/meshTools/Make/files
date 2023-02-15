@@ -215,11 +215,15 @@ patchToPatch/inverseDistance/inverseDistancePatchToPatch.C
 patchToPatch/intersection/intersectionPatchToPatch.C
 patchToPatch/rays/raysPatchToPatch.C
 
+patchToPatch/patchToPatchStabilisation/patchToPatchStabilisation.C
+
 cellsToCells/cellsToCells/cellsToCells.C
 cellsToCells/cellsToCells/cellsToCellsParallelOps.C
 cellsToCells/matching/matchingCellsToCells.C
 cellsToCells/nearest/nearestCellsToCells.C
 cellsToCells/intersection/intersectionCellsToCells.C
+
+cellsToCells/cellsToCellsStabilisation/cellsToCellsStabilisation.C
 
 meshToMesh/meshToMesh.C
 

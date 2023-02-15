@@ -52,4 +52,56 @@ Foam::patchToPatchFvPatchFieldMapper::operator()
 }
 
 
+template<class Type>
+void Foam::patchToPatchLeftOverFvPatchFieldMapper::map
+(
+    Field<Type>& f,
+    const Field<Type>& mapF
+) const
+{
+    f = pToP_.srcToTgt(mapF, f);
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::patchToPatchLeftOverFvPatchFieldMapper::map
+(
+    const Field<Type>& mapF
+) const
+{
+    FatalErrorInFunction
+        << "Not a valid operation for this mapper, which should only be "
+        << "used for modifying an existing, valid, field"
+        << exit(FatalError);
+    return tmp<Field<Type>>(nullptr);
+}
+
+
+template<class Type>
+void Foam::patchToPatchNormalisedFvPatchFieldMapper::map
+(
+    Field<Type>& f,
+    const Field<Type>& mapF
+) const
+{
+    f = pToP_.srcToTgt(mapF);
+
+    pS_.stabilise(f);
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::patchToPatchNormalisedFvPatchFieldMapper::map
+(
+    const Field<Type>& mapF
+) const
+{
+    tmp<Field<Type>> tf(new Field<Type>());
+    map(tf.ref(), mapF);
+    return tf;
+}
+
+
 // ************************************************************************* //

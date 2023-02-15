@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,30 +23,22 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "patchToPatchNormalisedFvPatchFieldMapper.H"
+#include "cellsToCellsStabilisation.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::patchToPatchNormalisedFvPatchFieldMapper::map
-(
-    Field<Type>& f,
-    const Field<Type>& mapF
-) const
-{
-    f = forward_ ? pToP_.srcToTgt(mapF) : pToP_.tgtToSrc(mapF);
-}
-
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::patchToPatchNormalisedFvPatchFieldMapper::map
-(
-    const Field<Type>& mapF
-) const
+void Foam::cellsToCellsStabilisation::stabilise(Field<Type>& fld) const
 {
-    tmp<Field<Type>> tf(new Field<Type>(size_));
-    map(tf.ref(), mapF);
-    return tf;
+    if (stabilisation_)
+    {
+        if (Pstream::parRun())
+        {
+            stabilisationMapPtr_->distribute(fld);
+        }
+
+        fld.map(fld, localStabilisationCells_);
+    }
 }
 
 

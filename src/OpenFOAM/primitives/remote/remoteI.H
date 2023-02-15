@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,22 @@ inline Foam::Ostream& Foam::operator<<(Ostream& os, const remote& p)
 inline Foam::Istream& Foam::operator>>(Istream& is, remote& p)
 {
     return is >> p.proci >> p.elementi;
+}
+
+
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+template<class Cmpt>
+class Tensor;
+
+inline remote transform(const Tensor<scalar>&, const remote& p)
+{
+    return p;
+}
+
 }
 
 

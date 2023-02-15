@@ -183,6 +183,28 @@ Foam::autoPtr<Foam::cellsToCells> Foam::cellsToCells::New
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::PackedBoolList Foam::cellsToCells::srcCoupled() const
+{
+    PackedBoolList result(srcLocalTgtCells_.size());
+    forAll(srcLocalTgtCells_, srcCelli)
+    {
+        result[srcCelli] = !srcLocalTgtCells_[srcCelli].empty();
+    }
+    return result;
+}
+
+
+Foam::PackedBoolList Foam::cellsToCells::tgtCoupled() const
+{
+    PackedBoolList result(tgtLocalSrcCells_.size());
+    forAll(tgtLocalSrcCells_, tgtCelli)
+    {
+        result[tgtCelli] = !tgtLocalSrcCells_[tgtCelli].empty();
+    }
+    return result;
+}
+
+
 Foam::remote Foam::cellsToCells::srcToTgtPoint
 (
     const polyMesh& tgtMesh,
