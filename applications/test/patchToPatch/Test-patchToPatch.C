@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,21 +41,34 @@ int main(int argc, char *argv[])
     argList::validArgs.append("method");
     argList::validArgs.append("reverse");
 
-    argList::addOption("sourceCase", "dir", "The case with the source patch");
+    argList::addOption
+    (
+        "sourceCase",
+        "dir",
+        "The directory of the case with the source patch"
+    );
+    argList::addOption
+    (
+        "sourceRegion",
+        "name",
+        "The region with the source patch"
+    );
 
+    #include "addRegionOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createPolyMesh.H"
+    #include "createNamedPolyMesh.H"
 
     // Optionally read a different mesh for the source
     autoPtr<Time> srcRunTimePtr;
     autoPtr<polyMesh> srcMeshPtr;
-    if (args.optionFound("sourceCase"))
+    if (args.optionFound("sourceCase") || args.optionFound("sourceRegion"))
     {
         const string tgtCase = getEnv("FOAM_CASE");
         const string tgtCaseName = getEnv("FOAM_CASENAME");
 
-        fileName sourceCase = args["sourceCase"];
+        fileName sourceCase =
+            args.optionLookupOrDefault<fileName>("sourceCase", tgtCase);
         sourceCase.clean();
         const fileName sourceCaseName =
             Pstream::parRun()
@@ -79,7 +92,11 @@ int main(int argc, char *argv[])
             (
                 Foam::IOobject
                 (
-                    Foam::polyMesh::defaultRegion,
+                    args.optionLookupOrDefault<word>
+                    (
+                        "sourceRegion",
+                        Foam::polyMesh::defaultRegion
+                    ),
                     srcRunTimePtr->name(),
                     srcRunTimePtr(),
                     Foam::IOobject::MUST_READ
