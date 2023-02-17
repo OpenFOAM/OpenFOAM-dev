@@ -365,7 +365,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
                 dmidtfs,
                 Tfs_,
                 latentHeatScheme::upwind,
-                latentHeatTransfer::heat,
+                latentHeatTransfer::mass,
                 eqns
             );
         }
@@ -401,7 +401,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
             dmdtfs_,
             Tfs_,
             latentHeatScheme::upwind,
-            latentHeatTransfer::heat,
+            latentHeatTransfer::mass,
             eqns
         );
         this->addDmdtHefs
@@ -536,7 +536,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
             volScalarField& dmdtf(*this->dmdtfs_[interface]);
             volScalarField& Tf(*this->Tfs_[interface]);
 
-            const volScalarField Tsat(saturationModelIter()->Tsat(thermo1.p()));
+            Tf = saturationModelIter()->Tsat(thermo1.p());
 
             const volScalarField L
             (
@@ -546,22 +546,22 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                     interface,
                     volatile_,
                     dmdtf,
-                    Tsat,
-                    latentHeatScheme::upwind
+                    Tf,
+                    latentHeatScheme::symmetric
                 )
               : this->L
                 (
                     interface,
                     dmdtf,
-                    Tsat,
-                    latentHeatScheme::upwind
+                    Tf,
+                    latentHeatScheme::symmetric
                 )
             );
 
             volScalarField H1(heatTransferModel.modelInThe(phase1).K(0));
             volScalarField H2(heatTransferModel.modelInThe(phase2).K(0));
 
-            volScalarField dmdtfNew((H1*(Tsat - T1) + H2*(Tsat - T2))/L);
+            volScalarField dmdtfNew((H1*(Tf - T1) + H2*(Tf - T2))/L);
 
             if (volatile_ != "none")
             {
@@ -594,6 +594,9 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                 }
             }
 
+            /* Needs to be included if the code is to be compiled with
+               latentHeatTransfer::heat flag in heatTransfer()
+
             H1 = heatTransferModel.modelInThe(phase1).K();
             H2 = heatTransferModel.modelInThe(phase2).K();
 
@@ -602,6 +605,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
             H2.max(small);
 
             Tf = (H1*T1 + H2*T2 + dmdtfNew*L)/(H1 + H2);
+            */
 
             Info<< Tf.name()
                 << ": min = " << gMin(Tf.primitiveField())
