@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,8 +58,11 @@ class vtkMesh
         //- Reference to mesh
         fvMesh& baseMesh_;
 
-        //- Subsetting engine + sub-fvMesh
+        //- Subsetting engine
         fvMeshSubset subsetter_;
+
+        //- Cell types to retain as polyhedra
+        const vtkTopo::vtkPolyhedra polyhedra_;
 
         //- Current cellSet (or empty)
         const word setName_;
@@ -73,7 +76,12 @@ public:
     // Constructors
 
         //- Construct from components
-        vtkMesh(fvMesh& baseMesh, const word& setName = "");
+        vtkMesh
+        (
+            fvMesh& baseMesh,
+            const vtkTopo::vtkPolyhedra polyhedra = vtkTopo::vtkPolyhedra::none,
+            const word& setName = word::null
+        );
 
         //- Disallow default bitwise copy construction
         vtkMesh(const vtkMesh&) = delete;
@@ -89,6 +97,7 @@ public:
                 return baseMesh_;
             }
 
+            //- Subsetting engine
             const fvMeshSubset& subsetter() const
             {
                 return subsetter_;
@@ -100,12 +109,12 @@ public:
                 return setName_.size();
             }
 
-            //- topology
+            //- VTK topology
             const vtkTopo& topo() const
             {
                 if (topoPtr_.empty())
                 {
-                    topoPtr_.reset(new vtkTopo(mesh()));
+                    topoPtr_.reset(new vtkTopo(mesh(), polyhedra_));
                 }
                 return topoPtr_();
             }

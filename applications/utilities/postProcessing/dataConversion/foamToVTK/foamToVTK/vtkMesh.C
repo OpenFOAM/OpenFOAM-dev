@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,14 +33,16 @@ License
 Foam::vtkMesh::vtkMesh
 (
     fvMesh& baseMesh,
+    const vtkTopo::vtkPolyhedra polyhedra,
     const word& setName
 )
 :
     baseMesh_(baseMesh),
     subsetter_(baseMesh),
+    polyhedra_(polyhedra),
     setName_(setName)
 {
-    if (setName.size())
+    if (setName != word::null)
     {
         // Read cellSet using whole mesh
         cellSet currentSet(baseMesh_, setName_);

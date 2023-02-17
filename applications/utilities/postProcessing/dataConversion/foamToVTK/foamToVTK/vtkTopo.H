@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,24 +51,20 @@ class polyMesh;
 
 class vtkTopo
 {
-    // Private Data
-
-        const polyMesh& mesh_;
-
-        //- Vertices per cell (including added cells) in vtk ordering
-        labelListList vertLabels_;
-
-        //- Cell types (including added cells) in vtk numbering
-        labelList cellTypes_;
-
-        labelList addPointCellLabels_;
-
-        labelList superCells_;
-
-
 public:
 
-   // Public static data
+   // Public Enumerations
+
+        //- Groups of cell types retain as polyhedra
+        enum class vtkPolyhedra
+        {
+            none,
+            polyhedra,
+            all
+        };
+
+        //- Names of groups of cell types retain as polyhedra
+        static const NamedEnum<vtkPolyhedra, 3> vtkPolyhedraNames_;
 
         //- Equivalent to enumeration in "vtkCellType.h"
         enum vtkTypes
@@ -76,7 +72,6 @@ public:
             VTK_TRIANGLE   = 5,
             VTK_POLYGON    = 7,
             VTK_QUAD       = 9,
-
             VTK_TETRA      = 10,
             VTK_HEXAHEDRON = 12,
             VTK_WEDGE      = 13,
@@ -84,14 +79,36 @@ public:
             VTK_POLYHEDRON = 42
         };
 
-    //- Enable/disable polyhedron decomposition. Default = true
-    static bool decomposePoly;
 
+private:
+
+    // Private Data
+
+        //- Reference to the mesh
+        const polyMesh& mesh_;
+
+        //- Cell types to retain as polyhedra
+        const vtkPolyhedra polyhedra_;
+
+        //- Vertices per cell (including added cells) in vtk ordering
+        labelListList vertLabels_;
+
+        //- Cell types (including added cells) in vtk numbering
+        labelList cellTypes_;
+
+        //- ...
+        labelList addPointCellLabels_;
+
+        //- ...
+        labelList superCells_;
+
+
+public:
 
     // Constructors
 
         //- Construct from components
-        vtkTopo(const polyMesh&);
+        vtkTopo(const polyMesh& mesh, const vtkPolyhedra& polyhedra);
 
         //- Disallow default bitwise copy construction
         vtkTopo(const vtkTopo&) = delete;
