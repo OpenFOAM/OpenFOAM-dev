@@ -639,7 +639,7 @@ _decomposePar_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-allRegions -case -cellProc -constant -copyUniform -copyZero -dict -doc -fields -fileHandler -force -help -latestTime -libs -noFields -noFunctionObjects -noSets -noZero -region -srcDoc -time"
+    opts="-allRegions -case -cellProc -constant -copyUniform -copyZero -doc -fields -fileHandler -force -help -latestTime -libs -noFields -noFunctionObjects -noSets -noZero -region -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -647,8 +647,6 @@ _decomposePar_ ()
     case "$prev" in
         -case)
             opts="" ; extra="-d" ;;
-        -dict)
-            opts="" ; extra="-d -f" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
         -time)
@@ -1575,7 +1573,7 @@ _foamToVTK_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-allPatches -ascii -case -cellSet -constant -doc -excludePatches -faceSet -fields -fileHandler -help -hostRoots -latestTime -libs -nearCellValue -noFaceZones -noFunctionObjects -noInternal -noLinks -noPointValues -noZero -parallel -pointSet -poly -region -roots -srcDoc -surfaceFields -time -useTimeName"
+    opts="-allPatches -ascii -case -cellSet -constant -doc -excludePatches -faceSet -fields -fileHandler -help -hostRoots -latestTime -libs -nearCellValue -noFaceZones -noFunctionObjects -noInternal -noLinks -noPointValues -noZero -parallel -pointSet -polyhedra -region -roots -srcDoc -surfaceFields -time -useTimeName"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1587,7 +1585,7 @@ _foamToVTK_ ()
             opts="uncollated collated masterUncollated" ; extra="" ;;
         -time)
             opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
-        -cellSet|-excludePatches|-faceSet|-fields|-hostRoots|-libs|-pointSet|-region|-roots)
+        -cellSet|-excludePatches|-faceSet|-fields|-hostRoots|-libs|-pointSet|-polyhedra|-region|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4161,6 +4159,31 @@ _writeMeshObj_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _writeMeshObj_ writeMeshObj
+
+_zeroDimensionalMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -fileHandler)
+            opts="uncollated collated masterUncollated" ; extra="" ;;
+        -libs)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _zeroDimensionalMesh_ zeroDimensionalMesh
 
 _zipUpMesh_ ()
 {
