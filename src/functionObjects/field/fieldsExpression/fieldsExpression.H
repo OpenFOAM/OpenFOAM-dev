@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,10 @@ SourceFiles
 
 namespace Foam
 {
+
+template<class Type, class GeoMesh>
+class DimensionedField;
+
 namespace functionObjects
 {
 
@@ -56,6 +60,15 @@ class fieldsExpression
     public fvMeshFunctionObject
 {
 protected:
+
+    // Protected typedefs
+
+        //- Internal field typedef that doesn't go via the
+        //  GeometricField::Internal typedef, and therefore allows template
+        //  argument deduction of the Type
+        template<class Type>
+        using VolInternalField = DimensionedField<Type, volMesh>;
+
 
     // Protected member data
 

@@ -82,6 +82,7 @@ bool Foam::functionObjects::uniform::read(const dictionary& dict)
             Type##Value_ = dict.lookup<Type>("value");                         \
         }
     FOR_ALL_FIELD_TYPES(readValueType, VolField);
+    FOR_ALL_FIELD_TYPES(readValueType, VolInternalField);
     FOR_ALL_FIELD_TYPES(readValueType, SurfaceField);
     #undef readValueType
 
@@ -94,6 +95,7 @@ bool Foam::functionObjects::uniform::read(const dictionary& dict)
         #define getFieldType(Type, GeoField)                                   \
             fieldTypes.append(GeoField<Type>::typeName);
         FOR_ALL_FIELD_TYPES(getFieldType, VolField);
+        FOR_ALL_FIELD_TYPES(getFieldType, VolInternalField);
         FOR_ALL_FIELD_TYPES(getFieldType, SurfaceField);
         #undef getFieldType
 
@@ -124,6 +126,7 @@ bool Foam::functionObjects::uniform::execute()
             );                                                                 \
         }
     FOR_ALL_FIELD_TYPES(calcType, VolField);
+    FOR_ALL_FIELD_TYPES(calcType, VolInternalField);
     FOR_ALL_FIELD_TYPES(calcType, SurfaceField);
     #undef calcType
 

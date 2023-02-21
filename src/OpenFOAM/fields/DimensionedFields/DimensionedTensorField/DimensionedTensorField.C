@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+UNARY_FUNCTION(tensor, tensor, T, transform)
 UNARY_FUNCTION(scalar, tensor, tr, transform)
 UNARY_FUNCTION(sphericalTensor, tensor, sph, transform)
 UNARY_FUNCTION(symmTensor, tensor, symm, transform)
@@ -57,6 +58,9 @@ UNARY_FUNCTION(symmTensor, symmTensor, eigenVectors, sign)
 
 UNARY_OPERATOR(vector, tensor, *, hdual, transform)
 UNARY_OPERATOR(tensor, vector, *, hdual, transform)
+
+BINARY_OPERATOR(vector, vector, tensor, /, '|', divide)
+BINARY_TYPE_OPERATOR(vector, vector, tensor, /, '|', divide)
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

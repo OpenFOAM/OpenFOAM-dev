@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,6 +143,7 @@ bool Foam::functionObjects::fieldsExpression::execute()
                     found                                                      \
                  || mesh_.foundObject<GeoField<Type>>(fieldNames_[i]);
             FOR_ALL_FIELD_TYPES(findFieldType, VolField);
+            FOR_ALL_FIELD_TYPES(findFieldType, VolInternalField);
             FOR_ALL_FIELD_TYPES(findFieldType, SurfaceField);
             #undef findFieldType
 
