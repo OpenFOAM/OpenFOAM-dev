@@ -23,13 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "heatTransferAoV.H"
+#include "heatTransferAv.H"
 #include "heatTransfer.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::heatTransferAoV::readCoeffs(const dictionary& dict)
+void Foam::fv::heatTransferAv::readCoeffs(const dictionary& dict)
 {
+    typeIOobject<volScalarField> AvIO
+    (
+        "Av",
+        mesh_.time().constant(),
+        mesh_,
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE
+    );
     typeIOobject<volScalarField> AoVIO
     (
         "AoV",
@@ -39,38 +47,47 @@ void Foam::fv::heatTransferAoV::readCoeffs(const dictionary& dict)
         IOobject::NO_WRITE
     );
 
-    if (dict.found("AoV"))
+    if (dict.found("Av"))
     {
-        AoV_ = dimensionedScalar("AoV", dimless/dimLength, dict);
-        AoVPtr_.clear();
+        Av_ = dimensionedScalar("Av", dimless/dimLength, dict);
+        AvPtr_.clear();
+    }
+    else if (dict.found("AoV"))
+    {
+        Av_ = dimensionedScalar("AoV", dimless/dimLength, dict);
+        AvPtr_.clear();
+    }
+    else if (AvIO.headerOk())
+    {
+        Av_ = dimensionedScalar("Av", dimless/dimLength, NaN);
+        AvPtr_.set(new volScalarField(AvIO, mesh_));
     }
     else if (AoVIO.headerOk())
     {
-        AoV_ = dimensionedScalar("AoV", dimless/dimLength, NaN);
-        AoVPtr_.set(new volScalarField(AoVIO, mesh_));
+        Av_ = dimensionedScalar("AoV", dimless/dimLength, NaN);
+        AvPtr_.set(new volScalarField(AoVIO, mesh_));
     }
     else
     {
         FatalIOErrorInFunction(dict)
-            << "Area per unit volume (AoV) not found. A uniform AoV "
-            << "value should be specified, or a non-uniform field should "
-            << "exist at " << AoVIO.objectPath()
-            << exit(FatalIOError);
+            << "Area per unit volume (Av) not found. A uniform Av value "
+            << "should be specified, or a non-uniform field should exist at "
+            << AvIO.objectPath() << exit(FatalIOError);
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::heatTransferAoV::heatTransferAoV
+Foam::fv::heatTransferAv::heatTransferAv
 (
     const dictionary& dict,
     const fvMesh& mesh
 )
 :
     mesh_(mesh),
-    AoV_("AoV", dimless/dimLength, NaN),
-    AoVPtr_(nullptr)
+    Av_("Av", dimless/dimLength, NaN),
+    AvPtr_(nullptr)
 {
     readCoeffs(dict);
 }
@@ -78,26 +95,26 @@ Foam::fv::heatTransferAoV::heatTransferAoV
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fv::heatTransferAoV::~heatTransferAoV()
+Foam::fv::heatTransferAv::~heatTransferAv()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::fv::heatTransferAoV::AoV() const
+Foam::tmp<Foam::volScalarField> Foam::fv::heatTransferAv::Av() const
 {
-    if (!AoVPtr_.valid())
+    if (!AvPtr_.valid())
     {
-        return volScalarField::New(typedName<heatTransfer>("AoV"), mesh_, AoV_);
+        return volScalarField::New(typedName<heatTransfer>("Av"), mesh_, Av_);
     }
     else
     {
-        return AoVPtr_();
+        return AvPtr_();
     }
 }
 
 
-bool Foam::fv::heatTransferAoV::read(const dictionary& dict)
+bool Foam::fv::heatTransferAv::read(const dictionary& dict)
 {
     readCoeffs(dict);
 

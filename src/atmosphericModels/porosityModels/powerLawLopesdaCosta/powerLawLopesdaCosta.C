@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,9 +71,18 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
 
     // Functional form of the porosity surface area per unit volume as a
     // function of the normalised vertical position
-    autoPtr<Function1<scalar >> SigmaFunc
+    autoPtr<Function1<scalar>> AvFunc
     (
-        Function1<scalar>::New("Sigma", dict)
+        Function1<scalar>::New
+        (
+            dict.lookupEntryBackwardsCompatible
+            (
+                {"Av", "Sigma"},
+                false,
+                true
+            ).keyword(),
+            dict
+        )
     );
 
     // Searchable triSurface for the top of the porous region
@@ -252,7 +261,7 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
     scalarField zNorm(zBottom/(zBottom + zTop));
 
     // Create the porosity surface area per unit volume zone field
-    Sigma_ = SigmaFunc->value(zNorm);
+    Av_ = AvFunc->value(zNorm);
 
     // Create the porous region cellZone and add to the mesh cellZones
 
@@ -320,9 +329,9 @@ Foam::porosityModels::powerLawLopesdaCosta::~powerLawLopesdaCosta()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 const Foam::scalarField&
-Foam::porosityModels::powerLawLopesdaCostaZone::Sigma() const
+Foam::porosityModels::powerLawLopesdaCostaZone::Av() const
 {
-    return Sigma_;
+    return Av_;
 }
 
 

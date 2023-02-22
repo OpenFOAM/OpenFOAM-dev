@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ void Foam::porosityModels::powerLawLopesdaCosta::apply
 
             Udiag[celli] +=
                 V[celli]*rho[celli]
-               *Cd_*Sigma_[i]*pow(magSqr(U[celli]), C1m1b2);
+               *Cd_*Av_[i]*pow(magSqr(U[celli]), C1m1b2);
         }
     }
 }
@@ -76,7 +76,7 @@ void Foam::porosityModels::powerLawLopesdaCosta::apply
                 AU[celli]
               + I
                *(
-                   0.5*rho[celli]*Cd_*Sigma_[i]
+                   0.5*rho[celli]*Cd_*Av_[i]
                   *pow(magSqr(U[celli]), C1m1b2)
                 );
         }

@@ -32,7 +32,7 @@ interRegion/interRegionModel/interRegionModel.C
 interRegion/interRegionExplicitPorositySource/interRegionExplicitPorositySource.C
 interRegion/interRegionHeatTransfer/interRegionHeatTransfer.C
 
-derived/heatTransfer/heatTransferAoV/heatTransferAoV.C
+derived/heatTransfer/heatTransferAv/heatTransferAv.C
 
 derived/heatTransfer/heatTransferCoefficientModels/heatTransferCoefficientModel/heatTransferCoefficientModel.C
 derived/heatTransfer/heatTransferCoefficientModels/constant/constant.C

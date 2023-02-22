@@ -26,17 +26,17 @@ Class
 
 Description
     Model for inter-region heat exchange. Requires specification of a model for
-    the heat transfer coefficient (htc) and the area per unit volume (AoV).
+    the heat transfer coefficient (htc) and the area per unit volume (Av).
     These are then used to apply the following source to the energy equation:
 
     \f[
-        -htc*AoV*(T_{nbr,mapped} - T)
+        -htc*Av*(T_{nbr,mapped} - T)
     \f]
 
     If the semiImplicit option is set, then this becomes:
 
     \f[
-        -htc*AoV*(T_{nbr,mapped} - T) + htc*AoV/Cp*h - Sp(htc*AoV/Cp, h);
+        -htc*Av*(T_{nbr,mapped} - T) + htc*Av/Cp*h - Sp(htc*Av/Cp, h);
     \f]
 
 Usage
@@ -53,7 +53,7 @@ Usage
 
         semiImplicit    no;
 
-        AoV             200;
+        Av              200;
 
         heatTransferCoefficientModel constant;
 
@@ -74,7 +74,7 @@ SourceFiles
 
 #include "interRegionModel.H"
 #include "heatTransferCoefficientModel.H"
-#include "heatTransferAoV.H"
+#include "heatTransferAv.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -103,7 +103,7 @@ class interRegionHeatTransfer
         word TNbrName_;
 
         //- The heat transfer area per unit volume
-        autoPtr<heatTransferAoV> heatTransferAoV_;
+        autoPtr<heatTransferAv> heatTransferAv_;
 
         //- The heat transfer model
         autoPtr<heatTransferCoefficientModel> heatTransferCoefficientModel_;

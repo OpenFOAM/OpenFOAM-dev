@@ -25,7 +25,7 @@ porousToair
 
     semiImplicit    no;
 
-    AoV             200;
+    Av              200;
 
     heatTransferCoefficientModel constant;
 

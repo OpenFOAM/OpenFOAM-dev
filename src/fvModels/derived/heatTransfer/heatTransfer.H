@@ -27,17 +27,17 @@ Class
 Description
     Model for heat exchange. Requires specification of an ambient temperature
     with which to exchange heat, and a model for the heat transfer coefficient
-    (htc) and the area per unit volume (AoV). These are then used to apply the
+    (htc) and the area per unit volume (Av). These are then used to apply the
     following source to the energy equation:
 
     \f[
-        -htc*AoV*(T_a - T)
+        -htc*Av*(T_a - T)
     \f]
 
     If the semiImplicit option is set, then this becomes:
 
     \f[
-        -htc*AoV*(T_a - T) + htc*AoV/Cp*h - Sp(htc*AoV/Cp, h);
+        -htc*Av*(T_a - T) + htc*Av/Cp*h - Sp(htc*Av/Cp, h);
     \f]
 
 Usage
@@ -54,7 +54,7 @@ Usage
 
         Ta              300;
 
-        AoV             200;
+        Av              200;
 
         heatTransferCoefficientModel constant;
 
@@ -76,7 +76,7 @@ SourceFiles
 #include "fvModel.H"
 #include "fvCellSet.H"
 #include "heatTransferCoefficientModel.H"
-#include "heatTransferAoV.H"
+#include "heatTransferAv.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -108,7 +108,7 @@ class heatTransfer
         dimensionedScalar Ta_;
 
         //- The heat transfer area per unit volume
-        autoPtr<heatTransferAoV> heatTransferAoV_;
+        autoPtr<heatTransferAv> heatTransferAv_;
 
         //- The heat transfer model
         autoPtr<heatTransferCoefficientModel> heatTransferCoefficientModel_;

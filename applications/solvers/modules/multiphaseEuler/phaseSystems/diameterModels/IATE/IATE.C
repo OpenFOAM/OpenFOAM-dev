@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::d() const
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::a() const
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::Av() const
 {
     return phase()*kappai_;
 }

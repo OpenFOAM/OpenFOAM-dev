@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ Foam::diameterModels::noDiameter::d() const
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::noDiameter::a() const
+Foam::diameterModels::noDiameter::Av() const
 {
     FatalErrorInFunction
         << "Requested surface area per unit volume of phase " << phase().name()

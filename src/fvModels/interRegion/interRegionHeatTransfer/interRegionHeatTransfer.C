@@ -59,7 +59,7 @@ void Foam::fv::interRegionHeatTransfer::readCoeffs()
 
     if (master())
     {
-        heatTransferAoV_.reset(new heatTransferAoV(coeffs(), mesh()));
+        heatTransferAv_.reset(new heatTransferAv(coeffs(), mesh()));
 
         heatTransferCoefficientModel_ =
             heatTransferCoefficientModel::New(coeffs(), *this);
@@ -88,7 +88,7 @@ Foam::fv::interRegionHeatTransfer::interRegionHeatTransfer
     semiImplicit_(false),
     TName_(word::null),
     TNbrName_(word::null),
-    heatTransferAoV_(nullptr),
+    heatTransferAv_(nullptr),
     heatTransferCoefficientModel_(nullptr)
 {
     readCoeffs();
@@ -132,7 +132,7 @@ void Foam::fv::interRegionHeatTransfer::addSup
     const volScalarField& Tnbr = tTnbr();
 
     // Get the heat transfer coefficient field
-    tmp<volScalarField> tHtcAoV;
+    tmp<volScalarField> tHtcAv;
     if (master())
     {
         tmp<volScalarField> mask =
@@ -150,26 +150,26 @@ void Foam::fv::interRegionHeatTransfer::addSup
                 dimensionedScalar(dimless, 1)
             );
         interpolate(oneNbr(), mask.ref().primitiveFieldRef());
-        tHtcAoV =
+        tHtcAv =
             mask
            *heatTransferCoefficientModel_->htc()
-           *heatTransferAoV_->AoV();
+           *heatTransferAv_->Av();
     }
     else
     {
         tmp<volScalarField> tHtcNbr =
             nbrHeatTransfer().heatTransferCoefficientModel_->htc()
-           *nbrHeatTransfer().heatTransferAoV_->AoV();
-        tHtcAoV =
+           *nbrHeatTransfer().heatTransferAv_->Av();
+        tHtcAv =
             volScalarField::New
             (
                 tHtcNbr().name(),
                 mesh(),
                 dimensionedScalar(tHtcNbr().dimensions(), 0)
             );
-        interpolate(tHtcNbr(), tHtcAoV.ref().primitiveFieldRef());
+        interpolate(tHtcNbr(), tHtcAv.ref().primitiveFieldRef());
     }
-    const volScalarField& htcAoV = tHtcAoV();
+    const volScalarField& htcAv = tHtcAv();
 
     if (semiImplicit_)
     {
@@ -178,20 +178,20 @@ void Foam::fv::interRegionHeatTransfer::addSup
             const basicThermo& thermo =
                mesh().lookupObject<basicThermo>(physicalProperties::typeName);
 
-            const volScalarField htcAoVByCpv(htcAoV/thermo.Cpv());
+            const volScalarField htcAvByCpv(htcAv/thermo.Cpv());
 
             eqn +=
-                htcAoV*(Tnbr - T)
-              + htcAoVByCpv*he - fvm::Sp(htcAoVByCpv, he);
+                htcAv*(Tnbr - T)
+              + htcAvByCpv*he - fvm::Sp(htcAvByCpv, he);
         }
         else if (he.dimensions() == dimTemperature)
         {
-            eqn += htcAoV*Tnbr - fvm::Sp(htcAoV, he);
+            eqn += htcAv*Tnbr - fvm::Sp(htcAv, he);
         }
     }
     else
     {
-        eqn += htcAoV*(Tnbr - T);
+        eqn += htcAv*(Tnbr - T);
     }
 }
 

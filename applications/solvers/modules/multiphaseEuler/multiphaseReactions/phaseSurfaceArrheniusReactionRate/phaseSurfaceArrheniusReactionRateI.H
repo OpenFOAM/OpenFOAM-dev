@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ phaseSurfaceArrheniusReactionRate
     ArrheniusReactionRate(species, dict),
     phaseName_(dict.lookup("phase")),
     ob_(ob),
-    tA_(nullptr)
+    tAv_(nullptr)
 {}
 
 
@@ -53,7 +53,7 @@ inline void Foam::phaseSurfaceArrheniusReactionRate::preEvaluate() const
     const phaseModel& phase =
         ob_.lookupObject<phaseModel>(IOobject::groupName("alpha", phaseName_));
 
-    tA_ = phase.dPtr()->a();
+    tAv_ = phase.dPtr()->Av();
 }
 
 
@@ -61,7 +61,7 @@ inline void Foam::phaseSurfaceArrheniusReactionRate::postEvaluate() const
 {
     ArrheniusReactionRate::postEvaluate();
 
-    tA_.clear();
+    tAv_.clear();
 }
 
 
@@ -73,7 +73,7 @@ inline Foam::scalar Foam::phaseSurfaceArrheniusReactionRate::operator()
     const label li
 ) const
 {
-    return ArrheniusReactionRate::operator()(p, T, c, li)*tA_()[li];
+    return ArrheniusReactionRate::operator()(p, T, c, li)*tAv_()[li];
 }
 
 
@@ -85,7 +85,7 @@ inline Foam::scalar Foam::phaseSurfaceArrheniusReactionRate::ddT
     const label li
 ) const
 {
-    return ArrheniusReactionRate::ddT(p, T, c, li)*tA_()[li];
+    return ArrheniusReactionRate::ddT(p, T, c, li)*tAv_()[li];
 }
 
 

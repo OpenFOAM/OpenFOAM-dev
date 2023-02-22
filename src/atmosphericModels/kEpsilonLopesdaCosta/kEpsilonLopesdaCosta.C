@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::setPorosityCoefficient
 
 
 template<class BasicMomentumTransportModel>
-void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::setCdSigma
+void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::setCdAv
 (
     volScalarField::Internal& C,
     const porosityModels::powerLawLopesdaCosta& pm
@@ -76,7 +76,7 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::setCdSigma
     if (pm.dict().found(C.name()))
     {
         const labelList& cellZoneIDs = pm.cellZoneIDs();
-        const scalarField& Sigma = pm.Sigma();
+        const scalarField& Av = pm.Av();
 
         const scalar Cpm = pm.dict().lookup<scalar>(C.name());
 
@@ -88,7 +88,7 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::setCdSigma
             forAll(cells, i)
             {
                 const label celli = cells[i];
-                C[celli] = Cpm*Sigma[celli];
+                C[celli] = Cpm*Av[celli];
             }
         }
     }
@@ -125,7 +125,7 @@ setPorosityCoefficients()
                 setPorosityCoefficient(sigmak_, pm);
                 setPorosityCoefficient(sigmaEps_, pm);
 
-                setCdSigma(CdSigma_, pm);
+                setCdAv(CdAv_, pm);
                 setPorosityCoefficient(betap_, pm);
                 setPorosityCoefficient(betad_, pm);
                 setPorosityCoefficient(C4_, pm);
@@ -152,7 +152,7 @@ tmp<fvScalarMatrix> kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kSource
     const volScalarField::Internal& magU3
 ) const
 {
-    return fvm::Su(CdSigma_*(betap_*magU3 - betad_*magU*k_()), k_);
+    return fvm::Su(CdAv_*(betap_*magU3 - betad_*magU*k_()), k_);
 }
 
 
@@ -166,7 +166,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::epsilonSource
 {
     return fvm::Su
     (
-        CdSigma_
+        CdAv_
        *(C4_*betap_*epsilon_()/k_()*magU3 - C5_*betad_*magU*epsilon_()),
         epsilon_
     );
@@ -279,11 +279,11 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
         )
     ),
 
-    CdSigma_
+    CdAv_
     (
         IOobject
         (
-            "CdSigma",
+            "CdAv",
             this->runTime_.name(),
             this->mesh_
         ),

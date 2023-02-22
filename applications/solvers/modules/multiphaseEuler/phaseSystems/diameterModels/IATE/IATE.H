@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ public:
         virtual tmp<volScalarField> d() const;
 
         //- Get the surface area per unit volume field
-        virtual tmp<volScalarField> a() const;
+        virtual tmp<volScalarField> Av() const;
 
         //- Correct the model
         virtual void correct();

@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::heatTransferAoV
+    Foam::fv::heatTransferAv
 
 Description
-    Class to handle area per unit volume [1/m] (AoV) for heat transfer
-    fvModels, which must be provided as a value in the coefficients dictionary
-    or as a field in constant.
+    Class to handle area per unit volume [1/m] (Av) for heat transfer fvModels,
+    which must be provided as a value in the coefficients dictionary or as a
+    field in constant.
 
 SourceFiles
-    heatTransferAoV.C
+    heatTransferAv.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef heatTransferAoV_H
-#define heatTransferAoV_H
+#ifndef heatTransferAv_H
+#define heatTransferAv_H
 
 #include "volFields.H"
 
@@ -47,10 +47,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class heatTransferAoV Declaration
+                          Class heatTransferAv Declaration
 \*---------------------------------------------------------------------------*/
 
-class heatTransferAoV
+class heatTransferAv
 {
     // Private Member Data
 
@@ -58,10 +58,10 @@ class heatTransferAoV
         const fvMesh& mesh_;
 
         //- Area per unit volume [1/m]
-        dimensionedScalar AoV_;
+        dimensionedScalar Av_;
 
         //- Area per unit volume [1/m]
-        autoPtr<volScalarField> AoVPtr_;
+        autoPtr<volScalarField> AvPtr_;
 
 
     // Private Member Functions
@@ -75,7 +75,7 @@ public:
     // Constructors
 
         //- Construct from dictionary and mesh
-        heatTransferAoV
+        heatTransferAv
         (
             const dictionary& dict,
             const fvMesh& mesh
@@ -83,13 +83,13 @@ public:
 
 
     //- Destructor
-    virtual ~heatTransferAoV();
+    virtual ~heatTransferAv();
 
 
     // Member Functions
 
         //- Get the area per unit volume
-        tmp<volScalarField> AoV() const;
+        tmp<volScalarField> Av() const;
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);

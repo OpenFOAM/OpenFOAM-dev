@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,12 +31,12 @@ Description
     given by:
 
         \f[
-            S = -\rho C_d \Sigma |U|^{(C_1 - 1)} U
+            S = -\rho C_d A_v |U|^{(C_1 - 1)} U
         \f]
 
     where
     \vartable
-        \Sigma | Porosity surface area per unit volume
+        A_v    | Porosity surface area per unit volume
         C_d    | Model linear coefficient
         C_1    | Model exponent coefficient
     \endvartable
@@ -83,7 +83,7 @@ protected:
         const word zoneName_;
 
         //- Porosity surface area per unit volume zone field
-        scalarField Sigma_;
+        scalarField Av_;
 
 
 public:
@@ -100,7 +100,7 @@ public:
     // Member Functions
 
         //- Return the porosity surface area per unit volume zone field
-        const scalarField& Sigma() const;
+        const scalarField& Av() const;
 };
 
 

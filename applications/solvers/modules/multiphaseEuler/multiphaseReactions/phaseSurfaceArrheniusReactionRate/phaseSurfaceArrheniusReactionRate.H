@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ class phaseSurfaceArrheniusReactionRate
         const objectRegistry& ob_;
 
         //- Surface area per unit volume field
-        mutable tmp<volScalarField> tA_;
+        mutable tmp<volScalarField> tAv_;
 
 
 public:
