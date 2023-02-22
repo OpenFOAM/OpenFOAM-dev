@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,29 +22,29 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Global
-    createRhoUf
+    meshCourantNo
 
 Description
-    Creates and initialises the velocity velocity field rhoUf.
+    Calculates and outputs the mean and maximum Courant Numbers.
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+scalar meshCoNum = 0.0;
+scalar meanMeshCoNum = 0.0;
 
-Info<< "Reading/calculating face velocity rhoUf\n" << endl;
-
-surfaceVectorField rhoUf
-(
-    IOobject
+{
+    scalarField sumPhi
     (
-        "rhoUf",
-        runTime.name(),
-        mesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-    fvc::interpolate(rho*U)
-);
+        fvc::surfaceSum(mag(mesh.phi()))().primitiveField()
+    );
 
+    meshCoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
+
+    meanMeshCoNum =
+        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
+}
+
+Info<< "Mesh Courant Number mean: " << meanMeshCoNum
+    << " max: " << meshCoNum << endl;
 
 // ************************************************************************* //

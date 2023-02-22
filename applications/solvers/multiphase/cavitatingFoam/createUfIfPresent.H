@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,33 +22,33 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Global
-    movingMeshContinuityErrs
+    createUfIfPresent
 
 Description
-    Calculates and prints the continuity errors for moving mesh calculation.
+    Creates and initialises the velocity field Uf if required.
 
 \*---------------------------------------------------------------------------*/
 
-if (mesh.moving())
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+autoPtr<surfaceVectorField> Uf;
+
+if (mesh.dynamic())
 {
-    scalar sumLocalContErr = runTime.deltaTValue()*
-        mag(fvc::div(phi + fvc::meshPhi(rho, U)))()
-       .weightedAverage(mesh.V()).value();
+    Info<< "Constructing face velocity Uf\n" << endl;
 
-    scalar globalContErr = runTime.deltaTValue()*
-        fvc::div(phi + fvc::meshPhi(rho, U))()
-       .weightedAverage(mesh.V()).value();
-
-    cumulativeContErr += globalContErr;
-
-    Info<< "time step continuity errors : sum local = " << sumLocalContErr
-        << ", global = " << globalContErr
-        << ", cumulative = " << cumulativeContErr
-        << endl;
-}
-else
-{
-    #include "continuityErrs.H"
+    Uf = new surfaceVectorField
+    (
+        IOobject
+        (
+            "Uf",
+            runTime.name(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        fvc::interpolate(U)
+    );
 }
 
 // ************************************************************************* //
