@@ -105,12 +105,6 @@ protected:
         autoPtr<incompressible::momentumTransportModel> momentumTransport;
 
 
-    // Continuity properties
-
-        //- Current cumulative continuity error
-        scalar cumulativeContErr;
-
-
     // Optional models
 
         //- MRF zone list
