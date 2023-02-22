@@ -708,11 +708,7 @@ fields/GeometricFields/pointFields/pointFields.C
 meshes/bandCompression/bandCompression.C
 meshes/preservePatchTypes/preservePatchTypes.C
 
-interpolations = interpolations
-interpolation = $(interpolations)/interpolation
-$(interpolations)/patchToPatchInterpolation/PatchToPatchInterpolationName.C
-
-interpolationWeights = $(interpolations)/interpolationWeights
+interpolationWeights = interpolations/interpolationWeights
 $(interpolationWeights)/interpolationWeights/interpolationWeights.C
 $(interpolationWeights)/linearInterpolationWeights/linearInterpolationWeights.C
 $(interpolationWeights)/splineInterpolationWeights/splineInterpolationWeights.C
