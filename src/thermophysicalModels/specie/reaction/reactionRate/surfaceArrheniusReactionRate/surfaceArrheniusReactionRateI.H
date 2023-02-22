@@ -33,11 +33,9 @@ inline Foam::surfaceArrheniusReactionRate::surfaceArrheniusReactionRate
 )
 :
     ArrheniusReactionRate(species, dict),
-    aName_(dict.lookup("a")),
-    aField_
-    (
-        ob.lookupObject<volScalarField::Internal>(aName_)
-    )
+    AvName_(dict.lookupBackwardsCompatible({"Av", "a"})),
+    ob_(ob),
+    tAv_(nullptr)
 {}
 
 
@@ -46,12 +44,16 @@ inline Foam::surfaceArrheniusReactionRate::surfaceArrheniusReactionRate
 inline void Foam::surfaceArrheniusReactionRate::preEvaluate() const
 {
     ArrheniusReactionRate::preEvaluate();
+
+    tAv_ = ob_.lookupObject<volScalarField::Internal>(AvName_);
 }
 
 
 inline void Foam::surfaceArrheniusReactionRate::postEvaluate() const
 {
     ArrheniusReactionRate::postEvaluate();
+
+    tAv_ = tmp<volScalarField::Internal>(nullptr);
 }
 
 
@@ -63,7 +65,7 @@ inline Foam::scalar Foam::surfaceArrheniusReactionRate::operator()
     const label li
 ) const
 {
-    return ArrheniusReactionRate::operator()(p, T, c, li)*aField_[li];
+    return ArrheniusReactionRate::operator()(p, T, c, li)*tAv_()[li];
 }
 
 
@@ -75,14 +77,14 @@ inline Foam::scalar Foam::surfaceArrheniusReactionRate::ddT
     const label li
 ) const
 {
-    return ArrheniusReactionRate::ddT(p, T, c, li)*aField_[li];
+    return ArrheniusReactionRate::ddT(p, T, c, li)*tAv_()[li];
 }
 
 
 inline void Foam::surfaceArrheniusReactionRate::write(Ostream& os) const
 {
     ArrheniusReactionRate::write(os);
-    writeEntry(os, "a", aName_);
+    writeEntry(os, "a", AvName_);
 }
 
 

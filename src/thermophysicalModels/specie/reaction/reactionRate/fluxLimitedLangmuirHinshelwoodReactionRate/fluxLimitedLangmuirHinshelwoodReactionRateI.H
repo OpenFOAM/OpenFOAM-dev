@@ -43,7 +43,7 @@ inline Foam::scalar Foam::fluxLimitedLangmuirHinshelwoodReactionRate::Av
     }
     else
     {
-        return AvField_[li];
+        return tAv_()[li];
     }
 }
 
@@ -58,6 +58,7 @@ fluxLimitedLangmuirHinshelwoodReactionRate
     const dictionary& dict
 )
 :
+    nReactants_(),
     additionalAdsorbableSpecieNames_
     (
         dict.lookupOrDefault
@@ -66,34 +67,22 @@ fluxLimitedLangmuirHinshelwoodReactionRate
             wordList()
         )
     ),
+    ra_(),
     a_(dict.lookupOrDefault("a", scalar(1))),
     A_(dict.lookup("A")),
     Ta_(dict.lookup("Ta")),
+    beta_(),
+    m_(),
     limited_(dict.found("s")),
-    AvUniform_
-    (
-        limited_
-      ? dict.lookup("Av")[0].isNumber()
-      : true
-    ),
-    Av_
-    (
-        limited_ && AvUniform_
-      ? dict.lookup<scalar>("Av")
-      : 0
-    ),
-    AvName_
-    (
-        limited_ && !AvUniform_
-      ? dict.lookup("Av")
-      : word::null
-    ),
-    AvField_
-    (
-        limited_ && !AvUniform_
-      ? ob.lookupObject<volScalarField::Internal>(AvName_)
-      : volScalarField::null()
-    )
+    AvUniform_(limited_ ? dict.lookup("Av")[0].isNumber() : true),
+    Av_(limited_ && AvUniform_ ? dict.lookup<scalar>("Av") : 0),
+    AvName_(limited_ && !AvUniform_ ? dict.lookup("Av") : word::null),
+    nu_(),
+    exp_(),
+    s_(),
+    W_(),
+    ob_(ob),
+    tAv_(nullptr)
 {
     List<specieCoeffs> lhs;
     List<specieCoeffs> rhs;
@@ -208,12 +197,16 @@ fluxLimitedLangmuirHinshelwoodReactionRate
 
 inline void
 Foam::fluxLimitedLangmuirHinshelwoodReactionRate::preEvaluate() const
-{}
+{
+    tAv_ = ob_.lookupObject<volScalarField::Internal>(AvName_);
+}
 
 
 inline void
 Foam::fluxLimitedLangmuirHinshelwoodReactionRate::postEvaluate() const
-{}
+{
+    tAv_ = tmp<volScalarField::Internal>(nullptr);
+}
 
 
 inline Foam::scalar

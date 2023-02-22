@@ -41,6 +41,7 @@ SourceFiles
 #define surfaceArrheniusReactionRate_H
 
 #include "ArrheniusReactionRate.H"
+#include "speciesTable.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -65,10 +66,13 @@ class surfaceArrheniusReactionRate
     // Private Data
 
         //- Name of the surface area per unit volume field
-        const word aName_;
+        const word AvName_;
+
+        //- Reference to the object registry
+        const objectRegistry& ob_;
 
         //- The surface area per unit volume field
-        const scalarField& aField_;
+        mutable tmp<volScalarField::Internal> tAv_;
 
 
 public:

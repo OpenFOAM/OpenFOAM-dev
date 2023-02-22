@@ -47,8 +47,8 @@ SourceFiles
 #ifndef fluxLimitedLangmuirHinshelwoodReactionRate_H
 #define fluxLimitedLangmuirHinshelwoodReactionRate_H
 
-#include "scalarField.H"
-#include "typeInfo.H"
+#include "speciesTable.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -83,21 +83,50 @@ class fluxLimitedLangmuirHinshelwoodReactionRate
         //- Reactant and additional adsorbable specie indices
         labelList ra_;
 
+        //- ?
         scalar a_;
+
+        //- Pre-exponential factor
         scalarList A_;
+
+        //- Activation temperature
         scalarList Ta_;
+
+        //- Temperature exponent
         scalarList beta_;
+
+        //- ?
         scalarList m_;
 
+        //- Is the reaction limited?
         bool limited_;
+
+        //- Is the surface area per unit volume a uniform value?
         bool AvUniform_;
+
+        //- Surface area per unit volume uniform value
         scalar Av_;
+
+        //- Surface area per unit volume field name
         const word AvName_;
-        const scalarField& AvField_;
+
+        //- ?
         scalarList nu_;
+
+        //- ?
         scalarList exp_;
+
+        //- ?
         scalarList s_;
+
+        //- ?
         scalarList W_;
+
+        //- Reference to the object registry
+        const objectRegistry& ob_;
+
+        //- Surface area per unit volume field
+        mutable tmp<volScalarField::Internal> tAv_;
 
 
     // Private Member Functions
