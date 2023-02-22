@@ -63,7 +63,7 @@ functions
     )
     #includeFunc graphCell
     (
-        entryName=graph,
+        name=graph,
         start=(0.05 0 0.05),
         end=(0.05 1.0 0.05),
         axis=y,

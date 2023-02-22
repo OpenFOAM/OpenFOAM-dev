@@ -56,10 +56,10 @@ functions
 {
     #includeFunc populationBalanceSizeDistribution
     (
+        name=numberDensity,
         populationBalance=bubbles,
         functionType=numberDensity,
-        coordinateType=volume,
-        entryName=numberDensity
+        coordinateType=volume
     )
 }
 
