@@ -229,7 +229,7 @@ public:
             //- Return the face - cell distance coefficient
             //  except for coupled patches for which the cell-centre
             //  to coupled-cell-centre distance coefficient is returned
-            const scalarField& deltaCoeffs() const;
+            virtual const scalarField& deltaCoeffs() const;
 
 
         // Evaluation functions
