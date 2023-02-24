@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,64 +23,83 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fixedValueFvsPatchField.H"
+#include "nonConformalPolyFacesFvsPatchLabelField.H"
+#include "fvPatchFieldMapper.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+Foam::nonConformalPolyFacesFvsPatchLabelField::
+nonConformalPolyFacesFvsPatchLabelField
 (
     const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF
+    const DimensionedField<label, surfaceMesh>& iF
 )
 :
-    fvsPatchField<Type>(p, iF)
+    fvsPatchLabelField(p, iF)
 {}
 
 
-template<class Type>
-Foam::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+Foam::nonConformalPolyFacesFvsPatchLabelField::
+nonConformalPolyFacesFvsPatchLabelField
 (
     const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
+    const DimensionedField<label, surfaceMesh>& iF,
     const dictionary& dict
 )
 :
-    fvsPatchField<Type>(p, iF, Field<Type>("value", dict, p.size()))
-{}
+    fvsPatchLabelField(p, iF, dict, false)
+{
+    labelField::operator=
+    (
+        labelField("value", dict, dict.lookup<label>("size"))
+    );
+}
 
 
-template<class Type>
-Foam::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+Foam::nonConformalPolyFacesFvsPatchLabelField::
+nonConformalPolyFacesFvsPatchLabelField
 (
-    const fixedValueFvsPatchField<Type>& ptf,
+    const nonConformalPolyFacesFvsPatchLabelField& ptf,
     const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
+    const DimensionedField<label, surfaceMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
 :
-    fvsPatchField<Type>(ptf, p, iF, mapper)
+    fvsPatchLabelField(ptf, p, iF, mapper)
 {}
 
 
-template<class Type>
-Foam::fixedValueFvsPatchField<Type>::fixedValueFvsPatchField
+Foam::nonConformalPolyFacesFvsPatchLabelField::
+nonConformalPolyFacesFvsPatchLabelField
 (
-    const fixedValueFvsPatchField<Type>& ptf,
-    const DimensionedField<Type, surfaceMesh>& iF
+    const nonConformalPolyFacesFvsPatchLabelField& ptf,
+    const DimensionedField<label, surfaceMesh>& iF
 )
 :
-    fvsPatchField<Type>(ptf, iF)
+    fvsPatchLabelField(ptf, iF)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::fixedValueFvsPatchField<Type>::write(Ostream& os) const
+void Foam::nonConformalPolyFacesFvsPatchLabelField::write(Ostream& os) const
 {
-    fvsPatchField<Type>::write(os);
+    fvsPatchLabelField::write(os);
+    writeEntry(os, "size", this->size());
     writeEntry(os, "value", *this);
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    makeFvsPatchTypeField
+    (
+        fvsPatchLabelField,
+        nonConformalPolyFacesFvsPatchLabelField
+    );
 }
 
 

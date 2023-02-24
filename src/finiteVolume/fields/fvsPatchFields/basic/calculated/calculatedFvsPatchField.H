@@ -105,6 +105,11 @@ public:
                 new calculatedFvsPatchField<Type>(*this, iF)
             );
         }
+
+    // Member Functions
+
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 

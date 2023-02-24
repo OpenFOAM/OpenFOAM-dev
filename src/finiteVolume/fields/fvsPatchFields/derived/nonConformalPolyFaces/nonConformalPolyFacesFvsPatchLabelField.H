@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::nonConformalCalculatedFvsPatchField
-
-Description
-    Foam::nonConformalCalculatedFvsPatchField
+    Foam::nonConformalPolyFacesFvsPatchLabelField
 
 SourceFiles
-    nonConformalCalculatedFvsPatchField.C
+    nonConformalPolyFacesFvsPatchLabelField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef nonConformalCalculatedFvsPatchField_H
-#define nonConformalCalculatedFvsPatchField_H
+#ifndef nonConformalPolyFacesFvsPatchLabelField_H
+#define nonConformalPolyFacesFvsPatchLabelField_H
 
-#include "fvsPatchField.H"
+#include "fvsPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,85 +40,73 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class nonConformalCalculatedFvsPatch Declaration
+                     Class nonConformalPolyFacesFvsPatchLabel Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class nonConformalCalculatedFvsPatchField
+class nonConformalPolyFacesFvsPatchLabelField
 :
-    public fvsPatchField<Type>
+    public fvsPatchLabelField
 {
 
 public:
 
     //- Runtime type information
-    TypeName("nonConformalCalculated");
+    TypeName("nonConformalPolyFaces");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        nonConformalCalculatedFvsPatchField
+        nonConformalPolyFacesFvsPatchLabelField
         (
             const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&
+            const DimensionedField<label, surfaceMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        nonConformalCalculatedFvsPatchField
+        nonConformalPolyFacesFvsPatchLabelField
         (
             const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&,
+            const DimensionedField<label, surfaceMesh>&,
             const dictionary&
         );
 
         //- Construct by mapping given patchField<Type> onto a new patch
-        nonConformalCalculatedFvsPatchField
+        nonConformalPolyFacesFvsPatchLabelField
         (
-            const nonConformalCalculatedFvsPatchField<Type>&,
+            const nonConformalPolyFacesFvsPatchLabelField&,
             const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&,
+            const DimensionedField<label, surfaceMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        nonConformalCalculatedFvsPatchField
+        nonConformalPolyFacesFvsPatchLabelField
         (
-            const nonConformalCalculatedFvsPatchField<Type>&
+            const nonConformalPolyFacesFvsPatchLabelField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        nonConformalCalculatedFvsPatchField
+        nonConformalPolyFacesFvsPatchLabelField
         (
-            const nonConformalCalculatedFvsPatchField<Type>&,
-            const DimensionedField<Type, surfaceMesh>&
+            const nonConformalPolyFacesFvsPatchLabelField&,
+            const DimensionedField<label, surfaceMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type>> clone
+        virtual tmp<fvsPatchLabelField> clone
         (
-            const DimensionedField<Type, surfaceMesh>& iF
+            const DimensionedField<label, surfaceMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type>>
+            return tmp<fvsPatchLabelField>
             (
-                new nonConformalCalculatedFvsPatchField<Type>(*this, iF)
+                new nonConformalPolyFacesFvsPatchLabelField(*this, iF)
             );
         }
 
 
     // Member Functions
-
-        // Attributes
-
-            //- Return true if this patch field fixes a value.
-            //  Needed to check if a level has to be specified while solving
-            //  Poissons equations.
-            virtual bool fixesValue() const
-            {
-                return true;
-            }
-
 
         //- Write
         virtual void write(Ostream&) const;
@@ -131,12 +116,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "nonConformalCalculatedFvsPatchField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

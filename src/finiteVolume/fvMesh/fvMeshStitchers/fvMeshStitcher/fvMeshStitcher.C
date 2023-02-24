@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1302,23 +1302,12 @@ bool Foam::fvMeshStitcher::connect
 
         if (fileHandler().isFile(polyFacesBfIO.objectPath(false)))
         {
-            haveTopology = true;
-
-            // Read the boundary field but then set default values for conformal
-            // patches as these patches will have had a uniform invalid index
-            // set in order to save disk space
-            surfaceLabelField::Boundary polyFacesBfRead
+            polyFacesBf.reset
             (
-                surfaceLabelField::null(),
                 surfaceLabelField(polyFacesBfIO, mesh_).boundaryField()
             );
-            forAll(mesh_.boundary(), patchi)
-            {
-                if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
-                {
-                    polyFacesBf[patchi] = polyFacesBfRead[patchi];
-                }
-            }
+
+            haveTopology = true;
         }
     }
 

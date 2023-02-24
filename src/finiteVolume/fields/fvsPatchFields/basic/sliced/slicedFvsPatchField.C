@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "slicedFvsPatchField.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::slicedFvsPatchField<Type>::slicedFvsPatchField
@@ -85,12 +85,24 @@ Foam::slicedFvsPatchField<Type>::clone
 }
 
 
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
 template<class Type>
 Foam::slicedFvsPatchField<Type>::~slicedFvsPatchField()
 {
     // Set the fvsPatchField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
     UList<Type>::shallowCopy(UList<Type>(nullptr, 0));
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::slicedFvsPatchField<Type>::write(Ostream& os) const
+{
+    fvsPatchField<Type>::write(os);
+    writeEntry(os, "value", *this);
 }
 
 

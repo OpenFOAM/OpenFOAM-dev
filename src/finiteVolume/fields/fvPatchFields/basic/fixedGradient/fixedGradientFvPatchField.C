@@ -26,7 +26,7 @@ License
 #include "fixedGradientFvPatchField.H"
 #include "dictionary.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
