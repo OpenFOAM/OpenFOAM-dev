@@ -266,6 +266,6 @@ nonConformal/pointPatchFields/nonConformalCyclic/nonConformalCyclicPointPatchFie
 nonConformal/pointPatchFields/nonConformalError/nonConformalErrorPointPatchFields.C
 nonConformal/pointPatchFields/nonConformalProcessorCyclic/nonConformalProcessorCyclicPointPatchFields.C
 
-nonConformalBoundary/nonConformalBoundary.C
+nonConformal/boundary/nonConformalBoundary.C
 
 LIB = $(FOAM_LIBBIN)/libmeshTools
