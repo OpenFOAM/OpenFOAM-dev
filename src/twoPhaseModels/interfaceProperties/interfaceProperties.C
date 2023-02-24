@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,9 +62,9 @@ void Foam::interfaceProperties::correctContactAngle
                 );
 
             fvsPatchVectorField& nHatp = nHatb[patchi];
-            const scalarField theta
+            const scalarField cosTheta
             (
-                degToRad(a1cap.theta(U_.boundaryField()[patchi], nHatp))
+                a1cap.cosTheta(U_.boundaryField()[patchi], nHatp)
             );
 
             const vectorField nf
@@ -75,12 +75,12 @@ void Foam::interfaceProperties::correctContactAngle
             // Reset nHatp to correspond to the contact angle
 
             const scalarField a12(nHatp & nf);
-            const scalarField b1(cos(theta));
+            const scalarField b1(cosTheta);
 
             scalarField b2(nHatp.size());
             forAll(b2, facei)
             {
-                b2[facei] = cos(acos(a12[facei]) - theta[facei]);
+                b2[facei] = cos(acos(a12[facei]) - acos(cosTheta[facei]));
             }
 
             const scalarField det(1.0 - a12*a12);

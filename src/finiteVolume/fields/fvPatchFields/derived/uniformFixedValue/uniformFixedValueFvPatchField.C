@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,19 +35,6 @@ Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF),
-    uniformValue_()
-{}
-
-
-template<class Type>
-Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const Field<Type>& fld
-)
-:
-    fixedValueFvPatchField<Type>(p, iF, fld),
     uniformValue_()
 {}
 

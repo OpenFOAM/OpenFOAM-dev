@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,6 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(alphaContactAngleFvPatchScalarField, 0);
-
     template<>
     const char* Foam::NamedEnum
     <
@@ -65,6 +63,7 @@ Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 )
 :
     fixedGradientFvPatchScalarField(p, iF),
+    contactAngle_(),
     limit_(lcZeroGradient)
 {}
 
@@ -77,6 +76,7 @@ Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 )
 :
     fixedGradientFvPatchScalarField(p, iF),
+    contactAngle_(contactAngleModel::New(dict)),
     limit_(limitControlNames_.read(dict.lookup("limit")))
 {
     if (dict.found("gradient"))
@@ -102,6 +102,7 @@ Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 )
 :
     fixedGradientFvPatchScalarField(acpsf, p, iF, mapper),
+    contactAngle_(acpsf.contactAngle_, false),
     limit_(acpsf.limit_)
 {}
 
@@ -113,11 +114,22 @@ Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 )
 :
     fixedGradientFvPatchScalarField(acpsf, iF),
+    contactAngle_(acpsf.contactAngle_, false),
     limit_(acpsf.limit_)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::scalarField> Foam::alphaContactAngleFvPatchScalarField::cosTheta
+(
+    const fvPatchVectorField& Up,
+    const vectorField& nHat
+) const
+{
+    return contactAngle_->cosTheta(Up, nHat);
+}
+
 
 void Foam::alphaContactAngleFvPatchScalarField::evaluate
 (
@@ -156,7 +168,20 @@ void Foam::alphaContactAngleFvPatchScalarField::write
 ) const
 {
     fixedGradientFvPatchScalarField::write(os);
+    writeEntry(os, contactAngle_());
     writeEntry(os, "limit", limitControlNames_[limit_]);
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    makePatchTypeField
+    (
+        fvPatchScalarField,
+        alphaContactAngleFvPatchScalarField
+    );
 }
 
 

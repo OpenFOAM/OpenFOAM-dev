@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,94 +22,96 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::gaussDivScheme
+    Foam::contactAngleModels::constant
 
 Description
-    Basic second-order div using face interpolated values and Gauss' theorem.
+    Uniform constant contact angle model.
+
+Usage
+    Example of the contact angle specification:
+    \verbatim
+        contactAngle
+        {
+            type                constant;
+            theta0              70;
+        }
+    \endverbatim
+
+See also
+    Foam::contactAngleModel
 
 SourceFiles
-    gaussDivScheme.C
+    constantContactAngle.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef gaussDivScheme_H
-#define gaussDivScheme_H
+#ifndef constantContactAngle_H
+#define constantContactAngle_H
 
-#include "divScheme.H"
+#include "contactAngleModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace fv
+namespace contactAngleModels
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class gaussDivScheme Declaration
+                          Class constant Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class gaussDivScheme
+class constant
 :
-    public fv::divScheme<Type>
+    public contactAngleModel
 {
+    // Private Data
+
+        //- Equilibrium contact angle
+        scalar theta0_;
+
 
 public:
 
     //- Runtime type information
-    TypeName("Gauss");
+    TypeName("constant");
 
 
     // Constructors
 
-        //- Construct null
-        gaussDivScheme(const fvMesh& mesh)
-        :
-            divScheme<Type>(mesh)
-        {}
+        //- Construct from dictionary
+        constant(const dictionary& dict);
 
-        //- Construct from Istream
-        gaussDivScheme(const fvMesh& mesh, Istream& is)
-        :
-            divScheme<Type>(mesh, is)
-        {}
+        //- Construct and return a clone
+        virtual autoPtr<contactAngleModel> clone() const
+        {
+            return autoPtr<contactAngleModel>(new constant(*this));
+        }
 
-        //- Disallow default bitwise copy construction
-        gaussDivScheme(const gaussDivScheme&) = delete;
+
+    //- Destructor
+    virtual ~constant();
 
 
     // Member Functions
 
-
-        tmp<VolField<typename innerProduct<vector, Type>::type>> fvcDiv
+        //- Cosine of the contact angle
+        virtual tmp<scalarField> cosTheta
         (
-            const VolField<Type>&
-        );
+            const fvPatchVectorField& Up,
+            const vectorField& nHat
+        ) const;
 
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const gaussDivScheme&) = delete;
+        //- Write data in dictionary format
+        virtual void write(Ostream& os) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace fv
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
+} // End namespace contactAngleModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "gaussDivScheme.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

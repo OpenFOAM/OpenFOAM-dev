@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,24 +22,47 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::constantAlphaContactAngleFvPatchScalarField
+    Foam::alphaContactAngleFvPatchScalarField
 
 Description
-    A constant alphaContactAngle scalar boundary condition.
+    General alpha contact angle boundary condition.
+
+    The essential entry "limit" controls the gradient of alpha1 on the wall:
+      - none - Calculate the gradient from the contact-angle without limiter
+      - gradient - Limit the wall-gradient such that alpha1 remains bounded
+        on the wall
+      - alpha - Bound the calculated alpha1 on the wall
+      - zeroGradient - Set the gradient of alpha1 to 0 on the wall, i.e.
+        reproduce previous behaviour, the pressure BCs can be left as before.
+
+    Note that if any of the first three options are used the boundary condition
+    on \c p_rgh must set to guarantee that the flux is corrected to be zero at
+    the wall e.g.:
+
+    \verbatim
+    <patchName>
+    {
+        type            alphaContactAngle;
+        limit           none;
+        theta0          70;
+    }
+    \endverbatim
 
 See also
-    Foam::alphaContactAngleFvPatchScalarField
-    Foam::temperatureDependentAlphaContactAngleFvPatchScalarField
+    Foam::contactAngleModel
+    Foam::contactAngleModels::constant
+    Foam::contactAngleModels::dynamic
 
 SourceFiles
-    constantAlphaContactAngleFvPatchScalarField.C
+    alphaContactAngleFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef constantAlphaContactAngleFvPatchScalarField_H
-#define constantAlphaContactAngleFvPatchScalarField_H
+#ifndef alphaContactAngleFvPatchScalarField_H
+#define alphaContactAngleFvPatchScalarField_H
 
-#include "alphaContactAngleFvPatchScalarField.H"
+#include "fixedGradientFvPatchFields.H"
+#include "contactAngleModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,87 +70,91 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-              Class constantAlphaContactAngleFvPatch Declaration
+             Class alphaContactAngleFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class constantAlphaContactAngleFvPatchScalarField
+class alphaContactAngleFvPatchScalarField
 :
-    public alphaContactAngleFvPatchScalarField
+    public fixedGradientFvPatchScalarField
 {
     // Private Data
 
-        //- Equilibrium contact angle
-        scalar theta0_;
+        //- Equilibrium contact angle function
+        autoPtr<contactAngleModel> contactAngle_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("constantAlphaContactAngle");
+    TypeName("alphaContactAngle");
 
+    //- Alpha limit options
+    enum limitControls
+    {
+        lcNone,
+        lcGradient,
+        lcZeroGradient,
+        lcAlpha
+    };
+
+    static const NamedEnum<limitControls, 4> limitControlNames_;
+    limitControls limit_;
 
     // Constructors
 
         //- Construct from patch and internal field
-        constantAlphaContactAngleFvPatchScalarField
+        alphaContactAngleFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        constantAlphaContactAngleFvPatchScalarField
+        alphaContactAngleFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given
-        //  constantAlphaContactAngleFvPatchScalarField
+        //- Construct by mapping given alphaContactAngleFvPatchScalarField
         //  onto a new patch
-        constantAlphaContactAngleFvPatchScalarField
+        alphaContactAngleFvPatchScalarField
         (
-            const constantAlphaContactAngleFvPatchScalarField&,
+            const alphaContactAngleFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        constantAlphaContactAngleFvPatchScalarField
+        alphaContactAngleFvPatchScalarField
         (
-            const constantAlphaContactAngleFvPatchScalarField&
+            const alphaContactAngleFvPatchScalarField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        constantAlphaContactAngleFvPatchScalarField
+        alphaContactAngleFvPatchScalarField
         (
-            const constantAlphaContactAngleFvPatchScalarField&,
+            const alphaContactAngleFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
-
-        //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchScalarField> clone
-        (
-            const DimensionedField<scalar, volMesh>& iF
-        ) const
-        {
-            return tmp<fvPatchScalarField>
-            (
-                new constantAlphaContactAngleFvPatchScalarField(*this, iF)
-            );
-        }
 
 
     // Member Functions
 
-        //- Return the equilibrium contact-angle
-        virtual tmp<scalarField> theta
+        //- Return the cosine of the contact angle
+        tmp<scalarField> cosTheta
         (
             const fvPatchVectorField& Up,
-            const fvsPatchVectorField& nHat
+            const vectorField& nHat
         ) const;
+
+        //- Evaluate the patch field
+        virtual void evaluate
+        (
+            const Pstream::commsTypes commsType=Pstream::commsTypes::blocking
+        );
 
         //- Write
         virtual void write(Ostream&) const;

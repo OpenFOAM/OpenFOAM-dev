@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,7 +140,7 @@ void Foam::Function1<Type>::operator=(const Function1<Type>& f)
 // * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
 
 template<class Type>
-void  Foam::writeEntry(Ostream& os, const Function1<Type>& f1)
+void Foam::writeEntry(Ostream& os, const Function1<Type>& f1)
 {
     writeKeyword(os, f1.name())
         << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;

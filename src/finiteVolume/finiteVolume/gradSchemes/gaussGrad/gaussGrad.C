@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,14 +77,12 @@ Foam::fv::gaussGrad<Type>::gradf
 
     forAll(mesh.boundary(), patchi)
     {
-        const labelUList& pFaceCells =
-            mesh.boundary()[patchi].faceCells();
-
+        const fvPatch& p = mesh.boundary()[patchi];
+        const labelUList& pFaceCells = p.faceCells();
         const vectorField& pSf = mesh.Sf().boundaryField()[patchi];
-
         const fvsPatchField<Type>& pssf = ssf.boundaryField()[patchi];
 
-        forAll(mesh.boundary()[patchi], facei)
+        forAll(p, facei)
         {
             igGrad[pFaceCells[facei]] += pSf[facei]*pssf[facei];
         }
