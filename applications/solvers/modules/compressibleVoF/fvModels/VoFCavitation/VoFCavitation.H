@@ -115,7 +115,7 @@ class VoFCavitation
 public:
 
     //- Runtime type information
-    TypeName("VoFCavitation");
+    TypeName("compressible::VoFCavitation");
 
 
     // Constructors

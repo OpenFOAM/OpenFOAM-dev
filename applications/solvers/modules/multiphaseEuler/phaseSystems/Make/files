@@ -20,9 +20,6 @@ phaseSystem/phaseSystem.C
 phaseSystem/phaseSystemNew.C
 phaseSystem/phaseSystemSolve.C
 
-PhaseSystems/HeatTransferPhaseSystem/heatTransferPhaseSystem.C
-PhaseSystems/TwoResistanceHeatTransferPhaseSystem/twoResistanceHeatTransferPhaseSystem.C
-
 diameterModels/diameterModel/diameterModel.C
 diameterModels/diameterModel/diameterModelNew.C
 diameterModels/sphericalDiameter/sphericalDiameter.C
@@ -38,7 +35,6 @@ diameterModels/IATE/IATEsources/wakeEntrainmentCoalescence/IATEwakeEntrainmentCo
 diameterModels/IATE/IATEsources/turbulentBreakUp/IATEturbulentBreakUp.C
 diameterModels/IATE/IATEsources/randomCoalescence/IATErandomCoalescence.C
 diameterModels/IATE/IATEsources/phaseChange/IATEphaseChange.C
-diameterModels/IATE/IATEsources/wallBoiling/IATEwallBoiling.C
 
 sizeGroup = diameterModels/velocityGroup/sizeGroup
 $(sizeGroup)/sizeGroup.C
@@ -97,7 +93,6 @@ $(driftModels)/phaseChange/phaseChange.C
 nucleationModels = populationBalanceModel/nucleationModels
 $(nucleationModels)/nucleationModel/nucleationModel.C
 $(nucleationModels)/reactionDriven/reactionDriven.C
-$(nucleationModels)/wallBoiling/wallBoiling.C
 
 BlendedInterfacialModel/blendingMethods/blendingMethod/blendingMethod.C
 BlendedInterfacialModel/blendingMethods/blendingMethod/blendingMethodNew.C

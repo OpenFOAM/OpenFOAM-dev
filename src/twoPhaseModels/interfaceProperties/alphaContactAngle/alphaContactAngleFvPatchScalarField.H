@@ -42,7 +42,7 @@ Description
     \verbatim
     <patchName>
     {
-        type            alphaContactAngle;
+        type            contactAngle;
         limit           none;
         theta0          70;
     }
@@ -86,7 +86,7 @@ class alphaContactAngleFvPatchScalarField
 public:
 
     //- Runtime type information
-    TypeName("alphaContactAngle");
+    TypeName("contactAngle");
 
     //- Alpha limit options
     enum limitControls

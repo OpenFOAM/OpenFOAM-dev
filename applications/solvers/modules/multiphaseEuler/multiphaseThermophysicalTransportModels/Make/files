@@ -1,3 +1,9 @@
+HeatTransferPhaseSystem/heatTransferPhaseSystem.C
+TwoResistanceHeatTransferPhaseSystem/twoResistanceHeatTransferPhaseSystem.C
+
+diameterModels/IATE/IATEsources/wallBoiling/IATEwallBoiling.C
+populationBalanceModel/nucleationModels/wallBoiling/wallBoiling.C
+
 derivedFvPatchFields/wallBoilingSubModels/partitioningModels/partitioningModel/partitioningModel.C
 derivedFvPatchFields/wallBoilingSubModels/partitioningModels/partitioningModel/partitioningModelNew.C
 derivedFvPatchFields/wallBoilingSubModels/partitioningModels/phaseFraction/phaseFraction.C
