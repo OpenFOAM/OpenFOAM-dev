@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -633,14 +633,13 @@ scalarInterfaces() const
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::reset
 (
-    const DimensionedField<Type, GeoMesh>& field,
     const GeometricBoundaryField<Type, PatchField, GeoMesh>& btf
 )
 {
     // Reset the number of patches in case the decomposition changed
     this->setSize(btf.size());
 
-    const polyBoundaryMesh& pbm = field.mesh()().boundaryMesh();
+    const polyBoundaryMesh& pbm = bmesh_.mesh().boundaryMesh();
 
     forAll(*this, patchi)
     {
@@ -648,7 +647,15 @@ void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::reset
         // changed
         if (isA<processorPolyPatch>(pbm[patchi]))
         {
-            this->set(patchi, btf[patchi].clone(bmesh_[patchi], field));
+            this->set
+            (
+                patchi,
+                btf[patchi].clone
+                (
+                    bmesh_[patchi],
+                    this->operator[](0).internalField()
+                )
+            );
         }
         else
         {
