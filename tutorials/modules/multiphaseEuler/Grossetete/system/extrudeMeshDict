@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      extrudeProperties;
+    object      extrudeMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
