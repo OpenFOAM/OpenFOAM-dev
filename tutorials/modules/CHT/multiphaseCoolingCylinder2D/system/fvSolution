@@ -13,7 +13,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-"(PIMPLE|PISO)"
+PIMPLE
 {
     nOuterCorrectors 3;
 }
