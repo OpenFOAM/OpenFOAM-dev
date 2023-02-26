@@ -31,9 +31,10 @@ License
 #include "fvcFlux.H"
 #include "fvcDdt.H"
 #include "fvcSnGrad.H"
+#include "fvcReconstruct.H"
 #include "fvmDiv.H"
 #include "fvmSup.H"
-#include "fvcReconstruct.H"
+#include "fvmLaplacian.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 

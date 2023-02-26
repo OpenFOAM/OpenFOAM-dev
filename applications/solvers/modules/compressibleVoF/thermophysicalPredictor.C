@@ -28,6 +28,7 @@ License
 #include "fvcDdt.H"
 #include "fvmDiv.H"
 #include "fvmSup.H"
+#include "fvmLaplacian.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 

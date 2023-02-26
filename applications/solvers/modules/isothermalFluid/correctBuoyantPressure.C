@@ -34,6 +34,7 @@ License
 #include "fvcReconstruct.H"
 #include "fvcVolumeIntegrate.H"
 #include "fvmDiv.H"
+#include "fvmLaplacian.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 

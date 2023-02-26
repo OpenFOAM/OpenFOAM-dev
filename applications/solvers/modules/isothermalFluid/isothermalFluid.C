@@ -29,6 +29,7 @@ License
 #include "fvcMeshPhi.H"
 #include "fvcVolumeIntegrate.H"
 #include "fvcReconstruct.H"
+#include "fvcDiv.H"
 #include "fvcSnGrad.H"
 #include "addToRunTimeSelectionTable.H"
 

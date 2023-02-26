@@ -28,7 +28,7 @@ License
 #include "fluidThermophysicalTransportModel.H"
 #include "phaseSystem.H"
 #include "heatTransferPhaseSystem.H"
-#include "compressibleMomentumTransportModels.H"
+#include "compressibleMomentumTransportModel.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "interfaceSaturationTemperatureModel.H"
 #include "rhoMulticomponentThermo.H"

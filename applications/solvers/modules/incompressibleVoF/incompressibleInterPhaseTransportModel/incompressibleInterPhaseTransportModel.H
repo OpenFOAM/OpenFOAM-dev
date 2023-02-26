@@ -44,7 +44,7 @@ SourceFiles
 #define incompressibleInterPhaseTransportModel_H
 
 #include "incompressibleTwoPhaseVoFMixture.H"
-#include "incompressibleMomentumTransportModels.H"
+#include "incompressibleMomentumTransportModel.H"
 #include "phaseIncompressibleMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressibleInterPhaseTransportModel.H"
+#include "fvMatrix.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

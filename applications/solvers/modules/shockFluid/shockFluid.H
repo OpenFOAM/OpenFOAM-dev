@@ -54,7 +54,7 @@ See also
 
 #include "fluidSolver.H"
 #include "psiThermo.H"
-#include "compressibleMomentumTransportModels.H"
+#include "compressibleMomentumTransportModel.H"
 #include "fluidThermoThermophysicalTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

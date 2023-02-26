@@ -56,7 +56,7 @@ See also
 
 #include "fluidSolver.H"
 #include "viscosityModel.H"
-#include "incompressibleMomentumTransportModels.H"
+#include "incompressibleMomentumTransportModel.H"
 #include "pressureReference.H"
 #include "IOMRFZoneList.H"
 

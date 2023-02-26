@@ -26,6 +26,7 @@ License
 #include "compressibleVoF.H"
 #include "localEulerDdtScheme.H"
 #include "fvcDdt.H"
+#include "fvcDiv.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

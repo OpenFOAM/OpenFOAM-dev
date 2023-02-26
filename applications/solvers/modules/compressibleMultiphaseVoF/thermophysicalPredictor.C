@@ -27,6 +27,7 @@ License
 #include "fvcMeshPhi.H"
 #include "fvcDdt.H"
 #include "fvmDiv.H"
+#include "fvmLaplacian.H"
 #include "fvmSup.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //

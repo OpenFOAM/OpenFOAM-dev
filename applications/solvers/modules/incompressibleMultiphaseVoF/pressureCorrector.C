@@ -31,8 +31,10 @@ License
 #include "fvcMeshPhi.H"
 #include "fvcFlux.H"
 #include "fvcDdt.H"
+#include "fvcDiv.H"
 #include "fvcSnGrad.H"
 #include "fvcReconstruct.H"
+#include "fvmLaplacian.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 

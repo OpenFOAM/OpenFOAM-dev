@@ -25,6 +25,7 @@ License
 
 #include "incompressibleFluid.H"
 #include "localEulerDdtScheme.H"
+#include "linear.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

@@ -26,6 +26,7 @@ License
 #include "isothermalFluid.H"
 #include "fvcFlux.H"
 #include "fvcSmooth.H"
+#include "fvcSurfaceIntegrate.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 

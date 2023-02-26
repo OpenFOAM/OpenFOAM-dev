@@ -26,7 +26,7 @@ License
 #include "KocamustafaogullariIshiiDepartureFrequency.H"
 #include "addToRunTimeSelectionTable.H"
 #include "uniformDimensionedFields.H"
-#include "compressibleMomentumTransportModels.H"
+#include "compressibleMomentumTransportModel.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "phaseSystem.H"
 

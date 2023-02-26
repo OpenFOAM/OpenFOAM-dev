@@ -53,7 +53,7 @@ See also
 
 #include "multiphaseVoFSolver.H"
 #include "compressibleMultiphaseVoFMixture.H"
-#include "compressibleMomentumTransportModels.H"
+#include "compressibleMomentumTransportModel.H"
 #include "pressureReference.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
