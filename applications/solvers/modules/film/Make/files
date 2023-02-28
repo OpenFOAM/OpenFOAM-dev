@@ -1,0 +1,4 @@
+film.C
+thermophysicalPredictor.C
+
+LIB = $(FOAM_LIBBIN)/libfilm

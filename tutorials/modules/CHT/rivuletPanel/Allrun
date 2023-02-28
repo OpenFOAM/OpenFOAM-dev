@@ -1,0 +1,25 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh -region panel
+
+runApplication -s 1 decomposePar -region panel -noFields
+
+runParallel extrudeToRegionMesh -region panel -overwrite
+
+runApplication -s 1 reconstructPar -allRegions
+
+runApplication -s 2 decomposePar -fields -allRegions
+
+printf "\n%s\n" "Creating files for paraview post-processing"
+paraFoam -touchAll
+echo
+
+runParallel $(getApplication)
+
+runApplication reconstructPar -allRegions
+
+#------------------------------------------------------------------------------
