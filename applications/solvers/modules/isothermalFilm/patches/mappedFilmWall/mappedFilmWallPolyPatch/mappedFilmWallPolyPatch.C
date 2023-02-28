@@ -1,0 +1,207 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "mappedFilmWallPolyPatch.H"
+#include "mappedPolyPatch.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(mappedFilmWallPolyPatch, 0);
+
+    addToRunTimeSelectionTable(polyPatch, mappedFilmWallPolyPatch, word);
+    addToRunTimeSelectionTable
+    (
+        polyPatch,
+        mappedFilmWallPolyPatch,
+        dictionary
+    );
+}
+
+
+// * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * * * * //
+
+Foam::mappedFilmWallPolyPatch::mappedFilmWallPolyPatch
+(
+    const word& name,
+    const label size,
+    const label start,
+    const label index,
+    const polyBoundaryMesh& bm,
+    const word& patchType
+)
+:
+    filmWallPolyPatch(name, size, start, index, bm, patchType),
+    mappedPatchBase(static_cast<const polyPatch&>(*this)),
+    reMapAfterMove_(true)
+{
+    //  mapped is not constraint type so add mapped group explicitly
+    if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)
+    {
+        inGroups().append(mappedPolyPatch::typeName);
+    }
+}
+
+
+Foam::mappedFilmWallPolyPatch::mappedFilmWallPolyPatch
+(
+    const word& name,
+    const label size,
+    const label start,
+    const label index,
+    const word& neighbourRegion,
+    const word& neighbourPatch,
+    const polyBoundaryMesh& bm
+)
+:
+    filmWallPolyPatch(name, size, start, index, bm, typeName),
+    mappedPatchBase
+    (
+        *this,
+        neighbourRegion,
+        neighbourPatch,
+        cyclicTransform(true)
+    ),
+    reMapAfterMove_(true)
+{}
+
+
+Foam::mappedFilmWallPolyPatch::mappedFilmWallPolyPatch
+(
+    const word& name,
+    const dictionary& dict,
+    const label index,
+    const polyBoundaryMesh& bm,
+    const word& patchType
+)
+:
+    filmWallPolyPatch(name, dict, index, bm, patchType),
+    mappedPatchBase(*this, dict, true),
+    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true))
+{
+    //  mapped is not constraint type so add mapped group explicitly
+    if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)
+    {
+        inGroups().append(mappedPolyPatch::typeName);
+    }
+}
+
+
+Foam::mappedFilmWallPolyPatch::mappedFilmWallPolyPatch
+(
+    const mappedFilmWallPolyPatch& pp,
+    const polyBoundaryMesh& bm
+)
+:
+    filmWallPolyPatch(pp, bm),
+    mappedPatchBase(*this, pp),
+    reMapAfterMove_(true)
+{}
+
+
+Foam::mappedFilmWallPolyPatch::mappedFilmWallPolyPatch
+(
+    const mappedFilmWallPolyPatch& pp,
+    const polyBoundaryMesh& bm,
+    const label index,
+    const label newSize,
+    const label newStart
+)
+:
+    filmWallPolyPatch(pp, bm, index, newSize, newStart),
+    mappedPatchBase(*this, pp),
+    reMapAfterMove_(true)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::mappedFilmWallPolyPatch::~mappedFilmWallPolyPatch()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::mappedFilmWallPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
+{
+    filmWallPolyPatch::initCalcGeometry(pBufs);
+}
+
+
+void Foam::mappedFilmWallPolyPatch::calcGeometry(PstreamBuffers& pBufs)
+{
+    filmWallPolyPatch::calcGeometry(pBufs);
+    mappedPatchBase::clearOut();
+}
+
+
+void Foam::mappedFilmWallPolyPatch::initMovePoints
+(
+    PstreamBuffers& pBufs,
+    const pointField& p
+)
+{
+    filmWallPolyPatch::initMovePoints(pBufs, p);
+}
+
+
+void Foam::mappedFilmWallPolyPatch::movePoints
+(
+    PstreamBuffers& pBufs,
+    const pointField& p
+)
+{
+    filmWallPolyPatch::movePoints(pBufs, p);
+    if (reMapAfterMove_)
+    {
+        mappedPatchBase::clearOut();
+    }
+}
+
+
+void Foam::mappedFilmWallPolyPatch::initTopoChange(PstreamBuffers& pBufs)
+{
+    filmWallPolyPatch::initTopoChange(pBufs);
+}
+
+
+void Foam::mappedFilmWallPolyPatch::topoChange(PstreamBuffers& pBufs)
+{
+    filmWallPolyPatch::topoChange(pBufs);
+    mappedPatchBase::clearOut();
+}
+
+
+void Foam::mappedFilmWallPolyPatch::write(Ostream& os) const
+{
+    filmWallPolyPatch::write(os);
+    mappedPatchBase::write(os);
+    writeEntryIfDifferent<bool>(os, "reMapAfterMove", true, reMapAfterMove_);
+}
+
+
+// ************************************************************************* //

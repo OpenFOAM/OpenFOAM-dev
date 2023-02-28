@@ -1,0 +1,23 @@
+EXE_INC = \
+    -IfilmCompressibleMomentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
+    -I$(LIB_SRC)/lagrangian/distributionModels/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/cfdTools \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -lfluidThermophysicalModels \
+    -lmomentumTransportModels \
+    -lfilmCompressibleMomentumTransportModels \
+    -linterfaceProperties \
+    -ldistributionModels \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lsampling \
+    -lfvModels \
+    -lfvConstraints

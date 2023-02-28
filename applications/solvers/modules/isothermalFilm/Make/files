@@ -1,0 +1,27 @@
+patches/filmFvPatch/filmFvPatch.C
+
+patches/filmWall/filmWallPolyPatch/filmWallPolyPatch.C
+patches/filmWall/filmWallPointPatch/filmWallPointPatch.C
+patches/filmWall/filmWallFvPatch/filmWallFvPatch.C
+
+patches/filmSurface/filmSurfacePolyPatch/filmSurfacePolyPatch.C
+patches/filmSurface/filmSurfacePointPatch/filmSurfacePointPatch.C
+patches/filmSurface/filmSurfaceFvPatch/filmSurfaceFvPatch.C
+
+patches/mappedFilmWall/mappedFilmWallFvPatch/mappedFilmWallFvPatch.C
+patches/mappedFilmWall/mappedFilmWallPointPatch/mappedFilmWallPointPatch.C
+patches/mappedFilmWall/mappedFilmWallPolyPatch/mappedFilmWallPolyPatch.C
+
+derivedFvPatchFields/alphaOne/alphaOneFvPatchScalarField.C
+derivedFvPatchFields/filmContactAngle/filmContactAngleFvPatchScalarField.C
+
+filmGaussGrad/filmGaussGrads.C
+
+contactForce.C
+prePredictor.C
+momentumPredictor.C
+predictAlpha.C
+correctAlpha.C
+isothermalFilm.C
+
+LIB = $(FOAM_LIBBIN)/libisothermalFilm
