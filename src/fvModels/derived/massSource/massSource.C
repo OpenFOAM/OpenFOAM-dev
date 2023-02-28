@@ -40,7 +40,7 @@ namespace fv
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::fv::massSource::readCoeffs()
 {
@@ -85,6 +85,12 @@ void Foam::fv::massSource::readCoeffs()
 }
 
 
+Foam::scalar Foam::fv::massSource::massFlowRate() const
+{
+    return massFlowRate_->value(mesh().time().userTimeValue());
+}
+
+
 template<class Type>
 void Foam::fv::massSource::addGeneralSupType
 (
@@ -92,9 +98,9 @@ void Foam::fv::massSource::addGeneralSupType
     const word& fieldName
 ) const
 {
-    const scalar t = mesh().time().userTimeValue();
-    const scalar massFlowRate = massFlowRate_->value(t);
-    const Type value = fieldValues_[fieldName]->value<Type>(t);
+    const scalar massFlowRate = this->massFlowRate();
+    const Type value =
+        fieldValues_[fieldName]->value<Type>(mesh().time().userTimeValue());
 
     const labelUList cells = set_.cells();
 
@@ -127,8 +133,7 @@ void Foam::fv::massSource::addSupType
 
     if (fieldName == rhoName_)
     {
-        const scalar t = mesh().time().userTimeValue();
-        const scalar massFlowRate = massFlowRate_->value(t);
+        const scalar massFlowRate = this->massFlowRate();
 
         forAll(cells, i)
         {
@@ -146,9 +151,9 @@ void Foam::fv::massSource::addSupType
                 << endl;
         }
 
-        const scalar t = mesh().time().userTimeValue();
-        const scalar massFlowRate = massFlowRate_->value(t);
-        const scalar T = fieldValues_[TName_]->value<scalar>(t);
+        const scalar massFlowRate = this->massFlowRate();
+        const scalar T =
+            fieldValues_[TName_]->value<scalar>(mesh().time().userTimeValue());
         const basicThermo& thermo =
             mesh().lookupObject<basicThermo>
             (
@@ -204,11 +209,12 @@ Foam::fv::massSource::massSource
     const word& name,
     const word& modelType,
     const fvMesh& mesh,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool all
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(all ? fvCellSet(mesh) : fvCellSet(mesh, coeffs())),
     phaseName_(),
     rhoName_(),
     heName_(),

@@ -44,5 +44,6 @@ zeroDimensional/zeroDimensionalFvModel/zeroDimensionalFvModel.C
 zeroDimensional/constraintSource/constraintSource.C
 zeroDimensional/densityConstraintSource/densityConstraintSource.C
 zeroDimensional/pressureConstraintSource/pressureConstraintSource.C
+zeroDimensional/zeroDimensionalMassSource/zeroDimensionalMassSource.C
 
 LIB = $(FOAM_LIBBIN)/libfvModels

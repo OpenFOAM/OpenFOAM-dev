@@ -118,12 +118,11 @@ public:
 
     // Constructors
 
+        //- Construct from mesh. Will select all.
+        fvCellSet(const fvMesh& mesh);
+
         //- Construct from mesh and dictionary
-        fvCellSet
-        (
-            const fvMesh& mesh,
-            const dictionary& dict
-        );
+        fvCellSet(const fvMesh& mesh, const dictionary& dict);
 
 
     //- Destructor
