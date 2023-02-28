@@ -25,7 +25,7 @@ License
 
 #include "mixedFvPatchField.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::mixedFvPatchField<Type>::mixedFvPatchField

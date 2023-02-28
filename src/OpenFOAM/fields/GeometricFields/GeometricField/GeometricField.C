@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1296,7 +1296,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::reset
     const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
 
     Internal::reset(gf);
-    boundaryField_.reset(*this, gf.boundaryField());
+    boundaryField_.reset(gf.boundaryField());
 
     tgf.clear();
 }

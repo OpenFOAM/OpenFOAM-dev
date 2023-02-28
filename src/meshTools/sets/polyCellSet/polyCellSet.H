@@ -131,12 +131,11 @@ public:
 
     // Constructors
 
+        //- Construct from mesh. Will select all.
+        polyCellSet(const polyMesh& mesh);
+
         //- Construct from mesh and dictionary
-        polyCellSet
-        (
-            const polyMesh& mesh,
-            const dictionary& dict
-        );
+        polyCellSet(const polyMesh& mesh, const dictionary& dict);
 
 
     //- Destructor

@@ -145,11 +145,15 @@ Foam::labelUList Foam::polyCellSet::identityMap(const label len) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::polyCellSet::polyCellSet
-(
-    const polyMesh& mesh,
-    const dictionary& dict
-)
+Foam::polyCellSet::polyCellSet(const polyMesh& mesh)
+:
+    mesh_(mesh),
+    selectionType_(selectionTypes::all),
+    cellSetName_(word::null)
+{}
+
+
+Foam::polyCellSet::polyCellSet(const polyMesh& mesh, const dictionary& dict)
 :
     mesh_(mesh),
     selectionType_(selectionTypes::all),

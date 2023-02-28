@@ -37,7 +37,8 @@ License
 #include "fvMeshMover.H"
 #include "fvMeshStitcher.H"
 #include "nonConformalFvPatch.H"
-#include "nonConformalCalculatedFvsPatchFields.H"
+#include "polyFacesFvsPatchLabelField.H"
+#include "nonConformalPolyFacesFvsPatchLabelField.H"
 #include "polyTopoChangeMap.H"
 #include "MapFvFields.H"
 #include "fvMeshMapper.H"
@@ -287,7 +288,7 @@ Foam::wordList Foam::fvMesh::polyFacesPatchTypes() const
     wordList wantedPatchTypes
     (
         boundary().size(),
-        calculatedFvsPatchLabelField::typeName
+        polyFacesFvsPatchLabelField::typeName
     );
 
     forAll(boundary(), patchi)
@@ -297,7 +298,7 @@ Foam::wordList Foam::fvMesh::polyFacesPatchTypes() const
         if (isA<nonConformalFvPatch>(fvp))
         {
             wantedPatchTypes[patchi] =
-                nonConformalCalculatedFvsPatchLabelField::typeName;
+                nonConformalPolyFacesFvsPatchLabelField::typeName;
         }
     }
 
@@ -929,13 +930,6 @@ const Foam::surfaceLabelField::Boundary& Foam::fvMesh::polyFacesBf() const
                 polyFacesPatchTypes(),
                 boundaryMesh().types()
             );
-
-        forAll(boundary(), patchi)
-        {
-            const polyPatch& pp = boundaryMesh()[patchi];
-            (*polyFacesBfPtr_)[patchi] =
-                labelList(identityMap(pp.size()) + pp.start());
-        }
     }
 
     return *polyFacesBfPtr_;
@@ -1681,8 +1675,8 @@ bool Foam::fvMesh::writeObject
 
     if (!conformal())
     {
-        // Create a full surface field with the polyFacesBf boundary field then
-        // overwrite all conformal faces with an index of -1 to save disk space
+        // Create a full surface field with the polyFacesBf boundary field to
+        // write to disk. Make the internal field uniform to save disk space.
 
         surfaceLabelField polyFaces
         (
@@ -1692,15 +1686,6 @@ bool Foam::fvMesh::writeObject
             labelField(nInternalFaces(), -1),
             *polyFacesBfPtr_
         );
-
-        forAll(boundary(), patchi)
-        {
-            const fvPatch& fvp = boundary()[patchi];
-            if (!isA<nonConformalFvPatch>(fvp))
-            {
-                polyFaces.boundaryFieldRef()[patchi] = -1;
-            }
-        }
 
         ok = ok & polyFaces.write(write);
     }

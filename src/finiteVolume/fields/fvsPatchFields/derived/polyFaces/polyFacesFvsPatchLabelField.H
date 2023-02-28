@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::internalFvsPatchField
-
-Description
-    Constraint fvsPatchField to hold values for internal face exposed by
-    sub-setting.
+    Foam::polyFacesFvsPatchLabelField
 
 SourceFiles
-    internalFvsPatchField.C
+    polyFacesFvsPatchLabelField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef internalFvsPatchField_H
-#define internalFvsPatchField_H
+#ifndef polyFacesFvsPatchLabelField_H
+#define polyFacesFvsPatchLabelField_H
 
-#include "fvsPatchField.H"
-#include "internalFvPatch.H"
+#include "fvsPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,86 +40,83 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class internalFvsPatch Declaration
+                     Class polyFacesFvsPatchLabelField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class internalFvsPatchField
+class polyFacesFvsPatchLabelField
 :
-    public fvsPatchField<Type>
+    public fvsPatchLabelField
 {
+private:
+
+    // Private Member Functions
+
+        //- Initialise
+        void init();
+
 
 public:
 
     //- Runtime type information
-    TypeName(internalFvPatch::typeName_());
+    TypeName("polyFaces");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        internalFvsPatchField
+        polyFacesFvsPatchLabelField
         (
             const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&
+            const DimensionedField<label, surfaceMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        internalFvsPatchField
+        polyFacesFvsPatchLabelField
         (
             const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&,
+            const DimensionedField<label, surfaceMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given internalFvsPatchField onto a new patch
-        internalFvsPatchField
+        //- Construct by mapping given patchField<Type> onto a new patch
+        polyFacesFvsPatchLabelField
         (
-            const internalFvsPatchField<Type>&,
+            const polyFacesFvsPatchLabelField&,
             const fvPatch&,
-            const DimensionedField<Type, surfaceMesh>&,
+            const DimensionedField<label, surfaceMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        internalFvsPatchField(const internalFvsPatchField<Type>&) = delete;
+        polyFacesFvsPatchLabelField
+        (
+            const polyFacesFvsPatchLabelField&
+        ) = delete;
 
         //- Copy constructor setting internal field reference
-        internalFvsPatchField
+        polyFacesFvsPatchLabelField
         (
-            const internalFvsPatchField<Type>&,
-            const DimensionedField<Type, surfaceMesh>&
+            const polyFacesFvsPatchLabelField&,
+            const DimensionedField<label, surfaceMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvsPatchField<Type>> clone
+        virtual tmp<fvsPatchLabelField> clone
         (
-            const DimensionedField<Type, surfaceMesh>& iF
+            const DimensionedField<label, surfaceMesh>& iF
         ) const
         {
-            return tmp<fvsPatchField<Type>>
+            return tmp<fvsPatchLabelField>
             (
-                new internalFvsPatchField<Type>(*this, iF)
+                new polyFacesFvsPatchLabelField(*this, iF)
             );
         }
-
-
-    // Member Functions
-
-        //- Write
-        virtual void write(Ostream&) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "internalFvsPatchField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

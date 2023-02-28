@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,11 +169,7 @@ public:
 
         //- Reset the boundary field contents to the given field
         //  Used for mesh to mesh mapping
-        void reset
-        (
-            const Internal&,
-            const GeometricBoundaryField<Type, PatchField, GeoMesh>&
-        );
+        void reset(const GeometricBoundaryField<Type, PatchField, GeoMesh>&);
 
         //- Write boundary field as dictionary entry
         void writeEntry(const word& keyword, Ostream& os) const;

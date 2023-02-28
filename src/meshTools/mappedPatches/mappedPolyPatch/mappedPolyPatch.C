@@ -37,7 +37,59 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+void Foam::mappedPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
+{
+    polyPatch::initCalcGeometry(pBufs);
+}
+
+
+void Foam::mappedPolyPatch::calcGeometry(PstreamBuffers& pBufs)
+{
+    polyPatch::calcGeometry(pBufs);
+    mappedPatchBase::clearOut();
+}
+
+
+void Foam::mappedPolyPatch::initMovePoints
+(
+    PstreamBuffers& pBufs,
+    const pointField& p
+)
+{
+    polyPatch::initMovePoints(pBufs, p);
+}
+
+
+void Foam::mappedPolyPatch::movePoints
+(
+    PstreamBuffers& pBufs,
+    const pointField& p
+)
+{
+    polyPatch::movePoints(pBufs, p);
+    if (reMapAfterMove_)
+    {
+        mappedPatchBase::clearOut();
+    }
+}
+
+
+void Foam::mappedPolyPatch::initTopoChange(PstreamBuffers& pBufs)
+{
+    polyPatch::initTopoChange(pBufs);
+}
+
+
+void Foam::mappedPolyPatch::topoChange(PstreamBuffers& pBufs)
+{
+    polyPatch::topoChange(pBufs);
+    mappedPatchBase::clearOut();
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::mappedPolyPatch::mappedPolyPatch
 (
@@ -116,56 +168,6 @@ Foam::mappedPolyPatch::~mappedPolyPatch()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::mappedPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
-{
-    polyPatch::initCalcGeometry(pBufs);
-}
-
-
-void Foam::mappedPolyPatch::calcGeometry(PstreamBuffers& pBufs)
-{
-    polyPatch::calcGeometry(pBufs);
-    mappedPatchBase::clearOut();
-}
-
-
-void Foam::mappedPolyPatch::initMovePoints
-(
-    PstreamBuffers& pBufs,
-    const pointField& p
-)
-{
-    polyPatch::initMovePoints(pBufs, p);
-}
-
-
-void Foam::mappedPolyPatch::movePoints
-(
-    PstreamBuffers& pBufs,
-    const pointField& p
-)
-{
-    polyPatch::movePoints(pBufs, p);
-    if (reMapAfterMove_)
-    {
-        mappedPatchBase::clearOut();
-    }
-}
-
-
-void Foam::mappedPolyPatch::initTopoChange(PstreamBuffers& pBufs)
-{
-    polyPatch::initTopoChange(pBufs);
-}
-
-
-void Foam::mappedPolyPatch::topoChange(PstreamBuffers& pBufs)
-{
-    polyPatch::topoChange(pBufs);
-    mappedPatchBase::clearOut();
-}
-
 
 void Foam::mappedPolyPatch::write(Ostream& os) const
 {

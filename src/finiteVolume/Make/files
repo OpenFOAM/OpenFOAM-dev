@@ -258,7 +258,6 @@ $(fvsPatchFields)/fvsPatchField/fvsPatchFields.C
 
 basicFvsPatchFields = $(fvsPatchFields)/basic
 $(basicFvsPatchFields)/calculated/calculatedFvsPatchFields.C
-$(basicFvsPatchFields)/nonConformalCalculated/nonConformalCalculatedFvsPatchFields.C
 $(basicFvsPatchFields)/coupled/coupledFvsPatchFields.C
 $(basicFvsPatchFields)/fixedValue/fixedValueFvsPatchFields.C
 $(basicFvsPatchFields)/sliced/slicedFvsPatchFields.C
@@ -276,6 +275,10 @@ $(constraintFvsPatchFields)/internal/internalFvsPatchFields.C
 $(constraintFvsPatchFields)/nonConformalCyclic/nonConformalCyclicFvsPatchFields.C
 $(constraintFvsPatchFields)/nonConformalError/nonConformalErrorFvsPatchFields.C
 $(constraintFvsPatchFields)/nonConformalProcessorCyclic/nonConformalProcessorCyclicFvsPatchFields.C
+
+derivedFvsPatchFields = $(fvsPatchFields)/derived
+$(derivedFvsPatchFields)/polyFaces/polyFacesFvsPatchLabelField.C
+$(derivedFvsPatchFields)/nonConformalPolyFaces/nonConformalPolyFacesFvsPatchLabelField.C
 
 fields/volFields/volFields.C
 fields/surfaceFields/surfaceFields.C

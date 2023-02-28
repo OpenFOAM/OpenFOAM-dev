@@ -16,7 +16,7 @@ FoamFile
 
 VoFCavitation
 {
-    type    VoFCavitation;
+    type    compressible::VoFCavitation;
 
     libs    ("libcompressibleVoFCavitation.so");
 

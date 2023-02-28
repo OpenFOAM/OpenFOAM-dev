@@ -42,8 +42,59 @@ namespace Foam
     );
 }
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-// * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * * * * //
+void Foam::mappedWallPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
+{
+    wallPolyPatch::initCalcGeometry(pBufs);
+}
+
+
+void Foam::mappedWallPolyPatch::calcGeometry(PstreamBuffers& pBufs)
+{
+    wallPolyPatch::calcGeometry(pBufs);
+    mappedPatchBase::clearOut();
+}
+
+
+void Foam::mappedWallPolyPatch::initMovePoints
+(
+    PstreamBuffers& pBufs,
+    const pointField& p
+)
+{
+    wallPolyPatch::initMovePoints(pBufs, p);
+}
+
+
+void Foam::mappedWallPolyPatch::movePoints
+(
+    PstreamBuffers& pBufs,
+    const pointField& p
+)
+{
+    wallPolyPatch::movePoints(pBufs, p);
+    if (reMapAfterMove_)
+    {
+        mappedPatchBase::clearOut();
+    }
+}
+
+
+void Foam::mappedWallPolyPatch::initTopoChange(PstreamBuffers& pBufs)
+{
+    wallPolyPatch::initTopoChange(pBufs);
+}
+
+
+void Foam::mappedWallPolyPatch::topoChange(PstreamBuffers& pBufs)
+{
+    wallPolyPatch::topoChange(pBufs);
+    mappedPatchBase::clearOut();
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::mappedWallPolyPatch::mappedWallPolyPatch
 (
@@ -145,56 +196,6 @@ Foam::mappedWallPolyPatch::~mappedWallPolyPatch()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::mappedWallPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
-{
-    wallPolyPatch::initCalcGeometry(pBufs);
-}
-
-
-void Foam::mappedWallPolyPatch::calcGeometry(PstreamBuffers& pBufs)
-{
-    wallPolyPatch::calcGeometry(pBufs);
-    mappedPatchBase::clearOut();
-}
-
-
-void Foam::mappedWallPolyPatch::initMovePoints
-(
-    PstreamBuffers& pBufs,
-    const pointField& p
-)
-{
-    wallPolyPatch::initMovePoints(pBufs, p);
-}
-
-
-void Foam::mappedWallPolyPatch::movePoints
-(
-    PstreamBuffers& pBufs,
-    const pointField& p
-)
-{
-    wallPolyPatch::movePoints(pBufs, p);
-    if (reMapAfterMove_)
-    {
-        mappedPatchBase::clearOut();
-    }
-}
-
-
-void Foam::mappedWallPolyPatch::initTopoChange(PstreamBuffers& pBufs)
-{
-    wallPolyPatch::initTopoChange(pBufs);
-}
-
-
-void Foam::mappedWallPolyPatch::topoChange(PstreamBuffers& pBufs)
-{
-    wallPolyPatch::topoChange(pBufs);
-    mappedPatchBase::clearOut();
-}
-
 
 void Foam::mappedWallPolyPatch::write(Ostream& os) const
 {

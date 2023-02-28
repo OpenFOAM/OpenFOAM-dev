@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "slicedFvPatchField.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::slicedFvPatchField<Type>::slicedFvPatchField
@@ -71,19 +71,7 @@ Foam::slicedFvPatchField<Type>::slicedFvPatchField
 }
 
 
-template<class Type>
-Foam::tmp<Foam::fvPatchField<Type>>
-Foam::slicedFvPatchField<Type>::clone
-(
-    const DimensionedField<Type, volMesh>& iF
-) const
-{
-    return tmp<fvPatchField<Type>>
-    (
-        new slicedFvPatchField<Type>(*this, iF)
-    );
-}
-
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::slicedFvPatchField<Type>::~slicedFvPatchField()

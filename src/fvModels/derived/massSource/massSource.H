@@ -83,7 +83,9 @@ class massSource
 :
     public fvModel
 {
-    // Private Data
+protected:
+
+    // Protected Data
 
         //- The set of cells the fvConstraint applies to
         fvCellSet set_;
@@ -107,10 +109,13 @@ class massSource
         HashPtrTable<unknownTypeFunction1> fieldValues_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Non-virtual read
         void readCoeffs();
+
+        //- Return the mass flow rate
+        virtual scalar massFlowRate() const;
 
 
         // Sources
@@ -164,7 +169,8 @@ public:
             const word& name,
             const word& modelType,
             const fvMesh& mesh,
-            const dictionary& dict
+            const dictionary& dict,
+            const bool all=false
         );
 
         //- Disallow default bitwise copy construction
