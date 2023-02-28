@@ -146,11 +146,11 @@ label findPatchID(const List<polyPatch*>& newPatches, const word& name)
 }
 
 
-template<class PatchType>
 label addPatch
 (
     const polyBoundaryMesh& patches,
     const word& patchName,
+    const word& patchType,
     const dictionary& dict,
     DynamicList<polyPatch*>& newPatches
 )
@@ -159,7 +159,7 @@ label addPatch
 
     if (patchi != -1)
     {
-        if (isA<PatchType>(*newPatches[patchi]))
+        if (newPatches[patchi]->type() == patchType)
         {
             return patchi;
         }
@@ -182,7 +182,7 @@ label addPatch
     }
 
     dictionary patchDict(dict);
-    patchDict.set("type", PatchType::typeName);
+    patchDict.set("type", patchType);
     patchDict.set("nFaces", 0);
     patchDict.set("startFace", startFacei);
 
@@ -541,6 +541,7 @@ void addCouplingPatches
     const wordList& zoneNames,
     const wordList& zoneShadowNames,
     const boolList& zoneIsInternal,
+    const dictionary& dict,
     DynamicList<polyPatch*>& newPatches,
     labelList& zoneTopPatch,
     labelList& zoneBottomPatch
@@ -550,6 +551,42 @@ void addCouplingPatches
         << "patchID\tpatch\ttype" << nl
         << "-------\t-----\t----"
         << endl;
+
+    const wordList patchNames
+    (
+        dict.lookupOrDefault("patchNames", wordList())
+    );
+
+    const wordList patchTypes
+    (
+        isShellMesh
+      ? dict.lookupOrDefault
+        (
+            "regionPatchTypes",
+            wordList(zoneNames.size(), mappedWallPolyPatch::typeName)
+        )
+      : dict.lookupOrDefault
+        (
+            "patchTypes",
+            wordList(zoneNames.size(), mappedWallPolyPatch::typeName)
+        )
+    );
+
+    const wordList regionPatchNames
+    (
+        dict.lookupOrDefault("regionPatchNames", wordList())
+    );
+
+    const wordList regionOppositePatchTypes
+    (
+        dict.lookupOrDefault("regionOppositePatchTypes", wordList())
+    );
+
+    const wordList regionOppositePatchNames
+    (
+        dict.lookupOrDefault("regionOppositePatchNames", wordList())
+    );
+
 
     zoneTopPatch.setSize(zoneNames.size(), -1);
     zoneBottomPatch.setSize(zoneNames.size(), -1);
@@ -562,11 +599,15 @@ void addCouplingPatches
     {
         const word patchNamePrefix =
             regionName + "_to_" + nbrRegionName + '_';
+
         const word nbrPatchNamePrefix =
             nbrRegionName + "_to_" + regionName + '_';
 
-        word bottomPatchName, bottomNbrPatchName;
-        word topPatchName, topNbrPatchName;
+        word bottomPatchName;
+        word bottomNbrPatchName;
+        word topPatchName;
+        word topNbrPatchName;
+
         if (zoneIsInternal[zonei])
         {
             bottomPatchName = patchNamePrefix + zoneNames[zonei] + "_bottom";
@@ -584,22 +625,41 @@ void addCouplingPatches
         }
         else
         {
-            bottomPatchName = patchNamePrefix + zoneNames[zonei];
-            bottomNbrPatchName = nbrPatchNamePrefix + zoneNames[zonei];
-            topPatchName = zoneNames[zonei] + "_top";
+            if (patchNames.size())
+            {
+                bottomPatchName = patchNames[zonei];
+            }
+            else
+            {
+                bottomPatchName = patchNamePrefix + zoneNames[zonei];
+            }
+
+            if (regionPatchNames.size())
+            {
+                bottomNbrPatchName = regionPatchNames[zonei];
+            }
+            else
+            {
+                bottomNbrPatchName = nbrPatchNamePrefix + zoneNames[zonei];
+            }
+
+            topPatchName =
+                regionOppositePatchNames.size()
+              ? regionOppositePatchNames[zonei]
+              : word(zoneNames[zonei] + "_top");
         }
 
         dictionary bottomPatchDict(patchDict);
         bottomPatchDict.add("neighbourPatch", bottomNbrPatchName);
 
-        zoneBottomPatch[zonei] =
-            addPatch<mappedWallPolyPatch>
-            (
-                mesh.boundaryMesh(),
-                bottomPatchName,
-                bottomPatchDict,
-                newPatches
-            );
+        zoneBottomPatch[zonei] = addPatch
+        (
+            mesh.boundaryMesh(),
+            bottomPatchName,
+            patchTypes[zonei],
+            bottomPatchDict,
+            newPatches
+        );
 
         Pout<< zoneBottomPatch[zonei]
             << '\t' << newPatches[zoneBottomPatch[zonei]]->name()
@@ -615,25 +675,27 @@ void addCouplingPatches
                 topPatchDict.add("bottomPatch", bottomPatchName);
             }
 
-            zoneTopPatch[zonei] =
-                addPatch<mappedExtrudedWallPolyPatch>
-                (
-                    mesh.boundaryMesh(),
-                    topPatchName,
-                    topPatchDict,
-                    newPatches
-                );
+            zoneTopPatch[zonei] = addPatch
+            (
+                mesh.boundaryMesh(),
+                topPatchName,
+                mappedExtrudedWallPolyPatch::typeName,
+                topPatchDict,
+                newPatches
+            );
         }
         else
         {
-            zoneTopPatch[zonei] =
-                addPatch<polyPatch>
-                (
-                    mesh.boundaryMesh(),
-                    topPatchName,
-                    dictionary(),
-                    newPatches
-                );
+            zoneTopPatch[zonei] = addPatch
+            (
+                mesh.boundaryMesh(),
+                topPatchName,
+                regionOppositePatchTypes.size()
+                  ? regionOppositePatchTypes[zonei]
+                  : polyPatch::typeName,
+                dictionary(),
+                newPatches
+            );
         }
 
         Pout<< zoneTopPatch[zonei]
@@ -734,10 +796,11 @@ labelList addZoneSidePatches
             if (oneDPolyPatchType == "empty")
             {
                 patchName = "oneDEmptyPatch";
-                zoneSidePatches[zoneI] = addPatch<emptyPolyPatch>
+                zoneSidePatches[zoneI] = addPatch
                 (
                     mesh.boundaryMesh(),
                     patchName,
+                    emptyPolyPatch::typeName,
                     dictionary(),
                     newPatches
                 );
@@ -745,10 +808,11 @@ labelList addZoneSidePatches
             else if (oneDPolyPatchType == "wedge")
             {
                 patchName = "oneDWedgePatch";
-                zoneSidePatches[zoneI] = addPatch<wedgePolyPatch>
+                zoneSidePatches[zoneI] = addPatch
                 (
                     mesh.boundaryMesh(),
                     patchName,
+                    wedgePolyPatch::typeName,
                     dictionary(),
                     newPatches
                 );
@@ -771,10 +835,11 @@ labelList addZoneSidePatches
             {
                 word patchName = zoneNames[zoneI] + "_" + "side";
 
-                zoneSidePatches[zoneI] = addPatch<polyPatch>
+                zoneSidePatches[zoneI] = addPatch
                 (
                     mesh.boundaryMesh(),
                     patchName,
+                    polyPatch::typeName,
                     dictionary(),
                     newPatches
                 );
@@ -910,10 +975,11 @@ labelList addExtrudeEdgeSidePatches
                     patchDict.add("myProcNo", Pstream::myProcNo());
                     patchDict.add("neighbProcNo", nbrProci);
 
-                    extrudeEdgeSidePatches[edgeI] = addPatch<processorPolyPatch>
+                    extrudeEdgeSidePatches[edgeI] = addPatch
                     (
                         mesh.boundaryMesh(),
                         name,
+                        processorPolyPatch::typeName,
                         patchDict,
                         newPatches
                     );
@@ -990,7 +1056,7 @@ int main(int argc, char *argv[])
 
             zoneShadowNames.append
             (
-                dict.lookupOrDefault<wordList>
+                dict.lookupOrDefault
                 (
                     keyword + "Shadow",
                     wordList
@@ -1344,6 +1410,7 @@ int main(int argc, char *argv[])
         zoneNames,
         zoneShadowNames,
         zoneIsInternal,
+        dict,
         regionPatches,
         zoneTopPatch,
         zoneBottomPatch
@@ -1376,6 +1443,7 @@ int main(int argc, char *argv[])
             zoneNames,
             zoneShadowNames,
             zoneIsInternal,
+            dict,
             newPatches,
             interMeshTopPatch,
             interMeshBottomPatch
