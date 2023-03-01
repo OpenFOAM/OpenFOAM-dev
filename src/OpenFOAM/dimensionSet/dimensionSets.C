@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "dimensionSet.H"
 #include "dimensionedScalar.H"
+#include "demandDrivenData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -37,6 +38,19 @@ namespace Foam
 dictionary* dimensionSystemsPtr_(nullptr);
 HashTable<dimensionedScalar>* unitSetPtr_(nullptr);
 dimensionSets* writeUnitSetPtr_(nullptr);
+
+// Delete the above data at the end of the run
+struct deleteDimensionSystemsPtr
+{
+    ~deleteDimensionSystemsPtr()
+    {
+        deleteDemandDrivenData(dimensionSystemsPtr_);
+        deleteDemandDrivenData(unitSetPtr_);
+        deleteDemandDrivenData(writeUnitSetPtr_);
+    }
+};
+
+deleteDimensionSystemsPtr deleteDimensionSystemsPtr_;
 
 }
 
