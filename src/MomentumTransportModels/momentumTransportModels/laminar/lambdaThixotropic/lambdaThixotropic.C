@@ -68,6 +68,13 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
     nu0_("nu0", dimViscosity, this->coeffDict_),
     nuInf_("nuInf", dimViscosity, this->coeffDict_),
     K_(1 - sqrt(nuInf_/nu0_)),
+    BinghamPlastic_(this->coeffDict_.found("sigmay")),
+    sigmay_
+    (
+        BinghamPlastic_
+      ? dimensionedScalar("sigmay", dimPressure/dimDensity, this->coeffDict_)
+      : dimensionedScalar("sigmay", dimPressure/dimDensity, 0)
+    ),
 
     lambda_
     (
@@ -92,7 +99,7 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        calcNu()
+        calcNu(strainRate())
     )
 {}
 
@@ -101,17 +108,46 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
 
 template<class BasicMomentumTransportModel>
 tmp<volScalarField>
-lambdaThixotropic<BasicMomentumTransportModel>::calcNu() const
+lambdaThixotropic<BasicMomentumTransportModel>::calcNu
+(
+    const volScalarField& strainRate
+) const
 {
-    return nuInf_/(sqr(1 - K_*lambda_) + rootVSmall);
+    tmp<volScalarField> nu
+    (
+        nuInf_/(sqr(1 - K_*lambda_) + rootVSmall)
+    );
+
+    // Add optional yield stress contribution to the viscosity
+    if (BinghamPlastic_)
+    {
+        dimensionedScalar sigmaySmall
+        (
+            "sigmaySmall",
+            sigmay_.dimensions(),
+            small
+        );
+
+        // Limit the Bingham viscosity to 100x the thixotropic viscosity
+        // for numerical stability
+        dimensionedScalar nuMax_("nuMax", 100*nu0_);
+
+        nu.ref() = min
+        (
+            sigmay_/(strainRate + 1e-4*(sigmay_ + sigmaySmall)/nu0_) + nu(),
+            nuMax_
+        );
+    }
+
+    return nu;
 }
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField::Internal>
+tmp<volScalarField>
 lambdaThixotropic<BasicMomentumTransportModel>::strainRate() const
 {
-    return sqrt(2.0)*mag(symm(fvc::grad(this->U())()()));
+    return sqrt(2.0)*mag(symm(fvc::grad(this->U())));
 }
 
 
@@ -181,6 +217,8 @@ void lambdaThixotropic<BasicMomentumTransportModel>::correct()
         Foam::fvConstraints::New(this->mesh_)
     );
 
+    const volScalarField strainRate(this->strainRate());
+
     tmp<fvScalarMatrix> lambdaEqn
     (
         fvm::ddt(lambda_) + fvm::div(phi, lambda_)
@@ -198,7 +236,7 @@ void lambdaThixotropic<BasicMomentumTransportModel>::correct()
 
     lambda_.maxMin(scalar(0), scalar(1));
 
-    nu_ = calcNu();
+    nu_ = calcNu(strainRate);
 
     laminarModel<BasicMomentumTransportModel>::correct();
 }

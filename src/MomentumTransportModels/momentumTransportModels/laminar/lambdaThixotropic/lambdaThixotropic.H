@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,6 +112,13 @@ class lambdaThixotropic
         //- Model coefficient
         dimensionedScalar K_;
 
+        //- Switch for optional Bingham plastic handling
+        //  Set by the presence of the sigmay entry
+        bool BinghamPlastic_;
+
+        //- Optional Bingham plastic yield stress [m^2/s^2]
+        dimensionedScalar sigmay_;
+
         //- Structural parameter
         //  0 = freestream value (most liquid)
         //  1 = fully built (most solid)
@@ -124,10 +131,13 @@ class lambdaThixotropic
     // Private Member Functions
 
         //- Calculates and returns the viscosity from the current lambda
-        tmp<volScalarField> calcNu() const;
+        tmp<volScalarField> calcNu
+        (
+            const volScalarField& strainRate
+        ) const;
 
         //- Returns the current strain rate from the velocity field
-        tmp<volScalarField::Internal> strainRate() const;
+        tmp<volScalarField> strainRate() const;
 
 
 public:
