@@ -22,6 +22,7 @@ wmake $targetType incompressibleMultiphaseVoF
 wmake $targetType compressibleMultiphaseVoF
 multiphaseEuler/Allwmake $targetType $*
 isothermalFilm/Allwmake $targetType $*
+film/Allwmake $targetType $*
 wmake $targetType solid
 solidDisplacement/Allwmake $targetType $*
 
