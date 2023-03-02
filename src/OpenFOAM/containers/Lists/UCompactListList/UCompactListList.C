@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,53 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "UCompactListList.H"
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+template<class T>
+template<class ListType, class ListListType>
+void Foam::UCompactListList<T>::setSizeToListList
+(
+    ListType& offsets,
+    ListType& m,
+    const ListListType& ll
+)
+{
+    offsets.setSize(ll.size() + 1);
+
+    label sumSize = 0;
+    offsets[0] = 0;
+    forAll(ll, i)
+    {
+        sumSize += ll[i].size();
+        offsets[i+1] = sumSize;
+    }
+
+    m.setSize(sumSize);
+}
+
+
+template<class T>
+template<class ListType, class ListListType>
+void Foam::UCompactListList<T>::setSizeAndValuesToListList
+(
+    ListType& offsets,
+    ListType& m,
+    const ListListType& ll
+)
+{
+    setSizeToListList(offsets, m, ll);
+
+    label k = 0;
+    forAll(ll, i)
+    {
+        forAll(ll[i], j)
+        {
+            m[k++] = ll[i][j];
+        }
+    }
+}
+
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,9 +104,13 @@ public:
         //  the number of data and a value for all elements.
         inline CompactListList(const label mRows, const label nData, const T&);
 
-        //- Construct by converting given List<Container>
-        template<class Container>
-        CompactListList(const List<Container>&);
+        //- Construct from UList<T2>
+        template<class T2>
+        CompactListList(const UList<T2>&);
+
+        //- Construct from UIndirectList<T2>
+        template<class T2>
+        CompactListList(const UIndirectList<T2>&);
 
         //- Construct given list of row-sizes and a value for all elements
         CompactListList(const labelUList& rowSizes, const T&);
@@ -135,6 +139,15 @@ public:
             //- Reset size of CompactListList.
             void setSize(const labelUList& rowSizes);
 
+            //- Reset size of CompactListList to match the given UList<T2>
+            template<class T2>
+            void setSize(const UList<T2>&);
+
+            //- Reset size of CompactListList to match the given
+            //  UIndirectList<T2>
+            template<class T2>
+            void setSize(const UIndirectList<T2>&);
+
             //- Reset size of CompactListList.
             //  This form only allows contraction of the CompactListList.
             inline void resize(const label mRows);
@@ -147,6 +160,16 @@ public:
 
             //- Reset size of CompactListList.
             inline void resize(const labelUList& rowSizes);
+
+            //- Reset size of CompactListList to match the given
+            //  UList<T2>
+            template<class T2>
+            void resize(const UList<T2>&);
+
+            //- Reset size of CompactListList to match the given
+            //  UIndirectList<T2>
+            template<class T2>
+            void resize(const UIndirectList<T2>&);
 
             //- Clear the CompactListList, i.e. set sizes to zero.
             void clear();

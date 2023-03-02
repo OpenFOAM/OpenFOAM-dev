@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,31 +28,28 @@ License
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
 template<class T>
-template<class Container>
-Foam::CompactListList<T>::CompactListList(const List<Container>& ll)
+template<class T2>
+Foam::CompactListList<T>::CompactListList(const UList<T2>& ll)
 :
     UCompactListList<T>(),
-    offsets_(ll.size() + 1),
+    offsets_(),
     m_()
 {
-    label sumSize = 0;
-    offsets_[0] = 0;
-    forAll(ll, i)
-    {
-        sumSize += ll[i].size();
-        offsets_[i+1] = sumSize;
-    }
+    UCompactListList<T>::setSizeAndValuesToListList(offsets_, m_, ll);
 
-    m_.setSize(sumSize);
+    UCompactListList<T>::shallowCopy(UCompactListList<T>(offsets_, m_));
+}
 
-    label k = 0;
-    forAll(ll, i)
-    {
-        forAll(ll[i], j)
-        {
-            m_[k++] = ll[i][j];
-        }
-    }
+
+template<class T>
+template<class T2>
+Foam::CompactListList<T>::CompactListList(const UIndirectList<T2>& ll)
+:
+    UCompactListList<T>(),
+    offsets_(),
+    m_()
+{
+    UCompactListList<T>::setSizeAndValuesToListList(offsets_, m_, ll);
 
     UCompactListList<T>::shallowCopy(UCompactListList<T>(offsets_, m_));
 }
@@ -153,6 +150,26 @@ void Foam::CompactListList<T>::setSize(const labelUList& rowSizes)
     }
 
     m_.setSize(sumSize);
+
+    UCompactListList<T>::shallowCopy(UCompactListList<T>(offsets_, m_));
+}
+
+
+template<class T>
+template<class T2>
+void Foam::CompactListList<T>::setSize(const UList<T2>& ll)
+{
+    UCompactListList<T>::setSizeToListList(offsets_, m_, ll);
+
+    UCompactListList<T>::shallowCopy(UCompactListList<T>(offsets_, m_));
+}
+
+
+template<class T>
+template<class T2>
+void Foam::CompactListList<T>::setSize(const UIndirectList<T2>& ll)
+{
+    UCompactListList<T>::setSizeToListList(offsets_, m_, ll);
 
     UCompactListList<T>::shallowCopy(UCompactListList<T>(offsets_, m_));
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,6 +74,15 @@ public:
 
 
     // Member Functions
+
+        //- The size of the underlying list
+        inline label capacity() const;
+
+        //- Clear all elements
+        void clear();
+
+        //- Resize and clear all elements
+        void resizeAndClear(const label newSize);
 
         //- Insert into the hash list. Return true if the value was newly
         //  inserted, or false if it was already there.

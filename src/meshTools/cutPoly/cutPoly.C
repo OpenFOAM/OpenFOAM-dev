@@ -139,7 +139,7 @@ Foam::labelListList Foam::cutPoly::cellCuts
     }
 
     // Get local cell-face-edge addressing
-    const labelListList& cfiAndFeiToCei = cAddr.cfiAndFeiToCei();
+    const CompactListList<label>& cfiAndFeiToCei = cAddr.cfiAndFeiToCei();
     const List<Pair<labelPair>>& ceiToCfiAndFei = cAddr.ceiToCfiAndFei();
     const boolList& cOwns = cAddr.cOwns();
 

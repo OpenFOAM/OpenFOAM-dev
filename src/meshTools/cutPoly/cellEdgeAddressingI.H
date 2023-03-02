@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,25 +25,87 @@ License
 
 #include "cellEdgeAddressing.H"
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+inline Foam::cellEdgeAddressing::cellEdgeAddressing
+(
+    const cellEdgeAddressingList& cAddrs,
+    const label celli
+)
+:
+    cAddrs_(cAddrs),
+    celli_(celli)
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::labelListList&
-Foam::cellEdgeAddressing::cfiAndFeiToCei() const
+inline const Foam::CompactListList<Foam::label>&
+Foam::cellEdgeAddressingData::cfiAndFeiToCei() const
 {
     return cfiAndFeiToCei_;
 }
 
 
 inline const Foam::List<Foam::Pair<Foam::labelPair>>&
-Foam::cellEdgeAddressing::ceiToCfiAndFei() const
+Foam::cellEdgeAddressingData::ceiToCfiAndFei() const
 {
     return ceiToCfiAndFei_;
 }
 
 
-inline const Foam::boolList& Foam::cellEdgeAddressing::cOwns() const
+inline const Foam::boolList& Foam::cellEdgeAddressingData::cOwns() const
 {
     return cOwns_;
+}
+
+
+inline const Foam::CompactListList<Foam::label>&
+Foam::cellEdgeAddressing::cfiAndFeiToCei() const
+{
+    return cAddrs_.data(celli_).cfiAndFeiToCei();
+}
+
+
+inline const Foam::List<Foam::Pair<Foam::labelPair>>&
+Foam::cellEdgeAddressing::ceiToCfiAndFei() const
+{
+    return cAddrs_.data(celli_).ceiToCfiAndFei();
+}
+
+
+inline const Foam::boolList& Foam::cellEdgeAddressing::cOwns() const
+{
+    return cAddrs_.data(celli_).cOwns();
+}
+
+
+inline const Foam::cellEdgeAddressingData&
+Foam::cellEdgeAddressingList::data(const label celli) const
+{
+    if (!list_.set(celli))
+    {
+        const cell& c = mesh().cells()[celli];
+        const faceList& fs = mesh().faces();
+        const labelList& fOwners = mesh().faceOwner();
+
+        list_.set
+        (
+            celli,
+            new cellEdgeAddressingData(c, fs, fOwners[c[0]] == celli)
+        );
+    }
+
+    return list_[celli];
+}
+
+
+// * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
+
+inline const Foam::cellEdgeAddressing
+Foam::cellEdgeAddressingList::operator[](const label celli) const
+{
+    return cellEdgeAddressing(*this, celli);
 }
 
 

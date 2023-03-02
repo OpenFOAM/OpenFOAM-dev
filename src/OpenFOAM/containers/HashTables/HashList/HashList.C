@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,34 @@ Foam::HashList<Type, Key, Hash>::HashList(const label size)
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+template<class Type, class Key, class Hash>
+inline Foam::label Foam::HashList<Type, Key, Hash>::capacity() const
+{
+    return List<Tuple2<Key, Type>>::size();
+}
+
+
+template<class Type, class Key, class Hash>
+void Foam::HashList<Type, Key, Hash>::clear()
+{
+    List<Tuple2<Key, Type>>::operator=
+    (
+        Tuple2<Key, Type>(nullKey, Type())
+    );
+}
+
+
+template<class Type, class Key, class Hash>
+void Foam::HashList<Type, Key, Hash>::resizeAndClear(const label newSize)
+{
+    List<Tuple2<Key, Type>>::resize
+    (
+        newSize,
+        Tuple2<Key, Type>(nullKey, Type())
+    );
+}
+
 
 template<class Type, class Key, class Hash>
 bool Foam::HashList<Type, Key, Hash>::insert(const Key& k, const Type& t)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,30 +48,63 @@ struct QuickHashEdge
 template<>
 const edge HashList<label, edge, QuickHashEdge>::nullKey(-labelMax, -labelMax);
 
+// Workspace for addressing calculations
+struct cellEdgeAddressingWorkspace
+{
+    HashList<label, edge, QuickHashEdge> edgeToCei;
+
+    DynamicList<bool> cOwnsIsSet;
+
+    cellEdgeAddressingWorkspace()
+    :
+        edgeToCei(0),
+        cOwnsIsSet()
+    {
+        resizeAndClear(6, 12);
+    }
+
+    void resizeAndClear(const label nCellFaces, const label nCellEdges)
+    {
+        if (edgeToCei.capacity() < nCellEdges)
+        {
+            edgeToCei.resizeAndClear(nCellEdges*6);
+        }
+        else
+        {
+            edgeToCei.clear();
+        }
+
+        cOwnsIsSet.resize(nCellFaces);
+        cOwnsIsSet = false;
+    }
+}
+workspace_;
+
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::cellEdgeAddressing::cellEdgeAddressing
+Foam::cellEdgeAddressingData::cellEdgeAddressingData
 (
     const cell& c,
     const faceList& fs,
     const bool cOwnsFirst
 )
 {
-    // Compute the number of cell edges
-    label nCellEdges = 0;
-    forAll(c, cfi)
-    {
-        const face& f = fs[c[cfi]];
+    // Allocate and initialise the addressing
+    cfiAndFeiToCei_.resize(UIndirectList<face>(fs, c));
+    ceiToCfiAndFei_ =
+        List<Pair<labelPair>>
+        (
+            cfiAndFeiToCei_.m().size()/2,
+            Pair<labelPair>(labelPair(-1, -1), labelPair(-1, -1))
+        );
 
-        nCellEdges += f.size();
-    }
-    nCellEdges /= 2;
+    // Resize and reset the workspace
+    workspace_.resizeAndClear(c.size(), ceiToCfiAndFei_.size());
 
     // Construct a map to enumerate the cell edges
-    HashList<label, edge, QuickHashEdge> edgeToCei(nCellEdges*6);
     {
         label cellEdgei = 0;
 
@@ -81,30 +114,22 @@ Foam::cellEdgeAddressing::cellEdgeAddressing
 
             forAll(f, fei)
             {
-                cellEdgei += edgeToCei.insert(f.faceEdge(fei), cellEdgei);
+                cellEdgei +=
+                    workspace_.edgeToCei.insert(f.faceEdge(fei), cellEdgei);
             }
         }
     }
-
-    // Allocate and initialise the addressing
-    cfiAndFeiToCei_ = labelListList(c.size());
-    ceiToCfiAndFei_ =
-        List<Pair<labelPair>>
-        (
-            nCellEdges,
-            Pair<labelPair>(labelPair(-1, -1), labelPair(-1, -1))
-        );
 
     // Copy data out of the map into the addressing
     forAll(c, cfi)
     {
         const face& f = fs[c[cfi]];
 
-        cfiAndFeiToCei_[cfi] = labelList(f.size(), -1);
+        cfiAndFeiToCei_[cfi] = -1;
 
         forAll(f, fei)
         {
-            const label cei = edgeToCei[f.faceEdge(fei)];
+            const label cei = workspace_.edgeToCei[f.faceEdge(fei)];
 
             cfiAndFeiToCei_[cfi][fei] = cei;
             ceiToCfiAndFei_[cei]
@@ -117,15 +142,14 @@ Foam::cellEdgeAddressing::cellEdgeAddressing
     // Allocate and initialise the face signs
     cOwns_ = boolList(c.size(), false);
     cOwns_[0] = cOwnsFirst;
-    boolList cOwnsIsSet(c.size(), false);
-    cOwnsIsSet[0] = true;
+    workspace_.cOwnsIsSet[0] = true;
 
     // Compare cell-face-edges to determine face signs
     forAll(c, cfi)
     {
         const face& f = fs[c[cfi]];
 
-        if (!cOwnsIsSet[cfi]) continue;
+        if (!workspace_.cOwnsIsSet[cfi]) continue;
 
         forAll(f, fei)
         {
@@ -138,7 +162,7 @@ Foam::cellEdgeAddressing::cellEdgeAddressing
                 ];
             const label cfj = other[0], fej = other[1];
 
-            if (cOwnsIsSet[cfj]) continue;
+            if (workspace_.cOwnsIsSet[cfj]) continue;
 
             const label sign =
                 edge::compare
@@ -148,7 +172,7 @@ Foam::cellEdgeAddressing::cellEdgeAddressing
                 );
 
             cOwns_[cfj] = sign < 0 ? cOwns_[cfi] : !cOwns_[cfi];
-            cOwnsIsSet[cfj] = true;
+            workspace_.cOwnsIsSet[cfj] = true;
         }
     }
 }
@@ -198,30 +222,6 @@ void Foam::cellEdgeAddressingList::mapMesh(const polyMeshMap& map)
 {
     list_.clear();
     list_.resize(map.mesh().nCells());
-}
-
-
-// * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
-
-const Foam::cellEdgeAddressing& Foam::cellEdgeAddressingList::operator[]
-(
-    const label celli
-) const
-{
-    if (!list_.set(celli))
-    {
-        const cell& c = mesh().cells()[celli];
-        const faceList& fs = mesh().faces();
-        const labelList& fOwners = mesh().faceOwner();
-
-        list_.set
-        (
-            celli,
-            new cellEdgeAddressing(c, fs, fOwners[c[0]] == celli)
-        );
-    }
-
-    return list_[celli];
 }
 
 

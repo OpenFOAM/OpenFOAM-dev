@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
+    Foam::cellEdgeAddressingData
     Foam::cellEdgeAddressing
     Foam::cellEdgeAddressingList
 
@@ -39,6 +40,7 @@ SourceFiles
 
 #include "DemandDrivenMeshObject.H"
 #include "polyMesh.H"
+#include "CompactListList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,19 +50,20 @@ namespace Foam
 class polyDistributionMap;
 class polyTopoChangeMap;
 class polyMeshMap;
+class cellEdgeAddressingList;
 
 /*---------------------------------------------------------------------------*\
-                      Class cellEdgeAddressing Declaration
+                      Class cellEdgeAddressingData Declaration
 \*---------------------------------------------------------------------------*/
 
-class cellEdgeAddressing
+class cellEdgeAddressingData
 {
 private:
 
     // Private Data
 
         //- Map from cell-face-index and face-edge-index to cell-edge-index
-        labelListList cfiAndFeiToCei_;
+        CompactListList<label> cfiAndFeiToCei_;
 
         //- Map from cell-edge-index to cell-face-index and face-edge-index.
         //  Note that there are two sets of indices for each cell-edge,
@@ -81,7 +84,7 @@ public:
     // Constructors
 
         //- Construct from a cell and its faces
-        cellEdgeAddressing
+        cellEdgeAddressingData
         (
             const cell& c,
             const faceList& fs,
@@ -92,7 +95,49 @@ public:
     // Member Functions
 
         //- Map from cell-face-index and face-edge-index to cell-edge-index
-        inline const labelListList& cfiAndFeiToCei() const;
+        inline const CompactListList<label>& cfiAndFeiToCei() const;
+
+        //- Map from cell-edge-index to cell-face-index and face-edge-index
+        inline const List<Pair<labelPair>>& ceiToCfiAndFei() const;
+
+        //- For each cell-face, whether or not the cell owns it
+        inline const boolList& cOwns() const;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                    Class cellEdgeAddressing Declaration
+\*---------------------------------------------------------------------------*/
+
+class cellEdgeAddressing
+{
+private:
+
+    // Private Data
+
+        //- The cell edge addressing list
+        const cellEdgeAddressingList& cAddrs_;
+
+        //- The cell index
+        const label celli_;
+
+
+public:
+
+    // Constructors
+
+        //- Construct from the cell edge addressing list and a cell index
+        inline cellEdgeAddressing
+        (
+            const cellEdgeAddressingList& cAddrs,
+            const label celli
+        );
+
+
+    // Member Functions
+
+        //- Map from cell-face-index and face-edge-index to cell-edge-index
+        inline const CompactListList<label>& cfiAndFeiToCei() const;
 
         //- Map from cell-edge-index to cell-face-index and face-edge-index
         inline const List<Pair<labelPair>>& ceiToCfiAndFei() const;
@@ -118,7 +163,7 @@ class cellEdgeAddressingList
     // Private Data
 
         //- Edge addressing for each cell
-        mutable PtrList<cellEdgeAddressing> list_;
+        mutable PtrList<cellEdgeAddressingData> list_;
 
 
 protected:
@@ -155,8 +200,11 @@ public:
 
     // Member Operators
 
+        //- Get the addressing data for a given cell
+        const cellEdgeAddressingData& data(const label celli) const;
+
         //- Get the addressing for a given cell
-        const cellEdgeAddressing& operator[](const label celli) const;
+        inline const cellEdgeAddressing operator[](const label celli) const;
 };
 
 

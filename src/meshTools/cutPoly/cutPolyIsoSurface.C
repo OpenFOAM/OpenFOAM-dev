@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,16 +55,21 @@ Foam::cutPolyIsoSurface::cutPolyIsoSurface
 {
     cpuTime cpuTime;
 
-    // Request the cell-edge addressing engine
-    const cellEdgeAddressingList& cAddrs = cellEdgeAddressingList::New(mesh);
-
     // Cut the faces
     List<List<labelPair>> faceCuts(mesh.faces().size());
     forAll(mesh.faces(), facei)
     {
         faceCuts[facei] =
-            cutPoly::faceCuts(mesh.faces()[facei], pAlphas, isoAlpha);
+            cutPoly::faceCuts
+            (
+                mesh.faces()[facei],
+                pAlphas,
+                isoAlpha
+            );
     }
+
+    // Request the cell-edge addressing engine
+    const cellEdgeAddressingList& cAddrs = cellEdgeAddressingList::New(mesh);
 
     // Cut the cells
     List<labelListList> cellCuts(mesh.cells().size());
@@ -81,6 +86,7 @@ Foam::cutPolyIsoSurface::cutPolyIsoSurface
                 pAlphas,
                 isoAlpha
             );
+
         nCutCells += !cellCuts[celli].empty();
     };
     if (!isNull<labelList>(zoneIDs))
@@ -111,26 +117,20 @@ Foam::cutPolyIsoSurface::cutPolyIsoSurface
     DynamicList<label> faceCellsDyn(nAllocate);
     forAll(mesh.cells(), celli)
     {
-        const cell& c = mesh.cells()[celli];
-
-        const labelListList& cCuts = cellCuts[celli];
-
-        const List<Pair<labelPair>>& ceiToCfiAndFei =
-            cAddrs[celli].ceiToCfiAndFei();
-
-        forAll(cCuts, cuti)
+        forAll(cellCuts[celli], cellCuti)
         {
-            if (cCuts[cuti].size() < 3) continue;
+            if (cellCuts[celli][cellCuti].size() < 3) continue;
 
-            facesDyn.append(face(cCuts[cuti].size()));
+            facesDyn.append(face(cellCuts[celli][cellCuti].size()));
 
-            forAll(cCuts[cuti], i)
+            forAll(cellCuts[celli][cellCuti], i)
             {
-                const label cei = cCuts[cuti][i];
-                const label cfi = ceiToCfiAndFei[cei][0][0];
-                const label fei = ceiToCfiAndFei[cei][0][1];
+                const label cei = cellCuts[celli][cellCuti][i];
+                const label cfi = cAddrs[celli].ceiToCfiAndFei()[cei][0][0];
+                const label fei = cAddrs[celli].ceiToCfiAndFei()[cei][0][1];
 
-                const edge e = mesh.faces()[c[cfi]].faceEdge(fei);
+                const edge e =
+                    mesh.faces()[mesh.cells()[celli][cfi]].faceEdge(fei);
 
                 EdgeMap<label>::iterator iter = meshEdgePoint.find(e);
 
