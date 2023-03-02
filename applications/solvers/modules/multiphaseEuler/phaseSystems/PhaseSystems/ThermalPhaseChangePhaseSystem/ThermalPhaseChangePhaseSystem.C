@@ -29,6 +29,7 @@ License
 #include "fvcVolumeIntegrate.H"
 #include "fvmSup.H"
 #include "rhoMulticomponentThermo.H"
+#include "wallBoilingHeatTransfer.H"
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
@@ -182,6 +183,30 @@ ThermalPhaseChangePhaseSystem
                     interface.phase1().thermo().T()
                   + interface.phase2().thermo().T()
                 )/2
+            )
+        );
+
+        Tsats_.insert
+        (
+            interface,
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName
+                    (
+                        "thermalPhaseChange:Tsat",
+                        interface.name()
+                    ),
+                    this->mesh().time().name(),
+                    this->mesh(),
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::AUTO_WRITE
+                ),
+                saturationModels_[interface]->Tsat
+                (
+                    interface.phase1().thermo().p()
+                )
             )
         );
 
@@ -363,7 +388,8 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
             this->addDmidtHefs
             (
                 dmidtfs,
-                Tfs_,
+                //Tfs_,
+                Tsats_,
                 latentHeatScheme::upwind,
                 latentHeatTransfer::mass,
                 eqns
@@ -399,7 +425,8 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
         this->addDmdtHefs
         (
             dmdtfs_,
-            Tfs_,
+            //Tfs_,
+            Tsats_,
             latentHeatScheme::upwind,
             latentHeatTransfer::mass,
             eqns
@@ -513,6 +540,18 @@ template<class BasePhaseSystem>
 void
 Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
 {
+    typedef
+        Foam::heatTransferModels::wallBoilingHeatTransfer
+        wallBoilingHeatTransferModel;
+
+    HashTable<const wallBoilingHeatTransferModel*>
+        wallBoilingHeatTransferModels =
+        this->mesh().template lookupClass<wallBoilingHeatTransferModel>();
+
+    typedef
+        compressible::alphatPhaseChangeWallFunctionBase
+        alphatPhaseChangeWallFunction;
+
     forAllConstIter
     (
         saturationModelTable,
@@ -536,7 +575,8 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
             volScalarField& dmdtf(*this->dmdtfs_[interface]);
             volScalarField& Tf(*this->Tfs_[interface]);
 
-            Tf = saturationModelIter()->Tsat(thermo1.p());
+            volScalarField& Tsat(*this->Tsats_[interface]);
+            Tsat = saturationModelIter()->Tsat(thermo1.p());
 
             const volScalarField L
             (
@@ -546,14 +586,14 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                     interface,
                     volatile_,
                     dmdtf,
-                    Tf,
+                    Tsat,
                     latentHeatScheme::symmetric
                 )
               : this->L
                 (
                     interface,
                     dmdtf,
-                    Tf,
+                    Tsat,
                     latentHeatScheme::symmetric
                 )
             );
@@ -561,7 +601,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
             volScalarField H1(heatTransferModel.modelInThe(phase1).K(0));
             volScalarField H2(heatTransferModel.modelInThe(phase2).K(0));
 
-            volScalarField dmdtfNew((H1*(Tf - T1) + H2*(Tf - T2))/L);
+            volScalarField dmdtfNew((H1*(Tsat - T1) + H2*(Tsat - T2))/L);
 
             if (volatile_ != "none")
             {
@@ -594,9 +634,6 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                 }
             }
 
-            /* Needs to be included if the code is to be compiled with
-               latentHeatTransfer::heat flag in heatTransfer()
-
             H1 = heatTransferModel.modelInThe(phase1).K();
             H2 = heatTransferModel.modelInThe(phase2).K();
 
@@ -605,7 +642,12 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
             H2.max(small);
 
             Tf = (H1*T1 + H2*T2 + dmdtfNew*L)/(H1 + H2);
-            */
+
+            Info<< Tsat.name()
+                << ": min = " << gMin(Tsat.primitiveField())
+                << ", mean = " << gAverage(Tsat.primitiveField())
+                << ", max = " << gMax(Tsat.primitiveField())
+                << endl;
 
             Info<< Tf.name()
                 << ": min = " << gMin(Tf.primitiveField())
@@ -628,14 +670,29 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
 
         // Nucleation mass transfer update
         {
-            typedef
-                compressible::alphatPhaseChangeWallFunctionBase
-                alphatWallFunction;
-
             volScalarField& nDmdtf(*this->nDmdtfs_[interface]);
             nDmdtf = Zero;
 
             bool wallBoilingActive = false;
+
+            forAllConstIter
+            (
+                HashTable<const wallBoilingHeatTransferModel*>,
+                wallBoilingHeatTransferModels,
+                wallBoilingHeatTransferModelIter
+            )
+            {
+                const wallBoilingHeatTransferModel& wbht =
+                    *wallBoilingHeatTransferModelIter();
+
+                if (!wbht.activePhaseInterface(interface)) continue;
+
+                wallBoilingActive = true;
+
+                nDmdtf +=
+                    (interface == wbht.activePhaseInterface() ? +1 : -1)
+                   *wbht.dmdtf();
+            }
 
             forAllConstIter(phaseInterface, interface, interfaceIter)
             {
@@ -655,10 +712,10 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                     const fvPatchScalarField& alphatp =
                         alphat.boundaryField()[patchi];
 
-                    if (!isA<alphatWallFunction>(alphatp)) continue;
+                    if (!isA<alphatPhaseChangeWallFunction>(alphatp)) continue;
 
-                    const alphatWallFunction& alphatw =
-                        refCast<const alphatWallFunction>(alphatp);
+                    const alphatPhaseChangeWallFunction& alphatw =
+                        refCast<const alphatPhaseChangeWallFunction>(alphatp);
 
                     if (!alphatw.activeInterface(interface)) continue;
 

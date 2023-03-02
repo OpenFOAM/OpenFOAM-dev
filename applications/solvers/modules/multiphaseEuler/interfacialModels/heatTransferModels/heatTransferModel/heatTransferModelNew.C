@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,8 @@ Foam::autoPtr<Foam::heatTransferModel> Foam::heatTransferModel::New
 (
     const dictionary& dict,
     const phaseInterface& interface,
-    const bool outer
+    const bool outer,
+    const bool registerObject
 )
 {
     const dictionary& modelDict =
@@ -56,7 +57,7 @@ Foam::autoPtr<Foam::heatTransferModel> Foam::heatTransferModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(modelDict, interface);
+    return cstrIter()(modelDict, interface, registerObject);
 }
 
 

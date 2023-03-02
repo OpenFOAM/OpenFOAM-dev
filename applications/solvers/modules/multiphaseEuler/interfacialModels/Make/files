@@ -42,6 +42,7 @@ heatTransferModels/constantNu/constantNuHeatTransfer.C
 heatTransferModels/RanzMarshall/RanzMarshall.C
 heatTransferModels/Gunn/Gunn.C
 heatTransferModels/sphericalHeatTransfer/sphericalHeatTransfer.C
+heatTransferModels/nonSphericalHeatTransfer/nonSphericalHeatTransfer.C
 heatTransferModels/timeScaleFilteredHeatTransfer/timeScaleFilteredHeatTransfer.C
 
 virtualMassModels/virtualMassModel/virtualMassModel.C

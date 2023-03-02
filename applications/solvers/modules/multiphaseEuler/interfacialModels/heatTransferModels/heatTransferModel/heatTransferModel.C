@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,9 +43,22 @@ const Foam::dimensionSet Foam::heatTransferModel::dimK(1, -1, -3, -1, 0);
 Foam::heatTransferModel::heatTransferModel
 (
     const dictionary& dict,
-    const phaseInterface& interface
+    const phaseInterface& interface,
+    const bool registerObject
 )
 :
+    regIOobject
+    (
+        IOobject
+        (
+            IOobject::groupName(typeName, interface.name()),
+            interface.mesh().time().name(),
+            interface.mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            registerObject
+        )
+    ),
     residualAlpha_
     (
         "residualAlpha",
@@ -75,6 +88,12 @@ Foam::tmp<Foam::volScalarField>
 Foam::heatTransferModel::K() const
 {
     return K(residualAlpha_.value());
+}
+
+
+bool Foam::heatTransferModel::writeData(Ostream& os) const
+{
+    return os.good();
 }
 
 

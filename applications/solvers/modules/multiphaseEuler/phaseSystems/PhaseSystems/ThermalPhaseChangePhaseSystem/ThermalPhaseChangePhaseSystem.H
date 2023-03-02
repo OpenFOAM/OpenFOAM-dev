@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,6 +106,9 @@ class ThermalPhaseChangePhaseSystem
 
         //- Interface temperatures
         phaseSystem::dmdtfTable Tfs_;
+
+        //- Saturation temperatures
+        phaseSystem::dmdtfTable Tsats_;
 
         //- Nucleate Mass transfer rates
         phaseSystem::dmdtfTable nDmdtfs_;
