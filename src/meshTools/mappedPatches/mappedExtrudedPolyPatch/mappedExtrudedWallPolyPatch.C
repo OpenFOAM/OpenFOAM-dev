@@ -23,55 +23,55 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mappedWallPolyPatch.H"
-#include "addToRunTimeSelectionTable.H"
+#include "mappedExtrudedWallPolyPatch.H"
 #include "mappedPolyPatch.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(mappedWallPolyPatch, 0);
+    defineTypeNameAndDebug(mappedExtrudedWallPolyPatch, 0);
 
-    addToRunTimeSelectionTable(polyPatch, mappedWallPolyPatch, word);
+    addToRunTimeSelectionTable(polyPatch, mappedExtrudedWallPolyPatch, word);
     addToRunTimeSelectionTable
     (
         polyPatch,
-        mappedWallPolyPatch,
+        mappedExtrudedWallPolyPatch,
         dictionary
     );
 }
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::mappedWallPolyPatch::calcGeometry(PstreamBuffers& pBufs)
+void Foam::mappedExtrudedWallPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 {
     wallPolyPatch::calcGeometry(pBufs);
-    mappedPatchBase::clearOut();
+    mappedExtrudedPatchBase::clearOut();
 }
 
 
-void Foam::mappedWallPolyPatch::movePoints
+void Foam::mappedExtrudedWallPolyPatch::movePoints
 (
     PstreamBuffers& pBufs,
     const pointField& p
 )
 {
     wallPolyPatch::movePoints(pBufs, p);
-    mappedPatchBase::clearOut();
+    mappedExtrudedPatchBase::clearOut();
 }
 
 
-void Foam::mappedWallPolyPatch::topoChange(PstreamBuffers& pBufs)
+void Foam::mappedExtrudedWallPolyPatch::topoChange(PstreamBuffers& pBufs)
 {
     wallPolyPatch::topoChange(pBufs);
-    mappedPatchBase::clearOut();
+    mappedExtrudedPatchBase::clearOut();
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::mappedWallPolyPatch::mappedWallPolyPatch
+Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
 (
     const word& name,
     const label size,
@@ -82,7 +82,7 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 )
 :
     wallPolyPatch(name, size, start, index, bm, patchType),
-    mappedPatchBase(static_cast<const polyPatch&>(*this))
+    mappedExtrudedPatchBase(static_cast<const polyPatch&>(*this))
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)
@@ -92,7 +92,7 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 }
 
 
-Foam::mappedWallPolyPatch::mappedWallPolyPatch
+Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
 (
     const word& name,
     const label size,
@@ -100,21 +100,23 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
     const label index,
     const word& neighbourRegion,
     const word& neighbourPatch,
+    const word& bottomPatch,
     const polyBoundaryMesh& bm
 )
 :
     wallPolyPatch(name, size, start, index, bm, typeName),
-    mappedPatchBase
+    mappedExtrudedPatchBase
     (
         *this,
         neighbourRegion,
         neighbourPatch,
+        bottomPatch,
         cyclicTransform(true)
     )
 {}
 
 
-Foam::mappedWallPolyPatch::mappedWallPolyPatch
+Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
 (
     const word& name,
     const dictionary& dict,
@@ -124,7 +126,7 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 )
 :
     wallPolyPatch(name, dict, index, bm, patchType),
-    mappedPatchBase(*this, dict, true)
+    mappedExtrudedPatchBase(*this, dict, true)
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)
@@ -134,20 +136,20 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 }
 
 
-Foam::mappedWallPolyPatch::mappedWallPolyPatch
+Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
 (
-    const mappedWallPolyPatch& pp,
+    const mappedExtrudedWallPolyPatch& pp,
     const polyBoundaryMesh& bm
 )
 :
     wallPolyPatch(pp, bm),
-    mappedPatchBase(*this, pp)
+    mappedExtrudedPatchBase(*this, pp)
 {}
 
 
-Foam::mappedWallPolyPatch::mappedWallPolyPatch
+Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
 (
-    const mappedWallPolyPatch& pp,
+    const mappedExtrudedWallPolyPatch& pp,
     const polyBoundaryMesh& bm,
     const label index,
     const label newSize,
@@ -155,22 +157,22 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 )
 :
     wallPolyPatch(pp, bm, index, newSize, newStart),
-    mappedPatchBase(*this, pp)
+    mappedExtrudedPatchBase(*this, pp)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::mappedWallPolyPatch::~mappedWallPolyPatch()
+Foam::mappedExtrudedWallPolyPatch::~mappedExtrudedWallPolyPatch()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::mappedWallPolyPatch::write(Ostream& os) const
+void Foam::mappedExtrudedWallPolyPatch::write(Ostream& os) const
 {
     wallPolyPatch::write(os);
-    mappedPatchBase::write(os);
+    mappedExtrudedPatchBase::write(os);
 }
 
 

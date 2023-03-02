@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mappedExtrudedWallPolyPatch.H"
-#include "addToRunTimeSelectionTable.H"
+#include "mappedExtrudedPatchBase.H"
 #include "LayerInfoData.H"
 #include "FaceCellWave.H"
 
@@ -32,73 +31,18 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(mappedExtrudedWallPolyPatch, 0);
-
-    addToRunTimeSelectionTable(polyPatch, mappedExtrudedWallPolyPatch, word);
-    addToRunTimeSelectionTable
-    (
-        polyPatch,
-        mappedExtrudedWallPolyPatch,
-        dictionary
-    );
+    defineTypeNameAndDebug(mappedExtrudedPatchBase, 0);
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::mappedExtrudedWallPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
-{
-    mappedWallPolyPatch::initCalcGeometry(pBufs);
-}
-
-
-void Foam::mappedExtrudedWallPolyPatch::calcGeometry(PstreamBuffers& pBufs)
-{
-    mappedWallPolyPatch::calcGeometry(pBufs);
-    bottomFaceCentresPtr_.clear();
-}
-
-
-void Foam::mappedExtrudedWallPolyPatch::initMovePoints
-(
-    PstreamBuffers& pBufs,
-    const pointField& p
-)
-{
-    mappedWallPolyPatch::initMovePoints(pBufs, p);
-}
-
-
-void Foam::mappedExtrudedWallPolyPatch::movePoints
-(
-    PstreamBuffers& pBufs,
-    const pointField& p
-)
-{
-    mappedWallPolyPatch::movePoints(pBufs, p);
-    bottomFaceCentresPtr_.clear();
-}
-
-
-void Foam::mappedExtrudedWallPolyPatch::initTopoChange(PstreamBuffers& pBufs)
-{
-    mappedWallPolyPatch::initTopoChange(pBufs);
-}
-
-
-void Foam::mappedExtrudedWallPolyPatch::topoChange(PstreamBuffers& pBufs)
-{
-    mappedWallPolyPatch::topoChange(pBufs);
-    bottomFaceCentresPtr_.clear();
-}
-
-
 Foam::tmp<Foam::vectorField>
-Foam::mappedExtrudedWallPolyPatch::patchFaceAreas() const
+Foam::mappedExtrudedPatchBase::patchFaceAreas() const
 {
     if (!bottomFaceAreasPtr_.valid())
     {
-        const bool isExtrudedRegion = bottomPatch_ != word::null;
+        const bool isExtrudedRegion = oppositePatch_ != word::null;
 
         if (isExtrudedRegion)
         {
@@ -106,9 +50,9 @@ Foam::mappedExtrudedWallPolyPatch::patchFaceAreas() const
             // corresponding areas and centres are on the bottom patch. We do
             // this by waving these values across the layers.
 
-            const polyMesh& mesh = boundaryMesh().mesh();
-            const polyPatch& pp = *this;
-            const polyPatch& bottomPp = boundaryMesh()[bottomPatch_];
+            const polyMesh& mesh = patch_.boundaryMesh().mesh();
+            const polyPatch& pp = patch_;
+            const polyPatch& bottomPp = patch_.boundaryMesh()[oppositePatch_];
 
             // Initialise faces on the bottom patch to wave from
             labelList initialFaces(bottomPp.size());
@@ -157,7 +101,7 @@ Foam::mappedExtrudedWallPolyPatch::patchFaceAreas() const
                 {
                     FatalErrorInFunction
                         << "Mesh \"" << mesh.name()
-                        << "\" is not layered between the extruded wall patch "
+                        << "\" is not layered between the extruded patch "
                         << "\"" << pp.name() << "\" and the bottom patch \""
                         << bottomPp.name() << "\"" << exit(FatalError);
                 }
@@ -172,21 +116,21 @@ Foam::mappedExtrudedWallPolyPatch::patchFaceAreas() const
             // of mapping on the extruded region and then reverse map the
             // extruded region's data so it is available here
 
-            const mappedExtrudedWallPolyPatch& nbrPp =
-                refCast<const mappedExtrudedWallPolyPatch>(nbrPolyPatch());
+            const mappedExtrudedPatchBase& nbrPp =
+                refCast<const mappedExtrudedPatchBase>(nbrPolyPatch());
 
             bottomFaceAreasPtr_.set
             (
                 nbrPp.reverseDistribute
                 (
-                    nbrPp.primitivePatch::faceAreas()
+                    nbrPp.patch_.primitivePatch::faceAreas()
                 ).ptr()
             );
             bottomFaceCentresPtr_.set
             (
                 nbrPp.reverseDistribute
                 (
-                    nbrPp.primitivePatch::faceCentres()
+                    nbrPp.patch_.primitivePatch::faceCentres()
                 ).ptr()
             );
         }
@@ -197,7 +141,7 @@ Foam::mappedExtrudedWallPolyPatch::patchFaceAreas() const
 
 
 Foam::tmp<Foam::pointField>
-Foam::mappedExtrudedWallPolyPatch::patchFaceCentres() const
+Foam::mappedExtrudedPatchBase::patchFaceCentres() const
 {
     if (!bottomFaceCentresPtr_.valid())
     {
@@ -209,7 +153,7 @@ Foam::mappedExtrudedWallPolyPatch::patchFaceCentres() const
 
 
 Foam::tmp<Foam::pointField>
-Foam::mappedExtrudedWallPolyPatch::patchLocalPoints() const
+Foam::mappedExtrudedPatchBase::patchLocalPoints() const
 {
     NotImplemented;
     return tmp<pointField>(nullptr);
@@ -218,72 +162,72 @@ Foam::mappedExtrudedWallPolyPatch::patchLocalPoints() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
-(
-    const word& name,
-    const label size,
-    const label start,
-    const label index,
-    const polyBoundaryMesh& bm,
-    const word& patchType
-)
+Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase(const polyPatch& pp)
 :
-    mappedWallPolyPatch(name, size, start, index, bm, patchType),
-    bottomPatch_(word::null)
+    mappedPatchBase(pp),
+    oppositePatch_(word::null)
 {}
 
 
-Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
+Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase
 (
-    const word& name,
+    const polyPatch& pp,
+    const word& nbrRegionName,
+    const word& nbrPatchName,
+    const word& oppositePatch,
+    const cyclicTransform& transform
+)
+:
+    mappedPatchBase(pp, nbrRegionName, nbrPatchName, transform),
+    oppositePatch_(oppositePatch)
+{}
+
+
+Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase
+(
+    const polyPatch& pp,
     const dictionary& dict,
-    const label index,
-    const polyBoundaryMesh& bm,
-    const word& patchType
+    const bool transformIsNone
 )
 :
-    mappedWallPolyPatch(name, dict, index, bm, patchType),
-    bottomPatch_(dict.lookupOrDefault<word>("bottomPatch", word::null))
+    mappedPatchBase(pp, dict, transformIsNone),
+    oppositePatch_(dict.lookupOrDefault<word>("oppositePatch", word::null))
 {}
 
 
-Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
+Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase
 (
-    const mappedExtrudedWallPolyPatch& pp,
-    const polyBoundaryMesh& bm
+    const polyPatch& pp,
+    const mappedExtrudedPatchBase& mepb
 )
 :
-    mappedWallPolyPatch(pp, bm),
-    bottomPatch_(pp.bottomPatch_)
-{}
-
-
-Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
-(
-    const mappedExtrudedWallPolyPatch& pp,
-    const polyBoundaryMesh& bm,
-    const label index,
-    const label newSize,
-    const label newStart
-)
-:
-    mappedWallPolyPatch(pp, bm, index, newSize, newStart),
-    bottomPatch_(pp.bottomPatch_)
+    mappedPatchBase(pp),
+    oppositePatch_(mepb.oppositePatch_)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::mappedExtrudedWallPolyPatch::~mappedExtrudedWallPolyPatch()
+Foam::mappedExtrudedPatchBase::~mappedExtrudedPatchBase()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::mappedExtrudedWallPolyPatch::write(Ostream& os) const
+void Foam::mappedExtrudedPatchBase::clearOut()
 {
-    mappedWallPolyPatch::write(os);
-    writeEntryIfDifferent(os, "bottomPatch", word::null, bottomPatch_);
+    mappedPatchBase::clearOut();
+    if (reMapAfterMove_)
+    {
+        bottomFaceCentresPtr_.clear();
+    }
+}
+
+
+void Foam::mappedExtrudedPatchBase::write(Ostream& os) const
+{
+    mappedPatchBase::write(os);
+    writeEntryIfDifferent(os, "oppositePatch", word::null, oppositePatch_);
 }
 
 

@@ -39,26 +39,10 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::mappedPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
-{
-    polyPatch::initCalcGeometry(pBufs);
-}
-
-
 void Foam::mappedPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 {
     polyPatch::calcGeometry(pBufs);
     mappedPatchBase::clearOut();
-}
-
-
-void Foam::mappedPolyPatch::initMovePoints
-(
-    PstreamBuffers& pBufs,
-    const pointField& p
-)
-{
-    polyPatch::initMovePoints(pBufs, p);
 }
 
 
@@ -69,16 +53,7 @@ void Foam::mappedPolyPatch::movePoints
 )
 {
     polyPatch::movePoints(pBufs, p);
-    if (reMapAfterMove_)
-    {
-        mappedPatchBase::clearOut();
-    }
-}
-
-
-void Foam::mappedPolyPatch::initTopoChange(PstreamBuffers& pBufs)
-{
-    polyPatch::initTopoChange(pBufs);
+    mappedPatchBase::clearOut();
 }
 
 
@@ -102,8 +77,7 @@ Foam::mappedPolyPatch::mappedPolyPatch
 )
 :
     polyPatch(name, size, start, index, bm, patchType),
-    mappedPatchBase(static_cast<const polyPatch&>(*this)),
-    reMapAfterMove_(true)
+    mappedPatchBase(static_cast<const polyPatch&>(*this))
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), typeName) == -1)
@@ -123,8 +97,7 @@ Foam::mappedPolyPatch::mappedPolyPatch
 )
 :
     polyPatch(name, dict, index, bm, patchType),
-    mappedPatchBase(*this, dict, false),
-    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true))
+    mappedPatchBase(*this, dict, false)
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), typeName) == -1)
@@ -141,8 +114,7 @@ Foam::mappedPolyPatch::mappedPolyPatch
 )
 :
     polyPatch(pp, bm),
-    mappedPatchBase(*this, pp),
-    reMapAfterMove_(true)
+    mappedPatchBase(*this, pp)
 {}
 
 
@@ -156,8 +128,7 @@ Foam::mappedPolyPatch::mappedPolyPatch
 )
 :
     polyPatch(pp, bm, index, newSize, newStart),
-    mappedPatchBase(*this, pp),
-    reMapAfterMove_(true)
+    mappedPatchBase(*this, pp)
 {}
 
 
@@ -173,7 +144,6 @@ void Foam::mappedPolyPatch::write(Ostream& os) const
 {
     polyPatch::write(os);
     mappedPatchBase::write(os);
-    writeEntryIfDifferent<bool>(os, "reMapAfterMove", true, reMapAfterMove_);
 }
 
 

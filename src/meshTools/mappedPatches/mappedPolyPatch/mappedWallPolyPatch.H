@@ -38,13 +38,10 @@ SourceFiles
 #include "wallPolyPatch.H"
 #include "mappedPatchBase.H"
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class polyMesh;
 
 /*---------------------------------------------------------------------------*\
                      Class mappedWallPolyPatch Declaration
@@ -55,31 +52,15 @@ class mappedWallPolyPatch
     public wallPolyPatch,
     public mappedPatchBase
 {
-    // Private Data
-
-        //- Do we need to re-calculate the mapping if mesh motion takes place?
-        //  Defaults to true.
-        const bool reMapAfterMove_;
-
-
 protected:
 
     // Protected Member Functions
 
-        //- Initialise the calculation of the patch geometry
-        virtual void initCalcGeometry(PstreamBuffers&);
-
         //- Calculate the patch geometry
         virtual void calcGeometry(PstreamBuffers&);
 
-        //- Initialise the patches for moving points
-        virtual void initMovePoints(PstreamBuffers&, const pointField&);
-
         //- Correct patches after moving points
         virtual void movePoints(PstreamBuffers&, const pointField&);
-
-        //- Initialise the update of the patch topology
-        virtual void initTopoChange(PstreamBuffers&);
 
         //- Update of the patch topology
         virtual void topoChange(PstreamBuffers&);

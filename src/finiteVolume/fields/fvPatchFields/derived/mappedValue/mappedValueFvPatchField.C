@@ -141,7 +141,8 @@ Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
     {
         OStringStream str;
         str << "Field " << this->internalField().name() << " of type "
-            << type() << " on patch " << this->patch().name() << " does not "
+            << type() << " on patch " << this->patch().name()
+            << " of type " << p.patch().type() << " does not "
             << "have mapping specified (i.e., neighbourPatch, and/or "
             << "neighbourRegion entries) nor is the patch of "
             << mappedPolyPatch::typeName << " type";

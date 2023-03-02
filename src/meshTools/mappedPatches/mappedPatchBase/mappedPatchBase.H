@@ -112,6 +112,10 @@ protected:
         //- Matching tolerance
         const scalar matchTol_;
 
+        //- Do we need to re-calculate the mapping if mesh motion takes place?
+        //  Defaults to true.
+        const bool reMapAfterMove_;
+
 
     // Protected Member Functions
 
@@ -238,7 +242,7 @@ public:
         // Edit
 
             //- Clear out data on mesh change
-            void clearOut();
+            virtual void clearOut();
 
 
         // Distribute

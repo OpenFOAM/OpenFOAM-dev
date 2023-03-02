@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -229,13 +229,13 @@ inline bool Foam::layerInfo::operator!=(const Foam::layerInfo& rhs) const
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const layerInfo& l)
+inline Foam::Ostream& Foam::operator<<(Ostream& os, const layerInfo& l)
 {
     return os << l.layer_ << token::SPACE << l.direction_;
 }
 
 
-Foam::Istream& Foam::operator>>(Istream& is, layerInfo& l)
+inline Foam::Istream& Foam::operator>>(Istream& is, layerInfo& l)
 {
     return is >> l.layer_ >> l.direction_;
 }

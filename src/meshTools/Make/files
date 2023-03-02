@@ -230,10 +230,12 @@ meshToMesh/meshToMesh.C
 mappedPatches/mappedPatchBase/mappedPatchBase.C
 mappedPatches/mappedPolyPatch/mappedPolyPatch.C
 mappedPatches/mappedPolyPatch/mappedWallPolyPatch.C
-mappedPatches/mappedPolyPatch/mappedExtrudedWallPolyPatch.C
 mappedPatches/mappedPointPatch/mappedPointPatch.C
 mappedPatches/mappedPointPatch/mappedWallPointPatch.C
-mappedPatches/mappedPointPatch/mappedExtrudedWallPointPatch.C
+
+mappedPatches/mappedExtrudedPatchBase/mappedExtrudedPatchBase.C
+mappedPatches/mappedExtrudedPolyPatch/mappedExtrudedWallPolyPatch.C
+mappedPatches/mappedExtrudedPointPatch/mappedExtrudedWallPointPatch.C
 
 mappedPatches/mappedInternalPatchBase/mappedInternalPatchBase.C
 mappedPatches/mappedInternalPolyPatch/mappedInternalPolyPatch.C

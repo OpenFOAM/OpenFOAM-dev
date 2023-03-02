@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,7 @@ Class
     Foam::mappedExtrudedWallPolyPatch
 
 Description
-    Wall patch which holds a mapping engine to map values from another patch,
-    and which offsets the geometry to account for the extrusion thickness
+    Wall patch which holds a mapping engine to map values from another patch
 
 SourceFiles
     mappedExtrudedWallPolyPatch.C
@@ -36,14 +35,14 @@ SourceFiles
 #ifndef mappedExtrudedWallPolyPatch_H
 #define mappedExtrudedWallPolyPatch_H
 
-#include "mappedWallPolyPatch.H"
+#include "wallPolyPatch.H"
+#include "mappedExtrudedPatchBase.H"
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class polyMesh;
 
 /*---------------------------------------------------------------------------*\
                      Class mappedExtrudedWallPolyPatch Declaration
@@ -51,56 +50,21 @@ class polyMesh;
 
 class mappedExtrudedWallPolyPatch
 :
-    public mappedWallPolyPatch
+    public wallPolyPatch,
+    public mappedExtrudedPatchBase
 {
-private:
-
-    // Private Member Data
-
-        //- The bottom patch on the other side of the extruded region. Empty if
-        //  this is not the extruded region.
-        word bottomPatch_;
-
-        //- The face areas on the bottom patch
-        mutable autoPtr<vectorField> bottomFaceAreasPtr_;
-
-        //- The face centres on the bottom patch
-        mutable autoPtr<pointField> bottomFaceCentresPtr_;
-
-        //- The local points on the bottom patch
-        mutable autoPtr<pointField> bottomLocalPointsPtr_;
-
-
 protected:
 
     // Protected Member Functions
 
-        //- Initialise the calculation of the patch geometry
-        virtual void initCalcGeometry(PstreamBuffers&);
-
         //- Calculate the patch geometry
         virtual void calcGeometry(PstreamBuffers&);
-
-        //- Initialise the patches for moving points
-        virtual void initMovePoints(PstreamBuffers&, const pointField&);
 
         //- Correct patches after moving points
         virtual void movePoints(PstreamBuffers&, const pointField&);
 
-        //- Initialise the update of the patch topology
-        virtual void initTopoChange(PstreamBuffers&);
-
         //- Update of the patch topology
         virtual void topoChange(PstreamBuffers&);
-
-        //- Get the face-areas for the patch
-        virtual tmp<vectorField> patchFaceAreas() const;
-
-        //- Get the face-centres for the patch
-        virtual tmp<pointField> patchFaceCentres() const;
-
-        //- Get the local points for the patch
-        virtual tmp<pointField> patchLocalPoints() const;
 
 
 public:
@@ -120,6 +84,19 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType
+        );
+
+        //- Construct from components
+        mappedExtrudedWallPolyPatch
+        (
+            const word& name,
+            const label size,
+            const label start,
+            const label index,
+            const word& neighbourRegion,
+            const word& neighbourPatch,
+            const word& bottomPatch,
+            const polyBoundaryMesh& bm
         );
 
         //- Construct from dictionary

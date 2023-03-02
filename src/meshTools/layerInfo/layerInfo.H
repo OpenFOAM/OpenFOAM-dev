@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,8 +50,8 @@ class transformer;
 
 // Forward declaration of friend functions and operators
 class layerInfo;
-Ostream& operator<<(Ostream&, const layerInfo&);
-Istream& operator>>(Istream&, layerInfo&);
+inline Ostream& operator<<(Ostream&, const layerInfo&);
+inline Istream& operator>>(Istream&, layerInfo&);
 
 /*---------------------------------------------------------------------------*\
                           Class layerInfo Declaration

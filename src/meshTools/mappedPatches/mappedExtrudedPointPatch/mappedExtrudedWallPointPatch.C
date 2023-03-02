@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,60 +21,31 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::mappedExtrudedWallPointPatch
-
-SourceFiles
-    mappedExtrudedWallPointPatch.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef mappedExtrudedWallPointPatch_H
-#define mappedExtrudedWallPointPatch_H
-
-#include "wallPointPatch.H"
-#include "mappedExtrudedWallPolyPatch.H"
+#include "mappedExtrudedWallPointPatch.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-/*---------------------------------------------------------------------------*\
-                    Class mappedExtrudedWallPointPatch Declaration
-\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-class mappedExtrudedWallPointPatch
-:
-    public wallPointPatch
-{
+defineTypeNameAndDebug(mappedExtrudedWallPointPatch, 0);
 
-public:
-
-    //- Runtime type information
-    TypeName(mappedExtrudedWallPolyPatch::typeName_());
-
-
-    // Constructors
-
-        //- Construct from polyPatch
-        mappedExtrudedWallPointPatch
-        (
-            const polyPatch& patch,
-            const pointBoundaryMesh& bm
-        )
-        :
-            wallPointPatch(patch, bm)
-        {}
-};
+// Add the patch constructor functions to the hash tables
+addToRunTimeSelectionTable
+(
+    facePointPatch,
+    mappedExtrudedWallPointPatch,
+    polyPatch
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

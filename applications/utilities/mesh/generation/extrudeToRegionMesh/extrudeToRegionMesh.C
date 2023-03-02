@@ -552,10 +552,20 @@ void addCouplingPatches
         << "-------\t-----\t----"
         << endl;
 
-    const wordList patchNames
+    wordList patchNames
     (
         dict.lookupOrDefault("patchNames", wordList())
     );
+
+    wordList regionPatchNames
+    (
+        dict.lookupOrDefault("regionPatchNames", wordList())
+    );
+
+    if (isShellMesh)
+    {
+        patchNames.swap(regionPatchNames);
+    }
 
     const wordList patchTypes
     (
@@ -570,11 +580,6 @@ void addCouplingPatches
             "patchTypes",
             wordList(zoneNames.size(), mappedWallPolyPatch::typeName)
         )
-    );
-
-    const wordList regionPatchNames
-    (
-        dict.lookupOrDefault("regionPatchNames", wordList())
     );
 
     const wordList regionOppositePatchTypes
@@ -672,7 +677,7 @@ void addCouplingPatches
             topPatchDict.add("neighbourPatch", topNbrPatchName);
             if (isShellMesh)
             {
-                topPatchDict.add("bottomPatch", bottomPatchName);
+                topPatchDict.add("oppositePatch", bottomPatchName);
             }
 
             zoneTopPatch[zonei] = addPatch

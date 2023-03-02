@@ -31,8 +31,6 @@ License
 #include "indexedOctree.H"
 #include "globalIndex.H"
 #include "RemoteData.H"
-#include "OBJstream.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -317,7 +315,8 @@ Foam::mappedPatchBase::mappedPatchBase(const polyPatch& pp)
     patchToPatchIsUsed_(false),
     patchToPatchIsValid_(false),
     patchToPatchPtr_(nullptr),
-    matchTol_(defaultMatchTol_)
+    matchTol_(defaultMatchTol_),
+    reMapAfterMove_(true)
 {}
 
 
@@ -339,7 +338,8 @@ Foam::mappedPatchBase::mappedPatchBase
     patchToPatchIsUsed_(false),
     patchToPatchIsValid_(false),
     patchToPatchPtr_(nullptr),
-    matchTol_(defaultMatchTol_)
+    matchTol_(defaultMatchTol_),
+    reMapAfterMove_(true)
 {}
 
 
@@ -387,7 +387,8 @@ Foam::mappedPatchBase::mappedPatchBase
         ).ptr()
       : nullptr
     ),
-    matchTol_(dict.lookupOrDefault("matchTolerance", defaultMatchTol_))
+    matchTol_(dict.lookupOrDefault("matchTolerance", defaultMatchTol_)),
+    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true))
 {
     const bool haveCoupleGroup = coupleGroup_.valid();
 
@@ -435,7 +436,8 @@ Foam::mappedPatchBase::mappedPatchBase
       ? patchToPatch::New(mpb.patchToPatchPtr_->type(), false).ptr()
       : nullptr
     ),
-    matchTol_(mpb.matchTol_)
+    matchTol_(mpb.matchTol_),
+    reMapAfterMove_(true)
 {}
 
 
@@ -493,9 +495,12 @@ const Foam::mappedPatchBase& Foam::mappedPatchBase::getMap
 
 void Foam::mappedPatchBase::clearOut()
 {
-    mapPtr_.clear();
-    nbrPatchFaceIndices_.clear();
-    patchToPatchIsValid_ = false;
+    if (reMapAfterMove_)
+    {
+        mapPtr_.clear();
+        nbrPatchFaceIndices_.clear();
+        patchToPatchIsValid_ = false;
+    }
 }
 
 
@@ -526,6 +531,8 @@ void Foam::mappedPatchBase::write(Ostream& os) const
     }
 
     writeEntryIfDifferent(os, "matchTolerance", defaultMatchTol_, matchTol_);
+
+    writeEntryIfDifferent<bool>(os, "reMapAfterMove", true, reMapAfterMove_);
 }
 
 
