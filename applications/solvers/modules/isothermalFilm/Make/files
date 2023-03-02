@@ -12,6 +12,10 @@ patches/mappedFilmWall/mappedFilmWallFvPatch/mappedFilmWallFvPatch.C
 patches/mappedFilmWall/mappedFilmWallPointPatch/mappedFilmWallPointPatch.C
 patches/mappedFilmWall/mappedFilmWallPolyPatch/mappedFilmWallPolyPatch.C
 
+patches/mappedFilmSurface/mappedFilmSurfacePolyPatch/mappedFilmSurfacePolyPatch.C
+patches/mappedFilmSurface/mappedFilmSurfacePointPatch/mappedFilmSurfacePointPatch.C
+patches/mappedFilmSurface/mappedFilmSurfaceFvPatch/mappedFilmSurfaceFvPatch.C
+
 derivedFvPatchFields/alphaOne/alphaOneFvPatchScalarField.C
 derivedFvPatchFields/filmContactAngle/filmContactAngleFvPatchScalarField.C
 

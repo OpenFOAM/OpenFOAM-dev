@@ -22,21 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mappedFilmWallPolyPatch
+    Foam::mappedFilmSurfacePolyPatch
 
 Description
-    Wall patch which holds a mapping engine to map values from another patch
+    Film surface patch which holds a mapping engine to map values
+    from another patch
 
 SourceFiles
-    mappedFilmWallPolyPatch.C
+    mappedFilmSurfacePolyPatch.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mappedFilmWallPolyPatch_H
-#define mappedFilmWallPolyPatch_H
+#ifndef mappedFilmSurfacePolyPatch_H
+#define mappedFilmSurfacePolyPatch_H
 
-#include "filmWallPolyPatch.H"
-#include "mappedPatchBase.H"
+#include "filmSurfacePolyPatch.H"
+#include "mappedExtrudedPatchBase.H"
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,13 +48,13 @@ namespace Foam
 class polyMesh;
 
 /*---------------------------------------------------------------------------*\
-                     Class mappedFilmWallPolyPatch Declaration
+                     Class mappedFilmSurfacePolyPatch Declaration
 \*---------------------------------------------------------------------------*/
 
-class mappedFilmWallPolyPatch
+class mappedFilmSurfacePolyPatch
 :
-    public filmWallPolyPatch,
-    public mappedPatchBase
+    public filmSurfacePolyPatch,
+    public mappedExtrudedPatchBase
 {
 protected:
 
@@ -72,13 +73,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("mappedFilmWall");
+    TypeName("mappedFilmSurface");
 
 
     // Constructors
 
         //- Construct from components
-        mappedFilmWallPolyPatch
+        mappedFilmSurfacePolyPatch
         (
             const word& name,
             const label size,
@@ -89,7 +90,7 @@ public:
         );
 
         //- Construct from components
-        mappedFilmWallPolyPatch
+        mappedFilmSurfacePolyPatch
         (
             const word& name,
             const label size,
@@ -97,11 +98,12 @@ public:
             const label index,
             const word& neighbourRegion,
             const word& neighbourPatch,
+            const word& bottomPatch,
             const polyBoundaryMesh& bm
         );
 
         //- Construct from dictionary
-        mappedFilmWallPolyPatch
+        mappedFilmSurfacePolyPatch
         (
             const word& name,
             const dictionary& dict,
@@ -111,17 +113,17 @@ public:
         );
 
         //- Construct as copy, resetting the boundary mesh
-        mappedFilmWallPolyPatch
+        mappedFilmSurfacePolyPatch
         (
-            const mappedFilmWallPolyPatch&,
+            const mappedFilmSurfacePolyPatch&,
             const polyBoundaryMesh&
         );
 
         //- Construct given the original patch and resetting the
         //  face list and boundary mesh information
-        mappedFilmWallPolyPatch
+        mappedFilmSurfacePolyPatch
         (
-            const mappedFilmWallPolyPatch& pp,
+            const mappedFilmSurfacePolyPatch& pp,
             const polyBoundaryMesh& bm,
             const label index,
             const label newSize,
@@ -131,7 +133,10 @@ public:
         //- Construct and return a clone, resetting the boundary mesh
         virtual autoPtr<polyPatch> clone(const polyBoundaryMesh& bm) const
         {
-            return autoPtr<polyPatch>(new mappedFilmWallPolyPatch(*this, bm));
+            return autoPtr<polyPatch>
+            (
+                new mappedFilmSurfacePolyPatch(*this, bm)
+            );
         }
 
         //- Construct and return a clone, resetting the face list
@@ -146,7 +151,7 @@ public:
         {
             return autoPtr<polyPatch>
             (
-                new mappedFilmWallPolyPatch
+                new mappedFilmSurfacePolyPatch
                 (
                     *this,
                     bm,
@@ -159,7 +164,7 @@ public:
 
 
     //- Destructor
-    virtual ~mappedFilmWallPolyPatch();
+    virtual ~mappedFilmSurfacePolyPatch();
 
 
     // Member Functions
