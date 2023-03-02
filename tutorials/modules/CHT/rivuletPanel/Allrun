@@ -8,7 +8,9 @@ runApplication blockMesh -region panel
 
 runApplication -s 1 decomposePar -region panel -noFields
 
-runParallel extrudeToRegionMesh -region panel -overwrite
+runParallel extrudeToRegionMesh \
+    -dict system/extrudeToRegionMeshDict.film \
+    -region panel -overwrite
 
 runApplication -s 1 reconstructPar -allRegions
 
