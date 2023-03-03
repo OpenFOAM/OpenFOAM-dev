@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,8 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class heatTransferModel
+:
+    public regIOobject
 {
 protected:
 
@@ -75,9 +77,10 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const phaseInterface& interface
+                const phaseInterface& interface,
+                const bool registerObject
             ),
-            (dict, interface)
+            (dict, interface, registerObject)
         );
 
 
@@ -96,7 +99,8 @@ public:
         heatTransferModel
         (
             const dictionary& dict,
-            const phaseInterface& interface
+            const phaseInterface& interface,
+            const bool registerObject
         );
 
 
@@ -110,7 +114,8 @@ public:
         (
             const dictionary& dict,
             const phaseInterface& interface,
-            const bool outer=true
+            const bool outer=true,
+            const bool registerObject=true
         );
 
 
@@ -126,6 +131,9 @@ public:
         //    ddt(alpha2*rho2*hb) + ... = ... K*(Tb - Ta)
         //  with a specified residual volume fraction
         virtual tmp<volScalarField> K(const scalar residualAlpha) const = 0;
+
+        //- Dummy write for regIOobject
+        bool writeData(Ostream& os) const;
 };
 
 

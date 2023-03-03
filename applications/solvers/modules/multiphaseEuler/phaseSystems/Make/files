@@ -27,6 +27,8 @@ diameterModels/constantDiameter/constantDiameter.C
 diameterModels/isothermalDiameter/isothermalDiameter.C
 diameterModels/linearTsubDiameter/linearTsubDiameter.C
 diameterModels/noDiameter/noDiameter.C
+diameterModels/residualDiameter/residualDiameter.C
+diameterModels/fixedInterfacialAreaDiameter/fixedInterfacialAreaDiameter.C
 diameterModels/velocityGroup/velocityGroup.C
 
 diameterModels/IATE/IATE.C

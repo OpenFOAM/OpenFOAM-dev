@@ -198,14 +198,20 @@ fluxLimitedLangmuirHinshelwoodReactionRate
 inline void
 Foam::fluxLimitedLangmuirHinshelwoodReactionRate::preEvaluate() const
 {
-    tAv_ = ob_.lookupObject<volScalarField::Internal>(AvName_);
+    if (!AvUniform_)
+    {
+        tAv_ = ob_.lookupObject<volScalarField::Internal>(AvName_);
+    }
 }
 
 
 inline void
 Foam::fluxLimitedLangmuirHinshelwoodReactionRate::postEvaluate() const
 {
-    tAv_ = tmp<volScalarField::Internal>(nullptr);
+    if (!AvUniform_)
+    {
+        tAv_ = tmp<volScalarField::Internal>(nullptr);
+    }
 }
 
 

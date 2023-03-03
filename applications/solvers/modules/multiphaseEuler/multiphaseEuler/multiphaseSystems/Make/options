@@ -21,4 +21,5 @@ EXE_INC = \
 
 LIB_LIBS = \
     -lcombustionModels \
-    -lphaseSystem
+    -lphaseSystem \
+    -leulerianInterfacialModels

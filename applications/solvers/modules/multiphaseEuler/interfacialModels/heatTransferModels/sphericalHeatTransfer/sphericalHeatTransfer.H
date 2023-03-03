@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Model which applies an analytical solution for heat transfer from the
-    surface of a sphere to the fluid within the sphere.
+    surface of a sphere to the matter within the sphere.
 
 SourceFiles
     sphericalHeatTransfer.C
@@ -71,7 +71,8 @@ public:
         sphericalHeatTransfer
         (
             const dictionary& dict,
-            const phaseInterface& interface
+            const phaseInterface& interface,
+            const bool registerObject
         );
 
 

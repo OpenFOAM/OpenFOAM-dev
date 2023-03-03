@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "phaseInterface.H"
 #include "sidedPhaseInterface.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -99,6 +100,24 @@ const Foam::phaseModel& Foam::sidedPhaseInterface::phase() const
 const Foam::phaseModel& Foam::sidedPhaseInterface::otherPhase() const
 {
     return phaseInterface::otherPhase(phase_);
+}
+
+
+Foam::autoPtr<Foam::phaseInterface>
+Foam::sidedPhaseInterface::otherInterface() const
+{
+    wordList nameParts = phaseInterface::nameToNameParts(fluid(), name());
+
+    const label i =
+        findIndex(nameParts, sidedPhaseInterface::separator());
+
+    nameParts[i+1] = otherPhase().name();
+
+    return phaseInterface::New
+    (
+        fluid(),
+        phaseInterface::namePartsToName(fluid(), nameParts)
+    );
 }
 
 
