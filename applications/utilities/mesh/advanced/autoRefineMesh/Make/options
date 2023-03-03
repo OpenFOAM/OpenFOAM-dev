@@ -7,5 +7,6 @@ EXE_INC = \
 EXE_LIBS = \
     -ldynamicMesh \
     -lmeshTools \
+    -lgenericPatches \
     -ltriSurface \
     -llagrangian

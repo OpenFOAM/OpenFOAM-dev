@@ -9,5 +9,6 @@ EXE_LIBS = \
     -lfileFormats \
     -lfiniteVolume \
     -lmeshTools \
+    -lgenericPatches \
     -ldynamicMesh \
     -lextrudeModel

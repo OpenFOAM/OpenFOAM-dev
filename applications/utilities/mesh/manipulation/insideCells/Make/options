@@ -5,4 +5,5 @@ EXE_INC = \
 
 EXE_LIBS = \
     -ltriSurface \
+    -lgenericPatches \
     -lmeshTools

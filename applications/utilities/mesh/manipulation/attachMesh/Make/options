@@ -3,4 +3,5 @@ EXE_INC = \
 
 EXE_LIBS = \
     -ldynamicMesh \
+    -lgenericPatches \
     -lmeshTools

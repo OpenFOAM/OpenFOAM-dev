@@ -1,5 +1,7 @@
 EXE_INC = \
+    -I$(LIB_SRC)/genericPatches/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude
 
 LIB_LIBS = \
+    -lgenericPatches \
     -lfiniteVolume

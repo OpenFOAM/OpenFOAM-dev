@@ -29,6 +29,7 @@ wmake $targetType OpenFOAM
 wmake $targetType fileFormats
 wmake $targetType surfMesh
 wmake $targetType triSurface
+wmake $targetType genericPatches
 wmake $targetType meshTools
 
 # Decomposition methods needed by dummyThirdParty

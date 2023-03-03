@@ -136,7 +136,7 @@ boundary
 (
     inlet
     {
-        type    pacth;
+        type    patch;
         faces
         (
             (0 1 2 3)

@@ -8,6 +8,7 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lmeshTools \
+    -lgenericPatches \
     -lsampling \
     -lsurfMesh \
     -ldynamicMesh

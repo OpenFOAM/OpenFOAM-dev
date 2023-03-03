@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,59 +21,25 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::genericFvPatch
-
-Description
-    FV variant of the genericPolyPatch.
-
-SourceFiles
-    genericFvPatch.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef genericFvPatch_H
-#define genericFvPatch_H
+#include "genericPointPatch.H"
+#include "addToRunTimeSelectionTable.H"
 
-#include "fvPatch.H"
-#include "genericPolyPatch.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
+    defineTypeNameAndDebug(genericPointPatch, 0);
 
-/*---------------------------------------------------------------------------*\
-                       Class genericFvPatch Declaration
-\*---------------------------------------------------------------------------*/
+    // Add the patch constructor functions to the hash tables
+    addToRunTimeSelectionTable
+    (
+        facePointPatch,
+        genericPointPatch,
+        polyPatch
+    );
+}
 
-class genericFvPatch
-:
-    public fvPatch
-{
-
-public:
-
-    //- Runtime type information
-    TypeName(genericPolyPatch::typeName_());
-
-
-    // Constructors
-
-        //- Construct from components
-        genericFvPatch(const polyPatch& patch, const fvBoundaryMesh& bm)
-        :
-            fvPatch(patch, bm)
-        {}
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

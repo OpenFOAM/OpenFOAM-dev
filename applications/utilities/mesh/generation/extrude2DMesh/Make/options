@@ -9,4 +9,5 @@ EXE_LIBS = \
     -lsurfMesh \
     -ldynamicMesh \
     -lextrude2DMesh \
+    -lgenericPatches \
     -lextrudeModel

@@ -478,7 +478,6 @@ $(polyPatches)/polyPatch/polyPatchNew.C
 
 basicPolyPatches = $(polyPatches)/basic
 $(basicPolyPatches)/coupled/coupledPolyPatch.C
-$(basicPolyPatches)/generic/genericPolyPatch.C
 
 constraintPolyPatches = $(polyPatches)/constraint
 $(constraintPolyPatches)/cyclic/cyclicTransform.C
@@ -606,7 +605,6 @@ $(pointPatches)/facePointPatch/facePointPatchNew.C
 
 basicPointPatches = $(pointPatches)/basic
 $(basicPointPatches)/coupled/coupledPointPatch.C
-$(basicPointPatches)/generic/genericPointPatch.C
 
 constraintPointPatches = $(pointPatches)/constraint
 $(constraintPointPatches)/cyclic/cyclicPointPatch.C

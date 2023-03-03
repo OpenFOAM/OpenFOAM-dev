@@ -6,4 +6,5 @@ EXE_INC = \
 #EXE_INC += -DDEBUG_ORDER
 
 EXE_LIBS = \
+    -lgenericPatches \
     -lmeshTools
