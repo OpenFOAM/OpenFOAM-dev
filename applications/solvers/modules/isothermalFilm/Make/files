@@ -18,6 +18,7 @@ patches/mappedFilmSurface/mappedFilmSurfaceFvPatch/mappedFilmSurfaceFvPatch.C
 
 derivedFvPatchFields/alphaOne/alphaOneFvPatchScalarField.C
 derivedFvPatchFields/filmContactAngle/filmContactAngleFvPatchScalarField.C
+derivedFvPatchFields/mappedFilmPressure/mappedFilmPressureFvPatchScalarField.C
 
 filmGaussGrad/filmGaussGrads.C
 

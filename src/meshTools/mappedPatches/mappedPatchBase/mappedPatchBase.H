@@ -220,20 +220,22 @@ public:
 
             //- Validate that the map exists and is appropriate for the given
             //  set of permitted configurations
-            template<class PatchField>
+            template<class PatchFieldType, class FieldType>
             static void validateMapForField
             (
-                const PatchField& field,
+                const PatchFieldType& field,
+                const FieldType& iF,
                 const dictionary& context,
                 const label froms = from::any
             );
 
             //- Validate that the map is appropriate for the given
             //  set of permitted configurations
-            template<class PatchField>
+            template<class PatchFieldType, class FieldType>
             void validateForField
             (
-                const PatchField& field,
+                const PatchFieldType& field,
+                const FieldType& iF,
                 const dictionary& context,
                 const label froms = from::any
             ) const;

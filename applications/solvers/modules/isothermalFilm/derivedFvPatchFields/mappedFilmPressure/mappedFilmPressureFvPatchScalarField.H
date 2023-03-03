@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,55 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mappedValueFvPatchField
+    Foam::mappedFilmPressureFvPatchScalarField
 
 Description
-    This boundary condition maps the values from a neighbouring patch to this
-    patch.
-
-Usage
-    \table
-        Property     | Description                | Required | Default value
-        field        | name of field to be mapped | no       | this field name
-        setAverage   | set the average value?     | no       | yes if average \\
-                                                               is specified, \\
-                                                               no otherwise
-        average      | average value to apply     | if setAverage is true |
-    \endtable
-
-    Example of the boundary condition specification:
-    \verbatim
-    <patchName>
-    {
-        type            mappedValue;
-        field           T;
-        average         300;
-        value           uniform 300;
-    }
-    \endverbatim
-
-    This boundary condition will usually be applied to a patch which is of
-    mappedPatchBase type, and which holds all the necessary mapping
-    information. It can also create its own mapping data which overrides that
-    in the mapped patch, or so that it can be applied to a non-mapped patch.
-    This is triggered by the presence of controls relating to mappedPatchBase
-    (i.e., neighbourRegion, neighbourPatch, etc ...).
-
-See also
-    Foam::mappedPatchBase
-    Foam::mappedPolyPatch
-    Foam::mappedFvPatch
-    Foam::mappedValueFvPatchField
+    Film pressure boundary condition which maps the neighbouring fluid patch
+    pressure to both the surface patch and internal film pressure field.
 
 SourceFiles
-    mappedValueFvPatchField.C
+    mappedFilmPressureFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mappedValueFvPatchField_H
-#define mappedValueFvPatchField_H
+#ifndef mappedFilmPressureFvPatchScalarField_H
+#define mappedFilmPressureFvPatchScalarField_H
 
-#include "fixedValueFvPatchFields.H"
+#include "zeroGradientFvPatchFields.H"
 #include "mappedFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -79,71 +45,70 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class mappedValueFvPatchField Declaration
+                   Class mappedFilmPressureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class mappedValueFvPatchField
+class mappedFilmPressureFvPatchScalarField
 :
-    public fixedValueFvPatchField<Type>,
-    public mappedFvPatchField<Type>
+    public zeroGradientFvPatchField<scalar>,
+    public mappedFvPatchField<scalar>
 {
 
 public:
 
     //- Runtime type information
-    TypeName("mappedValue");
+    TypeName("mappedFilmPressure");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        mappedValueFvPatchField
+        mappedFilmPressureFvPatchScalarField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        mappedValueFvPatchField
+        mappedFilmPressureFvPatchScalarField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<scalar, volMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given mappedValueFvPatchField
+        //- Construct by mapping given mappedFilmPressureFvPatchScalarField
         //  onto a new patch
-        mappedValueFvPatchField
+        mappedFilmPressureFvPatchScalarField
         (
-            const mappedValueFvPatchField<Type>&,
+            const mappedFilmPressureFvPatchScalarField&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        mappedValueFvPatchField
+        mappedFilmPressureFvPatchScalarField
         (
-            const mappedValueFvPatchField<Type>&
+            const mappedFilmPressureFvPatchScalarField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        mappedValueFvPatchField
+        mappedFilmPressureFvPatchScalarField
         (
-            const mappedValueFvPatchField<Type>&,
-            const DimensionedField<Type, volMesh>&
+            const mappedFilmPressureFvPatchScalarField&,
+            const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type>> clone
+        virtual tmp<fvPatchField<scalar>> clone
         (
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<scalar, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type>>
+            return tmp<fvPatchField<scalar>>
             (
-                new mappedValueFvPatchField<Type>(*this, iF)
+                new mappedFilmPressureFvPatchScalarField(*this, iF)
             );
         }
 
@@ -155,13 +120,13 @@ public:
             //- Map the given fvPatchField onto this fvPatchField
             virtual void map
             (
-                const fvPatchField<Type>&,
+                const fvPatchField<scalar>&,
                 const fvPatchFieldMapper&
             );
 
             //- Reset the fvPatchField to the given fvPatchField
             //  Used for mesh to mesh mapping
-            virtual void reset(const fvPatchField<Type>&);
+            virtual void reset(const fvPatchField<scalar>&);
 
 
         // Evaluation functions
@@ -178,12 +143,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "mappedValueFvPatchField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

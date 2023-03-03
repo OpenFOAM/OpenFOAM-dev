@@ -240,6 +240,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
     thermo_(thermoPtr),
     thermo(thermo_()),
 
+    p(thermo.p()),
     rho(thermo.rho()),
 
     nHat

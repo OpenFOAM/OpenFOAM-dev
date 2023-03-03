@@ -22,11 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mappedValueFvPatchField
+    Foam::mappedFvPatchField
 
 Description
-    This boundary condition maps the values from a neighbouring patch to this
-    patch.
+    Base class for mapped patch fields
 
 Usage
     \table
@@ -38,17 +37,6 @@ Usage
         average      | average value to apply     | if setAverage is true |
     \endtable
 
-    Example of the boundary condition specification:
-    \verbatim
-    <patchName>
-    {
-        type            mappedValue;
-        field           T;
-        average         300;
-        value           uniform 300;
-    }
-    \endverbatim
-
     This boundary condition will usually be applied to a patch which is of
     mappedPatchBase type, and which holds all the necessary mapping
     information. It can also create its own mapping data which overrides that
@@ -57,21 +45,21 @@ Usage
     (i.e., neighbourRegion, neighbourPatch, etc ...).
 
 See also
+    Foam::mappedValueFvPatchField
     Foam::mappedPatchBase
     Foam::mappedPolyPatch
     Foam::mappedFvPatch
-    Foam::mappedValueFvPatchField
 
 SourceFiles
-    mappedValueFvPatchField.C
+    mappedFvPatchField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mappedValueFvPatchField_H
-#define mappedValueFvPatchField_H
+#ifndef mappedFvPatchField_H
+#define mappedFvPatchField_H
 
-#include "fixedValueFvPatchFields.H"
-#include "mappedFvPatchField.H"
+#include "mappedPatchBase.H"
+#include "fvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,15 +67,46 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class mappedValueFvPatchField Declaration
+                   Class mappedFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class mappedValueFvPatchField
-:
-    public fixedValueFvPatchField<Type>,
-    public mappedFvPatchField<Type>
+class mappedFvPatchField
 {
+protected:
+
+    // Protected Member Data
+
+        //- Reference to the patch
+        const fvPatch& p_;
+
+        //- Reference to the internal field
+        const DimensionedField<Type, volMesh>& iF_;
+
+        //- The field to map
+        const word fieldName_;
+
+        //- If true adjust the sampled field to maintain an average value
+        const bool setAverage_;
+
+        //- Average value the sampled field is adjusted to
+        const Type average_;
+
+        //- The mapping engine
+        autoPtr<mappedPatchBase> mapperPtr_;
+
+
+    // Protected Member Functions
+
+        //- Return the mapping engine
+        const mappedPatchBase& mapper() const;
+
+        //- Return the neighbouring patch field
+        const fvPatchField<Type>& nbrPatchField() const;
+
+        //- Return the mapped values, given the neighbouring field
+        tmp<Field<Type>> mappedValues(const Field<Type>& nbrPatchField) const;
+
 
 public:
 
@@ -98,77 +117,53 @@ public:
     // Constructors
 
         //- Construct from patch and internal field
-        mappedValueFvPatchField
+        mappedFvPatchField
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        mappedValueFvPatchField
+        mappedFvPatchField
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given mappedValueFvPatchField
+        //- Construct by mapping given mappedFvPatchField
         //  onto a new patch
-        mappedValueFvPatchField
+        mappedFvPatchField
         (
-            const mappedValueFvPatchField<Type>&,
+            const mappedFvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        mappedValueFvPatchField
+        mappedFvPatchField
         (
-            const mappedValueFvPatchField<Type>&
+            const mappedFvPatchField<Type>&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        mappedValueFvPatchField
+        mappedFvPatchField
         (
-            const mappedValueFvPatchField<Type>&,
+            const mappedFvPatchField<Type>&,
             const DimensionedField<Type, volMesh>&
         );
 
-        //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type>> clone
-        (
-            const DimensionedField<Type, volMesh>& iF
-        ) const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new mappedValueFvPatchField<Type>(*this, iF)
-            );
-        }
+
+    //- Destructor
+    virtual ~mappedFvPatchField()
+    {}
 
 
     // Member Functions
 
-        // Mapping functions
-
-            //- Map the given fvPatchField onto this fvPatchField
-            virtual void map
-            (
-                const fvPatchField<Type>&,
-                const fvPatchFieldMapper&
-            );
-
-            //- Reset the fvPatchField to the given fvPatchField
-            //  Used for mesh to mesh mapping
-            virtual void reset(const fvPatchField<Type>&);
-
-
-        // Evaluation functions
-
-            //- Update the coefficients associated with the patch field
-            virtual void updateCoeffs();
-
+        //- Clear the mapper if present
+        virtual void clearOut();
 
         //- Write
         virtual void write(Ostream&) const;
@@ -182,7 +177,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "mappedValueFvPatchField.C"
+    #include "mappedFvPatchField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

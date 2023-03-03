@@ -66,13 +66,10 @@ Foam::solvers::isothermalFilm::pc(const volScalarField& sigma) const
 Foam::tmp<Foam::volScalarField>
 Foam::solvers::isothermalFilm::pe() const
 {
-    // Currently there is no transfer of pressure from the adjacent fluid
-    return volScalarField::New
-    (
-        "pExternal",
-        mesh,
-        dimensionedScalar(dimPressure, 0)
-    );
+    // Update the pressure, mapping from the fluid region as required
+    p.correctBoundaryConditions();
+
+    return p;
 }
 
 

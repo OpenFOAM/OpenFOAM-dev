@@ -98,6 +98,9 @@ protected:
         //- Reference to the fluid thermophysical properties
         fluidThermo& thermo;
 
+        //- The thermodynamic pressure field
+        volScalarField& p;
+
         //- The thermodynamic density field
         const volScalarField& rho;
 

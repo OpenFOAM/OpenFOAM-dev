@@ -28,10 +28,11 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class PatchField>
+template<class PatchFieldType, class FieldType>
 void Foam::mappedPatchBase::validateMapForField
 (
-    const PatchField& field,
+    const PatchFieldType& field,
+    const FieldType& iF,
     const dictionary& context,
     const label froms
 )
@@ -41,7 +42,7 @@ void Foam::mappedPatchBase::validateMapForField
     if (!isA<mappedPatchBase>(pp))
     {
         OStringStream str;
-        str << "Field " << field.internalField().name() << " of type "
+        str << "Field " << iF.name() << " of type "
             << field.type() << " cannot apply to patch " << pp.name()
             << " because the patch is not of " << typeName << " type";
         FatalIOErrorInFunction(context)
@@ -49,14 +50,21 @@ void Foam::mappedPatchBase::validateMapForField
             << exit(FatalIOError);
     }
 
-    refCast<const mappedPatchBase>(pp).validateForField(field, context, froms);
+    refCast<const mappedPatchBase>(pp).validateForField
+    (
+        field,
+        iF,
+        context,
+        froms
+    );
 }
 
 
-template<class PatchField>
+template<class PatchFieldType, class FieldType>
 void Foam::mappedPatchBase::validateForField
 (
-    const PatchField& field,
+    const PatchFieldType& field,
+    const FieldType& iF,
     const dictionary& context,
     const label froms
 ) const
@@ -69,7 +77,7 @@ void Foam::mappedPatchBase::validateForField
 
     if (isNotRegion || isRegion || isPatch)
     {
-        str << "Field " << field.internalField().name() << " of type "
+        str << "Field " << iF.name() << " of type "
             << field.type() << " cannot apply to patch " << patch_.name()
             << " because values are mapped from ";
     }
