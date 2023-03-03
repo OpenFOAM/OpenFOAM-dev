@@ -171,6 +171,7 @@ coupledTemperatureFvPatchScalarField
     mappedPatchBase::validateMapForField
     (
         *this,
+        iF,
         dict,
         mappedPatchBase::from::differentPatch
     );

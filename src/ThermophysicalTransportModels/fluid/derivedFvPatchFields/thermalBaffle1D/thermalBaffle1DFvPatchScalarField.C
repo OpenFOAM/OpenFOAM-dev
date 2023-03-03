@@ -82,6 +82,7 @@ thermalBaffle1DFvPatchScalarField
     mappedPatchBase::validateMapForField
     (
         *this,
+        iF,
         dict,
         mappedPatchBase::from::sameRegion
       & mappedPatchBase::from::differentPatch
