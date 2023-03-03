@@ -201,7 +201,7 @@ Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase
     const mappedExtrudedPatchBase& mepb
 )
 :
-    mappedPatchBase(pp),
+    mappedPatchBase(pp, mepb),
     oppositePatch_(mepb.oppositePatch_)
 {}
 
