@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -48,6 +48,6 @@ set output "pendulumAndSpring.eps"
 
 plot \
     "pendulumAndSpring.dat" u 1:2 w l t "x", \
-    "pendulumAndSpring.dat" u 1:(57.29578*$2) w l axes x1y2 t "omega"
+    "pendulumAndSpring.dat" u 1:(180/pi*$3) w l axes x1y2 t "omega"
 
 #------------------------------------------------------------------------------
