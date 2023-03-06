@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,19 +31,7 @@ Description
 
     Given the free stream velocity in the absolute frame at time 0, the
     condition applies the appropriate rotation transformation in time and space
-    to determine the current freestream velocity using:
-
-        \f[
-            U_{inf} = cos(\theta)*U_{inf}^{0} - sin(theta) (n^U_{inf}^{0})
-        \f]
-
-    where
-    \vartable
-        U_{inf}   = patch freestream velocity at t [m/s]
-        U_{inf}^0 = free stream velocity in the absolute frame at t=0 [m/s]
-        theta   = swept angle [rad]
-        n       = axis of the MRF
-    \endvartable
+    to determine the current freestream velocity.
 
 Usage
     \table
