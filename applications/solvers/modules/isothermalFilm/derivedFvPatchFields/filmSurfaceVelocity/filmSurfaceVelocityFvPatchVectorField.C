@@ -1,0 +1,182 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "filmSurfaceVelocityFvPatchVectorField.H"
+#include "momentumTransportModel.H"
+#include "mappedPatchBase.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::filmSurfaceVelocityFvPatchVectorField::
+filmSurfaceVelocityFvPatchVectorField
+(
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF
+)
+:
+    mixedFvPatchField<vector>(p, iF),
+    Cs_(0)
+{
+    refValue() = Zero;
+    refGrad() = Zero;
+    valueFraction() = 0;
+}
+
+
+Foam::filmSurfaceVelocityFvPatchVectorField::
+filmSurfaceVelocityFvPatchVectorField
+(
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    mixedFvPatchField<vector>(p, iF, dict, false),
+    Cs_(dict.lookup<scalar>("Cs"))
+{
+    refValue() = Zero;
+    refGrad() = Zero;
+    valueFraction() = 0;
+
+    if (dict.found("value"))
+    {
+        fvPatchVectorField::operator=
+        (
+            vectorField("value", dict, p.size())
+        );
+    }
+    else
+    {
+        // If the value entry is not present initialise to zero-gradient
+        fvPatchVectorField::operator=(patchInternalField());
+    }
+}
+
+
+Foam::filmSurfaceVelocityFvPatchVectorField::
+filmSurfaceVelocityFvPatchVectorField
+(
+    const filmSurfaceVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchField<vector>(ptf, p, iF, mapper),
+    Cs_(ptf.Cs_)
+{}
+
+
+Foam::filmSurfaceVelocityFvPatchVectorField::
+filmSurfaceVelocityFvPatchVectorField
+(
+    const filmSurfaceVelocityFvPatchVectorField& ptf,
+    const DimensionedField<vector, volMesh>& iF
+)
+:
+    mixedFvPatchField<vector>(ptf, iF),
+    Cs_(ptf.Cs_)
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
+{
+    if (updated())
+    {
+        return;
+    }
+
+    // Since we're inside initEvaluate/evaluate there might be processor
+    // comms underway. Change the tag we use.
+    const int oldTag = UPstream::msgType();
+    UPstream::msgType() = oldTag + 1;
+
+    // Get the coupling information from the mappedPatchBase
+    const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
+    const label patchiNbr = mpp.nbrPolyPatch().index();
+    const fvPatch& patchNbr =
+        refCast<const fvMesh>(mpp.nbrMesh()).boundary()[patchiNbr];
+
+    const vectorField UpNbr =
+        patchNbr.lookupPatchField<volVectorField, scalar>("U")
+       .patchInternalField();
+
+    // Set the reference value to the neighbouring fluid internal velocity
+    refValue() = mpp.distribute(UpNbr);
+
+    // Remove the normal component of the surface vel
+    const vectorField n(patch().nf());
+    refValue() -= n*(n & refValue());
+
+    // Lookup the momentum transport model
+    const momentumTransportModel& transportModel =
+        db().lookupType<momentumTransportModel>();
+
+    // Get the patch laminar viscosity
+    const tmp<scalarField> nuEff(transportModel.nuEff(patch().index()));
+
+    // Calculate the drag coefficient from the drag constant
+    // and the magnitude of the velocity difference
+    const scalarField Ds(Cs_*mag(refValue() - *this));
+
+    // Calculate the value-fraction from the balance between the
+    // external fluid drag and internal film stress
+    valueFraction() = Ds/(Ds + patch().deltaCoeffs()*nuEff);
+
+    mixedFvPatchField<vector>::updateCoeffs();
+
+    // Restore tag
+    UPstream::msgType() = oldTag;
+}
+
+
+void Foam::filmSurfaceVelocityFvPatchVectorField::write
+(
+    Ostream& os
+) const
+{
+    fvPatchField<vector>::write(os);
+
+    writeEntry(os, "Cs", Cs_);
+    writeEntry(os, "value", *this);
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+   makePatchTypeField
+   (
+       fvPatchVectorField,
+       filmSurfaceVelocityFvPatchVectorField
+   );
+}
+
+
+// ************************************************************************* //
