@@ -98,6 +98,11 @@ int main(int argc, char *argv[])
             << "solver not specified in the controlDict or on the command-line"
             << exit(FatalError);
     }
+    else
+    {
+        // Load the solver library
+        solver::load(solverName);
+    }
 
     // Create the default single region mesh
     #include "createMesh.H"

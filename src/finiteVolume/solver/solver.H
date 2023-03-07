@@ -135,6 +135,9 @@ public:
             fvMesh& mesh
         );
 
+        //- Load the specified solver library
+        static void load(const word& solverName);
+
 
     //- Destructor
     virtual ~solver();
