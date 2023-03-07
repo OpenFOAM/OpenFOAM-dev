@@ -98,6 +98,7 @@ void Foam::alphaOneFvPatchScalarField::updateCoeffs()
 void Foam::alphaOneFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -123,9 +123,7 @@ void Foam::mappedFilmPressureFvPatchScalarField::updateCoeffs()
 void Foam::mappedFilmPressureFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-
     mappedFvPatchField<scalar>::write(os);
-
     writeEntry(os, "value", *this);
 }
 

@@ -163,7 +163,6 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchField<vector>::write(os);
-
     writeEntry(os, "Cs", Cs_);
     writeEntry(os, "value", *this);
 }

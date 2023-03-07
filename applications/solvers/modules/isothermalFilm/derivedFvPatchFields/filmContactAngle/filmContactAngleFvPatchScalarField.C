@@ -94,6 +94,7 @@ void Foam::filmContactAngleFvPatchScalarField::write
 {
     zeroGradientFvPatchScalarField::write(os);
     writeEntry(os, contactAngle_());
+    writeEntry(os, "value", *this);
 }
 
 
