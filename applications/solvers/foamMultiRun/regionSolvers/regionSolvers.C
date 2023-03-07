@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "regionSolvers.H"
+#include "solver.H"
 #include "Time.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
