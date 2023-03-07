@@ -1,0 +1,52 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    object      p_rgh;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    inlet
+    {
+        type            prghTotalHydrostaticPressure;
+        p0              $internalField;
+        value           $internalField;
+    }
+
+    outlet
+    {
+        type            prghTotalHydrostaticPressure;
+        p0              $internalField;
+        value           $internalField;
+    }
+
+    sides
+    {
+        type            fixedFluxPressure;
+    }
+
+    film
+    {
+        type            fixedFluxPressure;
+    }
+
+    window
+    {
+        type            fixedFluxPressure;
+    }
+}
+
+// ************************************************************************* //

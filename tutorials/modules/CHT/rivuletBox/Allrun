@@ -1,0 +1,47 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh -region box
+
+runApplication -s panel extrudeToRegionMesh \
+    -dict system/extrudeToRegionMeshDict.panel \
+    -region box -overwrite
+
+runApplication -s film extrudeToRegionMesh \
+    -dict system/extrudeToRegionMeshDict.film \
+    -region panel -overwrite
+
+# Add the coupling between box and film
+# Third-region coupling is not currently supported by extrudeToRegionMesh
+
+runApplication -s box foamDictionary -set \
+    "entry0/film/type=mappedExtrudedWall, \
+     entry0/film/neighbourRegion=film, \
+     entry0/film/neighbourPatch=surface, \
+     entry0/film/transformType=none" \
+     constant/box/polyMesh/boundary
+
+runApplication -s film foamDictionary -set \
+    "entry0/surface/type=mappedFilmSurface, \
+     entry0/surface/neighbourRegion=box, \
+     entry0/surface/neighbourPatch=film, \
+     entry0/surface/oppositePatch=wall, \
+     entry0/surface/transformType=none" \
+     constant/film/polyMesh/boundary
+
+printf "\n%s\n" "Creating files for paraview post-processing"
+paraFoam -touchAll
+echo
+
+# Serial run
+#runApplication $(getApplication)
+
+# Parallel run
+runApplication decomposePar -allRegions
+runParallel $(getApplication)
+runApplication reconstructPar -allRegions
+
+#------------------------------------------------------------------------------
