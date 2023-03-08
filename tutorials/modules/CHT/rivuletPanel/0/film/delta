@@ -51,6 +51,8 @@ boundaryField
             thetaRec        50;
             gTheta          0.1;
         }
+
+        value           $internalField;
     }
 
     empty
