@@ -28,24 +28,36 @@ Description
     Film surface velocity boundary condition
 
     Evaluates the surface velocity from the shear imposed by the neighbouring
-    fluid velocity using a simple drag model based on the difference between the
-    fluid and film velocities multiplied by the coefficient \c Cs.  This simple
-    model is used in preference to the standard viscous shear stress model in
-    order to provide some means to include the drag enhancing effect
-    of surface ripples, rivulets etc. in the film surface.
+    fluid velocity using either a simple drag model based on the difference
+    between the fluid and film velocities multiplied by the coefficient \c Cs or
+    if \c Cs is not specified or set to 0 the fluid viscous shear stress.
+
+    The simple model might be used in preference to the fluid viscous shear
+    stress model in order to provide some means to include the drag enhancing
+    effect of surface ripples, rivulets etc. in the film surface.
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        Cs           | Fluid-film drag coefficient | yes |
+        Cs           | Fluid-film drag coefficient | no | 0
     \endtable
 
-    Example of the boundary condition specification:
+    Example of the boundary condition specification using the simple drag model:
     \verbatim
     <patchName>
     {
         type            filmSurfaceVelocity;
         Cs              0.005;
+        value           $internalField;
+    }
+    \endverbatim
+
+    Example of the boundary condition specification using the fluid stress:
+    \verbatim
+    <patchName>
+    {
+        type            filmSurfaceVelocity;
+        value           $internalField;
     }
     \endverbatim
 

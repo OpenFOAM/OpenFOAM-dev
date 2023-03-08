@@ -55,7 +55,7 @@ filmSurfaceVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(p, iF, dict, false),
-    Cs_(dict.lookup<scalar>("Cs"))
+    Cs_(dict.lookupOrDefault<scalar>("Cs", 0))
 {
     refValue() = Zero;
     refGrad() = Zero;
@@ -139,16 +139,41 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
     const momentumTransportModel& transportModel =
         db().lookupType<momentumTransportModel>();
 
-    // Get the patch laminar viscosity
-    const tmp<scalarField> nuEff(transportModel.nuEff(patch().index()));
+    // Get the patch laminar viscosity divided by delta
+    const tmp<scalarField> nuEffByDelta
+    (
+        transportModel.nuEff(patch().index())*patch().deltaCoeffs()
+    );
 
-    // Calculate the drag coefficient from the drag constant
-    // and the magnitude of the velocity difference
-    const scalarField Ds(Cs_*mag(refValue() - *this));
+    if (Cs_ > 0)
+    {
+        // Calculate the drag coefficient from the drag constant
+        // and the magnitude of the velocity difference
+        const scalarField Ds(Cs_*mag(refValue() - *this));
 
-    // Calculate the value-fraction from the balance between the
-    // external fluid drag and internal film stress
-    valueFraction() = Ds/(Ds + patch().deltaCoeffs()*nuEff);
+        // Calculate the value-fraction from the balance between the
+        // external fluid drag and internal film stress
+        valueFraction() = Ds/(Ds + nuEffByDelta);
+    }
+    else
+    {
+        // Lookup the neighbour momentum transport model
+        const momentumTransportModel& transportModelNbr =
+            mpp.nbrMesh().lookupType<momentumTransportModel>();
+
+        // Get the patch laminar viscosity
+        const tmp<scalarField> nuEffByDeltaNbr
+        (
+            mpp.distribute
+            (
+                transportModelNbr.nuEff(patchiNbr)*patchNbr.deltaCoeffs()
+            )
+        );
+
+        // Calculate the value-fraction from the balance between the
+        // external fluid and internal film stresses
+        valueFraction() = nuEffByDeltaNbr()/(nuEffByDelta + nuEffByDeltaNbr());
+    }
 
     mixedFvPatchField<vector>::updateCoeffs();
 
@@ -163,7 +188,12 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchField<vector>::write(os);
-    writeEntry(os, "Cs", Cs_);
+
+    if (Cs_ > 0)
+    {
+        writeEntry(os, "Cs", Cs_);
+    }
+
     writeEntry(os, "value", *this);
 }
 
