@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ Description
 namespace Foam
 {
     extern ISstream Sin;
-    extern OSstream Sout;
+    extern prefixOSstream Sout;
     extern OSstream Serr;
     extern prefixOSstream Pout;
     extern prefixOSstream Perr;

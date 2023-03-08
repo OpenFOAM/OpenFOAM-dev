@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,40 @@ Class
     Foam::regionSolvers
 
 Description
-    Simple class to hold the list of region solvers
+    Class to hold the lists of region meshes and solvers
+
+    Also provides loop and iteration functionality which automatically set the
+    region Info prefix for each of the solvers returned by the '[]' operator or
+    iterator.
+
+Usage
+    Given the \c regionSolvers named solvers:
+    \verbatim
+        // Create the region meshes and solvers
+        regionSolvers solvers(runTime);
+    \endverbatim
+
+    The list of solvers can be looped over:
+    \verbatim
+        forAll(solvers, i)
+        {
+            solvers[i].momentumPredictor();
+        }
+    \endverbatim
+    where the '[]' operator sets the region Info prefix.  After the loop the
+    region Info prefix remains set to the last region prefix and so for global
+    messages, e.g. the global time-step the Info prefix must be specifically
+    reset to spaces by calling the \c setGlobalPrefix() function.
+
+    Alternatively the list of solvers can be iterated over:
+    \verbatim
+        forAllIter(regionSolvers, solvers, solver)
+        {
+            solver->momentumPredictor();
+        }
+    \endverbatim
+    where the iterator increment sets the region \c Info prefix and at the end
+    automatically resets the \c Info prefix to spaces.
 
 SourceFiles
     regionSolvers.C
@@ -35,24 +68,34 @@ SourceFiles
 #ifndef regionSolvers_H
 #define regionSolvers_H
 
-#include "word.H"
-#include "Pair.H"
+#include "solver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class Time;
-
 /*---------------------------------------------------------------------------*\
                       Class regionSolvers Declaration
 \*---------------------------------------------------------------------------*/
 
 class regionSolvers
-:
-    public List<Pair<word>>
 {
+    // Private Member Data
+
+        //- Region meshes
+        PtrList<fvMesh> regions_;
+
+        //- Region solvers
+        PtrList<solver> solvers_;
+
+        //- Global space padding prefix
+        string prefix0_;
+
+        //- List of space padded region prefixes
+        stringList prefixes_;
+
+
 public:
 
     // Constructors
@@ -68,12 +111,81 @@ public:
     ~regionSolvers();
 
 
+    // Member Functions
+
+        //- Return the number of region solvers
+        inline label size() const;
+
+        //- Set the Info prefix to space padding for global messages
+        void setGlobalPrefix() const;
+
+        //- Set the Info prefix to the space padded region name
+        void setPrefix(const label i) const;
+
+        //- Reset the Info prefix to null
+        void resetPrefix() const;
+
+
+    // Iterator
+
+        class iterator;
+        friend class iterator;
+
+        // Iterator class to loop over the solvers, setting the prefix for each
+        class iterator
+        {
+            // Private Data
+
+                //- Reference to the regionSolvers
+                regionSolvers& regionSolvers_;
+
+                //- Current solver index
+                label index_;
+
+        public:
+
+            friend class regionSolvers;
+
+            // Constructors
+
+                //- Construct for the regionSolvers
+                inline explicit iterator(regionSolvers&);
+
+            // Member Operators
+
+                inline bool operator==(const iterator&) const;
+                inline bool operator!=(const iterator&) const;
+
+                inline solver& operator*();
+                inline solver& operator()();
+                inline solver* operator->();
+
+                inline iterator operator++();
+                inline iterator operator++(int);
+        };
+
+        //- Return an iterator to begin traversing the solvers
+        inline iterator begin();
+
+        //- Return an iterator to end traversing the solvers
+        inline iterator end();
+
+
     // Member Operators
+
+        //- Cast to the list of solvers
+        inline operator PtrList<solver>&();
+
+        //- Set the region i prefix and return the corresponding solver
+        solver& operator[](const label i);
 
         //- Disallow default bitwise assignment
         void operator=(const regionSolvers&) = delete;
 };
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "regionSolversI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

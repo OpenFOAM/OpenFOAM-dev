@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,6 @@ Usage
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "solver.H"
 #include "regionSolvers.H"
 #include "pimpleMultiRegionControl.H"
 #include "setDeltaT.H"
@@ -98,33 +97,8 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
 
-    regionSolvers regionSolvers(runTime);
-    PtrList<fvMesh> regions(regionSolvers.size());
-    PtrList<solver> solvers(regionSolvers.size());
-
-    forAll(regionSolvers, i)
-    {
-        regions.set
-        (
-            i,
-            new fvMesh
-            (
-                IOobject
-                (
-                    regionSolvers[i].first(),
-                    runTime.name(),
-                    runTime,
-                    IOobject::MUST_READ
-                )
-            )
-        );
-
-        solvers.set
-        (
-            i,
-            solver::New(regionSolvers[i].second(), regions[i])
-        );
-    }
+    // Create the region meshes and solvers
+    regionSolvers solvers(runTime);
 
     // Create the outer PIMPLE loop and control structure
     pimpleMultiRegionControl pimple(runTime, solvers);
@@ -142,6 +116,8 @@ int main(int argc, char *argv[])
         {
             solvers[i].preSolve();
         }
+
+        solvers.setGlobalPrefix();
 
         // Adjust the time-step according to the solver maxDeltaT
         adjustDeltaT(runTime, solvers);
@@ -191,6 +167,8 @@ int main(int argc, char *argv[])
         {
             solvers[i].postSolve();
         }
+
+        solvers.setGlobalPrefix();
 
         runTime.write();
 

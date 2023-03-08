@@ -31,6 +31,8 @@ License
 
 Foam::regionSolvers::regionSolvers(const Time& runTime)
 {
+    List<Pair<word>> regionSolverNames;
+
     if (runTime.controlDict().found("regionSolvers"))
     {
         const dictionary& regionSolversDict =
@@ -41,10 +43,7 @@ Foam::regionSolvers::regionSolvers(const Time& runTime)
             const word regionName(iter().keyword());
             const word solverName(iter().stream());
 
-            // Load the solver library
-            solver::load(solverName);
-
-            append(Pair<word>(regionName, solverName));
+            regionSolverNames.append(Pair<word>(regionName, solverName));
         }
     }
     else
@@ -77,7 +76,10 @@ Foam::regionSolvers::regionSolvers(const Time& runTime)
                 const wordList& fluidRegions = regions["solid"];
                 forAll(fluidRegions, i)
                 {
-                    append(Pair<word>(fluidRegions[i], "solid"));
+                    regionSolverNames.append
+                    (
+                        Pair<word>(fluidRegions[i], "solid")
+                    );
                 }
             }
 
@@ -86,7 +88,10 @@ Foam::regionSolvers::regionSolvers(const Time& runTime)
                 const wordList& fluidRegions = regions["fluid"];
                 forAll(fluidRegions, i)
                 {
-                    append(Pair<word>(fluidRegions[i], "fluid"));
+                    regionSolverNames.append
+                    (
+                        Pair<word>(fluidRegions[i], "fluid")
+                    );
                 }
             }
         }
@@ -98,6 +103,50 @@ Foam::regionSolvers::regionSolvers(const Time& runTime)
                 << exit(FatalIOError);
         }
     }
+
+    regions_.setSize(regionSolverNames.size());
+    solvers_.setSize(regionSolverNames.size());
+    prefixes_.setSize(regionSolverNames.size());
+
+    string::size_type nRegionNameChars = 0;
+
+    forAll(regionSolverNames, i)
+    {
+        const word& regionName = regionSolverNames[i].first();
+        const word& solverName = regionSolverNames[i].second();
+
+        // Load the solver library
+        solver::load(solverName);
+
+        regions_.set
+        (
+            i,
+            new fvMesh
+            (
+                IOobject
+                (
+                    regionName,
+                    runTime.name(),
+                    runTime,
+                    IOobject::MUST_READ
+                )
+            )
+        );
+
+        solvers_.set(i, solver::New(solverName, regions_[i]));
+
+        prefixes_[i] = regionName;
+        nRegionNameChars = max(nRegionNameChars, regionName.size());
+    }
+
+    nRegionNameChars++;
+
+    prefix0_.append(nRegionNameChars, ' ');
+
+    forAll(regionSolverNames, i)
+    {
+        prefixes_[i].append(nRegionNameChars - prefixes_[i].size(), ' ');
+    }
 }
 
 
@@ -105,6 +154,35 @@ Foam::regionSolvers::regionSolvers(const Time& runTime)
 
 Foam::regionSolvers::~regionSolvers()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::regionSolvers::setGlobalPrefix() const
+{
+    Sout.prefix() = prefix0_;
+}
+
+
+void Foam::regionSolvers::setPrefix(const label i) const
+{
+    Sout.prefix() = prefixes_[i];
+}
+
+
+void Foam::regionSolvers::resetPrefix() const
+{
+    Sout.prefix() = string::null;
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+Foam::solver& Foam::regionSolvers::operator[](const label i)
+{
+    setPrefix(i);
+    return solvers_[i];
+}
 
 
 // ************************************************************************* //
