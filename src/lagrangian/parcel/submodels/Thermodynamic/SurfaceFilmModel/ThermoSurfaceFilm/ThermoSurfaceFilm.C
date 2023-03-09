@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -620,7 +620,7 @@ bool Foam::ThermoSurfaceFilm<CloudType>::transferParcel
     {
         surfaceFilm& filmModel = this->surfaceFilmPtrs()[filmi];
 
-        if (filmModel.isRegionPatch(patchi))
+        if (filmModel.isFilmPatch(patchi))
         {
             const label facei = pp.whichFace(p.face());
 

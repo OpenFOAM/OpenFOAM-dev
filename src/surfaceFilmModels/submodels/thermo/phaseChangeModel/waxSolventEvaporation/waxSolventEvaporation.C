@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,7 +238,7 @@ void waxSolventEvaporation::correctModel
                 Ysolvent*Wsolvent/((1 - Ysolvent)*Wwax + Ysolvent*Wsolvent)
             );
 
-            // Primary region density [kg/m^3]
+            // Primary film density [kg/m^3]
             const scalar rhoInfc = rhoInf[celli];
 
             // Cell pressure [Pa]
@@ -276,7 +276,7 @@ void waxSolventEvaporation::correctModel
                 XsCoeff/(XsCoeff*Xsolvent*Wsolvent + (1 - Xs)*Wvap)
             );
 
-            // Primary region viscosity [Pa.s]
+            // Primary film viscosity [Pa.s]
             const scalar muInfc = muInf[celli];
 
             // Reynolds number
@@ -374,7 +374,7 @@ void waxSolventEvaporation::correctModel
 
         dMass += dm;
 
-        // Assume that the vapour transferred to the primary region is
+        // Assume that the vapour transferred to the primary film is
         // already at temperature Tloc so that all heat required for
         // the phase-change is provided by the film
         dEnergy += dm*primarySpecieThermo.Hs(vapId(), pInf, Tloc);

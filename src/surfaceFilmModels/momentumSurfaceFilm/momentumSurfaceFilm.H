@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ protected:
 
             // Transfer fields
 
-                //- Film mass available for transfer to the primary region
+                //- Film mass available for transfer to the primary film
                 volScalarField primaryMassTrans_;
 
                 //- Film mass available for transfer to cloud
@@ -140,8 +140,8 @@ protected:
 
         // Source term fields
 
-            // Film region - registered to the film region mesh
-            // Note: need boundary value mapped from primary region, and then
+            // Film film - registered to the film film mesh
+            // Note: need boundary value mapped from primary film, and then
             // pushed into the patch internal field
 
                 //- Mass [kg/m^2/s]
@@ -154,20 +154,20 @@ protected:
                 volScalarField::Internal pSp_;
 
 
-            // Primary region - registered to the primary region mesh
+            // Primary film - registered to the primary film mesh
             // Internal use only - not read-in
 
-                //- Primary region mass source [kg]
+                //- Primary film mass source [kg]
                 volScalarField rhoSpPrimary_;
 
-                //- Primary region tangential momentum source [kg m/s]
+                //- Primary film tangential momentum source [kg m/s]
                 volVectorField USpPrimary_;
 
-                //- Primary region normal momentum source (pressure) [kg m/s]
+                //- Primary film normal momentum source (pressure) [kg m/s]
                 volScalarField pSpPrimary_;
 
 
-        // Fields mapped from primary region - registered to the film region
+        // Fields mapped from primary film - registered to the film film
         // Note: need both boundary AND patch internal fields to be mapped
 
             //- Velocity [m/s]
@@ -217,13 +217,13 @@ protected:
         virtual bool read();
 
         //- Reset source term fields
-        virtual void resetPrimaryRegionSourceTerms();
+        virtual void resetPrimaryFilmSourceTerms();
 
-        //- Transfer thermo fields from the primary region to the film region
-        virtual void transferPrimaryRegionThermoFields();
+        //- Transfer thermo fields from the primary film to the film film
+        virtual void transferPrimaryFilmThermoFields();
 
-        //- Transfer source fields from the primary region to the film region
-        virtual void transferPrimaryRegionSourceFields();
+        //- Transfer source fields from the primary film to the film film
+        virtual void transferPrimaryFilmSourceFields();
 
         //- Hydrostatic pressure coefficient
         tmp<surfaceScalarField> rhog() const;
@@ -249,7 +249,7 @@ protected:
         //- Continuity check
         virtual void continuityCheck();
 
-        //- Constrain a film region master/slave boundaries of a field to a
+        //- Constrain a film film master/slave boundaries of a field to a
         //  given value
         template<class Type>
         tmp<Type> constrainFilmField
@@ -294,7 +294,7 @@ public:
             const word& modelType,
             const fvMesh& primaryMesh,
             const dimensionedVector& g,
-            const word& regionType,
+            const word& filmType,
             const bool readFields = true
         );
 
@@ -369,7 +369,7 @@ public:
             tmp<volVectorField::Internal> Uw() const;
 
 
-        // Transfer fields - to the primary region
+        // Transfer fields - to the primary film
 
             //- Return mass transfer source - Eulerian phase only
             virtual tmp<volScalarField> primaryMassTrans() const;
@@ -389,7 +389,7 @@ public:
             //- External hook to add sources to the film
             virtual void addSources
             (
-                const label patchi,            // patchi on primary region
+                const label patchi,            // patchi on primary film
                 const label facei,             // facei of patchi
                 const scalar massSource,       // [kg]
                 const vector& momentumSource,  // [kg m/s] (tang'l momentum)
@@ -400,7 +400,7 @@ public:
 
          // Source fields (read/write access)
 
-            // Primary region
+            // Primary film
 
                 //- Momentum [kg/m/s^2]
                 inline volVectorField& USpPrimary();
@@ -412,7 +412,7 @@ public:
                 inline volScalarField& rhoSpPrimary();
 
 
-            // Film region
+            // Film film
 
                 //- Momentum [kg/m/s^2]
                 inline volVectorField::Internal& USp();
@@ -433,7 +433,7 @@ public:
                 inline const volScalarField::Internal& rhoSp() const;
 
 
-        // Fields mapped from primary region
+        // Fields mapped from primary film
 
             //- Velocity [m/s]
             inline const volVectorField& UPrimary() const;
@@ -476,13 +476,13 @@ public:
         // Evolution
 
             //- Pre-evolve film hook
-            virtual void preEvolveRegion();
+            virtual void preEvolveFilm();
 
             //- Evolve the film equations
-            virtual void evolveRegion();
+            virtual void evolveFilm();
 
 
-        // Primary region source fields
+        // Primary film source fields
 
             //- Return total mass source - Eulerian phase only
             virtual tmp<volScalarField::Internal> Srho() const;

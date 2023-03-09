@@ -59,7 +59,7 @@ bool Foam::momentumSurfaceFilm::read()
 }
 
 
-void Foam::momentumSurfaceFilm::resetPrimaryRegionSourceTerms()
+void Foam::momentumSurfaceFilm::resetPrimaryFilmSourceTerms()
 {
     DebugInFunction << endl;
 
@@ -70,11 +70,11 @@ void Foam::momentumSurfaceFilm::resetPrimaryRegionSourceTerms()
 
 
 void Foam::momentumSurfaceFilm::
-transferPrimaryRegionThermoFields()
+transferPrimaryFilmThermoFields()
 {
     DebugInFunction << endl;
 
-    // Update fields from primary region via direct mapped
+    // Update fields from primary film via direct mapped
     // (coupled) boundary conditions
     UPrimary_.correctBoundaryConditions();
     p_.correctBoundaryConditions();
@@ -84,7 +84,7 @@ transferPrimaryRegionThermoFields()
 
 
 void Foam::momentumSurfaceFilm::
-transferPrimaryRegionSourceFields()
+transferPrimaryFilmSourceFields()
 {
     DebugInFunction << endl;
 
@@ -112,12 +112,12 @@ transferPrimaryRegionSourceFields()
         pSpPrimaryBf[patchi] *= rpriMagSfdeltaT;
     }
 
-    // Retrieve the source fields from the primary region
-    toRegion(rhoSp_, rhoSpPrimaryBf);
+    // Retrieve the source fields from the primary film
+    toFilm(rhoSp_, rhoSpPrimaryBf);
     rhoSp_.field() /= VbyA();
-    toRegion(USp_, USpPrimaryBf);
+    toFilm(USp_, USpPrimaryBf);
     USp_.field() /= VbyA();
-    toRegion(pSp_, pSpPrimaryBf);
+    toFilm(pSp_, pSpPrimaryBf);
 
     // update addedMassTotal counter
     if (time().writeTime())
@@ -158,7 +158,7 @@ Foam::momentumSurfaceFilm::pe()
     return volScalarField::New
     (
         typedName("pe"),
-        p_                             // Pressure (mapped from primary region)
+        p_                             // Pressure (mapped from primary film)
       - tpSp                           // Accumulated particle impingement
     );
 }
@@ -464,11 +464,11 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
     const word& modelType,
     const fvMesh& primaryMesh,
     const dimensionedVector& g,
-    const word& regionType,
+    const word& filmType,
     const bool readFields
 )
 :
-    surfaceFilm(modelType, primaryMesh, g, regionType),
+    surfaceFilm(modelType, primaryMesh, g, filmType),
     phaseName_(coeffs_.lookupOrDefault("phase", word::null)),
     pimple_(mesh_),
 
@@ -829,7 +829,7 @@ Foam::momentumSurfaceFilm::momentumSurfaceFilm
 
     if (readFields)
     {
-        transferPrimaryRegionThermoFields();
+        transferPrimaryFilmThermoFields();
 
         correctCoverage();
 
@@ -907,15 +907,15 @@ void Foam::momentumSurfaceFilm::addSources
 }
 
 
-void Foam::momentumSurfaceFilm::preEvolveRegion()
+void Foam::momentumSurfaceFilm::preEvolveFilm()
 {
     DebugInFunction << endl;
 
-    surfaceFilm::preEvolveRegion();
+    surfaceFilm::preEvolveFilm();
 
-    transferPrimaryRegionThermoFields();
+    transferPrimaryFilmThermoFields();
 
-    transferPrimaryRegionSourceFields();
+    transferPrimaryFilmSourceFields();
 
     // Reset transfer fields
     availableMass_ = mass();
@@ -926,7 +926,7 @@ void Foam::momentumSurfaceFilm::preEvolveRegion()
 }
 
 
-void Foam::momentumSurfaceFilm::evolveRegion()
+void Foam::momentumSurfaceFilm::evolveFilm()
 {
     DebugInFunction << endl;
 
@@ -961,7 +961,7 @@ void Foam::momentumSurfaceFilm::evolveRegion()
     }
 
     // Reset source terms for next time integration
-    resetPrimaryRegionSourceTerms();
+    resetPrimaryFilmSourceTerms();
 }
 
 

@@ -59,56 +59,56 @@ bool Foam::surfaceFilm::read()
 
 Foam::label Foam::surfaceFilm::nbrCoupledPatchID
 (
-    const surfaceFilm& nbrRegion,
-    const label regionPatchi
+    const surfaceFilm& nbrFilm,
+    const label filmPatchi
 ) const
 {
     label nbrPatchi = -1;
 
-    // region
-    const fvMesh& nbrRegionMesh = nbrRegion.mesh();
+    // film
+    const fvMesh& nbrFilmMesh = nbrFilm.mesh();
 
     // boundary meshes
     const polyBoundaryMesh& pbm = mesh().boundaryMesh();
-    const polyBoundaryMesh& nbrPbm = nbrRegionMesh.boundaryMesh();
+    const polyBoundaryMesh& nbrPbm = nbrFilmMesh.boundaryMesh();
 
-    if (regionPatchi > pbm.size() - 1)
+    if (filmPatchi > pbm.size() - 1)
     {
         FatalErrorInFunction
-            << "region patch index out of bounds: "
-            << "region patch index = " << regionPatchi
+            << "film patch index out of bounds: "
+            << "film patch index = " << filmPatchi
             << ", maximum index = " << pbm.size() - 1
             << abort(FatalError);
     }
 
     const mappedPatchBase& mpb =
-        mappedPatchBase::getMap(pbm[regionPatchi]);
+        mappedPatchBase::getMap(pbm[filmPatchi]);
 
-    // sample patch name on the primary region
+    // sample patch name on the primary film
     const word& primaryPatchName = mpb.nbrPatchName();
 
-    // find patch on nbr region that has the same sample patch name
-    forAll(nbrRegion.intCoupledPatchIDs(), j)
+    // find patch on nbr film that has the same sample patch name
+    forAll(nbrFilm.intCoupledPatchIDs(), j)
     {
-        const label nbrRegionPatchi = nbrRegion.intCoupledPatchIDs()[j];
+        const label nbrFilmPatchi = nbrFilm.intCoupledPatchIDs()[j];
 
         const mappedPatchBase& mpb =
-            mappedPatchBase::getMap(nbrPbm[nbrRegionPatchi]);
+            mappedPatchBase::getMap(nbrPbm[nbrFilmPatchi]);
 
         if (mpb.nbrPatchName() == primaryPatchName)
         {
-            nbrPatchi = nbrRegionPatchi;
+            nbrPatchi = nbrFilmPatchi;
             break;
         }
     }
 
     if (nbrPatchi == -1)
     {
-        const polyPatch& p = mesh().boundaryMesh()[regionPatchi];
+        const polyPatch& p = mesh().boundaryMesh()[filmPatchi];
 
         FatalErrorInFunction
             << "Unable to find patch pair for local patch "
-            << p.name() << " and region " << nbrRegion.name()
+            << p.name() << " and film " << nbrFilm.name()
             << abort(FatalError);
     }
 
@@ -123,14 +123,14 @@ Foam::surfaceFilm::surfaceFilm
     const word& modelType,
     const fvMesh& primaryMesh,
     const dimensionedVector& g,
-    const word& regionType
+    const word& filmType
 )
 :
     IOdictionary
     (
         IOobject
         (
-            regionType + "Properties",
+            filmType + "Properties",
             primaryMesh.time().constant(),
             primaryMesh.time(),
             IOobject::MUST_READ,
@@ -141,12 +141,12 @@ Foam::surfaceFilm::surfaceFilm
     time_(primaryMesh.time()),
     infoOutput_(true),
     modelType_(modelType),
-    regionName_(lookup("regionName")),
+    filmName_(lookup("filmName")),
     mesh_
     (
         IOobject
         (
-            regionName_,
+            filmName_,
             time_.name(),
             time_,
             IOobject::MUST_READ
@@ -201,16 +201,16 @@ Foam::surfaceFilm::surfaceFilm
 
     forAll(rbm, patchi)
     {
-        const polyPatch& regionPatch = rbm[patchi];
+        const polyPatch& filmPatch = rbm[patchi];
 
-        if (isA<mappedPatchBase>(regionPatch))
+        if (isA<mappedPatchBase>(filmPatch))
         {
             intCoupledPatchIDs.append(patchi);
 
-            nBoundaryFaces += regionPatch.faceCells().size();
+            nBoundaryFaces += filmPatch.faceCells().size();
 
             const mappedPatchBase& mapPatch =
-                refCast<const mappedPatchBase>(regionPatch);
+                refCast<const mappedPatchBase>(filmPatch);
 
             if
             (
@@ -232,8 +232,8 @@ Foam::surfaceFilm::surfaceFilm
     if (returnReduce(nBoundaryFaces, sumOp<label>()) == 0)
     {
         WarningInFunction
-            << "Region model has no mapped boundary conditions - transfer "
-            << "between regions will not be possible" << endl;
+            << "Film model has no mapped boundary conditions - transfer "
+            << "between films will not be possible" << endl;
     }
 
     if (!outputPropertiesPtr_.valid())
@@ -244,9 +244,9 @@ Foam::surfaceFilm::surfaceFilm
             (
                 IOobject
                 (
-                    regionName_ + "OutputProperties",
+                    filmName_ + "OutputProperties",
                     time_.name(),
-                    "uniform"/regionName_,
+                    "uniform"/filmName_,
                     primaryMesh_,
                     IOobject::READ_IF_PRESENT,
                     IOobject::NO_WRITE
@@ -275,8 +275,8 @@ Foam::surfaceFilm::surfaceFilm
     if (nBoundaryFaces != mesh_.nCells())
     {
         FatalErrorInFunction
-            << "Number of primary region coupled boundary faces not equal to "
-            << "the number of cells in the local region" << nl << nl
+            << "Number of primary film coupled boundary faces not equal to "
+            << "the number of cells in the local film" << nl << nl
             << "Number of cells = " << mesh_.nCells() << nl
             << "Boundary faces  = " << nBoundaryFaces << nl
             << abort(FatalError);
@@ -348,14 +348,14 @@ Foam::surfaceFilm::passivePatchIDs() const
 
 void Foam::surfaceFilm::evolve()
 {
-    Info<< "\nEvolving " << modelType_ << " for region "
+    Info<< "\nEvolving " << modelType_ << " for film "
         << mesh_.name() << endl;
 
-    preEvolveRegion();
+    preEvolveFilm();
 
-    evolveRegion();
+    evolveFilm();
 
-    postEvolveRegion();
+    postEvolveFilm();
 
     // Provide some feedback
     if (infoOutput_)
@@ -378,15 +378,15 @@ void Foam::surfaceFilm::evolve()
 }
 
 
-void Foam::surfaceFilm::preEvolveRegion()
+void Foam::surfaceFilm::preEvolveFilm()
 {}
 
 
-void Foam::surfaceFilm::evolveRegion()
+void Foam::surfaceFilm::evolveFilm()
 {}
 
 
-void Foam::surfaceFilm::postEvolveRegion()
+void Foam::surfaceFilm::postEvolveFilm()
 {}
 
 

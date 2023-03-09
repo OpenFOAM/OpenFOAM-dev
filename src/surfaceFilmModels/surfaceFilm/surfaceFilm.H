@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,10 @@ protected:
         //- Model type
         const word modelType_;
 
-        //- Region name
-        word regionName_;
+        //- Film name
+        word filmName_;
 
-        //- Region mesh
+        //- Film mesh
         fvMesh mesh_;
 
         //- Model coefficients dictionary
@@ -82,10 +82,10 @@ protected:
 
         // Addressing
 
-            //- List of patch IDs on the primary region coupled to this region
+            //- List of patch IDs on the primary film coupled to this film
             labelList primaryPatchIDs_;
 
-            //- List of patch IDs internally coupled with the primary region
+            //- List of patch IDs internally coupled with the primary film
             labelList intCoupledPatchIDs_;
 
             //- List of patch IDs opposite to internally coupled patches
@@ -127,7 +127,7 @@ public:
             const word& modelType,
             const fvMesh& mesh,
             const dimensionedVector& g,
-            const word& regionType
+            const word& filmType
         );
 
         //- Disallow default bitwise copy construction
@@ -148,7 +148,7 @@ public:
             //- Return the reference to the primary mesh
             inline const fvMesh& primaryMesh() const;
 
-            //- Return the region mesh
+            //- Return the film mesh
             inline const fvMesh& mesh() const;
 
             //- Return the information flag
@@ -170,7 +170,7 @@ public:
             inline const dimensionedVector& g() const;
 
 
-            // Region geometry
+            // Film geometry
 
                 //- Return the patch normal vectors
                 const volVectorField& nHat() const;
@@ -183,24 +183,24 @@ public:
 
             // Addressing
 
-                //- Return true if patchi on the local region is a coupled
-                //  patch to the primary region
-                inline bool isCoupledPatch(const label regionPatchi) const;
+                //- Return true if patchi on the film is a coupled
+                //  patch to the primary film
+                inline bool isCoupledPatch(const label filmPatchi) const;
 
-                //- Return true if patchi on the primary region is a coupled
-                //  patch to the local region
-                inline bool isRegionPatch(const label primaryPatchi) const;
+                //- Return true if patchi on the primary film is a coupled
+                //  patch to the film
+                inline bool isFilmPatch(const label primaryPatchi) const;
 
-                //- Return the list of patch IDs on the primary region coupled
-                //  to this region
+                //- Return the list of patch IDs on the primary film coupled
+                //  to this film
                 inline const labelList& primaryPatchIDs() const;
 
                 //- Return the list of patch IDs internally coupled with the
-                //  primary region
+                //  primary film
                 inline const labelList& intCoupledPatchIDs() const;
 
-                //- Return region ID corresponding to primaryPatchID
-                inline label regionPatchID(const label primaryPatchID) const;
+                //- Return film ID corresponding to primaryPatchID
+                inline label filmPatchID(const label primaryPatchID) const;
 
                 //- Return the list of patch IDs opposite to internally
                 //  coupled patches
@@ -211,39 +211,47 @@ public:
 
             //- Return boundary types for mapped field patches
             //  Also maps internal field value
-            //  Mapping region prescribed by underlying mapped poly patch
+            //  Mapping film prescribed by underlying mapped poly patch
             template<class Type>
             wordList mappedFieldAndInternalPatchTypes() const;
 
         // Helper
 
             //- Return the coupled patch ID paired with coupled patch
-            //  regionPatchi
+            //  filmPatchi
             label nbrCoupledPatchID
             (
-                const surfaceFilm& nbrRegion,
-                const label regionPatchi
+                const surfaceFilm& nbrFilm,
+                const label filmPatchi
             ) const;
 
-            //- Convert a local region field to the primary region
+            //- Convert a film field to the primary film
             template<class Type>
             void toPrimary
             (
-                const label regionPatchi,
-                Field<Type>& regionField
+                const label filmPatchi,
+                Field<Type>& filmField
             ) const;
 
-            //- Convert a primary region field to the local region
+            //- Convert a primary film field to the film
             template<class Type>
-            void toRegion
+            tmp<Field<Type>> toFilm
             (
-                const label regionPatchi,
-                Field<Type>& primaryFieldField
+                const label filmPatchi,
+                const Field<Type>& primaryPatchField
             ) const;
 
-            //- Return a primary patch field mapped the local region
+            //- Convert a primary film field to the film
             template<class Type>
-            void toRegion
+            tmp<Field<Type>> toFilm
+            (
+                const label filmPatchi,
+                const tmp<Field<Type>> & primaryPatchField
+            ) const;
+
+            //- Return a primary patch field mapped the film
+            template<class Type>
+            void toFilm
             (
                 Field<Type>& rf,
                 const typename VolField<Type>::Boundary& pBf
@@ -274,7 +282,7 @@ public:
             virtual tmp<volScalarField> sigma() const = 0;
 
 
-        // Transfer fields - to the primary region
+        // Transfer fields - to the primary film
 
             //- Return mass transfer source - Eulerian phase only
             virtual tmp<volScalarField> primaryMassTrans() const = 0;
@@ -299,17 +307,17 @@ public:
                 const scalar energySource
             ) = 0;
 
-            //- Main driver routing to evolve the region - calls other evolves
+            //- Main driver routing to evolve the film - calls other evolves
             virtual void evolve();
 
-            //- Pre-evolve region
-            virtual void preEvolveRegion();
+            //- Pre-evolve film
+            virtual void preEvolveFilm();
 
-            //- Evolve the region
-            virtual void evolveRegion();
+            //- Evolve the film
+            virtual void evolveFilm();
 
-            //- Post-evolve region
-            virtual void postEvolveRegion();
+            //- Post-evolve film
+            virtual void postEvolveFilm();
 
 
         // I-O

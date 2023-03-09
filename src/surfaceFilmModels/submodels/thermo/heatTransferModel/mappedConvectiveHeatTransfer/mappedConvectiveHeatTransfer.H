@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,10 +56,10 @@ class mappedConvectiveHeatTransfer
 {
     // Private Data
 
-        //- Heat transfer coefficient - primary region [W/m^2/K]
+        //- Heat transfer coefficient - primary film [W/m^2/K]
         volScalarField htcConvPrimary_;
 
-        //- Heat transfer coefficient - film region [W/m^2/K]
+        //- Heat transfer coefficient - film film [W/m^2/K]
         volScalarField::Internal htcConvFilm_;
 
 

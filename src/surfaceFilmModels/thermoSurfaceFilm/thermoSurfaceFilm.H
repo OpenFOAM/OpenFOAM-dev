@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,10 +71,10 @@ protected:
 
         // Thermo properties
 
-            //- Reference to the primary region thermo
+            //- Reference to the primary film thermo
             const fluidThermo& primaryThermo_;
 
-            // Transfer fields - to the primary region
+            // Transfer fields - to the primary film
 
                 //- Film energy transfer
                 volScalarField primaryEnergyTrans_;
@@ -100,22 +100,22 @@ protected:
 
         // Source term fields
 
-            // Film region - registered to the film region mesh
-            // Note: need boundary value mapped from primary region, and then
+            // Film film - registered to the film film mesh
+            // Note: need boundary value mapped from primary film, and then
             // pushed into the patch internal field
 
                 //- Energy [J/m2/s]
                 volScalarField::Internal hSp_;
 
 
-            // Primary region - registered to the primary region mesh
+            // Primary film - registered to the primary film mesh
             // Internal use only - not read-in
 
                 //- Energy [J/m2/s]
                 volScalarField hSpPrimary_;
 
 
-        // Fields mapped from primary region - registered to the film region
+        // Fields mapped from primary film - registered to the film film
         // Note: need both boundary AND patch internal fields to be mapped
 
             //- Temperature [K]
@@ -128,7 +128,7 @@ protected:
         // Sub-models
 
             //- Heat transfer coefficient between film surface and primary
-            //  region [W/m^2/K]
+            //  film [W/m^2/K]
             autoPtr<surfaceFilmModels::heatTransferModel> htcs_;
 
             //- Heat transfer coefficient between wall and film [W/m^2/K]
@@ -156,13 +156,13 @@ protected:
         virtual bool read();
 
         //- Reset source term fields
-        virtual void resetPrimaryRegionSourceTerms();
+        virtual void resetPrimaryFilmSourceTerms();
 
-        //- Transfer thermo fields from the primary region to the film region
-        virtual void transferPrimaryRegionThermoFields();
+        //- Transfer thermo fields from the primary film to the film film
+        virtual void transferPrimaryFilmThermoFields();
 
-        //- Transfer source fields from the primary region to the film region
-        virtual void transferPrimaryRegionSourceFields();
+        //- Transfer source fields from the primary film to the film film
+        virtual void transferPrimaryFilmSourceFields();
 
         //- Correct film coverage field
         virtual void correctCoverage();
@@ -194,7 +194,7 @@ public:
             const word& modelType,
             const fvMesh& primaryMesh,
             const dimensionedVector& g,
-            const word& regionType,
+            const word& filmType,
             const bool readFields = true
         );
 
@@ -210,7 +210,7 @@ public:
 
         // Thermo properties
 
-            //- Return const reference to the primary region thermo object
+            //- Return const reference to the primary film thermo object
             inline const fluidThermo& primaryThermo() const;
 
 
@@ -230,7 +230,7 @@ public:
             //- External hook to add sources to the film
             virtual void addSources
             (
-                const label patchi,            // patchi on primary region
+                const label patchi,            // patchi on primary film
                 const label facei,             // facei of patchi
                 const scalar massSource,       // [kg]
                 const vector& momentumSource,  // [kg m/s] (tangential momentum)
@@ -241,19 +241,19 @@ public:
 
         // Source term fields
 
-            // Film region
+            // Film film
 
                 //- Energy [J/m2/s]
                 inline const volScalarField::Internal& hSp() const;
 
 
-            // Primary region
+            // Primary film
 
                 //- Energy [J/m2/s]
                 inline const volScalarField& hSpPrimary() const;
 
 
-        // Fields mapped from the primary region
+        // Fields mapped from the primary film
 
             //- Temperature [K]
             inline const volScalarField& TPrimary() const;
@@ -283,15 +283,15 @@ public:
         // Evolution
 
             //- Pre-evolve film hook
-            virtual void preEvolveRegion();
+            virtual void preEvolveFilm();
 
             //- Evolve the film equations
-            virtual void evolveRegion();
+            virtual void evolveFilm();
 
 
         // Source fields
 
-            // Mapped into primary region
+            // Mapped into primary film
 
                 //- Return mass source for specie i - Eulerian phase only
                 virtual tmp<volScalarField::Internal> SYi

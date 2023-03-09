@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,12 +89,12 @@ inline Foam::IOdictionary& Foam::surfaceFilm::outputProperties()
 
 inline bool Foam::surfaceFilm::isCoupledPatch
 (
-    const label regionPatchi
+    const label filmPatchi
 ) const
 {
     forAll(intCoupledPatchIDs_, i)
     {
-        if (intCoupledPatchIDs_[i] == regionPatchi)
+        if (intCoupledPatchIDs_[i] == filmPatchi)
         {
             return true;
         }
@@ -104,7 +104,7 @@ inline bool Foam::surfaceFilm::isCoupledPatch
 }
 
 
-inline bool Foam::surfaceFilm::isRegionPatch
+inline bool Foam::surfaceFilm::isFilmPatch
 (
     const label primaryPatchi
 ) const
@@ -133,7 +133,7 @@ inline const Foam::labelList& Foam::surfaceFilm::intCoupledPatchIDs() const
 }
 
 
-inline Foam::label Foam::surfaceFilm::regionPatchID
+inline Foam::label Foam::surfaceFilm::filmPatchID
 (
     const label primaryPatchID
 ) const

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,8 +88,8 @@ void standardRadiation::correct()
         film().primaryMesh().lookupObject<volScalarField>("qin")
     );
 
-    // Map the primary-side radiative flux to the region internal field
-    film().toRegion(qinFilm_, qinPrimary.boundaryField());
+    // Map the primary-side radiative flux to the film internal field
+    film().toFilm(qinFilm_, qinPrimary.boundaryField());
 }
 
 

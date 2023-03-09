@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,7 +152,7 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
     const modelType& filmModel =
         db().time().lookupObject<modelType>(filmName_ + "Properties");
 
-    const label filmPatchi = filmModel.regionPatchID(patchi);
+    const label filmPatchi = filmModel.filmPatchID(patchi);
 
     tmp<volScalarField> mDotFilm(filmModel.primaryMassTrans());
     scalarField mDotFilmp = mDotFilm().boundaryField()[filmPatchi];

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,59 +32,90 @@ License
 template<class Type>
 void Foam::surfaceFilm::toPrimary
 (
-    const label regionPatchi,
-    Field<Type>& regionField
+    const label filmPatchi,
+    Field<Type>& filmField
 ) const
 {
     forAll(intCoupledPatchIDs_, i)
     {
-        if (intCoupledPatchIDs_[i] == regionPatchi)
+        if (intCoupledPatchIDs_[i] == filmPatchi)
         {
             const mappedPatchBase& mpb =
                 refCast<const mappedPatchBase>
                 (
-                    mesh().boundaryMesh()[regionPatchi]
+                    mesh().boundaryMesh()[filmPatchi]
                 );
-            regionField = mpb.reverseDistribute(regionField);
+            filmField = mpb.reverseDistribute(filmField);
             return;
         }
     }
 
     FatalErrorInFunction
-        << "Region patch ID " << regionPatchi << " not found in region mesh"
+        << "Film patch ID " << filmPatchi << " not found in film mesh"
         << abort(FatalError);
 }
 
 
 template<class Type>
-void Foam::surfaceFilm::toRegion
+Foam::tmp<Foam::Field<Type>> Foam::surfaceFilm::toFilm
 (
-    const label regionPatchi,
-    Field<Type>& primaryField
+    const label filmPatchi,
+    const Field<Type>& primaryPatchField
 ) const
 {
     forAll(intCoupledPatchIDs_, i)
     {
-        if (intCoupledPatchIDs_[i] == regionPatchi)
+        if (intCoupledPatchIDs_[i] == filmPatchi)
         {
             const mappedPatchBase& mpb =
                 refCast<const mappedPatchBase>
                 (
-                    mesh().boundaryMesh()[regionPatchi]
+                    mesh().boundaryMesh()[filmPatchi]
                 );
-            primaryField = mpb.distribute(primaryField);
-            return;
+
+            return mpb.distribute(primaryPatchField);
         }
     }
 
     FatalErrorInFunction
-        << "Region patch ID " << regionPatchi << " not found in region mesh"
+        << "Film patch ID " << filmPatchi << " not found in film mesh"
         << abort(FatalError);
+
+    return tmp<Field<Type>>(nullptr);
 }
 
 
 template<class Type>
-void Foam::surfaceFilm::toRegion
+Foam::tmp<Foam::Field<Type>> Foam::surfaceFilm::toFilm
+(
+    const label filmPatchi,
+    const tmp<Field<Type>>& tprimaryPatchField
+) const
+{
+    forAll(intCoupledPatchIDs_, i)
+    {
+        if (intCoupledPatchIDs_[i] == filmPatchi)
+        {
+            const mappedPatchBase& mpb =
+                refCast<const mappedPatchBase>
+                (
+                    mesh().boundaryMesh()[filmPatchi]
+                );
+
+            return mpb.distribute(tprimaryPatchField);
+        }
+    }
+
+    FatalErrorInFunction
+        << "Film patch ID " << filmPatchi << " not found in film mesh"
+        << abort(FatalError);
+
+    return tmp<Field<Type>>(nullptr);
+}
+
+
+template<class Type>
+void Foam::surfaceFilm::toFilm
 (
     Field<Type>& rf,
     const typename VolField<Type>::Boundary& pBf
@@ -92,16 +123,16 @@ void Foam::surfaceFilm::toRegion
 {
     forAll(intCoupledPatchIDs_, i)
     {
-        const label regionPatchi = intCoupledPatchIDs_[i];
+        const label filmPatchi = intCoupledPatchIDs_[i];
         const label primaryPatchi = primaryPatchIDs_[i];
 
-        const polyPatch& regionPatch =
-            mesh().boundaryMesh()[regionPatchi];
+        const polyPatch& filmPatch =
+            mesh().boundaryMesh()[filmPatchi];
 
         const mappedPatchBase& mpb =
-            refCast<const mappedPatchBase>(regionPatch);
+            refCast<const mappedPatchBase>(filmPatch);
 
-        UIndirectList<Type>(rf, regionPatch.faceCells()) =
+        UIndirectList<Type>(rf, filmPatch.faceCells()) =
             mpb.distribute(pBf[primaryPatchi]);
     }
 }

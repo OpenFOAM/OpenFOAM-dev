@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,10 +165,10 @@ void standardPhaseChange::correctModel
             }
             else
             {
-                // Primary region density [kg/m^3]
+                // Primary film density [kg/m^3]
                 const scalar rhoInfc = rhoInf[celli];
 
-                // Primary region viscosity [Pa.s]
+                // Primary film viscosity [Pa.s]
                 const scalar muInfc = muInf[celli];
 
                 // Reynolds number
@@ -197,7 +197,7 @@ void standardPhaseChange::correctModel
 
             dMass[celli] += dm;
 
-            // Assume that the vapour transferred to the primary region is
+            // Assume that the vapour transferred to the primary film is
             // already at temperature Tloc so that all heat required for
             // the phase-change is provided by the film
             dEnergy[celli] += dm*primarySpecieThermo.Hs(vapId(), pc, Tloc);

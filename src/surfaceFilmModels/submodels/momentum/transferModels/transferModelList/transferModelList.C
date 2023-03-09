@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ void transferModelList::correct
         );
     }
 
-    // Push values to boundaries ready for transfer to the primary region
+    // Push values to boundaries ready for transfer to the primary film
     massToTransfer.correctBoundaryConditions();
 
     const labelList& patchIDs = film().intCoupledPatchIDs();
@@ -155,7 +155,7 @@ void transferModelList::correct
         );
     }
 
-    // Push values to boundaries ready for transfer to the primary region
+    // Push values to boundaries ready for transfer to the primary film
     massToTransfer.correctBoundaryConditions();
     momentumToTransfer.correctBoundaryConditions();
     energyToTransfer.correctBoundaryConditions();

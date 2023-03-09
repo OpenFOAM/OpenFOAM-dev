@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Radiation model whereby the radiative heat flux is mapped from the primary
-    region
+    film
 
 SourceFiles
     primaryRadiation.C
@@ -56,7 +56,7 @@ class primaryRadiation
 {
     // Private Data
 
-        //- Incident radiative flux mapped from the primary region [kg/s^3]
+        //- Incident radiative flux mapped from the primary film [kg/s^3]
         volScalarField::Internal qinFilm_;
 
 

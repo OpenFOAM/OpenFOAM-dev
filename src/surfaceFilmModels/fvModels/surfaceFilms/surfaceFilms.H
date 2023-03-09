@@ -69,7 +69,7 @@ class surfaceFilms
         PtrList<thermoSurfaceFilm> surfaceFilms_;
 
         //- For each surface film model, the corresponding density name in the
-        //  primary region
+        //  primary film
         wordList surfaceFilmPrimaryRhoNames_;
 
         //- List of fields for which the fvModel adds source term

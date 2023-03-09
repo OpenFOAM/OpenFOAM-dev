@@ -53,23 +53,23 @@ bool Foam::thermoSurfaceFilm::read()
 }
 
 
-void Foam::thermoSurfaceFilm::resetPrimaryRegionSourceTerms()
+void Foam::thermoSurfaceFilm::resetPrimaryFilmSourceTerms()
 {
     DebugInFunction << endl;
 
-    momentumSurfaceFilm::resetPrimaryRegionSourceTerms();
+    momentumSurfaceFilm::resetPrimaryFilmSourceTerms();
 
     hSpPrimary_ == dimensionedScalar(hSp_.dimensions(), 0);
 }
 
 
-void Foam::thermoSurfaceFilm::transferPrimaryRegionThermoFields()
+void Foam::thermoSurfaceFilm::transferPrimaryFilmThermoFields()
 {
     DebugInFunction << endl;
 
-    momentumSurfaceFilm::transferPrimaryRegionThermoFields();
+    momentumSurfaceFilm::transferPrimaryFilmThermoFields();
 
-    // Update primary region fields on local region via direct mapped (coupled)
+    // Update primary film fields on local film via direct mapped (coupled)
     // boundary conditions
     TPrimary_.correctBoundaryConditions();
     forAll(YPrimary_, i)
@@ -79,11 +79,11 @@ void Foam::thermoSurfaceFilm::transferPrimaryRegionThermoFields()
 }
 
 
-void Foam::thermoSurfaceFilm::transferPrimaryRegionSourceFields()
+void Foam::thermoSurfaceFilm::transferPrimaryFilmSourceFields()
 {
     DebugInFunction << endl;
 
-    momentumSurfaceFilm::transferPrimaryRegionSourceFields();
+    momentumSurfaceFilm::transferPrimaryFilmSourceFields();
 
     volScalarField::Boundary& hSpPrimaryBf = hSpPrimary_.boundaryFieldRef();
 
@@ -99,8 +99,8 @@ void Foam::thermoSurfaceFilm::transferPrimaryRegionSourceFields()
         hSpPrimaryBf[patchi] *= rpriMagSfdeltaT;
     }
 
-    // Retrieve the source fields from the primary region
-    toRegion(hSp_, hSpPrimaryBf);
+    // Retrieve the source fields from the primary film
+    toFilm(hSp_, hSpPrimaryBf);
     hSp_.field() /= VbyA();
 }
 
@@ -199,7 +199,7 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::thermoSurfaceFilm::q
 
     return
     (
-        // Heat-transfer to the primary region
+        // Heat-transfer to the primary film
       - fvm::Sp((htcs_->h()/VbyA())/Cpv, h)
       + (htcs_->h()/VbyA())*(h()/Cpv + coverage*(TPrimary_() - T))
 
@@ -241,11 +241,11 @@ Foam::thermoSurfaceFilm::thermoSurfaceFilm
     const word& modelType,
     const fvMesh& primaryMesh,
     const dimensionedVector& g,
-    const word& regionType,
+    const word& filmType,
     const bool readFields
 )
 :
-    momentumSurfaceFilm(modelType, primaryMesh, g, regionType, false),
+    momentumSurfaceFilm(modelType, primaryMesh, g, filmType, false),
 
     primaryThermo_
     (
@@ -307,7 +307,7 @@ Foam::thermoSurfaceFilm::thermoSurfaceFilm
     (
         IOobject
         (
-            "T", // Same name as T on primary region to enable mapping
+            "T", // Same name as T on primary film to enable mapping
             time().name(),
             mesh(),
             IOobject::NO_READ,
@@ -391,7 +391,7 @@ Foam::thermoSurfaceFilm::thermoSurfaceFilm
 
     if (readFields)
     {
-        transferPrimaryRegionThermoFields();
+        transferPrimaryFilmThermoFields();
 
         correctCoverage();
 
@@ -448,16 +448,16 @@ void Foam::thermoSurfaceFilm::addSources
 }
 
 
-void Foam::thermoSurfaceFilm::preEvolveRegion()
+void Foam::thermoSurfaceFilm::preEvolveFilm()
 {
     DebugInFunction << endl;
 
-    momentumSurfaceFilm::preEvolveRegion();
+    momentumSurfaceFilm::preEvolveFilm();
     primaryEnergyTrans_ == dimensionedScalar(dimEnergy, 0);
 }
 
 
-void Foam::thermoSurfaceFilm::evolveRegion()
+void Foam::thermoSurfaceFilm::evolveFilm()
 {
     DebugInFunction << endl;
 
@@ -495,7 +495,7 @@ void Foam::thermoSurfaceFilm::evolveRegion()
     }
 
     // Reset source terms for next time integration
-    resetPrimaryRegionSourceTerms();
+    resetPrimaryFilmSourceTerms();
 }
 
 
