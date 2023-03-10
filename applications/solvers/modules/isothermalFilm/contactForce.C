@@ -72,8 +72,8 @@ Foam::solvers::isothermalFilm::contactForce(const volScalarField& sigma) const
     }
 
     // Filter for film wall and surface patches
-    labelHashSet wallSurfacePatches(wallPatchIDs);
-    wallSurfacePatches.insert(surfacePatchIDs);
+    labelHashSet wallAndSurfacePatches(wallPatchIDs);
+    wallAndSurfacePatches.insert(surfacePatchID);
 
     const volScalarField::Boundary& deltaBf = delta.boundaryField();
 
@@ -82,7 +82,7 @@ Foam::solvers::isothermalFilm::contactForce(const volScalarField& sigma) const
         const fvPatch& p(mesh.boundary()[patchi]);
 
         // For internal coupled patches
-        if (p.coupled() && !wallSurfacePatches.found(patchi))
+        if (p.coupled() && !wallAndSurfacePatches.found(patchi))
         {
             tmp<scalarField> tdeltan = deltaBf[patchi].patchNeighbourField();
             const scalarField& deltan = tdeltan();

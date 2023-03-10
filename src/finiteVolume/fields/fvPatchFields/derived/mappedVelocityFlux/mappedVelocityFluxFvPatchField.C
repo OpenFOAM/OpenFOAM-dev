@@ -110,9 +110,9 @@ void Foam::mappedVelocityFluxFvPatchField::updateCoeffs()
     surfaceScalarField& phiField =
         nbrMesh.lookupObjectRef<surfaceScalarField>(phiName_);
 
-    operator==(mapper.distribute(UField.boundaryField()[nbrPatchi]));
+    operator==(mapper.fromNeigbour(UField.boundaryField()[nbrPatchi]));
     phiField.boundaryFieldRef()[patch().index()] ==
-        mapper.distribute(phiField.boundaryField()[nbrPatchi]);
+        mapper.fromNeigbour(phiField.boundaryField()[nbrPatchi]);
 
     // Restore tag
     UPstream::msgType() = oldTag;

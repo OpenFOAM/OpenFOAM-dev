@@ -152,10 +152,8 @@ bool Foam::solvers::isothermalFilm::initFilmMesh()
     wallPatchIDs.transfer(wallPatchIDs_);
 
 
-    // Search for film surface patches
-
-    label nSurfaceFaces = 0;
-    DynamicList<label> surfacePatchIDs_;
+    // Search for film surface patch
+    surfacePatchID = -1;
 
     forAll(bm, patchi)
     {
@@ -163,16 +161,23 @@ bool Foam::solvers::isothermalFilm::initFilmMesh()
 
         if (isA<filmSurfacePolyPatch>(p))
         {
-            surfacePatchIDs_.append(patchi);
-            nSurfaceFaces += p.faceCells().size();
+            if (surfacePatchID == -1)
+            {
+                surfacePatchID = patchi;
+            }
+            else
+            {
+                FatalErrorInFunction
+                    << "More than one filmSurface patch defined: "
+                    << surfacePatchID << " and " << patchi
+                    << exit(FatalError);
+            }
         }
     }
 
-    surfacePatchIDs.transfer(surfacePatchIDs_);
-
-    if (returnReduce(nSurfaceFaces, sumOp<label>()) == 0)
+    if (surfacePatchID == -1)
     {
-        Info<< "There are no filmSurface faces in the mesh"
+        Info<< "The filmSurface patch is not defined"
             << endl;
     }
 
@@ -215,9 +220,9 @@ Foam::wordList Foam::solvers::isothermalFilm::alphaTypes() const
         alphaTypes[wallPatchIDs[i]] = alphaOneFvPatchScalarField::typeName;
     }
 
-    forAll(surfacePatchIDs, i)
+    if (surfacePatchID != -1)
     {
-        alphaTypes[surfacePatchIDs[i]] = alphaOneFvPatchScalarField::typeName;
+        alphaTypes[surfacePatchID] = alphaOneFvPatchScalarField::typeName;
     }
 
     return alphaTypes;

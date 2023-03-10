@@ -107,11 +107,12 @@ protected:
 
     // Film
 
-        //- List film wall patch IDs
+        //- List of film wall patch IDs
         labelList wallPatchIDs;
 
-        //- List of film surface patch IDs
-        labelList surfacePatchIDs;
+        //- Film surface patch ID
+        //  Set to -1 if the surface patch is empty or not coupled
+        label surfacePatchID;
 
         //- Film wall normal
         volVectorField nHat;

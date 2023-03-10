@@ -106,11 +106,11 @@ void Foam::mappedPatchBase::validateForField
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::mappedPatchBase::distribute(const Field<Type>& fld) const
+Foam::mappedPatchBase::fromNeigbour(const Field<Type>& nbrFld) const
 {
     if (sameUntransformedPatch())
     {
-        return fld;
+        return nbrFld;
     }
 
     if (!patchToPatchIsUsed_)
@@ -120,7 +120,7 @@ Foam::mappedPatchBase::distribute(const Field<Type>& fld) const
             calcMapping();
         }
 
-        tmp<Field<Type>> tResult(new Field<Type>(fld, nbrPatchFaceIndices_));
+        tmp<Field<Type>> tResult(new Field<Type>(nbrFld, nbrPatchFaceIndices_));
         mapPtr_->distribute(tResult.ref());
         return transform_.transform().transform(tResult);
     }
@@ -144,8 +144,8 @@ Foam::mappedPatchBase::distribute(const Field<Type>& fld) const
             transform_.transform().transform
             (
                 patchToPatchIsValid_
-              ? patchToPatchPtr_->tgtToSrc(fld)
-              : nbrMappedPatch().patchToPatchPtr_->srcToTgt(fld)
+              ? patchToPatchPtr_->tgtToSrc(nbrFld)
+              : nbrMappedPatch().patchToPatchPtr_->srcToTgt(nbrFld)
             );
     }
 }
@@ -153,17 +153,17 @@ Foam::mappedPatchBase::distribute(const Field<Type>& fld) const
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::mappedPatchBase::distribute(const tmp<Field<Type>>& fld) const
+Foam::mappedPatchBase::fromNeigbour(const tmp<Field<Type>>& nbrFld) const
 {
-    tmp<Field<Type>> tResult = distribute(fld());
-    fld.clear();
+    tmp<Field<Type>> tResult = fromNeigbour(nbrFld());
+    nbrFld.clear();
     return tResult;
 }
 
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::mappedPatchBase::reverseDistribute(const Field<Type>& fld) const
+Foam::mappedPatchBase::toNeigbour(const Field<Type>& fld) const
 {
     if (sameUntransformedPatch())
     {
@@ -207,9 +207,9 @@ Foam::mappedPatchBase::reverseDistribute(const Field<Type>& fld) const
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::mappedPatchBase::reverseDistribute(const tmp<Field<Type>>& fld) const
+Foam::mappedPatchBase::toNeigbour(const tmp<Field<Type>>& fld) const
 {
-    tmp<Field<Type>> tResult = reverseDistribute(fld());
+    tmp<Field<Type>> tResult = toNeigbour(fld());
     fld.clear();
     return tResult;
 }

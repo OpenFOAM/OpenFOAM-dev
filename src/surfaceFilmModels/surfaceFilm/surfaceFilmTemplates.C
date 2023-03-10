@@ -40,12 +40,12 @@ void Foam::surfaceFilm::toPrimary
     {
         if (intCoupledPatchIDs_[i] == filmPatchi)
         {
-            const mappedPatchBase& mpb =
+            const mappedPatchBase& mpp =
                 refCast<const mappedPatchBase>
                 (
                     mesh().boundaryMesh()[filmPatchi]
                 );
-            filmField = mpb.reverseDistribute(filmField);
+            filmField = mpp.toNeigbour(filmField);
             return;
         }
     }
@@ -67,13 +67,13 @@ Foam::tmp<Foam::Field<Type>> Foam::surfaceFilm::toFilm
     {
         if (intCoupledPatchIDs_[i] == filmPatchi)
         {
-            const mappedPatchBase& mpb =
+            const mappedPatchBase& mpp =
                 refCast<const mappedPatchBase>
                 (
                     mesh().boundaryMesh()[filmPatchi]
                 );
 
-            return mpb.distribute(primaryPatchField);
+            return mpp.fromNeigbour(primaryPatchField);
         }
     }
 
@@ -96,13 +96,13 @@ Foam::tmp<Foam::Field<Type>> Foam::surfaceFilm::toFilm
     {
         if (intCoupledPatchIDs_[i] == filmPatchi)
         {
-            const mappedPatchBase& mpb =
+            const mappedPatchBase& mpp =
                 refCast<const mappedPatchBase>
                 (
                     mesh().boundaryMesh()[filmPatchi]
                 );
 
-            return mpb.distribute(tprimaryPatchField);
+            return mpp.fromNeigbour(tprimaryPatchField);
         }
     }
 
@@ -129,11 +129,11 @@ void Foam::surfaceFilm::toFilm
         const polyPatch& filmPatch =
             mesh().boundaryMesh()[filmPatchi];
 
-        const mappedPatchBase& mpb =
+        const mappedPatchBase& mpp =
             refCast<const mappedPatchBase>(filmPatch);
 
         UIndirectList<Type>(rf, filmPatch.faceCells()) =
-            mpb.distribute(pBf[primaryPatchi]);
+            mpp.fromNeigbour(pBf[primaryPatchi]);
     }
 }
 

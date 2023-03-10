@@ -37,10 +37,9 @@ void Foam::solvers::isothermalFilm::constrainField
         fieldBf[patchi] = Zero;
     }
 
-    forAll(surfacePatchIDs, i)
+    if (surfacePatchID != -1)
     {
-        const label patchi = surfacePatchIDs[i];
-        fieldBf[patchi] = Zero;
+        fieldBf[surfacePatchID] = Zero;
     }
 }
 

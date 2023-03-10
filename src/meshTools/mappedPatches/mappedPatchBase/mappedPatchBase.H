@@ -249,21 +249,21 @@ public:
 
         // Distribute
 
-            //- Wrapper around map/interpolate data distribution
+            //- Map/interpolate the neighbour patch field to this patch
             template<class Type>
-            tmp<Field<Type>> distribute(const Field<Type>& fld) const;
+            tmp<Field<Type>> fromNeigbour(const Field<Type>& nbrFld) const;
 
-            //- Wrapper around map/interpolate data distribution
+            //- Map/interpolate the neighbour patch field to this patch
             template<class Type>
-            tmp<Field<Type>> distribute(const tmp<Field<Type>>& fld) const;
+            tmp<Field<Type>> fromNeigbour(const tmp<Field<Type>>& nbrFld) const;
 
-            //- Wrapper around map/interpolate data distribution
+            //- Map/interpolate patch field to the neighbour patch
             template<class Type>
-            tmp<Field<Type>> reverseDistribute(const Field<Type>& fld) const;
+            tmp<Field<Type>> toNeigbour(const Field<Type>& fld) const;
 
-            //- Wrapper around map/interpolate data distribution
+            //- Map/interpolate patch field to the neighbour patch
             template<class Type>
-            tmp<Field<Type>> reverseDistribute
+            tmp<Field<Type>> toNeigbour
             (
                 const tmp<Field<Type>>& fld
             ) const;

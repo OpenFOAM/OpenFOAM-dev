@@ -121,14 +121,14 @@ Foam::mappedExtrudedPatchBase::patchFaceAreas() const
 
             bottomFaceAreasPtr_.set
             (
-                nbrPp.reverseDistribute
+                nbrPp.toNeigbour
                 (
                     nbrPp.patch_.primitivePatch::faceAreas()
                 ).ptr()
             );
             bottomFaceCentresPtr_.set
             (
-                nbrPp.reverseDistribute
+                nbrPp.toNeigbour
                 (
                     nbrPp.patch_.primitivePatch::faceCentres()
                 ).ptr()

@@ -71,7 +71,7 @@ Foam::mappedFvPatchField<Type>::mappedValues
     UPstream::msgType() = oldTag + 1;
 
     // Map values
-    tmp<Field<Type>> tResult = this->mapper().distribute(nbrPatchField);
+    tmp<Field<Type>> tResult = this->mapper().fromNeigbour(nbrPatchField);
 
     // Set the average, if necessary
     if (setAverage_)

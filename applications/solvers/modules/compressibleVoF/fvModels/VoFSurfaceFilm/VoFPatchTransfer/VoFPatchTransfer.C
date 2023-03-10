@@ -144,31 +144,40 @@ void VoFPatchTransfer::correct
     // Do not correct if no patches selected
     if (!patchIDs_.size()) return;
 
+    // Film properties
+
     const thermoSurfaceFilm& film = filmType<thermoSurfaceFilm>();
 
     const scalarField& delta = film.delta();
     const scalarField& rho = film.rho();
+    const vectorField& U = film.U();
+    const scalarField& he = film.thermo().he();
+
     const scalarField& magSf = film.magSf();
 
     const polyBoundaryMesh& pbm = film.mesh().boundaryMesh();
 
 
+    // Primary region properties
+
+    const fvMesh& primaryMesh = film.primaryMesh();
+
     const compressibleTwoPhaseVoFMixture& thermo
     (
-        film.primaryMesh().lookupObject<compressibleTwoPhaseVoFMixture>
+        primaryMesh.lookupObject<compressibleTwoPhaseVoFMixture>
         (
             "phaseProperties"
         )
     );
 
-    const volVectorField& UVoF
-    (
-        film.primaryMesh().lookupObject<volVectorField>("U")
-    );
-
     const volScalarField& alphaVoF = thermo.alpha1();
     const volScalarField& rhoVoF = thermo.thermo1().rho()();
     const volScalarField& heVoF = thermo.thermo1().he();
+
+    const volVectorField& UVoF
+    (
+        primaryMesh.lookupObject<volVectorField>("U")
+    );
 
     forAll(patchIDs_, pidi)
     {
@@ -192,7 +201,7 @@ void VoFPatchTransfer::correct
                 film.toFilm
                 (
                     patchi,
-                    film.primaryMesh().boundary()[primaryPatchi].deltaCoeffs()
+                    primaryMesh.boundary()[primaryPatchi].deltaCoeffs()
                 )
             );
 
@@ -221,16 +230,13 @@ void VoFPatchTransfer::correct
                 film.toFilm
                 (
                     patchi,
-                    film.primaryMesh().boundary()[primaryPatchi]
-                   .patchInternalField(film.primaryMesh().V())
+                    primaryMesh.boundary()[primaryPatchi]
+                   .patchInternalField(primaryMesh.V())
                 )
             );
 
             const polyPatch& pp = pbm[patchi];
             const labelList& faceCells = pp.faceCells();
-
-            const vectorField& U = film.U();
-            const scalarField& he = film.thermo().he();
 
             // Accumulate the total mass removed from patch
             scalar dMassPatch = 0;

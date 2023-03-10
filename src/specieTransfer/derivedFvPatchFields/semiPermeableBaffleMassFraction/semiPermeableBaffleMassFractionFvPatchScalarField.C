@@ -115,7 +115,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     const scalarField Yc(patchInternalField());
     const scalarField nbrYc
     (
-        mpp.distribute
+        mpp.fromNeigbour
         (
             nbrPatch.lookupPatchField<volScalarField, scalar>(YName)
            .patchInternalField()
@@ -134,7 +134,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
 
     const scalarField nbrAlphaEffDeltap
     (
-        mpp.distribute
+        mpp.fromNeigbour
         (
             ttm.kappaEff(nbrPatch.index())*nbrPatch.deltaCoeffs()
            /ttm.thermo().Cp().boundaryField()[nbrPatch.index()]
@@ -154,7 +154,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     if (property_ == moleFraction || property_ == partialPressure)
     {
         tW = thermo.W(patch().index());
-        tNbrW = mpp.distribute(thermo.W(nbrPatch.index()));
+        tNbrW = mpp.fromNeigbour(thermo.W(nbrPatch.index()));
     }
 
     // Construct coefficients that convert mass fraction to the property that
@@ -174,7 +174,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
             {
                 k *= thermo.rho(patch().index())/Wi;
                 tmp<scalarField> nbrRhop =
-                    mpp.distribute(thermo.rho(nbrPatch.index()));
+                    mpp.fromNeigbour(thermo.rho(nbrPatch.index()));
                 nbrK *= nbrRhop/Wi;
             }
             break;
@@ -183,7 +183,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
             {
                 k *= thermo.p().boundaryField()[patch().index()]*tW/Wi;
                 tmp<scalarField> nbrPp =
-                    mpp.distribute
+                    mpp.fromNeigbour
                     (
                         thermo.p().boundaryField()[nbrPatch.index()]
                     );
