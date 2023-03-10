@@ -141,12 +141,12 @@ Foam::surfaceFilm::surfaceFilm
     time_(primaryMesh.time()),
     infoOutput_(true),
     modelType_(modelType),
-    filmName_(lookup("filmName")),
+    regionName_(lookup("regionName")),
     mesh_
     (
         IOobject
         (
-            filmName_,
+            regionName_,
             time_.name(),
             time_,
             IOobject::MUST_READ
@@ -244,9 +244,9 @@ Foam::surfaceFilm::surfaceFilm
             (
                 IOobject
                 (
-                    filmName_ + "OutputProperties",
+                    regionName_ + "OutputProperties",
                     time_.name(),
-                    "uniform"/filmName_,
+                    "uniform"/regionName_,
                     primaryMesh_,
                     IOobject::READ_IF_PRESENT,
                     IOobject::NO_WRITE

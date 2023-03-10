@@ -68,7 +68,7 @@ protected:
         const word modelType_;
 
         //- Film name
-        word filmName_;
+        word regionName_;
 
         //- Film mesh
         fvMesh mesh_;
