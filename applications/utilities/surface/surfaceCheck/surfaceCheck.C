@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,6 @@ using namespace Foam;
 // Does face use valid vertices?
 bool validTri
 (
-    const bool verbose,
     const triSurface& surf,
     const label facei
 )
@@ -242,6 +241,10 @@ int main(int argc, char *argv[])
         Info<< nl << "// end blockMeshDict info" << nl << endl;
     }
 
+    if (verbose)
+    {
+        return 0;
+    }
 
     // Region sizes
     // ~~~~~~~~~~~~
@@ -286,7 +289,7 @@ int main(int argc, char *argv[])
 
         forAll(surf, facei)
         {
-            if (!validTri(verbose, surf, facei))
+            if (!validTri(surf, facei))
             {
                 illegalFaces.append(facei);
             }
