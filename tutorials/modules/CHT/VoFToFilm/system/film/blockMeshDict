@@ -1,0 +1,115 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.001;
+
+w          1;
+h          100;
+
+wCells     1;
+hCells     80;
+
+wGrading   1;
+
+vertices
+(
+    (0    0   -1)
+    ($w   0   -1)
+    (0    $h  -1)
+    ($w   $h  -1)
+
+    (0    0    0)
+    ($w   0    0)
+    (0    $h   0)
+    ($w   $h   0)
+
+);
+
+blocks
+(
+    hex (0 1 3 2 4 5 7 6)
+    ($wCells $hCells 1)
+    simpleGrading ($wGrading 1 1)
+);
+
+boundary
+(
+    wall
+    {
+        type            filmWall;
+
+        neighbourRegion VoF;
+        neighbourPatch  film;
+
+        faces
+        (
+            (0 2 6 4)
+        );
+    }
+
+    surface
+    {
+        type            mappedFilmSurface;
+
+        neighbourRegion VoF;
+        neighbourPatch  film;
+        oppositePatch   wall;
+        transformType   none;
+
+        faces
+        (
+            (1 3 7 5)
+        );
+    }
+
+    bottom
+    {
+        type patch;
+        faces
+        (
+            (0 1 5 4)
+        );
+    }
+
+    atmosphere
+    {
+        type patch;
+        faces
+        (
+            (2 3 7 6)
+        );
+    }
+
+    back
+    {
+        type empty;
+        faces
+        (
+            (0 2 3 1)
+        );
+    }
+
+    front
+    {
+        type empty;
+        faces
+        (
+            (4 5 7 6)
+        );
+    }
+);
+
+
+// ************************************************************************* //

@@ -1,0 +1,32 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+VoFToFilmTransfer
+{
+    type        VoFtoFilmTransfer;
+
+    libs        ("libfilmVoFTransfer.so");
+
+    filmPatch   film;
+    phase       liquid;
+
+    deltaFactorToFilm 0.9;
+    alphaToFilm       0.86;
+
+    transferRateCoeff 0.1;
+}
+
+// ************************************************************************* //

@@ -1,0 +1,49 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      extrudeToRegionMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+region          film;
+
+patches         (film);
+
+extrudeModel    linearDirection;
+
+adaptMesh       no;
+
+patchTypes      (mappedExtrudedWall);
+patchNames      (film);
+
+regionPatchTypes   (filmWall);
+regionPatchNames   (wall);
+
+regionOppositePatchTypes    (mappedFilmSurface);
+regionOppositePatchNames    (surface);
+
+nLayers         1;
+
+expansionRatio  1;
+
+linearNormalCoeffs
+{
+    thickness       0.001;
+}
+
+linearDirectionCoeffs
+{
+    direction       (1 0 0);
+    thickness       0.001;
+}
+
+
+// ************************************************************************* //
