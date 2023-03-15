@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,7 +161,7 @@ using namespace Foam;
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 //- Read dictionary from file and return
-//  Sets steam to binary mode if specified in the optional header
+//  Sets stream to binary mode if specified in the optional header
 IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
 {
     IOstream::streamFormat dictFormat = IOstream::ASCII;
