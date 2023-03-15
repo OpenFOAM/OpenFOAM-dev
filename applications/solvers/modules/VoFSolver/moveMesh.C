@@ -49,7 +49,7 @@ void Foam::solvers::VoFSolver::moveMesh()
         }
 
         // Move the mesh
-        mesh.move();
+        mesh_.move();
 
         if (mesh.changing())
         {
@@ -63,7 +63,7 @@ void Foam::solvers::VoFSolver::moveMesh()
                 // from the mapped surface velocity
                 phi = mesh.Sf() & Uf();
 
-                correctUphiBCs(U, phi, true);
+                correctUphiBCs(U_, phi, true);
 
                 if (correctPhi)
                 {

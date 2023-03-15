@@ -75,6 +75,8 @@ Foam::solvers::isothermalFilm::pe() const
 
 void Foam::solvers::isothermalFilm::momentumPredictor()
 {
+    volVectorField& U = U_;
+
     // Calculate the surface tension coefficient
     const volScalarField sigma(constrainedField(surfaceTension->sigma()));
 

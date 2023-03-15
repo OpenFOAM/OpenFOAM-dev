@@ -67,7 +67,7 @@ Foam::scalar Foam::solvers::movingMesh::maxDeltaT() const
 void Foam::solvers::movingMesh::preSolve()
 {
     // Update the mesh for topology change, mesh to mesh mapping
-    mesh.update();
+    mesh_.update();
 }
 
 
@@ -75,7 +75,7 @@ void Foam::solvers::movingMesh::moveMesh()
 {
     if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
-        mesh.move();
+        mesh_.move();
     }
 }
 

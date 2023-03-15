@@ -84,7 +84,7 @@ protected:
     // Phase properties
 
         //- The compressible two-phase mixture
-        compressibleTwoPhaseVoFMixture& mixture;
+        compressibleTwoPhaseVoFMixture& mixture_;
 
 
     // Thermophysical properties
@@ -140,8 +140,6 @@ protected:
         tmp<volScalarField::Internal> contErr2;
 
 
-protected:
-
     // Protected Member Functions
 
         //- Return the pressure reference
@@ -165,6 +163,13 @@ protected:
 
         //- Return the momentum equation stress term
         virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U);
+
+public:
+
+    // Access to the physical state
+
+        //- The compressible two-phase mixture
+        const compressibleTwoPhaseVoFMixture& mixture;
 
 
 public:

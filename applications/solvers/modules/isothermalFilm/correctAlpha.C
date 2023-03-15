@@ -36,6 +36,9 @@ License
 
 void Foam::solvers::isothermalFilm::correctAlpha()
 {
+    volScalarField& alpha = alpha_;
+    volVectorField& U = U_;
+
     fvVectorMatrix& UEqn = tUEqn.ref();
 
     const surfaceScalarField rhof(fvc::interpolate(rho));

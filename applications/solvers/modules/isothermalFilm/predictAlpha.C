@@ -32,19 +32,19 @@ License
 void Foam::solvers::isothermalFilm::predictAlpha()
 {
     // Update delta and alpha BCs for time-varying inlets etc.
-    delta.correctBoundaryConditions();
-    alpha.boundaryFieldRef() == delta.boundaryField()/VbyA.boundaryField();
+    delta_.correctBoundaryConditions();
+    alpha_.boundaryFieldRef() == delta.boundaryField()/VbyA.boundaryField();
 
     fvScalarMatrix alphaEqn
     (
-        fvm::ddt(rho, alpha) + fvc::div(alphaRhoPhi)
+        fvm::ddt(rho, alpha_) + fvc::div(alphaRhoPhi)
       ==
-        fvModels().source(rho, alpha)
+        fvModels().source(rho, alpha_)
     );
 
     alphaEqn.solve();
 
-    fvConstraints().constrain(alpha);
+    fvConstraints().constrain(alpha_);
 
     // Update film thickness
     correctDelta();
@@ -53,8 +53,8 @@ void Foam::solvers::isothermalFilm::predictAlpha()
 
 void Foam::solvers::isothermalFilm::correctDelta()
 {
-    delta = max(alpha, 0.0)*VbyA;
-    delta.correctBoundaryConditions();
+    delta_ = max(alpha, 0.0)*VbyA;
+    delta_.correctBoundaryConditions();
 }
 
 

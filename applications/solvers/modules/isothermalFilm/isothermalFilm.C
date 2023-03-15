@@ -26,6 +26,7 @@ License
 #include "isothermalFilm.H"
 #include "filmWallPolyPatch.H"
 #include "filmSurfacePolyPatch.H"
+#include "mappedPatchBase.H"
 #include "zeroGradientFvPatchFields.H"
 #include "alphaOneFvPatchScalarField.H"
 #include "constantSurfaceTension.H"
@@ -205,11 +206,11 @@ bool Foam::solvers::isothermalFilm::initFilmMesh()
 
 Foam::wordList Foam::solvers::isothermalFilm::alphaTypes() const
 {
-    wordList alphaTypes(delta.boundaryField().types());
+    wordList alphaTypes(delta_.boundaryField().types());
 
-    forAll(delta.boundaryField(), patchi)
+    forAll(delta_.boundaryField(), patchi)
     {
-        if (!delta.boundaryField()[patchi].assignable())
+        if (!delta_.boundaryField()[patchi].assignable())
         {
             alphaTypes[patchi] = fixedValueFvPatchScalarField::typeName;
         }
@@ -242,11 +243,10 @@ Foam::solvers::isothermalFilm::isothermalFilm
     CoNum(0),
     cumulativeContErr(0),
 
-    thermo_(thermoPtr),
-    thermo(thermo_()),
+    thermoPtr_(thermoPtr),
+    thermo_(thermoPtr_()),
 
-    p(thermo.p()),
-    rho(thermo.rho()),
+    p(thermo_.p()),
 
     nHat
     (
@@ -288,7 +288,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
 
     initialised_(initFilmMesh()),
 
-    delta
+    delta_
     (
         IOobject
         (
@@ -301,7 +301,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
         mesh
     ),
 
-    alpha
+    alpha_
     (
         IOobject
         (
@@ -311,11 +311,11 @@ Foam::solvers::isothermalFilm::isothermalFilm
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        delta/VbyA,
+        delta_/VbyA,
         alphaTypes()
     ),
 
-    deltaWet("deltaWet", dimLength, thermo.properties()),
+    deltaWet("deltaWet", dimLength, thermo_.properties()),
 
     g
     (
@@ -329,7 +329,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
         )
     ),
 
-    U
+    U_
     (
         IOobject
         (
@@ -352,7 +352,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        fvc::flux(alpha*rho*U)
+        fvc::flux(alpha_*thermo_.rho()*U_)
     ),
 
     phi
@@ -365,24 +365,30 @@ Foam::solvers::isothermalFilm::isothermalFilm
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        fvc::flux(U)
+        fvc::flux(U_)
     ),
 
-    surfaceTension(surfaceTensionModel::New(thermo.properties(), mesh)),
+    surfaceTension(surfaceTensionModel::New(thermo_.properties(), mesh)),
     thermocapillary(!isType<surfaceTensionModels::constant>(surfaceTension())),
 
     momentumTransport
     (
         filmCompressible::momentumTransportModel::New
         (
-            alpha,
-            rho,
-            U,
+            alpha_,
+            thermo_.rho(),
+            U_,
             alphaRhoPhi,
             phi,
-            thermo
+            thermo_
         )
-    )
+    ),
+
+    delta(delta_),
+    alpha(alpha_),
+    thermo(thermo_),
+    rho(thermo_.rho()),
+    U(U_)
 {
     // Read the controls
     readControls();
@@ -405,6 +411,19 @@ Foam::solvers::isothermalFilm::~isothermalFilm()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+const Foam::fvPatch& Foam::solvers::isothermalFilm::surfacePatch() const
+{
+    return mesh.boundary()[surfacePatchID];
+}
+
+
+const Foam::mappedPatchBase&
+Foam::solvers::isothermalFilm::surfacePatchMap() const
+{
+    return refCast<const mappedPatchBase>(surfacePatch().patch());
+}
+
 
 Foam::scalar Foam::solvers::isothermalFilm::maxDeltaT() const
 {
@@ -432,7 +451,7 @@ void Foam::solvers::isothermalFilm::moveMesh()
 
 void Foam::solvers::isothermalFilm::thermophysicalPredictor()
 {
-    thermo.correct();
+    thermo_.correct();
 }
 
 

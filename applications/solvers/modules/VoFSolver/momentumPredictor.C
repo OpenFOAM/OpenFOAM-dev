@@ -32,6 +32,8 @@ License
 
 void Foam::solvers::VoFSolver::momentumPredictor()
 {
+    volVectorField& U = U_;
+
     tUEqn =
     (
         fvm::ddt(rho, U) + fvm::div(rhoPhi, U)

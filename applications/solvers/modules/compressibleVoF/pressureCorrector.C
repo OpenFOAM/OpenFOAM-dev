@@ -40,6 +40,8 @@ License
 
 void Foam::solvers::compressibleVoF::pressureCorrector()
 {
+    volVectorField& U = U_;
+
     const volScalarField& rho1 = mixture.rho1();
     const volScalarField& rho2 = mixture.rho2();
 
@@ -169,9 +171,9 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
         p_rghEqnComp2.ref() *= pos(alpha2);
 
         p_rghEqnComp1.ref() -=
-            (fvModels().source(alpha1, mixture.thermo1().rho())&rho1)/rho1;
+            (fvModels().source(alpha1, mixture_.thermo1().rho())&rho1)/rho1;
         p_rghEqnComp2.ref() -=
-            (fvModels().source(alpha2, mixture.thermo2().rho())&rho2)/rho2;
+            (fvModels().source(alpha2, mixture_.thermo2().rho())&rho2)/rho2;
 
         if (pimple.transonic())
         {
@@ -220,9 +222,9 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
         fvc::correctUf(Uf, U, fvc::absolute(phi, U), MRF);
 
         // Update densities from change in p_rgh
-        mixture.thermo1().correctRho(psi1*(p_rgh - p_rgh_0));
-        mixture.thermo2().correctRho(psi2*(p_rgh - p_rgh_0));
-        mixture.correct();
+        mixture_.thermo1().correctRho(psi1*(p_rgh - p_rgh_0));
+        mixture_.thermo2().correctRho(psi2*(p_rgh - p_rgh_0));
+        mixture_.correct();
 
         // Correct p_rgh for consistency with p and the updated densities
         p_rgh = p - rho*buoyancy.gh;

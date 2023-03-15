@@ -105,7 +105,7 @@ Foam::solvers::incompressibleVoF::incompressibleVoF(fvMesh& mesh)
                 dimensionedScalar(dimTime/dimDensity, 1)
             );
 
-            correctUphiBCs(U, phi, true);
+            correctUphiBCs(U_, phi, true);
 
             CorrectPhi
             (
@@ -120,7 +120,7 @@ Foam::solvers::incompressibleVoF::incompressibleVoF(fvMesh& mesh)
         }
         else
         {
-            correctUphiBCs(U, phi, true);
+            correctUphiBCs(U_, phi, true);
 
             CorrectPhi
             (

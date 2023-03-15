@@ -151,7 +151,7 @@ void Foam::solvers::solid::preSolve()
     fvModels().preUpdateMesh();
 
     // Update the mesh for topology change, mesh to mesh mapping
-    mesh.update();
+    mesh_.update();
 
     if (transient())
     {
@@ -164,7 +164,7 @@ void Foam::solvers::solid::moveMesh()
 {
     if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
-        if (!mesh.mover().solidBody())
+        if (!mesh_.mover().solidBody())
         {
             FatalErrorInFunction
                 << "Region " << name() << " of type " << type()
@@ -172,7 +172,7 @@ void Foam::solvers::solid::moveMesh()
                 << exit(FatalError);
         }
 
-        mesh.move();
+        mesh_.move();
     }
 }
 

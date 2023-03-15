@@ -34,7 +34,7 @@ void Foam::solvers::incompressibleFluid::moveMesh()
     if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
         // Move the mesh
-        mesh.move();
+        mesh_.move();
 
         if (mesh.changing())
         {

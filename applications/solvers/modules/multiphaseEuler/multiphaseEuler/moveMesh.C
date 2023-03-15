@@ -51,7 +51,7 @@ void Foam::solvers::multiphaseEuler::moveMesh()
         }
 
         // Move the mesh
-        mesh.move();
+        mesh_.move();
 
         if (mesh.changing() || mesh.topoChanged())
         {

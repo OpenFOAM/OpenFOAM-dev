@@ -40,6 +40,8 @@ License
 
 void Foam::solvers::incompressibleVoF::pressureCorrector()
 {
+    volVectorField& U = U_;
+
     fvVectorMatrix& UEqn = tUEqn.ref();
 
     if (rAU.valid())

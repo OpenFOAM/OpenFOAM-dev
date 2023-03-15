@@ -43,7 +43,7 @@ void Foam::solvers::compressibleVoF::thermophysicalPredictor()
     const fvScalarMatrix e1Source(fvModels().source(alpha1, rho1, e1));
     const fvScalarMatrix e2Source(fvModels().source(alpha2, rho2, e2));
 
-    volScalarField& T = mixture.T();
+    volScalarField& T = mixture_.T();
 
     fvScalarMatrix TEqn
     (
@@ -98,8 +98,8 @@ void Foam::solvers::compressibleVoF::thermophysicalPredictor()
 
     fvConstraints().constrain(T);
 
-    mixture.correctThermo();
-    mixture.correct();
+    mixture_.correctThermo();
+    mixture_.correct();
 }
 
 

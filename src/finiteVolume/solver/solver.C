@@ -49,27 +49,29 @@ bool Foam::solver::writeData(Ostream&) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solver::solver(fvMesh& mesh_)
+Foam::solver::solver(fvMesh& mesh)
 :
     regIOobject
     (
         IOobject
         (
             typeName,
-            mesh_.time().timeName(),
-            mesh_
+            mesh.time().timeName(),
+            mesh
         )
     ),
 
-    mesh(mesh_),
+    mesh_(mesh),
 
-    runTime(mesh.time()),
-
-    pimple(mesh),
-
-    steady(mesh.schemes().steady()),
+    steady(mesh_.schemes().steady()),
 
     LTS(fv::localEulerDdt::enabled(mesh)),
+
+    mesh(mesh_),
+
+    runTime(mesh_.time()),
+
+    pimple(mesh_),
 
     fvModelsPtr(nullptr),
     fvConstraintsPtr(nullptr)

@@ -31,7 +31,7 @@ License
 
 void Foam::solvers::film::thermophysicalPredictor()
 {
-    volScalarField& he = thermo.he();
+    volScalarField& he = thermo_.he();
 
     fvScalarMatrix heEqn
     (
@@ -49,7 +49,7 @@ void Foam::solvers::film::thermophysicalPredictor()
 
     fvConstraints().constrain(he);
 
-    thermo.correct();
+    thermo_.correct();
 }
 
 

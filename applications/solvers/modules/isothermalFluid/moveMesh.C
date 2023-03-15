@@ -33,7 +33,7 @@ void Foam::solvers::isothermalFluid::moveMesh()
     if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
         // Move the mesh
-        mesh.move();
+        mesh_.move();
 
         // The rhoU and rhoU0 fields can be cleared following mesh-motion
         // now the mesh has been re-stitched as necessary

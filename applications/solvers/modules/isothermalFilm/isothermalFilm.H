@@ -56,8 +56,8 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class filmFvPatch;
 class surfaceTensionModel;
+class mappedPatchBase;
 
 namespace solvers
 {
@@ -93,16 +93,13 @@ protected:
     // Thermophysical properties
 
         //- Pointer to the fluid thermophysical properties
-        autoPtr<fluidThermo> thermo_;
+        autoPtr<fluidThermo> thermoPtr_;
 
         //- Reference to the fluid thermophysical properties
-        fluidThermo& thermo;
+        fluidThermo& thermo_;
 
         //- The thermodynamic pressure field
         volScalarField& p;
-
-        //- The thermodynamic density field
-        const volScalarField& rho;
 
 
     // Film
@@ -127,10 +124,10 @@ protected:
         bool initialised_;
 
         //- Film thickness
-        volScalarField delta;
+        volScalarField delta_;
 
         //- Film volume fraction in the cell layer
-        volScalarField alpha;
+        volScalarField alpha_;
 
         //- Film thickness below which the surface is considered dry
         dimensionedScalar deltaWet;
@@ -145,7 +142,7 @@ protected:
     // Kinematic properties
 
         //- Film velocity field
-        volVectorField U;
+        volVectorField U_;
 
         //- Film mass-flux field
         surfaceScalarField alphaRhoPhi;
@@ -175,6 +172,27 @@ protected:
         //- Cached momentum matrix
         //  shared between the momentum predictor and pressure corrector
         tmp<fvVectorMatrix> tUEqn;
+
+
+public:
+
+    // Constant access to the physical state
+
+        //- Film thickness
+        const volScalarField& delta;
+
+        //- Film volume fraction in the cell layer
+        const volScalarField& alpha;
+
+        //- Reference to the fluid thermophysical properties
+        const fluidThermo& thermo;
+
+        //- The thermodynamic density field
+        const volScalarField& rho;
+
+        //- Film velocity field
+        const volVectorField& U;
+
 
 
 private:
@@ -259,8 +277,6 @@ public:
     //- Runtime type information
     TypeName("isothermalFilm");
 
-    friend class Foam::filmFvPatch;
-
 
     // Constructors
 
@@ -279,6 +295,12 @@ public:
 
 
     // Member Functions
+
+        //- Return the film surface patch
+        const fvPatch& surfacePatch() const;
+
+        //- Return the film surface patch region-region map
+        const mappedPatchBase& surfacePatchMap() const;
 
         //- Return the current maximum time-step for stable solution
         virtual scalar maxDeltaT() const;

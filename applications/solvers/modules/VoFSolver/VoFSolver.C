@@ -70,7 +70,7 @@ Foam::solvers::VoFSolver::VoFSolver
 
     divAlphaName("div(phi,alpha)"),
 
-    U
+    U_
     (
         IOobject
         (
@@ -93,7 +93,7 @@ Foam::solvers::VoFSolver::VoFSolver
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        linearInterpolate(U) & mesh.Sf()
+        linearInterpolate(U_) & mesh.Sf()
     ),
 
     buoyancy(mesh),
@@ -115,7 +115,9 @@ Foam::solvers::VoFSolver::VoFSolver
         fvc::interpolate(rho)*phi
     ),
 
-    MRF(mesh)
+    MRF(mesh),
+
+    U(U_)
 {
     mesh.schemes().setFluxRequired(p_rgh.name());
 
@@ -133,7 +135,7 @@ Foam::solvers::VoFSolver::VoFSolver
                 IOobject::READ_IF_PRESENT,
                 IOobject::AUTO_WRITE
             ),
-            fvc::interpolate(U)
+            fvc::interpolate(U_)
         );
     }
 
@@ -216,7 +218,7 @@ void Foam::solvers::VoFSolver::preSolve()
     }
 
     // Update the mesh for topology change, mesh to mesh mapping
-    mesh.update();
+    mesh_.update();
 }
 
 

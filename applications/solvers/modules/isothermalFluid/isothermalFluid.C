@@ -318,7 +318,7 @@ void Foam::solvers::isothermalFluid::preSolve()
     }
 
     // Update the mesh for topology change, mesh to mesh mapping
-    mesh.update();
+    mesh_.update();
 }
 
 

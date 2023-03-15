@@ -92,7 +92,7 @@ protected:
     // Kinematic properties
 
         //- Velocity field
-        volVectorField U;
+        volVectorField U_;
 
         //- Volumetric flux field
         surfaceScalarField phi;
@@ -182,6 +182,14 @@ protected:
 
         //- Return the interface surface tension force for the momentum equation
         virtual tmp<surfaceScalarField> surfaceTensionForce() const = 0;
+
+
+public:
+
+    // Access to the physical state
+
+        //- Velocity field
+        const volVectorField& U;
 
 
 public:

@@ -120,7 +120,7 @@ Foam::solvers::incompressibleMultiphaseVoF::incompressibleMultiphaseVoF
                 dimensionedScalar(dimTime/dimDensity, 1)
             );
 
-            correctUphiBCs(U, phi, true);
+            correctUphiBCs(U_, phi, true);
 
             CorrectPhi
             (
@@ -135,7 +135,7 @@ Foam::solvers::incompressibleMultiphaseVoF::incompressibleMultiphaseVoF
         }
         else
         {
-            correctUphiBCs(U, phi, true);
+            correctUphiBCs(U_, phi, true);
 
             CorrectPhi
             (

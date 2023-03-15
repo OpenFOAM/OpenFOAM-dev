@@ -51,12 +51,12 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         autoPtr<twoPhaseVoFMixture>(new compressibleTwoPhaseVoFMixture(mesh))
     ),
 
-    mixture
+    mixture_
     (
         refCast<compressibleTwoPhaseVoFMixture>(twoPhaseVoFSolver::mixture)
     ),
 
-    p(mixture.p()),
+    p(mixture_.p()),
 
     dgdt
     (
@@ -83,19 +83,19 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
     (
         "pMin",
         dimPressure,
-        mixture
+        mixture_
     ),
 
     alphaRhoPhi1
     (
         IOobject::groupName("alphaRhoPhi", alpha1.group()),
-        fvc::interpolate(mixture.thermo1().rho())*alphaPhi1
+        fvc::interpolate(mixture_.thermo1().rho())*alphaPhi1
     ),
 
     alphaRhoPhi2
     (
         IOobject::groupName("alphaRhoPhi", alpha2.group()),
-        fvc::interpolate(mixture.thermo2().rho())*(phi - alphaPhi1)
+        fvc::interpolate(mixture_.thermo2().rho())*(phi - alphaPhi1)
     ),
 
     K("K", 0.5*magSqr(U)),
@@ -109,10 +109,12 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         alphaPhi1,
         alphaRhoPhi1,
         alphaRhoPhi2,
-        mixture
+        mixture_
     ),
 
-    thermophysicalTransport(momentumTransport)
+    thermophysicalTransport(momentumTransport),
+
+    mixture(mixture_)
 {
     // Read the controls
     readControls();

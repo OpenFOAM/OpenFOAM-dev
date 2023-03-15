@@ -154,7 +154,7 @@ public:
 
         // Mesh changes
 
-            //- Prepare for mesh update
+            //- Prepare for mesh_.update
             virtual void preUpdateMesh();
 
             //- Update topology using the given map
