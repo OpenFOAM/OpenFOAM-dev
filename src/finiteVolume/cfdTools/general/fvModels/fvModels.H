@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -283,6 +283,9 @@ public:
 
         //- Inherit the PtrListDictionary index operators
         using PtrListDictionary<fvModel>::operator[];
+
+        //- Inherit the PtrListDictionary size function
+        using PtrListDictionary<fvModel>::size;
 
         //- Disallow default bitwise assignment
         void operator=(const fvModels&) = delete;
