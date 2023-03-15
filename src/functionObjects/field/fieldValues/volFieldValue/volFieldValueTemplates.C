@@ -34,7 +34,11 @@ bool Foam::functionObjects::fieldValues::volFieldValue::validField
     const word& fieldName
 ) const
 {
-    if (obr_.foundObject<VolField<Type>>(fieldName))
+    if
+    (
+        obr_.foundObject<VolField<Type>>(fieldName)
+     || obr_.foundObject<VolInternalField<Type>>(fieldName)
+    )
     {
         return true;
     }
@@ -53,6 +57,14 @@ Foam::functionObjects::fieldValues::volFieldValue::getFieldValues
     if (obr_.foundObject<VolField<Type>>(fieldName))
     {
         return filterField(obr_.lookupObject<VolField<Type>>(fieldName));
+    }
+
+    if (obr_.foundObject<VolInternalField<Type>>(fieldName))
+    {
+        return filterField
+        (
+            obr_.lookupObject<VolInternalField<Type>>(fieldName)
+        );
     }
 
     FatalErrorInFunction

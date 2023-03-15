@@ -61,15 +61,6 @@ class fieldsExpression
 {
 protected:
 
-    // Protected typedefs
-
-        //- Internal field typedef that doesn't go via the
-        //  GeometricField::Internal typedef, and therefore allows template
-        //  argument deduction of the Type
-        template<class Type>
-        using VolInternalField = DimensionedField<Type, volMesh>;
-
-
     // Protected member data
 
         //- Names of fields to process
