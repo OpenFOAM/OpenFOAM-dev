@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -276,7 +276,7 @@ void Foam::blockMesh::readBoundary
     // Read like boundary file
     const PtrList<entry> patchesInfo
     (
-        meshDescription.lookup("boundary")
+        meshDescription.lookupOrDefault("boundary", PtrList<entry>())
     );
 
     patchNames.setSize(patchesInfo.size());
@@ -574,7 +574,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
             defaultPatchError(defaultPatchName, meshDescription);
         }
     }
-    else if (meshDescription.found("boundary"))
+    else
     {
         wordList patchNames;
         faceListList tmpBlocksPatches;
