@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,19 +115,10 @@ public:
 
     // Constructors
 
-        static Type& New(Mesh& mesh);
-
-        static const Type& New(const Mesh& mesh);
+        static Type& New(const Mesh& mesh);
 
         template<class... Args>
         static Type& New
-        (
-            Mesh& mesh,
-            const Args&... args
-        );
-
-        template<class... Args>
-        static const Type& New
         (
             const Mesh& mesh,
             const Args&... args

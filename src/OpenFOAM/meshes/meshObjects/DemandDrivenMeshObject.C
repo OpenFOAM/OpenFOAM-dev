@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,37 +66,6 @@ Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::DemandDrivenMeshObject
 template<class Mesh, template<class> class MeshObjectType, class Type>
 Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
 (
-    Mesh& mesh
-)
-{
-    if (found(mesh))
-    {
-        return mesh.thisDb().objectRegistry::template lookupObjectRef<Type>
-        (
-            Type::typeName
-        );
-    }
-    else
-    {
-        if (meshObjects::debug)
-        {
-            Pout<< "DemandDrivenMeshObject::New(" << Mesh::typeName
-                << "&) : constructing " << Type::typeName
-                << " for region " << mesh.name() << endl;
-        }
-
-        Type* objectPtr = new Type(mesh);
-
-        regIOobject::store(objectPtr);
-
-        return *objectPtr;
-    }
-}
-
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-const Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
-(
     const Mesh& mesh
 )
 {
@@ -111,7 +80,7 @@ const Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
     {
         if (meshObjects::debug)
         {
-            Pout<< "DemandDrivenMeshObject::New(const " << Mesh::typeName
+            Pout<< "DemandDrivenMeshObject::New(" << Mesh::typeName
                 << "&) : constructing " << Type::typeName
                 << " for region " << mesh.name() << endl;
         }
@@ -129,7 +98,7 @@ template<class Mesh, template<class> class MeshObjectType, class Type>
 template<class... Args>
 Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
 (
-    Mesh& mesh,
+    const Mesh& mesh,
     const Args&... args
 )
 {
@@ -145,39 +114,6 @@ Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
         if (meshObjects::debug)
         {
             Pout<< "DemandDrivenMeshObject::New(" << Mesh::typeName
-                << "&, const Data1&) : constructing " << Type::typeName
-                << " for region " << mesh.name() << endl;
-        }
-
-        Type* objectPtr = new Type(mesh, args...);
-
-        regIOobject::store(objectPtr);
-
-        return *objectPtr;
-    }
-}
-
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-template<class... Args>
-const Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
-(
-    const Mesh& mesh,
-    const Args&... args
-)
-{
-    if (found(mesh))
-    {
-        return mesh.thisDb().objectRegistry::template lookupObject<Type>
-        (
-            Type::typeName
-        );
-    }
-    else
-    {
-        if (meshObjects::debug)
-        {
-            Pout<< "DemandDrivenMeshObject::New(const " << Mesh::typeName
                 << "&, const Data1&) : constructing " << Type::typeName
                 << " for region " << mesh.name() << endl;
         }
