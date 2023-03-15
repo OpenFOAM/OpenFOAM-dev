@@ -42,7 +42,6 @@ boundaryField
     surface
     {
         type            mappedFilmPressure;
-
         value           $internalField;
     }
 }
