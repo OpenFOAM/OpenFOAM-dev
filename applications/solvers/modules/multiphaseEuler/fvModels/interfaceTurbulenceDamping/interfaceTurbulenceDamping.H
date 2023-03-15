@@ -94,7 +94,7 @@ class interfaceTurbulenceDamping
 {
     // Private Data
 
-        //- The name of the Lagrangian phase
+        //- The name of the phase
         word phaseName_;
 
         //- Field name
