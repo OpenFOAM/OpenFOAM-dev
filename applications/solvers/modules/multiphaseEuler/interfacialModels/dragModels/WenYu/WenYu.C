@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,8 +47,7 @@ Foam::dragModels::WenYu::WenYu
     const bool registerObject
 )
 :
-    dispersedDragModel(dict, interface, registerObject),
-    residualRe_("residualRe", dimless, dict)
+    dispersedDragModel(dict, interface, registerObject)
 {}
 
 
@@ -71,7 +70,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::WenYu::CdRe() const
     const volScalarField CdsRes
     (
         neg(Res - 1000)*24*(1.0 + 0.15*pow(Res, 0.687))
-      + pos0(Res - 1000)*0.44*max(Res, residualRe_)
+      + pos0(Res - 1000)*0.44*Res
     );
 
     return

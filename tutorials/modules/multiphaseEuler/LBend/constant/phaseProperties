@@ -65,8 +65,6 @@ drag
     solids_dispersedIn_gas
     {
         type            GidaspowErgunWenYu;
-        residualAlpha   1e-5;
-        residualRe      1e-5;
     }
 }
 

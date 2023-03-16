@@ -73,7 +73,6 @@ drag
     steam_dispersedIn_water
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 }
 

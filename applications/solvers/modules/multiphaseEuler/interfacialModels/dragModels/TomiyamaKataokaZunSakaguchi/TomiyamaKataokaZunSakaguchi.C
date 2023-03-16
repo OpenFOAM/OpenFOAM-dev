@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,7 @@ Foam::dragModels::TomiyamaKataokaZunSakaguchi::TomiyamaKataokaZunSakaguchi
     const bool registerObject
 )
 :
-    dispersedDragModel(dict, interface, registerObject),
-    residualRe_("residualRe", dimless, dict),
-    residualEo_("residualEo", dimless, dict)
+    dispersedDragModel(dict, interface, registerObject)
 {}
 
 
@@ -69,16 +67,10 @@ Foam::dragModels::TomiyamaKataokaZunSakaguchi::~TomiyamaKataokaZunSakaguchi()
 Foam::tmp<Foam::volScalarField>
 Foam::dragModels::TomiyamaKataokaZunSakaguchi::CdRe() const
 {
-    volScalarField Re(interface_.Re());
-    volScalarField Eo(max(interface_.Eo(), residualEo_));
+    const volScalarField Re(interface_.Re());
+    const volScalarField Eo(interface_.Eo());
 
-    return
-        max
-        (
-            24*(1 + 0.15*pow(Re, 0.687))/max(Re, residualRe_),
-            8*Eo/(3*(Eo + 4.0))
-        )
-       *max(interface_.Re(), residualRe_);
+    return max(24*(1 + 0.15*pow(Re, 0.687)), 8*Eo*Re/(3*(Eo + 4.0)));
 }
 
 

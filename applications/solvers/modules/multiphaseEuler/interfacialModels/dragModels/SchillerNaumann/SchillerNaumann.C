@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,8 +47,7 @@ Foam::dragModels::SchillerNaumann::SchillerNaumann
     const bool registerObject
 )
 :
-    dispersedDragModel(dict, interface, registerObject),
-    residualRe_("residualRe", dimless, dict)
+    dispersedDragModel(dict, interface, registerObject)
 {}
 
 
@@ -62,11 +61,11 @@ Foam::dragModels::SchillerNaumann::~SchillerNaumann()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::SchillerNaumann::CdRe() const
 {
-    volScalarField Re(interface_.Re());
+    const volScalarField Re(interface_.Re());
 
     return
         neg(Re - 1000)*24*(1.0 + 0.15*pow(Re, 0.687))
-      + pos0(Re - 1000)*0.44*max(Re, residualRe_);
+      + pos0(Re - 1000)*0.44*Re;
 }
 
 

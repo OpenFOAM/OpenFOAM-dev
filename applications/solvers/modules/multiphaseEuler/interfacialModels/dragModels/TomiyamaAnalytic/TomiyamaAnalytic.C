@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,6 @@ Foam::dragModels::TomiyamaAnalytic::TomiyamaAnalytic
 )
 :
     dispersedDragModel(dict, interface, registerObject),
-    residualRe_("residualRe", dimless, dict),
     residualEo_("residualEo", dimless, dict),
     residualE_("residualE", dimless, dict),
     aspectRatio_(aspectRatioModel::New(dict.subDict("aspectRatio"), interface))
@@ -77,13 +76,8 @@ Foam::dragModels::TomiyamaAnalytic::CdRe() const
 
     return
         (8.0/3.0)
-       *Eo
-       /(
-            Eo*pow(E, 2.0/3.0)/OmEsq
-          + 16*pow(E, 4.0/3.0)
-        )
-       /sqr(F)
-       *max(interface_.Re(), residualRe_);
+       *Eo/(Eo*pow(E, 2.0/3.0)/OmEsq + 16*pow(E, 4.0/3.0))/sqr(F)
+       *interface_.Re();
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,7 @@ Foam::dragModels::Tenneti::Tenneti
     const bool registerObject
 )
 :
-    dispersedDragModel(dict, interface, registerObject),
-    residualRe_("residualRe", dimless, dict.lookup("residualRe"))
+    dispersedDragModel(dict, interface, registerObject)
 {}
 
 
@@ -78,7 +77,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Tenneti::CdRe() const
     const volScalarField CdReIsolated
     (
         neg(Res - 1000)*24*(1 + 0.15*pow(Res, 0.687))
-      + pos0(Res - 1000)*0.44*max(Res, residualRe_)
+      + pos0(Res - 1000)*0.44*Res
     );
 
     const volScalarField F0

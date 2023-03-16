@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,8 +47,7 @@ Foam::dragModels::GidaspowSchillerNaumann::GidaspowSchillerNaumann
     const bool registerObject
 )
 :
-    dispersedDragModel(dict, interface, registerObject),
-    residualRe_("residualRe", dimless, dict)
+    dispersedDragModel(dict, interface, registerObject)
 {}
 
 
@@ -73,7 +72,7 @@ Foam::dragModels::GidaspowSchillerNaumann::CdRe() const
     const volScalarField CdsRe
     (
         neg(Re - 1000)*24*(1.0 + 0.15*pow(Re, 0.687))/alpha2
-      + pos0(Re - 1000)*0.44*max(Re, residualRe_)
+      + pos0(Re - 1000)*0.44*Re
     );
 
     return

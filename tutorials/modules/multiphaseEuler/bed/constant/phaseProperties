@@ -94,7 +94,6 @@ drag
     air_dispersedIn_water
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     air_segregatedWith_water
@@ -107,7 +106,6 @@ drag
     water_dispersedIn_air
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     air_water_displacedBy_solid

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,28 +67,17 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::LegendreMagnaudet::Cl() const
     const volScalarField Sr
     (
         sqr(interface_.dispersed().d())
-       /(
-            Re
-           *interface_.continuous().thermo().nu()
-        )
+       /(Re*interface_.continuous().thermo().nu())
        *mag(fvc::grad(interface_.continuous().U()))
     );
 
     const volScalarField ClLowSqr
     (
-        sqr(6*2.255)
-       *sqr(Sr)
-       /(
-            pow4(constant::mathematical::pi)
-           *Re
-           *pow3(Sr + 0.2*Re)
-        )
+        sqr(6*2.255)*sqr(Sr)
+       /(pow4(constant::mathematical::pi)*Re*pow3(Sr + 0.2*Re))
     );
 
-    const volScalarField ClHighSqr
-    (
-        sqr(0.5*(Re + 16)/(Re + 29))
-    );
+    const volScalarField ClHighSqr(sqr(0.5*(Re + 16)/(Re + 29)));
 
     return sqrt(ClLowSqr + ClHighSqr);
 }

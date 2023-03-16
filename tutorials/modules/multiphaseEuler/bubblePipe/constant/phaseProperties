@@ -141,13 +141,11 @@ drag
     air1_dispersedIn_water
     {
         type            IshiiZuber;
-        residualRe      1e-3;
     }
 
     air2_dispersedIn_water
     {
         type            IshiiZuber;
-        residualRe      1e-3;
     }
 }
 

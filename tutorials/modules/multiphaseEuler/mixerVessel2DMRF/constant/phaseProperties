@@ -149,13 +149,11 @@ drag
     air_dispersedIn_water
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     water_dispersedIn_air
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     air_segregatedWith_water
@@ -168,13 +166,11 @@ drag
     air_dispersedIn_oil
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     oil_dispersedIn_air
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     air_segregatedWith_oil
@@ -187,13 +183,11 @@ drag
     air_dispersedIn_mercury
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     mercury_dispersedIn_air
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     air_segregatedWith_mercury
@@ -206,13 +200,11 @@ drag
     water_dispersedIn_oil
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     oil_dispersedIn_water
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     water_segregatedWith_oil
@@ -225,13 +217,11 @@ drag
     water_dispersedIn_mercury
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     mercury_dispersedIn_water
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     water_segregatedWith_mercury
@@ -244,13 +234,11 @@ drag
     oil_dispersedIn_mercury
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     mercury_dispersedIn_oil
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     oil_segregatedWith_mercury

@@ -83,13 +83,11 @@ drag
     air_dispersedIn_water
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     water_dispersedIn_air
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     air_segregatedWith_water

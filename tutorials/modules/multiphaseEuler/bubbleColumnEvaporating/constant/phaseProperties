@@ -83,13 +83,11 @@ drag
     gas_dispersedIn_liquid
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 
     liquid_dispersedIn_gas
     {
         type            SchillerNaumann;
-        residualRe      1e-3;
     }
 }
 

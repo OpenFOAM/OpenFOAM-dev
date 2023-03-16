@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,8 +47,7 @@ Foam::dragModels::Beetstra::Beetstra
     const bool registerObject
 )
 :
-    dispersedDragModel(dict, interface, registerObject),
-    residualRe_("residualRe", dimless, dict.lookup("residualRe"))
+    dispersedDragModel(dict, interface, registerObject)
 {}
 
 
@@ -72,13 +71,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Beetstra::CdRe() const
         max(1 - interface_.dispersed(), interface_.continuous().residualAlpha())
     );
 
-    const volScalarField Res(alpha2*interface_.Re());
-
-    const volScalarField ResLim
-    (
-        "ReLim",
-        max(Res, residualRe_)
-    );
+    const volScalarField Res(max(alpha2*interface_.Re(), scalar(0)));
 
     const volScalarField F0
     (
@@ -90,8 +83,8 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Beetstra::CdRe() const
     (
         "F1",
         0.413*Res/(24*sqr(alpha2))*(1.0/alpha2
-        + 3*alpha1*alpha2 + 8.4*pow(ResLim, -0.343))
-        /(1 + pow(10.0, 3*alpha1)*pow(ResLim, -(1 + 4*alpha1)/2.0))
+        + 3*alpha1*alpha2 + 8.4*pow(Res, -0.343))
+        /(1 + pow(10.0, 3*alpha1)*pow(Res, -(1 + 4*alpha1)/2.0))
     );
 
     return 24*alpha2*(F0 + F1);

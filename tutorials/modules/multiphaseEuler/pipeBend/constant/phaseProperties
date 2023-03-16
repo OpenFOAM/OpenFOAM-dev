@@ -136,7 +136,6 @@ drag
     particles_dispersedIn_water
     {
         type            WenYu;
-        residualRe      1e-3;
     }
 }
 
@@ -172,7 +171,6 @@ turbulentDispersion
     particles_dispersedIn_water
     {
         type            Burns;
-        residualRe      1e-3;
         sigma           1;
     }
 }
