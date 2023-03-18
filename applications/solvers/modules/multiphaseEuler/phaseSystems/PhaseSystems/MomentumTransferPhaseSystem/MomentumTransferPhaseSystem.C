@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,90 +120,6 @@ MomentumTransferPhaseSystem
     this->generateInterfacialModels(liftModels_);
     this->generateInterfacialModels(wallLubricationModels_);
     this->generateInterfacialModels(turbulentDispersionModels_);
-
-    forAllConstIter
-    (
-        dragModelTable,
-        dragModels_,
-        dragModelIter
-    )
-    {
-        const phaseInterface& interface = dragModelIter()->interface();
-
-        Kds_.insert
-        (
-            dragModelIter.key(),
-            new volScalarField
-            (
-                IOobject
-                (
-                    IOobject::groupName("Kd", interface.name()),
-                    this->mesh().time().name(),
-                    this->mesh()
-                ),
-                this->mesh(),
-                dimensionedScalar(dragModel::dimK, 0)
-            )
-        );
-
-        Kdfs_.insert
-        (
-            dragModelIter.key(),
-            new surfaceScalarField
-            (
-                IOobject
-                (
-                    IOobject::groupName("Kdf", interface.name()),
-                    this->mesh().time().name(),
-                    this->mesh()
-                ),
-                this->mesh(),
-                dimensionedScalar(dragModel::dimK, 0)
-            )
-        );
-    }
-
-    forAllConstIter
-    (
-        virtualMassModelTable,
-        virtualMassModels_,
-        virtualMassModelIter
-    )
-    {
-        const phaseInterface& interface = virtualMassModelIter()->interface();
-
-        Vms_.insert
-        (
-            interface,
-            new volScalarField
-            (
-                IOobject
-                (
-                    IOobject::groupName("Vm", interface.name()),
-                    this->mesh().time().name(),
-                    this->mesh()
-                ),
-                this->mesh(),
-                dimensionedScalar(virtualMassModel::dimK, 0)
-            )
-        );
-
-        Vmfs_.insert
-        (
-            interface,
-            new surfaceScalarField
-            (
-                IOobject
-                (
-                    IOobject::groupName("Vmf", interface.name()),
-                    this->mesh().time().name(),
-                    this->mesh()
-                ),
-                this->mesh(),
-                dimensionedScalar(virtualMassModel::dimK, 0)
-            )
-        );
-    }
 }
 
 
@@ -240,6 +156,36 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer()
         );
     }
 
+    // Initialise Kds table if required
+    if (!Kds_.size())
+    {
+        forAllConstIter
+        (
+            dragModelTable,
+            dragModels_,
+            dragModelIter
+        )
+        {
+            const phaseInterface& interface = dragModelIter()->interface();
+
+            Kds_.insert
+            (
+                dragModelIter.key(),
+                new volScalarField
+                (
+                    IOobject
+                    (
+                        IOobject::groupName("Kd", interface.name()),
+                        this->mesh().time().name(),
+                        this->mesh()
+                    ),
+                    this->mesh(),
+                    dimensionedScalar(dragModel::dimK, 0)
+                )
+            );
+        }
+    }
+
     // Update the drag coefficients
     forAllConstIter
     (
@@ -249,7 +195,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer()
     )
     {
         *Kds_[dragModelIter.key()] = dragModelIter()->K();
-        *Kdfs_[dragModelIter.key()] = dragModelIter()->Kf();
     }
 
     // Add the implicit part of the drag force
@@ -269,6 +214,37 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer()
         }
     }
 
+    // Initialise Vms table if required
+    if (!Vms_.size())
+    {
+        forAllConstIter
+        (
+            virtualMassModelTable,
+            virtualMassModels_,
+            virtualMassModelIter
+        )
+        {
+            const phaseInterface& interface =
+                virtualMassModelIter()->interface();
+
+            Vms_.insert
+            (
+                interface,
+                new volScalarField
+                (
+                    IOobject
+                    (
+                        IOobject::groupName("Vm", interface.name()),
+                        this->mesh().time().name(),
+                        this->mesh()
+                    ),
+                    this->mesh(),
+                    dimensionedScalar(virtualMassModel::dimK, 0)
+                )
+            );
+        }
+    }
+
     // Update the virtual mass coefficients
     forAllConstIter
     (
@@ -278,7 +254,6 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer()
     )
     {
         *Vms_[virtualMassModelIter.key()] = virtualMassModelIter()->K();
-        *Vmfs_[virtualMassModelIter.key()] = virtualMassModelIter()->Kf();
     }
 
     // Add the virtual mass force
@@ -338,6 +313,106 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransferf()
             phase.name(),
             new fvVectorMatrix(phase.U(), dimMass*dimVelocity/dimTime)
         );
+    }
+
+    // Initialise Kdfs table if required
+    if (!Kdfs_.size())
+    {
+        forAllConstIter
+        (
+            dragModelTable,
+            dragModels_,
+            dragModelIter
+        )
+        {
+            const phaseInterface& interface = dragModelIter()->interface();
+
+            Kdfs_.insert
+            (
+                dragModelIter.key(),
+                new surfaceScalarField
+                (
+                    IOobject
+                    (
+                        IOobject::groupName("Kdf", interface.name()),
+                        this->mesh().time().name(),
+                        this->mesh()
+                    ),
+                    this->mesh(),
+                    dimensionedScalar(dragModel::dimK, 0)
+                )
+            );
+        }
+    }
+
+    // Update the drag coefficients
+    forAllConstIter
+    (
+        dragModelTable,
+        dragModels_,
+        dragModelIter
+    )
+    {
+        *Kdfs_[dragModelIter.key()] = dragModelIter()->Kf();
+    }
+
+    // Initialise Vms and Vmfs tables if required
+    if (!Vms_.size())
+    {
+        forAllConstIter
+        (
+            virtualMassModelTable,
+            virtualMassModels_,
+            virtualMassModelIter
+        )
+        {
+            const phaseInterface& interface =
+                virtualMassModelIter()->interface();
+
+            Vms_.insert
+            (
+                interface,
+                new volScalarField
+                (
+                    IOobject
+                    (
+                        IOobject::groupName("Vm", interface.name()),
+                        this->mesh().time().name(),
+                        this->mesh()
+                    ),
+                    this->mesh(),
+                    dimensionedScalar(virtualMassModel::dimK, 0)
+                )
+            );
+
+            Vmfs_.insert
+            (
+                interface,
+                new surfaceScalarField
+                (
+                    IOobject
+                    (
+                        IOobject::groupName("Vmf", interface.name()),
+                        this->mesh().time().name(),
+                        this->mesh()
+                    ),
+                    this->mesh(),
+                    dimensionedScalar(virtualMassModel::dimK, 0)
+                )
+            );
+        }
+    }
+
+    // Update the virtual mass coefficients
+    forAllConstIter
+    (
+        virtualMassModelTable,
+        virtualMassModels_,
+        virtualMassModelIter
+    )
+    {
+        *Vms_[virtualMassModelIter.key()] = virtualMassModelIter()->K();
+        *Vmfs_[virtualMassModelIter.key()] = virtualMassModelIter()->Kf();
     }
 
     // Create U & grad(U) fields
