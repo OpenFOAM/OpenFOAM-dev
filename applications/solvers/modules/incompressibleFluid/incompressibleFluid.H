@@ -125,9 +125,7 @@ protected:
         tmp<fvVectorMatrix> tUEqn;
 
 
-private:
-
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Set rDeltaT for LTS
         void setRDeltaT();
@@ -140,7 +138,7 @@ private:
 
         //- Construct the pressure equation
         //  and correct the pressure and velocity
-        void correctPressure();
+        virtual void correctPressure();
 
 
 public:
