@@ -359,6 +359,7 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclic
                                 )
                             );
                     }
+
                     if (!owner)
                     {
                         c.nbr = c;
@@ -367,15 +368,18 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclic
                     SfBf[patchi][patchFacei] = c.nbr.area;
                     CfBf[patchi][patchFacei] = c.nbr.centre;
 
-                    part origP
-                    (
-                        SfBf[origPp.index()][origFacei],
-                        CfBf[origPp.index()][origFacei]
-                    );
-                    origP -= c;
+                    if (i != -1)
+                    {
+                        part origP
+                        (
+                            SfBf[origPp.index()][origFacei],
+                            CfBf[origPp.index()][origFacei]
+                        );
+                        origP -= c;
 
-                    SfBf[origPp.index()][origFacei] = origP.area;
-                    CfBf[origPp.index()][origFacei] = origP.centre;
+                        SfBf[origPp.index()][origFacei] = origP.area;
+                        CfBf[origPp.index()][origFacei] = origP.centre;
+                    }
                 }
             }
         }
