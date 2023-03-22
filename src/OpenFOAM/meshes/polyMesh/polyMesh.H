@@ -639,9 +639,9 @@ public:
                 const bool validBoundary = true
             );
 
-            //- Reset mesh
+            //- Swap mesh
             //  For run-time mesh replacement and mesh to mesh mapping
-            void reset(const polyMesh&);
+            void swap(polyMesh&);
 
 
         // Storage management

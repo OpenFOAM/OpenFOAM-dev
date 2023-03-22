@@ -134,15 +134,16 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
 
     if (timeIndices_.found((userTime + timeDelta_/2)/timeDelta_))
     {
-        const word meshDir = "meshToMesh_" + mesh().time().timeName(userTime);
+        const word otherMeshDir =
+            "meshToMesh_" + mesh().time().timeName(userTime);
 
-        Info << "Mapping to mesh " << meshDir << endl;
+        Info << "Mapping to mesh " << otherMeshDir << endl;
 
-        fvMesh newMesh
+        fvMesh otherMesh
         (
             IOobject
             (
-                meshDir,
+                otherMeshDir,
                 mesh().time().constant(),
                 mesh().time(),
                 IOobject::MUST_READ
@@ -151,14 +152,14 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
             fvMesh::stitchType::none
         );
 
+        mesh().swap(otherMesh);
+
         fvMeshToFvMesh mapper
         (
+            otherMesh,
             mesh(),
-            newMesh,
             cellsToCellss::intersection::typeName
         );
-
-        mesh().reset(newMesh);
 
         mesh().deltaCoeffs();
 

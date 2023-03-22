@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -799,140 +799,188 @@ void Foam::polyMesh::resetPrimitives
 }
 
 
-void Foam::polyMesh::reset(const polyMesh& newMesh)
+void Foam::polyMesh::swap(polyMesh& otherMesh)
 {
-    // Clear addressing. Keep geometric props and updateable props for mapping.
+    // Clear addressing. Keep geometric and updatable properties for mapping.
     clearAddressing(true);
+    otherMesh.clearAddressing(true);
 
-    points_ = newMesh.points();
+    // Swap the primitives
+    points_.swap(otherMesh.points_);
     bounds_ = boundBox(points_, true);
-    faces_ = newMesh.faces();
-    owner_ = newMesh.faceOwner();
-    neighbour_ = newMesh.faceNeighbour();
+    faces_.swap(otherMesh.faces_);
+    owner_.swap(otherMesh.owner_);
+    neighbour_.swap(otherMesh.neighbour_);
 
-    const polyPatchList& patches(newMesh.boundaryMesh());
-
+    // Clear the boundary data
     boundary_.clearGeom();
     boundary_.clearAddressing();
+    otherMesh.boundary_.clearGeom();
+    otherMesh.boundary_.clearAddressing();
 
-    // Reset the number of patches in case the decomposition changed
-    boundary_.setSize(patches.size());
-
-    forAll(boundary_, patchi)
+    // Swap the boundaries
+    auto updatePatches = []
+    (
+        const polyPatchList& otherPatches,
+        polyBoundaryMesh& boundaryMesh
+    )
     {
-        // Construct new processor patches in case the decomposition changed
-        if (!isA<processorPolyPatch>(patches[patchi]))
+        boundaryMesh.resize(otherPatches.size());
+
+        forAll(otherPatches, otherPatchi)
         {
-            boundary_[patchi] = polyPatch
-            (
-                boundary_[patchi],
-                boundary_,
-                patchi,
-                patches[patchi].size(),
-                patches[patchi].start()
-            );
+            // Clone processor patches, as the decomposition may be different
+            // in the other mesh. Just change the size and start of other
+            // patches.
+
+            if (isA<processorPolyPatch>(otherPatches[otherPatchi]))
+            {
+                boundaryMesh.set
+                (
+                    otherPatchi,
+                    otherPatches[otherPatchi].clone(boundaryMesh)
+                );
+            }
+            else
+            {
+                boundaryMesh[otherPatchi] = polyPatch
+                (
+                    otherPatches[otherPatchi],
+                    boundaryMesh,
+                    otherPatchi,
+                    otherPatches[otherPatchi].size(),
+                    otherPatches[otherPatchi].start()
+                );
+            }
         }
-        else
-        {
-            boundary_.set(patchi, patches[patchi].clone(boundary_));
-        }
+    };
+
+    {
+        const polyPatchList patches
+        (
+            boundary_,
+            boundary_
+        );
+        const polyPatchList otherPatches
+        (
+            otherMesh.boundary_,
+            otherMesh.boundary_
+        );
+
+        updatePatches(otherPatches, boundary_);
+        updatePatches(patches, otherMesh.boundary_);
     }
 
-    // parallelData depends on the processorPatch ordering so force
-    // recalculation. Problem: should really be done in removeBoundary but
-    // there is some info in parallelData which might be interesting in between
-    // removeBoundary and addPatches.
+    // Parallel data depends on the patch ordering so force recalculation
     globalMeshDataPtr_.clear();
+    otherMesh.globalMeshDataPtr_.clear();
 
     // Flags the mesh files as being changed
     setInstance(time().name());
+    otherMesh.setInstance(time().name());
 
     // Check if the faces and cells are valid
-    forAll(faces_, facei)
+    auto checkFaces = [](const polyMesh& mesh)
     {
-        const face& curFace = faces_[facei];
-
-        if (min(curFace) < 0 || max(curFace) > points_.size())
+        forAll(mesh.faces_, facei)
         {
-            FatalErrorInFunction
-                << "Face " << facei << " contains vertex labels out of range: "
-                << curFace << " Max point index = " << points_.size()
-                << abort(FatalError);
+            const face& curFace = mesh.faces_[facei];
+
+            if (min(curFace) < 0 || max(curFace) > mesh.points_.size())
+            {
+                FatalErrorInFunction
+                    << "Face " << facei << " contains vertex labels out of "
+                    << "range: " << curFace << " Max point index = "
+                    << mesh.points_.size() << abort(FatalError);
+            }
         }
-    }
+    };
+
+    checkFaces(*this);
+    checkFaces(otherMesh);
 
     // Set the primitive mesh from the owner_, neighbour_.
     // Works out from patch end where the active faces stop.
     initMesh();
+    otherMesh.initMesh();
 
     // Calculate topology for the patches (processor-processor comms etc.)
     boundary_.topoChange();
+    otherMesh.boundary_.topoChange();
 
     // Calculate the geometry for the patches (transformation tensors etc.)
     boundary_.calcGeometry();
+    otherMesh.boundary_.calcGeometry();
 
     // Update the optional pointMesh with respect to the updated polyMesh
     if (foundObject<pointMesh>(pointMesh::typeName))
     {
         pointMesh::New(*this).reset();
     }
+    if (otherMesh.foundObject<pointMesh>(pointMesh::typeName))
+    {
+        pointMesh::New(*this).reset();
+    }
 
     // Update point zones
-    if (pointZones_.size() == newMesh.pointZones_.size())
+    if (pointZones_.size() == otherMesh.pointZones_.size())
     {
         pointZones_.clearAddressing();
+        otherMesh.pointZones_.clearAddressing();
 
         forAll(pointZones_, i)
         {
-            pointZones_[i] = newMesh.pointZones_[i];
+            pointZones_[i].swap(otherMesh.pointZones_[i]);
         }
     }
     else
     {
         FatalErrorInFunction
-            << "Number of pointZones in new mesh = "
-            << newMesh.pointZones_.size()
-            << " is not the same as in the existing mesh = "
+            << "Number of pointZones in other mesh = "
+            << otherMesh.pointZones_.size()
+            << " is not the same as in the mesh = "
             << pointZones_.size()
             << exit(FatalError);
     }
 
     // Update face zones
-    if (faceZones_.size() == newMesh.faceZones_.size())
+    if (faceZones_.size() == otherMesh.faceZones_.size())
     {
         faceZones_.clearAddressing();
+        otherMesh.faceZones_.clearAddressing();
 
         forAll(faceZones_, i)
         {
-            faceZones_[i] = newMesh.faceZones_[i];
+            faceZones_[i].swap(otherMesh.faceZones_[i]);
         }
     }
     else
     {
         FatalErrorInFunction
-            << "Number of faceZones in new mesh = "
-            << newMesh.faceZones_.size()
-            << " is not the same as in the existing mesh = "
+            << "Number of faceZones in other mesh = "
+            << otherMesh.faceZones_.size()
+            << " is not the same as in the mesh = "
             << faceZones_.size()
             << exit(FatalError);
     }
 
     // Update cell zones
-    if (cellZones_.size() == newMesh.cellZones_.size())
+    if (cellZones_.size() == otherMesh.cellZones_.size())
     {
         cellZones_.clearAddressing();
+        otherMesh.cellZones_.clearAddressing();
 
         forAll(cellZones_, i)
         {
-            cellZones_[i] = newMesh.cellZones_[i];
+            cellZones_[i].swap(otherMesh.cellZones_[i]);
         }
     }
     else
     {
         FatalErrorInFunction
-            << "Number of cellZones in new mesh = "
-            << newMesh.cellZones_.size()
-            << " is not the same as in the existing mesh = "
+            << "Number of cellZones in other mesh = "
+            << otherMesh.cellZones_.size()
+            << " is not the same as in the mesh = "
             << cellZones_.size()
             << exit(FatalError);
     }

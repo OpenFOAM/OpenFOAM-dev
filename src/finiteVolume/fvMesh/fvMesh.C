@@ -756,7 +756,7 @@ void Foam::fvMesh::removeFvBoundary()
 }
 
 
-void Foam::fvMesh::reset(const fvMesh& newMesh)
+void Foam::fvMesh::swap(fvMesh& otherMesh)
 {
     // Clear the sliced fields
     clearGeom();
@@ -767,27 +767,38 @@ void Foam::fvMesh::reset(const fvMesh& newMesh)
     // Clear any non-updateable addressing
     clearAddressing(true);
 
-    polyMesh::reset(newMesh);
+    polyMesh::swap(otherMesh);
 
-    // Reset the number of patches in case the decomposition changed
-    boundary_.setSize(boundaryMesh().size());
-
-    forAll(boundaryMesh(), patchi)
+    auto updatePatches = []
+    (
+        const polyPatchList& patches,
+        fvBoundaryMesh& boundaryMesh
+    )
     {
-        // Construct new processor patches in case the decomposition changed
-        if (isA<processorPolyPatch>(boundaryMesh()[patchi]))
+        boundaryMesh.setSize(patches.size());
+
+        forAll(patches, patchi)
         {
-            boundary_.set
-            (
-                patchi,
-                fvPatch::New
+            // Construct new processor patches, as the decomposition may have
+            // changed. Leave other patches as is.
+
+            if (isA<processorPolyPatch>(patches[patchi]))
+            {
+                boundaryMesh.set
                 (
-                    boundaryMesh()[patchi],
-                    boundary_
-                )
-            );
+                    patchi,
+                    fvPatch::New
+                    (
+                        patches[patchi],
+                        boundaryMesh
+                    )
+                );
+            }
         }
-    }
+    };
+
+    updatePatches(boundaryMesh(), boundary_);
+    updatePatches(otherMesh.boundaryMesh(), otherMesh.boundary_);
 }
 
 
