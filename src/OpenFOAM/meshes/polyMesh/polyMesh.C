@@ -845,7 +845,7 @@ void Foam::polyMesh::swap(polyMesh& otherMesh)
             {
                 boundaryMesh[otherPatchi] = polyPatch
                 (
-                    otherPatches[otherPatchi],
+                    boundaryMesh[otherPatchi],
                     boundaryMesh,
                     otherPatchi,
                     otherPatches[otherPatchi].size(),
