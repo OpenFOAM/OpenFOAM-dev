@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -558,7 +558,7 @@ void Foam::domainDecomposition::validateProcs() const
 }
 
 
-void Foam::domainDecomposition::readComplete()
+void Foam::domainDecomposition::readComplete(const bool stitch)
 {
     completeMesh_.reset
     (
@@ -573,7 +573,10 @@ void Foam::domainDecomposition::readComplete()
                 IOobject::NO_WRITE,
                 false
             ),
-            false
+            false,
+            stitch
+          ? fvMesh::stitchType::nonGeometric
+          : fvMesh::stitchType::none
         )
     );
 }
@@ -1024,7 +1027,15 @@ bool Foam::domainDecomposition::readReconstruct(const bool doSets)
 
     if (load)
     {
-        readComplete();
+        typeIOobject<pointIOField> completePointsIo
+        (
+            "points",
+            procMeshes()[0].pointsInstance(),
+            procMeshes()[0].meshDir(),
+            runTimes_.completeTime()
+        );
+
+        readComplete(completePointsIo.headerOk());
 
         if (addrIo.headerOk())
         {
