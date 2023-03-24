@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -327,6 +327,38 @@ void Foam::MRFZoneList::makeAbsolute
     forAll(*this, i)
     {
         operator[](i).makeAbsolute(rho, phi);
+    }
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::MRFZoneList::absolute
+(
+    const tmp<surfaceScalarField>& tphi,
+    const volScalarField& rho
+) const
+{
+    if (size())
+    {
+        tmp<surfaceScalarField> rphi
+        (
+            New
+            (
+                tphi,
+                "absolute(" + tphi().name() + ')',
+                tphi().dimensions(),
+                true
+            )
+        );
+
+        makeAbsolute(fvc::interpolate(rho), rphi.ref());
+
+        tphi.clear();
+
+        return rphi;
+    }
+    else
+    {
+        return tmp<surfaceScalarField>(tphi, true);
     }
 }
 

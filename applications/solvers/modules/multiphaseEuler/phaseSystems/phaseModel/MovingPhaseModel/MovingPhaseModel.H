@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ protected:
         surfaceScalarField alphaRhoPhi_;
 
         //- Face velocity field
-        tmp<surfaceVectorField> Uf_;
+        autoPtr<surfaceVectorField> Uf_;
 
         //- Lagrangian acceleration field (needed for virtual-mass)
         mutable tmp<volVectorField> DUDt_;
@@ -219,7 +219,7 @@ public:
 
             //- Return the face velocity
             //  Required for moving mesh cases
-            virtual tmp<surfaceVectorField> Uf() const;
+            virtual const autoPtr<surfaceVectorField>& Uf() const;
 
             //- Access the face velocity
             //  Required for moving mesh cases

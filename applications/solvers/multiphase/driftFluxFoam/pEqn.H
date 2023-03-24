@@ -6,7 +6,7 @@
     (
         "phiHbyA",
         fvc::flux(HbyA)
-      + mixture.MRF().zeroFilter(fvc::interpolate(rho*rAU)*fvc::ddtCorr(U, phi))
+      + fvc::interpolate(rho*rAU)*fvc::ddtCorr(U, phi, Uf)
     );
     mixture.MRF().makeRelative(phiHbyA);
     adjustPhi(phiHbyA, U, p_rgh);
@@ -65,4 +65,7 @@
         );
         p_rgh = p - rho*gh;
     }
+
+    // Correct Uf for MRF
+    fvc::correctUf(Uf, U, phi, mixture.MRF());
 }

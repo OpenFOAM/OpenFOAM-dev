@@ -62,7 +62,7 @@ void Foam::solvers::incompressibleVoF::pressureCorrector()
         (
             "phiHbyA",
             fvc::flux(HbyA)
-          + MRF.zeroFilter(fvc::interpolate(rho*rAU())*fvc::ddtCorr(U, phi, Uf))
+          + fvc::interpolate(rho*rAU())*fvc::ddtCorr(U, phi, Uf)
         );
 
         MRF.makeRelative(phiHbyA);

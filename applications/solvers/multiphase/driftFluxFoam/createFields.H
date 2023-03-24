@@ -97,3 +97,28 @@ tmp<surfaceScalarField> talphaPhiCorr0;
 
 #include "createFvModels.H"
 #include "createFvConstraints.H"
+
+//- Pointer to the surface momentum field
+//  used for ddtCorr with MRF
+autoPtr<surfaceVectorField> Uf;
+
+if (mixture.MRF().size())
+{
+    Info<< "Constructing face momentum Uf" << endl;
+
+    // Ensure the U BCs are up-to-date before constructing Uf
+    U.correctBoundaryConditions();
+
+    Uf = new surfaceVectorField
+    (
+        IOobject
+        (
+            "Uf",
+            runTime.name(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        fvc::interpolate(U)
+    );
+}

@@ -119,9 +119,12 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
 
     momentumTransport->validate();
 
-    if (mesh.dynamic())
+    if (mesh.dynamic() || MRF.size())
     {
         Info<< "Constructing face momentum Uf" << endl;
+
+        // Ensure the U BCs are up-to-date before constructing Uf
+        U.correctBoundaryConditions();
 
         Uf = new surfaceVectorField
         (

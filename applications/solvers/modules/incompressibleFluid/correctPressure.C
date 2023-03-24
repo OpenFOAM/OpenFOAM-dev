@@ -46,7 +46,7 @@ void Foam::solvers::incompressibleFluid::correctPressure()
     (
         "phiHbyA",
         fvc::flux(HbyA)
-      + MRF.zeroFilter(fvc::interpolate(rAU)*fvc::ddtCorr(U, phi, Uf))
+      + fvc::interpolate(rAU)*fvc::ddtCorr(U, phi, Uf)
     );
 
     MRF.makeRelative(phiHbyA);

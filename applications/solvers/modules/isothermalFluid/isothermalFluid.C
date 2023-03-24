@@ -217,9 +217,12 @@ Foam::solvers::isothermalFluid::isothermalFluid
         );
     }
 
-    if (mesh.dynamic())
+    if (mesh.dynamic() || MRF.size())
     {
         Info<< "Constructing face momentum rhoUf" << endl;
+
+        // Ensure the U BCs are up-to-date before constructing Uf
+        U.correctBoundaryConditions();
 
         rhoUf = new surfaceVectorField
         (
@@ -362,6 +365,9 @@ void Foam::solvers::isothermalFluid::postSolve()
     if (!mesh.schemes().steady())
     {
         rho = thermo.rho();
+
+        // Correct rhoUf with the updated density if the mesh is moving
+        fvc::correctRhoUf(rhoUf, rho, U, phi, MRF);
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -492,7 +492,7 @@ EulerDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
-    const SurfaceField<Type>& Uf
+    const SurfaceField<Type>& rhoUf
 )
 {
     const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
@@ -500,31 +500,27 @@ EulerDdtScheme<Type>::fvcDdtUfCorr
     if
     (
         U.dimensions() == dimVelocity
-     && Uf.dimensions() == rho.dimensions()*dimVelocity
+     && rhoUf.dimensions() == rho.dimensions()*dimVelocity
     )
     {
-        VolField<Type> rhoU0
-        (
-            rho.oldTime()*U.oldTime()
-        );
-
-        fluxFieldType phiUf0(mesh().Sf() & Uf.oldTime());
+        VolField<Type> rhoU0(rho.oldTime()*U.oldTime());
+        fluxFieldType phiUf0(mesh().Sf() & rhoUf.oldTime());
         fluxFieldType phiCorr(phiUf0 - fvc::dotInterpolate(mesh().Sf(), rhoU0));
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + Uf.name() + ')',
-             this->fvcDdtPhiCoeff(rhoU0, phiUf0, phiCorr, rho.oldTime())
-            *rDeltaT*phiCorr
+            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
+            this->fvcDdtPhiCoeff(rhoU0, phiUf0, phiCorr, rho.oldTime())
+           *rDeltaT*phiCorr
         );
     }
     else if
     (
         U.dimensions() == rho.dimensions()*dimVelocity
-     && Uf.dimensions() == rho.dimensions()*dimVelocity
+     && rhoUf.dimensions() == rho.dimensions()*dimVelocity
     )
     {
-        fluxFieldType phiUf0(mesh().Sf() & Uf.oldTime());
+        fluxFieldType phiUf0(mesh().Sf() & rhoUf.oldTime());
         fluxFieldType phiCorr
         (
             phiUf0 - fvc::dotInterpolate(mesh().Sf(), U.oldTime())
@@ -532,7 +528,7 @@ EulerDdtScheme<Type>::fvcDdtUfCorr
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + Uf.name() + ')',
+            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
             this->fvcDdtPhiCoeff
             (
                 U.oldTime(),
@@ -545,7 +541,7 @@ EulerDdtScheme<Type>::fvcDdtUfCorr
     else
     {
         FatalErrorInFunction
-            << "dimensions of Uf are not correct"
+            << "dimensions of rhoUf are not correct"
             << abort(FatalError);
 
         return fluxFieldType::null();

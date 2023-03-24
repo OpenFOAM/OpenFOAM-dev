@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,10 +34,10 @@ void Foam::fvc::correctUf
 {
     const fvMesh& mesh = U.mesh();
 
-    if (mesh.dynamic())
+    if (Uf.valid())
     {
         Uf() = fvc::interpolate(U);
-        surfaceVectorField n(mesh.Sf()/mesh.magSf());
+        const surfaceVectorField n(mesh.Sf()/mesh.magSf());
         Uf() += n*(MRF.absolute(phi)/mesh.magSf() - (n & Uf()));
     }
 }
@@ -55,13 +55,13 @@ void Foam::fvc::correctRhoUf
 {
     const fvMesh& mesh = U.mesh();
 
-    if (mesh.dynamic())
+    if (rhoUf.valid())
     {
         rhoUf() = fvc::interpolate(rho*U);
-        surfaceVectorField n(mesh.Sf()/mesh.magSf());
+        const surfaceVectorField n(mesh.Sf()/mesh.magSf());
         rhoUf() +=
           n*(
-                MRF.absolute(fvc::absolute(phi, rho, U))/mesh.magSf()
+                MRF.absolute(fvc::absolute(phi, rho, U), rho)/mesh.magSf()
               - (n & rhoUf())
             );
     }

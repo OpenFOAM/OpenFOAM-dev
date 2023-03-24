@@ -225,6 +225,8 @@ Foam::phaseSystem::phaseSystem
 
     mesh_(mesh),
 
+    MRF_(mesh_),
+
     referencePhaseName_(lookupOrDefault("referencePhase", word::null)),
 
     phaseModels_
@@ -246,8 +248,6 @@ Foam::phaseSystem::phaseSystem
         mesh,
         dimensionedScalar(dimPressure/dimTime, 0)
     ),
-
-    MRF_(mesh_),
 
     deltaN_
     (
@@ -773,7 +773,7 @@ void Foam::phaseSystem::correctPhi
 
             // Calculate absolute flux
             // from the mapped surface velocity
-            phi_ += alphafs[phasei]*(mesh_.Sf() & phase.Uf());
+            phi_ += alphafs[phasei]*(mesh_.Sf() & phase.UfRef());
         }
 
         if (correctPhi)

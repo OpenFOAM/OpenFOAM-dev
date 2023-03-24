@@ -1067,15 +1067,12 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrByAs
         phiCorrs.set
         (
             phasei,
-            this->MRF().zeroFilter
             (
-                (
-                    phase.Uf().valid()
-                  ? (this->mesh_.Sf() & phase.Uf()().oldTime())()
-                  : phase.phi()().oldTime()
-                )
-              - fvc::flux(phase.U()().oldTime())
-            )()
+                phase.Uf().valid()
+              ? (this->mesh_.Sf() & phase.Uf()().oldTime())()
+              : phase.phi()().oldTime()
+            )
+          - fvc::flux(phase.U()().oldTime())
         );
     }
 

@@ -153,15 +153,14 @@ public:
             surfaceScalarField& phi
         ) const;
 
-        void makeAbsolute(Field<vector>& Up, const label patchi) const;
-
-        //- Filter-out the MRF region contribution from the given field
-        // setting the corresponding values to zero
-        template<class Type>
-        tmp<SurfaceField<Type>> zeroFilter
+        //- Return the given relative flux absolute within the MRF region
+        tmp<surfaceScalarField> absolute
         (
-            const tmp<SurfaceField<Type>>& tphi
+            const tmp<surfaceScalarField>& phi,
+            const volScalarField& rho
         ) const;
+
+        void makeAbsolute(Field<vector>& Up, const label patchi) const;
 
         //- Update MRFZone faces if the mesh topology changes
         void update();
@@ -183,12 +182,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "MRFZoneListTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

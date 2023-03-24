@@ -121,9 +121,12 @@ Foam::solvers::VoFSolver::VoFSolver
 {
     mesh.schemes().setFluxRequired(p_rgh.name());
 
-    if (mesh.dynamic())
+    if (mesh.dynamic() || MRF.size())
     {
         Info<< "Constructing face momentum Uf" << endl;
+
+        // Ensure the U BCs are up-to-date before constructing Uf
+        U_.correctBoundaryConditions();
 
         Uf = new surfaceVectorField
         (

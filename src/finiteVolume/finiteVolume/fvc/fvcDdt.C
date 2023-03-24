@@ -229,7 +229,7 @@ tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     const autoPtr<SurfaceField<Type>>& Uf
 )
 {
-    if (U.mesh().dynamic())
+    if (Uf.valid())
     {
         return ddtCorr(U, Uf());
     }
@@ -271,19 +271,18 @@ tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     ).ref().fvcDdtPhiCorr(rho, U, phi);
 }
 
-
 template<class Type>
 tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
     const SurfaceField<typename Foam::flux<Type>::type>& phi,
-    const autoPtr<SurfaceField<Type>>& Uf
+    const autoPtr<SurfaceField<Type>>& rhoUf
 )
 {
-    if (U.mesh().dynamic())
+    if (rhoUf.valid())
     {
-        return ddtCorr(rho, U, Uf());
+        return ddtCorr(rho, U, rhoUf());
     }
     else
     {
