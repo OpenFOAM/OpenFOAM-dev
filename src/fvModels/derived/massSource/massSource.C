@@ -98,16 +98,28 @@ void Foam::fv::massSource::addGeneralSupType
     const word& fieldName
 ) const
 {
-    const scalar massFlowRate = this->massFlowRate();
-    const Type value =
-        fieldValues_[fieldName]->value<Type>(mesh().time().userTimeValue());
-
     const labelUList cells = set_.cells();
 
-    forAll(cells, i)
+    const scalar massFlowRate = this->massFlowRate();
+
+    if (massFlowRate > 0)
     {
-        eqn.source()[cells[i]] -=
-            mesh().V()[cells[i]]/set_.V()*massFlowRate*value;
+        const Type value =
+            fieldValues_[fieldName]->value<Type>(mesh().time().userTimeValue());
+
+        forAll(cells, i)
+        {
+            eqn.source()[cells[i]] -=
+                mesh().V()[cells[i]]/set_.V()*massFlowRate*value;
+        }
+    }
+    else
+    {
+        forAll(cells, i)
+        {
+            eqn.diag()[cells[i]] +=
+                mesh().V()[cells[i]]/set_.V()*massFlowRate;
+        }
     }
 }
 
@@ -143,31 +155,52 @@ void Foam::fv::massSource::addSupType
     }
     else if (fieldName == heName_ && fieldValues_.found(TName_))
     {
-        if (fieldValues_.found(heName_))
-        {
-            WarningInFunction
-                << "Source " << name() << " defined for both field " << heName_
-                << " and " << TName_ << ". Only one of these should be present."
-                << endl;
-        }
-
         const scalar massFlowRate = this->massFlowRate();
-        const scalar T =
-            fieldValues_[TName_]->value<scalar>(mesh().time().userTimeValue());
-        const basicThermo& thermo =
-            mesh().lookupObject<basicThermo>
-            (
-                IOobject::groupName(physicalProperties::typeName, phaseName_)
-            );
-        const scalarField hs
-        (
-            thermo.hs(scalarField(cells.size(), T), cells)
-        );
 
-        forAll(cells, i)
+        if (massFlowRate > 0)
         {
-            eqn.source()[cells[i]] -=
-                mesh().V()[cells[i]]/set_.V()*massFlowRate*hs[i];
+            if (fieldValues_.found(heName_))
+            {
+                WarningInFunction
+                    << "Source " << name() << " defined for both field "
+                    << heName_ << " and " << TName_
+                    << ". Only one of these should be present." << endl;
+            }
+
+            const basicThermo& thermo =
+                mesh().lookupObject<basicThermo>
+                (
+                    IOobject::groupName
+                    (
+                        physicalProperties::typeName,
+                        phaseName_
+                    )
+                );
+
+            const scalar T =
+                fieldValues_[TName_]->value<scalar>
+                (
+                    mesh().time().userTimeValue()
+                );
+
+            const scalarField hs
+            (
+                thermo.hs(scalarField(cells.size(), T), cells)
+            );
+
+            forAll(cells, i)
+            {
+                eqn.source()[cells[i]] -=
+                    mesh().V()[cells[i]]/set_.V()*massFlowRate*hs[i];
+            }
+        }
+        else
+        {
+            forAll(cells, i)
+            {
+                eqn.diag()[cells[i]] +=
+                    mesh().V()[cells[i]]/set_.V()*massFlowRate;
+            }
         }
     }
     else
@@ -235,6 +268,7 @@ bool Foam::fv::massSource::addsSupToField(const word& fieldName) const
     if
     (
         isThisPhase
+     && massFlowRate() > 0
      && !(fieldName == rhoName_)
      && !(fieldName == heName_ && fieldValues_.found(TName_))
      && !fieldValues_.found(fieldName)
