@@ -30,6 +30,19 @@ Description
     for the mass that exits the domain due to expansion in space, so that the
     model correctly applies a total mass flow rate.
 
+    This model will write out additional fields, zeroDimensionalMassSource:m
+    and zeroDimensionalMassSource:factor. The zeroDimensionalMassSource:m field
+    is the total accumulated mass; the sum of the starting mass, plus all mass
+    added by models of this type. This may differ from the actual current mass
+    (= rho*V) within the zero-dimensional cell if pressure or density
+    constraints are being used. The zeroDimensionalMassSource:factor field is
+    the ratio between the current mass or volume and the total accumulated mass
+    or volume.
+
+    If the mass flow rate is positive then user-supplied fixed property values
+    are introduced to the field equations. If the mass flow rate is negative
+    then properties are removed at their current value.
+
 Usage
     Example usage:
     \verbatim
@@ -49,10 +62,10 @@ Usage
     }
     \endverbatim
 
-    Values should be provided for all solved for fields. Warnings will be
-    issued if values are not provided for fields for which transport equations
-    are solved. Warnings will also be issued if values are provided for fields
-    which are not solved for.
+    If the mass flow rate is positive then values should be provided for all
+    solved for fields. Warnings will be issued if values are not provided for
+    fields for which transport equations are solved. Warnings will also be
+    issued if values are provided for fields which are not solved for.
 
 SourceFiles
     zeroDimensionalMassSource.C
@@ -79,18 +92,29 @@ class zeroDimensionalMassSource
 :
     public massSource
 {
+private:
+
+    // Private Data
+
+        //- Reference to the zero-dimensional mass
+        volScalarField& m0D_;
+
+
+    // Private Member Functions
+
+        //- Calculate and return the zero-dimensional mass
+        tmp<volScalarField> calcM0D() const;
+
+        //- Initialise and return a reference to the zero-dimensional mass
+        volScalarField& initM0D() const;
+
+        //- Get a reference to the mass
+        const volScalarField& m() const;
+
+
 protected:
 
-    // Protected Data
-
-        //- Cached initial density field
-        autoPtr<volScalarField::Internal> rho0Ptr_;
-
-
     // Protected Member Functions
-
-        //- Non-virtual read
-        void readCoeffs();
 
         //- Return the mass flow rate
         virtual scalar massFlowRate() const;
@@ -116,10 +140,8 @@ public:
 
     // Member Functions
 
-        // IO
-
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
+        //- Update the model
+        virtual void correct();
 };
 
 

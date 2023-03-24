@@ -39,49 +39,143 @@ namespace fv
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::zeroDimensionalMassSource::readCoeffs()
+Foam::tmp<Foam::volScalarField>
+Foam::fv::zeroDimensionalMassSource::calcM0D() const
 {
-    const basicThermo& thermo =
-        mesh().lookupObject<basicThermo>
+    tmp<volScalarField> tm =
+        volScalarField::New
         (
-            IOobject::groupName(physicalProperties::typeName, phaseName_)
+            typedName("m0D"),
+            mesh(),
+            dimensionedScalar(dimMass, 0)
         );
 
-    rho0Ptr_.reset
-    (
-        new volScalarField::Internal
-        (
-            IOobject
-            (
-                typedName("rho0"),
-                mesh().time().timeName(),
-                mesh(),
-                IOobject::READ_IF_PRESENT,
-                IOobject::AUTO_WRITE
-            ),
-            thermo.rho()().internalField()
-        )
-    );
+    HashTable<const basicThermo*> thermos(mesh().lookupClass<basicThermo>());
+
+    forAllConstIter(HashTable<const basicThermo*>, thermos, thermoIter)
+    {
+        const basicThermo& thermo = *thermoIter();
+
+        tmp<volScalarField> tRho = thermo.rho();
+        const volScalarField& rho = tRho();
+
+        const word phaseName = thermo.phaseName();
+
+        if (thermo.phaseName() != word::null)
+        {
+            const volScalarField alpha =
+                mesh().lookupObject<volScalarField>
+                (
+                    IOobject::groupName("alpha", phaseName_)
+                );
+
+            tm.ref().ref() += alpha()*rho()*mesh().V();
+        }
+        else
+        {
+            tm.ref().ref() += rho()*mesh().V();
+        }
+    }
+
+    return tm;
 }
 
 
-Foam::scalar Foam::fv::zeroDimensionalMassSource::massFlowRate() const
+Foam::volScalarField& Foam::fv::zeroDimensionalMassSource::initM0D() const
 {
-    const scalar t = mesh().time().userTimeValue();
-    const scalar t0 = mesh().time().beginTime().value();
+    if (!mesh().foundObject<volScalarField>(typedName("m0D")))
+    {
+        volScalarField* mPtr =
+            new volScalarField
+            (
+                calcM0D()
+            );
 
-    const scalar mDot = massFlowRate_->value(t);
-    const scalar sumMDot = massFlowRate_->integral(t0, t);
+        mPtr->store();
+    }
 
-    const basicThermo& thermo =
-        mesh().lookupObject<basicThermo>
+    return mesh().lookupObjectRef<volScalarField>(typedName("m0D"));
+}
+
+
+const Foam::volScalarField& Foam::fv::zeroDimensionalMassSource::m() const
+{
+    // If not registered, then read or create the mass field
+    if (!mesh().foundObject<volScalarField>(typedName("m")))
+    {
+        typeIOobject<volScalarField> mIo
         (
-            IOobject::groupName(physicalProperties::typeName, phaseName_)
+            typedName("m"),
+            mesh().time().timeName(),
+            mesh(),
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
         );
 
-    return mDot*thermo.rho()()[0]/(rho0Ptr_()[0] + sumMDot/mesh().V()[0]);
+        volScalarField* mPtr =
+            new volScalarField
+            (
+                mIo,
+                mesh(),
+                dimensionedScalar(dimMass, 0)
+            );
+
+        mPtr->store();
+
+        if (!mIo.headerOk())
+        {
+            *mPtr = m0D_;
+        }
+
+        volScalarField* factorPtr =
+            new volScalarField
+            (
+                IOobject
+                (
+                    typedName("factor"),
+                    mesh().time().timeName(),
+                    mesh(),
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                *mPtr/m0D_
+            );
+
+        factorPtr->store();
+    }
+
+    volScalarField& m =
+        mesh().lookupObjectRef<volScalarField>(typedName("m"));
+
+    volScalarField& factor =
+        mesh().lookupObjectRef<volScalarField>(typedName("factor"));
+
+    // Update the mass if changes are available
+    if (mesh().foundObject<volScalarField>(typedName("deltaM")))
+    {
+        volScalarField& deltaM =
+            mesh().lookupObjectRef<volScalarField>(typedName("deltaM"));
+
+        m = m.oldTime() + deltaM;
+
+        factor = m/m0D_;
+
+        deltaM.checkOut();
+    }
+
+    return m;
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+Foam::scalar Foam::fv::zeroDimensionalMassSource::massFlowRate() const
+{
+    const scalar mDot = massFlowRate_->value(mesh().time().userTimeValue());
+
+    return mDot*m0D_[0]/m()[0];
 }
 
 
@@ -96,7 +190,7 @@ Foam::fv::zeroDimensionalMassSource::zeroDimensionalMassSource
 )
 :
     massSource(name, modelType, mesh, dict, true),
-    rho0Ptr_()
+    m0D_(initM0D())
 {
     if (mesh.nGeometricD() != 0)
     {
@@ -105,25 +199,41 @@ Foam::fv::zeroDimensionalMassSource::zeroDimensionalMassSource
             << mesh.nGeometricD() << "-dimensional mesh"
             << exit(FatalIOError);
     }
-
-    readCoeffs();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::zeroDimensionalMassSource::read(const dictionary& dict)
+void Foam::fv::zeroDimensionalMassSource::correct()
 {
-    if (fvModel::read(dict))
+    // Correct the zero-dimensional mass
+    m0D_ = calcM0D();
+
+    // Create the mass change
+    if (!mesh().foundObject<volScalarField>(typedName("deltaM")))
     {
-        massSource::readCoeffs();
-        readCoeffs();
-        return true;
+        volScalarField* dMPtr =
+            new volScalarField
+            (
+                IOobject
+                (
+                    typedName("deltaM"),
+                    mesh().time().timeName(),
+                    mesh()
+                ),
+                mesh(),
+                dimensionedScalar(dimMass, 0)
+            );
+
+        dMPtr->store();
     }
-    else
-    {
-        return false;
-    }
+
+    volScalarField& deltaM =
+        mesh().lookupObjectRef<volScalarField>(typedName("deltaM"));
+
+    const scalar mDot = massFlowRate_->value(mesh().time().userTimeValue());
+
+    deltaM += mesh().time().deltaT()*dimensionedScalar(dimMass/dimTime, mDot);
 }
 
 
