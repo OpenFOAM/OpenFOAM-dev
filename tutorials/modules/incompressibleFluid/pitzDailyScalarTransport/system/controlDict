@@ -20,9 +20,11 @@ solver          functions;
 
 subSolver       incompressibleFluid;
 
-startFrom       startTime;
+startFrom       latestTime;
 
 startTime       0;
+
+subSolverTime   0;
 
 stopAt          endTime;
 
