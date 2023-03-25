@@ -488,15 +488,17 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::AFfs() const
 
         forAllConstIter(phaseInterface, interface, iter)
         {
+            const surfaceScalarField alphaf
+            (
+                fvc::interpolate(iter.otherPhase())
+            );
+
             addField
             (
                 iter(),
                 "AFf",
-                fvc::interpolate
-                (
-                    iter.otherPhase()
-                   /max(iter.otherPhase(), iter.otherPhase().residualAlpha())
-                )*Kf,
+                alphaf/max(alphaf, iter.otherPhase().residualAlpha())
+               *Kf,
                 AFfs
             );
         }
@@ -884,16 +886,17 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiKdPhifs
 
         forAllConstIter(phaseInterface, interface, iter)
         {
+            const surfaceScalarField alphaf
+            (
+                fvc::interpolate(iter.otherPhase())
+            );
+
             addField
             (
                 iter(),
                 "phiKdPhif",
                -rAUfs[iter().index()]
-               *fvc::interpolate
-                (
-                   -iter.otherPhase()
-                   /max(iter.otherPhase(), iter.otherPhase().residualAlpha())
-                )
+               *alphaf/max(alphaf, iter.otherPhase().residualAlpha())
                *Kf
                *fvc::absolute
                 (
