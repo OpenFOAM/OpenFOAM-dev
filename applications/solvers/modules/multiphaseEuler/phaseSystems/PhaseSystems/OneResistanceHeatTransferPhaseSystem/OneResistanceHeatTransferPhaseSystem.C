@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,9 +95,16 @@ heatTransfer() const
             const volScalarField& he = phase.thermo().he();
             const volScalarField Cpv(phase.thermo().Cpv());
 
+            const volScalarField phaseK
+            (
+                iter.otherPhase()
+               /max(iter.otherPhase(), iter.otherPhase().residualAlpha())
+               *K
+            );
+
             *eqns[phase.name()] +=
-                K*(otherPhase.thermo().T() - phase.thermo().T() + he/Cpv)
-              - fvm::Sp(K/Cpv, he);
+                phaseK*(otherPhase.thermo().T() - phase.thermo().T() + he/Cpv)
+              - fvm::Sp(phaseK/Cpv, he);
         }
     }
 
