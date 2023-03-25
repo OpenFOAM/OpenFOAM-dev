@@ -35,7 +35,7 @@ void Foam::solvers::VoFSolver::moveMesh()
     {
         if
         (
-            correctPhi
+            (correctPhi || mesh.topoChanged())
          && divergent()
          && !divU.valid()
         )
@@ -65,34 +65,31 @@ void Foam::solvers::VoFSolver::moveMesh()
 
                 correctUphiBCs(U_, phi, true);
 
-                if (correctPhi)
+                if (divU.valid())
                 {
-                    if (divU.valid())
-                    {
-                        CorrectPhi
-                        (
-                            phi,
-                            U,
-                            p_rgh,
-                            surfaceScalarField("rAUf", fvc::interpolate(rAU())),
-                            divU(),
-                            pressureReference(),
-                            pimple
-                        );
-                    }
-                    else
-                    {
-                        CorrectPhi
-                        (
-                            phi,
-                            U,
-                            p_rgh,
-                            surfaceScalarField("rAUf", fvc::interpolate(rAU())),
-                            geometricZeroField(),
-                            pressureReference(),
-                            pimple
-                        );
-                    }
+                    CorrectPhi
+                    (
+                        phi,
+                        U,
+                        p_rgh,
+                        surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+                        divU(),
+                        pressureReference(),
+                        pimple
+                    );
+                }
+                else
+                {
+                    CorrectPhi
+                    (
+                        phi,
+                        U,
+                        p_rgh,
+                        surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+                        geometricZeroField(),
+                        pressureReference(),
+                        pimple
+                    );
                 }
 
                 // Make the fluxes relative to the mesh motion

@@ -37,7 +37,11 @@ void Foam::solvers::multiphaseEuler::moveMesh()
      && (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     )
     {
-        if (correctPhi && !divU.valid())
+        if
+        (
+            (correctPhi || mesh.topoChanged())
+         && !divU.valid()
+        )
         {
             // Construct and register divU for mapping
             divU = new volScalarField
@@ -53,20 +57,22 @@ void Foam::solvers::multiphaseEuler::moveMesh()
         // Move the mesh
         mesh_.move();
 
-        if (mesh.changing() || mesh.topoChanged())
+        if (mesh.changing())
         {
             buoyancy.moveMesh();
 
-            fluid.meshUpdate();
+            if (correctPhi || mesh.topoChanged())
+            {
+                fluid.meshUpdate();
 
-            fluid.correctPhi
-            (
-                p_rgh,
-                divU,
-                correctPhi,
-                pressureReference,
-                pimple
-            );
+                fluid.correctPhi
+                (
+                    p_rgh,
+                    divU,
+                    pressureReference,
+                    pimple
+                );
+            }
 
             meshCourantNo();
         }

@@ -48,19 +48,16 @@ void Foam::solvers::incompressibleFluid::moveMesh()
 
                 correctUphiBCs(U, phi, true);
 
-                if (correctPhi)
-                {
-                    CorrectPhi
-                    (
-                        phi,
-                        U,
-                        p,
-                        dimensionedScalar("rAUf", dimTime, 1),
-                        geometricZeroField(),
-                        pressureReference,
-                        pimple
-                    );
-                }
+                CorrectPhi
+                (
+                    phi,
+                    U,
+                    p,
+                    dimensionedScalar("rAUf", dimTime, 1),
+                    geometricZeroField(),
+                    pressureReference,
+                    pimple
+                );
 
                 // Make the flux relative to the mesh motion
                 fvc::makeRelative(phi, U);

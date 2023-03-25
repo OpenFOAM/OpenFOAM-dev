@@ -57,19 +57,16 @@ void Foam::solvers::isothermalFluid::moveMesh()
 
                 correctUphiBCs(rho, U, phi, true);
 
-                if (correctPhi)
-                {
-                    CorrectPhi
-                    (
-                        phi,
-                        buoyancy.valid() ? p_rgh : p,
-                        rho,
-                        thermo.psi(),
-                        dimensionedScalar("rAUf", dimTime, 1),
-                        divrhoU(),
-                        pimple
-                    );
-                }
+                CorrectPhi
+                (
+                    phi,
+                    buoyancy.valid() ? p_rgh : p,
+                    rho,
+                    thermo.psi(),
+                    dimensionedScalar("rAUf", dimTime, 1),
+                    divrhoU(),
+                    pimple
+                );
 
                 // Make the fluxes relative to the mesh-motion
                 fvc::makeRelative(phi, rho, U);
