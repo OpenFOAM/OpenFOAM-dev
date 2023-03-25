@@ -20,7 +20,7 @@ phases (water oil mercury air);
 
 water
 {
-    type            purePhaseModel;
+    type            pureIsothermalPhaseModel;
     diameterModel   constant;
     constantCoeffs
     {
@@ -32,7 +32,7 @@ water
 
 oil
 {
-    type            purePhaseModel;
+    type            pureIsothermalPhaseModel;
     diameterModel constant;
     constantCoeffs
     {
@@ -44,7 +44,7 @@ oil
 
 mercury
 {
-    type            purePhaseModel;
+    type            pureIsothermalPhaseModel;
     diameterModel constant;
     constantCoeffs
     {
@@ -56,7 +56,7 @@ mercury
 
 air
 {
-    type            purePhaseModel;
+    type            pureIsothermalPhaseModel;
     diameterModel   isothermal;
     isothermalCoeffs
     {
