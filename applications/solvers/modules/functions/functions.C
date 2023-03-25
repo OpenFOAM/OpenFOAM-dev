@@ -52,8 +52,29 @@ Foam::solvers::functions::functions(fvMesh& mesh)
       : runTime.controlDict().lookup("solver")
     );
 
+    Time& time(const_cast<Time&>(runTime));
+    const TimeState ts(time);
+    bool startTimeChanged = false;
+
+    if (runTime.controlDict().found("subSolverTime"))
+    {
+        const scalar subSolverTime
+        (
+            runTime.controlDict().lookup<scalar>("subSolverTime")
+        );
+
+        time.setTime(subSolverTime, 0);
+
+        startTimeChanged = true;
+    }
+
     // Instantiate the selected solver
     solverPtr = (solver::New(solverName, mesh));
+
+    if (startTimeChanged)
+    {
+        time.setTime(ts, ts.timeIndex());
+    }
 
     // Set all registered objects to NO_WRITE
     // so only those created by the functionObjects are written

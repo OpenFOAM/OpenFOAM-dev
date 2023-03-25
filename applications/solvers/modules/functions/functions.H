@@ -39,6 +39,11 @@ Description
     should not be written out each write-time.  Fields and other objects created
     and changed by the execution of the functionObjects are written out.
 
+    When restarting from a time directory which does contain the \c subSolver
+    fields the optional \c controlDict entry \c subSolverTime may be provided to
+    specify which time the \c subSolver should be instantiated for, after which
+    time is reset to \c startTime for the restart.
+
 SourceFiles
     functions.C
 
