@@ -78,7 +78,7 @@ functions
     #includeFunc writeObjects
     (
         d.particles,
-        phaseTransfer:dmidtf.TiO2.particlesAndVapor
+        phaseTransfer:dmidtf.TiO2.particles_vapour
     )
 }
 
