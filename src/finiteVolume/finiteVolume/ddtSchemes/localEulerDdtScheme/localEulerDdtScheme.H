@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,15 +212,6 @@ public:
 
         typedef typename ddtScheme<Type>::fluxFieldType fluxFieldType;
 
-        // using ddtScheme<Type>::fvcDdtPhiCoeff;
-
-        // virtual tmp<surfaceScalarField> fvcDdtPhiCoeff
-        // (
-        //     const VolField<Type>& U,
-        //     const fluxFieldType& phi,
-        //     const fluxFieldType& phiCorr
-        // );
-
         virtual tmp<fluxFieldType> fvcDdtUfCorr
         (
             const VolField<Type>& U,
@@ -237,11 +228,27 @@ public:
         (
             const volScalarField& rho,
             const VolField<Type>& U,
+            const SurfaceField<Type>& rhoUf
+        );
+
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
+        (
+            const volScalarField& rho,
+            const VolField<Type>& U,
+            const fluxFieldType& phi
+        );
+
+        virtual tmp<fluxFieldType> fvcDdtUfCorr
+        (
+            const volScalarField& alpha,
+            const volScalarField& rho,
+            const VolField<Type>& U,
             const SurfaceField<Type>& Uf
         );
 
         virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
+            const volScalarField& alpha,
             const volScalarField& rho,
             const VolField<Type>& U,
             const fluxFieldType& phi
@@ -291,6 +298,42 @@ tmp<surfaceScalarField> localEulerDdtScheme<scalar>::fvcDdtUfCorr
 template<>
 tmp<surfaceScalarField> localEulerDdtScheme<scalar>::fvcDdtPhiCorr
 (
+    const volScalarField& rho,
+    const volScalarField& U,
+    const surfaceScalarField& phi
+);
+
+template<>
+tmp<surfaceScalarField> localEulerDdtScheme<scalar>::fvcDdtUfCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const volScalarField& U,
+    const surfaceScalarField& Uf
+);
+
+template<>
+tmp<surfaceScalarField> localEulerDdtScheme<scalar>::fvcDdtPhiCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const volScalarField& U,
+    const surfaceScalarField& phi
+);
+
+template<>
+tmp<surfaceScalarField> localEulerDdtScheme<scalar>::fvcDdtUfCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const volScalarField& U,
+    const surfaceScalarField& Uf
+);
+
+template<>
+tmp<surfaceScalarField> localEulerDdtScheme<scalar>::fvcDdtPhiCorr
+(
+    const volScalarField& alpha,
     const volScalarField& rho,
     const volScalarField& U,
     const surfaceScalarField& phi

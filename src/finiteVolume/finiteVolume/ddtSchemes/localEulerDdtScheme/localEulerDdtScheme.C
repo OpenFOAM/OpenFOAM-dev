@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -431,7 +431,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
-    const SurfaceField<Type>& Uf
+    const SurfaceField<Type>& rhoUf
 )
 {
     const surfaceScalarField rDeltaT(fvc::interpolate(localRDeltaT()));
@@ -439,7 +439,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
     if
     (
         U.dimensions() == dimVelocity
-     && Uf.dimensions() == dimDensity*dimVelocity
+     && rhoUf.dimensions() == dimDensity*dimVelocity
     )
     {
         VolField<Type> rhoU0
@@ -447,7 +447,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
             rho.oldTime()*U.oldTime()
         );
 
-        fluxFieldType phiUf0(mesh().Sf() & Uf.oldTime());
+        fluxFieldType phiUf0(mesh().Sf() & rhoUf.oldTime());
         fluxFieldType phiCorr(phiUf0 - fvc::dotInterpolate(mesh().Sf(), rhoU0));
 
         return tmp<fluxFieldType>
@@ -457,7 +457,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
                 IOobject
                 (
                     "ddtCorr("
-                  + rho.name() + ',' + U.name() + ',' + Uf.name() + ')',
+                  + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
                     mesh().time().name(),
                     mesh()
                 ),
@@ -469,10 +469,10 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
     else if
     (
         U.dimensions() == dimDensity*dimVelocity
-     && Uf.dimensions() == dimDensity*dimVelocity
+     && rhoUf.dimensions() == dimDensity*dimVelocity
     )
     {
-        fluxFieldType phiUf0(mesh().Sf() & Uf.oldTime());
+        fluxFieldType phiUf0(mesh().Sf() & rhoUf.oldTime());
         fluxFieldType phiCorr
         (
             phiUf0 - fvc::dotInterpolate(mesh().Sf(), U.oldTime())
@@ -485,7 +485,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
                 IOobject
                 (
                     "ddtCorr("
-                  + rho.name() + ',' + U.name() + ',' + Uf.name() + ')',
+                  + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
                     mesh().time().name(),
                     mesh()
                 ),
@@ -502,7 +502,7 @@ localEulerDdtScheme<Type>::fvcDdtUfCorr
     else
     {
         FatalErrorInFunction
-            << "dimensions of Uf are not correct"
+            << "dimensions of rhoUf are not correct"
             << abort(FatalError);
 
         return fluxFieldType::null();
@@ -587,6 +587,89 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
                     phiCorr,
                     rho.oldTime()
                 )*rDeltaT*phiCorr
+            )
+        );
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "dimensions of phi are not correct"
+            << abort(FatalError);
+
+        return fluxFieldType::null();
+    }
+}
+
+
+template<class Type>
+tmp<typename localEulerDdtScheme<Type>::fluxFieldType>
+localEulerDdtScheme<Type>::fvcDdtUfCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const VolField<Type>& U,
+    const SurfaceField<Type>& Uf
+)
+{
+    const surfaceScalarField rDeltaT(fvc::interpolate(localRDeltaT()));
+
+    if (U.dimensions() == dimVelocity && Uf.dimensions() == dimVelocity)
+    {
+        const volScalarField alphaRho0(alpha.oldTime()*rho.oldTime());
+
+        return fluxFieldType::New
+        (
+            "ddtCorr("
+          + alpha.name() + rho.name() + ',' + U.name() + ',' + Uf.name()
+          + ')',
+            this->fvcDdtPhiCoeff(U.oldTime(), mesh().Sf() & Uf.oldTime())
+           *rDeltaT
+           *(
+                mesh().Sf()
+              & (
+                  fvc::interpolate(alphaRho0)*Uf.oldTime()
+                - fvc::interpolate(alphaRho0*U.oldTime())
+                )
+            )
+        );
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "dimensions of Uf are not correct"
+            << abort(FatalError);
+
+        return fluxFieldType::null();
+    }
+}
+
+
+template<class Type>
+tmp<typename localEulerDdtScheme<Type>::fluxFieldType>
+localEulerDdtScheme<Type>::fvcDdtPhiCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const VolField<Type>& U,
+    const fluxFieldType& phi
+)
+{
+    const surfaceScalarField rDeltaT(fvc::interpolate(localRDeltaT()));
+
+    if (U.dimensions() == dimVelocity && phi.dimensions() == dimFlux)
+    {
+        const volScalarField alphaRho0(alpha.oldTime()*rho.oldTime());
+
+        return fluxFieldType::New
+        (
+            "ddtCorr("
+          + alpha.name() + rho.name() + ',' + U.name() + ',' + phi.name()
+          + ')',
+            this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime())
+           *rDeltaT
+           *(
+                fvc::interpolate(alphaRho0)*phi.oldTime()
+               -fvc::dotInterpolate(mesh().Sf(), alphaRho0*U.oldTime())
             )
         );
     }

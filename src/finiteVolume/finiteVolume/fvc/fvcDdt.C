@@ -245,14 +245,17 @@ tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
-    const SurfaceField<Type>& Uf
+    const SurfaceField<Type>& rhoUf
 )
 {
     return fv::ddtScheme<Type>::New
     (
         U.mesh(),
-        U.mesh().schemes().ddt("ddt(" + U.name() + ')')
-    ).ref().fvcDdtUfCorr(rho, U, Uf);
+        U.mesh().schemes().ddt
+        (
+            "ddt(" + rho.name() + U.name() + ')'
+        )
+    ).ref().fvcDdtUfCorr(rho, U, rhoUf);
 }
 
 
@@ -271,6 +274,7 @@ tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     ).ref().fvcDdtPhiCorr(rho, U, phi);
 }
 
+
 template<class Type>
 tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
 (
@@ -287,6 +291,67 @@ tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
     else
     {
         return ddtCorr(rho, U, phi);
+    }
+}
+
+
+template<class Type>
+tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const VolField<Type>& U,
+    const SurfaceField<Type>& Uf
+)
+{
+    return fv::ddtScheme<Type>::New
+    (
+        U.mesh(),
+        U.mesh().schemes().ddt
+        (
+            "ddt(" + alpha.name() + rho.name() + ',' + U.name() + ')'
+        )
+    ).ref().fvcDdtUfCorr(alpha, rho, U, Uf);
+}
+
+
+template<class Type>
+tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const VolField<Type>& U,
+    const SurfaceField<typename Foam::flux<Type>::type>& phi
+)
+{
+    return fv::ddtScheme<Type>::New
+    (
+        U.mesh(),
+        U.mesh().schemes().ddt
+        (
+            "ddt(" + alpha.name() + rho.name() + ',' + U.name() + ')'
+        )
+    ).ref().fvcDdtPhiCorr(alpha, rho, U, phi);
+}
+
+
+template<class Type>
+tmp<SurfaceField<typename Foam::flux<Type>::type>> ddtCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const VolField<Type>& U,
+    const SurfaceField<typename Foam::flux<Type>::type>& phi,
+    const autoPtr<SurfaceField<Type>>& Uf
+)
+{
+    if (Uf.valid())
+    {
+        return ddtCorr(alpha, rho, U, Uf());
+    }
+    else
+    {
+        return ddtCorr(alpha, rho, U, phi);
     }
 }
 

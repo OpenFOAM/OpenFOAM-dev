@@ -623,6 +623,89 @@ EulerDdtScheme<Type>::fvcDdtPhiCorr
 
 
 template<class Type>
+tmp<typename EulerDdtScheme<Type>::fluxFieldType>
+EulerDdtScheme<Type>::fvcDdtUfCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const VolField<Type>& U,
+    const SurfaceField<Type>& Uf
+)
+{
+    const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+
+    if (U.dimensions() == dimVelocity && Uf.dimensions() == dimVelocity)
+    {
+        const volScalarField alphaRho0(alpha.oldTime()*rho.oldTime());
+
+        return fluxFieldType::New
+        (
+            "ddtCorr("
+          + alpha.name() + rho.name() + ',' + U.name() + ',' + Uf.name()
+          + ')',
+            this->fvcDdtPhiCoeff(U.oldTime(), mesh().Sf() & Uf.oldTime())
+           *rDeltaT
+           *(
+                mesh().Sf()
+              & (
+                  fvc::interpolate(alphaRho0)*Uf.oldTime()
+                - fvc::interpolate(alphaRho0*U.oldTime())
+                )
+            )
+        );
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "dimensions of Uf are not correct"
+            << abort(FatalError);
+
+        return fluxFieldType::null();
+    }
+}
+
+
+template<class Type>
+tmp<typename EulerDdtScheme<Type>::fluxFieldType>
+EulerDdtScheme<Type>::fvcDdtPhiCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const VolField<Type>& U,
+    const fluxFieldType& phi
+)
+{
+    const dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+
+    if (U.dimensions() == dimVelocity && phi.dimensions() == dimFlux)
+    {
+        const volScalarField alphaRho0(alpha.oldTime()*rho.oldTime());
+
+        return fluxFieldType::New
+        (
+            "ddtCorr("
+          + alpha.name() + rho.name() + ',' + U.name() + ',' + phi.name()
+          + ')',
+            this->fvcDdtPhiCoeff(U.oldTime(), phi.oldTime())
+           *rDeltaT
+           *(
+                fvc::interpolate(alphaRho0)*phi.oldTime()
+               -fvc::dotInterpolate(mesh().Sf(), alphaRho0*U.oldTime())
+            )
+        );
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "dimensions of phi are not correct"
+            << abort(FatalError);
+
+        return fluxFieldType::null();
+    }
+}
+
+
+template<class Type>
 tmp<surfaceScalarField> EulerDdtScheme<Type>::meshPhi
 (
     const VolField<Type>&

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1226,13 +1226,13 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
-    const SurfaceField<Type>& Uf
+    const SurfaceField<Type>& rhoUf
 )
 {
     if
     (
         U.dimensions() == dimVelocity
-     && Uf.dimensions() == rho.dimensions()*dimVelocity
+     && rhoUf.dimensions() == rho.dimensions()*dimVelocity
     )
     {
         DDt0Field<VolField<Type>>& ddt0 =
@@ -1242,11 +1242,11 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
                 rho.dimensions()*U.dimensions()
             );
 
-        DDt0Field<SurfaceField<Type>>& dUfdt0 =
+        DDt0Field<SurfaceField<Type>>& drhoUfdt0 =
             ddt0_<SurfaceField<Type>>
             (
-                "ddtCorrDdt0(" + Uf.name() + ')',
-                Uf.dimensions()
+                "ddtCorrDdt0(" + rhoUf.name() + ')',
+                rhoUf.dimensions()
             );
 
         dimensionedScalar rDtCoef = rDtCoef_(ddt0);
@@ -1264,27 +1264,27 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
               - offCentre_(ddt0());
         }
 
-        if (evaluate(dUfdt0))
+        if (evaluate(drhoUfdt0))
         {
-            dUfdt0 =
-                rDtCoef0_(dUfdt0)
-               *(Uf.oldTime() - Uf.oldTime().oldTime())
-              - offCentre_(dUfdt0());
+            drhoUfdt0 =
+                rDtCoef0_(drhoUfdt0)
+               *(rhoUf.oldTime() - rhoUf.oldTime().oldTime())
+              - offCentre_(drhoUfdt0());
         }
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + Uf.name() + ')',
+            "ddtCorr(" + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
             this->fvcDdtPhiCoeff
             (
                 rhoU0,
-                mesh().Sf() & Uf.oldTime(),
+                mesh().Sf() & rhoUf.oldTime(),
                 rho.oldTime()
             )
            *(
                 mesh().Sf()
               & (
-                    (rDtCoef*Uf.oldTime() + offCentre_(dUfdt0()))
+                    (rDtCoef*rhoUf.oldTime() + offCentre_(drhoUfdt0()))
                   - fvc::interpolate(rDtCoef*rhoU0 + offCentre_(ddt0()))
                 )
             )
@@ -1293,7 +1293,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
     else if
     (
         U.dimensions() == rho.dimensions()*dimVelocity
-     && Uf.dimensions() == rho.dimensions()*dimVelocity
+     && rhoUf.dimensions() == rho.dimensions()*dimVelocity
     )
     {
         DDt0Field<VolField<Type>>& ddt0 =
@@ -1303,11 +1303,11 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
                 U.dimensions()
             );
 
-        DDt0Field<SurfaceField<Type>>& dUfdt0 =
+        DDt0Field<SurfaceField<Type>>& drhoUfdt0 =
             ddt0_<SurfaceField<Type>>
             (
-                "ddtCorrDdt0(" + Uf.name() + ')',
-                Uf.dimensions()
+                "ddtCorrDdt0(" + rhoUf.name() + ')',
+                rhoUf.dimensions()
             );
 
         dimensionedScalar rDtCoef = rDtCoef_(ddt0);
@@ -1319,26 +1319,27 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
               - offCentre_(ddt0());
         }
 
-        if (evaluate(dUfdt0))
+        if (evaluate(drhoUfdt0))
         {
-            dUfdt0 =
-                rDtCoef0_(dUfdt0)*(Uf.oldTime() - Uf.oldTime().oldTime())
-              - offCentre_(dUfdt0());
+            drhoUfdt0 =
+                rDtCoef0_(drhoUfdt0)
+               *(rhoUf.oldTime() - rhoUf.oldTime().oldTime())
+              - offCentre_(drhoUfdt0());
         }
 
         return fluxFieldType::New
         (
-            "ddtCorr(" + U.name() + ',' + Uf.name() + ')',
+            "ddtCorr(" + U.name() + ',' + rhoUf.name() + ')',
             this->fvcDdtPhiCoeff
             (
                 U.oldTime(),
-                mesh().Sf() & Uf.oldTime(),
+                mesh().Sf() & rhoUf.oldTime(),
                 rho.oldTime()
             )
            *(
                 mesh().Sf()
               & (
-                    (rDtCoef*Uf.oldTime() + offCentre_(dUfdt0()))
+                    (rDtCoef*rhoUf.oldTime() + offCentre_(drhoUfdt0()))
                   - fvc::interpolate
                     (
                         rDtCoef*U.oldTime() + offCentre_(ddt0())
@@ -1350,7 +1351,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
     else
     {
         FatalErrorInFunction
-            << "dimensions of Uf are not correct"
+            << "dimensions of rhoUf are not correct"
             << abort(FatalError);
 
         return fluxFieldType::null();

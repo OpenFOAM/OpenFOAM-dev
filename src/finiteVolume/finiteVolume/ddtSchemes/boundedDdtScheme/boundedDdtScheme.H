@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,7 +169,7 @@ public:
         (
             const volScalarField& rho,
             const VolField<Type>& U,
-            const SurfaceField<Type>& Uf
+            const SurfaceField<Type>& rhoUf
         );
 
         virtual tmp<fluxFieldType> fvcDdtPhiCorr
@@ -178,6 +178,30 @@ public:
             const VolField<Type>& U,
             const fluxFieldType& phi
         );
+
+        virtual tmp<fluxFieldType> fvcDdtUfCorr
+        (
+            const volScalarField& alpha,
+            const volScalarField& rho,
+            const VolField<Type>& U,
+            const SurfaceField<Type>& Uf
+        )
+        {
+            NotImplemented;
+            return fluxFieldType::null();
+        }
+
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
+        (
+            const volScalarField& alpha,
+            const volScalarField& rho,
+            const VolField<Type>& U,
+            const fluxFieldType& phi
+        )
+        {
+            NotImplemented;
+            return fluxFieldType::null();
+        }
 
         virtual tmp<surfaceScalarField> meshPhi
         (
@@ -223,6 +247,24 @@ tmp<surfaceScalarField> boundedDdtScheme<scalar>::fvcDdtUfCorr
 template<>
 tmp<surfaceScalarField> boundedDdtScheme<scalar>::fvcDdtPhiCorr
 (
+    const volScalarField& rho,
+    const volScalarField& U,
+    const surfaceScalarField& phi
+);
+
+template<>
+tmp<surfaceScalarField> boundedDdtScheme<scalar>::fvcDdtUfCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const volScalarField& U,
+    const surfaceScalarField& Uf
+);
+
+template<>
+tmp<surfaceScalarField> boundedDdtScheme<scalar>::fvcDdtPhiCorr
+(
+    const volScalarField& alpha,
     const volScalarField& rho,
     const volScalarField& U,
     const surfaceScalarField& phi

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,11 +161,27 @@ public:
         (
             const volScalarField& rho,
             const VolField<Type>& U,
+            const SurfaceField<Type>& rhoUf
+        );
+
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
+        (
+            const volScalarField& rho,
+            const VolField<Type>& U,
+            const fluxFieldType& phi
+        );
+
+        virtual tmp<fluxFieldType> fvcDdtUfCorr
+        (
+            const volScalarField& alpha,
+            const volScalarField& rho,
+            const VolField<Type>& U,
             const SurfaceField<Type>& Uf
         );
 
         virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
+            const volScalarField& alpha,
             const volScalarField& rho,
             const VolField<Type>& U,
             const fluxFieldType& phi
@@ -215,6 +231,24 @@ tmp<surfaceScalarField> EulerDdtScheme<scalar>::fvcDdtUfCorr
 template<>
 tmp<surfaceScalarField> EulerDdtScheme<scalar>::fvcDdtPhiCorr
 (
+    const volScalarField& rho,
+    const volScalarField& U,
+    const surfaceScalarField& phi
+);
+
+template<>
+tmp<surfaceScalarField> EulerDdtScheme<scalar>::fvcDdtUfCorr
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const volScalarField& U,
+    const surfaceScalarField& Uf
+);
+
+template<>
+tmp<surfaceScalarField> EulerDdtScheme<scalar>::fvcDdtPhiCorr
+(
+    const volScalarField& alpha,
     const volScalarField& rho,
     const volScalarField& U,
     const surfaceScalarField& phi

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -236,11 +236,27 @@ public:
         (
             const volScalarField& rho,
             const VolField<Type>& U,
+            const SurfaceField<Type>& rhoUf
+        ) = 0;
+
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
+        (
+            const volScalarField& rho,
+            const VolField<Type>& U,
+            const fluxFieldType& phi
+        ) = 0;
+
+        virtual tmp<fluxFieldType> fvcDdtUfCorr
+        (
+            const volScalarField& alpha,
+            const volScalarField& rho,
+            const VolField<Type>& U,
             const SurfaceField<Type>& Uf
         ) = 0;
 
         virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
+            const volScalarField& alpha,
             const volScalarField& rho,
             const VolField<Type>& U,
             const fluxFieldType& phi
@@ -329,6 +345,31 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtUfCorr                               \
 (                                                                              \
     const volScalarField& rho,                                                 \
     const volScalarField& U,                                                   \
+    const surfaceScalarField& rhoUf                                            \
+)                                                                              \
+{                                                                              \
+    NotImplemented;                                                            \
+    return surfaceScalarField::null();                                         \
+}                                                                              \
+                                                                               \
+template<>                                                                     \
+tmp<surfaceScalarField> SS<scalar>::fvcDdtPhiCorr                              \
+(                                                                              \
+    const volScalarField& rho,                                                 \
+    const volScalarField& U,                                                   \
+    const surfaceScalarField& phi                                              \
+)                                                                              \
+{                                                                              \
+    NotImplemented;                                                            \
+    return surfaceScalarField::null();                                         \
+}                                                                              \
+                                                                               \
+template<>                                                                     \
+tmp<surfaceScalarField> SS<scalar>::fvcDdtUfCorr                               \
+(                                                                              \
+    const volScalarField& alpha,                                               \
+    const volScalarField& rho,                                                 \
+    const volScalarField& U,                                                   \
     const surfaceScalarField& Uf                                               \
 )                                                                              \
 {                                                                              \
@@ -339,6 +380,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtUfCorr                               \
 template<>                                                                     \
 tmp<surfaceScalarField> SS<scalar>::fvcDdtPhiCorr                              \
 (                                                                              \
+    const volScalarField& alpha,                                               \
     const volScalarField& rho,                                                 \
     const volScalarField& U,                                                   \
     const surfaceScalarField& phi                                              \

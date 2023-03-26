@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -274,17 +274,17 @@ steadyStateDdtScheme<Type>::fvcDdtUfCorr
 (
     const volScalarField& rho,
     const VolField<Type>& U,
-    const SurfaceField<Type>& Uf
+    const SurfaceField<Type>& rhoUf
 )
 {
     return fluxFieldType::New
     (
-        "ddtCorr(" + rho.name() + ',' + U.name() + ',' + Uf.name() + ')',
+        "ddtCorr(" + rho.name() + ',' + U.name() + ',' + rhoUf.name() + ')',
         mesh(),
         dimensioned<typename flux<Type>::type>
         (
             "0",
-            Uf.dimensions()*dimArea/dimTime,
+            rhoUf.dimensions()*dimArea/dimTime,
             Zero
         )
     );
