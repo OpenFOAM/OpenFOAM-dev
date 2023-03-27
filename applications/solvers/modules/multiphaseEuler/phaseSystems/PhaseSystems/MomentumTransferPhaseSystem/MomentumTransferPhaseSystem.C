@@ -1259,14 +1259,20 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::partialElimination
             (
                 interface.phase2(),
                 "KdByA",
-                -rAUs[phase1i]*K,
+               -rAUs[phase1i]
+               *interface.phase2()
+               /max(interface.phase2(), interface.phase2().residualAlpha())
+               *K,
                 KdByAs[phase1i]
             );
             addField
             (
                 interface.phase1(),
                 "KdByA",
-                -rAUs[phase2i]*K,
+               -rAUs[phase2i]
+               *interface.phase1()
+               /max(interface.phase1(), interface.phase1().residualAlpha())
+               *K,
                 KdByAs[phase2i]
             );
 
@@ -1399,18 +1405,32 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::partialEliminationf
             const label phase1i = interface.phase1().index();
             const label phase2i = interface.phase2().index();
 
+            const surfaceScalarField alpha1f
+            (
+                fvc::interpolate(interface.phase1())
+            );
+
+            const surfaceScalarField alpha2f
+            (
+                fvc::interpolate(interface.phase2())
+            );
+
             addField
             (
                 interface.phase2(),
                 "phiKdf",
-                -rAUfs[phase1i]*Kf,
+               -rAUfs[phase1i]
+               *alpha2f/max(alpha2f, interface.phase2().residualAlpha())
+               *Kf,
                 phiKdfs[phase1i]
             );
             addField
             (
                 interface.phase1(),
                 "phiKdf",
-                -rAUfs[phase2i]*Kf,
+               -rAUfs[phase2i]
+               *alpha1f/max(alpha1f, interface.phase1().residualAlpha())
+               *Kf,
                 phiKdfs[phase2i]
             );
         }
