@@ -1029,6 +1029,18 @@ const Foam::fileName& Foam::polyMesh::facesInstance() const
 }
 
 
+Foam::IOobject::writeOption Foam::polyMesh::pointsWriteOpt() const
+{
+    return points_.writeOpt();
+}
+
+
+Foam::IOobject::writeOption Foam::polyMesh::facesWriteOpt() const
+{
+    return faces_.writeOpt();
+}
+
+
 const Foam::Vector<Foam::label>& Foam::polyMesh::geometricD() const
 {
     if (geometricD_.x() == 0)

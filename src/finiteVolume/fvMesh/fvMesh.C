@@ -1684,7 +1684,7 @@ bool Foam::fvMesh::writeObject
 {
     bool ok = true;
 
-    if (!conformal())
+    if (!conformal() && pointsWriteOpt() == IOobject::AUTO_WRITE)
     {
         // Create a full surface field with the polyFacesBf boundary field to
         // write to disk. Make the internal field uniform to save disk space.
