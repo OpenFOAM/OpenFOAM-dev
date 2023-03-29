@@ -28,6 +28,10 @@ Description
     This fvModel applies a mass source to the continuity equation and to all
     field equations.
 
+    If the mass flow rate is positive then user-supplied fixed property values
+    are introduced to the field equations. If the mass flow rate is negative
+    then properties are removed at their current value.
+
 Usage
     Example usage:
     \verbatim
@@ -50,10 +54,10 @@ Usage
     }
     \endverbatim
 
-    Values should be provided for all solved for fields. Warnings will be
-    issued if values are not provided for fields for which transport equations
-    are solved. Warnings will also be issued if values are provided for fields
-    which are not solved for.
+    If the mass flow rate is positive then values should be provided for all
+    solved for fields. Warnings will be issued if values are not provided for
+    fields for which transport equations are solved. Warnings will also be
+    issued if values are provided for fields which are not solved for.
 
 SourceFiles
     massSource.C

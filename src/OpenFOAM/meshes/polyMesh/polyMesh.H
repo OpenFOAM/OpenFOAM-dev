@@ -417,11 +417,17 @@ public:
             //- Return the current instance directory for faces
             const fileName& facesInstance() const;
 
-            //- Set the instance for mesh files
-            void setInstance(const fileName&);
+            //- Return the points write option
+            IOobject::writeOption pointsWriteOpt() const;
+
+            //- Return the points write option
+            IOobject::writeOption facesWriteOpt() const;
 
             //- Set the instance for the points files
             void setPointsInstance(const fileName&);
+
+            //- Set the instance for mesh files
+            void setInstance(const fileName&);
 
 
         // Access
