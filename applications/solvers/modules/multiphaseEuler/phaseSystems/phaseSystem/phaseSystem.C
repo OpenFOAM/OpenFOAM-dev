@@ -774,17 +774,65 @@ void Foam::phaseSystem::correctPhi
         phi_ += alphafs[phasei]*(mesh_.Sf() & phase.UfRef());
     }
 
-    CorrectPhi
-    (
-        phi_,
-        movingPhases()[0].U(),
-        p_rgh,
-        // surfaceScalarField("rAUf", fvc::interpolate(rAU())),
-        dimensionedScalar(dimTime/dimDensity, 1),
-        divU(),
-        pressureReference,
-        pimple
-    );
+    if (incompressible())
+    {
+        if (divU.valid())
+        {
+            CorrectPhi
+            (
+                phi_,
+                movingPhases()[0].U(),
+                p_rgh,
+                dimensionedScalar(dimTime/dimDensity, 1),
+                divU(),
+                pressureReference,
+                pimple
+            );
+        }
+        else
+        {
+            CorrectPhi
+            (
+                phi_,
+                movingPhases()[0].U(),
+                p_rgh,
+                dimensionedScalar(dimTime/dimDensity, 1),
+                geometricZeroField(),
+                pressureReference,
+                pimple
+            );
+        }
+    }
+    else
+    {
+        volScalarField psi
+        (
+            volScalarField::New
+            (
+                "psi",
+                mesh_,
+                dimensionedScalar(dimless/dimPressure, 0)
+            )
+        );
+
+        forAll(phases(), phasei)
+        {
+            phaseModel& phase = phases()[phasei];
+            const volScalarField& alpha = phase;
+
+            psi += alpha*phase.thermo().psi()/phase.thermo().rho();
+        }
+
+        CorrectPhi
+        (
+            phi_,
+            p_rgh,
+            psi,
+            dimensionedScalar(dimTime/dimDensity, 1),
+            divU(),
+            pimple
+        );
+    }
 
     // Make the flux relative to the mesh motion
     fvc::makeRelative(phi_, movingPhases()[0].U());

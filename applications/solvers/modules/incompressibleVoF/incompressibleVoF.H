@@ -112,11 +112,24 @@ protected:
             return pressureReference_;
         }
 
+        //- The flow is incompressible
+        virtual bool incompressible() const
+        {
+            return true;
+        }
+
         //- Is the flow divergent?
         //  i.e. includes phase-fraction sources
-        virtual bool divergent()
+        virtual bool divergent() const
         {
             return fvModels().addsSupToField(alpha1.name());
+        }
+
+        //- Return the mixture compressibility/density
+        //  Not required for incompressible fluids
+        virtual tmp<volScalarField> psiByRho() const
+        {
+            return tmp<volScalarField>(nullptr);
         }
 
         //- Calculate the alpha equation sources

@@ -148,10 +148,25 @@ protected:
             return pressureReference_;
         }
 
-        //- Compressible flow is divergent
-        virtual bool divergent()
+        //- The fluid is incompressible if both phases are incompressible
+        virtual bool incompressible() const
         {
-            return true;
+            return mixture.incompressible();
+        }
+
+        //- Compressible flow is divergent
+        virtual bool divergent() const
+        {
+            return
+               !incompressible()
+             || fvModels().addsSupToField(alpha1.name());
+        }
+
+        //- Return the mixture compressibility/density
+        //  Used by CorrectPhi for compressible mixtures following mesh change
+        virtual tmp<volScalarField> psiByRho() const
+        {
+            return mixture.psiByRho();
         }
 
         //- Calculate the alpha equation sources

@@ -40,6 +40,7 @@ void Foam::solvers::multiphaseEuler::moveMesh()
         if
         (
             (correctPhi || mesh.topoChanged())
+      // && divergent()
          && !divU.valid()
         )
         {

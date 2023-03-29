@@ -203,6 +203,17 @@ Foam::tmp<Foam::scalarField> Foam::compressibleTwoPhaseVoFMixture::nu
 }
 
 
+Foam::tmp<Foam::volScalarField>
+Foam::compressibleTwoPhaseVoFMixture::psiByRho() const
+{
+    return
+    (
+        alpha1()*thermo1_->psi()/thermo1_->rho()
+      + alpha2()*thermo2_->psi()/thermo2_->rho()
+    );
+}
+
+
 bool Foam::compressibleTwoPhaseVoFMixture::read()
 {
     if (twoPhaseVoFMixture::read())

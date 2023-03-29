@@ -25,8 +25,7 @@ License
 
 #include "multiphaseVoFSolver.H"
 #include "localEulerDdtScheme.H"
-#include "CorrectPhi.H"
-#include "geometricZeroField.H"
+#include "fvcAverage.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

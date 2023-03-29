@@ -24,9 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compressibleMultiphaseVoF.H"
-#include "CorrectPhi.H"
 #include "geometricZeroField.H"
 #include "fvcDdt.H"
+#include "fvcDiv.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

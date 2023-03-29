@@ -25,8 +25,9 @@ License
 
 #include "VoFSolver.H"
 #include "localEulerDdtScheme.H"
-#include "CorrectPhi.H"
-#include "geometricZeroField.H"
+#include "linear.H"
+#include "fvcDiv.H"
+#include "fvcMeshPhi.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

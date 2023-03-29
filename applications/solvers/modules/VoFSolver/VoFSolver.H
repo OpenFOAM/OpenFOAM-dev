@@ -169,9 +169,16 @@ protected:
         //- Return the pressure reference
         virtual const Foam::pressureReference& pressureReference() const = 0;
 
+        //- Is the flow incompressible?
+        virtual bool incompressible() const = 0;
+
         //- Is the flow divergent?
         //  i.e. compressible or include phase-fraction sources
-        virtual bool divergent() = 0;
+        virtual bool divergent() const = 0;
+
+        //- Return the mixture compressibility/density
+        //  Used by CorrectPhi for compressible mixtures following mesh change
+        virtual tmp<volScalarField> psiByRho() const = 0;
 
         //- Return the momentum equation stress term
         virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U) = 0;

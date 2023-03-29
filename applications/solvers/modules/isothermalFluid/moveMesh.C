@@ -61,7 +61,6 @@ void Foam::solvers::isothermalFluid::moveMesh()
                 (
                     phi,
                     buoyancy.valid() ? p_rgh : p,
-                    rho,
                     thermo.psi(),
                     dimensionedScalar("rAUf", dimTime, 1),
                     divrhoU(),

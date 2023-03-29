@@ -111,11 +111,24 @@ protected:
             return pressureReference_;
         }
 
-        //- Is the flow divergent?
-        //  i.e. includes phase-fraction sources
-        virtual bool divergent()
+        //- The flow is incompressible
+        virtual bool incompressible() const
+        {
+            return true;
+        }
+
+        //- The flow is not incompressible and hence not divergent
+        //  Mass sources are not currently supported
+        virtual bool divergent() const
         {
             return false;
+        }
+
+        //- Return the mixture compressibility/density
+        //  Not required for incompressible fluids
+        virtual tmp<volScalarField> psiByRho() const
+        {
+            return tmp<volScalarField>(nullptr);
         }
 
         //- Return the momentum equation stress term

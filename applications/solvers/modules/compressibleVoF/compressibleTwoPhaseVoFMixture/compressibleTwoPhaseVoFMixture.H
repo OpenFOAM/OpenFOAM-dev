@@ -161,11 +161,22 @@ public:
             return thermo2_->rho();
         }
 
+        //- The fluid is incompressible if both phases are incompressible
+        bool incompressible() const
+        {
+            return
+                thermo1_->incompressible()
+             && thermo2_->incompressible();
+        }
+
         //- Return mixture density [kg/m^3]
         virtual const volScalarField& rho() const
         {
             return rho_;
         }
+
+        //- Return the mixture compressibility/density
+        virtual tmp<volScalarField> psiByRho() const;
 
         //- Correct the thermodynamics of each phase
         virtual void correctThermo();

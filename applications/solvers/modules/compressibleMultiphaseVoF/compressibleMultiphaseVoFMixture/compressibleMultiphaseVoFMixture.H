@@ -104,6 +104,9 @@ public:
             return rho_;
         }
 
+        //- Return true if all phases are incompressible
+        bool incompressible() const;
+
         //- Return the kinematic laminar viscosity
         virtual tmp<volScalarField> nu() const;
 
@@ -112,6 +115,9 @@ public:
 
         //- Return the face-interpolated dynamic laminar viscosity
         tmp<surfaceScalarField> nuf() const;
+
+        //- Return the mixture compressibility/density
+        virtual tmp<volScalarField> psiByRho() const;
 
         //- Correct the thermodynamics of each phase
         virtual void correctThermo();

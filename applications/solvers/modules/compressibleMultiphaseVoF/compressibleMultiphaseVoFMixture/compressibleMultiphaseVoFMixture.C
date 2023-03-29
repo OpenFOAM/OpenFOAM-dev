@@ -67,6 +67,20 @@ Foam::compressibleMultiphaseVoFMixture::compressibleMultiphaseVoFMixture
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+bool Foam::compressibleMultiphaseVoFMixture::incompressible() const
+{
+    bool incompressible = true;
+
+    forAll(phases_, phasei)
+    {
+        incompressible =
+            incompressible && phases_[phasei].thermo().incompressible();
+    }
+
+    return incompressible;
+}
+
+
 Foam::tmp<Foam::volScalarField>
 Foam::compressibleMultiphaseVoFMixture::nu() const
 {
@@ -100,6 +114,25 @@ Foam::tmp<Foam::scalarField> Foam::compressibleMultiphaseVoFMixture::nu
     }
 
     return mu/rho_.boundaryField()[patchi];
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::compressibleMultiphaseVoFMixture::psiByRho() const
+{
+    tmp<volScalarField> tpsiByRho
+    (
+        phases_[0]*phases_[0].thermo().psi()/phases_[0].thermo().rho()
+    );
+
+    for (label phasei=1; phasei<phases_.size(); phasei++)
+    {
+        tpsiByRho.ref() +=
+            phases_[phasei]*phases_[phasei].thermo().psi()
+           /phases_[phasei].thermo().rho();
+    }
+
+    return tpsiByRho;
 }
 
 

@@ -25,9 +25,10 @@ solvers
     p_rgh
     {
         solver          GAMG;
+        smoother        DIC;
+
         tolerance       1e-7;
         relTol          0.01;
-        smoother        GaussSeidel;
     }
 
     p_rghFinal
@@ -36,20 +37,30 @@ solvers
         preconditioner
         {
             preconditioner  GAMG;
+            smoother        GaussSeidel;
+
             tolerance       1e-7;
             relTol          0;
             nVcycles        2;
-            smoother        GaussSeidel;
         }
         tolerance       1e-7;
         relTol          0;
-        maxIter         30;
+        maxIter         50;
     }
 
     "pcorr.*"
     {
         $p_rghFinal;
-        tolerance       1e-5;
+        tolerance       0.001;
+        relTol          0;
+    }
+
+    MeshPhi
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+
+        tolerance       1e-2;
         relTol          0;
     }
 
@@ -57,6 +68,7 @@ solvers
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
+
         tolerance       1e-5;
         relTol          0;
         minIter         1;
@@ -66,6 +78,7 @@ solvers
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
+
         tolerance       1e-8;
         relTol          0;
         minIter         1;
@@ -79,7 +92,7 @@ PIMPLE
     nCorrectors         3;
     nNonOrthogonalCorrectors 0;
 
-    correctPhi          no;
+    correctPhi          yes;
     correctMeshPhi      no;
 }
 

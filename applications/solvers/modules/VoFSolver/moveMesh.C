@@ -65,29 +65,44 @@ void Foam::solvers::VoFSolver::moveMesh()
 
                 correctUphiBCs(U_, phi, true);
 
-                if (divU.valid())
+                if (incompressible())
                 {
-                    CorrectPhi
-                    (
-                        phi,
-                        U,
-                        p_rgh,
-                        surfaceScalarField("rAUf", fvc::interpolate(rAU())),
-                        divU(),
-                        pressureReference(),
-                        pimple
-                    );
+                    if (divU.valid())
+                    {
+                        CorrectPhi
+                        (
+                            phi,
+                            U,
+                            p_rgh,
+                            surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+                            divU(),
+                            pressureReference(),
+                            pimple
+                        );
+                    }
+                    else
+                    {
+                        CorrectPhi
+                        (
+                            phi,
+                            U,
+                            p_rgh,
+                            surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+                            geometricZeroField(),
+                            pressureReference(),
+                            pimple
+                        );
+                    }
                 }
                 else
                 {
                     CorrectPhi
                     (
                         phi,
-                        U,
                         p_rgh,
+                        psiByRho(),
                         surfaceScalarField("rAUf", fvc::interpolate(rAU())),
-                        geometricZeroField(),
-                        pressureReference(),
+                        divU(),
                         pimple
                     );
                 }
