@@ -1,0 +1,6 @@
+type multiNormal;
+min 0.001;
+max 0.019;
+mu (0.005 0.011 0.015);
+sigma (0.002 0.001 0.0015);
+strength (2 1 3);

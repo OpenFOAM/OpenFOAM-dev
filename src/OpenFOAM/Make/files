@@ -721,4 +721,16 @@ algorithms/polygonTriangulate/polygonTriangulate.C
 meshes/data/data.C
 meshes/Residuals/residuals.C
 
+distributions/distribution/distribution.C
+distributions/distribution/distributionNew.C
+distributions/unintegrable/unintegrable.C
+distributions/exponential/exponential.C
+distributions/fixedValue/fixedValue.C
+distributions/multiNormal/multiNormal.C
+distributions/normal/normal.C
+distributions/RosinRammler/RosinRammler.C
+distributions/tabulatedCumulative/tabulatedCumulative.C
+distributions/tabulatedDensity/tabulatedDensity.C
+distributions/uniform/uniform.C
+
 LIB = $(FOAM_LIBBIN)/libOpenFOAM

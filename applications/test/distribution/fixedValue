@@ -1,0 +1,2 @@
+type fixedValue;
+value 1e-2;

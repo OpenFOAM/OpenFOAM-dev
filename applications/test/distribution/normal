@@ -1,0 +1,5 @@
+type normal;
+min 0.001;
+max 0.019;
+mu 0.011;
+sigma 0.003;

@@ -21,72 +21,50 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Application
-    pdfPlot
-
-Description
-    Generates a graph of a probability distribution function.
-
 \*---------------------------------------------------------------------------*/
 
-#include "argList.H"
-#include "Time.H"
 #include "distribution.H"
-#include "setWriter.H"
-#include "writeFile.H"
-#include "OFstream.H"
 
-using namespace Foam;
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-int main(int argc, char *argv[])
+Foam::autoPtr<Foam::distribution> Foam::distribution::New
+(
+    const dictionary& dict,
+    Random& rndGen,
+    const label sampleQ
+)
 {
-    #include "setRootCase.H"
-    #include "createTime.H"
-    #include "createFields.H"
+    const word distributionType(dict.lookup("type"));
 
-    label iCheck = 100;
-    for (label i=1; i<=nSamples; i++)
+    Info<< "Selecting " << typeName << " type " << distributionType << endl;
+
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(distributionType);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        scalar ps = p->sample();
-        label n = label((ps - xMin)*nIntervals/(xMax - xMin));
-        samples[n]++;
-
-        if (writeData)
-        {
-            filePtr() << ps << nl;
-        }
-
-        if (i % iCheck == 0)
-        {
-            Info<< "    processed " << i << " samples" << endl;
-
-            if (i == 10*iCheck)
-            {
-                iCheck *= 10;
-            }
-        }
+        FatalErrorInFunction
+            << "Unknown " << typeName << " type " << distributionType
+            << nl << nl << "Valid " << typeName << " types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
 
-    scalarField x(nIntervals);
-    forAll(x, i)
-    {
-        x[i] = xMin + i*(xMax - xMin)/(nIntervals - 1);
-    }
+    Info<< incrIndent;
 
-    setWriter::New(runTime.graphFormat())->write
+    autoPtr<distribution> distributionPtr
     (
-        pdfPath,
-        args.executable(),
-        coordSet(true, "x", x),
-        p->type(),
-        samples
+        cstrIter()
+        (
+            dict.optionalSubDict(distributionType + "Distribution"),
+            rndGen,
+            sampleQ
+        )
     );
 
-    Info<< "End\n" << endl;
+    Info<< decrIndent;
 
-    return 0;
+    return distributionPtr;
 }
 
 

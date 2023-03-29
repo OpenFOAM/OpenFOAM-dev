@@ -1,0 +1,4 @@
+type exponential;
+min 0.01;
+max 0.5;
+lambda 3;

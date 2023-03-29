@@ -26,17 +26,18 @@
 
     Random rndGen(label(0));
 
-    autoPtr<distributionModel> p
+    autoPtr<distribution> p
     (
-        distributionModel::New
+        distribution::New
         (
             pdfDictionary,
-            rndGen
+            rndGen,
+            0
         )
     );
 
-    const scalar xMin = p->minValue();
-    const scalar xMax = p->maxValue();
+    const scalar xMin = p->min();
+    const scalar xMax = p->max();
 
     autoPtr<OFstream> filePtr(nullptr);
 
