@@ -1089,10 +1089,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::alphaDByAf
 
 template<class BasePhaseSystem>
 Foam::PtrList<Foam::surfaceScalarField>
-Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrs
-(
-    const bool includeVirtualMass
-) const
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrs() const
 {
     PtrList<surfaceScalarField> ddtCorrs(this->phaseModels_.size());
 

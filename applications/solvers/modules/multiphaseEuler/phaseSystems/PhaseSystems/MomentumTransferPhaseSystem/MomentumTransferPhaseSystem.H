@@ -241,10 +241,7 @@ public:
         //- Return the flux corrections for the cell-based algorithm. These
         //  depend on phase mass/volume fluxes, and must therefore be evaluated
         //  inside the corrector loop.
-        virtual PtrList<surfaceScalarField> ddtCorrs
-        (
-            const bool includeVirtualMass = false
-        ) const;
+        virtual PtrList<surfaceScalarField> ddtCorrs() const;
 
         //- Set the cell and faces drag correction fields
         virtual void dragCorrs

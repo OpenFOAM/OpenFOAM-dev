@@ -560,10 +560,7 @@ public:
             ) const = 0;
 
             //- Return the flux corrections for the cell-based algorithm
-            virtual PtrList<surfaceScalarField> ddtCorrs
-            (
-                const bool includeVirtualMass = false
-            ) const = 0;
+            virtual PtrList<surfaceScalarField> ddtCorrs() const = 0;
 
             //- Set the cell and faces drag correction fields
             virtual void dragCorrs
