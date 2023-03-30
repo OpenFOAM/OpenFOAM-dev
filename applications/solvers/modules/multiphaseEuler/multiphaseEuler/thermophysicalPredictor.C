@@ -121,9 +121,10 @@ void Foam::solvers::multiphaseEuler::thermophysicalPredictor()
             compositionPredictor();
             energyPredictor();
 
-            forAll(phases, phasei)
+            forAll(fluid.anisothermalPhases(), anisothermalPhasei)
             {
-                phaseModel& phase = phases[phasei];
+                phaseModel& phase =
+                    fluid.anisothermalPhases()[anisothermalPhasei];
 
                 Info<< phase.name() << " min/max T "
                     << min(phase.thermo().T()).value()
