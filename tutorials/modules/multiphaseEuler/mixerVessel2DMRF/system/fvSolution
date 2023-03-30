@@ -81,6 +81,11 @@ PIMPLE
 
     pRefCell        0;
     pRefValue       0;
+
+    faceMomentum        no;
+    VmDdtCorrection     yes;
+    dragCorrection      yes;
+    partialElimination  no;
 }
 
 relaxationFactors

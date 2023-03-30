@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,14 +58,12 @@ Foam::virtualMassModels::dispersedVirtualMassModel::Ki() const
 Foam::tmp<Foam::volScalarField>
 Foam::virtualMassModels::dispersedVirtualMassModel::K() const
 {
-    return interface_.dispersed()*Ki();
-}
-
-
-Foam::tmp<Foam::surfaceScalarField>
-Foam::virtualMassModels::dispersedVirtualMassModel::Kf() const
-{
-    return fvc::interpolate(interface_.dispersed())*fvc::interpolate(Ki());
+    return
+        max
+        (
+            interface_.dispersed(),
+            interface_.dispersed().residualAlpha()
+        )*Ki();
 }
 
 

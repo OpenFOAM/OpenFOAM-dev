@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,7 +206,6 @@ SourceFiles
 
 #include "sizeGroup.H"
 #include "phaseSystem.H"
-#include "pimpleNoLoopControl.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "HashPtrTable.H"
 #include "Pair.H"
@@ -232,8 +231,6 @@ class populationBalanceModel
 :
     public regIOobject
 {
-private:
-
     // Private Data
 
         //- Reference to the phaseSystem
@@ -250,9 +247,6 @@ private:
 
         //- Dictionary
         dictionary dict_;
-
-        //- Reference to pimpleNoLoopControl
-        const pimpleNoLoopControl& pimple_;
 
         //- Continuous phase
         const phaseModel& continuousPhase_;
@@ -437,9 +431,6 @@ public:
 
         //- Return populationBalanceCoeffs dictionary
         inline const dictionary& dict() const;
-
-        //- Return pimpleNoLoopControl
-        const pimpleNoLoopControl& pimple() const;
 
         //- Return the number of corrections
         inline label nCorr() const;

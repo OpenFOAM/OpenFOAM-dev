@@ -33,7 +33,7 @@ water
 oil
 {
     type            pureIsothermalPhaseModel;
-    diameterModel constant;
+    diameterModel   constant;
     constantCoeffs
     {
         d               1e-3;
@@ -45,7 +45,7 @@ oil
 mercury
 {
     type            pureIsothermalPhaseModel;
-    diameterModel constant;
+    diameterModel   constant;
     constantCoeffs
     {
         d               1e-3;

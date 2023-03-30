@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,18 +66,6 @@ Foam::virtualMassModels::noVirtualMass::K() const
     return volScalarField::New
     (
         "K",
-        interface_.mesh(),
-        dimensionedScalar(dimK, 0)
-    );
-}
-
-
-Foam::tmp<Foam::surfaceScalarField>
-Foam::virtualMassModels::noVirtualMass::Kf() const
-{
-    return surfaceScalarField::New
-    (
-        "Kf",
         interface_.mesh(),
         dimensionedScalar(dimK, 0)
     );

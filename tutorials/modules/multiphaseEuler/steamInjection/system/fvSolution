@@ -24,10 +24,12 @@ solvers
 
     p_rgh
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-10;
-        relTol          0.001;
+        solver          GAMG;
+        smoother        DIC;
+
+        tolerance       1e-8;
+        relTol          0.01;
+        maxIter         20;
     }
 
     p_rghFinal
@@ -38,50 +40,53 @@ solvers
 
     "U.*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
+
         tolerance       1e-6;
         relTol          0;
-        minIter         1;
     }
 
     "(e|h).*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-6;
+        solver          PBiCGStab;
+        preconditioner  DILU;
+
+        tolerance       1e-8;
         relTol          0;
-        minIter         1;
         maxIter         20;
     }
 
     "(k|epsilon).*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
+
         tolerance       1e-8;
         relTol          0;
-        minIter         1;
     }
 
     "Yi.*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-6;
+        solver          PBiCGStab;
+        preconditioner  DILU;
+
+        tolerance       1e-8;
         relTol          0;
-        minIter         1;
     }
 }
 
 PIMPLE
 {
-    nOuterCorrectors 3;
-    nCorrectors      1;
+    nOuterCorrectors    2;
+    nCorrectors         2;
     nNonOrthogonalCorrectors 0;
-    nEnergyCorrectors 2;
+    nEnergyCorrectors   2;
 
-    faceMomentum    yes;
+    faceMomentum        no;
+    VmDdtCorrection     yes;
+    dragCorrection      yes;
+    partialElimination  yes;
 }
 
 relaxationFactors

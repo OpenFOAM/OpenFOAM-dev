@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,13 +61,6 @@ inline const Foam::dictionary&
 Foam::diameterModels::populationBalanceModel::dict() const
 {
     return dict_;
-}
-
-
-inline const Foam::pimpleNoLoopControl&
-Foam::diameterModels::populationBalanceModel::pimple() const
-{
-    return pimple_;
 }
 
 

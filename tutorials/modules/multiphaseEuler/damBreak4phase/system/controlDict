@@ -34,7 +34,7 @@ writeInterval   0.02;
 
 purgeWrite      0;
 
-writeFormat     binary;
+writeFormat     ascii;
 
 writePrecision  6;
 
@@ -53,5 +53,9 @@ maxAlphaCo      0.5;
 
 maxDeltaT       1;
 
+functions
+{
+    #includeFunc phaseMap
+}
 
 // ************************************************************************* //

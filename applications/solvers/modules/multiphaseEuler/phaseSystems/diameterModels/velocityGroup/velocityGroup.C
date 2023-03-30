@@ -212,7 +212,7 @@ void Foam::diameterModels::velocityGroup::correct()
     const populationBalanceModel& popBal =
         phase().mesh().lookupObject<populationBalanceModel>(popBalName_);
 
-    if (!popBal.solveOnFinalIterOnly() || popBal.pimple().finalIter())
+    if (!popBal.solveOnFinalIterOnly() || popBal.fluid().pimple().finalIter())
     {
         forAll(sizeGroups_, i)
         {

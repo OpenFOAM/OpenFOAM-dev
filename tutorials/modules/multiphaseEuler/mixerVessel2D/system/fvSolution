@@ -94,6 +94,11 @@ PIMPLE
 
     correctPhi          yes;
     correctMeshPhi      no;
+
+    faceMomentum        no;
+    VmDdtCorrection     yes;
+    dragCorrection      yes;
+    partialElimination  no;
 }
 
 relaxationFactors

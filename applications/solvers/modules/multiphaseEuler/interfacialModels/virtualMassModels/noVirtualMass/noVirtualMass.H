@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,10 +85,6 @@ public:
         //- Return the virtual mass coefficient K
         //  used in the momentum equations
         virtual tmp<volScalarField> K() const;
-
-        //- Return the virtual mass coefficient Kf
-        //  used in the face-momentum equations
-        virtual tmp<surfaceScalarField> Kf() const;
 };
 
 

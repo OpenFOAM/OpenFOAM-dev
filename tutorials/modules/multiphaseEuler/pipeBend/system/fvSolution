@@ -53,19 +53,19 @@ solvers
 
     "(k|epsilon).*"
     {
-      solver            PBiCGStab;
-      preconditioner    DILU;
-      tolerance         1e-5;
-      relTol            0;
-      minIter           1;
+        solver            PBiCGStab;
+        preconditioner    DILU;
+        tolerance         1e-5;
+        relTol            0;
+        minIter           1;
     }
 
     "f.*"
     {
-      solver            PBiCGStab;
-      preconditioner    DILU;
-      tolerance         1e-6;
-      relTol            0;
+        solver            PBiCGStab;
+        preconditioner    DILU;
+        tolerance         1e-6;
+        relTol            0;
     }
 
     agglomerates
@@ -85,6 +85,11 @@ PIMPLE
     nNonOrthogonalCorrectors 0;
     alphaSpreadMin           5e-4;
     alphaSpreadMax           0.9995;
+
+    faceMomentum        no;
+    VmDdtCorrection     yes;
+    dragCorrection      yes;
+    partialElimination  no;
 }
 
 relaxationFactors

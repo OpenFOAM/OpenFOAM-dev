@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,8 +81,8 @@ public:
         //- Coefficient dimensions
         static const dimensionSet dimK;
 
-        //- Does this model require correcting on fixed flux boundaries?
-        static const bool correctFixedFluxBCs = true;
+        //- This model should not be set to 0 on fixed flux boundaries
+        static const bool correctFixedFluxBCs = false;
 
 
     // Constructors
@@ -118,10 +118,6 @@ public:
         //    ddt(alpha1*rho1*U1) + ... = ... K*(DU1_Dt - DU2_Dt)
         //    ddt(alpha2*rho2*U2) + ... = ... K*(DU1_Dt - DU2_Dt)
         virtual tmp<volScalarField> K() const = 0;
-
-        //- Return the virtual mass coefficient Kf
-        //  used in the face-momentum equations
-        virtual tmp<surfaceScalarField> Kf() const = 0;
 
         // Dummy write for regIOobject
         bool writeData(Ostream& os) const;
@@ -159,9 +155,6 @@ public:
 
         //- Return the lift coefficient K
         tmp<volScalarField> K() const;
-
-        //- Return the lift coefficient Kf
-        tmp<surfaceScalarField> Kf() const;
 };
 
 

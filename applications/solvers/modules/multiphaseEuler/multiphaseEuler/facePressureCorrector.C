@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
     rAUfs.clear();
     rAUfs.setSize(phases.size());
     {
-        PtrList<surfaceScalarField> AFfs(fluid.AFfs());
+        PtrList<surfaceScalarField> KdVmfs(fluid.KdVmfs());
 
         forAll(fluid.movingPhases(), movingPhasei)
         {
@@ -87,7 +87,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
                    /(
                         byDt(alphaRho0fs[phase.index()])
                       + fvc::interpolate(UEqns[phase.index()].A())
-                      + AFfs[phase.index()]
+                      + KdVmfs[phase.index()]
                     )
                 )
             );
@@ -111,7 +111,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
     }
 
     // Explicit force fluxes
-    PtrList<surfaceScalarField> phiFfs(fluid.phiFfs(rAUfs));
+    PtrList<surfaceScalarField> Ffs(fluid.Ffs());
 
     // Mass transfer rates
     PtrList<volScalarField> dmdts(fluid.dmdts());
@@ -155,9 +155,9 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
                     ).ptr()
                 );
 
-                if (phiFfs.set(phasei))
+                if (Ffs.set(phasei))
                 {
-                    phigFs[phasei] += phiFfs[phasei];
+                    phigFs[phasei] += rAUfs[phasei]*Ffs[phasei];
                 }
             }
         }
@@ -193,13 +193,13 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
         fluid.fillFields("phiHbyA", dimForce/dimDensity/dimVelocity, phiHbyAs);
 
         // Add explicit drag forces and fluxes
-        PtrList<surfaceScalarField> phiKdPhifs(fluid.phiKdPhifs(rAUfs));
+        PtrList<surfaceScalarField> KdPhifs(fluid.KdPhifs());
 
         forAll(phases, phasei)
         {
-            if (phiKdPhifs.set(phasei))
+            if (KdPhifs.set(phasei))
             {
-                phiHbyAs[phasei] -= phiKdPhifs[phasei];
+                phiHbyAs[phasei] -= rAUfs[phasei]*KdPhifs[phasei];
             }
         }
 
@@ -330,7 +330,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
 
                 if (partialElimination)
                 {
-                    fluid.partialEliminationf(rAUfs, alphafs, phiKdPhifs);
+                    fluid.partialEliminationf(rAUfs, alphafs, KdPhifs);
                 }
                 else
                 {

@@ -20,11 +20,11 @@ internalField       uniform 360;
 
 boundaryField
 {
-    walls
+    inlet
     {
-        type            fixedValue;
-        value           $internalField;
+        type             zeroGradient;
     }
+
     outlet
     {
         type            inletOutlet;
@@ -32,9 +32,11 @@ boundaryField
         inletValue      $internalField;
         value           $internalField;
     }
-    inlet
+
+    walls
     {
-        type             zeroGradient;
+        type            fixedValue;
+        value           $internalField;
     }
 }
 

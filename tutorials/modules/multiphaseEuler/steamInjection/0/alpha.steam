@@ -23,8 +23,9 @@ boundaryField
     inlet
     {
         type            fixedValue;
-        value           uniform 0.;
+        value           uniform 0;
     }
+
     outlet
     {
         type            inletOutlet;
@@ -32,13 +33,10 @@ boundaryField
         inletValue      uniform 0;
         value           uniform 0;
     }
+
     walls
     {
         type            zeroGradient;
-    }
-    defaultFaces
-    {
-        type            empty;
     }
 }
 

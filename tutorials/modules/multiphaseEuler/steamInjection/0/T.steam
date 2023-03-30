@@ -20,10 +20,12 @@ internalField       uniform 372.76;
 
 boundaryField
 {
-    walls
+    inlet
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           $internalField;
     }
+
     outlet
     {
         type            inletOutlet;
@@ -31,10 +33,10 @@ boundaryField
         inletValue      $internalField;
         value           $internalField;
     }
-    inlet
+
+    walls
     {
-        type            fixedValue;
-        value           $internalField;
+        type            zeroGradient;
     }
 }
 

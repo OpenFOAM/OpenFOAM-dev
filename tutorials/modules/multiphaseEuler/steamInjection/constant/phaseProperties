@@ -51,13 +51,7 @@ blending
 }
 
 surfaceTension
-{
-    steam_water
-    {
-        type            constant;
-        sigma           0.07;
-    }
-}
+{}
 
 saturationTemperature
 {
@@ -90,13 +84,13 @@ heatTransfer
     steam_dispersedIn_water_inThe_steam
     {
         type spherical;
-        residualAlpha 1e-4;
+        residualAlpha 1e-3;
     }
 
     steam_dispersedIn_water_inThe_water
     {
         type RanzMarshall;
-        residualAlpha 1e-4;
+        residualAlpha 1e-3;
     }
 }
 

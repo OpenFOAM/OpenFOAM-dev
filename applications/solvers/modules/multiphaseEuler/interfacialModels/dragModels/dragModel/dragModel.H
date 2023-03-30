@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,8 +46,6 @@ SourceFiles
 namespace Foam
 {
 
-class swarmCorrection;
-
 /*---------------------------------------------------------------------------*\
                           Class dragModel Declaration
 \*---------------------------------------------------------------------------*/
@@ -83,8 +81,8 @@ public:
         //- Coefficient dimensions
         static const dimensionSet dimK;
 
-        //- Does this model require correcting on fixed flux boundaries?
-        static const bool correctFixedFluxBCs = true;
+        //- This model MUST NOT be set to 0 on fixed flux boundaries
+        static const bool correctFixedFluxBCs = false;
 
 
     // Constructors

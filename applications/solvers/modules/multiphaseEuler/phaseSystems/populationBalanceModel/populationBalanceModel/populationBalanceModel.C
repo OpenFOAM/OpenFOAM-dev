@@ -797,7 +797,6 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
     (
         fluid_.subDict("populationBalanceCoeffs").subDict(name_)
     ),
-    pimple_(mesh_.lookupObject<pimpleNoLoopControl>("solutionControl")),
     continuousPhase_
     (
         mesh_.lookupObject<phaseModel>
@@ -1130,7 +1129,7 @@ Foam::diameterModels::populationBalanceModel::continuousTurbulence() const
 
 void Foam::diameterModels::populationBalanceModel::solve()
 {
-    if (!solveOnFinalIterOnly() || pimple_.finalIter())
+    if (!solveOnFinalIterOnly() || fluid_.pimple().finalIter())
     {
         const label nCorr = this->nCorr();
         const scalar tolerance =

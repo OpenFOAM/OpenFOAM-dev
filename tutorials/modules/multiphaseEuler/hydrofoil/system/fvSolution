@@ -81,6 +81,9 @@ PIMPLE
     transportCorrectionFinal yes;
 
     faceMomentum        no;
+    VmDdtCorrection     no;
+    dragCorrection      yes;
+    partialElimination  no;
 }
 
 cache

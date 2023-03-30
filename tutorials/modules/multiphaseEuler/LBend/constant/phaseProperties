@@ -69,13 +69,7 @@ drag
 }
 
 virtualMass
-{
-    solids_dispersedIn_gas
-    {
-        type            constantCoefficient;
-        Cvm             0;
-    }
-}
+{}
 
 heatTransfer
 {

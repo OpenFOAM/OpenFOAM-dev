@@ -52,6 +52,9 @@ void Foam::solvers::multiphaseEuler::readControls()
     faceMomentum =
         pimple.dict().lookupOrDefault<Switch>("faceMomentum", false);
 
+    dragCorrection =
+        pimple.dict().lookupOrDefault<Switch>("dragCorrection", false);
+
     partialElimination =
         pimple.dict().lookupOrDefault<Switch>("partialElimination", false);
 
@@ -95,6 +98,11 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
     faceMomentum
     (
         pimple.dict().lookupOrDefault<Switch>("faceMomentum", false)
+    ),
+
+    dragCorrection
+    (
+        pimple.dict().lookupOrDefault<Switch>("dragCorrection", false)
     ),
 
     partialElimination

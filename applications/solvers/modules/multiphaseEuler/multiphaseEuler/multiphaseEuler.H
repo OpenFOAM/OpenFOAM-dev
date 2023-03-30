@@ -81,6 +81,10 @@ protected:
         //  Defaults to false, i.e. uses the cell momentum equation
         Switch faceMomentum;
 
+        //- Cell/face drag correction for cell momentum corrector
+        //  Defaults to false
+        Switch dragCorrection;
+
         //- Partial elimination drag contribution optimisation
         //  Defaults to false
         Switch partialElimination;

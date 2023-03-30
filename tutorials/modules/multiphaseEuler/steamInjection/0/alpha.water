@@ -23,22 +23,20 @@ boundaryField
     inlet
     {
         type            fixedValue;
-        value           uniform 1.;
+        value           uniform 1;
     }
+
     outlet
     {
         type            inletOutlet;
         phi             phi.water;
-        inletValue      uniform 1.0;
-        value           uniform 1.0;
+        inletValue      uniform 1;
+        value           uniform 1;
     }
+
     walls
     {
         type            zeroGradient;
-    }
-    defaultFaces
-    {
-        type            empty;
     }
 }
 

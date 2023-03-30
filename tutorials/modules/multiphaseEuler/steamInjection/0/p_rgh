@@ -24,12 +24,17 @@ boundaryField
         type            fixedFluxPressure;
         value           $internalField;
     }
+
     outlet
     {
-        type            prghPressure;
-        p               $internalField;
+        type            prghTotalPressure;
+        p0              $internalField;
+        U               U.water;
+        phi             phi.water;
+        rho             rho.water;
         value           $internalField;
     }
+
     walls
     {
         type            fixedFluxPressure;

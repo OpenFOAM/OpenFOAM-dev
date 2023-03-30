@@ -25,11 +25,13 @@ boundaryField
         type            calculated;
         value           $internalField;
     }
+
     outlet
     {
         type            calculated;
         value           $internalField;
     }
+
     walls
     {
         type            nutkWallFunction;

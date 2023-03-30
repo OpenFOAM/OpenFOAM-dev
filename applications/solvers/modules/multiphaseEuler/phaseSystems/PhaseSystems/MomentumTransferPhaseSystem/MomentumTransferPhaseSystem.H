@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,8 +63,6 @@ class MomentumTransferPhaseSystem
 :
     public BasePhaseSystem
 {
-private:
-
     // Private typedefs
 
         typedef HashPtrTable
@@ -87,13 +85,6 @@ private:
             phaseInterfaceKey,
             phaseInterfaceKey::hash
         > VmTable;
-
-        typedef HashPtrTable
-        <
-            surfaceScalarField,
-            phaseInterfaceKey,
-            phaseInterfaceKey::hash
-        > VmfTable;
 
         typedef HashTable
         <
@@ -141,9 +132,6 @@ private:
 
         //- Virtual mass coefficients
         VmTable Vms_;
-
-        //- Face virtual mass coefficients
-        VmfTable Vmfs_;
 
 
         // Sub Models
@@ -206,72 +194,33 @@ public:
 
         //- Return implicit force coefficients on the faces, for the face-based
         //  algorithm.
-        virtual PtrList<surfaceScalarField> AFfs() const;
+        virtual PtrList<surfaceScalarField> KdVmfs() const;
 
         //- Return the explicit force fluxes for the cell-based algorithm, that
         //  do not depend on phase mass/volume fluxes, and can therefore be
         //  evaluated outside the corrector loop. This includes things like
         //  lift, turbulent dispersion, and wall lubrication.
-        virtual PtrList<surfaceScalarField> phiFs
-        (
-            const PtrList<volScalarField>& rAUs
-        );
+        virtual PtrList<surfaceScalarField> Fs();
 
-        //- As phiFs, but for the face-based algorithm
-        virtual PtrList<surfaceScalarField> phiFfs
-        (
-            const PtrList<surfaceScalarField>& rAUfs
-        );
+        //- As Fs, but for the face-based algorithm
+        virtual PtrList<surfaceScalarField> Ffs();
 
         //- Return the explicit drag force fluxes for the cell-based algorithm.
         //  These depend on phase mass/volume fluxes, and must therefore be
         //  evaluated inside the corrector loop.
-        virtual PtrList<surfaceScalarField> phiKdPhis
-        (
-            const PtrList<volScalarField>& rAUs
-        ) const;
+        virtual PtrList<surfaceScalarField> KdPhis() const;
 
-        //- As phiKdPhis, but for the face-based algorithm
-        virtual PtrList<surfaceScalarField> phiKdPhifs
-        (
-            const PtrList<surfaceScalarField>& rAUfs
-        ) const;
+        //- As KdPhis, but for the face-based algorithm
+        virtual PtrList<surfaceScalarField> KdPhifs() const;
+
+        //- Return the implicit part of the drag force
+        virtual PtrList<volScalarField> Kds() const;
 
         //- Return the explicit part of the drag force for the cell-based
-        //  algorithm. This is the cell-equivalent of phiKdPhis. These depend on
+        //  algorithm. This is the cell-equivalent of KdPhis. These depend on
         //  phase velocities, and must therefore be evaluated inside the
         //  corrector loop.
-        virtual PtrList<volVectorField> KdUByAs
-        (
-            const PtrList<volScalarField>& rAUs
-        ) const;
-
-        //- Solve the drag system for the velocities and fluxes
-        virtual void partialElimination
-        (
-            const PtrList<volScalarField>& rAUs,
-            const PtrList<volVectorField>& KdUByAs,
-            const PtrList<surfaceScalarField>& alphafs,
-            const PtrList<surfaceScalarField>& phiKdPhis
-        );
-
-        //- As partialElimination, but for the face-based algorithm. Only solves
-        //  for the fluxes.
-        virtual void partialEliminationf
-        (
-            const PtrList<surfaceScalarField>& rAUfs,
-            const PtrList<surfaceScalarField>& alphafs,
-            const PtrList<surfaceScalarField>& phiKdPhifs
-        );
-
-        //- Return the flux corrections for the cell-based algorithm. These
-        //  depend on phase mass/volume fluxes, and must therefore be evaluated
-        //  inside the corrector loop.
-        virtual PtrList<surfaceScalarField> ddtCorrByAs
-        (
-            const PtrList<volScalarField>& rAUs,
-            const bool includeVirtualMass = false
-        ) const;
+        virtual PtrList<volVectorField> KdUs() const;
 
         //- Returns true if the phase pressure is treated implicitly
         //  in the phase fraction equation
@@ -288,6 +237,40 @@ public:
             const PtrList<volScalarField>& rAUs,
             const PtrList<surfaceScalarField>& rAUfs
         ) const;
+
+        //- Return the flux corrections for the cell-based algorithm. These
+        //  depend on phase mass/volume fluxes, and must therefore be evaluated
+        //  inside the corrector loop.
+        virtual PtrList<surfaceScalarField> ddtCorrs
+        (
+            const bool includeVirtualMass = false
+        ) const;
+
+        //- Set the cell and faces drag correction fields
+        virtual void dragCorrs
+        (
+            PtrList<volVectorField>& dragCorrs,
+            PtrList<surfaceScalarField>& dragCorrf
+        ) const;
+
+        //- Solve the drag system for the velocities and fluxes
+        virtual void partialElimination
+        (
+            const PtrList<volScalarField>& rAUs,
+            const PtrList<volVectorField>& KdUs,
+            const PtrList<surfaceScalarField>& alphafs,
+            const PtrList<surfaceScalarField>& rAUfs,
+            const PtrList<surfaceScalarField>& KdPhis
+        );
+
+        //- As partialElimination, but for the face-based algorithm. Only solves
+        //  for the fluxes.
+        virtual void partialEliminationf
+        (
+            const PtrList<surfaceScalarField>& rAUfs,
+            const PtrList<surfaceScalarField>& alphafs,
+            const PtrList<surfaceScalarField>& KdPhifs
+        );
 
         //- Read base phaseProperties dictionary
         virtual bool read();

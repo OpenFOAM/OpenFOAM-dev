@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "multiphaseEuler.H"
+#include "fvmSup.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
@@ -36,6 +37,8 @@ void Foam::solvers::multiphaseEuler::cellMomentumPredictor()
 
     phaseSystem::momentumTransferTable&
         momentumTransfer(momentumTransferPtr());
+
+    const PtrList<volScalarField> Kds(fluid.Kds());
 
     forAll(fluid.movingPhases(), movingPhasei)
     {
@@ -54,6 +57,7 @@ void Foam::solvers::multiphaseEuler::cellMomentumPredictor()
              ==
                *momentumTransfer[phase.name()]
               + fvModels().source(alpha, rho, U)
+                // - fvm::Sp(Kds[phase.index()], U)
             )
         );
 

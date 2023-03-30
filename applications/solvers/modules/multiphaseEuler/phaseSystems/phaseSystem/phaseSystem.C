@@ -225,6 +225,8 @@ Foam::phaseSystem::phaseSystem
 
     mesh_(mesh),
 
+    pimple_(mesh_.lookupObject<pimpleNoLoopControl>("solutionControl")),
+
     MRF_(mesh_),
 
     referencePhaseName_(lookupOrDefault("referencePhase", word::null)),

@@ -45,6 +45,8 @@ SourceFiles
 #include "PtrListDictionary.H"
 #include "hashedWordList.H"
 
+#include "pimpleNoLoopControl.H"
+
 #include "IOMRFZoneList.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
@@ -125,6 +127,9 @@ protected:
 
         //- Reference to the mesh
         const fvMesh& mesh_;
+
+        //- Reference to pimpleNoLoopControl
+        const pimpleNoLoopControl& pimple_;
 
         //- Optional MRF zones
         IOMRFZoneList MRF_;
@@ -272,6 +277,9 @@ public:
 
             //- Return the mesh
             inline const fvMesh& mesh() const;
+
+            //- Return pimpleNoLoopControl
+            inline const pimpleNoLoopControl& pimple() const;
 
             //- Return the phase models
             inline const phaseModelList& phases() const;
@@ -515,37 +523,25 @@ public:
 
             //- Return the implicit force coefficients for the face-based
             //  algorithm
-            virtual PtrList<surfaceScalarField> AFfs() const = 0;
+            virtual PtrList<surfaceScalarField> KdVmfs() const = 0;
 
             //- Return the force fluxes for the cell-based algorithm
-            virtual PtrList<surfaceScalarField> phiFs
-            (
-                const PtrList<volScalarField>& rAUs
-            ) = 0;
+            virtual PtrList<surfaceScalarField> Fs() = 0;
 
             //- Return the force fluxes for the face-based algorithm
-            virtual PtrList<surfaceScalarField> phiFfs
-            (
-                const PtrList<surfaceScalarField>& rAUfs
-            ) = 0;
+            virtual PtrList<surfaceScalarField> Ffs() = 0;
 
             //- Return the force fluxes for the cell-based algorithm
-            virtual PtrList<surfaceScalarField> phiKdPhis
-            (
-                const PtrList<volScalarField>& rAUs
-            ) const = 0;
+            virtual PtrList<surfaceScalarField> KdPhis() const = 0;
 
             //- Return the force fluxes for the face-based algorithm
-            virtual PtrList<surfaceScalarField> phiKdPhifs
-            (
-                const PtrList<surfaceScalarField>& rAUfs
-            ) const = 0;
+            virtual PtrList<surfaceScalarField> KdPhifs() const = 0;
+
+            //- Return the implicit part of the drag force
+            virtual PtrList<volScalarField> Kds() const = 0;
 
             //- Return the explicit part of the drag force
-            virtual PtrList<volVectorField> KdUByAs
-            (
-                const PtrList<volScalarField>& rAUs
-            ) const = 0;
+            virtual PtrList<volVectorField> KdUs() const = 0;
 
             //- Returns true if the phase pressure is treated implicitly
             //  in the phase fraction equation
@@ -563,13 +559,27 @@ public:
                 const PtrList<surfaceScalarField>& rAUfs
             ) const = 0;
 
+            //- Return the flux corrections for the cell-based algorithm
+            virtual PtrList<surfaceScalarField> ddtCorrs
+            (
+                const bool includeVirtualMass = false
+            ) const = 0;
+
+            //- Set the cell and faces drag correction fields
+            virtual void dragCorrs
+            (
+                PtrList<volVectorField>& dragCorrs,
+                PtrList<surfaceScalarField>& dragCorrf
+            ) const = 0;
+
             //- Solve the drag system for the new velocities and fluxes
             virtual void partialElimination
             (
                 const PtrList<volScalarField>& rAUs,
-                const PtrList<volVectorField>& KdUByAs,
+                const PtrList<volVectorField>& KdUs,
                 const PtrList<surfaceScalarField>& alphafs,
-                const PtrList<surfaceScalarField>& phiKdPhis
+                const PtrList<surfaceScalarField>& rAUfs,
+                const PtrList<surfaceScalarField>& KdPhis
             ) = 0;
 
             //- Solve the drag system for the new fluxes
@@ -577,7 +587,7 @@ public:
             (
                 const PtrList<surfaceScalarField>& rAUfs,
                 const PtrList<surfaceScalarField>& alphafs,
-                const PtrList<surfaceScalarField>& phiKdPhifs
+                const PtrList<surfaceScalarField>& KdPhifs
             ) = 0;
 
             //- Re-normalise the flux of the phases
@@ -587,13 +597,6 @@ public:
                 const PtrList<surfaceScalarField>& alphafs,
                 const surfaceScalarField& phim
             );
-
-            //- Return the flux corrections for the cell-based algorithm
-            virtual PtrList<surfaceScalarField> ddtCorrByAs
-            (
-                const PtrList<volScalarField>& rAUs,
-                const bool includeVirtualMass = false
-            ) const = 0;
 
             //- Return the heat transfer matrices
             virtual autoPtr<heatTransferTable> heatTransfer() const = 0;

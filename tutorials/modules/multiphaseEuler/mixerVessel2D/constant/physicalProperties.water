@@ -22,7 +22,7 @@ thermoType
     thermo          eConst;
     equationOfState rPolynomial;
     specie          specie;
-    energy          sensibleEnthalpy;
+    energy          sensibleInternalEnergy;
 }
 
 mixture

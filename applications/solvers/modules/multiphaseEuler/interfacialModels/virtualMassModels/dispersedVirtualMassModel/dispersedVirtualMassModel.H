@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,10 +96,6 @@ public:
         //    ddt(alpha1*rho1*U1) + ... = ... K*(DU1_Dt - DU2_Dt)
         //    ddt(alpha2*rho2*U2) + ... = ... K*(DU1_Dt - DU2_Dt)
         virtual tmp<volScalarField> K() const;
-
-        //- Return the virtual mass coefficient Kf
-        //  used in the face-momentum equations
-        virtual tmp<surfaceScalarField> Kf() const;
 };
 
 

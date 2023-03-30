@@ -66,20 +66,14 @@ drag
 }
 
 virtualMass
-{
-    particles_dispersedIn_air
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-}
+{}
 
 heatTransfer
 {
     particles_dispersedIn_air
     {
         type            RanzMarshall;
-        residualAlpha   1e-3;
+        residualAlpha   1e-4;
     }
 }
 

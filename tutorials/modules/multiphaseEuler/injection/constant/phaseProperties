@@ -65,13 +65,7 @@ blending
 }
 
 surfaceTension
-{
-    air_water
-    {
-        type            constant;
-        sigma           0.07;
-    }
-}
+{}
 
 drag
 {
@@ -103,8 +97,7 @@ virtualMass
 
     water_dispersedIn_air
     {
-        type            constantCoefficient;
-        Cvm             0.5;
+        type            none;
     }
 }
 

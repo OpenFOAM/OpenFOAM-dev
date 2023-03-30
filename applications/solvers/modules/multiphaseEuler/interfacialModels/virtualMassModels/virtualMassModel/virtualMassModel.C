@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,12 +78,6 @@ bool Foam::virtualMassModel::writeData(Ostream& os) const
 Foam::tmp<Foam::volScalarField> Foam::blendedVirtualMassModel::K() const
 {
     return evaluate(&virtualMassModel::K, "K", virtualMassModel::dimK, false);
-}
-
-
-Foam::tmp<Foam::surfaceScalarField> Foam::blendedVirtualMassModel::Kf() const
-{
-    return evaluate(&virtualMassModel::Kf, "Kf", virtualMassModel::dimK, false);
 }
 
 
