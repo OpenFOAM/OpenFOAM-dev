@@ -70,6 +70,22 @@ functions
     )
 
     #includeFunc patchSurface(patch=".*(Walls|NonCouple)")
+
+    cavitationVolume
+    {
+        type            volFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+
+        writeControl    timeStep;
+        writeInterval   1;
+        writeFields     false;
+
+        select          all;
+
+        operation       volIntegrate;
+
+        fields          (alpha.vapour);
+    }
 }
 
 
