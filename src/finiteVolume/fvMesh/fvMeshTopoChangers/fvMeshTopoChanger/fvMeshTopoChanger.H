@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,11 @@ Class
     Foam::fvMeshTopoChanger
 
 Description
-    Abstract base class for fvMesh movers.
+    Abstract base class for fvMesh topology changers.
 
-    These classes move the mesh points, update the cell volumes and generate
-    the corresponding mesh fluxes without any topology change.
+    These classes apply topology changes to the mesh,
+    e.g. refinement/unrefinement, layer addition/removal, mesh-to-mesh mapping
+    etc.
 
 SourceFiles
     fvMeshTopoChanger.C
