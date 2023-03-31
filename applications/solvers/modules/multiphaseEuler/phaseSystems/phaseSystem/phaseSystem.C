@@ -728,7 +728,7 @@ void Foam::phaseSystem::correctBoundaryFlux()
 void Foam::phaseSystem::correctPhi
 (
     const volScalarField& p_rgh,
-    const tmp<volScalarField>& divU,
+    const autoPtr<volScalarField>& divU,
     const pressureReference& pressureReference,
     nonOrthogonalSolutionControl& pimple
 )
@@ -778,32 +778,16 @@ void Foam::phaseSystem::correctPhi
 
     if (incompressible())
     {
-        if (divU.valid())
-        {
-            CorrectPhi
-            (
-                phi_,
-                movingPhases()[0].U(),
-                p_rgh,
-                dimensionedScalar(dimTime/dimDensity, 1),
-                divU(),
-                pressureReference,
-                pimple
-            );
-        }
-        else
-        {
-            CorrectPhi
-            (
-                phi_,
-                movingPhases()[0].U(),
-                p_rgh,
-                dimensionedScalar(dimTime/dimDensity, 1),
-                geometricZeroField(),
-                pressureReference,
-                pimple
-            );
-        }
+        CorrectPhi
+        (
+            phi_,
+            movingPhases()[0].U(),
+            p_rgh,
+            dimensionedScalar(dimTime/dimDensity, 1),
+            divU,
+            pressureReference,
+            pimple
+        );
     }
     else
     {

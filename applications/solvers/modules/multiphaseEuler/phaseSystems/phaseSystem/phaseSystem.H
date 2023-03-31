@@ -656,7 +656,7 @@ public:
             void correctPhi
             (
                 const volScalarField& p_rgh,
-                const tmp<volScalarField>& divU,
+                const autoPtr<volScalarField>& divU,
                 const pressureReference& pressureReference,
                 nonOrthogonalSolutionControl& pimple
             );

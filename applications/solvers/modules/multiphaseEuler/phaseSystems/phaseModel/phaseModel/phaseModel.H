@@ -246,7 +246,7 @@ public:
             virtual bool isochoric() const = 0;
 
             //- Return the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
-            virtual tmp<volScalarField> divU() const = 0;
+            virtual const autoPtr<volScalarField>& divU() const = 0;
 
             //- Set the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
             virtual void divU(tmp<volScalarField> divU) = 0;

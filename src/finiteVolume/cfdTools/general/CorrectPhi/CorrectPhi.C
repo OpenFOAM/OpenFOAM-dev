@@ -39,14 +39,14 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class RAUfType, class DivUType>
+template<class RAUfType>
 void Foam::CorrectPhi
 (
     surfaceScalarField& phi,
     const volVectorField& U,
     const volScalarField& p,
     const RAUfType& rAUf,
-    const DivUType& divU,
+    const autoPtr<volScalarField>& divU,
     const pressureReference& pressureReference,
     nonOrthogonalSolutionControl& pcorrControl
 )
@@ -98,7 +98,13 @@ void Foam::CorrectPhi
         // matches the divU provided (from previous iteration, time-step...)
         fvScalarMatrix pcorrEqn
         (
-            fvm::laplacian(rAUf, pcorr) == fvc::div(phi) - divU
+            fvm::laplacian(rAUf, pcorr)
+         ==
+            (
+                divU.valid()
+              ? fvc::div(phi) - divU()
+              : fvc::div(phi)
+            )
         );
 
         pcorrEqn.setReference(pressureReference.refCell(), 0);
@@ -113,14 +119,14 @@ void Foam::CorrectPhi
 }
 
 
-template<class RAUfType, class DivRhoUType>
+template<class RAUfType>
 void Foam::CorrectPhi
 (
     surfaceScalarField& phi,
     const volScalarField& p,
     const volScalarField& psi,
     const RAUfType& rAUf,
-    const DivRhoUType& divRhoU,
+    const volScalarField& divRhoU,
     nonOrthogonalSolutionControl& pcorrControl
 )
 {

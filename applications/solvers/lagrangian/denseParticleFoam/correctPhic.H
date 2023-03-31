@@ -9,7 +9,7 @@ CorrectPhi
     Uc,
     p,
     dimensionedScalar("rAUf", dimTime, 1),
-    geometricZeroField(),
+    autoPtr<volScalarField>(),
     pressureReference,
     pimple
 );

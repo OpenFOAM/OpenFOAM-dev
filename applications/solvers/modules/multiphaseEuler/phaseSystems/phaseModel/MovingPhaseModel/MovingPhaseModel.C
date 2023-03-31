@@ -519,10 +519,10 @@ Foam::MovingPhaseModel<BasePhaseModel>::K() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
+const Foam::autoPtr<Foam::volScalarField>&
 Foam::MovingPhaseModel<BasePhaseModel>::divU() const
 {
-    return divU_.valid() ? tmp<volScalarField>(divU_()) : tmp<volScalarField>();
+    return divU_;
 }
 
 
@@ -531,13 +531,13 @@ void Foam::MovingPhaseModel<BasePhaseModel>::divU(tmp<volScalarField> divU)
 {
     if (!divU_.valid())
     {
-        divU_ = divU;
-        divU_.ref().rename(IOobject::groupName("divU", this->name()));
-        divU_.ref().checkIn();
+        divU_ = divU.ptr();
+        divU_().rename(IOobject::groupName("divU", this->name()));
+        divU_().checkIn();
     }
     else
     {
-        divU_.ref() = divU;
+        divU_() = divU;
     }
 }
 

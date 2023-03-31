@@ -136,7 +136,7 @@ public:
         // Compressibility (variable density)
 
             //- Return the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
-            virtual tmp<volScalarField> divU() const;
+            virtual const autoPtr<volScalarField>& divU() const;
 
             //- Set the phase dilatation rate (d(alpha)/dt + div(alpha*phi))
             virtual void divU(tmp<volScalarField> divU);

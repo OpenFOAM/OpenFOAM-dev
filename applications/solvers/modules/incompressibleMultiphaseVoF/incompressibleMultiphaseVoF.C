@@ -128,7 +128,7 @@ Foam::solvers::incompressibleMultiphaseVoF::incompressibleMultiphaseVoF
                 U,
                 p_rgh,
                 surfaceScalarField("rAUf", fvc::interpolate(rAU())),
-                geometricZeroField(),
+                autoPtr<volScalarField>(),
                 pressureReference(),
                 pimple
             );
@@ -143,7 +143,7 @@ Foam::solvers::incompressibleMultiphaseVoF::incompressibleMultiphaseVoF
                 U,
                 p_rgh,
                 dimensionedScalar(dimTime/rho.dimensions(), 1),
-                geometricZeroField(),
+                autoPtr<volScalarField>(),
                 pressureReference(),
                 pimple
             );

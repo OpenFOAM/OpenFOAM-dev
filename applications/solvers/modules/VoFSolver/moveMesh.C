@@ -67,32 +67,16 @@ void Foam::solvers::VoFSolver::moveMesh()
 
                 if (incompressible())
                 {
-                    if (divU.valid())
-                    {
-                        CorrectPhi
-                        (
-                            phi,
-                            U,
-                            p_rgh,
-                            surfaceScalarField("rAUf", fvc::interpolate(rAU())),
-                            divU(),
-                            pressureReference(),
-                            pimple
-                        );
-                    }
-                    else
-                    {
-                        CorrectPhi
-                        (
-                            phi,
-                            U,
-                            p_rgh,
-                            surfaceScalarField("rAUf", fvc::interpolate(rAU())),
-                            geometricZeroField(),
-                            pressureReference(),
-                            pimple
-                        );
-                    }
+                    CorrectPhi
+                    (
+                        phi,
+                        U,
+                        p_rgh,
+                        surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+                        divU,
+                        pressureReference(),
+                        pimple
+                    );
                 }
                 else
                 {

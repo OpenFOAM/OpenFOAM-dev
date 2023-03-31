@@ -259,10 +259,11 @@ Foam::StationaryPhaseModel<BasePhaseModel>::K() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
+const Foam::autoPtr<Foam::volScalarField>&
 Foam::StationaryPhaseModel<BasePhaseModel>::divU() const
 {
-    return tmp<volScalarField>();
+    static autoPtr<volScalarField> divU_;
+    return divU_;
 }
 
 

@@ -70,26 +70,26 @@ namespace Foam
         const bool evaluateUBCs
     );
 
-    template<class RAUfType, class DivUType>
+    template<class RAUfType>
     void CorrectPhi
     (
         surfaceScalarField& phi,
         const volVectorField& U,
         const volScalarField& p,
         const RAUfType& rAUf,
-        const DivUType& divU,
+        const autoPtr<volScalarField>& divU,
         const pressureReference& pressureReference,
         nonOrthogonalSolutionControl& pcorrControl
     );
 
-    template<class RAUfType, class DivRhoUType>
+    template<class RAUfType>
     void CorrectPhi
     (
         surfaceScalarField& phi,
         const volScalarField& p,
         const volScalarField& psi,
         const RAUfType& rAUf,
-        const DivRhoUType& divRhoU,
+        const volScalarField& divRhoU,
         nonOrthogonalSolutionControl& pcorrControl
     );
 }
