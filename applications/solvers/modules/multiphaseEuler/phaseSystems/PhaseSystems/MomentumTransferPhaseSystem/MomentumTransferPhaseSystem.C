@@ -596,8 +596,10 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs()
         const phaseInterface& interface =
             turbulentDispersionModelIter()->interface();
 
-        const volScalarField D(turbulentDispersionModelIter()->D());
-        const surfaceScalarField Df(fvc::interpolate(D));
+        const surfaceScalarField Df
+        (
+            fvc::interpolate(turbulentDispersionModelIter()->D())
+        );
 
         const volScalarField alpha12(interface.phase1() + interface.phase2());
         const surfaceScalarField snGradAlpha1By12
