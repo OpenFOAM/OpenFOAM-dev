@@ -29,7 +29,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
+#include "timeSelector.H"
 #include "fluidThermo.H"
 #include "compressibleMomentumTransportModels.H"
 #include "fluidThermoThermophysicalTransportModel.H"
@@ -38,6 +39,15 @@ Description
 #include "fvConstraints.H"
 #include "simpleControl.H"
 #include "pimpleControl.H"
+
+#include "fvcDdt.H"
+#include "fvcMeshPhi.H"
+
+#include "fvmDdt.H"
+#include "fvmDiv.H"
+#include "fvmLaplacian.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

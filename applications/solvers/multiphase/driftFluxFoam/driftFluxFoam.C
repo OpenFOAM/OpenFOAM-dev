@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,16 +33,34 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
+#include "timeSelector.H"
 #include "CMULES.H"
 #include "subCycle.H"
 #include "incompressibleTwoPhaseInteractingMixture.H"
 #include "momentumTransportModel.H"
 #include "compressibleMomentumTransportModels.H"
 #include "pimpleControl.H"
+#include "findRefCell.H"
 #include "pressureReference.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
+
+#include "constrainHbyA.H"
+#include "constrainPressure.H"
+#include "adjustPhi.H"
+
+#include "fvcDdt.H"
+#include "fvcSnGrad.H"
+#include "fvcFlux.H"
+#include "fvcMeshPhi.H"
+#include "fvcReconstruct.H"
+
+#include "fvmDdt.H"
+#include "fvmDiv.H"
+#include "fvmLaplacian.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

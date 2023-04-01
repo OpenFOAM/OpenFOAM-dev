@@ -29,10 +29,18 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
-#include "OSspecific.H"
+#include "argList.H"
+#include "timeSelector.H"
 #include "setWriter.H"
 #include "writeFile.H"
+
+#include "fvcGrad.H"
+
+#include "fvmDdt.H"
+#include "fvmDiv.H"
+#include "fvmLaplacian.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
