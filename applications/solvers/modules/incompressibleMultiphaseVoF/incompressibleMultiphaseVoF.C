@@ -102,26 +102,29 @@ Foam::solvers::incompressibleMultiphaseVoF::incompressibleMultiphaseVoF
     // Read the controls
     readControls();
 
+    if (correctPhi || mesh.topoChanging())
+    {
+        rAU = new volScalarField
+        (
+            IOobject
+            (
+                "rAU",
+                runTime.name(),
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE
+            ),
+            mesh,
+            dimensionedScalar(dimTime/dimDensity, 1)
+        );
+    }
+
     if (!runTime.restart() || !divergent())
     {
+        correctUphiBCs(U_, phi, true);
+
         if (correctPhi)
         {
-            rAU = new volScalarField
-            (
-                IOobject
-                (
-                    "rAU",
-                    runTime.name(),
-                    mesh,
-                    IOobject::READ_IF_PRESENT,
-                    IOobject::AUTO_WRITE
-                ),
-                mesh,
-                dimensionedScalar(dimTime/dimDensity, 1)
-            );
-
-            correctUphiBCs(U_, phi, true);
-
             CorrectPhi
             (
                 phi,
@@ -135,8 +138,6 @@ Foam::solvers::incompressibleMultiphaseVoF::incompressibleMultiphaseVoF
         }
         else
         {
-            correctUphiBCs(U_, phi, true);
-
             CorrectPhi
             (
                 phi,

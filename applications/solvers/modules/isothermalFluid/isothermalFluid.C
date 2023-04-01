@@ -298,7 +298,7 @@ void Foam::solvers::isothermalFluid::preSolve()
     // Store divrhoU from the previous mesh so that it can be mapped
     // and used in correctPhi to ensure the corrected phi has the
     // same divergence
-    if (correctPhi)
+    if (correctPhi || mesh.topoChanging())
     {
         divrhoU = new volScalarField
         (
