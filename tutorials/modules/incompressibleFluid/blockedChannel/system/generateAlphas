@@ -11,6 +11,11 @@ libs            ("libutilityFunctionObjects.so");
 
 name            generateAlpha;
 
+codeInclude
+#{
+    #include "volFields.H"
+#};
+
 codeWrite
 #{
     const dimensionedVector dx(dimless/dimLength, vector(1, 0, 0));
