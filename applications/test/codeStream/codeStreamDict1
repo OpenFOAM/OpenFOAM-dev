@@ -9,11 +9,11 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      testDict;
+    object      codesStreamDict1;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// values from outer-scope
+// Values from outer-scope
 begIter     0;
 endIter     200;
 
@@ -24,7 +24,7 @@ writeInterval   #codeStream
 
     codeInclude
     #{
-        #include "fvCFD.H"
+         // #include ".H"
     #};
 
     codeOptions
@@ -37,7 +37,7 @@ writeInterval   #codeStream
     #{
         static int someCode()
         {
-            Info<<"called someCode\n";
+            Info << "called someCode\n";
             return 10;
         }
     #};
@@ -45,13 +45,12 @@ writeInterval   #codeStream
     code
     #{
         label interval = ($endIter - $begIter);
-        // label nDumps = $nDumps;
         label nDumps = someCode();
         os  << (interval / nDumps);
     #};
 };
 
-// play with cleanup
+// Play with cleanup
 #remove begIter
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

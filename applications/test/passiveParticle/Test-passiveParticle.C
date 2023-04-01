@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,15 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    testPassiveParticle
+    Test-passiveParticle
 
 Description
     Test cloud of passive particles.
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
+#include "fvMesh.H"
 #include "passiveParticleCloud.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,7 +62,7 @@ int main(int argc, char *argv[])
 
         forAllConstIter(passiveParticleCloud, particles, iter)
         {
-            Pout<< "    " << iter().position() << " cell:" << iter().cell()
+            Pout<< "    " << iter().position(mesh) << " cell:" << iter().cell()
                 << " origProc:" << iter().origProc()
                 << " origId:" << iter().origId()
                 << endl;
@@ -82,7 +85,7 @@ int main(int argc, char *argv[])
 
         forAllConstIter(passiveParticleCloud, particles, iter)
         {
-            Pout<< "    " << iter().position() << " cell:" << iter().cell()
+            Pout<< "    " << iter().position(mesh) << " cell:" << iter().cell()
                 << " origProc:" << iter().origProc()
                 << " origId:" << iter().origId()
                 << endl;
