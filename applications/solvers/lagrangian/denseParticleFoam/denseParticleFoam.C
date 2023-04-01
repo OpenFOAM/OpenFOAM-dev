@@ -75,15 +75,36 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "fvCFD.H"
+#include "argList.H"
+#include "timeSelector.H"
 #include "viscosityModel.H"
 #include "phaseIncompressibleMomentumTransportModel.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
-#include "fvCorrectPhi.H"
+#include "findRefCell.H"
+#include "constrainPressure.H"
+#include "constrainHbyA.H"
+#include "adjustPhi.H"
+#include "uniformDimensionedFields.H"
+#include "zeroGradientFvPatchFields.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
+
+#include "fvcDdt.H"
+#include "fvcGrad.H"
+#include "fvcSnGrad.H"
+#include "fvcFlux.H"
+#include "fvcMeshPhi.H"
+#include "fvCorrectPhi.H"
+#include "fvcReconstruct.H"
+
+#include "fvmDdt.H"
+#include "fvmDiv.H"
+#include "fvmLaplacian.H"
+
 #include "parcelClouds.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

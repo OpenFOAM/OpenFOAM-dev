@@ -29,14 +29,28 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
+#include "timeSelector.H"
 #include "Kmesh.H"
 #include "UOprocess.H"
 #include "fft.H"
 #include "calcEk.H"
 #include "graph.H"
 #include "writeFile.H"
+
 #include "pisoControl.H"
+#include "constrainPressure.H"
+#include "constrainHbyA.H"
+
+#include "fvcDdt.H"
+#include "fvcGrad.H"
+#include "fvcFlux.H"
+
+#include "fvmDdt.H"
+#include "fvmDiv.H"
+#include "fvmLaplacian.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
