@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "isothermalFluid.H"
-#include "CorrectPhi.H"
+#include "fvCorrectPhi.H"
+#include "fvcMeshPhi.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -57,12 +58,12 @@ void Foam::solvers::isothermalFluid::moveMesh()
 
                 correctUphiBCs(rho, U, phi, true);
 
-                CorrectPhi
+                fv::correctPhi
                 (
                     phi,
                     buoyancy.valid() ? p_rgh : p,
                     thermo.psi(),
-                    dimensionedScalar("rAUf", dimTime, 1),
+                    autoPtr<volScalarField>(),
                     divrhoU(),
                     pimple
                 );

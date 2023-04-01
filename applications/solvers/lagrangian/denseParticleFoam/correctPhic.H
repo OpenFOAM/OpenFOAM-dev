@@ -3,12 +3,12 @@ phic = mesh.Sf() & Ucf();
 
 correctUphiBCs(Uc, phic, true);
 
-CorrectPhi
+fv::correctPhi
 (
     phic,
     Uc,
     p,
-    dimensionedScalar("rAUf", dimTime, 1),
+    autoPtr<volScalarField>(),
     autoPtr<volScalarField>(),
     pressureReference,
     pimple

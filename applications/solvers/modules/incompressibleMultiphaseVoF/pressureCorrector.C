@@ -43,17 +43,9 @@ void Foam::solvers::incompressibleMultiphaseVoF::pressureCorrector()
     volVectorField& U = U_;
 
     fvVectorMatrix& UEqn = tUEqn.ref();
+    setrAU(UEqn);
 
-    if (rAU.valid())
-    {
-        rAU.ref() = 1.0/UEqn.A();
-    }
-    else
-    {
-        rAU = 1.0/UEqn.A();
-    }
-
-    surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU()));
+    const surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU()));
 
     while (pimple.correct())
     {
@@ -154,11 +146,7 @@ void Foam::solvers::incompressibleMultiphaseVoF::pressureCorrector()
         }
     }
 
-    if (!correctPhi)
-    {
-        rAU.clear();
-    }
-
+    clearrAU();
     tUEqn.clear();
 }
 

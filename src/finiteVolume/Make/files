@@ -452,7 +452,8 @@ $(general)/findRefCell/findRefCell.C
 $(general)/constrainHbyA/constrainHbyA.C
 $(general)/adjustPhi/adjustPhi.C
 $(general)/bound/bound.C
-$(general)/CorrectPhi/correctUphiBCs.C
+$(general)/correctPhi/fvCorrectPhi.C
+$(general)/correctPhi/correctUphiBCs.C
 $(general)/pressureReference/pressureReference.C
 $(general)/levelSet/levelSet.C
 $(general)/surfaceToVolVelocity/surfaceToVolVelocity.C

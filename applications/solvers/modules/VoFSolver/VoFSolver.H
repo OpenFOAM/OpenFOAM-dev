@@ -125,7 +125,9 @@ protected:
 
     // Cached temporary fields
 
-        tmp<volScalarField> rAU;
+        //- Inverse momentum equation diagonal
+        //  Used to correct phi following mesh changes
+        autoPtr<volScalarField> rAU;
 
         //- Pointer to the surface momentum field
         //  used to recreate the flux after mesh-change
@@ -156,6 +158,12 @@ private:
 protected:
 
     // Protected Member Functions
+
+        //- Set or update the cached rAU
+        void setrAU(const fvVectorMatrix& UEqn);
+
+        //- Clear the cached rAU is no longer needed
+        void clearrAU();
 
         //- Correct the cached Courant numbers
         virtual void correctCoNum() = 0;

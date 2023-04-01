@@ -50,6 +50,28 @@ void Foam::solvers::VoFSolver::continuityErrors()
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
+void Foam::solvers::VoFSolver::setrAU(const fvVectorMatrix& UEqn)
+{
+    if (rAU.valid())
+    {
+        rAU() = 1.0/UEqn.A();
+    }
+    else
+    {
+        rAU = (1.0/UEqn.A()).ptr();
+    }
+}
+
+
+void Foam::solvers::VoFSolver::clearrAU()
+{
+    if (!(correctPhi || mesh.topoChanging()))
+    {
+        rAU.clear();
+    }
+}
+
+
 void Foam::solvers::VoFSolver::correctCoNum()
 {
     fluidSolver::correctCoNum(phi);

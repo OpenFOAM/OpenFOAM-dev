@@ -49,15 +49,7 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
     const volScalarField& psi2 = mixture.thermo2().psi();
 
     fvVectorMatrix& UEqn = tUEqn.ref();
-
-    if (rAU.valid())
-    {
-        rAU.ref() = 1.0/UEqn.A();
-    }
-    else
-    {
-        rAU = 1.0/UEqn.A();
-    }
+    setrAU(UEqn);
 
     const surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU()));
 
@@ -233,6 +225,7 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
 
     K = 0.5*magSqr(U);
 
+    clearrAU();
     tUEqn.clear();
 }
 

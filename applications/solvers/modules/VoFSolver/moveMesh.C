@@ -24,8 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VoFSolver.H"
-#include "CorrectPhi.H"
-#include "geometricZeroField.H"
+#include "fvCorrectPhi.H"
+#include "fvcMeshPhi.H"
+#include "fvcDiv.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -67,12 +68,12 @@ void Foam::solvers::VoFSolver::moveMesh()
 
                 if (incompressible())
                 {
-                    CorrectPhi
+                    fv::correctPhi
                     (
                         phi,
                         U,
                         p_rgh,
-                        surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+                        rAU,
                         divU,
                         pressureReference(),
                         pimple
@@ -80,12 +81,12 @@ void Foam::solvers::VoFSolver::moveMesh()
                 }
                 else
                 {
-                    CorrectPhi
+                    fv::correctPhi
                     (
                         phi,
                         p_rgh,
                         psiByRho(),
-                        surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+                        rAU,
                         divU(),
                         pimple
                     );

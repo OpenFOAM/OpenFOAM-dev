@@ -31,7 +31,7 @@ License
 #include "fvcDiv.H"
 #include "fvcGrad.H"
 #include "fvcSnGrad.H"
-#include "CorrectPhi.H"
+#include "fvCorrectPhi.H"
 #include "fvcMeshPhi.H"
 #include "correctContactAngle.H"
 #include "dragModel.H"
@@ -778,12 +778,12 @@ void Foam::phaseSystem::correctPhi
 
     if (incompressible())
     {
-        CorrectPhi
+        fv::correctPhi
         (
             phi_,
             movingPhases()[0].U(),
             p_rgh,
-            dimensionedScalar(dimTime/dimDensity, 1),
+            autoPtr<volScalarField>(),
             divU,
             pressureReference,
             pimple
@@ -809,12 +809,12 @@ void Foam::phaseSystem::correctPhi
             psi += alpha*phase.thermo().psi()/phase.thermo().rho();
         }
 
-        CorrectPhi
+        fv::correctPhi
         (
             phi_,
             p_rgh,
             psi,
-            dimensionedScalar(dimTime/dimDensity, 1),
+            autoPtr<volScalarField>(),
             divU(),
             pimple
         );

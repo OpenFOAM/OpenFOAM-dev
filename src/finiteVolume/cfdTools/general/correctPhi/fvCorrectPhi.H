@@ -21,8 +21,8 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::CorrectPhi
+Function
+    Foam::fv::correctPhi
 
 Description
     Flux correction functions to ensure continuity.
@@ -34,12 +34,13 @@ Description
     which non-conservative fluxes cause unboundedness of the phase-fraction.
 
 SourceFiles
-    CorrectPhi.C
+    fvCorrectPhi.C
+    correctUphiBCs.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef CorrectPhi_H
-#define CorrectPhi_H
+#ifndef fvCorrectPhi_H
+#define fvCorrectPhi_H
 
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
@@ -70,35 +71,31 @@ namespace Foam
         const bool evaluateUBCs
     );
 
-    template<class RAUfType>
-    void CorrectPhi
-    (
-        surfaceScalarField& phi,
-        const volVectorField& U,
-        const volScalarField& p,
-        const RAUfType& rAUf,
-        const autoPtr<volScalarField>& divU,
-        const pressureReference& pressureReference,
-        nonOrthogonalSolutionControl& pcorrControl
-    );
+    namespace fv
+    {
+        void correctPhi
+        (
+            surfaceScalarField& phi,
+            const volVectorField& U,
+            const volScalarField& p,
+            const autoPtr<volScalarField>& rAU,
+            const autoPtr<volScalarField>& divU,
+            const pressureReference& pressureReference,
+            nonOrthogonalSolutionControl& pcorrControl
+        );
 
-    template<class RAUfType>
-    void CorrectPhi
-    (
-        surfaceScalarField& phi,
-        const volScalarField& p,
-        const volScalarField& psi,
-        const RAUfType& rAUf,
-        const volScalarField& divRhoU,
-        nonOrthogonalSolutionControl& pcorrControl
-    );
+        void correctPhi
+        (
+            surfaceScalarField& phi,
+            const volScalarField& p,
+            const volScalarField& psi,
+            const autoPtr<volScalarField>& rAU,
+            const volScalarField& divRhoU,
+            nonOrthogonalSolutionControl& pcorrControl
+        );
+    }
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "CorrectPhi.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

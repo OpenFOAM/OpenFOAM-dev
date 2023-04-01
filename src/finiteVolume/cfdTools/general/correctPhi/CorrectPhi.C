@@ -26,7 +26,6 @@ License
 #include "CorrectPhi.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "fvScalarMatrix.H"
 #include "fvmDdt.H"
 #include "fvmLaplacian.H"
 #include "fvcDiv.H"
@@ -40,12 +39,12 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class RAUfType>
-void Foam::CorrectPhi
+void Foam::fv::CorrectPhi
 (
     surfaceScalarField& phi,
     const volVectorField& U,
     const volScalarField& p,
-    const RAUfType& rAUf,
+    const RAUfType& rAU,
     const autoPtr<volScalarField>& divU,
     const pressureReference& pressureReference,
     nonOrthogonalSolutionControl& pcorrControl
@@ -98,7 +97,7 @@ void Foam::CorrectPhi
         // matches the divU provided (from previous iteration, time-step...)
         fvScalarMatrix pcorrEqn
         (
-            fvm::laplacian(rAUf, pcorr)
+            fvm::laplacian(rAU, pcorr)
          ==
             (
                 divU.valid()
@@ -120,12 +119,12 @@ void Foam::CorrectPhi
 
 
 template<class RAUfType>
-void Foam::CorrectPhi
+void Foam::fv::CorrectPhi
 (
     surfaceScalarField& phi,
     const volScalarField& p,
     const volScalarField& psi,
-    const RAUfType& rAUf,
+    const RAUfType& rAU,
     const volScalarField& divRhoU,
     nonOrthogonalSolutionControl& pcorrControl
 )
@@ -172,7 +171,7 @@ void Foam::CorrectPhi
         (
             fvm::ddt(psi, pcorr)
           + fvc::div(phi)
-          - fvm::laplacian(rAUf, pcorr)
+          - fvm::laplacian(rAU, pcorr)
          ==
             divRhoU
         );

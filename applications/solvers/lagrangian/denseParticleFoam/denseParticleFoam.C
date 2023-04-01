@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ namespace Foam
 #include "phaseIncompressibleMomentumTransportModel.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
-#include "CorrectPhi.H"
+#include "fvCorrectPhi.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "parcelClouds.H"

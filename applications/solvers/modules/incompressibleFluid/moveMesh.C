@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "incompressibleFluid.H"
-#include "CorrectPhi.H"
+#include "fvCorrectPhi.H"
+#include "fvcMeshPhi.H"
 #include "geometricZeroField.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
@@ -48,12 +49,12 @@ void Foam::solvers::incompressibleFluid::moveMesh()
 
                 correctUphiBCs(U, phi, true);
 
-                CorrectPhi
+                fv::correctPhi
                 (
                     phi,
                     U,
                     p,
-                    dimensionedScalar("rAUf", dimTime, 1),
+                    autoPtr<volScalarField>(),
                     autoPtr<volScalarField>(),
                     pressureReference,
                     pimple
