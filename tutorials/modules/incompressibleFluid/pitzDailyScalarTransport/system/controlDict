@@ -59,6 +59,11 @@ functions
         type coded;
         libs            ("libutilityFunctionObjects.so");
 
+        codeInclude
+        #{
+            #include "volFields.H"
+        #};
+
         codeExecute
         #{
             const volScalarField& T
