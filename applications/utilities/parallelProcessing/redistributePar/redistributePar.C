@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,15 +46,18 @@ Description
     \endverbatim
 \*---------------------------------------------------------------------------*/
 
-#include "fvMesh.H"
+#include "argList.H"
+#include "timeSelector.H"
 #include "decompositionMethod.H"
 #include "PstreamReduceOps.H"
-#include "fvCFD.H"
 #include "fvMeshDistribute.H"
 #include "polyDistributionMap.H"
 #include "IOobjectList.H"
 #include "globalIndex.H"
 #include "loadOrCreateMesh.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

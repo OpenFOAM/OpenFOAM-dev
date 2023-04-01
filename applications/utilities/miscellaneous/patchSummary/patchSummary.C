@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,11 +35,14 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
 #include "volFields.H"
 #include "pointFields.H"
 #include "IOobjectList.H"
+#include "timeSelector.H"
 #include "patchSummaryTemplates.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

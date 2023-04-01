@@ -70,6 +70,7 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
+#include "argList.H"
 #include "pointMesh.H"
 #include "volPointInterpolation.H"
 #include "emptyPolyPatch.H"
@@ -91,7 +92,7 @@ Usage
 
 // Note: needs to be after TECIO to prevent Foam::Time conflicting with
 // Xlib Time.
-#include "fvCFD.H"
+#include "Time.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

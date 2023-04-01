@@ -133,7 +133,8 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
+#include "timeSelector.H"
 #include "pointMesh.H"
 #include "volPointInterpolation.H"
 #include "emptyPolyPatch.H"
@@ -161,6 +162,7 @@ Usage
 #include "surfaceMeshWriter.H"
 #include "writeSurfFields.H"
 
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
