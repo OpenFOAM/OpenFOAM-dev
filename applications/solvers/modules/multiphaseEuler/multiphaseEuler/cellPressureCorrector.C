@@ -168,25 +168,24 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                 const volScalarField& alpha = phase;
                 const label phasei = phase.index();
 
-                HbyAs.set
+                const volVectorField H
                 (
-                    phasei,
-                    constrainHbyA
+                    constrainH
                     (
-                        rAUs[phasei]
-                       *(
-                            UEqns[phasei].H()
-                          + byDt
-                            (
-                                max(phase.residualAlpha() - alpha, scalar(0))
-                               *phase.rho()
-                            )
-                           *phase.U()().oldTime()
-                        ),
+                        UEqns[phasei].H()
+                      + byDt
+                        (
+                            max(phase.residualAlpha() - alpha, scalar(0))
+                           *phase.rho()
+                        )
+                       *phase.U()().oldTime(),
+                        rAUs[phasei],
                         phase.U(),
                         p_rgh
                     )
                 );
+
+                HbyAs.set(phasei, rAUs[phasei]*H);
 
                 phiHbyAs.set
                 (
@@ -194,11 +193,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                     new surfaceScalarField
                     (
                         IOobject::groupName("phiHbyA", phase.name()),
-                        rAUfs[phasei]
-                       *(
-                           fvc::flux(HbyAs[phasei]/rAUs[phasei])
-                         + ddtCorrs[phasei]
-                        )
+                        rAUfs[phasei]*(fvc::flux(H) + ddtCorrs[phasei])
                       - alpharAUfs[phasei]*phigFs[phasei]
                       - rAUfs[phasei]*Fs[phasei]
                     )

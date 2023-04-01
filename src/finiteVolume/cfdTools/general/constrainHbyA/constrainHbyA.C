@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,52 @@ Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
     }
 
     return tHbyANew;
+}
+
+
+Foam::tmp<Foam::volVectorField> Foam::constrainH
+(
+    const tmp<volVectorField>& tH,
+    const volScalarField& rA,
+    const volVectorField& U,
+    const volScalarField& p
+)
+{
+    tmp<volVectorField> tHNew;
+
+    if (tH.isTmp())
+    {
+        tHNew = tH;
+        tHNew.ref().rename(IOobject::groupName("H", U.group()));
+    }
+    else
+    {
+        tHNew = volVectorField::New
+        (
+            IOobject::groupName("H", U.group()),
+            tH
+        );
+    }
+
+    volVectorField& H = tHNew.ref();
+    volVectorField::Boundary& Hbf = H.boundaryFieldRef();
+
+    forAll(U.boundaryField(), patchi)
+    {
+        if
+        (
+           !U.boundaryField()[patchi].assignable()
+        && !isA<fixedFluxExtrapolatedPressureFvPatchScalarField>
+            (
+                p.boundaryField()[patchi]
+            )
+        )
+        {
+            Hbf[patchi] = U.boundaryField()[patchi]/rA.boundaryField()[patchi];
+        }
+    }
+
+    return tHNew;
 }
 
 
