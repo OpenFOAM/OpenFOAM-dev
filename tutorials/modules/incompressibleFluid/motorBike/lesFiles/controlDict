@@ -55,6 +55,7 @@ functions
     writeCachedObjects
     {
         type        writeObjects;
+
         libs        ("libutilityFunctionObjects.so");
 
         writeControl writeTime;

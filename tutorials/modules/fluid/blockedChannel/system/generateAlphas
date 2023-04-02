@@ -7,6 +7,8 @@
 \*---------------------------------------------------------------------------*/
 
 type            coded;
+
+// Load the library containing the 'coded' functionObject
 libs            ("libutilityFunctionObjects.so");
 
 name            generateAlphas;

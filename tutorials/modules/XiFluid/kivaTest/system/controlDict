@@ -63,10 +63,13 @@ functions
     setDeltaT
     {
         type coded;
+
+        // Load the library containing the 'coded' functionObject
         libs            ("libutilityFunctionObjects.so");
 
-        code
+        codeInclude
         #{
+            #include "volFields.H"
         #};
 
         codeExecute

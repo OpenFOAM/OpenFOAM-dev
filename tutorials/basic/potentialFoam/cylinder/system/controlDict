@@ -48,10 +48,15 @@ functions
 {
     error
     {
+        type coded;
+
         // Load the library containing the 'coded' functionObject
         libs            ("libutilityFunctionObjects.so");
 
-        type coded;
+        codeInclude
+        #{
+            #include "volFields.H"
+        #};
 
         codeEnd
         #{
