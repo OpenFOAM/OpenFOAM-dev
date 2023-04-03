@@ -60,37 +60,44 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
     PtrList<surfaceScalarField> rAUfs(phases.size());
 
-    PtrList<volScalarField> Kds(fluid.Kds());
-
-    forAll(fluid.movingPhases(), movingPhasei)
     {
-        phaseModel& phase = fluid.movingPhases()[movingPhasei];
-        const volScalarField& alpha = phase;
+        PtrList<volScalarField> Kds(fluid.Kds());
 
-        const volScalarField AU
-        (
-            UEqns[phase.index()].A() + Kds[phase.index()]
-          + byDt
+        forAll(fluid.movingPhases(), movingPhasei)
+        {
+            phaseModel& phase = fluid.movingPhases()[movingPhasei];
+            const volScalarField& alpha = phase;
+
+            volScalarField AU
             (
-                max(phase.residualAlpha() - alpha, scalar(0))
-               *phase.rho()
-            )
-        );
+                UEqns[phase.index()].A()
+              + byDt
+                (
+                    max(phase.residualAlpha() - alpha, scalar(0))
+                   *phase.rho()
+                )
+            );
 
-        rAUs.set
-        (
-            phase.index(),
-            new volScalarField
+            if (Kds.set(phase.index()))
+            {
+                AU += Kds[phase.index()];
+            }
+
+            rAUs.set
             (
-                IOobject::groupName("rAU", phase.name()),
-                1/AU
-            )
-        );
+                phase.index(),
+                new volScalarField
+                (
+                    IOobject::groupName("rAU", phase.name()),
+                    1/AU
+                )
+            );
 
-        rAUfs.set(phase.index(), 1/fvc::interpolate(AU));
+            rAUfs.set(phase.index(), 1/fvc::interpolate(AU));
+        }
+        fluid.fillFields("rAU", dimTime/dimDensity, rAUs);
+        fluid.fillFields("rAUf", dimTime/dimDensity, rAUfs);
     }
-    fluid.fillFields("rAU", dimTime/dimDensity, rAUs);
-    fluid.fillFields("rAUf", dimTime/dimDensity, rAUfs);
 
     // Phase diagonal coefficients
     PtrList<surfaceScalarField> alpharAUfs(phases.size());
