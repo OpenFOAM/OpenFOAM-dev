@@ -123,7 +123,7 @@ void Foam::mappedFlowRateVelocityFvPatchVectorField::updateCoeffs()
 
     const scalarField phip
     (
-        mapper.fromNeigbour
+        mapper.fromNeighbour
         (
             nbrPatch.lookupPatchField<surfaceScalarField, scalar>(nbrPhiName_)
         )

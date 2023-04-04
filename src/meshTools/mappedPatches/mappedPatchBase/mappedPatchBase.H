@@ -251,19 +251,22 @@ public:
 
             //- Map/interpolate the neighbour patch field to this patch
             template<class Type>
-            tmp<Field<Type>> fromNeigbour(const Field<Type>& nbrFld) const;
+            tmp<Field<Type>> fromNeighbour(const Field<Type>& nbrFld) const;
 
             //- Map/interpolate the neighbour patch field to this patch
             template<class Type>
-            tmp<Field<Type>> fromNeigbour(const tmp<Field<Type>>& nbrFld) const;
+            tmp<Field<Type>> fromNeighbour
+            (
+                const tmp<Field<Type>>& nbrFld
+            ) const;
 
             //- Map/interpolate patch field to the neighbour patch
             template<class Type>
-            tmp<Field<Type>> toNeigbour(const Field<Type>& fld) const;
+            tmp<Field<Type>> toNeighbour(const Field<Type>& fld) const;
 
             //- Map/interpolate patch field to the neighbour patch
             template<class Type>
-            tmp<Field<Type>> toNeigbour
+            tmp<Field<Type>> toNeighbour
             (
                 const tmp<Field<Type>>& fld
             ) const;

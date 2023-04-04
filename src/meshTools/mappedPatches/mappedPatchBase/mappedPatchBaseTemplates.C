@@ -106,7 +106,7 @@ void Foam::mappedPatchBase::validateForField
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::mappedPatchBase::fromNeigbour(const Field<Type>& nbrFld) const
+Foam::mappedPatchBase::fromNeighbour(const Field<Type>& nbrFld) const
 {
     if (sameUntransformedPatch())
     {
@@ -153,9 +153,9 @@ Foam::mappedPatchBase::fromNeigbour(const Field<Type>& nbrFld) const
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::mappedPatchBase::fromNeigbour(const tmp<Field<Type>>& nbrFld) const
+Foam::mappedPatchBase::fromNeighbour(const tmp<Field<Type>>& nbrFld) const
 {
-    tmp<Field<Type>> tResult = fromNeigbour(nbrFld());
+    tmp<Field<Type>> tResult = fromNeighbour(nbrFld());
     nbrFld.clear();
     return tResult;
 }
@@ -163,7 +163,7 @@ Foam::mappedPatchBase::fromNeigbour(const tmp<Field<Type>>& nbrFld) const
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::mappedPatchBase::toNeigbour(const Field<Type>& fld) const
+Foam::mappedPatchBase::toNeighbour(const Field<Type>& fld) const
 {
     if (sameUntransformedPatch())
     {
@@ -207,9 +207,9 @@ Foam::mappedPatchBase::toNeigbour(const Field<Type>& fld) const
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::mappedPatchBase::toNeigbour(const tmp<Field<Type>>& fld) const
+Foam::mappedPatchBase::toNeighbour(const tmp<Field<Type>>& fld) const
 {
-    tmp<Field<Type>> tResult = toNeigbour(fld());
+    tmp<Field<Type>> tResult = toNeighbour(fld());
     fld.clear();
     return tResult;
 }

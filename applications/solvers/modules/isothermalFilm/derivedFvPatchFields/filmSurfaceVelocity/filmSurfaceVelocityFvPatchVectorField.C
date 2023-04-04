@@ -129,7 +129,7 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
     );
 
     // Set the reference value to the neighbouring fluid internal velocity
-    refValue() = mpp.fromNeigbour(UpNbr);
+    refValue() = mpp.fromNeighbour(UpNbr);
 
     // Remove the normal component of the surface vel
     const vectorField n(patch().nf());
@@ -164,7 +164,7 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
         // Get the patch laminar viscosity
         const tmp<scalarField> nuEffByDeltaNbr
         (
-            mpp.fromNeigbour
+            mpp.fromNeighbour
             (
                 transportModelNbr.nuEff(patchiNbr)*patchNbr.deltaCoeffs()
             )

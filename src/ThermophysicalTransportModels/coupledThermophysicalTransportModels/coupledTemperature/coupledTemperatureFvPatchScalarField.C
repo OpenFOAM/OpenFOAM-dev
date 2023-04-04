@@ -325,7 +325,7 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
 
     if (qrNbrName_ != "none")
     {
-        sumq += mpp.fromNeigbour
+        sumq += mpp.fromNeighbour
         (
             patchNbr.lookupPatchField<volScalarField, scalar>(qrNbrName_)
         );
@@ -354,8 +354,8 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
                 qNbr
             );
 
-            add(sumKappaTByDelta, mpp.fromNeigbour(sumKappaTByDeltaNbr));
-            add(sumKappaByDelta, mpp.fromNeigbour(sumKappaByDeltaNbr));
+            add(sumKappaTByDelta, mpp.fromNeighbour(sumKappaTByDeltaNbr));
+            add(sumKappaByDelta, mpp.fromNeighbour(sumKappaByDeltaNbr));
         }
         else
         {
@@ -364,12 +364,12 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
             coupledTemperatureNbr.getNbr(TwNbr, qNbr);
 
             add(sumKappaByDelta, scalarField(size(), wallKappaByDelta_));
-            add(sumKappaTByDelta, wallKappaByDelta_*mpp.fromNeigbour(TwNbr));
+            add(sumKappaTByDelta, wallKappaByDelta_*mpp.fromNeighbour(TwNbr));
         }
 
         if (qNbr.valid())
         {
-            sumq += mpp.fromNeigbour(qNbr);
+            sumq += mpp.fromNeighbour(qNbr);
         }
     }
 

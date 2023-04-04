@@ -137,7 +137,7 @@ void Foam::fv::filmToVoFTransfer::correct()
 
     const scalarField alphaVoF
     (
-        film_.surfacePatchMap().fromNeigbour
+        film_.surfacePatchMap().fromNeighbour
         (
             VoFtoFilm.alpha().boundaryField()[patchiVoF]
         )
@@ -145,7 +145,7 @@ void Foam::fv::filmToVoFTransfer::correct()
 
     const scalarField deltaCoeffsVoF
     (
-        film_.surfacePatchMap().fromNeigbour
+        film_.surfacePatchMap().fromNeighbour
         (
             VoF_.mesh.boundary()[patchiVoF].deltaCoeffs()
         )
@@ -227,7 +227,7 @@ inline Foam::fv::filmToVoFTransfer::VoFToFilmTransferRate
     );
 
     UIndirectList<Type>(tSu.ref(), film_.surfacePatch().faceCells()) =
-        film_.surfacePatchMap().fromNeigbour
+        film_.surfacePatchMap().fromNeighbour
         (
             (VoFtoFilmPtr->*transferRateFunc)()
         );

@@ -45,7 +45,7 @@ void Foam::surfaceFilm::toPrimary
                 (
                     mesh().boundaryMesh()[filmPatchi]
                 );
-            filmField = mpp.toNeigbour(filmField);
+            filmField = mpp.toNeighbour(filmField);
             return;
         }
     }
@@ -73,7 +73,7 @@ Foam::tmp<Foam::Field<Type>> Foam::surfaceFilm::toFilm
                     mesh().boundaryMesh()[filmPatchi]
                 );
 
-            return mpp.fromNeigbour(primaryPatchField);
+            return mpp.fromNeighbour(primaryPatchField);
         }
     }
 
@@ -102,7 +102,7 @@ Foam::tmp<Foam::Field<Type>> Foam::surfaceFilm::toFilm
                     mesh().boundaryMesh()[filmPatchi]
                 );
 
-            return mpp.fromNeigbour(tprimaryPatchField);
+            return mpp.fromNeighbour(tprimaryPatchField);
         }
     }
 
@@ -133,7 +133,7 @@ void Foam::surfaceFilm::toFilm
             refCast<const mappedPatchBase>(filmPatch);
 
         UIndirectList<Type>(rf, filmPatch.faceCells()) =
-            mpp.fromNeigbour(pBf[primaryPatchi]);
+            mpp.fromNeighbour(pBf[primaryPatchi]);
     }
 }
 

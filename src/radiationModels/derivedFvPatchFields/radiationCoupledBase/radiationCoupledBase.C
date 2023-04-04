@@ -146,7 +146,7 @@ Foam::tmp<Foam::scalarField> Foam::radiationCoupledBase::emissivity() const
             // emissivity of the surface rather than the emission coefficient
             // and the input specification MUST correspond to this.
             return
-                mpp.fromNeigbour
+                mpp.fromNeighbour
                 (
                     radiation.absorptionEmission().e()().boundaryField()
                     [
