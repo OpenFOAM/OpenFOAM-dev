@@ -349,8 +349,8 @@ Foam::scalar Foam::invIncGammaRatio_P(const scalar a, const scalar P)
 
     for (label iter = 0; iter < nIter; ++ iter)
     {
-        const scalar dP = incGammaRatio_P(a, x) - P;
-        const scalar t = dP/R(a, x);
+        const scalar dP = incGammaRatio_P(a, max(x, vSmall)) - P;
+        const scalar t = dP/max(R(a, x), vSmall);
         const scalar w = (a - 1 - x)/2;
 
         bool halley = mag(t) < 0.1 && mag(w*t) < 0.1;

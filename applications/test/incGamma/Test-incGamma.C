@@ -51,6 +51,8 @@ scalar grade(const scalar f)
 
 int main(int argc, char *argv[])
 {
+    argList args(argc, argv);
+
     const scalarField as({0.25, 0.5, 1, 2, 4});
 
     static const scalar nXs = 10000;
@@ -92,7 +94,15 @@ int main(int argc, char *argv[])
         {
             const scalar P = incGammaRatio_P(as[ai], xs[xi]);
             const scalar PStar =
-                incGammaRatio_P(as[ai], invIncGammaRatio_P(as[ai], P));
+                incGammaRatio_P
+                (
+                    as[ai],
+                    invIncGammaRatio_P
+                    (
+                        as[ai],
+                        min(max(P, small), 1 - small)
+                    )
+                );
             scalarPs[ai][xi] = P;
             scalarPErrors[ai][xi] = mag(P - PStar);
         }
