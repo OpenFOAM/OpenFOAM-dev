@@ -66,10 +66,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Gibilaro::CdRe() const
         max(interface_.continuous(), interface_.continuous().residualAlpha())
     );
 
-    return
-        (4.0/3.0)
-       *(17.3/alpha2 + 0.336*interface_.Re())*alpha2
-       *pow(alpha2, -2.8);
+    return (4.0/3.0)*(17.3/alpha2 + 0.336*interface_.Re())*pow(alpha2, -1.8);
 }
 
 
