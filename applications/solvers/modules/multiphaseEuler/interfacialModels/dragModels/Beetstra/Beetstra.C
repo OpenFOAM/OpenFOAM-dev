@@ -63,12 +63,12 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Beetstra::CdRe() const
 {
     const volScalarField alpha1
     (
-        max(interface_.dispersed(), interface_.continuous().residualAlpha())
+        max(interface_.dispersed(), interface_.dispersed().residualAlpha())
     );
 
     const volScalarField alpha2
     (
-        max(1 - interface_.dispersed(), interface_.continuous().residualAlpha())
+        max(interface_.continuous(), interface_.continuous().residualAlpha())
     );
 
     const volScalarField Res(max(alpha2*interface_.Re(), scalar(0)));

@@ -64,21 +64,18 @@ Foam::dragModels::GidaspowSchillerNaumann::CdRe() const
 {
     const volScalarField alpha2
     (
-        max(1 - interface_.dispersed(), interface_.continuous().residualAlpha())
+        max(interface_.continuous(), interface_.continuous().residualAlpha())
     );
 
-    const volScalarField Re(alpha2*interface_.Re());
+    const volScalarField Res(alpha2*interface_.Re());
 
-    const volScalarField CdsRe
+    const volScalarField CdsRes
     (
-        neg(Re - 1000)*24*(1.0 + 0.15*pow(Re, 0.687))/alpha2
-      + pos0(Re - 1000)*0.44*Re
+        neg(Res - 1000)*24*(1.0 + 0.15*pow(Res, 0.687))/alpha2
+      + pos0(Res - 1000)*0.44*Res
     );
 
-    return
-        CdsRe
-       *pow(alpha2, -2.65)
-       *max(interface_.continuous(), interface_.continuous().residualAlpha());
+    return CdsRes*pow(alpha2, -1.65);
 }
 
 

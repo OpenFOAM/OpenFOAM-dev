@@ -69,7 +69,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Tenneti::CdRe() const
 
     const volScalarField alpha2
     (
-        max(1 - interface_.dispersed(), interface_.continuous().residualAlpha())
+        max(interface_.continuous(), interface_.continuous().residualAlpha())
     );
 
     const volScalarField Res(alpha2*interface_.Re());
