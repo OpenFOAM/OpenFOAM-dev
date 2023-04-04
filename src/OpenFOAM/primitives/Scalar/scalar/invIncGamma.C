@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,11 +36,13 @@ Description
     \endverbatim
 
     All equation numbers in the following code refer to the above text and
-    the algorithm in the function 'invIncGamma' is described in section 4.
+    the algorithm in the function 'invIncGammaRatio_P' is described in section
+    4.
 
 \*---------------------------------------------------------------------------*/
 
 #include "mathematicalConstants.H"
+
 using namespace Foam::constant::mathematical;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -99,20 +101,30 @@ static scalar Sn(const scalar a, const scalar x)
     return Sn;
 }
 
+
+static scalar R(const scalar a, const scalar x)
+{
+    //- Eqn. 3
+    return exp(-x)*pow(x, a)/tgamma(a);
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Inverse normalised incomplete gamma function
-Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
+Foam::scalar Foam::invIncGammaRatio_P(const scalar a, const scalar P)
 {
     const scalar Q = 1 - P;
 
+    // Determine an initial guess (and potentially do a quick return)
+    scalar x = NaN;
+
     if (a == 1)
     {
-        return -log(Q);
+        x = -log(Q);
     }
     else if (a < 1)
     {
@@ -125,7 +137,7 @@ Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
             const scalar u =
                 (B*Q > 1e-8) ? pow(P*Ga*a, 1/a) : exp((-Q/a) - Eu);
 
-            return u/(1 - (u/(a + 1)));
+            x = u/(1 - (u/(a + 1)));
         }
         else if (a < 0.3 && B >= 0.35)
         {
@@ -133,7 +145,7 @@ Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
             const scalar t = exp(-Eu - B);
             const scalar u = t*exp(t);
 
-            return t*exp(u);
+            x = t*exp(u);
         }
         else if (B > 0.15 || a >= 0.3)
         {
@@ -141,7 +153,7 @@ Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
             const scalar y = -log(B);
             const scalar u = y - (1 - a)*log(y);
 
-            return y - (1 - a)*log(u) - log(1 + (1 - a)/(1 + u));
+            x = y - (1 - a)*log(u) - log(1 + (1 - a)/(1 + u));
         }
         else if (B > 0.1)
         {
@@ -149,7 +161,8 @@ Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
             const scalar y = -log(B);
             const scalar u = y - (1 - a)*log(y);
 
-            return y
+            x =
+                y
               - (1 - a)*log(u)
               - log
                 (
@@ -187,7 +200,13 @@ Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
             const scalar y3 = y2*y;
             const scalar y4 = y2*y2;
 
-            return y + c1 + (c2/y) + (c3/y2) + (c4/y3) + (c5/y4);
+            x = y + c1 + (c2/y) + (c3/y2) + (c4/y3) + (c5/y4);
+        }
+
+        // Quick return condition (a)
+        if (B <= 1e-13)
+        {
+            return x;
         }
     }
     else
@@ -207,15 +226,21 @@ Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
           - (3*s4 + 7*s2 - 16)/(810*a)
           + (9*s5 + 256*s3 - 433*s)/(38880*a*sqrta);
 
-        if (a >= 500 && mag(1 - w/a) < 1e-6)
+        // Quick return condition (b)
+        if (a >= 100 && mag(1 - w/a) < 1e-4)
         {
             return w;
+        }
+
+        if (a >= 500 && mag(1 - w/a) < 1e-6)
+        {
+            x = w;
         }
         else if (P > 0.5)
         {
             if (w < 3*a)
             {
-                return w;
+                x = w;
             }
             else
             {
@@ -264,7 +289,7 @@ Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
                     const scalar y3 = y2*y;
                     const scalar y4 = y2*y2;
 
-                    return y + c1 + (c2/y) + (c3/y2) + (c4/y3) + (c5/y4);
+                    x = y + c1 + (c2/y) + (c3/y2) + (c4/y3) + (c5/y4);
                 }
                 else
                 {
@@ -272,7 +297,7 @@ Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
                     const scalar u =
                         -lnB + (a - 1)*log(w) - log(1 + (1 - a)/(1 + w));
 
-                    return -lnB + (a - 1)*log(u) - log(1 + (1 - a)/(1 + u));
+                    x = -lnB + (a - 1)*log(u) - log(1 + (1 - a)/(1 + u));
                 }
             }
         }
@@ -295,9 +320,15 @@ Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
                 z = exp((v + z - s)/a);
             }
 
-            if (z <= 0.01*ap1 || z > 0.7*ap1)
+            // Quick return condition (c)
+            if (z < 0.006*ap1 && (a > 1 || a < 100 || mag(1 - w/a) > 1e-4))
             {
                 return z;
+            }
+
+            if (z <= 0.01*ap1 || z > 0.7*ap1)
+            {
+                x = z;
             }
             else
             {
@@ -306,10 +337,41 @@ Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
                 const scalar v = log(P) + lgamma(ap1);
                 z = exp((v + z - lnSn)/a);
 
-                return z*(1 - (a*log(z) - z - v + lnSn)/(a - z));
+                x = z*(1 - (a*log(z) - z - v + lnSn)/(a - z));
             }
         }
     }
+
+    // Iteration
+    static const label nIter = 20;
+    static const scalar eps = 1e-10;
+    static const scalar tau = 1e-5;
+
+    for (label iter = 0; iter < nIter; ++ iter)
+    {
+        const scalar dP = incGammaRatio_P(a, x) - P;
+        const scalar t = dP/R(a, x);
+        const scalar w = (a - 1 - x)/2;
+
+        bool halley = mag(t) < 0.1 && mag(w*t) < 0.1;
+
+        const scalar h = t + halley*w*sqr(t);
+
+        x *= 1 - h;
+
+        if
+        (
+            (halley && mag(w) >= 1 && mag(w*sqr(t)) <= eps)
+         || (mag(h) < eps)
+         || (mag(h) < tau && mag(dP) < tau*max(P, 1 - P))
+        )
+        {
+            return x;
+        }
+    }
+
+    // Iteration failed to converge. Probably at zero.
+    return 0;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ Foam::scalar Foam::distributionModels::massRosinRammler::sample() const
     {
         const scalar a = 3/n_ + 1;
         const scalar P = rndGen_.sample01<scalar>();
-        const scalar x = invIncGamma(a, P);
+        const scalar x = invIncGammaRatio_P(a, P);
         d = d_*pow(x, 1/n_);
     } while (d < minValue_ || d > maxValue_);
 
