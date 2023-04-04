@@ -47,10 +47,10 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
     PtrList<surfaceScalarField> alphafs(phases.size());
     forAll(phases, phasei)
     {
-        phaseModel& phase = phases[phasei];
+        const phaseModel& phase = phases[phasei];
         const volScalarField& alpha = phase;
 
-        alphafs.set(phasei, fvc::interpolate(alpha).ptr());
+        alphafs.set(phasei, fvc::interpolate(max(alpha, scalar(0))).ptr());
         alphafs[phasei].rename("pEqn" + alphafs[phasei].name());
     }
 
@@ -65,7 +65,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
         forAll(fluid.movingPhases(), movingPhasei)
         {
-            phaseModel& phase = fluid.movingPhases()[movingPhasei];
+            const phaseModel& phase = fluid.movingPhases()[movingPhasei];
             const volScalarField& alpha = phase;
 
             volScalarField AU
@@ -103,7 +103,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
     PtrList<surfaceScalarField> alpharAUfs(phases.size());
     forAll(phases, phasei)
     {
-        phaseModel& phase = phases[phasei];
+        const phaseModel& phase = phases[phasei];
         const volScalarField& alpha = phase;
 
         alpharAUfs.set
@@ -145,7 +145,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
             forAll(phases, phasei)
             {
-                phaseModel& phase = phases[phasei];
+                const phaseModel& phase = phases[phasei];
 
                 phigFs.set
                 (
@@ -171,7 +171,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
             forAll(fluid.movingPhases(), movingPhasei)
             {
-                phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                const phaseModel& phase = fluid.movingPhases()[movingPhasei];
                 const volScalarField& alpha = phase;
                 const label phasei = phase.index();
 
@@ -260,16 +260,13 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                 mesh
             ),
             mesh,
-            dimensionedScalar(dimensionSet(-1, 3, 1, 0, 0), 0)
+            dimensionedScalar(dimTime/dimDensity, 0)
         );
 
         forAll(phases, phasei)
         {
             rAUf += alphafs[phasei]*alpharAUfs[phasei];
-            // rAUf += alphafs[phasei]*alphafs[phasei]*rAUfs[phasei];
         }
-
-        rAUf = mag(rAUf);
 
         // Update the fixedFluxPressure BCs to ensure flux consistency
         {
@@ -282,7 +279,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
             forAll(phases, phasei)
             {
-                phaseModel& phase = phases[phasei];
+                const phaseModel& phase = phases[phasei];
                 phib +=
                     alphafs[phasei].boundaryField()
                    *phase.phi()().boundaryField();
