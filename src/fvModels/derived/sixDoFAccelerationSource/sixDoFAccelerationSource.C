@@ -161,7 +161,7 @@ void Foam::fv::sixDoFAccelerationSource::addSup
     const word& fieldName
 ) const
 {
-    addSup<geometricOneField>(geometricOneField(), eqn, fieldName);
+    addForce(geometricOneField(), geometricOneField(), eqn, fieldName);
 }
 
 
@@ -172,7 +172,19 @@ void Foam::fv::sixDoFAccelerationSource::addSup
     const word& fieldName
 ) const
 {
-    addSup<volScalarField>(rho, eqn, fieldName);
+    addForce(geometricOneField(), rho, eqn, fieldName);
+}
+
+
+void Foam::fv::sixDoFAccelerationSource::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<vector>& eqn,
+    const word& fieldName
+) const
+{
+    addForce(alpha, rho, eqn, fieldName);
 }
 
 

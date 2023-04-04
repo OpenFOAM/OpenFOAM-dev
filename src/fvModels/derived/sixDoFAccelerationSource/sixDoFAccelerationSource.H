@@ -96,10 +96,11 @@ private:
         //- Non-virtual read
         void readCoeffs();
 
-        //- Source term to momentum equation
-        template<class RhoFieldType>
-        void addSup
+        //- Add force to a momentum equation
+        template<class AlphaFieldType, class RhoFieldType>
+        void addForce
         (
+            const AlphaFieldType& alpha,
             const RhoFieldType& rho,
             fvMatrix<vector>& eqn,
             const word& fieldName
@@ -151,6 +152,15 @@ public:
         //- Source term to compressible momentum equation
         virtual void addSup
         (
+            const volScalarField& rho,
+            fvMatrix<vector>& eqn,
+            const word& fieldName
+        ) const;
+
+        //- Source term to phase momentum equation
+        virtual void addSup
+        (
+            const volScalarField& alpha,
             const volScalarField& rho,
             fvMatrix<vector>& eqn,
             const word& fieldName

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,9 +30,10 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class RhoFieldType>
-void Foam::fv::sixDoFAccelerationSource::addSup
+template<class AlphaFieldType, class RhoFieldType>
+void Foam::fv::sixDoFAccelerationSource::addForce
 (
+    const AlphaFieldType& alpha,
     const RhoFieldType& rho,
     fvMatrix<vector>& eqn,
     const word& fieldName
@@ -64,7 +65,8 @@ void Foam::fv::sixDoFAccelerationSource::addSup
     // ... otherwise include explicitly in the momentum equation
     else
     {
-        eqn -= rho*dimensionedVector("a", dimAcceleration, accelerations.x());
+        const dimensionedVector a("a", dimAcceleration, accelerations.x());
+        eqn -= alpha*rho*a;
     }
 
     dimensionedVector Omega
@@ -83,9 +85,9 @@ void Foam::fv::sixDoFAccelerationSource::addSup
 
     eqn -=
     (
-        rho*(2*Omega ^ eqn.psi())         // Coriolis force
-      + rho*(Omega ^ (Omega ^ mesh().C())) // Centrifugal force
-      + rho*(dOmegaDT ^ mesh().C())        // Angular acceleration force
+        alpha*rho*(2*Omega ^ eqn.psi())          // Coriolis force
+      + alpha*rho*(Omega ^ (Omega ^ mesh().C())) // Centrifugal force
+      + alpha*rho*(dOmegaDT ^ mesh().C())        // Angular acceleration force
     );
 }
 
