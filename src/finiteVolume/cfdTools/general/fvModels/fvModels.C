@@ -108,7 +108,12 @@ Foam::IOobject Foam::fvModels::createIOobject
 
 void Foam::fvModels::checkApplied() const
 {
-    if (mesh().time().timeIndex() > checkTimeIndex_)
+    const label timeIndex =
+        mesh().time().subCycling()
+      ? mesh().time().prevTimeState().timeIndex()
+      : mesh().time().timeIndex();
+
+    if (timeIndex > checkTimeIndex_)
     {
         const PtrListDictionary<fvModel>& modelList(*this);
 
@@ -128,7 +133,7 @@ void Foam::fvModels::checkApplied() const
             }
         }
 
-        checkTimeIndex_ = mesh().time().timeIndex();
+        checkTimeIndex_ = timeIndex;
     }
 }
 
