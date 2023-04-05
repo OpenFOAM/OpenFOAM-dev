@@ -8,20 +8,35 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      MRFProperties;
+    class       volScalarField;
+    location    "0";
+    object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-MRF
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
 {
-    cellZone    rotor;
+    #includeEtc "caseDicts/setConstraintTypes"
 
-    origin      (0 0 0);
-    axis        (0 0 1);
+    rotor
+    {
+        type            zeroGradient;
+    }
 
-    rpm         60;
+    stator
+    {
+        type            zeroGradient;
+    }
+
+    nonCouple
+    {
+        type            zeroGradient;
+    }
 }
+
 
 // ************************************************************************* //

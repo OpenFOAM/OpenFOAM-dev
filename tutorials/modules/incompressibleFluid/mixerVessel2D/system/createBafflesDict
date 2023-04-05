@@ -9,19 +9,37 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      MRFProperties;
+    location    "system";
+    object      createBafflesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-MRF
+internalFacesOnly true;
+
+#include "$FOAM_TUTORIALS/resources/blockMesh/mixerVessel2D"
+
+baffles
 {
-    cellZone    rotor;
+    nonCouple
+    {
+        type        searchableSurface;
+        surface     searchableCylinder;
+        point1      (0 0 -100);
+        point2      (0 0 100);
+        radius      $rotorRegion;
 
-    origin      (0 0 0);
-    axis        (0 0 1);
+        owner
+        {
+            name        nonCouple1;
+            type        patch;
+        }
 
-    rpm         60;
+        neighbour
+        {
+            name        nonCouple2;
+            type        patch;
+        }
+    }
 }
 
 // ************************************************************************* //
