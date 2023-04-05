@@ -8,20 +8,38 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      MRFProperties;
+    class       volVectorField;
+    location    "0";
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-MRF
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
 {
-    cellZone    rotor;
+    #includeEtc "caseDicts/setConstraintTypes"
 
-    origin      (0 0 0);
-    axis        (0 0 1);
+    rotor
+    {
+        type            movingWallVelocity;
+        value           $internalField;
+    }
 
-    rpm         60;
+    stator
+    {
+        type            movingWallVelocity;
+        value           $internalField;
+    }
+
+    nonCouple
+    {
+        type            movingWallSlipVelocity;
+        value           $internalField;
+    }
 }
+
 
 // ************************************************************************* //

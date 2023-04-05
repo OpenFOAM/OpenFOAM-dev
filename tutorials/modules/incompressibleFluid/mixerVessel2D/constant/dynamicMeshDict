@@ -10,18 +10,27 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      MRFProperties;
+    object      dynamicMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-MRF
+mover
 {
-    cellZone    rotor;
+    type            motionSolver;
 
-    origin      (0 0 0);
-    axis        (0 0 1);
+    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
 
-    rpm         60;
+    motionSolver    solidBody;
+
+    cellZone        rotor;
+
+    solidBodyMotionFunction  rotatingMotion;
+
+    origin        (0 0 0);
+    axis          (0 0 1);
+
+    rpm           60;
 }
+
 
 // ************************************************************************* //

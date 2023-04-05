@@ -89,15 +89,19 @@ protected:
         //- The transformation between the patches
         mutable cyclicTransform transform_;
 
-        //- Distributor (if not using patch-to-patch)
-        mutable autoPtr<distributionMap> mapPtr_;
+        //- Are we using the tree mapping method, or a patch-to-patch
+        //  intersection engine? The former is typically faster on small,
+        //  pairs of patches with identical meshes. The latter is better
+        //  parallelised and provides options for connecting patches with
+        //  differing surface meshes.
+        const bool usingTree_;
 
-        //- Indices of the neighbouring patch faces who's values have to be
-        //  supplied to the distribution map (if not using patch-to-patch)
-        mutable labelList nbrPatchFaceIndices_;
+        //- Distributor (if using tree)
+        mutable autoPtr<distributionMap> treeMapPtr_;
 
-        //- Is the patch-to-patch intersection engine being used?
-        const bool patchToPatchIsUsed_;
+        //- Indices of the neighbouring patch faces who's values
+        //  have to be supplied to the distribution map (if using tree)
+        mutable labelList treeNbrPatchFaceIndices_;
 
         //- Is the patch-to-patch intersection engine up to date? (if using
         //  patch-to-patch)
@@ -115,6 +119,9 @@ protected:
         //- Do we need to re-calculate the mapping if mesh motion takes place?
         //  Defaults to true.
         const bool reMapAfterMove_;
+
+        //- Do we need to re-map the neighbour because this patch moved?
+        mutable bool reMapNbr_;
 
 
     // Protected Member Functions

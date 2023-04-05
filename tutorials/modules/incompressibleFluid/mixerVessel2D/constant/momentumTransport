@@ -10,18 +10,11 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      MRFProperties;
+    object      momentumTransport;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-MRF
-{
-    cellZone    rotor;
+simulationType  laminar;
 
-    origin      (0 0 0);
-    axis        (0 0 1);
-
-    rpm         60;
-}
 
 // ************************************************************************* //

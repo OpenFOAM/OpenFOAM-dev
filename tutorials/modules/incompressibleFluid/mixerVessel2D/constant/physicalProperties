@@ -10,18 +10,13 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      MRFProperties;
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-MRF
-{
-    cellZone    rotor;
+viscosityModel  constant;
 
-    origin      (0 0 0);
-    axis        (0 0 1);
+nu              [0 2 -1 0 0 0 0] 1e-05;
 
-    rpm         60;
-}
 
 // ************************************************************************* //

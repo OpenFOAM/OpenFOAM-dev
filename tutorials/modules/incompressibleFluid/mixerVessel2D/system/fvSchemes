@@ -9,19 +9,45 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      MRFProperties;
+    location    "system";
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-MRF
+ddtSchemes
 {
-    cellZone    rotor;
-
-    origin      (0 0 0);
-    axis        (0 0 1);
-
-    rpm         60;
+    default         Euler;
 }
+
+gradSchemes
+{
+    default         Gauss linear;
+    grad(p)         Gauss linear;
+    grad(U)         Gauss linear;
+}
+
+divSchemes
+{
+    default         none;
+    div(phi,U)      Gauss linearUpwind grad(U);
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+    interpolate(HbyA) linear;
+}
+
+snGradSchemes
+{
+    default         corrected;
+}
+
 
 // ************************************************************************* //
