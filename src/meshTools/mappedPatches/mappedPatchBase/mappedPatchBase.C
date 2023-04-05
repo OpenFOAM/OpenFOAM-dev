@@ -64,7 +64,7 @@ Foam::tmp<Foam::pointField> Foam::mappedPatchBase::patchLocalPoints() const
 
 void Foam::mappedPatchBase::calcMapping() const
 {
-    if (mapPtr_.valid())
+    if (treeMapPtr_.valid())
     {
         FatalErrorInFunction
             << "Mapping already calculated" << exit(FatalError);
@@ -96,12 +96,8 @@ void Foam::mappedPatchBase::calcMapping() const
             true
         );
 
-    // Build the mapping...
-    //
-    // This octree based solution is deprecated. The "matching" patch-to-patch
-    // method is equivalent, less code, and should be more efficiently
-    // parallelised.
-    if (!patchToPatchIsUsed_)
+    // Build the mapping
+    if (usingTree_)
     {
         const globalIndex patchGlobalIndex(patch_.size());
 
@@ -242,7 +238,7 @@ void Foam::mappedPatchBase::calcMapping() const
 
         // Construct distribution schedule
         List<Map<label>> compactMap;
-        mapPtr_.reset
+        treeMapPtr_.reset
         (
             new distributionMap
             (
@@ -255,23 +251,22 @@ void Foam::mappedPatchBase::calcMapping() const
         const labelList oldSampleIndices(move(sampleIndices));
 
         // Construct input mapping for data to be distributed
-        nbrPatchFaceIndices_ = labelList(mapPtr_->constructSize(), -1);
-        UIndirectList<label>(nbrPatchFaceIndices_, oldToNew) = oldSampleIndices;
+        treeNbrPatchFaceIndices_ = labelList(treeMapPtr_->constructSize(), -1);
+        UIndirectList<label>(treeNbrPatchFaceIndices_, oldToNew) =
+            oldSampleIndices;
 
         // Reverse the map. This means the map is "forward" when going from
         // the neighbour patch to this patch, which is logical.
-        mapPtr_.reset
+        treeMapPtr_.reset
         (
             new distributionMap
             (
                 patch_.size(),
-                move(mapPtr_->constructMap()),
-                move(mapPtr_->subMap())
+                move(treeMapPtr_->constructMap()),
+                move(treeMapPtr_->subMap())
             )
         );
     }
-
-    // This (much simpler) patch-to-patch solution supersedes the above
     else
     {
         if (patchToPatchIsValid_)
@@ -310,13 +305,14 @@ Foam::mappedPatchBase::mappedPatchBase(const polyPatch& pp)
     nbrRegionName_(patch_.boundaryMesh().mesh().name()),
     nbrPatchName_(patch_.name()),
     transform_(true),
-    mapPtr_(nullptr),
-    nbrPatchFaceIndices_(),
-    patchToPatchIsUsed_(false),
+    usingTree_(true),
+    treeMapPtr_(nullptr),
+    treeNbrPatchFaceIndices_(),
     patchToPatchIsValid_(false),
     patchToPatchPtr_(nullptr),
     matchTol_(defaultMatchTol_),
-    reMapAfterMove_(true)
+    reMapAfterMove_(true),
+    reMapNbr_(false)
 {}
 
 
@@ -333,13 +329,14 @@ Foam::mappedPatchBase::mappedPatchBase
     nbrRegionName_(nbrRegionName),
     nbrPatchName_(nbrPatchName),
     transform_(transform),
-    mapPtr_(nullptr),
-    nbrPatchFaceIndices_(),
-    patchToPatchIsUsed_(false),
+    usingTree_(true),
+    treeMapPtr_(nullptr),
+    treeNbrPatchFaceIndices_(),
     patchToPatchIsValid_(false),
     patchToPatchPtr_(nullptr),
     matchTol_(defaultMatchTol_),
-    reMapAfterMove_(true)
+    reMapAfterMove_(true),
+    reMapNbr_(false)
 {}
 
 
@@ -373,13 +370,13 @@ Foam::mappedPatchBase::mappedPatchBase
       ? cyclicTransform(true)
       : cyclicTransform(dict, false)
     ),
-    mapPtr_(nullptr),
-    nbrPatchFaceIndices_(),
-    patchToPatchIsUsed_(dict.found("method") || dict.found("sampleMode")),
+    usingTree_(!dict.found("method") && !dict.found("sampleMode")),
+    treeMapPtr_(nullptr),
+    treeNbrPatchFaceIndices_(),
     patchToPatchIsValid_(false),
     patchToPatchPtr_
     (
-        patchToPatchIsUsed_
+        !usingTree_
       ? patchToPatch::New
         (
             dict.lookupBackwardsCompatible<word>({"method", "sampleMode"}),
@@ -388,7 +385,8 @@ Foam::mappedPatchBase::mappedPatchBase
       : nullptr
     ),
     matchTol_(dict.lookupOrDefault("matchTolerance", defaultMatchTol_)),
-    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true))
+    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true)),
+    reMapNbr_(false)
 {
     const bool haveCoupleGroup = coupleGroup_.valid();
 
@@ -426,18 +424,19 @@ Foam::mappedPatchBase::mappedPatchBase
     nbrRegionName_(mpb.nbrRegionName_),
     nbrPatchName_(mpb.nbrPatchName_),
     transform_(mpb.transform_),
-    mapPtr_(nullptr),
-    nbrPatchFaceIndices_(),
-    patchToPatchIsUsed_(mpb.patchToPatchIsUsed_),
+    usingTree_(mpb.usingTree_),
+    treeMapPtr_(nullptr),
+    treeNbrPatchFaceIndices_(),
     patchToPatchIsValid_(false),
     patchToPatchPtr_
     (
-        patchToPatchIsUsed_
+        !usingTree_
       ? patchToPatch::New(mpb.patchToPatchPtr_->type(), false).ptr()
       : nullptr
     ),
     matchTol_(mpb.matchTol_),
-    reMapAfterMove_(true)
+    reMapAfterMove_(true),
+    reMapNbr_(false)
 {}
 
 
@@ -497,9 +496,10 @@ void Foam::mappedPatchBase::clearOut()
 {
     if (reMapAfterMove_)
     {
-        mapPtr_.clear();
-        nbrPatchFaceIndices_.clear();
+        treeMapPtr_.clear();
+        treeNbrPatchFaceIndices_.clear();
         patchToPatchIsValid_ = false;
+        reMapNbr_ = true;
     }
 }
 
@@ -525,7 +525,7 @@ void Foam::mappedPatchBase::write(Ostream& os) const
 
     transform_.write(os);
 
-    if (patchToPatchIsUsed_)
+    if (!usingTree_)
     {
         writeEntry(os, "method", patchToPatchPtr_->type());
     }

@@ -46,8 +46,8 @@ inline bool Foam::mappedPatchBase::symmetric() const
         nbrPatchIsMapped()
      && nbrMappedPatch().nbrRegionName_ == patch_.boundaryMesh().mesh().name()
      && nbrMappedPatch().nbrPatchName_ == patch_.name()
-     && patchToPatchIsUsed_
-     && nbrMappedPatch().patchToPatchIsUsed_
+     && !usingTree_
+     && !nbrMappedPatch().usingTree_
      && nbrMappedPatch().patchToPatchPtr_->type() == patchToPatchPtr_->type();
 }
 
