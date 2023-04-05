@@ -348,7 +348,7 @@ Foam::surfaceFilm::passivePatchIDs() const
 
 void Foam::surfaceFilm::evolve()
 {
-    Info<< "\nEvolving " << modelType_ << " for film "
+    Info<< nl << "Evolving " << modelType_ << " for film "
         << mesh_.name() << endl;
 
     preEvolveFilm();

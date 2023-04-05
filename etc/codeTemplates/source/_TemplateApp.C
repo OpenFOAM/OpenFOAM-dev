@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    Info<< "\nEnd\n" << endl;
+    Info<< nl << "End" << nl << endl;
     return 0;
 }
 

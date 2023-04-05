@@ -1,4 +1,4 @@
-    Info<< "\nReading g" << endl;
+    Info<< nl << "Reading g" << endl;
     uniformDimensionedVectorField g
     (
         IOobject

@@ -637,7 +637,7 @@ void Foam::MomentumCloud<CloudType>::preEvolve()
     // with topology change due to lazy evaluation of valid mesh dimensions
     label nGeometricD = this->mesh().nGeometricD();
 
-    Info<< endl << "Solving " << nGeometricD << "-D cloud " << this->name()
+    Info<< nl << "Solving " << nGeometricD << "-D cloud " << this->name()
         << endl;
 
     this->dispersion().cacheFields(true);

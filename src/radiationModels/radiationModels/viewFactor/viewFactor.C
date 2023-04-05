@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -551,7 +551,7 @@ void Foam::radiationModels::viewFactor::calculate()
                 }
             }
 
-            Info<< "\nSolving view factor equations..." << endl;
+            Info<< nl << "Solving view factor equations..." << endl;
 
             // Negative coming into the fluid
             LUsolve(C, q);

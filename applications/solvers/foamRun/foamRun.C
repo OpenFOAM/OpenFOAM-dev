@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    Info<< "\nStarting time loop\n" << endl;
+    Info<< nl << "Starting time loop\n" << endl;
 
     while (pimple.run(runTime))
     {
