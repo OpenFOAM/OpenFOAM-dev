@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,25 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::nucleationModels::wallBoiling
+    Foam::diameterModels::IATEsources::wallBoiling
 
 Description
-    Wall-boiling model which requires a velocityGroup (i.e. phase) to be
-    specified in which the nucleation occurs. This setting must be consistent
-    with the specifications in the alphatWallBoilingWallFunction. If the
-    departure-diameter lies outside the diameter-range given by the sizeGroups
-    of the corresponding velocityGroup, the solver will give a warning and the
-    nucleation rate will be set to zero.
+    Wall-boiling IATE source.
 
 SourceFiles
     wallBoiling.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef wallBoiling_H
-#define wallBoiling_H
+#ifndef IATEwallBoiling_H
+#define IATEwallBoiling_H
 
-#include "nucleationModel.H"
+#include "IATEsource.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,7 +43,7 @@ namespace Foam
 {
 namespace diameterModels
 {
-namespace nucleationModels
+namespace IATEsources
 {
 
 /*---------------------------------------------------------------------------*\
@@ -57,18 +52,20 @@ namespace nucleationModels
 
 class wallBoiling
 :
-    public nucleationModel
+    public IATEsource
 {
+
 public:
 
     //- Runtime type information
     TypeName("wallBoiling");
 
-    // Constructor
+
+    // Constructors
 
         wallBoiling
         (
-            const populationBalanceModel& popBal,
+            const IATE& iate,
             const dictionary& dict
         );
 
@@ -80,21 +77,17 @@ public:
 
     // Member Functions
 
-        //- Precompute diameter independent expressions
-        virtual void precompute();
-
-        //- Add to nucleationRate
-        virtual void addToNucleationRate
+        virtual tmp<fvScalarMatrix> R
         (
-            volScalarField& nucleationRate,
-            const label i
-        );
+            const volScalarField& alphai,
+            volScalarField& kappai
+        ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace nucleationModels
+} // End namespace IATEsources
 } // End namespace diameterModels
 } // End namespace Foam
 
