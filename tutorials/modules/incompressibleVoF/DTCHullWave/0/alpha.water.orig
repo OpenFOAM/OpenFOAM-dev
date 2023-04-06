@@ -26,6 +26,7 @@ boundaryField
     inlet
     {
         type            waveAlpha;
+        libs            ("libwaves.so");
     }
 
     outlet

@@ -25,12 +25,15 @@ boundaryField
     "(inlet|inletSide)"
     {
         type            waveVelocity;
+        libs            ("libwaves.so");
     }
+
     top
     {
         type            pressureInletOutletVelocity;
         value           uniform (0 0 0);
     }
+
     bottom
     {
         type            noSlip;

@@ -25,13 +25,16 @@ boundaryField
     "(inlet|inletSide)"
     {
         type            waveAlpha;
+        libs            ("libwaves.so");
     }
+
     top
     {
         type            inletOutlet;
         inletValue      uniform 0;
         value           uniform 0;
     }
+
     bottom
     {
         type            zeroGradient;

@@ -24,10 +24,13 @@ boundaryField
     {
         type            zeroGradient;
     }
+
     "(top|inlet|outlet)"
     {
         type            waveAlpha;
+        libs            ("libwaves.so");
     }
+
     "(front|back)"
     {
         type            symmetryPlane;

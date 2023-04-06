@@ -25,19 +25,23 @@ boundaryField
     left
     {
         type            waveVelocity;
+        libs            ("libwaves.so");
     }
+
     right
     {
         type            outletPhaseMeanVelocity;
         UnMean          2;
         alpha           alpha.water;
     }
+
     top
     {
         type            pressureInletOutletVelocity;
         tangentialVelocity  $internalField;
         value           $internalField;
     }
+
     bottom
     {
         type            noSlip;

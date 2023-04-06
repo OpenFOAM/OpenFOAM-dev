@@ -26,12 +26,14 @@ boundaryField
     {
         type            zeroGradient;
     }
+
     left
     {
         type            waveAlpha;
-        U               U;
+        libs            ("libwaves.so");
         inletOutlet     true;
     }
+
     top
     {
         type            inletOutlet;

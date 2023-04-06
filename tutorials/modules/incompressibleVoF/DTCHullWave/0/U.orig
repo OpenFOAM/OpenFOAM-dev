@@ -28,6 +28,7 @@ boundaryField
     inlet
     {
         type            waveVelocity;
+        libs            ("libwaves.so");
     }
 
     outlet

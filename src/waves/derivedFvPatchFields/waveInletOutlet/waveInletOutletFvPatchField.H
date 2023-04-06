@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Usage
     <patchName>
     {
         type        waveInletOutlet;
-        phi         phi;
+        libs        ("libwaves.so");
         inletValueAbove 0.01;
         inletValueBelow table ((0 0.01) (10 0.1));
     }

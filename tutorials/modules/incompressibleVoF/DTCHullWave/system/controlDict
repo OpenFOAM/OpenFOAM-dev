@@ -52,8 +52,6 @@ maxCo           10;
 maxAlphaCo      5;
 maxDeltaT       0.01;
 
-libs            ("libwaves.so");
-
 functions
 {
     surfaces

@@ -24,15 +24,19 @@ boundaryField
     {
         type            noSlip;
     }
+
     "(top|inlet)"
     {
         type            waveVelocity;
+        libs            ("libwaves.so");
     }
+
     outlet
     {
         type            pressureInletOutletVelocity;
         value           $internalField;
     }
+
     "(front|back)"
     {
         type            symmetryPlane;
