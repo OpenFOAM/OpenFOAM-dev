@@ -1,37 +1,46 @@
 {
-    volVectorField HbyA(constrainHbyA(rAUc*UcEqn.H(), Uc, p));
-    volVectorField HbyASp(rASpUc/rAUc*HbyA);
+    const volScalarField rAUc(1.0/UcEqn.A());
+    const volScalarField r1ADUc(1/(1 + rAUc*Dc));
 
-    surfaceScalarField phiHbyASp
+    const surfaceScalarField rAUcf(fvc::interpolate(rAUc));
+    const surfaceScalarField r1ADUcf(1/(1 + rAUcf*fvc::interpolate(Dc)));
+    const surfaceScalarField rADUcf("Dp", r1ADUcf*rAUcf);
+
+    volVectorField HbyA(constrainHbyA(rAUc*UcEqn.H(), Uc, p));
+
+    surfaceScalarField phiHbyAD
     (
-        "phiHbyASp",
+        "phiHbyAD",
         (
-           fvc::flux(HbyASp)
-         + alphacf*rASpUcf*fvc::ddtCorr(Uc, phic, Ucf)
+            r1ADUcf
+           *(
+                fvc::flux(HbyA)
+              + alphacf*rAUcf*fvc::ddtCorr(Uc, phic, Ucf)
+            )
         )
     );
 
     if (p.needReference())
     {
-        fvc::makeRelative(phiHbyASp, Uc);
-        adjustPhi(phiHbyASp, Uc, p);
-        fvc::makeAbsolute(phiHbyASp, Uc);
+        fvc::makeRelative(phiHbyAD, Uc);
+        adjustPhi(phiHbyAD, Uc, p);
+        fvc::makeAbsolute(phiHbyAD, Uc);
     }
 
-    phiHbyASp += phicSUSu;
+    phiHbyAD += rADUcf*(Fgf + Fdf);
 
     // Update the pressure BCs to ensure flux consistency
-    constrainPressure(p, Uc, phiHbyASp, rASpUcf);
+    constrainPressure(p, Uc, phiHbyAD, rADUcf);
 
     // Non-orthogonal pressure corrector loop
     while (pimple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
-            fvm::laplacian(alphacf*rASpUcf, p)
+            fvm::laplacian(alphacf*rADUcf, p)
          ==
             fvc::ddt(alphac)
-          + fvc::div(alphacf*phiHbyASp)
+          + fvc::div(alphacf*phiHbyAD)
         );
 
         pEqn.setReference
@@ -44,18 +53,27 @@
 
         if (pimple.finalNonOrthogonalIter())
         {
-            phic = phiHbyASp - pEqn.flux()/alphacf;
+            phic = phiHbyAD - pEqn.flux()/alphacf;
 
             // Explicitly relax pressure for momentum corrector
             p.relax();
 
             Uc =
-                HbyA
-              + rAUc
-               *fvc::reconstruct
-                (
-                    (phicSUSu + phicSUSp*phic - pEqn.flux()/alphacf)/rASpUcf
+                r1ADUc
+               *(
+                    HbyA
+                  + rAUc
+                   *(
+                        fvc::reconstruct
+                        (
+                            Fgf - pEqn.flux()/alphacf/rADUcf
+                          - Dcf*(phic - phid)
+                        )
+                      + Dc*fvc::reconstruct(phic - phid)
+                      + Fd
+                     )
                 );
+
             Uc.correctBoundaryConditions();
             fvConstraints.constrain(Uc);
 

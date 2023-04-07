@@ -31,50 +31,6 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "NamedEnum.H"
-
-namespace Foam
-{
-    enum class cloudForceSplit
-    {
-        faceExplicitCellImplicit, // Implicit part of the cloud force added to
-                                  // the cell momentum equation. Explicit part
-                                  // to the face momentum equation. This is the
-                                  // least likely to create staggering patterns
-                                  // in the velocity field, but it can create
-                                  // unphysical perturbations in cell
-                                  // velocities even when particles and flow
-                                  // have the similar velocities.
-
-        faceExplicitCellLagged,   // Entire cloud force evaluated explicitly
-                                  // and added to the face momentum equation.
-                                  // Lagged correction (i.e.,
-                                  // fvm::Sp(cloudSU.diag(), Uc) -
-                                  // cloudSU.diag()*Uc) added to the cell
-                                  // momentum equation. This creates physical
-                                  // cell velocities when particles and flow
-                                  // have the same velocity, but can also
-                                  // result in staggering patterns in packed
-                                  // beds. Unsuitable for MPPIC.
-
-        faceImplicit              // Implicit and explicit parts of the force
-                                  // both added to the face momentum equation.
-                                  // Behaves somewhere between the other two.
-    };
-
-    template<>
-    const char* NamedEnum<cloudForceSplit, 3>::names[] =
-    {
-        "faceExplicitCellImplicit",
-        "faceExplicitCellLagged",
-        "faceImplicit"
-    };
-
-    const NamedEnum<cloudForceSplit, 3> cloudForceSplitNames;
-}
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #include "argList.H"
 #include "timeSelector.H"
 #include "viscosityModel.H"
@@ -165,68 +121,60 @@ int main(int argc, char *argv[])
         alphacf = fvc::interpolate(alphac);
         alphaPhic = alphacf*phic;
 
-        // Cloud forces
-        fvVectorMatrix cloudSU(clouds.SU(Uc));
-        volVectorField cloudSUu
+        // Dispersed phase drag force
+        volVectorField Fd
         (
             IOobject
             (
-                "cloudSUu",
+                "Fd",
                 runTime.name(),
                 mesh
             ),
             mesh,
-            dimensionedVector(dimForce/dimVolume, Zero),
+            dimensionedVector(dimAcceleration, Zero),
             zeroGradientFvPatchVectorField::typeName
         );
-        volScalarField cloudSUp
+
+        // continuous-dispersed phase drag coefficient
+        volScalarField Dc
         (
             IOobject
             (
-                "cloudSUp",
+                "Dc",
                 runTime.name(),
                 mesh
             ),
             mesh,
-            dimensionedScalar(dimForce/dimVelocity/dimVolume, Zero),
+            dimensionedScalar(dimless/dimTime, Zero),
             zeroGradientFvPatchVectorField::typeName
         );
 
-        const cloudForceSplit cloudSUSplit =
-            pimple.dict().found("cloudForceSplit")
-          ? cloudForceSplitNames.read(pimple.dict().lookup("cloudForceSplit"))
-          : cloudForceSplit::faceExplicitCellImplicit;
-
-        switch (cloudSUSplit)
         {
-            case cloudForceSplit::faceExplicitCellImplicit:
-                cloudSUu.primitiveFieldRef() = -cloudSU.source()/mesh.V();
-                cloudSUu.correctBoundaryConditions();
-                cloudSUp.primitiveFieldRef() = Zero;
-                cloudSUp.correctBoundaryConditions();
-                //cloudSU.diag() = cloudSU.diag();
-                cloudSU.source() = Zero;
-                break;
+            const fvVectorMatrix cloudSU(clouds.SU(Uc));
 
-            case cloudForceSplit::faceExplicitCellLagged:
-                cloudSUu.primitiveFieldRef() =
-                    (cloudSU.diag()*Uc() - cloudSU.source())/mesh.V();
-                cloudSUu.correctBoundaryConditions();
-                cloudSUp.primitiveFieldRef() = Zero;
-                cloudSUp.correctBoundaryConditions();
-                //cloudSU.diag() = cloudSU.diag();
-                cloudSU.source() = cloudSU.diag()*Uc();
-                break;
+            // Dispersed phase drag force
+            Fd.primitiveFieldRef() = -cloudSU.source()/mesh.V()/rhoc;
+            Fd.correctBoundaryConditions();
 
-            case cloudForceSplit::faceImplicit:
-                cloudSUu.primitiveFieldRef() = -cloudSU.source()/mesh.V();
-                cloudSUu.correctBoundaryConditions();
-                cloudSUp.primitiveFieldRef() = cloudSU.diag()/mesh.V();
-                cloudSUp.correctBoundaryConditions();
-                cloudSU.diag() = Zero;
-                cloudSU.source() = Zero;
-                break;
+            // Continuous phase drag coefficient
+            Dc.primitiveFieldRef() = -cloudSU.diag()/mesh.V()/rhoc;
+            Dc.correctBoundaryConditions();
         }
+
+        // Face continuous-dispersed phase drag coefficient
+        const surfaceScalarField Dcf(fvc::interpolate(Dc));
+
+        // Face dispersed phase drag force
+        const surfaceScalarField Fdf(fvc::flux(Fd));
+
+        // Effective flux of the dispersed phase
+        const surfaceScalarField phid
+        (
+            Fdf/(Dcf + dimensionedScalar(Dc.dimensions(), small))
+        );
+
+        // Face buoyancy force
+        const surfaceScalarField Fgf(g & mesh.Sf());
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
