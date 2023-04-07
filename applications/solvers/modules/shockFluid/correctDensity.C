@@ -31,6 +31,8 @@ License
 
 void Foam::solvers::shockFluid::correctDensity()
 {
+    volScalarField& rho(rho_);
+
     fvScalarMatrix rhoEqn
     (
         fvm::ddt(rho) + fvc::div(phi)

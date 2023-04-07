@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,16 +49,13 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         autoPtr<fluidThermo>(psiuMulticomponentThermo::New(mesh).ptr())
     ),
 
-    thermo(refCast<psiuMulticomponentThermo>(isothermalFluid::thermo)),
+    thermo_(refCast<psiuMulticomponentThermo>(isothermalFluid::thermo_)),
 
-    composition(thermo.composition()),
+    composition(thermo_.composition()),
 
-    b(composition.Y("b")),
+    b_(composition.Y("b")),
 
-    unstrainedLaminarFlameSpeed
-    (
-        laminarFlameSpeed::New(thermo)
-    ),
+    unstrainedLaminarFlameSpeed(laminarFlameSpeed::New(thermo_)),
 
     Su
     (
@@ -76,7 +73,7 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
     SuMin(0.01*Su.average()),
     SuMax(4*Su.average()),
 
-    Xi
+    Xi_
     (
         IOobject
         (
@@ -99,7 +96,7 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        Xi*Su
+        Xi_*Su
     ),
 
     combustionProperties
@@ -149,9 +146,13 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
     thermophysicalTransport
     (
         momentumTransport(),
-        thermo,
+        thermo_,
         true
-    )
+    ),
+
+    thermo(thermo_),
+    b(b_),
+    Xi(Xi_)
 {
     thermo.validate(type(), "ha", "ea");
 

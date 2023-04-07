@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 
 void Foam::solvers::fluid::thermophysicalPredictor()
 {
-    volScalarField& he = thermo.he();
+    volScalarField& he = thermo_.he();
 
     fvScalarMatrix EEqn
     (
@@ -60,7 +60,7 @@ void Foam::solvers::fluid::thermophysicalPredictor()
 
     fvConstraints().constrain(he);
 
-    thermo.correct();
+    thermo_.correct();
 }
 
 

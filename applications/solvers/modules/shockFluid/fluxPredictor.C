@@ -124,7 +124,7 @@ void Foam::solvers::shockFluid::fluxPredictor()
     aphiv_pos = surfaceScalarField::New("aphiv_pos", phiv_pos - aSf());
     aphiv_neg = surfaceScalarField::New("aphiv_neg", phiv_neg + aSf());
 
-    phi = aphiv_pos()*rho_pos() + aphiv_neg()*rho_neg();
+    phi_ = aphiv_pos()*rho_pos() + aphiv_neg()*rho_neg();
 }
 
 

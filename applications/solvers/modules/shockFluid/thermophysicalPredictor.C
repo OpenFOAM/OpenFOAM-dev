@@ -32,7 +32,7 @@ License
 
 void Foam::solvers::shockFluid::thermophysicalPredictor()
 {
-    volScalarField& e = thermo.he();
+    volScalarField& e = thermo_.he();
 
     const surfaceScalarField e_pos(interpolate(e, pos, thermo.T().name()));
     const surfaceScalarField e_neg(interpolate(e, neg, thermo.T().name()));
@@ -78,7 +78,7 @@ void Foam::solvers::shockFluid::thermophysicalPredictor()
 
     fvConstraints().constrain(e);
 
-    thermo.correct();
+    thermo_.correct();
 }
 
 

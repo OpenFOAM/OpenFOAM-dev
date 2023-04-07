@@ -31,6 +31,8 @@ License
 
 void Foam::solvers::isothermalFluid::momentumPredictor()
 {
+    volVectorField& U(U_);
+
     tUEqn =
     (
         fvm::ddt(rho, U) + fvm::div(phi, U)

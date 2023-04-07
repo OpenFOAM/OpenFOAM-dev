@@ -30,9 +30,9 @@ License
 void Foam::solvers::shockFluid::pressureCorrector()
 {
     const volScalarField& psi = thermo.psi();
-    p.ref() = rho()/psi();
-    p.correctBoundaryConditions();
-    rho.boundaryFieldRef() == psi.boundaryField()*p.boundaryField();
+    p_.ref() = rho()/psi();
+    p_.correctBoundaryConditions();
+    rho_.boundaryFieldRef() == psi.boundaryField()*p.boundaryField();
 }
 
 

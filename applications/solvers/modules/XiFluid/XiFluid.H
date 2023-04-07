@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ protected:
 
     // Thermophysical properties
 
-        psiuMulticomponentThermo& thermo;
+        psiuMulticomponentThermo& thermo_;
 
 
     // Composition
@@ -111,7 +111,7 @@ protected:
 
         //- Reference to the combustion regress variable
         //  obtained from the combustion mixture
-        volScalarField& b;
+        volScalarField& b_;
 
         //- Set of fields used for the multivariate convection scheme
         multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;
@@ -132,7 +132,7 @@ protected:
         dimensionedScalar SuMax;
 
         //- Flame wrinkling coefficient field
-        volScalarField Xi;
+        volScalarField Xi_;
 
         //- Turbulent flame-speed field
         volScalarField St;
@@ -213,6 +213,17 @@ protected:
 
 
 public:
+
+        //- Reference to the fluid thermophysical properties
+        const psiuMulticomponentThermo& thermo;
+
+        //- Reference to the combustion regress variable
+        //  obtained from the combustion mixture
+        const volScalarField& b;
+
+        //- Flame wrinkling coefficient field
+        const volScalarField& Xi;
+
 
     //- Runtime type information
     TypeName("XiFluid");

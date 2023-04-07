@@ -30,6 +30,8 @@ License
 
 void Foam::solvers::isothermalFluid::correctDensity()
 {
+    volScalarField& rho(rho_);
+
     fvScalarMatrix rhoEqn
     (
         fvm::ddt(rho) + fvc::div(phi)

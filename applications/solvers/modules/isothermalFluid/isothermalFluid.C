@@ -95,12 +95,12 @@ Foam::solvers::isothermalFluid::isothermalFluid
 :
     fluidSolver(mesh),
 
-    thermo_(thermoPtr),
-    thermo(thermo_()),
+    thermoPtr_(thermoPtr),
+    thermo_(thermoPtr_()),
 
-    p(thermo.p()),
+    p_(thermo_.p()),
 
-    rho
+    rho_
     (
         IOobject
         (
@@ -110,7 +110,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        thermo.renameRho()
+        thermo_.renameRho()
     ),
 
     dpdt
@@ -122,22 +122,22 @@ Foam::solvers::isothermalFluid::isothermalFluid
             mesh
         ),
         mesh,
-        dimensionedScalar(p.dimensions()/dimTime, 0)
+        dimensionedScalar(p_.dimensions()/dimTime, 0)
     ),
 
     buoyancy(buoyancy::New(mesh)),
 
-    p_rgh(buoyancy.valid() ? buoyancy->p_rgh : p),
+    p_rgh(buoyancy.valid() ? buoyancy->p_rgh : p_),
 
     pressureReference
     (
-        p,
+        p_,
         p_rgh,
         pimple.dict(),
-        thermo.incompressible()
+        thermo_.incompressible()
     ),
 
-    U
+    U_
     (
         IOobject
         (
@@ -150,7 +150,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
         mesh
     ),
 
-    phi
+    phi_
     (
         IOobject
         (
@@ -160,25 +160,31 @@ Foam::solvers::isothermalFluid::isothermalFluid
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        linearInterpolate(rho*U) & mesh.Sf()
+        linearInterpolate(rho_*U_) & mesh.Sf()
     ),
 
-    K("K", 0.5*magSqr(U)),
+    K("K", 0.5*magSqr(U_)),
 
     momentumTransport
     (
         compressible::momentumTransportModel::New
         (
-            rho,
-            U,
-            phi,
-            thermo
+            rho_,
+            U_,
+            phi_,
+            thermo_
         )
     ),
 
-    initialMass(fvc::domainIntegrate(rho)),
+    initialMass(fvc::domainIntegrate(rho_)),
 
-    MRF(mesh)
+    MRF(mesh),
+
+    thermo(thermo_),
+    p(p_),
+    rho(rho_),
+    U(U_),
+    phi(phi_)
 {
     // Read the controls
     readControls();
@@ -191,13 +197,13 @@ Foam::solvers::isothermalFluid::isothermalFluid
         hydrostaticInitialisation
         (
             p_rgh,
-            p,
-            rho,
+            p_,
+            rho_,
             U,
             buoyancy->gh,
             buoyancy->ghf,
             buoyancy->pRef,
-            thermo,
+            thermo_,
             pimple.dict()
         );
 
@@ -222,7 +228,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
         Info<< "Constructing face momentum rhoUf" << endl;
 
         // Ensure the U BCs are up-to-date before constructing Uf
-        U.correctBoundaryConditions();
+        U_.correctBoundaryConditions();
 
         rhoUf = new surfaceVectorField
         (
@@ -327,7 +333,7 @@ void Foam::solvers::isothermalFluid::preSolve()
 
 void Foam::solvers::isothermalFluid::thermophysicalPredictor()
 {
-    thermo.correct();
+    thermo_.correct();
 }
 
 
@@ -364,7 +370,7 @@ void Foam::solvers::isothermalFluid::postSolve()
 
     if (!mesh.schemes().steady())
     {
-        rho = thermo.rho();
+        rho_ = thermo.rho();
 
         // Correct rhoUf with the updated density if the mesh is moving
         fvc::correctRhoUf(rhoUf, rho, U, phi, MRF);

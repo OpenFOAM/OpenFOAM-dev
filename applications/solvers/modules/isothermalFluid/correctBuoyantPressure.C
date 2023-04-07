@@ -40,6 +40,11 @@ License
 
 void Foam::solvers::isothermalFluid::correctBuoyantPressure()
 {
+    volScalarField& rho(rho_);
+    volScalarField& p(p_);
+    volVectorField& U(U_);
+    surfaceScalarField& phi(phi_);
+
     // Local references to the buoyancy parameters
     const volScalarField& gh = buoyancy->gh;
     const surfaceScalarField& ghf = buoyancy->ghf;
@@ -220,7 +225,7 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
         const bool constrained = fvConstraints().constrain(p);
 
         // Thermodynamic density update
-        thermo.correctRho(psi*p - psip0);
+        thermo_.correctRho(psi*p - psip0);
 
         if (constrained)
         {

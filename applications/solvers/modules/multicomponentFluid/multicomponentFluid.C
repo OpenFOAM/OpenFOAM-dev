@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,22 +49,25 @@ Foam::solvers::multicomponentFluid::multicomponentFluid(fvMesh& mesh)
         autoPtr<fluidThermo>(fluidMulticomponentThermo::New(mesh).ptr())
     ),
 
-    thermo(refCast<fluidMulticomponentThermo>(isothermalFluid::thermo)),
+    thermo_(refCast<fluidMulticomponentThermo>(isothermalFluid::thermo_)),
 
-    composition(thermo.composition()),
+    composition(thermo_.composition()),
 
-    Y(composition.Y()),
+    Y_(composition.Y()),
 
-    reaction(combustionModel::New(thermo, momentumTransport())),
+    reaction(combustionModel::New(thermo_, momentumTransport())),
 
     thermophysicalTransport
     (
         fluidMulticomponentThermophysicalTransportModel::New
         (
             momentumTransport(),
-            thermo
+            thermo_
         )
-    )
+    ),
+
+    thermo(thermo_),
+    Y(Y_)
 {
     thermo.validate(type(), "h", "e");
 

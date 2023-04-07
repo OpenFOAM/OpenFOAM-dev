@@ -78,25 +78,25 @@ protected:
     // Thermophysical properties
 
         //- Pointer to the fluid thermophysical properties
-        autoPtr<psiThermo> thermo_;
+        autoPtr<psiThermo> thermoPtr_;
 
         //- Reference to the fluid thermophysical properties
-        psiThermo& thermo;
+        psiThermo& thermo_;
 
         //- Reference to the pressure field
-        volScalarField& p;
+        volScalarField& p_;
 
         //- The continuity density field
-        volScalarField rho;
+        volScalarField rho_;
 
 
     // Kinematic properties
 
         //- Velocity field
-        volVectorField U;
+        volVectorField U_;
 
         //- Mass-flux field
-        surfaceScalarField phi;
+        surfaceScalarField phi_;
 
         //- Kinetic energy field
         //  Used in the energy equation
@@ -200,6 +200,24 @@ private:
 
 
 public:
+
+    // Public Data
+
+        //- Reference to the fluid thermophysical properties
+        const psiThermo& thermo;
+
+        //- Reference to the pressure field
+        const volScalarField& p;
+
+        //- Reference to the continuity density field
+        const volScalarField& rho;
+
+        //- Reference to the velocity field
+        const volVectorField& U;
+
+        //- Reference to the mass-flux field
+        const surfaceScalarField& phi;
+
 
     //- Runtime type information
     TypeName("shockFluid");

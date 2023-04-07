@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,6 +161,9 @@ void Foam::solvers::XiFluid::bSolve
     const fv::convectionScheme<scalar>& mvConvection
 )
 {
+    volScalarField& b(b_);
+    volScalarField& Xi(Xi_);
+
     // progress variable
     // ~~~~~~~~~~~~~~~~~
     const volScalarField c("c", scalar(1) - b);
@@ -480,7 +483,7 @@ void Foam::solvers::XiFluid::EauSolve
     const fv::convectionScheme<scalar>& mvConvection
 )
 {
-    volScalarField& heau = thermo.heu();
+    volScalarField& heau = thermo_.heu();
 
     const volScalarField::Internal rhoByRhou(rho()/thermo.rhou()());
 
@@ -522,7 +525,7 @@ void Foam::solvers::XiFluid::EaSolve
     const fv::convectionScheme<scalar>& mvConvection
 )
 {
-    volScalarField& hea = thermo.he();
+    volScalarField& hea = thermo_.he();
 
     fvScalarMatrix EaEqn
     (
@@ -581,10 +584,10 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
 
     if (!ign.ignited())
     {
-        thermo.heu() == thermo.he();
+        thermo_.heu() == thermo.he();
     }
 
-    thermo.correct();
+    thermo_.correct();
 }
 
 

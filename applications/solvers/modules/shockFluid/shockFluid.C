@@ -94,13 +94,13 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
 :
     fluidSolver(mesh),
 
-    thermo_(psiThermo::New(mesh)),
+    thermoPtr_(psiThermo::New(mesh)),
 
-    thermo(thermo_()),
+    thermo_(thermoPtr_()),
 
-    p(thermo.p()),
+    p_(thermo_.p()),
 
-    rho
+    rho_
     (
         IOobject
         (
@@ -110,10 +110,10 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        thermo.renameRho()
+        thermo_.renameRho()
     ),
 
-    U
+    U_
     (
         IOobject
         (
@@ -126,7 +126,7 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
         mesh
     ),
 
-    phi
+    phi_
     (
         IOobject
         (
@@ -136,14 +136,14 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        linearInterpolate(rho*U) & mesh.Sf()
+        linearInterpolate(rho_*U_) & mesh.Sf()
     ),
 
-    K("K", 0.5*magSqr(U)),
+    K("K", 0.5*magSqr(U_)),
 
     inviscid
     (
-        max(thermo.mu()().primitiveField()) > 0
+        max(thermo_.mu()().primitiveField()) > 0
       ? false
       : true
     ),
@@ -154,10 +154,10 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
       ? autoPtr<compressibleMomentumTransportModel>(nullptr)
       : compressible::momentumTransportModel::New
         (
-            rho,
-            U,
-            phi,
-            thermo
+            rho_,
+            U_,
+            phi_,
+            thermo_
         )
     ),
 
@@ -168,14 +168,20 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
       : fluidThermoThermophysicalTransportModel::New
         (
             momentumTransport(),
-            thermo
+            thermo_
         )
     ),
 
     fluxScheme
     (
         mesh.schemes().dict().lookupOrDefault<word>("fluxScheme", "Kurganov")
-    )
+    ),
+
+    thermo(thermo_),
+    p(p_),
+    rho(rho_),
+    U(U_),
+    phi(phi_)
 {
     // Read the controls
     readControls();

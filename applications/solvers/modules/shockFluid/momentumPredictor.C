@@ -31,6 +31,8 @@ License
 
 void Foam::solvers::shockFluid::momentumPredictor()
 {
+    volVectorField& U(U_);
+
     const surfaceVectorField phiUp
     (
         (aphiv_pos()*rhoU_pos() + aphiv_neg()*rhoU_neg())

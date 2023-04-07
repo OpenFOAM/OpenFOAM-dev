@@ -60,7 +60,7 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
 :
     fluidSolver(mesh),
 
-    p
+    p_
     (
         IOobject
         (
@@ -73,9 +73,9 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
         mesh
     ),
 
-    pressureReference(p, pimple.dict()),
+    pressureReference(p_, pimple.dict()),
 
-    U
+    U_
     (
         IOobject
         (
@@ -88,7 +88,7 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
         mesh
     ),
 
-    phi
+    phi_
     (
         IOobject
         (
@@ -98,7 +98,7 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        linearInterpolate(U) & mesh.Sf()
+        linearInterpolate(U_) & mesh.Sf()
     ),
 
     viscosity(viscosityModel::New(mesh)),
@@ -107,13 +107,17 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
     (
         incompressible::momentumTransportModel::New
         (
-            U,
-            phi,
+            U_,
+            phi_,
             viscosity
         )
     ),
 
-    MRF(mesh)
+    MRF(mesh),
+
+    p(p_),
+    U(U_),
+    phi(phi_)
 {
     mesh.schemes().setFluxRequired(p.name());
 
@@ -124,7 +128,7 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
         Info<< "Constructing face momentum Uf" << endl;
 
         // Ensure the U BCs are up-to-date before constructing Uf
-        U.correctBoundaryConditions();
+        U_.correctBoundaryConditions();
 
         Uf = new surfaceVectorField
         (

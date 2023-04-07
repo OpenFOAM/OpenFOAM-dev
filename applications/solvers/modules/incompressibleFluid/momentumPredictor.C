@@ -31,6 +31,8 @@ License
 
 void Foam::solvers::incompressibleFluid::momentumPredictor()
 {
+    volVectorField& U(U_);
+
     tUEqn =
     (
         fvm::ddt(U) + fvm::div(phi, U)

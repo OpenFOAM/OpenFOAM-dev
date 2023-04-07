@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,13 +81,13 @@ protected:
 
     // Thermophysical properties
 
-        fluidMulticomponentThermo& thermo;
+        fluidMulticomponentThermo& thermo_;
 
 
     // Composition
 
         basicSpecieMixture& composition;
-        PtrList<volScalarField>& Y;
+        PtrList<volScalarField>& Y_;
 
 
     // Reactions
@@ -111,6 +111,15 @@ private:
 
 
 public:
+
+    // Public Data
+
+        //- Reference to the fluid thermophysical properties
+        const fluidMulticomponentThermo& thermo;
+
+        //- Reference to the composition
+        const PtrList<volScalarField>& Y;
+
 
     //- Runtime type information
     TypeName("multicomponentFluid");

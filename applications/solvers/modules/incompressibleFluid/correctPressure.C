@@ -38,6 +38,10 @@ License
 
 void Foam::solvers::incompressibleFluid::correctPressure()
 {
+    volScalarField& p(p_);
+    volVectorField& U(U_);
+    surfaceScalarField& phi(phi_);
+
     fvVectorMatrix& UEqn = tUEqn.ref();
 
     volScalarField rAU(1.0/UEqn.A());

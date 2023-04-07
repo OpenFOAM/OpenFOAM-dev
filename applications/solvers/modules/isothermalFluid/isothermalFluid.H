@@ -82,16 +82,16 @@ protected:
     // Thermophysical properties
 
         //- Pointer to the fluid thermophysical properties
-        autoPtr<fluidThermo> thermo_;
+        autoPtr<fluidThermo> thermoPtr_;
 
         //- Reference to the fluid thermophysical properties
-        fluidThermo& thermo;
+        fluidThermo& thermo_;
 
         //- Reference to the pressure field
-        volScalarField& p;
+        volScalarField& p_;
 
         //- The continuity density field
-        volScalarField rho;
+        volScalarField rho_;
 
         //- Rate of change of the pressure
         //  Used in the enthalpy equation
@@ -118,10 +118,10 @@ protected:
     // Kinematic properties
 
         //- Velocity field
-        volVectorField U;
+        volVectorField U_;
 
         //- Mass-flux field
-        surfaceScalarField phi;
+        surfaceScalarField phi_;
 
         //- Kinetic energy field
         //  Used in the energy equation
@@ -212,6 +212,24 @@ protected:
 
 
 public:
+
+    // Public Data
+
+        //- Reference to the fluid thermophysical properties
+        const fluidThermo& thermo;
+
+        //- Reference to the pressure field
+        const volScalarField& p;
+
+        //- Reference to the continuity density field
+        const volScalarField& rho;
+
+        //- Velocity field
+        const volVectorField& U;
+
+        //- Mass-flux field
+        const surfaceScalarField& phi;
+
 
     //- Runtime type information
     TypeName("isothermalFluid");

@@ -108,7 +108,7 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
         {
             if (composition.solve(i))
             {
-                volScalarField& Yi = Y[i];
+                volScalarField& Yi = Y_[i];
 
                 if (Yref.found(Yi.name()))
                 {

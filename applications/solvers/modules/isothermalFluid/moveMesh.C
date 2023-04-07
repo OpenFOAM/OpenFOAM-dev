@@ -54,13 +54,13 @@ void Foam::solvers::isothermalFluid::moveMesh()
             {
                 // Calculate absolute flux
                 // from the mapped surface velocity
-                phi = mesh.Sf() & rhoUf();
+                phi_ = mesh.Sf() & rhoUf();
 
-                correctUphiBCs(rho, U, phi, true);
+                correctUphiBCs(rho, U_, phi_, true);
 
                 fv::correctPhi
                 (
-                    phi,
+                    phi_,
                     buoyancy.valid() ? p_rgh : p,
                     thermo.psi(),
                     autoPtr<volScalarField>(),
@@ -69,7 +69,7 @@ void Foam::solvers::isothermalFluid::moveMesh()
                 );
 
                 // Make the fluxes relative to the mesh-motion
-                fvc::makeRelative(phi, rho, U);
+                fvc::makeRelative(phi_, rho, U);
             }
 
             meshCourantNo();

@@ -81,7 +81,7 @@ protected:
     // Pressure
 
         //- Pressure field
-        volScalarField p;
+        volScalarField p_;
 
         //- Pressure reference
         Foam::pressureReference pressureReference;
@@ -90,10 +90,10 @@ protected:
     // Kinematic properties
 
         //- Velocity field
-        volVectorField U;
+        volVectorField U_;
 
         //- Mass-flux field
-        surfaceScalarField phi;
+        surfaceScalarField phi_;
 
 
     // Momentum transport
@@ -142,6 +142,18 @@ protected:
 
 
 public:
+
+    // Public Data
+
+        //- Reference to the pressure field
+        const volScalarField& p;
+
+        //- Reference to the velocity field
+        const volVectorField& U;
+
+        //- Reference to the mass-flux field
+        const surfaceScalarField& phi;
+
 
     //- Runtime type information
     TypeName("incompressibleFluid");
