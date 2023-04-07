@@ -63,7 +63,7 @@ protected:
 
     // Thermophysical properties
 
-        solidDisplacementThermo& thermo;
+        solidDisplacementThermo& thermo_;
 
 
     // Solution algorithm controls
@@ -93,7 +93,7 @@ protected:
     // Kinematic properties
 
         //- Displacement field
-        volVectorField D;
+        volVectorField D_;
 
         //- Young's modulus
         const volScalarField& E;
@@ -128,6 +128,15 @@ protected:
 
 
 public:
+
+    // Public Data
+
+        //- Reference to the solid thermophysical properties
+        const solidDisplacementThermo& thermo;
+
+        //- Reference to the Displacement field
+        const volVectorField& D;
+
 
     //- Runtime type information
     TypeName("solidDisplacement");

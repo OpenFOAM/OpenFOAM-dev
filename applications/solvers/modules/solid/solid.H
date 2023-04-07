@@ -67,11 +67,11 @@ protected:
 
     // Thermophysical properties
 
-        autoPtr<solidThermo> thermo_;
+        autoPtr<solidThermo> thermoPtr_;
 
-        solidThermo& thermo;
+        solidThermo& thermo_;
 
-        volScalarField& T;
+        volScalarField& T_;
 
 
     // Thermophysical transport
@@ -100,6 +100,15 @@ private:
 
 
 public:
+
+    // Public Data
+
+        //- Reference to the solid thermophysical properties
+        const solidThermo& thermo;
+
+        //- Reference to the temperature field
+        const volScalarField& T;
+
 
     //- Runtime type information
     TypeName("solid");

@@ -66,11 +66,11 @@ Foam::solvers::solidDisplacement::solidDisplacement(fvMesh& mesh)
         autoPtr<solidThermo>(new solidDisplacementThermo(mesh))
     ),
 
-    thermo(refCast<solidDisplacementThermo>(solid::thermo)),
+    thermo_(refCast<solidDisplacementThermo>(solid::thermo_)),
 
     compactNormalStress(pimple.dict().lookup("compactNormalStress")),
 
-    D
+    D_
     (
         IOobject
         (
@@ -83,26 +83,26 @@ Foam::solvers::solidDisplacement::solidDisplacement(fvMesh& mesh)
         mesh
     ),
 
-    E(thermo.E()),
-    nu(thermo.nu()),
+    E(thermo_.E()),
+    nu(thermo_.nu()),
 
     mu(E/(2*(1 + nu))),
 
     lambda
     (
-        thermo.planeStress()
+        thermo_.planeStress()
       ? nu*E/((1 + nu)*(1 - nu))
       : nu*E/((1 + nu)*(1 - 2*nu))
     ),
 
     threeK
     (
-        thermo.planeStress()
+        thermo_.planeStress()
       ? E/(1 - nu)
       : E/(1 - 2*nu)
     ),
 
-    threeKalpha("threeKalpha", threeK*thermo.alphav()),
+    threeKalpha("threeKalpha", threeK*thermo_.alphav()),
 
     sigmaD
     (
@@ -112,7 +112,7 @@ Foam::solvers::solidDisplacement::solidDisplacement(fvMesh& mesh)
             runTime.name(),
             mesh
         ),
-        mu*twoSymm(fvc::grad(D)) + lambda*(I*tr(fvc::grad(D)))
+        mu*twoSymm(fvc::grad(D_)) + lambda*(I*tr(fvc::grad(D_)))
     ),
 
     divSigmaExp
@@ -126,10 +126,13 @@ Foam::solvers::solidDisplacement::solidDisplacement(fvMesh& mesh)
         fvc::div(sigmaD)
       - (
             compactNormalStress
-          ? fvc::laplacian(2*mu + lambda, D, "laplacian(DD,D)")
-          : fvc::div((2*mu + lambda)*fvc::grad(D), "div(sigmaD)")
+          ? fvc::laplacian(2*mu + lambda, D_, "laplacian(DD,D)")
+          : fvc::div((2*mu + lambda)*fvc::grad(D_), "div(sigmaD)")
         )
-    )
+    ),
+
+    thermo(thermo_),
+    D(D_)
 {
     mesh.schemes().setFluxRequired(D.name());
 
@@ -166,6 +169,8 @@ void Foam::solvers::solidDisplacement::thermophysicalPredictor()
 
 void Foam::solvers::solidDisplacement::pressureCorrector()
 {
+    volVectorField& D(D_);
+
     const volScalarField& rho = thermo.rho();
 
     int iCorr = 0;

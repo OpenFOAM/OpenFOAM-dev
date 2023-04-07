@@ -70,23 +70,6 @@ protected:
         bool LTS;
 
 
-public:
-
-    // Public Data
-
-        //- Region mesh
-        const fvMesh& mesh;
-
-        //- Time
-        const Time& runTime;
-
-        //- PIMPLE inner-loop controls
-        pimpleNoLoopControl pimple;
-
-        //- deltaT increase factor
-        static scalar deltaTFactor;
-
-
 private:
 
     // Private Member Data
@@ -105,6 +88,21 @@ private:
 
 
 public:
+
+    // Public Data
+
+        //- Region mesh
+        const fvMesh& mesh;
+
+        //- Time
+        const Time& runTime;
+
+        //- PIMPLE inner-loop controls
+        pimpleNoLoopControl pimple;
+
+        //- deltaT increase factor
+        static scalar deltaTFactor;
+
 
     //- Runtime type information
     TypeName("solver");

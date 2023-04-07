@@ -87,14 +87,17 @@ Foam::solvers::solid::solid
 :
     solver(mesh),
 
-    thermo_(thermoPtr),
-    thermo(thermo_()),
+    thermoPtr_(thermoPtr),
+    thermo_(thermoPtr_()),
 
-    T(thermo.T()),
+    T_(thermo_.T()),
 
-    thermophysicalTransport(solidThermophysicalTransportModel::New(thermo)),
+    thermophysicalTransport(solidThermophysicalTransportModel::New(thermo_)),
 
-    DiNum(0)
+    DiNum(0),
+
+    thermo(thermo_),
+    T(T_)
 {
     thermo.validate("solid", "h", "e");
 
@@ -192,7 +195,7 @@ void Foam::solvers::solid::momentumPredictor()
 
 void Foam::solvers::solid::thermophysicalPredictor()
 {
-    volScalarField& e = thermo.he();
+    volScalarField& e = thermo_.he();
     const volScalarField& rho = thermo.rho();
 
     while (pimple.correctNonOrthogonal())
@@ -214,7 +217,7 @@ void Foam::solvers::solid::thermophysicalPredictor()
         fvConstraints().constrain(e);
     }
 
-    thermo.correct();
+    thermo_.correct();
 }
 
 

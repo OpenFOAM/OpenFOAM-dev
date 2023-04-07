@@ -174,27 +174,6 @@ protected:
         tmp<fvVectorMatrix> tUEqn;
 
 
-public:
-
-    // Constant access to the physical state
-
-        //- Film thickness
-        const volScalarField& delta;
-
-        //- Film volume fraction in the cell layer
-        const volScalarField& alpha;
-
-        //- Reference to the fluid thermophysical properties
-        const fluidThermo& thermo;
-
-        //- The thermodynamic density field
-        const volScalarField& rho;
-
-        //- Film velocity field
-        const volVectorField& U;
-
-
-
 private:
 
     // Private Member Functions
@@ -268,8 +247,30 @@ private:
 
 protected:
 
+    // Protected Member Functions
+
         //- Read controls
         void readControls();
+
+
+public:
+
+    // Public Data
+
+        //- Film thickness
+        const volScalarField& delta;
+
+        //- Film volume fraction in the cell layer
+        const volScalarField& alpha;
+
+        //- Reference to the fluid thermophysical properties
+        const fluidThermo& thermo;
+
+        //- The thermodynamic density field
+        const volScalarField& rho;
+
+        //- Film velocity field
+        const volVectorField& U;
 
 
 public:
