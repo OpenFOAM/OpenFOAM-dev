@@ -62,15 +62,15 @@ void Foam::solvers::VoFSolver::moveMesh()
             {
                 // Calculate absolute flux
                 // from the mapped surface velocity
-                phi = mesh.Sf() & Uf();
+                phi_ = mesh.Sf() & Uf();
 
-                correctUphiBCs(U_, phi, true);
+                correctUphiBCs(U_, phi_, true);
 
                 if (incompressible())
                 {
                     fv::correctPhi
                     (
-                        phi,
+                        phi_,
                         U,
                         p_rgh,
                         rAU,
@@ -83,7 +83,7 @@ void Foam::solvers::VoFSolver::moveMesh()
                 {
                     fv::correctPhi
                     (
-                        phi,
+                        phi_,
                         p_rgh,
                         psiByRho(),
                         rAU,
@@ -93,7 +93,7 @@ void Foam::solvers::VoFSolver::moveMesh()
                 }
 
                 // Make the fluxes relative to the mesh motion
-                fvc::makeRelative(phi, U);
+                fvc::makeRelative(phi_, U);
             }
 
             meshCourantNo();

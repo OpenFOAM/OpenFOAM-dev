@@ -200,10 +200,10 @@ public:
         //  do not depend on phase mass/volume fluxes, and can therefore be
         //  evaluated outside the corrector loop. This includes things like
         //  lift, turbulent dispersion, and wall lubrication.
-        virtual PtrList<surfaceScalarField> Fs();
+        virtual PtrList<surfaceScalarField> Fs() const;
 
         //- As Fs, but for the face-based algorithm
-        virtual PtrList<surfaceScalarField> Ffs();
+        virtual PtrList<surfaceScalarField> Ffs() const;
 
         //- Return the explicit drag force fluxes for the cell-based algorithm.
         //  These depend on phase mass/volume fluxes, and must therefore be

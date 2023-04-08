@@ -83,7 +83,7 @@ Foam::solvers::multiphaseVoFSolver::multiphaseVoFSolver
 :
     VoFSolver(mesh, autoPtr<VoFMixture>(mixturePtr.ptr())),
 
-    mixture(refCast<multiphaseVoFMixture>(VoFSolver::mixture)),
+    mixture(refCast<multiphaseVoFMixture>(VoFSolver::mixture_)),
 
     phases(mixture.phases())
 {

@@ -42,6 +42,7 @@ License
 void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
 {
     volVectorField& U = U_;
+    surfaceScalarField& phi(phi_);
 
     fvVectorMatrix& UEqn = tUEqn.ref();
     setrAU(UEqn);

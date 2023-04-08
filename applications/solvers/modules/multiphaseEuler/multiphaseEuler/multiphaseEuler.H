@@ -107,18 +107,18 @@ protected:
 
     // Phase properties
 
-        autoPtr<phaseSystem> fluidPtr;
+        autoPtr<phaseSystem> fluidPtr_;
 
-        phaseSystem& fluid;
+        phaseSystem& fluid_;
 
-        phaseSystem::phaseModelList& phases;
+        phaseSystem::phaseModelList& phases_;
 
-        surfaceScalarField& phi;
+        surfaceScalarField& phi_;
 
 
     // Thermophysical properties
 
-        volScalarField& p;
+        volScalarField& p_;
 
         //- Reference to the buoyant pressure for buoyant cases
         //  otherwise to the pressure
@@ -197,6 +197,21 @@ private:
 
 
 public:
+
+    // Public Data
+
+        //- Reference to the multiphase fluid
+        const phaseSystem& fluid;
+
+        //- Reference to the phases
+        const phaseSystem::phaseModelList& phases;
+
+        //- Reference to the pressure field
+        const volScalarField& p;
+
+        //- Reference to the mass-flux field
+        const surfaceScalarField& phi;
+
 
     //- Runtime type information
     TypeName("multiphaseEuler");

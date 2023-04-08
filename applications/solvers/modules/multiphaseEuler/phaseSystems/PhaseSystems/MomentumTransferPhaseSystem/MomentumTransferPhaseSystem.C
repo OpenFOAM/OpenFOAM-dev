@@ -532,7 +532,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::KdVmfs() const
 
 template<class BasePhaseSystem>
 Foam::PtrList<Foam::surfaceScalarField>
-Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs()
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
 {
     PtrList<surfaceScalarField> Fs(this->phaseModels_.size());
 
@@ -659,7 +659,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs()
 
 template<class BasePhaseSystem>
 Foam::PtrList<Foam::surfaceScalarField>
-Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Ffs()
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Ffs() const
 {
     PtrList<surfaceScalarField> Ffs(this->phaseModels_.size());
 

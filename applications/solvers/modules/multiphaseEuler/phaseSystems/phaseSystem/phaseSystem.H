@@ -526,10 +526,10 @@ public:
             virtual PtrList<surfaceScalarField> KdVmfs() const = 0;
 
             //- Return the force fluxes for the cell-based algorithm
-            virtual PtrList<surfaceScalarField> Fs() = 0;
+            virtual PtrList<surfaceScalarField> Fs() const = 0;
 
             //- Return the force fluxes for the face-based algorithm
-            virtual PtrList<surfaceScalarField> Ffs() = 0;
+            virtual PtrList<surfaceScalarField> Ffs() const = 0;
 
             //- Return the force fluxes for the cell-based algorithm
             virtual PtrList<surfaceScalarField> KdPhis() const = 0;

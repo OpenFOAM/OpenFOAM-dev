@@ -32,6 +32,8 @@ void Foam::solvers::multiphaseEuler::cellMomentumPredictor()
 {
     Info<< "Constructing momentum equations" << endl;
 
+    phaseSystem& fluid(fluid_);
+
     autoPtr<phaseSystem::momentumTransferTable>
         momentumTransferPtr(fluid.momentumTransfer());
 
@@ -72,6 +74,8 @@ void Foam::solvers::multiphaseEuler::cellMomentumPredictor()
 void Foam::solvers::multiphaseEuler::faceMomentumPredictor()
 {
     Info<< "Constructing face momentum equations" << endl;
+
+    phaseSystem& fluid(fluid_);
 
     autoPtr<phaseSystem::momentumTransferTable>
         momentumTransferPtr(fluid.momentumTransferf());

@@ -78,9 +78,9 @@ protected:
     // Phase properties
 
         //- The compressible two-phase mixture
-        autoPtr<VoFMixture> mixture_;
+        autoPtr<VoFMixture> mixturePtr_;
 
-        VoFMixture& mixture;
+        VoFMixture& mixture_;
 
         //- Name of the alpha convection scheme
         const word divAlphaName;
@@ -95,7 +95,7 @@ protected:
         volVectorField U_;
 
         //- Volumetric flux field
-        surfaceScalarField phi;
+        surfaceScalarField phi_;
 
 
     // Thermophysical properties
@@ -201,13 +201,17 @@ protected:
 
 public:
 
-    // Access to the physical state
+    // Public Data
 
-        //- Velocity field
+        //- Reference to the VoF mixture
+        const VoFMixture& mixture;
+
+        //- Reference to the velocity field
         const volVectorField& U;
 
+        //- Reference to the mass-flux field
+        const surfaceScalarField& phi;
 
-public:
 
     //- Runtime type information
     TypeName("VoFSolver");

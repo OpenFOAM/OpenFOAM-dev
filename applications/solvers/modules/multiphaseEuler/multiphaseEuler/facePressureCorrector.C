@@ -43,12 +43,14 @@ License
 
 void Foam::solvers::multiphaseEuler::facePressureCorrector()
 {
+    volScalarField& p(p_);
+
     // Face volume fractions
     PtrList<surfaceScalarField> alphafs(phases.size());
     PtrList<surfaceScalarField> alphaRho0fs(phases.size());
     forAll(phases, phasei)
     {
-        phaseModel& phase = phases[phasei];
+        const phaseModel& phase = phases[phasei];
         const volScalarField& alpha = phase;
 
         alphafs.set(phasei, fvc::interpolate(alpha).ptr());
@@ -75,7 +77,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
 
         forAll(fluid.movingPhases(), movingPhasei)
         {
-            phaseModel& phase = fluid.movingPhases()[movingPhasei];
+            const phaseModel& phase = fluid.movingPhases()[movingPhasei];
 
             rAUfs.set
             (
@@ -99,7 +101,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
     PtrList<surfaceScalarField> alpharAUfs(phases.size());
     forAll(phases, phasei)
     {
-        phaseModel& phase = phases[phasei];
+        const phaseModel& phase = phases[phasei];
         alpharAUfs.set
         (
             phase.index(),
@@ -126,7 +128,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
         p_rgh = p - rho*buoyancy.gh;
 
         // Correct fixed-flux BCs to be consistent with the velocity BCs
-        fluid.correctBoundaryFlux();
+        fluid_.correctBoundaryFlux();
 
         // Combined buoyancy and force fluxes
         PtrList<surfaceScalarField> phigFs(phases.size());
@@ -139,7 +141,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
 
             forAll(phases, phasei)
             {
-                phaseModel& phase = phases[phasei];
+                const phaseModel& phase = phases[phasei];
 
                 phigFs.set
                 (
@@ -166,7 +168,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
         PtrList<surfaceScalarField> phiHbyAs(phases.size());
         forAll(fluid.movingPhases(), movingPhasei)
         {
-            phaseModel& phase = fluid.movingPhases()[movingPhasei];
+            const phaseModel& phase = fluid.movingPhases()[movingPhasei];
 
             phiHbyAs.set
             (
@@ -257,7 +259,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
 
             forAll(phases, phasei)
             {
-                phaseModel& phase = phases[phasei];
+                const phaseModel& phase = phases[phasei];
                 phib +=
                     alphafs[phasei].boundaryField()
                    *phase.phi()().boundaryField();
@@ -312,13 +314,13 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
             // Correct fluxes and velocities on last non-orthogonal iteration
             if (pimple.finalNonOrthogonalIter())
             {
-                phi = phiHbyA + pEqnIncomp.flux();
+                phi_ = phiHbyA + pEqnIncomp.flux();
 
                 surfaceScalarField mSfGradp("mSfGradp", pEqnIncomp.flux()/rAUf);
 
                 forAll(fluid.movingPhases(), movingPhasei)
                 {
-                    phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                    phaseModel& phase = fluid_.movingPhases()[movingPhasei];
 
                     phase.phiRef() =
                         phiHbyAs[phase.index()]
@@ -330,13 +332,13 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
 
                 if (partialElimination)
                 {
-                    fluid.partialEliminationf(rAUfs, alphafs, KdPhifs);
+                    fluid_.partialEliminationf(rAUfs, alphafs, KdPhifs);
                 }
                 else
                 {
                     forAll(fluid.movingPhases(), movingPhasei)
                     {
-                        phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                        phaseModel& phase = fluid_.movingPhases()[movingPhasei];
 
                         MRF.makeRelative(phase.phiRef());
                         fvc::makeRelative(phase.phiRef(), phase.U());
@@ -345,7 +347,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
 
                 forAll(fluid.movingPhases(), movingPhasei)
                 {
-                    phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                    phaseModel& phase = fluid_.movingPhases()[movingPhasei];
 
                     phase.URef() = fvc::reconstruct
                     (
@@ -381,7 +383,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
         // Update densities from change in p_rgh
         forAll(phases, phasei)
         {
-            phaseModel& phase = phases[phasei];
+            phaseModel& phase = phases_[phasei];
             phase.thermoRef().rho() += phase.thermo().psi()*(p_rgh - p_rgh_0);
         }
 

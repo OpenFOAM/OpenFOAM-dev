@@ -156,27 +156,32 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
 
     buoyancy(mesh),
 
-    fluidPtr(phaseSystem::New(mesh)),
+    fluidPtr_(phaseSystem::New(mesh)),
 
-    fluid(fluidPtr()),
+    fluid_(fluidPtr_()),
 
-    phases(fluid.phases()),
+    phases_(fluid_.phases()),
 
-    phi(fluid.phi()),
+    phi_(fluid_.phi()),
 
-    p(phases[0].thermoRef().p()),
+    p_(phases_[0].thermoRef().p()),
 
     p_rgh(buoyancy.p_rgh),
 
     pressureReference
     (
-        p,
+        p_,
         p_rgh,
         pimple.dict(),
-        fluid.incompressible()
+        fluid_.incompressible()
     ),
 
-    MRF(fluid.MRF())
+    MRF(fluid_.MRF()),
+
+    fluid(fluid_),
+    phases(phases_),
+    p(p_),
+    phi(phi_)
 {
     // Read the controls
     readControls();
@@ -244,14 +249,14 @@ void Foam::solvers::multiphaseEuler::prePredictor()
 
     if (pimple.thermophysics() || pimple.flow())
     {
-        fluid.solve(rAUs, rAUfs);
-        fluid.correct();
-        fluid.correctContinuityError();
+        fluid_.solve(rAUs, rAUfs);
+        fluid_.correct();
+        fluid_.correctContinuityError();
     }
 
     if (pimple.flow() && pimple.predictTransport())
     {
-        fluid.predictMomentumTransport();
+        fluid_.predictMomentumTransport();
     }
 }
 
@@ -260,8 +265,8 @@ void Foam::solvers::multiphaseEuler::postCorrector()
 {
     if (pimple.flow() && pimple.correctTransport())
     {
-        fluid.correctMomentumTransport();
-        fluid.correctThermophysicalTransport();
+        fluid_.correctMomentumTransport();
+        fluid_.correctThermophysicalTransport();
     }
 }
 

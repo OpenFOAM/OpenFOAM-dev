@@ -121,11 +121,11 @@ Foam::solvers::incompressibleMultiphaseVoF::incompressibleMultiphaseVoF
 
     if (!runTime.restart() || !divergent())
     {
-        correctUphiBCs(U_, phi, true);
+        correctUphiBCs(U_, phi_, true);
 
         fv::correctPhi
         (
-            phi,
+            phi_,
             U,
             p_rgh,
             rAU,

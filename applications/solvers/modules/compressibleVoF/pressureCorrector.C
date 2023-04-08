@@ -41,6 +41,7 @@ License
 void Foam::solvers::compressibleVoF::pressureCorrector()
 {
     volVectorField& U = U_;
+    surfaceScalarField& phi(phi_);
 
     const volScalarField& rho1 = mixture.rho1();
     const volScalarField& rho2 = mixture.rho2();

@@ -41,6 +41,7 @@ License
 void Foam::solvers::incompressibleVoF::pressureCorrector()
 {
     volVectorField& U = U_;
+    surfaceScalarField& phi(phi_);
 
     fvVectorMatrix& UEqn = tUEqn.ref();
     setrAU(UEqn);

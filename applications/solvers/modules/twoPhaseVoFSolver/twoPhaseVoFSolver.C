@@ -85,7 +85,7 @@ Foam::solvers::twoPhaseVoFSolver::twoPhaseVoFSolver
 :
     VoFSolver(mesh, autoPtr<VoFMixture>(mixturePtr.ptr())),
 
-    mixture(refCast<twoPhaseVoFMixture>(VoFSolver::mixture)),
+    mixture(refCast<twoPhaseVoFMixture>(VoFSolver::mixture_)),
 
     alpha1(mixture.alpha1()),
     alpha2(mixture.alpha2()),

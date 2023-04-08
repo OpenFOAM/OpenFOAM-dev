@@ -64,9 +64,9 @@ void Foam::solvers::multiphaseEuler::moveMesh()
 
             if (correctPhi || mesh.topoChanged())
             {
-                fluid.meshUpdate();
+                fluid_.meshUpdate();
 
-                fluid.correctPhi
+                fluid_.correctPhi
                 (
                     p_rgh,
                     divU,

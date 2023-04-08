@@ -43,6 +43,8 @@ License
 
 void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 {
+    volScalarField& p(p_);
+
     // Face volume fractions
     PtrList<surfaceScalarField> alphafs(phases.size());
     forAll(phases, phasei)
@@ -132,7 +134,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
         p_rgh = p - rho*buoyancy.gh;
 
         // Correct fixed-flux BCs to be consistent with the velocity BCs
-        fluid.correctBoundaryFlux();
+        fluid_.correctBoundaryFlux();
 
         // Combined buoyancy and force fluxes
         PtrList<surfaceScalarField> phigFs(phases.size());
@@ -334,13 +336,13 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             // Correct fluxes and velocities on last non-orthogonal iteration
             if (pimple.finalNonOrthogonalIter())
             {
-                phi = phiHbyA + pEqnIncomp.flux();
+                phi_ = phiHbyA + pEqnIncomp.flux();
 
                 surfaceScalarField mSfGradp("mSfGradp", pEqnIncomp.flux()/rAUf);
 
                 forAll(fluid.movingPhases(), movingPhasei)
                 {
-                    phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                    phaseModel& phase = fluid_.movingPhases()[movingPhasei];
 
                     phase.phiRef() =
                         phiHbyAs[phase.index()]
@@ -359,7 +361,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                 {
                     forAll(fluid.movingPhases(), movingPhasei)
                     {
-                        phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                        phaseModel& phase = fluid_.movingPhases()[movingPhasei];
                         const label phasei = phase.index();
 
                         phase.URef() =
@@ -379,7 +381,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
                     forAll(fluid.movingPhases(), movingPhasei)
                     {
-                        phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                        phaseModel& phase = fluid_.movingPhases()[movingPhasei];
                         const label phasei = phase.index();
 
                         phase.URef() =
@@ -395,7 +397,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
                 if (partialElimination)
                 {
-                    fluid.partialElimination
+                    fluid_.partialElimination
                     (
                         rAUs,
                         KdUs,
@@ -408,7 +410,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                 {
                     forAll(fluid.movingPhases(), movingPhasei)
                     {
-                        phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                        phaseModel& phase = fluid_.movingPhases()[movingPhasei];
 
                         MRF.makeRelative(phase.phiRef());
                         fvc::makeRelative(phase.phiRef(), phase.U());
@@ -417,7 +419,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
                 forAll(fluid.movingPhases(), movingPhasei)
                 {
-                    phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                    phaseModel& phase = fluid_.movingPhases()[movingPhasei];
 
                     phase.URef().correctBoundaryConditions();
                     phase.correctUf();
@@ -427,8 +429,8 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
         }
 
         // Update and limit the static pressure
-        p = p_rgh + rho*buoyancy.gh;
-        fvConstraints().constrain(p);
+        p_ = p_rgh + rho*buoyancy.gh;
+        fvConstraints().constrain(p_);
 
         // Account for static pressure reference
         if (p_rgh.needReference() && fluid.incompressible())
@@ -448,7 +450,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
         // Update densities from change in p_rgh
         forAll(phases, phasei)
         {
-            phaseModel& phase = phases[phasei];
+            phaseModel& phase = phases_[phasei];
             phase.thermoRef().rho() += phase.thermo().psi()*(p_rgh - p_rgh_0);
         }
 

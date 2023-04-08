@@ -41,11 +41,11 @@ void Foam::solvers::multiphaseEuler::compositionPredictor()
     phaseSystem::specieTransferTable&
     specieTransfer(specieTransferPtr());
 
-    fluid.correctReactions();
+    fluid_.correctReactions();
 
     forAll(fluid.multicomponentPhases(), multicomponentPhasei)
     {
-        phaseModel& phase = fluid.multicomponentPhases()[multicomponentPhasei];
+        phaseModel& phase = fluid_.multicomponentPhases()[multicomponentPhasei];
 
         UPtrList<volScalarField>& Y = phase.YActiveRef();
         const volScalarField& alpha = phase;
@@ -68,7 +68,7 @@ void Foam::solvers::multiphaseEuler::compositionPredictor()
         }
     }
 
-    fluid.correctSpecies();
+    fluid_.correctSpecies();
 }
 
 
@@ -81,7 +81,7 @@ void Foam::solvers::multiphaseEuler::energyPredictor()
 
     forAll(fluid.anisothermalPhases(), anisothermalPhasei)
     {
-        phaseModel& phase = fluid.anisothermalPhases()[anisothermalPhasei];
+        phaseModel& phase = fluid_.anisothermalPhases()[anisothermalPhasei];
 
         const volScalarField& alpha = phase;
         tmp<volScalarField> tRho = phase.rho();
@@ -104,8 +104,8 @@ void Foam::solvers::multiphaseEuler::energyPredictor()
         fvConstraints().constrain(phase.thermoRef().he());
     }
 
-    fluid.correctThermo();
-    fluid.correctContinuityError();
+    fluid_.correctThermo();
+    fluid_.correctContinuityError();
 }
 
 
@@ -117,13 +117,13 @@ void Foam::solvers::multiphaseEuler::thermophysicalPredictor()
     {
         for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
         {
-            fluid.predictThermophysicalTransport();
+            fluid_.predictThermophysicalTransport();
             compositionPredictor();
             energyPredictor();
 
             forAll(fluid.anisothermalPhases(), anisothermalPhasei)
             {
-                phaseModel& phase =
+                const phaseModel& phase =
                     fluid.anisothermalPhases()[anisothermalPhasei];
 
                 Info<< phase.name() << " min/max T "
