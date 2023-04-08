@@ -3,7 +3,7 @@
     const volScalarField r1ADUc(1/(1 + rAUc*Dc));
 
     const surfaceScalarField rAUcf(fvc::interpolate(rAUc));
-    const surfaceScalarField r1ADUcf(1/(1 + rAUcf*fvc::interpolate(Dc)));
+    const surfaceScalarField r1ADUcf(1/(1 + rAUcf*Dcf));
     const surfaceScalarField rADUcf("Dp", r1ADUcf*rAUcf);
 
     volVectorField HbyA(constrainHbyA(rAUc*UcEqn.H(), Uc, p));
@@ -27,7 +27,7 @@
         fvc::makeAbsolute(phiHbyAD, Uc);
     }
 
-    phiHbyAD += rADUcf*(Fgf + Fdf);
+    phiHbyAD += rADUcf*(Fgf + Dcf*phid);
 
     // Update the pressure BCs to ensure flux consistency
     constrainPressure(p, Uc, phiHbyAD, rADUcf);

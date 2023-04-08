@@ -164,13 +164,10 @@ int main(int argc, char *argv[])
         // Face continuous-dispersed phase drag coefficient
         const surfaceScalarField Dcf(fvc::interpolate(Dc));
 
-        // Face dispersed phase drag force
-        const surfaceScalarField Fdf(fvc::flux(Fd));
-
         // Effective flux of the dispersed phase
         const surfaceScalarField phid
         (
-            Fdf/(Dcf + dimensionedScalar(Dc.dimensions(), small))
+            fvc::flux(Fd)/(Dcf + dimensionedScalar(Dc.dimensions(), small))
         );
 
         // Face buoyancy force
