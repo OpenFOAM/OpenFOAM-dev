@@ -153,7 +153,7 @@ public:
 
     // Member Functions
 
-        //- Return the lift coefficient K
+        //- Return the virtual mass coefficient K
         tmp<volScalarField> K() const;
 };
 
