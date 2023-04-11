@@ -74,8 +74,8 @@ Foam::contactAngleModels::gravitational::cosTheta
     return cos
     (
         degToRad(theta0_)
-      + degToRad(thetaRec_ - theta0_)*max(uCoeff, 0.0)
-      - degToRad(thetaAdv_ - theta0_)*min(uCoeff, 0.0)
+      + degToRad(thetaRec_ - theta0_)*max(uCoeff, scalar(0))
+      - degToRad(thetaAdv_ - theta0_)*min(uCoeff, scalar(0))
     );
 }
 

@@ -66,7 +66,7 @@ void Foam::solvers::isothermalFilm::correctAlpha()
 
         const surfaceScalarField alphaf
         (
-            constrainedField(max(fvc::interpolate(alpha), 0.0))
+            constrainedField(max(fvc::interpolate(alpha), scalar(0)))
         );
 
         const surfaceScalarField alpharAUf

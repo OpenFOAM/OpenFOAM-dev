@@ -53,7 +53,7 @@ void Foam::solvers::isothermalFilm::predictAlpha()
 
 void Foam::solvers::isothermalFilm::correctDelta()
 {
-    delta_ = max(alpha, 0.0)*VbyA;
+    delta_ = max(alpha, scalar(0))*VbyA;
     delta_.correctBoundaryConditions();
 }
 
