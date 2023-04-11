@@ -84,14 +84,19 @@ Foam::linearViscousStress<BasicMomentumTransportModel>::divDevTau
     volVectorField& U
 ) const
 {
-    return
+    fvVectorMatrix divDevTauCorr
     (
-      - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
-      + this->divDevTauCorr
+        this->divDevTauCorr
         (
             -(this->alpha_*this->rho_*this->nuEff())*dev2(T(fvc::grad(U))),
             U
         )
+    );
+
+    return
+    (
+        divDevTauCorr
+      - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
     );
 }
 
