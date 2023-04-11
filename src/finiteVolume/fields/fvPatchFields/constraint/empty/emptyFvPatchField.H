@@ -125,7 +125,11 @@ public:
         // Mapping functions
 
             //- Map the given fvPatchField onto this fvPatchField
-            virtual void map(const fvPatchField<Type>&, const labelList&)
+            virtual void map
+            (
+                const fvPatchField<Type>&,
+                const fvPatchFieldMapper&
+            )
             {}
 
             //- Reset the fvPatchField to the given fvPatchField
