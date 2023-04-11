@@ -98,6 +98,9 @@ class heatTransfer
         //- The set of cells the model applies to
         fvCellSet set_;
 
+        //- Name of the phase
+        word phaseName_;
+
         //- Flag to activate semi-implicit coupling
         bool semiImplicit_;
 
@@ -118,6 +121,15 @@ class heatTransfer
 
         //- Non-virtual read
         void readCoeffs();
+
+        //- Source term to energy equation
+        template<class AlphaFieldType>
+        void add
+        (
+            const AlphaFieldType& alpha,
+            fvMatrix<scalar>& eqn,
+            const word& fieldName
+        ) const;
 
 
 public:
@@ -163,6 +175,15 @@ public:
             //- Source term to compressible energy equation
             virtual void addSup
             (
+                const volScalarField& rho,
+                fvMatrix<scalar>& eqn,
+                const word& fieldName
+            ) const;
+
+            //- Source term to phase energy equation
+            virtual void addSup
+            (
+                const volScalarField& alpha,
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
                 const word& fieldName

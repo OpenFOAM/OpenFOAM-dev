@@ -52,6 +52,8 @@ namespace fv
 
 void Foam::fv::heatTransfer::readCoeffs()
 {
+    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
+
     semiImplicit_ = coeffs().lookup<bool>("semiImplicit");
 
     TName_ = coeffs().lookupOrDefault<word>("T", "T");
@@ -62,6 +64,56 @@ void Foam::fv::heatTransfer::readCoeffs()
 
     heatTransferCoefficientModel_ =
         heatTransferCoefficientModel::New(coeffs(), mesh());
+}
+
+
+template<class AlphaFieldType>
+void Foam::fv::heatTransfer::add
+(
+    const AlphaFieldType& alpha,
+    fvMatrix<scalar>& eqn,
+    const word& fieldName
+) const
+{
+    const volScalarField& he = eqn.psi();
+
+    const volScalarField& T =
+        mesh().lookupObject<volScalarField>
+        (
+            IOobject::groupName(TName_, phaseName_)
+        );
+
+    tmp<volScalarField> mask =
+        volScalarField::New("mask", mesh(), dimensionedScalar(dimless, 0));
+    UIndirectList<scalar>(mask.ref().primitiveFieldRef(), set_.cells()) = 1;
+    const volScalarField htcAv
+    (
+        alpha*mask*heatTransferCoefficientModel_->htc()*heatTransferAv_->Av()
+    );
+
+    if (semiImplicit_)
+    {
+        if (he.dimensions() == dimEnergy/dimMass)
+        {
+            const basicThermo& thermo =
+               mesh().lookupObject<basicThermo>
+               (
+                   IOobject::groupName(physicalProperties::typeName, phaseName_)
+               );
+
+            const volScalarField htcAvByCpv(htcAv/thermo.Cpv());
+
+            eqn += htcAv*(Ta_ - T) + htcAvByCpv*he - fvm::Sp(htcAvByCpv, he);
+        }
+        else if (he.dimensions() == dimTemperature)
+        {
+            eqn += htcAv*Ta_ - fvm::Sp(htcAv, he);
+        }
+    }
+    else
+    {
+        eqn += htcAv*(Ta_ - T);
+    }
 }
 
 
@@ -77,6 +129,7 @@ Foam::fv::heatTransfer::heatTransfer
 :
     fvModel(name, modelType, mesh, dict),
     set_(mesh, coeffs()),
+    phaseName_(word::null),
     semiImplicit_(false),
     TName_(word::null),
     Ta_("Ta", dimTemperature, NaN),
@@ -98,7 +151,10 @@ Foam::fv::heatTransfer::~heatTransfer()
 Foam::wordList Foam::fv::heatTransfer::addSupFields() const
 {
     const basicThermo& thermo =
-        mesh().lookupObject<basicThermo>(physicalProperties::typeName);
+        mesh().lookupObject<basicThermo>
+        (
+            IOobject::groupName(physicalProperties::typeName, phaseName_)
+        );
 
     return wordList(1, thermo.he().name());
 }
@@ -110,39 +166,7 @@ void Foam::fv::heatTransfer::addSup
     const word& fieldName
 ) const
 {
-    const volScalarField& he = eqn.psi();
-
-    const volScalarField& T =
-        mesh().lookupObject<volScalarField>(TName_);
-
-    tmp<volScalarField> mask =
-        volScalarField::New("mask", mesh(), dimensionedScalar(dimless, 0));
-    UIndirectList<scalar>(mask.ref().primitiveFieldRef(), set_.cells()) = 1;
-    const volScalarField htcAv
-    (
-        mask*heatTransferCoefficientModel_->htc()*heatTransferAv_->Av()
-    );
-
-    if (semiImplicit_)
-    {
-        if (he.dimensions() == dimEnergy/dimMass)
-        {
-            const basicThermo& thermo =
-               mesh().lookupObject<basicThermo>(physicalProperties::typeName);
-
-            const volScalarField htcAvByCpv(htcAv/thermo.Cpv());
-
-            eqn += htcAv*(Ta_ - T) + htcAvByCpv*he - fvm::Sp(htcAvByCpv, he);
-        }
-        else if (he.dimensions() == dimTemperature)
-        {
-            eqn += htcAv*Ta_ - fvm::Sp(htcAv, he);
-        }
-    }
-    else
-    {
-        eqn += htcAv*(Ta_ - T);
-    }
+    add(geometricOneField(), eqn, fieldName);
 }
 
 
@@ -153,7 +177,19 @@ void Foam::fv::heatTransfer::addSup
     const word& fieldName
 ) const
 {
-    addSup(eqn, fieldName);
+    add(geometricOneField(), eqn, fieldName);
+}
+
+
+void Foam::fv::heatTransfer::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<scalar>& eqn,
+    const word& fieldName
+) const
+{
+    add(alpha, eqn, fieldName);
 }
 
 
