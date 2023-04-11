@@ -59,7 +59,7 @@ Foam::FieldFunction1<Type, Function1Type>::clone() const
 {
     return tmp<Function1<Type>>
     (
-        new Function1Type(refCast<const Function1Type>(*this))
+        new Function1Type(static_cast<const Function1Type&>(*this))
     );
 }
 
@@ -96,7 +96,7 @@ Foam::tmp<Foam::Field<Type>> Foam::FieldFunction1<Type, Function1Type>::value
 
     forAll(x, i)
     {
-        fld[i] = refCast<const Function1Type>(*this).value(x[i]);
+        fld[i] = static_cast<const Function1Type&>(*this).value(x[i]);
     }
 
     return tfld;
@@ -116,7 +116,8 @@ Foam::FieldFunction1<Type, Function1Type>::integral
 
     forAll(x1, i)
     {
-        fld[i] = refCast<const Function1Type>(*this).integral(x1[i], x2[i]);
+        fld[i] =
+            static_cast<const Function1Type&>(*this).integral(x1[i], x2[i]);
     }
 
     return tfld;

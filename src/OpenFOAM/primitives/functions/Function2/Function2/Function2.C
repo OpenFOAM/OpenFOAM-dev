@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ Foam::FieldFunction2<Type, Function2Type>::clone() const
 {
     return tmp<Function2<Type>>
     (
-        new Function2Type(refCast<const Function2Type>(*this))
+        new Function2Type(static_cast<const Function2Type&>(*this))
     );
 }
 
@@ -96,7 +96,7 @@ Foam::tmp<Foam::Field<Type>> Foam::FieldFunction2<Type, Function2Type>::value
 
     forAll(x, i)
     {
-        fld[i] = refCast<const Function2Type>(*this).value(x[i], y[i]);
+        fld[i] = static_cast<const Function2Type&>(*this).value(x[i], y[i]);
     }
 
     return tfld;
