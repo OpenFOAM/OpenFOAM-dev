@@ -21,6 +21,7 @@ wmake $targetType multiphaseVoFSolver
 wmake $targetType incompressibleMultiphaseVoF
 wmake $targetType compressibleMultiphaseVoF
 multiphaseEuler/Allwmake $targetType $*
+wmake $targetType incompressibleDenseParticleFluid
 isothermalFilm/Allwmake $targetType $*
 film/Allwmake $targetType $*
 wmake $targetType solid

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,11 +22,13 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solvers::incompressibleFluid
+    Foam::solvers::incompressibleDenseParticleFluid
 
 Description
-    Solver module for steady or transient turbulent flow of incompressible
-    isothermal fluids with optional mesh motion and change.
+
+    Solver module for transient flow of incompressible isothermal fluids coupled
+    with particle clouds including the effect of the volume fraction of
+    particles on the continuous phase, with optional mesh motion and change.
 
     Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
     pseudo-transient and steady simulations.
@@ -43,22 +45,23 @@ Description
     \endverbatim
 
 SourceFiles
-    incompressibleFluid.C
+    incompressibleDenseParticleFluid.C
 
 See also
     Foam::solvers::fluidSolver
-    Foam::solvers::isothermalFluid
+    Foam::solvers::incompressibleFluid
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef incompressibleFluid_H
-#define incompressibleFluid_H
+#ifndef incompressibleDenseParticleFluid_H
+#define incompressibleDenseParticleFluid_H
 
 #include "fluidSolver.H"
 #include "viscosityModel.H"
-#include "incompressibleMomentumTransportModel.H"
+#include "phaseIncompressibleMomentumTransportModel.H"
 #include "pressureReference.H"
-#include "IOMRFZoneList.H"
+#include "uniformDimensionedFields.H"
+#include "parcelClouds.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,15 +71,19 @@ namespace solvers
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class incompressibleFluid Declaration
+                          Class incompressibleDenseParticleFluid Declaration
 \*---------------------------------------------------------------------------*/
 
-class incompressibleFluid
+class incompressibleDenseParticleFluid
 :
     public fluidSolver
 {
 
 protected:
+
+    //- Name of the continuous phase
+    const word continuousPhaseName;
+
 
     // Pressure
 
@@ -87,48 +94,80 @@ protected:
         Foam::pressureReference pressureReference;
 
 
+    // Buoyancy
+
+        //- Acceleration due to gravity
+        uniformDimensionedVectorField g;
+
+
     // Kinematic properties
 
-        //- Velocity field
-        volVectorField U_;
+        //- Continuous phase velocity field
+        volVectorField Uc_;
 
-        //- Volumetric-flux field
-        surfaceScalarField phi_;
+        //- Continuous phase flux field
+        surfaceScalarField phic_;
+
+        //- Continuous phase kinematic viscosity model
+        autoPtr<viscosityModel> viscosity;
+
+
+    // Continuous phase properties for Lagrangian cloud
+
+        //- Continuous phase density
+        volScalarField rhoc;
+
+        //- Continuous phase viscosity
+        volScalarField muc;
+
+        //- Continuous phase-fraction
+        volScalarField alphac_;
+
+        //- Minimum continuous phase-fraction
+        scalar alphacMin;
+
+        //- Interpolated continuous phase-fraction
+        surfaceScalarField alphacf;
+
+        //- Continuous phase volumetric-flux field
+        surfaceScalarField alphaPhic;
 
 
     // Momentum transport
 
-        //- Kinematic viscosity model
-        autoPtr<viscosityModel> viscosity;
-
         //- Pointer to the momentum transport model
-        autoPtr<incompressible::momentumTransportModel> momentumTransport;
+        autoPtr<phaseIncompressible::momentumTransportModel> momentumTransport;
 
 
-    // Optional models
+    // Dispersed phase Lagrangian clouds
 
-        //- MRF zone list
-        IOMRFZoneList MRF;
+        parcelClouds& clouds;
 
 
     // Cached temporary fields
 
+        //- Dispersed phase drag force
+        autoPtr<volVectorField> Fd;
+
+        // Continuous-dispersed phase drag coefficient
+        autoPtr<volScalarField> Dc;
+
+        //- Face continuous-dispersed phase drag coefficient
+        autoPtr<surfaceScalarField> Dcf;
+
+        //- Effective volumetric flux of the dispersed phase
+        autoPtr<surfaceScalarField> phid;
+
         //- Pointer to the surface momentum field
         //  used to recreate the flux after mesh-change
-        autoPtr<surfaceVectorField> Uf;
-
-        //- Optional LTS reciprocal time-step field
-        tmp<volScalarField> trDeltaT;
+        autoPtr<surfaceVectorField> Ucf;
 
         //- Cached momentum matrix
         //  shared between the momentum predictor and pressure corrector
-        tmp<fvVectorMatrix> tUEqn;
+        tmp<fvVectorMatrix> tUcEqn;
 
 
     // Protected Member Functions
-
-        //- Set rDeltaT for LTS
-        void setRDeltaT();
 
         //- Correct the cached Courant numbers
         void correctCoNum();
@@ -148,28 +187,34 @@ public:
         //- Reference to the pressure field
         const volScalarField& p;
 
-        //- Reference to the velocity field
-        const volVectorField& U;
+        //- Reference to the continuous phase velocity field
+        const volVectorField& Uc;
 
-        //- Reference to the volumetric-flux field
-        const surfaceScalarField& phi;
+        //- Reference to the continuous phase volumetric-flux field
+        const surfaceScalarField& phic;
+
+        //- Reference continuous phase-fraction
+        const volScalarField& alphac;
 
 
     //- Runtime type information
-    TypeName("incompressibleFluid");
+    TypeName("incompressibleDenseParticleFluid");
 
 
     // Constructors
 
         //- Construct from region mesh
-        incompressibleFluid(fvMesh& mesh);
+        incompressibleDenseParticleFluid(fvMesh& mesh);
 
         //- Disallow default bitwise copy construction
-        incompressibleFluid(const incompressibleFluid&) = delete;
+        incompressibleDenseParticleFluid
+        (
+            const incompressibleDenseParticleFluid&
+        ) = delete;
 
 
     //- Destructor
-    virtual ~incompressibleFluid();
+    virtual ~incompressibleDenseParticleFluid();
 
 
     // Member Functions
@@ -204,7 +249,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const incompressibleFluid&) = delete;
+        void operator=(const incompressibleDenseParticleFluid&) = delete;
 };
 
 

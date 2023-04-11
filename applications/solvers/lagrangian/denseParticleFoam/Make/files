@@ -1,3 +1,0 @@
-denseParticleFoam.C
-
-EXE = $(FOAM_APPBIN)/denseParticleFoam
