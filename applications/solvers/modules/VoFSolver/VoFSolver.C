@@ -135,7 +135,7 @@ Foam::solvers::VoFSolver::VoFSolver
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        fvc::interpolate(rho)*phi
+        fvc::interpolate(rho)*phi_
     ),
 
     MRF(mesh),
