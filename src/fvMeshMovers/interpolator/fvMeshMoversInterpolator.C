@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ void Foam::fvMeshMovers::interpolator::mapMesh(const polyMeshMap& map)
 {
     if (displacement_)
     {
-        points0_() == mesh().points();
+        points0_().primitiveFieldRef() = mesh().points();
     }
 }
 
