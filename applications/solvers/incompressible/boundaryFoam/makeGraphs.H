@@ -1,4 +1,4 @@
-volSymmTensorField R
+const volSymmTensorField R
 (
     IOobject
     (
@@ -27,8 +27,9 @@ setWriter::New(runTime.graphFormat())->write
     "Uf", (flowDirection & U)().primitiveField(),
 
     "nu", turbulence->nu()().primitiveField(),
-    "k", turbulence->nu()().primitiveField(),
-    "epsilon", turbulence->nu()().primitiveField(),
+    "nuEff", turbulence->nuEff()().primitiveField(),
+    "k", turbulence->k()().primitiveField(),
+    "epsilon", turbulence->epsilon()().primitiveField(),
 
     "Rff", (flowDirection & R & flowDirection)().primitiveField(),
     "Rww", (wallNormal & R & wallNormal)().primitiveField(),

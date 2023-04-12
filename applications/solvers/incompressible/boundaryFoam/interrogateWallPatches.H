@@ -63,11 +63,11 @@ else
         << endl;
 }
 
-// store local id of near-walll cell to process
-label cellId = patches[patchId].faceCells()[faceId];
+// Store local id of near-walll cell to process
+const label cellId = patches[patchId].faceCells()[faceId];
 
-// create position array for graph generation
-scalarField y
+// Create position array for graph generation
+const scalarField y
 (
     wallNormal
   & (mesh.C().primitiveField() - mesh.C().boundaryField()[patchId][faceId])

@@ -91,7 +91,10 @@ int main(int argc, char *argv[])
 
 
         // Correct driving force for a constant volume flow rate
-        dimensionedVector UbarStar = flowMask & U.weightedAverage(mesh.V());
+        const dimensionedVector UbarStar
+        (
+            flowMask & U.weightedAverage(mesh.V())
+        );
 
         U += (Ubar - UbarStar);
         gradP += (Ubar - UbarStar)/(1.0/UEqn.A())().weightedAverage(mesh.V());

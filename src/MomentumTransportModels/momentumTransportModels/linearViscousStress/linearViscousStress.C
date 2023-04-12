@@ -84,7 +84,7 @@ Foam::linearViscousStress<BasicMomentumTransportModel>::divDevTau
     volVectorField& U
 ) const
 {
-    fvVectorMatrix divDevTauCorr
+    const fvVectorMatrix divDevTauCorr
     (
         this->divDevTauCorr
         (
