@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,15 +85,18 @@ private:
             PrimitivePatch
             <
                 typename UFaceList<FaceListType>::type,
-                const PointFieldType&
+                const Field<PointType>&
             >
             patch0Type;
 
 
     // Private Data
 
+        //- Stored old-time points
+        autoPtr<Field<PointType>> points0Ptr_;
+
         //- Reference to global list of old-time points
-        PointField points0_;
+        const Field<PointType>& points0_;
 
         //- Engine for calculating old-time geometry. Note: Methods that
         //  generate topology should not be called here. The base patch should

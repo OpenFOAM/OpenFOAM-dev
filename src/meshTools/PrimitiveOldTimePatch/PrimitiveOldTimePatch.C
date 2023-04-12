@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,8 @@ Foam::PrimitiveOldTimePatch<FaceList, PointField>::PrimitiveOldTimePatch
 )
 :
     PrimitivePatch<FaceList, PointField>(faces, points),
-    points0_(points0),
+    points0Ptr_(isRef<PointField> ? nullptr : new Field<PointType>(points0)),
+    points0_(isRef<PointField> ? points0 : points0Ptr_()),
     patch0Ptr_(new patch0Type(faces, points0_)),
     localPoints0Ptr_(nullptr)
 {}
@@ -64,6 +65,7 @@ Foam::PrimitiveOldTimePatch<FaceList, PointField>::PrimitiveOldTimePatch
 )
 :
     PrimitivePatch<FaceList, PointField>(faces, points),
+    points0Ptr_(nullptr),
     points0_(NullObjectRef<Field<PointType>>()),
     patch0Ptr_(nullptr),
     localPoints0Ptr_(nullptr)
