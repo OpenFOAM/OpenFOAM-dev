@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,10 +85,6 @@ bool Foam::functionObjects::stopAt::read(const dictionary& dict)
     if (dict.found("action"))
     {
         action_ = actionTypeNames_.read(dict.lookup("action"));
-    }
-    else
-    {
-        action_ = actionType::nextWrite;
     }
 
     return true;
