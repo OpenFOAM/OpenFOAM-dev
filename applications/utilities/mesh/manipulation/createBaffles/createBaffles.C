@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -309,8 +309,8 @@ label createFaces
                 {
                     const polyPatch& newPp =
                         fZone.flipMap()[zoneFacei]
-                      ? bMesh[newOwnerPatchi]
-                      : bMesh[newNeighbourPatchi];
+                      ? bMesh[newNeighbourPatchi]
+                      : bMesh[newOwnerPatchi];
 
                     // We cannot move coupled faces to different coupled
                     // faces. Generate an error if this is attempted.
