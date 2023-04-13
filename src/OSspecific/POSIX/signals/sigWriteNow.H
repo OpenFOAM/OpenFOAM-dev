@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,20 @@ Class
     Foam::sigWriteNow
 
 Description
-    Signal handler for interrupt defined by OptimisationSwitches::writeNowSignal
+    Signal handler to write when the writeNowSignal is sent.
 
-    Write once and continue.
+    writeNowSignal is set in etc/controlDict::OptimisationSwitches, e.g.
+    \verbatim
+    OptimisationSwitches
+    {
+        .
+        .
+        // Force dumping (at next timestep) upon signal (-1 to disable)
+        writeNowSignal              10; // SIGUSR1
+        .
+        .
+    }
+    \endverbatim
 
 SourceFiles
     sigWriteNow.C

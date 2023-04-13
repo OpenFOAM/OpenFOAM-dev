@@ -74,10 +74,10 @@ OptimisationSwitches
     nProcsSimpleSum 0;
 
     // Force dumping (at next timestep) upon signal (-1 to disable)
-    writeNowSignal              -1; // 10;
+    writeNowSignal              -1; // 10; // SIGUSR1
 
-    // Force dumping (at next timestep) upon signal (-1 to disable) and exit
-    stopAtWriteNowSignal        -1;
+    // Force dumping and exit (at next timestep) upon signal (-1 to disable)
+    stopAtWriteNowSignal        -1; // 12; // SIGUSR2
 
     // Default dictionary scoping syntax
     inputSyntax slash;

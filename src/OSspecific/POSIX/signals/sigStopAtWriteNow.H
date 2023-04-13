@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,20 @@ Class
     Foam::sigStopAtWriteNow
 
 Description
-    Signal handler for interrupt defined by
-        OptimisationSwitches::stopAtWriteNowSignal
+    Signal handler to write and exit when the stopAtWriteNowSignal is sent.
 
-    Write and stop the job.
+    stopAtWriteNowSignal is set in etc/controlDict::OptimisationSwitches, e.g.
+    \verbatim
+    OptimisationSwitches
+    {
+        .
+        .
+        // Force dumping and exit (at next timestep) upon signal (-1 to disable)
+        stopAtWriteNowSignal        12; // SIGUSR2
+        .
+        .
+    }
+    \endverbatim
 
 SourceFiles
     sigStopAtWriteNow.C
