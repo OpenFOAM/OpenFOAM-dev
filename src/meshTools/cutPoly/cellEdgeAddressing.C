@@ -53,12 +53,12 @@ struct cellEdgeAddressingWorkspace
 {
     HashList<label, edge, QuickHashEdge> edgeToCei;
 
-    DynamicList<bool> cOwnsIsSet;
+    DynamicList<label> cfei0;
 
     cellEdgeAddressingWorkspace()
     :
         edgeToCei(0),
-        cOwnsIsSet()
+        cfei0()
     {
         resizeAndClear(6, 12);
     }
@@ -74,8 +74,8 @@ struct cellEdgeAddressingWorkspace
             edgeToCei.clear();
         }
 
-        cOwnsIsSet.resize(nCellFaces);
-        cOwnsIsSet = false;
+        cfei0.resize(nCellFaces);
+        cfei0 = -1;
     }
 }
 workspace_;
@@ -142,38 +142,56 @@ Foam::cellEdgeAddressingData::cellEdgeAddressingData
     // Allocate and initialise the face signs
     cOwns_ = boolList(c.size(), false);
     cOwns_[0] = cOwnsFirst;
-    workspace_.cOwnsIsSet[0] = true;
+    workspace_.cfei0[0] = 0;
 
-    // Compare cell-face-edges to determine face signs
-    forAll(c, cfi)
+    // Walk around the cell, comparing edges to determine face signs
     {
-        const face& f = fs[c[cfi]];
+        label cfi = 0, fei = 0;
 
-        if (!workspace_.cOwnsIsSet[cfi]) continue;
-
-        forAll(f, fei)
+        do
         {
+            // Get the connected face and face-edge
             const label cei = cfiAndFeiToCei_[cfi][fei];
+            const labelPair cfiAndFei(labelPair(cfi, fei));
+            const labelPair& cfjAndFej =
+                ceiToCfiAndFei_[cei][ceiToCfiAndFei_[cei][0] == cfiAndFei];
+            const label cfj = cfjAndFej[0], fej = cfjAndFej[1];
 
-            const labelPair& other =
-                ceiToCfiAndFei_[cei]
-                [
-                    ceiToCfiAndFei_[cei][0] == labelPair(cfi, fei)
-                ];
-            const label cfj = other[0], fej = other[1];
+            // If the adjacent face has not been visited then set its sign and
+            // move forwards into it
+            if (workspace_.cfei0[cfj] == -1)
+            {
+                const label sign =
+                    edge::compare
+                    (
+                        fs[c[cfi]].faceEdge(fei),
+                        fs[c[cfj]].faceEdge(fej)
+                    );
 
-            if (workspace_.cOwnsIsSet[cfj]) continue;
+                cOwns_[cfj] = sign < 0 ? cOwns_[cfi] : !cOwns_[cfi];
 
-            const label sign =
-                edge::compare
-                (
-                    f.faceEdge(fei),
-                    fs[c[cfj]].faceEdge(fej)
-                );
+                workspace_.cfei0[cfj] = fej;
+                cfi = cfj;
+                fei = (fej + 1) % fs[c[cfj]].size();
+            }
 
-            cOwns_[cfj] = sign < 0 ? cOwns_[cfi] : !cOwns_[cfi];
-            workspace_.cOwnsIsSet[cfj] = true;
+            // If the adjacent face has been visited, and we are not back at
+            // the starting edge of this face, then move to the next edge of
+            // this face
+            else if (fei != workspace_.cfei0[cfi])
+            {
+                fei = (fei + 1) % fs[c[cfi]].size();
+            }
+
+            // If we back at the first edge then this face is complete and we
+            // move backwards into the adjacent face
+            else // if (fei == workspace_.cfei0[cfi])
+            {
+                cfi = cfj;
+                fei = fej;
+            }
         }
+        while (cfi != 0 || fei != 0);
     }
 }
 
