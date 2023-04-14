@@ -211,9 +211,6 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
             }
         }
 
-        // Correct Uf if the mesh is moving
-        fvc::correctUf(Uf, U, fvc::absolute(phi, U), MRF);
-
         // Update densities from change in p_rgh
         mixture_.thermo1().correctRho(psi1*(p_rgh - p_rgh_0));
         mixture_.thermo2().correctRho(psi2*(p_rgh - p_rgh_0));
@@ -223,6 +220,9 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
         p_rgh = p - rho*buoyancy.gh;
         p_rgh.correctBoundaryConditions();
     }
+
+    // Correct Uf if the mesh is moving
+    fvc::correctUf(Uf, U, fvc::absolute(phi, U), MRF);
 
     K = 0.5*magSqr(U);
 
