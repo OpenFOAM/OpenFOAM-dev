@@ -184,7 +184,7 @@ qZeta::qZeta
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        sqrt(bound(k_, kMin_)),
+        sqrt(max(k_, kMin_)),
         k_.boundaryField().types()
     ),
 
@@ -198,7 +198,7 @@ qZeta::qZeta
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        bound(epsilon_, epsilonMin_)/(2.0*q_),
+        max(epsilon_, epsilonMin_)/(2.0*q_),
         epsilon_.boundaryField().types()
     )
 {

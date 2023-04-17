@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,17 +24,15 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "bound.H"
-#include "volFields.H"
 #include "fvcAverage.H"
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-Foam::volScalarField&
-Foam::bound(volScalarField& vsf, const dimensionedScalar& lowerBound)
+bool Foam::bound(volScalarField& vsf, const dimensionedScalar& min)
 {
-    const scalar minVsf = min(vsf).value();
+    const scalar minVsf = Foam::min(vsf).value();
 
-    if (minVsf < lowerBound.value())
+    if (minVsf < min.value())
     {
         Info<< "bounding " << vsf.name()
             << ", min: " << minVsf
@@ -47,16 +45,20 @@ Foam::bound(volScalarField& vsf, const dimensionedScalar& lowerBound)
             max
             (
                 vsf.primitiveField(),
-                fvc::average(max(vsf, lowerBound))().primitiveField()
-              * pos0(-vsf.primitiveField())
+                fvc::average(max(vsf, min))().primitiveField()
+               *pos0(-vsf.primitiveField())
             ),
-            lowerBound.value()
+            min.value()
         );
 
-        vsf.boundaryFieldRef() = max(vsf.boundaryField(), lowerBound.value());
-    }
+        vsf.boundaryFieldRef() = max(vsf.boundaryField(), min.value());
 
-    return vsf;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

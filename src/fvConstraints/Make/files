@@ -1,8 +1,9 @@
-fixedValueConstraint/fixedValueConstraint.C
-fixedTemperatureConstraint/fixedTemperatureConstraint.C
+fixedValue/fixedValueConstraint.C
+fixedTemperature/fixedTemperatureConstraint.C
 limitTemperature/limitTemperature.C
 limitPressure/limitPressure.C
 limitMag/limitMag.C
+bound/boundConstraint.C
 meanVelocityForce/meanVelocityForce.C
 meanVelocityForce/patchMeanVelocityForce/patchMeanVelocityForce.C
 

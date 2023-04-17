@@ -237,7 +237,6 @@ void Foam::fv::limitPressure::distribute(const polyDistributionMap&)
 {}
 
 
-
 bool Foam::fv::limitPressure::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
