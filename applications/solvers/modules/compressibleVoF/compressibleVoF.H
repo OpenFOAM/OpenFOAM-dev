@@ -101,9 +101,6 @@ protected:
         //- Pressure reference
         Foam::pressureReference pressureReference_;
 
-        //- Minimum pressure
-        dimensionedScalar pMin;
-
 
     // Kinematic properties
 

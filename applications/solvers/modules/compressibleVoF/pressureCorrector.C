@@ -200,8 +200,9 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
 
                 phi = phiHbyA + p_rghEqnIncomp.flux();
 
-                p = max(p_rgh + (alpha1*rho1 + alpha2*rho2)*buoyancy.gh, pMin);
-                p_rgh = p - (alpha1*rho1 + alpha2*rho2)*buoyancy.gh;
+                p = p_rgh + rho*buoyancy.gh;
+                fvConstraints().constrain(p);
+                p_rgh = p - rho*buoyancy.gh;
                 p_rgh.correctBoundaryConditions();
 
                 U = HbyA

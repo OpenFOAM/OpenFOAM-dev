@@ -7,33 +7,18 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
-    class       volScalarField;
-    location    "0";
-    object      T.air;
+    format      ascii;
+    class       dictionary;
+    object      fvConstraints;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
-
-internalField   uniform 300;
-
-boundaryField
+boundp
 {
-    walls
-    {
-        type            calculated;
-        value           uniform 300;
-    }
-    front
-    {
-        type            empty;
-    }
-    back
-    {
-        type            empty;
-    }
-}
+    type       bound;
 
+    field      p;
+    min        100;
+}
 
 // ************************************************************************* //

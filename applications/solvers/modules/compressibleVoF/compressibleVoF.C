@@ -79,13 +79,6 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         false
     ),
 
-    pMin
-    (
-        "pMin",
-        dimPressure,
-        mixture_
-    ),
-
     alphaRhoPhi1
     (
         IOobject::groupName("alphaRhoPhi", alpha1.group()),

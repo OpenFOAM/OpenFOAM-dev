@@ -16,8 +16,6 @@ FoamFile
 
 phases (water oil mercury air);
 
-pMin            10000;
-
 sigmas
 (
     (air water)     0.07

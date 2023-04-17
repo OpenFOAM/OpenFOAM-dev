@@ -77,13 +77,6 @@ Foam::solvers::compressibleMultiphaseVoF::compressibleMultiphaseVoF
         false
     ),
 
-    pMin
-    (
-        "pMin",
-        dimPressure,
-        mixture
-    ),
-
     K("K", 0.5*magSqr(U)),
 
     momentumTransport_

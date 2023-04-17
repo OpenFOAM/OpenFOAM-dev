@@ -7,7 +7,7 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      ascii;
+    format      binary;
     class       volScalarField;
     location    "0";
     object      T.water;
