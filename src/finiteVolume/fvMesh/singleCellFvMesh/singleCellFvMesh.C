@@ -414,7 +414,7 @@ Foam::singleCellFvMesh::singleCellFvMesh
             io.readOpt(),
             io.writeOpt()
         ),
-        0
+        label(0)
     ),
     patchFaceMap_
     (

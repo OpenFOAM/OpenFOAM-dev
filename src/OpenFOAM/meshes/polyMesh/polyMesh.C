@@ -546,7 +546,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        0
+        label(0)
     ),
     neighbour_
     (
@@ -559,7 +559,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        0
+        label(0)
     ),
     clearedPrimitives_(false),
     boundary_
