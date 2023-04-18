@@ -159,6 +159,8 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
                 pressureReference.refValue()
             );
 
+            fvConstraints().constrain(p_rghEqn);
+
             p_rghEqn.solve();
         }
     }
@@ -194,6 +196,8 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
                 pressureReference.refCell(),
                 pressureReference.refValue()
             );
+
+            fvConstraints().constrain(p_rghEqn);
 
             p_rghEqn.solve();
         }

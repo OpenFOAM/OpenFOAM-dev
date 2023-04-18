@@ -22,17 +22,35 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::zeroDimensional::constraintSource
+    Foam::fv::zeroDimensionalFixedPressureModel
 
 Description
-    Base class for zero-dimensional constraint sources.
+    Zero-dimensional fixed pressure source. Should be used in conjunction
+    with the zeroDimensionalFixedPressureConstraint.
+
+    This constraint and model facilitates specification of a constant or
+    time-varying pressure. It adds mass source terms proportional to the error
+    that remains when the pressure equation is evaluated at the desired
+    pressure. Iteration may be necessary to converge the constraint in the case
+    of non-linear equations of state.
+
+    Properties are added or removed with their current value. The model
+    therefore represents a uniform expansion or contraction in infinite space.
+
+Usage
+    Example usage:
+    \verbatim
+    {
+        type            zeroDimensionalFixedPressure;
+    }
+    \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef constraintSource_H
-#define constraintSource_H
+#ifndef zeroDimensionalFixedPressureModel_H
+#define zeroDimensionalFixedPressureModel_H
 
-#include "zeroDimensionalFvModel.H"
+#include "fvModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,23 +58,24 @@ namespace Foam
 {
 namespace fv
 {
-namespace zeroDimensional
-{
+
+class zeroDimensionalFixedPressureConstraint;
 
 /*---------------------------------------------------------------------------*\
-                      Class constraintSource Declaration
+              Class zeroDimensionalFixedPressureModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class constraintSource
+class zeroDimensionalFixedPressureModel
 :
-    public zeroDimensionalFvModel
+    public fvModel
 {
     // Private member functions
 
-        // Sources
+        //- Access the corresponding constraint
+        const zeroDimensionalFixedPressureConstraint& constraint() const;
 
-            //- Return the mass source
-            virtual tmp<volScalarField::Internal> dmdt() const = 0;
+
+        // Sources
 
             //- Add a source term to an equation
             template<class Type>
@@ -92,17 +111,26 @@ class constraintSource
                 const word& fieldName
             ) const;
 
+            //- Add a source term to a scalar phase equation
+            void addSupType
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                fvMatrix<scalar>& eqn,
+                const word& fieldName
+            ) const;
+
 
 public:
 
     //- Runtime type information
-    TypeName("constraintSource");
+    TypeName("zeroDimensionalFixedPressure");
 
 
     // Constructors
 
         //- Construct from dictionary
-        constraintSource
+        zeroDimensionalFixedPressureModel
         (
             const word& name,
             const word& modelType,
@@ -112,7 +140,7 @@ public:
 
 
     //- Destructor
-    virtual ~constraintSource();
+    virtual ~zeroDimensionalFixedPressureModel();
 
 
     // Member Functions
@@ -122,10 +150,6 @@ public:
             //- Return true if the fvModel adds a source term to the given
             //  field's transport equation
             virtual bool addsSupToField(const word& fieldName) const;
-
-            //- Return the list of fields for which the fvModel adds source term
-            //  to the transport equation
-            virtual wordList addSupFields() const;
 
 
         // Sources
@@ -138,12 +162,26 @@ public:
 
             //- Add a source term to a phase equation
             FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_SUP);
+
+
+        // Mesh changes
+
+            //- Update for mesh motion
+            virtual bool movePoints();
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap&);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace zeroDimensional
 } // End namespace fv
 } // End namespace Foam
 

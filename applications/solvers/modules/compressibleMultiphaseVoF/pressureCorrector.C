@@ -126,7 +126,13 @@ void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
                 }
             }
 
-            solve(p_rghEqnComp + p_rghEqnIncomp);
+            {
+                fvScalarMatrix p_rghEqn(p_rghEqnComp + p_rghEqnIncomp);
+
+                fvConstraints().constrain(p_rghEqn);
+
+                p_rghEqn.solve();
+            }
 
             if (pimple.finalNonOrthogonalIter())
             {

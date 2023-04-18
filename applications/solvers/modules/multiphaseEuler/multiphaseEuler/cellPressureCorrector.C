@@ -330,6 +330,8 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                     );
                 }
 
+                fvConstraints().constrain(pEqn);
+
                 pEqn.solve();
             }
 

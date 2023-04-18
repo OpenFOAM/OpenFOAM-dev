@@ -9,14 +9,16 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      fvModels;
+    location    "system";
+    object      fvConstraints;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 zeroDimensionalFixedPressure1
 {
     type            zeroDimensionalFixedPressure;
+
+    pressure        5.06625e6;
 }
 
-//************************************************************************* //
+// ************************************************************************* //

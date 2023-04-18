@@ -308,6 +308,8 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
                     );
                 }
 
+                fvConstraints().constrain(pEqn);
+
                 pEqn.solve();
             }
 

@@ -185,10 +185,16 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
              == Sp_rgh
             );
 
-            solve
-            (
-                p_rghEqnComp1() + p_rghEqnComp2() + p_rghEqnIncomp
-            );
+            {
+                fvScalarMatrix p_rghEqn
+                (
+                    p_rghEqnComp1() + p_rghEqnComp2() + p_rghEqnIncomp
+                );
+
+                fvConstraints().constrain(p_rghEqn);
+
+                p_rghEqn.solve();
+            }
 
             if (pimple.finalNonOrthogonalIter())
             {

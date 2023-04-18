@@ -25,8 +25,8 @@ derived/volumeFractionSource/volumeFractionSource.C
 derived/solidEquilibriumEnergySource/solidEquilibriumEnergySource.C
 derived/massSource/massSource.C
 derived/heatSource/heatSource.C
-
 derived/heatTransfer/heatTransfer.C
+derived/zeroDimensionalMassSource/zeroDimensionalMassSource.C
 
 interRegion/interRegionModel/interRegionModel.C
 interRegion/interRegionExplicitPorositySource/interRegionExplicitPorositySource.C
@@ -39,11 +39,5 @@ derived/heatTransfer/heatTransferCoefficientModels/constant/constant.C
 derived/heatTransfer/heatTransferCoefficientModels/function1/function1.C
 derived/heatTransfer/heatTransferCoefficientModels/function2/function2.C
 derived/heatTransfer/heatTransferCoefficientModels/variable/variable.C
-
-zeroDimensional/zeroDimensionalFvModel/zeroDimensionalFvModel.C
-zeroDimensional/constraintSource/constraintSource.C
-zeroDimensional/densityConstraintSource/densityConstraintSource.C
-zeroDimensional/pressureConstraintSource/pressureConstraintSource.C
-zeroDimensional/zeroDimensionalMassSource/zeroDimensionalMassSource.C
 
 LIB = $(FOAM_LIBBIN)/libfvModels

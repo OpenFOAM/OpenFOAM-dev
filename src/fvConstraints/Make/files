@@ -6,5 +6,7 @@ limitMag/limitMag.C
 bound/boundConstraint.C
 meanVelocityForce/meanVelocityForce.C
 meanVelocityForce/patchMeanVelocityForce/patchMeanVelocityForce.C
+zeroDimensionalFixedPressure/zeroDimensionalFixedPressureConstraint.C
+zeroDimensionalFixedPressure/zeroDimensionalFixedPressureModel.C
 
 LIB = $(FOAM_LIBBIN)/libfvConstraints

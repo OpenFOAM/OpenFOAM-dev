@@ -146,6 +146,8 @@ void Foam::solvers::isothermalFluid::correctPressure()
                 pressureReference.refValue()
             );
 
+            fvConstraints().constrain(pEqn);
+
             pEqn.solve();
 
             if (pimple.finalNonOrthogonalIter())
@@ -189,6 +191,8 @@ void Foam::solvers::isothermalFluid::correctPressure()
                 pressureReference.refCell(),
                 pressureReference.refValue()
             );
+
+            fvConstraints().constrain(pEqn);
 
             pEqn.solve();
 
