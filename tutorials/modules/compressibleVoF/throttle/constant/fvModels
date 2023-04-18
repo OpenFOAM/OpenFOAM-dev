@@ -1,0 +1,63 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+VoFCavitation
+{
+    type    compressible::VoFCavitation;
+
+    libs    ("libcompressibleVoFCavitation.so");
+
+    model   SchnerrSauer;
+
+    KunzCoeffs
+    {
+        pSat    2300;   // Saturation pressure
+
+        liquid  water;
+
+        UInf    20.0;
+        tInf    0.005; // L = 0.1 m
+        Cc      1000;
+        Cv      1000;
+    }
+
+    MerkleCoeffs
+    {
+        pSat    2300;   // Saturation pressure
+
+        liquid  water;
+
+        UInf    20.0;
+        tInf    0.005;  // L = 0.1 m
+        Cc      80;
+        Cv      1e-03;
+    }
+
+    SchnerrSauerCoeffs
+    {
+        pSat    2300;   // Saturation pressure
+
+        liquid  water;
+
+        n       1.6e+13;
+        dNuc    2.0e-06;
+        Cc      1;
+        Cv      1;
+    }
+}
+
+
+//************************************************************************* //

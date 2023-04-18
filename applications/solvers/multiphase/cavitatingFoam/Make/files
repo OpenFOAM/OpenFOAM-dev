@@ -1,4 +1,0 @@
-cavitatingTwoPhaseMixture/cavitatingTwoPhaseMixture.C
-cavitatingFoam.C
-
-EXE = $(FOAM_APPBIN)/cavitatingFoam
