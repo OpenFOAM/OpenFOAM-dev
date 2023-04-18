@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 #include "slipFvPatchFields.H"
 #include "partialSlipFvPatchFields.H"
 #include "fvcGrad.H"
+#include "fvcDiv.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -174,6 +175,12 @@ Foam::tmp<Foam::volSymmTensorField> Foam::relativeVelocityModel::tauDm() const
         "tauDm",
         betad*sqr(Udm_) + betac*sqr(Ucm)
     );
+}
+
+
+Foam::tmp<Foam::volVectorField> Foam::relativeVelocityModel::divDevTau() const
+{
+    return fvc::div(tauDm());
 }
 
 

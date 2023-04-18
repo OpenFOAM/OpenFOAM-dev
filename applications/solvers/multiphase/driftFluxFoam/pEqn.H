@@ -8,7 +8,7 @@
         fvc::flux(HbyA)
       + fvc::interpolate(rho*rAU)*fvc::ddtCorr(U, phi, Uf)
     );
-    mixture.MRF().makeRelative(phiHbyA);
+    MRF.makeRelative(phiHbyA);
     adjustPhi(phiHbyA, U, p_rgh);
 
     surfaceScalarField phig
@@ -21,7 +21,7 @@
     phiHbyA += phig;
 
     // Update the pressure BCs to ensure flux consistency
-    constrainPressure(p_rgh, U, phiHbyA, rAUf, mixture.MRF());
+    constrainPressure(p_rgh, U, phiHbyA, rAUf, MRF);
 
     while (pimple.correctNonOrthogonal())
     {
@@ -67,5 +67,5 @@
     }
 
     // Correct Uf for MRF
-    fvc::correctUf(Uf, U, phi, mixture.MRF());
+    fvc::correctUf(Uf, U, phi, MRF);
 }

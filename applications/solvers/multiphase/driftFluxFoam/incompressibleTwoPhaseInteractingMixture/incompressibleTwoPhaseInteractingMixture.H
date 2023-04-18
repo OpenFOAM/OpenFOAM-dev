@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,6 @@ SourceFiles
 
 #include "twoPhaseMixture.H"
 #include "viscosityModel.H"
-#include "uniformDimensionedFields.H"
-#include "IOMRFZoneList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,7 +46,6 @@ namespace Foam
 {
 
 class mixtureViscosityModel;
-class relativeVelocityModel;
 
 /*---------------------------------------------------------------------------*\
           Class incompressibleTwoPhaseInteractingMixture Declaration
@@ -63,27 +60,26 @@ class incompressibleTwoPhaseInteractingMixture
 
         volVectorField& U_;
 
-        autoPtr<mixtureViscosityModel> muModel_;
+        //- Continuous phase viscosity model
         autoPtr<viscosityModel> nucModel_;
 
-        dimensionedScalar rhod_;
+        //- Mixture viscosity model
+        autoPtr<mixtureViscosityModel> muModel_;
+
+        //- Continuous phase density
         dimensionedScalar rhoc_;
 
-        //- Optional diameter of the dispersed phase particles
-        dimensionedScalar dd_;
+        //- Dispersed phase density
+        dimensionedScalar rhod_;
 
         //- Optional maximum dispersed phase-fraction (e.g. packing limit)
         scalar alphaMax_;
 
+        //- Mixture density
         volScalarField rho_;
 
-        volScalarField mu_;
-
-        //- Optional MRF zones
-        IOMRFZoneList MRF_;
-
-        //- Dispersed phase relative velocity model
-        autoPtr<relativeVelocityModel> UdmModel_;
+        //- Mixture kinematic viscosity
+        volScalarField nu_;
 
 
 public:
@@ -97,8 +93,7 @@ public:
         incompressibleTwoPhaseInteractingMixture
         (
             volVectorField& U,
-            const surfaceScalarField& phi,
-            const uniformDimensionedVectorField& g
+            const surfaceScalarField& phi
         );
 
 
@@ -114,20 +109,11 @@ public:
         //- Return const-access to the dispersed phase-fraction
         const volScalarField& alphad() const;
 
-        //- Return const-access to the mixture viscosityModel
-        const mixtureViscosityModel& muModel() const;
-
-        //- Return const-access to the continuous-phase viscosityModel
-        const viscosityModel& nucModel() const;
-
-        //- Return const-access to the dispersed-phase density
-        const dimensionedScalar& rhod() const;
-
         //- Return const-access to continuous-phase density
         const dimensionedScalar& rhoc() const;
 
-        //- Return the diameter of the dispersed-phase particles
-        const dimensionedScalar& dd() const;
+        //- Return const-access to the dispersed-phase density
+        const dimensionedScalar& rhod() const;
 
         //- Optional maximum phase-fraction (e.g. packing limit)
         //  Defaults to 1
@@ -139,26 +125,11 @@ public:
         //- Return the mixture density
         virtual const volScalarField& rho() const;
 
-        //- Return the dynamic mixture viscosity
-        tmp<volScalarField> mu() const;
-
-        //- Return the dynamic mixture viscosity for patch
-        virtual tmp<scalarField> mu(const label patchi) const;
-
         //- Return the mixture viscosity
         virtual tmp<volScalarField> nu() const;
 
         //- Return the mixture viscosity for patch
         virtual tmp<scalarField> nu(const label patchi) const;
-
-        //- Return MRF zones
-        const IOMRFZoneList& MRF() const;
-
-        //- Return the diffusion velocity of the dispersed phase
-        const volVectorField& Udm() const;
-
-        //- Return the div stress tensor due to the phase transport
-        tmp<volVectorField> divTauDm() const;
 
         //- Correct the laminar viscosity
         virtual void correct();

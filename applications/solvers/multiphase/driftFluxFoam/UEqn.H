@@ -3,8 +3,8 @@
     fvVectorMatrix UEqn
     (
         fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
-      + mixture.MRF().DDt(rho, U)
-      + mixture.divTauDm()
+      + MRF.DDt(rho, U)
+      + relativeVelocity->divDevTau()
       + turbulence->divDevTau(U)
      ==
         fvModels.source(rho, U)

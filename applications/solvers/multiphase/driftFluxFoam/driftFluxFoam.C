@@ -38,6 +38,7 @@ Description
 #include "CMULES.H"
 #include "subCycle.H"
 #include "incompressibleTwoPhaseInteractingMixture.H"
+#include "relativeVelocityModel.H"
 #include "momentumTransportModel.H"
 #include "compressibleMomentumTransportModels.H"
 #include "pimpleControl.H"
@@ -105,7 +106,7 @@ int main(int argc, char *argv[])
 
             #include "alphaEqnSubCycle.H"
 
-            mixture.correct();
+            relativeVelocity->correct();
 
             if (pimple.predictTransport())
             {

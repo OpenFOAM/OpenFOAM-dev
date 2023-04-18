@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,6 @@ License
 
 #include "incompressibleTwoPhaseInteractingMixture.H"
 #include "mixtureViscosityModel.H"
-#include "relativeVelocityModel.H"
-#include "fvcDiv.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -43,25 +41,19 @@ Foam::incompressibleTwoPhaseInteractingMixture::
 incompressibleTwoPhaseInteractingMixture
 (
     volVectorField& U,
-    const surfaceScalarField& phi,
-    const uniformDimensionedVectorField& g
+    const surfaceScalarField& phi
 )
 :
     twoPhaseMixture(U.mesh()),
 
     U_(U),
 
-    muModel_(mixtureViscosityModel::New(*this)),
     nucModel_(viscosityModel::New(U.mesh(), phase2Name())),
+    muModel_(mixtureViscosityModel::New(*this)),
 
-    rhod_("rho", dimDensity, muModel_()),
     rhoc_("rho", dimDensity, nucModel_()),
-    dd_
-    (
-        "d",
-        dimLength,
-        muModel_->lookupOrDefault("d", 0.0)
-    ),
+    rhod_("rho", dimDensity, muModel_()),
+
     alphaMax_(lookupOrDefault("alphaMax", 1.0)),
 
     rho_
@@ -78,22 +70,18 @@ incompressibleTwoPhaseInteractingMixture
         dimensionedScalar("rho", dimDensity, 0)
     ),
 
-    mu_
+    nu_
     (
         IOobject
         (
-            "mu",
+            "nu",
             U_.time().name(),
             U_.db()
         ),
         U_.mesh(),
-        dimensionedScalar(dimensionSet(1, -1, -1, 0, 0), 0),
+        dimensionedScalar(dimViscosity, 0),
         calculatedFvPatchScalarField::typeName
-    ),
-
-    MRF_(U.mesh()),
-
-    UdmModel_(relativeVelocityModel::New(*this, *this, g))
+    )
 {
     correct();
 }
@@ -109,37 +97,16 @@ Foam::incompressibleTwoPhaseInteractingMixture::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 const Foam::volScalarField&
-Foam::incompressibleTwoPhaseInteractingMixture::alphad() const
-{
-    return alpha1();
-}
-
-
-const Foam::volScalarField&
 Foam::incompressibleTwoPhaseInteractingMixture::alphac() const
 {
     return alpha2();
 }
 
 
-const Foam::mixtureViscosityModel&
-Foam::incompressibleTwoPhaseInteractingMixture::muModel() const
+const Foam::volScalarField&
+Foam::incompressibleTwoPhaseInteractingMixture::alphad() const
 {
-    return muModel_();
-}
-
-
-const Foam::viscosityModel&
-Foam::incompressibleTwoPhaseInteractingMixture::nucModel() const
-{
-    return nucModel_();
-}
-
-
-const Foam::dimensionedScalar&
-Foam::incompressibleTwoPhaseInteractingMixture::rhod() const
-{
-    return rhod_;
+    return alpha1();
 }
 
 
@@ -151,9 +118,9 @@ Foam::incompressibleTwoPhaseInteractingMixture::rhoc() const
 
 
 const Foam::dimensionedScalar&
-Foam::incompressibleTwoPhaseInteractingMixture::dd() const
+Foam::incompressibleTwoPhaseInteractingMixture::rhod() const
 {
-    return dd_;
+    return rhod_;
 }
 
 
@@ -178,59 +145,23 @@ Foam::incompressibleTwoPhaseInteractingMixture::rho() const
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::incompressibleTwoPhaseInteractingMixture::mu() const
-{
-    return mu_;
-}
-
-
-Foam::tmp<Foam::scalarField>
-Foam::incompressibleTwoPhaseInteractingMixture::mu(const label patchi) const
-{
-    return mu_.boundaryField()[patchi];
-}
-
-
-Foam::tmp<Foam::volScalarField>
 Foam::incompressibleTwoPhaseInteractingMixture::nu() const
 {
-    return mu_/rho_;
+    return nu_;
 }
 
 
 Foam::tmp<Foam::scalarField>
 Foam::incompressibleTwoPhaseInteractingMixture::nu(const label patchi) const
 {
-    return mu_.boundaryField()[patchi]/rho_.boundaryField()[patchi];
-}
-
-
-const Foam::IOMRFZoneList&
-Foam::incompressibleTwoPhaseInteractingMixture::MRF() const
-{
-    return MRF_;
-}
-
-
-const Foam::volVectorField&
-Foam::incompressibleTwoPhaseInteractingMixture::Udm() const
-{
-    return UdmModel_->Udm();
-}
-
-
-Foam::tmp<Foam::volVectorField>
-Foam::incompressibleTwoPhaseInteractingMixture::divTauDm() const
-{
-    return fvc::div(UdmModel_->tauDm());
+    return nu_.boundaryField()[patchi];
 }
 
 
 void Foam::incompressibleTwoPhaseInteractingMixture::correct()
 {
     rho_ = alpha1()*rhod_ + alpha2()*rhoc_;
-    mu_ = muModel_->mu(rhoc_*nucModel_->nu(), U_);
-    UdmModel_->correct();
+    nu_ = muModel_->mu(rhoc_*nucModel_->nu(), U_)/rho_;
 }
 
 
@@ -240,17 +171,10 @@ bool Foam::incompressibleTwoPhaseInteractingMixture::read()
     {
         if (muModel_->read() || nucModel_->read())
         {
-            muModel_->lookup("rho") >> rhod_;
             nucModel_->lookup("rho") >> rhoc_;
+            muModel_->lookup("rho") >> rhod_;
 
-            dd_ = dimensionedScalar
-            (
-                "d",
-                dimLength,
-                muModel_->lookupOrDefault("d", 0)
-            );
-
-            alphaMax_ = muModel_->lookupOrDefault( "alphaMax", 1.0);
+            alphaMax_ = muModel_->lookupOrDefault("alphaMax", 1.0);
 
             return true;
         }

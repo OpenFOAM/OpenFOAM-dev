@@ -35,7 +35,7 @@ volVectorField U
 
 
 Info<< "Reading incompressibleTwoPhaseInteractingMixture\n" << endl;
-incompressibleTwoPhaseInteractingMixture mixture(U, phi, g);
+incompressibleTwoPhaseInteractingMixture mixture(U, phi);
 
 volScalarField& alpha1(mixture.alpha1());
 const volScalarField& rho(mixture.rho());
@@ -52,6 +52,13 @@ surfaceScalarField rhoPhi
         IOobject::NO_WRITE
     ),
     fvc::interpolate(rho)*phi
+);
+
+
+// Dispersed phase relative velocity model
+autoPtr<relativeVelocityModel> relativeVelocity
+(
+    relativeVelocityModel::New(mixture, mixture, g)
 );
 
 
@@ -95,6 +102,7 @@ mesh.schemes().setFluxRequired(alpha1.name());
 // MULES Correction
 tmp<surfaceScalarField> talphaPhiCorr0;
 
+#include "createMRF.H"
 #include "createFvModels.H"
 #include "createFvConstraints.H"
 
@@ -102,7 +110,7 @@ tmp<surfaceScalarField> talphaPhiCorr0;
 //  used for ddtCorr with MRF
 autoPtr<surfaceVectorField> Uf;
 
-if (mixture.MRF().size())
+if (MRF.size())
 {
     Info<< "Constructing face momentum Uf" << endl;
 
