@@ -139,28 +139,31 @@ Foam::cellEdgeAddressingData::cellEdgeAddressingData
         }
     }
 
-    // Allocate and initialise the face signs
+    // Allocate and initialise the face ownership
     cOwns_ = boolList(c.size(), false);
     cOwns_[0] = cOwnsFirst;
     workspace_.cfei0[0] = 0;
 
-    // Walk around the cell, comparing edges to determine face signs
+    // Walk around the cell, comparing edges to determine face ownership
     {
         label cfi = 0, fei = 0;
 
         do
         {
-            // Get the connected face and face-edge
+            // Get the adjacent face and face-edge (given subscript j)
             const label cei = cfiAndFeiToCei_[cfi][fei];
             const labelPair cfiAndFei(labelPair(cfi, fei));
             const labelPair& cfjAndFej =
                 ceiToCfiAndFei_[cei][ceiToCfiAndFei_[cei][0] == cfiAndFei];
             const label cfj = cfjAndFej[0], fej = cfjAndFej[1];
 
-            // If the adjacent face has not been visited then set its sign and
-            // move forwards into it
+            // If the adjacent face has not been visited then set its ownership
+            // and it's starting face edge and move forwards into it
             if (workspace_.cfei0[cfj] == -1)
             {
+                // If the face-edges point in different directions then the
+                // faces have the same owner. If they point in the same
+                // direction then they have different owners.
                 const label sign =
                     edge::compare
                     (
@@ -183,7 +186,7 @@ Foam::cellEdgeAddressingData::cellEdgeAddressingData
                 fei = (fei + 1) % fs[c[cfi]].size();
             }
 
-            // If we back at the first edge then this face is complete and we
+            // If we are back at the first edge then this face is complete, so
             // move backwards into the adjacent face
             else // if (fei == workspace_.cfei0[cfi])
             {
