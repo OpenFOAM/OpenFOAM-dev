@@ -65,7 +65,7 @@ Foam::fv::zeroDimensionalMassSource::calcM0D() const
 
         if (thermo.phaseName() != word::null)
         {
-            const volScalarField alpha =
+            const volScalarField& alpha =
                 mesh().lookupObject<volScalarField>
                 (
                     IOobject::groupName("alpha", phaseName_)
