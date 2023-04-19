@@ -6,11 +6,11 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Writes out the minimum cell value magnitude for one or more fields.
+    Writes out the minimum cell value for one or more fields.
 
 \*---------------------------------------------------------------------------*/
 
-#includeEtc "caseDicts/postProcessing/minMax/cellMinMag.cfg"
+#includeEtc "caseDicts/postProcessing/volFieldValue/cellMin.cfg"
 
 fields  (<fieldNames>);
 

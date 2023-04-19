@@ -267,17 +267,6 @@ lagrangianFunctions
     //#includeFunc dsmcFields
 }
 
-minMaxFunctions
-{
-    #includeFunc cellMin(epsilon)
-
-    #includeFunc cellMax(k)
-
-    #includeFunc cellMinMag(U, writeLocation=yes)
-
-    #includeFunc cellMaxMag(U, writeLocation=yes)
-}
-
 numericalFunctions
 {
     #includeFunc residuals(p, U, h, k, epsilon)
@@ -410,6 +399,21 @@ surfaceFieldValueFunctions
     )
 }
 
+volFieldValueFunctions
+{
+    #includeFunc cellMin(epsilon)
+
+    #includeFunc cellMax(k)
+
+    #includeFunc cellMinMag(U, writeLocation=yes)
+
+    #includeFunc cellMaxMag(U, writeLocation=yes)
+
+    #includeFunc volAverage(p)
+
+    #includeFunc volIntegrate(rho)
+}
+
 functions
 {
     $combustionFunctions;
@@ -419,7 +423,6 @@ functions
     $forcesFunctions;
     $graphsFunctions;
     $lagrangianFunctions;
-    $minMaxFunctions;
     $numericalFunctions;
     $pressureFunctions;
     $probesFunctions;
@@ -427,6 +430,7 @@ functions
     $streamlinesFunctions;
     $surfaceFunctions;
     $surfaceFieldValueFunctions;
+    $volFieldValueFunctions;
 }
 
 // ************************************************************************* //

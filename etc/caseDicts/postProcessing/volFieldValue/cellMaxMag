@@ -4,10 +4,14 @@
    \\    /   O peration     | Website:  https://openfoam.org
     \\  /    A nd           | Version:  dev
      \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes out the maximum cell value magnitude for one or more fields.
+
 \*---------------------------------------------------------------------------*/
 
-#includeEtc "caseDicts/postProcessing/minMax/cellMinMax.cfg"
+#includeEtc "caseDicts/postProcessing/volFieldValue/cellMaxMag.cfg"
 
-operation       maxMag;
+fields  (<fieldNames>);
 
 // ************************************************************************* //
