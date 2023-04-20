@@ -33,6 +33,7 @@ namespace Foam
 {
 namespace fv
 {
+    defineTypeNameAndDebug(zeroDimensionalMassSourceBase, 0);
     defineTypeNameAndDebug(zeroDimensionalMassSource, 0);
     addToRunTimeSelectionTable(fvModel, zeroDimensionalMassSource, dictionary);
 }
@@ -42,7 +43,7 @@ namespace fv
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::fv::zeroDimensionalMassSource::calcM0D() const
+Foam::fv::zeroDimensionalMassSourceBase::calcM0D() const
 {
     tmp<volScalarField> tm =
         volScalarField::New
@@ -68,7 +69,7 @@ Foam::fv::zeroDimensionalMassSource::calcM0D() const
             const volScalarField& alpha =
                 mesh().lookupObject<volScalarField>
                 (
-                    IOobject::groupName("alpha", phaseName_)
+                    IOobject::groupName("alpha", phaseName)
                 );
 
             tm.ref().ref() += alpha()*rho()*mesh().V();
@@ -83,7 +84,7 @@ Foam::fv::zeroDimensionalMassSource::calcM0D() const
 }
 
 
-Foam::volScalarField& Foam::fv::zeroDimensionalMassSource::initM0D() const
+Foam::volScalarField& Foam::fv::zeroDimensionalMassSourceBase::initM0D() const
 {
     if (!mesh().foundObject<volScalarField>(typedName("m0D")))
     {
@@ -100,7 +101,7 @@ Foam::volScalarField& Foam::fv::zeroDimensionalMassSource::initM0D() const
 }
 
 
-const Foam::volScalarField& Foam::fv::zeroDimensionalMassSource::m() const
+const Foam::volScalarField& Foam::fv::zeroDimensionalMassSourceBase::m() const
 {
     // If not registered, then read or create the mass field
     if (!mesh().foundObject<volScalarField>(typedName("m")))
@@ -169,19 +170,33 @@ const Foam::volScalarField& Foam::fv::zeroDimensionalMassSource::m() const
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-Foam::scalar Foam::fv::zeroDimensionalMassSource::massFlowRate() const
+Foam::scalar Foam::fv::zeroDimensionalMassSourceBase::massFlowRate() const
 {
-    const scalar mDot = massFlowRate_->value(mesh().time().userTimeValue());
+    return zeroDimensionalMassFlowRate()*m0D_[0]/m()[0];
+}
 
-    return mDot*m0D_[0]/m()[0];
+
+void Foam::fv::zeroDimensionalMassSource::readCoeffs()
+{
+    readFieldValues();
+
+    zeroDimensionalMassFlowRate_.reset
+    (
+        Function1<scalar>::New("massFlowRate", coeffs()).ptr()
+    );
+}
+
+
+Foam::scalar
+Foam::fv::zeroDimensionalMassSource::zeroDimensionalMassFlowRate() const
+{
+    return zeroDimensionalMassFlowRate_->value(mesh().time().userTimeValue());
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::zeroDimensionalMassSource::zeroDimensionalMassSource
+Foam::fv::zeroDimensionalMassSourceBase::zeroDimensionalMassSourceBase
 (
     const word& name,
     const word& modelType,
@@ -189,7 +204,7 @@ Foam::fv::zeroDimensionalMassSource::zeroDimensionalMassSource
     const dictionary& dict
 )
 :
-    massSource(name, modelType, mesh, dict, true),
+    massSourceBase(name, modelType, mesh, dict),
     m0D_(initM0D())
 {
     if (mesh.nGeometricD() != 0)
@@ -202,9 +217,24 @@ Foam::fv::zeroDimensionalMassSource::zeroDimensionalMassSource
 }
 
 
+Foam::fv::zeroDimensionalMassSource::zeroDimensionalMassSource
+(
+    const word& name,
+    const word& modelType,
+    const fvMesh& mesh,
+    const dictionary& dict
+)
+:
+    zeroDimensionalMassSourceBase(name, modelType, mesh, dict),
+    zeroDimensionalMassFlowRate_()
+{
+    readCoeffs();
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::zeroDimensionalMassSource::correct()
+void Foam::fv::zeroDimensionalMassSourceBase::correct()
 {
     // Correct the zero-dimensional mass
     m0D_ = calcM0D();
@@ -231,9 +261,23 @@ void Foam::fv::zeroDimensionalMassSource::correct()
     volScalarField& deltaM =
         mesh().lookupObjectRef<volScalarField>(typedName("deltaM"));
 
-    const scalar mDot = massFlowRate_->value(mesh().time().userTimeValue());
+    deltaM +=
+        mesh().time().deltaT()
+       *dimensionedScalar(dimMass/dimTime, zeroDimensionalMassFlowRate());
+}
 
-    deltaM += mesh().time().deltaT()*dimensionedScalar(dimMass/dimTime, mDot);
+
+bool Foam::fv::zeroDimensionalMassSource::read(const dictionary& dict)
+{
+    if (zeroDimensionalMassSourceBase::read(dict))
+    {
+        readCoeffs();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

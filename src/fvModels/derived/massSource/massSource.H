@@ -80,19 +80,16 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class massSource Declaration
+                        Class massSourceBase Declaration
 \*---------------------------------------------------------------------------*/
 
-class massSource
+class massSourceBase
 :
     public fvModel
 {
-protected:
+private:
 
-    // Protected Data
-
-        //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+    // Private Data
 
         //- Name of the phase
         word phaseName_;
@@ -106,20 +103,20 @@ protected:
         //- Name of the temperature field
         word TName_;
 
-        //- Mass source
-        autoPtr<Function1<scalar>> massFlowRate_;
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Field values
         HashPtrTable<unknownTypeFunction1> fieldValues_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
 
         //- Non-virtual read
         void readCoeffs();
 
         //- Return the mass flow rate
-        virtual scalar massFlowRate() const;
+        virtual scalar massFlowRate() const = 0;
 
 
         // Sources
@@ -159,38 +156,39 @@ protected:
             ) const;
 
 
+protected:
+
+    // Protected Member Functions
+
+        //- Read the set
+        void readSet();
+
+        //- Read the field values
+        void readFieldValues();
+
+
 public:
 
     //- Runtime type information
-    TypeName("massSource");
+    TypeName("massSourceBase");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        massSource
+        massSourceBase
         (
             const word& name,
             const word& modelType,
             const fvMesh& mesh,
-            const dictionary& dict,
-            const bool all=false
+            const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        massSource(const massSource&) = delete;
+        massSourceBase(const massSourceBase&) = delete;
 
 
     // Member Functions
-
-        // Access
-
-            //- Return the name of the density field
-            const word& rhoName() const
-            {
-                return rhoName_;
-            }
-
 
         // Checks
 
@@ -239,7 +237,59 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const massSource&) = delete;
+        void operator=(const massSourceBase&) = delete;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                          Class massSource Declaration
+\*---------------------------------------------------------------------------*/
+
+class massSource
+:
+    public massSourceBase
+{
+private:
+
+    // Private Data
+
+        //- Mass flow rate
+        autoPtr<Function1<scalar>> massFlowRate_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
+
+        //- Return the mass flow rate
+        virtual scalar massFlowRate() const;
+
+
+public:
+
+    //- Runtime type information
+    TypeName("massSource");
+
+
+    // Constructors
+
+        //- Construct from explicit source name and mesh
+        massSource
+        (
+            const word& name,
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict
+        );
+
+
+    // Member Functions
+
+        // IO
+
+            //- Read source dictionary
+            virtual bool read(const dictionary& dict);
 };
 
 

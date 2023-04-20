@@ -34,15 +34,16 @@ namespace Foam
 {
 namespace fv
 {
+    defineTypeNameAndDebug(massSourceBase, 0);
     defineTypeNameAndDebug(massSource, 0);
     addToRunTimeSelectionTable(fvModel, massSource, dictionary);
 }
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::massSource::readCoeffs()
+void Foam::fv::massSourceBase::readCoeffs()
 {
     phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
 
@@ -69,30 +70,11 @@ void Foam::fv::massSource::readCoeffs()
         heName_ = thermo.he().name();
         TName_ = thermo.T().name();
     }
-
-    fieldValues_.clear();
-    const dictionary& fieldCoeffs = coeffs().subDict("fieldValues");
-    forAllConstIter(dictionary, fieldCoeffs, iter)
-    {
-        fieldValues_.set
-        (
-            iter().keyword(),
-            new unknownTypeFunction1(iter().keyword(), fieldCoeffs)
-        );
-    }
-
-    massFlowRate_.reset(Function1<scalar>::New("massFlowRate", coeffs()).ptr());
-}
-
-
-Foam::scalar Foam::fv::massSource::massFlowRate() const
-{
-    return massFlowRate_->value(mesh().time().userTimeValue());
 }
 
 
 template<class Type>
-void Foam::fv::massSource::addGeneralSupType
+void Foam::fv::massSourceBase::addGeneralSupType
 (
     fvMatrix<Type>& eqn,
     const word& fieldName
@@ -125,7 +107,7 @@ void Foam::fv::massSource::addGeneralSupType
 
 
 template<class Type>
-void Foam::fv::massSource::addSupType
+void Foam::fv::massSourceBase::addSupType
 (
     fvMatrix<Type>& eqn,
     const word& fieldName
@@ -135,7 +117,7 @@ void Foam::fv::massSource::addSupType
 }
 
 
-void Foam::fv::massSource::addSupType
+void Foam::fv::massSourceBase::addSupType
 (
     fvMatrix<scalar>& eqn,
     const word& fieldName
@@ -211,7 +193,7 @@ void Foam::fv::massSource::addSupType
 
 
 template<class Type>
-void Foam::fv::massSource::addSupType
+void Foam::fv::massSourceBase::addSupType
 (
     const volScalarField& rho,
     fvMatrix<Type>& eqn,
@@ -223,7 +205,7 @@ void Foam::fv::massSource::addSupType
 
 
 template<class Type>
-void Foam::fv::massSource::addSupType
+void Foam::fv::massSourceBase::addSupType
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -235,25 +217,80 @@ void Foam::fv::massSource::addSupType
 }
 
 
+void Foam::fv::massSource::readCoeffs()
+{
+    readSet();
+
+    readFieldValues();
+
+    massFlowRate_.reset
+    (
+        Function1<scalar>::New("massFlowRate", coeffs()).ptr()
+    );
+}
+
+
+Foam::scalar Foam::fv::massSource::massFlowRate() const
+{
+    return massFlowRate_->value(mesh().time().userTimeValue());
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::massSourceBase::readSet()
+{
+    set_.read(coeffs());
+}
+
+
+void Foam::fv::massSourceBase::readFieldValues()
+{
+    fieldValues_.clear();
+    const dictionary& fieldCoeffs = coeffs().subDict("fieldValues");
+    forAllConstIter(dictionary, fieldCoeffs, iter)
+    {
+        fieldValues_.set
+        (
+            iter().keyword(),
+            new unknownTypeFunction1(iter().keyword(), fieldCoeffs)
+        );
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::fv::massSourceBase::massSourceBase
+(
+    const word& name,
+    const word& modelType,
+    const fvMesh& mesh,
+    const dictionary& dict
+)
+:
+    fvModel(name, modelType, mesh, dict),
+    phaseName_(),
+    rhoName_(),
+    heName_(),
+    TName_(),
+    set_(fvCellSet(mesh)),
+    fieldValues_()
+{
+    readCoeffs();
+}
+
 
 Foam::fv::massSource::massSource
 (
     const word& name,
     const word& modelType,
     const fvMesh& mesh,
-    const dictionary& dict,
-    const bool all
+    const dictionary& dict
 )
 :
-    fvModel(name, modelType, mesh, dict),
-    set_(all ? fvCellSet(mesh) : fvCellSet(mesh, coeffs())),
-    phaseName_(),
-    rhoName_(),
-    heName_(),
-    TName_(),
-    massFlowRate_(),
-    fieldValues_()
+    massSourceBase(name, modelType, mesh, dict),
+    massFlowRate_()
 {
     readCoeffs();
 }
@@ -261,7 +298,7 @@ Foam::fv::massSource::massSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::massSource::addsSupToField(const word& fieldName) const
+bool Foam::fv::massSourceBase::addsSupToField(const word& fieldName) const
 {
     const bool isThisPhase = IOobject::group(fieldName) == phaseName_;
 
@@ -285,7 +322,7 @@ bool Foam::fv::massSource::addsSupToField(const word& fieldName) const
 }
 
 
-Foam::wordList Foam::fv::massSource::addSupFields() const
+Foam::wordList Foam::fv::massSourceBase::addSupFields() const
 {
     wordList fieldNames = fieldValues_.toc();
 
@@ -298,45 +335,58 @@ Foam::wordList Foam::fv::massSource::addSupFields() const
 }
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_SUP, fv::massSource);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_SUP, fv::massSourceBase);
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::massSource);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::massSourceBase);
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::massSource);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::massSourceBase);
 
 
-bool Foam::fv::massSource::movePoints()
+bool Foam::fv::massSourceBase::movePoints()
 {
     set_.movePoints();
     return true;
 }
 
 
-void Foam::fv::massSource::topoChange(const polyTopoChangeMap& map)
+void Foam::fv::massSourceBase::topoChange(const polyTopoChangeMap& map)
 {
     set_.topoChange(map);
 }
 
 
-void Foam::fv::massSource::mapMesh(const polyMeshMap& map)
+void Foam::fv::massSourceBase::mapMesh(const polyMeshMap& map)
 {
     set_.mapMesh(map);
 }
 
 
-void Foam::fv::massSource::distribute(const polyDistributionMap& map)
+void Foam::fv::massSourceBase::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
 }
 
 
-bool Foam::fv::massSource::read(const dictionary& dict)
+bool Foam::fv::massSourceBase::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
+        readCoeffs();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+bool Foam::fv::massSource::read(const dictionary& dict)
+{
+    if (massSourceBase::read(dict))
+    {
         readCoeffs();
         return true;
     }

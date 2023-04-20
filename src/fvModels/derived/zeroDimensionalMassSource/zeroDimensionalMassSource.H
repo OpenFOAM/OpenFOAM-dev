@@ -85,12 +85,12 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class zeroDimensionalMassSource Declaration
+                  Class zeroDimensionalMassSourceBase Declaration
 \*---------------------------------------------------------------------------*/
 
-class zeroDimensionalMassSource
+class zeroDimensionalMassSourceBase
 :
-    public massSource
+    public massSourceBase
 {
 private:
 
@@ -111,13 +111,61 @@ private:
         //- Get a reference to the mass
         const volScalarField& m() const;
 
-
-protected:
-
-    // Protected Member Functions
+        //- Return the zero-dimensional mass flow rate
+        virtual scalar zeroDimensionalMassFlowRate() const = 0;
 
         //- Return the mass flow rate
         virtual scalar massFlowRate() const;
+
+
+public:
+
+    //- Runtime type information
+    TypeName("zeroDimensionalMassSourceBase");
+
+
+    // Constructors
+
+        //- Construct from explicit source name and mesh
+        zeroDimensionalMassSourceBase
+        (
+            const word& name,
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict
+        );
+
+
+    // Member Functions
+
+        //- Update the model
+        virtual void correct();
+};
+
+
+/*---------------------------------------------------------------------------*\
+                    Class zeroDimensionalMassSource Declaration
+\*---------------------------------------------------------------------------*/
+
+class zeroDimensionalMassSource
+:
+    public zeroDimensionalMassSourceBase
+{
+private:
+
+    // Private Data
+
+        //- Zero-dimensional mass flow rate
+        autoPtr<Function1<scalar>> zeroDimensionalMassFlowRate_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
+
+        //- Return the zero-dimensional mass flow rate
+        virtual scalar zeroDimensionalMassFlowRate() const;
 
 
 public:
@@ -140,8 +188,10 @@ public:
 
     // Member Functions
 
-        //- Update the model
-        virtual void correct();
+        // IO
+
+            //- Read source dictionary
+            virtual bool read(const dictionary& dict);
 };
 
 
