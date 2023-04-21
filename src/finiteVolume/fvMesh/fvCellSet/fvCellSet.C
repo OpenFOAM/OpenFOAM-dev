@@ -71,10 +71,8 @@ Foam::fvCellSet::fvCellSet(const fvMesh& mesh)
 :
     polyCellSet(mesh),
     mesh_(mesh),
-    V_(NaN)
-{
-    setV();
-}
+    V_(gSum(mesh_.V()))
+{}
 
 
 Foam::fvCellSet::fvCellSet(const fvMesh& mesh, const dictionary& dict)
