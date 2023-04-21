@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,14 +74,14 @@ inline UniformField<Type> min
 
 
 template<class Type, class OtherType>
-inline OtherType min(const UniformField<Type>& u, const OtherType& o)
+inline auto min(const UniformField<Type>& u, const OtherType& o)
 {
     return min(u.operator Type(), o);
 }
 
 
 template<class Type, class OtherType>
-inline OtherType min(const OtherType& o, const UniformField<Type>& u)
+inline auto min(const OtherType& o, const UniformField<Type>& u)
 {
     return min(o, u.operator Type());
 }
@@ -99,14 +99,14 @@ inline UniformField<Type> max
 
 
 template<class Type, class OtherType>
-inline OtherType max(const UniformField<Type>& u, const OtherType& o)
+inline auto max(const UniformField<Type>& u, const OtherType& o)
 {
     return max(u.operator Type(), o);
 }
 
 
 template<class Type, class OtherType>
-inline OtherType max(const OtherType& o, const UniformField<Type>& u)
+inline auto max(const OtherType& o, const UniformField<Type>& u)
 {
     return max(o, u.operator Type());
 }

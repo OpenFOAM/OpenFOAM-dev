@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ inline const one& operator/(const one& o, const one&)
 }
 
 template<class Type>
-inline Type operator/(const one&, const Type& t)
+inline auto operator/(const one&, const Type& t)
 {
     return scalar(1)/t;
 }
@@ -107,13 +107,13 @@ inline const one& min(const one& o, const one&)
 }
 
 template<class Type>
-inline Type min(const one&, const Type& t)
+inline auto min(const one&, const Type& t)
 {
     return min(scalar(1), t);
 }
 
 template<class Type>
-inline Type min(const Type& t, const one&)
+inline auto min(const Type& t, const one&)
 {
     return min(t, scalar(1));
 }
@@ -124,13 +124,13 @@ inline const one& max(const one& o, const one&)
 }
 
 template<class Type>
-inline Type max(const one&, const Type& t)
+inline auto max(const one&, const Type& t)
 {
     return max(scalar(1), t);
 }
 
 template<class Type>
-inline Type max(const Type& t, const one&)
+inline auto max(const Type& t, const one&)
 {
     return max(t, scalar(1));
 }
