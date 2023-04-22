@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::alphaContactAngleFvPatchScalarField
+    Foam::contactAngleFvPatchScalarField
 
 Description
     General alpha contact angle boundary condition.
@@ -54,12 +54,12 @@ See also
     Foam::contactAngleModels::dynamic
 
 SourceFiles
-    alphaContactAngleFvPatchScalarField.C
+    contactAngleFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef alphaContactAngleFvPatchScalarField_H
-#define alphaContactAngleFvPatchScalarField_H
+#ifndef contactAngleFvPatchScalarField_H
+#define contactAngleFvPatchScalarField_H
 
 #include "fixedGradientFvPatchFields.H"
 #include "contactAngleModel.H"
@@ -70,10 +70,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-             Class alphaContactAngleFvPatchScalarField Declaration
+             Class contactAngleFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class alphaContactAngleFvPatchScalarField
+class contactAngleFvPatchScalarField
 :
     public fixedGradientFvPatchScalarField
 {
@@ -103,40 +103,40 @@ public:
     // Constructors
 
         //- Construct from patch and internal field
-        alphaContactAngleFvPatchScalarField
+        contactAngleFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        alphaContactAngleFvPatchScalarField
+        contactAngleFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given alphaContactAngleFvPatchScalarField
+        //- Construct by mapping given contactAngleFvPatchScalarField
         //  onto a new patch
-        alphaContactAngleFvPatchScalarField
+        contactAngleFvPatchScalarField
         (
-            const alphaContactAngleFvPatchScalarField&,
+            const contactAngleFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        alphaContactAngleFvPatchScalarField
+        contactAngleFvPatchScalarField
         (
-            const alphaContactAngleFvPatchScalarField&
+            const contactAngleFvPatchScalarField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        alphaContactAngleFvPatchScalarField
+        contactAngleFvPatchScalarField
         (
-            const alphaContactAngleFvPatchScalarField&,
+            const contactAngleFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 

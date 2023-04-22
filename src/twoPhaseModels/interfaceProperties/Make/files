@@ -12,6 +12,6 @@ contactAngleModels/temperatureDependent/temperatureDependentContactAngle.C
 contactAngleModels/dynamic/dynamicContactAngle.C
 contactAngleModels/gravitational/gravitationalContactAngle.C
 
-alphaContactAngle/alphaContactAngleFvPatchScalarField.C
+contactAngle/contactAngleFvPatchScalarField.C
 
 LIB = $(FOAM_LIBBIN)/libinterfaceProperties

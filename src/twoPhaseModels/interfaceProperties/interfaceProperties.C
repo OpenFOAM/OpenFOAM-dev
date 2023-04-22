@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "interfaceProperties.H"
-#include "alphaContactAngleFvPatchScalarField.H"
+#include "contactAngleFvPatchScalarField.H"
 #include "unitConversion.H"
 #include "surfaceInterpolate.H"
 #include "fvcDiv.H"
@@ -53,10 +53,10 @@ void Foam::interfaceProperties::correctContactAngle
 
     forAll(boundary, patchi)
     {
-        if (isA<alphaContactAngleFvPatchScalarField>(a1bf[patchi]))
+        if (isA<contactAngleFvPatchScalarField>(a1bf[patchi]))
         {
-            alphaContactAngleFvPatchScalarField& a1cap =
-                refCast<alphaContactAngleFvPatchScalarField>
+            contactAngleFvPatchScalarField& a1cap =
+                refCast<contactAngleFvPatchScalarField>
                 (
                     a1bf[patchi]
                 );

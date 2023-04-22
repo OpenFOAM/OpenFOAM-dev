@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "alphaContactAngleFvPatchScalarField.H"
+#include "contactAngleFvPatchScalarField.H"
 #include "fvPatchFieldMapper.H"
 #include "volMesh.H"
 #include "addToRunTimeSelectionTable.H"
@@ -35,7 +35,7 @@ namespace Foam
     template<>
     const char* Foam::NamedEnum
     <
-        Foam::alphaContactAngleFvPatchScalarField::limitControls,
+        Foam::contactAngleFvPatchScalarField::limitControls,
         4
     >::names[] =
     {
@@ -49,14 +49,14 @@ namespace Foam
 
 const Foam::NamedEnum
 <
-    Foam::alphaContactAngleFvPatchScalarField::limitControls,
+    Foam::contactAngleFvPatchScalarField::limitControls,
     4
-> Foam::alphaContactAngleFvPatchScalarField::limitControlNames_;
+> Foam::contactAngleFvPatchScalarField::limitControlNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
+Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
@@ -68,7 +68,7 @@ Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 {}
 
 
-Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
+Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -93,9 +93,9 @@ Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 }
 
 
-Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
+Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
 (
-    const alphaContactAngleFvPatchScalarField& acpsf,
+    const contactAngleFvPatchScalarField& acpsf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const fvPatchFieldMapper& mapper
@@ -107,9 +107,9 @@ Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 {}
 
 
-Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
+Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
 (
-    const alphaContactAngleFvPatchScalarField& acpsf,
+    const contactAngleFvPatchScalarField& acpsf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
@@ -121,7 +121,7 @@ Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField> Foam::alphaContactAngleFvPatchScalarField::cosTheta
+Foam::tmp<Foam::scalarField> Foam::contactAngleFvPatchScalarField::cosTheta
 (
     const fvPatchVectorField& Up,
     const vectorField& nHat
@@ -131,7 +131,7 @@ Foam::tmp<Foam::scalarField> Foam::alphaContactAngleFvPatchScalarField::cosTheta
 }
 
 
-void Foam::alphaContactAngleFvPatchScalarField::evaluate
+void Foam::contactAngleFvPatchScalarField::evaluate
 (
     const Pstream::commsTypes
 )
@@ -162,7 +162,7 @@ void Foam::alphaContactAngleFvPatchScalarField::evaluate
 }
 
 
-void Foam::alphaContactAngleFvPatchScalarField::write
+void Foam::contactAngleFvPatchScalarField::write
 (
     Ostream& os
 ) const
@@ -181,7 +181,7 @@ namespace Foam
     makePatchTypeField
     (
         fvPatchScalarField,
-        alphaContactAngleFvPatchScalarField
+        contactAngleFvPatchScalarField
     );
 }
 
