@@ -1,0 +1,6 @@
+relativeVelocityModel/relativeVelocityModel.C
+simple/simple.C
+general/general.C
+MichaelsBolger/MichaelsBolger.C
+
+LIB = $(FOAM_LIBBIN)/libincompressibleDriftFluxRelativeVelocityModels

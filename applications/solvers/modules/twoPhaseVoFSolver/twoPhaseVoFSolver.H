@@ -119,13 +119,20 @@ private:
         //- Solve for the phase-fractions
         void alphaSolve(const dictionary& alphaControls);
 
-        //- Solve for the phase-fractions
-        void alphaPredictor();
-
 
 protected:
 
     // Protected Member Functions
+
+        virtual tmp<surfaceScalarField> alphaPhi
+        (
+            const surfaceScalarField& phi,
+            const volScalarField& alpha,
+            const dictionary& alphaControls
+        );
+
+        //- Solve for the phase-fractions
+        void alphaPredictor();
 
         //- Adjust the rDeltaT in the vicinity of the interface
         virtual void setInterfaceRDeltaT(volScalarField& rDeltaT);

@@ -1,8 +1,0 @@
-#!/bin/sh
-cd ${0%/*} || exit 1    # Run from this directory
-
-wclean libso mixtureViscosityModels
-wclean libso relativeVelocityModels
-wclean
-
-#------------------------------------------------------------------------------

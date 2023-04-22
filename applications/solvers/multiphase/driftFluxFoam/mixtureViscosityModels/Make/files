@@ -1,8 +1,0 @@
-mixtureViscosityModel/mixtureViscosityModel.C
-mixtureViscosityModel/mixtureViscosityModelNew.C
-plastic/plastic.C
-BinghamPlastic/BinghamPlastic.C
-slurry/slurry.C
-Quemada/Quemada.C
-
-LIB = $(FOAM_LIBBIN)/libdriftFluxTransportModels

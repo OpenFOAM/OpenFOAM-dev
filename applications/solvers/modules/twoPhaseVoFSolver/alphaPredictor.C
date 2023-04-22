@@ -33,6 +33,41 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::surfaceScalarField> Foam::solvers::twoPhaseVoFSolver::alphaPhi
+(
+    const surfaceScalarField& phi,
+    const volScalarField& alpha,
+    const dictionary& alphaControls
+)
+{
+    const word alphaScheme(mesh.schemes().div(divAlphaName)[1].wordToken());
+
+    ITstream compressionScheme
+    (
+        compressionSchemes.found(alphaScheme)
+      ? mesh.schemes().div(divAlphaName)
+      : ITstream
+        (
+            divAlphaName,
+            tokenList
+            {
+                word("Gauss"),
+                word("interfaceCompression"),
+                alphaScheme,
+                alphaControls.lookup<scalar>("cAlpha")
+            }
+        )
+    );
+
+    return fvc::flux
+    (
+        phi,
+        alpha,
+        compressionScheme
+    );
+}
+
+
 void Foam::solvers::twoPhaseVoFSolver::alphaSolve
 (
     const dictionary& alphaControls
@@ -53,25 +88,6 @@ void Foam::solvers::twoPhaseVoFSolver::alphaSolve
     const bool alphaApplyPrevCorr
     (
         alphaControls.lookupOrDefault<Switch>("alphaApplyPrevCorr", false)
-    );
-
-    const word alphaScheme(mesh.schemes().div(divAlphaName)[1].wordToken());
-
-    ITstream compressionScheme
-    (
-        compressionSchemes.found(alphaScheme)
-      ? mesh.schemes().div(divAlphaName)
-      : ITstream
-        (
-            divAlphaName,
-            tokenList
-            {
-                word("Gauss"),
-                word("interfaceCompression"),
-                alphaScheme,
-                alphaControls.lookup<scalar>("cAlpha")
-            }
-        )
     );
 
 
@@ -219,11 +235,11 @@ void Foam::solvers::twoPhaseVoFSolver::alphaSolve
         // Split operator
         tmp<surfaceScalarField> talphaPhi1Un
         (
-            fvc::flux
+            alphaPhi
             (
                 phiCN(),
                 (cnCoeff*alpha1 + (1.0 - cnCoeff)*alpha1.oldTime())(),
-                compressionScheme.rewind()
+                alphaControls
             )
         );
 
@@ -399,8 +415,6 @@ void Foam::solvers::twoPhaseVoFSolver::alphaPredictor()
     {
         alphaSolve(alphaControls);
     }
-
-    mixture.correct();
 }
 
 

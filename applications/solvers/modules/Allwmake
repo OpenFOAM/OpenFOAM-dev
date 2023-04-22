@@ -20,6 +20,7 @@ compressibleVoF/Allwmake $targetType $*
 wmake $targetType multiphaseVoFSolver
 wmake $targetType incompressibleMultiphaseVoF
 wmake $targetType compressibleMultiphaseVoF
+wmake $targetType incompressibleDriftFlux
 multiphaseEuler/Allwmake $targetType $*
 wmake $targetType incompressibleDenseParticleFluid
 isothermalFilm/Allwmake $targetType $*

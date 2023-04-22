@@ -155,8 +155,8 @@ void Foam::solvers::twoPhaseVoFSolver::preSolve()
 void Foam::solvers::twoPhaseVoFSolver::prePredictor()
 {
     VoFSolver::prePredictor();
-
     alphaPredictor();
+    mixture.correct();
 }
 
 
