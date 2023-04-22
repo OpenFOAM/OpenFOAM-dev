@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     #define NO_CONTROL
     #include "postProcess.H"
 
-    #include "setRootCaseLists.H"
+    #include "setRootCase.H"
     #include "createTime.H"
     #include "createZeroDimensionalFvMesh.H"
     #include "createFields.H"
