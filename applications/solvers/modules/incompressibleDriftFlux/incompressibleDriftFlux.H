@@ -147,6 +147,13 @@ protected:
             tmp<volScalarField::Internal>& Sp
         );
 
+        //- Correct the interface properties following mesh-change
+        //  and phase-fraction update
+        virtual void correctInterface();
+
+        //- Return the interface surface tension force for the momentum equation
+        virtual tmp<surfaceScalarField> surfaceTensionForce() const;
+
         //- Return the momentum equation stress term
         virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U)
         {

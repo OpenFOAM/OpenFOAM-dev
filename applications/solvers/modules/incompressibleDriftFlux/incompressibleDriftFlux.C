@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "incompressibleDriftFlux.H"
-#include "localEulerDdtScheme.H"
 #include "fvCorrectPhi.H"
-#include "geometricZeroField.H"
 #include "addToRunTimeSelectionTable.H"
 
 #include "fvmDdt.H"
@@ -42,6 +40,24 @@ namespace solvers
     defineTypeNameAndDebug(incompressibleDriftFlux, 0);
     addToRunTimeSelectionTable(solver, incompressibleDriftFlux, fvMesh);
 }
+}
+
+
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+void Foam::solvers::incompressibleDriftFlux::correctInterface()
+{}
+
+
+Foam::tmp<Foam::surfaceScalarField>
+Foam::solvers::incompressibleDriftFlux::surfaceTensionForce() const
+{
+    return surfaceScalarField::New
+    (
+        "surfaceTensionForce",
+        mesh,
+        dimensionedScalar(dimForce/dimVolume, 0)
+    );
 }
 
 

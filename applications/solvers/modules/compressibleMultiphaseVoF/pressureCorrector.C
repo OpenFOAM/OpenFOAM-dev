@@ -64,7 +64,7 @@ void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
         const surfaceScalarField phig
         (
             (
-                mixture.surfaceTensionForce(U)
+                surfaceTensionForce()
               - buoyancy.ghf*fvc::snGrad(rho)
             )*rAUf*mesh.magSf()
         );

@@ -227,7 +227,7 @@ void Foam::solvers::twoPhaseVoFSolver::alphaSolve
 
         alpha2 = 1.0 - alpha1;
 
-        interface.correct();
+        correctInterface();
     }
 
     for (int aCorr=0; aCorr<nAlphaCorr; aCorr++)
@@ -321,7 +321,7 @@ void Foam::solvers::twoPhaseVoFSolver::alphaSolve
         alpha2 = 1.0 - alpha1;
 
         // Correct only the mixture interface for the interface compression flux
-        interface.correct();
+        correctInterface();
     }
 
     if (alphaApplyPrevCorr && MULESCorr)

@@ -70,7 +70,7 @@ void Foam::solvers::incompressibleVoF::pressureCorrector()
         surfaceScalarField phig
         (
             (
-                interface.surfaceTensionForce()
+                surfaceTensionForce()
               - buoyancy.ghf*fvc::snGrad(rho)
             )*rAUf*mesh.magSf()
         );
