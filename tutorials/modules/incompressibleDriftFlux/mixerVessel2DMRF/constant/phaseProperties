@@ -26,6 +26,4 @@ relativeVelocityModel simple;
     residualAlpha   0;
 }
 
-sigma           0;
-
 // ************************************************************************* //

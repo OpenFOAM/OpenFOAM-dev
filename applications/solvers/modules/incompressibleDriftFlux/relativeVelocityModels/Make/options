@@ -1,7 +1,7 @@
 EXE_INC = \
     -I../incompressibleDriftFluxMixture \
     -I../mixtureViscosityModels/lnInclude \
-    -I$(FOAM_SOLVERS)/modules/twoPhaseVoFSolver/lnInclude \
+    -I$(FOAM_SOLVERS)/modules/twoPhaseSolver/lnInclude \
     -I$(FOAM_SOLVERS)/modules/VoFSolver/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \

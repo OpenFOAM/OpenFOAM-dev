@@ -1,0 +1,6 @@
+twoPhaseVoFMixture/twoPhaseVoFMixture.C
+alphaPredictor.C
+pressureCorrector.C
+twoPhaseSolver.C
+
+LIB = $(FOAM_LIBBIN)/libtwoPhaseSolver

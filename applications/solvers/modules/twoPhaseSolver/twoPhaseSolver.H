@@ -22,11 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solvers::twoPhaseVoFSolver
+    Foam::solvers::twoPhaseSolver
 
 Description
-    Solver module base-class for for 2 immiscible fluids using a VOF (volume
-    of fluid) phase-fraction based interface capturing approach, with optional
+    Solver module base-class for for 2 immiscible fluids, with optional
     mesh motion and mesh topology changes including adaptive re-meshing.
 
     The momentum and other fluid properties are of the "mixture" and a single
@@ -45,18 +44,18 @@ Description
     particles, surface film etc. and constraining or limiting the solution.
 
 SourceFiles
-    twoPhaseVoFSolver.C
+    twoPhaseSolver.C
 
 See also
     Foam::solvers::fluidSolver
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef twoPhaseVoFSolver_H
-#define twoPhaseVoFSolver_H
+#ifndef twoPhaseSolver_H
+#define twoPhaseSolver_H
 
-#include "twoPhaseSolver.H"
-#include "interfaceProperties.H"
+#include "VoFSolver.H"
+#include "twoPhaseVoFMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,70 +65,116 @@ namespace solvers
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class twoPhaseVoFSolver Declaration
+                          Class twoPhaseSolver Declaration
 \*---------------------------------------------------------------------------*/
 
-class twoPhaseVoFSolver
+class twoPhaseSolver
 :
-    public twoPhaseSolver
+    public VoFSolver
 {
 
 protected:
 
-    // Interface properties
+    // Phase properties
 
-        interfaceProperties interface;
+        //- Reference to the twoPhaseVoFMixture
+        twoPhaseVoFMixture& mixture;
+
+        //- Reference to the phase1-fraction
+        volScalarField& alpha1;
+
+        //- Reference to the phase2-fraction
+        volScalarField& alpha2;
+
+        //- Switch indicating if this is a restart
+        bool alphaRestart;
+
+
+    // Kinematic properties
+
+        // Phase-1 volumetric flux
+        surfaceScalarField alphaPhi1;
+
+
+    // Cached temporary fields
+
+        //- MULES Correction
+        tmp<surfaceScalarField> talphaPhi1Corr0;
 
 
 private:
 
     // Private Member Functions
 
-        //- Correct the cached Courant numbers
-        virtual void correctCoNum();
+        //- Solve for the phase-fractions
+        void alphaSolve(const dictionary& alphaControls);
 
 
 protected:
 
     // Protected Member Functions
 
-        //- Adjust the rDeltaT in the vicinity of the interface
-        virtual void setInterfaceRDeltaT(volScalarField& rDeltaT);
+        virtual tmp<surfaceScalarField> alphaPhi
+        (
+            const surfaceScalarField& phi,
+            const volScalarField& alpha,
+            const dictionary& alphaControls
+        );
+
+        //- Solve for the phase-fractions
+        void alphaPredictor();
+
+        //- Calculate the alpha equation sources
+        virtual void alphaSuSp
+        (
+            tmp<volScalarField::Internal>& Su,
+            tmp<volScalarField::Internal>& Sp
+        ) = 0;
 
         //- Correct the interface properties following mesh-change
         //  and phase-fraction update
-        virtual void correctInterface();
+        virtual void correctInterface() = 0;
 
         //- Return the interface surface tension force for the momentum equation
-        virtual tmp<surfaceScalarField> surfaceTensionForce() const;
+        virtual tmp<surfaceScalarField> surfaceTensionForce() const = 0;
+
+        //- Construct and solve the incompressible pressure equation
+        //  in the PISO loop
+        void incompressiblePressureCorrector(volScalarField& p);
 
 
 public:
 
     //- Runtime type information
-    TypeName("twoPhaseVoFSolver");
+    TypeName("twoPhaseSolver");
 
 
     // Constructors
 
         //- Construct from region mesh
-        twoPhaseVoFSolver(fvMesh& mesh, autoPtr<twoPhaseVoFMixture>);
+        twoPhaseSolver(fvMesh& mesh, autoPtr<twoPhaseVoFMixture>);
 
         //- Disallow default bitwise copy construction
-        twoPhaseVoFSolver(const twoPhaseVoFSolver&) = delete;
+        twoPhaseSolver(const twoPhaseSolver&) = delete;
 
 
     //- Destructor
-    virtual ~twoPhaseVoFSolver();
+    virtual ~twoPhaseSolver();
 
 
     // Member Functions
+
+        //- Called at the start of the time-step, before the PIMPLE loop
+        virtual void preSolve();
+
+        //- Called at the start of the PIMPLE loop
+        virtual void prePredictor();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const twoPhaseVoFSolver&) = delete;
+        void operator=(const twoPhaseSolver&) = delete;
 };
 
 

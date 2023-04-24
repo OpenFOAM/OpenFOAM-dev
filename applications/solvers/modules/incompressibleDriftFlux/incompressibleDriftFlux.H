@@ -46,7 +46,7 @@ SourceFiles
 
 See also
     Foam::solvers::VoFSolver
-    Foam::solvers::twoPhaseVoFSolver
+    Foam::solvers::twoPhaseSolver
     Foam::solvers::compressibleVoF
 
 \*---------------------------------------------------------------------------*/
@@ -54,7 +54,7 @@ See also
 #ifndef incompressibleDriftFlux_H
 #define incompressibleDriftFlux_H
 
-#include "twoPhaseVoFSolver.H"
+#include "twoPhaseSolver.H"
 #include "incompressibleDriftFluxMixture.H"
 #include "relativeVelocityModel.H"
 #include "momentumTransportModel.H"
@@ -73,7 +73,7 @@ namespace solvers
 
 class incompressibleDriftFlux
 :
-    public twoPhaseVoFSolver
+    public twoPhaseSolver
 {
 
 protected:
@@ -104,6 +104,16 @@ protected:
         //- Pointer to the momentum transport model
         autoPtr<compressible::momentumTransportModel> momentumTransport;
 
+
+private:
+
+    // Private Member Functions
+
+        //- Correct the cached Courant numbers
+        virtual void correctCoNum();
+
+
+protected:
 
     // Protected Member Functions
 
@@ -139,6 +149,9 @@ protected:
             const volScalarField& alpha,
             const dictionary& alphaControls
         );
+
+        //- Adjust the rDeltaT in the vicinity of the interface
+        virtual void setInterfaceRDeltaT(volScalarField& rDeltaT);
 
         //- Calculate the alpha equation sources
         virtual void alphaSuSp
@@ -183,6 +196,9 @@ public:
 
 
     // Member Functions
+
+        //- Return the current maximum time-step for stable solution
+        virtual scalar maxDeltaT() const;
 
         //- Called at the start of the PIMPLE loop
         virtual void prePredictor();

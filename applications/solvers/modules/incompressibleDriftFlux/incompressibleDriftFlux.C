@@ -43,7 +43,22 @@ namespace solvers
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::solvers::incompressibleDriftFlux::correctCoNum()
+{
+    VoFSolver::correctCoNum();
+}
+
+
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+void Foam::solvers::incompressibleDriftFlux::setInterfaceRDeltaT
+(
+    volScalarField& rDeltaT
+)
+{}
+
 
 void Foam::solvers::incompressibleDriftFlux::correctInterface()
 {}
@@ -65,7 +80,7 @@ Foam::solvers::incompressibleDriftFlux::surfaceTensionForce() const
 
 Foam::solvers::incompressibleDriftFlux::incompressibleDriftFlux(fvMesh& mesh)
 :
-    twoPhaseVoFSolver
+    twoPhaseSolver
     (
         mesh,
         autoPtr<twoPhaseVoFMixture>(new incompressibleDriftFluxMixture(mesh))
@@ -73,7 +88,7 @@ Foam::solvers::incompressibleDriftFlux::incompressibleDriftFlux(fvMesh& mesh)
 
     mixture
     (
-        refCast<incompressibleDriftFluxMixture>(twoPhaseVoFSolver::mixture)
+        refCast<incompressibleDriftFluxMixture>(twoPhaseSolver::mixture)
        .initialise(U)
     ),
 
@@ -109,6 +124,11 @@ Foam::solvers::incompressibleDriftFlux::incompressibleDriftFlux(fvMesh& mesh)
 {
     // Read the controls
     readControls();
+
+    if (transient())
+    {
+        correctCoNum();
+    }
 
     if (correctPhi || mesh.topoChanging())
     {
@@ -153,6 +173,12 @@ Foam::solvers::incompressibleDriftFlux::~incompressibleDriftFlux()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::scalar Foam::solvers::incompressibleDriftFlux::maxDeltaT() const
+{
+    return fluidSolver::maxDeltaT();
+}
+
+
 void Foam::solvers::incompressibleDriftFlux::prePredictor()
 {
     VoFSolver::prePredictor();
@@ -193,6 +219,12 @@ void Foam::solvers::incompressibleDriftFlux::prePredictor()
     {
         momentumTransport->predict();
     }
+}
+
+
+void Foam::solvers::incompressibleDriftFlux::pressureCorrector()
+{
+    incompressiblePressureCorrector(p);
 }
 
 

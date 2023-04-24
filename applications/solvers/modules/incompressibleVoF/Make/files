@@ -1,7 +1,6 @@
 incompressibleTwoPhaseVoFMixture/incompressibleTwoPhaseVoFMixture.C
 incompressibleInterPhaseTransportModel/incompressibleInterPhaseTransportModel.C
 alphaSuSp.C
-pressureCorrector.C
 incompressibleVoF.C
 
 LIB = $(FOAM_LIBBIN)/libincompressibleVoF

@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "twoPhaseVoFSolver.H"
-#include "localEulerDdtScheme.H"
 #include "fvcAverage.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -42,7 +41,7 @@ namespace solvers
 
 void Foam::solvers::twoPhaseVoFSolver::correctCoNum()
 {
-    VoFSolver::correctCoNum();
+    twoPhaseSolver::correctCoNum();
 
     const scalarField sumPhi
     (
@@ -83,47 +82,10 @@ Foam::solvers::twoPhaseVoFSolver::twoPhaseVoFSolver
     autoPtr<twoPhaseVoFMixture> mixturePtr
 )
 :
-    VoFSolver(mesh, autoPtr<VoFMixture>(mixturePtr.ptr())),
+    twoPhaseSolver(mesh, mixturePtr),
 
-    mixture(refCast<twoPhaseVoFMixture>(VoFSolver::mixture_)),
-
-    alpha1(mixture.alpha1()),
-    alpha2(mixture.alpha2()),
-
-    alphaRestart
-    (
-        typeIOobject<surfaceScalarField>
-        (
-            IOobject::groupName("alphaPhi", alpha1.group()),
-            runTime.name(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ).headerOk()
-    ),
-
-    interface(mixture, alpha1, alpha2, U),
-
-    alphaPhi1
-    (
-        IOobject
-        (
-            IOobject::groupName("alphaPhi", alpha1.group()),
-            runTime.name(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        phi*fvc::interpolate(alpha1)
-    )
+    interface(mixture, alpha1, alpha2, U)
 {
-    mesh.schemes().setFluxRequired(alpha1.name());
-
-    if (alphaRestart)
-    {
-        Info << "Restarting alpha" << endl;
-    }
-
     if (transient())
     {
         correctCoNum();
@@ -135,29 +97,6 @@ Foam::solvers::twoPhaseVoFSolver::twoPhaseVoFSolver
 
 Foam::solvers::twoPhaseVoFSolver::~twoPhaseVoFSolver()
 {}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-void Foam::solvers::twoPhaseVoFSolver::preSolve()
-{
-    VoFSolver::preSolve();
-
-    // Do not apply previous time-step mesh compression flux
-    // if the mesh topology changed
-    if (mesh().topoChanged())
-    {
-        talphaPhi1Corr0.clear();
-    }
-}
-
-
-void Foam::solvers::twoPhaseVoFSolver::prePredictor()
-{
-    VoFSolver::prePredictor();
-    alphaPredictor();
-    mixture.correct();
-}
 
 
 // ************************************************************************* //

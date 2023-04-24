@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "twoPhaseVoFSolver.H"
+#include "twoPhaseSolver.H"
 #include "subCycle.H"
 #include "interfaceCompression.H"
 #include "CMULES.H"
@@ -33,7 +33,7 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::surfaceScalarField> Foam::solvers::twoPhaseVoFSolver::alphaPhi
+Foam::tmp<Foam::surfaceScalarField> Foam::solvers::twoPhaseSolver::alphaPhi
 (
     const surfaceScalarField& phi,
     const volScalarField& alpha,
@@ -68,7 +68,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::solvers::twoPhaseVoFSolver::alphaPhi
 }
 
 
-void Foam::solvers::twoPhaseVoFSolver::alphaSolve
+void Foam::solvers::twoPhaseSolver::alphaSolve
 (
     const dictionary& alphaControls
 )
@@ -364,7 +364,7 @@ void Foam::solvers::twoPhaseVoFSolver::alphaSolve
 }
 
 
-void Foam::solvers::twoPhaseVoFSolver::alphaPredictor()
+void Foam::solvers::twoPhaseSolver::alphaPredictor()
 {
     const dictionary& alphaControls = mesh.solution().solverDict(alpha1.name());
 

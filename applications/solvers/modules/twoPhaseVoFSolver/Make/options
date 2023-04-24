@@ -1,4 +1,5 @@
 EXE_INC = \
+    -I$(FOAM_SOLVERS)/modules/twoPhaseSolver/lnInclude \
     -I$(FOAM_SOLVERS)/modules/VoFSolver/lnInclude \
     -I$(FOAM_SOLVERS)/modules/fluidSolver/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
@@ -11,8 +12,7 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude
 
 LIB_LIBS = \
-    -lVoFSolver \
-    -lfluidSolver \
+    -ltwoPhaseSolver \
     -lphysicalProperties \
     -linterfaceCompression \
     -linterfaceProperties \

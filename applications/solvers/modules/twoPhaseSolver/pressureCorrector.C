@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "incompressibleDriftFlux.H"
+#include "twoPhaseSolver.H"
 #include "constrainHbyA.H"
 #include "constrainPressure.H"
 #include "adjustPhi.H"
@@ -38,7 +38,10 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::incompressibleDriftFlux::pressureCorrector()
+void Foam::solvers::twoPhaseSolver::incompressiblePressureCorrector
+(
+    volScalarField& p
+)
 {
     volVectorField& U = U_;
     surfaceScalarField& phi(phi_);

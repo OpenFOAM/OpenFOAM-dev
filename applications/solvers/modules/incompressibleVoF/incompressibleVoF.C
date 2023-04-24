@@ -147,6 +147,12 @@ void Foam::solvers::incompressibleVoF::prePredictor()
 }
 
 
+void Foam::solvers::incompressibleVoF::pressureCorrector()
+{
+    incompressiblePressureCorrector(p);
+}
+
+
 void Foam::solvers::incompressibleVoF::thermophysicalPredictor()
 {}
 
