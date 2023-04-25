@@ -27,17 +27,17 @@ gradSchemes
 
 divSchemes
 {
-    default                         none;
+    default                 none;
 
-    "div\(phi,alpha.*\)"            Gauss vanLeer;
-    "div\(phir,alpha.*,alpha.*)"    Gauss vanLeer;
+    div(phi,alpha)          Gauss vanLeer;
+    div(phir,alpha,alpha)   Gauss vanLeer;
 
-    "div\(phi.*,U.*\)"              Gauss linearUpwind limited;
-    "div\(alphaRhoPhi.*,U.*\)"      Gauss linearUpwind limited;
+    div(phi,U)              Gauss linearUpwind limited;
+    div(alphaRhoPhi,U)      Gauss linearUpwind limited;
 
-    "div\(alphaPhi.*,f.*\)"         Gauss upwind;
+    "div\(alphaPhi,f*.*\)"  Gauss upwind;
 
-    "div\(\(\(\(alpha.*\*rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
+    div((((alpha*rho)*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes

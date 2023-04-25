@@ -26,13 +26,13 @@ gradSchemes
 
 divSchemes
 {
-    default                         none;
+    default                 none;
 
-    "div\(phi,alpha.*\)"            Gauss vanLeer;
-    "div\(alphaRhoPhi.*,U.*\)"      Gauss limitedLinearV 1;
-    "div\(alphaPhi.*,f.*\)"         Gauss limitedLinear 1;
+    div(phi,alpha)          Gauss vanLeer;
+    div(alphaRhoPhi,U)      Gauss limitedLinearV 1;
+    "div\(alphaPhi,f*.*\)"  Gauss limitedLinear 1;
 
-    "div\(\(\(\(alpha.*\*rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
+    div((((alpha*rho)*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
