@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,6 +56,11 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of classes
+class surfaceFilm;
+class Random;
+
+
 /*---------------------------------------------------------------------------*\
                        Class ThermoSurfaceFilmBase Declaration
 \*---------------------------------------------------------------------------*/
@@ -87,9 +92,15 @@ class ThermoSurfaceFilm
     public SurfaceFilmModel<CloudType>,
     public ThermoSurfaceFilmBase
 {
+    // Private Member Functions
+
+        //- Return pointers to the films
+        UPtrList<surfaceFilm>& surfaceFilmPtrs() const;
+
+
 protected:
 
-    // Protected data
+    // Protected Data
 
         //- Convenience typedef to the cloud's parcel type
         typedef typename CloudType::parcelType parcelType;
@@ -106,8 +117,17 @@ protected:
             //- Pointers to the surface films
             mutable UPtrList<surfaceFilm> surfaceFilms_;
 
+            //- List of film patches
+            mutable labelList filmPatches_;
+
 
         // Cached injector fields per film patch
+
+            //- Film velocity / patch face
+            vectorField UFilmPatch_;
+
+            //- Film density / patch face
+            scalarField rhoFilmPatch_;
 
             //- Film temperature / patch face
             scalarField TFilmPatch_;
@@ -219,17 +239,11 @@ protected:
                 bool& keepParticle
             );
 
-
         //- Return pointers to the films
-        virtual UPtrList<surfaceFilm>& surfaceFilmPtrs() const;
+        virtual const labelList& filmPatches() const;
 
         //- Cache the film fields in preparation for injection
-        virtual void cacheFilmFields
-        (
-            const label filmPatchi,
-            const label primaryPatchi,
-            const surfaceFilm& filmModel
-        );
+        virtual void cacheFilmFields(const label filmi);
 
         //- Set the individual parcel properties
         virtual void setParcelProperties

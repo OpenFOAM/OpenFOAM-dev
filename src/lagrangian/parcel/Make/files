@@ -113,9 +113,6 @@ clouds/Templates/MomentumCloud/cloudSolution/cloudSolution.C
 # averaging methods
 submodels/MPPIC/AveragingMethods/makeAveragingMethods.C
 
-# surface films
-submodels/Thermodynamic/SurfaceFilmModel/ThermoSurfaceFilm/ThermoSurfaceFilmBase.C
-
 # fvModels
 fvModels/clouds/clouds.C
 

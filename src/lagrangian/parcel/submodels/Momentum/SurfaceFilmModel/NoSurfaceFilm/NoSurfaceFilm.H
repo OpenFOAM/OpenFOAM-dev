@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,17 @@ protected:
     // Protected Member Functions
 
         //- Return pointers to the films
-        virtual UPtrList<surfaceFilm>& surfaceFilmPtrs() const;
+        virtual const labelList& filmPatches() const;
+
+        //- Cache the film fields in preparation for injection
+        virtual void cacheFilmFields(const label filmi);
+
+        //- Set the individual parcel properties
+        virtual void setParcelProperties
+        (
+            parcelType& p,
+            const label filmFacei
+        ) const;
 
 
 public:
@@ -105,13 +115,6 @@ public:
                 const polyPatch& pp,
                 bool& keepParticle
             );
-
-            //- Set parcel properties
-            virtual void setParcelProperties
-            (
-                parcelType& p,
-                const label filmCelli
-            ) const;
 
 
         // I-O

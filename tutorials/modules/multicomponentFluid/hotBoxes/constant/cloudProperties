@@ -16,6 +16,8 @@ FoamFile
 
 type        reactingCloud;
 
+libs        ("libparcelSurfaceFilmModels.so");
+
 solution
 {
     coupled         yes;

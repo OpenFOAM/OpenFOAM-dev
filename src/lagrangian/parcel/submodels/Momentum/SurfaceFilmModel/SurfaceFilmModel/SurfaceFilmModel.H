@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,20 +36,15 @@ SourceFiles
 #ifndef SurfaceFilmModel_H
 #define SurfaceFilmModel_H
 
-#include "IOdictionary.H"
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
 #include "CloudSubModelBase.H"
-#include "surfaceMesh.H"
 #include "dimensionedTypes.H"
+#include "polyPatch.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class surfaceFilm;
 
 /*---------------------------------------------------------------------------*\
                       Class SurfaceFilmModel Declaration
@@ -84,14 +79,8 @@ protected:
             //- Parcel diameter / patch face
             scalarField diameterParcelPatch_;
 
-            //- Film velocity / patch face
-            vectorField UFilmPatch_;
-
-            //- Film density / patch face
-            scalarField rhoFilmPatch_;
-
             //- Film height of all film patches / patch face
-            List<scalarField> deltaFilmPatch_;
+            scalarField deltaFilmPatch_;
 
 
         // Counters
@@ -105,24 +94,18 @@ protected:
 
     // Protected functions
 
-        //- Return pointers to the films
-        virtual UPtrList<surfaceFilm>&
-            surfaceFilmPtrs() const = 0;
+        //- Return list of film patches
+        virtual const labelList& filmPatches() const = 0;
 
         //- Cache the film fields in preparation for injection
-        virtual void cacheFilmFields
-        (
-            const label filmPatchi,
-            const label primaryPatchi,
-            const surfaceFilm&
-        );
+        virtual void cacheFilmFields(const label filmi) = 0;
 
         //- Set the individual parcel properties
         virtual void setParcelProperties
         (
             parcelType& p,
             const label filmFacei
-        ) const;
+        ) const = 0;
 
 
 public:

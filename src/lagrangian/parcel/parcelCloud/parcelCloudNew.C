@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,6 +52,8 @@ Foam::autoPtr<Foam::parcelCloud> Foam::parcelCloud::New
 
     Info<< "Selecting " << parcelCloud::typeName << " " << type << endl;
 
+    libs.open(dict, "libs");
+
     viscosityConstructorTable::iterator cstrIter =
         viscosityConstructorTablePtr_->find(type);
 
@@ -92,6 +94,8 @@ Foam::autoPtr<Foam::parcelCloud> Foam::parcelCloud::New
     const word type(dict.lookup<word>("type"));
 
     Info<< "Selecting " << parcelCloud::typeName << " " << type << endl;
+
+    libs.open(dict, "libs");
 
     thermoConstructorTable::iterator cstrIter =
         thermoConstructorTablePtr_->find(type);

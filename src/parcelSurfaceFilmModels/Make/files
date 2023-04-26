@@ -1,0 +1,7 @@
+ThermoSurfaceFilmBase.C
+makeThermoParcelSurfaceFilmModels.C
+makeReactingParcelSurfaceFilmModels.C
+makeReactingMultiphaseParcelSurfaceFilmModels.C
+makeSprayParcelSurfaceFilmModels.C
+
+LIB = $(FOAM_LIBBIN)/libparcelSurfaceFilmModels

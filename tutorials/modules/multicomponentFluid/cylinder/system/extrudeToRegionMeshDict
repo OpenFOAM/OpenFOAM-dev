@@ -15,7 +15,7 @@ FoamFile
 
 region          wallFilm;
 
-patches         (walls cylinder);
+patches         (walls);
 
 extrudeModel    linearNormal;
 

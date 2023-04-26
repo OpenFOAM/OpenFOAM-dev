@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ License
 
 // Reacting
 #include "makeReactingParcelPhaseChangeModels.H"
-#include "makeReactingParcelSurfaceFilmModels.H"
+#include "makeParcelSurfaceFilmModels.H"
 
 // Spray
 #include "DistortedSphereDragForce.H"
@@ -64,7 +64,7 @@ makeParcelCompositionModels(sprayCloud);
 
 // Reacting sub-models
 makeReactingParcelPhaseChangeModels(sprayCloud);
-makeReactingParcelSurfaceFilmModels(sprayCloud);
+makeParcelSurfaceFilmModels(sprayCloud);
 
 // Spray sub-models
 makeParticleForceModelType(DistortedSphereDragForce, sprayCloud);

@@ -22,7 +22,7 @@ boundaryField
 {
     #includeEtc "caseDicts/setConstraintTypes"
 
-    "(walls_top|cylinder_top)"
+    walls_top
     {
         type            slip;
     }

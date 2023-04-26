@@ -22,7 +22,7 @@ boundaryField
 {
     #includeEtc "caseDicts/setConstraintTypes"
 
-    "(sides|frontAndBack|walls_top|cylinder_top)"
+    "(sides|frontAndBack|walls_top)"
     {
         type            zeroGradient;
     }

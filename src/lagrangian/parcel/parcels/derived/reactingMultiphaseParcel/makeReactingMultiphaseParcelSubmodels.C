@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ License
 #include "makeReactingMultiphaseParcelInjectionModels.H" // MP variant
 #include "makeParcelPatchInteractionModels.H"
 #include "makeReactingMultiphaseParcelStochasticCollisionModels.H" // MP variant
-#include "makeReactingParcelSurfaceFilmModels.H" // Reacting variant
+#include "makeParcelSurfaceFilmModels.H"
 
 // Thermodynamic
 #include "makeParcelHeatTransferModels.H"
@@ -59,7 +59,7 @@ makeReactingMultiphaseParcelStochasticCollisionModels
 (
     reactingMultiphaseCloud
 );
-makeReactingParcelSurfaceFilmModels(reactingMultiphaseCloud);
+makeParcelSurfaceFilmModels(reactingMultiphaseCloud);
 
 // Thermo sub-models
 makeParcelHeatTransferModels(reactingMultiphaseCloud);

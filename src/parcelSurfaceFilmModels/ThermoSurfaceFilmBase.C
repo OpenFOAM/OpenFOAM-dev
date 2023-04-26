@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,39 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "thermoCloud.H"
+#include "ThermoSurfaceFilm.H"
 
-#include "makeParcelCloudFunctionObjects.H"
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-// Momentum
-#include "makeParcelForces.H"
-#include "makeParcelDispersionModels.H"
-#include "makeThermoParcelInjectionModels.H"
-#include "makeParcelPatchInteractionModels.H"
-#include "makeParcelStochasticCollisionModels.H"
-#include "makeParcelSurfaceFilmModels.H"
+namespace Foam
+{
+    template<>
+    const char* NamedEnum
+    <
+        ThermoSurfaceFilmBase::interactionType,
+        3
+    >::names[] = {"absorb", "bounce", "splashBai"};
+}
 
-// Thermodynamic
-#include "makeParcelHeatTransferModels.H"
-#include "makeParcelCompositionModels.H"
 
-#include "NoComposition.H"
-#include "SinglePhaseMixture.H"
+const Foam::NamedEnum
+<
+    Foam::ThermoSurfaceFilmBase::interactionType,
+    3
+> Foam::ThermoSurfaceFilmBase::interactionTypeNames_;
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-makeParcelCloudFunctionObjects(thermoCloud);
-
-// Momentum sub-models
-makeParcelForces(thermoCloud);
-makeParcelDispersionModels(thermoCloud);
-makeThermoParcelInjectionModels(thermoCloud);
-makeParcelPatchInteractionModels(thermoCloud);
-makeParcelStochasticCollisionModels(thermoCloud);
-makeParcelSurfaceFilmModels(thermoCloud);
-
-// Thermo sub-models
-makeParcelHeatTransferModels(thermoCloud);
-makeParcelCompositionModels(thermoCloud);
 
 // ************************************************************************* //

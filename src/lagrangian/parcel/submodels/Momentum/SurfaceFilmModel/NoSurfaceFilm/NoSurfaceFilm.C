@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,12 +29,25 @@ License
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::UPtrList<Foam::surfaceFilm>&
-Foam::NoSurfaceFilm<CloudType>::surfaceFilmPtrs() const
+const Foam::labelList& Foam::NoSurfaceFilm<CloudType>::filmPatches() const
 {
-    static UPtrList<surfaceFilm> null;
+    static labelList null;
     return null;
 }
+
+
+template<class CloudType>
+void Foam::NoSurfaceFilm<CloudType>::cacheFilmFields(const label filmi)
+{}
+
+
+template<class CloudType>
+void Foam::NoSurfaceFilm<CloudType>::setParcelProperties
+(
+    parcelType& p,
+    const label filmFacei
+) const
+{}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -79,15 +92,6 @@ bool Foam::NoSurfaceFilm<CloudType>::transferParcel
 {
     return false;
 }
-
-
-template<class CloudType>
-void Foam::NoSurfaceFilm<CloudType>::setParcelProperties
-(
-    parcelType&,
-    const label
-) const
-{}
 
 
 template<class CloudType>

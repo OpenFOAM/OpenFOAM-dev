@@ -30,6 +30,7 @@ License
 #include "fvmLaplacian.H"
 #include "fvcReconstruct.H"
 #include "volPointInterpolation.H"
+#include "fixedValueFvPatchFields.H"
 #include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

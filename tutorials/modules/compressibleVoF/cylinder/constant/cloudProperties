@@ -16,6 +16,8 @@ FoamFile
 
 type        thermoCloud;
 
+libs        ("libparcelSurfaceFilmModels.so");
+
 solution
 {
     coupled         no;
