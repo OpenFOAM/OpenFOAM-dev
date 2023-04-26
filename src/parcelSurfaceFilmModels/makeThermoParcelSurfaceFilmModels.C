@@ -24,10 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "thermoCloud.H"
-#include "makeThermoParcelSurfaceFilmModels.H"
+#include "ThermoSurfaceFilm.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makeThermoParcelSurfaceFilmModels(thermoCloud);
+makeSurfaceFilmModelType(ThermoSurfaceFilm, thermoCloud);
 
 // ************************************************************************* //

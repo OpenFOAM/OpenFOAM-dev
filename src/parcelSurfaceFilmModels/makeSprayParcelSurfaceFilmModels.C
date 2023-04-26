@@ -24,10 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sprayCloud.H"
-#include "makeReactingParcelSurfaceFilmModels.H"
+#include "ThermoSurfaceFilm.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makeReactingParcelSurfaceFilmModels(sprayCloud);
+makeSurfaceFilmModelType(ThermoSurfaceFilm, sprayCloud);
 
 // ************************************************************************* //

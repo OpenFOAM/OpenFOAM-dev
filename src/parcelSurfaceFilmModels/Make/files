@@ -1,4 +1,4 @@
-ThermoSurfaceFilmBase.C
+ThermoSurfaceFilm/ThermoSurfaceFilmBase.C
 makeThermoParcelSurfaceFilmModels.C
 makeReactingParcelSurfaceFilmModels.C
 makeReactingMultiphaseParcelSurfaceFilmModels.C

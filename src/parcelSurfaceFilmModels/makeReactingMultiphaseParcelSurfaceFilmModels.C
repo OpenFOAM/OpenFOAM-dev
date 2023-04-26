@@ -24,10 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "reactingMultiphaseCloud.H"
-#include "makeReactingParcelSurfaceFilmModels.H"
+#include "ThermoSurfaceFilm.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makeReactingParcelSurfaceFilmModels(reactingMultiphaseCloud);
+makeSurfaceFilmModelType(ThermoSurfaceFilm, reactingMultiphaseCloud);
 
 // ************************************************************************* //
