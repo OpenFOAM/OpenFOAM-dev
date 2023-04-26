@@ -54,6 +54,8 @@ namespace Foam
 namespace fv
 {
 
+class VoFtoFilmTransfer;
+
 /*---------------------------------------------------------------------------*\
                        Class filmToVoFTransfer Declaration
 \*---------------------------------------------------------------------------*/
@@ -85,6 +87,8 @@ class filmToVoFTransfer
 
 
     // Private Member Functions
+
+        const VoFtoFilmTransfer& VoFtoFilm(const fvModels&) const;
 
         //- Return the transfer rate from the VoF transferRateFunc
         template<class Type, class TransferRateFunc>

@@ -138,8 +138,10 @@ bool Foam::solvers::isothermalFilm::initFilmMesh()
     if (nWallFaces != mesh.nCells())
     {
         FatalErrorInFunction
-            << "The number of filmWall faces in the mesh "
-               "is not equal to the number of cells"
+            << "The number of film wall faces in the mesh "
+            << nWallFaces
+            << " is not equal to the number of cells "
+            << mesh.nCells()
             << exit(FatalError);
     }
 

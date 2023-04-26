@@ -42,7 +42,6 @@ Description
 
 SourceFiles
     ThermoSurfaceFilm.C
-    ThermoSurfaceFilmI.H
 
 \*---------------------------------------------------------------------------*/
 

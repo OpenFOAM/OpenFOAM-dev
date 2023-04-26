@@ -130,10 +130,7 @@ void Foam::fv::filmToVoFTransfer::correct()
 
     const label patchiVoF = film_.surfacePatchMap().nbrPolyPatch().index();
 
-    const VoFtoFilmTransfer& VoFtoFilm
-    (
-        refCast<VoFtoFilmTransfer>(VoF_.fvModels()[0])
-    );
+    const VoFtoFilmTransfer& VoFtoFilm(this->VoFtoFilm(VoF_.fvModels()));
 
     const scalarField alphaVoF
     (
@@ -170,22 +167,11 @@ void Foam::fv::filmToVoFTransfer::correct()
 }
 
 
-template<class Type, class TransferRateFunc>
-Foam::tmp<Foam::VolInternalField<Type>>
-inline Foam::fv::filmToVoFTransfer::VoFToFilmTransferRate
+const Foam::fv::VoFtoFilmTransfer& Foam::fv::filmToVoFTransfer::VoFtoFilm
 (
-    TransferRateFunc transferRateFunc,
-    const dimensionSet& dimProp
+    const Foam::fvModels& fvModels
 ) const
 {
-    const Foam::fvModels& fvModels
-    (
-        fvModels::New
-        (
-            refCast<const fvMesh>(film_.surfacePatchMap().nbrMesh())
-        )
-    );
-
     const VoFtoFilmTransfer* VoFtoFilmPtr = nullptr;
 
     forAll(fvModels, i)
@@ -216,6 +202,26 @@ inline Foam::fv::filmToVoFTransfer::VoFToFilmTransferRate
             << exit(FatalError);
     }
 
+    return *VoFtoFilmPtr;
+}
+
+
+template<class Type, class TransferRateFunc>
+Foam::tmp<Foam::VolInternalField<Type>>
+inline Foam::fv::filmToVoFTransfer::VoFToFilmTransferRate
+(
+    TransferRateFunc transferRateFunc,
+    const dimensionSet& dimProp
+) const
+{
+    const Foam::fvModels& fvModels
+    (
+        fvModels::New
+        (
+            refCast<const fvMesh>(film_.surfacePatchMap().nbrMesh())
+        )
+    );
+
     tmp<VolInternalField<Type>> tSu
     (
         VolInternalField<Type>::New
@@ -229,7 +235,7 @@ inline Foam::fv::filmToVoFTransfer::VoFToFilmTransferRate
     UIndirectList<Type>(tSu.ref(), film_.surfacePatch().faceCells()) =
         film_.surfacePatchMap().fromNeighbour
         (
-            (VoFtoFilmPtr->*transferRateFunc)()
+            (VoFtoFilm(fvModels).*transferRateFunc)()
         );
 
     return tSu/mesh().V();
