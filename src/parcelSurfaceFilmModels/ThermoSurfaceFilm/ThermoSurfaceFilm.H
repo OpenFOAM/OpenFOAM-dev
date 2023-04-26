@@ -57,7 +57,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class surfaceFilm;
+class thermoSurfaceFilm;
 class Random;
 
 
@@ -95,7 +95,7 @@ class ThermoSurfaceFilm
     // Private Member Functions
 
         //- Return pointers to the films
-        UPtrList<surfaceFilm>& surfaceFilmPtrs() const;
+        UPtrList<thermoSurfaceFilm>& filmPtrs() const;
 
 
 protected:
@@ -111,11 +111,11 @@ protected:
 
         // Film models
 
-            //- Names of the surface films
-            const wordList surfaceFilmNames_;
+            //- Names of the films
+            const wordList filmNames_;
 
-            //- Pointers to the surface films
-            mutable UPtrList<surfaceFilm> surfaceFilms_;
+            //- Pointers to the films
+            mutable UPtrList<thermoSurfaceFilm> films_;
 
             //- List of film patches
             mutable labelList filmPatches_;
@@ -188,7 +188,7 @@ protected:
             //- Absorb parcel into film
             void absorbInteraction
             (
-                surfaceFilm&,
+                thermoSurfaceFilm&,
                 const parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -208,7 +208,7 @@ protected:
             //- Parcel interaction with dry surface
             void drySplashInteraction
             (
-                surfaceFilm&,
+                thermoSurfaceFilm&,
                 const parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -218,7 +218,7 @@ protected:
             //- Parcel interaction with wetted surface
             void wetSplashInteraction
             (
-                surfaceFilm&,
+                thermoSurfaceFilm&,
                 parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -228,7 +228,7 @@ protected:
             //- Bai parcel splash interaction model
             void splashInteraction
             (
-                surfaceFilm&,
+                thermoSurfaceFilm&,
                 const parcelType& p,
                 const polyPatch& pp,
                 const label facei,
@@ -285,7 +285,7 @@ public:
 
         // Evaluation
 
-            //- Transfer parcel from cloud to surface film
+            //- Transfer parcel from cloud to film
             //  Returns true if parcel is to be transferred
             virtual bool transferParcel
             (
@@ -297,7 +297,7 @@ public:
 
         // I-O
 
-            //- Write surface film info to stream
+            //- Write film info to stream
             virtual void info(Ostream& os);
 };
 
