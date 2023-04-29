@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,10 +68,9 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Ergun::CdRe() const
         (4.0/3.0)
        *(
             150
-           *max(1 - continuous, dispersed.residualAlpha())
+           *max(dispersed, dispersed.residualAlpha())
            /max(continuous, continuous.residualAlpha())
-          + 1.75
-           *interface_.Re()
+          + 1.75*interface_.Re()
         );
 }
 
