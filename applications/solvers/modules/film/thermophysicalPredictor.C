@@ -51,9 +51,6 @@ void Foam::solvers::film::thermophysicalPredictor()
     fvConstraints().constrain(he);
 
     thermo_.correct();
-
-    Info<< max(alpha) << " " << min(alpha) << endl;
-    Info<< max(thermo.T()) << " " << min(thermo.T()) << endl;
 }
 
 
