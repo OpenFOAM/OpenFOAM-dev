@@ -1,0 +1,31 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication -s fluid blockMesh -region fluid
+runApplication -s film blockMesh -dict system/film/blockMeshDict
+runApplication extrudeMesh -region film
+
+runApplication -s fluid foamDictionary -set \
+    "entry0/film/type=mappedExtrudedWall, \
+     entry0/film/neighbourRegion=film, \
+     entry0/film/neighbourPatch=surface, \
+     entry0/film/transformType=none" \
+     constant/fluid/polyMesh/boundary
+
+runApplication -s film foamDictionary -set \
+    "entry0/surface/type=mappedFilmSurface, \
+     entry0/surface/neighbourRegion=fluid, \
+     entry0/surface/neighbourPatch=film, \
+     entry0/surface/oppositePatch=wall, \
+     entry0/surface/transformType=none" \
+     constant/film/polyMesh/boundary
+
+printf "\n%s\n" "Creating files for paraview post-processing"
+paraFoam -touchAll
+echo
+
+runApplication $(getApplication)
+
+#------------------------------------------------------------------------------

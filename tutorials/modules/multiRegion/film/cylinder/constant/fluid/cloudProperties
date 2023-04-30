@@ -16,7 +16,7 @@ FoamFile
 
 type        reactingCloud;
 
-libs        ("libparcelSurfaceFilmModels.so");
+libs        ("libfilmCloudTransfer.so");
 
 solution
 {
@@ -99,7 +99,7 @@ subModels
 
     stochasticCollisionModel none;
 
-    surfaceFilmModel thermoSurfaceFilm;
+    surfaceFilmModel cloudFilmTransfer;
 
     radiation       off;
 
@@ -119,15 +119,15 @@ subModels
         );
     }
 
-    thermoSurfaceFilmCoeffs
+    cloudFilmTransferCoeffs
     {
         interactionType absorb;
-        surfaceFilms    ("surfaceFilm");
     }
 }
 
 
 cloudFunctions
 {}
+
 
 // ************************************************************************* //
