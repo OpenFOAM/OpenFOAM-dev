@@ -122,10 +122,8 @@ subModels
     thermoSurfaceFilmCoeffs
     {
         interactionType absorb;
-        surfaceFilms    ("surfaceFilm");
     }
 }
-
 
 cloudFunctions
 {}

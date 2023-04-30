@@ -445,8 +445,7 @@ Foam::ThermoSurfaceFilm<CloudType>::filmPtrs() const
             HashTable<const thermoSurfaceFilm*> filmPtrs =
                 db.lookupClass<thermoSurfaceFilm>();
 
-            const word defaultName =
-                thermoSurfaceFilm::typeName + "Properties";
+            const word defaultName = surfaceFilm::typeName + "Properties";
 
             if
             (
@@ -457,6 +456,7 @@ Foam::ThermoSurfaceFilm<CloudType>::filmPtrs() const
              || (filmPtrs.size() > 1)
             )
             {
+                Info << filmPtrs.begin().key() << " " << defaultName << endl;
                 this->coeffDict().lookup("surfaceFilms");
             }
         }
@@ -577,7 +577,7 @@ Foam::ThermoSurfaceFilm<CloudType>::ThermoSurfaceFilm
         this->coeffDict().lookupOrDefault
         (
             "surfaceFilms",
-            wordList(1, thermoSurfaceFilm::typeName)
+            wordList(1, surfaceFilm::typeName)
         )
     ),
     films_(),
