@@ -9,24 +9,39 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      fvModels;
+    location    "system/film";
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-VoFFilmTransfer
+ddtSchemes
 {
-    type        VoFFilmTransfer;
-
-    libs        ("libfilmVoFTransfer.so");
-
-    filmPatch   film;
-    phase       liquid;
-
-    deltaFactorToFilm 0.9;
-    alphaToFilm       0.86;
-
-    transferRateCoeff 0.1;
+    default         Euler;
 }
+
+gradSchemes
+{
+    default         Gauss linear;
+}
+
+divSchemes
+{
+    default             none;
+
+    div(phid,alpha)     Gauss upwind;
+    div(alphaRhoPhi,U)  Gauss upwind;
+    div(alphaRhoPhi,e)  Gauss upwind;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear uncorrected;
+}
+
+snGradSchemes
+{
+    default         uncorrected;
+}
+
 
 // ************************************************************************* //

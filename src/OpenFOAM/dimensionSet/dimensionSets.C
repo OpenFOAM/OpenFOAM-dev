@@ -165,6 +165,7 @@ const Foam::dimensionSet Foam::dimVolume(pow3(dimLength));
 const Foam::dimensionSet Foam::dimVol(dimVolume);
 
 const Foam::dimensionSet Foam::dimVelocity(dimLength/dimTime);
+const Foam::dimensionSet Foam::dimMomentum(dimMass*dimVelocity);
 const Foam::dimensionSet Foam::dimAcceleration(dimVelocity/dimTime);
 
 const Foam::dimensionSet Foam::dimDensity(dimMass/dimVolume);

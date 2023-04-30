@@ -14,17 +14,21 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-VoFFilmTransfer
+filmCloudTransfer
 {
-    type        VoFFilmTransfer;
+    type    filmCloudTransfer;
 
-    libs        ("libfilmVoFTransfer.so");
+    libs    ("libfilmCloudTransfer.so");
+}
 
-    filmPatch   film;
-    phase       liquid;
+filmVoFTransfer
+{
+    type    filmVoFTransfer;
 
-    deltaFactorToFilm 0.9;
-    alphaToFilm       0.86;
+    libs    ("libfilmVoFTransfer.so");
+
+    deltaFactorToVoF  0.3;
+    alphaToVoF        0.3;
 
     transferRateCoeff 0.1;
 }

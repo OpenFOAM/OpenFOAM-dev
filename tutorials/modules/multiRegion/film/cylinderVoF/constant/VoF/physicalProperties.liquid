@@ -10,23 +10,22 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      fvModels;
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-VoFFilmTransfer
+thermoType
 {
-    type        VoFFilmTransfer;
-
-    libs        ("libfilmVoFTransfer.so");
-
-    filmPatch   film;
-    phase       liquid;
-
-    deltaFactorToFilm 0.9;
-    alphaToFilm       0.86;
-
-    transferRateCoeff 0.1;
+    type            heRhoThermo;
+    mixture         pureMixture;
+    properties      liquid;
+    energy          sensibleInternalEnergy;
 }
+
+mixture
+{
+    H2O;
+}
+
 
 // ************************************************************************* //

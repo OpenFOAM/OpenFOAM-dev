@@ -9,24 +9,28 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      fvModels;
+    object      extrudeToRegionMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-VoFFilmTransfer
+sourceCase      "$FOAM_CASE";
+constructFrom   patch;
+
+sourcePatches   (surface);
+exposedPatchName wall;
+
+extrudeModel    linearNormal;
+
+nLayers         1;
+
+expansionRatio  1;
+
+flipNormals     yes;
+mergeFaces      no;
+
+linearNormalCoeffs
 {
-    type        VoFFilmTransfer;
-
-    libs        ("libfilmVoFTransfer.so");
-
-    filmPatch   film;
-    phase       liquid;
-
-    deltaFactorToFilm 0.9;
-    alphaToFilm       0.86;
-
-    transferRateCoeff 0.1;
+    thickness       0.01;
 }
 
 // ************************************************************************* //

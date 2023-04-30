@@ -7,5 +7,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 wmake $targetType filmCompressibleMomentumTransportModels
 wmake $targetType
 wmake $targetType fvModels/filmVoFTransfer
+wmake $targetType fvModels/filmCloudTransfer
 
 #------------------------------------------------------------------------------

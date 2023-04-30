@@ -118,7 +118,7 @@ protected:
         volScalarField::Internal magSf;
 
         //- Film cell volume/wall face area
-        volScalarField VbyA;
+        volScalarField VbyA_;
 
         //- Bool returned by initFilmMesh()
         bool initialised_;
@@ -173,6 +173,9 @@ protected:
         //  shared between the momentum predictor and pressure corrector
         tmp<fvVectorMatrix> tUEqn;
 
+        //- Continuity error
+        tmp<volScalarField::Internal> contErr;
+
 
 private:
 
@@ -206,7 +209,10 @@ private:
         //- Correct the cached Courant number
         void correctCoNum();
 
-        //- Calculate and print the continuity errors
+        // Calculate the continuity error caused by limiting alpha
+        void correctContinuityError();
+
+        //- Print the continuity errors
         void continuityErrors();
 
         //- Construct the explicit film volume-fraction prediction equation
@@ -256,6 +262,9 @@ protected:
 public:
 
     // Public Data
+
+        //- Film cell volume/wall face area
+        const volScalarField& VbyA;
 
         //- Film thickness
         const volScalarField& delta;

@@ -1,4 +1,4 @@
-EXE_INC = -ggdb3 \
+EXE_INC = \
     -I$(FOAM_SOLVERS)/modules/isothermalFilm/lnInclude \
     -I$(FOAM_SOLVERS)/modules/isothermalFilm/filmCompressibleMomentumTransportModels/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \

@@ -9,24 +9,52 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      fvModels;
+    location    "system";
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-VoFFilmTransfer
+application     foamMultiRun;
+
+regionSolvers
 {
-    type        VoFFilmTransfer;
-
-    libs        ("libfilmVoFTransfer.so");
-
-    filmPatch   film;
-    phase       liquid;
-
-    deltaFactorToFilm 0.9;
-    alphaToFilm       0.86;
-
-    transferRateCoeff 0.1;
+    VoF             compressibleVoF;
+    film            film;
 }
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         20;
+
+deltaT          1e-02;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.2;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  10;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.3;
+maxAlphaCo      1;
+
+maxDeltaT       1;
 
 // ************************************************************************* //

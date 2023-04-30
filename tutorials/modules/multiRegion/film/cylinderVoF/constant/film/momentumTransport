@@ -10,23 +10,11 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      fvModels;
+    object      momentumTransport;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-VoFFilmTransfer
-{
-    type        VoFFilmTransfer;
+simulationType  laminar;
 
-    libs        ("libfilmVoFTransfer.so");
-
-    filmPatch   film;
-    phase       liquid;
-
-    deltaFactorToFilm 0.9;
-    alphaToFilm       0.86;
-
-    transferRateCoeff 0.1;
-}
 
 // ************************************************************************* //

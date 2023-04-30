@@ -66,7 +66,7 @@ void Foam::solvers::isothermalFilm::correctAlpha()
 
         const surfaceScalarField alphaf
         (
-            constrainedField(max(fvc::interpolate(alpha), scalar(0)))
+            constrainedField(fvc::interpolate(alpha))
         );
 
         const surfaceScalarField alpharAUf
@@ -76,7 +76,7 @@ void Foam::solvers::isothermalFilm::correctAlpha()
 
         const surfaceScalarField phig("phig", phip + pbByAlphaGradRhof*alphaf);
 
-        phi = constrainPhiHbyA(fvc::flux(HbyA) - alpharAUf*phig, U, alpha);
+        phi = constrainedField(fvc::flux(HbyA) - alpharAUf*phig);
 
         const surfaceScalarField phid("phid", rhof*phi);
 

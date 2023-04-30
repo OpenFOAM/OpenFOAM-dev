@@ -1,4 +1,4 @@
-filmToVoFTransfer.C
-VoFtoFilmTransfer.C
+filmVoFTransfer.C
+VoFFilmTransfer.C
 
 LIB = $(FOAM_LIBBIN)/libfilmVoFTransfer

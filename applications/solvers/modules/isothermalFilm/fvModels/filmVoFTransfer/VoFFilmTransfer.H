@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::VoFtoFilmTransfer
+    Foam::fv::VoFFilmTransfer
 
 Description
     Film<->VoF transfer model
@@ -30,20 +30,29 @@ Description
 Usage
     Example usage:
     \verbatim
-    VoFtoFilmTransfer
+    VoFFilmTransfer
     {
-        type    VoFtoFilmTransfer;
-        phase   water;
+        type        VoFFilmTransfer;
+
+        libs        ("libfilmVoFTransfer.so");
+
+        filmPatch   film;
+        phase       liquid;
+
+        deltaFactorToFilm 0.9;
+        alphaToFilm       0.86;
+
+        transferRateCoeff 0.1;
     }
     \endverbatim
 
 SourceFiles
-    VoFtoFilmTransfer.C
+    VoFFilmTransfer.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef VoFtoFilmTransfer_H
-#define VoFtoFilmTransfer_H
+#ifndef VoFFilmTransfer_H
+#define VoFFilmTransfer_H
 
 #include "fvModel.H"
 #include "compressibleVoF.H"
@@ -56,10 +65,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class VoFtoFilmTransfer Declaration
+                       Class VoFFilmTransfer Declaration
 \*---------------------------------------------------------------------------*/
 
-class VoFtoFilmTransfer
+class VoFFilmTransfer
 :
     public fvModel
 {
@@ -102,7 +111,7 @@ class VoFtoFilmTransfer
 
         //- Return the transfer rate from the film transferRateFunc
         template<class Type, class TransferRateFunc>
-        inline tmp<VolInternalField<Type>> filmToVoFTransferRate
+        inline tmp<VolInternalField<Type>> filmVoFTransferRate
         (
             TransferRateFunc transferRateFunc,
             const dimensionSet& dimProp
@@ -116,13 +125,13 @@ class VoFtoFilmTransfer
 public:
 
     //- Runtime type information
-    TypeName("VoFtoFilmTransfer");
+    TypeName("VoFFilmTransfer");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        VoFtoFilmTransfer
+        VoFFilmTransfer
         (
             const word& sourceName,
             const word& modelType,
@@ -131,9 +140,9 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        VoFtoFilmTransfer
+        VoFFilmTransfer
         (
-            const VoFtoFilmTransfer&
+            const VoFFilmTransfer&
         ) = delete;
 
 
@@ -228,7 +237,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const VoFtoFilmTransfer&) = delete;
+        void operator=(const VoFFilmTransfer&) = delete;
 };
 
 

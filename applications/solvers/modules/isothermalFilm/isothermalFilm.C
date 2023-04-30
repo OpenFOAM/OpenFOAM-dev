@@ -79,17 +79,13 @@ void Foam::solvers::isothermalFilm::continuityErrors()
 {
     const dimensionedScalar mass = fvc::domainIntegrate(rho()*delta()*magSf);
 
+    correctContinuityError();
+
     if (mass.value() > small)
     {
-        const volScalarField::Internal contErr
-        (
-            fvc::ddt(alpha, rho)()() + fvc::div(alphaRhoPhi)()()
-          - (fvModels().source(rho, alpha) & alpha)()()
-        );
-
         const volScalarField::Internal massContErr
         (
-            runTime.deltaT()*magSf*contErr
+            runTime.deltaT()*magSf*contErr()
         );
 
         const scalar sumLocalContErr =
@@ -199,8 +195,8 @@ bool Foam::solvers::isothermalFilm::initFilmMesh()
 
     nHat.correctBoundaryConditions();
 
-    VbyA.primitiveFieldRef() = mesh.V()/magSf;
-    VbyA.correctBoundaryConditions();
+    VbyA_.primitiveFieldRef() = mesh.V()/magSf;
+    VbyA_.correctBoundaryConditions();
 
     return true;
 }
@@ -275,7 +271,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
         dimensionedScalar(dimArea, 0)
     ),
 
-    VbyA
+    VbyA_
     (
         IOobject
         (
@@ -313,7 +309,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        delta_/VbyA,
+        delta_/VbyA_,
         alphaTypes()
     ),
 
@@ -386,6 +382,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
         )
     ),
 
+    VbyA(VbyA_),
     delta(delta_),
     alpha(alpha_),
     thermo(thermo_),

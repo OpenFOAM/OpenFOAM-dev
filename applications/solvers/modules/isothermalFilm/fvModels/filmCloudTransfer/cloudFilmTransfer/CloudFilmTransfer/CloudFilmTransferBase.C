@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,38 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "film.H"
-#include "fvmDdt.H"
-#include "fvmDiv.H"
+#include "CloudFilmTransfer.H"
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-void Foam::solvers::film::thermophysicalPredictor()
+namespace Foam
 {
-    volScalarField& he = thermo_.he();
-
-    fvScalarMatrix heEqn
-    (
-        fvm::ddt(alpha, rho, he) + fvm::div(alphaRhoPhi, he)
-      - fvm::Sp(contErr(), he)
-      + thermophysicalTransport->divq(he)
-     ==
-        fvModels().source(alpha, rho, he)
-    );
-
-    heEqn.relax();
-
-    fvConstraints().constrain(heEqn);
-
-    heEqn.solve();
-
-    fvConstraints().constrain(he);
-
-    thermo_.correct();
-
-    Info<< max(alpha) << " " << min(alpha) << endl;
-    Info<< max(thermo.T()) << " " << min(thermo.T()) << endl;
+    template<>
+    const char* NamedEnum
+    <
+        CloudFilmTransferBase::interactionType,
+        3
+    >::names[] = {"absorb", "bounce", "splashBai"};
 }
+
+
+const Foam::NamedEnum
+<
+    Foam::CloudFilmTransferBase::interactionType,
+    3
+> Foam::CloudFilmTransferBase::interactionTypeNames_;
 
 
 // ************************************************************************* //

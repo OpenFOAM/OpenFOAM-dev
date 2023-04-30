@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "isothermalFilm.H"
+#include "fvcDdt.H"
 #include "fvcDiv.H"
 #include "fvmDdt.H"
 
@@ -46,14 +47,31 @@ void Foam::solvers::isothermalFilm::predictAlpha()
 
     fvConstraints().constrain(alpha_);
 
+    // Remove potential unboundedness in alpha caused by div(alphaRhoPhi)
+    alpha_.max(0);
+
+    // Calculate the continuity error caused by limiting alpha
+    // Reset to ~0 following the alpha corrector
+    correctContinuityError();
+
     // Update film thickness
     correctDelta();
 }
 
 
+void Foam::solvers::isothermalFilm::correctContinuityError()
+{
+    contErr =
+    (
+        fvc::ddt(rho, alpha)()() + fvc::div(alphaRhoPhi)()()
+      - (fvModels().source(rho, alpha) & alpha)()()
+    );
+}
+
+
 void Foam::solvers::isothermalFilm::correctDelta()
 {
-    delta_ = max(alpha, scalar(0))*VbyA;
+    delta_ = alpha*VbyA;
     delta_.correctBoundaryConditions();
 }
 

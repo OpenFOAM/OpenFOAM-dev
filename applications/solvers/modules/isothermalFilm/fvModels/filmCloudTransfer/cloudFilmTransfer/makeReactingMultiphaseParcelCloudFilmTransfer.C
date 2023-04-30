@@ -23,38 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "film.H"
-#include "fvmDdt.H"
-#include "fvmDiv.H"
+#include "reactingMultiphaseCloud.H"
+#include "CloudFilmTransfer.H"
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::solvers::film::thermophysicalPredictor()
-{
-    volScalarField& he = thermo_.he();
-
-    fvScalarMatrix heEqn
-    (
-        fvm::ddt(alpha, rho, he) + fvm::div(alphaRhoPhi, he)
-      - fvm::Sp(contErr(), he)
-      + thermophysicalTransport->divq(he)
-     ==
-        fvModels().source(alpha, rho, he)
-    );
-
-    heEqn.relax();
-
-    fvConstraints().constrain(heEqn);
-
-    heEqn.solve();
-
-    fvConstraints().constrain(he);
-
-    thermo_.correct();
-
-    Info<< max(alpha) << " " << min(alpha) << endl;
-    Info<< max(thermo.T()) << " " << min(thermo.T()) << endl;
-}
-
+makeSurfaceFilmModelType(CloudFilmTransfer, reactingMultiphaseCloud);
 
 // ************************************************************************* //

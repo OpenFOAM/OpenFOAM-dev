@@ -23,8 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "VoFtoFilmTransfer.H"
-#include "filmToVoFTransfer.H"
+#include "VoFFilmTransfer.H"
+#include "filmVoFTransfer.H"
 #include "mappedPatchBase.H"
 #include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
@@ -35,12 +35,12 @@ namespace Foam
 {
     namespace fv
     {
-        defineTypeNameAndDebug(VoFtoFilmTransfer, 0);
+        defineTypeNameAndDebug(VoFFilmTransfer, 0);
 
         addToRunTimeSelectionTable
         (
             fvModel,
-            VoFtoFilmTransfer,
+            VoFFilmTransfer,
             dictionary
         );
     }
@@ -49,7 +49,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::VoFtoFilmTransfer::VoFtoFilmTransfer
+Foam::fv::VoFFilmTransfer::VoFFilmTransfer
 (
     const word& sourceName,
     const word& modelType,
@@ -101,21 +101,19 @@ Foam::fv::VoFtoFilmTransfer::VoFtoFilmTransfer
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::VoFtoFilmTransfer::addSupFields() const
+Foam::wordList Foam::fv::VoFFilmTransfer::addSupFields() const
 {
     return wordList
-    (
-        {
-            alpha_.name(),
-            thermo_.rho()().name(),
-            thermo_.he().name(),
-            VoF_.U.name()
-        }
-    );
+    {
+        alpha_.name(),
+        thermo_.rho()().name(),
+        thermo_.he().name(),
+        VoF_.U.name()
+    };
 }
 
 
-void Foam::fv::VoFtoFilmTransfer::correct()
+void Foam::fv::VoFFilmTransfer::correct()
 {
     if (curTimeIndex_ == mesh().time().timeIndex())
     {
@@ -186,7 +184,7 @@ void Foam::fv::VoFtoFilmTransfer::correct()
 
 template<class Type, class TransferRateFunc>
 Foam::tmp<Foam::VolInternalField<Type>>
-inline Foam::fv::VoFtoFilmTransfer::filmToVoFTransferRate
+inline Foam::fv::VoFFilmTransfer::filmVoFTransferRate
 (
     TransferRateFunc transferRateFunc,
     const dimensionSet& dimProp
@@ -205,20 +203,20 @@ inline Foam::fv::VoFtoFilmTransfer::filmToVoFTransferRate
         )
     );
 
-    const filmToVoFTransfer* filmToVoFPtr = nullptr;
+    const filmVoFTransfer* filmVoFPtr = nullptr;
 
     forAll(fvModels, i)
     {
-        if (isType<filmToVoFTransfer>(fvModels[i]))
+        if (isType<filmVoFTransfer>(fvModels[i]))
         {
-            filmToVoFPtr = &refCast<const filmToVoFTransfer>(fvModels[i]);
+            filmVoFPtr = &refCast<const filmVoFTransfer>(fvModels[i]);
         }
     }
 
-    if (!filmToVoFPtr)
+    if (!filmVoFPtr)
     {
         FatalErrorInFunction
-            << "Cannot find filmToVoFTransfer fvModel for the film region "
+            << "Cannot find filmVoFTransfer fvModel for the film region "
             << VoFFilmPatchMap.nbrMesh().name()
             << exit(FatalError);
     }
@@ -236,14 +234,14 @@ inline Foam::fv::VoFtoFilmTransfer::filmToVoFTransferRate
     UIndirectList<Type>(tSu.ref(), mesh().boundary()[filmPatchi_].faceCells()) =
         VoFFilmPatchMap.fromNeighbour
         (
-            (filmToVoFPtr->*transferRateFunc)()
+            (filmVoFPtr->*transferRateFunc)()
         );
 
     return tSu/mesh().V();
 }
 
 
-void Foam::fv::VoFtoFilmTransfer::addSup
+void Foam::fv::VoFFilmTransfer::addSup
 (
     fvMatrix<scalar>& eqn,
     const word& fieldName
@@ -257,9 +255,9 @@ void Foam::fv::VoFtoFilmTransfer::addSup
     if (fieldName == alpha_.name())
     {
         eqn +=
-            filmToVoFTransferRate<scalar>
+            filmVoFTransferRate<scalar>
             (
-                &filmToVoFTransfer::transferRate,
+                &filmVoFTransfer::transferRate,
                 dimVolume
             )
           + fvm::Sp(transferRate_, eqn.psi());
@@ -273,7 +271,7 @@ void Foam::fv::VoFtoFilmTransfer::addSup
 }
 
 
-void Foam::fv::VoFtoFilmTransfer::addSup
+void Foam::fv::VoFFilmTransfer::addSup
 (
     const volScalarField& alpha,
     fvMatrix<scalar>& eqn,
@@ -288,9 +286,9 @@ void Foam::fv::VoFtoFilmTransfer::addSup
     if (fieldName == thermo_.rho()().name())
     {
         eqn +=
-            filmToVoFTransferRate<scalar>
+            filmVoFTransferRate<scalar>
             (
-                &filmToVoFTransfer::rhoTransferRate,
+                &filmVoFTransfer::rhoTransferRate,
                 dimMass
             )
           + fvm::Sp(alpha()*transferRate_, eqn.psi());
@@ -304,7 +302,7 @@ void Foam::fv::VoFtoFilmTransfer::addSup
 }
 
 
-void Foam::fv::VoFtoFilmTransfer::addSup
+void Foam::fv::VoFFilmTransfer::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -320,9 +318,9 @@ void Foam::fv::VoFtoFilmTransfer::addSup
     if (fieldName == thermo_.he().name())
     {
         eqn +=
-            filmToVoFTransferRate<scalar>
+            filmVoFTransferRate<scalar>
             (
-                &filmToVoFTransfer::heTransferRate,
+                &filmVoFTransfer::heTransferRate,
                 dimEnergy
             )
           + fvm::Sp(alpha()*rho()*transferRate_, eqn.psi());
@@ -336,7 +334,7 @@ void Foam::fv::VoFtoFilmTransfer::addSup
 }
 
 
-void Foam::fv::VoFtoFilmTransfer::addSup
+void Foam::fv::VoFFilmTransfer::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
@@ -349,9 +347,9 @@ void Foam::fv::VoFtoFilmTransfer::addSup
     }
 
     eqn +=
-        filmToVoFTransferRate<vector>
+        filmVoFTransferRate<vector>
         (
-            &filmToVoFTransfer::UTransferRate,
+            &filmVoFTransfer::UTransferRate,
             dimMass*dimVelocity
         )
       + fvm::Sp(alpha_()*thermo_.rho()()*transferRate_, eqn.psi());
@@ -359,7 +357,7 @@ void Foam::fv::VoFtoFilmTransfer::addSup
 
 
 template<class Type, class FieldType>
-inline Foam::tmp<Foam::Field<Type>> Foam::fv::VoFtoFilmTransfer::TransferRate
+inline Foam::tmp<Foam::Field<Type>> Foam::fv::VoFFilmTransfer::TransferRate
 (
     const FieldType& f
 ) const
@@ -381,45 +379,45 @@ inline Foam::tmp<Foam::Field<Type>> Foam::fv::VoFtoFilmTransfer::TransferRate
 
 
 Foam::tmp<Foam::scalarField>
-Foam::fv::VoFtoFilmTransfer::rhoTransferRate() const
+Foam::fv::VoFFilmTransfer::rhoTransferRate() const
 {
     return TransferRate<scalar>(thermo_.rho()());
 }
 
 
 Foam::tmp<Foam::scalarField>
-Foam::fv::VoFtoFilmTransfer::heTransferRate() const
+Foam::fv::VoFFilmTransfer::heTransferRate() const
 {
     return TransferRate<scalar>(thermo_.rho()()*thermo_.he()());
 }
 
 
 Foam::tmp<Foam::vectorField>
-Foam::fv::VoFtoFilmTransfer::UTransferRate() const
+Foam::fv::VoFFilmTransfer::UTransferRate() const
 {
     return TransferRate<vector>(thermo_.rho()()*VoF_.U());
 }
 
 
-void Foam::fv::VoFtoFilmTransfer::topoChange(const polyTopoChangeMap&)
+void Foam::fv::VoFFilmTransfer::topoChange(const polyTopoChangeMap&)
 {
     transferRate_.setSize(mesh().nCells());
 }
 
 
-void Foam::fv::VoFtoFilmTransfer::mapMesh(const polyMeshMap& map)
+void Foam::fv::VoFFilmTransfer::mapMesh(const polyMeshMap& map)
 {
     transferRate_.setSize(mesh().nCells());
 }
 
 
-void Foam::fv::VoFtoFilmTransfer::distribute(const polyDistributionMap&)
+void Foam::fv::VoFFilmTransfer::distribute(const polyDistributionMap&)
 {
     transferRate_.setSize(mesh().nCells());
 }
 
 
-bool Foam::fv::VoFtoFilmTransfer::movePoints()
+bool Foam::fv::VoFFilmTransfer::movePoints()
 {
     return true;
 }

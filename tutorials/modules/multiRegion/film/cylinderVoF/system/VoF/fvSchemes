@@ -21,26 +21,37 @@ ddtSchemes
 
 gradSchemes
 {
-    default         filmGauss linear;
+    default         Gauss linear;
 }
 
 divSchemes
 {
-    default             none;
+    div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
 
-    div(phid,alpha)     Gauss upwind; // vanLeer;
-    div(alphaRhoPhi,U)  Gauss upwind;
-    div(alphaRhoPhi,e)  Gauss upwind;
+    div(rhoPhi,U)   Gauss linearUpwindV grad(U);
+
+    div(alphaRhoPhi,e) Gauss linearUpwind grad(e);
+    div(alphaRhoPhi,T) Gauss upwind;
+
+    div(phi,p)      Gauss upwind;
+    div(rhoPhi,K)   Gauss upwind;
+
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
 {
-    default         Gauss linear orthogonal;
+    default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
 }
 
 snGradSchemes
 {
-    default         orthogonal;
+    default         corrected;
 }
 
 

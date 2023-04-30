@@ -9,24 +9,47 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      fvModels;
+    location    "system/film";
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-VoFFilmTransfer
+solvers
 {
-    type        VoFFilmTransfer;
+    "alpha.*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
 
-    libs        ("libfilmVoFTransfer.so");
+        tolerance       1e-10;
+        relTol          0;
+    }
 
-    filmPatch   film;
-    phase       liquid;
+    "(U|e).*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
 
-    deltaFactorToFilm 0.9;
-    alphaToFilm       0.86;
-
-    transferRateCoeff 0.1;
+        tolerance       1e-10;
+        relTol          0;
+    }
 }
+
+PIMPLE
+{
+    momentumPredictor yes;
+    nOuterCorrectors  2;
+    nCorrectors       1;
+    nNonOrthogonalCorrectors 0;
+}
+
+relaxationFactors
+{
+    equations
+    {
+        ".*"        1;
+    }
+}
+
 
 // ************************************************************************* //

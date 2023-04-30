@@ -1,0 +1,9 @@
+filmCloudTransfer.C
+
+cloudFilmTransfer/CloudFilmTransfer/CloudFilmTransferBase.C
+cloudFilmTransfer/makeThermoParcelCloudFilmTransfer.C
+cloudFilmTransfer/makeReactingParcelCloudFilmTransfer.C
+cloudFilmTransfer/makeReactingMultiphaseParcelCloudFilmTransfer.C
+cloudFilmTransfer/makeSprayParcelCloudFilmTransfer.C
+
+LIB = $(FOAM_LIBBIN)/libfilmCloudTransfer

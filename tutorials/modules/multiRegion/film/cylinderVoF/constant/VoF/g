@@ -8,25 +8,14 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
+    class       uniformDimensionedVectorField;
     location    "constant";
-    object      fvModels;
+    object      g;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-VoFFilmTransfer
-{
-    type        VoFFilmTransfer;
+dimensions      [0 1 -2 0 0 0 0];
+value           (0 -9.81 0);
 
-    libs        ("libfilmVoFTransfer.so");
-
-    filmPatch   film;
-    phase       liquid;
-
-    deltaFactorToFilm 0.9;
-    alphaToFilm       0.86;
-
-    transferRateCoeff 0.1;
-}
 
 // ************************************************************************* //

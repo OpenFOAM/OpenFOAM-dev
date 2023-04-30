@@ -8,25 +8,40 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      fvModels;
+    class       volVectorField;
+    location    "0/film";
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-VoFFilmTransfer
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
 {
-    type        VoFFilmTransfer;
+    surface
+    {
+        type            filmSurfaceVelocity;
+        Cs              0.005;
+        value           $internalField;
+    }
 
-    libs        ("libfilmVoFTransfer.so");
+    wall
+    {
+        type            noSlip;
+    }
 
-    filmPatch   film;
-    phase       liquid;
+    sides
+    {
+        type            noSlip;
+    }
 
-    deltaFactorToFilm 0.9;
-    alphaToFilm       0.86;
-
-    transferRateCoeff 0.1;
+    frontAndBack
+    {
+        type            slip;
+    }
 }
+
 
 // ************************************************************************* //
