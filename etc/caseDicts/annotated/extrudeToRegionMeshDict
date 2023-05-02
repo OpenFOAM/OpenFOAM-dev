@@ -30,6 +30,11 @@ faceZones       (f0 f1);
 // faceSets        (f0 f1);
 // faceSetsShadow  (f0Shadow f1Shadow);
 
+// Set intrude to yes/true to extrude into/overlapping the primary region mesh
+// i.e. intrude rather than extrude
+// Used to create film regions which overlap the primary region mesh
+// intrude         yes;
+
 // Adapt the original mesh to have mapped patches that connect to the extruded
 // region? If so, then extruded internal faces become baffles with mapped
 // patches, and extruded boundary faces are repatched onto mapped patches.
