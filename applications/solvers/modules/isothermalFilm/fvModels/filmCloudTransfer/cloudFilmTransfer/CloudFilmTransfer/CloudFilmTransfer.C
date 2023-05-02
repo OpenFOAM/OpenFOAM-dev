@@ -527,11 +527,14 @@ void Foam::CloudFilmTransfer<CloudType>::cacheFilmFields(const label filmi)
 
     filmCloudTransfer.resetFromCloudFields();
 
+    // Set the mass transferred from film->cloud to 0
     this->massParcelPatch_.setSize
     (
         this->owner().mesh().boundary()[filmPatches_[filmi]].size(),
         0.0
     );
+
+    this->deltaFilmPatch_ = filmCloudTransfer.deltaToCloud();
 }
 
 

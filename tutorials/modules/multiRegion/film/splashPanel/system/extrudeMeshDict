@@ -30,7 +30,7 @@ mergeFaces      no;
 
 linearNormalCoeffs
 {
-    thickness       0.01;
+    thickness       0.002;
 }
 
 // ************************************************************************* //

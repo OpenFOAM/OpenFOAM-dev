@@ -263,6 +263,27 @@ void Foam::fv::filmCloudTransfer::parcelFromCloud
 }
 
 
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+inline Foam::fv::filmCloudTransfer::filmToCloudTransfer
+(
+    const VolField<Type>& prop
+) const
+{
+    return film_.surfacePatchMap().toNeighbour
+    (
+        Field<Type>(prop, film_.surfacePatch().faceCells())
+    );
+}
+
+
+Foam::tmp<Foam::Field<Foam::scalar>>
+Foam::fv::filmCloudTransfer::deltaToCloud() const
+{
+    return filmToCloudTransfer(film_.delta);
+}
+
+
 void Foam::fv::filmCloudTransfer::topoChange(const polyTopoChangeMap&)
 {}
 

@@ -9,28 +9,30 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      extrudeMeshDict;
+    location    "constant";
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-sourceCase      "$FOAM_CASE";
-constructFrom   patch;
-
-sourcePatches   (surface);
-exposedPatchName wall;
-
-extrudeModel    linearNormal;
-
-nLayers         1;
-
-expansionRatio  1;
-
-flipNormals     yes;
-mergeFaces      no;
-
-linearNormalCoeffs
+thermoType
 {
-    thickness       0.01;
+    type            heRhoThermo;
+    mixture         pureMixture;
+    properties      liquid;
+    energy          sensibleInternalEnergy;
 }
+
+mixture
+{
+    H2O;
+}
+
+sigma
+{
+    type    constant;
+    sigma   0.07;
+}
+
+deltaWet    1e-4;
 
 // ************************************************************************* //

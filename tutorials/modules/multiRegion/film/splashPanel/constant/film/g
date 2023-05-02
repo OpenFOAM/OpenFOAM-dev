@@ -8,29 +8,14 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    object      extrudeMeshDict;
+    class       uniformDimensionedVectorField;
+    location    "constant";
+    object      g;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-sourceCase      "$FOAM_CASE";
-constructFrom   patch;
+dimensions      [0 1 -2 0 0 0 0];
+value           (0 0 -9.81);
 
-sourcePatches   (surface);
-exposedPatchName wall;
-
-extrudeModel    linearNormal;
-
-nLayers         1;
-
-expansionRatio  1;
-
-flipNormals     yes;
-mergeFaces      no;
-
-linearNormalCoeffs
-{
-    thickness       0.01;
-}
 
 // ************************************************************************* //

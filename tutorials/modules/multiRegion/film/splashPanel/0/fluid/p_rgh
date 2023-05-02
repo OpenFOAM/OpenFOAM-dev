@@ -8,29 +8,30 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    object      extrudeMeshDict;
+    class       volScalarField;
+    location    "0";
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-sourceCase      "$FOAM_CASE";
-constructFrom   patch;
+dimensions      [1 -1 -2 0 0 0 0];
 
-sourcePatches   (surface);
-exposedPatchName wall;
+internalField   uniform 1e5;
 
-extrudeModel    linearNormal;
-
-nLayers         1;
-
-expansionRatio  1;
-
-flipNormals     yes;
-mergeFaces      no;
-
-linearNormalCoeffs
+boundaryField
 {
-    thickness       0.01;
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    film
+    {
+        type            fixedFluxPressure;
+    }
+
+    top
+    {
+        type            prghTotalPressure;
+        p0              $internalField;
+    }
 }
 
 // ************************************************************************* //

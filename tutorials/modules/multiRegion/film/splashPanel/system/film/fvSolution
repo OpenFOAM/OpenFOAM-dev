@@ -9,28 +9,44 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      extrudeMeshDict;
+    location    "system/wallFilm";
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-sourceCase      "$FOAM_CASE";
-constructFrom   patch;
-
-sourcePatches   (surface);
-exposedPatchName wall;
-
-extrudeModel    linearNormal;
-
-nLayers         1;
-
-expansionRatio  1;
-
-flipNormals     yes;
-mergeFaces      no;
-
-linearNormalCoeffs
+solvers
 {
-    thickness       0.01;
+    "alpha.*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-10;
+        relTol          0;
+    }
+
+    "(U|e).*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-10;
+        relTol          0;
+    }
 }
+
+PIMPLE
+{
+    momentumPredictor yes;
+    nCorr           1;
+    nNonOrthCorr    0;
+}
+
+relaxationFactors
+{
+    equations
+    {
+        ".*"        1;
+    }
+}
+
 
 // ************************************************************************* //

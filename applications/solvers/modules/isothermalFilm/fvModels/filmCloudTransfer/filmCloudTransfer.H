@@ -80,12 +80,21 @@ class filmCloudTransfer
 
     // Private Member Functions
 
+        //- Cloud to film rate transfer function
         template<class Type>
         tmp<VolInternalField<Type>>
         inline CloudToFilmTransferRate
         (
             const Field<Type>& prop,
             const dimensionSet& dimProp
+        ) const;
+
+        //- Film to cloud transfer function
+        template<class Type>
+        tmp<Field<Type>>
+        inline filmToCloudTransfer
+        (
+            const VolField<Type>& prop
         ) const;
 
 
@@ -166,8 +175,11 @@ public:
 
         // Transfer from cloud
 
+            //- Reset the fields accumulated cloud transfer fields
             void resetFromCloudFields();
 
+            //- Transfer parcel properties from cloud to the film
+            //  accumulated fields
             void parcelFromCloud
             (
                 const label facei,
@@ -176,6 +188,12 @@ public:
                 const scalar pressure,
                 const scalar energy
             );
+
+
+        // Transfer to cloud
+
+            //- Transfer the film delta field to the cloud
+            tmp<Field<scalar>> deltaToCloud() const;
 
 
         // Mesh changes

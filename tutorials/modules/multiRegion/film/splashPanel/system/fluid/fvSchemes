@@ -10,50 +10,49 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     foamMultiRun;
-
-regionSolvers
+ddtSchemes
 {
-    fluid           multicomponentFluid;
-    film            film;
+    default         Euler;
 }
 
-startFrom       startTime;
+gradSchemes
+{
+    default         Gauss linear;
+    grad(p)         Gauss linear;
+}
 
-startTime       0;
+divSchemes
+{
+    default         none;
+    div(phi,U)      Gauss upwind;
+    div(phi,K)      Gauss upwind;
+    div(phi,h)      Gauss upwind;
+    div(phi,k)      Gauss upwind;
+    div(phi,epsilon) Gauss upwind;
+    div(U)          Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(phi,Yi_h)  Gauss upwind;
+}
 
-stopAt          endTime;
+laplacianSchemes
+{
+    default         Gauss linear uncorrected;
+}
 
-endTime         20;
+interpolationSchemes
+{
+    default         linear;
+}
 
-deltaT          1e-2;
+snGradSchemes
+{
+    default         uncorrected;
+}
 
-writeControl    adjustableRunTime;
 
-writeInterval   0.1;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  10;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable yes;
-
-adjustTimeStep  yes;
-
-maxCo           0.3;
-
-maxDeltaT       1;
 
 // ************************************************************************* //

@@ -8,29 +8,31 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    object      extrudeMeshDict;
+    class       volScalarField;
+    location    "0";
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-sourceCase      "$FOAM_CASE";
-constructFrom   patch;
+dimensions      [0 0 0 1 0 0 0];
 
-sourcePatches   (surface);
-exposedPatchName wall;
+internalField   uniform 300;
 
-extrudeModel    linearNormal;
-
-nLayers         1;
-
-expansionRatio  1;
-
-flipNormals     yes;
-mergeFaces      no;
-
-linearNormalCoeffs
+boundaryField
 {
-    thickness       0.01;
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    film
+    {
+        type            coupledTemperature;
+        value           $internalField;
+    }
+
+    top
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+    }
 }
 
 // ************************************************************************* //

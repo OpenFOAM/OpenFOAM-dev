@@ -99,7 +99,6 @@ boundary
         type mappedWall;
         neighbourRegion solid;
         neighbourPatch  wall_inner
-        transformType   none;
         faces
         (
             (3 2 6 7)
@@ -127,7 +126,6 @@ boundary
         type mappedWall;
         neighbourRegion fluid;
         neighbourPatch  wall
-        transformType   none;
         faces
         (
             (9 8 12 13)
