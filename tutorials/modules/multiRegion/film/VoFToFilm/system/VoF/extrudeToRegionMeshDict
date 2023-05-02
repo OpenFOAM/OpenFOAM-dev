@@ -17,7 +17,9 @@ region          film;
 
 patches         (film);
 
-extrudeModel    linearDirection;
+extrudeModel    linearNormal;
+
+intrude         yes;
 
 adaptMesh       no;
 
@@ -38,12 +40,5 @@ linearNormalCoeffs
 {
     thickness       0.001;
 }
-
-linearDirectionCoeffs
-{
-    direction       (1 0 0);
-    thickness       0.001;
-}
-
 
 // ************************************************************************* //

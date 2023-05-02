@@ -9,24 +9,32 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      extrudeMeshDict;
+    object      extrudeToRegionMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-sourceCase      "$FOAM_CASE";
-constructFrom   patch;
+region          film;
 
-sourcePatches   (surface);
-exposedPatchName wall;
+patches         (film);
 
 extrudeModel    linearNormal;
+
+intrude         yes;
+
+adaptMesh       no;
+
+patchTypes      (mappedExtrudedWall);
+patchNames      (film);
+
+regionPatchTypes   (filmWall);
+regionPatchNames   (wall);
+
+regionOppositePatchTypes    (mappedFilmSurface);
+regionOppositePatchNames    (surface);
 
 nLayers         1;
 
 expansionRatio  1;
-
-flipNormals     yes;
-mergeFaces      no;
 
 linearNormalCoeffs
 {

@@ -101,7 +101,10 @@ boundary
 (
     film
     {
-        type patch;
+        type            mappedExtrudedWall;
+        neighbourRegion film;
+        neighbourPatch  surface;
+
         faces
         (
             (0 1 20 19)
@@ -118,6 +121,7 @@ boundary
     sides
     {
         type patch;
+
         faces
         (
             (2 3 22 21)
@@ -129,6 +133,7 @@ boundary
     top
     {
         type patch;
+
         faces
         (
             (6 7 26 25)

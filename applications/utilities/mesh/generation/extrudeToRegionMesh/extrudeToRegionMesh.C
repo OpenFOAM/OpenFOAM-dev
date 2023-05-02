@@ -536,6 +536,7 @@ void addCouplingPatches
 (
     const fvMesh& mesh,
     const bool isShellMesh,
+    const bool intrude,
     const word& regionName,
     const word& nbrRegionName,
     const wordList& zoneNames,
@@ -654,8 +655,13 @@ void addCouplingPatches
               : word(zoneNames[zonei] + "_top");
         }
 
-        dictionary bottomPatchDict(patchDict);
-        bottomPatchDict.add("neighbourPatch", bottomNbrPatchName);
+        dictionary bottomPatchDict;
+
+        if (!intrude)
+        {
+            bottomPatchDict = patchDict;
+            bottomPatchDict.add("neighbourPatch", bottomNbrPatchName);
+        }
 
         zoneBottomPatch[zonei] = addPatch
         (
@@ -691,6 +697,19 @@ void addCouplingPatches
         }
         else
         {
+            dictionary oppositePatchDict;
+
+            if (intrude)
+            {
+                oppositePatchDict = patchDict;
+
+                oppositePatchDict.add("neighbourPatch", bottomNbrPatchName);
+                if (isShellMesh)
+                {
+                    oppositePatchDict.add("oppositePatch", bottomPatchName);
+                }
+            }
+
             zoneTopPatch[zonei] = addPatch
             (
                 mesh.boundaryMesh(),
@@ -698,7 +717,7 @@ void addCouplingPatches
                 regionOppositePatchTypes.size()
                   ? regionOppositePatchTypes[zonei]
                   : polyPatch::typeName,
-                dictionary(),
+                oppositePatchDict,
                 newPatches
             );
         }
@@ -1030,8 +1049,11 @@ int main(int argc, char *argv[])
 
     const dictionary dict(systemDict("extrudeToRegionMeshDict", args, mesh));
 
-    // Region to extrude from
+    // Region to create by extrusion
     const word shellRegionName(dict.lookup("region"));
+
+    // Should the extruded region overlap the existing region, i.e. "intrude"?
+    const Switch intrude(dict.lookupOrDefault("intrude", false));
 
     if (shellRegionName == regionName)
     {
@@ -1043,14 +1065,31 @@ int main(int argc, char *argv[])
     }
 
     // Select faces to extrude
-    enum class zoneSourceType { zone, set, patch };
-    static const wordList zoneSourceTypeNames =
-        {"faceZone", "faceSet", "patch" };
-    static const wordList zoneSourcesTypeNames =
-        {"faceZones", "faceSets", "patches" };
+    enum class zoneSourceType
+    {
+        zone,
+        set,
+        patch
+    };
+
+    static const wordList zoneSourceTypeNames
+    {
+        "faceZone",
+        "faceSet",
+        "patch"
+    };
+
+    static const wordList zoneSourcesTypeNames
+    {
+        "faceZones",
+        "faceSets",
+        "patches"
+    };
+
     wordList zoneNames;
     wordList zoneShadowNames;
     List<zoneSourceType> zoneSourceTypes;
+
     auto lookupZones = [&](const zoneSourceType& type)
     {
         const word& keyword = zoneSourcesTypeNames[unsigned(type)];
@@ -1322,14 +1361,22 @@ int main(int argc, char *argv[])
         shadowExtrudeFaceFlips.transfer(sdwFlipsDyn);
     }
 
+    faceList extrudeFaceList(UIndirectList<face>(mesh.faces(), extrudeFaces));
+
+    if (intrude)
+    {
+        forAll(extrudeFaceList, facei)
+        {
+            extrudeFaceList[facei].flip();
+        }
+    }
 
     // Create a primitive patch of the extruded faces
     const primitiveFacePatch extrudePatch
     (
-        faceList(UIndirectList<face>(mesh.faces(), extrudeFaces)),
+        extrudeFaceList,
         mesh.points()
     );
-
 
     // Check zone either all internal or all external faces
     const boolList zoneIsInternal
@@ -1410,6 +1457,7 @@ int main(int argc, char *argv[])
     (
         mesh,
         true,
+        intrude,
         shellRegionName,
         regionName,
         zoneNames,
@@ -1443,6 +1491,7 @@ int main(int argc, char *argv[])
         (
             mesh,
             false,
+            intrude,
             regionName,
             shellRegionName,
             zoneNames,
