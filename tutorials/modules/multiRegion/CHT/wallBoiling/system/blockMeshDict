@@ -98,7 +98,7 @@ boundary
     {
         type mappedWall;
         neighbourRegion solid;
-        neighbourPatch  wall_inner
+        neighbourPatch wall_inner;
         faces
         (
             (3 2 6 7)
@@ -125,7 +125,7 @@ boundary
     {
         type mappedWall;
         neighbourRegion fluid;
-        neighbourPatch  wall
+        neighbourPatch wall;
         faces
         (
             (9 8 12 13)
