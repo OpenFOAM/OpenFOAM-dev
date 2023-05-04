@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,9 @@ Usage
 
       - \par -allLibs
         Load all libraries
+
+      - \par -listAllLibs
+        Load and list all libraries
 
       - \par switches,
         List all available debug, info and optimisation switches
@@ -249,6 +252,12 @@ int main(int argc, char *argv[])
 
     argList::addBoolOption
     (
+        "listAllLibs",
+        "Load and list all libraries"
+    );
+
+    argList::addBoolOption
+    (
         "switches",
         "List all available debug, info and optimisation switches"
     );
@@ -324,14 +333,22 @@ int main(int argc, char *argv[])
     const string libDir(getEnv("FOAM_LIBBIN"));
     const fileNameList libNames(readDir(libDir));
 
-    if (args.optionFound("allLibs"))
+    const bool listAllLibs = args.optionFound("listAllLibs");
+
+    if (args.optionFound("allLibs") || listAllLibs)
     {
-        Info << "Loading libraries:" << nl;
+        if (listAllLibs)
+        {
+            Info << "Loading libraries:" << nl;
+        }
         forAll(libNames, i)
         {
             if (libNames[i].ext() == "so")
             {
-                Info << "    " << libNames[i].c_str() << nl;
+                if (listAllLibs)
+                {
+                    Info << "    " << libNames[i].c_str() << nl;
+                }
                 libs.open(libDir/libNames[i]);
             }
         }
