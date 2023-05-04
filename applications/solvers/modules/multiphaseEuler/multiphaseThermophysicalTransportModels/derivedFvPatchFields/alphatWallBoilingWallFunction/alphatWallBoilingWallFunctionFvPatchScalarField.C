@@ -994,11 +994,6 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
 
     if (phaseType_ == liquidPhase)
     {
-        writeKeyword(os, "partitioningModel") << nl;
-        os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-        partitioningModel_->write(os);
-        os  << decrIndent << indent << token::END_BLOCK << nl;
-
         writeKeyword(os, "nucleationSiteModel") << nl;
         os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
         nucleationSiteModel_->write(os);
