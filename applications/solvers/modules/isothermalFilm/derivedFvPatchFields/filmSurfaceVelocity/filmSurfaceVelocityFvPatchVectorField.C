@@ -140,31 +140,29 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
     const compressibleMomentumTransportModel& transportModel =
         db().lookupType<compressibleMomentumTransportModel>();
 
-    // Patch density
-    const scalarField& rhop
-    (
-        transportModel.rho().boundaryField()[patch().index()]
-    );
-
-    // Patch laminar dynamic viscosity divided by delta
-    const tmp<scalarField> muEffByDelta
-    (
-        rhop*transportModel.nuEff(patch().index())
-       *patch().deltaCoeffs()
-    );
-
     // Lookup the neighbour momentum transport model
     const compressibleMomentumTransportModel& transportModelNbr =
         mpp.nbrMesh().lookupType<compressibleMomentumTransportModel>();
 
-    // Neighbour patch density
-    const scalarField& rhopNbr
+    // Patch laminar dynamic viscosity divided by delta
+    const tmp<scalarField> muEffByDelta
     (
-        transportModelNbr.rho().boundaryField()[patchiNbr]
+        transportModel.rho().boundaryField()[patch().index()]
+       *transportModel.nuEff(patch().index())
+       *patch().deltaCoeffs()
     );
 
     if (Cs_ > 0)
     {
+        // Get the neighbour patch density
+        const tmp<scalarField> rhopNbr
+        (
+            mpp.fromNeighbour
+            (
+                transportModelNbr.rho().boundaryField()[patchiNbr]
+            )
+        );
+
         // Calculate the drag coefficient from the drag constant
         // and the magnitude of the velocity difference
         const scalarField Ds(Cs_*rhopNbr*mag(refValue() - *this));
@@ -180,7 +178,8 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
         (
             mpp.fromNeighbour
             (
-                rhopNbr*transportModelNbr.nuEff(patchiNbr)
+                transportModelNbr.rho().boundaryField()[patchiNbr]
+               *transportModelNbr.nuEff(patchiNbr)
                *patchNbr.deltaCoeffs()
             )
         );
