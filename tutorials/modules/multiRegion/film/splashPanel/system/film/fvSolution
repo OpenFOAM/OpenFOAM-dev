@@ -36,7 +36,7 @@ solvers
 PIMPLE
 {
     momentumPredictor yes;
-    nCorr           1;
+    nCorrectors     1;
     nNonOrthCorr    0;
 }
 
