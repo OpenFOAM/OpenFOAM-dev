@@ -16,7 +16,7 @@ FoamFile
 region          baffle3D;
 
 patches         (baffle3D0);
-patchesShadow   (baffle3D1);
+oppositePatches (baffle3D1);
 
 extrudeModel    linearNormal;
 

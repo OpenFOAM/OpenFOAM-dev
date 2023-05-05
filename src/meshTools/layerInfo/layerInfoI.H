@@ -60,7 +60,7 @@ inline Foam::layerInfo::layerInfo(const label faceLayer, const label direction)
 
 inline Foam::label Foam::layerInfo::faceLayer() const
 {
-    if (layer_ % 2 != 1)
+    if ((layer_ + 1) % 2 != 0)
     {
         FatalError
             << "Face layer index requested from cell layer info"

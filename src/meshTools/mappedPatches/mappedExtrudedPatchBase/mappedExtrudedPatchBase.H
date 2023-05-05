@@ -53,9 +53,8 @@ class mappedExtrudedPatchBase
 {
     // Private Member Data
 
-        //- The patch on the opposite side of the extruded region.
-        //  Empty if this is not the extruded region.
-        mutable word oppositePatch_;
+        //- Is this the in the extruded region?
+        mutable bool isExtrudedRegion_;
 
         //- The face areas on the bottom patch
         mutable autoPtr<vectorField> bottomFaceAreasPtr_;
@@ -98,7 +97,7 @@ public:
             const polyPatch& pp,
             const word& nbrRegionName,
             const word& nbrPatchName,
-            const word& oppositePatch,
+            const bool isExtrudedRegion,
             const cyclicTransform& transform
         );
 

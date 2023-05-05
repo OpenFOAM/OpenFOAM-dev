@@ -20,14 +20,15 @@ runApplication -s film extrudeToRegionMesh \
 runApplication -s box foamDictionary -set \
     "entry0/film/type=mappedExtrudedWall, \
      entry0/film/neighbourRegion=film, \
-     entry0/film/neighbourPatch=surface" \
+     entry0/film/neighbourPatch=surface, \
+     entry0/film/isExtrudedRegion=no" \
      constant/box/polyMesh/boundary
 
 runApplication -s film foamDictionary -set \
     "entry0/surface/type=mappedFilmSurface, \
      entry0/surface/neighbourRegion=box, \
      entry0/surface/neighbourPatch=film, \
-     entry0/surface/oppositePatch=wall" \
+     entry0/surface/isExtrudedRegion=yes" \
      constant/film/polyMesh/boundary
 
 printf "\n%s\n" "Creating files for paraview post-processing"

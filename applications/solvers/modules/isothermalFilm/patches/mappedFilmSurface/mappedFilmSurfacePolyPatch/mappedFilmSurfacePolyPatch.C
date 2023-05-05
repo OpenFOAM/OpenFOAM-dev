@@ -74,7 +74,7 @@ Foam::mappedFilmSurfacePolyPatch::mappedFilmSurfacePolyPatch
     const label index,
     const word& neighbourRegion,
     const word& neighbourPatch,
-    const word& bottomPatch,
+    const bool isExtrudedRegion,
     const polyBoundaryMesh& bm
 )
 :
@@ -84,7 +84,7 @@ Foam::mappedFilmSurfacePolyPatch::mappedFilmSurfacePolyPatch
         *this,
         neighbourRegion,
         neighbourPatch,
-        bottomPatch,
+        isExtrudedRegion,
         cyclicTransform(true)
     )
 {}

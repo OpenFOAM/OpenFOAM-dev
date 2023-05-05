@@ -27,7 +27,7 @@ License
 #include "SubField.H"
 #include "Time.H"
 #include "triPointRef.H"
-#include "treeDataFace.H"
+#include "treeDataPoint.H"
 #include "indexedOctree.H"
 #include "globalIndex.H"
 #include "RemoteData.H"
@@ -62,6 +62,33 @@ Foam::tmp<Foam::pointField> Foam::mappedPatchBase::patchLocalPoints() const
 }
 
 
+Foam::tmp<Foam::vectorField> Foam::mappedPatchBase::nbrPatchFaceAreas() const
+{
+    return
+        nbrPatchIsMapped()
+      ? nbrMappedPatch().patchFaceAreas()
+      : tmp<vectorField>(nbrPolyPatch().primitivePatch::faceAreas());
+}
+
+
+Foam::tmp<Foam::pointField> Foam::mappedPatchBase::nbrPatchFaceCentres() const
+{
+    return
+        nbrPatchIsMapped()
+      ? nbrMappedPatch().patchFaceCentres()
+      : tmp<vectorField>(nbrPolyPatch().primitivePatch::faceCentres());
+}
+
+
+Foam::tmp<Foam::pointField> Foam::mappedPatchBase::nbrPatchLocalPoints() const
+{
+    return
+        nbrPatchIsMapped()
+      ? nbrMappedPatch().patchLocalPoints()
+      : tmp<vectorField>(nbrPolyPatch().localPoints());
+}
+
+
 void Foam::mappedPatchBase::calcMapping() const
 {
     if (treeMapPtr_.valid())
@@ -87,8 +114,8 @@ void Foam::mappedPatchBase::calcMapping() const
             patchFaceAreas(),
             transform_,
             nbrPolyPatch().name(),
-            nbrPolyPatch().faceCentres(),
-            nbrPolyPatch().faceAreas(),
+            nbrPatchFaceCentres(),
+            nbrPatchFaceAreas(),
             nbrPatchIsMapped()
           ? nbrMappedPatch().transform_
           : cyclicTransform(false),
@@ -104,9 +131,6 @@ void Foam::mappedPatchBase::calcMapping() const
         // Find processor and cell/face indices of samples
         labelList sampleGlobalPatchFaces, sampleIndices;
         {
-            // Lookup the correct region
-            const polyMesh& mesh = nbrMesh();
-
             // Gather the sample points into a single globally indexed list
             List<point> allPoints(patchGlobalIndex.size());
             {
@@ -146,24 +170,17 @@ void Foam::mappedPatchBase::calcMapping() const
             }
             else
             {
-                const polyPatch& pp = nbrPolyPatch();
+                const pointField nbrPoints(nbrPatchFaceCentres());
 
-                const labelList patchFaces(identityMap(pp.size()) + pp.start());
-
-                const treeBoundBox patchBb
+                const treeBoundBox nbrPointsBb
                 (
-                    treeBoundBox(pp.points(), pp.meshPoints()).extend(1e-4)
+                    treeBoundBox(nbrPoints).extend(1e-4)
                 );
 
-                const indexedOctree<treeDataFace> boundaryTree
+                const indexedOctree<treeDataPoint> tree
                 (
-                    treeDataFace    // all information needed to search faces
-                    (
-                        false,      // do not cache bb
-                        mesh,
-                        patchFaces  // boundary faces only
-                    ),
-                    patchBb,        // overall search domain
+                    treeDataPoint(nbrPoints),
+                    nbrPointsBb,    // overall search domain
                     8,              // maxLevel
                     10,             // leafsize
                     3.0             // duplicity
@@ -174,15 +191,14 @@ void Foam::mappedPatchBase::calcMapping() const
                     const point& p = allPoints[alli];
 
                     const pointIndexHit pih =
-                        boundaryTree.findNearest(p, magSqr(patchBb.span()));
+                        tree.findNearest(p, magSqr(nbrPointsBb.span()));
 
                     if (pih.hit())
                     {
-                        const point fc = pp[pih.index()].centre(pp.points());
-
                         allNearest[alli].proci = Pstream::myProcNo();
                         allNearest[alli].elementi = pih.index();
-                        allNearest[alli].data = magSqr(fc - p);
+                        allNearest[alli].data =
+                            magSqr(nbrPoints[pih.index()] - p);
                     }
                 }
             }
@@ -276,18 +292,24 @@ void Foam::mappedPatchBase::calcMapping() const
         }
 
         const pointField patchLocalPoints(this->patchLocalPoints());
+        const pointField nbrPatchLocalPoints(this->nbrPatchLocalPoints());
 
         const primitivePatch patch
         (
             SubList<face>(patch_.localFaces(), patch_.size()),
             patchLocalPoints
         );
+        const primitivePatch nbrPatch
+        (
+            SubList<face>(nbrPolyPatch().localFaces(), nbrPolyPatch().size()),
+            nbrPatchLocalPoints
+        );
 
         patchToPatchPtr_->update
         (
             patch,
             patch.pointNormals(),
-            nbrPolyPatch(),
+            nbrPatch,
             transform_.transform()
         );
 

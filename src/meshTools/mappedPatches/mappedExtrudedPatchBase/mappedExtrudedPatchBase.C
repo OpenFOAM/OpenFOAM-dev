@@ -25,7 +25,9 @@ License
 
 #include "mappedExtrudedPatchBase.H"
 #include "LayerInfoData.H"
+#include "PointEdgeLayerInfoData.H"
 #include "FaceCellWave.H"
+#include "PointEdgeWave.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,60 +42,108 @@ namespace Foam
 Foam::tmp<Foam::vectorField>
 Foam::mappedExtrudedPatchBase::patchFaceAreas() const
 {
-    if (!bottomFaceAreasPtr_.valid())
+    if (isExtrudedRegion_)
     {
-        const bool isExtrudedRegion = oppositePatch_ != word::null;
-
-        if (isExtrudedRegion)
+        if (!bottomFaceAreasPtr_.valid())
         {
+            const polyMesh& mesh = patch_.boundaryMesh().mesh();
+            const polyPatch& pp = patch_;
+
             // If this is the extruded region we need to work out what the
             // corresponding areas and centres are on the bottom patch. We do
             // this by waving these values across the layers.
 
-            const polyMesh& mesh = patch_.boundaryMesh().mesh();
-            const polyPatch& pp = patch_;
-            const polyPatch& bottomPp = patch_.boundaryMesh()[oppositePatch_];
-
-            // Initialise faces on the bottom patch to wave from
-            labelList initialFaces(bottomPp.size());
-            List<LayerInfoData<Pair<vector>>> initialFaceInfo(bottomPp.size());
-            forAll(bottomPp, bottomPpFacei)
+            // Initialise layer data on the patch faces
+            labelList initialFaces1(pp.size());
+            List<layerInfo> initialFaceInfo1(pp.size());
+            forAll(pp, ppFacei)
             {
-                initialFaces[bottomPpFacei] =
-                    bottomPp.start() + bottomPpFacei;
-                initialFaceInfo[bottomPpFacei] =
-                    LayerInfoData<Pair<vector>>
-                    (
-                        0,
-                        -1,
-                        Pair<vector>
-                        (
-                            bottomPp.faceAreas()[bottomPpFacei],
-                            bottomPp.faceCentres()[bottomPpFacei]
-                        )
-                    );
+                initialFaces1[ppFacei] = pp.start() + ppFacei;
+                initialFaceInfo1[ppFacei] = layerInfo(0, -1);
             }
 
             // Wave across the mesh layers
-            List<LayerInfoData<Pair<vector>>> faceInfo(mesh.nFaces());
-            List<LayerInfoData<Pair<vector>>> cellInfo(mesh.nCells());
-            FaceCellWave<LayerInfoData<Pair<vector>>>
+            List<layerInfo> faceInfo1(mesh.nFaces());
+            List<layerInfo> cellInfo1(mesh.nCells());
+            FaceCellWave<layerInfo> wave1(mesh, faceInfo1, cellInfo1);
+            wave1.setFaceInfo(initialFaces1, initialFaceInfo1);
+            const label nIterations1 =
+                wave1.iterate(mesh.globalData().nTotalCells() + 1);
+
+            // Count how many opposite faces the wave ended on
+            label nInitialFaces2 = 0;
+            for
+            (
+                label facei = mesh.nInternalFaces();
+                facei < mesh.nFaces();
+                ++ facei
+            )
+            {
+                if
+                (
+                    faceInfo1[facei].valid(wave1.data())
+                 && faceInfo1[facei].faceLayer() == nIterations1
+                )
+                {
+                    nInitialFaces2 ++;
+                }
+            }
+
+            // Initialise data on the opposite faces. Store the area and centre.
+            labelList initialFaces2(nInitialFaces2);
+            List<LayerInfoData<Pair<vector>>> initialFaceInfo2(nInitialFaces2);
+            label initialFace2i = 0;
+            for
+            (
+                label facei = mesh.nInternalFaces();
+                facei < mesh.nFaces();
+                ++ facei
+            )
+            {
+                if
+                (
+                    faceInfo1[facei].valid(wave1.data())
+                 && faceInfo1[facei].faceLayer() != 0
+                )
+                {
+                    initialFaces2[initialFace2i] = facei;
+                    initialFaceInfo2[initialFace2i] =
+                        LayerInfoData<Pair<vector>>
+                        (
+                            0,
+                            -1,
+                            Pair<vector>
+                            (
+                                mesh.faceAreas()[facei],
+                                mesh.faceCentres()[facei]
+                            )
+                        );
+                    initialFace2i ++;
+                }
+            }
+
+            // Wave back across the mesh layers
+            List<LayerInfoData<Pair<vector>>> faceInfo2(mesh.nFaces());
+            List<LayerInfoData<Pair<vector>>> cellInfo2(mesh.nCells());
+            FaceCellWave<LayerInfoData<Pair<vector>>> wave2
             (
                 mesh,
-                initialFaces,
-                initialFaceInfo,
-                faceInfo,
-                cellInfo,
+                initialFaces2,
+                initialFaceInfo2,
+                faceInfo2,
+                cellInfo2,
                 mesh.globalData().nTotalCells() + 1
             );
 
-            // Unpack into this patch's bottom face areas and centres
+            // Unpack into this patch's bottom face areas and centres. Note
+            // that the face area needs flipping as it relates to a patch on
+            // the other side of the extruded region.
             bottomFaceAreasPtr_.set(new vectorField(pp.size()));
             bottomFaceCentresPtr_.set(new pointField(pp.size()));
             forAll(pp, ppFacei)
             {
                 const LayerInfoData<Pair<vector>>& info =
-                    faceInfo[pp.start() + ppFacei];
+                    faceInfo2[pp.start() + ppFacei];
 
                 static nil td;
 
@@ -101,62 +151,188 @@ Foam::mappedExtrudedPatchBase::patchFaceAreas() const
                 {
                     FatalErrorInFunction
                         << "Mesh \"" << mesh.name()
-                        << "\" is not layered between the extruded patch "
-                        << "\"" << pp.name() << "\" and the bottom patch \""
-                        << bottomPp.name() << "\"" << exit(FatalError);
+                        << "\" is not layered from the extruded patch "
+                        << "\"" << pp.name() << "\"" << exit(FatalError);
                 }
 
-                bottomFaceAreasPtr_()[ppFacei] = info.data().first();
+                bottomFaceAreasPtr_()[ppFacei] = - info.data().first();
                 bottomFaceCentresPtr_()[ppFacei] = info.data().second();
             }
         }
-        else
-        {
-            // If this is not the extruded region then we trigger construction
-            // of mapping on the extruded region and then reverse map the
-            // extruded region's data so it is available here
 
-            const mappedExtrudedPatchBase& nbrPp =
-                refCast<const mappedExtrudedPatchBase>(nbrPolyPatch());
-
-            bottomFaceAreasPtr_.set
-            (
-                nbrPp.toNeighbour
-                (
-                    nbrPp.patch_.primitivePatch::faceAreas()
-                ).ptr()
-            );
-            bottomFaceCentresPtr_.set
-            (
-                nbrPp.toNeighbour
-                (
-                    nbrPp.patch_.primitivePatch::faceCentres()
-                ).ptr()
-            );
-        }
+        return bottomFaceAreasPtr_();
     }
 
-    return bottomFaceAreasPtr_();
+    return mappedPatchBase::patchFaceAreas();
 }
 
 
 Foam::tmp<Foam::pointField>
 Foam::mappedExtrudedPatchBase::patchFaceCentres() const
 {
-    if (!bottomFaceCentresPtr_.valid())
+    if (isExtrudedRegion_)
     {
-        patchFaceAreas();
+        if (!bottomFaceCentresPtr_.valid())
+        {
+            patchFaceAreas();
+        }
+
+        return bottomFaceCentresPtr_();
     }
 
-    return bottomFaceCentresPtr_();
+    return mappedPatchBase::patchFaceCentres();
 }
 
 
 Foam::tmp<Foam::pointField>
 Foam::mappedExtrudedPatchBase::patchLocalPoints() const
 {
-    NotImplemented;
-    return tmp<pointField>(nullptr);
+    if (isExtrudedRegion_)
+    {
+        if (!bottomLocalPointsPtr_.valid())
+        {
+            const polyMesh& mesh = patch_.boundaryMesh().mesh();
+            const polyPatch& pp = patch_;
+
+            // If this is the extruded region we need to work out what the
+            // corresponding points are on the bottom patch. We do this by
+            // waving these location across the layers.
+
+            // Initialise layer data on the patch points
+            labelList initialPoints1(pp.nPoints());
+            List<pointEdgeLayerInfo> initialPointInfo1(pp.nPoints());
+            forAll(pp.meshPoints(), ppPointi)
+            {
+                initialPoints1[ppPointi] = pp.meshPoints()[ppPointi];
+                initialPointInfo1[ppPointi] = pointEdgeLayerInfo(0);
+            }
+
+            // Wave across the mesh layers
+            List<pointEdgeLayerInfo> pointInfo1(mesh.nPoints());
+            List<pointEdgeLayerInfo> edgeInfo1(mesh.nEdges());
+            PointEdgeWave<pointEdgeLayerInfo> wave1
+            (
+                mesh,
+                pointInfo1,
+                edgeInfo1
+            );
+            wave1.setPointInfo(initialPoints1, initialPointInfo1);
+            const label nIterations1 =
+                wave1.iterate(mesh.globalData().nTotalPoints() + 1);
+
+            if (debug)
+            {
+                pointScalarField pointLayer
+                (
+                    pointScalarField::New
+                    (
+                        typedName("pointLayer"),
+                        pointMesh::New(mesh),
+                        dimensionedScalar(dimless, 0)
+                    )
+                );
+                forAll(pointInfo1, pointi)
+                {
+                    pointLayer[pointi] =
+                        pointInfo1[pointi].valid(wave1.data())
+                      ? pointInfo1[pointi].pointLayer()
+                      : -1;
+                }
+                pointLayer.write();
+            }
+
+            // Count how many opposite points the wave ended on
+            label nInitialPoints2 = 0;
+            forAll(pointInfo1, pointi)
+            {
+                if
+                (
+                    pointInfo1[pointi].valid(wave1.data())
+                 && pointInfo1[pointi].pointLayer() == nIterations1
+                )
+                {
+                    nInitialPoints2 ++;
+                }
+            }
+
+            // Initialise data on the opposite points. Store the position.
+            labelList initialPoints2(nInitialPoints2);
+            List<PointEdgeLayerInfoData<point>>
+                initialPointInfo2(nInitialPoints2);
+            label initialPoint2i = 0;
+            forAll(pointInfo1, pointi)
+            {
+                if
+                (
+                    pointInfo1[pointi].valid(wave1.data())
+                 && pointInfo1[pointi].pointLayer() == nIterations1
+                )
+                {
+                    initialPoints2[initialPoint2i] = pointi;
+                    initialPointInfo2[initialPoint2i] =
+                        PointEdgeLayerInfoData<point>(0, mesh.points()[pointi]);
+                    initialPoint2i ++;
+                }
+            }
+
+            // Wave back across the mesh layers
+            List<PointEdgeLayerInfoData<point>> pointInfo2(mesh.nPoints());
+            List<PointEdgeLayerInfoData<point>> edgeInfo2(mesh.nEdges());
+            PointEdgeWave<PointEdgeLayerInfoData<point>> wave2
+            (
+                mesh,
+                initialPoints2,
+                initialPointInfo2,
+                pointInfo2,
+                edgeInfo2,
+                mesh.globalData().nTotalCells() + 1
+            );
+
+            // Unpack into this patch's bottom local points
+            bottomLocalPointsPtr_.set(new pointField(pp.nPoints()));
+            forAll(pp.meshPoints(), ppPointi)
+            {
+                const PointEdgeLayerInfoData<point>& info =
+                    pointInfo2[pp.meshPoints()[ppPointi]];
+
+                static nil td;
+
+                if (!info.valid(td))
+                {
+                    FatalErrorInFunction
+                        << "Mesh \"" << mesh.name()
+                        << "\" is not layered from the extruded patch "
+                        << "\"" << pp.name() << "\"" << exit(FatalError);
+                }
+
+                bottomLocalPointsPtr_()[ppPointi] = info.data();
+            }
+
+            if (debug)
+            {
+                pointVectorField pointOffset
+                (
+                    pointVectorField::New
+                    (
+                        typedName("pointOffset"),
+                        pointMesh::New(mesh),
+                        dimensionedVector(dimLength, Zero)
+                    )
+                );
+                forAll(pp.meshPoints(), ppPointi)
+                {
+                    pointOffset[pp.meshPoints()[ppPointi]] =
+                        bottomLocalPointsPtr_()[ppPointi]
+                      - pp.localPoints()[ppPointi];
+                }
+                pointOffset.write();
+            }
+        }
+
+        return bottomLocalPointsPtr_();
+    }
+
+    return mappedPatchBase::patchLocalPoints();
 }
 
 
@@ -165,7 +341,7 @@ Foam::mappedExtrudedPatchBase::patchLocalPoints() const
 Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase(const polyPatch& pp)
 :
     mappedPatchBase(pp),
-    oppositePatch_(word::null)
+    isExtrudedRegion_(false)
 {}
 
 
@@ -174,12 +350,12 @@ Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase
     const polyPatch& pp,
     const word& nbrRegionName,
     const word& nbrPatchName,
-    const word& oppositePatch,
+    const bool isExtrudedRegion,
     const cyclicTransform& transform
 )
 :
     mappedPatchBase(pp, nbrRegionName, nbrPatchName, transform),
-    oppositePatch_(oppositePatch)
+    isExtrudedRegion_(isExtrudedRegion)
 {}
 
 
@@ -191,7 +367,7 @@ Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase
 )
 :
     mappedPatchBase(pp, dict, transformIsNone),
-    oppositePatch_(dict.lookupOrDefault<word>("oppositePatch", word::null))
+    isExtrudedRegion_(dict.lookup<bool>("isExtrudedRegion"))
 {}
 
 
@@ -202,7 +378,7 @@ Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase
 )
 :
     mappedPatchBase(pp, mepb),
-    oppositePatch_(mepb.oppositePatch_)
+    isExtrudedRegion_(mepb.isExtrudedRegion_)
 {}
 
 
@@ -227,7 +403,7 @@ void Foam::mappedExtrudedPatchBase::clearOut()
 void Foam::mappedExtrudedPatchBase::write(Ostream& os) const
 {
     mappedPatchBase::write(os);
-    writeEntryIfDifferent(os, "oppositePatch", word::null, oppositePatch_);
+    writeEntry(os, "isExtrudedRegion", isExtrudedRegion_);
 }
 
 

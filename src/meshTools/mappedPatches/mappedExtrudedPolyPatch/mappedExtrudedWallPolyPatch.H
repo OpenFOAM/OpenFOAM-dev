@@ -95,7 +95,7 @@ public:
             const label index,
             const word& neighbourRegion,
             const word& neighbourPatch,
-            const word& bottomPatch,
+            const bool isExtrudedRegion,
             const polyBoundaryMesh& bm
         );
 
