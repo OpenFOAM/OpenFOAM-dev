@@ -7,16 +7,12 @@ cd ${0%/*} || exit 1 # Run from this directory
 runApplication blockMesh -region fluid
 
 # Create the 3D baffle
-runApplication -s extrudeFromPatches createBaffles -region fluid -overwrite \
-    -dict system/fluid/createBafflesDict.extrudeFromPatches
+runApplication topoSet -region fluid
 runApplication extrudeToRegionMesh -region fluid -overwrite \
-    -dict system/fluid/extrudeToRegionMeshDict.extrudeFromPatches
+    -dict system/fluid/extrudeToRegionMeshDict.extrudeFromInternalFaces
 
 # Create the 1D baffle
-runApplication createBaffles -region fluid -overwrite
-
-runApplication $(getApplication)
-
-paraFoam -touchAll
+runApplication -s baffle1D createBaffles -region fluid -overwrite \
+    -dict system/fluid/createBafflesDict.baffle1D
 
 #------------------------------------------------------------------------------

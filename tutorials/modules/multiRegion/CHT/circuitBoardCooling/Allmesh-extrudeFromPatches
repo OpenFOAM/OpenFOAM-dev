@@ -1,0 +1,19 @@
+#!/bin/sh
+cd ${0%/*} || exit 1 # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh -region fluid
+
+# Create the 3D baffle
+runApplication -s baffle3D createBaffles -region fluid -overwrite \
+    -dict system/fluid/createBafflesDict.baffle3D
+runApplication extrudeToRegionMesh -region fluid -overwrite \
+    -dict system/fluid/extrudeToRegionMeshDict.extrudeFromPatches
+
+# Create the 1D baffle
+runApplication -s baffle1D createBaffles -region fluid -overwrite \
+    -dict system/fluid/createBafflesDict.baffle1D
+
+#------------------------------------------------------------------------------

@@ -4,14 +4,26 @@ cd ${0%/*} || exit 1 # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-runApplication blockMesh -region fluid
+# If a test, try both extrusion strategies
+if isTest "$@"
+then
+    runApplication -s extrudeFromInternalFaces foamCloneCase . extrudeFromInternalFaces
+    cp -r All* include extrudeFromInternalFaces
 
-# Create the 3D baffle
-runApplication topoSet -region fluid
-runApplication extrudeToRegionMesh -region fluid -overwrite
+    runApplication -s extrudeFromPatches foamCloneCase . extrudeFromPatches
+    cp -r All* include extrudeFromPatches
 
-# Create the 1D baffle
-runApplication createBaffles -region fluid -overwrite
+    (cd extrudeFromInternalFaces && ./Allrun extrudeFromInternalFaces)
+
+    (cd extrudeFromPatches && ./Allrun extrudeFromPatches)
+
+    exit
+fi
+
+# If not a test, just run one strategy
+[ -n "$1" ] && strategy=$1 || strategy=extrudeFromInternalFaces
+
+./Allmesh-$strategy
 
 runApplication $(getApplication)
 
