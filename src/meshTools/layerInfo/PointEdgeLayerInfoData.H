@@ -179,6 +179,22 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#define DefineContiguousPointEdgeLayerInfoDataType(Type, nullArg)             \
+    template<>                                                                \
+    inline bool contiguous<PointEdgeLayerInfoData<Type>>()                    \
+    {                                                                         \
+        return true;                                                          \
+    }
+
+DefineContiguousPointEdgeLayerInfoDataType(bool, );
+DefineContiguousPointEdgeLayerInfoDataType(label, );
+FOR_ALL_FIELD_TYPES(DefineContiguousPointEdgeLayerInfoDataType);
+
+#undef DefineContiguousPointEdgeLayerInfoDataType
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

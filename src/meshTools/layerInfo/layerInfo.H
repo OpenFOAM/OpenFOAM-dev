@@ -181,9 +181,19 @@ public:
 
     // IOstream Operators
 
-        friend Ostream& operator<<(Ostream&, const layerInfo&);
-        friend Istream& operator>>(Istream&, layerInfo&);
+        inline friend Ostream& operator<<(Ostream&, const layerInfo&);
+        inline friend Istream& operator>>(Istream&, layerInfo&);
 };
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<>
+inline bool contiguous<layerInfo>()
+{
+    return true;
+}
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

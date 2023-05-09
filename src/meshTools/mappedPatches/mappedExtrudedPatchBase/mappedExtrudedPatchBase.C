@@ -29,11 +29,17 @@ License
 #include "FaceCellWave.H"
 #include "PointEdgeWave.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(mappedExtrudedPatchBase, 0);
+
+    template<>
+    inline bool contiguous<LayerInfoData<Pair<vector>>>()
+    {
+        return true;
+    }
 }
 
 

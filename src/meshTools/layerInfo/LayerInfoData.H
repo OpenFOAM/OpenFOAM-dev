@@ -171,6 +171,23 @@ public:
         );
 };
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define DefineContiguousLayerInfoDataType(Type, nullArg)                      \
+    template<>                                                                \
+    inline bool contiguous<LayerInfoData<Type>>()                             \
+    {                                                                         \
+        return true;                                                          \
+    }
+
+DefineContiguousLayerInfoDataType(bool, );
+DefineContiguousLayerInfoDataType(label, );
+FOR_ALL_FIELD_TYPES(DefineContiguousLayerInfoDataType);
+
+#undef DefineContiguousLayerInfoDataType
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

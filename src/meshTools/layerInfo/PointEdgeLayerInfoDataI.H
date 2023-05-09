@@ -205,7 +205,7 @@ inline bool Foam::PointEdgeLayerInfoData<Type>::operator!=
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
 template<class Type>
-inline Foam::Ostream& Foam::operator<<
+Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
     const PointEdgeLayerInfoData<Type>& l
@@ -220,11 +220,7 @@ inline Foam::Ostream& Foam::operator<<
 
 
 template<class Type>
-inline Foam::Istream& Foam::operator>>
-(
-    Istream& is,
-    PointEdgeLayerInfoData<Type>& l
-)
+Foam::Istream& Foam::operator>>(Istream& is, PointEdgeLayerInfoData<Type>& l)
 {
     return is >> static_cast<pointEdgeLayerInfo&>(l) >> l.data_;
 }

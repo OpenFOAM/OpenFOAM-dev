@@ -185,7 +185,7 @@ inline bool Foam::LayerInfoData<Type>::operator!=
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
 template<class Type>
-inline Foam::Ostream& Foam::operator<<
+Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
     const LayerInfoData<Type>& l
@@ -196,7 +196,7 @@ inline Foam::Ostream& Foam::operator<<
 
 
 template<class Type>
-inline Foam::Istream& Foam::operator>>(Istream& is, LayerInfoData<Type>& l)
+Foam::Istream& Foam::operator>>(Istream& is, LayerInfoData<Type>& l)
 {
     return is >> static_cast<layerInfo&>(l) >> l.data_;
 }

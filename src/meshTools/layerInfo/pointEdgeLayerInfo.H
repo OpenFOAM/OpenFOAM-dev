@@ -182,7 +182,8 @@ public:
 };
 
 
-//- Data associated with pointEdgeLayerInfo type are contiguous
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 template<>
 inline bool contiguous<pointEdgeLayerInfo>()
 {
