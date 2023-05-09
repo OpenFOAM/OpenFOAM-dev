@@ -7,10 +7,10 @@ cd ${0%/*} || exit 1 # Run from this directory
 # If a test, try both extrusion strategies
 if isTest "$@"
 then
-    runApplication -s extrudeFromInternalFaces foamCloneCase . extrudeFromInternalFaces
+    cloneCase . extrudeFromInternalFaces
     cp -r All* include extrudeFromInternalFaces
 
-    runApplication -s extrudeFromPatches foamCloneCase . extrudeFromPatches
+    cloneCase . extrudeFromPatches
     cp -r All* include extrudeFromPatches
 
     (cd extrudeFromInternalFaces && ./Allrun extrudeFromInternalFaces)
