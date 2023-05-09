@@ -366,7 +366,7 @@ Foam::mappedPatchBase::mappedPatchBase
 (
     const polyPatch& pp,
     const dictionary& dict,
-    const bool transformIsNone
+    const bool defaultTransformIsNone
 )
 :
     patch_(pp),
@@ -386,12 +386,7 @@ Foam::mappedPatchBase::mappedPatchBase
       : dict.lookupOrDefault<bool>("samePatch", false) ? pp.name()
       : dict.lookupBackwardsCompatible<word>({"neighbourPatch", "samplePatch"})
     ),
-    transform_
-    (
-        transformIsNone
-      ? cyclicTransform(true)
-      : cyclicTransform(dict, false)
-    ),
+    transform_(cyclicTransform(dict, defaultTransformIsNone)),
     usingTree_(!dict.found("method") && !dict.found("sampleMode")),
     treeMapPtr_(nullptr),
     treeNbrPatchFaceIndices_(),

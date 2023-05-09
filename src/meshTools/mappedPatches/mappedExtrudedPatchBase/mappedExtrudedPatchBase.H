@@ -106,7 +106,7 @@ public:
         (
             const polyPatch& pp,
             const dictionary& dict,
-            const bool transformisNone
+            const bool defaultTransformIsNone
         );
 
         //- Construct as copy, resetting the boundary mesh
