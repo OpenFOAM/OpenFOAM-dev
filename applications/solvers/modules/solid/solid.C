@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "solid.H"
+#include "fvcSurfaceIntegrate.H"
 #include "fvMeshMover.H"
 #include "localEulerDdtScheme.H"
 #include "addToRunTimeSelectionTable.H"
@@ -61,19 +62,25 @@ void Foam::solvers::solid::correctDiNum()
       : mag(thermo.Kappa())()
     );
 
-    const surfaceScalarField kapparhoCpbyDelta
+    const volScalarField::Internal DiNumvf
     (
-        sqr(mesh.surfaceInterpolation::deltaCoeffs())
-       *fvc::interpolate(kappa)
-       /fvc::interpolate(thermo.rho()*thermo.Cp())
+        fvc::surfaceSum
+        (
+            mesh.magSf()
+           *fvc::interpolate(kappa)
+           *mesh.surfaceInterpolation::deltaCoeffs()
+        )()()
+       /(mesh.V()*thermo.rho()()*thermo.Cp()())
+       *runTime.deltaT()
     );
 
-    DiNum = max(kapparhoCpbyDelta).value()*runTime.deltaTValue();
-    const scalar meanDiNum =
-        average(kapparhoCpbyDelta).value()*runTime.deltaTValue();
+    const scalar meanDiNum = gAverage(DiNumvf);
+    const scalar maxDiNum = gMax(DiNumvf);
 
     Info<< "Diffusion Number mean: " << meanDiNum
-        << " max: " << DiNum << endl;
+        << " max: " << maxDiNum << endl;
+
+    DiNum = maxDiNum;
 }
 
 
