@@ -505,6 +505,9 @@ public:
             //- Mean diameter Dij
             inline scalar Dij(const label i, const label j) const;
 
+            //- Min diameter
+            inline scalar Dmin() const;
+
             //- Max diameter
             inline scalar Dmax() const;
 

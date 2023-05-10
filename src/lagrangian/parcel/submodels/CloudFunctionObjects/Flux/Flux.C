@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,7 @@ void Foam::Flux<CloudType, Derived>::write()
     }
 }
 
+
 template<class CloudType, class Derived>
 void Foam::Flux<CloudType, Derived>::accumulate
 (
@@ -79,6 +80,7 @@ void Foam::Flux<CloudType, Derived>::accumulate
 
     phif += sign*Derived::dPhiDeltaT(p)/mesh.time().deltaTValue();
 }
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

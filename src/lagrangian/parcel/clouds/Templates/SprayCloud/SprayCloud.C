@@ -218,7 +218,7 @@ void Foam::SprayCloud<CloudType>::info()
     CloudType::info();
     scalar d32 = 1.0e+6*this->Dij(3, 2);
     scalar d10 = 1.0e+6*this->Dij(1, 0);
-    scalar dMax = 1.0e+6*this->Dmax();
+    scalar dMax = 1.0e+6*max(scalar(0), this->Dmax());
     scalar pen = this->penetration(0.95);
 
     Info<< "    D10, D32, Dmax (mu)             = " << d10 << ", " << d32

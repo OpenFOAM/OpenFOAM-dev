@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -332,18 +332,30 @@ inline Foam::scalar Foam::MomentumCloud<CloudType>::Dij
 
 
 template<class CloudType>
-inline Foam::scalar Foam::MomentumCloud<CloudType>::Dmax() const
+inline Foam::scalar Foam::MomentumCloud<CloudType>::Dmin() const
 {
-    scalar d = -great;
+    scalar d = vGreat;
+
     forAllConstIter(typename MomentumCloud<CloudType>, *this, iter)
     {
-        const parcelType& p = iter();
-        d = max(d, p.d());
+        d = min(d, iter().d());
     }
 
-    reduce(d, maxOp<scalar>());
+    return returnReduce(d, minOp<scalar>());
+}
 
-    return max(0.0, d);
+
+template<class CloudType>
+inline Foam::scalar Foam::MomentumCloud<CloudType>::Dmax() const
+{
+    scalar d = -vGreat;
+
+    forAllConstIter(typename MomentumCloud<CloudType>, *this, iter)
+    {
+        d = max(d, iter().d());
+    }
+
+    return returnReduce(d, maxOp<scalar>());
 }
 
 
