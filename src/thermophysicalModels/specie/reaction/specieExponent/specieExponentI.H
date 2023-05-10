@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,28 +103,7 @@ inline Foam::scalar Foam::pow(const scalar x, const specieExponent& e)
 {
     if (e.hasIntegerExponent())
     {
-        if (e.integerExponent_ == 0)
-        {
-            return 1;
-        }
-        else
-        {
-            scalar xx = e.integerExponent_ > 0 ? x : 1/x;
-
-            scalar y = 1;
-
-            for (label i = e.integerExponent_; i != 0; i /= 2)
-            {
-                if (i % 2)
-                {
-                    y *= xx;
-                }
-
-                xx *= xx;
-            }
-
-            return y;
-        }
+        return integerPow(x, e.integerExponent_);
     }
     else
     {

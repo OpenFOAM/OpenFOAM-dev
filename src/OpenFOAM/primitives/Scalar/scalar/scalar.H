@@ -124,6 +124,7 @@ namespace Foam
 
 namespace Foam
 {
+    //- Read a single scalar from an input stream
     scalar readScalar(Istream& is);
 
     //- Normalised upper incomplete gamma function
@@ -140,8 +141,18 @@ namespace Foam
 
     //- Inverse normalised lower incomplete gamma function
     scalar invIncGammaRatio_P(const scalar a, const scalar P);
+
+    //- Compute the power of the number x to the integer e
+    inline scalar integerPow(const scalar x, const label e);
+
+    //- Compute the power of the number x to the reciprocal integer 1/e
+    inline scalar integerRoot(const scalar x, const label e);
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "scalarI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

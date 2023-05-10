@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,7 @@ void component(scalarField& sf, const UList<scalar>& f, const direction)
 {
     sf = f;
 }
+
 
 template<>
 void scalarField::replace(const direction, const UList<scalar>& sf)
@@ -117,9 +118,14 @@ BINARY_TYPE_OPERATOR_SF(scalar, scalar, scalar, /, divide)
 
 BINARY_FUNCTION(scalar, scalar, scalar, pow)
 BINARY_TYPE_FUNCTION(scalar, scalar, scalar, pow)
+BINARY_FUNCTION(scalar, scalar, label, integerPow)
+BINARY_TYPE_FUNCTION_FS(scalar, scalar, label, integerPow)
+BINARY_FUNCTION(scalar, scalar, label, integerRoot)
+BINARY_TYPE_FUNCTION_FS(scalar, scalar, label, integerRoot)
 
 BINARY_FUNCTION(scalar, scalar, scalar, atan2)
 BINARY_TYPE_FUNCTION(scalar, scalar, scalar, atan2)
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
