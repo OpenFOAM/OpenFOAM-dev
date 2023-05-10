@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,6 +118,7 @@ class arcUniform
         //- Uses calcSamples to obtain samples and copies them into *this
         void genSamples();
 
+
 public:
 
     //- Runtime type information
@@ -136,7 +137,7 @@ public:
         );
 
 
-    // Destructor
+    //- Destructor
     virtual ~arcUniform();
 };
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,6 +86,15 @@ public:
 
         //- Construct from dictionary
         csvSetWriter(const dictionary& dict);
+
+        //- Construct copy
+        csvSetWriter(const csvSetWriter& writer);
+
+        //- Construct and return a clone
+        virtual autoPtr<setWriter> clone() const
+        {
+            return autoPtr<setWriter>(new csvSetWriter(*this));
+        }
 
 
     //- Destructor

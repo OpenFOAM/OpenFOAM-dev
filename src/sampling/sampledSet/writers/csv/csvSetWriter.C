@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,6 +69,13 @@ Foam::csvSetWriter::csvSetWriter(const dictionary& dict)
 :
     setWriter(dict),
     separator_(dict.lookupOrDefault<string>("separator", string(","))[0])
+{}
+
+
+Foam::csvSetWriter::csvSetWriter(const csvSetWriter& writer)
+:
+    setWriter(writer),
+    separator_(writer.separator_)
 {}
 
 

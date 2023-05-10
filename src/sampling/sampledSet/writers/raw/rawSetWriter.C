@@ -71,6 +71,13 @@ Foam::rawSetWriter::rawSetWriter(const dictionary& dict)
 {}
 
 
+Foam::rawSetWriter::rawSetWriter(const rawSetWriter& writer)
+:
+    setWriter(writer),
+    separateSegments_(true)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::rawSetWriter::~rawSetWriter()

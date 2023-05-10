@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
         (
             "myDirectory",
             "mySet",
-            coordSet(points, true),
+            coordSet(true, "position", points),
             "p", p,
             "U", U
         );
@@ -340,6 +340,12 @@ public:
         //- Construct from dictionary
         setWriter(const dictionary& dict);
 
+        //- Construct copy
+        setWriter(const setWriter& writer);
+
+        //- Construct and return a clone
+        virtual autoPtr<setWriter> clone() const = 0;
+
 
     //- Destructor
     virtual ~setWriter() = 0;
@@ -397,7 +403,7 @@ public:
         //      "myDirectory", "mySet",
         //
         //      // Geometry
-        //      coordSet(points, true),
+        //      coordSet(true, "position", points),
         //
         //      // Fields
         //      "p", Field<scalar>(points.size(), ...),
