@@ -53,10 +53,8 @@ subModels
         model1
         {
             type            patchInjection;
-            massTotal       0;
             SOI             0;
             duration        5;
-            parcelBasisType fixed;
             nParticle       1;
             parcelsPerSecond 1000;
             patchName       inlet;
@@ -64,11 +62,8 @@ subModels
             flowRateProfile constant 1;
             sizeDistribution
             {
-                type        fixedValue;
-                fixedValueDistribution
-                {
-                    value       1e-4;
-                }
+                type            fixedValue;
+                value           1e-4;
             }
         }
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,20 +31,6 @@ template<class CloudType>
 Foam::scalar Foam::InjectionModel<CloudType>::timeStart() const
 {
     return SOI_;
-}
-
-
-template<class CloudType>
-Foam::scalar Foam::InjectionModel<CloudType>::volumeTotal() const
-{
-    return volumeTotal_;
-}
-
-
-template<class CloudType>
-Foam::scalar Foam::InjectionModel<CloudType>::massTotal() const
-{
-    return massTotal_;
 }
 
 

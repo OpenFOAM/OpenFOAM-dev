@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "PatchFlowRateInjection.H"
 #include "TimeFunction1.H"
-#include "distributionModel.H"
+#include "distribution.H"
 #include "mathematicalConstants.H"
 #include "surfaceFields.H"
 
@@ -43,7 +43,7 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
     patchInjectionBase(owner.mesh(), this->coeffDict().lookup("patchName")),
     phiName_(this->coeffDict().template lookupOrDefault<word>("phi", "phi")),
     rhoName_(this->coeffDict().template lookupOrDefault<word>("rho", "rho")),
-    duration_(this->coeffDict().template lookup<scalar>("duration")),
+    duration_(this->readDuration(dict, owner)),
     concentration_
     (
         TimeFunction1<scalar>
@@ -59,20 +59,14 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
     ),
     sizeDistribution_
     (
-        distributionModel::New
+        distribution::New
         (
             this->coeffDict().subDict("sizeDistribution"),
-            owner.rndGen()
+            owner.rndGen(),
+            this->sizeSampleQ()
         )
     )
-{
-    duration_ = owner.db().time().userTimeToTime(duration_);
-
-    // Re-initialise total mass/volume to inject to zero
-    // - will be reset during each injection
-    this->volumeTotal_ = 0.0;
-    this->massTotal_ = 0.0;
-}
+{}
 
 
 template<class CloudType>
@@ -146,13 +140,13 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::flowRate() const
 
 
 template<class CloudType>
-Foam::label Foam::PatchFlowRateInjection<CloudType>::parcelsToInject
+Foam::label Foam::PatchFlowRateInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1
 )
 {
-    if ((time0 >= 0.0) && (time0 < duration_))
+    if (time0 >= 0 && time0 < duration_)
     {
         scalar dt = time1 - time0;
 
@@ -185,33 +179,22 @@ Foam::label Foam::PatchFlowRateInjection<CloudType>::parcelsToInject
 
 
 template<class CloudType>
-Foam::scalar Foam::PatchFlowRateInjection<CloudType>::volumeToInject
+Foam::scalar Foam::PatchFlowRateInjection<CloudType>::massToInject
 (
     const scalar time0,
     const scalar time1
 )
 {
-    scalar volume = 0.0;
+    scalar volume = 0;
 
-    if ((time0 >= 0.0) && (time0 < duration_))
+    if (time0 >= 0 && time0 < duration_)
     {
         scalar c = concentration_.value(0.5*(time0 + time1));
 
         volume = c*(time1 - time0)*flowRate();
     }
 
-    this->volumeTotal_ = volume;
-    this->massTotal_ = volume*this->owner().constProps().rho0();
-
-    return volume;
-}
-
-
-template<class CloudType>
-Foam::scalar Foam::PatchFlowRateInjection<CloudType>::averageParcelMass()
-{
-    NotImplemented;
-    return NaN;
+    return volume*this->owner().constProps().rho0();
 }
 
 
@@ -262,13 +245,6 @@ template<class CloudType>
 bool Foam::PatchFlowRateInjection<CloudType>::fullyDescribed() const
 {
     return false;
-}
-
-
-template<class CloudType>
-bool Foam::PatchFlowRateInjection<CloudType>::validInjection(const label)
-{
-    return true;
 }
 
 

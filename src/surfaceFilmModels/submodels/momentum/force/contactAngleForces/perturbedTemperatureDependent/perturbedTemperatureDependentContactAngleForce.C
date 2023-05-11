@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,10 +59,11 @@ perturbedTemperatureDependentContactAngleForce
     rndGen_(label(0)),
     distribution_
     (
-        distributionModel::New
+        distribution::New
         (
             coeffDict_.subDict("distribution"),
-            rndGen_
+            rndGen_,
+            0
         )
     )
 {}

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,6 @@ Description
     velocity.
 
     User specifies:
-      - Total mass to inject
       - Name of patch
       - Injection duration
       - Injection target concentration/carrier volume flow rate
@@ -56,7 +55,7 @@ SourceFiles
 namespace Foam
 {
 
-class distributionModel;
+class distribution;
 
 /*---------------------------------------------------------------------------*\
                    Class PatchFlowRateInjection Declaration
@@ -77,7 +76,7 @@ class PatchFlowRateInjection
         const word rhoName_;
 
         //- Injection duration [s]
-        scalar duration_;
+        const scalar duration_;
 
         //- Concentration profile of particle volume to carrier volume [-]
         const TimeFunction1<scalar> concentration_;
@@ -86,7 +85,7 @@ class PatchFlowRateInjection
         const scalar parcelConcentration_;
 
         //- Parcel size distribution model
-        const autoPtr<distributionModel> sizeDistribution_;
+        const autoPtr<distribution> sizeDistribution_;
 
 
 public:
@@ -131,19 +130,16 @@ public:
         virtual void topoChange();
 
         //- Return the end-of-injection time
-        scalar timeEnd() const;
+        virtual scalar timeEnd() const;
 
         //- Return the total volumetric flow rate across the patch [m^3/s]
-        virtual scalar flowRate() const;
+        scalar flowRate() const;
 
         //- Number of parcels to introduce relative to SOI
-        virtual label parcelsToInject(const scalar time0, const scalar time1);
+        virtual label nParcelsToInject(const scalar time0, const scalar time1);
 
-        //- Volume of parcels to introduce relative to SOI
-        virtual scalar volumeToInject(const scalar time0, const scalar time1);
-
-        //- Return the average parcel mass over the injection period
-        virtual scalar averageParcelMass();
+        //- Parcel mass to introduce relative to SOI
+        virtual scalar massToInject(const scalar time0, const scalar time1);
 
 
         // Injection geometry
@@ -174,10 +170,6 @@ public:
 
             //- Flag to identify whether model fully describes the parcel
             virtual bool fullyDescribed() const;
-
-            //- Return flag to identify whether or not injection of parcelI is
-            //  permitted
-            virtual bool validInjection(const label parcelI);
 };
 
 

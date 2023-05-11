@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,13 +48,11 @@ SourceFiles
 #ifndef InjectionModel_H
 #define InjectionModel_H
 
-#include "IOdictionary.H"
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
+#include "injectionModel.H"
 #include "CloudSubModelBase.H"
-#include "vector.H"
 #include "particle.H"
 #include "TimeFunction1.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,24 +66,13 @@ namespace Foam
 template<class CloudType>
 class InjectionModel
 :
+    public injectionModel,
     public CloudSubModelBase<CloudType>
 {
 public:
 
     //- Convenience typedef for parcelType
     typedef typename CloudType::parcelType parcelType;
-
-
-    // Enumerations
-
-        //- Parcel basis representation options
-        //  i.e constant number of particles OR constant mass per parcel
-        enum parcelBasis
-        {
-            pbNumber,
-            pbMass,
-            pbFixed
-        };
 
 
 protected:
@@ -96,16 +83,6 @@ protected:
 
             //- Start of injection [s]
             scalar SOI_;
-
-            //- Total volume of particles introduced by this injector [m^3]
-            //  - scaled to ensure massTotal is achieved
-            scalar volumeTotal_;
-
-            //- Total mass to inject [kg]
-            scalar massTotal_;
-
-            //- Mass flow rate profile for steady calculations
-            TimeFunction1<scalar> massFlowRate_;
 
             //- Total mass injected to date [kg]
             scalar massInjected_;
@@ -122,12 +99,12 @@ protected:
 
         // Injection properties per Lagrangian time step
 
-            //- Parcel basis enumeration
-            parcelBasis parcelBasis_;
-
-            //- nParticle to assign to parcels when the 'fixed' basis
-            //  is selected
+            //- Fixed nParticle to assign to parcels. Only valid if
+            //  uniformParcelSize is nParticle.
             scalar nParticleFixed_;
+
+            //- Size uniform to all parcels
+            uniformParcelSize uniformParcelSize_;
 
             //- Continuous phase time at start of injection time step [s]
             scalar time0_;
@@ -138,17 +115,30 @@ protected:
 
     // Protected Member Functions
 
-        //- Additional flag to identify whether or not injection of parcelI is
-        //  permitted
-        virtual bool validInjection(const label parcelI) = 0;
-
-        //- Determine properties for next time step/injection interval
-        bool prepareForNextTimeStep
+        //- Read the total mass value for instantaneous injections
+        scalar readMassTotal
         (
-            const scalar time,
-            label& newParcels,
-            scalar& newVolumeFraction
+            const dictionary& dict,
+            CloudType& owner
         );
+
+        //- Read the duration for continuous injections
+        scalar readDuration
+        (
+            const dictionary& dict,
+            CloudType& owner
+        );
+
+        //- Read the mass flow rate function for continuous injections
+        TimeFunction1<scalar> readMassFlowRate
+        (
+            const dictionary& dict,
+            CloudType& owner,
+            const scalar duration
+        );
+
+        //- Get the index of this injector
+        label index() const;
 
         //- Find the cell that contains the supplied position
         //  Will modify position slightly towards the owner cell centroid to
@@ -171,14 +161,15 @@ protected:
             typename CloudType::parcelType& parcel
         );
 
+        //- Return the sampling moment to be used by the size distribution
+        label sizeSampleQ() const;
+
         //- Set number of particles to inject given parcel properties
-        scalar setNumberOfParticles
+        void setNumberOfParticles
         (
-            const label parcels,
-            const scalar volumeFraction,
-            const scalar diameter,
-            const scalar rho
-        );
+            PtrList<parcelType>& parcelPtrs,
+            const scalar mass
+        ) const;
 
         //- Post injection checks
         void postInjectCheck
@@ -265,12 +256,6 @@ public:
             //- Return the start-of-injection time
             inline scalar timeStart() const;
 
-            //- Return the total volume to be injected across the event
-            inline scalar volumeTotal() const;
-
-            //- Return mass of particles to introduce
-            inline scalar massTotal() const;
-
             //- Return mass of particles injected (cumulative)
             inline scalar massInjected() const;
 
@@ -278,21 +263,21 @@ public:
             virtual scalar timeEnd() const = 0;
 
             //- Number of parcels to introduce relative to SOI
-            virtual label parcelsToInject
+            virtual label nParcelsToInject
             (
                 const scalar time0,
                 const scalar time1
             ) = 0;
 
-            //- Volume of parcels to introduce relative to SOI
-            virtual scalar volumeToInject
+            //- Parcel mass to introduce relative to SOI
+            virtual scalar massToInject
             (
                 const scalar time0,
                 const scalar time1
             ) = 0;
 
-            //- Return the average parcel mass over the injection period
-            virtual scalar averageParcelMass();
+            //- Return the average injected parcel mass
+            scalar averageParcelMass();
 
 
             // Counters

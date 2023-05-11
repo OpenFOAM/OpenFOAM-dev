@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::string Foam::ReactingMultiphaseParcel<ParcelType>::propertyList_ =
 template<class ParcelType>
 const std::size_t Foam::ReactingMultiphaseParcel<ParcelType>::sizeofFields_
 (
-    0
+    sizeof(scalar)
 );
 
 
@@ -49,6 +49,7 @@ Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 )
 :
     ParcelType(is, readFields),
+    mass0_(0.0),
     YGas_(0),
     YLiquid_(0),
     YSolid_(0),
@@ -60,7 +61,15 @@ Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
         DynamicList<scalar> Yl;
         DynamicList<scalar> Ys;
 
-        is >> Yg >> Yl >> Ys;
+        if (is.format() == IOstream::ASCII)
+        {
+            is >> mass0_ >> Yg >> Yl >> Ys;
+        }
+        else
+        {
+            is.read(reinterpret_cast<char*>(&mass0_), sizeofFields_);
+            is >> Yg >> Yl >> Ys;
+        }
 
         YGas_.transfer(Yg);
         YLiquid_.transfer(Yl);
@@ -105,6 +114,20 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
     bool valid = c.size();
 
     ParcelType::readFields(c, compModel);
+
+    IOField<scalar> mass0
+    (
+        c.fieldIOobject("mass0", IOobject::MUST_READ),
+        valid
+    );
+    c.checkFieldIOobject(c, mass0);
+
+    label i = 0;
+    forAllIter(typename CloudType, c, iter)
+    {
+        ReactingMultiphaseParcel<ParcelType>& p = iter();
+        p.mass0_ = mass0[i++];
+    }
 
     // Get names and sizes for each Y...
     const label idGas = compModel.idGas();
@@ -207,8 +230,18 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
 
     label np = c.size();
 
-    // Write the composition fractions
     {
+        IOField<scalar> mass0(c.fieldIOobject("mass0", IOobject::NO_READ), np);
+
+        label i = 0;
+        forAllConstIter(typename CloudType, c, iter)
+        {
+            const ReactingMultiphaseParcel<ParcelType>& p = iter();
+            mass0[i++] = p.mass0_;
+        }
+        mass0.write(np > 0);
+
+        // Write the composition fractions
         const wordList& stateLabels = compModel.stateLabels();
 
         const label idGas = compModel.idGas();
@@ -301,6 +334,7 @@ Foam::Ostream& Foam::operator<<
     if (os.format() == IOstream::ASCII)
     {
         os  << static_cast<const ParcelType&>(p)
+            << token::SPACE << p.mass0()
             << token::SPACE << YGasLoc
             << token::SPACE << YLiquidLoc
             << token::SPACE << YSolidLoc;
@@ -308,6 +342,11 @@ Foam::Ostream& Foam::operator<<
     else
     {
         os  << static_cast<const ParcelType&>(p);
+        os.write
+        (
+            reinterpret_cast<const char*>(&p.mass0_),
+            ReactingMultiphaseParcel<ParcelType>::sizeofFields_
+        );
         os  << YGasLoc << YLiquidLoc << YSolidLoc;
     }
 

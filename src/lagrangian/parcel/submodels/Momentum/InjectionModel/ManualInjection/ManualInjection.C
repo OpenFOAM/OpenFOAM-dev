@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,13 +57,15 @@ Foam::ManualInjection<CloudType>::ManualInjection
     injectorCells_(positions_.size(), -1),
     injectorTetFaces_(positions_.size(), -1),
     injectorTetPts_(positions_.size(), -1),
+    massTotal_(this->readMassTotal(dict, owner)),
     U0_(this->coeffDict().lookup("U0")),
     sizeDistribution_
     (
-        distributionModel::New
+        distribution::New
         (
             this->coeffDict().subDict("sizeDistribution"),
-            owner.rndGen()
+            owner.rndGen(),
+            this->sizeSampleQ()
         )
     ),
     ignoreOutOfBounds_
@@ -78,9 +80,6 @@ Foam::ManualInjection<CloudType>::ManualInjection
     {
         diameters_[i] = sizeDistribution_->sample();
     }
-
-    // Determine volume of particles to inject
-    this->volumeTotal_ = sum(pow3(diameters_))*pi/6.0;
 }
 
 
@@ -98,6 +97,7 @@ Foam::ManualInjection<CloudType>::ManualInjection
     injectorCells_(im.injectorCells_),
     injectorTetFaces_(im.injectorTetFaces_),
     injectorTetPts_(im.injectorTetPts_),
+    massTotal_(im.massTotal_),
     U0_(im.U0_),
     sizeDistribution_(im.sizeDistribution_().clone().ptr()),
     ignoreOutOfBounds_(im.ignoreOutOfBounds_)
@@ -165,13 +165,14 @@ Foam::scalar Foam::ManualInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label Foam::ManualInjection<CloudType>::parcelsToInject
+Foam::label Foam::ManualInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1
 )
 {
-    if ((0.0 >= time0) && (0.0 < time1))
+    // All parcels introduced at SOI
+    if (0 >= time0 && 0 < time1)
     {
         return positions_.size();
     }
@@ -183,20 +184,20 @@ Foam::label Foam::ManualInjection<CloudType>::parcelsToInject
 
 
 template<class CloudType>
-Foam::scalar Foam::ManualInjection<CloudType>::volumeToInject
+Foam::scalar Foam::ManualInjection<CloudType>::massToInject
 (
     const scalar time0,
     const scalar time1
 )
 {
     // All parcels introduced at SOI
-    if ((0.0 >= time0) && (0.0 < time1))
+    if (0 >= time0 && 0 < time1)
     {
-        return this->volumeTotal_;
+        return massTotal_;
     }
     else
     {
-        return 0.0;
+        return 0;
     }
 }
 
@@ -242,13 +243,6 @@ template<class CloudType>
 bool Foam::ManualInjection<CloudType>::fullyDescribed() const
 {
     return false;
-}
-
-
-template<class CloudType>
-bool Foam::ManualInjection<CloudType>::validInjection(const label)
-{
-    return true;
 }
 
 

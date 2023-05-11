@@ -78,20 +78,18 @@ subModels
         {
             type            manualInjection;
             massTotal       0.0001;
-            parcelBasisType mass;
+            uniformParcelSize volume;
             SOI             0;
             positionsFile   "limestoneCloudPositions";
             U0              (0 0 0);
             sizeDistribution
             {
-                type        RosinRammler;
-                RosinRammlerDistribution
-                {
-                    minValue        5e-06;
-                    maxValue        0.000565;
-                    d               4.8e-05;
-                    n               0.5;
-                }
+                type            RosinRammler;
+                Q               3;
+                min             5e-06;
+                max             0.000565;
+                d               4.8e-05;
+                n               0.5;
             }
         }
     }

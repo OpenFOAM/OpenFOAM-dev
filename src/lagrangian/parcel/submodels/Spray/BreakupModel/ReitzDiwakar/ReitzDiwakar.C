@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,6 +92,7 @@ bool Foam::ReitzDiwakar<CloudType>::update
     const vector& Urel,
     const scalar Urmag,
     const scalar tMom,
+    const label injectori,
     scalar& dChild,
     scalar& massChild
 )

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ namespace Foam
 template<class Type>
 class TimeFunction1;
 
-class distributionModel;
+class distribution;
 
 /*---------------------------------------------------------------------------*\
                        Class PatchInjection Declaration
@@ -72,7 +72,10 @@ class PatchInjection
     // Private Data
 
         //- Injection duration [s]
-        scalar duration_;
+        const scalar duration_;
+
+        //- Mass flow rate relative to SOI []
+        const TimeFunction1<scalar> massFlowRate_;
 
         //- Number of parcels to introduce per second []
         const label parcelsPerSecond_;
@@ -80,11 +83,8 @@ class PatchInjection
         //- Initial parcel velocity [m/s]
         const vector U0_;
 
-        //- Flow rate profile relative to SOI []
-        const TimeFunction1<scalar> flowRateProfile_;
-
         //- Parcel size distribution model
-        const autoPtr<distributionModel> sizeDistribution_;
+        const autoPtr<distribution> sizeDistribution_;
 
 
 public:
@@ -132,10 +132,10 @@ public:
         virtual scalar timeEnd() const;
 
         //- Number of parcels to introduce relative to SOI
-        virtual label parcelsToInject(const scalar time0, const scalar time1);
+        virtual label nParcelsToInject(const scalar time0, const scalar time1);
 
-        //- Volume of parcels to introduce relative to SOI
-        virtual scalar volumeToInject(const scalar time0, const scalar time1);
+        //- Parcel mass to introduce relative to SOI
+        virtual scalar massToInject(const scalar time0, const scalar time1);
 
 
         // Injection geometry
@@ -166,10 +166,6 @@ public:
 
             //- Flag to identify whether model fully describes the parcel
             virtual bool fullyDescribed() const;
-
-            //- Return flag to identify whether or not injection of parcelI is
-            //  permitted
-            virtual bool validInjection(const label parcelI);
 };
 
 

@@ -56,19 +56,14 @@ subModels
         model1
         {
             type            manualInjection;
-            massTotal       0;
-            parcelBasisType fixed;
             nParticle       1;
             SOI             0;
             positionsFile   "cloudPositions";
             U0              (0 0 0);
             sizeDistribution
             {
-                type        fixedValue;
-                fixedValueDistribution
-                {
-                    value   0.006;
-                }
+                type            fixedValue;
+                value           0.006;
             }
         }
     }

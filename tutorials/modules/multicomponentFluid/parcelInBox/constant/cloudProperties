@@ -78,18 +78,14 @@ subModels
         {
             type            manualInjection;
             massTotal       5.23599e-10; // 1 droplet of density 1000 kg/m3
-            parcelBasisType mass;
+            uniformParcelSize volume;
             SOI             0;
             positionsFile   "cloudPositions";
             U0              (0 0 0);
             sizeDistribution
             {
-                type uniform;
-                uniformDistribution
-                {
-                    minValue        100e-06;
-                    maxValue        100e-06;
-                }
+                type            fixedValue;
+                value           100e-06;
             }
         }
     }

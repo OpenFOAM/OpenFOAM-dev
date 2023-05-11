@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -278,7 +278,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         d0,
         T0,
         mass0,
-        this->mass0_,
+        mass0_,
         YMix[GAS]*YGas_,
         YMix[LIQ]*YLiquid_,
         YMix[SLD]*YSolid_,
@@ -716,6 +716,7 @@ Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 )
 :
     ParcelType(p),
+    mass0_(p.mass0_),
     YGas_(p.YGas_),
     YLiquid_(p.YLiquid_),
     YSolid_(p.YSolid_),

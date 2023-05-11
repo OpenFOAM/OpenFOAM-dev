@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
 See also
     Foam::surfaceFilmModels::contactAngleForce
-    Foam::distributionModel
+    Foam::distribution
 
 SourceFiles
     distributionContactAngleForce.C
@@ -40,7 +40,7 @@ SourceFiles
 #define distributionContactAngleForce_H
 
 #include "contactAngleForce.H"
-#include "distributionModel.H"
+#include "distribution.H"
 #include "Random.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -64,7 +64,7 @@ class distributionContactAngleForce
         Random rndGen_;
 
         //- Parcel size PDF model
-        const autoPtr<distributionModel> distribution_;
+        const autoPtr<distribution> distribution_;
 
         //- Cached contact angle field
         mutable volScalarField theta_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,10 +58,11 @@ drippingEjection::drippingEjection
     rndGen_(label(0)),
     parcelDistribution_
     (
-        distributionModel::New
+        distribution::New
         (
             coeffDict_.subDict("parcelDistribution"),
-            rndGen_
+            rndGen_,
+            0
         )
     ),
     diameter_(film.mesh().nCells(), -1.0)

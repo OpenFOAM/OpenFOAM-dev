@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,9 +132,6 @@ protected:
 
         // Parcel properties
 
-            //- Initial mass [kg]
-            scalar mass0_;
-
             //- Mass fractions of mixture []
             scalarField Y_;
 
@@ -182,8 +179,7 @@ public:
         AddToPropertyList
         (
             ParcelType,
-            " mass0"
-          + " nPhases(Y1..YN)"
+            " nPhases(Y1..YN)"
         );
 
 
@@ -233,17 +229,11 @@ public:
 
         // Access
 
-            //- Return const access to initial mass [kg]
-            inline scalar mass0() const;
-
             //- Return const access to mass fractions of mixture []
             inline const scalarField& Y() const;
 
 
         // Edit
-
-            //- Return access to initial mass [kg]
-            inline scalar& mass0();
 
             //- Return access to mass fractions of mixture []
             inline scalarField& Y();

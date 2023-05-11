@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Foam::MomentumLookupTableInjection<CloudType>::MomentumLookupTableInjection
 :
     InjectionModel<CloudType>(dict, owner, modelName, typeName),
     inputFileName_(this->coeffDict().lookup("inputFile")),
-    duration_(this->coeffDict().template lookup<scalar>("duration")),
+    duration_(this->readDuration(dict, owner)),
     parcelsPerSecond_
     (
         this->coeffDict().template lookup<scalar>("parcelsPerSecond")
@@ -60,22 +60,12 @@ Foam::MomentumLookupTableInjection<CloudType>::MomentumLookupTableInjection
     injectorTetFaces_(0),
     injectorTetPts_(0)
 {
-    duration_ = owner.db().time().userTimeToTime(duration_);
-
     // Set/cache the injector cells
     injectorCells_.setSize(injectors_.size());
     injectorTetFaces_.setSize(injectors_.size());
     injectorTetPts_.setSize(injectors_.size());
 
     topoChange();
-
-    // Determine volume of particles to inject
-    this->volumeTotal_ = 0.0;
-    forAll(injectors_, i)
-    {
-        this->volumeTotal_ += injectors_[i].mDot()/injectors_[i].rho();
-    }
-    this->volumeTotal_ *= duration_;
 }
 
 
@@ -133,13 +123,13 @@ Foam::scalar Foam::MomentumLookupTableInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label Foam::MomentumLookupTableInjection<CloudType>::parcelsToInject
+Foam::label Foam::MomentumLookupTableInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1
 )
 {
-    if ((time0 >= 0.0) && (time0 < duration_))
+    if (time0 >= 0 && time0 < duration_)
     {
         return floor(injectorCells_.size()*(time1 - time0)*parcelsPerSecond_);
     }
@@ -151,22 +141,23 @@ Foam::label Foam::MomentumLookupTableInjection<CloudType>::parcelsToInject
 
 
 template<class CloudType>
-Foam::scalar Foam::MomentumLookupTableInjection<CloudType>::volumeToInject
+Foam::scalar Foam::MomentumLookupTableInjection<CloudType>::massToInject
 (
     const scalar time0,
     const scalar time1
 )
 {
-    scalar volume = 0.0;
-    if ((time0 >= 0.0) && (time0 < duration_))
+    scalar mass = 0;
+
+    if (time0 >= 0 && time0 < duration_)
     {
         forAll(injectors_, i)
         {
-            volume += injectors_[i].mDot()/injectors_[i].rho()*(time1 - time0);
+            mass += injectors_[i].mDot()*(time1 - time0);
         }
     }
 
-    return volume;
+    return mass;
 }
 
 
@@ -225,16 +216,6 @@ void Foam::MomentumLookupTableInjection<CloudType>::setProperties
 
 template<class CloudType>
 bool Foam::MomentumLookupTableInjection<CloudType>::fullyDescribed() const
-{
-    return true;
-}
-
-
-template<class CloudType>
-bool Foam::MomentumLookupTableInjection<CloudType>::validInjection
-(
-    const label
-)
 {
     return true;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,12 +171,14 @@ template<class CloudType>
 void Foam::ReactingMultiphaseCloud<CloudType>::checkParcelProperties
 (
     parcelType& parcel,
-    const bool fullyDescribed
+    const label injectori
 )
 {
-    CloudType::checkParcelProperties(parcel, fullyDescribed);
+    CloudType::checkParcelProperties(parcel, injectori);
 
-    if (fullyDescribed)
+    parcel.mass0() = parcel.mass();
+
+    if (injectori != -1 && this->injectors()[injectori].fullyDescribed())
     {
         label idGas = this->composition().idGas();
         label idLiquid = this->composition().idLiquid();

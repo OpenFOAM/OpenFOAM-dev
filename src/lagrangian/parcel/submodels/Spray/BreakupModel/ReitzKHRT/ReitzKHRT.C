@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,6 +98,7 @@ bool Foam::ReitzKHRT<CloudType>::update
     const vector& Urel,
     const scalar Urmag,
     const scalar tMom,
+    const label injectori,
     scalar& dChild,
     scalar& massChild
 )
@@ -105,7 +106,7 @@ bool Foam::ReitzKHRT<CloudType>::update
     bool addParcel = false;
 
     const scalar averageParcelMass =
-        this->owner().injectors().averageParcelMass();
+        this->owner().injectors()[injectori].averageParcelMass();
 
     scalar r = 0.5*d;
     scalar d3 = pow3(d);
@@ -190,14 +191,13 @@ bool Foam::ReitzKHRT<CloudType>::update
             // reduce the diameter according to the rate-equation
             d = (fraction*dc + d)/(1.0 + fraction);
 
-            // scalar ms0 = rho*pow3(dc)*mathematicalConstant::pi/6.0;
-            scalar ms0 = mass0*(1.0 - pow3(d/d0));
-            ms += ms0;
+            // calculate the stripped mass
+            ms += mass0*(1.0 - pow3(d/d0));
 
             if (ms/averageParcelMass > msLimit_)
             {
                 // Correct evaluation of the number of child droplets and the
-                // diameter of parcel droplets after breaukp
+                // diameter of parcel droplets after breakup
                 // Solution of cubic equation for the diameter of the parent
                 // drops after breakup, see Eq. 18 in
                 // Patterson & Reitz, SAE 980131

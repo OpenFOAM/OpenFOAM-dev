@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::string Foam::ReactingParcel<ParcelType>::propertyList_ =
 template<class ParcelType>
 const std::size_t Foam::ReactingParcel<ParcelType>::sizeofFields_
 (
-    sizeof(scalar)
+    0
 );
 
 
@@ -45,22 +45,13 @@ template<class ParcelType>
 Foam::ReactingParcel<ParcelType>::ReactingParcel(Istream& is, bool readFields)
 :
     ParcelType(is, readFields),
-    mass0_(0.0),
     Y_(0)
 {
     if (readFields)
     {
         DynamicList<scalar> Ymix;
 
-        if (is.format() == IOstream::ASCII)
-        {
-            is >> mass0_ >> Ymix;
-        }
-        else
-        {
-            is.read(reinterpret_cast<char*>(&mass0_), sizeofFields_);
-            is >> Ymix;
-        }
+        is >> Ymix;
 
         Y_.transfer(Ymix);
     }
@@ -98,20 +89,6 @@ void Foam::ReactingParcel<ParcelType>::readFields
 
     ParcelType::readFields(c);
 
-    IOField<scalar> mass0
-    (
-        c.fieldIOobject("mass0", IOobject::MUST_READ),
-        valid
-    );
-    c.checkFieldIOobject(c, mass0);
-
-    label i = 0;
-    forAllIter(typename CloudType, c, iter)
-    {
-        ReactingParcel<ParcelType>& p = iter();
-        p.mass0_ = mass0[i++];
-    }
-
     // Get names and sizes for each Y...
     const wordList& phaseTypes = compModel.phaseTypes();
     const label nPhases = phaseTypes.size();
@@ -120,7 +97,6 @@ void Foam::ReactingParcel<ParcelType>::readFields
     {
         stateLabels = compModel.stateLabels()[0];
     }
-
 
     // Set storage for each Y... for each parcel
     forAllIter(typename CloudType, c, iter)
@@ -173,16 +149,6 @@ void Foam::ReactingParcel<ParcelType>::writeFields
     const label np = c.size();
 
     {
-        IOField<scalar> mass0(c.fieldIOobject("mass0", IOobject::NO_READ), np);
-
-        label i = 0;
-        forAllConstIter(typename CloudType, c, iter)
-        {
-            const ReactingParcel<ParcelType>& p = iter();
-            mass0[i++] = p.mass0_;
-        }
-        mass0.write(np > 0);
-
         // Write the composition fractions
         const wordList& phaseTypes = compModel.phaseTypes();
         wordList stateLabels(phaseTypes.size(), "");
@@ -227,17 +193,11 @@ Foam::Ostream& Foam::operator<<
     if (os.format() == IOstream::ASCII)
     {
         os  << static_cast<const ParcelType&>(p)
-            << token::SPACE << p.mass0()
             << token::SPACE << p.Y();
     }
     else
     {
         os  << static_cast<const ParcelType&>(p);
-        os.write
-        (
-            reinterpret_cast<const char*>(&p.mass0_),
-            ReactingParcel<ParcelType>::sizeofFields_
-        );
         os  << p.Y();
     }
 

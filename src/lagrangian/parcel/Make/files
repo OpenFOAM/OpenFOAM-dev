@@ -96,6 +96,9 @@ $(MPPICTIMESCALE)/equilibrium/equilibrium.C
 $(MPPICTIMESCALE)/nonEquilibrium/nonEquilibrium.C
 $(MPPICTIMESCALE)/isotropic/isotropic.C
 
+# injection model
+submodels/Momentum/InjectionModel/InjectionModel/injectionModel.C
+
 # integration schemes
 integrationScheme/integrationScheme/integrationScheme.C
 integrationScheme/integrationScheme/integrationSchemeNew.C

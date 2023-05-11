@@ -81,7 +81,7 @@ subModels
             type            coneInjection;
             SOI             0;
             massTotal       6.0e-6;
-            parcelBasisType mass;
+            uniformParcelSize volume;
             injectionMethod disc;
             flowType        flowRateAndDischarge;
             dInner          0;
@@ -134,15 +134,12 @@ subModels
 
             sizeDistribution
             {
-                type        RosinRammler;
-
-                RosinRammlerDistribution
-                {
-                    minValue        1e-06;
-                    maxValue        0.00015;
-                    d               0.00015;
-                    n               3;
-                }
+                type            RosinRammler;
+                Q               3;
+                min             1e-06;
+                max             0.00015;
+                d               0.00015;
+                n               3;
             }
         }
     }

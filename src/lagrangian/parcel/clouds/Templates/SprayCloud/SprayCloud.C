@@ -26,6 +26,7 @@ License
 #include "SprayCloud.H"
 #include "AtomisationModel.H"
 #include "BreakupModel.H"
+#include "ConeInjection.H"
 #include "parcelThermo.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
@@ -163,19 +164,22 @@ template<class CloudType>
 void Foam::SprayCloud<CloudType>::checkParcelProperties
 (
     parcelType& parcel,
-    const bool fullyDescribed
+    const label injectori
 )
 {
-    CloudType::checkParcelProperties(parcel, fullyDescribed);
+    CloudType::checkParcelProperties(parcel, injectori);
 
-    // store the injection position and initial drop size
-    parcel.position0() = parcel.position(this->mesh());
+    // store the initial size and position
     parcel.d0() = parcel.d();
+    parcel.mass0() = parcel.mass();
+    parcel.position0() = parcel.position(this->mesh());
 
     parcel.y() = breakup().y0();
     parcel.yDot() = breakup().yDot0();
 
     parcel.liquidCore() = atomisation().initLiquidCore();
+
+    parcel.injector() = injectori;
 }
 
 

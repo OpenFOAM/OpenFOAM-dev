@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,6 +161,7 @@ Foam::CellZoneInjection<CloudType>::CellZoneInjection
 :
     InjectionModel<CloudType>(dict, owner, modelName, typeName),
     cellZoneName_(this->coeffDict().lookup("cellZone")),
+    massTotal_(this->readMassTotal(dict, owner)),
     numberDensity_(this->coeffDict().template lookup<scalar>("numberDensity")),
     injectorCoordinates_(),
     injectorCells_(),
@@ -170,9 +171,11 @@ Foam::CellZoneInjection<CloudType>::CellZoneInjection
     U0_(this->coeffDict().lookup("U0")),
     sizeDistribution_
     (
-        distributionModel::New
+        distribution::New
         (
-            this->coeffDict().subDict("sizeDistribution"), owner.rndGen()
+            this->coeffDict().subDict("sizeDistribution"),
+            owner.rndGen(),
+            this->sizeSampleQ()
         )
     )
 {
@@ -188,6 +191,7 @@ Foam::CellZoneInjection<CloudType>::CellZoneInjection
 :
     InjectionModel<CloudType>(im),
     cellZoneName_(im.cellZoneName_),
+    massTotal_(im.massTotal_),
     numberDensity_(im.numberDensity_),
     injectorCoordinates_(im.injectorCoordinates_),
     injectorCells_(im.injectorCells_),
@@ -252,9 +256,6 @@ void Foam::CellZoneInjection<CloudType>::topoChange()
             diameters_[i] = sizeDistribution_->sample();
         }
     }
-
-    // Determine volume of particles to inject
-    this->volumeTotal_ = sum(pow3(diameters_))*constant::mathematical::pi/6.0;
 }
 
 
@@ -267,13 +268,14 @@ Foam::scalar Foam::CellZoneInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label Foam::CellZoneInjection<CloudType>::parcelsToInject
+Foam::label Foam::CellZoneInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1
 )
 {
-    if ((0.0 >= time0) && (0.0 < time1))
+    // All parcels introduced at SOI
+    if (0 >= time0 && 0 < time1)
     {
         return injectorCoordinates_.size();
     }
@@ -285,20 +287,20 @@ Foam::label Foam::CellZoneInjection<CloudType>::parcelsToInject
 
 
 template<class CloudType>
-Foam::scalar Foam::CellZoneInjection<CloudType>::volumeToInject
+Foam::scalar Foam::CellZoneInjection<CloudType>::massToInject
 (
     const scalar time0,
     const scalar time1
 )
 {
     // All parcels introduced at SOI
-    if ((0.0 >= time0) && (0.0 < time1))
+    if (0 >= time0 && 0 < time1)
     {
-        return this->volumeTotal_;
+        return massTotal_;
     }
     else
     {
-        return 0.0;
+        return 0;
     }
 }
 
@@ -344,13 +346,6 @@ template<class CloudType>
 bool Foam::CellZoneInjection<CloudType>::fullyDescribed() const
 {
     return false;
-}
-
-
-template<class CloudType>
-bool Foam::CellZoneInjection<CloudType>::validInjection(const label)
-{
-    return true;
 }
 
 

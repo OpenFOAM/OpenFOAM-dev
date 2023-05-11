@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ SourceFiles
 #define ManualInjection_H
 
 #include "InjectionModel.H"
-#include "distributionModel.H"
+#include "distribution.H"
 #include "Switch.H"
 #include "GlobalIOField.H"
 
@@ -86,11 +86,14 @@ class ManualInjection
         //- List of tetPt labels corresponding to injector positions
         labelList injectorTetPts_;
 
+        //- Mass to inject
+        const scalar massTotal_;
+
         //- Initial parcel velocity
         const vector U0_;
 
         //- Parcel size distribution model
-        const autoPtr<distributionModel> sizeDistribution_;
+        const autoPtr<distribution> sizeDistribution_;
 
         //- Flag to suppress errors if particle injection site is out-of-bounds
         Switch ignoreOutOfBounds_;
@@ -135,13 +138,13 @@ public:
         virtual void topoChange();
 
         //- Return the end-of-injection time
-        scalar timeEnd() const;
+        virtual scalar timeEnd() const;
 
         //- Number of parcels to introduce relative to SOI
-        virtual label parcelsToInject(const scalar time0, const scalar time1);
+        virtual label nParcelsToInject(const scalar time0, const scalar time1);
 
-        //- Volume of parcels to introduce relative to SOI
-        virtual scalar volumeToInject(const scalar time0, const scalar time1);
+        //- Parcel mass to introduce relative to SOI
+        virtual scalar massToInject(const scalar time0, const scalar time1);
 
 
         // Injection geometry
@@ -170,10 +173,6 @@ public:
 
             //- Flag to identify whether model fully describes the parcel
             virtual bool fullyDescribed() const;
-
-            //- Return flag to identify whether or not injection of parcelI is
-            //  permitted
-            virtual bool validInjection(const label parcelI);
 };
 
 

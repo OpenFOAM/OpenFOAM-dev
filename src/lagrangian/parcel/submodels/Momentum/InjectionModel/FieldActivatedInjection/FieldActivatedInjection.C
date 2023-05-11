@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,6 +71,7 @@ Foam::FieldActivatedInjection<CloudType>::FieldActivatedInjection
     injectorCells_(positions_.size()),
     injectorTetFaces_(positions_.size()),
     injectorTetPts_(positions_.size()),
+    massTotal_(this->readMassTotal(dict, owner)),
     nParcelsPerInjector_
     (
         this->coeffDict().template lookup<label>("parcelsPerInjector")
@@ -80,10 +81,11 @@ Foam::FieldActivatedInjection<CloudType>::FieldActivatedInjection
     diameters_(positions_.size()),
     sizeDistribution_
     (
-        distributionModel::New
+        distribution::New
         (
             this->coeffDict().subDict("sizeDistribution"),
-            owner.rndGen()
+            owner.rndGen(),
+            this->sizeSampleQ()
         )
     )
 {
@@ -92,10 +94,6 @@ Foam::FieldActivatedInjection<CloudType>::FieldActivatedInjection
     {
         diameters_[i] = sizeDistribution_->sample();
     }
-
-    // Determine total volume of particles to inject
-    this->volumeTotal_ =
-        nParcelsPerInjector_*sum(pow3(diameters_))*pi/6.0;
 
     topoChange();
 }
@@ -117,6 +115,7 @@ Foam::FieldActivatedInjection<CloudType>::FieldActivatedInjection
     injectorCells_(im.injectorCells_),
     injectorTetFaces_(im.injectorTetFaces_),
     injectorTetPts_(im.injectorTetPts_),
+    massTotal_(im.massTotal_),
     nParcelsPerInjector_(im.nParcelsPerInjector_),
     nParcelsInjected_(im.nParcelsInjected_),
     U0_(im.U0_),
@@ -160,7 +159,7 @@ Foam::scalar Foam::FieldActivatedInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label Foam::FieldActivatedInjection<CloudType>::parcelsToInject
+Foam::label Foam::FieldActivatedInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1
@@ -178,7 +177,7 @@ Foam::label Foam::FieldActivatedInjection<CloudType>::parcelsToInject
 
 
 template<class CloudType>
-Foam::scalar Foam::FieldActivatedInjection<CloudType>::volumeToInject
+Foam::scalar Foam::FieldActivatedInjection<CloudType>::massToInject
 (
     const scalar time0,
     const scalar time1
@@ -186,7 +185,7 @@ Foam::scalar Foam::FieldActivatedInjection<CloudType>::volumeToInject
 {
     if (sum(nParcelsInjected_) < nParcelsPerInjector_*positions_.size())
     {
-        return this->volumeTotal_/nParcelsPerInjector_;
+        return massTotal_/nParcelsPerInjector_;
     }
     else
     {
@@ -198,7 +197,7 @@ Foam::scalar Foam::FieldActivatedInjection<CloudType>::volumeToInject
 template<class CloudType>
 void Foam::FieldActivatedInjection<CloudType>::setPositionAndCell
 (
-    const label parcelI,
+    const label parceli,
     const label,
     const scalar,
     barycentric& coordinates,
@@ -208,17 +207,28 @@ void Foam::FieldActivatedInjection<CloudType>::setPositionAndCell
     label& facei
 )
 {
-    coordinates = injectorCoordinates_[parcelI];
-    celli = injectorCells_[parcelI];
-    tetFacei = injectorTetFaces_[parcelI];
-    tetPti = injectorTetPts_[parcelI];
+    const label injectorCelli = injectorCells_[parceli];
+
+    if
+    (
+        nParcelsInjected_[parceli] < nParcelsPerInjector_
+     && factor_*referenceField_[injectorCelli] > thresholdField_[injectorCelli]
+    )
+    {
+        coordinates = injectorCoordinates_[parceli];
+        celli = injectorCells_[parceli];
+        tetFacei = injectorTetFaces_[parceli];
+        tetPti = injectorTetPts_[parceli];
+
+        nParcelsInjected_[parceli]++;
+    }
 }
 
 
 template<class CloudType>
 void Foam::FieldActivatedInjection<CloudType>::setProperties
 (
-    const label parcelI,
+    const label parceli,
     const label,
     const scalar,
     typename CloudType::parcelType& parcel
@@ -228,35 +238,13 @@ void Foam::FieldActivatedInjection<CloudType>::setProperties
     parcel.U() = U0_;
 
     // set particle diameter
-    parcel.d() = diameters_[parcelI];
+    parcel.d() = diameters_[parceli];
 }
 
 
 template<class CloudType>
 bool Foam::FieldActivatedInjection<CloudType>::fullyDescribed() const
 {
-    return false;
-}
-
-
-template<class CloudType>
-bool Foam::FieldActivatedInjection<CloudType>::validInjection
-(
-    const label parcelI
-)
-{
-    const label celli = injectorCells_[parcelI];
-
-    if
-    (
-        nParcelsInjected_[parcelI] < nParcelsPerInjector_
-     && factor_*referenceField_[celli] > thresholdField_[celli]
-    )
-    {
-        nParcelsInjected_[parcelI]++;
-        return true;
-    }
-
     return false;
 }
 

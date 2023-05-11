@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ SourceFiles
 #define drippingEjection_H
 
 #include "ejectionModel.H"
-#include "distributionModel.H"
+#include "distribution.H"
 #include "Random.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -74,8 +74,7 @@ protected:
         Random rndGen_;
 
         //- Parcel size PDF model
-        const autoPtr<distributionModel>
-            parcelDistribution_;
+        const autoPtr<distribution> parcelDistribution_;
 
         //- Diameters of particles to eject into the dripping
         scalarList diameter_;

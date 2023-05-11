@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,6 +198,9 @@ protected:
 
         // Parcel properties
 
+            //- Initial mass [kg]
+            scalar mass0_;
+
             //- Mass fractions of gases []
             scalarField YGas_;
 
@@ -274,7 +277,8 @@ public:
         AddToPropertyList
         (
             ParcelType,
-            " nGas(Y1..YN)"
+            " mass0"
+          + " nGas(Y1..YN)"
           + " nLiquid(Y1..YN)"
           + " nSolid(Y1..YN)"
         );
@@ -330,6 +334,9 @@ public:
 
         // Access
 
+            //- Return const access to initial mass [kg]
+            inline scalar mass0() const;
+
             //- Return const access to mass fractions of gases
             inline const scalarField& YGas() const;
 
@@ -344,6 +351,9 @@ public:
 
 
         // Edit
+
+            //- Return access to initial mass [kg]
+            inline scalar& mass0();
 
             //- Return access to mass fractions of gases
             inline scalarField& YGas();

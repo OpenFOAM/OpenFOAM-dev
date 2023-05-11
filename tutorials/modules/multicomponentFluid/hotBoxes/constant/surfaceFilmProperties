@@ -43,13 +43,11 @@ forces
         distribution
         {
             type            normal;
-            normalDistribution
-            {
-                minValue        50;
-                maxValue        100;
-                expectation     75;
-                variance        100;
-            }
+            Q               0;
+            min             50;
+            max             100;
+            mu              75;
+            sigma           100;
         }
 
         zeroForcePatches ();
@@ -74,14 +72,12 @@ ejection
 
         parcelDistribution
         {
-            type         RosinRammler;
-            RosinRammlerDistribution
-            {
-                minValue        5e-04;
-                maxValue        0.0012;
-                d               7.5e-05;
-                n               0.5;
-            }
+            type            RosinRammler;
+            Q               0;
+            min             5e-04;
+            max             0.0012;
+            d               7.5e-05;
+            n               0.5;
         }
     }
 }

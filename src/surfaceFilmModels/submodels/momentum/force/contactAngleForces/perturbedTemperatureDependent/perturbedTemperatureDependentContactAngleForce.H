@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,8 +30,7 @@ Description
 
     The contact angle in degrees is specified as a Foam::Function1 type, to
     enable the use of, e.g.  constant, polynomial, table values and the
-    stochastic perturbation obtained from a
-    Foam::distributionModels::distributionModel
+    stochastic perturbation obtained from a Foam::distribution
 
 See also
     Foam::surfaceFilmModels::contactAngleForce
@@ -39,7 +38,7 @@ See also
     temperatureDependentContactAngleForce
     Foam::surfaceFilmModels::distributionContactAngleForce
     Foam::Function1s
-    Foam::distributionModel
+    Foam::distribution
 
 SourceFiles
     perturbedTemperatureDependentContactAngleForce.C
@@ -51,7 +50,7 @@ SourceFiles
 
 #include "contactAngleForce.H"
 #include "Function1.H"
-#include "distributionModel.H"
+#include "distribution.H"
 #include "Random.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -78,7 +77,7 @@ class perturbedTemperatureDependentContactAngleForce
         Random rndGen_;
 
         //- Parcel size PDF model
-        const autoPtr<distributionModel> distribution_;
+        const autoPtr<distribution> distribution_;
 
 
 protected:

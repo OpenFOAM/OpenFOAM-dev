@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,39 +132,6 @@ Foam::scalar Foam::InjectionModelList<CloudType>::timeEnd() const
     }
 
     return maxTime;
-}
-
-
-template<class CloudType>
-Foam::scalar Foam::InjectionModelList<CloudType>::volumeToInject
-(
-    const scalar time0,
-    const scalar time1
-)
-{
-    scalar vol = 0.0;
-    forAll(*this, i)
-    {
-        vol += this->operator[](i).volumeToInject(time0, time1);
-    }
-
-    return vol;
-}
-
-
-template<class CloudType>
-Foam::scalar Foam::InjectionModelList<CloudType>::averageParcelMass()
-{
-    scalar mass = 0.0;
-    scalar massTotal = 0.0;
-    forAll(*this, i)
-    {
-        scalar mt = this->operator[](i).massTotal();
-        mass += mt*this->operator[](i).averageParcelMass();
-        massTotal += mt;
-    }
-
-    return mass/massTotal;
 }
 
 

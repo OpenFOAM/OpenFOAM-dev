@@ -138,7 +138,7 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
                 if (pPtr->nParticle() > 0.001)
                 {
                     // Check new parcel properties
-                    cloud.checkParcelProperties(*pPtr, false);
+                    cloud.checkParcelProperties(*pPtr, -1);
 
                     // Add the new parcel to the cloud
                     cloud.addParticle(pPtr);

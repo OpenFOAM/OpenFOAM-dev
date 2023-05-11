@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,8 +146,11 @@ protected:
 
         // Spray parcel properties
 
-            //- Initial droplet diameter
+            //- Initial droplet diameter [m]
             scalar d0_;
+
+            //- Initial mass [kg]
+            scalar mass0_;
 
             //- Injection position
             vector position0_;
@@ -176,15 +179,11 @@ protected:
             //- Stripped parcel mass due to breakup
             scalar ms_;
 
-            //- Injected from injector (needed e.g. for calculating distance
-            //  from injector)
-            scalar injector_;
+            //- Injector id
+            label injector_;
 
             //- Momentum relaxation time (needed for calculating parcel acc.)
             scalar tMom_;
-
-            //- Passive scalar (extra variable to be defined by user)
-            scalar user_;
 
 
 public:
@@ -238,6 +237,9 @@ public:
             //- Return const access to initial droplet diameter
             inline scalar d0() const;
 
+            //- Return const access to initial mass [kg]
+            inline scalar mass0() const;
+
             //- Return const access to initial droplet position
             inline const vector& position0() const;
 
@@ -266,19 +268,19 @@ public:
             inline scalar ms() const;
 
             //- Return const access to injector id
-            inline scalar injector() const;
+            inline label injector() const;
 
             //- Return const access to momentum relaxation time
             inline scalar tMom() const;
-
-            //- Return const access to passive user scalar
-            inline scalar user() const;
 
 
         // Edit
 
             //- Return access to initial droplet diameter
             inline scalar& d0();
+
+            //- Return access to initial mass [kg]
+            inline scalar& mass0();
 
             //- Return access to initial droplet position
             inline vector& position0();
@@ -308,13 +310,10 @@ public:
             inline scalar& ms();
 
             //- Return access to injector id
-            inline scalar& injector();
+            inline label& injector();
 
             //- Return access to momentum relaxation time
             inline scalar& tMom();
-
-            //- Return access to passive user scalar
-            inline scalar& user();
 
 
         // Main calculation loop

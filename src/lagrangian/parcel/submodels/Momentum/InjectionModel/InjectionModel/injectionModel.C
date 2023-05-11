@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,34 +23,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "distributionModel.H"
+#include "injectionModel.H"
 
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::distributionModel> Foam::distributionModel::New
-(
-    const dictionary& dict,
-    Random& rndGen
-)
+namespace Foam
 {
-    const word modelType(dict.lookup("type"));
-
-    Info<< "Selecting distribution model " << modelType << endl;
-
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(modelType);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown distribution model type " << modelType << nl << nl
-            << "Valid distribution model types are:" << nl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
-
-    return autoPtr<distributionModel>(cstrIter()(dict, rndGen));
+    template<>
+    const char* NamedEnum
+    <
+        Foam::injectionModel::uniformParcelSize,
+        3
+    >::names[] = {"nParticle", "surfaceArea", "volume"};
 }
+
+
+const Foam::NamedEnum<Foam::injectionModel::uniformParcelSize, 3>
+    Foam::injectionModel::uniformParcelSizeNames_;
 
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,19 +142,11 @@ Foam::ConeInjection<CloudType>::ConeInjection
     injectorCell_(-1),
     injectorTetFace_(-1),
     injectorTetPt_(-1),
-    duration_(this->coeffDict().template lookup<scalar>("duration")),
+    duration_(this->readDuration(dict, owner)),
+    massFlowRate_(this->readMassFlowRate(dict, owner, duration_)),
     parcelsPerSecond_
     (
         this->coeffDict().template lookup<scalar>("parcelsPerSecond")
-    ),
-    flowRateProfile_
-    (
-        TimeFunction1<scalar>
-        (
-            owner.db().time(),
-            "flowRateProfile",
-            this->coeffDict()
-        )
     ),
     thetaInner_
     (
@@ -176,9 +168,11 @@ Foam::ConeInjection<CloudType>::ConeInjection
     ),
     sizeDistribution_
     (
-        distributionModel::New
+        distribution::New
         (
-            this->coeffDict().subDict("sizeDistribution"), owner.rndGen()
+            this->coeffDict().subDict("sizeDistribution"),
+            owner.rndGen(),
+            this->sizeSampleQ()
         )
     ),
     dInner_(vGreat),
@@ -187,14 +181,9 @@ Foam::ConeInjection<CloudType>::ConeInjection
     Cd_(owner.db().time(), "Cd"),
     Pinj_(owner.db().time(), "Pinj")
 {
-    duration_ = owner.db().time().userTimeToTime(duration_);
-
     setInjectionMethod();
 
     setFlowType();
-
-    // Set total volume to inject
-    this->volumeTotal_ = flowRateProfile_.integral(0, duration_);
 
     topoChange();
 }
@@ -217,8 +206,8 @@ Foam::ConeInjection<CloudType>::ConeInjection
     injectorTetFace_(im.injectorTetFace_),
     injectorTetPt_(im.injectorTetPt_),
     duration_(im.duration_),
+    massFlowRate_(im.massFlowRate_),
     parcelsPerSecond_(im.parcelsPerSecond_),
-    flowRateProfile_(im.flowRateProfile_),
     thetaInner_(im.thetaInner_),
     thetaOuter_(im.thetaOuter_),
     sizeDistribution_(im.sizeDistribution_().clone().ptr()),
@@ -265,7 +254,7 @@ Foam::scalar Foam::ConeInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label Foam::ConeInjection<CloudType>::parcelsToInject
+Foam::label Foam::ConeInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1
@@ -287,7 +276,7 @@ Foam::label Foam::ConeInjection<CloudType>::parcelsToInject
 
 
 template<class CloudType>
-Foam::scalar Foam::ConeInjection<CloudType>::volumeToInject
+Foam::scalar Foam::ConeInjection<CloudType>::massToInject
 (
     const scalar time0,
     const scalar time1
@@ -295,7 +284,7 @@ Foam::scalar Foam::ConeInjection<CloudType>::volumeToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        return flowRateProfile_.integral(time0, time1);
+        return massFlowRate_.integral(time0, time1);
     }
     else
     {
@@ -465,10 +454,8 @@ void Foam::ConeInjection<CloudType>::setProperties
         case ftFlowRateAndDischarge:
         {
             const scalar A = 0.25*pi*(sqr(dOuter_) - sqr(dInner_));
-            const scalar massFlowRate =
-                this->massTotal()*flowRateProfile_.value(t)/this->volumeTotal();
             const scalar Umag =
-                massFlowRate/(parcel.rho()*Cd_.value(t)*A);
+                massFlowRate_.value(t)/(parcel.rho()*Cd_.value(t)*A);
             parcel.U() = Umag*dirVec;
             break;
         }
@@ -487,13 +474,6 @@ template<class CloudType>
 bool Foam::ConeInjection<CloudType>::fullyDescribed() const
 {
     return false;
-}
-
-
-template<class CloudType>
-bool Foam::ConeInjection<CloudType>::validInjection(const label)
-{
-    return true;
 }
 
 

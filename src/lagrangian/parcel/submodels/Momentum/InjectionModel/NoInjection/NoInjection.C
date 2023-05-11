@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,12 +59,12 @@ Foam::NoInjection<CloudType>::~NoInjection()
 template<class CloudType>
 Foam::scalar Foam::NoInjection<CloudType>::timeEnd() const
 {
-    return 0.0;
+    return 0;
 }
 
 
 template<class CloudType>
-Foam::label Foam::NoInjection<CloudType>::parcelsToInject
+Foam::label Foam::NoInjection<CloudType>::nParcelsToInject
 (
     const scalar,
     const scalar
@@ -75,13 +75,13 @@ Foam::label Foam::NoInjection<CloudType>::parcelsToInject
 
 
 template<class CloudType>
-Foam::scalar Foam::NoInjection<CloudType>::volumeToInject
+Foam::scalar Foam::NoInjection<CloudType>::massToInject
 (
     const scalar,
     const scalar
 )
 {
-    return 0.0;
+    return 0;
 }
 
 
@@ -113,19 +113,12 @@ void Foam::NoInjection<CloudType>::setProperties
     parcel.U() = Zero;
 
     // set particle diameter
-    parcel.d() = 0.0;
+    parcel.d() = 0;
 }
 
 
 template<class CloudType>
 bool Foam::NoInjection<CloudType>::fullyDescribed() const
-{
-    return false;
-}
-
-
-template<class CloudType>
-bool Foam::NoInjection<CloudType>::validInjection(const label)
 {
     return false;
 }

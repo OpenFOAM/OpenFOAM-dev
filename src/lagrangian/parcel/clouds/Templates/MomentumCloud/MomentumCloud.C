@@ -545,7 +545,7 @@ template<class CloudType>
 void Foam::MomentumCloud<CloudType>::checkParcelProperties
 (
     parcelType& parcel,
-    const bool fullyDescribed
+    const label injectori
 )
 {
     if (parcel.typeId() == -1)

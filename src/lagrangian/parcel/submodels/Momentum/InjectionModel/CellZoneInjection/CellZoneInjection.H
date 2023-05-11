@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ SourceFiles
 #define CellZoneInjection_H
 
 #include "InjectionModel.H"
-#include "distributionModel.H"
+#include "distribution.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,6 +66,9 @@ class CellZoneInjection
 
         //- Name of cell zone
         const word cellZoneName_;
+
+        //- Mass to inject
+        const scalar massTotal_;
 
         //- Number density
         const scalar numberDensity_;
@@ -89,7 +92,7 @@ class CellZoneInjection
         const vector U0_;
 
         //- Parcel size distribution model
-        const autoPtr<distributionModel> sizeDistribution_;
+        const autoPtr<distribution> sizeDistribution_;
 
 
     // Private Member Functions
@@ -137,13 +140,13 @@ public:
         virtual void topoChange();
 
         //- Return the end-of-injection time
-        scalar timeEnd() const;
+        virtual scalar timeEnd() const;
 
         //- Number of parcels to introduce relative to SOI
-        label parcelsToInject(const scalar time0, const scalar time1);
+        virtual label nParcelsToInject(const scalar time0, const scalar time1);
 
-        //- Volume of parcels to introduce relative to SOI
-        scalar volumeToInject(const scalar time0, const scalar time1);
+        //- Parcel mass to introduce relative to SOI
+        virtual scalar massToInject(const scalar time0, const scalar time1);
 
 
         // Injection geometry
@@ -172,10 +175,6 @@ public:
 
             //- Flag to identify whether model fully describes the parcel
             virtual bool fullyDescribed() const;
-
-            //- Return flag to identify whether or not injection of parcelI is
-            //  permitted
-            virtual bool validInjection(const label parcelI);
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,12 +208,12 @@ template<class CloudType>
 void Foam::ReactingCloud<CloudType>::checkParcelProperties
 (
     parcelType& parcel,
-    const bool fullyDescribed
+    const label injectori
 )
 {
-    CloudType::checkParcelProperties(parcel, fullyDescribed);
+    CloudType::checkParcelProperties(parcel, injectori);
 
-    if (fullyDescribed)
+    if (injectori != -1 && this->injectors()[injectori].fullyDescribed())
     {
         checkSuppliedComposition
         (
@@ -222,9 +222,6 @@ void Foam::ReactingCloud<CloudType>::checkParcelProperties
             "YMixture"
         );
     }
-
-    // derived information - store initial mass
-    parcel.mass0() = parcel.mass();
 }
 
 

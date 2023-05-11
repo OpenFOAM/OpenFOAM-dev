@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,7 @@ Foam::SprayParcel<ParcelType>::SprayParcel(Istream& is, bool readFields)
 :
     ParcelType(is, readFields),
     d0_(0.0),
+    mass0_(0.0),
     position0_(Zero),
     sigma_(0.0),
     mu_(0.0),
@@ -51,15 +52,15 @@ Foam::SprayParcel<ParcelType>::SprayParcel(Istream& is, bool readFields)
     yDot_(0.0),
     tc_(0.0),
     ms_(0.0),
-    injector_(1.0),
-    tMom_(great),
-    user_(0.0)
+    injector_(-1),
+    tMom_(great)
 {
     if (readFields)
     {
         if (is.format() == IOstream::ASCII)
         {
             d0_ = readScalar(is);
+            mass0_ = readScalar(is);
             is >> position0_;
             sigma_ = readScalar(is);
             mu_ = readScalar(is);
@@ -69,9 +70,8 @@ Foam::SprayParcel<ParcelType>::SprayParcel(Istream& is, bool readFields)
             yDot_ = readScalar(is);
             tc_ = readScalar(is);
             ms_ = readScalar(is);
-            injector_ = readScalar(is);
+            injector_ = readLabel(is);
             tMom_ = readScalar(is);
-            user_ = readScalar(is);
         }
         else
         {
@@ -114,6 +114,9 @@ void Foam::SprayParcel<ParcelType>::readFields
 
     IOField<scalar> d0(c.fieldIOobject("d0", IOobject::MUST_READ), write);
     c.checkFieldIOobject(c, d0);
+
+    IOField<scalar> mass0(c.fieldIOobject("mass0", IOobject::MUST_READ), write);
+    c.checkFieldIOobject(c, mass0);
 
     IOField<vector> position0
     (
@@ -170,7 +173,7 @@ void Foam::SprayParcel<ParcelType>::readFields
     );
     c.checkFieldIOobject(c, ms);
 
-    IOField<scalar> injector
+    IOField<label> injector
     (
         c.fieldIOobject("injector", IOobject::MUST_READ),
         write
@@ -184,18 +187,12 @@ void Foam::SprayParcel<ParcelType>::readFields
     );
     c.checkFieldIOobject(c, tMom);
 
-    IOField<scalar> user
-    (
-        c.fieldIOobject("user", IOobject::MUST_READ),
-        write
-    );
-    c.checkFieldIOobject(c, user);
-
     label i = 0;
     forAllIter(typename CloudType, c, iter)
     {
         SprayParcel<ParcelType>& p = iter();
         p.d0_ = d0[i];
+        p.mass0_ = mass0[i];
         p.position0_ = position0[i];
         p.sigma_ = sigma[i];
         p.mu_ = mu[i];
@@ -207,7 +204,6 @@ void Foam::SprayParcel<ParcelType>::readFields
         p.ms_ = ms[i];
         p.injector_ = injector[i];
         p.tMom_ = tMom[i];
-        p.user_ = user[i];
         i++;
     }
 }
@@ -234,6 +230,7 @@ void Foam::SprayParcel<ParcelType>::writeFields
     label np = c.size();
 
     IOField<scalar> d0(c.fieldIOobject("d0", IOobject::NO_READ), np);
+    IOField<scalar> mass0(c.fieldIOobject("mass0", IOobject::NO_READ), np);
     IOField<vector> position0
     (
         c.fieldIOobject("position0", IOobject::NO_READ),
@@ -251,19 +248,19 @@ void Foam::SprayParcel<ParcelType>::writeFields
     IOField<scalar> yDot(c.fieldIOobject("yDot", IOobject::NO_READ), np);
     IOField<scalar> tc(c.fieldIOobject("tc", IOobject::NO_READ), np);
     IOField<scalar> ms(c.fieldIOobject("ms", IOobject::NO_READ), np);
-    IOField<scalar> injector
+    IOField<label> injector
     (
         c.fieldIOobject("injector", IOobject::NO_READ),
         np
     );
     IOField<scalar> tMom(c.fieldIOobject("tMom", IOobject::NO_READ), np);
-    IOField<scalar> user(c.fieldIOobject("user", IOobject::NO_READ), np);
 
     label i = 0;
     forAllConstIter(typename CloudType, c, iter)
     {
         const SprayParcel<ParcelType>& p = iter();
         d0[i] = p.d0_;
+        mass0[i] = p.mass0_;
         position0[i] = p.position0_;
         sigma[i] = p.sigma_;
         mu[i] = p.mu_;
@@ -275,13 +272,13 @@ void Foam::SprayParcel<ParcelType>::writeFields
         ms[i] = p.ms_;
         injector[i] = p.injector_;
         tMom[i] = p.tMom_;
-        user[i] = p.user_;
         i++;
     }
 
     const bool write = np > 0;
 
     d0.write(write);
+    mass0.write(write);
     position0.write(write);
     sigma.write(write);
     mu.write(write);
@@ -293,7 +290,6 @@ void Foam::SprayParcel<ParcelType>::writeFields
     ms.write(write);
     injector.write(write);
     tMom.write(write);
-    user.write(write);
 }
 
 
@@ -310,6 +306,7 @@ Foam::Ostream& Foam::operator<<
     {
         os  << static_cast<const ParcelType&>(p)
         << token::SPACE << p.d0()
+        << token::SPACE << p.mass0()
         << token::SPACE << p.position0()
         << token::SPACE << p.sigma()
         << token::SPACE << p.mu()
@@ -320,8 +317,7 @@ Foam::Ostream& Foam::operator<<
         << token::SPACE << p.tc()
         << token::SPACE << p.ms()
         << token::SPACE << p.injector()
-        << token::SPACE << p.tMom()
-        << token::SPACE << p.user();
+        << token::SPACE << p.tMom();
     }
     else
     {

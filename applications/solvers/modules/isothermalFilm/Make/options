@@ -13,7 +13,6 @@ LIB_LIBS = \
     -lmomentumTransportModels \
     -lfilmCompressibleMomentumTransportModels \
     -linterfaceProperties \
-    -ldistributionModels \
     -lfiniteVolume \
     -lmeshTools \
     -lsampling \

@@ -84,7 +84,7 @@ subModels
 
             massTotal       10;
             parcelsPerSecond 1000;
-            parcelBasisType mass;
+            uniformParcelSize volume;
             flowRateProfile constant 0.1;
             Umag            constant 3.0;
             thetaInner      constant 0;
@@ -92,14 +92,12 @@ subModels
 
             sizeDistribution
             {
-                type         RosinRammler;
-                RosinRammlerDistribution
-                {
-                    minValue        5e-04;
-                    maxValue        0.0012;
-                    d               7.5e-05;
-                    n               0.5;
-                }
+                type            RosinRammler;
+                Q               3;
+                min             5e-04;
+                max             0.0012;
+                d               7.5e-05;
+                n               0.5;
             }
         }
 

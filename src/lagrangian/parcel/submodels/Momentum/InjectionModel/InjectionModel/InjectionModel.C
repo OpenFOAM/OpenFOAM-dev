@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,64 +27,144 @@ License
 #include "mathematicalConstants.H"
 #include "meshTools.H"
 #include "volFields.H"
+#include "Scale.H"
 
 using namespace Foam::constant::mathematical;
 
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::InjectionModel<CloudType>::prepareForNextTimeStep
+Foam::scalar Foam::InjectionModel<CloudType>::readMassTotal
 (
-    const scalar time,
-    label& newParcels,
-    scalar& newVolumeFraction
+    const dictionary& dict,
+    CloudType& owner
 )
 {
-    // Initialise values
-    newParcels = 0;
-    newVolumeFraction = 0.0;
-    bool validInjection = false;
-
-    // Return if not started injection event
-    if (time < SOI_)
+    if (dict.found("nParticle"))
     {
-        timeStep0_ = time;
-        return validInjection;
-    }
-
-    // Make times relative to SOI
-    scalar t0 = timeStep0_ - SOI_;
-    scalar t1 = time - SOI_;
-
-    // Number of parcels to inject
-    newParcels = this->parcelsToInject(t0, t1);
-
-    // Volume of parcels to inject
-    newVolumeFraction =
-        this->volumeToInject(t0, t1)
-       /(volumeTotal_ + rootVSmall);
-
-    if (newVolumeFraction > 0)
-    {
-        if (newParcels > 0)
+        if (dict.found("massTotal"))
         {
-            timeStep0_ = time;
-            validInjection = true;
+            IOWarningInFunction(dict)
+                << "If nParticle is specified then the massTotal "
+                << "setting has no effect " << endl;
         }
-        else
-        {
-            // Injection should have started, but not sufficient volume to
-            // produce (at least) 1 parcel - hold value of timeStep0_
-            validInjection = false;
-        }
-    }
-    else
-    {
-        timeStep0_ = time;
-        validInjection = false;
+
+        return NaN;
     }
 
-    return validInjection;
+    if (owner.solution().steadyState())
+    {
+        FatalErrorInFunction
+            << "The " << type() << " injection model is not compatible with "
+            << "steady state solution"
+            << exit(FatalError);
+
+        return NaN;
+    }
+
+    return dict.lookup<scalar>("massTotal");
+}
+
+
+template<class CloudType>
+Foam::scalar Foam::InjectionModel<CloudType>::readDuration
+(
+    const dictionary& dict,
+    CloudType& owner
+)
+{
+    const Time& time = owner.mesh().time();
+
+    if (owner.solution().steadyState())
+    {
+        return vGreat;
+    }
+
+    return
+        time.userTimeToTime
+        (
+            this->coeffDict().template lookup<scalar>("duration")
+        );
+}
+
+
+template<class CloudType>
+Foam::TimeFunction1<Foam::scalar>
+Foam::InjectionModel<CloudType>::readMassFlowRate
+(
+    const dictionary& dict,
+    CloudType& owner,
+    const scalar duration
+)
+{
+    const Time& time = owner.mesh().time();
+
+    if (dict.found("nParticle"))
+    {
+        if (dict.found("massFlowRate") || dict.found("massTotal"))
+        {
+            IOWarningInFunction(dict)
+                << "If nParticle is specified then massFlowRate and massTotal "
+                << "settings have no effect " << endl;
+        }
+
+        return
+            TimeFunction1<scalar>
+            (
+                time,
+                Function1s::Constant<scalar>("NaN", NaN)
+            );
+    }
+
+    if (owner.solution().steadyState())
+    {
+        return TimeFunction1<scalar>(time, "massFlowRate", dict);
+    }
+
+    const scalar massTotal = dict.lookup<scalar>("massTotal");
+
+    if (!dict.found("flowRateProfile"))
+    {
+        return
+            TimeFunction1<scalar>
+            (
+                time,
+                Function1s::Constant<scalar>("massFlowRate", massTotal/duration)
+            );
+    }
+
+    autoPtr<Function1<scalar>> flowRateProfile =
+        Function1<scalar>::New("flowRateProfile", dict);
+
+    const scalar sumFlowRateProfile = flowRateProfile->integral(0, duration);
+
+    return
+        TimeFunction1<scalar>
+        (
+            time,
+            Function1s::Scale<scalar>
+            (
+                "massFlowRate",
+                Function1s::Constant<scalar>("m", massTotal/sumFlowRateProfile),
+                Function1s::Constant<scalar>("one", scalar(1)),
+                flowRateProfile()
+            )
+        );
+}
+
+
+template<class CloudType>
+Foam::label Foam::InjectionModel<CloudType>::index() const
+{
+    forAll(this->owner().injectors(), i)
+    {
+        if (this->owner().injectors()(i) == this)
+        {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 
@@ -201,67 +281,122 @@ void Foam::InjectionModel<CloudType>::constrainPosition
 
 
 template<class CloudType>
-Foam::scalar Foam::InjectionModel<CloudType>::setNumberOfParticles
-(
-    const label parcels,
-    const scalar volumeFraction,
-    const scalar diameter,
-    const scalar rho
-)
+Foam::label Foam::InjectionModel<CloudType>::sizeSampleQ() const
 {
-    scalar nP = 0.0;
-    switch (parcelBasis_)
+    switch (uniformParcelSize_)
     {
-        case pbMass:
-        {
-            scalar volumep = pi/6.0*pow3(diameter);
-            scalar volumeTot = massTotal_/rho;
+        case uniformParcelSize::nParticle:
+            return 0;
+        case uniformParcelSize::surfaceArea:
+            return 2;
+        case uniformParcelSize::volume:
+            return 3;
+    }
 
-            nP = volumeFraction*volumeTot/(parcels*volumep);
-            break;
-        }
-        case pbNumber:
+    return -labelMax;
+}
+
+
+template<class CloudType>
+void Foam::InjectionModel<CloudType>::setNumberOfParticles
+(
+    PtrList<parcelType>& parcelPtrs,
+    const scalar mass
+) const
+{
+    auto size = [&](const parcelType& p)
+    {
+        switch (uniformParcelSize_)
         {
-            nP = massTotal_/(rho*volumeTotal_);
-            break;
+            case uniformParcelSize::nParticle:
+                return scalar(1);
+            case uniformParcelSize::surfaceArea:
+                return p.areaS();
+            case uniformParcelSize::volume:
+                return p.volume();
         }
-        case pbFixed:
+        return NaN;
+    };
+
+    // Determine the total mass and size of all created particles
+    scalar sumMassBySize = 0;
+    forAll(parcelPtrs, parceli)
+    {
+        if (parcelPtrs.set(parceli))
         {
-            nP = nParticleFixed_;
-            break;
-        }
-        default:
-        {
-            nP = 0.0;
-            FatalErrorInFunction
-                << "Unknown parcelBasis type" << nl
-                << exit(FatalError);
+            const parcelType& p = parcelPtrs[parceli];
+            sumMassBySize += p.mass()/size(p);
         }
     }
 
-    return nP;
+    reduce(sumMassBySize, sumOp<scalar>());
+
+    // Set the numbers of particles on each parcel
+    forAll(parcelPtrs, parceli)
+    {
+        if (parcelPtrs.set(parceli))
+        {
+            parcelType& p = parcelPtrs[parceli];
+            p.nParticle() = mass/size(p)/sumMassBySize;
+        }
+    }
+
+    // Check that the constraints are correct
+    if (debug)
+    {
+        scalar massN = 0, minSizeN = vGreat, maxSizeN = -vGreat;
+        forAll(parcelPtrs, parceli)
+        {
+            if (parcelPtrs.set(parceli))
+            {
+                const parcelType& p = parcelPtrs[parceli];
+                massN += p.nParticle()*p.mass();
+                minSizeN = min(minSizeN, p.nParticle()*size(p));
+                maxSizeN = max(minSizeN, p.nParticle()*size(p));
+            }
+        }
+
+        reduce(massN, sumOp<scalar>());
+
+        if (mag(massN - mass) > rootSmall*(massN + mass)/2)
+        {
+            FatalErrorInFunction
+                << "Parcels do not have the required mass"
+                << exit(FatalError);
+        }
+
+        reduce(minSizeN, minOp<scalar>());
+        reduce(maxSizeN, maxOp<scalar>());
+
+        if (maxSizeN - minSizeN > rootSmall*(maxSizeN + minSizeN)/2)
+        {
+            FatalErrorInFunction
+                << "Parcel sizes are not uniform"
+                << exit(FatalError);
+        }
+    }
 }
 
 
 template<class CloudType>
 void Foam::InjectionModel<CloudType>::postInjectCheck
 (
-    const label parcelsAdded,
+    const label nParcelsAdded,
     const scalar massAdded
 )
 {
-    const label allParcelsAdded = returnReduce(parcelsAdded, sumOp<label>());
+    const label allNParcelsAdded = returnReduce(nParcelsAdded, sumOp<label>());
 
-    if (allParcelsAdded > 0)
+    if (allNParcelsAdded > 0)
     {
         Info<< nl
             << "Cloud: " << this->owner().name()
             << " injector: " << this->modelName() << nl
-            << "    Added " << allParcelsAdded << " new parcels" << nl << endl;
+            << "    Added " << allNParcelsAdded << " new parcels" << nl << endl;
     }
 
     // Increment total number of parcels added
-    parcelsAddedTotal_ += allParcelsAdded;
+    parcelsAddedTotal_ += allNParcelsAdded;
 
     // Increment total mass injected
     massInjected_ += returnReduce(massAdded, sumOp<scalar>());
@@ -280,19 +415,16 @@ template<class CloudType>
 Foam::InjectionModel<CloudType>::InjectionModel(CloudType& owner)
 :
     CloudSubModelBase<CloudType>(owner),
-    SOI_(0.0),
-    volumeTotal_(0.0),
-    massTotal_(0.0),
-    massFlowRate_(owner.db().time(), "massFlowRate"),
+    SOI_(0),
     massInjected_(this->template getModelProperty<scalar>("massInjected")),
     nInjections_(this->template getModelProperty<label>("nInjections")),
     parcelsAddedTotal_
     (
         this->template getModelProperty<scalar>("parcelsAddedTotal")
     ),
-    parcelBasis_(pbNumber),
-    nParticleFixed_(0.0),
-    time0_(0.0),
+    nParticleFixed_(-vGreat),
+    uniformParcelSize_(uniformParcelSize::nParticle),
+    time0_(0),
     timeStep0_(this->template getModelProperty<scalar>("timeStep0"))
 {}
 
@@ -307,65 +439,55 @@ Foam::InjectionModel<CloudType>::InjectionModel
 )
 :
     CloudSubModelBase<CloudType>(modelName, owner, dict, typeName, modelType),
-    SOI_(0.0),
-    volumeTotal_(0.0),
-    massTotal_(0.0),
-    massFlowRate_(owner.db().time(), "massFlowRate"),
+    SOI_(0),
     massInjected_(this->template getModelProperty<scalar>("massInjected")),
     nInjections_(this->template getModelProperty<scalar>("nInjections")),
     parcelsAddedTotal_
     (
         this->template getModelProperty<scalar>("parcelsAddedTotal")
     ),
-    parcelBasis_(pbNumber),
-    nParticleFixed_(0.0),
+    nParticleFixed_(dict.lookupOrDefault<scalar>("nParticle", -vGreat)),
+    uniformParcelSize_
+    (
+        uniformParcelSizeNames_
+        [
+            !dict.found("parcelBasisType") && nParticleFixed_ > 0
+          ? dict.lookupOrDefault<word>
+            (
+                "uniformParcelSize",
+                uniformParcelSizeNames_[uniformParcelSize::nParticle]
+            )
+          : dict.lookup<word>("uniformParcelSize")
+        ]
+    ),
     time0_(owner.db().time().value()),
     timeStep0_(this->template getModelProperty<scalar>("timeStep0"))
 {
-    // Provide some info
-    // - also serves to initialise mesh dimensions - needed for parallel runs
-    //   due to lazy evaluation of valid mesh dimensions
+    // Provide some info. Also serves to initialise mesh dimensions. This may
+    // be needed for parallel runs due to lazy evaluation of valid mesh
+    // dimensions.
     Info<< "    Constructing " << owner.mesh().nGeometricD() << "-D injection"
         << endl;
 
+    if
+    (
+        nParticleFixed_ > 0
+     && uniformParcelSize_ != uniformParcelSize::nParticle
+    )
+    {
+        FatalIOErrorInFunction(dict)
+            << "If nParticle is specified then the uniformParcelSize must be "
+            << uniformParcelSizeNames_[uniformParcelSize::nParticle]
+            << exit(FatalIOError);
+    }
+
     if (owner.solution().transient())
     {
-        this->coeffDict().lookup("massTotal") >> massTotal_;
-        this->coeffDict().lookup("SOI") >> SOI_;
-        SOI_ = owner.db().time().userTimeToTime(SOI_);
-    }
-    else
-    {
-        massFlowRate_.reset(this->coeffDict());
-        massTotal_ = massFlowRate_.value(owner.db().time().value());
-    }
-
-    const word parcelBasisType = this->coeffDict().lookup("parcelBasisType");
-
-    if (parcelBasisType == "mass")
-    {
-        parcelBasis_ = pbMass;
-    }
-    else if (parcelBasisType == "number")
-    {
-        parcelBasis_ = pbNumber;
-    }
-    else if (parcelBasisType == "fixed")
-    {
-        parcelBasis_ = pbFixed;
-
-        Info<< "    Choosing nParticle to be a fixed value, massTotal "
-            << "variable now does not determine anything."
-            << endl;
-
-        nParticleFixed_ =
-            this->coeffDict().template lookup<scalar>("nParticle");
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "parcelBasisType must be either 'number', 'mass' or 'fixed'"
-            << nl << exit(FatalError);
+        SOI_ =
+            owner.db().time().userTimeToTime
+            (
+                this->coeffDict().template lookup<scalar>("SOI")
+            );
     }
 }
 
@@ -378,14 +500,11 @@ Foam::InjectionModel<CloudType>::InjectionModel
 :
     CloudSubModelBase<CloudType>(im),
     SOI_(im.SOI_),
-    volumeTotal_(im.volumeTotal_),
-    massTotal_(im.massTotal_),
-    massFlowRate_(im.massFlowRate_),
     massInjected_(im.massInjected_),
     nInjections_(im.nInjections_),
     parcelsAddedTotal_(im.parcelsAddedTotal_),
-    parcelBasis_(im.parcelBasis_),
     nParticleFixed_(im.nParticleFixed_),
+    uniformParcelSize_(im.uniformParcelSize_),
     time0_(im.time0_),
     timeStep0_(im.timeStep0_)
 {}
@@ -408,17 +527,10 @@ void Foam::InjectionModel<CloudType>::topoChange()
 template<class CloudType>
 Foam::scalar Foam::InjectionModel<CloudType>::averageParcelMass()
 {
-    label nTotal = 0.0;
-    if (this->owner().solution().transient())
-    {
-        nTotal = parcelsToInject(0.0, timeEnd() - timeStart());
-    }
-    else
-    {
-        nTotal = parcelsToInject(0.0, 1.0);
-    }
+    const scalar deltaT =
+        this->owner().solution().transient() ? timeEnd() - timeStart() : 1;
 
-    return massTotal_/nTotal;
+    return massToInject(0, deltaT)/nParcelsToInject(0, deltaT);
 }
 
 
@@ -434,106 +546,168 @@ void Foam::InjectionModel<CloudType>::inject
 
     const scalar time = this->owner().db().time().value();
 
-    // Prepare for next time step
-    label parcelsAdded = 0;
-    scalar massAdded = 0.0;
-    label newParcels = 0;
-    scalar newVolumeFraction = 0.0;
+    // Reset counters
+    label nParcelsAdded = 0;
+    scalar massAdded = 0;
 
-    if (prepareForNextTimeStep(time, newParcels, newVolumeFraction))
+    // Get amounts to inject
+    label nParcels;
+    scalar mass;
+    bool inject;
+    if (time < SOI_)
+    {
+        // Injection has not started yet
+        nParcels = 0;
+        mass = 0;
+        inject = false;
+        timeStep0_ = time;
+    }
+    else
+    {
+        // Injection has started. Get amounts between times.
+        const scalar t0 = timeStep0_ - SOI_, t1 = time - SOI_;
+        nParcels = nParcelsToInject(t0, t1);
+        mass = nParticleFixed_ < 0 ? massToInject(t0, t1) : NaN;
+
+        if (nParcels > 0 && (nParticleFixed_ > 0 || mass > 0))
+        {
+            // Injection is valid
+            inject = true;
+            timeStep0_ = time;
+        }
+        else if (nParcels == 0 && (nParticleFixed_ < 0 && mass > 0))
+        {
+            // Injection should have started, but there is not a sufficient
+            // amount to inject a single parcel. Do not inject, but hold
+            // advancement of the old-time so that the mass gets added to a
+            // subsequent injection.
+            inject = false;
+        }
+        else
+        {
+            // Nothing to inject
+            inject = false;
+            timeStep0_ = time;
+        }
+    }
+
+    // Do injection
+    if (inject)
     {
         // Duration of injection period during this timestep
         const scalar deltaT =
-            max(0.0, min(td.trackTime(), min(time - SOI_, timeEnd() - time0_)));
+            max
+            (
+                scalar(0),
+                min
+                (
+                    td.trackTime(),
+                    min
+                    (
+                        time - SOI_,
+                        timeEnd() - time0_
+                    )
+                )
+            );
 
         // Pad injection time if injection starts during this timestep
-        const scalar padTime = max(0.0, SOI_ - time0_);
+        const scalar padTime = max(scalar(0), SOI_ - time0_);
 
-        // Introduce new parcels linearly across carrier phase timestep
-        for (label parcelI = 0; parcelI < newParcels; parcelI++)
+        // Create new parcels linearly across carrier phase timestep
+        PtrList<parcelType> parcelPtrs(nParcels);
+        forAll(parcelPtrs, parceli)
         {
-            if (validInjection(parcelI))
+            // Calculate the pseudo time of injection for parcel 'parceli'
+            scalar timeInj = time0_ + padTime + deltaT*parceli/nParcels;
+
+            // Determine the injection coordinates and owner cell,
+            // tetFace and tetPt
+            barycentric coordinates = barycentric::uniform(NaN);
+            label celli = -1, tetFacei = -1, tetPti = -1, facei = -1;
+            setPositionAndCell
+            (
+                parceli,
+                nParcels,
+                timeInj,
+                coordinates,
+                celli,
+                tetFacei,
+                tetPti,
+                facei
+            );
+
+            if (celli > -1)
             {
-                // Calculate the pseudo time of injection for parcel 'parcelI'
-                scalar timeInj = time0_ + padTime + deltaT*parcelI/newParcels;
+                // Lagrangian timestep
+                const scalar dt = timeInj - time0_;
 
-                // Determine the injection coordinates and owner cell,
-                // tetFace and tetPt
-                barycentric coordinates = barycentric::uniform(NaN);
-                label celli = -1, tetFacei = -1, tetPti = -1, facei = -1;
-                setPositionAndCell
+                // Create a new parcel
+                parcelPtrs.set
                 (
-                    parcelI,
-                    newParcels,
-                    timeInj,
-                    coordinates,
-                    celli,
-                    tetFacei,
-                    tetPti,
-                    facei
-                );
-
-                if (celli > -1)
-                {
-                    // Lagrangian timestep
-                    const scalar dt = timeInj - time0_;
-
-                    // Create a new parcel
-                    parcelType* pPtr =
-                        new parcelType
-                        (
-                            mesh,
-                            coordinates,
-                            celli,
-                            tetFacei,
-                            tetPti,
-                            facei
-                        );
-
-                    // Correct the position for reduced-dimension cases
-                    constrainPosition(td, *pPtr);
-
-                    // Check/set new parcel thermo properties
-                    cloud.setParcelThermoProperties(*pPtr);
-
-                    // Assign new parcel properties in injection model
-                    setProperties(parcelI, newParcels, timeInj, *pPtr);
-
-                    // Check/set new parcel injection properties
-                    cloud.checkParcelProperties(*pPtr, fullyDescribed());
-
-                    // Apply correction to velocity for 2-D cases
-                    meshTools::constrainDirection
+                    parceli,
+                    new parcelType
                     (
                         mesh,
-                        mesh.solutionD(),
-                        pPtr->U()
-                    );
+                        coordinates,
+                        celli,
+                        tetFacei,
+                        tetPti,
+                        facei
+                    )
+                );
+                parcelType& p = parcelPtrs[parceli];
 
-                    // Number of particles per parcel
-                    pPtr->nParticle() =
-                        setNumberOfParticles
-                        (
-                            newParcels,
-                            newVolumeFraction,
-                            pPtr->d(),
-                            pPtr->rho()
-                        );
+                // Correct the position for reduced-dimension cases
+                constrainPosition(td, p);
 
-                    // Modify the step fraction so that the particles are
-                    // injected continually through the time-step
-                    pPtr->stepFraction() = dt/td.trackTime();
+                // Check/set new parcel thermo properties
+                cloud.setParcelThermoProperties(p);
 
-                    // Add the new parcel
-                    parcelsAdded ++;
-                    massAdded += pPtr->nParticle()*pPtr->mass();
-                    cloud.addParticle(pPtr);
-                }
+                // Assign new parcel properties in injection model
+                setProperties(parceli, nParcels, timeInj, p);
+
+                // Check/set new parcel injection properties
+                cloud.checkParcelProperties(p, index());
+
+                // Apply correction to velocity for 2-D cases
+                meshTools::constrainDirection
+                (
+                    mesh,
+                    mesh.solutionD(),
+                    p.U()
+                );
+
+                // Modify the step fraction so that the particles are
+                // injected continually through the time-step
+                p.stepFraction() = dt/td.trackTime();
+
+                // Set the number of particles. If not fixed, this will set
+                // a junk value, which will get corrected below.
+                p.nParticle() = nParticleFixed_;
+            }
+        }
+
+        // Set the number of particles so that the introduced mass is correct
+        // and the uniform size is as specified
+        if (nParticleFixed_ < 0)
+        {
+            setNumberOfParticles(parcelPtrs, mass);
+        }
+
+        // Add the new parcels
+        forAll(parcelPtrs, parceli)
+        {
+            if (parcelPtrs.set(parceli))
+            {
+                parcelType& p = parcelPtrs[parceli];
+                nParcelsAdded ++;
+                massAdded += p.nParticle()*p.mass();
+                cloud.addParticle(parcelPtrs.set(parceli, nullptr).ptr());
             }
         }
     }
 
-    postInjectCheck(parcelsAdded, massAdded);
+    postInjectCheck(nParcelsAdded, massAdded);
 }
 
 
@@ -547,88 +721,99 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
 {
     const polyMesh& mesh = this->owner().mesh();
 
-    massTotal_ = massFlowRate_.value(mesh.time().value());
-
     // Reset counters
-    time0_ = 0.0;
-    label parcelsAdded = 0;
-    scalar massAdded = 0.0;
+    label nParcelsAdded = 0;
+    scalar massAdded = 0;
 
-    // Set number of new parcels to inject based on first second of injection
-    label newParcels = parcelsToInject(0.0, 1.0);
+    // Get amounts to inject based on first second of injection
+    const label nParcels = nParcelsToInject(0, 1);
+    const scalar mass = nParticleFixed_ < 0 ? massToInject(0, 1) : NaN;
 
-    // Inject new parcels
-    for (label parcelI = 0; parcelI < newParcels; parcelI++)
+    // Do injection
+    if (nParcels > 0)
     {
-        // Volume to inject is split equally amongst all parcel streams
-        scalar newVolumeFraction = 1.0/scalar(newParcels);
-
-        // Determine the injection coordinates and owner cell,
-        // tetFace and tetPt
-        barycentric coordinates = barycentric::uniform(NaN);
-        label celli = -1, tetFacei = -1, tetPti = -1, facei = -1;
-        setPositionAndCell
-        (
-            parcelI,
-            newParcels,
-            0,
-            coordinates,
-            celli,
-            tetFacei,
-            tetPti,
-            facei
-        );
-
-        if (celli > -1)
+        PtrList<parcelType> parcelPtrs(nParcels);
+        forAll(parcelPtrs, parceli)
         {
-            // Create a new parcel
-            parcelType* pPtr =
-                new parcelType
+            // Determine the injection coordinates and owner cell,
+            // tetFace and tetPt
+            barycentric coordinates = barycentric::uniform(NaN);
+            label celli = -1, tetFacei = -1, tetPti = -1, facei = -1;
+            setPositionAndCell
+            (
+                parceli,
+                nParcels,
+                0,
+                coordinates,
+                celli,
+                tetFacei,
+                tetPti,
+                facei
+            );
+
+            if (celli > -1)
+            {
+                // Create a new parcel
+                parcelPtrs.set
                 (
-                    mesh,
-                    coordinates,
-                    celli,
-                    tetFacei,
-                    tetPti,
-                    facei
+                    parceli,
+                    new parcelType
+                    (
+                        mesh,
+                        coordinates,
+                        celli,
+                        tetFacei,
+                        tetPti,
+                        facei
+                    )
                 );
+                parcelType& p = parcelPtrs[parceli];
 
-            // Correct the position for reduced-dimension cases
-            constrainPosition(td, *pPtr);
+                // Correct the position for reduced-dimension cases
+                constrainPosition(td, p);
 
-            // Check/set new parcel thermo properties
-            cloud.setParcelThermoProperties(*pPtr);
+                // Check/set new parcel thermo properties
+                cloud.setParcelThermoProperties(p);
 
-            // Assign new parcel properties in injection model
-            setProperties(parcelI, newParcels, 0.0, *pPtr);
+                // Assign new parcel properties in injection model
+                setProperties(parceli, nParcels, 0, p);
 
-            // Check/set new parcel injection properties
-            cloud.checkParcelProperties(*pPtr, fullyDescribed());
+                // Check/set new parcel injection properties
+                cloud.checkParcelProperties(p, index());
 
-            // Apply correction to velocity for 2-D cases
-            meshTools::constrainDirection(mesh, mesh.solutionD(), pPtr->U());
+                // Apply correction to velocity for 2-D cases
+                meshTools::constrainDirection(mesh, mesh.solutionD(), p.U());
 
-            // Number of particles per parcel
-            pPtr->nParticle() =
-                setNumberOfParticles
-                (
-                    1,
-                    newVolumeFraction,
-                    pPtr->d(),
-                    pPtr->rho()
-                );
+                // Initial step fraction
+                p.stepFraction() = 0;
 
-            // Initial step fraction
-            pPtr->stepFraction() = 0;
+                // Set the number of particles. If not fixed, this will set
+                // a junk value, which will get corrected below.
+                p.nParticle() = nParticleFixed_;
+            }
+        }
 
-            // Add the new parcel
-            parcelsAdded ++;
-            massAdded += pPtr->nParticle()*pPtr->mass();
-            cloud.addParticle(pPtr);
+        // Set the number of particles so that the introduced mass is correct
+        // and the uniform size is as specified
+        if (nParticleFixed_ < 0)
+        {
+            setNumberOfParticles(parcelPtrs, mass);
+        }
+
+        // Add the new parcels
+        forAll(parcelPtrs, parceli)
+        {
+            if (parcelPtrs.set(parceli))
+            {
+                parcelType& p = parcelPtrs[parceli];
+                nParcelsAdded ++;
+                massAdded += p.nParticle()*p.mass();
+                cloud.addParticle(parcelPtrs.set(parceli, nullptr).ptr());
+            }
         }
     }
 
-    postInjectCheck(parcelsAdded, massAdded);
+    postInjectCheck(nParcelsAdded, massAdded);
 }
 
 

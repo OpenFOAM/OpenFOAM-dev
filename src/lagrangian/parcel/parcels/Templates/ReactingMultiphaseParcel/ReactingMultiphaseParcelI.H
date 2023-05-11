@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,6 +78,7 @@ inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 )
 :
     ParcelType(mesh, coordinates, celli, tetFacei, tetPti, facei),
+    mass0_(0),
     YGas_(0),
     YLiquid_(0),
     YSolid_(0),
@@ -94,6 +95,7 @@ inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 )
 :
     ParcelType(mesh, position, celli),
+    mass0_(0),
     YGas_(0),
     YLiquid_(0),
     YSolid_(0),
@@ -137,7 +139,14 @@ hRetentionCoeff() const
 }
 
 
-// * * * * * * * * * * ThermoParcel Member Functions * * * * * * * * * * * * //
+// * * * * * * * * ReactingMultiphaseParcel Member Functions * * * * * * * * //
+
+template<class ParcelType>
+inline Foam::scalar Foam::ReactingMultiphaseParcel<ParcelType>::mass0() const
+{
+    return mass0_;
+}
+
 
 template<class ParcelType>
 inline const Foam::scalarField& Foam::ReactingMultiphaseParcel<ParcelType>::
@@ -168,6 +177,13 @@ inline Foam::label
 Foam::ReactingMultiphaseParcel<ParcelType>::canCombust() const
 {
     return canCombust_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar& Foam::ReactingMultiphaseParcel<ParcelType>::mass0()
+{
+    return mass0_;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,6 +118,7 @@ inline Foam::SprayParcel<ParcelType>::SprayParcel
 :
     ParcelType(mesh, coordinates, celli, tetFacei, tetPti, facei),
     d0_(this->d()),
+    mass0_(this->mass()),
     position0_(this->position(mesh)),
     sigma_(0.0),
     mu_(0.0),
@@ -127,9 +128,8 @@ inline Foam::SprayParcel<ParcelType>::SprayParcel
     yDot_(0.0),
     tc_(0.0),
     ms_(0.0),
-    injector_(1.0),
-    tMom_(great),
-    user_(0.0)
+    injector_(-1),
+    tMom_(great)
 {}
 
 
@@ -143,6 +143,7 @@ inline Foam::SprayParcel<ParcelType>::SprayParcel
 :
     ParcelType(mesh, position, celli),
     d0_(this->d()),
+    mass0_(this->mass()),
     position0_(this->position(mesh)),
     sigma_(0.0),
     mu_(0.0),
@@ -152,9 +153,8 @@ inline Foam::SprayParcel<ParcelType>::SprayParcel
     yDot_(0.0),
     tc_(0.0),
     ms_(0.0),
-    injector_(1.0),
-    tMom_(great),
-    user_(0.0)
+    injector_(-1),
+    tMom_(great)
 {}
 
 
@@ -182,6 +182,13 @@ template<class ParcelType>
 inline Foam::scalar Foam::SprayParcel<ParcelType>::d0() const
 {
     return d0_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar Foam::SprayParcel<ParcelType>::mass0() const
+{
+    return mass0_;
 }
 
 
@@ -249,7 +256,7 @@ inline Foam::scalar Foam::SprayParcel<ParcelType>::ms() const
 
 
 template<class ParcelType>
-inline Foam::scalar Foam::SprayParcel<ParcelType>::injector() const
+inline Foam::label Foam::SprayParcel<ParcelType>::injector() const
 {
     return injector_;
 }
@@ -263,16 +270,16 @@ inline Foam::scalar Foam::SprayParcel<ParcelType>::tMom() const
 
 
 template<class ParcelType>
-inline Foam::scalar Foam::SprayParcel<ParcelType>::user() const
+inline Foam::scalar& Foam::SprayParcel<ParcelType>::d0()
 {
-    return user_;
+    return d0_;
 }
 
 
 template<class ParcelType>
-inline Foam::scalar& Foam::SprayParcel<ParcelType>::d0()
+inline Foam::scalar& Foam::SprayParcel<ParcelType>::mass0()
 {
-    return d0_;
+    return mass0_;
 }
 
 
@@ -340,7 +347,7 @@ inline Foam::scalar& Foam::SprayParcel<ParcelType>::ms()
 
 
 template<class ParcelType>
-inline Foam::scalar& Foam::SprayParcel<ParcelType>::injector()
+inline Foam::label& Foam::SprayParcel<ParcelType>::injector()
 {
     return injector_;
 }
@@ -350,13 +357,6 @@ template<class ParcelType>
 inline Foam::scalar& Foam::SprayParcel<ParcelType>::tMom()
 {
     return tMom_;
-}
-
-
-template<class ParcelType>
-inline Foam::scalar& Foam::SprayParcel<ParcelType>::user()
-{
-    return user_;
 }
 
 

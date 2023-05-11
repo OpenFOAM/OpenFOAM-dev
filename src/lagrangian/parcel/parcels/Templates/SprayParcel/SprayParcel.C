@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,6 +153,8 @@ void Foam::SprayParcel<ParcelType>::calcAtomisation
     const scalar dt
 )
 {
+    if (injector_ == -1) return;
+
     typedef typename TrackCloudType::thermoCloudType thermoCloudType;
     const CompositionModel<thermoCloudType>& composition =
         cloud.composition();
@@ -169,7 +171,7 @@ void Foam::SprayParcel<ParcelType>::calcAtomisation
     // Calculate average gas density based on average temperature
     scalar rhoAv = td.pc()/(R*Tav);
 
-    scalar soi = cloud.injectors().timeStart();
+    scalar soi = cloud.injectors()[injector_].timeStart();
     scalar currentTime = cloud.db().time().value();
     const vector& pos = this->position(td.mesh);
     const vector& injectionPos = this->position0();
@@ -179,10 +181,12 @@ void Foam::SprayParcel<ParcelType>::calcAtomisation
     scalar Urel = mag(this->U());
 
     scalar t0 = max(0.0, currentTime - this->age() - soi);
-    scalar t1 = min(t0 + dt, cloud.injectors().timeEnd() - soi);
+    scalar t1 = min(t0 + dt, cloud.injectors()[injector_].timeEnd() - soi);
+
+    scalar rho0 = mass0_/this->volume(d0_);
 
     // This should be the vol flow rate from when the parcel was injected
-    scalar volFlowRate = cloud.injectors().volumeToInject(t0, t1)/dt;
+    scalar volFlowRate = cloud.injectors()[injector_].massToInject(t0, t1)/rho0;
 
     scalar chi = 0.0;
     if (atomisation.calcChi())
@@ -276,6 +280,7 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
             Urel,
             Urmag,
             this->tMom(),
+            injector_,
             dChild,
             parcelMassChild
         )
@@ -306,7 +311,6 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
         child->ms() = -great;
         child->injector() = this->injector();
         child->tMom() = massChild/(Fcp.Sp() + Fncp.Sp());
-        child->user() = 0.0;
         child->calcDispersion(cloud, td, dt);
 
         cloud.addParticle(child);
@@ -426,8 +430,7 @@ Foam::SprayParcel<ParcelType>::SprayParcel(const SprayParcel<ParcelType>& p)
     tc_(p.tc_),
     ms_(p.ms_),
     injector_(p.injector_),
-    tMom_(p.tMom_),
-    user_(p.user_)
+    tMom_(p.tMom_)
 {}
 
 

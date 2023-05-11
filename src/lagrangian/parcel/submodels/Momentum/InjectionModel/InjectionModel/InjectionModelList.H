@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,12 +89,6 @@ public:
 
             //- Return the maximum end-of-injection time
             scalar timeEnd() const;
-
-            //- Volume of parcels to introduce relative to SOI
-            scalar volumeToInject(const scalar time0, const scalar time1);
-
-            //- Return the average parcel mass
-            scalar averageParcelMass();
 
 
         // Edit

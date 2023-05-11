@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,94 +22,51 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::distributionModels::exponential
+    Foam::injectionModel
 
 Description
-    exponential distribution model
+    Non-templated base class for lagrangian injection models
 
 SourceFiles
-    exponential.C
+    injectionModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef exponential_H
-#define exponential_H
+#ifndef injectionModel_H
+#define injectionModel_H
 
-#include "distributionModel.H"
+#include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace distributionModels
-{
 
 /*---------------------------------------------------------------------------*\
-                         Class exponential Declaration
+                          Class injectionModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class exponential
-:
-    public distributionModel
+class injectionModel
 {
-    // Private Data
-
-        //- Distribution minimum
-        scalar minValue_;
-
-        //- Distribution maximum
-        scalar maxValue_;
-
-
-        // Model coefficients
-
-            scalar lambda_;
-
-
 public:
 
-    //- Runtime type information
-    TypeName("exponential");
+    // Public Enumerations
 
-
-    // Constructors
-
-        //- Construct from components
-        exponential(const dictionary& dict, Random& rndGen);
-
-        //- Construct copy
-        exponential(const exponential& p);
-
-        //- Construct and return a clone
-        virtual autoPtr<distributionModel> clone() const
+        //- Enumeration for the parcels' uniform size
+        enum class uniformParcelSize
         {
-            return autoPtr<distributionModel>(new exponential(*this));
-        }
+            nParticle,
+            surfaceArea,
+            volume
+        };
 
-
-    //- Destructor
-    virtual ~exponential();
-
-
-    // Member Functions
-
-        //- Sample the distributionModel
-        virtual scalar sample() const;
-
-        //- Return the minimum value
-        virtual scalar minValue() const;
-
-        //- Return the maximum value
-        virtual scalar maxValue() const;
-
-        //- Return the mean value
-        virtual scalar meanValue() const;
+        //- Names of the parcels' uniform size
+        static const NamedEnum<uniformParcelSize, 3> uniformParcelSizeNames_;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace distributionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

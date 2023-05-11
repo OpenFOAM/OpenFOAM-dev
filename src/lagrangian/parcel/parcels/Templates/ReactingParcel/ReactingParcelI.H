@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,6 @@ inline Foam::ReactingParcel<ParcelType>::ReactingParcel
 )
 :
     ParcelType(mesh, coordinates, celli, tetFacei, tetPti, facei),
-    mass0_(0.0),
     Y_(0)
 {}
 
@@ -87,7 +86,6 @@ inline Foam::ReactingParcel<ParcelType>::ReactingParcel
 )
 :
     ParcelType(mesh, position, celli),
-    mass0_(0.0),
     Y_(0)
 {}
 
@@ -110,26 +108,12 @@ Foam::ReactingParcel<ParcelType>::constantProperties::constantVolume() const
 }
 
 
-// * * * * * * * * * * ThermoParcel Member Functions * * * * * * * * * * * * //
-
-template<class ParcelType>
-inline Foam::scalar Foam::ReactingParcel<ParcelType>::mass0() const
-{
-    return mass0_;
-}
-
+// * * * * * * * * * * ReactingParcel Member Functions * * * * * * * * * * * //
 
 template<class ParcelType>
 inline const Foam::scalarField& Foam::ReactingParcel<ParcelType>::Y() const
 {
     return Y_;
-}
-
-
-template<class ParcelType>
-inline Foam::scalar& Foam::ReactingParcel<ParcelType>::mass0()
-{
-    return mass0_;
 }
 
 

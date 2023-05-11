@@ -71,7 +71,7 @@ subModels
             type            patchInjection;
             massTotal       40;
             SOI             1;
-            parcelBasisType mass;
+            uniformParcelSize volume;
             patchName       inlet;
             duration        4;
             parcelsPerSecond 100644;
@@ -79,14 +79,12 @@ subModels
             flowRateProfile constant 1;
             sizeDistribution
             {
-                type        normal;
-                normalDistribution
-                {
-                    expectation 100e-6;
-                    variance 25e-6;
-                    minValue 20e-6;
-                    maxValue 180e-6;
-                }
+                type            normal;
+                Q               3;
+                min             20e-6;
+                max             180e-6;
+                mu              100e-6;
+                sigma           25e-6;
             }
         }
     }

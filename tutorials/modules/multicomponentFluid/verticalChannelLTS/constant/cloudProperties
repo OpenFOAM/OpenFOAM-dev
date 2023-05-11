@@ -81,38 +81,35 @@ subModels
         {
             type            patchInjection;
             massFlowRate    0.8e-03;
-            parcelBasisType mass;
+            uniformParcelSize volume;
             patchName       inletCentral;
             parcelsPerSecond 100;
-            duration        1; // NOTE: set to 1 for steady state
             U0              (0 40 0);
             flowRateProfile constant 1;
             sizeDistribution
             {
-                type        general;
-                generalDistribution
-                {
-                    distribution
-                    (
-                        (10e-06      0.0025)
-                        (15e-06      0.0528)
-                        (20e-06      0.2795)
-                        (25e-06      1.0918)
-                        (30e-06      2.3988)
-                        (35e-06      4.4227)
-                        (40e-06      6.3888)
-                        (45e-06      8.6721)
-                        (50e-06      10.3153)
-                        (55e-06      11.6259)
-                        (60e-06      12.0030)
-                        (65e-06      10.4175)
-                        (70e-06      10.8427)
-                        (75e-06      8.0016)
-                        (80e-06      6.1333)
-                        (85e-06      3.8827)
-                        (90e-06      3.4688)
-                    );
-                }
+                type            tabulatedDensity;
+                Q               3;
+                distribution
+                (
+                    (10e-06      0.0025)
+                    (15e-06      0.0528)
+                    (20e-06      0.2795)
+                    (25e-06      1.0918)
+                    (30e-06      2.3988)
+                    (35e-06      4.4227)
+                    (40e-06      6.3888)
+                    (45e-06      8.6721)
+                    (50e-06      10.3153)
+                    (55e-06      11.6259)
+                    (60e-06      12.0030)
+                    (65e-06      10.4175)
+                    (70e-06      10.8427)
+                    (75e-06      8.0016)
+                    (80e-06      6.1333)
+                    (85e-06      3.8827)
+                    (90e-06      3.4688)
+                );
             }
         }
     }
