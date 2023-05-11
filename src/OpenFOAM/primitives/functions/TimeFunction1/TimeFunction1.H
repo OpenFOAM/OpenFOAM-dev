@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,6 +84,13 @@ public:
             const Time& time,
             const word& name,
             const dictionary& dict
+        );
+
+        //- Construct from time and Function1
+        TimeFunction1
+        (
+            const Time& time,
+            const Function1<Type>& function
         );
 
         //- Construct null from time and name

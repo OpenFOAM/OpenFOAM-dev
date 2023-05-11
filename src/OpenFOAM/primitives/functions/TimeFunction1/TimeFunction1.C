@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,19 @@ Foam::TimeFunction1<Type>::TimeFunction1
     time_(time),
     name_(name),
     function_(Function1<Type>::New(name, dict))
+{}
+
+
+template<class Type>
+Foam::TimeFunction1<Type>::TimeFunction1
+(
+    const Time& time,
+    const Function1<Type>& function
+)
+:
+    time_(time),
+    name_(function.name()),
+    function_(function.clone().ptr())
 {}
 
 
