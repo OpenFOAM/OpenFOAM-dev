@@ -141,7 +141,9 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         (
             IOobject::groupName("alphaPhi", this->name()),
             fluid.mesh().time().name(),
-            fluid.mesh()
+            fluid.mesh(),
+            IOobject::READ_IF_PRESENT,
+            IOobject::NO_WRITE
         ),
         fluid.mesh(),
         dimensionedScalar(dimensionSet(0, 3, -1, 0, 0), 0)
@@ -152,7 +154,9 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         (
             IOobject::groupName("alphaRhoPhi", this->name()),
             fluid.mesh().time().name(),
-            fluid.mesh()
+            fluid.mesh(),
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
         ),
         fluid.mesh(),
         dimensionedScalar(dimensionSet(1, 0, -1, 0, 0), 0)
