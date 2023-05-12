@@ -61,7 +61,6 @@ mover
 
         report          on;
         accelerationRelaxation 0.7;
-        // accelerationDamping 0;
 
         solver
         {
