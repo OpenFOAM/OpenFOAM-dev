@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -76,9 +76,8 @@ cpIfPresent() {
     [ "$_start_time" ] || return 0
 
     # If src time directory is copied to a different time,
-    # delete the uniform subdirectory and phi file
-    rm -f "$_tgt/phi"
-    rm -rf "$_tgt/uniform"
+    # delete the uniform subdirectory and phi, Uf files
+    rm -rf "$_tgt/phi" "$_tgt/Uf" "$_tgt/uniform"
 }
 
 isCaseValid() {
@@ -258,7 +257,8 @@ time_dir="$(foamListTimes -withZero $proc_opt -case "$srcDir" | $time_opt)"
 
 # Copy scripts if required
 [ "$no_scripts" ] || \
-    scripts="$(find "$srcDir" -maxdepth 1 -type f -exec file {} \; | \
+    scripts="$(find "$srcDir" -maxdepth 1 ! -name "*~" -type f \
+               -exec file {} \; | \
                grep "shell script" | \
                cut -d: -f1)"
 [ "$scripts" ] && echo "Copying scripts from $srcDir to $tgtDir:" && \
