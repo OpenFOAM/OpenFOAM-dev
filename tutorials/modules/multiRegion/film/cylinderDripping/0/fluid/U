@@ -8,38 +8,33 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0/film";
-    object      T;
+    class       volVectorField;
+    location    "0";
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform  300;
+internalField   uniform (0 0 0);
 
 boundaryField
 {
-    surface
+    film
     {
-        type            coupledTemperature;
+        type            mappedValue;
         value           $internalField;
     }
 
-    wall
+    "(sides|frontAndBack)"
     {
-        type            fixedValue;
+        type            noSlip;
+    }
+
+    top
+    {
+        type            pressureInletOutletVelocity;
         value           $internalField;
-    }
-
-    sides
-    {
-        type            zeroGradient;
-    }
-
-    frontAndBack
-    {
-        type            zeroGradient;
     }
 }
 

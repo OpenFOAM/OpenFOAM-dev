@@ -25,20 +25,22 @@ Class
     Foam::CloudFilmTransfer
 
 Description
-    Thermo parcel surface film model.
+    Thermo parcel<->film transfer model.
 
     Responsible for:
     - injecting parcels from the film model into the cloud, e.g. for dripping
     - parcel interaction with the film, e.g absorb, bounce, splash
 
-    Splash model references:
+    References:
+    \verbatim
+        Bai, C., & Gosman, A. D. (1996).
+        Mathematical modelling of wall films formed by impinging sprays.
+        SAE transactions, 782-796.
 
-        Bai and Gosman, `Mathematical modelling of wall films formed by
-        impinging sprays', SAE 960626, 1996
-
-        Bai et al, `Modelling of gasoline spray impingement', Atom. Sprays,
-        vol 12, pp 1-27, 2002
-
+        Bai, C. X., Rusche, H., & Gosman, A. D. (2002).
+        Modeling of gasoline spray impingement.
+        Atomization and Sprays, 12(1-3).
+    \endverbatim
 
 SourceFiles
     CloudFilmTransfer.C

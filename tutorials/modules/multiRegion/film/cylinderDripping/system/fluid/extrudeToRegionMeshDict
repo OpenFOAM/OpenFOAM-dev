@@ -8,39 +8,37 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0/film";
-    object      T;
+    class       dictionary;
+    object      extrudeToRegionMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+region          film;
 
-internalField   uniform  300;
+patches         (film);
 
-boundaryField
+extrudeModel    linearNormal;
+
+intrude         yes;
+
+adaptMesh       no;
+
+patchTypes      (mappedExtrudedWall);
+patchNames      (film);
+
+regionPatchTypes   (filmWall);
+regionPatchNames   (wall);
+
+regionOppositePatchTypes    (mappedFilmSurface);
+regionOppositePatchNames    (surface);
+
+nLayers         1;
+
+expansionRatio  1;
+
+linearNormalCoeffs
 {
-    surface
-    {
-        type            coupledTemperature;
-        value           $internalField;
-    }
-
-    wall
-    {
-        type            fixedValue;
-        value           $internalField;
-    }
-
-    sides
-    {
-        type            zeroGradient;
-    }
-
-    frontAndBack
-    {
-        type            zeroGradient;
-    }
+    thickness       0.001;
 }
 
 // ************************************************************************* //

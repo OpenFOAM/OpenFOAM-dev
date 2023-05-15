@@ -58,7 +58,13 @@ Foam::fv::filmCloudTransfer::filmCloudTransfer
 :
     fvModel(sourceName, modelType, mesh, dict),
     film_(mesh.lookupObject<solvers::isothermalFilm>(solver::typeName)),
-    curTimeIndex_(-1)
+    curTimeIndex_(-1),
+    ejection_
+    (
+        dict.found("ejection")
+      ? ejectionModel::New(dict.subDict("ejection"), film_)
+      : autoPtr<ejectionModel>(nullptr)
+    )
 {}
 
 
@@ -84,6 +90,11 @@ void Foam::fv::filmCloudTransfer::correct()
     }
 
     curTimeIndex_ = mesh().time().timeIndex();
+
+    if (ejection_.valid())
+    {
+        ejection_->correct();
+    }
 }
 
 
@@ -172,6 +183,11 @@ void Foam::fv::filmCloudTransfer::addSup
     if (fieldName == film_.alpha.name())
     {
         eqn += CloudToFilmTransferRate<scalar>(massFromCloud_, dimMass);
+
+        if (ejection_.valid())
+        {
+            eqn -= fvm::Sp(ejection_->rate()*rho(), eqn.psi());
+        }
     }
     else
     {
@@ -198,6 +214,11 @@ void Foam::fv::filmCloudTransfer::addSup
     if (fieldName == film_.thermo.he().name())
     {
         eqn += CloudToFilmTransferRate<scalar>(energyFromCloud_, dimEnergy);
+
+        if (ejection_.valid())
+        {
+            eqn -= fvm::Sp(alpha()*rho()*ejection_->rate(), eqn.psi());
+        }
     }
     else
     {
@@ -222,6 +243,11 @@ void Foam::fv::filmCloudTransfer::addSup
     }
 
     eqn += CloudToFilmTransferRate<vector>(momentumFromCloud_, dimMomentum);
+
+    if (ejection_.valid())
+    {
+        eqn -= fvm::Sp(alpha()*rho()*ejection_->rate(), eqn.psi());
+    }
 }
 
 
@@ -267,7 +293,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 inline Foam::fv::filmCloudTransfer::filmToCloudTransfer
 (
-    const VolField<Type>& prop
+    const VolInternalField<Type>& prop
 ) const
 {
     return film_.surfacePatchMap().toNeighbour
@@ -277,27 +303,102 @@ inline Foam::fv::filmCloudTransfer::filmToCloudTransfer
 }
 
 
-Foam::tmp<Foam::Field<Foam::scalar>>
-Foam::fv::filmCloudTransfer::deltaToCloud() const
+bool Foam::fv::filmCloudTransfer::ejecting() const
 {
-    return filmToCloudTransfer(film_.delta);
+    return ejection_.valid();
 }
 
 
-void Foam::fv::filmCloudTransfer::topoChange(const polyTopoChangeMap&)
-{}
+Foam::tmp<Foam::Field<Foam::scalar>>
+Foam::fv::filmCloudTransfer::ejectedMassToCloud() const
+{
+    return filmToCloudTransfer<scalar>
+    (
+        (
+            mesh().V()
+           *mesh().time().deltaTValue()
+           *film_.alpha()*film_.rho()*ejection_->rate()
+        )()
+    );
+}
+
+
+Foam::tmp<Foam::Field<Foam::scalar>>
+Foam::fv::filmCloudTransfer::ejectedDiameterToCloud() const
+{
+    return filmToCloudTransfer<scalar>(ejection_->diameter());
+}
+
+
+Foam::tmp<Foam::Field<Foam::scalar>>
+Foam::fv::filmCloudTransfer::deltaToCloud() const
+{
+    return filmToCloudTransfer<scalar>(film_.delta);
+}
+
+
+Foam::tmp<Foam::Field<Foam::vector>>
+Foam::fv::filmCloudTransfer::UToCloud() const
+{
+    return filmToCloudTransfer<vector>(film_.U);
+}
+
+
+Foam::tmp<Foam::Field<Foam::scalar>>
+Foam::fv::filmCloudTransfer::rhoToCloud() const
+{
+    return filmToCloudTransfer<scalar>(film_.rho);
+}
+
+
+Foam::tmp<Foam::Field<Foam::scalar>>
+Foam::fv::filmCloudTransfer::TToCloud() const
+{
+    return filmToCloudTransfer<scalar>(film_.thermo.T());
+}
+
+
+Foam::tmp<Foam::Field<Foam::scalar>>
+Foam::fv::filmCloudTransfer::CpToCloud() const
+{
+    return filmToCloudTransfer<scalar>(film_.thermo.Cp());
+}
+
+
+void Foam::fv::filmCloudTransfer::topoChange(const polyTopoChangeMap& map)
+{
+    if (ejection_.valid())
+    {
+        ejection_->topoChange(map);
+    }
+}
 
 
 void Foam::fv::filmCloudTransfer::mapMesh(const polyMeshMap& map)
-{}
+{
+    if (ejection_.valid())
+    {
+        ejection_->mapMesh(map);
+    }
+}
 
 
-void Foam::fv::filmCloudTransfer::distribute(const polyDistributionMap&)
-{}
+void Foam::fv::filmCloudTransfer::distribute(const polyDistributionMap& map)
+{
+    if (ejection_.valid())
+    {
+        ejection_->distribute(map);
+    }
+}
 
 
 bool Foam::fv::filmCloudTransfer::movePoints()
 {
+    if (ejection_.valid())
+    {
+        ejection_->movePoints();
+    }
+
     return true;
 }
 

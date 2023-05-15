@@ -8,39 +8,52 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0/film";
-    object      T;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+application     foamMultiRun;
 
-internalField   uniform  300;
-
-boundaryField
+regionSolvers
 {
-    surface
-    {
-        type            coupledTemperature;
-        value           $internalField;
-    }
-
-    wall
-    {
-        type            fixedValue;
-        value           $internalField;
-    }
-
-    sides
-    {
-        type            zeroGradient;
-    }
-
-    frontAndBack
-    {
-        type            zeroGradient;
-    }
+    film            film;
+    fluid           multicomponentFluid;
 }
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1;
+
+deltaT          1e-2;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.01;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  10;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.3;
+
+maxDeltaT       1;
 
 // ************************************************************************* //

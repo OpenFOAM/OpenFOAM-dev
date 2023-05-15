@@ -32,6 +32,13 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::volScalarField>
+Foam::solvers::isothermalFilm::sigma() const
+{
+    return constrainedField(surfaceTension->sigma());
+}
+
+
 Foam::tmp<Foam::surfaceScalarField>
 Foam::solvers::isothermalFilm::pbByAlphaRhof() const
 {
@@ -81,7 +88,7 @@ void Foam::solvers::isothermalFilm::momentumPredictor()
     volVectorField& U = U_;
 
     // Calculate the surface tension coefficient
-    const volScalarField sigma(constrainedField(surfaceTension->sigma()));
+    const volScalarField sigma(this->sigma());
 
     tUEqn =
     (

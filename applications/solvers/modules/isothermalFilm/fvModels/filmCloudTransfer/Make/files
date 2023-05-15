@@ -1,4 +1,9 @@
 filmCloudTransfer.C
+ejectionModels/ejectionModel/ejectionModel.C
+ejectionModels/ejectionModel/ejectionModelNew.C
+ejectionModels/dripping/dripping.C
+ejectionModels/BrunDripping/BrunDripping.C
+ejectionModels/curvatureSeparation/curvatureSeparation.C
 
 cloudFilmTransfer/CloudFilmTransfer/CloudFilmTransferBase.C
 cloudFilmTransfer/makeThermoParcelCloudFilmTransfer.C

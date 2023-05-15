@@ -48,6 +48,7 @@ SourceFiles
 
 #include "fvModel.H"
 #include "isothermalFilm.H"
+#include "ejectionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -72,10 +73,15 @@ class filmCloudTransfer
         //- Current time index (used for updating)
         mutable label curTimeIndex_;
 
-        scalarField massFromCloud_;
-        vectorField momentumFromCloud_;
-        scalarField pressureFromCloud_;
-        scalarField energyFromCloud_;
+        // Transfers from cloud
+
+            scalarField massFromCloud_;
+            vectorField momentumFromCloud_;
+            scalarField pressureFromCloud_;
+            scalarField energyFromCloud_;
+
+        //- Pointer to the ejection model
+        autoPtr<ejectionModel> ejection_;
 
 
     // Private Member Functions
@@ -94,7 +100,7 @@ class filmCloudTransfer
         tmp<Field<Type>>
         inline filmToCloudTransfer
         (
-            const VolField<Type>& prop
+            const VolInternalField<Type>& prop
         ) const;
 
 
@@ -192,8 +198,29 @@ public:
 
         // Transfer to cloud
 
+            //- Return true if the film is ejecting to the cloud
+            bool ejecting() const;
+
+            //- Transfer the ejected mass to the cloud
+            tmp<Field<scalar>> ejectedMassToCloud() const;
+
+            //- Transfer the ejected droplet diameter to the cloud
+            tmp<Field<scalar>> ejectedDiameterToCloud() const;
+
             //- Transfer the film delta field to the cloud
             tmp<Field<scalar>> deltaToCloud() const;
+
+            //- Transfer the film velocity field to the cloud
+            tmp<Field<vector>> UToCloud() const;
+
+            //- Transfer the film density field to the cloud
+            tmp<Field<scalar>> rhoToCloud() const;
+
+            //- Transfer the film temperature field to the cloud
+            tmp<Field<scalar>> TToCloud() const;
+
+            //- Transfer the film heat capacity field to the cloud
+            tmp<Field<scalar>> CpToCloud() const;
 
 
         // Mesh changes

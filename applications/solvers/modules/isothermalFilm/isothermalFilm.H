@@ -112,10 +112,10 @@ protected:
         label surfacePatchID;
 
         //- Film wall normal
-        volVectorField nHat;
+        volVectorField nHat_;
 
         //- Film cell cross-sectional area magnitude
-        volScalarField::Internal magSf;
+        volScalarField::Internal magSf_;
 
         //- Film cell volume/wall face area
         volScalarField VbyA_;
@@ -133,22 +133,16 @@ protected:
         dimensionedScalar deltaWet;
 
 
-    // Buoyancy
-
-        //- Acceleration due to gravity
-        uniformDimensionedVectorField g;
-
-
     // Kinematic properties
 
         //- Film velocity field
         volVectorField U_;
 
         //- Film mass-flux field
-        surfaceScalarField alphaRhoPhi;
+        surfaceScalarField alphaRhoPhi_;
 
         //- Film volumetric-flux field
-        surfaceScalarField phi;
+        surfaceScalarField phi_;
 
 
     // Interface properties
@@ -263,6 +257,15 @@ public:
 
     // Public Data
 
+        //- Acceleration due to gravity
+        const uniformDimensionedVectorField g;
+
+        //- Film wall normal
+        const volVectorField& nHat;
+
+        //- Film cell cross-sectional area magnitude
+        const volScalarField::Internal& magSf;
+
         //- Film cell volume/wall face area
         const volScalarField& VbyA;
 
@@ -275,11 +278,17 @@ public:
         //- Reference to the fluid thermophysical properties
         const fluidThermo& thermo;
 
-        //- The thermodynamic density field
+        //- Reference to the thermodynamic density field
         const volScalarField& rho;
 
-        //- Film velocity field
+        //- Reference to the film velocity field
         const volVectorField& U;
+
+        //- Reference to the film mass-flux field
+        const surfaceScalarField& alphaRhoPhi;
+
+        //- Reference to the film volumetric-flux field
+        const surfaceScalarField& phi;
 
 
 public:
@@ -311,6 +320,9 @@ public:
 
         //- Return the film surface patch region-region map
         const mappedPatchBase& surfacePatchMap() const;
+
+        //- Return the film surface tension coefficient field
+        tmp<volScalarField> sigma() const;
 
         //- Return the current maximum time-step for stable solution
         virtual scalar maxDeltaT() const;

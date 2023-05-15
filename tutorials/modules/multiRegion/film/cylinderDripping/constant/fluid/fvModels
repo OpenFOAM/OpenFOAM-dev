@@ -8,39 +8,16 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0/film";
-    object      T;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
-
-internalField   uniform  300;
-
-boundaryField
+clouds
 {
-    surface
-    {
-        type            coupledTemperature;
-        value           $internalField;
-    }
-
-    wall
-    {
-        type            fixedValue;
-        value           $internalField;
-    }
-
-    sides
-    {
-        type            zeroGradient;
-    }
-
-    frontAndBack
-    {
-        type            zeroGradient;
-    }
+    type    clouds;
+    libs    ("liblagrangianParcel.so");
 }
 
 // ************************************************************************* //

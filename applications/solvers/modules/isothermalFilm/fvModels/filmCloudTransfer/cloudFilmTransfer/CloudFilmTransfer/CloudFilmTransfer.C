@@ -521,20 +521,29 @@ const Foam::labelList& Foam::CloudFilmTransfer<CloudType>::filmPatches() const
 template<class CloudType>
 void Foam::CloudFilmTransfer<CloudType>::cacheFilmFields(const label filmi)
 {
-    // Film->Cloud transfer Not implemented yet
-
     fv::filmCloudTransfer& filmCloudTransfer = filmTransferPtrs()[filmi];
 
     filmCloudTransfer.resetFromCloudFields();
 
-    // Set the mass transferred from film->cloud to 0
-    this->massParcelPatch_.setSize
-    (
-        this->owner().mesh().boundary()[filmPatches_[filmi]].size(),
-        0.0
-    );
-
     this->deltaFilmPatch_ = filmCloudTransfer.deltaToCloud();
+
+    // Ensure the film->cloud ejection transfer is up-to-date
+    filmCloudTransfer.correct();
+
+    if (filmCloudTransfer.ejecting())
+    {
+        this->massParcelPatch_ = filmCloudTransfer.ejectedMassToCloud();
+        this->diameterParcelPatch_ = filmCloudTransfer.ejectedDiameterToCloud();
+        UFilmPatch_ = filmCloudTransfer.UToCloud();
+        rhoFilmPatch_ = filmCloudTransfer.rhoToCloud();
+        TFilmPatch_ = filmCloudTransfer.TToCloud();
+        CpFilmPatch_ = filmCloudTransfer.CpToCloud();
+    }
+    else
+    {
+        // Set the mass transferred from film->cloud to 0
+        this->massParcelPatch_.setSize(0);
+    }
 }
 
 

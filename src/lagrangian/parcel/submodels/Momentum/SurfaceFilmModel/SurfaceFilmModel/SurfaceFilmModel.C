@@ -106,49 +106,53 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
 
         const labelList& injectorCellsPatch = pbm[filmPatchi].faceCells();
 
+        // Get and cache the properties of the droplets ejected from the film
         cacheFilmFields(filmi);
 
         const vectorField& Cf = mesh.C().boundaryField()[filmPatchi];
         const vectorField& Sf = mesh.Sf().boundaryField()[filmPatchi];
         const scalarField& magSf = mesh.magSf().boundaryField()[filmPatchi];
 
-        forAll(injectorCellsPatch, j)
+        if (massParcelPatch_.size())
         {
-            if (massParcelPatch_[j] > 0)
+            forAll(injectorCellsPatch, j)
             {
-                const label celli = injectorCellsPatch[j];
+                if (massParcelPatch_[j] > 0)
+                {
+                    const label celli = injectorCellsPatch[j];
 
-                const scalar offset =
-                    max
+                    const scalar offset = max
                     (
                         diameterParcelPatch_[j],
                         deltaFilmPatch_[j]
                     );
-                const point pos = Cf[j] - 1.1*offset*Sf[j]/magSf[j];
 
-                // Create a new parcel
-                parcelType* pPtr =
-                    new parcelType(this->owner().pMesh(), pos, celli);
+                    const point pos = Cf[j] - 1.1*offset*Sf[j]/magSf[j];
 
-                // Check/set new parcel thermo properties
-                cloud.setParcelThermoProperties(*pPtr);
+                    // Create a new parcel
+                    parcelType* pPtr =
+                        new parcelType(this->owner().pMesh(), pos, celli);
 
-                setParcelProperties(*pPtr, j);
+                    // Check/set new parcel thermo properties
+                    cloud.setParcelThermoProperties(*pPtr);
 
-                if (pPtr->nParticle() > 0.001)
-                {
-                    // Check new parcel properties
-                    cloud.checkParcelProperties(*pPtr, -1);
+                    setParcelProperties(*pPtr, j);
 
-                    // Add the new parcel to the cloud
-                    cloud.addParticle(pPtr);
+                    if (pPtr->nParticle() > 0.001)
+                    {
+                        // Check new parcel properties
+                        cloud.checkParcelProperties(*pPtr, -1);
 
-                    nParcelsInjected_++;
-                }
-                else
-                {
-                    // TODO: cache mass and re-distribute?
-                    delete pPtr;
+                        // Add the new parcel to the cloud
+                        cloud.addParticle(pPtr);
+
+                        nParcelsInjected_++;
+                    }
+                    else
+                    {
+                        // TODO: cache mass and re-distribute?
+                        delete pPtr;
+                    }
                 }
             }
         }

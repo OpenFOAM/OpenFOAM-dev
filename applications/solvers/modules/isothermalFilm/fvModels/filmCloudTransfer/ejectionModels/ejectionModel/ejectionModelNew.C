@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cavitationModel.H"
+#include "ejectionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::cavitationModel> Foam::cavitationModel::New
+Foam::autoPtr<Foam::ejectionModel> Foam::ejectionModel::New
 (
     const dictionary& dict,
-    const incompressibleTwoPhases& phases
+    const solvers::isothermalFilm& film
 )
 {
     const word modelType(dict.lookup("model"));
 
-    Info<< "Selecting cavitation model " << modelType << endl;
+    Info<< "Selecting film ejection model " << modelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
@@ -43,16 +43,16 @@ Foam::autoPtr<Foam::cavitationModel> Foam::cavitationModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown cavitation model "
+            << "Unknown film ejection model "
             << modelType << nl << nl
-            << "Valid cavitation models are : " << nl
-            << dictionaryConstructorTablePtr_->sortedToc()
+            << "Valid film ejection models are:" << nl
+            << dictionaryConstructorTablePtr_->toc()
             << exit(FatalError);
     }
 
-    return autoPtr<cavitationModel>
+    return autoPtr<ejectionModel>
     (
-        cstrIter()(dict.optionalSubDict(modelType + "Coeffs"), phases)
+        cstrIter()(dict.optionalSubDict(modelType + "Coeffs"), film)
     );
 }
 
