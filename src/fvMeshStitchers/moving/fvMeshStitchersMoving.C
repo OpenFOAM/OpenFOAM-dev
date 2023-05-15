@@ -988,9 +988,13 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
             const label errorPatchFacei1 = 2*origPatchFacei + 1;
 
             const vector errorSf =
-                origPp.faceNormals()[origPatchFacei]
-               *phi.boundaryField()[errorPatchi][errorPatchFacei0]
-               /max(meshMagUfb[origPatchi][origPatchFacei], vSmall);
+                min
+                (
+                    mag(phi.boundaryField()[errorPatchi][errorPatchFacei0])
+                   /max(meshMagUfb[origPatchi][origPatchFacei], vSmall),
+                    origPp.magFaceAreas()[origPatchFacei]
+                )
+               *origPp.faceNormals()[origPatchFacei];
 
             fvsPatchField<vector>& Sfp =
                 SfSf.boundaryFieldRef()[errorPatchi];
