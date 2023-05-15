@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,11 +155,26 @@ Foam::scalar Foam::nutWallFunctionFvPatchScalarField::yPlusLam
     const scalar E
 )
 {
-    scalar ypl = 11.0;
+    const scalar ypl0 = 12.0;
+
+    scalar ypl = ypl0;
 
     for (int i=0; i<10; i++)
     {
         ypl = log(max(E*ypl, 1))/kappa;
+    }
+
+    // If ypl is greater than the starting value recalculate from a larger value
+    // to ensure the result is slightly larger rather than slightly smaller
+    // than exact value
+    if (ypl > ypl0)
+    {
+        ypl += 1;
+
+        for (int i=0; i<10; i++)
+        {
+            ypl = log(max(E*ypl, 1))/kappa;
+        }
     }
 
     return ypl;
