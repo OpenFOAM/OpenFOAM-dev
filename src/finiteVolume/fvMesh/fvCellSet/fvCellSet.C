@@ -60,7 +60,6 @@ void Foam::fvCellSet::writeFileHeader
     wf.writeCommented(file, "Selection");
     file<< setw(1) << ':' << setw(1) << ' '
         << selectionTypeNames[selectionType()] << " " << cellSetName() << endl;
-    wf.writeHeaderValue(file, "Cells", nCells());
     wf.writeHeaderValue(file, "Volume", V());
 }
 

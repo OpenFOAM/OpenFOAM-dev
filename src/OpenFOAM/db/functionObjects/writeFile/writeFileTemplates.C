@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ void Foam::functionObjects::writeFile::writeHeaderValue
 {
     os  << setw(1) << '#' << setw(1) << ' '
         << setf(ios_base::left) << setw(charWidth() - 2) << property.c_str()
-        << setw(1) << ':' << setw(1) << ' ' << value << nl;
+        << setw(1) << ':' << setw(1) << ' ' << value << endl;
 }
 
 
