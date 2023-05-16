@@ -1354,7 +1354,7 @@ void Foam::triIntersect::intersectTris
         // Step 3.1: Define functions
 
         // Add crossing point locations, inserting source points as necessary
-        auto addPointLocations = [&pointLocations]
+        auto addPointLocations = [&srcInTgtTri,&pointLocations]
         (
             const location l1,
             const location l2 = location(),
@@ -1398,13 +1398,21 @@ void Foam::triIntersect::intersectTris
                             srcEj = (srcEj + 2) % 3
                         )
                         {
+                            if (srcInTgtTri[srcEj] != 1)
+                            {
+                                return false;
+                            }
+
                             pointLocations.append(location::srcPoint(srcEj));
                         }
                     }
                 }
             }
 
-            if (!add) return;
+            if (!add)
+            {
+                return true;
+            }
 
             pointLocations.append(l1);
 
@@ -1412,6 +1420,8 @@ void Foam::triIntersect::intersectTris
             {
                 pointLocations.append(l2);
             }
+
+            return true;
         };
 
         // One target point is within the source triangle and one is not
@@ -1430,9 +1440,7 @@ void Foam::triIntersect::intersectTris
               ? (tgtOutSrcPi1 + 2*reverse) % 3
               : (tgtOutSrcPi1 + 2*!reverse) % 3;
 
-            addPointLocations(location::intersection(srcEi, tgtEi));
-
-            return true;
+            return addPointLocations(location::intersection(srcEi, tgtEi));
         };
 
         // One target point is a source point and the other is outside a source
@@ -1464,7 +1472,11 @@ void Foam::triIntersect::intersectTris
 
             if (tgtOutSrcEi1 == srcEi0Opp)
             {
-                addPointLocations(location::intersection(srcEi0Opp, tgtEi));
+                return
+                    addPointLocations
+                    (
+                        location::intersection(srcEi0Opp, tgtEi)
+                    );
             }
 
             return true;
@@ -1508,11 +1520,12 @@ void Foam::triIntersect::intersectTris
              != (srcInTgtEdge[srcPi][tgtEi] == 1)
             )
             {
-                addPointLocations
-                (
-                    location::intersection(tgtOutSrcEi0, tgtEi),
-                    location::intersection(tgtOutSrcEi1, tgtEi)
-                );
+                return
+                    addPointLocations
+                    (
+                        location::intersection(tgtOutSrcEi0, tgtEi),
+                        location::intersection(tgtOutSrcEi1, tgtEi)
+                    );
             }
 
             return true;
@@ -1561,9 +1574,7 @@ void Foam::triIntersect::intersectTris
                 Swap(l1, l2);
             }
 
-            addPointLocations(l1, l2);
-
-            return true;
+            return addPointLocations(l1, l2);
         };
 
         // Both target points are outside source corners
@@ -1615,7 +1626,17 @@ void Foam::triIntersect::intersectTris
             }
             if (tgtIsSrcPi0 != -1)
             {
-                addPointLocations(location::srcTgtPoint(tgtIsSrcPi0, tgtPi0));
+                if
+                (
+                   !addPointLocations
+                    (
+                        location::srcTgtPoint(tgtIsSrcPi0, tgtPi0)
+                    )
+                )
+                {
+                    pointLocations.clear();
+                    break;
+                }
             }
 
             // Add crossings
@@ -1758,7 +1779,10 @@ void Foam::triIntersect::intersectTris
 
             if (l.isIntersection() || l.isSrcAndTgtPoint())
             {
-                addPointLocations(l, location(), false);
+                if (!addPointLocations(l, location(), false))
+                {
+                    pointLocations.clear();
+                }
             }
         }
     }
