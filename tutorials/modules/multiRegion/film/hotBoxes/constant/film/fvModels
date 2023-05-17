@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+filmCloudTransfer
+{
+    type    filmCloudTransfer;
+
+    libs    ("libfilmCloudTransfer.so");
+
+    ejection
+    {
+        model   dripping;
+
+        deltaStable 0;
+
+        minParticlesPerParcel 100;
+
+        parcelDistribution
+        {
+            type            RosinRammler;
+            Q               0;
+            min             5e-04;
+            max             0.0012;
+            d               7.5e-05;
+            n               0.5;
+        }
+    }
+}
+
+// ************************************************************************* //

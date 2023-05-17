@@ -1,0 +1,23 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication -s fluid blockMesh -region fluid
+
+# Create a set for the bits of the mesh that are not boxes
+runApplication topoSet -region fluid
+
+# Create the boxes and add their surfaces to the boxes patch
+runApplication subsetMesh notBoxes -region fluid -patch film -overwrite -noFields
+
+# Create the film mesh
+runApplication extrudeToRegionMesh -region fluid -overwrite
+
+printf "\n%s\n" "Creating files for paraview post-processing"
+paraFoam -touchAll
+echo
+
+runApplication $(getApplication)
+
+#------------------------------------------------------------------------------

@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      epsilon;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -3 0 0 0 0];
+
+internalField   uniform 1e-7;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    sides
+    {
+        type            epsilonWallFunction;
+        value           uniform 1e-7;
+    }
+
+    film
+    {
+        type            epsilonWallFunction;
+        value           uniform 1e-7;
+    }
+}
+
+// ************************************************************************* //

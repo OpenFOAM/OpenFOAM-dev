@@ -1,0 +1,157 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      reactingCloud1Properties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type        reactingCloud;
+
+libs        ("libfilmCloudTransfer.so");
+
+solution
+{
+    coupled         yes;
+    transient       yes;
+    cellValueSourceCorrection yes;
+    maxCo           0.3;
+
+    sourceTerms
+    {
+        schemes
+        {
+            rho             explicit 1;
+            U               explicit 1;
+            Yi              explicit 1;
+            h               explicit 1;
+            radiation       explicit 1;
+        }
+    }
+
+    interpolationSchemes
+    {
+        rho             cell;
+        U               cellPoint;
+        mu              cell;
+        T               cell;
+        Cp              cell;
+        kappa           cell;
+        p               cell;
+    }
+
+    integrationSchemes
+    {
+        U               Euler;
+        T               analytical;
+    }
+}
+
+constantProperties
+{
+    rho0            1000;
+    T0              300;
+    Cp0             4187;
+
+    constantVolume  false;
+}
+
+subModels
+{
+    particleForces
+    {
+        sphereDrag;
+        gravity;
+    }
+
+    injectionModels
+    {
+        model1
+        {
+            type            coneInjection;
+            SOI             0.000;
+            duration        20.000;
+            position        (0.3 0.35 1.45);
+            direction       (0 0 -1);
+
+            massTotal       10;
+            parcelsPerSecond 1000;
+            uniformParcelSize volume;
+            flowRateProfile constant 0.1;
+            Umag            constant 3.0;
+            thetaInner      constant 0;
+            thetaOuter      constant 45;
+
+            sizeDistribution
+            {
+                type            RosinRammler;
+                Q               3;
+                min             5e-04;
+                max             0.0012;
+                d               7.5e-05;
+                n               0.5;
+            }
+        }
+
+        model2
+        {
+            $model1;
+            position        (0.6 0.35 1.45);
+        }
+    }
+
+    dispersionModel none;
+
+    patchInteractionModel standardWallInteraction;
+
+    heatTransferModel none;
+
+    compositionModel singlePhaseMixture;
+
+    phaseChangeModel none;
+
+    stochasticCollisionModel none;
+
+    surfaceFilmModel cloudFilmTransfer;
+
+    radiation       off;
+
+    standardWallInteractionCoeffs
+    {
+        type            rebound;
+    }
+
+    singlePhaseMixtureCoeffs
+    {
+        phases
+        (
+            liquid
+            {
+                H2O          1;
+            }
+        );
+    }
+
+    cloudFilmTransferCoeffs
+    {
+        interactionType splashBai;
+        deltaWet        0.0005;
+        Adry            2630;
+        Awet            1320;
+        Cf              0.6;
+    }
+}
+
+cloudFunctions
+{}
+
+
+// ************************************************************************* //
