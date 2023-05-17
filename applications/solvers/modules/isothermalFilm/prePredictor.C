@@ -29,11 +29,7 @@ License
 
 void Foam::solvers::isothermalFilm::prePredictor()
 {
-    predictAlpha();
-
-    fvModels().correct();
-
-    predictAlpha();
+    continuityPredictor();
 
     if (pimple.predictTransport())
     {

@@ -24,9 +24,9 @@ derivedFvPatchFields/filmSurfaceVelocity/filmSurfaceVelocityFvPatchVectorField.C
 filmGaussGrad/filmGaussGrads.C
 
 contactForce.C
+continuityPredictor.C
 prePredictor.C
 momentumPredictor.C
-predictAlpha.C
 correctAlpha.C
 isothermalFilm.C
 

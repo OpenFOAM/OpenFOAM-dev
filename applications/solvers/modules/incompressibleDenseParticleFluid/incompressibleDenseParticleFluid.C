@@ -344,8 +344,6 @@ void Foam::solvers::incompressibleDenseParticleFluid::prePredictor()
         ).ptr();
     }
 
-    fvModels().correct();
-
     if (pimple.predictTransport())
     {
         momentumTransport->predict();

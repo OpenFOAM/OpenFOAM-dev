@@ -30,7 +30,7 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::isothermalFilm::predictAlpha()
+void Foam::solvers::isothermalFilm::continuityPredictor()
 {
     // Update delta and alpha BCs for time-varying inlets etc.
     delta_.correctBoundaryConditions();

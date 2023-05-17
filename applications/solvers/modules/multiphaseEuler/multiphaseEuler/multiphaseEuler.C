@@ -242,11 +242,6 @@ void Foam::solvers::multiphaseEuler::preSolve()
 
 void Foam::solvers::multiphaseEuler::prePredictor()
 {
-    if (pimple.models())
-    {
-        fvModels().correct();
-    }
-
     if (pimple.thermophysics() || pimple.flow())
     {
         fluid_.solve(rAUs, rAUfs);

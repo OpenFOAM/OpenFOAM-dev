@@ -136,6 +136,7 @@ int main(int argc, char *argv[])
         while (pimple.loop())
         {
             solver.moveMesh();
+            solver.fvModels().correct();
             solver.prePredictor();
             solver.momentumPredictor();
             solver.thermophysicalPredictor();

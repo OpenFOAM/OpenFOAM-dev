@@ -33,8 +33,6 @@ void Foam::solvers::shockFluid::prePredictor()
 
     correctDensity();
 
-    fvModels().correct();
-
     if (!inviscid && pimple.predictTransport())
     {
         momentumTransport->predict();

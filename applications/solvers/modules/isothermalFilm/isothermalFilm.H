@@ -203,15 +203,15 @@ private:
         //- Correct the cached Courant number
         void correctCoNum();
 
+        //  Solve the explicit continuity equation for the film volume-fraction
+        //  to predict the film thickness
+        void continuityPredictor();
+
         // Calculate the continuity error caused by limiting alpha
         void correctContinuityError();
 
         //- Print the continuity errors
         void continuityErrors();
-
-        //- Construct the explicit film volume-fraction prediction equation
-        //  and predict the film thickness
-        void predictAlpha();
 
         //- Update film thickness delta from the film volume-fraction
         void correctDelta();

@@ -204,8 +204,6 @@ void Foam::solvers::incompressibleFluid::preSolve()
 
 void Foam::solvers::incompressibleFluid::prePredictor()
 {
-    fvModels().correct();
-
     if (pimple.predictTransport())
     {
         momentumTransport->predict();

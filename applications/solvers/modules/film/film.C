@@ -65,17 +65,6 @@ Foam::solvers::film::~film()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::film::prePredictor()
-{
-    isothermalFilm::prePredictor();
-
-    if (pimple.predictTransport())
-    {
-        thermophysicalTransport->predict();
-    }
-}
-
-
 void Foam::solvers::film::postCorrector()
 {
     isothermalFilm::postCorrector();

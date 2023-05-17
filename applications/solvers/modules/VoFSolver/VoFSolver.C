@@ -251,9 +251,7 @@ void Foam::solvers::VoFSolver::preSolve()
 
 
 void Foam::solvers::VoFSolver::prePredictor()
-{
-    fvModels().correct();
-}
+{}
 
 
 void Foam::solvers::VoFSolver::postSolve()
