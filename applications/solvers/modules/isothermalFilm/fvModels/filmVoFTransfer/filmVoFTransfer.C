@@ -159,7 +159,7 @@ void Foam::fv::filmVoFTransfer::correct()
          || alphaVoF[facei] > alphaToVoF_
         )
         {
-            transferRate_[celli] = -transferRateCoeff_/deltaT;
+            transferRate_[celli] = transferRateCoeff_/deltaT;
         }
     }
 }
@@ -260,7 +260,7 @@ void Foam::fv::filmVoFTransfer::addSup
                 &VoFFilmTransfer::rhoTransferRate,
                 dimMass
             )
-          + fvm::Sp(transferRate_*rho(), eqn.psi());
+          - fvm::Sp(transferRate_*rho(), eqn.psi());
     }
     else
     {
@@ -292,7 +292,7 @@ void Foam::fv::filmVoFTransfer::addSup
                 &VoFFilmTransfer::heTransferRate,
                 dimEnergy
             )
-          + fvm::Sp(alpha()*rho()*transferRate_, eqn.psi());
+          - fvm::Sp(alpha()*rho()*transferRate_, eqn.psi());
     }
     else
     {
@@ -322,7 +322,7 @@ void Foam::fv::filmVoFTransfer::addSup
             &VoFFilmTransfer::UTransferRate,
             dimMomentum
         )
-      + fvm::Sp(alpha()*rho()*transferRate_, eqn.psi());
+      - fvm::Sp(alpha()*rho()*transferRate_, eqn.psi());
 }
 
 
@@ -340,7 +340,7 @@ inline Foam::tmp<Foam::Field<Type>> Foam::fv::filmVoFTransfer::TransferRate
         (
             UIndirectList<Type>
             (
-                -film_.alpha()*transferRate_*mesh().V()*f,
+                film_.alpha()*transferRate_*mesh().V()*f,
                 faceCells
             )
         )

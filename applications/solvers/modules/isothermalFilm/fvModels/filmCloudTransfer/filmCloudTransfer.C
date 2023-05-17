@@ -58,7 +58,7 @@ Foam::fv::filmCloudTransfer::filmCloudTransfer
 :
     fvModel(sourceName, modelType, mesh, dict),
     film_(mesh.lookupObject<solvers::isothermalFilm>(solver::typeName)),
-    curTimeIndex_(-1),
+    correctEjection_(false),
     ejection_
     (
         dict.found("ejection")
@@ -84,16 +84,13 @@ Foam::wordList Foam::fv::filmCloudTransfer::addSupFields() const
 
 void Foam::fv::filmCloudTransfer::correct()
 {
-    if (curTimeIndex_ == mesh().time().timeIndex())
-    {
-        return;
-    }
-
-    curTimeIndex_ = mesh().time().timeIndex();
-
-    if (ejection_.valid())
+    if (ejection_.valid() && correctEjection_)
     {
         ejection_->correct();
+
+        // Do not correct ejection rate until the cloud has evolved
+        // to include the last set of ejected parcels
+        correctEjection_ = false;
     }
 }
 
@@ -270,6 +267,9 @@ void Foam::fv::filmCloudTransfer::resetFromCloudFields()
     momentumFromCloud_ = Zero;
     pressureFromCloud_ = 0;
     energyFromCloud_ = 0;
+
+    // Enable ejection correction on next call to correct()
+    correctEjection_ = true;
 }
 
 

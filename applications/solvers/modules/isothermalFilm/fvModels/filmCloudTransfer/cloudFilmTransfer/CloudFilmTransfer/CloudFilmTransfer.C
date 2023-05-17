@@ -527,9 +527,6 @@ void Foam::CloudFilmTransfer<CloudType>::cacheFilmFields(const label filmi)
 
     this->deltaFilmPatch_ = filmCloudTransfer.deltaToCloud();
 
-    // Ensure the film->cloud ejection transfer is up-to-date
-    filmCloudTransfer.correct();
-
     if (filmCloudTransfer.ejecting())
     {
         this->massParcelPatch_ = filmCloudTransfer.ejectedMassToCloud();

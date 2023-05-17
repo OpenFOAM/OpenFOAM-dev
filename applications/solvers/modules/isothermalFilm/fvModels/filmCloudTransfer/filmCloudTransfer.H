@@ -70,15 +70,16 @@ class filmCloudTransfer
         //- The film model
         const solvers::isothermalFilm& film_;
 
-        //- Current time index (used for updating)
-        mutable label curTimeIndex_;
-
         // Transfers from cloud
 
             scalarField massFromCloud_;
             vectorField momentumFromCloud_;
             scalarField pressureFromCloud_;
             scalarField energyFromCloud_;
+
+        //- Switch to ensure the ejection rate is not updated until
+        //  the last set of ejected parcels have been included in the cloud
+        bool correctEjection_;
 
         //- Pointer to the ejection model
         autoPtr<ejectionModel> ejection_;
