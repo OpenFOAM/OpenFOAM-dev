@@ -66,7 +66,7 @@ void Foam::MomentumCloud<CloudType>::setModels()
         ).ptr()
     );
 
-    surfaceFilmModel_.reset
+    filmModel_.reset
     (
         SurfaceFilmModel<MomentumCloud<CloudType>>::New
         (
@@ -250,7 +250,7 @@ void Foam::MomentumCloud<CloudType>::cloudReset(MomentumCloud<CloudType>& c)
     dispersionModel_.reset(c.dispersionModel_.ptr());
     patchInteractionModel_.reset(c.patchInteractionModel_.ptr());
     stochasticCollisionModel_.reset(c.stochasticCollisionModel_.ptr());
-    surfaceFilmModel_.reset(c.surfaceFilmModel_.ptr());
+    filmModel_.reset(c.filmModel_.ptr());
 
     UIntegrator_.reset(c.UIntegrator_.ptr());
 }
@@ -333,7 +333,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     dispersionModel_(nullptr),
     patchInteractionModel_(nullptr),
     stochasticCollisionModel_(nullptr),
-    surfaceFilmModel_(nullptr),
+    filmModel_(nullptr),
     UIntegrator_(nullptr),
     UTrans_
     (
@@ -426,7 +426,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     dispersionModel_(c.dispersionModel_->clone()),
     patchInteractionModel_(c.patchInteractionModel_->clone()),
     stochasticCollisionModel_(c.stochasticCollisionModel_->clone()),
-    surfaceFilmModel_(c.surfaceFilmModel_->clone()),
+    filmModel_(c.filmModel_->clone()),
     UIntegrator_(c.UIntegrator_->clone()),
     UTrans_
     (
@@ -515,7 +515,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     dispersionModel_(nullptr),
     patchInteractionModel_(nullptr),
     stochasticCollisionModel_(nullptr),
-    surfaceFilmModel_(nullptr),
+    filmModel_(nullptr),
     UIntegrator_(nullptr),
     UTrans_(nullptr),
     UCoeff_(nullptr)

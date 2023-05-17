@@ -210,9 +210,8 @@ protected:
             autoPtr<StochasticCollisionModel<MomentumCloud<CloudType>>>
                 stochasticCollisionModel_;
 
-            //- Surface film model
-            autoPtr<SurfaceFilmModel<MomentumCloud<CloudType>>>
-                surfaceFilmModel_;
+            //- Optional film model
+            autoPtr<SurfaceFilmModel<MomentumCloud<CloudType>>> filmModel_;
 
 
         // Reference to the particle integration schemes

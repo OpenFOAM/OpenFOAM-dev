@@ -8,7 +8,6 @@ wmake $targetType
 
 wmake $targetType fvModels/VoFTurbulenceDamping
 wmake $targetType fvModels/VoFClouds
-wmake $targetType fvModels/VoFSurfaceFilm
 wmake $targetType fvModels/VoFCavitation
 wmake $targetType fvModels/VoFSolidificationMeltingSource
 

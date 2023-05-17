@@ -5,7 +5,6 @@ wclean
 
 wclean libso fvModels/VoFTurbulenceDamping
 wclean libso fvModels/VoFClouds
-wclean libso fvModels/VoFSurfaceFilm
 wclean libso fvModels/VoFCavitation
 wclean libso fvModels/VoFSolidificationMeltingSource
 

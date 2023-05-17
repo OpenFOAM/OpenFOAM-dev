@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -206,7 +206,6 @@ modelsInFamily () {
         _modelDirs="\
             $(findModelDirs "$_familyDir" 2) \
             $(findModelDirs "$FOAM_SRC/lagrangian/parcel/fvModels") \
-            $(findModelDirs "$FOAM_SRC/surfaceFilmModels/fvModels") \
             $(findModelDirs "$FOAM_SRC/radiationModels/fvModels/radiation")"
 
     [ "$_modelDirs" ] || return 0

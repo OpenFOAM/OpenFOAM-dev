@@ -232,7 +232,7 @@ template<class CloudType>
 inline const Foam::SurfaceFilmModel<Foam::MomentumCloud<CloudType>>&
 Foam::MomentumCloud<CloudType>::surfaceFilm() const
 {
-    return surfaceFilmModel_();
+    return filmModel_();
 }
 
 
@@ -240,7 +240,7 @@ template<class CloudType>
 inline Foam::SurfaceFilmModel<Foam::MomentumCloud<CloudType>>&
 Foam::MomentumCloud<CloudType>::surfaceFilm()
 {
-    return surfaceFilmModel_();
+    return filmModel_();
 }
 
 
