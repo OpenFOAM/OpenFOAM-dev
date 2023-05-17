@@ -134,7 +134,7 @@ TiO2
 
 TiO2_s
 {
-    $TiO2
+    $TiO2;
 }
 
 Cl2
