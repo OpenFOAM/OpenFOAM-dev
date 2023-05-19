@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Merkle.H"
+#include "Saito.H"
 #include "addToRunTimeSelectionTable.H"
+
+#include "mathematicalConstants.H"
+using Foam::constant::mathematical::pi;
+
+#include "physicoChemicalConstants.H"
+using Foam::constant::physicoChemical::RR;
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -34,8 +40,8 @@ namespace compressible
 {
 namespace cavitationModels
 {
-    defineTypeNameAndDebug(Merkle, 0);
-    addToRunTimeSelectionTable(cavitationModel, Merkle, dictionary);
+    defineTypeNameAndDebug(Saito, 0);
+    addToRunTimeSelectionTable(cavitationModel, Saito, dictionary);
 }
 }
 }
@@ -43,7 +49,7 @@ namespace cavitationModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::compressible::cavitationModels::Merkle::Merkle
+Foam::compressible::cavitationModels::Saito::Saito
 (
     const dictionary& dict,
     const compressibleTwoPhases& phases
@@ -51,14 +57,12 @@ Foam::compressible::cavitationModels::Merkle::Merkle
 :
     cavitationModel(dict, phases),
 
-    UInf_("UInf", dimVelocity, dict),
-    tInf_("tInf", dimTime, dict),
-    Cc_("Cc", dimless, dict),
+    Ca_("Ca", dimless/dimLength, dict),
     Cv_("Cv", dimless, dict),
+    Cc_("Cc", dimless, dict),
+    alphaNuc_("alphaNuc", dimless, dict),
 
-    p0_("0", dimPressure, 0),
-
-    mcCoeff_(Cc_/(0.5*sqr(UInf_)*tInf_))
+    p0_("0", dimPressure, 0)
 {
     correct();
 }
@@ -66,62 +70,88 @@ Foam::compressible::cavitationModels::Merkle::Merkle
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+inline Foam::tmp<Foam::volScalarField::Internal>
+Foam::compressible::cavitationModels::Saito::fT(const rhoThermo& thermo) const
+{
+    return sqrt(2*pi*(RR/thermo.W()()())*thermo.T()());
+}
+
+
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::compressible::cavitationModels::Merkle::mDotcvAlphal() const
+Foam::compressible::cavitationModels::Saito::mDotcvAlphal() const
 {
     const volScalarField::Internal& p = thermol().p();
 
-    const volScalarField::Internal mvCoeff_
+    const volScalarField::Internal alphal
     (
-        Cv_*rhol()/(0.5*sqr(UInf_)*tInf_*rhov())
+        min(max(this->alphal(), scalar(0)), scalar(1))
     );
+
+    const volScalarField::Internal alphav
+    (
+        min(max(this->alphav(), scalar(0)), scalar(1))
+    );
+
+    const volScalarField::Internal alphavNuc(max(alphav, alphaNuc_));
+
+    const volScalarField::Internal A(Ca_*alphal*alphavNuc);
+
+    const volScalarField::Internal mvCoeff(Cv_*A*rhol()/(rhov()*fT(thermol())));
+    const volScalarField::Internal mcCoeff(Cc_*A/fT(thermol()));
 
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*max(p - pSatv(), p0_),
-       -mvCoeff_*min(p - pSatl(), p0_)
+        mcCoeff*alphal*max(p - pSatv(), p0_),
+       -mvCoeff*alphavNuc*min(p - pSatl(), p0_)
     );
 }
 
 
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
-Foam::compressible::cavitationModels::Merkle::mDotcvP() const
+Foam::compressible::cavitationModels::Saito::mDotcvP() const
 {
     const volScalarField::Internal& p = thermol().p();
 
-    const volScalarField::Internal limitedAlphal
+    const volScalarField::Internal alphal
     (
-        min(max(alphal(), scalar(0)), scalar(1))
+        min(max(this->alphal(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal mvCoeff_
+    const volScalarField::Internal alphav
     (
-        Cv_*rhol()/(0.5*sqr(UInf_)*tInf_*rhov())
+        min(max(this->alphav(), scalar(0)), scalar(1))
     );
+
+    const volScalarField::Internal alphavNuc(max(alphav, alphaNuc_));
+
+    const volScalarField::Internal A(Ca_*alphal*alphavNuc);
+
+    const volScalarField::Internal mvCoeff(Cv_*A*rhol()/(rhov()*fT(thermol())));
+    const volScalarField::Internal mcCoeff(Cc_*A/fT(thermol()));
 
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*(1 - limitedAlphal)*pos0(p - pSatv()),
-       -mvCoeff_*limitedAlphal*neg(p - pSatl())
+        mcCoeff*alphal*alphav*pos0(p - pSatv()),
+       -mvCoeff*alphal*alphavNuc*neg(p - pSatl())
     );
 }
 
 
-void Foam::compressible::cavitationModels::Merkle::correct()
+void Foam::compressible::cavitationModels::Saito::correct()
 {}
 
 
-bool Foam::compressible::cavitationModels::Merkle::read
+bool Foam::compressible::cavitationModels::Saito::read
 (
     const dictionary& dict
 )
 {
     if (cavitationModel::read(dict))
     {
-        dict.lookup("UInf") >> UInf_;
-        dict.lookup("tInf") >> tInf_;
-        dict.lookup("Cc") >> Cc_;
+        dict.lookup("Ca") >> Ca_;
         dict.lookup("Cv") >> Cv_;
+        dict.lookup("Cc") >> Cc_;
+        dict.lookup("alphaNuc") >> alphaNuc_;
 
         return true;
     }

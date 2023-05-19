@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,10 +29,10 @@ Description
 
     Reference:
     \verbatim
-        Schnerr, G. H., And Sauer, J.,
-        "Physical and Numerical Modeling of Unsteady Cavitation Dynamics",
-        Proc. 4th International Conference on Multiphase Flow,
-        New Orleans, U.S.A., 2001.
+        Schnerr, G. H., & Sauer, J. (2001, May).
+        Physical and numerical modeling of unsteady cavitation dynamics.
+        In Fourth international conference on multiphase flow (Vol. 1).
+        New Orleans, LO, USA: ICMF New Orleans.
     \endverbatim
 
 SourceFiles
@@ -77,6 +77,9 @@ class SchnerrSauer
         dimensionedScalar Cv_;
 
         dimensionedScalar p0_;
+
+
+    // Private Member functions
 
         //- Nucleation site volume-fraction
         dimensionedScalar alphaNuc() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,12 +33,11 @@ Description
 
     Reference:
     \verbatim
-        Kunz, R.F., Boger, D.A., Stinebring, D.R., Chyczewski, Lindau. J.W.,
-        Gibeling, H.J., Venkateswaran, S., Govindan, T.R.,
-        "A Preconditioned Implicit Method for Two-Phase Flows with Application
-         to Cavitation Prediction,"
-        Computers and Fluids,
-        29(8):849-875, 2000.
+        Kunz, R. F., Boger, D. A., Stinebring, D. R., Chyczewski,
+        T. S., Lindau, J. W., Gibeling, H. J., ... & Govindan, T. (2000).
+        A preconditioned Navier–Stokes method for two-phase flows
+        with application to cavitation prediction.
+        Computers & Fluids, 29(8), 849-875.
     \endverbatim
 
 SourceFiles

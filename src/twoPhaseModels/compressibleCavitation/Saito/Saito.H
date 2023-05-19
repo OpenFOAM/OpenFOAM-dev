@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,26 +22,50 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::compressible::cavitationModels::Merkle
+    Foam::compressible::cavitationModels::Saito
 
 Description
-    Merkle cavitation model.
+    Saito cavitation model.
 
     Reference:
     \verbatim
-        Markle, C. L. (1998).
-        Computational modeling of the dynamics of sheet cavitation.
-        In Proc. 3rd International Symposium on Cavitation
-        (Vol. 2, pp. 307-311).
+        Saito, Y., Takami, R., Nakamori, I., & Ikohagi, T. (2007).
+        Numerical analysis of unsteady behavior of cloud cavitation
+        around a NACA0015 foil. Computational Mechanics, 40, 85-96.
    \endverbatim
 
+Usage:
+    \table
+        Property | Description                      | Required | Default value
+        liquid   | Name of the liquid phase         | yes      |
+        pSat     | Saturation vapor pressure        | yes      |
+        Ca       | Interfacial area concentration coefficient [1/m] | yes      |
+        Cv       | Vapourisation rate coefficient   | yes      |
+        Cc       | Condensation rate coefficient    | yes      |
+        alphaNuc | Nucleation site volume fraction  | yes      |
+    \endtable
+
+    Example:
+    \verbatim
+        model       Saito;
+
+        liquid      liquid;
+
+        pSat        79995;
+
+        Ca          0.1;  // Interfacial area concentration coefficient [1/m]
+        Cc          1;
+        Cv          1;
+        alphaNuc    0.01;
+    \endverbatim
+
 SourceFiles
-    Merkle.C
+    Saito.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Merkle_H
-#define Merkle_H
+#ifndef Saito_H
+#define Saito_H
 
 #include "cavitationModel.H"
 
@@ -55,35 +79,47 @@ namespace cavitationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                                 Class Merkle
+                                 Class Saito
 \*---------------------------------------------------------------------------*/
 
-class Merkle
+class Saito
 :
     public cavitationModel
 {
     // Private Data
 
-        dimensionedScalar UInf_;
-        dimensionedScalar tInf_;
-        dimensionedScalar Cc_;
+        //- Interfacial area concentration coefficient [1/m]
+        dimensionedScalar Ca_;
+
+        //- Vapourisation rate coefficient
         dimensionedScalar Cv_;
 
+        //- Condensation rate coefficient
+        dimensionedScalar Cc_;
+
+        //- Nucleation site volume fraction
+        dimensionedScalar alphaNuc_;
+
+        //- Zero with pressure dimensions
         dimensionedScalar p0_;
 
-        dimensionedScalar mcCoeff_;
+
+    // Private Member functions
+
+        //- Return the function of temperature
+        inline tmp<volScalarField::Internal> fT(const rhoThermo& thermo) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("Merkle");
+    TypeName("Saito");
 
 
     // Constructors
 
         //- Construct for phases
-        Merkle
+        Saito
         (
             const dictionary& dict,
             const compressibleTwoPhases& phases
@@ -91,7 +127,7 @@ public:
 
 
     //- Destructor
-    virtual ~Merkle()
+    virtual ~Saito()
     {}
 
 
@@ -106,7 +142,7 @@ public:
         //  to multiply (p - pSat)
         virtual Pair<tmp<volScalarField::Internal>> mDotcvP() const;
 
-        //- Correct the Merkle phaseChange model
+        //- Correct the Saito phaseChange model
         virtual void correct();
 
         //- Read the dictionary and update
