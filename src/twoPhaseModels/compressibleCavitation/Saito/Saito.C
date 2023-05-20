@@ -70,7 +70,7 @@ Foam::compressible::cavitationModels::Saito::Saito
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-inline Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::volScalarField::Internal>
 Foam::compressible::cavitationModels::Saito::fT(const rhoThermo& thermo) const
 {
     return sqrt(2*pi*(RR/thermo.W()()())*thermo.T()());
@@ -82,14 +82,14 @@ Foam::compressible::cavitationModels::Saito::mDotcvAlphal() const
 {
     const volScalarField::Internal& p = thermol().p();
 
-    const volScalarField::Internal alphal
-    (
-        min(max(this->alphal(), scalar(0)), scalar(1))
-    );
-
     const volScalarField::Internal alphav
     (
         min(max(this->alphav(), scalar(0)), scalar(1))
+    );
+
+    const volScalarField::Internal alphal
+    (
+        min(max(this->alphal(), scalar(0)), scalar(1))
     );
 
     const volScalarField::Internal alphavNuc(max(alphav, alphaNuc_));
@@ -112,14 +112,14 @@ Foam::compressible::cavitationModels::Saito::mDotcvP() const
 {
     const volScalarField::Internal& p = thermol().p();
 
-    const volScalarField::Internal alphal
-    (
-        min(max(this->alphal(), scalar(0)), scalar(1))
-    );
-
     const volScalarField::Internal alphav
     (
         min(max(this->alphav(), scalar(0)), scalar(1))
+    );
+
+    const volScalarField::Internal alphal
+    (
+        min(max(this->alphal(), scalar(0)), scalar(1))
     );
 
     const volScalarField::Internal alphavNuc(max(alphav, alphaNuc_));

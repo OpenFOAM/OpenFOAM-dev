@@ -51,12 +51,12 @@ Usage:
 
         liquid      liquid;
 
-        pSat        79995;
+        pSat        2300;
 
         Ca          0.1;  // Interfacial area concentration coefficient [1/m]
         Cc          1;
         Cv          1;
-        alphaNuc    0.01;
+        alphaNuc    0.001;
     \endverbatim
 
 SourceFiles
@@ -107,7 +107,7 @@ class Saito
     // Private Member functions
 
         //- Return the function of temperature
-        inline tmp<volScalarField::Internal> fT(const rhoThermo& thermo) const;
+        tmp<volScalarField::Internal> fT(const rhoThermo& thermo) const;
 
 
 public:

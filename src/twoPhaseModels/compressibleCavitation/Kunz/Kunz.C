@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,8 @@ Foam::compressible::cavitationModels::Kunz::Kunz
 
     UInf_("UInf", dimVelocity, dict),
     tInf_("tInf", dimTime, dict),
-    Cc_("Cc", dimless, dict),
     Cv_("Cv", dimless, dict),
+    Cc_("Cc", dimless, dict),
 
     p0_("0", dimPressure, 0)
 {
@@ -64,21 +64,29 @@ Foam::compressible::cavitationModels::Kunz::Kunz
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::compressible::cavitationModels::Kunz::mvCoeff() const
+{
+    return Cv_*rhov()/(0.5*rhol()*sqr(UInf_)*tInf_);
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::compressible::cavitationModels::Kunz::mcCoeff() const
+{
+    return Cc_*rhov()/tInf_;
+}
+
+
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
 Foam::compressible::cavitationModels::Kunz::mDotcvAlphal() const
 {
     const volScalarField::Internal& p =
         phases_.mesh().lookupObject<volScalarField>("p");
 
-    const volScalarField::Internal mcCoeff_(Cc_*rhov()/tInf_);
-    const volScalarField::Internal mvCoeff_
+    const volScalarField::Internal alphal
     (
-        Cv_*rhov()/(0.5*rhol()*sqr(UInf_)*tInf_)
-    );
-
-    const volScalarField::Internal limitedAlphal
-    (
-        min(max(alphal(), scalar(0)), scalar(1))
+        min(max(this->alphal(), scalar(0)), scalar(1))
     );
 
     const volScalarField::Internal pSatv(this->pSatv());
@@ -86,9 +94,9 @@ Foam::compressible::cavitationModels::Kunz::mDotcvAlphal() const
 
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*sqr(limitedAlphal)
+        mcCoeff()*sqr(alphal)
        *max(p - pSatv, p0_)/max(p - pSatv, 0.01*pSatv),
-       -mvCoeff_*min(p - pSatl, p0_)
+      - mvCoeff()*min(p - pSatl, p0_)
     );
 }
 
@@ -99,15 +107,14 @@ Foam::compressible::cavitationModels::Kunz::mDotcvP() const
     const volScalarField::Internal& p =
         phases_.mesh().lookupObject<volScalarField>("p");
 
-    const volScalarField::Internal mcCoeff_(Cc_*rhov()/tInf_);
-    const volScalarField::Internal mvCoeff_
+    const volScalarField::Internal alphav
     (
-        Cv_*rhov()/(0.5*rhol()*sqr(UInf_)*tInf_)
+        min(max(this->alphav(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal limitedAlphal
+    const volScalarField::Internal alphal
     (
-        min(max(alphal(), scalar(0)), scalar(1))
+        min(max(this->alphal(), scalar(0)), scalar(1))
     );
 
     const volScalarField::Internal pSatv(this->pSatv());
@@ -115,9 +122,9 @@ Foam::compressible::cavitationModels::Kunz::mDotcvP() const
 
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*sqr(limitedAlphal)*(1 - limitedAlphal)
-       *pos0(p - pSatv)/max(p - pSatv, 0.01*pSatv),
-       -mvCoeff_*limitedAlphal*neg(p - pSatl)
+        mcCoeff()*alphav*sqr(alphal)*pos0(p - pSatv)
+       /max(p - pSatv, 0.01*pSatv),
+      - mvCoeff()*alphal*neg(p - pSatl)
     );
 }
 
@@ -135,8 +142,8 @@ bool Foam::compressible::cavitationModels::Kunz::read
     {
         dict.lookup("UInf") >> UInf_;
         dict.lookup("tInf") >> tInf_;
-        dict.lookup("Cc") >> Cc_;
         dict.lookup("Cv") >> Cv_;
+        dict.lookup("Cc") >> Cc_;
 
         return true;
     }

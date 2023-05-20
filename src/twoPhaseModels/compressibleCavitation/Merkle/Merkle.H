@@ -35,6 +35,31 @@ Description
         (Vol. 2, pp. 307-311).
    \endverbatim
 
+Usage:
+    \table
+        Property | Description                     | Required | Default value
+        liquid   | Name of the liquid phase             | yes      |
+        pSat     | Saturation vapor pressure            | yes      |
+        Uinf     | Free-stream velocity                 | yes      |
+        tInf     | Vaporisation/condensation time scale | yes      |
+        Cv       | Vapourisation rate coefficient       | yes      |
+        Cc       | Condensation rate coefficient        | yes      |
+    \endtable
+
+    Example:
+    \verbatim
+        model       Merkle;
+
+        liquid      liquid;
+
+        pSat        2300;
+
+        UInf        20;
+        tInf        0.005;  // L = 0.1 m
+        Cv          1e-3;
+        Cc          80;
+    \endverbatim
+
 SourceFiles
     Merkle.C
 
@@ -64,14 +89,27 @@ class Merkle
 {
     // Private Data
 
+        //- Free-stream velocity
         dimensionedScalar UInf_;
+
+        //- Vaporisation/condensation time scale
         dimensionedScalar tInf_;
-        dimensionedScalar Cc_;
+
+        //- Vaporisation rate coefficient
         dimensionedScalar Cv_;
 
+        //- Condensation rate coefficient
+        dimensionedScalar Cc_;
+
+        //- Zero with pressure dimensions
         dimensionedScalar p0_;
 
         dimensionedScalar mcCoeff_;
+
+
+    // Private Member functions
+
+        tmp<volScalarField::Internal> mvCoeff() const;
 
 
 public:

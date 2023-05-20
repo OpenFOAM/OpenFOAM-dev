@@ -53,8 +53,8 @@ Foam::compressible::cavitationModels::Merkle::Merkle
 
     UInf_("UInf", dimVelocity, dict),
     tInf_("tInf", dimTime, dict),
-    Cc_("Cc", dimless, dict),
     Cv_("Cv", dimless, dict),
+    Cc_("Cc", dimless, dict),
 
     p0_("0", dimPressure, 0),
 
@@ -66,20 +66,22 @@ Foam::compressible::cavitationModels::Merkle::Merkle
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::compressible::cavitationModels::Merkle::mvCoeff() const
+{
+    return Cv_*rhol()/(0.5*sqr(UInf_)*tInf_*rhov());
+}
+
+
 Foam::Pair<Foam::tmp<Foam::volScalarField::Internal>>
 Foam::compressible::cavitationModels::Merkle::mDotcvAlphal() const
 {
     const volScalarField::Internal& p = thermol().p();
 
-    const volScalarField::Internal mvCoeff_
-    (
-        Cv_*rhol()/(0.5*sqr(UInf_)*tInf_*rhov())
-    );
-
     return Pair<tmp<volScalarField::Internal>>
     (
         mcCoeff_*max(p - pSatv(), p0_),
-       -mvCoeff_*min(p - pSatl(), p0_)
+       -mvCoeff()*min(p - pSatl(), p0_)
     );
 }
 
@@ -89,20 +91,20 @@ Foam::compressible::cavitationModels::Merkle::mDotcvP() const
 {
     const volScalarField::Internal& p = thermol().p();
 
-    const volScalarField::Internal limitedAlphal
+    const volScalarField::Internal alphav
     (
-        min(max(alphal(), scalar(0)), scalar(1))
+        min(max(this->alphav(), scalar(0)), scalar(1))
     );
 
-    const volScalarField::Internal mvCoeff_
+    const volScalarField::Internal alphal
     (
-        Cv_*rhol()/(0.5*sqr(UInf_)*tInf_*rhov())
+        min(max(this->alphal(), scalar(0)), scalar(1))
     );
 
     return Pair<tmp<volScalarField::Internal>>
     (
-        mcCoeff_*(1 - limitedAlphal)*pos0(p - pSatv()),
-       -mvCoeff_*limitedAlphal*neg(p - pSatl())
+        mcCoeff_*alphav*pos0(p - pSatv()),
+       -mvCoeff()*alphal*neg(p - pSatl())
     );
 }
 
@@ -120,8 +122,8 @@ bool Foam::compressible::cavitationModels::Merkle::read
     {
         dict.lookup("UInf") >> UInf_;
         dict.lookup("tInf") >> tInf_;
-        dict.lookup("Cc") >> Cc_;
         dict.lookup("Cv") >> Cv_;
+        dict.lookup("Cc") >> Cc_;
 
         return true;
     }

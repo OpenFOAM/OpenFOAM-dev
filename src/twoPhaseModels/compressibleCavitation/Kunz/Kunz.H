@@ -25,11 +25,13 @@ Class
     Foam::compressible::cavitationModels::Kunz
 
 Description
-    Kunz cavitation model slightly modified so that the condensation term
-    is switched off when the pressure is less than the saturation vapour
-    pressure.  This change allows the condensation term to be formulated as
-    a coefficient multiplying (p - p_sat) so that it can be included as an
-    implicit term in the pressure equation.
+    Kunz cavitation model.
+
+    Slightly modified so that the condensation term is switched off when the
+    pressure is less than the saturation vapour pressure.  This change allows
+    the condensation term to be formulated as a coefficient multiplying (p -
+    p_sat) so that it can be included as an implicit term in the pressure
+    equation.
 
     Reference:
     \verbatim
@@ -38,6 +40,31 @@ Description
         A preconditioned Navier–Stokes method for two-phase flows
         with application to cavitation prediction.
         Computers & Fluids, 29(8), 849-875.
+    \endverbatim
+
+Usage:
+    \table
+        Property | Description                     | Required | Default value
+        liquid   | Name of the liquid phase             | yes      |
+        pSat     | Saturation vapor pressure            | yes      |
+        Uinf     | Free-stream velocity                 | yes      |
+        tInf     | Vaporisation/condensation time scale | yes      |
+        Cv       | Vapourisation rate coefficient       | yes      |
+        Cc       | Condensation rate coefficient        | yes      |
+    \endtable
+
+    Example:
+    \verbatim
+        model       Kunz;
+
+        liquid      liquid;
+
+        pSat        2300;
+
+        UInf        20;
+        tInf        0.005; // L = 0.1 m
+        Cv          1000;
+        Cc          1000;
     \endverbatim
 
 SourceFiles
@@ -69,12 +96,27 @@ class Kunz
 {
     // Private Data
 
+        //- Free-stream velocity
         dimensionedScalar UInf_;
+
+        //- Vaporisation time scale
         dimensionedScalar tInf_;
-        dimensionedScalar Cc_;
+
+        //- Vaporisation rate coefficient
         dimensionedScalar Cv_;
 
+        //- Condensation rate coefficient
+        dimensionedScalar Cc_;
+
+        //- Zero with pressure dimensions
         dimensionedScalar p0_;
+
+
+    // Private Member functions
+
+        tmp<volScalarField::Internal> mvCoeff() const;
+
+        tmp<volScalarField::Internal> mcCoeff() const;
 
 
 public:

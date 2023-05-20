@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,8 +56,8 @@ Foam::cavitationModels::SchnerrSauer::SchnerrSauer
 
     n_("n", dimless/dimVolume, dict),
     dNuc_("dNuc", dimLength, dict),
-    Cc_("Cc", dimless, dict),
     Cv_("Cv", dimless, dict),
+    Cc_("Cc", dimless, dict),
 
     p0_("0", pSat().dimensions(), 0.0)
 {
@@ -167,8 +167,8 @@ bool Foam::cavitationModels::SchnerrSauer::read(const dictionary& dict)
     {
         dict.lookup("n") >> n_;
         dict.lookup("dNuc") >> dNuc_;
-        dict.lookup("Cc") >> Cc_;
         dict.lookup("Cv") >> Cv_;
+        dict.lookup("Cc") >> Cc_;
 
         return true;
     }

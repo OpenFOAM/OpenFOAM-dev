@@ -35,6 +35,32 @@ Description
         New Orleans, LO, USA: ICMF New Orleans.
     \endverbatim
 
+Usage:
+    \table
+        Property | Description                    | Required | Default value
+        liquid   | Name of the liquid phase       | yes      |
+        pSat     | Saturation vapor pressure      | yes      |
+        Uinf     | Free-stream velocity           | yes      |
+        n        | Bubble number density          | yes      |
+        dNuc     | Nucleation site diameter       | yes      |
+        Cv       | Vapourisation rate coefficient | yes      |
+        Cc       | Condensation rate coefficient  | yes      |
+    \endtable
+
+    Example:
+    \verbatim
+        model       SchnerrSauer;
+
+        liquid      liquid;
+
+        pSat        2300;
+
+        n           1.6e+13;
+        dNuc        2e-6;
+        Cv          1;
+        Cc          1;
+    \endverbatim
+
 SourceFiles
     SchnerrSauer.C
 
@@ -70,12 +96,13 @@ class SchnerrSauer
         //- Nucleation site diameter
         dimensionedScalar dNuc_;
 
+        //- Vaporisation rate coefficient
+        dimensionedScalar Cv_;
+
         //- Condensation rate coefficient
         dimensionedScalar Cc_;
 
-        //- Vapourisation rate coefficient
-        dimensionedScalar Cv_;
-
+        //- Zero with pressure dimensions
         dimensionedScalar p0_;
 
 
@@ -90,7 +117,7 @@ class SchnerrSauer
             const volScalarField::Internal& limitedAlphal
         ) const;
 
-        //- Part of the condensation and vapourisation rates
+        //- Part of the condensation and vaporisation rates
         tmp<volScalarField::Internal> pCoeff
         (
             const volScalarField::Internal& p,

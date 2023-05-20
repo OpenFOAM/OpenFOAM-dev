@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,10 +29,36 @@ Description
 
     Reference:
     \verbatim
-        Schnerr, G. H., And Sauer, J.,
-        "Physical and Numerical Modeling of Unsteady Cavitation Dynamics",
-        Proc. 4th International Conference on Multiphase Flow,
-        New Orleans, U.S.A., 2001.
+        Schnerr, G. H., & Sauer, J. (2001, May).
+        Physical and numerical modeling of unsteady cavitation dynamics.
+        In Fourth international conference on multiphase flow (Vol. 1).
+        New Orleans, LO, USA: ICMF New Orleans.
+    \endverbatim
+
+Usage:
+    \table
+        Property | Description                    | Required | Default value
+        liquid   | Name of the liquid phase       | yes      |
+        pSat     | Saturation vapor pressure      | yes      |
+        Uinf     | Free-stream velocity           | yes      |
+        n        | Bubble number density          | yes      |
+        dNuc     | Nucleation site diameter       | yes      |
+        Cv       | Vapourisation rate coefficient | yes      |
+        Cc       | Condensation rate coefficient  | yes      |
+    \endtable
+
+    Example:
+    \verbatim
+        model       SchnerrSauer;
+
+        liquid      liquid;
+
+        pSat        2300;
+
+        n           1.6e+13;
+        dNuc        2e-6;
+        Cv          1;
+        Cc          1;
     \endverbatim
 
 SourceFiles
@@ -68,11 +94,11 @@ class SchnerrSauer
         //- Nucleation site diameter
         dimensionedScalar dNuc_;
 
+        //- Vaporisation rate coefficient
+        dimensionedScalar Cv_;
+
         //- Condensation rate coefficient
         dimensionedScalar Cc_;
-
-        //- Vapourisation rate coefficient
-        dimensionedScalar Cv_;
 
         dimensionedScalar p0_;
 
@@ -85,7 +111,7 @@ class SchnerrSauer
             const volScalarField::Internal& limitedAlphal
         ) const;
 
-        //- Part of the condensation and vapourisation rates
+        //- Part of the condensation and vaporisation rates
         tmp<volScalarField::Internal> pCoeff
         (
             const volScalarField::Internal& p

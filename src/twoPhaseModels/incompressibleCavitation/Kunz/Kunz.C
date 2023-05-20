@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,8 @@ Foam::cavitationModels::Kunz::Kunz
 
     UInf_("UInf", dimVelocity, dict),
     tInf_("tInf", dimTime, dict),
-    Cc_("Cc", dimless, dict),
     Cv_("Cv", dimless, dict),
+    Cc_("Cc", dimless, dict),
 
     p0_("0", pSat().dimensions(), 0.0),
 
@@ -113,8 +113,8 @@ bool Foam::cavitationModels::Kunz::read(const dictionary& dict)
     {
         dict.lookup("UInf") >> UInf_;
         dict.lookup("tInf") >> tInf_;
-        dict.lookup("Cc") >> Cc_;
         dict.lookup("Cv") >> Cv_;
+        dict.lookup("Cc") >> Cc_;
 
         mcCoeff_ = Cc_*rhov()/tInf_;
         mvCoeff_ = Cv_*rhov()/(0.5*rhol()*sqr(UInf_)*tInf_);

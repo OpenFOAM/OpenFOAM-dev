@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,11 +29,36 @@ Description
 
     Reference:
     \verbatim
-        C. L. Merkle, J. Feng, and P. E. O. Buelow,
-        "Computational modeling of the dynamics of sheet cavitation",
-        in Proceedings Third International Symposium on Cavitation
-        Grenoble, France 1998.
+        Markle, C. L. (1998).
+        Computational modeling of the dynamics of sheet cavitation.
+        In Proc. 3rd International Symposium on Cavitation
+        (Vol. 2, pp. 307-311).
    \endverbatim
+
+Usage:
+    \table
+        Property | Description                     | Required | Default value
+        liquid   | Name of the liquid phase             | yes      |
+        pSat     | Saturation vapor pressure            | yes      |
+        Uinf     | Free-stream velocity                 | yes      |
+        tInf     | Vaporisation/condensation time scale | yes      |
+        Cv       | Vapourisation rate coefficient       | yes      |
+        Cc       | Condensation rate coefficient        | yes      |
+    \endtable
+
+    Example:
+    \verbatim
+        model       Merkle;
+
+        liquid      liquid;
+
+        pSat        2300;
+
+        UInf        20;
+        tInf        0.005;  // L = 0.1 m
+        Cv          1e-3;
+        Cc          80;
+    \endverbatim
 
 SourceFiles
     Merkle.C
@@ -62,14 +87,23 @@ class Merkle
 {
     // Private Data
 
+        //- Free-stream velocity
         dimensionedScalar UInf_;
+
+        //- Vaporisation/condensation time scale
         dimensionedScalar tInf_;
-        dimensionedScalar Cc_;
+
+        //- Vaporisation rate coefficient
         dimensionedScalar Cv_;
 
+        //- Condensation rate coefficient
+        dimensionedScalar Cc_;
+
+        //- Zero with pressure dimensions
         dimensionedScalar p0_;
 
         dimensionedScalar mcCoeff_;
+
         dimensionedScalar mvCoeff_;
 
 
