@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethods::hyperbolic::fContinuous
 {
     tmp<volScalarField> x = this->x(alphas, phaseSet, systemSet);
     tmp<volScalarField> a = parameter(alphas, phaseSet, minContinuousAlpha_);
-    return (1 + tanh((4/transitionAlphaScale_)*(x - a)))/2;
+    return (1 + tanh((4/transitionAlphaScale_.value)*(x - a)))/2;
 }
 
 
@@ -68,14 +68,15 @@ Foam::blendingMethods::hyperbolic::hyperbolic
     ),
     transitionAlphaScale_
     (
-        readParameter("transitionAlphaScale", dict, {0, NaN}, false)
+        readParameter("transitionAlphaScale", dict, {0, vGreat}, false)
     )
 {
     if
     (
         canBeContinuous(0)
      && canBeContinuous(1)
-     && minContinuousAlpha_[0] + minContinuousAlpha_[1] < 1 - rootSmall
+     && minContinuousAlpha_[0].value + minContinuousAlpha_[1].value
+      < 1 - rootSmall
     )
     {
         FatalErrorInFunction
@@ -98,7 +99,7 @@ Foam::blendingMethods::hyperbolic::~hyperbolic()
 
 bool Foam::blendingMethods::hyperbolic::canBeContinuous(const label index) const
 {
-    return isParameter(minContinuousAlpha_[index]);
+    return minContinuousAlpha_[index].valid;
 }
 
 
@@ -107,7 +108,8 @@ bool Foam::blendingMethods::hyperbolic::canSegregate() const
     return
         canBeContinuous(0)
      && canBeContinuous(1)
-     && minContinuousAlpha_[0] + minContinuousAlpha_[1] > 1 + rootSmall;
+     && minContinuousAlpha_[0].value + minContinuousAlpha_[1].value
+      > 1 + rootSmall;
 }
 
 

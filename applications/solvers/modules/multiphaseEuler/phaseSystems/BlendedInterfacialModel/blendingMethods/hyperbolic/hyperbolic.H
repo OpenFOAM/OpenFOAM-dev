@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,10 +65,10 @@ class hyperbolic
     // Private Data
 
         //- Minimum fraction of phases which can be considered continuous
-        Pair<scalar> minContinuousAlpha_;
+        Pair<blendingParameter> minContinuousAlpha_;
 
         //- Width of the transition
-        const scalar transitionAlphaScale_;
+        const blendingParameter transitionAlphaScale_;
 
 
 protected:

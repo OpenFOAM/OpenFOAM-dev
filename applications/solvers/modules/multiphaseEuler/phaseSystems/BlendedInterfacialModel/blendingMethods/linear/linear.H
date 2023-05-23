@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,10 +64,10 @@ class linear
     // Private Data
 
         //- Minimum fraction of phases which can be considered fully continuous
-        Pair<scalar> minFullyContinuousAlpha_;
+        Pair<blendingParameter> minFullyContinuousAlpha_;
 
         //- Minimum fraction of phases which can be considered partly continuous
-        Pair<scalar> minPartlyContinuousAlpha_;
+        Pair<blendingParameter> minPartlyContinuousAlpha_;
 
 
 protected:

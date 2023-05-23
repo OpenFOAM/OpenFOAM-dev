@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,20 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
+                     Struct blendingParameter Declaration
+\*---------------------------------------------------------------------------*/
+
+struct blendingParameter
+{
+    //- Is this parameter valid?
+    bool valid;
+
+    //- The parameter value. Could be templated if needed.
+    scalar value;
+};
+
+
+/*---------------------------------------------------------------------------*\
                        Class blendingMethod Declaration
 \*---------------------------------------------------------------------------*/
 
@@ -62,7 +76,7 @@ protected:
     // Protected Static Member Functions
 
         //- Read a parameter and check it lies within specified bounds
-        static scalar readParameter
+        static blendingParameter readParameter
         (
             const word& name,
             const dictionary& dict,
@@ -71,7 +85,7 @@ protected:
         );
 
         //- Read a parameter for each phase in the interface
-        static Pair<scalar> readParameters
+        static Pair<blendingParameter> readParameters
         (
             const word& name,
             const dictionary& dict,
@@ -79,9 +93,6 @@ protected:
             const Pair<scalar>& bounds,
             const bool allowNone
         );
-
-        //- Test if the given scalar is a valid parameter
-        static bool isParameter(const scalar parameter);
 
 
     // Protected Member Functions
@@ -106,7 +117,7 @@ protected:
         (
             const UPtrList<const volScalarField>& alphas,
             const label set,
-            const Pair<scalar>& parameters
+            const Pair<blendingParameter>& parameters
         ) const;
 
         //- Return the coordinate of the blending function

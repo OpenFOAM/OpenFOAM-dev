@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-Foam::scalar Foam::blendingMethod::readParameter
+Foam::blendingParameter Foam::blendingMethod::readParameter
 (
     const word& name,
     const dictionary& dict,
@@ -51,28 +51,25 @@ Foam::scalar Foam::blendingMethod::readParameter
 
         if (allowNone && t.isWord() && t.wordToken() == "none")
         {
-            return NaN;
+            return {false, NaN};
         }
 
         if (t.isNumber())
         {
             forAll(bounds, i)
             {
-                if (!std::isnan(bounds[i]))
-                {
-                    const label s = i == 0 ? -1 : +1;
+                const label s = i == 0 ? -1 : +1;
 
-                    if (s*t.number() > s*bounds[i])
-                    {
-                        FatalErrorInFunction
-                            << "Blending parameter " << name << " is "
-                            << (i == 0 ? "less" : "greater") << " than "
-                            << bounds[i] << exit(FatalError);
-                    }
+                if (s*t.number() > s*bounds[i])
+                {
+                    FatalErrorInFunction
+                        << "Blending parameter " << name << " is "
+                        << (i == 0 ? "less" : "greater") << " than "
+                        << bounds[i] << exit(FatalError);
                 }
             }
 
-            return t.number();
+            return {true, t.number()};
         }
 
         FatalIOErrorInFunction(dict)
@@ -80,11 +77,11 @@ Foam::scalar Foam::blendingMethod::readParameter
             << t.info() << exit(FatalIOError);
     }
 
-    return NaN;
+    return {false, NaN};
 }
 
 
-Foam::Pair<Foam::scalar> Foam::blendingMethod::readParameters
+Foam::Pair<Foam::blendingParameter> Foam::blendingMethod::readParameters
 (
     const word& name,
     const dictionary& dict,
@@ -96,17 +93,11 @@ Foam::Pair<Foam::scalar> Foam::blendingMethod::readParameters
     const word name1 = IOobject::groupName(name, interface.phase1().name());
     const word name2 = IOobject::groupName(name, interface.phase2().name());
     return
-        Pair<scalar>
+        Pair<blendingParameter>
         (
             readParameter(name1, dict, bounds, allowNone),
             readParameter(name2, dict, bounds, allowNone)
         );
-}
-
-
-bool Foam::blendingMethod::isParameter(const scalar parameter)
-{
-    return !std::isnan(parameter);
 }
 
 
@@ -156,7 +147,7 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethod::parameter
 (
     const UPtrList<const volScalarField>& alphas,
     const label set,
-    const Pair<scalar>& parameters
+    const Pair<blendingParameter>& parameters
 ) const
 {
     tmp<volScalarField> talphaParameter = constant(alphas, 0);
@@ -167,7 +158,7 @@ Foam::tmp<Foam::volScalarField> Foam::blendingMethod::parameter
         {
             talphaParameter.ref() +=
                 max(iter().residualAlpha(), alphas[iter().index()])
-               *parameters[iter.index()];
+               *parameters[iter.index()].value;
         }
     }
 

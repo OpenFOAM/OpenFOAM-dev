@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,8 +95,8 @@ Foam::blendingMethods::linear::linear
 
         if
         (
-            isParameter(minFullyContinuousAlpha_[i])
-         != isParameter(minPartlyContinuousAlpha_[i])
+            minFullyContinuousAlpha_[i].valid
+         != minPartlyContinuousAlpha_[i].valid
         )
         {
             FatalErrorInFunction
@@ -109,7 +109,8 @@ Foam::blendingMethods::linear::linear
         (
             (
                 canBeContinuous(i)
-             && minFullyContinuousAlpha_[i] <= minPartlyContinuousAlpha_[i]
+             && minFullyContinuousAlpha_[i].value
+             <= minPartlyContinuousAlpha_[i].value
             )
         )
         {
@@ -126,11 +127,13 @@ Foam::blendingMethods::linear::linear
      && canBeContinuous(1)
      && (
             (
-                minFullyContinuousAlpha_[0] + minPartlyContinuousAlpha_[1]
+                minFullyContinuousAlpha_[0].value
+              + minPartlyContinuousAlpha_[1].value
               < 1 - rootSmall
             )
          || (
-                minFullyContinuousAlpha_[1] + minPartlyContinuousAlpha_[0]
+                minFullyContinuousAlpha_[1].value
+              + minPartlyContinuousAlpha_[0].value
               < 1 - rootSmall
             )
         )
@@ -157,7 +160,7 @@ Foam::blendingMethods::linear::~linear()
 
 bool Foam::blendingMethods::linear::canBeContinuous(const label index) const
 {
-    return isParameter(minFullyContinuousAlpha_[index]);
+    return minFullyContinuousAlpha_[index].valid;
 }
 
 
@@ -167,11 +170,16 @@ bool Foam::blendingMethods::linear::canSegregate() const
         canBeContinuous(0)
      && canBeContinuous(1)
      && (
-            minFullyContinuousAlpha_[0] + minPartlyContinuousAlpha_[1]
-          > 1 + rootSmall
-         ||
-            minFullyContinuousAlpha_[1] + minPartlyContinuousAlpha_[0]
-          > 1 + rootSmall
+            (
+                minFullyContinuousAlpha_[0].value
+              + minPartlyContinuousAlpha_[1].value
+              > 1 + rootSmall
+            )
+         || (
+                minFullyContinuousAlpha_[1].value
+              + minPartlyContinuousAlpha_[0].value
+              > 1 + rootSmall
+            )
         );
 }
 
