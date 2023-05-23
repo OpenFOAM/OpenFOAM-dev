@@ -215,6 +215,9 @@ public:
         //- Sample the distribution
         scalar sample() const;
 
+        //- Sample the distribution
+        using distribution::sample;
+
         //- Return the mean value
         virtual scalar mean() const;
 
