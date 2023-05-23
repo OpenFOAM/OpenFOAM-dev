@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "egrMixture.H"
-#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -74,7 +73,7 @@ const ThermoType& Foam::egrMixture<ThermoType>::mixture
     const scalar egr
 ) const
 {
-    if (ft < 0.0001)
+    if (ft < 0.0001 && egr < 0.0001)
     {
         return oxidant_;
     }
@@ -87,7 +86,7 @@ const ThermoType& Foam::egrMixture<ThermoType>::mixture
         fu *= (1.0 - egr);
         ox *= (1.0 - egr);
 
-        scalar pr = 1 - fu - ox;
+        const scalar pr = 1 - fu - ox;
 
         mixture_ = fu*fuel_;
         mixture_ += ox*oxidant_;
