@@ -30,7 +30,6 @@ Description
 
     User specifies:
       - Number density of particles in cell set (effective)
-      - Total mass to inject
       - Initial parcel velocity
 
     Properties:

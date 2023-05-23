@@ -36,7 +36,7 @@
 #     fvModel is selected to evolve the Lagrangian particles.  See:
 #
 #         tutorials/modules/incompressibleFluid/hopperParticles
-#         tutorials/modules/incompressibleFluid/mixerVessel2DParticles
+#         tutorials/modules/incompressibleFluid/mixerVesselHorizontal2DParticles
 #
 #------------------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ physical fields needed by fvModel functionObject in which the clouds fvModel is
 selected to evolve the Lagrangian particles.  See:
 
     tutorials/modules/incompressibleFluid/hopperParticles
-    tutorials/modules/incompressibleFluid/mixerVessel2DParticles
+    tutorials/modules/incompressibleFluid/mixerVesselHorizontal2DParticles
 
 EOF
 
