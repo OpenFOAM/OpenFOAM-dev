@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,12 +32,47 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::IOerror::IOerror(const string& title)
+Foam::IOerrorLocation::IOerrorLocation()
 :
-    error(title),
     ioFileName_("unknown"),
     ioStartLineNumber_(-1),
     ioEndLineNumber_(-1)
+{}
+
+
+Foam::IOerrorLocation::IOerrorLocation
+(
+    const string& ioFileName,
+    const label ioStartLineNumber,
+    const label ioEndLineNumber
+)
+:
+    ioFileName_(ioFileName),
+    ioStartLineNumber_(ioStartLineNumber),
+    ioEndLineNumber_(ioEndLineNumber)
+{}
+
+
+Foam::IOerrorLocation::IOerrorLocation(const IOstream& ios)
+:
+    ioFileName_(ios.name()),
+    ioStartLineNumber_(ios.lineNumber()),
+    ioEndLineNumber_(-1)
+{}
+
+
+Foam::IOerrorLocation::IOerrorLocation(const dictionary& dict)
+:
+    ioFileName_(dict.name()),
+    ioStartLineNumber_(dict.startLineNumber()),
+    ioEndLineNumber_(dict.endLineNumber())
+{}
+
+
+Foam::IOerror::IOerror(const string& title)
+:
+    error(title),
+    IOerrorLocation()
 {}
 
 
@@ -46,58 +81,14 @@ Foam::OSstream& Foam::IOerror::operator()
     const char* functionName,
     const char* sourceFileName,
     const int sourceFileLineNumber,
-    const string& ioFileName,
-    const label ioStartLineNumber,
-    const label ioEndLineNumber
+    const IOerrorLocation& location
 )
 {
     error::operator()(functionName, sourceFileName, sourceFileLineNumber);
 
-    ioFileName_ = ioFileName;
-    ioStartLineNumber_ = ioStartLineNumber;
-    ioEndLineNumber_ = ioEndLineNumber;
+    IOerrorLocation::operator=(location);
 
     return operator OSstream&();
-}
-
-
-Foam::OSstream& Foam::IOerror::operator()
-(
-    const char* functionName,
-    const char* sourceFileName,
-    const int sourceFileLineNumber,
-    const IOstream& ioStream
-)
-{
-    return operator()
-    (
-        functionName,
-        sourceFileName,
-        sourceFileLineNumber,
-        ioStream.name(),
-        ioStream.lineNumber(),
-        -1
-    );
-}
-
-
-Foam::OSstream& Foam::IOerror::operator()
-(
-    const char* functionName,
-    const char* sourceFileName,
-    const int sourceFileLineNumber,
-    const dictionary& dict
-)
-{
-    return operator()
-    (
-        functionName,
-        sourceFileName,
-        sourceFileLineNumber,
-        dict.name(),
-        dict.startLineNumber(),
-        dict.endLineNumber()
-    );
 }
 
 

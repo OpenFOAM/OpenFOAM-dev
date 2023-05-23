@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -550,8 +550,7 @@ Foam::fileOperations::uncollatedFileOperation::readStream
             "uncollatedFileOperation::readStream()",
             __FILE__,
             __LINE__,
-            fName,
-            0
+            IOerrorLocation(fName, 0)
         )   << "cannot open file"
             << exit(FatalIOError);
     }
