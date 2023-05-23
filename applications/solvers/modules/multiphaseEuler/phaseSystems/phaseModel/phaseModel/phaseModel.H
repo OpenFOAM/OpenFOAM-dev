@@ -258,10 +258,13 @@ public:
             virtual const rhoThermo& thermo() const = 0;
 
             //- Access the thermophysical model
-            virtual rhoThermo& thermoRef() = 0;
+            virtual rhoThermo& thermo() = 0;
 
             //- Return the density field
             virtual const volScalarField& rho() const = 0;
+
+            //- Access the density field
+            virtual volScalarField& rho() = 0;
 
             //- Return whether the phase is isothermal
             virtual bool isothermal() const = 0;
@@ -314,11 +317,17 @@ public:
             //- Access the velocity
             virtual volVectorField& URef() = 0;
 
+            //- Access the velocity
+            virtual const volVectorField& URef() const = 0;
+
             //- Return the volumetric flux
             virtual tmp<surfaceScalarField> phi() const = 0;
 
             //- Access the volumetric flux
             virtual surfaceScalarField& phiRef() = 0;
+
+            //- Access the volumetric flux
+            virtual const surfaceScalarField& phiRef() const = 0;
 
             //- Return the face velocity
             //  Required for moving mesh cases
@@ -328,17 +337,27 @@ public:
             //  Required for moving mesh cases
             virtual surfaceVectorField& UfRef() = 0;
 
+            //- Access the face velocity
+            //  Required for moving mesh cases
+            virtual const surfaceVectorField& UfRef() const = 0;
+
             //- Return the volumetric flux of the phase
             virtual tmp<surfaceScalarField> alphaPhi() const = 0;
 
             //- Access the volumetric flux of the phase
             virtual surfaceScalarField& alphaPhiRef() = 0;
 
+            //- Access the volumetric flux of the phase
+            virtual const surfaceScalarField& alphaPhiRef() const = 0;
+
             //- Return the mass flux of the phase
             virtual tmp<surfaceScalarField> alphaRhoPhi() const = 0;
 
             //- Access the mass flux of the phase
             virtual surfaceScalarField& alphaRhoPhiRef() = 0;
+
+            //- Access the mass flux of the phase
+            virtual const surfaceScalarField& alphaRhoPhiRef() const = 0;
 
             //- Return the substantive acceleration
             virtual tmp<volVectorField> DUDt() const = 0;

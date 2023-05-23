@@ -210,9 +210,7 @@ void Foam::phaseModel::correctInflowOutflow(surfaceScalarField& alphaPhi) const
 {
     surfaceScalarField::Boundary& alphaPhiBf = alphaPhi.boundaryFieldRef();
     const volScalarField::Boundary& alphaBf = boundaryField();
-
-    tmp<surfaceScalarField> tphi(phi());
-    const surfaceScalarField::Boundary& phiBf = tphi().boundaryField();
+    const surfaceScalarField::Boundary& phiBf = phiRef().boundaryField();
 
     forAll(alphaPhiBf, patchi)
     {

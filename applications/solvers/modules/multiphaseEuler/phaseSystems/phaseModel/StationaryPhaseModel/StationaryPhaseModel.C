@@ -107,6 +107,18 @@ Foam::StationaryPhaseModel<BasePhaseModel>::URef()
 
 
 template<class BasePhaseModel>
+const Foam::volVectorField&
+Foam::StationaryPhaseModel<BasePhaseModel>::URef() const
+{
+    FatalErrorInFunction
+        << "Cannot access the velocity of a stationary phase"
+        << exit(FatalError);
+
+    return volVectorField::null();
+}
+
+
+template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::phi() const
 {
@@ -128,6 +140,18 @@ Foam::StationaryPhaseModel<BasePhaseModel>::phiRef()
         << exit(FatalError);
 
     return const_cast<surfaceScalarField&>(surfaceScalarField::null());
+}
+
+
+template<class BasePhaseModel>
+const Foam::surfaceScalarField&
+Foam::StationaryPhaseModel<BasePhaseModel>::phiRef() const
+{
+    FatalErrorInFunction
+        << "Cannot access the flux of a stationary phase"
+        << exit(FatalError);
+
+    return surfaceScalarField::null();
 }
 
 
@@ -157,6 +181,18 @@ Foam::StationaryPhaseModel<BasePhaseModel>::UfRef()
 
 
 template<class BasePhaseModel>
+const Foam::surfaceVectorField&
+Foam::StationaryPhaseModel<BasePhaseModel>::UfRef() const
+{
+    FatalErrorInFunction
+        << "Cannot access the face velocity of a stationary phase"
+        << exit(FatalError);
+
+    return surfaceVectorField::null();
+}
+
+
+template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::alphaPhi() const
 {
@@ -182,6 +218,18 @@ Foam::StationaryPhaseModel<BasePhaseModel>::alphaPhiRef()
 
 
 template<class BasePhaseModel>
+const Foam::surfaceScalarField&
+Foam::StationaryPhaseModel<BasePhaseModel>::alphaPhiRef() const
+{
+    FatalErrorInFunction
+        << "Cannot access the volumetric flux of a stationary phase"
+        << exit(FatalError);
+
+    return surfaceScalarField::null();
+}
+
+
+template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::alphaRhoPhi() const
 {
@@ -203,6 +251,18 @@ Foam::StationaryPhaseModel<BasePhaseModel>::alphaRhoPhiRef()
         << exit(FatalError);
 
     return const_cast<surfaceScalarField&>(surfaceScalarField::null());
+}
+
+
+template<class BasePhaseModel>
+const Foam::surfaceScalarField&
+Foam::StationaryPhaseModel<BasePhaseModel>::alphaRhoPhiRef() const
+{
+    FatalErrorInFunction
+        << "Cannot access the mass flux of a stationary phase"
+        << exit(FatalError);
+
+    return surfaceScalarField::null();
 }
 
 

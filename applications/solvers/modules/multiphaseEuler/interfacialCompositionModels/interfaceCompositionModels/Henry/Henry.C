@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,8 +101,7 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModels::Henry::Yf
         return
             k_[index]
            *otherComposition().Y(speciesName)
-           *otherThermo().rho()
-           /thermo().rho();
+           *otherThermo().rho()/thermo().rho();
     }
     else
     {

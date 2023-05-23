@@ -100,10 +100,13 @@ public:
             virtual const rhoThermo& thermo() const;
 
             //- Access the thermophysical model
-            virtual rhoThermo& thermoRef();
+            virtual rhoThermo& thermo();
 
             //- Return the density field
             virtual const volScalarField& rho() const;
+
+            //- Access the the density field
+            virtual volScalarField& rho();
 
 
         // Transport

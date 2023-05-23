@@ -84,10 +84,8 @@ void Foam::solvers::multiphaseEuler::energyPredictor()
         phaseModel& phase = fluid_.anisothermalPhases()[anisothermalPhasei];
 
         const volScalarField& alpha = phase;
-        tmp<volScalarField> tRho = phase.rho();
-        const volScalarField& rho = tRho();
-        tmp<volVectorField> tU = phase.U();
-        const volVectorField& U = tU();
+        const volScalarField& rho = phase.rho();
+        const volVectorField& U = phase.URef();
 
         fvScalarMatrix EEqn
         (
@@ -95,13 +93,13 @@ void Foam::solvers::multiphaseEuler::energyPredictor()
          ==
            *heatTransfer[phase.name()]
           + alpha*rho*(U&buoyancy.g)
-          + fvModels().source(alpha, rho, phase.thermoRef().he())
+          + fvModels().source(alpha, rho, phase.thermo().he())
         );
 
         EEqn.relax();
         fvConstraints().constrain(EEqn);
         EEqn.solve();
-        fvConstraints().constrain(phase.thermoRef().he());
+        fvConstraints().constrain(phase.thermo().he());
     }
 
     fluid_.correctThermo();

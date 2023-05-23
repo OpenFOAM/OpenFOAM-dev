@@ -94,11 +94,17 @@ public:
             //- Access the velocity
             virtual volVectorField& URef();
 
+            //- Access the velocity
+            virtual const volVectorField& URef() const;
+
             //- Return the volumetric flux
             virtual tmp<surfaceScalarField> phi() const;
 
             //- Access the volumetric flux
             virtual surfaceScalarField& phiRef();
+
+            //- Access the volumetric flux
+            virtual const surfaceScalarField& phiRef() const;
 
             //- Return the face velocity
             //  Required for moving mesh cases
@@ -108,17 +114,27 @@ public:
             //  Required for moving mesh cases
             virtual surfaceVectorField& UfRef();
 
+            //- Access the face velocity
+            //  Required for moving mesh cases
+            virtual const surfaceVectorField& UfRef() const;
+
             //- Return the volumetric flux of the phase
             virtual tmp<surfaceScalarField> alphaPhi() const;
 
             //- Access the volumetric flux of the phase
             virtual surfaceScalarField& alphaPhiRef();
 
+            //- Access the volumetric flux of the phase
+            virtual const surfaceScalarField& alphaPhiRef() const;
+
             //- Return the mass flux of the phase
             virtual tmp<surfaceScalarField> alphaRhoPhi() const;
 
             //- Access the mass flux of the phase
             virtual surfaceScalarField& alphaRhoPhiRef();
+
+            //- Access the mass flux of the phase
+            virtual const surfaceScalarField& alphaRhoPhiRef() const;
 
             //- Return the substantive acceleration
             virtual tmp<volVectorField> DUDt() const;

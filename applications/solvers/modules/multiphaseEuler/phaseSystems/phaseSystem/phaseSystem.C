@@ -572,7 +572,7 @@ void Foam::phaseSystem::correctContinuityError()
     {
         phaseModel& phase = movingPhaseModels_[movingPhasei];
         const volScalarField& alpha = phase;
-        volScalarField& rho = phase.thermoRef().rho();
+        volScalarField& rho = phase.rho();
 
         volScalarField source
         (

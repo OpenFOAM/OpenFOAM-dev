@@ -164,7 +164,7 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
 
     phi_(fluid_.phi()),
 
-    p_(phases_[0].thermoRef().p()),
+    p_(phases_[0].thermo().p()),
 
     p_rgh(buoyancy.p_rgh),
 

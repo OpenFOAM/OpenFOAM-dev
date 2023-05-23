@@ -83,7 +83,7 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::thermo() const
 
 template<class BasePhaseModel, class ThermoModel>
 Foam::rhoThermo&
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::thermoRef()
+Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::thermo()
 {
     return thermo_();
 }
@@ -92,6 +92,14 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::thermoRef()
 template<class BasePhaseModel, class ThermoModel>
 const Foam::volScalarField&
 Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::rho() const
+{
+    return thermo_->rho();
+}
+
+
+template<class BasePhaseModel, class ThermoModel>
+Foam::volScalarField&
+Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::rho()
 {
     return thermo_->rho();
 }

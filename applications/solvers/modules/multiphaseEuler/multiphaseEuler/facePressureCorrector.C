@@ -386,7 +386,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
         forAll(phases, phasei)
         {
             phaseModel& phase = phases_[phasei];
-            phase.thermoRef().rho() += phase.thermo().psi()*(p_rgh - p_rgh_0);
+            phase.rho() += phase.thermo().psi()*(p_rgh - p_rgh_0);
         }
 
         // Update mass transfer rates for change in p_rgh
