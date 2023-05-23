@@ -84,11 +84,14 @@ Usage
             duration        1;
 
             // Quantities
-            massTotal       0; // <-- not used with these settings
-            parcelBasisType fixed;
             parcelsPerSecond 1000000;
-            flowRateProfile constant 1;
+
+            // - Inject parcels with a fixed number of particles
             nParticle       1;
+
+            //// - Or, inject a specified mass of particles
+            //massTotal       6.0e-6;
+            //uniformParcelSize volume;
 
             // Sizes
             sizeDistribution

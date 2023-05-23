@@ -69,9 +69,8 @@ subModels
 
             U0               (1 0 0);
 
-            parcelBasisType  mass; // fixed;
+            uniformParcelSize volume;
             massTotal        1e-3;
-            // nParticle        100; // Required for fixed parcelBasisType
 
             sizeDistribution
             {
