@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,8 +146,6 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
     }
 
     const fvPatchList& patches = phase.mesh().boundary();
-    const volVectorField& U = phase.U();
-
     volScalarField::Boundary& nufBf = nuf.boundaryFieldRef();
 
     forAll(patches, patchi)
@@ -158,7 +156,7 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
                 (
                     pf.boundaryField()[patchi]*sin(phi_.value())
                    /(
-                        mag(U.boundaryField()[patchi].snGrad())
+                       mag(phase.U()().boundaryField()[patchi].snGrad())
                       + small
                     )
                 );

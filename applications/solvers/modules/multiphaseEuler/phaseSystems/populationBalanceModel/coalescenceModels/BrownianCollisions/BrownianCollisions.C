@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,9 @@ addToCoalescenceRate
     const sizeGroup& fj = popBal_.sizeGroups()[j];
 
     const volScalarField& T = popBal_.continuousPhase().thermo().T();
-    const volScalarField& mu = popBal_.continuousPhase().thermo().mu();
+
+    tmp<volScalarField> tmu(popBal_.continuousPhase().thermo().mu());
+    const volScalarField& mu = tmu();
 
     const volScalarField Cci
     (

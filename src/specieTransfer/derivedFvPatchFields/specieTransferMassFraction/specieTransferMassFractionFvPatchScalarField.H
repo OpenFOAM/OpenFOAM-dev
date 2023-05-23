@@ -181,6 +181,11 @@ public:
             virtual void updateCoeffs();
 
 
+    // Member Operators
+
+        using mixedFvPatchScalarField::operator=;
+
+
         //- Write
         virtual void write(Ostream&) const;
 };

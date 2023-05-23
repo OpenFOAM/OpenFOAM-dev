@@ -143,8 +143,8 @@ Foam::wallBoilingModels::departureFrequencyModels::Cole::fDeparture
         (
             liquid.mesh(),
             dDep,
-            liquid.thermo().rho()(),
-            vapour.thermo().rho()()
+            liquid.rho(),
+            vapour.rho()
         );
 }
 

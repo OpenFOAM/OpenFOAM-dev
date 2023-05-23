@@ -129,7 +129,7 @@ void Foam::diameterModels::IATE::correct()
                   + fvc::div(phase().alphaPhi())
                 )
               - (
-                    fvc::ddt(phase(), phase().rho()())
+                    fvc::ddt(phase(), phase().rho())
                   + fvc::div(phase().alphaRhoPhi())
                 )/phase().rho()
             ),

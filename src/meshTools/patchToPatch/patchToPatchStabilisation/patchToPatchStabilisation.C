@@ -191,12 +191,13 @@ void Foam::patchToPatchStabilisation::update
           + "_connections.obj"
         );
 
-        pointField fcs(patch.faceCentres());
-        stabilise(fcs);
+        const pointField fcs(patch.faceCentres());
+        pointField sfcs(fcs);
+        stabilise(sfcs);
 
         forAll(fcs, celli)
         {
-            const point& c = patch.faceCentres()[celli];
+            const point& c = fcs[celli];
             if (magSqr(c - fcs[celli]) == 0) continue;
             obj.write(linePointRef(fcs[celli], c));
         }

@@ -233,7 +233,7 @@ Foam::wordList Foam::solvers::isothermalFilm::alphaTypes() const
 Foam::solvers::isothermalFilm::isothermalFilm
 (
     fvMesh& mesh,
-    autoPtr<fluidThermo> thermoPtr
+    autoPtr<rhoThermo> thermoPtr
 )
 :
     solver(mesh),
@@ -403,7 +403,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
 
 Foam::solvers::isothermalFilm::isothermalFilm(fvMesh& mesh)
 :
-    isothermalFilm(mesh, fluidThermo::New(mesh))
+    isothermalFilm(mesh, rhoThermo::New(mesh))
 {}
 
 

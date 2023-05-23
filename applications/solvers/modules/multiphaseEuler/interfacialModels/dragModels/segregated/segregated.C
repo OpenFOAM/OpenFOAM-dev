@@ -131,7 +131,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
 
     const volScalarField::Internal ReI
     (
-        (interface_.rho()()()*interface_.magUr()()())
+        (interface_.rho()()*interface_.magUr()()())
        /(magGradI*limitedAlpha1*limitedAlpha2*muI)
     );
 

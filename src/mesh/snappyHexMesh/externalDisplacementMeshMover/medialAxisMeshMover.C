@@ -77,7 +77,7 @@ Foam::labelList Foam::medialAxisMeshMover::getFixedValueBCs
         }
     }
 
-    return Foam::move(adaptPatchIDs);
+    return adaptPatchIDs;
 }
 
 

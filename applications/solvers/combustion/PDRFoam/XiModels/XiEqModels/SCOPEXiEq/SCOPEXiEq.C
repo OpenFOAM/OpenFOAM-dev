@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,8 +76,11 @@ Foam::XiEqModels::SCOPEXiEq::~SCOPEXiEq()
 
 Foam::tmp<Foam::volScalarField> Foam::XiEqModels::SCOPEXiEq::XiEq() const
 {
-    const volScalarField& k = turbulence_.k();
-    const volScalarField& epsilon = turbulence_.epsilon();
+    tmp<volScalarField> tk = turbulence_.k();
+    const volScalarField& k = tk();
+
+    tmp<volScalarField> tepsilon = turbulence_.epsilon();
+    const volScalarField& epsilon = tepsilon();
 
     volScalarField up(sqrt((2.0/3.0)*k));
     if (subGridSchelkin_)

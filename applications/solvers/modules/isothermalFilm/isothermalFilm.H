@@ -46,7 +46,7 @@ See also
 #define isothermalFilm_H
 
 #include "solver.H"
-#include "fluidThermo.H"
+#include "rhoThermo.H"
 #include "filmCompressibleMomentumTransportModel.H"
 #include "uniformDimensionedFields.H"
 
@@ -93,10 +93,10 @@ protected:
     // Thermophysical properties
 
         //- Pointer to the fluid thermophysical properties
-        autoPtr<fluidThermo> thermoPtr_;
+        autoPtr<rhoThermo> thermoPtr_;
 
         //- Reference to the fluid thermophysical properties
-        fluidThermo& thermo_;
+        rhoThermo& thermo_;
 
         //- The thermodynamic pressure field
         volScalarField& p;
@@ -276,7 +276,7 @@ public:
         const volScalarField& alpha;
 
         //- Reference to the fluid thermophysical properties
-        const fluidThermo& thermo;
+        const rhoThermo& thermo;
 
         //- Reference to the thermodynamic density field
         const volScalarField& rho;
@@ -300,7 +300,7 @@ public:
     // Constructors
 
         //- Construct from region mesh and thermophysical properties
-        isothermalFilm(fvMesh& mesh, autoPtr<fluidThermo>);
+        isothermalFilm(fvMesh& mesh, autoPtr<rhoThermo>);
 
         //- Construct from region mesh
         isothermalFilm(fvMesh& mesh);

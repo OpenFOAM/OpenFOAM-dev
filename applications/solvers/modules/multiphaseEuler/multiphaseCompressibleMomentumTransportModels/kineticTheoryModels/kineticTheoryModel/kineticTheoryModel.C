@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -410,7 +410,9 @@ void Foam::RASModels::kineticTheoryModel::correct()
     const volScalarField& rho = phase_.rho();
     const surfaceScalarField& alphaRhoPhi = alphaRhoPhi_;
     const volVectorField& U = U_;
-    const volVectorField& Uc_ = continuousPhase.U();
+
+    tmp<volVectorField> tUc(continuousPhase.U());
+    const volVectorField& Uc = tUc();
 
     const scalar sqrtPi = sqrt(constant::mathematical::pi);
     const dimensionedScalar ThetaSmall("ThetaSmall", Theta_.dimensions(), 1e-6);
@@ -470,7 +472,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         const volScalarField J2
         (
             "J2",
-            0.25*sqr(beta)*da*magSqr(U - Uc_)
+            0.25*sqr(beta)*da*magSqr(U - Uc)
            /(
                max(alpha, residualAlpha_)*rho
               *sqrtPi*(ThetaSqrt + ThetaSmallSqrt)

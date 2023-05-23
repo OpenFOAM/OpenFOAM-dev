@@ -112,7 +112,8 @@ Foam::labelList Foam::fileOperations::masterUncollatedFileOperation::subRanks
                 break;
             }
         }
-        return move(subRanks);
+
+        return subRanks;
     }
 }
 

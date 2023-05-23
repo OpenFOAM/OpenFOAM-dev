@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,11 +222,12 @@ void Foam::refinementRegions::orient()
 
             if (shell.triSurface::size())
             {
-                const pointField& points = shell.points();
+                tmp<pointField> tpoints(shell.points());
+                const pointField& points = tpoints();
 
                 hasSurface = true;
-
                 boundBox shellBb(points[0], points[0]);
+
                 // Assume surface is compact!
                 forAll(points, i)
                 {

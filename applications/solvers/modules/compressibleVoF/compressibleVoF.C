@@ -143,8 +143,8 @@ void Foam::solvers::compressibleVoF::prePredictor()
 {
     twoPhaseVoFSolver::prePredictor();
 
-    const volScalarField& rho1 = mixture.thermo1().rho();
-    const volScalarField& rho2 = mixture.thermo2().rho();
+    const volScalarField& rho1 = mixture_.thermo1().rho();
+    const volScalarField& rho2 = mixture_.thermo2().rho();
 
     alphaRhoPhi1 = fvc::interpolate(rho1)*alphaPhi1;
     alphaRhoPhi2 = fvc::interpolate(rho2)*(phi - alphaPhi1);

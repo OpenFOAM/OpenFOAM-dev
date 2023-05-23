@@ -128,8 +128,14 @@ KocamustafaogullariIshiiDepartureFrequency::fDeparture
         (
             liquid.mesh(),
             dDep,
-            liquid.thermo().rho(patchi)(),
-            vapour.thermo().rho(patchi)(),
+            static_cast<const scalarField&>
+            (
+                liquid.rho().boundaryField()[patchi]
+            ),
+            static_cast<const scalarField&>
+            (
+                vapour.rho().boundaryField()[patchi]
+            ),
             liquid.fluid().sigma(phaseInterfaceKey(liquid, vapour), patchi)()
         );
 }
@@ -153,8 +159,8 @@ KocamustafaogullariIshiiDepartureFrequency::fDeparture
         (
             liquid.mesh(),
             dDep,
-            liquid.thermo().rho()(),
-            vapour.thermo().rho()(),
+            liquid.rho(),
+            vapour.rho(),
             liquid.fluid().sigma(phaseInterfaceKey(liquid, vapour))()
         );
 }

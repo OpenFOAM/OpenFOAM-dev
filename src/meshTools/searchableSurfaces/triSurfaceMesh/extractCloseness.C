@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,8 @@ void Foam::triSurfaceMesh::drawHitProblem
     if (debug)
     {
         const List<labelledTri>& tris = *this;
-        const pointField& points = this->points();
+        tmp<pointField> tpoints = points();
+        const pointField& points = tpoints();
 
         Info<< nl << "# findLineAll did not hit its own face."
             << nl << "# fi " << fi
@@ -316,7 +317,8 @@ Foam::triSurfaceMesh::extractPointCloseness
 
     // Prepare start and end points for intersection tests
 
-    const pointField& points = this->points();
+    tmp<pointField> tpoints = points();
+    const pointField& points = tpoints();
     const labelList& meshPoints = this->meshPoints();
     const pointField& faceCentres = this->faceCentres();
     const vectorField& normals = this->faceNormals();

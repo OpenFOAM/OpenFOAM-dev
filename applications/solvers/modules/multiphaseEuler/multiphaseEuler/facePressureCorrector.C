@@ -63,7 +63,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
                 fvc::interpolate
                 (
                     max(alpha.oldTime(), phase.residualAlpha())
-                   *phase.rho()().oldTime()
+                   *phase.rho().oldTime()
                 )
             ).ptr()
         );

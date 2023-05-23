@@ -261,7 +261,7 @@ public:
             virtual rhoThermo& thermoRef() = 0;
 
             //- Return the density field
-            virtual tmp<volScalarField> rho() const = 0;
+            virtual const volScalarField& rho() const = 0;
 
             //- Return whether the phase is isothermal
             virtual bool isothermal() const = 0;

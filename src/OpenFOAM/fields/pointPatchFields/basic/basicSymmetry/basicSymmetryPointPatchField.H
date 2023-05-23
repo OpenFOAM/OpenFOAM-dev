@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,6 +115,11 @@ public:
                 const Pstream::commsTypes commsType =
                     Pstream::commsTypes::blocking
             );
+
+
+    // Member Operators
+
+        using pointPatchField<Type>::operator=;
 };
 
 

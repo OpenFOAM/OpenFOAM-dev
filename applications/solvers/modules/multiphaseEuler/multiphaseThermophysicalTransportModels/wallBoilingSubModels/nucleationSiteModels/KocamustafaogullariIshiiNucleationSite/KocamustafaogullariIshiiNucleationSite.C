@@ -145,8 +145,14 @@ KocamustafaogullariIshiiNucleationSite::nucleationSiteDensity
             L,
             dDep,
             Tw,
-            liquid.thermo().rho(patchi)(),
-            vapour.thermo().rho(patchi)(),
+            static_cast<const scalarField&>
+            (
+                liquid.rho().boundaryField()[patchi]
+            ),
+            static_cast<const scalarField&>
+            (
+                vapour.rho().boundaryField()[patchi]
+            ),
             liquid.fluid().sigma(phaseInterfaceKey(liquid, vapour), patchi)()
         );
 }
@@ -172,8 +178,8 @@ KocamustafaogullariIshiiNucleationSite::nucleationSiteDensity
         L,
         dDep,
         Tf,
-        liquid.thermo().rho()(),
-        vapour.thermo().rho()(),
+        liquid.rho(),
+        vapour.rho(),
         liquid.fluid().sigma(phaseInterfaceKey(liquid, vapour))()
     );
 }

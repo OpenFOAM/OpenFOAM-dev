@@ -171,7 +171,7 @@ void Foam::solvers::solidDisplacement::pressureCorrector()
 {
     volVectorField& D(D_);
 
-    const volScalarField& rho = thermo.rho();
+    const volScalarField& rho = thermo_.rho();
 
     int iCorr = 0;
     scalar initialResidual = 0;

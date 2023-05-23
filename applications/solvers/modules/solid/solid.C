@@ -203,7 +203,7 @@ void Foam::solvers::solid::momentumPredictor()
 void Foam::solvers::solid::thermophysicalPredictor()
 {
     volScalarField& e = thermo_.he();
-    const volScalarField& rho = thermo.rho();
+    const volScalarField& rho = thermo_.rho();
 
     while (pimple.correctNonOrthogonal())
     {

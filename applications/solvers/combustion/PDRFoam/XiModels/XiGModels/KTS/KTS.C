@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,9 @@ Foam::XiGModels::KTS::~KTS()
 Foam::tmp<Foam::volScalarField> Foam::XiGModels::KTS::G() const
 {
     volScalarField up(sqrt((2.0/3.0)*turbulence_.k()));
-    const volScalarField& epsilon = turbulence_.epsilon();
+
+    tmp<volScalarField> tepsilon = turbulence_.epsilon();
+    const volScalarField& epsilon = tepsilon();
 
     volScalarField tauEta(sqrt(mag(thermo_.muu()/(thermo_.rhou()*epsilon))));
 

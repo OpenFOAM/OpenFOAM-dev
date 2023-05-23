@@ -87,9 +87,7 @@ Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
 
         Type* objectPtr = new Type(mesh);
 
-        regIOobject::store(objectPtr);
-
-        return *objectPtr;
+        return regIOobject::store(objectPtr);
     }
 }
 
@@ -120,9 +118,7 @@ Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
 
         Type* objectPtr = new Type(mesh, args...);
 
-        regIOobject::store(objectPtr);
-
-        return *objectPtr;
+        return regIOobject::store(objectPtr);
     }
 }
 

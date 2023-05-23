@@ -82,6 +82,8 @@ public:
         //- Map a label field (not implemented)
         DEFINE_FIELD_MAPPER_OPERATOR(label, );
 
+        using fvPatchFieldMapper::operator();
+
         //- Map a temporary field
         template<class Type>
         void operator()(Field<Type>& f, const tmp<Field<Type>>& tmapF) const;

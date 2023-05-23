@@ -395,7 +395,7 @@ Foam::labelList Foam::multiLevelDecomp::decompose
         finalDecomp
     );
 
-    return move(finalDecomp);
+    return finalDecomp;
 }
 
 
@@ -420,7 +420,7 @@ Foam::labelList Foam::multiLevelDecomp::decompose
         finalDecomp
     );
 
-    return move(finalDecomp);
+    return finalDecomp;
 }
 
 

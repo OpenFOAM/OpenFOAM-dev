@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -693,7 +693,7 @@ correctInterfaceThermo()
 
                     const volScalarField rhoKDL
                     (
-                        phase.thermo().rho()
+                        phase.rho()
                        *diffusiveMassTransferModel.modelInThe(phase).K()
                        *compositionModel.modelInThe(phase).D(specie)
                        *this->Li

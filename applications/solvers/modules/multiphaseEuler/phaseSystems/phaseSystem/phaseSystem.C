@@ -701,7 +701,8 @@ void Foam::phaseSystem::correctBoundaryFlux()
     {
         phaseModel& phase = movingPhases()[movingPhasei];
 
-        const volVectorField::Boundary& UBf = phase.U()().boundaryField();
+        tmp<volVectorField> tU(phase.U());
+        const volVectorField::Boundary& UBf = tU().boundaryField();
 
         FieldField<fvsPatchField, scalar> phiRelBf
         (
@@ -806,7 +807,7 @@ void Foam::phaseSystem::correctPhi
             phaseModel& phase = phases()[phasei];
             const volScalarField& alpha = phase;
 
-            psi += alpha*phase.thermo().psi()/phase.thermo().rho();
+            psi += alpha*phase.thermo().psi()/phase.rho();
         }
 
         fv::correctPhi

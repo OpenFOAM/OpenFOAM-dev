@@ -55,7 +55,7 @@ using std::move;
 template<class T>
 inline T clone(const T& t)
 {
-    return move(T(t));
+    return T(t);
 }
 
 // Forward declaration of classes

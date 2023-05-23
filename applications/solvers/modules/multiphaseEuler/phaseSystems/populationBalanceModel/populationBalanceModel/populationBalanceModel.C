@@ -695,7 +695,7 @@ void Foam::diameterModels::populationBalanceModel::correctDilatationError()
         const phaseModel& phase = fluid_.phases()[phaseName];
         const velocityGroup& velGroup = *velocityGroupPtrs_[phaseName];
         const volScalarField& alpha = phase;
-        const volScalarField& rho = phase.thermo().rho();
+        const volScalarField& rho = phase.rho();
 
         dilatationError =
             fvc::ddt(alpha) + fvc::div(phase.alphaPhi())
@@ -1167,7 +1167,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
                 sizeGroup& fi = sizeGroups_[i];
                 const phaseModel& phase = fi.phase();
                 const volScalarField& alpha = phase;
-                const volScalarField& rho = phase.thermo().rho();
+                const volScalarField& rho = phase.rho();
                 const volScalarField& dilatationError =
                     dilatationErrors_[phase.name()];
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ void Foam::diameterModels::driftModels::densityChangeDrift::addToDriftRate
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const phaseModel& phase = fi.phase();
     const volScalarField& alpha = phase;
-    const volScalarField& rho = phase.thermo().rho();
+    const volScalarField& rho = phase.rho();
 
     driftRate -=
         fi.x()
