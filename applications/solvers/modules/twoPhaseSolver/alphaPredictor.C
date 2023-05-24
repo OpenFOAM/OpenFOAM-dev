@@ -163,8 +163,8 @@ void Foam::solvers::twoPhaseSolver::alphaSolve
         divU =
         (
             mesh.moving()
-          ? fvc::div(phiCN + mesh.phi())
-          : fvc::div(phiCN)
+          ? fvc::div(phiCN() + mesh.phi())
+          : fvc::div(phiCN())
         );
     }
 
