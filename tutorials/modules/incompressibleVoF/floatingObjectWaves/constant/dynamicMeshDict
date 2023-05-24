@@ -1,0 +1,79 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+mover
+{
+    type            motionSolver;
+
+    libs            ("libfvMeshMovers.so" "librigidBodyMeshMotion.so");
+
+    motionSolver       rigidBodyMotion;
+
+    rigidBodyMotionCoeffs
+    {
+        report          on;
+
+        solver
+        {
+            type Newmark;
+        }
+
+        accelerationRelaxation 0.7;
+
+        bodies
+        {
+            floatingObject
+            {
+                type            cuboid;
+                parent          root;
+
+                // Cuboid dimensions
+                Lx              0.3;
+                Ly              0.2;
+                Lz              0.5;
+
+                // Density of the cuboid
+                rho             500;
+
+                // Cuboid mass
+                mass            #calc "$rho*$Lx*$Ly*$Lz";
+                L               ($Lx $Ly $Lz);
+                centreOfMass    (0 0 0.25);
+                transform       (1 0 0 0 1 0 0 0 1) (0.5 0.45 0.1);
+
+                joint
+                {
+                    type            composite;
+                    joints
+                    (
+                        {
+                            type Py;
+                        }
+                        {
+                            type Ry;
+                        }
+                    );
+                }
+
+                patches         (floatingObject);
+                innerDistance   0.05;
+                outerDistance   0.35;
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //
