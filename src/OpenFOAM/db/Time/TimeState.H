@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,10 +100,6 @@ public:
 
             //- Return true if this is a write time
             inline bool writeTime() const;
-
-            //- Return true if this is a write time.
-            //  Provided for backward-compatibility
-            inline bool outputTime() const;
 };
 
 
