@@ -8,35 +8,16 @@
 FoamFile
 {
     format      ascii;
-    class       volVectorField;
-    object      U;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
-
-internalField   uniform (0 0 0);
-
-boundaryField
+clouds
 {
-    inlet
-    {
-        type            pressureInletOutletVelocity;
-        value           $internalField;
-    }
-    outlet
-    {
-        type            pressureInletOutletVelocity;
-        value           $internalField;
-    }
-    walls
-    {
-        type            noSlip;
-    }
-    frontAndBack
-    {
-        type            noSlip;
-    }
+    type    clouds;
+    libs    ("liblagrangianParcel.so");
 }
 
 // ************************************************************************* //

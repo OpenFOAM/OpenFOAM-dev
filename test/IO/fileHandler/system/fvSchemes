@@ -16,22 +16,24 @@ FoamFile
 
 ddtSchemes
 {
-    default         none;
+    default         Euler;
 }
 
 gradSchemes
 {
-    default         none;
+    default         Gauss linear;
 }
 
 divSchemes
 {
     default         none;
+    div(phi,U)      Gauss limitedLinearV 1;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
 {
-    default         none;
+    default         Gauss linear corrected;
 }
 
 interpolationSchemes

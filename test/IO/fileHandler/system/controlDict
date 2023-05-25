@@ -14,7 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     particleFoam;
+application     foamRun;
+
+solver          incompressibleFluid;
 
 startFrom       latestTime;
 

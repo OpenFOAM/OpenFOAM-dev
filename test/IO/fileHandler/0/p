@@ -8,34 +8,36 @@
 FoamFile
 {
     format      ascii;
-    class       volVectorField;
-    object      U;
+    class       volScalarField;
+    object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [0 2 -2 0 0 0 0];
 
-internalField   uniform (0 0 0);
+internalField   uniform 0;
 
 boundaryField
 {
     inlet
     {
-        type            pressureInletOutletVelocity;
+        type            totalPressure;
+        p0              $internalField;
         value           $internalField;
     }
     outlet
     {
-        type            pressureInletOutletVelocity;
+        type            totalPressure;
+        p0              $internalField;
         value           $internalField;
     }
     walls
     {
-        type            noSlip;
+        type            zeroGradient;
     }
     frontAndBack
     {
-        type            noSlip;
+        type            zeroGradient;
     }
 }
 
