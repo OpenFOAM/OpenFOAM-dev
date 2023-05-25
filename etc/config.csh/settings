@@ -184,6 +184,7 @@ setenv FOAM_SRC $WM_PROJECT_DIR/src
 setenv FOAM_TUTORIALS $WM_PROJECT_DIR/tutorials
 setenv FOAM_UTILITIES $FOAM_APP/utilities
 setenv FOAM_SOLVERS $FOAM_APP/solvers
+setenv FOAM_MODULES $FOAM_APP/modules
 setenv FOAM_RUN $WM_PROJECT_USER_DIR/run
 
 # Add application bins to the path

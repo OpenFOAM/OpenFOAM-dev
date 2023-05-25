@@ -1,7 +1,0 @@
-EXE_INC = \
-    -I$(FOAM_SOLVERS)/modules/movingMesh/lnInclude \
-    -I$(LIB_SRC)/finiteVolume/lnInclude
-
-LIB_LIBS = \
-    -lmovingMesh \
-    -lfiniteVolume

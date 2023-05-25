@@ -1,0 +1,26 @@
+EXE_INC = \
+    -I$(FOAM_MODULES)/multiphaseVoFSolver/lnInclude \
+    -I$(FOAM_MODULES)/VoFSolver/lnInclude \
+    -I$(FOAM_MODULES)/fluidSolver/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/multiphaseModels/multiphaseProperties/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/phaseIncompressible/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude
+
+LIB_LIBS = \
+    -lmultiphaseVoFSolver \
+    -lphysicalProperties \
+    -lmultiphaseProperties \
+    -linterfaceCompression \
+    -lmomentumTransportModels \
+    -lincompressibleMomentumTransportModels \
+    -lphaseIncompressibleMomentumTransportModels \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lfvModels \
+    -lfvConstraints \
+    -lsampling

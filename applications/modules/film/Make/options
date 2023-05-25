@@ -1,0 +1,23 @@
+EXE_INC = \
+    -I$(FOAM_MODULES)/isothermalFilm/lnInclude \
+    -IfilmThermophysicalTransportModels/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/thermophysicalTransportModel/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/fluid/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -lisothermalFilm \
+    -lfilmThermophysicalTransportModels \
+    -lcoupledThermophysicalTransportModels \
+    -lmomentumTransportModels \
+    -lcompressibleMomentumTransportModels \
+    -lfiniteVolume \
+    -lmeshTools \
+    -lsampling \
+    -lfvModels \
+    -lfvConstraints

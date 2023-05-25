@@ -19,6 +19,8 @@ wmakeCheckPwd "$WM_PROJECT_DIR/applications" || {
 }
 
 wmake -all $targetType solvers
+modules/Allwmake $targetType $*
+wmake -all $targetType legacy
 wmake -all $targetType utilities
 
 #------------------------------------------------------------------------------

@@ -1,0 +1,7 @@
+EXE_INC = \
+    -I$(FOAM_MODULES)/movingMesh/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+
+LIB_LIBS = \
+    -lmovingMesh \
+    -lfiniteVolume

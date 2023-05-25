@@ -1,0 +1,13 @@
+EXE_INC = \
+    -I$(FOAM_MODULES)/twoPhaseVoFSolver/lnInclude \
+    -I$(FOAM_MODULES)/twoPhaseSolver/lnInclude \
+    -I$(FOAM_MODULES)/VoFSolver/lnInclude \
+    -I$(FOAM_MODULES)/incompressibleVoF/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/incompressibleTwoPhases/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+
+LIB_LIBS =

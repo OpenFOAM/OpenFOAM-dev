@@ -1,0 +1,17 @@
+EXE_INC = \
+    -I$(FOAM_MODULES)/twoPhaseVoFSolver/lnInclude \
+    -I$(FOAM_MODULES)/twoPhaseSolver/lnInclude \
+    -I$(FOAM_MODULES)/VoFSolver/lnInclude \
+    -I$(FOAM_MODULES)/compressibleVoF/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/compressibleTwoPhases/lnInclude \
+    -I$(LIB_SRC)/lagrangian/basic/lnInclude \
+    -I$(LIB_SRC)/lagrangian/parcel/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+
+LIB_LIBS = \
+    -llagrangian \
+    -llagrangianParcel \
+    -llagrangianParcelTurbulence

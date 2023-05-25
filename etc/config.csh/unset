@@ -100,6 +100,7 @@ unsetenv FOAM_SIGNAN
 unsetenv FOAM_SITE_APPBIN
 unsetenv FOAM_SITE_LIBBIN
 unsetenv FOAM_SOLVERS
+unsetenv FOAM_MODULES
 unsetenv FOAM_SRC
 unsetenv FOAM_TUTORIALS
 unsetenv FOAM_USER_APPBIN
