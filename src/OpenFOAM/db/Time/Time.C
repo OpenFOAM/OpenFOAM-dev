@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,8 +166,7 @@ void Foam::Time::setControls()
     {
         int oldPrecision = curPrecision_;
         int requiredPrecision = -1;
-        bool found = false;
-        word oldTime(name());
+
         for
         (
             curPrecision_ = maxPrecision_;
@@ -178,18 +177,8 @@ void Foam::Time::setControls()
             // Update the time formatting
             setTime(startTime_, 0);
 
-            word newTime(name());
-
-            if (newTime == oldTime)
-            {
-                break;
-            }
-            oldTime = newTime;
-
             // Check the existence of the time directory with the new format
-            found = fileHandler().exists(timePath(), false, false);
-
-            if (found)
+            if (fileHandler().exists(timePath(), false, false))
             {
                 requiredPrecision = curPrecision_;
             }
