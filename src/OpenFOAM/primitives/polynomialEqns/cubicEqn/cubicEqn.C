@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Foam::Roots<3> Foam::cubicEqn::roots() const
     Where Q and P are given in the code below.
 
     The properties of the cubic can be related to the properties of this
-    quadratic in w^3. If it has a repeated root a zero, the cubic has a tripl
+    quadratic in w^3. If it has a repeated root a zero, the cubic has a triple
     root. If it has a repeated root not at zero, the cubic has two real roots,
     one repeated and one not. If it has two complex roots, the cubic has three
     real roots. If it has two real roots, then the cubic has one real root and
@@ -77,6 +77,11 @@ Foam::Roots<3> Foam::cubicEqn::roots() const
     if (a == 0)
     {
         return Roots<3>(quadraticEqn(b, c, d).roots(), rootType::nan, 0);
+    }
+
+    if (d == 0)
+    {
+        return Roots<3>(rootType::real, 0, quadraticEqn(a, b, c).roots());
     }
 
     // This is assumed not to over- or under-flow. If it does, all bets are off.
