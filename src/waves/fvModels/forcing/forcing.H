@@ -65,6 +65,9 @@ protected:
         //- Damping coefficient [1/s]
         dimensionedScalar lambda_;
 
+        //- Optional boundary damping coefficient [1/s]
+        dimensionedScalar lambdaBoundary_;
+
         //- The scaling function
         autoPtr<Function1<scalar>> scale_;
 

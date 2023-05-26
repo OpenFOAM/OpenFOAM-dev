@@ -45,7 +45,8 @@ forcing
         duration    0.5;
     }
 
-    lambda      25;
+    lambda          5;
+    lambdaBoundary  25;
 }
 
 

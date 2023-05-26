@@ -65,7 +65,7 @@ functions0
 DebugSwitches
 {
     // Write the forcing and damping scale and force fields
-    // forcing   1;
+    forcing   1;
 }
 
 // ************************************************************************* //

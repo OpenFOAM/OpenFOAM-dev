@@ -50,6 +50,14 @@ void Foam::fv::forcing::readCoeffs()
             coeffs().lookup(lambda_.name())
         );
 
+    lambdaBoundary_ =
+        dimensionedScalar
+        (
+            lambdaBoundary_.name(),
+            lambdaBoundary_.dimensions(),
+            coeffs().lookupOrDefault(lambdaBoundary_.name(), 0)
+        );
+
     const bool foundScale = coeffs().found("scale");
     const bool foundOgn = coeffs().found("origin");
     const bool foundDir = coeffs().found("direction");
@@ -157,6 +165,22 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff
         volScalarField::Internal::New(typedName("forceCoeff"), lambda_*scale)
     );
 
+    // Damp the cells adjacent to the boundary with lambdaBoundary if specified
+    if (lambdaBoundary_.value() > 0)
+    {
+        const fvBoundaryMesh& bm = mesh().boundary();
+
+        forAll(bm, patchi)
+        {
+            if (!bm[patchi].coupled())
+            {
+                UIndirectList<scalar>(tforceCoeff.ref(), bm[patchi].faceCells())
+              = lambdaBoundary_.value()
+               *Field<scalar>(scale, bm[patchi].faceCells());
+            }
+        }
+    }
+
     // Write out the force coefficient for debugging
     if (debug && mesh().time().writeTime())
     {
@@ -185,6 +209,7 @@ Foam::fv::forcing::forcing
 :
     fvModel(name, modelType, mesh, dict),
     lambda_("lambda", dimless/dimTime, NaN),
+    lambdaBoundary_("lambdaBoundary", dimless/dimTime, 0),
     scale_(nullptr),
     origins_(),
     directions_()

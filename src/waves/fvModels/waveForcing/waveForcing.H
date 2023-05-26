@@ -63,6 +63,10 @@ Usage
         }
 
         lambda          0.5; // Forcing coefficient
+
+     // lambda          2;   // Optional boundary forcing coefficient
+                             // Useful when wave BCs are specified
+                             // without mean flow
     }
     \endverbatim
 
