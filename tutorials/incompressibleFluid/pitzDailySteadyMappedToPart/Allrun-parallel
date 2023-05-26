@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
 # Copy the source case
-isTest "$@" && path=.. || path=$FOAM_TUTORIALS/modules/incompressibleFluid
+isTest "$@" && path=.. || path=$FOAM_TUTORIALS/incompressibleFluid
 cp -r $path/pitzDailySteady/constant .
 cp -r $path/pitzDailySteady/system/controlDict system
 cp -r $path/pitzDailySteady/system/fv* system
