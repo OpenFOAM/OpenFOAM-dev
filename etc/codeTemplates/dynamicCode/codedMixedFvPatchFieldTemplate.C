@@ -87,23 +87,6 @@ ${typeName}MixedValueFvPatch${FieldType}::
 ${typeName}MixedValueFvPatch${FieldType}
 (
     const fvPatch& p,
-    const DimensionedField<${TemplateType}, volMesh>& iF
-)
-:
-    mixedFvPatchField<${TemplateType}>(p, iF)
-{
-    if (${verbose:-false})
-    {
-        Info<<"construct ${typeName} sha1: ${SHA1sum}"
-            " from patch/DimensionedField\n";
-    }
-}
-
-
-${typeName}MixedValueFvPatch${FieldType}::
-${typeName}MixedValueFvPatch${FieldType}
-(
-    const fvPatch& p,
     const DimensionedField<${TemplateType}, volMesh>& iF,
     const dictionary& dict
 )

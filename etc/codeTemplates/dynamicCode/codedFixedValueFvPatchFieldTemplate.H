@@ -61,13 +61,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        ${typeName}FixedValueFvPatch${FieldType}
-        (
-            const fvPatch&,
-            const DimensionedField<${TemplateType}, volMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         ${typeName}FixedValueFvPatch${FieldType}
         (

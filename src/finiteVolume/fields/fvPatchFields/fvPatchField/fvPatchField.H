@@ -626,12 +626,6 @@ public:
     (                                                                          \
         PatchTypeField,                                                        \
         typePatchTypeField,                                                    \
-        patch                                                                  \
-    );                                                                         \
-    addRemovableToRunTimeSelectionTable                                        \
-    (                                                                          \
-        PatchTypeField,                                                        \
-        typePatchTypeField,                                                    \
         patchMapper                                                            \
     );                                                                         \
     addRemovableToRunTimeSelectionTable                                        \
