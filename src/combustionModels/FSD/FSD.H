@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Description
     omegaEq. This omegaEq is obtained from the flamelet solution for
     different strain rates and fit using a exponential distribution.
 
-    The spacial distribution of the consumption speed (omega) is obtained also
+    The spatial distribution of the consumption speed (omega) is obtained also
     from a strained flamelet solution and it is assumed to have a gaussian
     distribution.
 

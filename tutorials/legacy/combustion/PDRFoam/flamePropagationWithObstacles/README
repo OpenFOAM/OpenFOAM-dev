@@ -4,5 +4,5 @@ Step to introduce the PDR fields:
 
 1) Create zero-size patches for wall or/and coupled baffles in
 the boundary file.
-2) Specify the boundary contitions for these patches in the fields.
+2) Specify the boundary conditions for these patches in the fields.
 3) Create the new PDR mesh using the PDRMesh utility.

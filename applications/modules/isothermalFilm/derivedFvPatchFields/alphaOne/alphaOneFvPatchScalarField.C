@@ -106,7 +106,7 @@ void Foam::alphaOneFvPatchScalarField::write(Ostream& os) const
 
 namespace Foam
 {
-    makePatchTypeField
+    makeNullConstructablePatchTypeField
     (
         fvPatchScalarField,
         alphaOneFvPatchScalarField

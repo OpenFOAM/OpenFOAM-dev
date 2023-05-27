@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "momentumTransportModel.H"
-#include "inletOutletFvPatchField.H"
+#include "zeroInletOutletFvPatchField.H"
 #include "wallFvPatch.H"
 #include "zeroGradientFvPatchField.H"
 #include "addToRunTimeSelectionTable.H"
@@ -53,7 +53,7 @@ Foam::wordList Foam::functionObjects::age::patchTypes() const
     wordList result
     (
         mesh_.boundary().size(),
-        inletOutletFvPatchField<scalar>::typeName
+        zeroInletOutletFvPatchField<scalar>::typeName
     );
 
     forAll(mesh_.boundary(), patchi)
@@ -166,12 +166,6 @@ bool Foam::functionObjects::age::execute()
     (
         Foam::fvConstraints::New(mesh_)
     );
-
-    // This only works because the null constructed inletValue for an
-    // inletOutletFvPatchField is zero. If we needed any other value we would
-    // have to loop over the inletOutlet patches and explicitly set the
-    // inletValues. We would need to change the interface of inletOutlet in
-    // order to do this.
 
     const surfaceScalarField& phi =
         mesh_.lookupObject<surfaceScalarField>(phiName_);

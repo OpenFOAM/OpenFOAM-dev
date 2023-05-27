@@ -22,86 +22,99 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::fixedInterfacialArea
+    Foam::zeroInletOutletFvPatchField
 
 Description
-    fixedInterfacialArea dispersed-phase diameter model.
-    The interfacial are is set by providing phase surface area divided by phase
-    volume, AvbyAlpha, either as a constant value or as a field.
+    This boundary condition provides a generic outflow condition
+
+    Zero gradient is applied for outflow and a zero value applied for reverse
+    flow.
+
+Usage
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            zeroInletOutlet;
+    }
+    \endverbatim
+
+See also
+    Foam::inletOutletFvPatchField
+    Foam::zeroGradientFvPatchField
 
 SourceFiles
-    fixedInterfacialAreaDiameter.C
+    zeroInletOutletFvPatchField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fixedInterfacialAreaDiameter_H
-#define fixedInterfacialAreaDiameter_H
+#ifndef zeroInletOutletFvPatchField_H
+#define zeroInletOutletFvPatchField_H
 
-#include "diameterModel.H"
+#include "inletOutletFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace diameterModels
-{
 
 /*---------------------------------------------------------------------------*\
-                    Class fixedInterfacialArea Declaration
+                   Class zeroInletOutletFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
-class fixedInterfacialArea
+template<class Type>
+class zeroInletOutletFvPatchField
 :
-    public diameterModel
+    public inletOutletFvPatchField<Type>
 {
-    // Private Data
-
-        //- Uniform fixed area by volume of the stationary phase for calculation
-        //  of the interfacial area
-        dimensionedScalar AvbyAlpha_;
-
-        //- Optional area by volume field of the stationary phase for
-        //  calculation of interfacial area
-        autoPtr<volScalarField> AvbyAlphaFieldPtr_;
-
 
 public:
 
     //- Runtime type information
-    TypeName("fixedInterfacialArea");
+    TypeName("zeroInletOutlet");
 
 
     // Constructors
 
-        //- Construct from dictionary and phase
-        fixedInterfacialArea
+        using inletOutletFvPatchField<Type>::inletOutletFvPatchField;
+
+        //- Construct from patch, internal field and dictionary
+        zeroInletOutletFvPatchField
         (
-            const dictionary& diameterProperties,
-            const phaseModel& phase
+            const fvPatch&,
+            const DimensionedField<Type, volMesh>&,
+            const dictionary&
         );
 
-
-    //- Destructor
-    virtual ~fixedInterfacialArea();
+        //- Construct and return a clone setting internal field reference
+        virtual tmp<fvPatchField<Type>> clone
+        (
+            const DimensionedField<Type, volMesh>& iF
+        ) const
+        {
+            return tmp<fvPatchField<Type>>
+            (
+                new zeroInletOutletFvPatchField<Type>(*this, iF)
+            );
+        }
 
 
     // Member Functions
 
-        //- Get the diameter field
-        virtual tmp<volScalarField> d() const;
-
-        //- Get the surface area per unit volume field
-        virtual tmp<volScalarField> Av() const;
-
-        //- Read diameterProperties dictionary
-        virtual bool read(const dictionary& diameterProperties);
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace diameterModels
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "zeroInletOutletFvPatchField.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

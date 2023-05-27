@@ -213,8 +213,7 @@ public:
             return volScalarField::New
             (
                 "omega",
-                epsilon_/(Cmu_*k_),
-                epsilon_.boundaryField().types()
+                epsilon_/(Cmu_*k_)
             );
         }
 

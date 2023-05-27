@@ -275,8 +275,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::sigma() const
     return volSymmTensorField::New
     (
         this->groupName("R"),
-        ((2.0/3.0)*I)*tk() - (nutEff_)*dev(twoSymm(fvc::grad(this->U_))),
-        tk().boundaryField().types()
+        ((2.0/3.0)*I)*tk() - (nutEff_)*dev(twoSymm(fvc::grad(this->U_)))
     );
 }
 

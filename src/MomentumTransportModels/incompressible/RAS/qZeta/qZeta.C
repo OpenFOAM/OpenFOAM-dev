@@ -181,7 +181,7 @@ qZeta::qZeta
             this->groupName("q"),
             runTime_.name(),
             mesh_,
-            IOobject::NO_READ,
+            IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
         sqrt(max(k_, kMin_)),
@@ -195,7 +195,7 @@ qZeta::qZeta
             this->groupName("zeta"),
             runTime_.name(),
             mesh_,
-            IOobject::NO_READ,
+            IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
         max(epsilon_, epsilonMin_)/(2.0*q_),

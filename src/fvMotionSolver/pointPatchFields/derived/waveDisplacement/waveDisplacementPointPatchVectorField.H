@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ Description
     Specified surface wave moving boundary.
 
     The motion is a cosine wave with specified amplitude, frequency, wave number
-    and optional leading and trailing spacial ramps and temporal ramp
+    and optional leading and trailing spatial ramps and temporal ramp
     to allow the motion to be applied to an initially flat surface.
 
 Usage

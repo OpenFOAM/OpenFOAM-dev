@@ -28,7 +28,7 @@ Description
     Dripping film to cloud ejection transfer model
 
     On an inverted surface if the film thickness is sufficient to generate a
-    valid parcel the equivalent mass is removed from the film and transfered to
+    valid parcel the equivalent mass is removed from the film and transferred to
     the cloud as a parcel containing droplets with a diameter obtained from
     the specified parcelDistribution.
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,8 @@ Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
 {
     this->refValue() = Zero;
     this->refGrad() = Zero;
-    this->valueFraction() = 0.0;
+    this->valueFraction() = 0;
+    fvPatchField<Type>::operator=(Zero);
 }
 
 
@@ -69,7 +70,7 @@ Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
     }
 
     this->refGrad() = Zero;
-    this->valueFraction() = 0.0;
+    this->valueFraction() = 0;
 }
 
 

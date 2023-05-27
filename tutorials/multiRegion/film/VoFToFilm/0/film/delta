@@ -33,14 +33,12 @@ boundaryField
 
     bottom
     {
-        type            inletOutlet;
-        inletValue      $internalField;
+        type            zeroInletOutlet;
     }
 
     atmosphere
     {
-        type            inletOutlet;
-        inletValue      $internalField;
+        type            zeroInletOutlet;
     }
 }
 

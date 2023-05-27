@@ -81,30 +81,10 @@ template<class BasicMomentumTransportModel>
 Foam::tmp<Foam::volSymmTensorField>
 Foam::eddyViscosity<BasicMomentumTransportModel>::sigma() const
 {
-    tmp<volScalarField> tk(k());
-
-    // Get list of patchField type names from k
-    wordList patchFieldTypes(tk().boundaryField().types());
-
-    // For k patchField types which do not have an equivalent for symmTensor
-    // set to calculated
-    forAll(patchFieldTypes, i)
-    {
-        if
-        (
-           !fvPatchField<symmTensor>::patchConstructorTablePtr_
-                ->found(patchFieldTypes[i])
-        )
-        {
-            patchFieldTypes[i] = calculatedFvPatchField<symmTensor>::typeName;
-        }
-    }
-
     return volSymmTensorField::New
     (
         this->groupName("R"),
-        ((2.0/3.0)*I)*tk() - (nut_)*dev(twoSymm(fvc::grad(this->U_))),
-        patchFieldTypes
+        ((2.0/3.0)*I)*k() - (nut_)*dev(twoSymm(fvc::grad(this->U_)))
     );
 }
 

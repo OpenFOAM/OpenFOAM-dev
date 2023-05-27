@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -28,12 +28,12 @@
 # Description
 #     Script to inform the user that the reactingMultiphaseEulerFoam solver has
 #     been renamed and replaces the original multiphaseEulerFoam, providing
-#     much more general and extensible funcionality.
+#     much more general and extensible functionality.
 #
 #------------------------------------------------------------------------------
 
 echo "The reactingMultiphaseEulerFoam solver has been renamed" \
      "and replaces the original multiphaseEulerFoam,"
-echo "providing much more general and extensible funcionality."
+echo "providing much more general and extensible functionality."
 
 #------------------------------------------------------------------------------
