@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication zeroDimensionalMesh
 
-chemkin=$FOAM_TUTORIALS/combustion/chemFoam/nc7h16/chemkin
+chemkin=$WM_PROJECT_DIR/test/chemistry/nc7h16/chemkin
 
 runApplication chemkinToFoam \
     $chemkin/chem.inp $chemkin/therm.dat $chemkin/transportProperties \
