@@ -97,13 +97,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        waveInletOutletFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         waveInletOutletFvPatchField
         (

@@ -61,13 +61,10 @@ class mixedFixedValueSlipFvPatchField
         //- Fraction (0-1) of value used for boundary condition
         scalarField valueFraction_;
 
-public:
 
-    //- Runtime type information
-    TypeName("mixedFixedValueSlip");
+protected:
 
-
-    // Constructors
+    // Protected functions
 
         //- Construct from patch and internal field
         mixedFixedValueSlipFvPatchField
@@ -75,6 +72,15 @@ public:
             const fvPatch&,
             const DimensionedField<Type, volMesh>&
         );
+
+
+public:
+
+    //- Runtime type information
+    TypeName("mixedFixedValueSlip");
+
+
+    // Constructors
 
         //- Construct from patch, internal field and dictionary
         mixedFixedValueSlipFvPatchField

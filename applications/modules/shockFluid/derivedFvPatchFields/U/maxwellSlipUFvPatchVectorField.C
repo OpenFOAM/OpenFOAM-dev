@@ -35,24 +35,6 @@ License
 Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    mixedFixedValueSlipFvPatchVectorField(p, iF),
-    TName_("T"),
-    rhoName_("rho"),
-    psiName_("psi"),
-    muName_("mu"),
-    accommodationCoeff_(1.0),
-    Uwall_(p.size(), vector(0.0, 0.0, 0.0)),
-    thermalCreep_(true),
-    curvature_(true)
-{}
-
-
-Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
-(
-    const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )

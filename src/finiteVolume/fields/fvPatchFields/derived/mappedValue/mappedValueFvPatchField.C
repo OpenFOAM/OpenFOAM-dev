@@ -33,18 +33,6 @@ template<class Type>
 Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
-)
-:
-    fixedValueFvPatchField<Type>(p, iF),
-    mappedFvPatchField<Type>(p, iF)
-{}
-
-
-template<class Type>
-Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
-(
-    const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
 )

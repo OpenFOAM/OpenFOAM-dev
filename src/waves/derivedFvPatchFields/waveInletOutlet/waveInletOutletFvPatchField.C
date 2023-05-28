@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,20 +32,6 @@ License
 #include "waveSuperposition.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::waveInletOutletFvPatchField<Type>::waveInletOutletFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
-)
-:
-    mixedFvPatchField<Type>(p, iF),
-    inletValueAbove_(),
-    inletValueBelow_(),
-    phiName_("phi")
-{}
-
 
 template<class Type>
 Foam::waveInletOutletFvPatchField<Type>::waveInletOutletFvPatchField

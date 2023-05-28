@@ -68,7 +68,7 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
+        //- Construct from components
         ${typeName}FvModel${SourceType}
         (
             const word& name,

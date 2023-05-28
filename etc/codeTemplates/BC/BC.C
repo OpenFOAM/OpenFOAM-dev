@@ -45,29 +45,6 @@ Foam::CLASS::
 CONSTRUCT
 (
     const fvPatch& p,
-    const DimensionedField<TYPE, volMesh>& iF
-)
-:
-    PARENT(p, iF),
-    scalarData_(0.0),
-    data_(Zero),
-    fieldData_(p.size(), Zero),
-    timeVsData_(),
-    wordData_("wordDefault"),
-    labelData_(-1),
-    boolData_(false)
-{
-    this->refValue() = Zero;
-    this->refGrad() = Zero;
-    this->valueFraction() = 0.0;
-}
-
-
-template<class Type>
-Foam::CLASS::
-CONSTRUCT
-(
-    const fvPatch& p,
     const DimensionedField<TYPE, volMesh>& iF,
     const dictionary& dict
 )

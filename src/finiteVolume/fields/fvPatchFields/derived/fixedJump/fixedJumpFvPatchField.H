@@ -89,12 +89,7 @@ protected:
         Field<Type> jump_;
 
 
-public:
-
-    //- Runtime type information
-    TypeName("fixedJump");
-
-    // Constructors
+    // Protected functions
 
         //- Construct from patch and internal field
         fixedJumpFvPatchField
@@ -102,6 +97,14 @@ public:
             const fvPatch&,
             const DimensionedField<Type, volMesh>&
         );
+
+
+public:
+
+    //- Runtime type information
+    TypeName("fixedJump");
+
+    // Constructors
 
         //- Construct from patch, internal field and dictionary
         fixedJumpFvPatchField

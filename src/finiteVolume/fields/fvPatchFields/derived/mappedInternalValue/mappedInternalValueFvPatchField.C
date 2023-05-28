@@ -62,23 +62,6 @@ Foam::mappedInternalValueFvPatchField<Type>::
 mappedInternalValueFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
-)
-:
-    fixedValueFvPatchField<Type>(p, iF),
-    fieldName_(iF.name()),
-    setAverage_(false),
-    average_(Zero),
-    interpolationScheme_(interpolationCell<Type>::typeName),
-    mapperPtr_(nullptr)
-{}
-
-
-template<class Type>
-Foam::mappedInternalValueFvPatchField<Type>::
-mappedInternalValueFvPatchField
-(
-    const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
 )

@@ -24,24 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "uniformInletOutletFvPatchField.H"
+#include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
-)
-:
-    mixedFvPatchField<Type>(p, iF),
-    phiName_("phi")
-{
-    this->refValue() = Zero;
-    this->refGrad() = Zero;
-    this->valueFraction() = 0.0;
-}
-
 
 template<class Type>
 Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField

@@ -77,13 +77,9 @@ class partialSlipFvPatchField
         scalarField valueFraction_;
 
 
-public:
+protected:
 
-    //- Runtime type information
-    TypeName("partialSlip");
-
-
-    // Constructors
+    // Protected functions
 
         //- Construct from patch and internal field
         partialSlipFvPatchField
@@ -91,6 +87,15 @@ public:
             const fvPatch&,
             const DimensionedField<Type, volMesh>&
         );
+
+
+public:
+
+    //- Runtime type information
+    TypeName("partialSlip");
+
+
+    // Constructors
 
         //- Construct from patch, internal field and dictionary
         partialSlipFvPatchField

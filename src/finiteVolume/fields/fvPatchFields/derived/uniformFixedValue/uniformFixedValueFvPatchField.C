@@ -31,18 +31,6 @@ template<class Type>
 Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
-)
-:
-    fixedValueFvPatchField<Type>(p, iF),
-    uniformValue_()
-{}
-
-
-template<class Type>
-Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
-(
-    const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
 )

@@ -25,7 +25,6 @@ License
 
 #include "CONSTRUCTs.H"
 #include "addToRunTimeSelectionTable.H"
-#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

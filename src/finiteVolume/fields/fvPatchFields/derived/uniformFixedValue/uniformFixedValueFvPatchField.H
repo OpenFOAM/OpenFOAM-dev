@@ -89,13 +89,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        uniformFixedValueFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         uniformFixedValueFvPatchField
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,13 +92,7 @@ protected:
         word phiName_;
 
 
-public:
-
-    //- Runtime type information
-    TypeName("outletInlet");
-
-
-    // Constructors
+    // Protected functions
 
         //- Construct from patch and internal field
         outletInletFvPatchField
@@ -106,6 +100,15 @@ public:
             const fvPatch&,
             const DimensionedField<Type, volMesh>&
         );
+
+
+public:
+
+    //- Runtime type information
+    TypeName("outletInlet");
+
+
+    // Constructors
 
         //- Construct from patch, internal field and dictionary
         outletInletFvPatchField

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -437,33 +437,6 @@ void Foam::externalCoupledMixedFvPatchField<Type>::writeHeader
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::externalCoupledMixedFvPatchField<Type>::
-externalCoupledMixedFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
-)
-:
-    mixedFvPatchField<Type>(p, iF),
-    commsDir_("unknown-commsDir"),
-    fName_("unknown-fName"),
-    waitInterval_(0),
-    timeOut_(0),
-    calcFrequency_(0),
-    initByExternal_(false),
-    log_(false),
-    master_(false),
-    offsets_(),
-    initialised_(false),
-    coupledPatchIDs_()
-{
-    this->refValue() = Zero;
-    this->refGrad() = Zero;
-    this->valueFraction() = 0.0;
-}
-
 
 template<class Type>
 Foam::externalCoupledMixedFvPatchField<Type>::

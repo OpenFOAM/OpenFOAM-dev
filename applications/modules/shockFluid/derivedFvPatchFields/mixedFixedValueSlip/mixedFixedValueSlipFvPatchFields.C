@@ -25,7 +25,6 @@ License
 
 #include "mixedFixedValueSlipFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
-#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -33,19 +33,6 @@ Foam::timeVaryingMappedFixedValueFvPatchField<Type>::
 timeVaryingMappedFixedValueFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
-)
-:
-    fixedValueFvPatchField<Type>(p, iF),
-    fieldMapper_(p, iF.name())
-{}
-
-
-template<class Type>
-Foam::timeVaryingMappedFixedValueFvPatchField<Type>::
-timeVaryingMappedFixedValueFvPatchField
-(
-    const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
 )

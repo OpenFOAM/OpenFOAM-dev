@@ -31,22 +31,6 @@ template<class Type>
 Foam::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
-)
-:
-    fixedValueFvPatchField<Type>(p, iF),
-    ranGen_(label(0)),
-    fluctuationScale_(Zero),
-    referenceField_(p.size()),
-    alpha_(0.1),
-    curTimeIndex_(-1)
-{}
-
-
-template<class Type>
-Foam::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
-(
-    const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
 )

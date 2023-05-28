@@ -32,23 +32,6 @@ template<class Type>
 Foam::genericFvPatchField<Type>::genericFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
-)
-:
-    calculatedFvPatchField<Type>(p, iF)
-{
-    FatalErrorInFunction
-        << "Trying to construct an genericFvPatchField on patch "
-        << this->patch().name()
-        << " of field " << this->internalField().name()
-        << abort(FatalError);
-}
-
-
-template<class Type>
-Foam::genericFvPatchField<Type>::genericFvPatchField
-(
-    const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
 )

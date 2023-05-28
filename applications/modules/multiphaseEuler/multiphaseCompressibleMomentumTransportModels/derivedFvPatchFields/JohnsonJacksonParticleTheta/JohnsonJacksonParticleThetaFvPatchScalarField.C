@@ -44,19 +44,6 @@ Foam::JohnsonJacksonParticleThetaFvPatchScalarField::
 JohnsonJacksonParticleThetaFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    mixedFvPatchScalarField(p, iF),
-    restitutionCoefficient_("restitutionCoefficient", dimless, 0),
-    specularityCoefficient_("specularityCoefficient", dimless, 0)
-{}
-
-
-Foam::JohnsonJacksonParticleThetaFvPatchScalarField::
-JohnsonJacksonParticleThetaFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

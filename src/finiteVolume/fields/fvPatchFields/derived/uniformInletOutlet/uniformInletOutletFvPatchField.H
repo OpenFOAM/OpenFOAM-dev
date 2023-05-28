@@ -102,13 +102,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        uniformInletOutletFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         uniformInletOutletFvPatchField
         (

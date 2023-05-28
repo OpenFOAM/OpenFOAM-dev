@@ -122,13 +122,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        mappedInternalValueFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         mappedInternalValueFvPatchField
         (
