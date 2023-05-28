@@ -34,17 +34,6 @@ License
 Foam::pressureFvPatchScalarField::pressureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedValueFvPatchScalarField(p, iF),
-    p_(p.size(), 0.0)
-{}
-
-
-Foam::pressureFvPatchScalarField::pressureFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

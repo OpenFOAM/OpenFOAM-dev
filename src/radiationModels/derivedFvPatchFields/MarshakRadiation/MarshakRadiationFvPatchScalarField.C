@@ -35,22 +35,6 @@ License
 Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    mixedFvPatchScalarField(p, iF),
-    radiationCoupledBase(p, "undefined", scalarField::null()),
-    TName_("T")
-{
-    refValue() = 0.0;
-    refGrad() = 0.0;
-    valueFraction() = 0.0;
-}
-
-
-Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

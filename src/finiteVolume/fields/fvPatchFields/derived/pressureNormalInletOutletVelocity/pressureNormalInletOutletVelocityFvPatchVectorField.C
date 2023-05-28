@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,25 +29,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::pressureNormalInletOutletVelocityFvPatchVectorField::
-pressureNormalInletOutletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    mixedFvPatchVectorField(p, iF),
-    phiName_("phi"),
-    rhoName_("rho")
-{
-    refValue() = *this;
-    refGrad() = Zero;
-    valueFraction() = 0.0;
-}
-
 
 Foam::pressureNormalInletOutletVelocityFvPatchVectorField::
 pressureNormalInletOutletVelocityFvPatchVectorField

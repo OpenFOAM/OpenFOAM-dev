@@ -35,17 +35,6 @@ Foam::adjointOutletVelocityFvPatchVectorField::
 adjointOutletVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    fixedValueFvPatchVectorField(p, iF)
-{}
-
-
-Foam::adjointOutletVelocityFvPatchVectorField::
-adjointOutletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )

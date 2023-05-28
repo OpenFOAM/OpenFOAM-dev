@@ -100,13 +100,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        alphatJayatillekeWallFunctionFvPatchScalarField
-        (
-            const fvPatch&,
-            const DimensionedField<scalar, volMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         alphatJayatillekeWallFunctionFvPatchScalarField
         (

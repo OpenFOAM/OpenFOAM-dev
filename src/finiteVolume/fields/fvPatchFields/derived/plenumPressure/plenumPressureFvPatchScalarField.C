@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,33 +30,6 @@ License
 #include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedValueFvPatchScalarField(p, iF),
-    gamma_(1.4),
-    R_(287.04),
-    supplyMassFlowRate_(1.0),
-    supplyTotalTemperature_(300.0),
-    plenumVolume_(1.0),
-    plenumDensity_(1.0),
-    plenumDensityOld_(1.0),
-    plenumTemperature_(300.0),
-    plenumTemperatureOld_(300.0),
-    rho_(1.0),
-    hasRho_(false),
-    inletAreaRatio_(1.0),
-    inletDischargeCoefficient_(1.0),
-    timeScale_(0.0),
-    timeIndex_(-1),
-    phiName_("phi"),
-    UName_("U")
-{}
-
 
 Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
 (

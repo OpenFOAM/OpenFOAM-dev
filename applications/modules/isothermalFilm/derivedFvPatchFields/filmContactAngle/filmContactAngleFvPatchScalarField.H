@@ -115,13 +115,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        filmContactAngleFvPatchScalarField
-        (
-            const fvPatch&,
-            const DimensionedField<scalar, volMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         filmContactAngleFvPatchScalarField
         (

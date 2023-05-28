@@ -37,35 +37,6 @@ Foam::externalTemperatureFvPatchScalarField::
 externalTemperatureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    mixedFvPatchScalarField(p, iF),
-    haveQ_(false),
-    Q_(NaN),
-    haveq_(false),
-    q_(),
-    haveh_(false),
-    h_(),
-    Ta_(),
-    emissivity_(0),
-    thicknessLayers_(),
-    kappaLayers_(),
-    relaxation_(1),
-    qrName_(word::null),
-    qrRelaxation_(1),
-    qrPrevious_()
-{
-    refValue() = 0;
-    refGrad() = 0;
-    valueFraction() = 1;
-}
-
-
-Foam::externalTemperatureFvPatchScalarField::
-externalTemperatureFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )
@@ -447,15 +418,6 @@ namespace Foam
     (
         fvPatchScalarField,
         externalTemperatureFvPatchScalarField
-    );
-
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        fvPatchScalarField,
-        externalTemperatureFvPatchScalarField,
-        patch,
-        externalWallHeatFluxTemperature,
-        "externalWallHeatFluxTemperature"
     );
 
     addBackwardCompatibleToRunTimeSelectionTable

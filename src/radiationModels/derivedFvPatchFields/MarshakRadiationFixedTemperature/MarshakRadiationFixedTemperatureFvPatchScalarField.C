@@ -36,23 +36,6 @@ Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::
 MarshakRadiationFixedTemperatureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    mixedFvPatchScalarField(p, iF),
-    radiationCoupledBase(p, "undefined", scalarField::null()),
-    Trad_(p.size())
-{
-    refValue() = 0.0;
-    refGrad() = 0.0;
-    valueFraction() = 0.0;
-}
-
-
-Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::
-MarshakRadiationFixedTemperatureFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

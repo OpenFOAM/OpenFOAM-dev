@@ -35,25 +35,6 @@ Foam::inletOutletTotalTemperatureFvPatchScalarField::
 inletOutletTotalTemperatureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    inletOutletFvPatchScalarField(p, iF),
-    UName_("U"),
-    psiName_("psi"),
-    gamma_(0.0),
-    T0_(p.size(), 0.0)
-{
-    this->refValue() = Zero;
-    this->refGrad() = Zero;
-    this->valueFraction() = 0.0;
-}
-
-
-Foam::inletOutletTotalTemperatureFvPatchScalarField::
-inletOutletTotalTemperatureFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

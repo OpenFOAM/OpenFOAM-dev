@@ -566,38 +566,6 @@ alphatWallBoilingWallFunctionFvPatchScalarField::
 alphatWallBoilingWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedValueFvPatchScalarField(p, iF),
-    alphatPhaseChangeWallFunctionBase(),
-
-    phaseType_(liquidPhase),
-    useLiquidTemperatureWallFunction_(true),
-    tolerance_(rootSmall),
-
-    Prt_(0.85),
-    tau_(0.8),
-
-    partitioningModel_(nullptr),
-    nucleationSiteModel_(nullptr),
-    departureDiameterModel_(nullptr),
-    departureFrequencyModel_(nullptr),
-
-    wetFraction_(p.size(), 0),
-    dDeparture_(p.size(), 1e-5),
-    fDeparture_(p.size(), 0),
-    nucleationSiteDensity_(p.size(), 0),
-    qQuenching_(p.size(), 0),
-    qEvaporative_(p.size(), 0),
-    dmdtf_(p.size(), 0)
-{}
-
-
-alphatWallBoilingWallFunctionFvPatchScalarField::
-alphatWallBoilingWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

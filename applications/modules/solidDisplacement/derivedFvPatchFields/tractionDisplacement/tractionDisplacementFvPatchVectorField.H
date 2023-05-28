@@ -64,6 +64,13 @@ protected:
         template<class Type>
         void updateCoeffs(const Type& pressure);
 
+        //- Construct from patch and internal field
+        tractionDisplacementFvPatchVectorField
+        (
+            const fvPatch&,
+            const DimensionedField<vector, volMesh>&
+        );
+
 
 public:
 
@@ -72,13 +79,6 @@ public:
 
 
     // Constructors
-
-        //- Construct from patch and internal field
-        tractionDisplacementFvPatchVectorField
-        (
-            const fvPatch&,
-            const DimensionedField<vector, volMesh>&
-        );
 
         //- Construct from patch, internal field and dictionary
         tractionDisplacementFvPatchVectorField

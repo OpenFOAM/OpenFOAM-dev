@@ -31,17 +31,6 @@ License
 Foam::filmContactAngleFvPatchScalarField::filmContactAngleFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    zeroGradientFvPatchScalarField(p, iF),
-    contactAngle_()
-{}
-
-
-Foam::filmContactAngleFvPatchScalarField::filmContactAngleFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

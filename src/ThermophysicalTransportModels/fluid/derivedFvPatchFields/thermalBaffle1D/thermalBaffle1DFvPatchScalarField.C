@@ -43,27 +43,6 @@ thermalBaffle1DFvPatchScalarField<solidType>::
 thermalBaffle1DFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    mixedFvPatchScalarField(p, iF),
-    TName_("T"),
-    baffleActivated_(true),
-    thickness_(p.size()),
-    qs_(p.size()),
-    solidDict_(),
-    solidPtr_(nullptr),
-    qrPrevious_(p.size()),
-    qrRelaxation_(1),
-    qrName_("undefined-qr")
-{}
-
-
-template<class solidType>
-thermalBaffle1DFvPatchScalarField<solidType>::
-thermalBaffle1DFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

@@ -32,17 +32,6 @@ License
 Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    zeroGradientFvPatchField<scalar>(p, iF),
-    mappedFvPatchField<scalar>(p, iF)
-{}
-
-
-Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

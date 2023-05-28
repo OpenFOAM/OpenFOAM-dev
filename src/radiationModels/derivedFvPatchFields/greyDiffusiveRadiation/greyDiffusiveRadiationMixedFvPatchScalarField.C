@@ -40,23 +40,6 @@ Foam::greyDiffusiveRadiationMixedFvPatchScalarField::
 greyDiffusiveRadiationMixedFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    mixedFvPatchScalarField(p, iF),
-    radiationCoupledBase(p, "undefined", scalarField::null()),
-    TName_("T")
-{
-    refValue() = 0.0;
-    refGrad() = 0.0;
-    valueFraction() = 1.0;
-}
-
-
-Foam::greyDiffusiveRadiationMixedFvPatchScalarField::
-greyDiffusiveRadiationMixedFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

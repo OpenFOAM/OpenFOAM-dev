@@ -176,13 +176,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        externalTemperatureFvPatchScalarField
-        (
-            const fvPatch&,
-            const DimensionedField<scalar, volMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         externalTemperatureFvPatchScalarField
         (

@@ -40,18 +40,6 @@ atmBoundaryLayerInletVelocityFvPatchVectorField::
 atmBoundaryLayerInletVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    inletOutletFvPatchVectorField(p, iF),
-    atmBoundaryLayer()
-{}
-
-
-atmBoundaryLayerInletVelocityFvPatchVectorField::
-atmBoundaryLayerInletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )

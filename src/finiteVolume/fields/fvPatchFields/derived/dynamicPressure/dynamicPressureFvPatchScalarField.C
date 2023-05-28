@@ -113,20 +113,6 @@ void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
 Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedValueFvPatchScalarField(p, iF),
-    rhoName_("rho"),
-    psiName_("none"),
-    gamma_(0),
-    p0_(p.size(), 0)
-{}
-
-
-Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

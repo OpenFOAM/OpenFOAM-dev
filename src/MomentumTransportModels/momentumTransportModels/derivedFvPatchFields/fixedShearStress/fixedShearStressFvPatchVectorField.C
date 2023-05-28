@@ -35,17 +35,6 @@ License
 Foam::fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    fixedValueFvPatchVectorField(p, iF),
-    tau0_(Zero)
-{}
-
-
-Foam::fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
-(
-    const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )

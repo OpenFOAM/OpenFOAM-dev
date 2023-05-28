@@ -35,27 +35,6 @@ Foam::fixedNormalInletOutletVelocityFvPatchVectorField::
 fixedNormalInletOutletVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    directionMixedFvPatchVectorField(p, iF),
-    phiName_("phi"),
-    fixTangentialInflow_(true),
-    normalVelocity_
-    (
-        fvPatchVectorField::New("fixedValue", p, iF)
-    )
-{
-    refValue() = Zero;
-    refGrad() = Zero;
-    valueFraction() = Zero;
-}
-
-
-Foam::fixedNormalInletOutletVelocityFvPatchVectorField::
-fixedNormalInletOutletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )

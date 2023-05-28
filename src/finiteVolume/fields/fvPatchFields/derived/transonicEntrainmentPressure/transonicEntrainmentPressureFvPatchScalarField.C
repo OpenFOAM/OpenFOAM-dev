@@ -33,23 +33,6 @@ Foam::transonicEntrainmentPressureFvPatchScalarField::
 transonicEntrainmentPressureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    mixedFvPatchScalarField(p, iF),
-    rhoName_("rho"),
-    psiName_("psi"),
-    phiName_("phi"),
-    gamma_(0),
-    Mb_(0),
-    p0_(p.size(), 0)
-{}
-
-
-Foam::transonicEntrainmentPressureFvPatchScalarField::
-transonicEntrainmentPressureFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

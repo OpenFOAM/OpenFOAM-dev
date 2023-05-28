@@ -33,18 +33,6 @@ License
 Foam::fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedValueFvPatchScalarField(p, iF),
-    pName_("p"),
-    psiName_("psi")
-{}
-
-
-Foam::fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

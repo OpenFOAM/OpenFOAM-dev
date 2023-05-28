@@ -212,18 +212,6 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::yPlus
 nutURoughWallFunctionFvPatchScalarField::nutURoughWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    nutUWallFunctionFvPatchScalarField(p, iF),
-    Ks_(p.size(), 0.0),
-    Cs_(p.size(), 0.0)
-{}
-
-
-nutURoughWallFunctionFvPatchScalarField::nutURoughWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

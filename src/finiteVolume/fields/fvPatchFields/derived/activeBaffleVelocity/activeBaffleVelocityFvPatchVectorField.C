@@ -35,28 +35,6 @@ Foam::activeBaffleVelocityFvPatchVectorField::
 activeBaffleVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    fixedValueFvPatchVectorField(p, iF),
-    pName_("p"),
-    cyclicPatchName_(),
-    cyclicPatchLabel_(-1),
-    orientation_(1),
-    initWallSf_(0),
-    initCyclicSf_(0),
-    nbrCyclicSf_(0),
-    openFraction_(0),
-    openingTime_(0),
-    maxOpenFractionDelta_(0),
-    curTimeIndex_(-1)
-{}
-
-
-Foam::activeBaffleVelocityFvPatchVectorField::
-activeBaffleVelocityFvPatchVectorField
-(
-    const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )

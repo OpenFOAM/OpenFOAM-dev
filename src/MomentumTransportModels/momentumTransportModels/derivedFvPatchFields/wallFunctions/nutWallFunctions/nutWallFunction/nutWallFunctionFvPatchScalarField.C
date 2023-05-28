@@ -68,22 +68,6 @@ void Foam::nutWallFunctionFvPatchScalarField::writeLocalEntries
 Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedValueFvPatchScalarField(p, iF),
-    Cmu_(0.09),
-    kappa_(0.41),
-    E_(9.8),
-    yPlusLam_(yPlusLam(kappa_, E_))
-{
-    checkType();
-}
-
-
-Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

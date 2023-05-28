@@ -93,13 +93,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        MRFFreestreamVelocityFvPatchVectorField
-        (
-            const fvPatch&,
-            const DimensionedField<vector, volMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         MRFFreestreamVelocityFvPatchVectorField
         (

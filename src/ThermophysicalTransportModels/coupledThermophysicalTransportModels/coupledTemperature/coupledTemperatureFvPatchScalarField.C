@@ -131,29 +131,6 @@ Foam::coupledTemperatureFvPatchScalarField::
 coupledTemperatureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    mixedFvPatchScalarField(p, iF),
-    TnbrName_("undefined-Tnbr"),
-    qrNbrName_("undefined-qrNbr"),
-    qrName_("undefined-qr"),
-    thicknessLayers_(0),
-    kappaLayers_(0),
-    qs_(),
-    Qs_(0),
-    wallKappaByDelta_(0)
-{
-    this->refValue() = 0;
-    this->refGrad() = 0;
-    this->valueFraction() = 1;
-}
-
-
-Foam::coupledTemperatureFvPatchScalarField::
-coupledTemperatureFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )
@@ -443,16 +420,6 @@ namespace Foam
         coupledTemperatureFvPatchScalarField
     );
 
-
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        fvPatchScalarField,
-        coupledTemperatureFvPatchScalarField,
-        patch,
-        turbulentTemperatureCoupledBaffleMixed,
-        "compressible::turbulentTemperatureCoupledBaffleMixed"
-    );
-
     addBackwardCompatibleToRunTimeSelectionTable
     (
         fvPatchScalarField,
@@ -471,15 +438,6 @@ namespace Foam
         "compressible::turbulentTemperatureCoupledBaffleMixed"
     );
 
-
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        fvPatchScalarField,
-        coupledTemperatureFvPatchScalarField,
-        patch,
-        turbulentTemperatureRadCoupledMixed,
-        "compressible::turbulentTemperatureRadCoupledMixed"
-    );
 
     addBackwardCompatibleToRunTimeSelectionTable
     (

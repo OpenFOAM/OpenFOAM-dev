@@ -91,13 +91,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        uniformFixedMultiphaseHeatFluxFvPatchScalarField
-        (
-            const fvPatch&,
-            const DimensionedField<scalar, volMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         uniformFixedMultiphaseHeatFluxFvPatchScalarField
         (

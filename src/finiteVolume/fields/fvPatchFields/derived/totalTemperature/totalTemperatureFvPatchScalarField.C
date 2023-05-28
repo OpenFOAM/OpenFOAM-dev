@@ -34,21 +34,6 @@ License
 Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedValueFvPatchScalarField(p, iF),
-    UName_("U"),
-    phiName_("phi"),
-    psiName_("psi"),
-    gamma_(0.0),
-    T0_(p.size(), 0.0)
-{}
-
-
-Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

@@ -34,22 +34,6 @@ Foam::filmSurfaceVelocityFvPatchVectorField::
 filmSurfaceVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    mixedFvPatchField<vector>(p, iF),
-    Cs_(0)
-{
-    refValue() = Zero;
-    refGrad() = Zero;
-    valueFraction() = 0;
-}
-
-
-Foam::filmSurfaceVelocityFvPatchVectorField::
-filmSurfaceVelocityFvPatchVectorField
-(
-    const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )

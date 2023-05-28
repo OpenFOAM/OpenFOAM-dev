@@ -47,18 +47,6 @@ alphatJayatillekeWallFunctionFvPatchScalarField::
 alphatJayatillekeWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedValueFvPatchScalarField(p, iF),
-    Prt_(0.85)
-{}
-
-
-alphatJayatillekeWallFunctionFvPatchScalarField::
-alphatJayatillekeWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

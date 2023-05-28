@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,28 +29,6 @@ License
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::supersonicFreestreamFvPatchVectorField::
-supersonicFreestreamFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    mixedFvPatchVectorField(p, iF),
-    TName_("T"),
-    pName_("p"),
-    psiName_("psi"),
-    UInf_(Zero),
-    pInf_(0),
-    TInf_(0),
-    gamma_(0)
-{
-    refValue() = patchInternalField();
-    refGrad() = Zero;
-    valueFraction() = 1;
-}
-
 
 Foam::supersonicFreestreamFvPatchVectorField::
 supersonicFreestreamFvPatchVectorField

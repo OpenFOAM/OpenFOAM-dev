@@ -34,19 +34,6 @@ Foam::uniformFixedMultiphaseHeatFluxFvPatchScalarField::
 uniformFixedMultiphaseHeatFluxFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    mixedFvPatchScalarField(p, iF),
-    q_(nullptr),
-    relax_(1)
-{}
-
-
-Foam::uniformFixedMultiphaseHeatFluxFvPatchScalarField::
-uniformFixedMultiphaseHeatFluxFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

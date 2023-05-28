@@ -35,27 +35,6 @@ License
 Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    mixedFvPatchScalarField(p, iF),
-    UName_("U"),
-    rhoName_("rho"),
-    psiName_("psi"),
-    muName_("mu"),
-    accommodationCoeff_(1.0),
-    Twall_(p.size(), 0.0),
-    gamma_(1.4)
-{
-    refValue() = 0.0;
-    refGrad() = 0.0;
-    valueFraction() = 0.0;
-}
-
-
-Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

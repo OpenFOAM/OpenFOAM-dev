@@ -103,22 +103,6 @@ template<class Type>
 Foam::mappedFvPatchField<Type>::mappedFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
-)
-:
-    p_(p),
-    iF_(iF),
-    fieldName_(iF.name()),
-    setAverage_(false),
-    average_(Zero),
-    mapperPtr_(nullptr)
-{}
-
-
-template<class Type>
-Foam::mappedFvPatchField<Type>::mappedFvPatchField
-(
-    const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
 )

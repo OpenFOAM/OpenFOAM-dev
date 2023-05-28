@@ -59,18 +59,6 @@ const Foam::NamedEnum
 Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedGradientFvPatchScalarField(p, iF),
-    contactAngle_(),
-    limit_(lcZeroGradient)
-{}
-
-
-Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

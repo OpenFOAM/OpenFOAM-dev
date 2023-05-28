@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,17 +33,6 @@ Foam::scalar Foam::epsilonmWallFunctionFvPatchScalarField::tolerance_ = 1e-1;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::epsilonmWallFunctionFvPatchScalarField::
-epsilonmWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedValueFvPatchField<scalar>(p, iF)
-{}
-
 
 Foam::epsilonmWallFunctionFvPatchScalarField::
 epsilonmWallFunctionFvPatchScalarField

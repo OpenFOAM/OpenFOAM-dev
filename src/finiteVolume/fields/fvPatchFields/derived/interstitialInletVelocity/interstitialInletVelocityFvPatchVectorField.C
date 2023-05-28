@@ -35,19 +35,6 @@ Foam::interstitialInletVelocityFvPatchVectorField::
 interstitialInletVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    fixedValueFvPatchVectorField(p, iF),
-    inletVelocity_(p.size(), Zero),
-    alphaName_("alpha")
-{}
-
-
-Foam::interstitialInletVelocityFvPatchVectorField::
-interstitialInletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )

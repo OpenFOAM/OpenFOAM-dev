@@ -129,18 +129,6 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::nut() const
 nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    nutkWallFunctionFvPatchScalarField(p, iF),
-    Ks_(p.size(), 0.0),
-    Cs_(p.size(), 0.0)
-{}
-
-
-nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

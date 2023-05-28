@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -278,23 +278,6 @@ void omegaWallFunctionFvPatchScalarField::calculate
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedValueFvPatchField<scalar>(p, iF),
-    beta1_(0.075),
-    blended_(false),
-    G_(),
-    omega_(),
-    initialised_(false),
-    master_(-1),
-    cornerWeights_()
-{}
-
 
 omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 (

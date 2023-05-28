@@ -137,26 +137,6 @@ Foam::flowRateInletVelocityFvPatchVectorField::
 flowRateInletVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    fixedValueFvPatchField<vector>(p, iF),
-    flowRate_(),
-    profile_(),
-    meanVelocity_(false),
-    volumetric_(false),
-    rhoName_("rho"),
-    rhoInlet_(0),
-    alphaName_(word::null),
-    y_(),
-    area_(NaN)
-{}
-
-
-Foam::flowRateInletVelocityFvPatchVectorField::
-flowRateInletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )

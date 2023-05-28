@@ -35,24 +35,6 @@ Foam::pressureDirectedInletOutletVelocityFvPatchVectorField::
 pressureDirectedInletOutletVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    mixedFvPatchVectorField(p, iF),
-    phiName_("phi"),
-    rhoName_("rho"),
-    inletDir_(p.size())
-{
-    refValue() = *this;
-    refGrad() = Zero;
-    valueFraction() = 0.0;
-}
-
-
-Foam::pressureDirectedInletOutletVelocityFvPatchVectorField::
-pressureDirectedInletOutletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )

@@ -58,13 +58,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        adjointOutletVelocityFvPatchVectorField
-        (
-            const fvPatch&,
-            const DimensionedField<vector, volMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         adjointOutletVelocityFvPatchVectorField
         (

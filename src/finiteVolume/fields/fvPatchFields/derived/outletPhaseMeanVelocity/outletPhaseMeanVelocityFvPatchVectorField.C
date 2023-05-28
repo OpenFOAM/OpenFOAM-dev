@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,23 +30,6 @@ License
 #include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::outletPhaseMeanVelocityFvPatchVectorField::
-outletPhaseMeanVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    mixedFvPatchField<vector>(p, iF),
-    UnMean_(nullptr),
-    alphaName_("none")
-{
-    refValue() = Zero;
-    refGrad() = Zero;
-    valueFraction() = 0.0;
-}
-
 
 Foam::outletPhaseMeanVelocityFvPatchVectorField::
 outletPhaseMeanVelocityFvPatchVectorField

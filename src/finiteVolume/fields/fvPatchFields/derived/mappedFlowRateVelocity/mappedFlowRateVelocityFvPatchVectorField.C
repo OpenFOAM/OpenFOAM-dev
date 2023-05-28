@@ -36,20 +36,6 @@ Foam::mappedFlowRateVelocityFvPatchVectorField::
 mappedFlowRateVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
-)
-:
-    fixedValueFvPatchField<vector>(p, iF),
-    nbrPhiName_("none"),
-    phiName_("phi"),
-    rhoName_("rho")
-{}
-
-
-Foam::mappedFlowRateVelocityFvPatchVectorField::
-mappedFlowRateVelocityFvPatchVectorField
-(
-    const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )

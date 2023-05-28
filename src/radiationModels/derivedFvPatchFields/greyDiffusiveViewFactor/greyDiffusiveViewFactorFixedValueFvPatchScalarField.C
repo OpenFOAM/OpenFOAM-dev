@@ -35,19 +35,6 @@ Foam::greyDiffusiveViewFactorFixedValueFvPatchScalarField::
 greyDiffusiveViewFactorFixedValueFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fixedValueFvPatchScalarField(p, iF),
-    radiationCoupledBase(patch(), "undefined", scalarField::null()),
-    qro_(p.size(), 0.0)
-{}
-
-
-Foam::greyDiffusiveViewFactorFixedValueFvPatchScalarField::
-greyDiffusiveViewFactorFixedValueFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

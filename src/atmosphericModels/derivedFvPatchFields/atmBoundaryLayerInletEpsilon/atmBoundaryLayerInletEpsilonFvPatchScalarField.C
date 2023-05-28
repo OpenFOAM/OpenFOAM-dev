@@ -40,18 +40,6 @@ atmBoundaryLayerInletEpsilonFvPatchScalarField::
 atmBoundaryLayerInletEpsilonFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    inletOutletFvPatchScalarField(p, iF),
-    atmBoundaryLayer()
-{}
-
-
-atmBoundaryLayerInletEpsilonFvPatchScalarField::
-atmBoundaryLayerInletEpsilonFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

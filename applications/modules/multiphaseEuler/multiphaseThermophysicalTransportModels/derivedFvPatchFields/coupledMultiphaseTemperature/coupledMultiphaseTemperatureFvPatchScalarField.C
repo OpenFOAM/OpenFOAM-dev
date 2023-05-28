@@ -176,17 +176,6 @@ Foam::coupledMultiphaseTemperatureFvPatchScalarField::
 coupledMultiphaseTemperatureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    coupledTemperatureFvPatchScalarField(p, iF)
-{}
-
-
-Foam::coupledMultiphaseTemperatureFvPatchScalarField::
-coupledMultiphaseTemperatureFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )

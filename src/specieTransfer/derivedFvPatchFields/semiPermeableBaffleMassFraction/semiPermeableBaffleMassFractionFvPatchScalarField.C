@@ -38,17 +38,6 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::
 semiPermeableBaffleMassFractionFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    specieTransferMassFractionFvPatchScalarField(p, iF)
-{}
-
-
-Foam::semiPermeableBaffleMassFractionFvPatchScalarField::
-semiPermeableBaffleMassFractionFvPatchScalarField
-(
-    const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )
