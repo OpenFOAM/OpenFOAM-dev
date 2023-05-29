@@ -125,13 +125,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        codedFixedValuePointPatchField
-        (
-            const pointPatch&,
-            const DimensionedField<Type, pointMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         codedFixedValuePointPatchField
         (

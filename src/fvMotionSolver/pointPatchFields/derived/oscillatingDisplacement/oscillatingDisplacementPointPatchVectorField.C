@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,19 +35,6 @@ namespace Foam
 {
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-oscillatingDisplacementPointPatchVectorField::
-oscillatingDisplacementPointPatchVectorField
-(
-    const pointPatch& p,
-    const DimensionedField<vector, pointMesh>& iF
-)
-:
-    fixedValuePointPatchField<vector>(p, iF),
-    amplitude_(Zero),
-    omega_(0.0)
-{}
-
 
 oscillatingDisplacementPointPatchVectorField::
 oscillatingDisplacementPointPatchVectorField

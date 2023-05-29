@@ -119,13 +119,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        waveDisplacementPointPatchVectorField
-        (
-            const pointPatch&,
-            const DimensionedField<vector, pointMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         waveDisplacementPointPatchVectorField
         (

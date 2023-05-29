@@ -69,13 +69,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        angularOscillatingDisplacementPointPatchVectorField
-        (
-            const pointPatch&,
-            const DimensionedField<vector, pointMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         angularOscillatingDisplacementPointPatchVectorField
         (

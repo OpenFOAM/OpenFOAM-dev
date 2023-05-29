@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,11 +49,12 @@ Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
     if (cstrIter == pointPatchConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown patchField type "
-            << patchFieldType << nl << nl
-            << "Valid patchField types are :" << endl
+            << "Unknown null-constructable patchField type " << patchFieldType
+            << " for patch " << p.name() << " of type " << p.type()
+            << " for field " << iF.name() << nl << nl
+            << "Valid null-constructable patchField types are :" << endl
             << pointPatchConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << abort(FatalError);
     }
 
     if
@@ -129,7 +130,8 @@ Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
             (
                 dict
             )   << "Unknown patchField type " << patchFieldType
-                << " for patch type " << p.type() << nl << nl
+                << " for patch " << p.name() << " of type " << p.type()
+                << " for field " << iF.name() << nl << nl
                 << "Valid patchField types are :" << endl
                 << dictionaryConstructorTablePtr_->sortedToc()
                 << exit(FatalIOError);
@@ -185,7 +187,9 @@ Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
     if (cstrIter == patchMapperConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown patchField type " << ptf.type() << nl << nl
+            << "Unknown patchField type " << ptf.type()
+            << " for patch " << p.name() << " of type " << p.type()
+            << " for field " << iF.name() << nl << nl
             << "Valid patchField types are :" << endl
             << patchMapperConstructorTablePtr_->sortedToc()
             << exit(FatalError);

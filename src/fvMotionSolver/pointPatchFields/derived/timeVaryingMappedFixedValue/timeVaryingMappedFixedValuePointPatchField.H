@@ -107,13 +107,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        timeVaryingMappedFixedValuePointPatchField
-        (
-            const pointPatch&,
-            const DimensionedField<Type, pointMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         timeVaryingMappedFixedValuePointPatchField
         (

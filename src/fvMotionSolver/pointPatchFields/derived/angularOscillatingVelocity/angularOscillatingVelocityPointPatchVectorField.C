@@ -40,23 +40,6 @@ angularOscillatingVelocityPointPatchVectorField::
 angularOscillatingVelocityPointPatchVectorField
 (
     const pointPatch& p,
-    const DimensionedField<vector, pointMesh>& iF
-)
-:
-    fixedValuePointPatchField<vector>(p, iF),
-    axis_(Zero),
-    origin_(Zero),
-    angle0_(0.0),
-    amplitude_(0.0),
-    omega_(0.0),
-    p0_(p.localPoints())
-{}
-
-
-angularOscillatingVelocityPointPatchVectorField::
-angularOscillatingVelocityPointPatchVectorField
-(
-    const pointPatch& p,
     const DimensionedField<vector, pointMesh>& iF,
     const dictionary& dict
 )

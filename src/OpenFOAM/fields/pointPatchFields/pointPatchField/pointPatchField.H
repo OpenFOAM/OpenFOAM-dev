@@ -524,14 +524,7 @@ const pointPatchField<Type>& operator+
     defineTemplateRunTimeSelectionTable(pointPatchTypeField, dictionary);
 
 
-
 #define addToPointPatchFieldRunTimeSelection(PatchTypeField,typePatchTypeField)\
-    addToRunTimeSelectionTable                                                 \
-    (                                                                          \
-        PatchTypeField,                                                        \
-        typePatchTypeField,                                                    \
-        pointPatch                                                             \
-    );                                                                         \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
         PatchTypeField,                                                        \
@@ -546,10 +539,35 @@ const pointPatchField<Type>& operator+
     );
 
 
+#define addToNullConstructablePointPatchFieldRunTimeSelection(                 \
+    PatchTypeField, typePatchTypeField)                                        \
+                                                                               \
+    addToPointPatchFieldRunTimeSelection(PatchTypeField, typePatchTypeField)   \
+                                                                               \
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        PatchTypeField,                                                        \
+        typePatchTypeField,                                                    \
+        pointPatch                                                             \
+    );
+
+
 // For non-templated patch fields
 #define makePointPatchTypeField(PatchTypeField, typePatchTypeField)            \
     defineTypeNameAndDebug(typePatchTypeField, 0);                             \
     addToPointPatchFieldRunTimeSelection(PatchTypeField, typePatchTypeField)
+
+
+// For non-templated patch fields
+#define makeNullConstructablePointPatchTypeField(                              \
+    PatchTypeField, typePatchTypeField)                                        \
+                                                                               \
+    defineTypeNameAndDebug(typePatchTypeField, 0);                             \
+    addToNullConstructablePointPatchFieldRunTimeSelection                      \
+    (                                                                          \
+        PatchTypeField,                                                        \
+        typePatchTypeField                                                     \
+    )
 
 
 // For templated patch fields
@@ -566,8 +584,26 @@ const pointPatchField<Type>& operator+
     )
 
 
+// For templated patch fields
+#define makeNullConstructableTemplatePointPatchTypeField(fieldType, type)      \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        CAT4(type, PointPatch, CAPITALIZE(fieldType), Field),                  \
+        0                                                                      \
+    );                                                                         \
+    addToNullConstructablePointPatchFieldRunTimeSelection                      \
+    (                                                                          \
+        CAT3(pointPatch, CAPITALIZE(fieldType), Field),                        \
+        CAT4(type, PointPatch, CAPITALIZE(fieldType), Field)                   \
+    )
+
+
 #define makePointPatchFields(type)                                             \
     FOR_ALL_FIELD_TYPES(makeTemplatePointPatchTypeField, type)
+
+
+#define makeNullConstructablePointPatchFields(type)                            \
+    FOR_ALL_FIELD_TYPES(makeNullConstructableTemplatePointPatchTypeField, type)
 
 
 #define makePointPatchFieldTypeName(fieldType, type)                           \

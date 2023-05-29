@@ -61,13 +61,6 @@ public:
 
     // Constructors
 
-        //- Construct from patch and internal field
-        ${typeName}FixedValuePointPatch${FieldType}
-        (
-            const pointPatch&,
-            const DimensionedField<${TemplateType}, pointMesh>&
-        );
-
         //- Construct from patch, internal field and dictionary
         ${typeName}FixedValuePointPatch${FieldType}
         (

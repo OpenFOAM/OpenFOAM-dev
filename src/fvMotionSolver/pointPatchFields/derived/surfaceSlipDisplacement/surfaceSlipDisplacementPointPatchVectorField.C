@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -302,20 +302,6 @@ void surfaceSlipDisplacementPointPatchVectorField::calcProjection
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-surfaceSlipDisplacementPointPatchVectorField::
-surfaceSlipDisplacementPointPatchVectorField
-(
-    const pointPatch& p,
-    const DimensionedField<vector, pointMesh>& iF
-)
-:
-    pointPatchVectorField(p, iF),
-    projectMode_(NEAREST),
-    projectDir_(Zero),
-    wedgePlane_(-1)
-{}
-
 
 surfaceSlipDisplacementPointPatchVectorField::
 surfaceSlipDisplacementPointPatchVectorField

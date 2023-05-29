@@ -32,19 +32,6 @@ template<class Type>
 Foam::genericPointPatchField<Type>::genericPointPatchField
 (
     const pointPatch& p,
-    const DimensionedField<Type, pointMesh>& iF
-)
-:
-    calculatedPointPatchField<Type>(p, iF)
-{
-    NotImplemented;
-}
-
-
-template<class Type>
-Foam::genericPointPatchField<Type>::genericPointPatchField
-(
-    const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
     const dictionary& dict
 )

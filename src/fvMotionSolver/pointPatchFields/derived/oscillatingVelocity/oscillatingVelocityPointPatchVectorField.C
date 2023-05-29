@@ -40,20 +40,6 @@ oscillatingVelocityPointPatchVectorField::
 oscillatingVelocityPointPatchVectorField
 (
     const pointPatch& p,
-    const DimensionedField<vector, pointMesh>& iF
-)
-:
-    fixedValuePointPatchField<vector>(p, iF),
-    amplitude_(Zero),
-    omega_(0.0),
-    p0_(p.localPoints())
-{}
-
-
-oscillatingVelocityPointPatchVectorField::
-oscillatingVelocityPointPatchVectorField
-(
-    const pointPatch& p,
     const DimensionedField<vector, pointMesh>& iF,
     const dictionary& dict
 )
