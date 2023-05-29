@@ -159,6 +159,7 @@ Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
             )   << "inconsistent patch and patchField types for \n"
                 << "    patch type " << p.type()
                 << " and patchField type " << patchFieldType
+                << " for field " << iF.name()
                 << exit(FatalIOError);
         }
     }

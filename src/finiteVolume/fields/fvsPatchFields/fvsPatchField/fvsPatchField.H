@@ -121,6 +121,19 @@ public:
         (
             tmp,
             fvsPatchField,
+            dictionary,
+            (
+                const fvPatch& p,
+                const DimensionedField<Type, surfaceMesh>& iF,
+                const dictionary& dict
+            ),
+            (p, iF, dict)
+        );
+
+        declareRunTimeSelectionTable
+        (
+            tmp,
+            fvsPatchField,
             patchMapper,
             (
                 const fvsPatchField<Type>& ptf,
@@ -129,19 +142,6 @@ public:
                 const fvPatchFieldMapper& m
             ),
             (dynamic_cast<const fvsPatchFieldType&>(ptf), p, iF, m)
-        );
-
-        declareRunTimeSelectionTable
-        (
-            tmp,
-            fvsPatchField,
-            dictionary,
-            (
-                const fvPatch& p,
-                const DimensionedField<Type, surfaceMesh>& iF,
-                const dictionary& dict
-            ),
-            (p, iF, dict)
         );
 
 
