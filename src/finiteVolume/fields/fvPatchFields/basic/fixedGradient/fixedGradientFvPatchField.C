@@ -84,11 +84,6 @@ Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 {
     if (mappingRequired)
     {
-        // For unmapped faces set to internal field value (zero-gradient)
-        if (mapper.hasUnmapped())
-        {
-            gradient_ = Zero;
-        }
         mapper(gradient_, ptf.gradient_);
     }
 }
