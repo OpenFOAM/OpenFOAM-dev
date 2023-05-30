@@ -55,7 +55,7 @@ void Foam::fv::forcing::readCoeffs()
         (
             lambdaBoundary_.name(),
             lambdaBoundary_.dimensions(),
-            coeffs().lookupOrDefault(lambdaBoundary_.name(), 0)
+            coeffs().lookupOrDefault(lambdaBoundary_.name(), 0.0)
         );
 
     const bool foundScale = coeffs().found("scale");
@@ -209,7 +209,7 @@ Foam::fv::forcing::forcing
 :
     fvModel(name, modelType, mesh, dict),
     lambda_("lambda", dimless/dimTime, NaN),
-    lambdaBoundary_("lambdaBoundary", dimless/dimTime, 0),
+    lambdaBoundary_("lambdaBoundary", dimless/dimTime, 0.0),
     scale_(nullptr),
     origins_(),
     directions_()
