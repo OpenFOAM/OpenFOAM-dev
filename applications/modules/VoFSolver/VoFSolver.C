@@ -146,27 +146,6 @@ Foam::solvers::VoFSolver::VoFSolver
 {
     mesh.schemes().setFluxRequired(p_rgh.name());
 
-    if (mesh.dynamic() || MRF.size())
-    {
-        Info<< "Constructing face momentum Uf" << endl;
-
-        // Ensure the U BCs are up-to-date before constructing Uf
-        U_.correctBoundaryConditions();
-
-        Uf = new surfaceVectorField
-        (
-            IOobject
-            (
-                "Uf",
-                runTime.name(),
-                mesh,
-                IOobject::READ_IF_PRESENT,
-                IOobject::AUTO_WRITE
-            ),
-            fvc::interpolate(U_)
-        );
-    }
-
     if (LTS)
     {
         Info<< "Using LTS" << endl;
@@ -220,6 +199,27 @@ void Foam::solvers::VoFSolver::preSolve()
 {
     // Read the controls
     readControls();
+
+    if ((mesh.dynamic() || MRF.size()) && !Uf.valid())
+    {
+        Info<< "Constructing face momentum Uf" << endl;
+
+        // Ensure the U BCs are up-to-date before constructing Uf
+        U_.correctBoundaryConditions();
+
+        Uf = new surfaceVectorField
+        (
+            IOobject
+            (
+                "Uf",
+                runTime.name(),
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE
+            ),
+            fvc::interpolate(U_)
+        );
+    }
 
     if (transient())
     {

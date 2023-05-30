@@ -223,27 +223,6 @@ Foam::solvers::isothermalFluid::isothermalFluid
         );
     }
 
-    if (mesh.dynamic() || MRF.size())
-    {
-        Info<< "Constructing face momentum rhoUf" << endl;
-
-        // Ensure the U BCs are up-to-date before constructing Uf
-        U_.correctBoundaryConditions();
-
-        rhoUf = new surfaceVectorField
-        (
-            IOobject
-            (
-                "rhoUf",
-                runTime.name(),
-                mesh,
-                IOobject::READ_IF_PRESENT,
-                IOobject::AUTO_WRITE
-            ),
-            fvc::interpolate(rho*U)
-        );
-    }
-
     if (transient())
     {
         correctCoNum();
@@ -291,6 +270,27 @@ void Foam::solvers::isothermalFluid::preSolve()
 {
     // Read the controls
     readControls();
+
+    if ((mesh.dynamic() || MRF.size()) && !rhoUf.valid())
+    {
+        Info<< "Constructing face momentum rhoUf" << endl;
+
+        // Ensure the U BCs are up-to-date before constructing Uf
+        U_.correctBoundaryConditions();
+
+        rhoUf = new surfaceVectorField
+        (
+            IOobject
+            (
+                "rhoUf",
+                runTime.name(),
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE
+            ),
+            fvc::interpolate(rho*U)
+        );
+    }
 
     if (transient())
     {

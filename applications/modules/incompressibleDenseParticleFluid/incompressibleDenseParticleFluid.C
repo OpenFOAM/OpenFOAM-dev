@@ -230,7 +230,25 @@ incompressibleDenseParticleFluid
     alphacf = fvc::interpolate(alphac);
     alphaPhic = alphacf*phic;
 
-    if (mesh.dynamic())
+    correctCoNum();
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::solvers::incompressibleDenseParticleFluid::
+~incompressibleDenseParticleFluid()
+{}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+void Foam::solvers::incompressibleDenseParticleFluid::preSolve()
+{
+    // Read the controls
+    readControls();
+
+    if (mesh.dynamic() && !Ucf.valid())
     {
         Info<< "Constructing face momentum Ucf" << endl;
 
@@ -250,24 +268,6 @@ incompressibleDenseParticleFluid
             fvc::interpolate(Uc)
         );
     }
-
-    correctCoNum();
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::solvers::incompressibleDenseParticleFluid::
-~incompressibleDenseParticleFluid()
-{}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-void Foam::solvers::incompressibleDenseParticleFluid::preSolve()
-{
-    // Read the controls
-    readControls();
 
     // Store the particle positions
     if (mesh.topoChanging())
