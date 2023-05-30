@@ -41,8 +41,7 @@ namespace Foam
 template<class BasicThermophysicalTransportModel>
 void Fickian<BasicThermophysicalTransportModel>::updateDm() const
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const PtrList<volScalarField>& Y = composition.Y();
+    const PtrList<volScalarField>& Y = this->thermo().Y();
     const volScalarField& p = this->thermo().p();
     const volScalarField& T = this->thermo().T();
 
@@ -83,7 +82,7 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
                            (
                                "Wj",
                                Wm.dimensions(),
-                               composition.Wi(j)
+                               this->thermo().Wi(j)
                            )
                           *(
                                i < j
@@ -100,7 +99,12 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
                 (
                     1/Wm
                   - Y[i]
-                   /dimensionedScalar("Wi", Wm.dimensions(), composition.Wi(i))
+                   /dimensionedScalar
+                    (
+                        "Wi",
+                        Wm.dimensions(),
+                        this->thermo().Wi(i)
+                    )
                 )/max(sumXbyD, dimensionedScalar(sumXbyD.dimensions(), small))
             );
         }
@@ -142,14 +146,14 @@ Fickian<BasicThermophysicalTransportModel>::Fickian
 
     mixtureDiffusionCoefficients_(true),
 
-    DFuncs_(this->thermo().composition().species().size()),
+    DFuncs_(this->thermo().species().size()),
 
-    DmFuncs_(this->thermo().composition().species().size()),
+    DmFuncs_(this->thermo().species().size()),
 
     DTFuncs_
     (
         this->coeffDict_.found("DT")
-      ? this->thermo().composition().species().size()
+      ? this->thermo().species().size()
       : 0
     )
 {}
@@ -165,8 +169,7 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
         BasicThermophysicalTransportModel::read()
     )
     {
-        const basicSpecieMixture& composition = this->thermo().composition();
-        const speciesTable& species = composition.species();
+        const speciesTable& species = this->thermo().species();
 
         this->coeffDict_.lookup("mixtureDiffusionCoefficients")
             >> mixtureDiffusionCoefficients_;
@@ -273,13 +276,11 @@ tmp<volScalarField> Fickian<BasicThermophysicalTransportModel>::DEff
     const volScalarField& Yi
 ) const
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
-
     return volScalarField::New
     (
         "DEff",
         this->momentumTransport().rho()
-       *Dm()[composition.index(Yi)]
+       *Dm()[this->thermo().specieIndex(Yi)]
     );
 }
 
@@ -291,11 +292,9 @@ tmp<scalarField> Fickian<BasicThermophysicalTransportModel>::DEff
     const label patchi
 ) const
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
-
     return
         this->momentumTransport().rho().boundaryField()[patchi]
-       *Dm()[composition.index(Yi)].boundaryField()[patchi];
+       *Dm()[this->thermo().specieIndex(Yi)].boundaryField()[patchi];
 }
 
 
@@ -316,8 +315,9 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
         )
     );
 
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const PtrList<volScalarField>& Y = composition.Y();
+    const PtrList<volScalarField>& Y = this->thermo().Y();
+    const volScalarField& p = this->thermo().p();
+    const volScalarField& T = this->thermo().T();
 
     if (Y.size())
     {
@@ -343,12 +343,9 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
 
         forAll(Y, i)
         {
-            if (i != composition.defaultSpecie())
+            if (i != this->thermo().defaultSpecie())
             {
-                const volScalarField hi
-                (
-                    composition.Hs(i, this->thermo().p(), this->thermo().T())
-                );
+                const volScalarField hi(this->thermo().hsi(i, p, T));
 
                 const surfaceScalarField ji(this->j(Y[i]));
                 sumJ += ji;
@@ -358,12 +355,9 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
         }
 
         {
-            const label i = composition.defaultSpecie();
+            const label i = this->thermo().defaultSpecie();
 
-            const volScalarField hi
-            (
-                composition.Hs(i, this->thermo().p(), this->thermo().T())
-            );
+            const volScalarField hi(this->thermo().hsi(i, p, T));
 
             sumJh -= sumJ*fvc::interpolate(hi);
         }
@@ -390,8 +384,9 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divq
         )
     );
 
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const PtrList<volScalarField>& Y = composition.Y();
+    const PtrList<volScalarField>& Y = this->thermo().Y();
+    const volScalarField& p = this->thermo().p();
+    const volScalarField& T = this->thermo().T();
 
     tmpDivq.ref() -=
         fvm::laplacianCorrection(this->alpha()*this->alphaEff(), he);
@@ -418,12 +413,9 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divq
 
     forAll(Y, i)
     {
-        if (i != composition.defaultSpecie())
+        if (i != this->thermo().defaultSpecie())
         {
-            const volScalarField hi
-            (
-                composition.Hs(i, this->thermo().p(), this->thermo().T())
-            );
+            const volScalarField hi(this->thermo().hsi(i, p, T));
 
             const surfaceScalarField ji(this->j(Y[i]));
             sumJ += ji;
@@ -433,12 +425,9 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divq
     }
 
     {
-        const label i = composition.defaultSpecie();
+        const label i = this->thermo().defaultSpecie();
 
-        const volScalarField hi
-        (
-            composition.Hs(i, this->thermo().p(), this->thermo().T())
-        );
+        const volScalarField hi(this->thermo().hsi(i, p, T));
 
         sumJh -= sumJ*fvc::interpolate(hi);
     }
@@ -457,7 +446,6 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::j
 {
     if (DTFuncs_.size())
     {
-        const basicSpecieMixture& composition = this->thermo().composition();
         const volScalarField& p = this->thermo().p();
         const volScalarField& T = this->thermo().T();
 
@@ -467,7 +455,7 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::j
             (
                 evaluate
                 (
-                    DTFuncs_[composition.index(Yi)],
+                    DTFuncs_[this->thermo().specieIndex(Yi)],
                     dimDynamicViscosity,
                     p,
                     T
@@ -490,7 +478,6 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divj
 {
     if (DTFuncs_.size())
     {
-        const basicSpecieMixture& composition = this->thermo().composition();
         const volScalarField& p = this->thermo().p();
         const volScalarField& T = this->thermo().T();
 
@@ -502,7 +489,7 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divj
                 (
                     evaluate
                     (
-                        DTFuncs_[composition.index(Yi)],
+                        DTFuncs_[this->thermo().specieIndex(Yi)],
                         dimDynamicViscosity,
                         p,
                         T

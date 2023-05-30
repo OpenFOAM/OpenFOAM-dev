@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,11 +39,15 @@ SourceFiles
 #define psiThermo_H
 
 #include "fluidThermo.H"
+#include "pureThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+template<class, class> class heThermo;
+template<class> class hePsiThermo;
 
 /*---------------------------------------------------------------------------*\
                           Class psiThermo Declaration
@@ -62,6 +66,16 @@ public:
 
         //- Forward declare the composite class
         class composite;
+
+
+    // Public Typedefs
+
+        //- The derived type
+        template<class MixtureType>
+        using heThermoType = hePsiThermo<heThermo<MixtureType, composite>>;
+
+        //- The derived name
+        static const word heThermoName;
 
 
     //- Runtime type information
@@ -127,8 +141,8 @@ public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
-        implementation(const fvMesh&, const word& phaseName);
+        //- Construct from dictionary, mesh and phase name
+        implementation(const dictionary&, const fvMesh&, const word&);
 
         //- Disallow default bitwise copy construction
         implementation(const implementation&) = delete;
@@ -167,6 +181,7 @@ public:
 class psiThermo::composite
 :
     public basicThermo::implementation,
+    public pureThermo,
     public fluidThermo::implementation,
     public psiThermo::implementation
 {
@@ -174,16 +189,19 @@ public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
+        //- Construct from dictionary, mesh and phase name
+        template<class MixtureType>
         composite
         (
+            const dictionary& dict,
+            const MixtureType& mixture,
             const fvMesh& mesh,
             const word& phaseName
         )
         :
-            basicThermo::implementation(mesh, phaseName),
-            fluidThermo::implementation(mesh, phaseName),
-            psiThermo::implementation(mesh, phaseName)
+            basicThermo::implementation(dict, mesh, phaseName),
+            fluidThermo::implementation(dict, mesh, phaseName),
+            psiThermo::implementation(dict, mesh, phaseName)
         {}
 };
 

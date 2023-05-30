@@ -1,5 +1,4 @@
 basicChemistryModel& chemistry = pChemistry();
 scalar dtChem = min(chemistry.deltaTChem()[0], runTime.deltaT().value());
-basicSpecieMixture& composition = thermo.composition();
-PtrList<volScalarField>& Y = composition.Y();
+PtrList<volScalarField>& Y = thermo.Y();
 volScalarField& p = thermo.p();

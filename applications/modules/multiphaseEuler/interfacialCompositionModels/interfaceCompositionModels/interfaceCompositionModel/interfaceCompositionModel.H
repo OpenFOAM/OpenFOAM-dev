@@ -132,17 +132,12 @@ public:
             //- Return the thermo
             inline const rhoMulticomponentThermo& thermo() const;
 
-            //- Return the composition
-            inline const basicSpecieMixture& composition() const;
-
             //- Return the other thermo
             inline const rhoThermo& otherThermo() const;
 
-            //- Return whether the other side has a multi-specie composition
-            inline bool otherHasComposition() const;
-
-            //- Return the other composition
-            inline const basicSpecieMixture& otherComposition() const;
+            //- Return the other multicomponent thermo
+            inline const rhoMulticomponentThermo&
+                otherMulticomponentThermo() const;
 
 
         // Evaluation

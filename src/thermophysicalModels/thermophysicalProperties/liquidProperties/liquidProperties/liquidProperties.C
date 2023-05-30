@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "liquidProperties.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
@@ -82,65 +82,6 @@ Foam::liquidProperties::liquidProperties(const dictionary& dict)
     omega_(dict.lookup<scalar>("omega")),
     delta_(dict.lookup<scalar>("delta"))
 {}
-
-
-// * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
-(
-    const word& name
-)
-{
-    if (debug)
-    {
-        InfoInFunction << "Constructing liquidProperties" << endl;
-    }
-
-    ConstructorTable::iterator cstrIter = ConstructorTablePtr_->find(name);
-
-    if (cstrIter == ConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown liquidProperties type "
-            << name << nl << nl
-            << "Valid liquidProperties types are:" << nl
-            << ConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
-
-    return autoPtr<liquidProperties>(cstrIter()());
-}
-
-
-Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
-(
-    const dictionary& dict
-)
-{
-    if (debug)
-    {
-        InfoInFunction << "Constructing liquidProperties" << endl;
-    }
-
-    // If the type is not specified use the name as the liquid type name
-    const word& liquidPropertiesTypeName =
-        dict.found("type") ? dict.lookup("type") : dict.dictName();
-
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(liquidPropertiesTypeName);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown liquidProperties type "
-            << liquidPropertiesTypeName << nl << nl
-            << "Valid liquidProperties types are:" << nl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
-
-    return autoPtr<liquidProperties>(cstrIter()(dict));
-}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

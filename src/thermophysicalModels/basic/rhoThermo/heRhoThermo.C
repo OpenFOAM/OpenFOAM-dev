@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,8 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class BasicRhoThermo, class MixtureType>
-void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::calculate()
+template<class HeThermo>
+void Foam::heRhoThermo<HeThermo>::calculate()
 {
     const scalarField& hCells = this->he();
     const scalarField& pCells = this->p_;
@@ -43,11 +43,14 @@ void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::calculate()
 
     forAll(TCells, celli)
     {
-        const typename MixtureType::thermoMixtureType& thermoMixture =
-            this->cellThermoMixture(celli);
+        auto composition = this->cellComposition(celli);
 
-        const typename MixtureType::transportMixtureType& transportMixture =
-            this->cellTransportMixture(celli, thermoMixture);
+        const typename HeThermo::mixtureType::thermoMixtureType&
+            thermoMixture = this->thermoMixture(composition);
+
+        const typename HeThermo::mixtureType::transportMixtureType&
+            transportMixture =
+            this->transportMixture(composition, thermoMixture);
 
         TCells[celli] = thermoMixture.THE
         (
@@ -109,13 +112,14 @@ void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::calculate()
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::thermoMixtureType& thermoMixture =
-                    this->patchFaceThermoMixture(patchi, facei);
+                auto composition = this->patchFaceComposition(patchi, facei);
 
-                const typename MixtureType::transportMixtureType&
+                const typename HeThermo::mixtureType::thermoMixtureType&
+                    thermoMixture = this->thermoMixture(composition);
+
+                const typename HeThermo::mixtureType::transportMixtureType&
                     transportMixture =
-                    this->patchFaceTransportMixture
-                    (patchi, facei, thermoMixture);
+                    this->transportMixture(composition, thermoMixture);
 
                 phe[facei] = thermoMixture.HE(pp[facei], pT[facei]);
 
@@ -132,13 +136,14 @@ void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::calculate()
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::thermoMixtureType& thermoMixture =
-                    this->patchFaceThermoMixture(patchi, facei);
+                auto composition = this->patchFaceComposition(patchi, facei);
 
-                const typename MixtureType::transportMixtureType&
+                const typename HeThermo::mixtureType::thermoMixtureType&
+                    thermoMixture = this->thermoMixture(composition);
+
+                const typename HeThermo::mixtureType::transportMixtureType&
                     transportMixture =
-                    this->patchFaceTransportMixture
-                    (patchi, facei, thermoMixture);
+                    this->transportMixture(composition, thermoMixture);
 
                 pT[facei] = thermoMixture.THE(phe[facei], pp[facei], pT[facei]);
 
@@ -157,14 +162,14 @@ void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::calculate()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class BasicRhoThermo, class MixtureType>
-Foam::heRhoThermo<BasicRhoThermo, MixtureType>::heRhoThermo
+template<class HeThermo>
+Foam::heRhoThermo<HeThermo>::heRhoThermo
 (
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    heThermo<BasicRhoThermo, MixtureType>(mesh, phaseName)
+    HeThermo(mesh, phaseName)
 {
     calculate();
 }
@@ -172,24 +177,24 @@ Foam::heRhoThermo<BasicRhoThermo, MixtureType>::heRhoThermo
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class BasicRhoThermo, class MixtureType>
-Foam::heRhoThermo<BasicRhoThermo, MixtureType>::~heRhoThermo()
+template<class HeThermo>
+Foam::heRhoThermo<HeThermo>::~heRhoThermo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class BasicRhoThermo, class MixtureType>
-void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::correct()
+template<class HeThermo>
+void Foam::heRhoThermo<HeThermo>::correct()
 {
-    if (debug)
+    if (HeThermo::debug)
     {
         InfoInFunction << endl;
     }
 
     calculate();
 
-    if (debug)
+    if (HeThermo::debug)
     {
         Info<< "    Finished" << endl;
     }

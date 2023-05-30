@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,14 +21,22 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::liquidPropertiesSelector
+
+Description
+    Wrapper class providing run-time selection of thermophysicalProperties
+    for the templated thermodynamics packages.
+
+SourceFiles
+    liquidPropertiesSelectorI.H
+    liquidPropertiesSelector.C
+
 \*---------------------------------------------------------------------------*/
 
-#include "rhoThermo.H"
-#include "heRhoThermo.H"
-#include "pureMixture.H"
-#include "thermo.H"
-#include "sensibleInternalEnergy.H"
-#include "sensibleEnthalpy.H"
+#ifndef liquidPropertiesSelector_H
+#define liquidPropertiesSelector_H
+
 #include "thermophysicalPropertiesSelector.H"
 #include "liquidProperties.H"
 
@@ -37,38 +45,51 @@ License
 namespace Foam
 {
 
-/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
+/*---------------------------------------------------------------------------*\
+                    Class liquidPropertiesSelector Declaration
+\*---------------------------------------------------------------------------*/
 
-typedef heRhoThermo
-<
-    rhoThermo::composite,
-    pureMixture
-    <
-        species::thermo
-        <
-            thermophysicalPropertiesSelector<liquidProperties>,
-            sensibleInternalEnergy
-        >
-    >
-> heRhoThermopureMixtureliquidProperties;
+class liquidPropertiesSelector
+:
+    public thermophysicalPropertiesSelector<liquidProperties>
+{
+public:
+
+    // Constructors
+
+        //- Inherit constructors
+        using
+            thermophysicalPropertiesSelector<liquidProperties>::
+            thermophysicalPropertiesSelector;
 
 
-typedef heRhoThermo
-<
-    rhoThermo::composite,
-    pureMixture
-    <
-        species::thermo
-        <
-            thermophysicalPropertiesSelector<liquidProperties>,
-            sensibleEnthalpy
-        >
-    >
-> heRhoThermopureMixtureEnthalpyliquidProperties;
+    //- Destructor
+    virtual ~liquidPropertiesSelector()
+    {}
+
+
+    // Member Functions
+
+        // Physical properties
+
+            //- Surface tension [N/m]
+            virtual scalar sigma(const scalar p, const scalar T) const;
+
+            //- Viscosity [Pa s]
+            inline scalar mu(const scalar p, const scalar T) const;
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "liquidPropertiesSelectorI.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

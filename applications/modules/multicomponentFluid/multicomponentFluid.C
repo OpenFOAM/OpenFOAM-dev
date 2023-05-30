@@ -51,9 +51,7 @@ Foam::solvers::multicomponentFluid::multicomponentFluid(fvMesh& mesh)
 
     thermo_(refCast<fluidMulticomponentThermo>(isothermalFluid::thermo_)),
 
-    composition(thermo_.composition()),
-
-    Y_(composition.Y()),
+    Y_(thermo_.Y()),
 
     reaction(combustionModel::New(thermo_, momentumTransport())),
 

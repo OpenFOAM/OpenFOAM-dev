@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "liquidPropertiesSurfaceTension.H"
 #include "liquidThermo.H"
+#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -68,58 +69,11 @@ Foam::surfaceTensionModels::liquidProperties::~liquidProperties()
 Foam::tmp<Foam::volScalarField>
 Foam::surfaceTensionModels::liquidProperties::sigma() const
 {
-    const heRhoThermopureMixtureliquidProperties& thermo =
-        mesh_.lookupObject<heRhoThermopureMixtureliquidProperties>
+    return
+        mesh_.lookupObject<liquidThermo>
         (
              IOobject::groupName(physicalProperties::typeName, phaseName_)
-        );
-
-    tmp<volScalarField> tsigma
-    (
-        volScalarField::New
-        (
-            "sigma",
-            mesh_,
-            dimSigma
-        )
-    );
-    volScalarField& sigma = tsigma.ref();
-
-    const volScalarField& T = thermo.T();
-    const volScalarField& p = thermo.p();
-
-    volScalarField::Internal& sigmai = sigma;
-    const volScalarField::Internal& pi = p;
-    const volScalarField::Internal& Ti = T;
-
-    forAll(sigmai, celli)
-    {
-        const heRhoThermopureMixtureliquidProperties::transportMixtureType&
-            liquid = thermo.cellTransportMixture(celli);
-
-        sigmai[celli] = liquid.properties().sigma(pi[celli], Ti[celli]);
-    }
-
-    volScalarField::Boundary& sigmaBf = sigma.boundaryFieldRef();
-    const volScalarField::Boundary& pBf = p.boundaryField();
-    const volScalarField::Boundary& TBf = T.boundaryField();
-
-    forAll(sigmaBf, patchi)
-    {
-        scalarField& sigmaPf = sigmaBf[patchi];
-        const scalarField& pPf = pBf[patchi];
-        const scalarField& TPf = TBf[patchi];
-
-        forAll(sigmaPf, facei)
-        {
-            const heRhoThermopureMixtureliquidProperties::transportMixtureType&
-                liquid = thermo.patchFaceTransportMixture(patchi, facei);
-
-            sigmaPf[facei] = liquid.properties().sigma(pPf[facei], TPf[facei]);
-        }
-    }
-
-    return tsigma;
+        ).sigma();
 }
 
 

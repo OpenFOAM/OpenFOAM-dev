@@ -85,7 +85,7 @@ bool Foam::functionObjects::moleFractions::execute()
         mesh_.lookupObject<fluidMulticomponentThermo>(thermoName);
 
     // Construct mole fraction fields corresponding to the mass fraction fields
-    const PtrList<volScalarField>& Y = thermo.composition().Y();
+    const PtrList<volScalarField>& Y = thermo.Y();
     if (X_.empty())
     {
         X_.setSize(Y.size());
@@ -120,7 +120,7 @@ bool Foam::functionObjects::moleFractions::execute()
         (
             "Wi",
             dimMass/dimMoles,
-            thermo.composition().Wi(i)
+            thermo.Wi(i)
         );
 
         X_[i] = Y[i]*W/Wi;

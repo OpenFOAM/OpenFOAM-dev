@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,70 +22,58 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::SpecieMixture
+    Foam::heMulticomponentThermo
 
 Description
-    Foam::SpecieMixture
+    Multi-component thermo implementation
 
 SourceFiles
-    SpecieMixture.C
+    heMulticomponentThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef SpecieMixture_H
-#define SpecieMixture_H
+#ifndef heMulticomponentThermo_H
+#define heMulticomponentThermo_H
 
-#include "scalar.H"
-#include "volFields.H"
+#include "heThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// Forward declaration of classes
-class dictionary;
-class fvMesh;
-
-
 /*---------------------------------------------------------------------------*\
-                        Class SpecieMixture Declaration
+                       Class heMulticomponentThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class MixtureType>
-class SpecieMixture
+template<class HeThermo>
+class heMulticomponentThermo
 :
-    public MixtureType
+    public HeThermo
 {
+protected:
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Return a volScalarField of the given property
-        tmp<volScalarField> volScalarFieldProperty
+        template<class Method, class ... Args>
+        tmp<volScalarField> volScalarFieldPropertyi
         (
             const word& psiName,
             const dimensionSet& psiDim,
-            scalar (MixtureType::thermoType::*psiMethod)
-            (
-                const scalar,
-                const scalar
-            ) const,
+            Method psiMethod,
             const label speciei,
-            const volScalarField& p,
-            const volScalarField& T
+            const Args& ... args
         ) const;
 
-        //- Return a field of the given property
-        tmp<scalarField> fieldProperty
+        //- Return a scalarField of the given property
+        template<class Method, class Arg, class ... Args>
+        tmp<scalarField> scalarFieldPropertyi
         (
-            scalar (MixtureType::thermoType::*psiMethod)
-            (
-                const scalar,
-                const scalar
-            ) const,
+            Method psiMethod,
             const label speciei,
-            const scalarField& p,
-            const scalarField& T
+            const Arg& arg,
+            const Args& ... args
         ) const;
 
 
@@ -93,27 +81,35 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary, mesh and phase name
-        SpecieMixture(const dictionary&, const fvMesh&, const word& phaseName);
+        //- Construct from mesh and phase name
+        heMulticomponentThermo(const fvMesh&, const word& phaseName);
+
+        //- Disallow default bitwise copy construction
+        heMulticomponentThermo
+        (
+            const heMulticomponentThermo<HeThermo>&
+        ) = delete;
 
 
     //- Destructor
-    virtual ~SpecieMixture()
-    {}
+    virtual ~heMulticomponentThermo();
 
 
     // Member Functions
 
         // Specie properties
 
-            //- Molecular weight of the given specie [kg/kmol]
+            //- Molecular weight [kg/kmol]
             virtual scalar Wi(const label speciei) const;
 
             //- Enthalpy of formation [J/kg]
-            virtual scalar Hf(const label speciei) const;
+            virtual scalar hfi(const label speciei) const;
+
+
+        // Specie thermo properties
 
             //- Density [kg/m^3]
-            virtual scalar rho
+            virtual scalar rhoi
             (
                 const label speciei,
                 const scalar p,
@@ -121,7 +117,7 @@ public:
             ) const;
 
             //- Density [kg/m^3]
-            virtual tmp<volScalarField> rho
+            virtual tmp<volScalarField> rhoi
             (
                 const label speciei,
                 const volScalarField& p,
@@ -129,7 +125,7 @@ public:
             ) const;
 
             //- Heat capacity at constant pressure [J/kg/K]
-            virtual scalar Cp
+            virtual scalar Cpi
             (
                 const label speciei,
                 const scalar p,
@@ -137,7 +133,7 @@ public:
             ) const;
 
             //- Heat capacity at constant pressure [J/kg/K]
-            virtual tmp<volScalarField> Cp
+            virtual tmp<volScalarField> Cpi
             (
                 const label speciei,
                 const volScalarField& p,
@@ -145,7 +141,7 @@ public:
             ) const;
 
             //- Enthalpy/Internal energy [J/kg]
-            virtual scalar HE
+            virtual scalar hei
             (
                 const label speciei,
                 const scalar p,
@@ -153,7 +149,7 @@ public:
             ) const;
 
             //- Enthalpy/Internal energy [J/kg]
-            virtual tmp<scalarField> HE
+            virtual tmp<scalarField> hei
             (
                 const label speciei,
                 const scalarField& p,
@@ -161,7 +157,7 @@ public:
             ) const;
 
             //- Enthalpy/Internal energy [J/kg]
-            virtual tmp<volScalarField> HE
+            virtual tmp<volScalarField> hei
             (
                 const label speciei,
                 const volScalarField& p,
@@ -169,7 +165,7 @@ public:
             ) const;
 
             //- Sensible enthalpy [J/kg]
-            virtual scalar Hs
+            virtual scalar hsi
             (
                 const label speciei,
                 const scalar p,
@@ -177,7 +173,7 @@ public:
             ) const;
 
             //- Sensible enthalpy [J/kg]
-            virtual tmp<scalarField> Hs
+            virtual tmp<scalarField> hsi
             (
                 const label speciei,
                 const scalarField& p,
@@ -185,7 +181,7 @@ public:
             ) const;
 
             //- Sensible enthalpy [J/kg]
-            virtual tmp<volScalarField> Hs
+            virtual tmp<volScalarField> hsi
             (
                 const label speciei,
                 const volScalarField& p,
@@ -193,7 +189,7 @@ public:
             ) const;
 
             //- Absolute enthalpy [J/kg]
-            virtual scalar Ha
+            virtual scalar hai
             (
                 const label speciei,
                 const scalar p,
@@ -201,7 +197,7 @@ public:
             ) const;
 
             //- Absolute enthalpy [J/kg]
-            virtual tmp<scalarField> Ha
+            virtual tmp<scalarField> hai
             (
                 const label speciei,
                 const scalarField& p,
@@ -209,7 +205,7 @@ public:
             ) const;
 
             //- Absolute enthalpy [J/kg]
-            virtual tmp<volScalarField> Ha
+            virtual tmp<volScalarField> hai
             (
                 const label speciei,
                 const volScalarField& p,
@@ -217,26 +213,10 @@ public:
             ) const;
 
 
-        // Per specie transport properties
-
-            //- Dynamic viscosity [kg/m/s]
-            virtual scalar mu
-            (
-                const label speciei,
-                const scalar p,
-                const scalar T
-            ) const;
-
-            //- Dynamic viscosity [kg/m/s]
-            virtual tmp<volScalarField> mu
-            (
-                const label speciei,
-                const volScalarField& p,
-                const volScalarField& T
-            ) const;
+        // Specie transport properties
 
             //- Thermal conductivity [W/m/K]
-            virtual scalar kappa
+            virtual scalar kappai
             (
                 const label speciei,
                 const scalar p,
@@ -244,36 +224,12 @@ public:
             ) const;
 
             //- Thermal conductivity [W/m/K]
-            virtual tmp<volScalarField> kappa
+            virtual tmp<volScalarField> kappai
             (
                 const label speciei,
                 const volScalarField& p,
                 const volScalarField& T
             ) const;
-
-
-        // Field properties abstract functions provided here to avoid issues
-        // with inheritance of virtual functions in heThermo
-
-            //- Heat capacity at constant pressure for patch [J/kg/K]
-            virtual const volScalarField& Cp() const = 0;
-
-            //- Heat capacity at constant pressure for patch [J/kg/K]
-            virtual tmp<scalarField> Cp
-            (
-                const scalarField& T,
-                const label patchi
-            ) const = 0;
-
-            //- Heat capacity at constant volume [J/kg/K]
-            virtual const volScalarField& Cv() const = 0;
-
-            //- Heat capacity at constant volume for patch [J/kg/K]
-            virtual tmp<scalarField> Cv
-            (
-                const scalarField& T,
-                const label patchi
-            ) const = 0;
 };
 
 
@@ -284,7 +240,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifdef NoRepository
-    #include "SpecieMixture.C"
+    #include "heMulticomponentThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -29,7 +29,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "fluidThermophysicalTransportModel.H"
-#include "basicSpecieMixture.H"
+#include "fluidMulticomponentThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -88,12 +88,9 @@ const Foam::tmp<Foam::scalarField>
 Foam::specieTransferTemperatureFvPatchScalarField::phiHep() const
 {
     typedef specieTransferMassFractionFvPatchScalarField YBCType;
-    const basicSpecieMixture& mixture = YBCType::composition(db());
-    const PtrList<volScalarField>& Y = mixture.Y();
+    const fluidMulticomponentThermo& thermo = YBCType::thermo(db());
+    const PtrList<volScalarField>& Y = thermo.Y();
 
-    // Get thermodynamic properties
-    const fluidThermo& thermo =
-        db().lookupObject<fluidThermo>(physicalProperties::typeName);
     const fvPatchScalarField& Tp = *this;
     const fvPatchScalarField& pp = thermo.p().boundaryField()[patch().index()];
 
@@ -112,7 +109,7 @@ Foam::specieTransferTemperatureFvPatchScalarField::phiHep() const
                 << exit(FatalError);
         }
 
-        phiHep += refCast<const YBCType>(Yp).phiYp()*mixture.HE(i, pp, Tp);
+        phiHep += refCast<const YBCType>(Yp).phiYp()*thermo.hei(i, pp, Tp);
     }
 
     return tPhiHep;

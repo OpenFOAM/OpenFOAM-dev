@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ Foam::chemistryReductionMethods::DAC<ThermoType>::DAC
     const wordHashSet initSet(this->coeffsDict_.lookup("initialSet"));
     forAllConstIter(wordHashSet, initSet, iter)
     {
-        searchInitSet_.append(chemistry.mixture().species()[iter.key()]);
+        searchInitSet_.append(chemistry.thermo().species()[iter.key()]);
     }
 
     if (this->coeffsDict_.found("automaticSIS"))
@@ -198,7 +198,7 @@ Foam::chemistryReductionMethods::DAC<ThermoType>::DAC
             fuelSpecies_[i] = fuelSpeciesEntry[i].first();
             fuelSpeciesProp_[i] = fuelSpeciesEntry[i].second();
             fuelSpeciesID_[i] =
-                this->chemistry_.mixture().species()[fuelSpecies_[i]];
+                this->chemistry_.thermo().species()[fuelSpecies_[i]];
             scalar curMm =
                 this->chemistry_.specieThermos()[fuelSpeciesID_[i]].W();
             Mmtot += fuelSpeciesProp_[i]/curMm;

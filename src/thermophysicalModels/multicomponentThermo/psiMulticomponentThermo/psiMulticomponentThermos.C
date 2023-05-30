@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,30 +30,11 @@ License
 #include "psiThermo.H"
 #include "psiMulticomponentThermo.H"
 #include "hePsiThermo.H"
+#include "heMulticomponentThermo.H"
+#include "heFluidMulticomponentThermo.H"
 
 #include "forGases.H"
-#include "makeMulticomponentThermo.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#define makePsiMulticomponentThermos(Mixture, ThermoPhysics)                   \
-    makeMulticomponentThermos                                                  \
-    (                                                                          \
-        psiThermo,                                                             \
-        psiMulticomponentThermo,                                               \
-        hePsiThermo,                                                           \
-        Mixture,                                                               \
-        ThermoPhysics                                                          \
-    )
-
-#define makePsiMulticomponentThermo(Mixture, ThermoPhysics)                    \
-    makeMulticomponentThermo                                                   \
-    (                                                                          \
-        psiMulticomponentThermo,                                               \
-        hePsiThermo,                                                           \
-        Mixture,                                                               \
-        ThermoPhysics                                                          \
-    )
+#include "makeFluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,17 +42,24 @@ namespace Foam
 {
     forCoeffGases
     (
-        makePsiMulticomponentThermos,
+        makeFluidMulticomponentThermos,
+        psiThermo,
+        psiMulticomponentThermo,
         coefficientMulticomponentMixture
     );
-
     forCoeffGases
     (
-        makePsiMulticomponentThermos,
+        makeFluidMulticomponentThermos,
+        psiThermo,
+        psiMulticomponentThermo,
         coefficientWilkeMulticomponentMixture
     );
-
-    forGases(makePsiMulticomponentThermo, singleComponentMixture);
+    forGases
+    (
+        makeFluidMulticomponentThermo,
+        psiMulticomponentThermo,
+        singleComponentMixture
+    );
 }
 
 // ************************************************************************* //

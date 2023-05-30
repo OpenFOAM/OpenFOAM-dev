@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,59 +23,86 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "basicSpecieMixture.H"
+#include "multicomponentThermo.H"
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-namespace Foam
+void Foam::multicomponentThermo::implementation::correctMassFractions()
 {
-    defineTypeNameAndDebug(basicSpecieMixture, 0);
+    if (species_.size())
+    {
+        tmp<volScalarField> tYt
+        (
+            volScalarField::New
+            (
+                IOobject::groupName("Yt", Y_[0].group()),
+                Y_[0],
+                calculatedFvPatchScalarField::typeName
+            )
+        );
+        volScalarField& Yt = tYt.ref();
+
+        for (label i=1; i<Y_.size(); i++)
+        {
+            Yt += Y_[i];
+        }
+
+        if (mag(min(Yt).value()) < rootVSmall)
+        {
+            FatalErrorInFunction
+                << "Sum of mass fractions is zero for species " << species()
+                << exit(FatalError);
+        }
+
+        forAll(Y_, i)
+        {
+            Y_[i] /= Yt;
+        }
+    }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::basicSpecieMixture::basicSpecieMixture
+Foam::multicomponentThermo::implementation::implementation
 (
-    const dictionary& thermoDict,
+    const dictionary& dict,
     const wordList& specieNames,
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    basicMixture(thermoDict, mesh, phaseName),
-    phaseName_(phaseName),
     species_(specieNames),
-    defaultSpecie_
+    defaultSpecieName_
     (
         species_.size()
-      ? thermoDict.lookupBackwardsCompatible<word>
+      ? dict.lookupBackwardsCompatible<word>
         (
             {"defaultSpecie", "inertSpecie"}
         )
       : word("undefined")
     ),
-    defaultSpecieIndex_(-1),
+    defaultSpeciei_
+    (
+        species_.size()
+     && species_.found(defaultSpecieName_)
+      ? species_[defaultSpecieName_]
+      : -1
+    ),
     active_(species_.size(), true),
-    Y_(species_.size())
+    Y_(species_.size()),
+    Yslicer_()
 {
-    if (species_.size())
+    if (species_.size() && defaultSpeciei_ == -1)
     {
-        if (species_.found(defaultSpecie_))
-        {
-            defaultSpecieIndex_ = species_[defaultSpecie_];
-        }
-        else
-        {
-            FatalIOErrorInFunction(thermoDict)
-                << "default specie " << defaultSpecie_
-                << " not found in available species " << species_
-                << exit(FatalIOError);
-        }
+        FatalIOErrorInFunction(dict)
+            << "default specie " << defaultSpecieName_
+            << " not found in available species " << species_
+            << exit(FatalIOError);
     }
 
+    // Read the species' mass fractions
     tmp<volScalarField> tYdefault;
-
     forAll(species_, i)
     {
         typeIOobject<volScalarField> header
@@ -86,9 +113,9 @@ Foam::basicSpecieMixture::basicSpecieMixture
             IOobject::NO_READ
         );
 
-        // check if field exists and can be read
         if (header.headerOk())
         {
+            // Read the mass fraction field
             Y_.set
             (
                 i,
@@ -176,71 +203,108 @@ Foam::basicSpecieMixture::basicSpecieMixture
         }
     }
 
+    Yslicer_.set(Y_);
+
     correctMassFractions();
 }
 
 
-void Foam::basicSpecieMixture::correctMassFractions()
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::multicomponentThermo::~multicomponentThermo()
+{}
+
+
+Foam::multicomponentThermo::implementation::~implementation()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::speciesTable&
+Foam::multicomponentThermo::implementation::species() const
 {
-    if (species_.size())
+    return species_;
+}
+
+
+Foam::label Foam::multicomponentThermo::implementation::defaultSpecie() const
+{
+    return defaultSpeciei_;
+}
+
+
+const Foam::List<bool>&
+Foam::multicomponentThermo::implementation::speciesActive() const
+{
+    return active_;
+}
+
+
+void Foam::multicomponentThermo::syncSpeciesActive() const
+{
+    if (Pstream::parRun())
     {
-        tmp<volScalarField> tYt
-        (
-            volScalarField::New
-            (
-                IOobject::groupName("Yt", phaseName_),
-                Y_[0],
-                calculatedFvPatchScalarField::typeName
-            )
-        );
-        volScalarField& Yt = tYt.ref();
+        List<bool>& speciesActive =
+            const_cast<List<bool>&>(this->speciesActive());
 
-        for (label i=1; i<Y_.size(); i++)
-        {
-            Yt += Y_[i];
-        }
+        Pstream::listCombineGather(speciesActive, orEqOp<bool>());
+        Pstream::listCombineScatter(speciesActive);
 
-        if (mag(min(Yt).value()) < rootVSmall)
-        {
-            FatalErrorInFunction
-                << "Sum of mass fractions is zero for species " << species()
-                << exit(FatalError);
-        }
+        PtrList<volScalarField>& Y =
+            const_cast<PtrList<volScalarField>&>(this->Y());
 
-        forAll(Y_, i)
+        forAll(Y, speciei)
         {
-            Y_[i] /= Yt;
+            if (speciesActive[speciei])
+            {
+                Y[speciei].writeOpt() = IOobject::AUTO_WRITE;
+            }
         }
     }
 }
 
 
-void Foam::basicSpecieMixture::normalise()
+Foam::PtrList<Foam::volScalarField>&
+Foam::multicomponentThermo::implementation::Y()
 {
-    if (species_.size())
+    return Y_;
+}
+
+
+const Foam::PtrList<Foam::volScalarField>&
+Foam::multicomponentThermo::implementation::Y() const
+{
+    return Y_;
+}
+
+
+void Foam::multicomponentThermo::normaliseY()
+{
+    if (species().size())
     {
         tmp<volScalarField> tYt
         (
             volScalarField::New
             (
-                IOobject::groupName("Yt", phaseName_),
-                Y_[0].mesh(),
+                IOobject::groupName("Yt", phaseName()),
+                Y()[0].mesh(),
                 dimensionedScalar(dimless, 0)
             )
         );
         volScalarField& Yt = tYt.ref();
 
-        forAll(Y_, i)
+        forAll(Y(), i)
         {
-            if (solve(i))
+            if (solveSpecie(i))
             {
-                Y_[i].max(scalar(0));
-                Yt += Y_[i];
+                Y()[i].max(scalar(0));
+                Yt += Y()[i];
             }
         }
 
-        Y_[defaultSpecieIndex_] = scalar(1) - Yt;
-        Y_[defaultSpecieIndex_].max(scalar(0));
+        Y()[defaultSpecie()] = scalar(1) - Yt;
+        Y()[defaultSpecie()].max(scalar(0));
     }
 }
 

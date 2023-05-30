@@ -51,9 +51,7 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
 
     thermo_(refCast<psiuMulticomponentThermo>(isothermalFluid::thermo_)),
 
-    composition(thermo_.composition()),
-
-    b_(composition.Y("b")),
+    b_(thermo_.Y("b")),
 
     unstrainedLaminarFlameSpeed(laminarFlameSpeed::New(thermo_)),
 
@@ -144,9 +142,9 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
 {
     thermo.validate(type(), "ha", "ea");
 
-    if (composition.contains("ft"))
+    if (thermo_.containsSpecie("ft"))
     {
-        fields.add(composition.Y("ft"));
+        fields.add(thermo_.Y("ft"));
     }
 
     fields.add(b);

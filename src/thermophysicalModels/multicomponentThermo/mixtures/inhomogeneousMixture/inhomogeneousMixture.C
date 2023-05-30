@@ -24,46 +24,20 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "inhomogeneousMixture.H"
-#include "fvMesh.H"
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-template<class ThermoType>
-const char* Foam::inhomogeneousMixture<ThermoType>::specieNames_[2] =
-{
-    "ft",
-    "b"
-};
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
 Foam::inhomogeneousMixture<ThermoType>::inhomogeneousMixture
 (
-    const dictionary& thermoDict,
-    const fvMesh& mesh,
-    const word& phaseName
+    const dictionary& dict
 )
 :
-    basicCombustionMixture
-    (
-        thermoDict,
-        speciesTable(nSpecies_, specieNames_),
-        mesh,
-        phaseName
-    ),
-
-    stoicRatio_("stoichiometricAirFuelMassRatio", dimless, thermoDict),
-
-    fuel_("fuel", thermoDict.subDict("fuel")),
-    oxidant_("oxidant", thermoDict.subDict("oxidant")),
-    products_("burntProducts", thermoDict.subDict("burntProducts")),
-
-    mixture_("mixture", fuel_),
-
-    ft_(Y("ft")),
-    b_(Y("b"))
+    stoicRatio_("stoichiometricAirFuelMassRatio", dimless, dict),
+    fuel_("fuel", dict.subDict("fuel")),
+    oxidant_("oxidant", dict.subDict("oxidant")),
+    products_("burntProducts", dict.subDict("burntProducts")),
+    mixture_("mixture", fuel_)
 {}
 
 
@@ -82,9 +56,9 @@ const ThermoType& Foam::inhomogeneousMixture<ThermoType>::mixture
     }
     else
     {
-        scalar fu = b*ft + (1.0 - b)*fres(ft, stoicRatio().value());
-        scalar ox = 1 - ft - (ft - fu)*stoicRatio().value();
-        scalar pr = 1 - fu - ox;
+        const scalar fu = b*ft + (1 - b)*fres(ft);
+        const scalar ox = 1 - ft - (ft - fu)*stoicRatio_.value();
+        const scalar pr = 1 - fu - ox;
 
         mixture_ = fu*fuel_;
         mixture_ += ox*oxidant_;
@@ -96,48 +70,70 @@ const ThermoType& Foam::inhomogeneousMixture<ThermoType>::mixture
 
 
 template<class ThermoType>
-void Foam::inhomogeneousMixture<ThermoType>::read(const dictionary& thermoDict)
+const typename Foam::inhomogeneousMixture<ThermoType>::thermoMixtureType&
+Foam::inhomogeneousMixture<ThermoType>::thermoMixture
+(
+    const scalarFieldListSlice& Y
+) const
 {
-    stoicRatio_ = dimensionedScalar
-    (
-        "stoichiometricAirFuelMassRatio",
-        dimless,
-        thermoDict
-    );
-
-    fuel_ = ThermoType("fuel", thermoDict.subDict("fuel"));
-    oxidant_ = ThermoType("oxidant", thermoDict.subDict("oxidant"));
-    products_ =
-        ThermoType("burntProducts", thermoDict.subDict("burntProducts"));
+    return mixture(Y[FT], Y[B]);
 }
 
 
 template<class ThermoType>
-const ThermoType& Foam::inhomogeneousMixture<ThermoType>::specieThermo
+const typename Foam::inhomogeneousMixture<ThermoType>::transportMixtureType&
+Foam::inhomogeneousMixture<ThermoType>::transportMixture
 (
-    const label speciei
+    const scalarFieldListSlice& Y
 ) const
 {
-    if (speciei == 0)
-    {
-        return fuel_;
-    }
-    else if (speciei == 1)
-    {
-        return oxidant_;
-    }
-    else if (speciei == 2)
-    {
-        return products_;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Unknown specie index " << speciei << ". Valid indices are 0..2"
-            << abort(FatalError);
+    return mixture(Y[FT], Y[B]);
+}
 
-        return fuel_;
-    }
+
+template<class ThermoType>
+const typename Foam::inhomogeneousMixture<ThermoType>::transportMixtureType&
+Foam::inhomogeneousMixture<ThermoType>::transportMixture
+(
+    const scalarFieldListSlice&,
+    const thermoMixtureType& mixture
+) const
+{
+    return mixture;
+}
+
+
+template<class ThermoType>
+const typename Foam::inhomogeneousMixture<ThermoType>::thermoType&
+Foam::inhomogeneousMixture<ThermoType>::reactants
+(
+    const scalarFieldListSlice& Y
+) const
+{
+    return mixture(Y[FT], 1);
+}
+
+
+template<class ThermoType>
+const typename Foam::inhomogeneousMixture<ThermoType>::thermoType&
+Foam::inhomogeneousMixture<ThermoType>::products
+(
+    const scalarFieldListSlice& Y
+) const
+{
+    return mixture(Y[FT], 0);
+}
+
+
+template<class ThermoType>
+void Foam::inhomogeneousMixture<ThermoType>::read(const dictionary& dict)
+{
+    stoicRatio_ =
+        dimensionedScalar("stoichiometricAirFuelMassRatio", dimless, dict);
+
+    fuel_ = ThermoType("fuel", dict.subDict("fuel"));
+    oxidant_ = ThermoType("oxidant", dict.subDict("oxidant"));
+    products_ = ThermoType("burntProducts", dict.subDict("burntProducts"));
 }
 
 

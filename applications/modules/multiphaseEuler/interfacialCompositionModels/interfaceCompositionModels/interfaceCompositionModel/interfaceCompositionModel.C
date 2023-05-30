@@ -74,9 +74,9 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModel::dY
     const volScalarField& Tf
 ) const
 {
-    const label speciei = composition().species()[speciesName];
+    const label speciei = thermo().species()[speciesName];
 
-    return Yf(speciesName, Tf) - composition().Y()[speciei];
+    return Yf(speciesName, Tf) - thermo().Y()[speciei];
 }
 
 
@@ -95,16 +95,16 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModel::D
     const word& speciesName
 ) const
 {
-    const label speciei = composition().species()[speciesName];
+    const label speciei = thermo().species()[speciesName];
     const volScalarField& p(thermo_.p());
     const volScalarField& T(thermo_.T());
 
     return volScalarField::New
     (
         IOobject::groupName("D" + speciesName, interface_.name()),
-        composition().kappa(speciei, p, T)
-       /composition().Cp(speciei, p, T)
-       /composition().rho(speciei, p, T)
+        thermo().kappai(speciei, p, T)
+       /thermo().Cpi(speciei, p, T)
+       /thermo().rhoi(speciei, p, T)
        /Le_
     );
 }

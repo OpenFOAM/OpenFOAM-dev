@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::COxidationDiffusionLimitedRate<CloudType>::COxidationDiffusionLimitedRate
     const scalar WCO2 = owner.composition().carrier().Wi(CO2GlobalId_);
     WC_ = WCO2 - WO2_;
 
-    HcCO2_ = owner.composition().carrier().Hf(CO2GlobalId_);
+    HcCO2_ = owner.composition().carrier().hfi(CO2GlobalId_);
 
     if (Sb_ < 0)
     {
@@ -132,10 +132,11 @@ Foam::scalar Foam::COxidationDiffusionLimitedRate<CloudType>::calculate
     }
 
     const parcelThermo& thermo = this->owner().thermo();
-    const basicSpecieMixture& carrier = this->owner().composition().carrier();
+    const fluidMulticomponentThermo& carrierThermo =
+        this->owner().composition().carrier();
 
     // Local mass fraction of O2 in the carrier phase
-    const scalar YO2 = carrier.Y(O2GlobalId_)[celli];
+    const scalar YO2 = carrierThermo.Y(O2GlobalId_)[celli];
 
     // Change in C mass [kg]
     scalar dmC = 4.0*mathematical::pi*d*D_*YO2*Tc*rhoc/(Sb_*(T + Tc))*dt;

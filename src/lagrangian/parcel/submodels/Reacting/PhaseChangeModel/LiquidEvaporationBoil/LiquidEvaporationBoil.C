@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,10 +182,10 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
     forAll(this->owner().composition().carrier().Y(), i)
     {
         scalar Yc = this->owner().composition().carrier().Y()[i][p.cell()];
-        Hc += Yc*this->owner().composition().carrier().Ha(i, pc, Tc);
-        Hsc += Yc*this->owner().composition().carrier().Ha(i, ps, Ts);
-        Cpc += Yc*this->owner().composition().carrier().Cp(i, ps, Ts);
-        kappac += Yc*this->owner().composition().carrier().kappa(i, ps, Ts);
+        Hc += Yc*this->owner().composition().carrier().hai(i, pc, Tc);
+        Hsc += Yc*this->owner().composition().carrier().hai(i, ps, Ts);
+        Cpc += Yc*this->owner().composition().carrier().Cpi(i, ps, Ts);
+        kappac += Yc*this->owner().composition().carrier().kappai(i, ps, Ts);
     }
 
     // calculate mass transfer of each specie in liquid
@@ -326,7 +326,8 @@ Foam::scalar Foam::LiquidEvaporationBoil<CloudType>::dh
         }
         case (parent::etEnthalpyDifference):
         {
-            scalar hc = this->owner().composition().carrier().Ha(idc, p, TDash);
+            scalar hc =
+                this->owner().composition().carrier().hai(idc, p, TDash);
             scalar hp = liquids_.properties()[idl].Ha(p, TDash);
 
             dh = hc - hp;

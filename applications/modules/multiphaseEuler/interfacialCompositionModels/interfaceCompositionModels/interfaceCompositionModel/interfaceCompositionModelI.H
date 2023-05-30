@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "interfaceCompositionModel.H"
+#include "rhoMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,29 +48,16 @@ Foam::interfaceCompositionModel::thermo() const
 }
 
 
-const Foam::basicSpecieMixture&
-Foam::interfaceCompositionModel::composition() const
-{
-    return thermo_.composition();
-}
-
-
 const Foam::rhoThermo& Foam::interfaceCompositionModel::otherThermo() const
 {
     return otherThermo_;
 }
 
 
-bool Foam::interfaceCompositionModel::otherHasComposition() const
+const Foam::rhoMulticomponentThermo&
+Foam::interfaceCompositionModel::otherMulticomponentThermo() const
 {
-    return isA<rhoMulticomponentThermo>(otherThermo_);
-}
-
-
-const Foam::basicSpecieMixture&
-Foam::interfaceCompositionModel::otherComposition() const
-{
-    return refCast<const rhoMulticomponentThermo>(otherThermo_).composition();
+    return refCast<const rhoMulticomponentThermo>(otherThermo_);
 }
 
 

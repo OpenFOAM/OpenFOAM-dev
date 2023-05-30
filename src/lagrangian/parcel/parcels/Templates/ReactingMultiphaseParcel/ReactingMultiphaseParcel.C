@@ -435,7 +435,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         {
             scalar dm = np0*dMassGas[i];
             label gid = composition.localToCarrierId(GAS, i);
-            scalar hs = composition.carrier().Hs(gid, pc, T0);
+            scalar hs = composition.carrier().hsi(gid, pc, T0);
             cloud.rhoTrans(gid)[this->cell()] += dm;
             cloud.UTransRef()[this->cell()] += dm*U0;
             cloud.hsTransRef()[this->cell()] += dm*hs;
@@ -444,7 +444,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         {
             scalar dm = np0*dMassLiquid[i];
             label gid = composition.localToCarrierId(LIQ, i);
-            scalar hs = composition.carrier().Hs(gid, pc, T0);
+            scalar hs = composition.carrier().hsi(gid, pc, T0);
             cloud.rhoTrans(gid)[this->cell()] += dm;
             cloud.UTransRef()[this->cell()] += dm*U0;
             cloud.hsTransRef()[this->cell()] += dm*hs;
@@ -456,7 +456,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         {
             scalar dm = np0*dMassSolid[i];
             label gid = composition.localToCarrierId(SLD, i);
-            scalar hs = composition.carrier().Hs(gid, pc, T0);
+            scalar hs = composition.carrier().hsi(gid, pc, T0);
             cloud.rhoTrans(gid)[this->cell()] += dm;
             cloud.UTransRef()[this->cell()] += dm*U0;
             cloud.hsTransRef()[this->cell()] += dm*hs;
@@ -466,7 +466,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         forAll(dMassSRCarrier, i)
         {
             scalar dm = np0*dMassSRCarrier[i];
-            scalar hs = composition.carrier().Hs(i, pc, T0);
+            scalar hs = composition.carrier().hsi(i, pc, T0);
             cloud.rhoTrans(i)[this->cell()] += dm;
             cloud.UTransRef()[this->cell()] += dm*U0;
             cloud.hsTransRef()[this->cell()] += dm*hs;
@@ -598,7 +598,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
         forAll(dMassDV, i)
         {
             const label id = composition.localToCarrierId(GAS, i);
-            const scalar Cp = composition.carrier().Cp(id, td.pc(), Ts);
+            const scalar Cp = composition.carrier().Cpi(id, td.pc(), Ts);
             const scalar W = composition.carrier().Wi(id);
             const scalar Ni = dMassDV[i]/(this->areaS(d)*dt*W);
 

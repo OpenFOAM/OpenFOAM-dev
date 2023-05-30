@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,9 +33,24 @@ License
 #include "heheuPsiThermo.H"
 
 #include "forAbsoluteGases.H"
-#include "makeMulticomponentThermo.H"
+#include "makeThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define makePsiuMulticomponentThermos(Mixture, ThermoPhysics)                  \
+                                                                               \
+    defineThermo(psiuMulticomponentThermo, Mixture, ThermoPhysics);            \
+                                                                               \
+    addThermo(basicThermo, psiuMulticomponentThermo, Mixture, ThermoPhysics);  \
+    addThermo(fluidThermo, psiuMulticomponentThermo, Mixture, ThermoPhysics);  \
+    addThermo(psiThermo, psiuMulticomponentThermo, Mixture, ThermoPhysics);    \
+    addThermo                                                                  \
+    (                                                                          \
+        psiuMulticomponentThermo,                                              \
+        psiuMulticomponentThermo,                                              \
+        Mixture,                                                               \
+        ThermoPhysics                                                          \
+    )
 
 namespace Foam
 {

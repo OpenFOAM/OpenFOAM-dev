@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,76 +23,44 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "liquidPropertiesSelector.H"
+
+#include "sensibleInternalEnergy.H"
+#include "sensibleEnthalpy.H"
+
+#include "pureMixture.H"
+
+#include "thermo.H"
+
 #include "liquidThermo.H"
-#include "addToRunTimeSelectionTable.H"
+#include "heRhoThermo.H"
+#include "heLiquidThermo.H"
+#include "makeThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define makeLiquidThermo(ThermoPhysics)                                        \
+                                                                               \
+    defineThermo(liquidThermo, pureMixture, ThermoPhysics);                    \
+                                                                               \
+    addThermo(basicThermo, liquidThermo, pureMixture, ThermoPhysics);          \
+    addThermo(fluidThermo, liquidThermo, pureMixture, ThermoPhysics);          \
+    addThermo(rhoThermo, liquidThermo, pureMixture, ThermoPhysics);            \
+    addThermo(liquidThermo, liquidThermo, pureMixture, ThermoPhysics)
 
 namespace Foam
 {
+    typedef
+        species::thermo<liquidPropertiesSelector, sensibleInternalEnergy>
+        liquidSensibleInternalEnergy;
 
-/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
+    makeLiquidThermo(liquidSensibleInternalEnergy);
 
-defineTemplateTypeNameAndDebugWithName
-(
-    heRhoThermopureMixtureliquidProperties,
-    "heRhoThermo<pureMixture<liquid,sensibleInternalEnergy>>",
-    0
-);
+    typedef
+        species::thermo<liquidPropertiesSelector, sensibleEnthalpy>
+        liquidSensibleEnthalpy;
 
-addToRunTimeSelectionTable
-(
-    basicThermo,
-    heRhoThermopureMixtureliquidProperties,
-    fvMesh
-);
-
-addToRunTimeSelectionTable
-(
-    fluidThermo,
-    heRhoThermopureMixtureliquidProperties,
-    fvMesh
-);
-
-addToRunTimeSelectionTable
-(
-    rhoThermo,
-    heRhoThermopureMixtureliquidProperties,
-    fvMesh
-);
-
-
-defineTemplateTypeNameAndDebugWithName
-(
-    heRhoThermopureMixtureEnthalpyliquidProperties,
-    "heRhoThermo<pureMixture<liquid,sensibleEnthalpy>>",
-    0
-);
-
-addToRunTimeSelectionTable
-(
-    basicThermo,
-    heRhoThermopureMixtureEnthalpyliquidProperties,
-    fvMesh
-);
-
-addToRunTimeSelectionTable
-(
-    fluidThermo,
-    heRhoThermopureMixtureEnthalpyliquidProperties,
-    fvMesh
-);
-
-addToRunTimeSelectionTable
-(
-    rhoThermo,
-    heRhoThermopureMixtureEnthalpyliquidProperties,
-    fvMesh
-);
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
+    makeLiquidThermo(liquidSensibleEnthalpy);
+}
 
 // ************************************************************************* //

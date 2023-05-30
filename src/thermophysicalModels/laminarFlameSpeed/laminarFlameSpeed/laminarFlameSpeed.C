@@ -47,7 +47,7 @@ Foam::laminarFlameSpeed::laminarFlameSpeed
     fuel_(dict.lookup("fuel")),
     equivalenceRatio_(0)
 {
-    if (!psiuMulticomponentThermo_.composition().contains("ft"))
+    if (!psiuMulticomponentThermo_.containsSpecie("ft"))
     {
         equivalenceRatio_ =
             dimensionedScalar("equivalenceRatio", dimless, dict).value();

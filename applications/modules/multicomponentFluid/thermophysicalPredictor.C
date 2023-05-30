@@ -45,7 +45,7 @@ void Foam::solvers::multicomponentFluid::thermophysicalPredictor()
 
     forAll(Y, i)
     {
-        if (composition.solve(i))
+        if (thermo_.solveSpecie(i))
         {
             volScalarField& Yi = Y_[i];
 
@@ -69,7 +69,7 @@ void Foam::solvers::multicomponentFluid::thermophysicalPredictor()
         }
     }
 
-    composition.normalise();
+    thermo_.normaliseY();
 
 
     volScalarField& he = thermo_.he();

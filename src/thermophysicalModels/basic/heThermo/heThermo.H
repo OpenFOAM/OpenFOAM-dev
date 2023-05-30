@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,9 @@ Class
     Foam::heThermo
 
 Description
-    Enthalpy/Internal energy for a mixture
+    Thermo implementation and storage of energy and heat capacities. Provides
+    overloads of the functions defined in the basic thermo type that depend on
+    the primitive thermo model.
 
 SourceFiles
     heThermo.C
@@ -35,8 +37,8 @@ SourceFiles
 #ifndef heThermo_H
 #define heThermo_H
 
-#include "basicMixture.H"
 #include "volFields.H"
+#include "physicalProperties.H"
 #include "uniformGeometricFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -45,14 +47,23 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
+                       Class heThermoName Declaration
+\*---------------------------------------------------------------------------*/
+
+TemplateName(heThermo);
+
+
+/*---------------------------------------------------------------------------*\
                           Class heThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class BasicThermo, class MixtureType>
+template<class MixtureType, class BasicThermoType>
 class heThermo
 :
-    public BasicThermo,
-    public MixtureType
+    public heThermoName,
+    public physicalProperties,
+    public MixtureType,
+    public BasicThermoType
 {
 protected:
 
@@ -71,38 +82,31 @@ protected:
     // Protected Member Functions
 
         //- Return a volScalarField of the given property
-        template
-        <
-            class CellMixture,
-            class PatchFaceMixture,
-            class Method,
-            class ... Args
-        >
+        template<class Mixture, class Method, class ... Args>
         tmp<volScalarField> volScalarFieldProperty
         (
             const word& psiName,
             const dimensionSet& psiDim,
-            CellMixture cellMixture,
-            PatchFaceMixture patchFaceMixture,
+            Mixture mixture,
             Method psiMethod,
             const Args& ... args
         ) const;
 
         //- Return a scalarField of the given property on a cell set
-        template<class CellMixture, class Method, class ... Args>
+        template<class Mixture, class Method, class ... Args>
         tmp<scalarField> cellSetProperty
         (
-            CellMixture cellMixture,
+            Mixture mixture,
             Method psiMethod,
             const labelList& cells,
             const Args& ... args
         ) const;
 
         //- Return a scalarField of the given property on a patch
-        template<class PatchFaceMixture, class Method, class ... Args>
+        template<class Mixture, class Method, class ... Args>
         tmp<scalarField> patchFieldProperty
         (
-            PatchFaceMixture patchFaceMixture,
+            Mixture mixture,
             Method psiMethod,
             const label patchi,
             const Args& ... args
@@ -128,17 +132,26 @@ protected:
 
 public:
 
+    // Typedefs
+
+        //- Mixture type
+        typedef MixtureType mixtureType;
+
+        //- Basic thermo
+        typedef BasicThermoType basicThermoType;
+
+
+    //- Disambiguate debug switch used by derivations
+    using heThermoName::debug;
+
+
     // Constructors
 
-        //- Construct from mesh
-        heThermo
-        (
-            const fvMesh&,
-            const word& phaseName
-        );
+        //- Construct from mesh and phase name
+        heThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        heThermo(const heThermo<BasicThermo, MixtureType>&) = delete;
+        heThermo(const heThermo<MixtureType, BasicThermoType>&) = delete;
 
 
     //- Destructor
@@ -147,16 +160,20 @@ public:
 
     // Member Functions
 
-        //- Return the composition of the mixture
-        virtual typename MixtureType::basicMixtureType&
-        composition()
+        //- Return the properties dictionary
+        virtual IOdictionary& properties()
         {
             return *this;
         }
 
-        //- Return the composition of the mixture
-        virtual const typename MixtureType::basicMixtureType&
-        composition() const
+        //- Return the properties dictionary
+        virtual const IOdictionary& properties() const
+        {
+            return *this;
+        }
+
+        //- Return the mixture
+        const MixtureType& mixture() const
         {
             return *this;
         }
@@ -357,11 +374,37 @@ public:
 };
 
 
+/*---------------------------------------------------------------------------*\
+                       Class namedHeThermo Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class HeThermo>
+class namedHeThermo
+:
+    public HeThermo
+{
+public:
+
+    //- Runtime type information
+    TypeName("heThermo");
+
+
+    // Constructors
+
+        //- Inherit constructors
+        using HeThermo::HeThermo;
+
+
+    //- Destructor
+    virtual ~namedHeThermo();
+};
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
     #include "heThermo.C"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,8 +200,8 @@ Foam::laminarFlameSpeedModels::GuldersEGR::operator()() const
 {
     if
     (
-        psiuMulticomponentThermo_.composition().contains("ft")
-     && psiuMulticomponentThermo_.composition().contains("egr")
+        psiuMulticomponentThermo_.containsSpecie("ft")
+     && psiuMulticomponentThermo_.containsSpecie("egr")
     )
     {
         return Su0pTphi
@@ -215,10 +215,10 @@ Foam::laminarFlameSpeedModels::GuldersEGR::operator()() const
                 psiuMulticomponentThermo_.properties()
             )
            /(
-                scalar(1)/psiuMulticomponentThermo_.composition().Y("ft")
+                scalar(1)/psiuMulticomponentThermo_.Y("ft")
               - scalar(1)
             ),
-            psiuMulticomponentThermo_.composition().Y("egr")
+            psiuMulticomponentThermo_.Y("egr")
         );
     }
     else

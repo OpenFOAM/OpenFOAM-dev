@@ -94,9 +94,9 @@ if (ign.ignited())
 
     Info<< "min(b) = " << min(b).value() << endl;
 
-    if (composition.contains("ft"))
+    if (thermo.containsSpecie("ft"))
     {
-        volScalarField& ft = composition.Y("ft");
+        volScalarField& ft = thermo.Y("ft");
 
         Info<< "Combustion progress = "
             << 100*(1.0 - b)().weightedAverage(mesh.V()*ft).value() << "%"

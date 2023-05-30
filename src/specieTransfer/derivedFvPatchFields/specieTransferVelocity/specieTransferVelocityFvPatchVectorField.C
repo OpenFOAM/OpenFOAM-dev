@@ -28,7 +28,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "basicSpecieMixture.H"
+#include "fluidMulticomponentThermo.H"
 #include "basicThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -78,7 +78,7 @@ const Foam::tmp<Foam::scalarField>
 Foam::specieTransferVelocityFvPatchVectorField::phip() const
 {
     typedef specieTransferMassFractionFvPatchScalarField YBCType;
-    const PtrList<volScalarField>& Y = YBCType::composition(db()).Y();
+    const PtrList<volScalarField>& Y = YBCType::thermo(db()).Y();
 
     // Sum up the phiYp-s from all the species
     tmp<scalarField> tPhip(new scalarField(this->size(), 0));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "CompositionModel.H"
+#include "fluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -32,10 +33,10 @@ Foam::CompositionModel<CloudType>::CompositionModel(CloudType& owner)
 :
     CloudSubModelBase<CloudType>(owner),
     carrierThermo_(owner.carrierThermo()),
-    carrierMixture_
+    carrierMcThermoPtr_
     (
-        isA<basicSpecieMixture>(carrierThermo_)
-      ? &refCast<const basicSpecieMixture>(carrierThermo_)
+        isA<fluidMulticomponentThermo>(carrierThermo_)
+      ? &refCast<const fluidMulticomponentThermo>(carrierThermo_)
       : nullptr
     ),
     thermo_(owner.thermo()),
@@ -53,19 +54,19 @@ Foam::CompositionModel<CloudType>::CompositionModel
 :
     CloudSubModelBase<CloudType>(owner, dict, typeName, type),
     carrierThermo_(owner.carrierThermo()),
-    carrierMixture_
+    carrierMcThermoPtr_
     (
-        isA<basicSpecieMixture>(carrierThermo_)
-      ? &refCast<const basicSpecieMixture>(carrierThermo_)
+        isA<fluidMulticomponentThermo>(carrierThermo_)
+      ? &refCast<const fluidMulticomponentThermo>(carrierThermo_)
       : nullptr
     ),
     thermo_(owner.thermo()),
     phaseProps_
     (
         this->coeffDict().lookup("phases"),
-        carrierMixture_ == nullptr
+        carrierMcThermoPtr_ == nullptr
       ? hashedWordList::null()
-      : carrierMixture_->species(),
+      : carrierMcThermoPtr_->species(),
         thermo_.liquids().components(),
         thermo_.solids().components()
     )
@@ -80,7 +81,7 @@ Foam::CompositionModel<CloudType>::CompositionModel
 :
     CloudSubModelBase<CloudType>(cm),
     carrierThermo_(cm.carrierThermo_),
-    carrierMixture_(cm.carrierMixture_),
+    carrierMcThermoPtr_(cm.carrierMcThermoPtr_),
     thermo_(cm.thermo_),
     phaseProps_(cm.phaseProps_)
 {}
@@ -103,17 +104,17 @@ const Foam::parcelThermo& Foam::CompositionModel<CloudType>::thermo() const
 
 
 template<class CloudType>
-const Foam::basicSpecieMixture&
+const Foam::fluidMulticomponentThermo&
 Foam::CompositionModel<CloudType>::carrier() const
 {
-    if (carrierMixture_ == nullptr)
+    if (carrierMcThermoPtr_ == nullptr)
     {
         FatalErrorInFunction
             << "carrier requested, but object is not allocated"
             << abort(FatalError);
     }
 
-    return *carrierMixture_;
+    return *carrierMcThermoPtr_;
 }
 
 
@@ -187,9 +188,9 @@ Foam::label Foam::CompositionModel<CloudType>::carrierId
 {
     label id = -1;
 
-    forAll(carrierMixture_->species(), i)
+    forAll(carrierMcThermoPtr_->species(), i)
     {
-        if (cmptName == carrierMixture_->species()[i])
+        if (cmptName == carrierMcThermoPtr_->species()[i])
         {
             id = i;
         }
@@ -200,7 +201,7 @@ Foam::label Foam::CompositionModel<CloudType>::carrierId
         FatalErrorInFunction
             << "Unable to determine global id for requested component "
             << cmptName << ". Available components are " << nl
-            << carrierMixture_->species()
+            << carrierMcThermoPtr_->species()
             << abort(FatalError);
     }
 
@@ -278,7 +279,7 @@ Foam::scalarField Foam::CompositionModel<CloudType>::X
             forAll(Y, i)
             {
                 label cid = props.carrierId(i);
-                X[i] = Y[i]/carrierMixture_->Wi(cid);
+                X[i] = Y[i]/carrierMcThermoPtr_->Wi(cid);
                 WInv += X[i];
             }
             break;
@@ -324,7 +325,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::H
             forAll(Y, i)
             {
                 label cid = props.carrierId(i);
-                HMixture += Y[i]*carrierMixture_->Ha(cid, p, T);
+                HMixture += Y[i]*carrierMcThermoPtr_->hai(cid, p, T);
             }
             break;
         }
@@ -373,7 +374,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hs
             forAll(Y, i)
             {
                 label cid = props.carrierId(i);
-                HsMixture += Y[i]*carrierMixture_->Hs(cid, p, T);
+                HsMixture += Y[i]*carrierMcThermoPtr_->hsi(cid, p, T);
             }
             break;
         }
@@ -424,7 +425,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hc
             forAll(Y, i)
             {
                 label cid = props.carrierId(i);
-                HcMixture += Y[i]*carrierMixture_->Hf(cid);
+                HcMixture += Y[i]*carrierMcThermoPtr_->hfi(cid);
             }
             break;
         }
@@ -474,7 +475,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Cp
             forAll(Y, i)
             {
                 label cid = props.carrierId(i);
-                CpMixture += Y[i]*carrierMixture_->Cp(cid, p, T);
+                CpMixture += Y[i]*carrierMcThermoPtr_->Cpi(cid, p, T);
             }
             break;
         }

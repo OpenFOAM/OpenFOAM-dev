@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,13 +82,13 @@ void Foam::combustionModels::infinitelyFastChemistry::correct()
 
     const label fuelI = this->fuelIndex();
 
-    const volScalarField& YFuel = this->thermo().composition().Y()[fuelI];
+    const volScalarField& YFuel = this->thermo().Y()[fuelI];
 
     const dimensionedScalar s = this->s();
 
-    if (this->thermo().composition().contains("O2"))
+    if (this->thermo().containsSpecie("O2"))
     {
-        const volScalarField& YO2 = this->thermo().composition().Y("O2");
+        const volScalarField& YO2 = this->thermo().Y("O2");
 
         this->wFuel_ ==
             this->rho()/(this->mesh().time().deltaT()*C_)

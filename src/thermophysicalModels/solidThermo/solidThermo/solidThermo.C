@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "solidThermo.H"
 #include "fvMesh.H"
 
-/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
@@ -34,11 +34,14 @@ namespace Foam
     defineRunTimeSelectionTable(solidThermo, fvMesh);
 }
 
+const Foam::word Foam::solidThermo::heThermoName("heSolidThermo");
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::solidThermo::implementation::implementation
 (
+    const dictionary& dict,
     const fvMesh& mesh,
     const word& phaseName
 )
@@ -68,17 +71,6 @@ Foam::solidThermo::implementation::implementation
         mesh,
         dimDensity
     )
-{}
-
-
-Foam::solidThermo::implementation::implementation
-(
-    const fvMesh& mesh,
-    const dictionary& dict,
-    const word& phaseName
-)
-:
-    solidThermo::implementation::implementation(mesh, phaseName)
 {}
 
 

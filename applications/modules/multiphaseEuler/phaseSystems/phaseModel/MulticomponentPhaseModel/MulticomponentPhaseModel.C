@@ -48,11 +48,11 @@ Foam::MulticomponentPhaseModel<BasePhaseModel>::MulticomponentPhaseModel
 :
     BasePhaseModel(fluid, phaseName, referencePhase, index)
 {
-    PtrList<volScalarField>& Y = this->thermo_->composition().Y();
+    PtrList<volScalarField>& Y = this->thermo_->Y();
 
     forAll(Y, i)
     {
-        if (this->thermo_->composition().solve(i))
+        if (this->thermo_->solveSpecie(i))
         {
             const label j = YActive_.size();
             YActive_.resize(j + 1);
@@ -74,7 +74,7 @@ Foam::MulticomponentPhaseModel<BasePhaseModel>::~MulticomponentPhaseModel()
 template<class BasePhaseModel>
 void Foam::MulticomponentPhaseModel<BasePhaseModel>::correctSpecies()
 {
-    this->thermo_->composition().normalise();
+    this->thermo_->normaliseY();
     BasePhaseModel::correctSpecies();
 }
 
@@ -121,7 +121,7 @@ template<class BasePhaseModel>
 const Foam::PtrList<Foam::volScalarField>&
 Foam::MulticomponentPhaseModel<BasePhaseModel>::Y() const
 {
-    return this->thermo_->composition().Y();
+    return this->thermo_->Y();
 }
 
 
@@ -129,7 +129,7 @@ template<class BasePhaseModel>
 const Foam::volScalarField&
 Foam::MulticomponentPhaseModel<BasePhaseModel>::Y(const word& name) const
 {
-    return this->thermo_->composition().Y(name);
+    return this->thermo_->Y(name);
 }
 
 
@@ -137,7 +137,7 @@ template<class BasePhaseModel>
 Foam::PtrList<Foam::volScalarField>&
 Foam::MulticomponentPhaseModel<BasePhaseModel>::YRef()
 {
-    return this->thermo_->composition().Y();
+    return this->thermo_->Y();
 }
 
 

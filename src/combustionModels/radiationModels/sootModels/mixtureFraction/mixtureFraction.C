@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,8 +87,6 @@ Foam::radiationModels::sootModels::mixtureFraction::mixtureFraction
             combustionModel::combustionPropertiesName
         );
 
-    const basicSpecieMixture& mixture = combustion.mixture();
-
     const reaction& singleReaction = combustion.singleReaction();
 
     scalar totalMol = 0;
@@ -108,15 +106,15 @@ Foam::radiationModels::sootModels::mixtureFraction::mixtureFraction
         const label speciei = singleReaction.rhs()[i].index;
         const scalar stoichCoeff = singleReaction.rhs()[i].stoichCoeff;
         Xi[i] = mag(stoichCoeff)/totalMol;
-        Wm += Xi[i]*mixture.Wi(speciei);
+        Wm += Xi[i]*combustion.thermo().Wi(speciei);
     }
 
-    scalarList Yprod0(mixture.species().size(), 0.0);
+    scalarList Yprod0(combustion.thermo().species().size(), 0.0);
 
     forAll(singleReaction.rhs(), i)
     {
         const label speciei = singleReaction.rhs()[i].index;
-        Yprod0[speciei] = mixture.Wi(speciei)/Wm*Xi[i];
+        Yprod0[speciei] = combustion.thermo().Wi(speciei)/Wm*Xi[i];
     }
 
     const scalar XSoot = nuSoot_/totalMol;
@@ -129,10 +127,11 @@ Foam::radiationModels::sootModels::mixtureFraction::mixtureFraction
     if (mappingFieldName_ == "none")
     {
         const label index = singleReaction.rhs()[0].index;
-        mappingFieldName_ = mixture.Y(index).name();
+        mappingFieldName_ = combustion.thermo().Y(index).name();
     }
 
-    const label mapFieldIndex = mixture.species()[mappingFieldName_];
+    const label mapFieldIndex =
+        combustion.thermo().species()[mappingFieldName_];
 
     mapFieldMax_ = Yprod0[mapFieldIndex];
 }

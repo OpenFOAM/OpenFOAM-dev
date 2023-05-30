@@ -2,6 +2,7 @@ thermophysicalProperties/thermophysicalProperties.C
 
 
 liquidProperties/liquidProperties/liquidProperties.C
+liquidProperties/liquidProperties/liquidPropertiesNew.C
 liquidProperties/liquidMixtureProperties/liquidMixtureProperties.C
 
 liquidProperties/liquid/liquid.C

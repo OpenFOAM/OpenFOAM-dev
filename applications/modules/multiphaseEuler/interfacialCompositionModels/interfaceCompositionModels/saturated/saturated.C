@@ -52,7 +52,7 @@ Foam::interfaceCompositionModels::saturated::wRatioByP() const
     (
         "W",
         dimMass/dimMoles,
-        composition().Wi(saturatedIndex_)
+        thermo().Wi(saturatedIndex_)
     );
 
     return Wi/thermo().W()/thermo().p();
@@ -69,7 +69,7 @@ Foam::interfaceCompositionModels::saturated::saturated
 :
     interfaceCompositionModel(dict, interface),
     saturatedName_(species()[0]),
-    saturatedIndex_(composition().species()[saturatedName_]),
+    saturatedIndex_(thermo().species()[saturatedName_]),
     saturationModel_(saturationPressureModel::New("pSat", dict))
 {
     if (species().size() != 1)
@@ -108,12 +108,12 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModels::saturated::Yf
     }
     else
     {
-        const label speciesIndex = composition().species()[speciesName];
+        const label speciesIndex = thermo().species()[speciesName];
 
         return
-            composition().Y()[speciesIndex]
+            thermo().Y()[speciesIndex]
            *(scalar(1) - wRatioByP()*saturationModel_->pSat(Tf))
-           /max(scalar(1) - composition().Y()[saturatedIndex_], small);
+           /max(scalar(1) - thermo().Y()[saturatedIndex_], small);
     }
 }
 
@@ -131,12 +131,12 @@ Foam::interfaceCompositionModels::saturated::YfPrime
     }
     else
     {
-        const label speciesIndex = composition().species()[speciesName];
+        const label speciesIndex = thermo().species()[speciesName];
 
         return
-          - composition().Y()[speciesIndex]
+          - thermo().Y()[speciesIndex]
            *wRatioByP()*saturationModel_->pSatPrime(Tf)
-           /max(scalar(1) - composition().Y()[saturatedIndex_], small);
+           /max(scalar(1) - thermo().Y()[saturatedIndex_], small);
     }
 }
 

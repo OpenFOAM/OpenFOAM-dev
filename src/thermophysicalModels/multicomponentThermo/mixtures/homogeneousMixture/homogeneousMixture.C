@@ -24,36 +24,18 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "homogeneousMixture.H"
-#include "fvMesh.H"
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-template<class ThermoType>
-const char* Foam::homogeneousMixture<ThermoType>::specieNames_[1] = {"b"};
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
 Foam::homogeneousMixture<ThermoType>::homogeneousMixture
 (
-    const dictionary& thermoDict,
-    const fvMesh& mesh,
-    const word& phaseName
+    const dictionary& dict
 )
 :
-    basicCombustionMixture
-    (
-        thermoDict,
-        speciesTable(nSpecies_, specieNames_),
-        mesh,
-        phaseName
-    ),
-
-    reactants_("reactants", thermoDict.subDict("reactants")),
-    products_("products", thermoDict.subDict("products")),
-    mixture_("mixture", reactants_),
-    b_(Y("b"))
+    reactants_("reactants", dict.subDict("reactants")),
+    products_("products", dict.subDict("products")),
+    mixture_("mixture", reactants_)
 {}
 
 
@@ -84,35 +66,66 @@ const ThermoType& Foam::homogeneousMixture<ThermoType>::mixture
 
 
 template<class ThermoType>
-void Foam::homogeneousMixture<ThermoType>::read(const dictionary& thermoDict)
+const typename Foam::homogeneousMixture<ThermoType>::thermoMixtureType&
+Foam::homogeneousMixture<ThermoType>::thermoMixture
+(
+    const scalarFieldListSlice& Y
+) const
 {
-    reactants_ = ThermoType("reactants", thermoDict.subDict("reactants"));
-    products_ = ThermoType("products", thermoDict.subDict("products"));
+    return mixture(Y[B]);
 }
 
 
 template<class ThermoType>
-const ThermoType& Foam::homogeneousMixture<ThermoType>::specieThermo
+const typename Foam::homogeneousMixture<ThermoType>::transportMixtureType&
+Foam::homogeneousMixture<ThermoType>::transportMixture
 (
-    const label speciei
+    const scalarFieldListSlice& Y
 ) const
 {
-    if (speciei == 0)
-    {
-        return reactants_;
-    }
-    else if (speciei == 1)
-    {
-        return products_;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Unknown specie index " << speciei << ". Valid indices are 0..1"
-            << abort(FatalError);
+    return mixture(Y[B]);
+}
 
-        return reactants_;
-    }
+
+template<class ThermoType>
+const typename Foam::homogeneousMixture<ThermoType>::transportMixtureType&
+Foam::homogeneousMixture<ThermoType>::transportMixture
+(
+    const scalarFieldListSlice&,
+    const thermoMixtureType& mixture
+) const
+{
+    return mixture;
+}
+
+
+template<class ThermoType>
+const typename Foam::homogeneousMixture<ThermoType>::thermoType&
+Foam::homogeneousMixture<ThermoType>::reactants
+(
+    const scalarFieldListSlice& Y
+) const
+{
+    return reactants_;
+}
+
+
+template<class ThermoType>
+const typename Foam::homogeneousMixture<ThermoType>::thermoType&
+Foam::homogeneousMixture<ThermoType>::products
+(
+    const scalarFieldListSlice& Y
+) const
+{
+    return products_;
+}
+
+
+template<class ThermoType>
+void Foam::homogeneousMixture<ThermoType>::read(const dictionary& dict)
+{
+    reactants_ = ThermoType("reactants", dict.subDict("reactants"));
+    products_ = ThermoType("products", dict.subDict("products"));
 }
 
 

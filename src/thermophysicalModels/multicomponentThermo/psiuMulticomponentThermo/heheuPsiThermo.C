@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,8 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class BasicPsiThermo, class MixtureType>
-void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
+template<class HeThermo>
+void Foam::heheuPsiThermo<HeThermo>::calculate()
 {
     const scalarField& hCells = this->he_;
     const scalarField& heuCells = this->heu_;
@@ -46,11 +46,14 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
 
     forAll(TCells, celli)
     {
-        const typename MixtureType::thermoMixtureType& thermoMixture =
-            this->cellThermoMixture(celli);
+        auto composition = this->cellComposition(celli);
 
-        const typename MixtureType::transportMixtureType& transportMixture =
-            this->cellTransportMixture(celli, thermoMixture);
+        const typename HeThermo::mixtureType::thermoMixtureType&
+            thermoMixture = this->thermoMixture(composition);
+
+        const typename HeThermo::mixtureType::transportMixtureType&
+            transportMixture =
+            this->transportMixture(composition, thermoMixture);
 
         TCells[celli] = thermoMixture.THE
         (
@@ -67,7 +70,7 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
         kappaCells[celli] =
             transportMixture.kappa(pCells[celli], TCells[celli]);
 
-        TuCells[celli] = this->cellReactants(celli).THE
+        TuCells[celli] = this->reactants(composition).THE
         (
             heuCells[celli],
             pCells[celli],
@@ -122,13 +125,14 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::thermoMixtureType&
-                    thermoMixture = this->patchFaceThermoMixture(patchi, facei);
+                auto composition = this->patchFaceComposition(patchi, facei);
 
-                const typename MixtureType::transportMixtureType&
+                const typename HeThermo::mixtureType::thermoMixtureType&
+                    thermoMixture = this->thermoMixture(composition);
+
+                const typename HeThermo::mixtureType::transportMixtureType&
                     transportMixture =
-                    this->patchFaceTransportMixture
-                    (patchi, facei, thermoMixture);
+                    this->transportMixture(composition, thermoMixture);
 
                 phe[facei] = thermoMixture.HE(pp[facei], pT[facei]);
 
@@ -143,13 +147,14 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::thermoMixtureType&
-                    thermoMixture = this->patchFaceThermoMixture(patchi, facei);
+                auto composition = this->patchFaceComposition(patchi, facei);
 
-                const typename MixtureType::transportMixtureType&
+                const typename HeThermo::mixtureType::thermoMixtureType&
+                    thermoMixture = this->thermoMixture(composition);
+
+                const typename HeThermo::mixtureType::transportMixtureType&
                     transportMixture =
-                    this->patchFaceTransportMixture
-                    (patchi, facei, thermoMixture);
+                    this->transportMixture(composition, thermoMixture);
 
                 pT[facei] = thermoMixture.THE(phe[facei], pp[facei], pT[facei]);
 
@@ -160,7 +165,7 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
                 pkappa[facei] = transportMixture.kappa(pp[facei], pT[facei]);
 
                 pTu[facei] =
-                    this->patchFaceReactants(patchi, facei)
+                    this->reactants(composition)
                    .THE(pheu[facei], pp[facei], pTu[facei]);
             }
         }
@@ -170,14 +175,14 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class BasicPsiThermo, class MixtureType>
-Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
+template<class HeThermo>
+Foam::heheuPsiThermo<HeThermo>::heheuPsiThermo
 (
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    heThermo<BasicPsiThermo, MixtureType>(mesh, phaseName),
+    HeThermo(mesh, phaseName),
     Tu_
     (
         IOobject
@@ -194,7 +199,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
     (
         IOobject
         (
-            MixtureType::thermoType::heName() + 'u',
+            HeThermo::mixtureType::thermoType::heName() + 'u',
             mesh.time().name(),
             mesh,
             IOobject::NO_READ,
@@ -202,11 +207,10 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
         ),
         this->volScalarFieldProperty
         (
-            MixtureType::thermoType::heName() + 'u',
+            HeThermo::mixtureType::thermoType::heName() + 'u',
             dimEnergy/dimMass,
-            &MixtureType::cellReactants,
-            &MixtureType::patchFaceReactants,
-            &MixtureType::thermoMixtureType::HE,
+            &HeThermo::mixtureType::reactants,
+            &HeThermo::mixtureType::thermoMixtureType::HE,
             this->p_,
             this->Tu_
         ),
@@ -223,17 +227,17 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class BasicPsiThermo, class MixtureType>
-Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::~heheuPsiThermo()
+template<class HeThermo>
+Foam::heheuPsiThermo<HeThermo>::~heheuPsiThermo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class BasicPsiThermo, class MixtureType>
-void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::correct()
+template<class HeThermo>
+void Foam::heheuPsiThermo<HeThermo>::correct()
 {
-    if (debug)
+    if (HeThermo::debug)
     {
         InfoInFunction << endl;
     }
@@ -243,16 +247,16 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::correct()
 
     calculate();
 
-    if (debug)
+    if (HeThermo::debug)
     {
         Info<< "    Finished" << endl;
     }
 }
 
 
-template<class BasicPsiThermo, class MixtureType>
+template<class HeThermo>
 Foam::tmp<Foam::scalarField>
-Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
+Foam::heheuPsiThermo<HeThermo>::heu
 (
     const scalarField& Tu,
     const labelList& cells
@@ -260,8 +264,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
 {
     return this->cellSetProperty
     (
-        &MixtureType::cellReactants,
-        &MixtureType::thermoMixtureType::HE,
+        &HeThermo::mixtureType::reactants,
+        &HeThermo::mixtureType::thermoMixtureType::HE,
         cells,
         UIndirectList<scalar>(this->p_, cells),
         Tu
@@ -269,9 +273,9 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
 }
 
 
-template<class BasicPsiThermo, class MixtureType>
+template<class HeThermo>
 Foam::tmp<Foam::scalarField>
-Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
+Foam::heheuPsiThermo<HeThermo>::heu
 (
     const scalarField& Tu,
     const label patchi
@@ -279,8 +283,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
 {
     return this->patchFieldProperty
     (
-        &MixtureType::patchFaceReactants,
-        &MixtureType::thermoMixtureType::HE,
+        &HeThermo::mixtureType::reactants,
+        &HeThermo::mixtureType::thermoMixtureType::HE,
         patchi,
         this->p_.boundaryField()[patchi],
         Tu
@@ -288,17 +292,16 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
 }
 
 
-template<class BasicPsiThermo, class MixtureType>
+template<class HeThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::Tb() const
+Foam::heheuPsiThermo<HeThermo>::Tb() const
 {
     return this->volScalarFieldProperty
     (
         "Tb",
         dimTemperature,
-        &MixtureType::cellProducts,
-        &MixtureType::patchFaceProducts,
-        &MixtureType::thermoMixtureType::THE,
+        &HeThermo::mixtureType::products,
+        &HeThermo::mixtureType::thermoMixtureType::THE,
         this->he_,
         this->p_,
         this->T_
@@ -306,26 +309,25 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::Tb() const
 }
 
 
-template<class BasicPsiThermo, class MixtureType>
+template<class HeThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psiu() const
+Foam::heheuPsiThermo<HeThermo>::psiu() const
 {
     return this->volScalarFieldProperty
     (
         "psiu",
         this->psi_.dimensions(),
-        &MixtureType::cellReactants,
-        &MixtureType::patchFaceReactants,
-        &MixtureType::thermoMixtureType::psi,
+        &HeThermo::mixtureType::reactants,
+        &HeThermo::mixtureType::thermoMixtureType::psi,
         this->p_,
         this->Tu_
     );
 }
 
 
-template<class BasicPsiThermo, class MixtureType>
+template<class HeThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psib() const
+Foam::heheuPsiThermo<HeThermo>::psib() const
 {
     const volScalarField Tb(this->Tb());
 
@@ -333,35 +335,33 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psib() const
     (
         "psib",
         this->psi_.dimensions(),
-        &MixtureType::cellProducts,
-        &MixtureType::patchFaceProducts,
-        &MixtureType::thermoMixtureType::psi,
+        &HeThermo::mixtureType::products,
+        &HeThermo::mixtureType::thermoMixtureType::psi,
         this->p_,
         Tb
     );
 }
 
 
-template<class BasicPsiThermo, class MixtureType>
+template<class HeThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::muu() const
+Foam::heheuPsiThermo<HeThermo>::muu() const
 {
     return this->volScalarFieldProperty
     (
         "muu",
         dimDynamicViscosity,
-        &MixtureType::cellReactants,
-        &MixtureType::patchFaceReactants,
-        &MixtureType::transportMixtureType::mu,
+        &HeThermo::mixtureType::reactants,
+        &HeThermo::mixtureType::transportMixtureType::mu,
         this->p_,
         this->Tu_
     );
 }
 
 
-template<class BasicPsiThermo, class MixtureType>
+template<class HeThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::mub() const
+Foam::heheuPsiThermo<HeThermo>::mub() const
 {
     const volScalarField Tb(this->Tb());
 
@@ -369,9 +369,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::mub() const
     (
         "mub",
         dimDynamicViscosity,
-        &MixtureType::cellProducts,
-        &MixtureType::patchFaceProducts,
-        &MixtureType::transportMixtureType::mu,
+        &HeThermo::mixtureType::products,
+        &HeThermo::mixtureType::transportMixtureType::mu,
         this->p_,
         Tb
     );

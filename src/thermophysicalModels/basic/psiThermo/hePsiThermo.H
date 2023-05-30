@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::hePsiThermo
 
 Description
-    Energy for a mixture based on compressibility
+    Thermo implementation based on compressibility
 
 SourceFiles
     hePsiThermo.C
@@ -47,10 +47,10 @@ namespace Foam
                          Class hePsiThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class BasicPsiThermo, class MixtureType>
+template<class HeThermo>
 class hePsiThermo
 :
-    public heThermo<BasicPsiThermo, MixtureType>
+    public HeThermo
 {
     // Private Member Functions
 
@@ -59,21 +59,13 @@ class hePsiThermo
 
 public:
 
-    //- Runtime type information
-    TypeName("hePsiThermo");
-
-
     // Constructors
 
         //- Construct from mesh and phase name
-        hePsiThermo
-        (
-            const fvMesh&,
-            const word& phaseName
-        );
+        hePsiThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        hePsiThermo(const hePsiThermo<BasicPsiThermo, MixtureType>&) = delete;
+        hePsiThermo(const hePsiThermo<HeThermo>&) = delete;
 
 
     //- Destructor
@@ -89,10 +81,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=
-        (
-            const hePsiThermo<BasicPsiThermo, MixtureType>&
-        ) = delete;
+        void operator=(const hePsiThermo<HeThermo>&) = delete;
 };
 
 

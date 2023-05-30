@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::heRhoThermo
 
 Description
-    Energy for a mixture based on density
+    Thermo implementation based on density
 
 SourceFiles
     heRhoThermo.C
@@ -47,10 +47,10 @@ namespace Foam
                          Class heRhoThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class BasicRhoThermo, class MixtureType>
+template<class HeThermo>
 class heRhoThermo
 :
-    public heThermo<BasicRhoThermo, MixtureType>
+    public HeThermo
 {
     // Private Member Functions
 
@@ -60,21 +60,13 @@ class heRhoThermo
 
 public:
 
-    //- Runtime type information
-    TypeName("heRhoThermo");
-
-
     // Constructors
 
         //- Construct from mesh and phase name
-        heRhoThermo
-        (
-            const fvMesh&,
-            const word& phaseName
-        );
+        heRhoThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        heRhoThermo(const heRhoThermo<BasicRhoThermo, MixtureType>&) = delete;
+        heRhoThermo(const heRhoThermo<HeThermo>&) = delete;
 
 
     //- Destructor
@@ -90,10 +82,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=
-        (
-            const heRhoThermo<BasicRhoThermo, MixtureType>&
-        ) = delete;
+        void operator=(const heRhoThermo<HeThermo>&) = delete;
 };
 
 

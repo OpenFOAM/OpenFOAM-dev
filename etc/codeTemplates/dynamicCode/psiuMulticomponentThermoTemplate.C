@@ -23,12 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "forThermo.H"
-#include "makeMulticomponentThermo.H"
-
+// Specie
 #include "${specie}.H"
-
-#include "thermo.H"
 
 // EoS
 #include "${equationOfState}.H"
@@ -46,6 +42,10 @@ License
 
 // Mixture
 #include "${mixture}.H"
+
+#include "thermo.H"
+#include "typedefThermo.H"
+#include "makeThermo.H"
 
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
@@ -75,15 +75,28 @@ extern "C"
 
 namespace Foam
 {
-    forThermo
+    typedefThermo
     (
         ${transport}Transport,
         ${energy},
         ${thermo}Thermo,
         ${equationOfState},
-        ${specie},
-        makePsiuMulticomponentThermo,
-        ${mixture}
+        ${specie}
+    );
+
+    defineThermo
+    (
+        ${typeBase},
+        ${mixture},
+        ${transport}Transport${energy}${thermo}Thermo${equationOfState}${specie}
+    );
+
+    addThermo
+    (
+        ${typeBase},
+        ${typeBase},
+        ${mixture},
+        ${transport}Transport${energy}${thermo}Thermo${equationOfState}${specie}
     );
 }
 

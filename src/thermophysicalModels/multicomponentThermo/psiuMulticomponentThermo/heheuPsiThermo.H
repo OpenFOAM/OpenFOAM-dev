@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,13 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::heheuMulticomponentThermo
+    Foam::heheuPsiThermo
 
 Description
-    Foam::heheuMulticomponentThermo
+    Thermo implementation based on compressibility with additional unburnt
+    thermodynamic state
 
 SourceFiles
-    heheuMulticomponentThermo.C
+    heheuPsiThermo.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -46,10 +47,10 @@ namespace Foam
                        Class heheuPsiThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class BasicPsiThermo, class MixtureType>
+template<class HeThermo>
 class heheuPsiThermo
 :
-    public heThermo<BasicPsiThermo, MixtureType>
+    public HeThermo
 {
     // Private Data
 
@@ -68,24 +69,13 @@ class heheuPsiThermo
 
 public:
 
-    //- Runtime type information
-    TypeName("heheuPsiThermo");
-
-
     // Constructors
 
         //- Construct from mesh and phase name
-        heheuPsiThermo
-        (
-            const fvMesh&,
-            const word& phaseName
-        );
+        heheuPsiThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        heheuPsiThermo
-        (
-            const heheuPsiThermo<BasicPsiThermo, MixtureType>&
-        ) = delete;
+        heheuPsiThermo(const heheuPsiThermo<HeThermo>&) = delete;
 
 
     //- Destructor
@@ -154,6 +144,12 @@ public:
 
             //- Dynamic viscosity of burnt gas [kg/m/s]
             virtual tmp<volScalarField> mub() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const heheuPsiThermo<HeThermo>&) = delete;
 };
 
 

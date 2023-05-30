@@ -24,100 +24,77 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "multicomponentMixture.H"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class ThermoType>
-Foam::PtrList<ThermoType>
-Foam::multicomponentMixture<ThermoType>::readSpeciesData
-(
-    const dictionary& thermoDict
-) const
-{
-    PtrList<ThermoType> specieThermos(species_.size());
-
-    forAll(species_, i)
-    {
-        specieThermos.set
-        (
-            i,
-            new ThermoType(species_[i], thermoDict.subDict(species_[i]))
-        );
-    }
-
-    return specieThermos;
-}
-
-
-template<class ThermoType>
-Foam::List<Foam::List<Foam::specieElement>>
-Foam::multicomponentMixture<ThermoType>::readSpeciesComposition
-(
-    const dictionary& thermoDict
-) const
-{
-    List<List<specieElement>> specieCompositions(species_.size());
-
-    // Loop through all species in thermoDict to retrieve
-    // the species composition
-    forAll(species_, i)
-    {
-        if (thermoDict.subDict(species_[i]).isDict("elements"))
-        {
-            const dictionary& elements =
-                thermoDict.subDict(species_[i]).subDict("elements");
-
-            const wordList elementsNames(elements.toc());
-
-            specieCompositions[i].resize(elementsNames.size());
-
-            forAll(elementsNames, eni)
-            {
-                specieCompositions[i][eni].name() = elementsNames[eni];
-                specieCompositions[i][eni].nAtoms() =
-                    elements.lookupOrDefault(elementsNames[eni], 0);
-            }
-        }
-    }
-
-    return specieCompositions;
-}
-
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
 Foam::multicomponentMixture<ThermoType>::multicomponentMixture
 (
-    const dictionary& thermoDict,
-    const fvMesh& mesh,
-    const word& phaseName
+    const dictionary& dict
 )
-:
-    basicSpecieMixture
-    (
-        thermoDict,
-        thermoDict.lookup("species"),
-        mesh,
-        phaseName
-    ),
-    specieThermos_(readSpeciesData(thermoDict)),
-    specieCompositions_(readSpeciesComposition(thermoDict))
 {
-    correctMassFractions();
+    read(dict);
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
+Foam::wordList Foam::multicomponentMixture<ThermoType>::specieNames() const
+{
+    wordList result(specieThermos_.size());
+
+    forAll(specieThermos_, speciei)
+    {
+        result[speciei] = specieThermos_[speciei].name();
+    }
+
+    return result;
+}
+
+
+template<class ThermoType>
 void Foam::multicomponentMixture<ThermoType>::read
 (
-    const dictionary& thermoDict
+    const dictionary& dict
 )
 {
-    specieThermos_ = readSpeciesData(thermoDict);
-    specieCompositions_ = readSpeciesComposition(thermoDict);
+    const wordList specieNames(dict.lookup("species"));
+
+    specieThermos_.setSize(specieNames.size());
+    specieCompositions_.setSize(specieNames.size());
+    specieDictLocations_.setSize(specieNames.size());
+
+    forAll(specieNames, speciei)
+    {
+        const dictionary& specieDict = dict.subDict(specieNames[speciei]);
+
+        specieThermos_.set
+        (
+            speciei,
+            new ThermoType(specieNames[speciei], specieDict)
+        );
+
+        if (specieDict.isDict("elements"))
+        {
+            const dictionary& specieElementsDict =
+                specieDict.subDict("elements");
+
+            const wordList elementsNames(specieElementsDict.toc());
+
+            specieCompositions_[speciei].resize(elementsNames.size());
+
+            forAll(elementsNames, eni)
+            {
+                specieCompositions_[speciei][eni].name() = elementsNames[eni];
+                specieCompositions_[speciei][eni].nAtoms() =
+                    specieElementsDict.lookupOrDefault(elementsNames[eni], 0);
+            }
+        }
+
+        specieDictLocations_[speciei] = IOerrorLocation(specieDict);
+    }
 }
 
 
@@ -130,10 +107,10 @@ Foam::multicomponentMixture<ThermoType>::specieComposition
 {
     if (specieCompositions_[speciei].empty())
     {
-        // Spit an error associated with the lookup of this specie's elements
-        refCast<const dictionary>(*this)
-            .subDict(species_[speciei])
-            .subDict("elements");
+        FatalIOErrorInFunction(specieDictLocations_[speciei])
+            << "Elemental composition not specified for specie "
+            << specieThermos_[speciei].name()
+            << exit(FatalIOError);
     }
 
     return specieCompositions_[speciei];

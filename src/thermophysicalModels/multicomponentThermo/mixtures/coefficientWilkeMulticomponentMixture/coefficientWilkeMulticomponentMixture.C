@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,67 +25,11 @@ License
 
 #include "coefficientWilkeMulticomponentMixture.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::
-coefficientWilkeMulticomponentMixture
-(
-    const dictionary& thermoDict,
-    const fvMesh& mesh,
-    const word& phaseName
-)
-:
-    multicomponentMixture<ThermoType>
-    (
-        thermoDict,
-        mesh,
-        phaseName
-    ),
-    mixture_("mixture", this->specieThermos()[0]),
-    transportMixture_(this->specieThermos())
-{}
-
-
-template<class ThermoType>
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixture::
-transportMixture
-(
-    const PtrList<ThermoType>& specieThermos
-)
-:
-    specieThermos_(specieThermos),
-    M_(specieThermos.size()),
-    A_(specieThermos.size()),
-    B_(specieThermos.size()),
-    X_(specieThermos.size()),
-    mu_(specieThermos.size()),
-    w_(specieThermos.size()),
-    muCached_(false)
-{
-    forAll(specieThermos_, i)
-    {
-        M_[i] = specieThermos[i].W();
-    }
-
-    forAll(M_, i)
-    {
-        forAll(M_, j)
-        {
-            if (i != j)
-            {
-                A_(i, j) = ((4/sqrt(2.0))*sqrt(1 + M_[i]/M_[j]));
-                B_(i, j) = sqrt(M_[j]/M_[i]);
-            }
-        }
-    }
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class ThermoType>
-void Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixture::
+void
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType::
 WilkeWeights
 (
     scalar p,
@@ -121,9 +65,62 @@ WilkeWeights
 }
 
 
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class ThermoType>
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::
+coefficientWilkeMulticomponentMixture
+(
+    const dictionary& dict
+)
+:
+    multicomponentMixture<ThermoType>(dict),
+    mixture_("mixture", this->specieThermos()[0]),
+    transportMixture_(this->specieThermos())
+{}
+
+
+template<class ThermoType>
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType::
+transportMixtureType
+(
+    const PtrList<ThermoType>& specieThermos
+)
+:
+    specieThermos_(specieThermos),
+    M_(specieThermos.size()),
+    A_(specieThermos.size()),
+    B_(specieThermos.size()),
+    X_(specieThermos.size()),
+    mu_(specieThermos.size()),
+    w_(specieThermos.size()),
+    muCached_(false)
+{
+    forAll(specieThermos_, i)
+    {
+        M_[i] = specieThermos[i].W();
+    }
+
+    forAll(M_, i)
+    {
+        forAll(M_, j)
+        {
+            if (i != j)
+            {
+                A_(i, j) = ((4/sqrt(2.0))*sqrt(1 + M_[i]/M_[j]));
+                B_(i, j) = sqrt(M_[j]/M_[i]);
+            }
+        }
+    }
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 template<class ThermoType>
 Foam::scalar
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixture::
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType::
 mu
 (
     scalar p,
@@ -144,7 +141,7 @@ mu
 
 template<class ThermoType>
 Foam::scalar
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixture::
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType::
 kappa
 (
     scalar p,
@@ -169,40 +166,16 @@ kappa
 template<class ThermoType>
 const typename
 Foam::coefficientWilkeMulticomponentMixture<ThermoType>::thermoMixtureType&
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::cellThermoMixture
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::thermoMixture
 (
-    const label celli
+    const scalarFieldListSlice& Y
 ) const
 {
-    mixture_ = this->Y()[0][celli]*this->specieThermos()[0];
+    mixture_ = Y[0]*this->specieThermos()[0];
 
-    for (label i=1; i<this->Y().size(); i++)
+    for (label i=1; i<Y.size(); i++)
     {
-        mixture_ += this->Y()[i][celli]*this->specieThermos()[i];
-    }
-
-    return mixture_;
-}
-
-
-template<class ThermoType>
-const typename
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::thermoMixtureType&
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::patchFaceThermoMixture
-(
-    const label patchi,
-    const label facei
-) const
-{
-    mixture_ =
-        this->Y()[0].boundaryField()[patchi][facei]
-       *this->specieThermos()[0];
-
-    for (label i=1; i<this->Y().size(); i++)
-    {
-        mixture_ +=
-            this->Y()[i].boundaryField()[patchi][facei]
-           *this->specieThermos()[i];
+        mixture_ += Y[i]*this->specieThermos()[i];
     }
 
     return mixture_;
@@ -212,26 +185,24 @@ Foam::coefficientWilkeMulticomponentMixture<ThermoType>::patchFaceThermoMixture
 template<class ThermoType>
 const typename
 Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType&
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::cellTransportMixture
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixture
 (
-    const label celli
+    const scalarFieldListSlice& Y
 ) const
 {
     transportMixture_.muCached_ = false;
 
-    scalarList& X = transportMixture_.X_;
-
     scalar sumX = 0;
 
-    forAll(X, i)
+    forAll(Y, i)
     {
-        X[i] = this->Y()[i][celli]/this->specieThermos()[i].W();
-        sumX += X[i];
+        transportMixture_.X_[i] = Y[i]/this->specieThermos()[i].W();
+        sumX += transportMixture_.X_[i];
     }
 
-    forAll(X, i)
+    forAll(Y, i)
     {
-        X[i] /= sumX;
+        transportMixture_.X_[i] /= sumX;
     }
 
     return transportMixture_;
@@ -241,63 +212,13 @@ Foam::coefficientWilkeMulticomponentMixture<ThermoType>::cellTransportMixture
 template<class ThermoType>
 const typename
 Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType&
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::
-patchFaceTransportMixture
+Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixture
 (
-    const label patchi,
-    const label facei
+    const scalarFieldListSlice& Y,
+    const thermoMixtureType&
 ) const
 {
-    transportMixture_.muCached_ = false;
-
-    scalarList& X = transportMixture_.X_;
-
-    scalar sumX = 0;
-
-    forAll(X, i)
-    {
-        X[i] =
-            this->Y()[i].boundaryField()[patchi][facei]
-           /this->specieThermos()[i].W();
-        sumX += X[i];
-    }
-
-    forAll(X, i)
-    {
-        X[i] /= sumX;
-    }
-
-    return transportMixture_;
-}
-
-template<class ThermoType>
-const typename
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType&
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::
-cellTransportMixture
-(
-    const label celli,
-    const thermoMixtureType& thermoMixture
-) const
-{
-    cellTransportMixture(celli);
-    transportMixture_.muCached_ = true;
-    return transportMixture_;
-}
-
-
-template<class ThermoType>
-const typename
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::transportMixtureType&
-Foam::coefficientWilkeMulticomponentMixture<ThermoType>::
-patchFaceTransportMixture
-(
-    const label patchi,
-    const label facei,
-    const thermoMixtureType& thermoMixture
-) const
-{
-    patchFaceTransportMixture(patchi, facei);
+    transportMixture(Y);
     transportMixture_.muCached_ = true;
     return transportMixture_;
 }

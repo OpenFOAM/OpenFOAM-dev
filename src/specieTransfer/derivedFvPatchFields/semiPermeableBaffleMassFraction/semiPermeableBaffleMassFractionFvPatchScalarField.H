@@ -92,8 +92,6 @@ SourceFiles
 namespace Foam
 {
 
-class basicSpecieMixture;
-
 /*---------------------------------------------------------------------------*\
       Class semiPermeableBaffleMassFractionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/

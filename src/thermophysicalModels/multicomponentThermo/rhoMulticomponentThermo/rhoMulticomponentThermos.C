@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,32 +31,13 @@ License
 #include "rhoThermo.H"
 #include "rhoMulticomponentThermo.H"
 #include "heRhoThermo.H"
+#include "heMulticomponentThermo.H"
+#include "heFluidMulticomponentThermo.H"
 
 #include "forGases.H"
 #include "forLiquids.H"
 #include "forTabulated.H"
-#include "makeMulticomponentThermo.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#define makeRhoMulticomponentThermos(Mixture, ThermoPhysics)                   \
-    makeMulticomponentThermos                                                  \
-    (                                                                          \
-        rhoThermo,                                                             \
-        rhoMulticomponentThermo,                                               \
-        heRhoThermo,                                                           \
-        Mixture,                                                               \
-        ThermoPhysics                                                          \
-    )
-
-#define makeRhoMulticomponentThermo(Mixture, ThermoPhysics)                    \
-    makeMulticomponentThermo                                                   \
-    (                                                                          \
-        rhoMulticomponentThermo,                                               \
-        heRhoThermo,                                                           \
-        Mixture,                                                               \
-        ThermoPhysics                                                          \
-    )
+#include "makeFluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,28 +45,59 @@ namespace Foam
 {
     forCoeffGases
     (
-        makeRhoMulticomponentThermos,
+        makeFluidMulticomponentThermos,
+        rhoThermo,
+        rhoMulticomponentThermo,
         coefficientMulticomponentMixture
     );
-
     forCoeffGases
     (
-        makeRhoMulticomponentThermos,
+        makeFluidMulticomponentThermos,
+        rhoThermo,
+        rhoMulticomponentThermo,
         coefficientWilkeMulticomponentMixture
     );
-
-    forGases(makeRhoMulticomponentThermo, singleComponentMixture);
+    forGases
+    (
+        makeFluidMulticomponentThermo,
+        rhoMulticomponentThermo,
+        singleComponentMixture
+    );
 
     forCoeffLiquids
     (
-        makeRhoMulticomponentThermos,
+        makeFluidMulticomponentThermos,
+        rhoThermo,
+        rhoMulticomponentThermo,
         coefficientMulticomponentMixture
     );
-    forLiquids(makeRhoMulticomponentThermos, valueMulticomponentMixture);
-    forLiquids(makeRhoMulticomponentThermo, singleComponentMixture);
+    forLiquids
+    (
+        makeFluidMulticomponentThermos,
+        rhoThermo,
+        rhoMulticomponentThermo,
+        valueMulticomponentMixture
+    );
+    forLiquids
+    (
+        makeFluidMulticomponentThermo,
+        rhoMulticomponentThermo,
+        singleComponentMixture
+    );
 
-    forTabulated(makeRhoMulticomponentThermos, valueMulticomponentMixture);
-    forTabulated(makeRhoMulticomponentThermo, singleComponentMixture);
+    forTabulated
+    (
+        makeFluidMulticomponentThermos,
+        rhoThermo,
+        rhoMulticomponentThermo,
+        valueMulticomponentMixture
+    );
+    forTabulated
+    (
+        makeFluidMulticomponentThermo,
+        rhoMulticomponentThermo,
+        singleComponentMixture
+    );
 }
 
 // ************************************************************************* //

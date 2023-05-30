@@ -32,7 +32,7 @@ License
 
 void Foam::combustionModels::singleStepCombustion::calculateqFuel()
 {
-    const scalar Wu = mixture_.Wi(fuelIndex_);
+    const scalar Wu = thermo_.Wi(fuelIndex_);
 
     forAll(reaction_.lhs(), i)
     {
@@ -40,7 +40,7 @@ void Foam::combustionModels::singleStepCombustion::calculateqFuel()
         const scalar stoichCoeff = reaction_.lhs()[i].stoichCoeff;
         specieStoichCoeffs_[speciei] = -stoichCoeff;
         qFuel_.value() +=
-            mixture_.Hf(speciei)*mixture_.Wi(speciei)*stoichCoeff/Wu;
+            thermo_.hfi(speciei)*thermo_.Wi(speciei)*stoichCoeff/Wu;
     }
 
     forAll(reaction_.rhs(), i)
@@ -49,7 +49,7 @@ void Foam::combustionModels::singleStepCombustion::calculateqFuel()
         const scalar stoichCoeff = reaction_.rhs()[i].stoichCoeff;
         specieStoichCoeffs_[speciei] = stoichCoeff;
         qFuel_.value() -=
-            mixture_.Hf(speciei)*mixture_.Wi(speciei)*stoichCoeff/Wu;
+            thermo_.hfi(speciei)*thermo_.Wi(speciei)*stoichCoeff/Wu;
         specieProd_[speciei] = -1;
     }
 
@@ -59,17 +59,17 @@ void Foam::combustionModels::singleStepCombustion::calculateqFuel()
 
 void Foam::combustionModels::singleStepCombustion::massAndAirStoichRatios()
 {
-    const label O2Index = mixture_.species()["O2"];
-    const scalar Wu = mixture_.Wi(fuelIndex_);
+    const label O2Index = thermo_.species()["O2"];
+    const scalar Wu = thermo_.Wi(fuelIndex_);
 
     stoicRatio_ =
         (
-            mixture_.Wi(mixture_.defaultSpecie())
-           *specieStoichCoeffs_[mixture_.defaultSpecie()]
-          + mixture_.Wi(O2Index)*mag(specieStoichCoeffs_[O2Index])
+            thermo_.Wi(thermo_.defaultSpecie())
+           *specieStoichCoeffs_[thermo_.defaultSpecie()]
+          + thermo_.Wi(O2Index)*mag(specieStoichCoeffs_[O2Index])
         )/(Wu*mag(specieStoichCoeffs_[fuelIndex_]));
 
-    s_ = mixture_.Wi(O2Index)*mag(specieStoichCoeffs_[O2Index])
+    s_ = thermo_.Wi(O2Index)*mag(specieStoichCoeffs_[O2Index])
         /(Wu*mag(specieStoichCoeffs_[fuelIndex_]));
 
     Info << "stoichiometric air-fuel ratio: " << stoicRatio_.value() << endl;
@@ -93,13 +93,13 @@ void Foam::combustionModels::singleStepCombustion::calculateMaxProducts()
     {
         const label speciei = reaction_.rhs()[i].index;
         Xi[i] = mag(specieStoichCoeffs_[speciei])/totalMol;
-        Wm += Xi[i]*mixture_.Wi(speciei);
+        Wm += Xi[i]*thermo_.Wi(speciei);
     }
 
     forAll(reaction_.rhs(), i)
     {
         const label speciei = reaction_.rhs()[i].index;
-        Yprod0_[speciei] =  mixture_.Wi(speciei)/Wm*Xi[i];
+        Yprod0_[speciei] =  thermo_.Wi(speciei)/Wm*Xi[i];
     }
 
     Info << "Maximum products mass concentrations: " << nl;
@@ -107,7 +107,7 @@ void Foam::combustionModels::singleStepCombustion::calculateMaxProducts()
     {
         if (Yprod0_[i] > 0)
         {
-            Info<< "    " << mixture_.species()[i] << ": " << Yprod0_[i] << nl;
+            Info<< "    " << thermo_.species()[i] << ": " << Yprod0_[i] << nl;
         }
     }
 
@@ -115,8 +115,8 @@ void Foam::combustionModels::singleStepCombustion::calculateMaxProducts()
     forAll(specieStoichCoeffs_, i)
     {
         specieStoichCoeffs_[i] =
-            specieStoichCoeffs_[i]*mixture_.Wi(i)
-           /(mixture_.Wi(fuelIndex_)*mag(specieStoichCoeffs_[fuelIndex_]));
+            specieStoichCoeffs_[i]*thermo_.Wi(i)
+           /(thermo_.Wi(fuelIndex_)*mag(specieStoichCoeffs_[fuelIndex_]));
     }
 }
 
@@ -132,15 +132,14 @@ Foam::combustionModels::singleStepCombustion::singleStepCombustion
 )
 :
     combustionModel(modelType, thermo, turb, combustionProperties),
-    mixture_(dynamic_cast<const basicSpecieMixture&>(this->thermo())),
-    reaction_(mixture_.species(), this->subDict("reaction")),
+    reaction_(thermo_.species(), this->subDict("reaction")),
     stoicRatio_(dimensionedScalar("stoicRatio", dimless, 0)),
     s_(dimensionedScalar("s", dimless, 0)),
     qFuel_(dimensionedScalar("qFuel", sqr(dimVelocity), 0)),
-    specieStoichCoeffs_(mixture_.species().size(), 0.0),
-    Yprod0_(mixture_.species().size(), 0.0),
+    specieStoichCoeffs_(thermo_.species().size(), 0.0),
+    Yprod0_(thermo_.species().size(), 0.0),
     fres_(Yprod0_.size()),
-    fuelIndex_(mixture_.species()[thermo.properties().lookup("fuel")]),
+    fuelIndex_(thermo_.species()[thermo.properties().lookup("fuel")]),
     specieProd_(Yprod0_.size(), 1),
     wFuel_
     (
@@ -161,7 +160,7 @@ Foam::combustionModels::singleStepCombustion::singleStepCombustion
     {
         IOobject header
         (
-            "fres_" + mixture_.species()[fresI],
+            "fres_" + thermo_.species()[fresI],
             this->mesh().time().name(),
             this->mesh()
         );
@@ -213,7 +212,7 @@ Foam::combustionModels::singleStepCombustion::R(const label speciei) const
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::combustionModels::singleStepCombustion::R(volScalarField& Y) const
 {
-    const label specieI = mixture_.species()[Y.member()];
+    const label specieI = thermo_.species()[Y.member()];
 
     volScalarField wSpecie
     (
@@ -240,7 +239,7 @@ Foam::combustionModels::singleStepCombustion::Qdot() const
 {
     const label fuelI = fuelIndex();
     volScalarField& YFuel =
-        const_cast<volScalarField&>(this->thermo().composition().Y(fuelI));
+        const_cast<volScalarField&>(this->thermo().Y(fuelI));
 
     return -qFuel()*(R(YFuel) & YFuel);
 }
@@ -261,9 +260,9 @@ bool Foam::combustionModels::singleStepCombustion::read()
 
 void Foam::combustionModels::singleStepCombustion::fresCorrect()
 {
-    const label O2Index = mixture_.species()["O2"];
-    const volScalarField& YFuel = mixture_.Y()[fuelIndex_];
-    const volScalarField& YO2 = mixture_.Y()[O2Index];
+    const label O2Index = thermo_.species()["O2"];
+    const volScalarField& YFuel = thermo_.Y()[fuelIndex_];
+    const volScalarField& YO2 = thermo_.Y()[O2Index];
 
     // reactants
     forAll(reaction_.lhs(), i)
@@ -283,7 +282,7 @@ void Foam::combustionModels::singleStepCombustion::fresCorrect()
     forAll(reaction_.rhs(), i)
     {
         const label speciei = reaction_.rhs()[i].index;
-        if (speciei != mixture_.defaultSpecie())
+        if (speciei != thermo_.defaultSpecie())
         {
             forAll(fres_[speciei], celli)
             {

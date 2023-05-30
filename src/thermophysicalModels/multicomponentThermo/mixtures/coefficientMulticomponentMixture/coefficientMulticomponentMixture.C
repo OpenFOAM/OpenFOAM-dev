@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,17 +31,10 @@ template<class ThermoType>
 Foam::coefficientMulticomponentMixture<ThermoType>::
 coefficientMulticomponentMixture
 (
-    const dictionary& thermoDict,
-    const fvMesh& mesh,
-    const word& phaseName
+    const dictionary& dict
 )
 :
-    multicomponentMixture<ThermoType>
-    (
-        thermoDict,
-        mesh,
-        phaseName
-    ),
+    multicomponentMixture<ThermoType>(dict),
     mixture_("mixture", this->specieThermos()[0])
 {}
 
@@ -51,16 +44,16 @@ coefficientMulticomponentMixture
 template<class ThermoType>
 const typename
 Foam::coefficientMulticomponentMixture<ThermoType>::thermoMixtureType&
-Foam::coefficientMulticomponentMixture<ThermoType>::cellThermoMixture
+Foam::coefficientMulticomponentMixture<ThermoType>::thermoMixture
 (
-    const label celli
+    const scalarFieldListSlice& Y
 ) const
 {
-    mixture_ = this->Y()[0][celli]*this->specieThermos()[0];
+    mixture_ = Y[0]*this->specieThermos()[0];
 
-    for (label i=1; i<this->Y().size(); i++)
+    for (label i=1; i<Y.size(); i++)
     {
-        mixture_ += this->Y()[i][celli]*this->specieThermos()[i];
+        mixture_ += Y[i]*this->specieThermos()[i];
     }
 
     return mixture_;
@@ -69,25 +62,26 @@ Foam::coefficientMulticomponentMixture<ThermoType>::cellThermoMixture
 
 template<class ThermoType>
 const typename
-Foam::coefficientMulticomponentMixture<ThermoType>::thermoMixtureType&
-Foam::coefficientMulticomponentMixture<ThermoType>::patchFaceThermoMixture
+Foam::coefficientMulticomponentMixture<ThermoType>::transportMixtureType&
+Foam::coefficientMulticomponentMixture<ThermoType>::transportMixture
 (
-    const label patchi,
-    const label facei
+    const scalarFieldListSlice& Y
 ) const
 {
-    mixture_ =
-        this->Y()[0].boundaryField()[patchi][facei]
-       *this->specieThermos()[0];
+    return thermoMixture(Y);
+}
 
-    for (label i=1; i<this->Y().size(); i++)
-    {
-        mixture_ +=
-            this->Y()[i].boundaryField()[patchi][facei]
-           *this->specieThermos()[i];
-    }
 
-    return mixture_;
+template<class ThermoType>
+const typename
+Foam::coefficientMulticomponentMixture<ThermoType>::transportMixtureType&
+Foam::coefficientMulticomponentMixture<ThermoType>::transportMixture
+(
+    const scalarFieldListSlice&,
+    const thermoMixtureType& mixture
+) const
+{
+    return mixture;
 }
 
 

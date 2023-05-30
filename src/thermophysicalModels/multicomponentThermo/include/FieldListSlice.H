@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,47 +22,82 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::basicMixture
+    Foam::FieldListSlice
 
 Description
-    Foam::basicMixture
-
-SourceFiles
-    basicMixture.C
+    Class to provide a list-like interface to a slice through a PtrList of
+    fields
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef basicMixture_H
-#define basicMixture_H
+#ifndef FieldListSlice_H
+#define FieldListSlice_H
+
+#include "Field.H"
+#include "fieldTypes.H"
+#include "PtrList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class fvMesh;
-class dictionary;
-class word;
-
 /*---------------------------------------------------------------------------*\
-                        Class basicMixture Declaration
+                       Class FieldListSlice Declaration
 \*---------------------------------------------------------------------------*/
 
-class basicMixture
+template<class Type>
+class FieldListSlice
 {
+    // Private Data
+
+        //- Reference to the fields
+        const UPtrList<const Field<Type>>& fields_;
+
+        //- Element index
+        const label elementi_;
+
 
 public:
 
-    //- The base class of the mixture
-    typedef basicMixture basicMixtureType;
-
-
     // Constructors
 
-        //- Construct from dictionary, mesh and phase name
-        basicMixture(const dictionary&, const fvMesh&, const word&)
+        //- Construct from a list of fields and an element index
+        inline FieldListSlice
+        (
+            const UPtrList<const Field<Type>>& fields,
+            const label elementi
+        )
+        :
+            fields_(fields),
+            elementi_(elementi)
         {}
+
+
+    // Member Functions
+
+        //- Return the size of the slice
+        inline label size() const
+        {
+            return fields_.size();
+        }
+
+
+    // Member Operators
+
+        //- Access an element
+        inline const Type& operator[](const label fieldi) const
+        {
+            return fields_[fieldi][elementi_];
+        }
 };
+
+
+//- Define scalarFieldListSlice, vectorFieldListSlice, etc...
+#define typedefTypeFieldListSlice(Type, nullArg)                               \
+    typedef FieldListSlice<Type> Type##FieldListSlice;
+FOR_ALL_FIELD_TYPES(typedefTypeFieldListSlice);
+#undef typedefTypeFieldListSlice
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

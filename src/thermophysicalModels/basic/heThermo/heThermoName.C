@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,50 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-inline bool Foam::basicCombustionMixture::contains
-(
-    const word& specieName
-) const
+#include "heThermo.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
 {
-    return species_.found(specieName);
-}
-
-
-inline Foam::volScalarField& Foam::basicCombustionMixture::Y
-(
-    const word& specieName
-)
-{
-    return Y_[species_[specieName]];
-}
-
-
-inline const Foam::volScalarField& Foam::basicCombustionMixture::Y
-(
-    const word& specieName
-) const
-{
-    return Y_[species_[specieName]];
-}
-
-
-inline Foam::scalar Foam::basicCombustionMixture::fres
-(
-    const scalar ft,
-    const scalar stoicRatio
-) const
-{
-    return max(ft - (scalar(1) - ft)/stoicRatio, scalar(0));
-}
-
-
-inline Foam::tmp<Foam::volScalarField> Foam::basicCombustionMixture::fres
-(
-    const volScalarField& ft,
-    const dimensionedScalar& stoicRatio
-) const
-{
-    return max(ft - (scalar(1) - ft)/stoicRatio.value(), scalar(0));
+    defineTypeNameAndDebug(heThermoName, 0);
 }
 
 

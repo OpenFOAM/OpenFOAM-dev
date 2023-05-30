@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "clouds.H"
-#include "basicSpecieMixture.H"
+#include "multicomponentThermo.H"
 #include "fvMatrix.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -167,16 +167,16 @@ Foam::wordList Foam::fv::clouds::addSupFields() const
 
         fieldNames.append(carrierThermo.he().name());
 
-        if (isA<basicSpecieMixture>(carrierThermo))
+        if (isA<multicomponentThermo>(carrierThermo))
         {
-            const basicSpecieMixture& composition =
-                refCast<const basicSpecieMixture>(carrierThermo);
+            const multicomponentThermo& carrierMcThermo =
+                refCast<const multicomponentThermo>(carrierThermo);
 
-            const PtrList<volScalarField>& Y = composition.Y();
+            const PtrList<volScalarField>& Y = carrierMcThermo.Y();
 
             forAll(Y, i)
             {
-                if (composition.solve(i))
+                if (carrierMcThermo.solveSpecie(i))
                 {
                     fieldNames.append(Y[i].name());
                 }
@@ -262,20 +262,20 @@ void Foam::fv::clouds::addSup
     {
         eqn += cloudsPtr_().Sh(eqn.psi());
     }
-    else if
-    (
-        isA<basicSpecieMixture>(carrierThermo)
-     && refCast<const basicSpecieMixture>(carrierThermo).contains
-        (
-            eqn.psi().name()
-        )
-    )
+    else if (isA<multicomponentThermo>(carrierThermo))
     {
-        eqn += cloudsPtr_().SYi
-        (
-            refCast<const basicSpecieMixture>(carrierThermo).index(eqn.psi()),
-            eqn.psi()
-        );
+        const multicomponentThermo& carrierMcThermo =
+            refCast<const multicomponentThermo>(carrierThermo);
+
+        if (carrierMcThermo.containsSpecie(eqn.psi().name()))
+        {
+            eqn +=
+                cloudsPtr_().SYi
+                (
+                    carrierMcThermo.specieIndex(eqn.psi()),
+                    eqn.psi()
+                );
+        }
     }
 }
 

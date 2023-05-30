@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,23 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::basicCombustionMixture
+    Foam::PhysicalPropertiesThermo
 
 Description
-    Specialisation of the basicMixture for combustion.
-
-SourceFiles
-    basicCombustionMixture.C
+    Wrapper around a thermo which also constructs the physical properties
+    dictionary
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef basicCombustionMixture_H
-#define basicCombustionMixture_H
+#ifndef PhysicalPropertiesThermo_H
+#define PhysicalPropertiesThermo_H
 
-#include "volFields.H"
-#include "PtrList.H"
-#include "basicMixture.H"
-#include "speciesTable.H"
+#include "physicalProperties.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,70 +41,41 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class basicCombustionMixture Declaration
+                   Class PhysicalPropertiesThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-class basicCombustionMixture
+template<class BasicThermoType>
+class PhysicalPropertiesThermo
 :
-    public basicMixture
+    public physicalProperties,
+    public BasicThermoType
 {
-
-protected:
-
-    // Protected data
-
-        //- Table of specie names
-        speciesTable species_;
-
-        //- Species mass fractions
-        PtrList<volScalarField> Y_;
-
-
 public:
-
-    //- Run time type information
-    TypeName("basicCombustionMixture");
-
-
-    //- The base class of the mixture
-    typedef basicCombustionMixture basicMixtureType;
-
 
     // Constructors
 
-        //- Construct from dictionary, specie names, mesh and phase name
-        basicCombustionMixture
+        //- Construct from mesh and phase name
+        PhysicalPropertiesThermo
         (
-            const dictionary&,
-            const wordList& specieNames,
-            const fvMesh&,
-            const word&
+            const fvMesh& mesh,
+            const word& phaseName = word::null
         );
 
 
     //- Destructor
-    virtual ~basicCombustionMixture()
-    {}
+    virtual ~PhysicalPropertiesThermo();
 
 
     // Member Functions
 
-        //- Does the mixture include this specie?
-        inline bool contains(const word& specieName) const;
+        //- Access the properties dictionary
+        virtual const IOdictionary& properties() const;
 
-        //- Return the mass-fraction field for a specie given by name
-        inline volScalarField& Y(const word& specieName);
+        //- Non-const access the properties dictionary
+        virtual IOdictionary& properties();
 
-        //- Return the const mass-fraction field for a specie given by name
-        inline const volScalarField& Y(const word& specieName) const;
-
-        inline scalar fres(const scalar ft, const scalar stoicRatio) const;
-
-        inline tmp<volScalarField> fres
-        (
-            const volScalarField& ft,
-            const dimensionedScalar& stoicRatio
-        ) const;
+        //- Read the properties dictionary
+        virtual bool read();
 };
 
 
@@ -119,7 +85,9 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "basicCombustionMixtureI.H"
+#ifdef NoRepository
+    #include "PhysicalPropertiesThermo.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

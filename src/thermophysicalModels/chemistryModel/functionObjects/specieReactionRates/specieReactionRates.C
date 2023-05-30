@@ -58,7 +58,7 @@ void Foam::functionObjects::specieReactionRates::writeFileHeader(const label i)
     writeTabbed(file(), "Reaction");
 
     const wordList& speciesNames =
-        chemistryModel_.thermo().composition().species();
+        chemistryModel_.thermo().species();
 
     forAll (speciesNames, si)
     {

@@ -30,13 +30,10 @@ License
 template<class ThermoType>
 Foam::singleComponentMixture<ThermoType>::singleComponentMixture
 (
-    const dictionary& thermoDict,
-    const fvMesh& mesh,
-    const word& phaseName
+    const dictionary& dict
 )
 :
-    basicSpecieMixture(thermoDict, wordList(), mesh, phaseName),
-    mixture_("mixture", thermoDict.subDict("mixture"))
+    mixture_("mixture", dict.subDict("mixture"))
 {}
 
 
@@ -52,10 +49,10 @@ Foam::singleComponentMixture<ThermoType>::~singleComponentMixture()
 template<class ThermoType>
 void Foam::singleComponentMixture<ThermoType>::read
 (
-    const dictionary& thermoDict
+    const dictionary& dict
 )
 {
-    mixture_ = ThermoType("mixture", thermoDict.subDict("mixture"));
+    mixture_ = ThermoType("mixture", dict.subDict("mixture"));
 }
 
 

@@ -50,7 +50,7 @@ SourceFiles
 namespace Foam
 {
 
-class basicSpecieMixture;
+class fluidMulticomponentThermo;
 
 /*---------------------------------------------------------------------------*\
         Class specieTransferMassFractionFvPatchScalarField Declaration
@@ -107,8 +107,11 @@ public:
 
     // Static member functions
 
-        //- Access the composition for the given database
-        static const basicSpecieMixture& composition(const objectRegistry& db);
+        //- Get the thermo from the given database
+        static const fluidMulticomponentThermo& thermo
+        (
+            const objectRegistry& db
+        );
 
 
     // Constructors

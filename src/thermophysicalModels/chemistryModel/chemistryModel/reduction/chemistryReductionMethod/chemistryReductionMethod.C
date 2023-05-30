@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,9 +142,9 @@ void Foam::chemistryReductionMethod<ThermoType>::endReduceMechanism
         {
             stoc[j] = i;
             ctos[i] = j++;
-            if (!chemistry_.active(i))
+            if (!chemistry_.thermo().speciesActive()[i])
             {
-                chemistry_.setActive(i);
+                chemistry_.thermo().setSpecieActive(i);
             }
         }
         else

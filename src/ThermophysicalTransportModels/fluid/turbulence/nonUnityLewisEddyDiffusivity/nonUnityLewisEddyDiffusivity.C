@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,8 +102,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
         )
     );
 
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const PtrList<volScalarField>& Y = composition.Y();
+    const PtrList<volScalarField>& Y = this->thermo().Y();
 
     if (Y.size())
     {
@@ -121,7 +120,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
         {
             const volScalarField hi
             (
-                composition.Hs(i, this->thermo().p(), this->thermo().T())
+                this->thermo().hsi(i, this->thermo().p(), this->thermo().T())
             );
 
             hGradY += fvc::interpolate(hi)*fvc::snGrad(Y[i]);
@@ -158,8 +157,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
         )
     );
 
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const PtrList<volScalarField>& Y = composition.Y();
+    const PtrList<volScalarField>& Y = this->thermo().Y();
 
     tmpDivq.ref() -=
         fvm::laplacianCorrection(this->alpha()*this->alphaEff(), he);
@@ -178,7 +176,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
     {
         const volScalarField hi
         (
-            composition.Hs(i, this->thermo().p(), this->thermo().T())
+            this->thermo().hsi(i, this->thermo().p(), this->thermo().T())
         );
 
         hGradY += fvc::interpolate(hi)*fvc::snGrad(Y[i]);

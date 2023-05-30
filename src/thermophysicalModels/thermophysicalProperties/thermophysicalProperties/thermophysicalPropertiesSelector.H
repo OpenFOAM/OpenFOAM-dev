@@ -98,10 +98,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return
-                "thermophysicalPropertiesSelector<"
-              + ThermophysicalProperties::typeName
-              + '>';
+            return ThermophysicalProperties::typeName;
         }
 
 
@@ -125,16 +122,13 @@ public:
 
         // Fundamental equation of state properties
 
-            //- Liquid density [kg/m^3]
+            //- Density [kg/m^3]
             inline scalar rho(scalar p, scalar T) const;
 
-            //- Liquid compressibility [s^2/m^2]
-            //  Note: currently it is assumed the liquid is incompressible
+            //- Compressibility [s^2/m^2]
             inline scalar psi(scalar p, scalar T) const;
 
             //- Return (Cp - Cv) [J/kg/K]
-            //  Note: currently it is assumed the liquid is incompressible
-            //  so CpMCv 0
             inline scalar CpMCv(scalar p, scalar T) const;
 
 
@@ -165,19 +159,16 @@ public:
             inline scalar S(const scalar p, const scalar T) const;
 
 
+        // Physical properties
+
+            //- Thermal conductivity  [W/m/K]
+            inline scalar kappa(scalar p, scalar T) const;
+
+
         // I-O
 
             //- Write to Ostream
             void write(Ostream& os) const;
-
-
-        // Physical properties
-
-            //- Liquid viscosity [Pa s]
-            inline scalar mu(scalar p, scalar T) const;
-
-            //- Liquid thermal conductivity  [W/m/K]
-            inline scalar kappa(scalar p, scalar T) const;
 };
 
 

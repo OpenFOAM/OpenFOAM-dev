@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,6 +47,11 @@ SourceFiles
 namespace Foam
 {
 
+template<class, class> class heThermo;
+template<class> class heRhoThermo;
+template<class> class heMulticomponentThermo;
+template<class> class heFluidMulticomponentThermo;
+
 /*---------------------------------------------------------------------------*\
                       Class rhoMulticomponentThermo Declaration
 \*---------------------------------------------------------------------------*/
@@ -60,11 +65,25 @@ public:
 
     // Public Classes
 
-        //- Forward declare the implementation class
-        class implementation;
-
         //- Forward declare the composite class
         class composite;
+
+
+    // Public Typedefs
+
+        //- The derived type
+        template<class MixtureType>
+        using heThermoType =
+            heFluidMulticomponentThermo
+            <
+                heMulticomponentThermo
+                <
+                    heRhoThermo
+                    <
+                        heThermo<MixtureType, composite>
+                    >
+                >
+            >;
 
 
     //- Runtime type information
@@ -98,28 +117,6 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-              Class rhoMulticomponentThermo::implementation Declaration
-\*---------------------------------------------------------------------------*/
-
-class rhoMulticomponentThermo::implementation
-:
-    virtual public rhoMulticomponentThermo
-{
-
-public:
-
-    // Constructors
-
-        //- Construct from mesh and phase name
-        implementation(const fvMesh&, const word& phaseName);
-
-
-    //- Destructor
-    virtual ~implementation();
-};
-
-
-/*---------------------------------------------------------------------------*\
                 Class rhoMulticomponentThermo::composite Declaration
 \*---------------------------------------------------------------------------*/
 
@@ -128,25 +125,33 @@ class rhoMulticomponentThermo::composite
     public basicThermo::implementation,
     public fluidThermo::implementation,
     public rhoThermo::implementation,
-    public fluidMulticomponentThermo::implementation,
-    public rhoMulticomponentThermo::implementation
+    public multicomponentThermo::implementation,
+    public rhoMulticomponentThermo
 {
 public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
+        //- Construct from dictionary, mesh and phase name
+        template<class MixtureType>
         composite
         (
+            const dictionary& dict,
+            const MixtureType& mixture,
             const fvMesh& mesh,
             const word& phaseName
         )
         :
-            basicThermo::implementation(mesh, phaseName),
-            fluidThermo::implementation(mesh, phaseName),
-            rhoThermo::implementation(mesh, phaseName),
-            fluidMulticomponentThermo::implementation(mesh, phaseName),
-            rhoMulticomponentThermo::implementation(mesh, phaseName)
+            basicThermo::implementation(dict, mesh, phaseName),
+            fluidThermo::implementation(dict, mesh, phaseName),
+            rhoThermo::implementation(dict, mesh, phaseName),
+            multicomponentThermo::implementation
+            (
+                dict,
+                mixture.specieNames(),
+                mesh,
+                phaseName
+            )
         {}
 };
 

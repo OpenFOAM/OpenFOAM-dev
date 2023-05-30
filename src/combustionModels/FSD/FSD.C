@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,9 +107,9 @@ void Foam::combustionModels::FSD::calculateSourceNorm()
 
     const label fuelI = this->fuelIndex();
 
-    const volScalarField& YFuel = this->thermo().composition().Y()[fuelI];
+    const volScalarField& YFuel = this->thermo().Y()[fuelI];
 
-    const volScalarField& YO2 = this->thermo().composition().Y("O2");
+    const volScalarField& YO2 = this->thermo().Y("O2");
 
     const dimensionedScalar s = this->s();
 
@@ -298,7 +298,7 @@ void Foam::combustionModels::FSD::calculateSourceNorm()
     forAll(productsIndex, j)
     {
         label specieI = productsIndex[j];
-        const volScalarField& Yp = this->thermo().composition().Y()[specieI];
+        const volScalarField& Yp = this->thermo().Y()[specieI];
         products += Yp;
     }
 

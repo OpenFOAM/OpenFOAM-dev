@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ SourceFiles
 #ifndef solidThermo_H
 #define solidThermo_H
 
-#include "basicThermo.H"
+#include "pureThermo.H"
 #include "uniformGeometricFields.H"
 #include "fvScalarMatrix.H"
 
@@ -46,6 +46,9 @@ SourceFiles
 
 namespace Foam
 {
+
+template<class, class> class heThermo;
+template<class> class heSolidThermo;
 
 /*---------------------------------------------------------------------------*\
                          Class solidThermo Declaration
@@ -64,6 +67,16 @@ public:
 
         //- Forward declare the composite class
         class composite;
+
+
+    // Public Typedefs
+
+        //- The derived type
+        template<class MixtureType>
+        using heThermoType = heSolidThermo<heThermo<MixtureType, composite>>;
+
+        //- The derived name
+        static const word heThermoName;
 
 
     //- Runtime type information
@@ -144,16 +157,8 @@ public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
-        implementation(const fvMesh&, const word& phaseName);
-
-        //- Construct from mesh, dictionary and phase name
-        implementation
-        (
-            const fvMesh&,
-            const dictionary& dict,
-            const word& phaseName
-        );
+        //- Construct from dictionary, mesh and phase name
+        implementation(const dictionary&, const fvMesh&, const word&);
 
 
     //- Destructor
@@ -180,21 +185,36 @@ public:
 class solidThermo::composite
 :
     public basicThermo::implementation,
+    public pureThermo,
     public solidThermo::implementation
 {
 public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
+        //- Construct from dictionary, mesh and phase name
         composite
         (
+            const dictionary& dict,
             const fvMesh& mesh,
             const word& phaseName
         )
         :
-            basicThermo::implementation(mesh, phaseName),
-            solidThermo::implementation(mesh, phaseName)
+            basicThermo::implementation(dict, mesh, phaseName),
+            solidThermo::implementation(dict, mesh, phaseName)
+        {}
+
+        //- Construct from dictionary, mesh and phase name
+        template<class MixtureType>
+        composite
+        (
+            const dictionary& dict,
+            const MixtureType& mixture,
+            const fvMesh& mesh,
+            const word& phaseName
+        )
+        :
+            composite(dict, mesh, phaseName)
         {}
 };
 

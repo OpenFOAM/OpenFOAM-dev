@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::heSolidThermo
 
 Description
-    Energy for a solid mixture
+    Thermo implementation for a solid
 
 SourceFiles
     heSolidThermo.C
@@ -46,10 +46,10 @@ namespace Foam
                         Class heSolidThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class BasicSolidThermo, class MixtureType>
+template<class HeThermo>
 class heSolidThermo
 :
-    public heThermo<BasicSolidThermo, MixtureType>
+    public HeThermo
 {
 protected:
 
@@ -67,24 +67,13 @@ protected:
 
 public:
 
-    //- Runtime type information
-    TypeName("heSolidThermo");
-
-
     // Constructors
 
         //- Construct from mesh and phase name
-        heSolidThermo
-        (
-            const fvMesh&,
-            const word& phaseName
-        );
+        heSolidThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        heSolidThermo
-        (
-            const heSolidThermo<BasicSolidThermo, MixtureType>&
-        ) = delete;
+        heSolidThermo(const heSolidThermo<HeThermo>&) = delete;
 
 
     //- Destructor
@@ -99,7 +88,7 @@ public:
         //- Return true if thermal conductivity is isotropic
         virtual bool isotropic() const
         {
-            return MixtureType::thermoType::isotropic;
+            return HeThermo::mixtureType::thermoType::isotropic;
         }
 
         //- Anisotropic thermal conductivity [W/m/K]
@@ -109,10 +98,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=
-        (
-            const heSolidThermo<BasicSolidThermo, MixtureType>&
-        ) = delete;
+        void operator=(const heSolidThermo<HeThermo>&) = delete;
 };
 
 

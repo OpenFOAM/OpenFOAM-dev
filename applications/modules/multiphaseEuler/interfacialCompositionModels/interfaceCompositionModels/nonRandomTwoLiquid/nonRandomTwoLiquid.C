@@ -87,8 +87,8 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
     species1Name_ = species()[0];
     species2Name_ = species()[1];
 
-    species1Index_ = composition().species()[species1Name_];
-    species2Index_ = composition().species()[species2Name_];
+    species1Index_ = thermo().species()[species1Name_];
+    species2Index_ = thermo().species()[species2Name_];
 
     alpha12_ = dimensionedScalar
     (
@@ -171,25 +171,25 @@ void Foam::interfaceCompositionModels::nonRandomTwoLiquid::update
 
     const volScalarField X1
     (
-        composition().Y(species1Index_)
+        thermo().Y(species1Index_)
        *W
        /dimensionedScalar
         (
             "W",
             dimMass/dimMoles,
-            composition().Wi(species1Index_)
+            thermo().Wi(species1Index_)
         )
     );
 
     const volScalarField X2
     (
-        composition().Y(species2Index_)
+        thermo().Y(species2Index_)
        *W
        /dimensionedScalar
         (
             "W",
             dimMass/dimMoles,
-            composition().Wi(species2Index_)
+            thermo().Wi(species2Index_)
         )
     );
 
@@ -233,21 +233,21 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::Yf
     if (speciesName == species1Name_)
     {
         return
-            otherComposition().Y(speciesName)
+            otherMulticomponentThermo().Y(speciesName)
            *speciesModel1_->Yf(speciesName, Tf)
            *gamma1_;
     }
     else if (speciesName == species2Name_)
     {
         return
-            otherComposition().Y(speciesName)
+            otherMulticomponentThermo().Y(speciesName)
            *speciesModel2_->Yf(speciesName, Tf)
            *gamma2_;
     }
     else
     {
         return
-            composition().Y(speciesName)
+            thermo().Y(speciesName)
            *(scalar(1) - Yf(species1Name_, Tf) - Yf(species2Name_, Tf));
     }
 }
@@ -263,21 +263,21 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::YfPrime
     if (speciesName == species1Name_)
     {
         return
-            otherComposition().Y(speciesName)
+            otherMulticomponentThermo().Y(speciesName)
            *speciesModel1_->YfPrime(speciesName, Tf)
            *gamma1_;
     }
     else if (speciesName == species2Name_)
     {
         return
-            otherComposition().Y(speciesName)
+            otherMulticomponentThermo().Y(speciesName)
            *speciesModel2_->YfPrime(speciesName, Tf)
            *gamma2_;
     }
     else
     {
         return
-          - composition().Y(speciesName)
+          - thermo().Y(speciesName)
            *(YfPrime(species1Name_, Tf) + YfPrime(species2Name_, Tf));
     }
 }

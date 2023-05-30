@@ -25,7 +25,7 @@ Class
     Foam::combustionModels::singleStepCombustion
 
 Description
-    Base class for combustion models using basicSpecieMixture.
+    Base class for single-step combustion models
 
 SourceFiles
     singleStepCombustion.C
@@ -36,7 +36,6 @@ SourceFiles
 #define singleStepCombustion_H
 
 #include "combustionModel.H"
-#include "basicSpecieMixture.H"
 #include "reaction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -57,9 +56,6 @@ class singleStepCombustion
 protected:
 
     // Protected data
-
-        //- Reference to the mixture
-        const basicSpecieMixture& mixture_;
 
         //- The single-step reaction
         reaction reaction_;
@@ -131,9 +127,6 @@ public:
     // Member Functions
 
         // Access functions
-
-            //- Return the mixture
-            const basicSpecieMixture& mixture() const;
 
             //- Return the single step reaction
             inline const reaction& singleReaction() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,49 +23,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "basicCombustionMixture.H"
+#include "pureThermo.H"
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-namespace Foam
+inline Foam::nil Foam::pureThermo::cellComposition(const label celli) const
 {
-    defineTypeNameAndDebug(basicCombustionMixture, 0);
+    return nil();
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::basicCombustionMixture::basicCombustionMixture
+inline Foam::nil Foam::pureThermo::patchFaceComposition
 (
-    const dictionary& thermoDict,
-    const wordList& specieNames,
-    const fvMesh& mesh,
-    const word& phaseName
-)
-:
-    basicMixture(thermoDict, mesh, phaseName),
-    species_(specieNames),
-    Y_(species_.size())
+    const label patchi,
+    const label facei
+) const
 {
-    forAll(species_, i)
-    {
-        Y_.set
-        (
-            i,
-            new volScalarField
-            (
-                IOobject
-                (
-                    IOobject::groupName(species_[i], phaseName),
-                    mesh.time().name(),
-                    mesh,
-                    IOobject::MUST_READ,
-                    IOobject::AUTO_WRITE
-                ),
-                mesh
-            )
-        );
-    }
+    return nil();
 }
 
 
