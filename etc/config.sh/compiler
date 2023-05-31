@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -39,12 +39,6 @@ OpenFOAM | ThirdParty)
     mpc_version=mpc-1.0.1
 
     case "$WM_COMPILER" in
-    Gcc48)
-        gcc_version=gcc-4.8.5
-        ;;
-    Gcc49)
-        gcc_version=gcc-4.9.4
-        ;;
     Gcc55)
         gcc_version=gcc-5.5.0
         ;;
@@ -81,5 +75,4 @@ OpenFOAM | ThirdParty)
         ;;
     esac
     ;;
-
 esac
