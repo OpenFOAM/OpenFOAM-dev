@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,6 +85,7 @@ class lineCellFace
         //- Calculate all the sampling points
         virtual void calcSamples
         (
+            const label storeFaces,
             DynamicList<point>& samplingPositions,
             DynamicList<scalar>& samplingDistances,
             DynamicList<label>& samplingSegments,
@@ -93,7 +94,7 @@ class lineCellFace
         ) const;
 
         //- Uses calcSamples to obtain samples and copies them into *this
-        void genSamples();
+        void genSamples(const label storeFaces);
 
 
 public:

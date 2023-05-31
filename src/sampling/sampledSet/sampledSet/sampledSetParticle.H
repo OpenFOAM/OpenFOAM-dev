@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ public:
         const bool storeSet_;
 
         //- Are we storing the faces we track through?
-        const bool storeFaces_;
+        const label storeFaces_;
 
         //- Are we storing the cells we track through?
         const bool storeCells_;
@@ -97,9 +97,9 @@ public:
         (
             sampledSetCloud& cloud,
             const List<point>& set,
-            bool storeSet,
-            bool storeFaces,
-            bool storeCells,
+            const bool storeSet,
+            const label storeFaces,
+            const bool storeCells,
             DynamicList<point>& positions,
             DynamicList<scalar>& distances,
             DynamicList<label>& cells,
@@ -210,6 +210,10 @@ public:
 
             //- Hit a wall patch. Ends the track.
             void hitWallPatch(sampledSetCloud&, trackingData&);
+
+            //- Do corrections to the particle and tracking data following a
+            //  transfer between processors
+            void correctAfterParallelTransfer(sampledSetCloud&, trackingData&);
 
 
     // IOstream Operators

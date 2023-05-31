@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,16 +93,16 @@ void Foam::functionObjects::interfaceHeight::writePositions()
         // line. The latter is equal to the equivalent length with alpha equal
         // to one.
         scalar sumLength = 0, sumLengthAlpha = 0;
-        for(label si = 0; si < set.size() - 1; ++ si)
+        for (label si = 0; si < set.size() - 1; ++ si)
         {
-            if (set.segments()[si] != set.segments()[si+1])
-            {
-                continue;
-            }
+            if (set.segments()[si] != set.segments()[si+1]) continue;
 
             const vector& p0 = set.pointCoord(si), p1 = set.pointCoord(si+1);
             const label c0 = set.cells()[si], c1 = set.cells()[si+1];
             const label f0 = set.faces()[si], f1 = set.faces()[si+1];
+
+            if (f0 != -1 && f1 != -1) continue;
+
             const scalar a0 = interpolator->interpolate(p0, c0, f0);
             const scalar a1 = interpolator->interpolate(p1, c1, f1);
 

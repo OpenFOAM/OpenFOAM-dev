@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,7 @@ namespace sampledSets
 
 void Foam::sampledSets::lineCellFace::calcSamples
 (
+    const label storeFaces,
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>& samplingDistances,
     DynamicList<label>& samplingSegments,
@@ -58,7 +59,7 @@ void Foam::sampledSets::lineCellFace::calcSamples
         searchEngine(),
         start_,
         end_,
-        true,
+        storeFaces,
         true,
         samplingPositions,
         samplingDistances,
@@ -69,7 +70,7 @@ void Foam::sampledSets::lineCellFace::calcSamples
 }
 
 
-void Foam::sampledSets::lineCellFace::genSamples()
+void Foam::sampledSets::lineCellFace::genSamples(const label storeFaces)
 {
     DynamicList<point> samplingPositions;
     DynamicList<scalar> samplingDistances;
@@ -79,6 +80,7 @@ void Foam::sampledSets::lineCellFace::genSamples()
 
     calcSamples
     (
+        storeFaces,
         samplingPositions,
         samplingDistances,
         samplingSegments,
@@ -117,7 +119,7 @@ Foam::sampledSets::lineCellFace::lineCellFace
     start_(dict.lookup("start")),
     end_(dict.lookup("end"))
 {
-    genSamples();
+    genSamples(1);
 }
 
 
@@ -135,7 +137,7 @@ Foam::sampledSets::lineCellFace::lineCellFace
     start_(start),
     end_(end)
 {
-    genSamples();
+    genSamples(2);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ void Foam::sampledSets::lineFace::calcSamples
     const meshSearch& searchEngine,
     const vector& start,
     const vector& end,
-    const bool storeFaces,
+    const label storeFaces,
     const bool storeCells,
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>& samplingDistances,
@@ -280,7 +280,7 @@ void Foam::sampledSets::lineFace::calcSamples
         searchEngine(),
         start_,
         end_,
-        true,
+        1,
         false,
         samplingPositions,
         samplingDistances,
