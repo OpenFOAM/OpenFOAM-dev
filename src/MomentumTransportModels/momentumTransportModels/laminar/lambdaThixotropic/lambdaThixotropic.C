@@ -96,10 +96,11 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
             this->groupName(typedName("nu")),
             this->runTime_.name(),
             this->mesh_,
-            IOobject::NO_READ,
+            IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        calcNu(strainRate())
+        this->mesh_,
+        nu0_
     )
 {}
 
