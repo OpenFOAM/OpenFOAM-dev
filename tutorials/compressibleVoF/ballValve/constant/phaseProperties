@@ -16,13 +16,10 @@ FoamFile
 
 phases          (vapour water);
 
-pMin            100;
-
 sigma
 {
     type    liquidProperties;
     phase   water;
 }
-
 
 // ************************************************************************* //
