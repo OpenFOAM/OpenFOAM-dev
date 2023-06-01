@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,10 +217,16 @@ public:
         //  Foam::findEtcFile
         string& expand(const bool allowEmpty = false);
 
-        //- Remove repeated characters returning true if string changed
+        //- Remove all occurrences of character returning true if string changed
+        bool remove(const char);
+
+        //- Remove all occurrences of character and return the string
+        string remove(const char) const;
+
+        //- Remove repeated character returning true if string changed
         bool removeRepeated(const char);
 
-        //- Return string with repeated characters removed
+        //- Remove repeated character and return the string
         string removeRepeated(const char) const;
 
         //- Remove trailing character returning true if string changed

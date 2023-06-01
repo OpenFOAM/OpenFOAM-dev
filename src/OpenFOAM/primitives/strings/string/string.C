@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,6 +129,49 @@ Foam::string& Foam::string::expand(const bool allowEmpty)
 }
 
 
+bool Foam::string::remove(const char character)
+{
+    bool changed = false;
+
+    string::size_type n = 0;
+    iterator iter2 = begin();
+
+    for
+    (
+        string::const_iterator iter1 = iter2;
+        iter1 != end();
+        ++iter1
+    )
+    {
+        char c = *iter1;
+
+        if (c == character)
+        {
+            changed = true;
+        }
+        else
+        {
+            *iter2 = c;
+            ++iter2;
+            ++n;
+        }
+    }
+
+    resize(n);
+
+    return changed;
+}
+
+
+Foam::string Foam::string::remove(const char character) const
+{
+    string str(*this);
+    str.remove(character);
+    return str;
+}
+
+
+
 bool Foam::string::removeRepeated(const char character)
 {
     bool changed = false;
@@ -142,7 +185,7 @@ bool Foam::string::removeRepeated(const char character)
     (
         string::const_iterator iter1 = iter2;
         iter1 != end();
-        ++ iter1
+        ++iter1
     )
     {
         char c = *iter1;
@@ -154,8 +197,8 @@ bool Foam::string::removeRepeated(const char character)
         else
         {
             *iter2 = cPrev = c;
-            ++ iter2;
-            ++ n;
+            ++iter2;
+            ++n;
         }
     }
 
