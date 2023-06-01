@@ -285,7 +285,7 @@ public:
         const surfaceScalarField& phi;
 
 
-private:
+protected:
 
     // Momentum transport
 
