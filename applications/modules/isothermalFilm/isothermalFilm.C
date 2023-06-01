@@ -357,19 +357,6 @@ Foam::solvers::isothermalFilm::isothermalFilm
     surfaceTension(surfaceTensionModel::New(thermo_.properties(), mesh)),
     thermocapillary(!isType<surfaceTensionModels::constant>(surfaceTension())),
 
-    momentumTransport
-    (
-        filmCompressible::momentumTransportModel::New
-        (
-            alpha_,
-            thermo_.rho(),
-            U_,
-            alphaRhoPhi_,
-            phi_,
-            thermo_
-        )
-    ),
-
     g
     (
         IOobject
@@ -391,7 +378,20 @@ Foam::solvers::isothermalFilm::isothermalFilm
     rho(thermo_.rho()),
     U(U_),
     alphaRhoPhi(alphaRhoPhi_),
-    phi(phi_)
+    phi(phi_),
+
+    momentumTransport
+    (
+        filmCompressible::momentumTransportModel::New
+        (
+            alpha,
+            thermo.rho(),
+            U,
+            alphaRhoPhi,
+            phi,
+            thermo
+        )
+    )
 {
     // Read the controls
     readControls();

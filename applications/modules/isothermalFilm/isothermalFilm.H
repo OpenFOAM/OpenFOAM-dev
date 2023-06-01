@@ -155,12 +155,6 @@ protected:
         bool thermocapillary;
 
 
-    // Momentum transport
-
-        //- Pointer to the momentum transport model
-        autoPtr<filmCompressible::momentumTransportModel> momentumTransport;
-
-
     // Cached temporary fields
 
         //- Cached momentum matrix
@@ -289,6 +283,14 @@ public:
 
         //- Reference to the film volumetric-flux field
         const surfaceScalarField& phi;
+
+
+private:
+
+    // Momentum transport
+
+        //- Pointer to the momentum transport model
+        autoPtr<filmCompressible::momentumTransportModel> momentumTransport;
 
 
 public:
