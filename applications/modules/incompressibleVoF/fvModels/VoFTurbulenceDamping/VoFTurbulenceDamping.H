@@ -55,8 +55,6 @@ Usage
     {
         type    VoFTurbulenceDamping;
 
-        libs    ("libVoFTurbulenceDamping.so");
-
         // Interface turbulence damping length scale
         // This is a required input as described in section 3.3 of the paper
         delta   1e-4;

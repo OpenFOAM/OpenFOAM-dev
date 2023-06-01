@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,32 +65,34 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
         Info<< "Selecting function " << functionType << endl;
     }
 
-    if (dict.found("functionObjectLibs"))
+    if
+    (
+        !dictionaryConstructorTablePtr_
+     || dictionaryConstructorTablePtr_->find(functionType)
+        == dictionaryConstructorTablePtr_->end()
+    )
     {
-        libs.open
+        if
         (
-            dict,
-            "functionObjectLibs",
-            dictionaryConstructorTablePtr_
-        );
-    }
-    else
-    {
-        libs.open
-        (
-            dict,
-            "libs",
-            dictionaryConstructorTablePtr_
-        );
-    }
+           !libs.open
+            (
+                dict,
+                "libs",
+                dictionaryConstructorTablePtr_
+            )
+        )
+        {
+            libs.open("lib" + functionType.remove(':') + ".so", false);
+        }
 
-    if (!dictionaryConstructorTablePtr_)
-    {
-        FatalErrorInFunction
-            << "Unknown function type "
-            << functionType << nl << nl
-            << "Table of functionObjects is empty"
-            << exit(FatalError);
+        if (!dictionaryConstructorTablePtr_)
+        {
+            FatalErrorInFunction
+                << "Unknown function type "
+                << functionType << nl << nl
+                << "Table of functionObjects is empty"
+                << exit(FatalError);
+        }
     }
 
     dictionaryConstructorTable::iterator cstrIter =

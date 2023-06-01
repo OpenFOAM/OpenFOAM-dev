@@ -56,8 +56,6 @@ Usage
     {
         type    filmCloudTransfer;
 
-        libs    ("libfilmCloudTransfer.so");
-
         ejection
         {
             model   BrunDripping;

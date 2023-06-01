@@ -67,7 +67,7 @@ functions
     writeWallBoilingProperties
     {
         type            wallBoilingProperties;
-        functionObjectLibs ( "libmultiphaseEulerFoamFunctionObjects.so" );
+        libs            ( "libmultiphaseEulerFoamFunctionObjects.so" );
         writeControl    writeTime;
         executeAtStart  no;
         region          fluid;
@@ -76,7 +76,7 @@ functions
     outflow
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         region          fluid;
@@ -88,7 +88,7 @@ functions
     inflow
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         region          fluid;
@@ -100,7 +100,7 @@ functions
     outletGas
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         region          fluid;
@@ -113,7 +113,7 @@ functions
     outletLiquid
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         region          fluid;
@@ -126,7 +126,7 @@ functions
     inletGas
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         region          fluid;
@@ -139,7 +139,7 @@ functions
     inletLiquid
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         region          fluid;
@@ -153,7 +153,7 @@ functions
     {
         type        writeObjects;
         libs        ("libutilityFunctionObjects.so");
-        region          fluid;
+        region      fluid;
 
         objects
         (
@@ -168,6 +168,7 @@ functions
             h.liquid
             h.gas
         );
+
         writeControl    writeTime;
         writeInterval   1;
     }

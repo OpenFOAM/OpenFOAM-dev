@@ -18,8 +18,6 @@ VoFClouds
 {
     type    VoFClouds;
 
-    libs    ("libVoFClouds.so");
-
     phase   liquid;
     carrierPhase air;
 }

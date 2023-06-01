@@ -55,8 +55,6 @@ Usage
     {
         type    VoFTurbulenceDamping;
 
-        libs    ("libcompressibleVoFTurbulenceDamping.so");
-
         // Interface momentumTransport damping length scale
         // This is a required input as described in section 3.3 of the paper
         delta   1e-4;

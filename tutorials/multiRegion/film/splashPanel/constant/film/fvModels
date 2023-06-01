@@ -17,8 +17,6 @@ FoamFile
 filmCloudTransfer
 {
     type    filmCloudTransfer;
-
-    libs    ("libfilmCloudTransfer.so");
 }
 
 // ************************************************************************* //

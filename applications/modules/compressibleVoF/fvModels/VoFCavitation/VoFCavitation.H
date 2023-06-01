@@ -34,8 +34,6 @@ Usage
     {
         type    VoFCavitation;
 
-        libs    ("libcompressibleVoFCavitation.so");
-
         model   SchnerrSauer;
 
         KunzCoeffs

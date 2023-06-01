@@ -94,27 +94,50 @@ Foam::autoPtr<Foam::fvModel> Foam::fvModel::New
 (
     const word& name,
     const fvMesh& mesh,
-    const dictionary& coeffs
+    const dictionary& dict
 )
 {
-    const word modelType(coeffs.lookup("type"));
+    const word modelType(dict.lookup("type"));
 
     Info<< indent
         << "Selecting finite volume model type " << modelType << endl;
 
-    libs.open
+    if
     (
-        coeffs,
-        "libs",
-        dictionaryConstructorTablePtr_
-    );
+        !dictionaryConstructorTablePtr_
+     || dictionaryConstructorTablePtr_->find(modelType)
+        == dictionaryConstructorTablePtr_->end()
+    )
+    {
+        if
+        (
+           !libs.open
+            (
+                dict,
+                "libs",
+                dictionaryConstructorTablePtr_
+            )
+        )
+        {
+            libs.open("lib" + modelType.remove(':') + ".so", false);
+        }
+
+        if (!dictionaryConstructorTablePtr_)
+        {
+            FatalErrorInFunction
+                << "Unknown model type "
+                << modelType << nl << nl
+                << "Table of fvModels is empty"
+                << exit(FatalError);
+        }
+    }
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(coeffs)
+        FatalIOErrorInFunction(dict)
             << "Unknown fvModel " << modelType << nl << nl
             << "Valid fvModels are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()
@@ -123,7 +146,7 @@ Foam::autoPtr<Foam::fvModel> Foam::fvModel::New
 
     return autoPtr<fvModel>
     (
-        cstrIter()(name, modelType, mesh, coeffs)
+        cstrIter()(name, modelType, mesh, dict)
     );
 }
 

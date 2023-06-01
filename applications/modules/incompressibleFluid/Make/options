@@ -7,12 +7,4 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 LIB_LIBS = \
-    -lfluidSolver \
-    -lmomentumTransportModels \
-    -lincompressibleMomentumTransportModels \
-    -lphysicalProperties \
-    -lfiniteVolume \
-    -lfvModels \
-    -lfvConstraints \
-    -lsampling \
-    -lmeshTools
+    -lfluidSolver

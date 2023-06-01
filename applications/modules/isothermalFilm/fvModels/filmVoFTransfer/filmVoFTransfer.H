@@ -34,8 +34,6 @@ Usage
     {
         type    filmVoFTransfer;
 
-        libs    ("libfilmVoFTransfer.so");
-
         deltaFactorToVoF  1.5;
         alphaToVoF        0.9;
 

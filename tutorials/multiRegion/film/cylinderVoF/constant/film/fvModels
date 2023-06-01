@@ -17,15 +17,11 @@ FoamFile
 filmCloudTransfer
 {
     type    filmCloudTransfer;
-
-    libs    ("libfilmCloudTransfer.so");
 }
 
 filmVoFTransfer
 {
     type    filmVoFTransfer;
-
-    libs    ("libfilmVoFTransfer.so");
 
     deltaFactorToVoF  0.3;
     alphaToVoF        0.3;

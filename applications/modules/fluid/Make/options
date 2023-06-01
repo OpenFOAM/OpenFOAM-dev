@@ -17,11 +17,5 @@ LIB_LIBS = \
     -lfluidSolver \
     -lisothermalFluid \
     -lfluidThermophysicalModels \
-    -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
-    -lcoupledThermophysicalTransportModels \
-    -lfiniteVolume \
-    -lmeshTools \
-    -lsampling \
-    -lfvModels \
-    -lfvConstraints
+    -lcoupledThermophysicalTransportModels

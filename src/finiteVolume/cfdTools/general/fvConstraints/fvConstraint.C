@@ -82,27 +82,50 @@ Foam::autoPtr<Foam::fvConstraint> Foam::fvConstraint::New
 (
     const word& name,
     const fvMesh& mesh,
-    const dictionary& coeffs
+    const dictionary& dict
 )
 {
-    const word constraintType(coeffs.lookup("type"));
+    const word constraintType(dict.lookup("type"));
 
     Info<< indent
         << "Selecting finite volume constraint type " << constraintType << endl;
 
-    libs.open
+    if
     (
-        coeffs,
-        "libs",
-        dictionaryConstructorTablePtr_
-    );
+        !dictionaryConstructorTablePtr_
+     || dictionaryConstructorTablePtr_->find(constraintType)
+        == dictionaryConstructorTablePtr_->end()
+    )
+    {
+        if
+        (
+           !libs.open
+            (
+                dict,
+                "libs",
+                dictionaryConstructorTablePtr_
+            )
+        )
+        {
+            libs.open("lib" + constraintType.remove(':') + ".so", false);
+        }
+
+        if (!dictionaryConstructorTablePtr_)
+        {
+            FatalErrorInFunction
+                << "Unknown constraint type "
+                << constraintType << nl << nl
+                << "Table of fvConstraints is empty"
+                << exit(FatalError);
+        }
+    }
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(constraintType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(coeffs)
+        FatalIOErrorInFunction(dict)
             << "Unknown fvConstraint " << constraintType << nl << nl
             << "Valid fvConstraints are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()
@@ -111,7 +134,7 @@ Foam::autoPtr<Foam::fvConstraint> Foam::fvConstraint::New
 
     return autoPtr<fvConstraint>
     (
-        cstrIter()(name, constraintType, mesh, coeffs)
+        cstrIter()(name, constraintType, mesh, dict)
     );
 }
 

@@ -57,14 +57,14 @@ functions
     writeWallBoilingProperties
     {
         type            wallBoilingProperties;
-        functionObjectLibs ( "libmultiphaseEulerFoamFunctionObjects.so" );
+        libs            ( "libmultiphaseEulerFoamFunctionObjects.so" );
         writeControl    writeTime;
         phase           liquid;
     }
     outflow
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         select          patch;
@@ -75,7 +75,7 @@ functions
     inflow
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         select          patch;
@@ -86,7 +86,7 @@ functions
     outletGas
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         select          patch;
@@ -98,7 +98,7 @@ functions
     outletLiquid
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         select          patch;
@@ -110,7 +110,7 @@ functions
     inletGas
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         select          patch;
@@ -122,7 +122,7 @@ functions
     inletLiquid
     {
         type            surfaceFieldValue;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs            ( "libfieldFunctionObjects.so" );
         log             yes;
         writeFields     false;
         select          patch;

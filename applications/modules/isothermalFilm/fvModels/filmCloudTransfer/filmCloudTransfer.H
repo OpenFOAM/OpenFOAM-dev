@@ -33,8 +33,6 @@ Usage
     filmCloudTransfer
     {
         type    filmCloudTransfer;
-
-        libs    ("libfilmCloudTransfer.so");
     }
     \endverbatim
 
