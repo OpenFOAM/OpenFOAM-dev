@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,65 +89,74 @@ class MaxwellStefan
 
             //- Generalised Fick's law diffusion coefficients field list.
             //  This is the diagonal of the mass diffusion coefficient matrix
-            PtrList<volScalarField> Dii_;
+            mutable PtrList<volScalarField> Dii_;
 
             //- List of fields of the explicit part of the mass diffusion flux
             // of the species
-            PtrList<surfaceScalarField> jexp_;
+            mutable PtrList<surfaceScalarField> jexp_;
 
 
         // Workspace for diffusion coefficient transformation
 
             //- Molecular weights of the species
-            scalarField W;
+            mutable scalarField W;
 
             //- List of mass-fraction field pointers
             //  for the internal mesh or a patch
-            List<const scalarField*> YPtrs;
+            mutable List<const scalarField*> YPtrs;
 
             //- Matrix of mass diffusion coefficient field pointers
             //  for the internal mesh or a patch
-            SquareMatrix<scalarField*> DijPtrs;
+            mutable SquareMatrix<scalarField*> DijPtrs;
 
             //- Mass-fractions at a cell or face
-            scalarField Y;
+            mutable scalarField Y;
 
             //- Mole-fractions at a cell or face
-            scalarField X;
+            mutable scalarField X;
 
             //- Binary mass diffusion coefficient matrix at a cell or face
-            scalarSquareMatrix DD;
+            mutable scalarSquareMatrix DD;
 
             //- Matrix form of the coefficients in the Maxwell-Stefan equation
             //  at a cell or face
-            LUscalarMatrix A;
+            mutable LUscalarMatrix A;
 
             //- Matrix of composition coefficients at a cell or face
             //  used to transform the binary mass diffusion coefficients into
             //  the generalised Fick's law diffusion coefficients
-            scalarSquareMatrix B;
+            mutable scalarSquareMatrix B;
 
             //- Inverse of A
-            scalarSquareMatrix invA;
+            mutable scalarSquareMatrix invA;
 
             //- Matrix of the generalised Fick's law diffusion coefficients
             //  at a cell or face
-            scalarSquareMatrix D;
+            mutable scalarSquareMatrix D;
 
 
     // Private member functions
 
         //- Transform the Binary mass diffusion coefficient matrix DD into the
         //  matrix of the generalised Fick's law diffusion coefficients D
-        void transformDiffusionCoefficient();
+        void transformDiffusionCoefficient() const;
 
         //- Calls transformDiffusionCoefficient() for each cell and patch face
         //  and maps the resulting D into DijPtrs
-        void transformDiffusionCoefficientFields();
+        void transformDiffusionCoefficientFields() const;
 
         //- Calls transformDiffusionCoefficientFields() for the internal mesh
         //  and each patch and maps the resulting DijPtrs into Dii_ and Dij
-        void transform(List<PtrList<volScalarField>>& Dij);
+        void transform(List<PtrList<volScalarField>>& Dij) const;
+
+        //- Update Dii_
+        void updateDii() const;
+
+        //- Update Dii_ if not yet constructed and return
+        const PtrList<volScalarField>& Dii() const;
+
+        //- Update jexp_ if not yet constructed and return
+        const PtrList<surfaceScalarField>& jexp() const;
 
 
 public:

@@ -45,6 +45,12 @@ makeLaminarThermophysicalTransportModel(Fourier);
 #include "unityLewisFourier.H"
 makeLaminarThermophysicalTransportModel(unityLewisFourier);
 
+#include "FickianFourier.H"
+makeLaminarThermophysicalTransportModel(FickianFourier);
+
+#include "MaxwellStefanFourier.H"
+makeLaminarThermophysicalTransportModel(MaxwellStefanFourier);
+
 
 // -------------------------------------------------------------------------- //
 // RAS models
@@ -58,6 +64,9 @@ makeRASLESThermophysicalTransportModel(RAS, unityLewisEddyDiffusivity);
 
 #include "nonUnityLewisEddyDiffusivity.H"
 makeRASLESThermophysicalTransportModel(RAS, nonUnityLewisEddyDiffusivity);
+
+#include "FickianEddyDiffusivity.H"
+makeRASLESThermophysicalTransportModel(RAS, FickianEddyDiffusivity);
 
 
 // -------------------------------------------------------------------------- //

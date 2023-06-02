@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,16 @@ class Fickian
             PtrList<Function2<scalar>> DTFuncs_;
 
             //- Mass diffusion coefficients in the mixture
-            PtrList<volScalarField> Dm_;
+            mutable PtrList<volScalarField> Dm_;
+
+
+    // Private member functions
+
+        //- Update Dm_
+        void updateDm() const;
+
+        //- Update Dm_ if not yet constructed and return
+        const PtrList<volScalarField>& Dm() const;
 
 
 public:

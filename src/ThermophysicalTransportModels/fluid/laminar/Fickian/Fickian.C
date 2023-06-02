@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,91 @@ License
 
 namespace Foam
 {
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class BasicThermophysicalTransportModel>
+void Fickian<BasicThermophysicalTransportModel>::updateDm() const
+{
+    const basicSpecieMixture& composition = this->thermo().composition();
+    const PtrList<volScalarField>& Y = composition.Y();
+    const volScalarField& p = this->thermo().p();
+    const volScalarField& T = this->thermo().T();
+
+    Dm_.setSize(Y.size());
+
+    if (mixtureDiffusionCoefficients_)
+    {
+        forAll(Y, i)
+        {
+            Dm_.set(i, evaluate(DmFuncs_[i], dimViscosity, p, T));
+        }
+    }
+    else
+    {
+        const volScalarField Wm(this->thermo().W());
+        volScalarField sumXbyD
+        (
+            volScalarField::New
+            (
+                "sumXbyD",
+                T.mesh(),
+                dimless/dimViscosity/Wm.dimensions()
+            )
+        );
+
+        forAll(Dm_, i)
+        {
+            sumXbyD = Zero;
+
+            forAll(Y, j)
+            {
+                if (j != i)
+                {
+                    sumXbyD +=
+                        Y[j]
+                       /(
+                           dimensionedScalar
+                           (
+                               "Wj",
+                               Wm.dimensions(),
+                               composition.Wi(j)
+                           )
+                          *(
+                               i < j
+                             ? evaluate(DFuncs_[i][j], dimViscosity, p, T)
+                             : evaluate(DFuncs_[j][i], dimViscosity, p, T)
+                           )
+                       );
+                }
+            }
+
+            Dm_.set
+            (
+                i,
+                (
+                    1/Wm
+                  - Y[i]
+                   /dimensionedScalar("Wi", Wm.dimensions(), composition.Wi(i))
+                )/max(sumXbyD, dimensionedScalar(sumXbyD.dimensions(), small))
+            );
+        }
+    }
+}
+
+
+template<class BasicThermophysicalTransportModel>
+const PtrList<volScalarField>&
+Fickian<BasicThermophysicalTransportModel>::Dm() const
+{
+    if (!Dm_.size())
+    {
+        updateDm();
+    }
+
+    return Dm_;
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -194,7 +279,7 @@ tmp<volScalarField> Fickian<BasicThermophysicalTransportModel>::DEff
     (
         "DEff",
         this->momentumTransport().rho()
-       *Dm_[composition.index(Yi)]
+       *Dm()[composition.index(Yi)]
     );
 }
 
@@ -210,7 +295,7 @@ tmp<scalarField> Fickian<BasicThermophysicalTransportModel>::DEff
 
     return
         this->momentumTransport().rho().boundaryField()[patchi]
-       *Dm_[composition.index(Yi)].boundaryField()[patchi];
+       *Dm()[composition.index(Yi)].boundaryField()[patchi];
 }
 
 
@@ -438,71 +523,7 @@ template<class BasicThermophysicalTransportModel>
 void Fickian<BasicThermophysicalTransportModel>::predict()
 {
     BasicThermophysicalTransportModel::predict();
-
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const PtrList<volScalarField>& Y = composition.Y();
-    const volScalarField& p = this->thermo().p();
-    const volScalarField& T = this->thermo().T();
-
-    Dm_.setSize(Y.size());
-
-    if (mixtureDiffusionCoefficients_)
-    {
-        forAll(Y, i)
-        {
-            Dm_.set(i, evaluate(DmFuncs_[i], dimViscosity, p, T));
-        }
-    }
-    else
-    {
-        const volScalarField Wm(this->thermo().W());
-        volScalarField sumXbyD
-        (
-            volScalarField::New
-            (
-                "sumXbyD",
-                T.mesh(),
-                dimless/dimViscosity/Wm.dimensions()
-            )
-        );
-
-        forAll(Dm_, i)
-        {
-            sumXbyD = Zero;
-
-            forAll(Y, j)
-            {
-                if (j != i)
-                {
-                    sumXbyD +=
-                        Y[j]
-                       /(
-                           dimensionedScalar
-                           (
-                               "Wj",
-                               Wm.dimensions(),
-                               composition.Wi(j)
-                           )
-                          *(
-                               i < j
-                             ? evaluate(DFuncs_[i][j], dimViscosity, p, T)
-                             : evaluate(DFuncs_[j][i], dimViscosity, p, T)
-                           )
-                       );
-                }
-            }
-
-            Dm_.set
-            (
-                i,
-                (
-                    1/Wm
-                  - Y[i]
-                   /dimensionedScalar("Wi", Wm.dimensions(), composition.Wi(i))
-                )/max(sumXbyD, dimensionedScalar(sumXbyD.dimensions(), small))
-            );
-        }
-    }
+    updateDm();
 }
 
 
