@@ -26,7 +26,6 @@ License
 #include "incompressibleFluid.H"
 #include "fvCorrectPhi.H"
 #include "fvcMeshPhi.H"
-#include "geometricZeroField.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
