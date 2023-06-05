@@ -107,7 +107,13 @@ Foam::fvMeshTopoChangers::meshToMesh::~meshToMesh()
 
 bool Foam::fvMeshTopoChangers::meshToMesh::update()
 {
-    if (timeIndex_ == -1)
+    // Add the meshToMeshAdjustTimeStepFunctionObject functionObject
+    // if not already present
+    if
+    (
+        mesh().time().functionObjects().findObjectID("meshToMeshAdjustTimeStep")
+     == -1
+    )
     {
         const_cast<Time&>(mesh().time()).functionObjects().append
         (
