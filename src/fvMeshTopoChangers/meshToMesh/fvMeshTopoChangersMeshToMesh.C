@@ -92,7 +92,7 @@ Foam::fvMeshTopoChangers::meshToMesh::meshToMesh
 {
     forAll(times_, i)
     {
-        timeIndices_.insert(label((times_[i] + timeDelta_/2.0)/timeDelta_));
+        timeIndices_.insert(int64_t((times_[i] + timeDelta_/2.0)/timeDelta_));
     }
 }
 
