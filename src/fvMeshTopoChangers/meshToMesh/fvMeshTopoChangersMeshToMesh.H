@@ -64,7 +64,7 @@ class meshToMesh
         scalar timeDelta_;
 
         //- Hash set of mesh mapping time indices
-        labelHashSet timeIndices_;
+        HashSet<int64_t, Hash<int64_t>> timeIndices_;
 
         //- The time index used for updating
         label timeIndex_;
