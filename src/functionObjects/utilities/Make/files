@@ -13,5 +13,6 @@ removeRegisteredObject/removeRegisteredObject.C
 writeDictionary/writeDictionary.C
 writeObjects/writeObjects.C
 time/timeFunctionObject.C
+checkMesh/checkMesh.C
 
 LIB = $(FOAM_LIBBIN)/libutilityFunctionObjects
