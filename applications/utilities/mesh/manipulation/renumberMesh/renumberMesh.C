@@ -619,8 +619,7 @@ int main(int argc, char *argv[])
     );
 
     #include "setRootCase.H"
-    #include "createTime.H"
-    runTime.functionObjects().off();
+    #include "createTimeNoFunctionObjects.H"
 
     // Force linker to include zoltan symbols. This section is only needed since
     // Zoltan is a static library

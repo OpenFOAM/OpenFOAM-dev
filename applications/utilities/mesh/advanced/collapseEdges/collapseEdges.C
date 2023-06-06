@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,9 +84,7 @@ int main(int argc, char *argv[])
     #include "addDictOption.H"
     #include "addOverwriteOption.H"
     #include "setRootCase.H"
-    #include "createTime.H"
-
-    runTime.functionObjects().off();
+    #include "createTimeNoFunctionObjects.H"
     instantList timeDirs = timeSelector::selectIfPresent(runTime, args);
 
     #include "createMeshNoChangers.H"

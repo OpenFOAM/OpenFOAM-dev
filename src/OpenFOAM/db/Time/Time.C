@@ -332,20 +332,116 @@ void Foam::Time::setControls()
 Foam::Time::Time
 (
     const word& controlDictName,
-    const fileName& rootPath,
-    const fileName& caseName,
-    const word& systemName,
-    const word& constantName,
+    const argList& args,
     const bool enableFunctionObjects
 )
 :
     TimePaths
     (
-        rootPath,
-        caseName,
-        systemName,
-        constantName
+        args.parRunControl().parRun(),
+        args.rootPath(),
+        args.globalCaseName(),
+        args.caseName()
     ),
+
+    objectRegistry(*this),
+
+    runTimeModifiable_(false),
+
+    controlDict_
+    (
+        IOobject
+        (
+            controlDictName,
+            system(),
+            *this,
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE
+        )
+    ),
+
+    startTimeIndex_(0),
+    startTime_(0),
+    endTime_(0),
+    beginTime_(startTime_),
+
+    userTime_(userTimes::userTime::New(controlDict_)),
+
+    stopAt_(stopAtControl::endTime),
+    writeControl_(writeControl::timeStep),
+    writeInterval_(great),
+    purgeWrite_(0),
+    writeOnce_(false),
+
+    subCycling_(false),
+
+    sigWriteNow_(writeInfoHeader, *this),
+    sigStopAtWriteNow_(writeInfoHeader, *this),
+
+    writeFormat_(IOstream::ASCII),
+    writeVersion_(IOstream::currentVersion),
+    writeCompression_(IOstream::UNCOMPRESSED),
+    graphFormat_("raw"),
+    cacheTemporaryObjects_(true),
+
+    functionObjects_
+    (
+        *this,
+        enableFunctionObjects
+      ? argList::validOptions.found("withFunctionObjects")
+        ? args.optionFound("withFunctionObjects")
+        : !args.optionFound("noFunctionObjects")
+      : false
+    )
+{
+    libs.open(controlDict_, "libs");
+
+    // Explicitly set read flags on objectRegistry so anything constructed
+    // from it reads as well (e.g. fvSolution).
+    readOpt() = IOobject::MUST_READ_IF_MODIFIED;
+
+    if (args.options().found("case"))
+    {
+        const wordList switchSets
+        (
+            {
+                "InfoSwitches",
+                "OptimisationSwitches",
+                "DebugSwitches",
+                "DimensionedConstants",
+                "DimensionSets"
+            }
+        );
+
+        forAll(switchSets, i)
+        {
+            if (controlDict_.found(switchSets[i]))
+            {
+                IOWarningInFunction(controlDict_)
+                    << switchSets[i]
+                    << " in system/controlDict are only processed if "
+                    << args.executable() << " is run in the "
+                    << args.path() << " directory" << endl;
+            }
+        }
+    }
+
+    setControls();
+
+    // Add a watch on the controlDict file after runTimeModifiable_ is set
+    controlDict_.addWatch();
+}
+
+
+Foam::Time::Time
+(
+    const word& controlDictName,
+    const fileName& rootPath,
+    const fileName& caseName,
+    const bool enableFunctionObjects
+)
+:
+    TimePaths(rootPath, caseName),
 
     objectRegistry(*this),
 
@@ -404,126 +500,13 @@ Foam::Time::Time
 
 Foam::Time::Time
 (
-    const word& controlDictName,
-    const argList& args,
-    const word& systemName,
-    const word& constantName
-)
-:
-    TimePaths
-    (
-        args.parRunControl().parRun(),
-        args.rootPath(),
-        args.globalCaseName(),
-        args.caseName(),
-        systemName,
-        constantName
-    ),
-
-    objectRegistry(*this),
-
-    runTimeModifiable_(false),
-
-    controlDict_
-    (
-        IOobject
-        (
-            controlDictName,
-            system(),
-            *this,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    ),
-
-    startTimeIndex_(0),
-    startTime_(0),
-    endTime_(0),
-    beginTime_(startTime_),
-
-    userTime_(userTimes::userTime::New(controlDict_)),
-
-    stopAt_(stopAtControl::endTime),
-    writeControl_(writeControl::timeStep),
-    writeInterval_(great),
-    purgeWrite_(0),
-    writeOnce_(false),
-
-    subCycling_(false),
-
-    sigWriteNow_(writeInfoHeader, *this),
-    sigStopAtWriteNow_(writeInfoHeader, *this),
-
-    writeFormat_(IOstream::ASCII),
-    writeVersion_(IOstream::currentVersion),
-    writeCompression_(IOstream::UNCOMPRESSED),
-    graphFormat_("raw"),
-    cacheTemporaryObjects_(true),
-
-    functionObjects_
-    (
-        *this,
-        argList::validOptions.found("withFunctionObjects")
-      ? args.optionFound("withFunctionObjects")
-      : !args.optionFound("noFunctionObjects")
-    )
-{
-    libs.open(controlDict_, "libs");
-
-    // Explicitly set read flags on objectRegistry so anything constructed
-    // from it reads as well (e.g. fvSolution).
-    readOpt() = IOobject::MUST_READ_IF_MODIFIED;
-
-    if (args.options().found("case"))
-    {
-        const wordList switchSets
-        (
-            {
-                "InfoSwitches",
-                "OptimisationSwitches",
-                "DebugSwitches",
-                "DimensionedConstants",
-                "DimensionSets"
-            }
-        );
-
-        forAll(switchSets, i)
-        {
-            if (controlDict_.found(switchSets[i]))
-            {
-                IOWarningInFunction(controlDict_)
-                    << switchSets[i]
-                    << " in system/controlDict are only processed if "
-                    << args.executable() << " is run in the "
-                    << args.path() << " directory" << endl;
-            }
-        }
-    }
-
-    setControls();
-
-    // Add a watch on the controlDict file after runTimeModifiable_ is set
-    controlDict_.addWatch();
-}
-
-
-Foam::Time::Time
-(
     const dictionary& dict,
     const fileName& rootPath,
     const fileName& caseName,
-    const word& systemName,
-    const word& constantName,
     const bool enableFunctionObjects
 )
 :
-    TimePaths
-    (
-        rootPath,
-        caseName,
-        systemName,
-        constantName
-    ),
+    TimePaths(rootPath, caseName),
 
     objectRegistry(*this),
 
@@ -585,18 +568,10 @@ Foam::Time::Time
 (
     const fileName& rootPath,
     const fileName& caseName,
-    const word& systemName,
-    const word& constantName,
     const bool enableFunctionObjects
 )
 :
-    TimePaths
-    (
-        rootPath,
-        caseName,
-        systemName,
-        constantName
-    ),
+    TimePaths(rootPath, caseName),
 
     objectRegistry(*this),
 

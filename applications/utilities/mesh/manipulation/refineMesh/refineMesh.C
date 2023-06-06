@@ -169,8 +169,7 @@ int main(int argc, char *argv[])
     );
 
     #include "setRootCase.H"
-    #include "createTime.H"
-    runTime.functionObjects().off();
+    #include "createTimeNoFunctionObjects.H"
     #include "createNamedPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 

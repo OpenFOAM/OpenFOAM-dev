@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,21 +26,26 @@ License
 #include "TimePaths.H"
 #include "IOstreams.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    const word TimePaths::systemName = "system";
+    const word TimePaths::constantName = "constant";
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::TimePaths::TimePaths
 (
     const fileName& rootPath,
-    const fileName& caseName,
-    const word& systemName,
-    const word& constantName
+    const fileName& caseName
 )
 :
     processorCase_(false),
     rootPath_(rootPath),
-    case_(caseName),
-    system_(systemName),
-    constant_(constantName)
+    case_(caseName)
 {
     // Find out from case name whether a processor directory
     std::string::size_type pos = caseName.find("processor");
@@ -69,17 +74,13 @@ Foam::TimePaths::TimePaths
     const bool processorCase,
     const fileName& rootPath,
     const fileName& globalCaseName,
-    const fileName& caseName,
-    const word& systemName,
-    const word& constantName
+    const fileName& caseName
 )
 :
     processorCase_(processorCase),
     rootPath_(rootPath),
     globalCaseName_(globalCaseName),
-    case_(caseName),
-    system_(systemName),
-    constant_(constantName)
+    case_(caseName)
 {
     if (!processorCase)
     {

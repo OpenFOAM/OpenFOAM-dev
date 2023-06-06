@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,10 +125,9 @@ int main(int argc, char *argv[])
     (
         Time::controlDictName,
         args.rootPath(),
-        args.caseName()
+        args.caseName(),
+        false
     );
-
-    runTimeExtruded.functionObjects().off();
 
     const ExtrudeMode surfaceFormat = ExtrudeModeNames[args[1]];
     const bool overwrite = args.optionFound("overwrite");

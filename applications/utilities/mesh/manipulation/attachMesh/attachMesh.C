@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,8 +44,7 @@ int main(int argc, char *argv[])
     argList::noParallel();
 
     #include "setRootCase.H"
-    #include "createTime.H"
-    runTime.functionObjects().off();
+    #include "createTimeNoFunctionObjects.H"
     #include "createPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,11 +54,14 @@ class TimePaths
         const fileName rootPath_;
         fileName globalCaseName_;
         const fileName case_;
-        const word system_;
-        const word constant_;
-
 
 public:
+
+    // Static Data
+
+        static const word systemName;
+        static const word constantName;
+
 
     // Constructors
 
@@ -66,9 +69,7 @@ public:
         TimePaths
         (
             const fileName& rootPath,
-            const fileName& caseName,
-            const word& systemName,
-            const word& constantName
+            const fileName& caseName
         );
 
 
@@ -78,9 +79,7 @@ public:
             const bool processorCase,
             const fileName& rootPath,
             const fileName& globalCaseName,
-            const fileName& caseName,
-            const word& systemName,
-            const word& constantName
+            const fileName& caseName
         );
 
 
@@ -111,9 +110,9 @@ public:
             }
 
             //- Return system name
-            const word& system() const
+            static const word& system()
             {
-                return system_;
+                return systemName;
             }
 
             //- Return system name for the case
@@ -121,9 +120,9 @@ public:
             fileName caseSystem() const;
 
             //- Return constant name
-            const word& constant() const
+            static const word& constant()
             {
-                return constant_;
+                return constantName;
             }
 
             //- Return constant name for the case

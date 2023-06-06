@@ -665,8 +665,7 @@ int main(int argc, char *argv[])
     #include "addDictOption.H"
 
     #include "setRootCase.H"
-    #include "createTime.H"
-    runTime.functionObjects().off();
+    #include "createTimeNoFunctionObjects.H"
 
     const bool overwrite = args.optionFound("overwrite");
     const bool checkGeometry = args.optionFound("checkGeometry");

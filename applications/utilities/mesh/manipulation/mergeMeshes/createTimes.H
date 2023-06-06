@@ -7,9 +7,9 @@
     (
         Time::controlDictName,
         masterCasePath,
-        masterCaseName
+        masterCaseName,
+        false
     );
-    runTimeMaster.functionObjects().off();
 
     const fileName addCasePath = addCase.path();
     const fileName addCaseName = addCase.name();
@@ -18,6 +18,6 @@
     (
         Time::controlDictName,
         addCasePath,
-        addCaseName
+        addCaseName,
+        false
     );
-    runTimeToAdd.functionObjects().off();

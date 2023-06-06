@@ -420,8 +420,7 @@ int main(int argc, char *argv[])
     #include "addRegionOption.H"
 
     #include "setRootCase.H"
-    #include "createTime.H"
-    runTime.functionObjects().off();
+    #include "createTimeNoFunctionObjects.H"
 
     const bool patchFaces = args.optionFound("patchFaces");
     const bool patchEdges = args.optionFound("patchEdges");

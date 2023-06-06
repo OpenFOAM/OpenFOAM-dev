@@ -361,8 +361,7 @@ int main(int argc, char *argv[])
     #include "addRegionOption.H"
 
     #include "setRootCase.H"
-    #include "createTime.H"
-    runTime.functionObjects().off();
+    #include "createTimeNoFunctionObjects.H"
     #include "createNamedMesh.H"
 
     const polyBoundaryMesh& bMesh = mesh.boundaryMesh();

@@ -339,12 +339,10 @@ int main(int argc, char *argv[])
 
     // Make sure we do not use the master-only reading.
     regIOobject::fileModificationChecking = regIOobject::timeStamp;
-    #include "createTime.H"
+    #include "createTimeNoFunctionObjects.H"
     // Allow override of time
     instantList times = timeSelector::selectIfPresent(runTime, args);
     runTime.setTime(times[0], 0);
-
-    runTime.functionObjects().off();
 
     word regionName = polyMesh::defaultRegion;
     fileName meshSubDir;

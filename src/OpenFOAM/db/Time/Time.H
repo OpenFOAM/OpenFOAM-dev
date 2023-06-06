@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,8 +215,7 @@ public:
         (
             const word& name,
             const argList& args,
-            const word& systemName = "system",
-            const word& constantName = "constant"
+            const bool enableFunctionObjects = true
         );
 
         //- Construct given name of dictionary to read, rootPath and casePath
@@ -225,8 +224,6 @@ public:
             const word& name,
             const fileName& rootPath,
             const fileName& caseName,
-            const word& systemName = "system",
-            const word& constantName = "constant",
             const bool enableFunctionObjects = true
         );
 
@@ -236,8 +233,6 @@ public:
             const dictionary& dict,
             const fileName& rootPath,
             const fileName& caseName,
-            const word& systemName = "system",
-            const word& constantName = "constant",
             const bool enableFunctionObjects = true
         );
 
@@ -246,8 +241,6 @@ public:
         (
             const fileName& rootPath,
             const fileName& caseName,
-            const word& systemName = "system",
-            const word& constantName = "constant",
             const bool enableFunctionObjects = true
         );
 
