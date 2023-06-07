@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,54 +28,53 @@ License
 
 // * * * * * * * * * * * * * * * * Static Data * * * * * * * * * * * * * * * //
 
-template<class MulticomponentThermo>
-Foam::scalar Foam::Reaction<MulticomponentThermo>::TlowDefault(0);
+template<class ThermoType>
+Foam::scalar Foam::Reaction<ThermoType>::TlowDefault(0);
 
-template<class MulticomponentThermo>
-Foam::scalar Foam::Reaction<MulticomponentThermo>::ThighDefault(great);
+template<class ThermoType>
+Foam::scalar Foam::Reaction<ThermoType>::ThighDefault(great);
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class MulticomponentThermo>
-void Foam::Reaction<MulticomponentThermo>::setThermo
+template<class ThermoType>
+void Foam::Reaction<ThermoType>::setThermo
 (
-    const HashPtrTable<MulticomponentThermo>& thermoDatabase
+    const PtrList<ThermoType>& speciesThermo
 )
 {
-    typename MulticomponentThermo::thermoType rhsThermo
+    typename ThermoType::thermoType rhsThermo
     (
         rhs()[0].stoichCoeff
-       *(*thermoDatabase[species()[rhs()[0].index]]).W()
-       *(*thermoDatabase[species()[rhs()[0].index]])
+       *speciesThermo[rhs()[0].index].W()
+       *speciesThermo[rhs()[0].index]
     );
 
     for (label i=1; i<rhs().size(); ++i)
     {
         rhsThermo +=
             rhs()[i].stoichCoeff
-           *(*thermoDatabase[species()[rhs()[i].index]]).W()
-           *(*thermoDatabase[species()[rhs()[i].index]]);
+           *speciesThermo[rhs()[i].index].W()
+           *speciesThermo[rhs()[i].index];
     }
 
-    typename MulticomponentThermo::thermoType lhsThermo
+    typename ThermoType::thermoType lhsThermo
     (
         lhs()[0].stoichCoeff
-       *(*thermoDatabase[species()[lhs()[0].index]]).W()
-       *(*thermoDatabase[species()[lhs()[0].index]])
+       *speciesThermo[lhs()[0].index].W()
+       *speciesThermo[lhs()[0].index]
     );
 
     for (label i=1; i<lhs().size(); ++i)
     {
         lhsThermo +=
             lhs()[i].stoichCoeff
-           *(*thermoDatabase[species()[lhs()[i].index]]).W()
-           *(*thermoDatabase[species()[lhs()[i].index]]);
+           *speciesThermo[lhs()[i].index].W()
+           *speciesThermo[lhs()[i].index];
     }
 
-    // Check for mass imbalance in the reaction
-    // A value of 1 corresponds to an error of 1 H atom in the reaction,
-    // i.e. 1 kg/kmol
+    // Check for mass imbalance in the reaction. A value of 1 corresponds to an
+    // error of 1 H atom in the reaction; i.e. 1 kg/kmol.
     if (mag(lhsThermo.Y() - rhsThermo.Y()) > 0.1)
     {
         FatalErrorInFunction
@@ -84,69 +83,69 @@ void Foam::Reaction<MulticomponentThermo>::setThermo
             << exit(FatalError);
     }
 
-    MulticomponentThermo::thermoType::operator=(lhsThermo == rhsThermo);
+    ThermoType::thermoType::operator=(lhsThermo == rhsThermo);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class MulticomponentThermo>
-Foam::Reaction<MulticomponentThermo>::Reaction
+template<class ThermoType>
+Foam::Reaction<ThermoType>::Reaction
 (
     const speciesTable& species,
+    const PtrList<ThermoType>& speciesThermo,
     const List<specieCoeffs>& lhs,
-    const List<specieCoeffs>& rhs,
-    const HashPtrTable<MulticomponentThermo>& thermoDatabase
+    const List<specieCoeffs>& rhs
 )
 :
     reaction(species, lhs, rhs),
-    MulticomponentThermo::thermoType(*thermoDatabase[species[0]]),
+    ThermoType::thermoType(speciesThermo[0]),
     Tlow_(TlowDefault),
     Thigh_(ThighDefault)
 {
-    setThermo(thermoDatabase);
+    setThermo(speciesThermo);
 }
 
 
-template<class MulticomponentThermo>
-Foam::Reaction<MulticomponentThermo>::Reaction
+template<class ThermoType>
+Foam::Reaction<ThermoType>::Reaction
 (
-    const Reaction<MulticomponentThermo>& r,
+    const Reaction<ThermoType>& r,
     const speciesTable& species
 )
 :
     reaction(r, species),
-    MulticomponentThermo::thermoType(r),
+    ThermoType::thermoType(r),
     Tlow_(r.Tlow()),
     Thigh_(r.Thigh())
 {}
 
 
-template<class MulticomponentThermo>
-Foam::Reaction<MulticomponentThermo>::Reaction
+template<class ThermoType>
+Foam::Reaction<ThermoType>::Reaction
 (
     const speciesTable& species,
-    const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+    const PtrList<ThermoType>& speciesThermo,
     const dictionary& dict
 )
 :
     reaction(species, dict),
-    MulticomponentThermo::thermoType(*thermoDatabase[species[0]]),
+    ThermoType::thermoType(speciesThermo[0]),
     Tlow_(dict.lookupOrDefault<scalar>("Tlow", TlowDefault)),
     Thigh_(dict.lookupOrDefault<scalar>("Thigh", ThighDefault))
 {
-    setThermo(thermoDatabase);
+    setThermo(speciesThermo);
 }
 
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-template<class MulticomponentThermo>
-Foam::autoPtr<Foam::Reaction<MulticomponentThermo>>
-Foam::Reaction<MulticomponentThermo>::New
+template<class ThermoType>
+Foam::autoPtr<Foam::Reaction<ThermoType>>
+Foam::Reaction<ThermoType>::New
 (
     const speciesTable& species,
-    const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+    const PtrList<ThermoType>& speciesThermo,
     const dictionary& dict
 )
 {
@@ -156,7 +155,7 @@ Foam::Reaction<MulticomponentThermo>::New
         dictionaryConstructorTablePtr_->find(reactionTypeName);
 
     // Backwards compatibility check. Reaction names used to have "Reaction"
-    // (Reaction<MulticomponentThermo>::typeName_()) appended. This was
+    // (Reaction<ThermoType>::typeName_()) appended. This was
     // removed as it is unnecessary given the context in which the reaction is
     // specified. If this reaction name was not found, search also for the old
     // name.
@@ -178,19 +177,19 @@ Foam::Reaction<MulticomponentThermo>::New
             << exit(FatalError);
     }
 
-    return autoPtr<Reaction<MulticomponentThermo>>
+    return autoPtr<Reaction<ThermoType>>
     (
-        cstrIter()(species, thermoDatabase, dict)
+        cstrIter()(species, speciesThermo, dict)
     );
 }
 
 
-template<class MulticomponentThermo>
-Foam::autoPtr<Foam::Reaction<MulticomponentThermo>>
-Foam::Reaction<MulticomponentThermo>::New
+template<class ThermoType>
+Foam::autoPtr<Foam::Reaction<ThermoType>>
+Foam::Reaction<ThermoType>::New
 (
     const speciesTable& species,
-    const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+    const PtrList<ThermoType>& speciesThermo,
     const objectRegistry& ob,
     const dictionary& dict
 )
@@ -199,7 +198,7 @@ Foam::Reaction<MulticomponentThermo>::New
     // use the dictionary constructor table only
     if (!objectRegistryConstructorTablePtr_)
     {
-        return New(species, thermoDatabase, dict);
+        return New(species, speciesThermo, dict);
     }
 
     const word& reactionTypeName = dict.lookup("type");
@@ -241,53 +240,30 @@ Foam::Reaction<MulticomponentThermo>::New
                 << exit(FatalError);
         }
 
-        return autoPtr<Reaction<MulticomponentThermo>>
+        return autoPtr<Reaction<ThermoType>>
         (
-            cstrIter()(species, thermoDatabase, dict)
+            cstrIter()(species, speciesThermo, dict)
         );
     }
 
-    return autoPtr<Reaction<MulticomponentThermo>>
+    return autoPtr<Reaction<ThermoType>>
     (
-        cstrIter()(species, thermoDatabase, ob, dict)
+        cstrIter()(species, speciesThermo, ob, dict)
     );
-}
-
-
-template<class MulticomponentThermo>
-Foam::autoPtr<Foam::Reaction<MulticomponentThermo>>
-Foam::Reaction<MulticomponentThermo>::New
-(
-    const speciesTable& species,
-    const PtrList<MulticomponentThermo>& speciesThermo,
-    const dictionary& dict
-)
-{
-    HashPtrTable<MulticomponentThermo> thermoDatabase;
-    forAll(speciesThermo, i)
-    {
-        thermoDatabase.insert
-        (
-            speciesThermo[i].name(),
-            speciesThermo[i].clone().ptr()
-        );
-    }
-
-    return New(species, thermoDatabase, dict);
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class MulticomponentThermo>
-void Foam::Reaction<MulticomponentThermo>::write(Ostream& os) const
+template<class ThermoType>
+void Foam::Reaction<ThermoType>::write(Ostream& os) const
 {
     reaction::write(os);
 }
 
 
-template<class MulticomponentThermo>
-void Foam::Reaction<MulticomponentThermo>::C
+template<class ThermoType>
+void Foam::Reaction<ThermoType>::C
 (
     const scalar p,
     const scalar T,
@@ -315,8 +291,8 @@ void Foam::Reaction<MulticomponentThermo>::C
 }
 
 
-template<class MulticomponentThermo>
-Foam::scalar Foam::Reaction<MulticomponentThermo>::omega
+template<class ThermoType>
+Foam::scalar Foam::Reaction<ThermoType>::omega
 (
     const scalar p,
     const scalar T,
@@ -343,8 +319,8 @@ Foam::scalar Foam::Reaction<MulticomponentThermo>::omega
 }
 
 
-template<class MulticomponentThermo>
-void Foam::Reaction<MulticomponentThermo>::dNdtByV
+template<class ThermoType>
+void Foam::Reaction<ThermoType>::dNdtByV
 (
     const scalar p,
     const scalar T,
@@ -374,8 +350,8 @@ void Foam::Reaction<MulticomponentThermo>::dNdtByV
 }
 
 
-template<class MulticomponentThermo>
-void Foam::Reaction<MulticomponentThermo>::ddNdtByVdcTp
+template<class ThermoType>
+void Foam::Reaction<ThermoType>::ddNdtByVdcTp
 (
     const scalar p,
     const scalar T,

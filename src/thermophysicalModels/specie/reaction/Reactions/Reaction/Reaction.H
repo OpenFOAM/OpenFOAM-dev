@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::Reaction
 
 Description
-    Simple extension of MulticomponentThermo to handle reaction kinetics in
+    Simple extension of ThermoType to handle reaction kinetics in
     addition to the equilibrium thermodynamics already handled.
 
 SourceFiles
@@ -52,11 +52,11 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-template<class MulticomponentThermo>
+template<class ThermoType>
 class Reaction;
 
-template<class MulticomponentThermo>
-inline Ostream& operator<<(Ostream&, const Reaction<MulticomponentThermo>&);
+template<class ThermoType>
+inline Ostream& operator<<(Ostream&, const Reaction<ThermoType>&);
 
 class objectRegistry;
 
@@ -65,11 +65,11 @@ class objectRegistry;
                           Class Reaction Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class MulticomponentThermo>
+template<class ThermoType>
 class Reaction
 :
     public reaction,
-    public MulticomponentThermo::thermoType
+    public ThermoType::thermoType
 {
 
 public:
@@ -91,10 +91,7 @@ private:
     // Private Member Functions
 
         //- Construct reaction thermo
-        void setThermo
-        (
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase
-        );
+        void setThermo(const PtrList<ThermoType>& speciesThermo);
 
 
 public:
@@ -112,10 +109,10 @@ public:
             dictionary,
             (
                 const speciesTable& species,
-                const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+                const PtrList<ThermoType>& speciesThermo,
                 const dictionary& dict
             ),
-            (species, thermoDatabase, dict)
+            (species, speciesThermo, dict)
         );
 
         declareRunTimeSelectionTable
@@ -125,11 +122,11 @@ public:
             objectRegistry,
             (
                 const speciesTable& species,
-                const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+                const PtrList<ThermoType>& speciesThermo,
                 const objectRegistry& ob,
                 const dictionary& dict
             ),
-            (species, thermoDatabase, ob, dict)
+            (species, speciesThermo, ob, dict)
         );
 
 
@@ -139,15 +136,15 @@ public:
         Reaction
         (
             const speciesTable& species,
+            const PtrList<ThermoType>& speciesThermo,
             const List<specieCoeffs>& lhs,
-            const List<specieCoeffs>& rhs,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase
+            const List<specieCoeffs>& rhs
         );
 
         //- Construct as copy given new speciesTable
         Reaction
         (
-            const Reaction<MulticomponentThermo>&,
+            const Reaction<ThermoType>&,
             const speciesTable& species
         );
 
@@ -155,15 +152,15 @@ public:
         Reaction
         (
             const speciesTable& species,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+            const PtrList<ThermoType>& speciesThermo,
             const dictionary& dict
         );
 
         //- Construct and return a clone
-        virtual autoPtr<Reaction<MulticomponentThermo>> clone() const = 0;
+        virtual autoPtr<Reaction<ThermoType>> clone() const = 0;
 
         //- Construct and return a clone with new speciesTable
-        virtual autoPtr<Reaction<MulticomponentThermo>> clone
+        virtual autoPtr<Reaction<ThermoType>> clone
         (
             const speciesTable& species
         ) const = 0;
@@ -171,32 +168,21 @@ public:
 
     // Selectors
 
-        //- Return a pointer to new patchField created on freestore
-        //  from dictionary
-        static autoPtr<Reaction<MulticomponentThermo>> New
+        //- Return a pointer to new reaction created from a dictionary
+        static autoPtr<Reaction<ThermoType>> New
         (
             const speciesTable& species,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+            const PtrList<ThermoType>& speciesThermo,
             const dictionary& dict
         );
 
-        //- Return a pointer to new patchField created on freestore
-        //  from objectRegistry and dictionary
-        static autoPtr<Reaction<MulticomponentThermo>> New
+        //- Return a pointer to new reaction created from an objectRegistry and
+        //  a dictionary
+        static autoPtr<Reaction<ThermoType>> New
         (
             const speciesTable& species,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+            const PtrList<ThermoType>& speciesThermo,
             const objectRegistry& ob,
-            const dictionary& dict
-        );
-
-        //- Return a pointer to new patchField created on freestore from dict.
-        //  This is used to construct a single reaction given a speciesThermo
-        //  list from which a temporary thermoDatabase is created.
-        static autoPtr<Reaction<MulticomponentThermo>> New
-        (
-            const speciesTable& species,
-            const PtrList<MulticomponentThermo>& speciesThermo,
             const dictionary& dict
         );
 
@@ -371,15 +357,15 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const Reaction<MulticomponentThermo>&) = delete;
+        void operator=(const Reaction<ThermoType>&) = delete;
 
 
     // Ostream Operator
 
-        friend Ostream& operator<< <MulticomponentThermo>
+        friend Ostream& operator<< <ThermoType>
         (
             Ostream&,
-            const Reaction<MulticomponentThermo>&
+            const Reaction<ThermoType>&
         );
 };
 

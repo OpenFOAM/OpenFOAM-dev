@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::IrreversibleReaction
 
 Description
-    Simple extension of Reaction to handle irreversible reactions
+    Extension of Reaction to handle irreversible reactions
 
 SourceFiles
     IrreversibleReaction.C
@@ -46,10 +46,10 @@ namespace Foam
                     Class IrreversibleReaction Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class MulticomponentThermo, class ReactionRate>
+template<class ThermoType, class ReactionRate>
 class IrreversibleReaction
 :
-    public Reaction<MulticomponentThermo>
+    public Reaction<ThermoType>
 {
     // Private Data
 
@@ -67,14 +67,14 @@ public:
         //- Construct from components
         IrreversibleReaction
         (
-            const Reaction<MulticomponentThermo>& reaction,
+            const Reaction<ThermoType>& reaction,
             const ReactionRate& reactionRate
         );
 
         //- Construct as copy given new speciesTable
         IrreversibleReaction
         (
-            const IrreversibleReaction<MulticomponentThermo, ReactionRate>&,
+            const IrreversibleReaction<ThermoType, ReactionRate>&,
             const speciesTable& species
         );
 
@@ -82,7 +82,7 @@ public:
         IrreversibleReaction
         (
             const speciesTable& species,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+            const PtrList<ThermoType>& speciesThermo,
             const dictionary& dict
         );
 
@@ -90,17 +90,17 @@ public:
         IrreversibleReaction
         (
             const speciesTable& species,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+            const PtrList<ThermoType>& speciesThermo,
             const objectRegistry& ob,
             const dictionary& dict
         );
 
         //- Construct and return a clone
-        virtual autoPtr<Reaction<MulticomponentThermo>> clone() const
+        virtual autoPtr<Reaction<ThermoType>> clone() const
         {
-            return autoPtr<Reaction<MulticomponentThermo>>
+            return autoPtr<Reaction<ThermoType>>
             (
-                new IrreversibleReaction<MulticomponentThermo, ReactionRate>
+                new IrreversibleReaction<ThermoType, ReactionRate>
                 (
                     *this
                 )
@@ -108,14 +108,14 @@ public:
         }
 
         //- Construct and return a clone with new speciesTable
-        virtual autoPtr<Reaction<MulticomponentThermo>> clone
+        virtual autoPtr<Reaction<ThermoType>> clone
         (
             const speciesTable& species
         ) const
         {
-            return autoPtr<Reaction<MulticomponentThermo>>
+            return autoPtr<Reaction<ThermoType>>
             (
-                new IrreversibleReaction<MulticomponentThermo, ReactionRate>
+                new IrreversibleReaction<ThermoType, ReactionRate>
                 (
                     *this,
                     species
@@ -230,7 +230,7 @@ public:
         //- Disallow default bitwise assignment
         void operator=
         (
-            const IrreversibleReaction<MulticomponentThermo, ReactionRate>&
+            const IrreversibleReaction<ThermoType, ReactionRate>&
         ) = delete;
 };
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,10 +49,10 @@ namespace Foam
                         Class ReactionProxy Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class MulticomponentThermo>
+template<class ThermoType>
 class ReactionProxy
 :
-    public Reaction<MulticomponentThermo>
+    public Reaction<ThermoType>
 {
 
 public:
@@ -63,31 +63,16 @@ public:
         ReactionProxy
         (
             const speciesTable& species,
+            const PtrList<ThermoType>& speciesThermo,
             const List<specieCoeffs>& lhs,
-            const List<specieCoeffs>& rhs,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase
-        );
-
-        //- Construct as copy given new speciesTable
-        ReactionProxy
-        (
-            const Reaction<MulticomponentThermo>&,
-            const speciesTable& species
-        );
-
-        //- Construct from dictionary
-        ReactionProxy
-        (
-            const speciesTable& species,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
-            const dictionary& dict
+            const List<specieCoeffs>& rhs
         );
 
         //- Construct and return a clone
-        virtual autoPtr<Reaction<MulticomponentThermo>> clone() const;
+        virtual autoPtr<Reaction<ThermoType>> clone() const;
 
         //- Construct and return a clone with new speciesTable
-        virtual autoPtr<Reaction<MulticomponentThermo>> clone
+        virtual autoPtr<Reaction<ThermoType>> clone
         (
             const speciesTable& species
         ) const;

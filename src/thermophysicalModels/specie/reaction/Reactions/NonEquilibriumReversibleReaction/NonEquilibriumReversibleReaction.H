@@ -25,7 +25,7 @@ Class
     Foam::NonEquilibriumReversibleReaction
 
 Description
-    Simple extension of Reaction to handle non-equilibrium reversible reactions.
+    Extension of Reaction to handle non-equilibrium reversible reactions
 
 SourceFiles
     NonEquilibriumReversibleReaction.C
@@ -46,10 +46,10 @@ namespace Foam
               Class NonEquilibriumReversibleReaction Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class MulticomponentThermo, class ReactionRate>
+template<class ThermoType, class ReactionRate>
 class NonEquilibriumReversibleReaction
 :
-    public Reaction<MulticomponentThermo>
+    public Reaction<ThermoType>
 {
     // Private Data
 
@@ -68,7 +68,7 @@ public:
         //- Construct from components
         NonEquilibriumReversibleReaction
         (
-            const Reaction<MulticomponentThermo>& reaction,
+            const Reaction<ThermoType>& reaction,
             const ReactionRate& forwardReactionRate,
             const ReactionRate& reverseReactionRate
         );
@@ -78,7 +78,7 @@ public:
         (
             const NonEquilibriumReversibleReaction
             <
-                MulticomponentThermo,
+                ThermoType,
                 ReactionRate
             >&,
             const speciesTable& species
@@ -88,7 +88,7 @@ public:
         NonEquilibriumReversibleReaction
         (
             const speciesTable& species,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+            const PtrList<ThermoType>& speciesThermo,
             const dictionary& dict
         );
 
@@ -96,35 +96,35 @@ public:
         NonEquilibriumReversibleReaction
         (
             const speciesTable& species,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+            const PtrList<ThermoType>& speciesThermo,
             const objectRegistry& ob,
             const dictionary& dict
         );
 
         //- Construct and return a clone
-        virtual autoPtr<Reaction<MulticomponentThermo>> clone() const
+        virtual autoPtr<Reaction<ThermoType>> clone() const
         {
-            return autoPtr<Reaction<MulticomponentThermo>>
+            return autoPtr<Reaction<ThermoType>>
             (
                 new NonEquilibriumReversibleReaction
                 <
-                    MulticomponentThermo,
+                    ThermoType,
                     ReactionRate
                 >(*this)
             );
         }
 
         //- Construct and return a clone with new speciesTable
-        virtual autoPtr<Reaction<MulticomponentThermo>> clone
+        virtual autoPtr<Reaction<ThermoType>> clone
         (
             const speciesTable& species
         ) const
         {
-            return autoPtr<Reaction<MulticomponentThermo>>
+            return autoPtr<Reaction<ThermoType>>
             (
                 new NonEquilibriumReversibleReaction
                 <
-                    MulticomponentThermo,
+                    ThermoType,
                     ReactionRate
                 >
                 (
@@ -243,7 +243,7 @@ public:
         (
             const NonEquilibriumReversibleReaction
             <
-                MulticomponentThermo,
+                ThermoType,
                 ReactionRate
             >&
         ) = delete;

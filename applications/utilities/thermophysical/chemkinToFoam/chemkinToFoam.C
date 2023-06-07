@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,10 +73,7 @@ int main(int argc, char *argv[])
 
     bool newFormat = args.optionFound("newFormat");
 
-    speciesTable species;
-    chemkinReader cr(species, args[1], args[3], args[2], newFormat);
-    const HashPtrTable<chemkinReader::thermoPhysics>& speciesThermo =
-        cr.speciesThermo();
+    chemkinReader cr(args[1], args[3], args[2], newFormat);
 
     dictionary thermoDict;
     thermoDict.add("species", cr.species());
@@ -84,7 +81,7 @@ int main(int argc, char *argv[])
     // Add the species thermo formatted entries
     {
         OStringStream os;
-        speciesThermo.write(os);
+        cr.speciesThermo().write(os);
         dictionary speciesThermoDict(IStringStream(os.str())());
         thermoDict.merge(speciesThermoDict);
     }
@@ -96,7 +93,7 @@ int main(int argc, char *argv[])
     forAllConstIter
     (
         HashPtrTable<chemkinReader::thermoPhysics>,
-        speciesThermo,
+        cr.speciesThermo(),
         iter
     )
     {

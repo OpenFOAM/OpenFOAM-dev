@@ -177,9 +177,9 @@ void Foam::chemkinReader::addReactionType
                     ReactionProxy<thermoPhysics>
                     (
                         speciesTable_,
+                        speciesThermoList(),
                         lhs.shrink(),
-                        rhs.shrink(),
-                        speciesThermo_
+                        rhs.shrink()
                     ),
                     rr
                 )
@@ -196,9 +196,9 @@ void Foam::chemkinReader::addReactionType
                     ReactionProxy<thermoPhysics>
                     (
                         speciesTable_,
+                        speciesThermoList(),
                         lhs.shrink(),
-                        rhs.shrink(),
-                        speciesThermo_
+                        rhs.shrink()
                     ),
                     rr
                 )
@@ -487,9 +487,9 @@ void Foam::chemkinReader::addReaction
                         ReactionProxy<thermoPhysics>
                         (
                             speciesTable_,
+                            speciesThermoList(),
                             lhs.shrink(),
-                            rhs.shrink(),
-                            speciesThermo_
+                            rhs.shrink()
                         ),
                         ArrheniusReactionRate
                         (
@@ -542,9 +542,9 @@ void Foam::chemkinReader::addReaction
                         ReactionProxy<thermoPhysics>
                         (
                             speciesTable_,
+                            speciesThermoList(),
                             lhs.shrink(),
-                            rhs.shrink(),
-                            speciesThermo_
+                            rhs.shrink()
                         ),
                         thirdBodyArrheniusReactionRate
                         (
@@ -647,9 +647,9 @@ void Foam::chemkinReader::addReaction
                         ReactionProxy<thermoPhysics>
                         (
                             speciesTable_,
+                            speciesThermoList(),
                             lhs.shrink(),
-                            rhs.shrink(),
-                            speciesThermo_
+                            rhs.shrink()
                         ),
                         LandauTellerReactionRate
                         (
@@ -828,7 +828,6 @@ void Foam::chemkinReader::read
 
 Foam::chemkinReader::chemkinReader
 (
-    speciesTable& species,
     const fileName& CHEMKINFileName,
     const fileName& transportFileName,
     const fileName& thermoFileName,
@@ -837,66 +836,11 @@ Foam::chemkinReader::chemkinReader
 :
     lineNo_(1),
     specieNames_(10),
-    speciesTable_(species),
+    speciesTable_(),
     newFormat_(newFormat),
     imbalanceTol_(rootSmall)
 {
     read(CHEMKINFileName, thermoFileName, transportFileName);
-}
-
-
-Foam::chemkinReader::chemkinReader
-(
-    const dictionary& thermoDict,
-    speciesTable& species
-)
-:
-    lineNo_(1),
-    specieNames_(10),
-    speciesTable_(species),
-    newFormat_(thermoDict.lookupOrDefault("newFormat", false)),
-    imbalanceTol_(thermoDict.lookupOrDefault("imbalanceTolerance", rootSmall))
-{
-    if (newFormat_)
-    {
-        Info<< "Reading CHEMKIN thermo data in new file format" << endl;
-    }
-
-    fileName chemkinFile(fileName(thermoDict.lookup("CHEMKINFile")).expand());
-
-    fileName thermoFile = fileName::null;
-
-    if (thermoDict.found("CHEMKINThermoFile"))
-    {
-        thermoFile = fileName(thermoDict.lookup("CHEMKINThermoFile")).expand();
-    }
-
-    fileName transportFile
-    (
-        fileName(thermoDict.lookup("CHEMKINTransportFile")).expand()
-    );
-
-    // allow relative file names
-    fileName relPath = thermoDict.name().path();
-    if (relPath.size())
-    {
-        if (!chemkinFile.isAbsolute())
-        {
-            chemkinFile = relPath/chemkinFile;
-        }
-
-        if (thermoFile != fileName::null && !thermoFile.isAbsolute())
-        {
-            thermoFile = relPath/thermoFile;
-        }
-
-        if (!transportFile.isAbsolute())
-        {
-            transportFile = relPath/transportFile;
-        }
-    }
-
-    read(chemkinFile, thermoFile, transportFile);
 }
 
 

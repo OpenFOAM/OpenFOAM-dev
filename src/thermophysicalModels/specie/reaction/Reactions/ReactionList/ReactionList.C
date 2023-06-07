@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,17 +45,8 @@ Foam::ReactionList<ThermoType>::ReactionList
 
     const dictionary& reactions(dict.subDict("reactions"));
 
-    HashPtrTable<ThermoType> thermoDatabase;
-    forAll(speciesThermo, i)
-    {
-        thermoDatabase.insert
-        (
-            speciesThermo[i].name(),
-            speciesThermo[i].clone().ptr()
-        );
-    }
-
     this->setSize(reactions.size());
+
     label i = 0;
 
     forAllConstIter(dictionary, reactions, iter)
@@ -66,7 +57,7 @@ Foam::ReactionList<ThermoType>::ReactionList
             Reaction<ThermoType>::New
             (
                 species,
-                thermoDatabase,
+                speciesThermo,
                 reactions.subDict(iter().keyword())
             ).ptr()
         );
@@ -92,17 +83,8 @@ Foam::ReactionList<ThermoType>::ReactionList
 
     const dictionary& reactions(dict.subDict("reactions"));
 
-    HashPtrTable<ThermoType> thermoDatabase;
-    forAll(speciesThermo, i)
-    {
-        thermoDatabase.insert
-        (
-            speciesThermo[i].name(),
-            speciesThermo[i].clone().ptr()
-        );
-    }
-
     this->setSize(reactions.size());
+
     label i = 0;
 
     forAllConstIter(dictionary, reactions, iter)
@@ -113,7 +95,7 @@ Foam::ReactionList<ThermoType>::ReactionList
             Reaction<ThermoType>::New
             (
                 species,
-                thermoDatabase,
+                speciesThermo,
                 ob,
                 reactions.subDict(iter().keyword())
             ).ptr()

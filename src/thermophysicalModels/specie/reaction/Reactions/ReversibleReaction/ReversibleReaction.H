@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,8 @@ Class
     Foam::ReversibleReaction
 
 Description
-    Simple extension of Reaction to handle reversible reactions using
-    equilibrium thermodynamics.
+    Extension of Reaction to handle reversible reactions using equilibrium
+    thermodynamics
 
 SourceFiles
     ReversibleReaction.C
@@ -47,10 +47,10 @@ namespace Foam
                      Class ReversibleReaction Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class MulticomponentThermo, class ReactionRate>
+template<class ThermoType, class ReactionRate>
 class ReversibleReaction
 :
-    public Reaction<MulticomponentThermo>
+    public Reaction<ThermoType>
 {
     // Private Data
 
@@ -68,14 +68,14 @@ public:
         //- Construct from components
         ReversibleReaction
         (
-            const Reaction<MulticomponentThermo>& reaction,
+            const Reaction<ThermoType>& reaction,
             const ReactionRate& k
         );
 
         //- Construct as copy given new speciesTable
         ReversibleReaction
         (
-            const ReversibleReaction<MulticomponentThermo, ReactionRate>&,
+            const ReversibleReaction<ThermoType, ReactionRate>&,
             const speciesTable& species
         );
 
@@ -83,7 +83,7 @@ public:
         ReversibleReaction
         (
             const speciesTable& species,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+            const PtrList<ThermoType>& speciesThermo,
             const dictionary& dict
         );
 
@@ -91,17 +91,17 @@ public:
         ReversibleReaction
         (
             const speciesTable& species,
-            const HashPtrTable<MulticomponentThermo>& thermoDatabase,
+            const PtrList<ThermoType>& speciesThermo,
             const objectRegistry& ob,
             const dictionary& dict
         );
 
         //- Construct and return a clone
-        virtual autoPtr<Reaction<MulticomponentThermo>> clone() const
+        virtual autoPtr<Reaction<ThermoType>> clone() const
         {
-            return autoPtr<Reaction<MulticomponentThermo>>
+            return autoPtr<Reaction<ThermoType>>
             (
-                new ReversibleReaction<MulticomponentThermo, ReactionRate>
+                new ReversibleReaction<ThermoType, ReactionRate>
                 (
                     *this
                 )
@@ -109,14 +109,14 @@ public:
         }
 
         //- Construct and return a clone with new speciesTable
-        virtual autoPtr<Reaction<MulticomponentThermo>> clone
+        virtual autoPtr<Reaction<ThermoType>> clone
         (
             const speciesTable& species
         ) const
         {
-            return autoPtr<Reaction<MulticomponentThermo>>
+            return autoPtr<Reaction<ThermoType>>
             (
-                new ReversibleReaction<MulticomponentThermo, ReactionRate>
+                new ReversibleReaction<ThermoType, ReactionRate>
                 (
                     *this,
                     species
@@ -231,7 +231,7 @@ public:
         //- Disallow default bitwise assignment
         void operator=
         (
-            const ReversibleReaction<MulticomponentThermo, ReactionRate>&
+            const ReversibleReaction<ThermoType, ReactionRate>&
         ) = delete;
 };
 
