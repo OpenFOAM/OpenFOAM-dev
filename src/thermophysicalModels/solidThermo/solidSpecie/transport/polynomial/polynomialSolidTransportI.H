@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,17 +60,6 @@ Foam::polynomialSolidTransport<Thermo, PolySize>::clone() const
     return autoPtr<polynomialSolidTransport<Thermo, PolySize>>
     (
         new polynomialSolidTransport<Thermo, PolySize>(*this)
-    );
-}
-
-
-template<class Thermo, int PolySize>
-inline Foam::autoPtr<Foam::polynomialSolidTransport<Thermo, PolySize>>
-Foam::polynomialSolidTransport<Thermo, PolySize>::New(const dictionary& dict)
-{
-    return autoPtr<polynomialSolidTransport<Thermo, PolySize>>
-    (
-        new polynomialSolidTransport<Thermo, PolySize>(dict)
     );
 }
 

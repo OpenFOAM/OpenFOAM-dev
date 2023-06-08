@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,17 +61,6 @@ Foam::AndradeTransport<Thermo>::clone() const
     return autoPtr<AndradeTransport<Thermo>>
     (
         new AndradeTransport<Thermo>(*this)
-    );
-}
-
-
-template<class Thermo>
-inline Foam::autoPtr<Foam::AndradeTransport<Thermo>>
-Foam::AndradeTransport<Thermo>::New(const dictionary& dict)
-{
-    return autoPtr<AndradeTransport<Thermo>>
-    (
-        new AndradeTransport<Thermo>(dict)
     );
 }
 

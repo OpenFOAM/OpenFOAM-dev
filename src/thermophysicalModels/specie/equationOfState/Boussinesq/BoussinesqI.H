@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,20 +62,6 @@ Foam::Boussinesq<Specie>::clone() const
     return autoPtr<Boussinesq<Specie>>
     (
         new Boussinesq<Specie>(*this)
-    );
-}
-
-
-template<class Specie>
-inline Foam::autoPtr<Foam::Boussinesq<Specie>>
-Foam::Boussinesq<Specie>::New
-(
-    const dictionary& dict
-)
-{
-    return autoPtr<Boussinesq<Specie>>
-    (
-        new Boussinesq<Specie>(dict)
     );
 }
 

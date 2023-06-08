@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,17 +61,6 @@ inline Foam::autoPtr<Foam::perfectFluid<Specie>>
 Foam::perfectFluid<Specie>::clone() const
 {
     return autoPtr<perfectFluid<Specie>>(new perfectFluid<Specie>(*this));
-}
-
-
-template<class Specie>
-inline Foam::autoPtr<Foam::perfectFluid<Specie>>
-Foam::perfectFluid<Specie>::New
-(
-    const dictionary& dict
-)
-{
-    return autoPtr<perfectFluid<Specie>>(new perfectFluid<Specie>(dict));
 }
 
 

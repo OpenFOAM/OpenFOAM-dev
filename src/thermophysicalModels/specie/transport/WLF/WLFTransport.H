@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,9 +163,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<WLFTransport> clone() const;
-
-        // Selector from dictionary
-        inline static autoPtr<WLFTransport> New(const dictionary& dict);
 
 
     // Member Functions

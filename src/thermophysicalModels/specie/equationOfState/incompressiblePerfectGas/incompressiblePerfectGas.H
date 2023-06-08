@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,12 +130,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<incompressiblePerfectGas> clone() const;
-
-        // Selector from dictionary
-        inline static autoPtr<incompressiblePerfectGas> New
-        (
-            const dictionary& dict
-        );
 
 
     // Member Functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,12 +155,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<adiabaticPerfectFluid> clone() const;
-
-        // Selector from dictionary
-        inline static autoPtr<adiabaticPerfectFluid> New
-        (
-            const dictionary& dict
-        );
 
 
     // Member Functions

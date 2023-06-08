@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,20 +70,6 @@ Foam::WLFTransport<Thermo>::clone() const
     return autoPtr<WLFTransport<Thermo>>
     (
         new WLFTransport<Thermo>(*this)
-    );
-}
-
-
-template<class Thermo>
-inline Foam::autoPtr<Foam::WLFTransport<Thermo>>
-Foam::WLFTransport<Thermo>::New
-(
-    const dictionary& dict
-)
-{
-    return autoPtr<WLFTransport<Thermo>>
-    (
-        new WLFTransport<Thermo>(dict)
     );
 }
 

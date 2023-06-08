@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,17 +86,6 @@ Foam::ePowerThermo<EquationOfState>::clone() const
     return autoPtr<ePowerThermo<EquationOfState>>
     (
         new ePowerThermo<EquationOfState>(*this)
-    );
-}
-
-
-template<class EquationOfState>
-inline Foam::autoPtr<Foam::ePowerThermo<EquationOfState>>
-Foam::ePowerThermo<EquationOfState>::New(const dictionary& dict)
-{
-    return autoPtr<ePowerThermo<EquationOfState>>
-    (
-        new ePowerThermo<EquationOfState>(dict)
     );
 }
 
