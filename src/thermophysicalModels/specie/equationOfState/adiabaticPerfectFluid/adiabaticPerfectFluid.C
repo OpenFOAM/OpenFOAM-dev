@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,10 +31,11 @@ License
 template<class Specie>
 Foam::adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid
 (
+    const word& name,
     const dictionary& dict
 )
 :
-    Specie(dict),
+    Specie(name, dict),
     p0_(dict.subDict("equationOfState").lookup<scalar>("p0")),
     rho0_(dict.subDict("equationOfState").lookup<scalar>("rho0")),
     gamma_(dict.subDict("equationOfState").lookup<scalar>("gamma")),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,8 +99,8 @@ public:
         //- Construct as named copy
         inline specie(const word& name, const specie&);
 
-        //- Construct from dictionary
-        specie(const dictionary& dict);
+        //- Construct from name and dictionary
+        specie(const word& name, const dictionary& dict);
 
         //- Copy constructor
         specie(const specie&) = default;

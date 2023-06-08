@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,19 +102,19 @@ int main(int argc, char *argv[])
         << nl << endl;
 
     // Reactants (mole-based)
-    thermo FUEL(thermoData.subDict(fuelName)); FUEL *= FUEL.W();
+    thermo FUEL(fuelName, thermoData.subDict(fuelName)); FUEL *= FUEL.W();
 
     // Oxidant (mole-based)
-    thermo O2(thermoData.subDict("O2")); O2 *= O2.W();
-    thermo N2(thermoData.subDict("N2")); N2 *= N2.W();
+    thermo O2("O2", thermoData.subDict("O2")); O2 *= O2.W();
+    thermo N2("N2", thermoData.subDict("N2")); N2 *= N2.W();
 
     // Intermediates (mole-based)
-    thermo H2(thermoData.subDict("H2")); H2 *= H2.W();
+    thermo H2("H2", thermoData.subDict("H2")); H2 *= H2.W();
 
     // Products (mole-based)
-    thermo CO2(thermoData.subDict("CO2")); CO2 *= CO2.W();
-    thermo H2O(thermoData.subDict("H2O")); H2O *= H2O.W();
-    thermo CO(thermoData.subDict("CO")); CO *= CO.W();
+    thermo CO2("CO2", thermoData.subDict("CO2")); CO2 *= CO2.W();
+    thermo H2O("H2O", thermoData.subDict("H2O")); H2O *= H2O.W();
+    thermo CO("CO", thermoData.subDict("CO")); CO *= CO.W();
 
 
     // Product dissociation reactions

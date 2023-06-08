@@ -113,7 +113,9 @@ class polynomialSolidTransport
         Polynomial<PolySize> kappaCoeffs_;
 
 
-    // Private Member Functions
+public:
+
+    // Constructors
 
         //- Construct from components
         inline polynomialSolidTransport
@@ -122,11 +124,6 @@ class polynomialSolidTransport
             const Polynomial<PolySize>& kappaPoly
         );
 
-
-public:
-
-    // Constructors
-
         //- Construct as named copy
         inline polynomialSolidTransport
         (
@@ -134,8 +131,8 @@ public:
             const polynomialSolidTransport&
         );
 
-        //- Construct from dictionary
-        polynomialSolidTransport(const dictionary& dict);
+        //- Construct from name and dictionary
+        polynomialSolidTransport(const word& name, const dictionary& dict);
 
         //- Construct and return a clone
         inline autoPtr<polynomialSolidTransport> clone() const;

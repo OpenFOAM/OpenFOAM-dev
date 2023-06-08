@@ -30,8 +30,10 @@ License
 template<class Thermo>
 inline void Foam::sutherlandTransport<Thermo>::calcCoeffs
 (
-    const scalar mu1, const scalar T1,
-    const scalar mu2, const scalar T2
+    const scalar mu1,
+    const scalar T1,
+    const scalar mu2,
+    const scalar T2
 )
 {
     scalar rootT1 = sqrt(T1);
@@ -64,8 +66,10 @@ template<class Thermo>
 inline Foam::sutherlandTransport<Thermo>::sutherlandTransport
 (
     const Thermo& t,
-    const scalar mu1, const scalar T1,
-    const scalar mu2, const scalar T2
+    const scalar mu1,
+    const scalar T1,
+    const scalar mu2,
+    const scalar T2
 )
 :
     Thermo(t)

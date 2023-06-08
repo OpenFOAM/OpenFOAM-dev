@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,8 +102,10 @@ class thermo
 
 public:
 
-    //- The thermodynamics of the individual species'
-    typedef thermo<Thermo, Type> thermoType;
+    // Public Typedefs
+
+        //- The thermodynamics of the individual species'
+        typedef thermo<Thermo, Type> thermoType;
 
 
     // Constructors
@@ -111,8 +113,8 @@ public:
         //- Construct from components
         inline thermo(const Thermo& sp);
 
-        //- Construct from dictionary
-        thermo(const dictionary& dict);
+        //- Construct from name and dictionary
+        thermo(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline thermo(const word& name, const thermo&);

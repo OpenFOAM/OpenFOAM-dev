@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,9 +57,13 @@ void Foam::janafThermo<EquationOfState>::checkInputData() const
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
-Foam::janafThermo<EquationOfState>::janafThermo(const dictionary& dict)
+Foam::janafThermo<EquationOfState>::janafThermo
+(
+    const word& name,
+    const dictionary& dict
+)
 :
-    EquationOfState(dict),
+    EquationOfState(name, dict),
     Tlow_(dict.subDict("thermodynamics").lookup<scalar>("Tlow")),
     Thigh_(dict.subDict("thermodynamics").lookup<scalar>("Thigh")),
     Tcommon_(dict.subDict("thermodynamics").lookup<scalar>("Tcommon")),

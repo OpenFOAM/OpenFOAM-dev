@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,22 +97,38 @@ int main(int argc, char *argv[])
     dictionary thermoData(thermoDataFile);
 
 
-    const thermo reactant0(thermoData.subDict(rMix[0].name()));
+    const thermo reactant0
+    (
+        rMix[0].name(),
+        thermoData.subDict(rMix[0].name())
+    );
 
     thermo reactants(rMix[0].volFrac()*reactant0.rho(p, T0)*reactant0);
 
     for (label i=1; i<rMix.size(); i++)
     {
-        const thermo reactanti(thermoData.subDict(rMix[i].name()));
+        const thermo reactanti
+        (
+            rMix[i].name(),
+            thermoData.subDict(rMix[i].name())
+        );
         reactants += rMix[i].volFrac()*reactanti.rho(p, T0)*reactanti;
     }
 
-    const thermo product0(thermoData.subDict(pMix[0].name()));
+    const thermo product0
+    (
+        pMix[0].name(),
+        thermoData.subDict(pMix[0].name())
+    );
     thermo products(pMix[0].volFrac()*product0.rho(p, T0)*product0);
 
     for (label i=1; i<pMix.size(); i++)
     {
-        const thermo producti(thermoData.subDict(pMix[i].name()));
+        const thermo producti
+        (
+            pMix[i].name(),
+            thermoData.subDict(pMix[i].name())
+        );
         products += pMix[i].volFrac()*producti.rho(p, T0)*producti;
     }
 

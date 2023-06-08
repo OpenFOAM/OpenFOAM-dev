@@ -117,7 +117,10 @@ class tabulatedTransport
 :
     public Thermo
 {
-    typedef Function2s::UniformTable<scalar> table2D;
+    // Private Typedefs
+
+        //- Table type
+        typedef Function2s::UniformTable<scalar> table2D;
 
 
     // Private Data
@@ -129,7 +132,9 @@ class tabulatedTransport
         table2D kappa_;
 
 
-    // Private Member Functions
+public:
+
+    // Constructors
 
         //- Construct from components
         inline tabulatedTransport
@@ -139,16 +144,11 @@ class tabulatedTransport
             const table2D& kappaPoly
         );
 
-
-public:
-
-    // Constructors
-
         //- Construct as named copy
         inline tabulatedTransport(const word&, const tabulatedTransport&);
 
-        //- Construct from dictionary
-        tabulatedTransport(const dictionary& dict);
+        //- Construct from name and dictionary
+        tabulatedTransport(const word& name, const dictionary& dict);
 
         //- Construct and return a clone
         inline autoPtr<tabulatedTransport> clone() const;

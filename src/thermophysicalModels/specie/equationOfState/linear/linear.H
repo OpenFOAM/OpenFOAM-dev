@@ -129,8 +129,8 @@ public:
             const scalar rho0
         );
 
-        //- Construct from dictionary
-        linear(const dictionary& dict);
+        //- Construct from name and dictionary
+        linear(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline linear(const word& name, const linear&);

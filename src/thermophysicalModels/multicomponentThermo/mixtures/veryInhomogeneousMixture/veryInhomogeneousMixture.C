@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,9 +57,9 @@ Foam::veryInhomogeneousMixture<ThermoType>::veryInhomogeneousMixture
 
     stoicRatio_(thermoDict.lookup("stoichiometricAirFuelMassRatio")),
 
-    fuel_(thermoDict.subDict("fuel")),
-    oxidant_(thermoDict.subDict("oxidant")),
-    products_(thermoDict.subDict("burntProducts")),
+    fuel_("fuel", thermoDict.subDict("fuel")),
+    oxidant_("oxidant", thermoDict.subDict("oxidant")),
+    products_("burntProducts", thermoDict.subDict("burntProducts")),
 
     mixture_("mixture", fuel_),
 
@@ -102,9 +102,10 @@ void Foam::veryInhomogeneousMixture<ThermoType>::read
     const dictionary& thermoDict
 )
 {
-    fuel_ = ThermoType(thermoDict.subDict("fuel"));
-    oxidant_ = ThermoType(thermoDict.subDict("oxidant"));
-    products_ = ThermoType(thermoDict.subDict("burntProducts"));
+    fuel_ = ThermoType("fuel", thermoDict.subDict("fuel"));
+    oxidant_ = ThermoType("oxidant", thermoDict.subDict("oxidant"));
+    products_ =
+        ThermoType("burntProducts", thermoDict.subDict("burntProducts"));
 }
 
 

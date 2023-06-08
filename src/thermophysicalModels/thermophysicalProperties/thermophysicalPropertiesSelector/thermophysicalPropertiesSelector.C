@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,7 @@ thermophysicalPropertiesSelector
     const word& name
 )
 :
+    name_(name),
     propertiesPtr_(ThermophysicalProperties::New(name))
 {}
 
@@ -42,20 +43,36 @@ template<class ThermophysicalProperties>
 Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::
 thermophysicalPropertiesSelector
 (
+    const word& name,
     const dictionary& dict
 )
+:
+    name_(name)
 {
-    const word name(dict.first()->keyword());
+    const word type(dict.first()->keyword());
 
-    if (dict.isDict(name))
+    if (dict.isDict(type))
     {
-        propertiesPtr_ = ThermophysicalProperties::New(dict.subDict(name));
+        propertiesPtr_ = ThermophysicalProperties::New(dict.subDict(type));
     }
     else
     {
-        propertiesPtr_ = ThermophysicalProperties::New(name);
+        propertiesPtr_ = ThermophysicalProperties::New(type);
     }
 }
+
+
+template<class ThermophysicalProperties>
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::
+thermophysicalPropertiesSelector
+(
+    const word& name,
+    const thermophysicalPropertiesSelector& tps
+)
+:
+    name_(tps.name),
+    propertiesPtr_(tps.propertiesPtr_.clone())
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,13 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo>
-Foam::AndradeTransport<Thermo>::AndradeTransport(const dictionary& dict)
+Foam::AndradeTransport<Thermo>::AndradeTransport
+(
+    const word& name,
+    const dictionary& dict
+)
 :
-    Thermo(dict),
+    Thermo(name, dict),
     muCoeffs_(dict.subDict("transport").lookup("muCoeffs")),
     kappaCoeffs_(dict.subDict("transport").lookup("kappaCoeffs"))
 {}

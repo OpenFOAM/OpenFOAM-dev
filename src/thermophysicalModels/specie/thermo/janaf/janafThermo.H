@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,9 +136,15 @@ class janafThermo
 
 public:
 
-    // Public data
+    // Public static data
 
+        //- Number of coefficients
         static const int nCoeffs_ = 7;
+
+
+    // Public typdefs
+
+        //- Coefficient array type
         typedef FixedList<scalar, nCoeffs_> coeffArray;
 
 
@@ -149,7 +155,10 @@ private:
         // Temperature limits of applicability of functions
         scalar Tlow_, Thigh_, Tcommon_;
 
+        //- Cp coefficients for the high temperature range (Tcommon to Thigh)
         coeffArray highCpCoeffs_;
+
+        //- Cp coefficients for the low temperature range (Tlow to Tcommon)
         coeffArray lowCpCoeffs_;
 
 
@@ -178,8 +187,8 @@ public:
             const bool convertCoeffs = false
         );
 
-        //- Construct from dictionary
-        janafThermo(const dictionary& dict);
+        //- Construct from name and dictionary
+        janafThermo(const word& name, const dictionary& dict);
 
         //- Construct as a named copy
         inline janafThermo(const word&, const janafThermo&);

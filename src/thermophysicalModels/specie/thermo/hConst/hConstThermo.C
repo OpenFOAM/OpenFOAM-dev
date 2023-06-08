@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,13 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
-Foam::hConstThermo<EquationOfState>::hConstThermo(const dictionary& dict)
+Foam::hConstThermo<EquationOfState>::hConstThermo
+(
+    const word& name,
+    const dictionary& dict
+)
 :
-    EquationOfState(dict),
+    EquationOfState(name, dict),
     Cp_(dict.subDict("thermodynamics").lookup<scalar>("Cp")),
     Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
     Tref_(dict.subDict("thermodynamics").lookupOrDefault<scalar>("Tref", Tstd)),

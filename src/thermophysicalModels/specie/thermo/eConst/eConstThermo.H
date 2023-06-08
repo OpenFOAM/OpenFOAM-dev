@@ -121,7 +121,9 @@ class eConstThermo
         scalar Esref_;
 
 
-    // Private Member Functions
+public:
+
+    // Constructors
 
         //- Construct from components
         inline eConstThermo
@@ -133,13 +135,8 @@ class eConstThermo
             const scalar Esref
         );
 
-
-public:
-
-    // Constructors
-
-        //- Construct from dictionary
-        eConstThermo(const dictionary& dict);
+        //- Construct from name and dictionary
+        eConstThermo(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline eConstThermo(const word&, const eConstThermo&);

@@ -128,7 +128,10 @@ class rhoTabulated
 :
     public Specie
 {
-    typedef Function2s::UniformTable<scalar> table2D;
+    // Private Typedefs
+
+        //- Table type
+        typedef Function2s::UniformTable<scalar> table2D;
 
 
     // Private Data
@@ -148,8 +151,8 @@ public:
             const table2D& rho
         );
 
-        //- Construct from dictionary
-        rhoTabulated(const dictionary& dict);
+        //- Construct from name and dictionary
+        rhoTabulated(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline rhoTabulated(const word& name, const rhoTabulated&);

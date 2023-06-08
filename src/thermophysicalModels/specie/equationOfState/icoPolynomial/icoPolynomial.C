@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,13 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie, int PolySize>
-Foam::icoPolynomial<Specie, PolySize>::icoPolynomial(const dictionary& dict)
+Foam::icoPolynomial<Specie, PolySize>::icoPolynomial
+(
+    const word& name,
+    const dictionary& dict
+)
 :
-    Specie(dict),
+    Specie(name, dict),
     rhoCoeffs_
 (
     dict.subDict("equationOfState").lookup

@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
 inline Foam::hConstThermo<EquationOfState>::hConstThermo
@@ -42,8 +42,6 @@ inline Foam::hConstThermo<EquationOfState>::hConstThermo
     Hsref_(Href)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
 inline Foam::hConstThermo<EquationOfState>::hConstThermo

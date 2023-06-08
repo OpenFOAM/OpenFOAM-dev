@@ -25,7 +25,7 @@ License
 
 #include "icoTabulated.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::icoTabulated<Specie>::icoTabulated
@@ -38,8 +38,6 @@ inline Foam::icoTabulated<Specie>::icoTabulated
     rho_(rho)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::icoTabulated<Specie>::icoTabulated

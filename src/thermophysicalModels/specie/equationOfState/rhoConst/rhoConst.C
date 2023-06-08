@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,9 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
-Foam::rhoConst<Specie>::rhoConst(const dictionary& dict)
+Foam::rhoConst<Specie>::rhoConst(const word& name, const dictionary& dict)
 :
-    Specie(dict),
+    Specie(name, dict),
     rho_(dict.subDict("equationOfState").lookup<scalar>("rho"))
 {}
 

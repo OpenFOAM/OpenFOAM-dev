@@ -31,7 +31,8 @@ License
 template<class Specie>
 inline Foam::incompressiblePerfectGas<Specie>::incompressiblePerfectGas
 (
-    const Specie& sp,  const scalar pRef
+    const Specie& sp,
+    const scalar pRef
 )
 :
     Specie(sp),

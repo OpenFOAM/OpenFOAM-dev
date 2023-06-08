@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,9 +37,13 @@ const int Foam::species::thermo<Thermo, Type>::maxIter_ = 100;
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo, template<class> class Type>
-Foam::species::thermo<Thermo, Type>::thermo(const dictionary& dict)
+Foam::species::thermo<Thermo, Type>::thermo
+(
+    const word& name,
+    const dictionary& dict
+)
 :
-    Thermo(dict)
+    Thermo(name, dict)
 {}
 
 

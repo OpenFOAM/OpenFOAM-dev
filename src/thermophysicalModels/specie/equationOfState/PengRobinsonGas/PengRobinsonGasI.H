@@ -26,7 +26,7 @@ License
 #include "PengRobinsonGas.H"
 #include "mathematicalConstants.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::PengRobinsonGas<Specie>::PengRobinsonGas
@@ -47,8 +47,6 @@ inline Foam::PengRobinsonGas<Specie>::PengRobinsonGas
     omega_(omega)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::PengRobinsonGas<Specie>::PengRobinsonGas

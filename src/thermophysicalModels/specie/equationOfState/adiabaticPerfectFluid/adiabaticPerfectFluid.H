@@ -143,8 +143,8 @@ public:
             const scalar B
         );
 
-        //- Construct from dictionary
-        adiabaticPerfectFluid(const dictionary& dict);
+        //- Construct from name and dictionary
+        adiabaticPerfectFluid(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline adiabaticPerfectFluid

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,10 @@ class thermophysicalPropertiesSelector
 {
     // Private member data
 
+        //- Specie name
+        word name_;
+
+        //- Properties model
         autoPtr<ThermophysicalProperties> propertiesPtr_;
 
 
@@ -63,8 +67,19 @@ public:
         //- Construct from name
         thermophysicalPropertiesSelector(const word& name);
 
-        //- Construct from dictionary
-        thermophysicalPropertiesSelector(const dictionary& dict);
+        //- Construct from name and dictionary
+        thermophysicalPropertiesSelector
+        (
+            const word& name,
+            const dictionary& dict
+        );
+
+        //- Construct as named copy
+        thermophysicalPropertiesSelector
+        (
+            const word& name,
+            const thermophysicalPropertiesSelector&
+        );
 
 
     // Static data
@@ -89,8 +104,14 @@ public:
               + '>';
         }
 
-        //- Return reference to the selected physical properties class
-        inline const ThermophysicalProperties& properties() const;
+
+        // Access
+
+            //- Return the specie name
+            inline const word& name() const;
+
+            //- Return the physical properties model
+            inline const ThermophysicalProperties& properties() const;
 
 
         // Physical constants which define the specie

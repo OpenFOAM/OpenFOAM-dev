@@ -131,8 +131,8 @@ public:
             const Polynomial<PolySize>& rhoPoly
         );
 
-        //- Construct from dictionary
-        icoPolynomial(const dictionary& dict);
+        //- Construct from name and dictionary
+        icoPolynomial(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline icoPolynomial(const word& name, const icoPolynomial&);

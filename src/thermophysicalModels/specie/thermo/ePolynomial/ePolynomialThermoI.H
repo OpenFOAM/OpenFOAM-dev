@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "ePolynomialThermo.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState, int PolySize>
 inline Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
@@ -46,8 +46,6 @@ inline Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
     sCoeffs_(sCoeffs)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState, int PolySize>
 inline Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo

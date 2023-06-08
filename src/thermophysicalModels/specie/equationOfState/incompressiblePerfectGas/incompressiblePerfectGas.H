@@ -118,8 +118,8 @@ public:
         //- Construct from components
         inline incompressiblePerfectGas(const Specie& sp, const scalar pRef);
 
-        //- Construct from dictionary
-        incompressiblePerfectGas(const dictionary& dict);
+        //- Construct from name and dictionary
+        incompressiblePerfectGas(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline incompressiblePerfectGas

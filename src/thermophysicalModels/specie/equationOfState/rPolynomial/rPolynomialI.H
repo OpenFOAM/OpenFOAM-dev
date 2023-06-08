@@ -25,7 +25,7 @@ License
 
 #include "rPolynomial.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::rPolynomial<Specie>::rPolynomial
@@ -38,8 +38,6 @@ inline Foam::rPolynomial<Specie>::rPolynomial
     C_(coeffs)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::rPolynomial<Specie>::rPolynomial

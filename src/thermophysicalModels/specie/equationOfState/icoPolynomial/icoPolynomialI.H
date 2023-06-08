@@ -25,7 +25,7 @@ License
 
 #include "icoPolynomial.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie, int PolySize>
 inline Foam::icoPolynomial<Specie, PolySize>::icoPolynomial
@@ -38,8 +38,6 @@ inline Foam::icoPolynomial<Specie, PolySize>::icoPolynomial
     rhoCoeffs_(rhoCoeffs)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie, int PolySize>
 inline Foam::icoPolynomial<Specie, PolySize>::icoPolynomial

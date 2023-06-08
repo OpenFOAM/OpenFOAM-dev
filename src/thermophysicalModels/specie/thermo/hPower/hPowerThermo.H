@@ -123,6 +123,11 @@ class hPowerThermo
         //- Check given temperature is within the range of the fitted coeffs
         inline void checkT(const scalar T) const;
 
+
+public:
+
+    // Constructors
+
         //- Construct from components
         inline hPowerThermo
         (
@@ -133,13 +138,8 @@ class hPowerThermo
             const scalar Hf
         );
 
-
-public:
-
-    // Constructors
-
-        //- Construct from dictionary
-        hPowerThermo(const dictionary&);
+        //- Construct from name and dictionary
+        hPowerThermo(const word& name, const dictionary& dict);
 
         //- Construct as a named copy
         inline hPowerThermo

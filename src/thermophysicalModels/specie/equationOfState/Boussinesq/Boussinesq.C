@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,10 +31,11 @@ License
 template<class Specie>
 Foam::Boussinesq<Specie>::Boussinesq
 (
+    const word& name,
     const dictionary& dict
 )
 :
-    Specie(dict),
+    Specie(name, dict),
     rho0_(dict.subDict("equationOfState").lookup<scalar>("rho0")),
     T0_(dict.subDict("equationOfState").lookup<scalar>("T0")),
     beta_(dict.subDict("equationOfState").lookup<scalar>("beta"))

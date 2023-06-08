@@ -114,8 +114,10 @@ class sutherlandTransport
         //  given two viscosities and temperatures
         inline void calcCoeffs
         (
-            const scalar mu1, const scalar T1,
-            const scalar mu2, const scalar T2
+            const scalar mu1,
+            const scalar T1,
+            const scalar mu2,
+            const scalar T2
         );
 
         //- Read coefficient from dictionary
@@ -138,15 +140,17 @@ public:
         inline sutherlandTransport
         (
             const Thermo& t,
-            const scalar mu1, const scalar T1,
-            const scalar mu2, const scalar T2
+            const scalar mu1,
+            const scalar T1,
+            const scalar mu2,
+            const scalar T2
         );
 
         //- Construct as named copy
         inline sutherlandTransport(const word&, const sutherlandTransport&);
 
-        //- Construct from dictionary
-        sutherlandTransport(const dictionary& dict);
+        //- Construct from name and dictionary
+        sutherlandTransport(const word& name, const dictionary& dict);
 
         //- Construct from base thermo and dictionary
         sutherlandTransport(const Thermo& t,const dictionary& dict);

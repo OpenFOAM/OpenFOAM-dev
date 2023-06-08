@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,7 +141,9 @@ class hPolynomialThermo
         Polynomial<PolySize> sCoeffs_;
 
 
-    // Private Member Functions
+public:
+
+    // Constructors
 
         //- Construct from components
         inline hPolynomialThermo
@@ -154,13 +156,8 @@ class hPolynomialThermo
             const Polynomial<PolySize>& sCoeffs
         );
 
-
-public:
-
-    // Constructors
-
-        //- Construct from dictionary
-        hPolynomialThermo(const dictionary& dict);
+        //- Construct from name and dictionary
+        hPolynomialThermo(const word& name, const dictionary& dict);
 
         //- Construct as a named copy
         inline hPolynomialThermo(const word&, const hPolynomialThermo&);

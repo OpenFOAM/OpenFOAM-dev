@@ -107,7 +107,9 @@ class constTransport
         scalar kappa_;
 
 
-    // Private Member Functions
+public:
+
+    // Constructors
 
         //- Construct from components
         inline constTransport
@@ -119,16 +121,11 @@ class constTransport
             const scalar kappa
         );
 
-
-public:
-
-    // Constructors
-
         //- Construct as named copy
         inline constTransport(const word&, const constTransport&);
 
-        //- Construct from dictionary
-        constTransport(const dictionary& dict);
+        //- Construct from name and dictionary
+        constTransport(const word& name, const dictionary& dict);
 
         //- Construct and return a clone
         inline autoPtr<constTransport> clone() const;

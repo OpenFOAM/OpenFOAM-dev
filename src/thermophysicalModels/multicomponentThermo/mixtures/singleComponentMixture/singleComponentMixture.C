@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Foam::singleComponentMixture<ThermoType>::singleComponentMixture
 )
 :
     basicSpecieMixture(thermoDict, wordList(), mesh, phaseName),
-    mixture_(thermoDict.subDict("mixture"))
+    mixture_("mixture", thermoDict.subDict("mixture"))
 {}
 
 
@@ -55,7 +55,7 @@ void Foam::singleComponentMixture<ThermoType>::read
     const dictionary& thermoDict
 )
 {
-    mixture_ = ThermoType(thermoDict.subDict("mixture"));
+    mixture_ = ThermoType("mixture", thermoDict.subDict("mixture"));
 }
 
 

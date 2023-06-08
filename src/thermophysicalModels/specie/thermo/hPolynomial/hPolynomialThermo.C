@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,10 +31,11 @@ License
 template<class EquationOfState, int PolySize>
 Foam::hPolynomialThermo<EquationOfState, PolySize>::hPolynomialThermo
 (
+    const word& name,
     const dictionary& dict
 )
 :
-    EquationOfState(dict),
+    EquationOfState(name, dict),
     Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
     Sf_(dict.subDict("thermodynamics").lookup<scalar>("Sf")),
     CpCoeffs_

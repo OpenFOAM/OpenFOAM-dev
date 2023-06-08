@@ -131,7 +131,15 @@ class WLFTransport
         scalar rPr_;
 
 
-    // Private Constructors
+    // Private Member Functions
+
+        //- Read coefficient from dictionary
+        scalar readCoeff(const word& coeffName, const dictionary& dict);
+
+
+public:
+
+    // Constructors
 
         //- Construct from components
         inline WLFTransport
@@ -144,22 +152,11 @@ class WLFTransport
             const scalar Pr
         );
 
-
-    // Private Member Functions
-
-        //- Read coefficient from dictionary
-        scalar readCoeff(const word& coeffName, const dictionary& dict);
-
-
-public:
-
-    // Constructors
-
         //- Construct as named copy
         inline WLFTransport(const word&, const WLFTransport&);
 
-        //- Construct from dictionary
-        WLFTransport(const dictionary& dict);
+        //- Construct from name and dictionary
+        WLFTransport(const word& name, const dictionary& dict);
 
         //- Construct and return a clone
         inline autoPtr<WLFTransport> clone() const;

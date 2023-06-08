@@ -25,7 +25,7 @@ License
 
 #include "adiabaticPerfectFluid.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid
@@ -44,8 +44,6 @@ inline Foam::adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid
     B_(B)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,10 @@ class hIcoTabulatedThermo
 :
     public EquationOfState
 {
-    typedef Function1s::integratedNonUniformTable integratedNonUniformTable;
+    // Private Typedefs
+
+        //- Table type
+        typedef Function1s::integratedNonUniformTable integratedNonUniformTable;
 
 
     // Private Data
@@ -115,8 +118,8 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary
-        hIcoTabulatedThermo(const dictionary& dict);
+        //- Construct from name and dictionary
+        hIcoTabulatedThermo(const word& name, const dictionary& dict);
 
         //- Construct as a named copy
         inline hIcoTabulatedThermo(const word&, const hIcoTabulatedThermo&);

@@ -91,7 +91,10 @@ class icoTabulated
 :
     public Specie
 {
-    typedef Function1s::NonUniformTable<scalar> nonUniformTable;
+    // Private Typedefs
+
+        //- Table type
+        typedef Function1s::NonUniformTable<scalar> nonUniformTable;
 
 
     // Private Data
@@ -111,8 +114,8 @@ public:
             const nonUniformTable& rho
         );
 
-        //- Construct from dictionary
-        icoTabulated(const dictionary& dict);
+        //- Construct from name and dictionary
+        icoTabulated(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline icoTabulated(const word& name, const icoTabulated&);

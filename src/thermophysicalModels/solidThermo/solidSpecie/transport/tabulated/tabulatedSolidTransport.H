@@ -101,7 +101,9 @@ class tabulatedSolidTransport
         nonUniformTable kappa_;
 
 
-    // Private Member Functions
+public:
+
+    // Constructors
 
         //- Construct from components
         inline tabulatedSolidTransport
@@ -110,11 +112,6 @@ class tabulatedSolidTransport
             const nonUniformTable& kappa
         );
 
-
-public:
-
-    // Constructors
-
         //- Construct as named copy
         inline tabulatedSolidTransport
         (
@@ -122,8 +119,8 @@ public:
             const tabulatedSolidTransport&
         );
 
-        //- Construct from dictionary
-        tabulatedSolidTransport(const dictionary&);
+        //- Construct from name and dictionary
+        tabulatedSolidTransport(const word& name, const dictionary& dict);
 
         //- Construct and return a clone
         inline autoPtr<tabulatedSolidTransport> clone() const;

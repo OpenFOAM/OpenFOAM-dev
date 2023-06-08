@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,26 @@ License
 #include "specie.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class EquationOfState>
+inline const typename Foam::janafThermo<EquationOfState>::coeffArray&
+Foam::janafThermo<EquationOfState>::coeffs
+(
+    const scalar T
+) const
+{
+    if (T < Tcommon_)
+    {
+        return lowCpCoeffs_;
+    }
+    else
+    {
+        return highCpCoeffs_;
+    }
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
 inline Foam::janafThermo<EquationOfState>::janafThermo
@@ -63,26 +83,6 @@ inline Foam::janafThermo<EquationOfState>::janafThermo
     }
 }
 
-
-template<class EquationOfState>
-inline const typename Foam::janafThermo<EquationOfState>::coeffArray&
-Foam::janafThermo<EquationOfState>::coeffs
-(
-    const scalar T
-) const
-{
-    if (T < Tcommon_)
-    {
-        return lowCpCoeffs_;
-    }
-    else
-    {
-        return highCpCoeffs_;
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
 inline Foam::janafThermo<EquationOfState>::janafThermo

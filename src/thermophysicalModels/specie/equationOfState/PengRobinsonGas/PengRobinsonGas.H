@@ -144,8 +144,8 @@ public:
             const scalar& omega
         );
 
-        //- Construct from dictionary
-        PengRobinsonGas(const dictionary& dict);
+        //- Construct from name and dictionary
+        PengRobinsonGas(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline PengRobinsonGas(const word& name, const PengRobinsonGas&);

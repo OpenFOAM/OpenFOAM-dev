@@ -123,7 +123,9 @@ class logPolynomialTransport
         Polynomial<PolySize> kappaCoeffs_;
 
 
-    // Private Member Functions
+public:
+
+    // Constructors
 
         //- Construct from components
         inline logPolynomialTransport
@@ -133,11 +135,6 @@ class logPolynomialTransport
             const Polynomial<PolySize>& kappaPoly
         );
 
-
-public:
-
-    // Constructors
-
         //- Construct as named copy
         inline logPolynomialTransport
         (
@@ -145,8 +142,8 @@ public:
             const logPolynomialTransport&
         );
 
-        //- Construct from dictionary
-        logPolynomialTransport(const dictionary& dict);
+        //- Construct from name and dictionary
+        logPolynomialTransport(const word& name, const dictionary& dict);
 
         //- Construct and return a clone
         inline autoPtr<logPolynomialTransport> clone() const;

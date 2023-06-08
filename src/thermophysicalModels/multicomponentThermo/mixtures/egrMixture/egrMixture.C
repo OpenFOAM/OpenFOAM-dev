@@ -51,9 +51,9 @@ Foam::egrMixture<ThermoType>::egrMixture
 
     stoicRatio_(thermoDict.lookup("stoichiometricAirFuelMassRatio")),
 
-    fuel_(thermoDict.subDict("fuel")),
-    oxidant_(thermoDict.subDict("oxidant")),
-    products_(thermoDict.subDict("burntProducts")),
+    fuel_("fuel", thermoDict.subDict("fuel")),
+    oxidant_("oxidant", thermoDict.subDict("oxidant")),
+    products_("burntProducts", thermoDict.subDict("burntProducts")),
 
     mixture_("mixture", fuel_),
 
@@ -102,9 +102,10 @@ void Foam::egrMixture<ThermoType>::read(const dictionary& thermoDict)
 {
     stoicRatio_ = thermoDict.lookup("stoichiometricAirFuelMassRatio");
 
-    fuel_ = ThermoType(thermoDict.subDict("fuel"));
-    oxidant_ = ThermoType(thermoDict.subDict("oxidant"));
-    products_ = ThermoType(thermoDict.subDict("burntProducts"));
+    fuel_ = ThermoType("fuel", thermoDict.subDict("fuel"));
+    oxidant_ = ThermoType("oxidant", thermoDict.subDict("oxidant"));
+    products_ =
+        ThermoType("burntProducts", thermoDict.subDict("burntProducts"));
 }
 
 

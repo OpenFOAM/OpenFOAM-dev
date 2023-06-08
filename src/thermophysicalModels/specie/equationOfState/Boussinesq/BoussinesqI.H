@@ -31,7 +31,10 @@ License
 template<class Specie>
 inline Foam::Boussinesq<Specie>::Boussinesq
 (
-    const Specie& sp, const scalar rho0, const scalar T0, const scalar beta
+    const Specie& sp,
+    const scalar rho0,
+    const scalar T0,
+    const scalar beta
 )
 :
     Specie(sp),

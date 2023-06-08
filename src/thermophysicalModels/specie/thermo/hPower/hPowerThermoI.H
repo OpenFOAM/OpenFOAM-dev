@@ -44,21 +44,6 @@ inline void Foam::hPowerThermo<EquationOfState>::checkT
 }
 
 
-template<class EquationOfState>
-inline Foam::hPowerThermo<EquationOfState>::hPowerThermo
-(
-    const word& name,
-    const hPowerThermo& jt
-)
-:
-    EquationOfState(name, jt),
-    c0_(jt.c0_),
-    n0_(jt.n0_),
-    Tref_(jt.Tref_),
-    Hf_(jt.Hf_)
-{}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
@@ -76,6 +61,21 @@ inline Foam::hPowerThermo<EquationOfState>::hPowerThermo
     n0_(n0),
     Tref_(Tref),
     Hf_(Hf)
+{}
+
+
+template<class EquationOfState>
+inline Foam::hPowerThermo<EquationOfState>::hPowerThermo
+(
+    const word& name,
+    const hPowerThermo& jt
+)
+:
+    EquationOfState(name, jt),
+    c0_(jt.c0_),
+    n0_(jt.n0_),
+    Tref_(jt.Tref_),
+    Hf_(jt.Hf_)
 {}
 
 

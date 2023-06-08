@@ -25,7 +25,7 @@ License
 
 #include "rhoTabulated.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::rhoTabulated<Specie>::rhoTabulated
@@ -38,8 +38,6 @@ inline Foam::rhoTabulated<Specie>::rhoTabulated
     rho_(rho)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::rhoTabulated<Specie>::rhoTabulated

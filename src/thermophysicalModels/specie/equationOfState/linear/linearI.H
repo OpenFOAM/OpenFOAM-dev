@@ -25,7 +25,7 @@ License
 
 #include "linear.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::linear<Specie>::linear
@@ -40,8 +40,6 @@ inline Foam::linear<Specie>::linear
     rho0_(rho0)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::linear<Specie>::linear

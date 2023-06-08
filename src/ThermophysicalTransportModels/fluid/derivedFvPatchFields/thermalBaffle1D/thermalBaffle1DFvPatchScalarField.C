@@ -187,7 +187,7 @@ const solidType& thermalBaffle1DFvPatchScalarField<solidType>::solid() const
     {
         if (solidPtr_.empty())
         {
-            solidPtr_.reset(new solidType(solidDict_));
+            solidPtr_.reset(new solidType("solid", solidDict_));
         }
 
         return solidPtr_();

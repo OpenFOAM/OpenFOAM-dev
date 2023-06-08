@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,8 +55,8 @@ int main(int argc, char *argv[])
 
     dictionary dict(IFstream("thermoDict")());
 
-    ThermoType t1(dict.subDict("specie1"));
-    ThermoType t2(dict.subDict("specie2"));
+    ThermoType t1("specie1", dict.subDict("specie1"));
+    ThermoType t2("specie2", dict.subDict("specie2"));
 
     Info<< "Checking Cp of mixture of hConstThermo" << endl;
 

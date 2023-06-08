@@ -121,7 +121,9 @@ class hConstThermo
         scalar Hsref_;
 
 
-    // Private Member Functions
+public:
+
+    // Constructors
 
         //- Construct from components
         inline hConstThermo
@@ -133,13 +135,8 @@ class hConstThermo
             const scalar Hsref
         );
 
-
-public:
-
-    // Constructors
-
-        //- Construct from dictionary
-        hConstThermo(const dictionary& dict);
+        //- Construct from name and dictionary
+        hConstThermo(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline hConstThermo(const word&, const hConstThermo&);

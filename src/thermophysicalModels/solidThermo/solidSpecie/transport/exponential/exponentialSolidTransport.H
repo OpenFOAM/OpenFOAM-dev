@@ -80,7 +80,9 @@ class exponentialSolidTransport
         scalar Tref_;
 
 
-    // Private Member Functions
+public:
+
+    // Constructors
 
         //- Construct from components
         inline exponentialSolidTransport
@@ -91,11 +93,6 @@ class exponentialSolidTransport
             const scalar Tref
         );
 
-
-public:
-
-    // Constructors
-
         //- Construct as named copy
         inline exponentialSolidTransport
         (
@@ -103,8 +100,8 @@ public:
             const exponentialSolidTransport&
         );
 
-        //- Construct from dictionary
-        exponentialSolidTransport(const dictionary&);
+        //- Construct from name and dictionary
+        exponentialSolidTransport(const word& name, const dictionary& dict);
 
         //- Construct and return a clone
         inline autoPtr<exponentialSolidTransport> clone() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,9 +42,13 @@ Foam::scalar Foam::WLFTransport<Thermo>::readCoeff
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo>
-Foam::WLFTransport<Thermo>::WLFTransport(const dictionary& dict)
+Foam::WLFTransport<Thermo>::WLFTransport
+(
+    const word& name,
+    const dictionary& dict
+)
 :
-    Thermo(dict),
+    Thermo(name, dict),
     mu0_(readCoeff("mu0", dict)),
     Tr_(readCoeff("Tr", dict)),
     C1_(readCoeff("C1", dict)),

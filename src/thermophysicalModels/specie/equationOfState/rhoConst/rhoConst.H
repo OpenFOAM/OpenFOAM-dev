@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,8 +113,8 @@ public:
         //- Construct from components
         inline rhoConst(const Specie& sp, const scalar rho);
 
-        //- Construct from dictionary
-        rhoConst(const dictionary& dict);
+        //- Construct from name and dictionary
+        rhoConst(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline rhoConst(const word& name, const rhoConst&);

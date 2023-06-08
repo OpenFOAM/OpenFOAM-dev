@@ -136,8 +136,8 @@ public:
             const scalar beta
         );
 
-        //- Construct from dictionary
-        Boussinesq(const dictionary& dict);
+        //- Construct from name and dictionary
+        Boussinesq(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline Boussinesq

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,10 @@ class eTabulatedThermo
 :
     public EquationOfState
 {
-    typedef Function2s::UniformTable<scalar> table2D;
+    // Private Typedefs
+
+        //- Table type
+        typedef Function2s::UniformTable<scalar> table2D;
 
 
     // Private Data
@@ -151,8 +154,8 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary
-        eTabulatedThermo(const dictionary& dict);
+        //- Construct from name and dictionary
+        eTabulatedThermo(const word& name, const dictionary& dict);
 
         //- Construct as a named copy
         inline eTabulatedThermo(const word&, const eTabulatedThermo&);

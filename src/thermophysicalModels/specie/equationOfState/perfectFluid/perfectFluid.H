@@ -133,8 +133,8 @@ public:
             const scalar rho0
         );
 
-        //- Construct from dictionary
-        perfectFluid(const dictionary& dict);
+        //- Construct from name and dictionary
+        perfectFluid(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline perfectFluid(const word& name, const perfectFluid&);

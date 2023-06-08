@@ -23,7 +23,17 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "thermophysicalPropertiesSelector.H"
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ThermophysicalProperties>
+inline const Foam::word&
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::name() const
+{
+    return name_;
+}
+
 
 template<class ThermophysicalProperties>
 inline const ThermophysicalProperties&

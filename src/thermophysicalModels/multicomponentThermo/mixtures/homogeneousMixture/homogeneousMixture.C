@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,8 +50,8 @@ Foam::homogeneousMixture<ThermoType>::homogeneousMixture
         phaseName
     ),
 
-    reactants_(thermoDict.subDict("reactants")),
-    products_(thermoDict.subDict("products")),
+    reactants_("reactants", thermoDict.subDict("reactants")),
+    products_("products", thermoDict.subDict("products")),
     mixture_("mixture", reactants_),
     b_(Y("b"))
 {}
@@ -86,8 +86,8 @@ const ThermoType& Foam::homogeneousMixture<ThermoType>::mixture
 template<class ThermoType>
 void Foam::homogeneousMixture<ThermoType>::read(const dictionary& thermoDict)
 {
-    reactants_ = ThermoType(thermoDict.subDict("reactants"));
-    products_ = ThermoType(thermoDict.subDict("products"));
+    reactants_ = ThermoType("reactants", thermoDict.subDict("reactants"));
+    products_ = ThermoType("products", thermoDict.subDict("products"));
 }
 
 

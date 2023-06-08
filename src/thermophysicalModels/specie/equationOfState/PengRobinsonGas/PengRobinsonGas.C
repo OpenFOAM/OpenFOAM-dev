@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,10 +31,11 @@ License
 template<class Specie>
 Foam::PengRobinsonGas<Specie>::PengRobinsonGas
 (
+    const word& name,
     const dictionary& dict
 )
 :
-    Specie(dict),
+    Specie(name, dict),
     Tc_(dict.subDict("equationOfState").lookup<scalar>("Tc")),
     Vc_(dict.subDict("equationOfState").lookup<scalar>("Vc")),
     Zc_(1.0),

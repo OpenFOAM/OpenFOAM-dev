@@ -25,7 +25,7 @@ License
 
 #include "perfectFluid.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::perfectFluid<Specie>::perfectFluid
@@ -40,8 +40,6 @@ inline Foam::perfectFluid<Specie>::perfectFluid
     rho0_(rho0)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::perfectFluid<Specie>::perfectFluid

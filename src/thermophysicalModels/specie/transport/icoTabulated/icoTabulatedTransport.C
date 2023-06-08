@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,10 +31,11 @@ License
 template<class Thermo>
 Foam::icoTabulatedTransport<Thermo>::icoTabulatedTransport
 (
+    const word& name,
     const dictionary& dict
 )
 :
-    Thermo(dict),
+    Thermo(name, dict),
     mu_("mu", dict.subDict("transport").subDict("mu")),
     kappa_("kappa", dict.subDict("transport").subDict("kappa"))
 {}

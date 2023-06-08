@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,48 +101,23 @@ int main(int argc, char *argv[])
     scalar stoicCO2 = n;
     scalar stoicH2O = m/2.0;
 
-    thermo FUEL
-    (
-        "fuel",
-        thermo(thermoData.subDict(fuelName))
-    );
+    thermo FUEL("fuel", thermoData.subDict(fuelName));
     Info<< "fuel " << FUEL << ';' << endl;
     FUEL *= FUEL.W();
 
-    thermo O2
-    (
-        "O2",
-        thermo(thermoData.subDict("O2"))
-    );
+    thermo O2("O2", thermoData.subDict("O2"));
     O2 *= O2.W();
 
-    thermo N2
-    (
-        "N2",
-        thermo(thermoData.subDict("N2"))
-    );
+    thermo N2("N2", thermoData.subDict("N2"));
     N2 *= N2.W();
 
-    thermo CO2
-    (
-        "CO2",
-        thermo(thermoData.subDict("CO2"))
-    );
+    thermo CO2("CO2", thermoData.subDict("CO2"));
     CO2 *= CO2.W();
 
-    thermo H2O
-    (
-        "H2O",
-        thermo(thermoData.subDict("H2O"))
-    );
+    thermo H2O("H2O", thermoData.subDict("H2O"));
     H2O *= H2O.W();
 
-    thermo oxidant
-    (
-        "oxidant",
-        stoicO2*O2
-      + stoicN2*N2
-    );
+    thermo oxidant("oxidant", stoicO2*O2 + stoicN2*N2);
     Info<< "oxidant " << (1/oxidant.Y())*oxidant << ';' << endl;
 
     dimensionedScalar stoichiometricAirFuelMassRatio

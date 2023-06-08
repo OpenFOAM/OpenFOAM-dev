@@ -25,7 +25,7 @@ License
 
 #include "perfectGas.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::perfectGas<Specie>::perfectGas(const Specie& sp)
@@ -33,8 +33,6 @@ inline Foam::perfectGas<Specie>::perfectGas(const Specie& sp)
     Specie(sp)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
 inline Foam::perfectGas<Specie>::perfectGas

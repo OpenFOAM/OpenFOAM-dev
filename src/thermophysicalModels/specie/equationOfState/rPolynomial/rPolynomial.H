@@ -111,13 +111,14 @@ class rPolynomial
 :
     public Specie
 {
-    // Private Data
+    // Private Classes
 
+        //- Coefficient list class
         class coeffList
         :
             public VectorSpace<coeffList, scalar, 5>
         {
-            public:
+        public:
 
             // Constructors
 
@@ -133,6 +134,8 @@ class rPolynomial
         };
 
 
+    // Private Data
+
         //- Density coefficients
         coeffList C_;
 
@@ -142,14 +145,10 @@ public:
     // Constructors
 
         //- Construct from components
-        inline rPolynomial
-        (
-            const Specie& sp,
-            const coeffList& coeffs
-        );
+        inline rPolynomial(const Specie& sp, const coeffList& coeffs);
 
-        //- Construct from dictionary
-        rPolynomial(const dictionary& dict);
+        //- Construct from name and dictionary
+        rPolynomial(const word& name, const dictionary& dict);
 
         //- Construct as named copy
         inline rPolynomial(const word& name, const rPolynomial&);

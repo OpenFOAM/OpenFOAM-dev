@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
 inline Foam::eConstThermo<EquationOfState>::eConstThermo
@@ -42,8 +42,6 @@ inline Foam::eConstThermo<EquationOfState>::eConstThermo
     Esref_(Esref)
 {}
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
 inline Foam::eConstThermo<EquationOfState>::eConstThermo

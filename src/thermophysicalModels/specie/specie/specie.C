@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,9 +36,9 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::specie::specie(const dictionary& dict)
+Foam::specie::specie(const word& name, const dictionary& dict)
 :
-    name_(dict.dictName()),
+    name_(name),
     Y_(dict.subDict("specie").lookupOrDefault("massFraction", 1.0)),
     molWeight_(dict.subDict("specie").lookup<scalar>("molWeight"))
 {}
