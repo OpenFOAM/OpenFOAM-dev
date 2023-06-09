@@ -56,7 +56,7 @@ namespace fvMeshTopoChangers
 bool Foam::fvMeshTopoChangers::meshToMesh::forward() const
 {
     return
-        !cycle_
+        cycle_ == 0
      || int((mesh().time().userTimeValue() - begin_)/cycle_) % 2 == 0;
 }
 
@@ -131,6 +131,13 @@ Foam::fvMeshTopoChangers::meshToMesh::meshToMesh
     cycle_(dict.lookupOrDefault("cycle", 0.0)),
     timeIndex_(-1)
 {
+    if (repeat_ > 0 && cycle_ > 0)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Both 'repeat' and 'cycle' options specified"
+            << exit(FatalIOError);
+    }
+
     forAll(times_, i)
     {
         timeIndices_.insert(int64_t((times_[i] + timeDelta_/2.0)/timeDelta_));
@@ -150,11 +157,16 @@ Foam::scalar Foam::fvMeshTopoChangers::meshToMesh::timeToNextMesh() const
 {
     const Time& time = mesh().time();
 
-    if (repeat_ || cycle_ || time.userTimeValue() + timeDelta_ < times_.last())
+    if
+    (
+        repeat_ > 0
+     || cycle_ > 0
+     || time.userTimeValue() + timeDelta_ < times_.last()
+    )
     {
         const scalar meshTime = this->meshTime();
 
-        if (!cycle_ || int((time.userTimeValue() - begin_)/cycle_) % 2 == 0)
+        if (cycle_ == 0 || int((time.userTimeValue() - begin_)/cycle_) % 2 == 0)
         {
             forAll(times_, i)
             {
