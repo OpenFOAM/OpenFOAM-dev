@@ -53,6 +53,44 @@ namespace fvMeshTopoChangers
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
+bool Foam::fvMeshTopoChangers::meshToMesh::forward() const
+{
+    return
+        !cycle_
+     || int((mesh().time().userTimeValue() - begin_)/cycle_) % 2 == 0;
+}
+
+
+Foam::scalar Foam::fvMeshTopoChangers::meshToMesh::meshTime() const
+{
+    const Time& time = mesh().time();
+
+    if (repeat_ > 0)
+    {
+        return begin_ + fmod(time.userTimeValue() - begin_, repeat_);
+    }
+    else if (cycle_ > 0)
+    {
+        if (forward())
+        {
+            return
+                begin_
+              + fmod(time.userTimeValue() - begin_, cycle_);
+        }
+        else
+        {
+            return
+                begin_ + cycle_
+              - fmod(time.userTimeValue() - begin_, cycle_);
+        }
+    }
+    else
+    {
+        return time.userTimeValue();
+    }
+}
+
+
 void Foam::fvMeshTopoChangers::meshToMesh::interpolateUfs()
 {
     // Interpolate U to Uf
@@ -88,6 +126,9 @@ Foam::fvMeshTopoChangers::meshToMesh::meshToMesh
     dict_(dict),
     times_(dict.lookup("times")),
     timeDelta_(dict.lookup<scalar>("timeDelta")),
+    begin_(dict.lookupOrDefault("begin", mesh().time().beginTime().value())),
+    repeat_(dict.lookupOrDefault("repeat", 0.0)),
+    cycle_(dict.lookupOrDefault("cycle", 0.0)),
     timeIndex_(-1)
 {
     forAll(times_, i)
@@ -105,43 +146,82 @@ Foam::fvMeshTopoChangers::meshToMesh::~meshToMesh()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::scalar Foam::fvMeshTopoChangers::meshToMesh::timeToNextMesh() const
+{
+    const Time& time = mesh().time();
+
+    if (repeat_ || cycle_ || time.userTimeValue() + timeDelta_ < times_.last())
+    {
+        const scalar meshTime = this->meshTime();
+
+        if (!cycle_ || int((time.userTimeValue() - begin_)/cycle_) % 2 == 0)
+        {
+            forAll(times_, i)
+            {
+                if (times_[i] > meshTime + timeDelta_)
+                {
+                    return time.userTimeToTime(times_[i] - meshTime);
+                }
+            }
+        }
+        else
+        {
+            forAllReverse(times_, i)
+            {
+                if (times_[i] < meshTime - timeDelta_)
+                {
+                    return time.userTimeToTime(meshTime - times_[i]);
+                }
+            }
+        }
+    }
+
+    return vGreat;
+}
+
+
 bool Foam::fvMeshTopoChangers::meshToMesh::update()
 {
+    const Time& time = mesh().time();
+
     // Add the meshToMeshAdjustTimeStepFunctionObject functionObject
     // if not already present
     if
     (
-        mesh().time().functionObjects().findObjectID("meshToMeshAdjustTimeStep")
+        time.functionObjects().findObjectID("meshToMeshAdjustTimeStep")
      == -1
     )
     {
-        const_cast<Time&>(mesh().time()).functionObjects().append
+        const_cast<Time&>(time).functionObjects().append
         (
             new functionObjects::meshToMeshAdjustTimeStepFunctionObject
             (
                 "meshToMeshAdjustTimeStep",
-                mesh().time(),
+                time,
                 dict_
             )
         );
     }
 
     // Only refine on the first call in a time-step
-    if (timeIndex_ != mesh().time().timeIndex())
+    if (timeIndex_ != time.timeIndex())
     {
-        timeIndex_ = mesh().time().timeIndex();
+        timeIndex_ = time.timeIndex();
     }
     else
     {
         return false;
     }
 
-    const scalar userTime = mesh().time().userTimeValue();
+    // Obtain the mesh time from the user time
+    // repeating or cycling the mesh sequence if required
 
-    if (timeIndices_.found((userTime + timeDelta_/2)/timeDelta_))
+    const scalar meshTime = this->meshTime();
+
+    if (timeIndices_.found((meshTime + timeDelta_/2)/timeDelta_))
     {
         const word otherMeshDir =
-            "meshToMesh_" + mesh().time().timeName(userTime);
+            "meshToMesh_" + time.timeName(meshTime);
 
         Info << "Mapping to mesh " << otherMeshDir << endl;
 
@@ -150,8 +230,8 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
             IOobject
             (
                 otherMeshDir,
-                mesh().time().constant(),
-                mesh().time(),
+                time.constant(),
+                time,
                 IOobject::MUST_READ
             ),
             false,

@@ -35,6 +35,9 @@ topoChanger
 
     times   (0.0015 0.003);
 
+    cycle   #calc "1.0/300.0";
+    begin   0;
+
     timeDelta 1e-6;
 }
 

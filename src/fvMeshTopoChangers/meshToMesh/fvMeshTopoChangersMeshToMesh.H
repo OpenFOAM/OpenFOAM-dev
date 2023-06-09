@@ -25,7 +25,39 @@ Class
     Foam::fvMeshTopoChangers::meshToMesh
 
 Description
-    fvMeshTopoChanger which maps to new mesh
+    fvMeshTopoChanger which maps the fields to a new mesh or sequence of meshes
+
+    which can optionally be mapped to repeatedly for example in multi-cycle
+    engine cases or cycled through for symmetric forward and reverse motion.
+
+Usage
+    \table
+        Property  | Description                   | Required | Default value
+        libs      | Libraries to load             | no       |
+        times     | List of times for the meshes  | yes      |
+        repeat    | Repetition period             | no       |
+        cycle     | Cycle period                  | no       |
+        begin     | Begin time for the meshes     | no       | Time::beginTime()
+        timeDelta | Time tolerance used for time -> index | yes      |
+    \endtable
+
+    Examples of the mesh-to-mesh mapping for the multi-cycle
+    tutorials/incompressibleFluid/movingCone case:
+    \verbatim
+    topoChanger
+    {
+        type    meshToMesh;
+
+        libs    ("libmeshToMeshTopoChanger.so");
+
+        times   (0.0015 0.003);
+
+        cycle   #calc "1.0/300.0";
+        begin   0;
+
+        timeDelta 1e-6;
+    }
+    \endverbatim
 
 SourceFiles
     fvMeshTopoChangersMeshToMesh.C
@@ -66,11 +98,29 @@ class meshToMesh
         //- Hash set of mesh mapping time indices
         HashSet<int64_t, Hash<int64_t>> timeIndices_;
 
+        //- Optional begin time for the meshes
+        scalar begin_;
+
+        //- Optional repetition period
+        scalar repeat_;
+
+        //- Optional cycle period
+        scalar cycle_;
+
         //- The time index used for updating
         label timeIndex_;
 
 
     // Private Member Functions
+
+        //- Return true if the set of meshes are being traversed in the forward
+        //  sequence or false if cycling is currently traversing the meshes in
+        //  revers order
+        bool forward() const;
+
+        //- Return the user time mapped to the mesh sequence
+        //  handling the repeat or cycle option
+        scalar meshTime() const;
 
         //- Interpolate U's to Uf's
         void interpolateUfs();
@@ -97,15 +147,7 @@ public:
 
     // Member Functions
 
-        const scalarList& times() const
-        {
-            return times_;
-        }
-
-        scalar timeDelta() const
-        {
-            return timeDelta_;
-        }
+        scalar timeToNextMesh() const;
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();

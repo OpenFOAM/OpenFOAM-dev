@@ -17,20 +17,34 @@ dimensions      [0 1 -1 0 0 0 0];
 
 internalField   uniform 0;
 
+movement
+{
+    type            uniformFixedValue;
+
+    uniformValue
+    {
+        type            square;
+
+        amplitude       1;
+        frequency       150;
+        start           0;
+        level           0;
+    }
+}
+
+
 boundaryField
 {
     #includeEtc "caseDicts/setConstraintTypes"
 
     movingWall
     {
-        type            uniformFixedValue;
-        uniformValue    constant 1;
+        $movement;
     }
 
     farFieldMoving
     {
-        type            uniformFixedValue;
-        uniformValue    constant 1;
+        $movement;
     }
 
     fixedWall

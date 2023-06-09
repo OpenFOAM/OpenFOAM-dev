@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,20 +85,7 @@ bool Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::read
 Foam::scalar
 Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::timeToNextWrite()
 {
-    const scalarList& times = meshToMesh_.times();
-
-    if (time_.userTimeValue() + meshToMesh_.timeDelta() < times.last())
-    {
-        forAll(times, i)
-        {
-            if (times[i] > time_.userTimeValue() + meshToMesh_.timeDelta())
-            {
-                return time_.userTimeToTime(times[i] - time_.userTimeValue());
-            }
-        }
-    }
-
-    return vGreat;
+    return meshToMesh_.timeToNextMesh();
 }
 
 
