@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,9 @@ namespace Foam
     class fileName;
     class polyMesh;
 
+    //- Output directory for sets and surfaces
+    fileName checkMeshOutputDir(const polyMesh& mesh);
+
     //- Print mesh statistics
     void printMeshStats(const polyMesh& mesh, const bool allTopology);
 
@@ -62,15 +65,15 @@ namespace Foam
         const fileName& outputDir
     );
 
-    //- Write vtk representation of (assembled) faceSet to surface file in
+    //- Write representation of (assembled) faceSet to surface file in
     //  postProcessing/ directory
     void mergeAndWrite(const surfaceWriter&, const faceSet&);
 
-    //- Write vtk representation of (assembled) cellSet to surface file in
+    //- Write representation of (assembled) cellSet to surface file in
     //  postProcessing/ directory
     void mergeAndWrite(const surfaceWriter&, const cellSet&);
 
-    //- Write vtk representation of (assembled) pointSet to 'set' file in
+    //- Write representation of (assembled) pointSet to 'set' file in
     //  postProcessing/ directory
     void mergeAndWrite(const setWriter&, const pointSet&);
 }

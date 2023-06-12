@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -257,6 +257,21 @@ void Foam::mergeAndWrite
 }
 
 
+Foam::fileName Foam::checkMeshOutputDir(const polyMesh& mesh)
+{
+    return
+        mesh.time().globalPath()
+       /functionObjects::writeFile::outputPrefix
+       /(
+            (mesh.name() != polyMesh::defaultRegion)
+          ? mesh.name()
+          : word::null
+        )
+       /"checkMesh"
+       /mesh.pointsInstance();
+}
+
+
 void Foam::mergeAndWrite
 (
     const surfaceWriter& writer,
@@ -271,15 +286,7 @@ void Foam::mergeAndWrite
         mesh.points()
     );
 
-    fileName outputDir
-    (
-        set.time().globalPath()
-       /functionObjects::writeFile::outputPrefix
-       /mesh.pointsInstance()
-       /set.name()
-    );
-
-    mergeAndWrite(mesh, writer, set.name(), setPatch, outputDir);
+    mergeAndWrite(mesh, writer, set.name(), setPatch, checkMeshOutputDir(mesh));
 }
 
 
@@ -363,13 +370,7 @@ void Foam::mergeAndWrite
         mesh.points()
     );
 
-    fileName outputDir
-    (
-        set.time().globalPath()
-       /functionObjects::writeFile::outputPrefix
-       /mesh.pointsInstance()
-       /set.name()
-    );
+    const fileName outputDir(checkMeshOutputDir(mesh));
     outputDir.clean();
 
     mergeAndWrite(mesh, writer, set.name(), setPatch, outputDir);
@@ -453,9 +454,7 @@ void Foam::mergeAndWrite
     {
         writer.write
         (
-            set.time().globalPath()
-           /functionObjects::writeFile::outputPrefix
-           /mesh.pointsInstance(),
+            checkMeshOutputDir(mesh),
             set.name(),
             coordSet(false, word::null, mergedPts),
             "pointID",
