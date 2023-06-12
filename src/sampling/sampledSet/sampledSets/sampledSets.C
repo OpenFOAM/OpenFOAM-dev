@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,7 +145,10 @@ bool Foam::functionObjects::sampledSets::read(const dictionary& dict)
 
         dict.lookup("interpolationScheme") >> interpolationScheme_;
 
-        const word writeType(dict.lookup("setFormat"));
+        const word writeType
+        (
+            dict.lookupOrDefault("setFormat", time_.graphFormat())
+        );
 
         // Define the set formatter
         formatter_ = setWriter::New(writeType, dict);

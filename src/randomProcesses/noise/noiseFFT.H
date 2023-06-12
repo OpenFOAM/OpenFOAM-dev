@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ SourceFiles
 #define noiseFFT_H
 
 #include "scalarField.H"
-#include "graph.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,8 +80,8 @@ public:
 
     // Member Functions
 
-        //- Return the graph of p(t)
-        graph pt() const;
+        //- Return p(t)
+        Pair<scalarField> pt() const;
 
         //- Return the nth window
         tmp<scalarField> window(const label N, const label n) const;
@@ -94,24 +93,34 @@ public:
         tmp<scalarField> Pf(const tmp<scalarField>& pn) const;
 
         //- Return the multi-window mean fft of the complete pressure data
-        graph meanPf(const label N, const label nw) const;
+        Pair<scalarField> meanPf(const label N, const label nw) const;
 
         //- Return the multi-window RMS mean fft of the complete pressure data
-        graph RMSmeanPf(const label N, const label nw) const;
+        Pair<scalarField> RMSmeanPf(const label N, const label nw) const;
 
         //- Return the narrow-band PFL (pressure-fluctuation level) spectrum
-        graph Lf(const graph& gPf) const;
+        Pair<scalarField> Lf(const Pair<scalarField>& gPf) const;
 
         //- Return the one-third-octave-band PFL spectrum
         //  starting at octave with mean frequency f1
-        graph Ldelta(const graph& gLf, const scalar f1, const scalar fU) const;
+        Pair<scalarField> Ldelta
+        (
+            const Pair<scalarField>& gLf,
+            const scalar f1,
+            const scalar fU
+        ) const;
 
         //- Return the one-third-octave-band pressure spectrum
         //  starting at octave with mean frequency f1
-        graph Pdelta(const graph& gLf, const scalar f1, const scalar fU) const;
+        Pair<scalarField> Pdelta
+        (
+            const Pair<scalarField>& gLf,
+            const scalar f1,
+            const scalar fU
+        ) const;
 
         //- Return the total PFL as the sum of Lf over all frequencies
-        scalar Lsum(const graph& gLf) const;
+        scalar Lsum(const Pair<scalarField>& gLf) const;
 
         //- Convert the db into Pa
         scalar dbToPa(const scalar db) const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,8 +102,8 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
         // Dump particles
         OBJstream str
         (
-            mesh_.time().path()
-           /"wantedTracks_" + mesh_.time().name() + ".obj"
+            time_.path()
+           /"wantedTracks_" + time_.name() + ".obj"
         );
         InfoInFunction << "Dumping tracks to " << str.name() << endl;
 
@@ -161,8 +161,8 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
         {
             OBJstream str
             (
-                mesh_.time().path()
-               /"obtainedTracks_" + mesh_.time().name() + ".obj"
+                time_.path()
+               /"obtainedTracks_" + time_.name() + ".obj"
             );
             InfoInFunction << "Dumping obtained to " << str.name() << endl;
 

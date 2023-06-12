@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ void Foam::functionObjects::fieldAverage::initialise()
 
 void Foam::functionObjects::fieldAverage::restart()
 {
-    Log << "    Restarting averaging at time " << obr_.time().name() << nl;
+    Log << "    Restarting averaging at time " << time_.name() << nl;
 
     // Clear the times
     totalIter_ = 0;
@@ -124,8 +124,8 @@ void Foam::functionObjects::fieldAverage::calcAverages()
 {
     Log << type() << " " << name() << ":" << nl;
 
-    const label currentTimeIndex = obr_.time().timeIndex();
-    const scalar currentTime = obr_.time().value();
+    const label currentTimeIndex = time_.timeIndex();
+    const scalar currentTime = time_.value();
 
     if (prevTimeIndex_ == currentTimeIndex)
     {
@@ -148,7 +148,7 @@ void Foam::functionObjects::fieldAverage::calcAverages()
     forAll(faItems_, fieldi)
     {
         totalIter_[fieldi]++;
-        totalTime_[fieldi] += obr_.time().deltaTValue();
+        totalTime_[fieldi] += time_.deltaTValue();
     }
 
     Log << "    Calculating averages" << nl;
@@ -185,7 +185,7 @@ void Foam::functionObjects::fieldAverage::writeAverages() const
         IOobject
         (
             name() + "Properties",
-            obr_.time().name(),
+            time_.name(),
             "uniform",
             obr_,
             IOobject::NO_READ,
@@ -250,7 +250,7 @@ void Foam::functionObjects::fieldAverage::read
         typeIOobject<timeIOdictionary> propsDictHeader
         (
             name() + "Properties",
-            obr_.time().name(),
+            time_.name(),
             "uniform",
             obr_,
             IOobject::MUST_READ_IF_MODIFIED,

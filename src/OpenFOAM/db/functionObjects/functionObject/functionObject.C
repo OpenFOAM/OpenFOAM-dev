@@ -41,9 +41,14 @@ bool Foam::functionObject::postProcess(false);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObject::functionObject(const word& name)
+Foam::functionObject::functionObject
+(
+    const word& name,
+    const Time& runTime
+)
 :
     name_(name),
+    time_(runTime),
     log(false),
     executeAtStart_(true)
 {}

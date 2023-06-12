@@ -245,7 +245,11 @@ bool Foam::functionObjects::layerAverage::read(const dictionary& dict)
 
     fields_ = dict.lookup<wordList>("fields");
 
-    formatter_ = setWriter::New(dict.lookup("setFormat"), dict);
+    formatter_ = setWriter::New
+    (
+        dict.lookupOrDefault("setFormat", time_.graphFormat()),
+        dict
+    );
 
     calcLayers();
 
@@ -316,11 +320,11 @@ bool Foam::functionObjects::layerAverage::write()
     {
         // Make output directory
         const fileName outputPath =
-            mesh_.time().globalPath()
+            time_.globalPath()
            /writeFile::outputPrefix
            /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
            /name()
-           /mesh_.time().name();
+           /time_.name();
         mkDir(outputPath);
 
         scalarField layerDistance(layerCentre_.size(), 0);

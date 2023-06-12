@@ -264,7 +264,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
                 (
                     fieldName + '_' + selectionTypeNames[selectionType()]
                   + '-' + cellSetName(),
-                    obr_.time().name(),
+                    time_.name(),
                     obr_,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE

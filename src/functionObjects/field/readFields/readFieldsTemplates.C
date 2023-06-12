@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void Foam::functionObjects::readFields::loadField
         IOobject fieldHeader
         (
             fieldName,
-            mesh_.time().name(),
+            time_.name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::NO_WRITE

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ bool Foam::functionObjects::timeStep::write()
     {
         writeTime(file());
 
-        file() << tab << obr_.time().deltaTValue();
+        file() << tab << time_.deltaTValue();
 
         file() << endl;
     }

@@ -181,7 +181,11 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
         dict.subDict("seedSampleSet")
     );
 
-    formatterPtr_ = setWriter::New(dict.lookup("setFormat"), dict);
+    formatterPtr_ = setWriter::New
+    (
+        dict.lookupOrDefault("setFormat", time_.graphFormat()),
+        dict
+    );
 
     return true;
 }
@@ -534,11 +538,11 @@ bool Foam::functionObjects::streamlines::write()
     {
         // Make output directory
         const fileName outputPath =
-            mesh_.time().globalPath()
+            time_.globalPath()
            /writeFile::outputPrefix
            /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
            /name()
-           /mesh_.time().name();
+           /time_.name();
         mkDir(outputPath);
 
         // Pass data to the formatter to write

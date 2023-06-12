@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ Foam::volScalarField& Foam::functionObjects::phaseScalarTransport::Phi()
                 IOobject
                 (
                     "Phi" + s_.name(),
-                    mesh_.time().name(),
+                    time_.name(),
                     mesh_,
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE
@@ -164,7 +164,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
         Info<< type() << ": Writing " << DDtAlpha.name() << endl;
         DDtAlpha.write();
     };
-    if (debug && mesh_.time().writeTime())
+    if (debug && time_.writeTime())
     {
         writeDDt(0);
     }
@@ -224,7 +224,7 @@ Foam::functionObjects::phaseScalarTransport::alphaPhi()
     }
 
     // Debug writing
-    if (debug && mesh_.time().writeTime())
+    if (debug && time_.writeTime())
     {
         writeDDt(1);
     }
@@ -295,7 +295,7 @@ Foam::functionObjects::phaseScalarTransport::phaseScalarTransport
         IOobject
         (
             fieldName_,
-            mesh_.time().name(),
+            time_.name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -477,7 +477,7 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
                         "alpha"
                       + word(toupper(fieldName_[0]))
                       + fieldName_(1, fieldName_.size() - 1),
-                        mesh_.time().name(),
+                        time_.name(),
                         mesh_,
                         IOobject::NO_READ,
                         IOobject::AUTO_WRITE

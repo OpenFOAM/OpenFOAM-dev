@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,45 +23,60 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "xmgrGraph.H"
-#include "addToRunTimeSelectionTable.H"
+#include "writeEk.H"
+#include "fft.H"
+#include "kShellIntegration.H"
+#include "volFields.H"
+#include "setWriter.H"
+#include "writeFile.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(xmgrGraph, 0);
-    const word xmgrGraph::ext_("agr");
 
-    typedef graph::writer graphWriter;
-    addToRunTimeSelectionTable(graphWriter, xmgrGraph, word);
-}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::xmgrGraph::write(const graph& g, Ostream& os) const
+void writeEk
+(
+    const volVectorField& U,
+    const Kmesh& K
+)
 {
-    os  << "@title " << g.title() << nl
-        << "@xaxis label " << g.xName() << nl
-        << "@yaxis label " << g.yName() << endl;
+    const Pair<scalarField> Ek
+    (
+        kShellIntegration
+        (
+            fft::forwardTransform
+            (
+                ReComplexField(U.primitiveField()),
+                K.nn()
+            ),
+            K
+        )
+    );
 
-    label fieldi = 0;
+    autoPtr<setWriter> writer
+    (
+        setWriter::New(U.time().graphFormat())
+    );
 
-    forAllConstIter(graph, g, iter)
-    {
-        os  << "@s" << fieldi << " legend "
-            << iter()->name() << nl
-            << "@target G0.S" << fieldi << nl
-            << "@type xy" << endl;
-
-        writeXY(g.x(), *iter(), os);
-
-        os << endl;
-
-        fieldi++;
-    }
+    writer->write
+    (
+        U.time().path()
+       /functionObjects::writeFile::outputPrefix
+       /"graphs"
+       /U.time().name(),
+        "Ek",
+        coordSet(true,"k", Ek.first()),
+        "E(k)",
+        Ek.second()
+    );
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // ************************************************************************* //

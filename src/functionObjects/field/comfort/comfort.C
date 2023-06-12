@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -321,7 +321,7 @@ bool Foam::functionObjects::comfort::execute()
         IOobject
         (
             "hc",
-            mesh_.time().name(),
+            time_.name(),
             mesh_
         ),
         mesh_,
@@ -441,7 +441,7 @@ bool Foam::functionObjects::comfort::execute()
         IOobject
         (
             "TI",
-            mesh_.time().name(),
+            time_.name(),
             mesh_
         ),
         mesh_,

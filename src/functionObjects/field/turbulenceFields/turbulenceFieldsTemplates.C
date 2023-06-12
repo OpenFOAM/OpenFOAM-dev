@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ void Foam::functionObjects::turbulenceFields::processField
                 IOobject
                 (
                     scopedName,
-                    obr_.time().name(),
+                    time_.name(),
                     obr_,
                     IOobject::READ_IF_PRESENT,
                     IOobject::NO_WRITE

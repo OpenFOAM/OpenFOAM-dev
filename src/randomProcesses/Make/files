@@ -1,34 +1,14 @@
-Kmesh                       = Kmesh
+Kmesh/Kmesh.C
 
-fft                         = fft
+fft/fft.C
+fft/fftRenumber.C
+fft/writeEk.C
+fft/kShellIntegration.C
 
-processes                   = processes
-UOprocess                   = $(processes)/UOprocess
+processes/UOprocess/UOprocess.C
 
-turbulence                  = turbulence
+turbulence/turbGen.C
 
-noise                       = noise
-
-$(Kmesh)/Kmesh.C
-
-$(fft)/fft.C
-$(fft)/fftRenumber.C
-$(fft)/calcEk.C
-$(fft)/kShellIntegration.C
-
-$(UOprocess)/UOprocess.C
-
-$(turbulence)/turbGen.C
-
-$(noise)/noiseFFT.C
-
-graph/curve/curve.C
-graph/graph.C
-
-writers = graph/writers
-$(writers)/rawGraph/rawGraph.C
-$(writers)/gnuplotGraph/gnuplotGraph.C
-$(writers)/xmgrGraph/xmgrGraph.C
-$(writers)/jplotGraph/jplotGraph.C
+noise/noiseFFT.C
 
 LIB = $(FOAM_LIBBIN)/librandomProcesses

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,9 +72,6 @@ public:
 protected:
 
     // Protected data
-
-        //- Reference to the Time
-        const Time& time_;
 
         //- Action type names
         static const NamedEnum<actionType, 3> actionTypeNames_;

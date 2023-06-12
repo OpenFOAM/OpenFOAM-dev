@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,9 +69,6 @@ class setTimeStepFunctionObject
     public functionObject
 {
     // Private Data
-
-        //- Reference to the time database
-        const Time& time_;
 
         //- Time step function/table
         autoPtr<Function1<scalar>> timeStepPtr_;

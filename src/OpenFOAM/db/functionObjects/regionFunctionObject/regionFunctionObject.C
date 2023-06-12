@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,8 +108,7 @@ Foam::functionObjects::regionFunctionObject::regionFunctionObject
     const dictionary& dict
 )
 :
-    functionObject(name),
-    time_(runTime),
+    functionObject(name, runTime),
     obr_
     (
         runTime.lookupObject<objectRegistry>
@@ -127,8 +126,7 @@ Foam::functionObjects::regionFunctionObject::regionFunctionObject
     const dictionary& dict
 )
 :
-    functionObject(name),
-    time_(obr.time()),
+    functionObject(name, obr.time()),
     obr_(obr)
 {}
 

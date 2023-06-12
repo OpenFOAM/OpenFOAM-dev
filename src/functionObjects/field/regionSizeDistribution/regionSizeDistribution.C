@@ -89,7 +89,7 @@ void Foam::functionObjects::regionSizeDistribution::writeAlphaFields
         IOobject
         (
             alphaName_ + "_liquidCore",
-            obr_.time().name(),
+            time_.name(),
             obr_,
             IOobject::NO_READ
         ),
@@ -102,7 +102,7 @@ void Foam::functionObjects::regionSizeDistribution::writeAlphaFields
         IOobject
         (
             alphaName_ + "_background",
-            obr_.time().name(),
+            time_.name(),
             obr_,
             IOobject::NO_READ
         ),
@@ -371,7 +371,11 @@ bool Foam::functionObjects::regionSizeDistribution::read(const dictionary& dict)
     dict.lookup("nBins") >> nBins_;
     dict.lookup("fields") >> fields_;
 
-    formatterPtr_ = setWriter::New(dict.lookup("setFormat"), dict);
+    formatterPtr_ = setWriter::New
+    (
+        dict.lookupOrDefault("setFormat", time_.graphFormat()),
+        dict
+    );
 
     return true;
 }
@@ -410,7 +414,7 @@ bool Foam::functionObjects::regionSizeDistribution::write()
                 IOobject
                 (
                     alphaName_,
-                    mesh_.time().name(),
+                    time_.name(),
                     mesh_,
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
@@ -505,7 +509,7 @@ bool Foam::functionObjects::regionSizeDistribution::write()
             IOobject
             (
                 "region",
-                mesh_.time().name(),
+                time_.name(),
                 mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE

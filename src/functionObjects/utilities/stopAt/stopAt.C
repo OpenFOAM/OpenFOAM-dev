@@ -65,8 +65,7 @@ Foam::functionObjects::stopAt::stopAt
     const dictionary& dict
 )
 :
-    functionObject(name),
-    time_(runTime),
+    functionObject(name, runTime),
     action_(actionType::nextWrite),
     stopped_(false)
 {}

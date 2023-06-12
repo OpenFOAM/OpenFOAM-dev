@@ -127,7 +127,7 @@ Foam::functionObjects::scalarTransport::scalarTransport
         IOobject
         (
             fieldName_,
-            mesh_.time().name(),
+            time_.name(),
             mesh_,
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
@@ -464,7 +464,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
             if
             (
                 sRestart_
-             || mesh_.time().timeIndex() > mesh_.time().startTimeIndex() + 1
+             || time_.timeIndex() > time_.startTimeIndex() + 1
             )
             {
                 ocCoeff =

@@ -6,4 +6,7 @@ label sampleFrequency(propsDict.lookup<label>("sampleFrequency"));
 
 label maxPositions(propsDict.lookup<label>("maxPositions"));
 
-word setFormat(propsDict.lookupOrDefault<word>("setFormat", "vtk"));
+word setFormat
+(
+    propsDict.lookupOrDefault<word>("setFormat", runTime.graphFormat())
+);

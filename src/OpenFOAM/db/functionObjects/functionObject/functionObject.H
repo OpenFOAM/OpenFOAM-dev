@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,6 +148,12 @@ class functionObject
         const word name_;
 
 
+protected:
+
+        //- Reference to time
+        const Time& time_;
+
+
 public:
 
     ClassName("functionObject");
@@ -180,7 +186,7 @@ public:
     // Constructors
 
         //- Construct from components
-        functionObject(const word& name);
+        functionObject(const word& name, const Time& runTime);
 
         //- Return clone
         autoPtr<functionObject> clone() const

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,40 +21,44 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Application
+    writeEk
+
+Description
+    This function evaluates q(k) (McComb, p61) by summing all wavevectors
+    in a k-shell. Then we divide through by the volume of the box
+    - to be accurate, by the volume of the ellipsoid enclosing the
+    box (assume cells even in each direction). Finally, multiply the
+    q(k) values by k^2 to give the full power spectrum E(k). Integrating
+    this over the whole range gives the energy in turbulence.
+
 \*---------------------------------------------------------------------------*/
 
-#include "jplotGraph.H"
-#include "addToRunTimeSelectionTable.H"
+#ifndef writeEk_H
+#define writeEk_H
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+#include "volFieldsFwd.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(jplotGraph, 0);
-    const word jplotGraph::ext_("dat");
 
-    typedef graph::writer graphWriter;
-    addToRunTimeSelectionTable(graphWriter, jplotGraph, word);
-}
+class Kmesh;
+
+void writeEk
+(
+    const volVectorField& U,
+    const Kmesh& K
+);
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::jplotGraph::write(const graph& g, Ostream& os) const
-{
-    os  << "# JPlot file" << nl
-        << "# column 1: " << g.xName() << endl;
+} // End namespace Foam
 
-    label fieldi = 0;
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    forAllConstIter(graph, g, iter)
-    {
-        os  << "# column " << fieldi + 2 << ": " << (*iter()).name() << endl;
-        fieldi++;
-    }
-
-    g.writeTable(os);
-}
-
+#endif
 
 // ************************************************************************* //

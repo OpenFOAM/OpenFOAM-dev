@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ Foam::functionObjects::timeControl::timeControl
     const dictionary& dict
 )
 :
-    functionObject(name),
+    functionObject(name, t),
     time_(t),
     startTime_(-vGreat),
     endTime_(vGreat),

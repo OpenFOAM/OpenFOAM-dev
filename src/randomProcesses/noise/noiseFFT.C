@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ Foam::noiseFFT::noiseFFT(const fileName& pFileName, const label skip)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::graph Foam::noiseFFT::pt() const
+Foam::Pair<Foam::scalarField> Foam::noiseFFT::pt() const
 {
     scalarField t(size());
     forAll(t, i)
@@ -110,14 +110,7 @@ Foam::graph Foam::noiseFFT::pt() const
         t[i] = i*deltat_;
     }
 
-    return graph
-    (
-        "p(t)",
-        "t [s]",
-        "p(t) [Pa]",
-        t,
-        *this
-    );
+    return Pair<scalarField>(t, *this);
 }
 
 
@@ -202,7 +195,7 @@ Foam::tmp<Foam::scalarField> Foam::noiseFFT::Pf
 }
 
 
-Foam::graph Foam::noiseFFT::meanPf
+Foam::Pair<Foam::scalarField> Foam::noiseFFT::meanPf
 (
     const label N,
     const label nw
@@ -237,18 +230,11 @@ Foam::graph Foam::noiseFFT::meanPf
         f[i] = i*deltaf;
     }
 
-    return graph
-    (
-        "P(f)",
-        "f [Hz]",
-        "P(f) [Pa]",
-        f,
-        MeanPf
-    );
+    return Pair<scalarField>(f, MeanPf);
 }
 
 
-Foam::graph Foam::noiseFFT::RMSmeanPf
+Foam::Pair<Foam::scalarField> Foam::noiseFFT::RMSmeanPf
 (
     const label N,
     const label nw
@@ -283,39 +269,28 @@ Foam::graph Foam::noiseFFT::RMSmeanPf
         f[i] = i*deltaf;
     }
 
-    return graph
-    (
-        "P(f)",
-        "f [Hz]",
-        "P(f) [Pa]",
-        f,
-        RMSMeanPf
-    );
+    return Pair<scalarField>(f, RMSMeanPf);
 }
 
 
-Foam::graph Foam::noiseFFT::Lf(const graph& gPf) const
-{
-    return graph
-    (
-        "L(f)",
-        "f [Hz]",
-        "L(f) [dB]",
-        gPf.x(),
-        20*log10(gPf.y()/p0)
-    );
-}
-
-
-Foam::graph Foam::noiseFFT::Ldelta
+Foam::Pair<Foam::scalarField> Foam::noiseFFT::Lf
 (
-    const graph& gLf,
+    const Pair<scalarField>& gPf
+) const
+{
+    return Pair<scalarField>(gPf.first(), 20*log10(gPf.second()/p0));
+}
+
+
+Foam::Pair<Foam::scalarField> Foam::noiseFFT::Ldelta
+(
+    const Pair<scalarField>& gLf,
     const scalar f1,
     const scalar fU
 ) const
 {
-    const scalarField& f = gLf.x();
-    const scalarField& Lf = gLf.y();
+    const scalarField& f = gLf.first();
+    const scalarField& Lf = gLf.second();
 
     scalarField ldelta(Lf.size(), 0.0);
     scalarField fm(ldelta.size());
@@ -352,26 +327,19 @@ Foam::graph Foam::noiseFFT::Ldelta
     fm.setSize(j);
     ldelta.setSize(j);
 
-    return graph
-    (
-        "Ldelta",
-        "fm [Hz]",
-        "Ldelta [dB]",
-        fm,
-        ldelta
-    );
+    return Pair<scalarField>(fm, ldelta);
 }
 
 
-Foam::graph Foam::noiseFFT::Pdelta
+Foam::Pair<Foam::scalarField> Foam::noiseFFT::Pdelta
 (
-    const graph& gPf,
+    const Pair<scalarField>& gPf,
     const scalar f1,
     const scalar fU
 ) const
 {
-    const scalarField& f = gPf.x();
-    const scalarField& Pf = gPf.y();
+    const scalarField& f = gPf.first();
+    const scalarField& Pf = gPf.second();
 
     scalarField pdelta(Pf.size(), 0.0);
     scalarField fm(pdelta.size());
@@ -408,20 +376,13 @@ Foam::graph Foam::noiseFFT::Pdelta
     fm.setSize(j);
     pdelta.setSize(j);
 
-    return graph
-    (
-        "Pdelta",
-        "fm [Hz]",
-        "Pdelta [dB]",
-        fm,
-        pdelta
-    );
+    return Pair<scalarField>(fm, pdelta);
 }
 
 
-Foam::scalar Foam::noiseFFT::Lsum(const graph& gLf) const
+Foam::scalar Foam::noiseFFT::Lsum(const Pair<Foam::scalarField>& gLf) const
 {
-    const scalarField& Lf = gLf.y();
+    const scalarField& Lf = gLf.second();
 
     scalar lsum = 0.0;
 

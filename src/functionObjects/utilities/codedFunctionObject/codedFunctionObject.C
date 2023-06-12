@@ -119,9 +119,8 @@ Foam::codedFunctionObject::codedFunctionObject
     const dictionary& dict
 )
 :
-    functionObject(name),
-    codedBase(name, dict),
-    time_(time)
+    functionObject(name, time),
+    codedBase(name, dict)
 {
     read(dict);
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,11 @@ bool Foam::functionObjects::histogram::read(const dictionary& dict)
     min_ = dict.lookupOrDefault<scalar>("min", 0);
     dict.lookup("nBins") >> nBins_;
 
-    formatterPtr_ = setWriter::New(dict.lookup("setFormat"), dict);
+    formatterPtr_ = setWriter::New
+    (
+        dict.lookupOrDefault("setFormat", time_.graphFormat()),
+        dict
+    );
 
     return true;
 }
@@ -108,7 +112,7 @@ bool Foam::functionObjects::histogram::write()
                 IOobject
                 (
                     fieldName_,
-                    mesh_.time().name(),
+                    time_.name(),
                     mesh_,
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE

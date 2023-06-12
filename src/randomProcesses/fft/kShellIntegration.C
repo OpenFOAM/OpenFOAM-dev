@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::graph Foam::kShellIntegration
+Foam::Pair<Foam::scalarField> Foam::kShellIntegration
 (
     const complexVectorField& Ek,
     const Kmesh& K
@@ -37,9 +37,9 @@ Foam::graph Foam::kShellIntegration
     // evaluate the radial component of the spectra as an average
     // over the shells of thickness dk
 
-    graph kShellMeanEk = kShellMean(Ek, K);
-    const scalarField& x = kShellMeanEk.x();
-    scalarField& y = *kShellMeanEk.begin()();
+    Pair<scalarField> kShellMeanEk(kShellMean(Ek, K));
+    const scalarField& x = kShellMeanEk.first();
+    scalarField& y = kShellMeanEk.second();
 
     // now multiply by 4pi k^2 (the volume of each shell) to get the
     // spectra E(k). int E(k) dk is now the total energy in a box
@@ -66,7 +66,7 @@ Foam::graph Foam::kShellIntegration
 // kShellMean : average over the points in a k-shell to evaluate the
 // radial part of the energy spectrum.
 
-Foam::graph Foam::kShellMean
+Foam::Pair<Foam::scalarField> Foam::kShellMean
 (
     const complexVectorField& Ek,
     const Kmesh& K
@@ -130,7 +130,7 @@ Foam::graph Foam::kShellMean
         }
     }
 
-    return graph("E(k)", "k", "E(k)", k1D, Ek1D);
+    return Pair<scalarField>(k1D, Ek1D);
 }
 
 

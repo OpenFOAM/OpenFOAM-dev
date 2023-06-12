@@ -607,11 +607,11 @@ void Foam::functionObjects::patchCutLayerAverage::initialise()
 Foam::fileName Foam::functionObjects::patchCutLayerAverage::outputPath() const
 {
     return
-        mesh_.time().globalPath()
+        time_.globalPath()
        /writeFile::outputPrefix
        /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
        /name()
-       /mesh_.time().name();
+       /time_.name();
 }
 
 
@@ -658,7 +658,11 @@ bool Foam::functionObjects::patchCutLayerAverage::read(const dictionary& dict)
             )
         ];
 
-    formatter_ = setWriter::New(dict.lookup("setFormat"), dict);
+    formatter_ = setWriter::New
+    (
+        dict.lookupOrDefault("setFormat", time_.graphFormat()),
+        dict
+    );
 
     nOptimiseIter_ = dict.lookupOrDefault("nOptimiseIter", 2);
 

@@ -34,8 +34,7 @@ Description
 #include "Kmesh.H"
 #include "UOprocess.H"
 #include "fft.H"
-#include "calcEk.H"
-#include "graph.H"
+#include "writeEk.H"
 #include "writeFile.H"
 
 #include "pisoControl.H"
@@ -130,15 +129,7 @@ int main(int argc, char *argv[])
 
         if (runTime.writeTime())
         {
-            calcEk(U, K).write
-            (
-                runTime.path()
-               /functionObjects::writeFile::outputPrefix
-               /"graphs"
-               /runTime.name(),
-                "Ek",
-                runTime.graphFormat()
-            );
+            writeEk(U, K);
         }
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"

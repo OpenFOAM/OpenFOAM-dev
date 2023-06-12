@@ -108,8 +108,18 @@ Foam::SizeDistribution<CloudType>::SizeDistribution
 :
     CloudFunctionObject<CloudType>(dict, owner, modelName, typeName),
     nPoints_(dict.lookup<label>("nPoints")),
-    formatter_(setWriter::New(dict.lookup("setFormat"), dict))
-
+    formatter_
+    (
+        setWriter::New
+        (
+            dict.lookupOrDefault
+            (
+                "setFormat",
+                owner.mesh().time().graphFormat()
+            ),
+            dict
+        )
+    )
 {}
 
 

@@ -408,7 +408,11 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::read
 
     fvMeshFunctionObject::read(dict);
 
-    formatterPtr_ = setWriter::New(dict.lookup("setFormat"), dict);
+    formatterPtr_ = setWriter::New
+    (
+        dict.lookupOrDefault("setFormat", time_.graphFormat()),
+        dict
+    );
 
     return false;
 }

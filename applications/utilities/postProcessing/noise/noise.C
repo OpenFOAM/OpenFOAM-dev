@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,13 +77,13 @@ See also
 
 \*---------------------------------------------------------------------------*/
 
-
 #include "noiseFFT.H"
 #include "argList.H"
 #include "Time.H"
 #include "Table.H"
-#include "IOdictionary.H"
 #include "systemDict.H"
+#include "setWriter.H"
+#include "writeFile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -132,7 +132,31 @@ int main(int argc, char *argv[])
     #include "addDictOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createFields.H"
+
+    const word dictName("noiseDict");
+
+    IOdictionary dict(systemDict(dictName, args, runTime));
+
+    // Reference pressure
+    const scalar pRef = dict.lookupOrDefault("pRef", 0.0);
+
+    // Number of samples in sampling window
+    const label N = dict.lookupOrDefault("N", 65536);
+
+    // Number of sampling windows
+    const label nw = dict.lookupOrDefault("nw", 100);
+
+    // Lower frequency of frequency band
+    const scalar f1 = dict.lookupOrDefault("f1", 25.0);
+
+    // Upper frequency of frequency band
+    const scalar fU = dict.lookupOrDefault("fU", 10000.0);
+
+    // Graph format
+    const word graphFormat
+    (
+        dict.lookupOrDefault<word>("graphFormat", runTime.graphFormat())
+    );
 
     Info<< "Reading data file" << endl;
     Function1s::Table<scalar> pData
@@ -163,24 +187,60 @@ int main(int argc, char *argv[])
 
     nfft -= pRef;
 
-    fileName pDateFileName(dict.subDict("pressureData").lookup("file"));
-    fileName baseFileName(pDateFileName.lessExt());
+    const fileName pDateFileName(dict.subDict("pressureData").lookup("file"));
+    const fileName baseFileName(pDateFileName.lessExt());
+    const fileName outputPath
+    (
+        runTime.path()
+       /functionObjects::writeFile::outputPrefix
+       /baseFileName
+    );
 
-    graph Pf(nfft.RMSmeanPf(N, min(nfft.size()/N, nw)));
-    Info<< "    Creating graph for " << Pf.title() << endl;
-    Pf.write(baseFileName + graph::wordify(Pf.title()), graphFormat);
+    autoPtr<setWriter> writer(setWriter::New(graphFormat));
 
-    graph Lf(nfft.Lf(Pf));
-    Info<< "    Creating graph for " << Lf.title() << endl;
-    Lf.write(baseFileName + graph::wordify(Lf.title()), graphFormat);
+    const Pair<scalarField> Pf(nfft.RMSmeanPf(N, min(nfft.size()/N, nw)));
+    Info<< "    Creating graph for P(f)" << endl;
+    writer->write
+    (
+        outputPath,
+        "Pf",
+        coordSet(true, "f [Hz]", Pf.first()),
+        "P(f) [Pa]",
+        Pf.second()
+    );
 
-    graph Ldelta(nfft.Ldelta(Lf, f1, fU));
-    Info<< "    Creating graph for " << Ldelta.title() << endl;
-    Ldelta.write(baseFileName + graph::wordify(Ldelta.title()), graphFormat);
+    const Pair<scalarField> Lf(nfft.Lf(Pf));
+    Info<< "    Creating graph for L(f)" << endl;
+    writer->write
+    (
+        outputPath,
+        "Lf",
+        coordSet(true, "f [Hz]", Lf.first()),
+        "L(f) [dB]",
+        Lf.second()
+    );
 
-    graph Pdelta(nfft.Pdelta(Pf, f1, fU));
-    Info<< "    Creating graph for " << Pdelta.title() << endl;
-    Pdelta.write(baseFileName + graph::wordify(Pdelta.title()), graphFormat);
+    const Pair<scalarField> Ldelta(nfft.Ldelta(Lf, f1, fU));
+    Info<< "    Creating graph for Ldelta" << endl;
+    writer->write
+    (
+        outputPath,
+        "Ldelta",
+        coordSet(true, "fm [Hz]", Ldelta.first()),
+        "Ldelta(f) [dB]",
+        Ldelta.second()
+    );
+
+    const Pair<scalarField> Pdelta(nfft.Pdelta(Pf, f1, fU));
+    Info<< "    Creating graph for Pdelta" << endl;
+    writer->write
+    (
+        outputPath,
+        "Pdelta",
+        coordSet(true, "fm [Hz]", Pdelta.first()),
+        "P(f) [dB]",
+        Pdelta.second()
+    );
 
     Info<< nl << "End\n" << endl;
 

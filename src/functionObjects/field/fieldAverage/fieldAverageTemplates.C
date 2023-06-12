@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ void Foam::functionObjects::fieldAverage::readMeanFieldType(const label fieldi)
     IOobject meanFieldIo
     (
         meanFieldName,
-        obr_.time().name(),
+        time_.name(),
         obr_,
         IOobject::MUST_READ,
         IOobject::NO_WRITE
@@ -114,7 +114,7 @@ void Foam::functionObjects::fieldAverage::initialiseMeanFieldType
                 IOobject
                 (
                     meanFieldName,
-                    obr_.time().name(),
+                    time_.name(),
                     obr_
                 ),
                 1*baseField
@@ -161,7 +161,7 @@ void Foam::functionObjects::fieldAverage::readPrime2MeanFieldType
     IOobject prime2MeanFieldIo
     (
         prime2MeanFieldName,
-        obr_.time().name(),
+        time_.name(),
         obr_,
         IOobject::MUST_READ,
         IOobject::NO_WRITE
@@ -253,7 +253,7 @@ void Foam::functionObjects::fieldAverage::initialisePrime2MeanFieldType
                 IOobject
                 (
                     prime2MeanFieldName,
-                    obr_.time().name(),
+                    time_.name(),
                     obr_
                 ),
                 sqr(baseField) - sqr(meanField)
@@ -313,7 +313,7 @@ void Foam::functionObjects::fieldAverage::calculateMeanFieldType
     Type& meanField =
         obr_.lookupObjectRef<Type>(faItems_[fieldi].meanFieldName());
 
-    scalar dt = obr_.time().deltaTValue();
+    scalar dt = time_.deltaTValue();
     scalar Dt = totalTime_[fieldi];
 
     if (iterBase())
@@ -379,7 +379,7 @@ void Foam::functionObjects::fieldAverage::calculatePrime2MeanFieldType
     Type2& prime2MeanField =
         obr_.lookupObjectRef<Type2>(faItems_[fieldi].prime2MeanFieldName());
 
-    scalar dt = obr_.time().deltaTValue();
+    scalar dt = time_.deltaTValue();
     scalar Dt = totalTime_[fieldi];
 
     if (iterBase())
