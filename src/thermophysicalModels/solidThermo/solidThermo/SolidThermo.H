@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::heFluidMulticomponentThermo
+    Foam::SolidThermo
 
 Description
-    Fluid multi-component thermo implementation
+    Thermo implementation for a solid
 
 SourceFiles
-    heFluidMulticomponentThermo.C
+    SolidThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef heFluidMulticomponentThermo_H
-#define heFluidMulticomponentThermo_H
+#ifndef SolidThermo_H
+#define SolidThermo_H
 
-#include "heThermo.H"
+#include "BasicThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,57 +43,62 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class heFluidMulticomponentThermo Declaration
+                        Class SolidThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class HeThermo>
-class heFluidMulticomponentThermo
+template<class BaseThermo>
+class SolidThermo
 :
-    public HeThermo
+    public BaseThermo
 {
+protected:
+
+    // Protected data
+
+        //- Anisotropic thermal conductivity [W/m/K]
+        volVectorField Kappa_;
+
+
+    // Private Member Functions
+
+        //- Calculate the thermo variables
+        void calculate();
+
+
 public:
 
     // Constructors
 
         //- Construct from mesh and phase name
-        heFluidMulticomponentThermo(const fvMesh&, const word& phaseName);
+        SolidThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        heFluidMulticomponentThermo
-        (
-            const heFluidMulticomponentThermo<HeThermo>&
-        ) = delete;
+        SolidThermo(const SolidThermo<BaseThermo>&) = delete;
 
 
     //- Destructor
-    virtual ~heFluidMulticomponentThermo();
+    virtual ~SolidThermo();
 
 
     // Member Functions
 
-        // Specie transport properties
+        //- Update properties
+        virtual void correct();
 
-            //- Dynamic viscosity [kg/m/s]
-            virtual scalar mui
-            (
-                const label speciei,
-                const scalar p,
-                const scalar T
-            ) const;
+        //- Return true if thermal conductivity is isotropic
+        virtual bool isotropic() const
+        {
+            return BaseThermo::mixtureType::thermoType::isotropic;
+        }
 
-            //- Dynamic viscosity [kg/m/s]
-            virtual tmp<volScalarField> mui
-            (
-                const label speciei,
-                const volScalarField& p,
-                const volScalarField& T
-            ) const;
+        //- Anisotropic thermal conductivity [W/m/K]
+        virtual const volVectorField& Kappa() const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const heFluidMulticomponentThermo<HeThermo>&) = delete;
+        void operator=(const SolidThermo<BaseThermo>&) = delete;
 };
 
 
@@ -101,10 +106,10 @@ public:
 
 } // End namespace Foam
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "heFluidMulticomponentThermo.C"
+    #include "SolidThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

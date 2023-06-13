@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::heMulticomponentThermo
+    Foam::MulticomponentThermo
 
 Description
     Multi-component thermo implementation
 
 SourceFiles
-    heMulticomponentThermo.C
+    MulticomponentThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef heMulticomponentThermo_H
-#define heMulticomponentThermo_H
+#ifndef MulticomponentThermo_H
+#define MulticomponentThermo_H
 
-#include "heThermo.H"
+#include "BasicThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,13 +43,13 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class heMulticomponentThermo Declaration
+                       Class MulticomponentThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class HeThermo>
-class heMulticomponentThermo
+template<class BaseThermo>
+class MulticomponentThermo
 :
-    public HeThermo
+    public BaseThermo
 {
 protected:
 
@@ -82,17 +82,14 @@ public:
     // Constructors
 
         //- Construct from mesh and phase name
-        heMulticomponentThermo(const fvMesh&, const word& phaseName);
+        MulticomponentThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        heMulticomponentThermo
-        (
-            const heMulticomponentThermo<HeThermo>&
-        ) = delete;
+        MulticomponentThermo(const MulticomponentThermo<BaseThermo>&) = delete;
 
 
     //- Destructor
-    virtual ~heMulticomponentThermo();
+    virtual ~MulticomponentThermo();
 
 
     // Member Functions
@@ -240,7 +237,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifdef NoRepository
-    #include "heMulticomponentThermo.C"
+    #include "MulticomponentThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

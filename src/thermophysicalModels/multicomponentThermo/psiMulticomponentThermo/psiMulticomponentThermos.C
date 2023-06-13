@@ -23,17 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "psiMulticomponentThermo.H"
+
 #include "coefficientMulticomponentMixture.H"
 #include "coefficientWilkeMulticomponentMixture.H"
 #include "singleComponentMixture.H"
 
-#include "psiThermo.H"
-#include "psiMulticomponentThermo.H"
-#include "hePsiThermo.H"
-#include "heMulticomponentThermo.H"
-#include "heFluidMulticomponentThermo.H"
-
 #include "forGases.H"
+
 #include "makeFluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

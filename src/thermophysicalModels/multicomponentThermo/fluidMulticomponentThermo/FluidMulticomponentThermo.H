@@ -22,21 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::heRhoThermo
+    Foam::FluidMulticomponentThermo
 
 Description
-    Thermo implementation based on density
+    Fluid multi-component thermo implementation
 
 SourceFiles
-    heRhoThermo.C
+    FluidMulticomponentThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef heRhoThermo_H
-#define heRhoThermo_H
+#ifndef FluidMulticomponentThermo_H
+#define FluidMulticomponentThermo_H
 
-#include "rhoThermo.H"
-#include "heThermo.H"
+#include "BasicThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,45 +43,57 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class heRhoThermo Declaration
+                       Class FluidMulticomponentThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class HeThermo>
-class heRhoThermo
+template<class BaseThermo>
+class FluidMulticomponentThermo
 :
-    public HeThermo
+    public BaseThermo
 {
-    // Private Member Functions
-
-        //- Calculate the thermo variables
-        void calculate();
-
-
 public:
 
     // Constructors
 
         //- Construct from mesh and phase name
-        heRhoThermo(const fvMesh&, const word& phaseName);
+        FluidMulticomponentThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        heRhoThermo(const heRhoThermo<HeThermo>&) = delete;
+        FluidMulticomponentThermo
+        (
+            const FluidMulticomponentThermo<BaseThermo>&
+        ) = delete;
 
 
     //- Destructor
-    virtual ~heRhoThermo();
+    virtual ~FluidMulticomponentThermo();
 
 
     // Member Functions
 
-        //- Update properties
-        virtual void correct();
+        // Specie transport properties
+
+            //- Dynamic viscosity [kg/m/s]
+            virtual scalar mui
+            (
+                const label speciei,
+                const scalar p,
+                const scalar T
+            ) const;
+
+            //- Dynamic viscosity [kg/m/s]
+            virtual tmp<volScalarField> mui
+            (
+                const label speciei,
+                const volScalarField& p,
+                const volScalarField& T
+            ) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const heRhoThermo<HeThermo>&) = delete;
+        void operator=(const FluidMulticomponentThermo<BaseThermo>&) = delete;
 };
 
 
@@ -90,10 +101,10 @@ public:
 
 } // End namespace Foam
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifdef NoRepository
-    #include "heRhoThermo.C"
+    #include "FluidMulticomponentThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

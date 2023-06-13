@@ -47,11 +47,6 @@ SourceFiles
 namespace Foam
 {
 
-template<class, class> class heThermo;
-template<class> class heRhoThermo;
-template<class> class heMulticomponentThermo;
-template<class> class heFluidMulticomponentThermo;
-
 /*---------------------------------------------------------------------------*\
                       Class rhoMulticomponentThermo Declaration
 \*---------------------------------------------------------------------------*/
@@ -73,14 +68,14 @@ public:
 
         //- The derived type
         template<class MixtureType>
-        using heThermoType =
-            heFluidMulticomponentThermo
+        using DerivedThermoType =
+            FluidMulticomponentThermo
             <
-                heMulticomponentThermo
+                MulticomponentThermo
                 <
-                    heRhoThermo
+                    RhoThermo
                     <
-                        heThermo<MixtureType, composite>
+                        BasicThermo<MixtureType, composite>
                     >
                 >
             >;

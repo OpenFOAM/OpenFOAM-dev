@@ -19,7 +19,7 @@ type
     heRhoThermo
 );
 
-typeBase
+typeRenamed
 (
     hePsiThermo psiThermo
     heRhoThermo rhoThermo

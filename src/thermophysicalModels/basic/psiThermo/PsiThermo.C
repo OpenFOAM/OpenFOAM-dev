@@ -23,12 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "hePsiThermo.H"
+#include "PsiThermo.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class HeThermo>
-void Foam::hePsiThermo<HeThermo>::calculate()
+template<class BaseThermo>
+void Foam::PsiThermo<BaseThermo>::calculate()
 {
     const scalarField& hCells = this->he_;
     const scalarField& pCells = this->p_;
@@ -44,10 +44,10 @@ void Foam::hePsiThermo<HeThermo>::calculate()
     {
         auto composition = this->cellComposition(celli);
 
-        const typename HeThermo::mixtureType::thermoMixtureType&
+        const typename BaseThermo::mixtureType::thermoMixtureType&
             thermoMixture = this->thermoMixture(composition);
 
-        const typename HeThermo::mixtureType::transportMixtureType&
+        const typename BaseThermo::mixtureType::transportMixtureType&
             transportMixture =
             this->transportMixture(composition, thermoMixture);
 
@@ -108,10 +108,10 @@ void Foam::hePsiThermo<HeThermo>::calculate()
             {
                 auto composition = this->patchFaceComposition(patchi, facei);
 
-                const typename HeThermo::mixtureType::thermoMixtureType&
+                const typename BaseThermo::mixtureType::thermoMixtureType&
                     thermoMixture = this->thermoMixture(composition);
 
-                const typename HeThermo::mixtureType::transportMixtureType&
+                const typename BaseThermo::mixtureType::transportMixtureType&
                     transportMixture =
                     this->transportMixture(composition, thermoMixture);
 
@@ -131,10 +131,10 @@ void Foam::hePsiThermo<HeThermo>::calculate()
             {
                 auto composition = this->patchFaceComposition(patchi, facei);
 
-                const typename HeThermo::mixtureType::thermoMixtureType&
+                const typename BaseThermo::mixtureType::thermoMixtureType&
                     thermoMixture = this->thermoMixture(composition);
 
-                const typename HeThermo::mixtureType::transportMixtureType&
+                const typename BaseThermo::mixtureType::transportMixtureType&
                     transportMixture =
                     this->transportMixture(composition, thermoMixture);
 
@@ -154,14 +154,14 @@ void Foam::hePsiThermo<HeThermo>::calculate()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class HeThermo>
-Foam::hePsiThermo<HeThermo>::hePsiThermo
+template<class BaseThermo>
+Foam::PsiThermo<BaseThermo>::PsiThermo
 (
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    HeThermo(mesh, phaseName)
+    BaseThermo(mesh, phaseName)
 {
     calculate();
 
@@ -172,17 +172,17 @@ Foam::hePsiThermo<HeThermo>::hePsiThermo
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class HeThermo>
-Foam::hePsiThermo<HeThermo>::~hePsiThermo()
+template<class BaseThermo>
+Foam::PsiThermo<BaseThermo>::~PsiThermo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class HeThermo>
-void Foam::hePsiThermo<HeThermo>::correct()
+template<class BaseThermo>
+void Foam::PsiThermo<BaseThermo>::correct()
 {
-    if (HeThermo::debug)
+    if (BaseThermo::debug)
     {
         InfoInFunction << endl;
     }
@@ -192,7 +192,7 @@ void Foam::hePsiThermo<HeThermo>::correct()
 
     calculate();
 
-    if (HeThermo::debug)
+    if (BaseThermo::debug)
     {
         Info<< "    Finished" << endl;
     }

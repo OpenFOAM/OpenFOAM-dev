@@ -23,18 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "liquidPropertiesSelector.H"
-
-#include "sensibleInternalEnergy.H"
-#include "sensibleEnthalpy.H"
+#include "liquidThermo.H"
 
 #include "pureMixture.H"
 
+#include "liquidPropertiesSelector.H"
+#include "sensibleInternalEnergy.H"
+#include "sensibleEnthalpy.H"
 #include "thermo.H"
 
-#include "liquidThermo.H"
-#include "heRhoThermo.H"
-#include "heLiquidThermo.H"
 #include "makeThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

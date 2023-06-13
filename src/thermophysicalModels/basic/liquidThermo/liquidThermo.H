@@ -38,16 +38,13 @@ SourceFiles
 #ifndef liquidThermo_H
 #define liquidThermo_H
 
+#include "LiquidThermo.H"
 #include "rhoThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-template<class, class> class heThermo;
-template<class> class heRhoThermo;
-template<class> class heLiquidThermo;
 
 /*---------------------------------------------------------------------------*\
                           Class liquidThermo Declaration
@@ -69,8 +66,8 @@ public:
 
         //- The derived type
         template<class MixtureType>
-        using heThermoType =
-            heLiquidThermo<heRhoThermo<heThermo<MixtureType, composite>>>;
+        using DerivedThermoType =
+            LiquidThermo<RhoThermo<BasicThermo<MixtureType, composite>>>;
 
 
     //- Runtime type information

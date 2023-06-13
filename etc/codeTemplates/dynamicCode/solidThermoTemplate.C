@@ -37,7 +37,6 @@ License
 #include "${transport}Transport.H"
 
 // psi/rho
-#include "${typeBase}.H"
 #include "${type}.H"
 
 // Mixture
@@ -86,15 +85,15 @@ namespace Foam
 
     defineThermo
     (
-        ${typeBase},
+        ${type},
         ${mixture},
         ${transport}Transport${energy}${thermo}Thermo${equationOfState}${specie}
     );
 
     addThermo
     (
-        ${typeBase},
-        ${typeBase},
+        ${type},
+        ${type},
         ${mixture},
         ${transport}Transport${energy}${thermo}Thermo${equationOfState}${specie}
     );

@@ -39,6 +39,7 @@ SourceFiles
 #define solidThermo_H
 
 #include "pureThermo.H"
+#include "SolidThermo.H"
 #include "uniformGeometricFields.H"
 #include "fvScalarMatrix.H"
 
@@ -46,9 +47,6 @@ SourceFiles
 
 namespace Foam
 {
-
-template<class, class> class heThermo;
-template<class> class heSolidThermo;
 
 /*---------------------------------------------------------------------------*\
                          Class solidThermo Declaration
@@ -73,10 +71,11 @@ public:
 
         //- The derived type
         template<class MixtureType>
-        using heThermoType = heSolidThermo<heThermo<MixtureType, composite>>;
+        using DerivedThermoType =
+            SolidThermo<BasicThermo<MixtureType, composite>>;
 
         //- The derived name
-        static const word heThermoName;
+        static const word derivedThermoName;
 
 
     //- Runtime type information

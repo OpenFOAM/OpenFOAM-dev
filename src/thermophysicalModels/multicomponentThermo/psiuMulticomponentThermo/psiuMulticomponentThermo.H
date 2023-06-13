@@ -40,6 +40,7 @@ SourceFiles
 #define psiuMulticomponentThermo_H
 
 #include "psiThermo.H"
+#include "PsiuMulticomponentThermo.H"
 #include "speciesTable.H"
 #include "GeometricFieldListSlicer.H"
 
@@ -47,9 +48,6 @@ SourceFiles
 
 namespace Foam
 {
-
-template<class, class> class heThermo;
-template<class> class heheuPsiThermo;
 
 /*---------------------------------------------------------------------------*\
                      Class psiuMulticomponentThermo Declaration
@@ -86,10 +84,11 @@ public:
 
         //- The derived type
         template<class MixtureType>
-        using heThermoType = heheuPsiThermo<heThermo<MixtureType, composite>>;
+        using DerivedThermoType =
+            PsiuMulticomponentThermo<BasicThermo<MixtureType, composite>>;
 
         //- The derived name
-        static const word heThermoName;
+        static const word derivedThermoName;
 
 
     //- Runtime type information

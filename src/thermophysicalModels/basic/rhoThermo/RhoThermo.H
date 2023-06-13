@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::heSolidThermo
+    Foam::RhoThermo
 
 Description
-    Thermo implementation for a solid
+    Thermo implementation based on density
 
 SourceFiles
-    heSolidThermo.C
+    RhoThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef heSolidThermo_H
-#define heSolidThermo_H
+#ifndef RhoThermo_H
+#define RhoThermo_H
 
-#include "heThermo.H"
+#include "BasicThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,22 +43,14 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class heSolidThermo Declaration
+                         Class RhoThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class HeThermo>
-class heSolidThermo
+template<class BaseThermo>
+class RhoThermo
 :
-    public HeThermo
+    public BaseThermo
 {
-protected:
-
-    // Protected data
-
-        //- Anisotropic thermal conductivity [W/m/K]
-        volVectorField Kappa_;
-
-
     // Private Member Functions
 
         //- Calculate the thermo variables
@@ -70,14 +62,14 @@ public:
     // Constructors
 
         //- Construct from mesh and phase name
-        heSolidThermo(const fvMesh&, const word& phaseName);
+        RhoThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        heSolidThermo(const heSolidThermo<HeThermo>&) = delete;
+        RhoThermo(const RhoThermo<BaseThermo>&) = delete;
 
 
     //- Destructor
-    virtual ~heSolidThermo();
+    virtual ~RhoThermo();
 
 
     // Member Functions
@@ -85,20 +77,11 @@ public:
         //- Update properties
         virtual void correct();
 
-        //- Return true if thermal conductivity is isotropic
-        virtual bool isotropic() const
-        {
-            return HeThermo::mixtureType::thermoType::isotropic;
-        }
-
-        //- Anisotropic thermal conductivity [W/m/K]
-        virtual const volVectorField& Kappa() const;
-
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const heSolidThermo<HeThermo>&) = delete;
+        void operator=(const RhoThermo<BaseThermo>&) = delete;
 };
 
 
@@ -109,7 +92,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "heSolidThermo.C"
+    #include "RhoThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

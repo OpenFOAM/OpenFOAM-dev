@@ -23,56 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "psiuMulticomponentThermo.H"
-#include "FieldListSlice.H"
+#include "BasicThermo.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-inline bool Foam::psiuMulticomponentThermo::containsSpecie
-(
-    const word& specieName
-) const
+namespace Foam
 {
-    return species().found(specieName);
-}
-
-
-inline Foam::volScalarField& Foam::psiuMulticomponentThermo::Y
-(
-    const word& specieName
-)
-{
-    return Y()[species()[specieName]];
-}
-
-
-inline const Foam::volScalarField& Foam::psiuMulticomponentThermo::Y
-(
-    const word& specieName
-) const
-{
-    return Y()[species()[specieName]];
-}
-
-
-inline Foam::scalarFieldListSlice
-Foam::psiuMulticomponentThermo::implementation::cellComposition
-(
-    const label celli
-) const
-{
-    return Yslicer_.slice(celli);
-}
-
-
-inline Foam::scalarFieldListSlice
-Foam::psiuMulticomponentThermo::implementation::patchFaceComposition
-(
-    const label patchi,
-    const label facei
-) const
-{
-    return Yslicer_.patchSlice(patchi, facei);
+    defineTypeNameAndDebug(BasicThermoName, 0);
 }
 
 

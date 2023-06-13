@@ -18,7 +18,7 @@ type
     heheuPsiThermo
 );
 
-typeBase
+typeRenamed
 (
     heheuPsiThermo psiuMulticomponentThermo
 );

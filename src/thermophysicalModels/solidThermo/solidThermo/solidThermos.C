@@ -24,10 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "solidThermo.H"
-#include "heSolidThermo.H"
+
 #include "pureMixture.H"
 
 #include "forSolids.H"
+
 #include "makeThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

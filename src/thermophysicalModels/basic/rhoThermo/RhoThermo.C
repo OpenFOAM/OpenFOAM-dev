@@ -23,24 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "heheuPsiThermo.H"
-#include "fvMesh.H"
-#include "fixedValueFvPatchFields.H"
+#include "RhoThermo.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class HeThermo>
-void Foam::heheuPsiThermo<HeThermo>::calculate()
+template<class BaseThermo>
+void Foam::RhoThermo<BaseThermo>::calculate()
 {
-    const scalarField& hCells = this->he_;
-    const scalarField& heuCells = this->heu_;
+    const scalarField& hCells = this->he();
     const scalarField& pCells = this->p_;
 
     scalarField& TCells = this->T_.primitiveFieldRef();
-    scalarField& TuCells = this->Tu_.primitiveFieldRef();
     scalarField& CpCells = this->Cp_.primitiveFieldRef();
     scalarField& CvCells = this->Cv_.primitiveFieldRef();
     scalarField& psiCells = this->psi_.primitiveFieldRef();
+    scalarField& rhoCells = this->rho_.primitiveFieldRef();
     scalarField& muCells = this->mu_.primitiveFieldRef();
     scalarField& kappaCells = this->kappa_.primitiveFieldRef();
 
@@ -48,10 +45,10 @@ void Foam::heheuPsiThermo<HeThermo>::calculate()
     {
         auto composition = this->cellComposition(celli);
 
-        const typename HeThermo::mixtureType::thermoMixtureType&
+        const typename BaseThermo::mixtureType::thermoMixtureType&
             thermoMixture = this->thermoMixture(composition);
 
-        const typename HeThermo::mixtureType::transportMixtureType&
+        const typename BaseThermo::mixtureType::transportMixtureType&
             transportMixture =
             this->transportMixture(composition, thermoMixture);
 
@@ -65,17 +62,11 @@ void Foam::heheuPsiThermo<HeThermo>::calculate()
         CpCells[celli] = thermoMixture.Cp(pCells[celli], TCells[celli]);
         CvCells[celli] = thermoMixture.Cv(pCells[celli], TCells[celli]);
         psiCells[celli] = thermoMixture.psi(pCells[celli], TCells[celli]);
+        rhoCells[celli] = thermoMixture.rho(pCells[celli], TCells[celli]);
 
         muCells[celli] = transportMixture.mu(pCells[celli], TCells[celli]);
         kappaCells[celli] =
             transportMixture.kappa(pCells[celli], TCells[celli]);
-
-        TuCells[celli] = this->reactants(composition).THE
-        (
-            heuCells[celli],
-            pCells[celli],
-            TuCells[celli]
-        );
     }
 
     volScalarField::Boundary& pBf =
@@ -83,9 +74,6 @@ void Foam::heheuPsiThermo<HeThermo>::calculate()
 
     volScalarField::Boundary& TBf =
         this->T_.boundaryFieldRef();
-
-    volScalarField::Boundary& TuBf =
-        this->Tu_.boundaryFieldRef();
 
     volScalarField::Boundary& CpBf =
         this->Cp_.boundaryFieldRef();
@@ -96,11 +84,11 @@ void Foam::heheuPsiThermo<HeThermo>::calculate()
     volScalarField::Boundary& psiBf =
         this->psi_.boundaryFieldRef();
 
+    volScalarField::Boundary& rhoBf =
+        this->rho_.boundaryFieldRef();
+
     volScalarField::Boundary& heBf =
         this->he().boundaryFieldRef();
-
-    volScalarField::Boundary& heuBf =
-        this->heu().boundaryFieldRef();
 
     volScalarField::Boundary& muBf =
         this->mu_.boundaryFieldRef();
@@ -112,12 +100,11 @@ void Foam::heheuPsiThermo<HeThermo>::calculate()
     {
         fvPatchScalarField& pp = pBf[patchi];
         fvPatchScalarField& pT = TBf[patchi];
-        fvPatchScalarField& pTu = TuBf[patchi];
         fvPatchScalarField& pCp = CpBf[patchi];
         fvPatchScalarField& pCv = CvBf[patchi];
         fvPatchScalarField& ppsi = psiBf[patchi];
+        fvPatchScalarField& prho = rhoBf[patchi];
         fvPatchScalarField& phe = heBf[patchi];
-        fvPatchScalarField& pheu = heuBf[patchi];
         fvPatchScalarField& pmu = muBf[patchi];
         fvPatchScalarField& pkappa = kappaBf[patchi];
 
@@ -127,10 +114,10 @@ void Foam::heheuPsiThermo<HeThermo>::calculate()
             {
                 auto composition = this->patchFaceComposition(patchi, facei);
 
-                const typename HeThermo::mixtureType::thermoMixtureType&
+                const typename BaseThermo::mixtureType::thermoMixtureType&
                     thermoMixture = this->thermoMixture(composition);
 
-                const typename HeThermo::mixtureType::transportMixtureType&
+                const typename BaseThermo::mixtureType::transportMixtureType&
                     transportMixture =
                     this->transportMixture(composition, thermoMixture);
 
@@ -139,6 +126,8 @@ void Foam::heheuPsiThermo<HeThermo>::calculate()
                 pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
                 ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
+                prho[facei] = thermoMixture.rho(pp[facei], pT[facei]);
+
                 pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
                 pkappa[facei] = transportMixture.kappa(pp[facei], pT[facei]);
             }
@@ -149,10 +138,10 @@ void Foam::heheuPsiThermo<HeThermo>::calculate()
             {
                 auto composition = this->patchFaceComposition(patchi, facei);
 
-                const typename HeThermo::mixtureType::thermoMixtureType&
+                const typename BaseThermo::mixtureType::thermoMixtureType&
                     thermoMixture = this->thermoMixture(composition);
 
-                const typename HeThermo::mixtureType::transportMixtureType&
+                const typename BaseThermo::mixtureType::transportMixtureType&
                     transportMixture =
                     this->transportMixture(composition, thermoMixture);
 
@@ -161,12 +150,10 @@ void Foam::heheuPsiThermo<HeThermo>::calculate()
                 pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
                 ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
+                prho[facei] = thermoMixture.rho(pp[facei], pT[facei]);
+
                 pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
                 pkappa[facei] = transportMixture.kappa(pp[facei], pT[facei]);
-
-                pTu[facei] =
-                    this->reactants(composition)
-                   .THE(pheu[facei], pp[facei], pTu[facei]);
             }
         }
     }
@@ -175,205 +162,42 @@ void Foam::heheuPsiThermo<HeThermo>::calculate()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class HeThermo>
-Foam::heheuPsiThermo<HeThermo>::heheuPsiThermo
+template<class BaseThermo>
+Foam::RhoThermo<BaseThermo>::RhoThermo
 (
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    HeThermo(mesh, phaseName),
-    Tu_
-    (
-        IOobject
-        (
-            "Tu",
-            mesh.time().name(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    ),
-    heu_
-    (
-        IOobject
-        (
-            HeThermo::mixtureType::thermoType::heName() + 'u',
-            mesh.time().name(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        this->volScalarFieldProperty
-        (
-            HeThermo::mixtureType::thermoType::heName() + 'u',
-            dimEnergy/dimMass,
-            &HeThermo::mixtureType::reactants,
-            &HeThermo::mixtureType::thermoMixtureType::HE,
-            this->p_,
-            this->Tu_
-        ),
-        this->heuBoundaryTypes()
-    )
+    BaseThermo(mesh, phaseName)
 {
-    this->heuBoundaryCorrection(this->heu_);
-
     calculate();
-
-    this->psi_.oldTime(); // Switch on saving old time
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class HeThermo>
-Foam::heheuPsiThermo<HeThermo>::~heheuPsiThermo()
+template<class BaseThermo>
+Foam::RhoThermo<BaseThermo>::~RhoThermo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class HeThermo>
-void Foam::heheuPsiThermo<HeThermo>::correct()
+template<class BaseThermo>
+void Foam::RhoThermo<BaseThermo>::correct()
 {
-    if (HeThermo::debug)
+    if (BaseThermo::debug)
     {
         InfoInFunction << endl;
     }
 
-    // force the saving of the old-time values
-    this->psi_.oldTime();
-
     calculate();
 
-    if (HeThermo::debug)
+    if (BaseThermo::debug)
     {
         Info<< "    Finished" << endl;
     }
-}
-
-
-template<class HeThermo>
-Foam::tmp<Foam::scalarField>
-Foam::heheuPsiThermo<HeThermo>::heu
-(
-    const scalarField& Tu,
-    const labelList& cells
-) const
-{
-    return this->cellSetProperty
-    (
-        &HeThermo::mixtureType::reactants,
-        &HeThermo::mixtureType::thermoMixtureType::HE,
-        cells,
-        UIndirectList<scalar>(this->p_, cells),
-        Tu
-    );
-}
-
-
-template<class HeThermo>
-Foam::tmp<Foam::scalarField>
-Foam::heheuPsiThermo<HeThermo>::heu
-(
-    const scalarField& Tu,
-    const label patchi
-) const
-{
-    return this->patchFieldProperty
-    (
-        &HeThermo::mixtureType::reactants,
-        &HeThermo::mixtureType::thermoMixtureType::HE,
-        patchi,
-        this->p_.boundaryField()[patchi],
-        Tu
-    );
-}
-
-
-template<class HeThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::heheuPsiThermo<HeThermo>::Tb() const
-{
-    return this->volScalarFieldProperty
-    (
-        "Tb",
-        dimTemperature,
-        &HeThermo::mixtureType::products,
-        &HeThermo::mixtureType::thermoMixtureType::THE,
-        this->he_,
-        this->p_,
-        this->T_
-    );
-}
-
-
-template<class HeThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::heheuPsiThermo<HeThermo>::psiu() const
-{
-    return this->volScalarFieldProperty
-    (
-        "psiu",
-        this->psi_.dimensions(),
-        &HeThermo::mixtureType::reactants,
-        &HeThermo::mixtureType::thermoMixtureType::psi,
-        this->p_,
-        this->Tu_
-    );
-}
-
-
-template<class HeThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::heheuPsiThermo<HeThermo>::psib() const
-{
-    const volScalarField Tb(this->Tb());
-
-    return this->volScalarFieldProperty
-    (
-        "psib",
-        this->psi_.dimensions(),
-        &HeThermo::mixtureType::products,
-        &HeThermo::mixtureType::thermoMixtureType::psi,
-        this->p_,
-        Tb
-    );
-}
-
-
-template<class HeThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::heheuPsiThermo<HeThermo>::muu() const
-{
-    return this->volScalarFieldProperty
-    (
-        "muu",
-        dimDynamicViscosity,
-        &HeThermo::mixtureType::reactants,
-        &HeThermo::mixtureType::transportMixtureType::mu,
-        this->p_,
-        this->Tu_
-    );
-}
-
-
-template<class HeThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::heheuPsiThermo<HeThermo>::mub() const
-{
-    const volScalarField Tb(this->Tb());
-
-    return this->volScalarFieldProperty
-    (
-        "mub",
-        dimDynamicViscosity,
-        &HeThermo::mixtureType::products,
-        &HeThermo::mixtureType::transportMixtureType::mu,
-        this->p_,
-        Tb
-    );
 }
 
 

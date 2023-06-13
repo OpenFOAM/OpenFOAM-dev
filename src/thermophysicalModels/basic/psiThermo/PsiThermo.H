@@ -22,21 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::hePsiThermo
+    Foam::PsiThermo
 
 Description
     Thermo implementation based on compressibility
 
 SourceFiles
-    hePsiThermo.C
+    PsiThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef hePsiThermo_H
-#define hePsiThermo_H
+#ifndef PsiThermo_H
+#define PsiThermo_H
 
-#include "psiThermo.H"
-#include "heThermo.H"
+#include "BasicThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,13 +43,13 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class hePsiThermo Declaration
+                         Class PsiThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class HeThermo>
-class hePsiThermo
+template<class Thermo>
+class PsiThermo
 :
-    public HeThermo
+    public Thermo
 {
     // Private Member Functions
 
@@ -62,14 +61,14 @@ public:
     // Constructors
 
         //- Construct from mesh and phase name
-        hePsiThermo(const fvMesh&, const word& phaseName);
+        PsiThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        hePsiThermo(const hePsiThermo<HeThermo>&) = delete;
+        PsiThermo(const PsiThermo<Thermo>&) = delete;
 
 
     //- Destructor
-    virtual ~hePsiThermo();
+    virtual ~PsiThermo();
 
 
     // Member Functions
@@ -81,7 +80,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const hePsiThermo<HeThermo>&) = delete;
+        void operator=(const PsiThermo<Thermo>&) = delete;
 };
 
 
@@ -92,7 +91,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "hePsiThermo.C"
+    #include "PsiThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

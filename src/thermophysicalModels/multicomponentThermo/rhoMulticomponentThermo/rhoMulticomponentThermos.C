@@ -23,20 +23,17 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "rhoMulticomponentThermo.H"
+
 #include "coefficientMulticomponentMixture.H"
 #include "coefficientWilkeMulticomponentMixture.H"
 #include "valueMulticomponentMixture.H"
 #include "singleComponentMixture.H"
 
-#include "rhoThermo.H"
-#include "rhoMulticomponentThermo.H"
-#include "heRhoThermo.H"
-#include "heMulticomponentThermo.H"
-#include "heFluidMulticomponentThermo.H"
-
 #include "forGases.H"
 #include "forLiquids.H"
 #include "forTabulated.H"
+
 #include "makeFluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::heheuPsiThermo
+    Foam::PsiuMulticomponentThermo
 
 Description
     Thermo implementation based on compressibility with additional unburnt
     thermodynamic state
 
 SourceFiles
-    heheuPsiThermo.C
+    PsiuMulticomponentThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef heheuPsiThermo_H
-#define heheuPsiThermo_H
+#ifndef PsiuMulticomponentThermo_H
+#define PsiuMulticomponentThermo_H
 
-#include "heThermo.H"
+#include "BasicThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,13 +44,13 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class heheuPsiThermo Declaration
+                       Class PsiuMulticomponentThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class HeThermo>
-class heheuPsiThermo
+template<class BaseThermo>
+class PsiuMulticomponentThermo
 :
-    public HeThermo
+    public BaseThermo
 {
     // Private Data
 
@@ -72,14 +72,17 @@ public:
     // Constructors
 
         //- Construct from mesh and phase name
-        heheuPsiThermo(const fvMesh&, const word& phaseName);
+        PsiuMulticomponentThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        heheuPsiThermo(const heheuPsiThermo<HeThermo>&) = delete;
+        PsiuMulticomponentThermo
+        (
+            const PsiuMulticomponentThermo<BaseThermo>&
+        ) = delete;
 
 
     //- Destructor
-    virtual ~heheuPsiThermo();
+    virtual ~PsiuMulticomponentThermo();
 
 
     // Member Functions
@@ -149,7 +152,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const heheuPsiThermo<HeThermo>&) = delete;
+        void operator=(const PsiuMulticomponentThermo<BaseThermo>&) = delete;
 };
 
 
@@ -160,7 +163,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifdef NoRepository
-    #include "heheuPsiThermo.C"
+    #include "PsiuMulticomponentThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

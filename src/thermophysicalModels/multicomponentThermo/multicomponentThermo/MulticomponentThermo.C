@@ -23,15 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "heMulticomponentThermo.H"
+#include "MulticomponentThermo.H"
 #include "fvMesh.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template<class HeThermo>
+template<class BaseThermo>
 template<class Method, class ... Args>
 Foam::tmp<Foam::volScalarField>
-Foam::heMulticomponentThermo<HeThermo>::volScalarFieldPropertyi
+Foam::MulticomponentThermo<BaseThermo>::volScalarFieldPropertyi
 (
     const word& psiName,
     const dimensionSet& psiDim,
@@ -40,7 +40,7 @@ Foam::heMulticomponentThermo<HeThermo>::volScalarFieldPropertyi
     const Args& ... args
 ) const
 {
-    const typename HeThermo::mixtureType::thermoType& thermo =
+    const typename BaseThermo::mixtureType::thermoType& thermo =
         this->specieThermo(speciei);
 
     tmp<volScalarField> tPsi
@@ -78,10 +78,10 @@ Foam::heMulticomponentThermo<HeThermo>::volScalarFieldPropertyi
 }
 
 
-template<class HeThermo>
+template<class BaseThermo>
 template<class Method, class Arg, class ... Args>
 Foam::tmp<Foam::scalarField>
-Foam::heMulticomponentThermo<HeThermo>::scalarFieldPropertyi
+Foam::MulticomponentThermo<BaseThermo>::scalarFieldPropertyi
 (
     Method psiMethod,
     const label speciei,
@@ -89,7 +89,7 @@ Foam::heMulticomponentThermo<HeThermo>::scalarFieldPropertyi
     const Args& ... args
 ) const
 {
-    const typename HeThermo::mixtureType::thermoType& thermo =
+    const typename BaseThermo::mixtureType::thermoType& thermo =
         this->specieThermo(speciei);
 
     tmp<scalarField> tPsi(new scalarField(arg.size()));
@@ -107,28 +107,28 @@ Foam::heMulticomponentThermo<HeThermo>::scalarFieldPropertyi
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class HeThermo>
-Foam::heMulticomponentThermo<HeThermo>::heMulticomponentThermo
+template<class BaseThermo>
+Foam::MulticomponentThermo<BaseThermo>::MulticomponentThermo
 (
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    HeThermo(mesh, phaseName)
+    BaseThermo(mesh, phaseName)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class HeThermo>
-Foam::heMulticomponentThermo<HeThermo>::~heMulticomponentThermo()
+template<class BaseThermo>
+Foam::MulticomponentThermo<BaseThermo>::~MulticomponentThermo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class HeThermo>
-Foam::scalar Foam::heMulticomponentThermo<HeThermo>::Wi
+template<class BaseThermo>
+Foam::scalar Foam::MulticomponentThermo<BaseThermo>::Wi
 (
     const label speciei
 ) const
@@ -137,8 +137,8 @@ Foam::scalar Foam::heMulticomponentThermo<HeThermo>::Wi
 }
 
 
-template<class HeThermo>
-Foam::scalar Foam::heMulticomponentThermo<HeThermo>::hfi
+template<class BaseThermo>
+Foam::scalar Foam::MulticomponentThermo<BaseThermo>::hfi
 (
     const label speciei
 ) const
@@ -147,8 +147,8 @@ Foam::scalar Foam::heMulticomponentThermo<HeThermo>::hfi
 }
 
 
-template<class HeThermo>
-Foam::scalar Foam::heMulticomponentThermo<HeThermo>::rhoi
+template<class BaseThermo>
+Foam::scalar Foam::MulticomponentThermo<BaseThermo>::rhoi
 (
     const label speciei,
     const scalar p,
@@ -159,9 +159,9 @@ Foam::scalar Foam::heMulticomponentThermo<HeThermo>::rhoi
 }
 
 
-template<class HeThermo>
+template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heMulticomponentThermo<HeThermo>::rhoi
+Foam::MulticomponentThermo<BaseThermo>::rhoi
 (
     const label speciei,
     const volScalarField& p,
@@ -172,7 +172,7 @@ Foam::heMulticomponentThermo<HeThermo>::rhoi
     (
         "rho",
         dimDensity,
-        &HeThermo::mixtureType::thermoType::rho,
+        &BaseThermo::mixtureType::thermoType::rho,
         speciei,
         p,
         T
@@ -180,8 +180,8 @@ Foam::heMulticomponentThermo<HeThermo>::rhoi
 }
 
 
-template<class HeThermo>
-Foam::scalar Foam::heMulticomponentThermo<HeThermo>::Cpi
+template<class BaseThermo>
+Foam::scalar Foam::MulticomponentThermo<BaseThermo>::Cpi
 (
     const label speciei,
     const scalar p,
@@ -192,9 +192,9 @@ Foam::scalar Foam::heMulticomponentThermo<HeThermo>::Cpi
 }
 
 
-template<class HeThermo>
+template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heMulticomponentThermo<HeThermo>::Cpi
+Foam::MulticomponentThermo<BaseThermo>::Cpi
 (
     const label speciei,
     const volScalarField& p,
@@ -205,7 +205,7 @@ Foam::heMulticomponentThermo<HeThermo>::Cpi
     (
         "Cp",
         dimEnergy/dimMass/dimTemperature,
-        &HeThermo::mixtureType::thermoType::Cp,
+        &BaseThermo::mixtureType::thermoType::Cp,
         speciei,
         p,
         T
@@ -213,8 +213,8 @@ Foam::heMulticomponentThermo<HeThermo>::Cpi
 }
 
 
-template<class HeThermo>
-Foam::scalar Foam::heMulticomponentThermo<HeThermo>::hei
+template<class BaseThermo>
+Foam::scalar Foam::MulticomponentThermo<BaseThermo>::hei
 (
     const label speciei,
     const scalar p,
@@ -225,8 +225,8 @@ Foam::scalar Foam::heMulticomponentThermo<HeThermo>::hei
 }
 
 
-template<class HeThermo>
-Foam::tmp<Foam::scalarField> Foam::heMulticomponentThermo<HeThermo>::hei
+template<class BaseThermo>
+Foam::tmp<Foam::scalarField> Foam::MulticomponentThermo<BaseThermo>::hei
 (
     const label speciei,
     const scalarField& p,
@@ -235,7 +235,7 @@ Foam::tmp<Foam::scalarField> Foam::heMulticomponentThermo<HeThermo>::hei
 {
     return scalarFieldPropertyi
     (
-        &HeThermo::mixtureType::thermoType::HE,
+        &BaseThermo::mixtureType::thermoType::HE,
         speciei,
         p,
         T
@@ -243,9 +243,9 @@ Foam::tmp<Foam::scalarField> Foam::heMulticomponentThermo<HeThermo>::hei
 }
 
 
-template<class HeThermo>
+template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heMulticomponentThermo<HeThermo>::hei
+Foam::MulticomponentThermo<BaseThermo>::hei
 (
     const label speciei,
     const volScalarField& p,
@@ -256,7 +256,7 @@ Foam::heMulticomponentThermo<HeThermo>::hei
     (
         "he",
         dimEnergy/dimMass,
-        &HeThermo::mixtureType::thermoType::HE,
+        &BaseThermo::mixtureType::thermoType::HE,
         speciei,
         p,
         T
@@ -264,8 +264,8 @@ Foam::heMulticomponentThermo<HeThermo>::hei
 }
 
 
-template<class HeThermo>
-Foam::scalar Foam::heMulticomponentThermo<HeThermo>::hsi
+template<class BaseThermo>
+Foam::scalar Foam::MulticomponentThermo<BaseThermo>::hsi
 (
     const label speciei,
     const scalar p,
@@ -276,8 +276,8 @@ Foam::scalar Foam::heMulticomponentThermo<HeThermo>::hsi
 }
 
 
-template<class HeThermo>
-Foam::tmp<Foam::scalarField> Foam::heMulticomponentThermo<HeThermo>::hsi
+template<class BaseThermo>
+Foam::tmp<Foam::scalarField> Foam::MulticomponentThermo<BaseThermo>::hsi
 (
     const label speciei,
     const scalarField& p,
@@ -286,7 +286,7 @@ Foam::tmp<Foam::scalarField> Foam::heMulticomponentThermo<HeThermo>::hsi
 {
     return scalarFieldPropertyi
     (
-        &HeThermo::mixtureType::thermoType::Hs,
+        &BaseThermo::mixtureType::thermoType::Hs,
         speciei,
         p,
         T
@@ -294,9 +294,9 @@ Foam::tmp<Foam::scalarField> Foam::heMulticomponentThermo<HeThermo>::hsi
 }
 
 
-template<class HeThermo>
+template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heMulticomponentThermo<HeThermo>::hsi
+Foam::MulticomponentThermo<BaseThermo>::hsi
 (
     const label speciei,
     const volScalarField& p,
@@ -307,7 +307,7 @@ Foam::heMulticomponentThermo<HeThermo>::hsi
     (
         "hs",
         dimEnergy/dimMass,
-        &HeThermo::mixtureType::thermoType::Hs,
+        &BaseThermo::mixtureType::thermoType::Hs,
         speciei,
         p,
         T
@@ -315,8 +315,8 @@ Foam::heMulticomponentThermo<HeThermo>::hsi
 }
 
 
-template<class HeThermo>
-Foam::scalar Foam::heMulticomponentThermo<HeThermo>::hai
+template<class BaseThermo>
+Foam::scalar Foam::MulticomponentThermo<BaseThermo>::hai
 (
     const label speciei,
     const scalar p,
@@ -327,8 +327,8 @@ Foam::scalar Foam::heMulticomponentThermo<HeThermo>::hai
 }
 
 
-template<class HeThermo>
-Foam::tmp<Foam::scalarField> Foam::heMulticomponentThermo<HeThermo>::hai
+template<class BaseThermo>
+Foam::tmp<Foam::scalarField> Foam::MulticomponentThermo<BaseThermo>::hai
 (
     const label speciei,
     const scalarField& p,
@@ -337,7 +337,7 @@ Foam::tmp<Foam::scalarField> Foam::heMulticomponentThermo<HeThermo>::hai
 {
     return scalarFieldPropertyi
     (
-        &HeThermo::mixtureType::thermoType::Ha,
+        &BaseThermo::mixtureType::thermoType::Ha,
         speciei,
         p,
         T
@@ -345,9 +345,9 @@ Foam::tmp<Foam::scalarField> Foam::heMulticomponentThermo<HeThermo>::hai
 }
 
 
-template<class HeThermo>
+template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heMulticomponentThermo<HeThermo>::hai
+Foam::MulticomponentThermo<BaseThermo>::hai
 (
     const label speciei,
     const volScalarField& p,
@@ -358,7 +358,7 @@ Foam::heMulticomponentThermo<HeThermo>::hai
     (
         "ha",
         dimEnergy/dimMass,
-        &HeThermo::mixtureType::thermoType::Ha,
+        &BaseThermo::mixtureType::thermoType::Ha,
         speciei,
         p,
         T
@@ -366,8 +366,8 @@ Foam::heMulticomponentThermo<HeThermo>::hai
 }
 
 
-template<class HeThermo>
-Foam::scalar Foam::heMulticomponentThermo<HeThermo>::kappai
+template<class BaseThermo>
+Foam::scalar Foam::MulticomponentThermo<BaseThermo>::kappai
 (
     const label speciei,
     const scalar p,
@@ -378,9 +378,9 @@ Foam::scalar Foam::heMulticomponentThermo<HeThermo>::kappai
 }
 
 
-template<class HeThermo>
+template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heMulticomponentThermo<HeThermo>::kappai
+Foam::MulticomponentThermo<BaseThermo>::kappai
 (
     const label speciei,
     const volScalarField& p,
@@ -391,7 +391,7 @@ Foam::heMulticomponentThermo<HeThermo>::kappai
     (
         "kappa",
         dimPower/dimLength/dimTemperature,
-        &HeThermo::mixtureType::thermoType::kappa,
+        &BaseThermo::mixtureType::thermoType::kappa,
         speciei,
         p,
         T

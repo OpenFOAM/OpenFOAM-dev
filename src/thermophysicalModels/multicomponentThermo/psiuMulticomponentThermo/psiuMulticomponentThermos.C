@@ -23,16 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "psiuMulticomponentThermo.H"
+
 #include "egrMixture.H"
 #include "homogeneousMixture.H"
 #include "inhomogeneousMixture.H"
 #include "veryInhomogeneousMixture.H"
 
-#include "psiThermo.H"
-#include "psiuMulticomponentThermo.H"
-#include "heheuPsiThermo.H"
-
 #include "forAbsoluteGases.H"
+
 #include "makeThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

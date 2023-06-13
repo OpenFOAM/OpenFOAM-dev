@@ -37,15 +37,12 @@ License
 #include "${transport}Transport.H"
 
 // psi/rho
-#include "${typeBase}.H"
 #include "${type}.H"
 
 // Mixture
 #include "${mixture}.H"
 
 #include "thermo.H"
-#include "heMulticomponentThermo.H"
-#include "heFluidMulticomponentThermo.H"
 #include "typedefThermo.H"
 #include "makeThermo.H"
 
@@ -88,7 +85,7 @@ namespace Foam
 
     defineThermo
     (
-        ${typeBase},
+        ${type},
         ${mixture},
         ${transport}Transport${energy}${thermo}Thermo${equationOfState}${specie}
     );
@@ -96,15 +93,15 @@ namespace Foam
     addThermo
     (
         fluidMulticomponentThermo,
-        ${typeBase},
+        ${type},
         ${mixture},
         ${transport}Transport${energy}${thermo}Thermo${equationOfState}${specie}
     );
 
     addThermo
     (
-        ${typeBase},
-        ${typeBase},
+        ${type},
+        ${type},
         ${mixture},
         ${transport}Transport${energy}${thermo}Thermo${equationOfState}${specie}
     );

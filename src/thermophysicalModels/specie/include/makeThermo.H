@@ -33,6 +33,7 @@ Description
 #define makeThermo_H
 
 #include "basicThermo.H"
+#include "NamedThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -40,14 +41,14 @@ Description
 #define defineThermo(BaseThermo, Mixture, ThermoPhysics)                       \
                                                                                \
     typedef                                                                    \
-        namedHeThermo<BaseThermo::heThermoType<Mixture<ThermoPhysics>>>        \
-        BaseThermo##HeThermo##Mixture##ThermoPhysics;                          \
+        NamedThermo<BaseThermo::DerivedThermoType<Mixture<ThermoPhysics>>>     \
+        BaseThermo##Mixture##ThermoPhysics;                                    \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        BaseThermo##HeThermo##Mixture##ThermoPhysics,                          \
+        BaseThermo##Mixture##ThermoPhysics,                                    \
         (                                                                      \
-            BaseThermo::heThermoName + "<"                                     \
+            BaseThermo::derivedThermoName + "<"                                \
           + Mixture<ThermoPhysics>::typeName() + ">"                           \
         ).c_str(),                                                             \
         0                                                                      \
@@ -59,7 +60,7 @@ Description
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
         SelectThermo,                                                          \
-        BaseThermo##HeThermo##Mixture##ThermoPhysics,                          \
+        BaseThermo##Mixture##ThermoPhysics,                                    \
         fvMesh                                                                 \
     );
 

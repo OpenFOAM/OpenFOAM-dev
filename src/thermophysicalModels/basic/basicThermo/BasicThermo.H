@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::heThermo
+    Foam::BasicThermo
 
 Description
     Thermo implementation and storage of energy and heat capacities. Provides
@@ -30,12 +30,12 @@ Description
     the primitive thermo model.
 
 SourceFiles
-    heThermo.C
+    BasicThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef heThermo_H
-#define heThermo_H
+#ifndef BasicThermo_H
+#define BasicThermo_H
 
 #include "volFields.H"
 #include "physicalProperties.H"
@@ -47,20 +47,20 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class heThermoName Declaration
+                       Class BasicThermoName Declaration
 \*---------------------------------------------------------------------------*/
 
-TemplateName(heThermo);
+TemplateName(BasicThermo);
 
 
 /*---------------------------------------------------------------------------*\
-                          Class heThermo Declaration
+                          Class BasicThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class MixtureType, class BasicThermoType>
-class heThermo
+class BasicThermo
 :
-    public heThermoName,
+    public BasicThermoName,
     public physicalProperties,
     public MixtureType,
     public BasicThermoType
@@ -142,20 +142,20 @@ public:
 
 
     //- Disambiguate debug switch used by derivations
-    using heThermoName::debug;
+    using BasicThermoName::debug;
 
 
     // Constructors
 
         //- Construct from mesh and phase name
-        heThermo(const fvMesh&, const word& phaseName);
+        BasicThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        heThermo(const heThermo<MixtureType, BasicThermoType>&) = delete;
+        BasicThermo(const BasicThermo<MixtureType, BasicThermoType>&) = delete;
 
 
     //- Destructor
-    virtual ~heThermo();
+    virtual ~BasicThermo();
 
 
     // Member Functions
@@ -374,32 +374,6 @@ public:
 };
 
 
-/*---------------------------------------------------------------------------*\
-                       Class namedHeThermo Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class HeThermo>
-class namedHeThermo
-:
-    public HeThermo
-{
-public:
-
-    //- Runtime type information
-    TypeName("heThermo");
-
-
-    // Constructors
-
-        //- Inherit constructors
-        using HeThermo::HeThermo;
-
-
-    //- Destructor
-    virtual ~namedHeThermo();
-};
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
@@ -407,7 +381,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "heThermo.C"
+    #include "BasicThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

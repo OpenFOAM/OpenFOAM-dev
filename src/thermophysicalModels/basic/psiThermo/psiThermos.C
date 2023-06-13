@@ -24,10 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "psiThermo.H"
-#include "hePsiThermo.H"
+
 #include "pureMixture.H"
 
 #include "forGases.H"
+
 #include "makeFluidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

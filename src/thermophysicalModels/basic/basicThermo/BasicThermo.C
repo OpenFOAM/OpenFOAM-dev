@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "heThermo.H"
+#include "BasicThermo.H"
 #include "gradientEnergyFvPatchScalarField.H"
 #include "mixedEnergyFvPatchScalarField.H"
 
@@ -32,7 +32,7 @@ License
 template<class MixtureType, class BasicThermoType>
 template<class Mixture, class Method, class ... Args>
 Foam::tmp<Foam::volScalarField>
-Foam::heThermo<MixtureType, BasicThermoType>::volScalarFieldProperty
+Foam::BasicThermo<MixtureType, BasicThermoType>::volScalarFieldProperty
 (
     const word& psiName,
     const dimensionSet& psiDim,
@@ -84,7 +84,7 @@ Foam::heThermo<MixtureType, BasicThermoType>::volScalarFieldProperty
 template<class MixtureType, class BasicThermoType>
 template<class Mixture, class Method, class ... Args>
 Foam::tmp<Foam::scalarField>
-Foam::heThermo<MixtureType, BasicThermoType>::cellSetProperty
+Foam::BasicThermo<MixtureType, BasicThermoType>::cellSetProperty
 (
     Mixture mixture,
     Method psiMethod,
@@ -113,7 +113,7 @@ Foam::heThermo<MixtureType, BasicThermoType>::cellSetProperty
 template<class MixtureType, class BasicThermoType>
 template<class Mixture, class Method, class ... Args>
 Foam::tmp<Foam::scalarField>
-Foam::heThermo<MixtureType, BasicThermoType>::patchFieldProperty
+Foam::BasicThermo<MixtureType, BasicThermoType>::patchFieldProperty
 (
     Mixture mixture,
     Method psiMethod,
@@ -141,7 +141,7 @@ Foam::heThermo<MixtureType, BasicThermoType>::patchFieldProperty
 
 template<class MixtureType, class BasicThermoType>
 Foam::UIndirectList<Foam::scalar>
-Foam::heThermo<MixtureType, BasicThermoType>::cellSetScalarList
+Foam::BasicThermo<MixtureType, BasicThermoType>::cellSetScalarList
 (
     const volScalarField& psi,
     const labelList& cells
@@ -153,7 +153,7 @@ Foam::heThermo<MixtureType, BasicThermoType>::cellSetScalarList
 
 template<class MixtureType, class BasicThermoType>
 Foam::UniformField<Foam::scalar>
-Foam::heThermo<MixtureType, BasicThermoType>::cellSetScalarList
+Foam::BasicThermo<MixtureType, BasicThermoType>::cellSetScalarList
 (
     const uniformGeometricScalarField& psi,
     const labelList&
@@ -164,7 +164,7 @@ Foam::heThermo<MixtureType, BasicThermoType>::cellSetScalarList
 
 
 template<class MixtureType, class BasicThermoType>
-void Foam::heThermo<MixtureType, BasicThermoType>::
+void Foam::BasicThermo<MixtureType, BasicThermoType>::
 heBoundaryCorrection(volScalarField& h)
 {
     volScalarField::Boundary& hBf = h.boundaryFieldRef();
@@ -188,7 +188,7 @@ heBoundaryCorrection(volScalarField& h)
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class MixtureType, class BasicThermoType>
-Foam::heThermo<MixtureType, BasicThermoType>::heThermo
+Foam::BasicThermo<MixtureType, BasicThermoType>::BasicThermo
 (
     const fvMesh& mesh,
     const word& phaseName
@@ -256,12 +256,7 @@ Foam::heThermo<MixtureType, BasicThermoType>::heThermo
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class MixtureType, class BasicThermoType>
-Foam::heThermo<MixtureType, BasicThermoType>::~heThermo()
-{}
-
-
-template<class HeThermo>
-Foam::namedHeThermo<HeThermo>::~namedHeThermo()
+Foam::BasicThermo<MixtureType, BasicThermoType>::~BasicThermo()
 {}
 
 
@@ -269,7 +264,7 @@ Foam::namedHeThermo<HeThermo>::~namedHeThermo()
 
 template<class MixtureType, class BasicThermoType>
 const Foam::volScalarField&
-Foam::heThermo<MixtureType, BasicThermoType>::Cpv() const
+Foam::BasicThermo<MixtureType, BasicThermoType>::Cpv() const
 {
     if (MixtureType::thermoType::enthalpy())
     {
@@ -283,7 +278,8 @@ Foam::heThermo<MixtureType, BasicThermoType>::Cpv() const
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::volScalarField> Foam::heThermo<MixtureType, BasicThermoType>::he
+Foam::tmp<Foam::volScalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::he
 (
     const volScalarField& p,
     const volScalarField& T
@@ -302,7 +298,8 @@ Foam::tmp<Foam::volScalarField> Foam::heThermo<MixtureType, BasicThermoType>::he
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::he
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::he
 (
     const scalarField& T,
     const labelList& cells
@@ -320,7 +317,8 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::he
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::he
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::he
 (
     const scalarField& T,
     const label patchi
@@ -339,7 +337,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::he
 
 template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::heThermo<MixtureType, BasicThermoType>::hs() const
+Foam::BasicThermo<MixtureType, BasicThermoType>::hs() const
 {
     return volScalarFieldProperty
     (
@@ -354,7 +352,8 @@ Foam::heThermo<MixtureType, BasicThermoType>::hs() const
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::volScalarField> Foam::heThermo<MixtureType, BasicThermoType>::hs
+Foam::tmp<Foam::volScalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::hs
 (
     const volScalarField& p,
     const volScalarField& T
@@ -373,7 +372,8 @@ Foam::tmp<Foam::volScalarField> Foam::heThermo<MixtureType, BasicThermoType>::hs
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::hs
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::hs
 (
     const scalarField& T,
     const labelList& cells
@@ -391,7 +391,8 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::hs
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::hs
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::hs
 (
     const scalarField& T,
     const label patchi
@@ -410,7 +411,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::hs
 
 template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::heThermo<MixtureType, BasicThermoType>::ha() const
+Foam::BasicThermo<MixtureType, BasicThermoType>::ha() const
 {
     return volScalarFieldProperty
     (
@@ -425,7 +426,8 @@ Foam::heThermo<MixtureType, BasicThermoType>::ha() const
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::volScalarField> Foam::heThermo<MixtureType, BasicThermoType>::ha
+Foam::tmp<Foam::volScalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::ha
 (
     const volScalarField& p,
     const volScalarField& T
@@ -444,7 +446,8 @@ Foam::tmp<Foam::volScalarField> Foam::heThermo<MixtureType, BasicThermoType>::ha
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::ha
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::ha
 (
     const scalarField& T,
     const labelList& cells
@@ -462,7 +465,8 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::ha
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::ha
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::ha
 (
     const scalarField& T,
     const label patchi
@@ -481,7 +485,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::ha
 
 template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::heThermo<MixtureType, BasicThermoType>::hc() const
+Foam::BasicThermo<MixtureType, BasicThermoType>::hc() const
 {
     return volScalarFieldProperty
     (
@@ -494,7 +498,8 @@ Foam::heThermo<MixtureType, BasicThermoType>::hc() const
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::Cp
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::Cp
 (
     const scalarField& T,
     const label patchi
@@ -512,7 +517,8 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::Cp
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::Cv
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::Cv
 (
     const scalarField& T,
     const label patchi
@@ -530,7 +536,8 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::Cv
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::gamma
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::gamma
 (
     const scalarField& T,
     const label patchi
@@ -549,14 +556,15 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::gamma
 
 template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::heThermo<MixtureType, BasicThermoType>::gamma() const
+Foam::BasicThermo<MixtureType, BasicThermoType>::gamma() const
 {
     return volScalarField::New("gamma", Cp_/Cv_);
 }
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::Cpv
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::Cpv
 (
     const scalarField& T,
     const label patchi
@@ -575,7 +583,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::Cpv
 
 template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::heThermo<MixtureType, BasicThermoType>::THE
+Foam::BasicThermo<MixtureType, BasicThermoType>::THE
 (
     const volScalarField& h,
     const volScalarField& p,
@@ -596,7 +604,8 @@ Foam::heThermo<MixtureType, BasicThermoType>::THE
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::THE
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::THE
 (
     const scalarField& h,
     const scalarField& T0,
@@ -616,7 +625,8 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::THE
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::THE
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::THE
 (
     const scalarField& h,
     const scalarField& T0,
@@ -637,7 +647,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::THE
 
 template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::heThermo<MixtureType, BasicThermoType>::W() const
+Foam::BasicThermo<MixtureType, BasicThermoType>::W() const
 {
     return volScalarFieldProperty
     (
@@ -650,7 +660,8 @@ Foam::heThermo<MixtureType, BasicThermoType>::W() const
 
 
 template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::W
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::W
 (
     const label patchi
 ) const
@@ -665,7 +676,7 @@ Foam::tmp<Foam::scalarField> Foam::heThermo<MixtureType, BasicThermoType>::W
 
 
 template<class MixtureType, class BasicThermoType>
-bool Foam::heThermo<MixtureType, BasicThermoType>::read()
+bool Foam::BasicThermo<MixtureType, BasicThermoType>::read()
 {
     if (physicalProperties::read())
     {

@@ -49,7 +49,7 @@ Description
     obtaining a single copy of all the implementation classes it needs to form
     a complete implementation. The use of virtual inheritance does not result
     in additional constructor calls propagating further down the hierarchy
-    (into heThermo and similar) because all virtually inherited interface
+    (into BasicThermo and similar) because all virtually inherited interface
     classes are default constructable.
 
 SourceFiles

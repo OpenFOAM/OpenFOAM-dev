@@ -21,16 +21,57 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::NamedThermo
+
+Description
+    Final wrapper around a derived thermo. Adds type info.
+
 \*---------------------------------------------------------------------------*/
 
-#include "heThermo.H"
+#ifndef NamedThermo_H
+#define NamedThermo_H
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+#include "typeInfo.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(heThermoName, 0);
-}
 
+/*---------------------------------------------------------------------------*\
+                          Class NamedThermo Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class BaseThermo>
+class NamedThermo
+:
+    public BaseThermo
+{
+public:
+
+    //- Runtime type information
+    TypeName("NamedThermo");
+
+
+    // Constructors
+
+        //- Inherit constructors
+        using BaseThermo::BaseThermo;
+
+
+    //- Destructor
+    virtual ~NamedThermo()
+    {}
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

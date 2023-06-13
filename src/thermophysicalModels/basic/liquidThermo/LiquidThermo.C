@@ -23,60 +23,42 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "heFluidMulticomponentThermo.H"
-#include "fvMesh.H"
+#include "LiquidThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class HeThermo>
-Foam::heFluidMulticomponentThermo<HeThermo>::heFluidMulticomponentThermo
+template<class BaseThermo>
+Foam::LiquidThermo<BaseThermo>::LiquidThermo
 (
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    HeThermo(mesh, phaseName)
+    BaseThermo(mesh, phaseName)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class HeThermo>
-Foam::heFluidMulticomponentThermo<HeThermo>::~heFluidMulticomponentThermo()
+template<class BaseThermo>
+Foam::LiquidThermo<BaseThermo>::~LiquidThermo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class HeThermo>
-Foam::scalar Foam::heFluidMulticomponentThermo<HeThermo>::mui
-(
-    const label speciei,
-    const scalar p,
-    const scalar T
-) const
-{
-    return this->specieThermo(speciei).mu(p, T);
-}
-
-
-template<class HeThermo>
+template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::heFluidMulticomponentThermo<HeThermo>::mui
-(
-    const label speciei,
-    const volScalarField& p,
-    const volScalarField& T
-) const
+Foam::LiquidThermo<BaseThermo>::sigma() const
 {
-    return this->volScalarFieldPropertyi
+    return this->volScalarFieldProperty
     (
-        "mu",
-        dimMass/dimLength/dimTime,
-        &HeThermo::mixtureType::thermoType::mu,
-        speciei,
-        p,
-        T
+        "sigma",
+        dimForce/dimLength,
+        &BaseThermo::mixtureType::thermoMixture,
+        &BaseThermo::mixtureType::thermoMixtureType::sigma,
+        this->p_,
+        this->T_
     );
 }
 

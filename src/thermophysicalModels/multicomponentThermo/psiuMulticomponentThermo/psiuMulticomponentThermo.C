@@ -37,7 +37,10 @@ namespace Foam
     defineRunTimeSelectionTable(psiuMulticomponentThermo, fvMesh);
 }
 
-const Foam::word Foam::psiuMulticomponentThermo::heThermoName("heheuPsiThermo");
+const Foam::word Foam::psiuMulticomponentThermo::derivedThermoName
+(
+    "heheuPsiThermo"
+);
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //

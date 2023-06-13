@@ -1,4 +1,5 @@
 basicThermo/basicThermo.C
+basicThermo/BasicThermoName.C
 
 pureThermo/pureThermo.C
 
@@ -20,7 +21,5 @@ derivedFvPatchFields/gradientEnergy/gradientEnergyFvPatchScalarField.C
 derivedFvPatchFields/gradientEnergy/gradientEnergyCalculatedTemperatureFvPatchScalarField.C
 derivedFvPatchFields/mixedEnergy/mixedEnergyFvPatchScalarField.C
 derivedFvPatchFields/mixedEnergy/mixedEnergyCalculatedTemperatureFvPatchScalarField.C
-
-heThermo/heThermoName.C
 
 LIB = $(FOAM_LIBBIN)/libfluidThermophysicalModels
