@@ -239,7 +239,11 @@ void Foam::Time::setControls()
         )
     );
 
-    if (timeDict.found("beginTime"))
+    if (controlDict_.found("beginTime"))
+    {
+        beginTime_ = userTimeToTime(controlDict_.lookup<scalar>("beginTime"));
+    }
+    else if (timeDict.found("beginTime"))
     {
         beginTime_ = userTimeToTime(timeDict.lookup<scalar>("beginTime"));
     }
