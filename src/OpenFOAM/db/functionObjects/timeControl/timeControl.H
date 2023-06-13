@@ -123,14 +123,11 @@ public:
         //- Flag to indicate whether to execute
         bool execute();
 
+        //- Return the time to the next write
+        scalar timeToNextWrite();
+
         //- Return control
         inline timeControls control() const;
-
-        //- Return interval
-        inline scalar interval() const;
-
-        //- Return the index of the previous execution
-        inline label executionIndex() const;
 
 
     // Member Operators

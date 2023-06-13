@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,7 +178,7 @@ bool Foam::timeControl::execute()
         case timeControls::runTime:
         case timeControls::adjustableRunTime:
         {
-            label executionIndex = label
+            const label executionIndex = label
             (
                 (
                     (time_.value() - time_.beginTime().value())
@@ -197,7 +197,7 @@ bool Foam::timeControl::execute()
 
         case timeControls::cpuTime:
         {
-            label executionIndex = label
+            const label executionIndex = label
             (
                 returnReduce(time_.elapsedCpuTime(), maxOp<double>())
                /interval_
@@ -212,7 +212,7 @@ bool Foam::timeControl::execute()
 
         case timeControls::clockTime:
         {
-            label executionIndex = label
+            const label executionIndex = label
             (
                 returnReduce(label(time_.elapsedClockTime()), maxOp<label>())
                /interval_
@@ -241,6 +241,48 @@ bool Foam::timeControl::execute()
     }
 
     return false;
+}
+
+
+Foam::scalar Foam::timeControl::timeToNextWrite()
+{
+    switch (timeControl_)
+    {
+        case timeControls::timeStep:
+        case timeControls::writeTime:
+        case timeControls::outputTime:
+        case timeControls::runTime:
+        case timeControls::cpuTime:
+        case timeControls::clockTime:
+        case timeControls::none:
+        {
+            return vGreat;
+            break;
+        }
+
+        case timeControls::adjustableRunTime:
+        {
+            return
+                max
+                (
+                    0.0,
+                    (executionIndex_ + 1)*interval_
+                  - (time_.value() - time_.beginTime().value())
+                );
+            break;
+        }
+
+        default:
+        {
+            FatalErrorInFunction
+                << "Undefined output control: "
+                << timeControlNames_[timeControl_] << nl
+                << abort(FatalError);
+            break;
+        }
+    }
+
+    return vGreat;
 }
 
 

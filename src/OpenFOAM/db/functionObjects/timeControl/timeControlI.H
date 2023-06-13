@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,18 +34,6 @@ inline const Foam::Time& Foam::timeControl::time() const
 inline Foam::timeControl::timeControls Foam::timeControl::control() const
 {
     return timeControl_;
-}
-
-
-inline Foam::scalar Foam::timeControl::interval() const
-{
-    return interval_;
-}
-
-
-inline Foam::label Foam::timeControl::executionIndex() const
-{
-    return executionIndex_;
 }
 
 

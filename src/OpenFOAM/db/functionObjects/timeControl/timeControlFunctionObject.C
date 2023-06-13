@@ -159,26 +159,7 @@ bool Foam::functionObjects::timeControl::end()
 
 Foam::scalar Foam::functionObjects::timeControl::timeToNextWrite()
 {
-    if
-    (
-        active()
-     && writeControl_.control() ==
-        Foam::timeControl::timeControls::adjustableRunTime
-    )
-    {
-        const label  writeTimeIndex = writeControl_.executionIndex();
-        const scalar writeInterval = writeControl_.interval();
-
-        return
-            max
-            (
-                0.0,
-                (writeTimeIndex + 1)*writeInterval
-              - (time_.value() - time_.beginTime().value())
-            );
-    }
-
-    return vGreat;
+    return writeControl_.timeToNextWrite();
 }
 
 
