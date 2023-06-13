@@ -69,7 +69,7 @@ subModels
         model1
         {
             type            patchInjection;
-            massTotal       40;
+            massFlowRate    10;
             SOI             1;
             uniformParcelSize volume;
             patchName       inlet;

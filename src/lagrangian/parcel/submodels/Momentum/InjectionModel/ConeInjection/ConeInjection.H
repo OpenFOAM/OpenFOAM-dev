@@ -217,7 +217,7 @@ private:
         const TimeFunction1<scalar> massFlowRate_;
 
         //- Number of parcels to introduce per second
-        const label parcelsPerSecond_;
+        const TimeFunction1<scalar> parcelsPerSecond_;
 
         //- Inner half-cone angle relative to SOI [deg]
         const TimeFunction1<scalar> thetaInner_;

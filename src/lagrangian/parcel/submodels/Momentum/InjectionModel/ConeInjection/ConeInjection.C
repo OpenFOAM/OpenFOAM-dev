@@ -144,10 +144,7 @@ Foam::ConeInjection<CloudType>::ConeInjection
     injectorTetPt_(-1),
     duration_(this->readDuration(dict, owner)),
     massFlowRate_(this->readMassFlowRate(dict, owner, duration_)),
-    parcelsPerSecond_
-    (
-        this->coeffDict().template lookup<scalar>("parcelsPerSecond")
-    ),
+    parcelsPerSecond_(this->readParcelsPerSecond(dict, owner)),
     thetaInner_
     (
         TimeFunction1<scalar>
@@ -263,10 +260,15 @@ Foam::label Foam::ConeInjection<CloudType>::nParcelsToInject
     if (time0 >= 0 && time0 < duration_)
     {
         //// Standard calculation
-        //return floor(parcelsPerSecond_*(time1 - time0));
+        //return floor(parcelsPerSecond_.integral(time0, time1));
 
         // Modified calculation to make numbers exact
-        return floor(parcelsPerSecond_*time1 - this->parcelsAddedTotal());
+        return
+            floor
+            (
+                parcelsPerSecond_.integral(0, time1)
+              - this->parcelsAddedTotal()
+            );
     }
     else
     {

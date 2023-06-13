@@ -39,10 +39,7 @@ ReactingMultiphaseLookupTableInjection
     InjectionModel<CloudType>(dict, owner, modelName, typeName),
     inputFileName_(this->coeffDict().lookup("inputFile")),
     duration_(this->readDuration(dict, owner)),
-    parcelsPerSecond_
-    (
-        this->coeffDict().template lookup<scalar>("parcelsPerSecond")
-    ),
+    parcelsPerSecond_(this->readParcelsPerSecond(dict, owner)),
     randomise_(readBool(this->coeffDict().lookup("randomise"))),
     injectors_
     (
@@ -136,7 +133,12 @@ Foam::ReactingMultiphaseLookupTableInjection<CloudType>::nParcelsToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        return floor(injectorCells_.size()*(time1 - time0)*parcelsPerSecond_);
+        return
+            floor
+            (
+                injectorCells_.size()
+               *parcelsPerSecond_.integral(time0, time1)
+            );
     }
     else
     {

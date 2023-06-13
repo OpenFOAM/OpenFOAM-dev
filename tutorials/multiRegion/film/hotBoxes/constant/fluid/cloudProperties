@@ -77,12 +77,12 @@ subModels
         model1
         {
             type            coneInjection;
-            SOI             0.000;
-            duration        20.000;
+            SOI             0;
+            duration        20;
             position        (0.3 0.35 1.45);
             direction       (0 0 -1);
 
-            massTotal       10;
+            massFlowRate    0.5;
             parcelsPerSecond 1000;
             uniformParcelSize volume;
             flowRateProfile constant 0.1;

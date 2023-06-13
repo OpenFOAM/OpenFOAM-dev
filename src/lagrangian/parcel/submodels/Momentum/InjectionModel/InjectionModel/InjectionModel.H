@@ -137,6 +137,14 @@ protected:
             const scalar duration
         );
 
+        //- Read the number of parcels injected per second for continuous
+        //  injections
+        TimeFunction1<scalar> readParcelsPerSecond
+        (
+            const dictionary& dict,
+            CloudType& owner
+        );
+
         //- Get the index of this injector
         label index() const;
 

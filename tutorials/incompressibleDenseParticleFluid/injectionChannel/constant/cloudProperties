@@ -79,31 +79,15 @@ subModels
                 mu              650e-6;
                 sigma           25e-6;
             }
-            flowRateProfile constant 1;
             SOI             0;
             duration        60;
         }
 
         model2
         {
-            type            patchInjection;
+            $model1;
             patchName       upperInlet;
             U0              (18.7939 -6.8404 0);
-            nParticle       1;
-            parcelsPerSecond 1390885;
-            sizeDistribution
-            {
-                type            normal;
-                Q               0;
-                min             500e-6;
-                max             800e-6;
-                mu              650e-6;
-                sigma           25e-6;
-            }
-            flowRateProfile constant 1;
-            massTotal       0;
-            SOI             0;
-            duration        60;
         }
     }
 

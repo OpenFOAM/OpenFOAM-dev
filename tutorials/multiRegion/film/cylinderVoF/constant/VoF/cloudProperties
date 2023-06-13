@@ -77,7 +77,6 @@ subModels
         model1
         {
             type            thermoLookupTableInjection;
-            massTotal       100;
             uniformParcelSize volume;
             SOI             0;
             inputFile       "parcelInjectionProperties";

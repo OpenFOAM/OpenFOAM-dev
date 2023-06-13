@@ -77,7 +77,6 @@ subModels
         model1
         {
             type            reactingLookupTableInjection;
-            massTotal       0.5;
             uniformParcelSize volume;
             SOI             0;
             inputFile       "parcelInjectionProperties";

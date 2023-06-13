@@ -99,9 +99,12 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
 {
     const Time& time = owner.mesh().time();
 
+    const bool haveMassFlowRate = dict.found("massFlowRate");
+    const bool haveMassTotal = dict.found("massTotal");
+
     if (dict.found("nParticle"))
     {
-        if (dict.found("massFlowRate") || dict.found("massTotal"))
+        if (haveMassFlowRate || haveMassTotal)
         {
             IOWarningInFunction(dict)
                 << "If nParticle is specified then massFlowRate and massTotal "
@@ -116,7 +119,21 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
             );
     }
 
-    if (owner.solution().steadyState())
+    if (owner.solution().steadyState() && haveMassTotal)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Cannot specify the massTotal of a steady injection. Use "
+            << "massFlowRate instead." << exit(FatalIOError);
+    }
+
+    if (haveMassFlowRate && haveMassTotal)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Cannot specify both massFlowRate and massTotal. Use one or "
+            << "the other." << exit(FatalIOError);
+    }
+
+    if (owner.solution().steadyState() || haveMassFlowRate)
     {
         return TimeFunction1<scalar>(time, "massFlowRate", dict);
     }
@@ -150,6 +167,20 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
                 flowRateProfile()
             )
         );
+}
+
+
+template<class CloudType>
+Foam::TimeFunction1<Foam::scalar>
+Foam::InjectionModel<CloudType>::readParcelsPerSecond
+(
+    const dictionary& dict,
+    CloudType& owner
+)
+{
+    const Time& time = owner.mesh().time();
+
+    return TimeFunction1<scalar>(time, "parcelsPerSecond", dict);
 }
 
 

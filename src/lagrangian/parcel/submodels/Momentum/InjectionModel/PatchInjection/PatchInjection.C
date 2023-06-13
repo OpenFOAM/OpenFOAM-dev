@@ -41,10 +41,7 @@ Foam::PatchInjection<CloudType>::PatchInjection
     patchInjectionBase(owner.mesh(), this->coeffDict().lookup("patchName")),
     duration_(this->readDuration(dict, owner)),
     massFlowRate_(this->readMassFlowRate(dict, owner, duration_)),
-    parcelsPerSecond_
-    (
-        this->coeffDict().template lookup<scalar>("parcelsPerSecond")
-    ),
+    parcelsPerSecond_(this->readParcelsPerSecond(dict, owner)),
     U0_(this->coeffDict().lookup("U0")),
     sizeDistribution_
     (
@@ -106,7 +103,7 @@ Foam::label Foam::PatchInjection<CloudType>::nParcelsToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        scalar nParcels = (time1 - time0)*parcelsPerSecond_;
+        scalar nParcels = parcelsPerSecond_.integral(time0, time1);
 
         Random& rnd = this->owner().rndGen();
 
