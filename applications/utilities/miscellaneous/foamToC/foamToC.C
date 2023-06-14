@@ -36,17 +36,17 @@ Description
 
 Usage
     \b foamToC [OPTION]
+      - \par -noLibs
+        Do not load all libraries
+
+      - \par -libs '(\"lib1.so\" ... \"libN.so\")'
+        Specify libraries to load
+
       - \par -solver \<name\>
         Specify the solver class
 
-      - \par -libs '(\"lib1.so\" ... \"libN.so\")'
-        Specify the additional libraries to load
-
-      - \par -allLibs
-        Load all libraries
-
-      - \par -listAllLibs
-        Load and list all libraries
+      - \par -listLibs
+        List libraries as they are loaded
 
       - \par switches,
         List all available debug, info and optimisation switches
@@ -102,14 +102,14 @@ Usage
 
       - Print a complete list of all run-time selection tables:
         \verbatim
-            foamToC -allLibs -tables
-            or
-            foamToC -allLibs
+            foamToC -tables
+            or simply
+            foamToC
         \endverbatim
 
       - Print a complete list of all entries in all run-time selection tables:
         \verbatim
-            foamToC -allLibs -all
+            foamToC -all
         \endverbatim
 
 \*---------------------------------------------------------------------------*/
@@ -247,14 +247,14 @@ int main(int argc, char *argv[])
 
     argList::addBoolOption
     (
-        "allLibs",
-        "Load all libraries"
+        "noLibs",
+        "Do not load all libraries"
     );
 
     argList::addBoolOption
     (
-        "listAllLibs",
-        "Load and list all libraries"
+        "listLibs",
+        "List libraries as they are loaded"
     );
 
     argList::addBoolOption
@@ -334,11 +334,11 @@ int main(int argc, char *argv[])
     const string libDir(getEnv("FOAM_LIBBIN"));
     const fileNameList libNames(readDir(libDir));
 
-    const bool listAllLibs = args.optionFound("listAllLibs");
+    const bool listLibs = args.optionFound("listLibs");
 
-    if (args.optionFound("allLibs") || listAllLibs)
+    if (!args.optionFound("noLibs") && solverName == word::null)
     {
-        if (listAllLibs)
+        if (listLibs)
         {
             Info << "Loading libraries:" << nl;
         }
@@ -346,7 +346,7 @@ int main(int argc, char *argv[])
         {
             if (libNames[i].ext() == "so")
             {
-                if (listAllLibs)
+                if (listLibs)
                 {
                     Info << "    " << libNames[i].c_str() << nl;
                 }
