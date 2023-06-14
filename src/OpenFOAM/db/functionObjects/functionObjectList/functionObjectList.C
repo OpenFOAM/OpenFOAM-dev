@@ -278,7 +278,7 @@ bool Foam::functionObjectList::end()
 }
 
 
-Foam::scalar Foam::functionObjectList::timeToNextWrite()
+Foam::scalar Foam::functionObjectList::timeToNextAction()
 {
     scalar result = vGreat;
 
@@ -291,7 +291,7 @@ Foam::scalar Foam::functionObjectList::timeToNextWrite()
 
         forAll(*this, oi)
         {
-            result = min(result, operator[](oi).timeToNextWrite());
+            result = min(result, operator[](oi).timeToNextAction());
         }
     }
 

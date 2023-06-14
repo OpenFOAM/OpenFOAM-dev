@@ -83,7 +83,8 @@ bool Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::read
 
 
 Foam::scalar
-Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::timeToNextWrite()
+Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::
+timeToNextAction()
 {
     return meshToMesh_.timeToNextMesh();
 }

@@ -157,7 +157,7 @@ bool Foam::functionObject::end()
 }
 
 
-Foam::scalar Foam::functionObject::timeToNextWrite()
+Foam::scalar Foam::functionObject::timeToNextAction()
 {
     return vGreat;
 }

@@ -176,7 +176,7 @@ public:
         bool end();
 
         //- Return the time to the next write
-        scalar timeToNextWrite();
+        scalar timeToNextAction();
 
         //- Update topology using the given map
         virtual void movePoints(const polyMesh& mesh);

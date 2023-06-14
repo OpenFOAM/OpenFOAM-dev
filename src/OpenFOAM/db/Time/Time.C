@@ -82,17 +82,17 @@ Foam::word Foam::Time::controlDictName("controlDict");
 
 void Foam::Time::adjustDeltaT()
 {
-    const scalar timeToNextWrite = min
+    const scalar timeToNextAction = min
     (
         max
         (
             0,
             (writeTimeIndex_ + 1)*writeInterval_ - (value() - beginTime_)
         ),
-        functionObjects_.timeToNextWrite()
+        functionObjects_.timeToNextAction()
     );
 
-    const scalar nSteps = timeToNextWrite/deltaT_;
+    const scalar nSteps = timeToNextAction/deltaT_;
 
     // Ensure nStepsToNextWrite does not overflow
     if (nSteps < labelMax)
@@ -101,7 +101,7 @@ void Foam::Time::adjustDeltaT()
         // to accommodate the next write time before splitting
         const label nStepsToNextWrite = label(max(nSteps, 1) + 0.99);
 
-        deltaT_ = timeToNextWrite/nStepsToNextWrite;
+        deltaT_ = timeToNextAction/nStepsToNextWrite;
     }
 }
 

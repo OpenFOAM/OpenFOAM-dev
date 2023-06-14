@@ -157,9 +157,13 @@ bool Foam::functionObjects::timeControl::end()
 }
 
 
-Foam::scalar Foam::functionObjects::timeControl::timeToNextWrite()
+Foam::scalar Foam::functionObjects::timeControl::timeToNextAction()
 {
-    return writeControl_.timeToNextWrite();
+    return min
+    (
+        executeControl_.timeToNextAction(),
+        writeControl_.timeToNextAction()
+    );
 }
 
 

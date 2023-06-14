@@ -69,21 +69,24 @@ Description
         endTime  | End time                              | no       |
         executeAtStart  | Execute at start time switch   | no       | yes
         executeControl  | See time controls below        | no       | timeStep
-        executeInterval | Steps between each execute phase | no     |
+        executeInterval | Steps between each execution   | no       |
+        executeTimes    | List of execution times        | no       |
         writeControl    | See time controls below        | no       | timeStep
-        writeInterval   | Steps between each write phase | no       |
+        writeInterval   | Steps between each write       | no       |
+        writeTimes      | List of write times            | no       |
     \endtable
 
     Time controls:
     \table
         Option            | Description
         timeStep          | Execute/write every 'Interval' time-steps
-        writeTime         | Execute/write every 'Interval' output times
+        writeTime         | Execute/write every 'Interval' write times
         adjustableRunTime | Execute/write every 'Interval' run time period
         runTime           | Execute/write every 'Interval' run time period
+        runTimes          | Execute/write at specified list of run times
         clockTime         | Execute/write every 'Interval' clock time period
         cpuTime           | Execute/write every 'Interval' CPU time period
-        none              | Execute/write every time-step
+        none              | No execution
     \endtable
 
     The sub-dictionary name \c \<functionObjectName\> is chosen by the user, and
@@ -244,7 +247,7 @@ public:
         //- Called by Time::adjustTimeStep(). Allows the functionObject to
         //  insert a write time earlier than that already in use by the run
         //  time. Returns the write time, or vGreat.
-        virtual scalar timeToNextWrite();
+        virtual scalar timeToNextAction();
 
         //- Update topology using the given map
         virtual void movePoints(const polyMesh& mesh);

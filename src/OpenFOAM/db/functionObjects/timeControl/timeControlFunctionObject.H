@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,8 +151,9 @@ public:
             //- Called when Time::run() determines that the time-loop exits
             virtual bool end();
 
-            //- Return the time to the next write
-            virtual scalar timeToNextWrite();
+            //- Return the time to the next execute or write
+            //  if time requires adjustment
+            virtual scalar timeToNextAction();
 
             //- Read and set the function object if its data have changed
             virtual bool read(const dictionary&);
