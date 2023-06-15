@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #define TableReader_H
 
 #include "dictionary.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -122,14 +123,17 @@ public:
                                                                                \
     defineNamedTemplateTypeNameAndDebug(TableReaders::SS<Type>, 0);            \
                                                                                \
-    TableReader<Type>::adddictionaryConstructorToTable<TableReaders::SS<Type>> \
-        add##SS##Type##ConstructorToTable_;
+    addTemplatedToRunTimeSelectionTable(TableReader, SS, Type, dictionary)
 
 #define makeTableReaders(Type)                                                 \
     defineTableReader(Type);                                                   \
-    makeTableReader(Embedded, Type);                                           \
-    makeTableReader(Foam, Type);                                               \
-    makeTableReader(Csv, Type)
+                                                                               \
+    namespace TableReaders                                                     \
+    {                                                                          \
+        makeTableReader(Embedded, Type);                                       \
+        makeTableReader(Foam, Type);                                           \
+        makeTableReader(Csv, Type);                                            \
+    }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,11 +102,14 @@ const trvType trvType::vsType::rootMin
 
 namespace Foam
 {
-    makeFunction1s(trvType);
+    makeFunction1s(trvType, nullArg);
 
     defineTableReader(trvType);
-    makeTableReader(Embedded, trvType);
-    makeTableReader(Foam, trvType);
+    namespace TableReaders
+    {
+        makeTableReader(Embedded, trvType);
+        makeTableReader(Foam, trvType);
+    }
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,7 @@ SourceFiles
 #include "tmp.H"
 #include "typeInfo.H"
 #include "Field.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -204,24 +205,27 @@ public:
 #define makeFunction2(Type)                                                    \
                                                                                \
     defineNamedTemplateTypeNameAndDebug(Function2<Type>, 0);                   \
-                                                                               \
     defineTemplateRunTimeSelectionTable(Function2<Type>, dictionary);
 
 
 #define makeFunction2Type(SS, Type)                                            \
                                                                                \
-    defineNamedTemplateTypeNameAndDebug(Function2s::SS<Type>, 0);              \
-                                                                               \
-    Function2<Type>::adddictionaryConstructorToTable<Function2s::SS<Type>>     \
-        addFunction2##SS##Type##ConstructorToTable_;
+    defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                          \
+    typedef Function2<Type> Type##Function2;                                   \
+    typedef SS<Type> Type##SS##Function2;                                      \
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        Type##Function2,                                                       \
+        Type##SS##Function2,                                                   \
+        dictionary                                                             \
+    )
 
 
 #define makeScalarFunction2(SS)                                                \
                                                                                \
     defineTypeNameAndDebug(SS, 0);                                             \
-                                                                               \
-    Function2<scalar>::adddictionaryConstructorToTable<SS>                     \
-        addFunction2##SS##ConstructorToTable_;
+    typedef Function2<scalar> scalarFunction2;                                 \
+    addToRunTimeSelectionTable(scalarFunction2, SS, dictionary)
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

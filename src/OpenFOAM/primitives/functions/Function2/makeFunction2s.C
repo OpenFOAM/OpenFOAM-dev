@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,27 +35,32 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeFunction2s(Type)                                                   \
+#define makeFunction2s(Type, nullArg)                                          \
+                                                                               \
     makeFunction2(Type);                                                       \
-    makeFunction2Type(None, Type);                                             \
-    makeFunction2Type(Constant, Type);                                         \
-    makeFunction2Type(ZeroConstant, Type);                                     \
-    makeFunction2Type(OneConstant, Type);                                      \
-    makeFunction2Type(Scale, Type);                                            \
-    makeFunction2Type(UniformTable, Type);                                     \
-    makeFunction2Type(Coded, Type);
+                                                                               \
+    namespace Function2s                                                       \
+    {                                                                          \
+        makeFunction2Type(None, Type);                                         \
+        makeFunction2Type(Constant, Type);                                     \
+        makeFunction2Type(ZeroConstant, Type);                                 \
+        makeFunction2Type(OneConstant, Type);                                  \
+        makeFunction2Type(Scale, Type);                                        \
+        makeFunction2Type(UniformTable, Type);                                 \
+        makeFunction2Type(Coded, Type);                                        \
+    }
 
 namespace Foam
 {
     makeFunction2(label);
-    makeFunction2Type(None, label);
-    makeFunction2Type(Constant, label);
 
-    makeFunction2s(scalar);
-    makeFunction2s(vector);
-    makeFunction2s(sphericalTensor);
-    makeFunction2s(symmTensor);
-    makeFunction2s(tensor);
+    namespace Function2s
+    {
+        makeFunction2Type(None, label);
+        makeFunction2Type(Constant, label);
+    }
+
+    FOR_ALL_FIELD_TYPES(makeFunction2s);
 }
 
 

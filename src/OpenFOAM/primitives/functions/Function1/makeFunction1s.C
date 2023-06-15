@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,14 +45,14 @@ License
 namespace Foam
 {
     makeFunction1(label);
-    makeFunction1Type(None, label);
-    makeFunction1Type(Constant, label);
 
-    makeFunction1s(scalar);
-    makeFunction1s(vector);
-    makeFunction1s(sphericalTensor);
-    makeFunction1s(symmTensor);
-    makeFunction1s(tensor);
+    namespace Function1s
+    {
+        makeFunction1Type(None, label);
+        makeFunction1Type(Constant, label);
+    }
+
+    FOR_ALL_FIELD_TYPES(makeFunction1s);
 }
 
 

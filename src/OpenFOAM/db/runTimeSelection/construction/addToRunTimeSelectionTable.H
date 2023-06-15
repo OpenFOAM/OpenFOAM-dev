@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,43 +98,6 @@ namespace Foam
         (#baseType, baseType::typeName_(), thisType::typeName, STR(LIB_NAME))
 
 
-//- Add to hash-table of functions with 'lookup' as the key
-#define addRemovableNamedToRunTimeSelectionTable\
-(baseType,thisType,argNames,lookup)                                            \
-                                                                               \
-    /* Add the thisType constructor function to the table, find by lookup */   \
-    baseType::addRemovable##argNames##ConstructorToTable<thisType>             \
-        addRemovable_##lookup##_##thisType##argNames##ConstructorTo            \
-        ##baseType##Table_(#lookup);                                           \
-                                                                               \
-    bool addRemovable_##lookup##_##thisType##argNames##To##baseType##ToC_ =    \
-        addToRunTimeSelectionTableToC                                          \
-        (#baseType, baseType::typeName_(), #lookup, STR(LIB_NAME))
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-//- Add to hash-table of functions with typename as the key.
-//  Use when baseType doesn't need a template argument (eg, is a typedef)
-#define addTemplateToRunTimeSelectionTable\
-(baseType,thisType,Targ,argNames)                                              \
-                                                                               \
-    /* Add the thisType constructor function to the table */                   \
-    baseType::add##argNames##ConstructorToTable<thisType<Targ>>                \
-        add##thisType##Targ##argNames##ConstructorTo##baseType##Table_
-
-
-//- Add to hash-table of functions with 'lookup' as the key.
-//  Use when baseType doesn't need a template argument (eg, is a typedef)
-#define addNamedTemplateToRunTimeSelectionTable\
-(baseType,thisType,Targ,argNames,lookup)                                       \
-                                                                               \
-    /* Add the thisType constructor function to the table, find by lookup */   \
-    baseType::add##argNames##ConstructorToTable<thisType<Targ>>                \
-        add_##lookup##_##thisType##Targ##argNames##ConstructorTo##baseType     \
-        ##Table_(#lookup)
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 //- Add to hash-table of functions with typename as the key.
@@ -144,7 +107,16 @@ namespace Foam
                                                                                \
     /* Add the thisType constructor function to the table */                   \
     baseType<Targ>::add##argNames##ConstructorToTable<thisType<Targ>>          \
-        add##thisType##Targ##argNames##ConstructorTo##baseType##Targ##Table_
+        add##thisType##Targ##argNames##ConstructorTo##baseType##Targ##Table_;  \
+                                                                               \
+    bool add##thisType##Targ##argNames##To##baseType##Targ##ToC_ =             \
+        addToRunTimeSelectionTableToC                                          \
+        (                                                                      \
+            #baseType,                                                         \
+            baseType<Targ>::typeName_(),                                       \
+            thisType<Targ>::typeName,                                          \
+            STR(LIB_NAME)                                                      \
+        )
 
 
 //- Add to hash-table of functions with 'lookup' as the key.
@@ -155,7 +127,11 @@ namespace Foam
     /* Add the thisType constructor function to the table, find by lookup */   \
     baseType<Targ>::add##argNames##ConstructorToTable<thisType<Targ>>          \
         add_##lookup##_##thisType##Targ##argNames##ConstructorTo##baseType##   \
-        Targ##Table_(#lookup)
+        Targ##Table_(#lookup);                                                 \
+                                                                               \
+    bool add_##lookup##_##thisType##Targ##argNames##To##baseType##Targ##ToC_ = \
+        addToRunTimeSelectionTableToC                                          \
+        (#baseType, baseType<Targ>::typeName_(), #lookup, STR(LIB_NAME))
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

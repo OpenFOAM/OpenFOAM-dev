@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,7 @@ SourceFiles
 #include "tmp.H"
 #include "typeInfo.H"
 #include "Field.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -216,33 +217,43 @@ public:
 #define makeFunction1(Type)                                                    \
                                                                                \
     defineNamedTemplateTypeNameAndDebug(Function1<Type>, 0);                   \
-                                                                               \
     defineTemplateRunTimeSelectionTable(Function1<Type>, dictionary);
 
 
 #define makeFunction1Type(SS, Type)                                            \
                                                                                \
-    defineNamedTemplateTypeNameAndDebug(Function1s::SS<Type>, 0);              \
-                                                                               \
-    Function1<Type>::adddictionaryConstructorToTable<Function1s::SS<Type>>     \
-    addFunction1##SS##Type##ConstructorToTable_;
+    defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                          \
+    typedef Function1<Type> Type##Function1;                                   \
+    typedef SS<Type> Type##SS##Function1;                                      \
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        Type##Function1,                                                       \
+        Type##SS##Function1,                                                   \
+        dictionary                                                             \
+    )
 
 
 #define makeNamedFunction1Type(SS, Type, Name)                                 \
                                                                                \
-    Function1<Type>::adddictionaryConstructorToTable<Function1s::SS<Type>>     \
-    addFunction1##Name##Type##ConstructorToTable_(#Name);
+    typedef Function1<Type> Type##Function1;                                   \
+    typedef SS<Type> Type##SS##Function1;                                      \
+    addNamedToRunTimeSelectionTable                                            \
+    (                                                                          \
+        Type##Function1,                                                       \
+        Type##SS##Function1,                                                   \
+        dictionary,                                                            \
+        Name                                                                   \
+    )
 
 
 #define makeScalarFunction1(SS)                                                \
                                                                                \
     defineTypeNameAndDebug(SS, 0);                                             \
-                                                                               \
-    Function1<scalar>::adddictionaryConstructorToTable<SS>                     \
-        addFunction1##SS##ConstructorToTable_;
+    typedef Function1<scalar> scalarFunction1;                                 \
+    addToRunTimeSelectionTable(scalarFunction1, SS, dictionary)
 
 
-#define makeFunction1s(Type)                                                   \
+#define makeFunction1s(Type, nullArg)                                          \
                                                                                \
     template<>                                                                 \
     const char* const Foam::Tuple2<Foam::scalar, Type>::typeName               \
@@ -251,20 +262,24 @@ public:
     );                                                                         \
                                                                                \
     makeFunction1(Type);                                                       \
-    makeFunction1Type(None, Type);                                             \
-    makeFunction1Type(Constant, Type);                                         \
-    makeFunction1Type(Uniform, Type);                                          \
-    makeFunction1Type(ZeroConstant, Type);                                     \
-    makeFunction1Type(OneConstant, Type);                                      \
-    makeFunction1Type(Polynomial, Type);                                       \
-    makeFunction1Type(Sine, Type);                                             \
-    makeFunction1Type(Square, Type);                                           \
-    makeFunction1Type(Table, Type);                                            \
-    makeFunction1Type(UniformTable, Type);                                     \
-    makeFunction1Type(NonUniformTable, Type);                                  \
-    makeNamedFunction1Type(Table, Type, tableFile);                            \
-    makeFunction1Type(Scale, Type);                                            \
-    makeFunction1Type(Coded, Type);
+                                                                               \
+    namespace Function1s                                                       \
+    {                                                                          \
+        makeFunction1Type(None, Type);                                         \
+        makeFunction1Type(Constant, Type);                                     \
+        makeFunction1Type(Uniform, Type);                                      \
+        makeFunction1Type(ZeroConstant, Type);                                 \
+        makeFunction1Type(OneConstant, Type);                                  \
+        makeFunction1Type(Polynomial, Type);                                   \
+        makeFunction1Type(Sine, Type);                                         \
+        makeFunction1Type(Square, Type);                                       \
+        makeFunction1Type(Table, Type);                                        \
+        makeFunction1Type(UniformTable, Type);                                 \
+        makeFunction1Type(NonUniformTable, Type);                              \
+        makeNamedFunction1Type(Table, Type, tableFile);                        \
+        makeFunction1Type(Scale, Type);                                        \
+        makeFunction1Type(Coded, Type);                                        \
+    }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

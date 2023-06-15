@@ -98,11 +98,14 @@ const avType avType::vsType::rootMin
 namespace Foam
 {
 
-    makeFunction1s(avType);
+    makeFunction1s(avType, nullArg);
 
     defineTableReader(avType);
-    makeTableReader(Embedded, avType);
-    makeTableReader(Foam, avType);
+    namespace TableReaders
+    {
+        makeTableReader(Embedded, avType);
+        makeTableReader(Foam, avType);
+    }
 }
 
 

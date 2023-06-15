@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,8 +37,8 @@ Description
 #include "pointFields.H"
 #include "typeInfo.H"
 #include "autoPtr.H"
-#include "runTimeSelectionTables.H"
 #include "tetIndices.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,7 +68,7 @@ protected:
 public:
 
     //- Runtime type information
-    virtual const word& type() const = 0;
+    TypeName("interpolation");
 
 
     // Declare run-time constructor selection table
@@ -219,9 +219,13 @@ public:
     defineNamedTemplateTypeNameAndDebug(InterpolationType<Type>, 0);
 
 #define makeInterpolation(Type, InterpolationType)                             \
-    interpolation<Type>::                                                      \
-        adddictionaryConstructorToTable<InterpolationType<Type>>               \
-        add##InterpolationType##Type##ConstructorToTable_;
+    addTemplatedToRunTimeSelectionTable                                        \
+    (                                                                          \
+        interpolation,                                                         \
+        InterpolationType,                                                     \
+        Type,                                                                  \
+        dictionary                                                             \
+    );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
