@@ -70,6 +70,9 @@ class filmCloudTransfer
 
         // Transfers from cloud
 
+            //- Switch to indicate the cloud fields have been transferred
+            bool cloudFieldsTransferred_;
+
             scalarField massFromCloud_;
             vectorField momentumFromCloud_;
             scalarField pressureFromCloud_;

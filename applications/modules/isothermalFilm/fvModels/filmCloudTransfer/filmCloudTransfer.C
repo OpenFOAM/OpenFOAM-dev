@@ -58,6 +58,7 @@ Foam::fv::filmCloudTransfer::filmCloudTransfer
 :
     fvModel(sourceName, modelType, mesh, dict),
     film_(mesh.lookupObject<solvers::isothermalFilm>(solver::typeName)),
+    cloudFieldsTransferred_(false),
     correctEjection_(false),
     ejection_
     (
@@ -113,7 +114,7 @@ inline Foam::fv::filmCloudTransfer::CloudToFilmTransferRate
         )
     );
 
-    if (prop.size())
+    if (cloudFieldsTransferred_)
     {
         const fvMesh& cloudMesh =
             refCast<const fvMesh>(film_.surfacePatchMap().nbrMesh());
@@ -268,6 +269,8 @@ void Foam::fv::filmCloudTransfer::resetFromCloudFields()
     pressureFromCloud_ = 0;
     energyFromCloud_ = 0;
 
+    cloudFieldsTransferred_ = true;
+
     // Enable ejection correction on next call to correct()
     correctEjection_ = true;
 }
@@ -367,6 +370,11 @@ Foam::fv::filmCloudTransfer::CpToCloud() const
 
 void Foam::fv::filmCloudTransfer::topoChange(const polyTopoChangeMap& map)
 {
+    // Set the cloud field state to false, will be updated by the cloud tracking
+    // If the film is evaluated before the cloud it would be better
+    // if the cloud fields were mapped
+    cloudFieldsTransferred_ = false;
+
     if (ejection_.valid())
     {
         ejection_->topoChange(map);
@@ -376,6 +384,11 @@ void Foam::fv::filmCloudTransfer::topoChange(const polyTopoChangeMap& map)
 
 void Foam::fv::filmCloudTransfer::mapMesh(const polyMeshMap& map)
 {
+    // Set the cloud field state to false, will be updated by the cloud tracking
+    // If the film is evaluated before the cloud it would be better
+    // if the cloud fields were mapped
+    cloudFieldsTransferred_ = false;
+
     if (ejection_.valid())
     {
         ejection_->mapMesh(map);
@@ -385,6 +398,11 @@ void Foam::fv::filmCloudTransfer::mapMesh(const polyMeshMap& map)
 
 void Foam::fv::filmCloudTransfer::distribute(const polyDistributionMap& map)
 {
+    // Set the cloud field state to false, will be updated by the cloud tracking
+    // If the film is evaluated before the cloud it would be better
+    // if the cloud fields were mapped
+    cloudFieldsTransferred_ = false;
+
     if (ejection_.valid())
     {
         ejection_->distribute(map);
