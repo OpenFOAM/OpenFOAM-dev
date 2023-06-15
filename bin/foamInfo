@@ -73,7 +73,6 @@ Examples
   foamInfo Function1
   foamInfo square
   foamInfo fixedTemperatureConstraint
-  foamInfo surfaces
   foamInfo foamNewBC
 
 USAGE
@@ -189,8 +188,27 @@ findModelDirs () {
     _familyDir="$1"
     _depth=1
     [ "$2" ] && _depth="$2"
+    _dirs=""
 
-    find "$1" -maxdepth "$_depth" -mindepth "$_depth" -type d
+    while [ "$_depth" -ge 1 ]
+    do
+        _dirs="$(find "$1" -maxdepth "$_depth" -mindepth "$_depth" -type d | \
+               sed 's/\/Make//g' | sed 's/\/lnInclude//g')"
+
+        [ "$_dirs" ] && break
+        _depth=$((_depth - 1))
+    done
+
+    echo "$_dirs" | sort -u
+}
+
+fvModelDirs () {
+    for d in \
+        $(find "$FOAM_APP" -name fvModels) \
+        $(find "$FOAM_SRC" -name fvModels)
+    do
+        findModelDirs "$d" 2
+    done
 }
 
 modelsInFamily () {
@@ -202,11 +220,7 @@ modelsInFamily () {
     _modelDirs="$(findModelDirs "$_familyDir")"
 
     ### special handling of fvModels
-    [ "$_family" = fvModels ] && \
-        _modelDirs="\
-            $(findModelDirs "$_familyDir" 2) \
-            $(findModelDirs "$FOAM_SRC/lagrangian/parcel/fvModels") \
-            $(findModelDirs "$FOAM_SRC/radiationModels/fvModels/radiation")"
+    [ "$_family" = fvModels ] && _modelDirs="$(fvModelDirs)"
 
     [ "$_modelDirs" ] || return 0
 
@@ -221,8 +235,9 @@ modelsInFamily () {
 
         # Model family with TypeName defined
         [ "$_hasTypeName" ] && \
-            _file="$(find "$_mDir" -name "*.H" -exec grep -l TypeName {} \;)" && \
-            TypeName "$_file"
+            _files="$(find "$_mDir" -maxdepth 1 -name "*.H" -exec \
+                      grep -l TypeName {} \;)" && \
+            for _f in $_files ; do TypeName "$_f" ; done
 
         [ "$_hasTypeName" ] && continue
 
@@ -232,7 +247,9 @@ modelsInFamily () {
             grep -w "$_mName" && continue
 
         echo "$_mName"
-    done | sort
+
+        # Remove model names ending "Base" as they are base classes
+    done | sort -u | sed '/Base$/d'
 }
 
 # Argument: .H file
