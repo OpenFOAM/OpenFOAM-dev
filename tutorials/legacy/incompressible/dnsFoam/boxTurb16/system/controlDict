@@ -44,5 +44,6 @@ timePrecision   6;
 
 runTimeModifiable true;
 
+graphFormat     raw;
 
 // ************************************************************************* //
