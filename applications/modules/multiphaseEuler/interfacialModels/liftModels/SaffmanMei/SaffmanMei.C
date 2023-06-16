@@ -63,18 +63,18 @@ Foam::liftModels::SaffmanMei::~SaffmanMei()
 
 Foam::tmp<Foam::volScalarField> Foam::liftModels::SaffmanMei::Cl() const
 {
-    volScalarField Re(max(interface_.Re(), residualRe_));
-    volScalarField Rew
+    const volScalarField Re(max(interface_.Re(), residualRe_));
+    const volScalarField Rew
     (
         mag(fvc::curl(interface_.continuous().U()))
        *sqr(interface_.dispersed().d())
        /(
             interface_.continuous().thermo().nu()
-          + dimensionedScalar(dimViscosity, rootVSmall)
+          + dimensionedScalar(dimViscosity, small)
         )
     );
 
-    volScalarField Cld
+    const volScalarField Cld
     (
         neg0(Re - 40)*6.46
        *(
@@ -84,7 +84,7 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::SaffmanMei::Cl() const
       + pos(Re - 40)*6.46*0.0524*sqrt(0.5*(Rew/Re)*Re)
     );
 
-    return 3/(twoPi*sqrt(Rew + rootVSmall))*Cld;
+    return 3/(twoPi*sqrt(Rew + small))*Cld;
 }
 
 

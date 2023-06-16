@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -253,7 +253,7 @@ Foam::label Foam::WallSpringSliderDashpot<CloudType>::nSubCycles() const
     const scalar minCollisionDeltaT =
         5.429675
        *rMin
-       *pow(rhoMax/(Estar_*sqrt(UMagMax) + rootVSmall), 0.4)
+       *pow(rhoMax/(Estar_*sqrt(UMagMax) + small), 0.4)
        /collisionResolutionSteps_;
 
     return ceil(this->owner().time().deltaTValue()/minCollisionDeltaT);
