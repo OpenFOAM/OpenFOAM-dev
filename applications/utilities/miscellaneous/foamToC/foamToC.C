@@ -37,13 +37,13 @@ Description
 Usage
     \b foamToC [OPTION]
       - \par -noLibs
-        Do not load all libraries
+        Load only the core libOpenFOAM.so library by default
 
       - \par -libs '(\"lib1.so\" ... \"libN.so\")'
-        Specify libraries to load
+        Pre-load additional libraries
 
       - \par -solver \<name\>
-        Specify the solver class
+        Load libraries associated with specified solver
 
       - \par -listLibs
         List libraries as they are loaded
@@ -231,24 +231,24 @@ int main(int argc, char *argv[])
 
     argList::initValidTables::clear();
 
-    argList::addOption
+    argList::addBoolOption
     (
-        "solver",
-        "name",
-        "Solver name"
+        "noLibs",
+        "Load only the core libOpenFOAM.so library by default"
     );
 
     argList::addOption
     (
         "libs",
         "'(\"lib1.so\" ... \"libN.so\")'",
-        "Pre-load libraries"
+        "Pre-load additional libraries"
     );
 
-    argList::addBoolOption
+    argList::addOption
     (
-        "noLibs",
-        "Do not load all libraries"
+        "solver",
+        "name",
+        "Load libraries associated with specified solver"
     );
 
     argList::addBoolOption
