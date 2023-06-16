@@ -219,6 +219,9 @@ public:
     // Member Functions
 
         //- Sample the distribution
+        using Base::sample;
+
+        //- Sample the distribution
         virtual tmp<scalarField> sample(const label n) const
         {
             tmp<scalarField> tResult(new scalarField(n));
