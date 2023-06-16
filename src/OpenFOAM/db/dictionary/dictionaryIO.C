@@ -470,7 +470,7 @@ bool Foam::readConfigFile
     // Delay processing the functionEntries
     // until after the argument entries have been added
     entry::disableFunctionEntries = true;
-    dictionary funcsDict(funcType, parentDict, fileStream);
+    dictionary funcsDict(fileName(funcType), parentDict, fileStream);
     entry::disableFunctionEntries = false;
 
     dictionary* funcDictPtr = &funcsDict;

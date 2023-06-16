@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,38 @@ License
 
 #include "dictionary.H"
 #include "primitiveEntry.H"
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class T, class ... KeysAndTs>
+Foam::dictionary::dictionary
+(
+    const keyType& k,
+    const T& t,
+    const KeysAndTs& ... keysAndTs
+)
+:
+    parent_(dictionary::null)
+{
+    set(k, t, keysAndTs ...);
+}
+
+
+template<class T, class ... KeysAndTs>
+Foam::dictionary::dictionary
+(
+    const fileName& name,
+    const keyType& k,
+    const T& t,
+    const KeysAndTs& ... keysAndTs
+)
+:
+    dictionaryName(name),
+    parent_(dictionary::null)
+{
+    set(k, t, keysAndTs ...);
+}
+
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -202,6 +234,19 @@ template<class T>
 void Foam::dictionary::set(const keyType& k, const T& t)
 {
     set(new primitiveEntry(k, t));
+}
+
+
+template<class T, class ... KeysAndTs>
+void Foam::dictionary::set
+(
+    const keyType& k,
+    const T& t,
+    const KeysAndTs& ... keysAndTs
+)
+{
+    set(new primitiveEntry(k, t));
+    set(keysAndTs ...);
 }
 
 
