@@ -1445,7 +1445,7 @@ void Foam::fvMesh::unconform
 
     // Set the face geometry
     SfRef() == Sf;
-    magSfRef() == mag(Sf);
+    magSfRef() == max(mag(Sf), dimensionedScalar(dimArea, vSmall));
     CRef().boundaryFieldRef() == Cf.boundaryField();
     CfRef() == Cf;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(dimensionSet, 1);
-    const scalar dimensionSet::smallExponent = small;
+    const scalar dimensionSet::smallExponent = rootSmall;
 }
 
 
