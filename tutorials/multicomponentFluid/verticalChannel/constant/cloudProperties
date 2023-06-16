@@ -78,10 +78,10 @@ subModels
         {
             type            patchInjection;
             SOI             0.01;
-            massFlowRate    16;
+            massFlowRate    0.0008;
             uniformParcelSize volume;
             patchName       inletCentral;
-            duration        10000;
+            duration        1e300;
             parcelsPerSecond 1e5;
             U0              (40 0 0);
             flowRateProfile constant 1;
