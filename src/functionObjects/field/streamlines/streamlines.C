@@ -181,11 +181,7 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
         dict.subDict("seedSampleSet")
     );
 
-    formatterPtr_ = setWriter::New
-    (
-        dict.lookupOrDefault("setFormat", time_.graphFormat()),
-        dict
-    );
+    formatterPtr_ = setWriter::New(dict.lookup("setFormat"), dict);
 
     return true;
 }

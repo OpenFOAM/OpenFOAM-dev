@@ -385,7 +385,6 @@ Foam::Time::Time
     writeFormat_(IOstream::ASCII),
     writeVersion_(IOstream::currentVersion),
     writeCompression_(IOstream::UNCOMPRESSED),
-    graphFormat_("raw"),
     cacheTemporaryObjects_(true),
 
     functionObjects_
@@ -484,7 +483,6 @@ Foam::Time::Time
     writeFormat_(IOstream::ASCII),
     writeVersion_(IOstream::currentVersion),
     writeCompression_(IOstream::UNCOMPRESSED),
-    graphFormat_("raw"),
     cacheTemporaryObjects_(true),
 
     functionObjects_(*this, enableFunctionObjects)
@@ -550,7 +548,6 @@ Foam::Time::Time
     writeFormat_(IOstream::ASCII),
     writeVersion_(IOstream::currentVersion),
     writeCompression_(IOstream::UNCOMPRESSED),
-    graphFormat_("raw"),
     cacheTemporaryObjects_(true),
 
     functionObjects_(*this, enableFunctionObjects)
@@ -611,7 +608,6 @@ Foam::Time::Time
     writeFormat_(IOstream::ASCII),
     writeVersion_(IOstream::currentVersion),
     writeCompression_(IOstream::UNCOMPRESSED),
-    graphFormat_("raw"),
     cacheTemporaryObjects_(true),
 
     functionObjects_(*this, enableFunctionObjects)

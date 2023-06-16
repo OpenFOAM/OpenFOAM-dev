@@ -190,9 +190,6 @@ private:
         //- Default output compression
         IOstream::compressionType writeCompression_;
 
-        //- Default graph format
-        word graphFormat_;
-
         //- Is temporary object cache enabled
         mutable bool cacheTemporaryObjects_;
 
@@ -299,12 +296,6 @@ public:
             IOstream::compressionType writeCompression() const
             {
                 return writeCompression_;
-            }
-
-            //- Default graph format
-            const word& graphFormat() const
-            {
-                return graphFormat_;
             }
 
             //- Supports re-reading

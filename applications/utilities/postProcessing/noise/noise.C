@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
     // Graph format
     const word graphFormat
     (
-        dict.lookupOrDefault<word>("graphFormat", runTime.graphFormat())
+        dict.lookupOrDefault<word>("graphFormat", "raw")
     );
 
     Info<< "Reading data file" << endl;

@@ -13,7 +13,7 @@ const volSymmTensorField R
 
 runTime.write();
 
-setWriter::New(runTime.graphFormat())->write
+setWriter::New(runTime.controlDict().lookup("graphFormat"))->write
 (
     runTime.globalPath()
    /functionObjects::writeFile::outputPrefix

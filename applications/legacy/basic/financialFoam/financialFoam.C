@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 
         if (runTime.writeTime())
         {
-            setWriter::New(runTime.graphFormat())->write
+            setWriter::New(runTime.controlDict().lookup("graphFormat"))->write
             (
                 runTime.globalPath()
                /functionObjects::writeFile::outputPrefix

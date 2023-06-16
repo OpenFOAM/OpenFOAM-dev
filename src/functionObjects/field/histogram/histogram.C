@@ -71,11 +71,7 @@ bool Foam::functionObjects::histogram::read(const dictionary& dict)
     min_ = dict.lookupOrDefault<scalar>("min", 0);
     dict.lookup("nBins") >> nBins_;
 
-    formatterPtr_ = setWriter::New
-    (
-        dict.lookupOrDefault("setFormat", time_.graphFormat()),
-        dict
-    );
+    formatterPtr_ = setWriter::New(dict.lookup("setFormat"), dict);
 
     return true;
 }

@@ -245,11 +245,7 @@ bool Foam::functionObjects::layerAverage::read(const dictionary& dict)
 
     fields_ = dict.lookup<wordList>("fields");
 
-    formatter_ = setWriter::New
-    (
-        dict.lookupOrDefault("setFormat", time_.graphFormat()),
-        dict
-    );
+    formatter_ = setWriter::New(dict.lookup("setFormat"), dict);
 
     calcLayers();
 

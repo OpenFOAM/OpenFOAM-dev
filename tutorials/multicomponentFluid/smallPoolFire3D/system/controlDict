@@ -43,8 +43,6 @@ timeFormat      general;
 
 timePrecision   6;
 
-graphFormat     raw;
-
 runTimeModifiable yes;
 
 adjustTimeStep  yes;

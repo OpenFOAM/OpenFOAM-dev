@@ -658,11 +658,7 @@ bool Foam::functionObjects::patchCutLayerAverage::read(const dictionary& dict)
             )
         ];
 
-    formatter_ = setWriter::New
-    (
-        dict.lookupOrDefault("setFormat", time_.graphFormat()),
-        dict
-    );
+    formatter_ = setWriter::New(dict.lookup("setFormat"), dict);
 
     nOptimiseIter_ = dict.lookupOrDefault("nOptimiseIter", 2);
 

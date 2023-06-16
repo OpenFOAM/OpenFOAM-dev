@@ -58,7 +58,7 @@ void writeEk
 
     autoPtr<setWriter> writer
     (
-        setWriter::New(U.time().graphFormat())
+        setWriter::New(U.time().controlDict().lookup("graphFormat"))
     );
 
     writer->write

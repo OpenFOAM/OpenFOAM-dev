@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
         x[i] = xMin + i*(xMax - xMin)/(nIntervals - 1);
     }
 
-    setWriter::New(runTime.graphFormat())->write
+    setWriter::New(runTime.controlDict().lookup("graphFormat"))->write
     (
         pdfPath,
         args.executable(),

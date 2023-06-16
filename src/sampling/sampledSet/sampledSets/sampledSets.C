@@ -145,10 +145,7 @@ bool Foam::functionObjects::sampledSets::read(const dictionary& dict)
 
         dict.lookup("interpolationScheme") >> interpolationScheme_;
 
-        const word writeType
-        (
-            dict.lookupOrDefault("setFormat", time_.graphFormat())
-        );
+        const word writeType(dict.lookup("setFormat"));
 
         // Define the set formatter
         formatter_ = setWriter::New(writeType, dict);

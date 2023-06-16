@@ -371,11 +371,7 @@ bool Foam::functionObjects::regionSizeDistribution::read(const dictionary& dict)
     dict.lookup("nBins") >> nBins_;
     dict.lookup("fields") >> fields_;
 
-    formatterPtr_ = setWriter::New
-    (
-        dict.lookupOrDefault("setFormat", time_.graphFormat()),
-        dict
-    );
+    formatterPtr_ = setWriter::New(dict.lookup("setFormat"), dict);
 
     return true;
 }
