@@ -85,7 +85,8 @@ void Foam::solvers::multiphaseEuler::energyPredictor()
 
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();
-        const volVectorField& U = phase.URef();
+        const tmp<volVectorField> tU(phase.U());
+        const volVectorField& U(tU());
 
         fvScalarMatrix EEqn
         (
