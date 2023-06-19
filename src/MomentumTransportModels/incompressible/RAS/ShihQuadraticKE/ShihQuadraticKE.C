@@ -27,7 +27,14 @@ License
 #include "bound.H"
 #include "wallFvPatch.H"
 #include "nutkWallFunctionFvPatchScalarField.H"
-#include "addToRunTimeSelectionTable.H"
+#include "makeMomentumTransportModel.H"
+
+makeMomentumTransportModelTypes
+(
+    geometricOneField,
+    geometricOneField,
+    incompressibleMomentumTransportModel
+)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -41,7 +48,12 @@ namespace RASModels
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(ShihQuadraticKE, 0);
-addToRunTimeSelectionTable(RASModel, ShihQuadraticKE, dictionary);
+addToRunTimeSelectionTable
+(
+    RASincompressibleMomentumTransportModel,
+    ShihQuadraticKE,
+    dictionary
+);
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 

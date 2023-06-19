@@ -26,7 +26,14 @@ License
 #include "LienLeschziner.H"
 #include "wallDist.H"
 #include "bound.H"
-#include "addToRunTimeSelectionTable.H"
+#include "makeMomentumTransportModel.H"
+
+makeMomentumTransportModelTypes
+(
+    geometricOneField,
+    geometricOneField,
+    incompressibleMomentumTransportModel
+)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,7 +47,12 @@ namespace RASModels
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(LienLeschziner, 0);
-addToRunTimeSelectionTable(RASModel, LienLeschziner, dictionary);
+addToRunTimeSelectionTable
+(
+    RASincompressibleMomentumTransportModel,
+    LienLeschziner,
+    dictionary
+);
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 

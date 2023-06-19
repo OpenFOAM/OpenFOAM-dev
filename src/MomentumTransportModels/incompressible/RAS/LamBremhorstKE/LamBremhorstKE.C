@@ -26,7 +26,14 @@ License
 #include "LamBremhorstKE.H"
 #include "wallDist.H"
 #include "bound.H"
-#include "addToRunTimeSelectionTable.H"
+#include "makeMomentumTransportModel.H"
+
+makeMomentumTransportModelTypes
+(
+    geometricOneField,
+    geometricOneField,
+    incompressibleMomentumTransportModel
+)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,7 +47,12 @@ namespace RASModels
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(LamBremhorstKE, 0);
-addToRunTimeSelectionTable(RASModel, LamBremhorstKE, dictionary);
+addToRunTimeSelectionTable
+(
+    RASincompressibleMomentumTransportModel,
+    LamBremhorstKE,
+    dictionary
+);
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 

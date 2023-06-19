@@ -26,7 +26,14 @@ License
 #include "LienCubicKE.H"
 #include "wallDist.H"
 #include "bound.H"
-#include "addToRunTimeSelectionTable.H"
+#include "makeMomentumTransportModel.H"
+
+makeMomentumTransportModelTypes
+(
+    geometricOneField,
+    geometricOneField,
+    incompressibleMomentumTransportModel
+)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,7 +47,12 @@ namespace RASModels
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(LienCubicKE, 0);
-addToRunTimeSelectionTable(RASModel, LienCubicKE, dictionary);
+addToRunTimeSelectionTable
+(
+    RASincompressibleMomentumTransportModel,
+    LienCubicKE,
+    dictionary
+);
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 

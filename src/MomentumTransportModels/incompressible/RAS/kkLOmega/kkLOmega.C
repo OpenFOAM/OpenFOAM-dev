@@ -26,7 +26,14 @@ License
 #include "kkLOmega.H"
 #include "bound.H"
 #include "wallDist.H"
-#include "addToRunTimeSelectionTable.H"
+#include "makeMomentumTransportModel.H"
+
+makeMomentumTransportModelTypes
+(
+    geometricOneField,
+    geometricOneField,
+    incompressibleMomentumTransportModel
+)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,7 +47,12 @@ namespace RASModels
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(kkLOmega, 0);
-addToRunTimeSelectionTable(RASModel, kkLOmega, dictionary);
+addToRunTimeSelectionTable
+(
+    RASincompressibleMomentumTransportModel,
+    kkLOmega,
+    dictionary
+);
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 

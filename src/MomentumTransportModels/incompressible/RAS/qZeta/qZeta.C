@@ -26,7 +26,14 @@ License
 #include "qZeta.H"
 #include "fvcMagSqrGradGrad.H"
 #include "bound.H"
-#include "addToRunTimeSelectionTable.H"
+#include "makeMomentumTransportModel.H"
+
+makeMomentumTransportModelTypes
+(
+    geometricOneField,
+    geometricOneField,
+    incompressibleMomentumTransportModel
+)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,7 +47,12 @@ namespace RASModels
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(qZeta, 0);
-addToRunTimeSelectionTable(RASModel, qZeta, dictionary);
+addToRunTimeSelectionTable
+(
+    RASincompressibleMomentumTransportModel,
+    qZeta,
+    dictionary
+);
 
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
