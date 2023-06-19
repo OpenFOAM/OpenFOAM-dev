@@ -1325,7 +1325,11 @@ _foamToC_ ()
      }
 
     _listTables () {
-        foamToC -tables | sed 's/[[:space:]]\{4\}//' | grep -v ' '
+        [ -z "${1// }" ] && \
+            foamToC -tables | \
+            sed '1,/Run-time/d' | \
+            sed 's/[[:space:]]\{4\}//' | grep -v ' ' && exit 0
+        foamToC -tables | sed '1,/Run-time/d' | tr -d " "
      }
 
     opts="-all -doc -functionObjects -fvConstraints -fvModels -help -libs -listLibs -noLibs -scalarBCs -search -solver -srcDoc -switches -table -tables -vectorBCs"
@@ -1335,7 +1339,7 @@ _foamToC_ ()
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
        -solver) opts="$(_listSolvers)" ;;
-       -table) opts="$(_listTables)" ;;
+       -table) opts="$(_listTables ${cur})" ;;
         *) ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
