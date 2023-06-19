@@ -168,7 +168,7 @@ private:
         //  will take care of the old-time levels.
         mutable label curTimeIndex_;
 
-        //- Cell volumes old time level
+        //- Cell volumes
         mutable SlicedDimensionedField<scalar, volMesh>* VPtr_;
 
         //- Cell volumes old time level
@@ -316,6 +316,7 @@ public:
         typedef fvBoundaryMesh BoundaryMesh;
 
         friend fvMeshTopoChangers::list;
+        friend fvMeshDistributor;
 
     // Declare name of the class and its debug switch
     ClassName("fvMesh");

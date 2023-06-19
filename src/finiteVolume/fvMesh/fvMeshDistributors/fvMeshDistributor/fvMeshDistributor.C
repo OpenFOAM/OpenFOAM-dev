@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,5 +90,13 @@ void Foam::fvMeshDistributor::velocityMotionCorrection::update() const
         }
     }
 }
+
+
+bool Foam::fvMeshDistributor::update()
+{
+    mesh_.clearGeomNotOldVol();
+    return true;
+}
+
 
 // ************************************************************************* //

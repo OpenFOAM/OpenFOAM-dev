@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ void Foam::fvMesh::makeSf() const
             *this,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
-            false
+            true
         ),
         *this,
         dimArea,
@@ -95,7 +95,7 @@ void Foam::fvMesh::makeMagSf() const
             *this,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
-            false
+            true
         ),
         *this,
         dimArea,
@@ -132,7 +132,7 @@ void Foam::fvMesh::makeC() const
             *this,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
-            false
+            true
         ),
         *this,
         dimLength,
@@ -170,7 +170,7 @@ void Foam::fvMesh::makeCf() const
             *this,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
-            false
+            true
         ),
         *this,
         dimLength,
@@ -276,7 +276,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V() const
                 *this,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                true
             ),
             *this,
             dimVolume,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,6 +69,9 @@ void Foam::fvMeshDistributors::distributor::distribute
 
     // Mesh distribution engine
     fvMeshDistribute distributor(mesh);
+
+    // Clear sliced and other non-distributable mesh data
+    fvMeshDistributor::update();
 
     // Do actual sending/receiving of mesh
     autoPtr<polyDistributionMap> map
