@@ -29,6 +29,7 @@
 #     Sourced from /etc/bashrc
 #
 #------------------------------------------------------------------------------
+# shellcheck disable=SC2155,SC2207,SC2086
 
 _adiabaticFlameT_ ()
 {
@@ -1319,15 +1320,23 @@ _foamToC_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
+    _listSolvers () {
+        foamToC -table solver | sed '1,/Contents/d' | awk '{print $1}' | xargs
+     }
+
+    _listTables () {
+        foamToC -tables | sed 's/[[:space:]]\{4\}//' | grep -v ' '
+     }
+
     opts="-all -doc -functionObjects -fvConstraints -fvModels -help -libs -listLibs -noLibs -scalarBCs -search -solver -srcDoc -switches -table -tables -vectorBCs"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-        -libs|-search|-solver|-table)
-            opts="" ; extra="" ;;
-       *) ;;
+       -solver) opts="$(_listSolvers)" ;;
+       -table) opts="$(_listTables)" ;;
+        *) ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -3871,6 +3880,7 @@ _surfaceTransformPoints_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _surfaceTransformPoints_ surfaceTransformPoints
+
 _temporalInterpolate_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -44,9 +44,15 @@ error() {
     exit 1
 }
 
+file=$WM_PROJECT_DIR/etc/config.sh/bash_completion
+
 case "$1" in
 (-h | -help)
     usage && exit 0
+    ;;
+(-l | -local)
+    file=${file##*/}
+    shift 1
     ;;
 -*)
     error "$1 is not a valid option/filename"
@@ -88,6 +94,7 @@ banner () {
 #     Sourced from /etc/bashrc
 #
 #------------------------------------------------------------------------------
+# shellcheck disable=SC2155,SC2207,SC2086
 
 EOF
 }
@@ -208,18 +215,47 @@ $(caseStart)
 $(caseEnd)
 }
 complete -o filenames -o nospace -F _surfaceTransformPoints_ surfaceTransformPoints
+
+EOF
+}
+
+# shellcheck disable=SC2154
+_foamToC () {
+    cat<<EOF
+_foamToC_ ()
+{
+$(declareLocals)
+
+    _listSolvers () {
+        foamToC -table solver | sed '1,/Contents/d' | awk '{print \$1}' | xargs
+     }
+
+    _listTables () {
+        foamToC -tables | sed 's/[[:space:]]\{4\}//' | grep -v ' '
+     }
+
+    opts="-all -doc -functionObjects -fvConstraints -fvModels -help -libs -listLibs -noLibs -scalarBCs -search -solver -srcDoc -switches -table -tables -vectorBCs"
+    for o in \$used ; do opts="\${opts/\$o/}" ; done
+    extra=""
+
+$(caseStart)
+       -solver) opts="\$(_listSolvers)" ;;
+       -table) opts="\$(_listTables)" ;;
+        *) ;;
+$(caseEnd)
+}
+complete -o filenames -o nospace -F _foamToC_ foamToC
+
 EOF
 }
 
 #------------------------------------------------------------------------------
 
-file=$WM_PROJECT_DIR/etc/config.sh/bash_completion
-
 apps="$(ls "$FOAM_APPBIN") \
       $(find "$WM_PROJECT_DIR/bin" -maxdepth 1 -type f | sort) \
       $(find "$WM_PROJECT_DIR/wmake" -maxdepth 1 -type f | sort)"
 
-specialApps="foamGet foamCloneCase surfaceTransformPoints"
+specialApps="foamGet foamCloneCase foamToC surfaceTransformPoints"
 
 banner > "$file"
 
