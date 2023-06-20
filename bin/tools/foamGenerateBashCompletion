@@ -238,7 +238,7 @@ $(declareLocals)
         foamToC -tables | sed '1,/Run-time/d' | tr -d " "
      }
 
-    opts="-all -doc -functionObjects -fvConstraints -fvModels -help -libs -listLibs -noLibs -scalarBCs -search -solver -srcDoc -switches -table -tables -vectorBCs"
+    opts="-all -doc -functionObjects -fvConstraints -fvModels -help -libs -listLibs -noLibs -scalarBCs -search -solver -solvers -srcDoc -switches -table -tables -vectorBCs"
     for o in \$used ; do opts="\${opts/\$o/}" ; done
     extra=""
 
