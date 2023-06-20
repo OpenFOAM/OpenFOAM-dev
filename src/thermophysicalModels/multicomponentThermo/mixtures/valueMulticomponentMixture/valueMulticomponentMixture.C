@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,7 +146,7 @@ Foam::scalar Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::psi
     scalar T
 ) const
 {
-    scalar rho = 0;
+    scalar oneByRho = 0;
     scalar psiByRho2 = 0;
 
     forAll(Y_, i)
@@ -154,7 +154,7 @@ Foam::scalar Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::psi
         const scalar rhoi = specieThermos_[i].rho(p, T);
         const scalar psii = specieThermos_[i].psi(p, T);
 
-        rho += Y_[i]*rhoi;
+        oneByRho += Y_[i]/rhoi;
 
         if (psii > 0)
         {
@@ -162,7 +162,7 @@ Foam::scalar Foam::valueMulticomponentMixture<ThermoType>::thermoMixture::psi
         }
     }
 
-    return sqr(rho)*psiByRho2;
+    return psiByRho2/sqr(oneByRho);
 }
 
 
