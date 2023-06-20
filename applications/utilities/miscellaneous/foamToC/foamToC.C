@@ -42,6 +42,9 @@ Usage
       - \par -libs '(\"lib1.so\" ... \"libN.so\")'
         Pre-load additional libraries
 
+      - \par -solvers \<name\>
+        List solvers
+
       - \par -solver \<name\>
         Load libraries associated with specified solver
 
@@ -80,6 +83,11 @@ Usage
         List fvConstraints
 
     Example usage:
+      - Print the list of solvers
+        \verbatim
+            foamToC -solvers
+        \endverbatim
+
       - Print the list of scalar boundary conditions (fvPatchField<scalar>)
         provided by the \c fluid solver without additional libraries:
         \verbatim
@@ -242,6 +250,12 @@ int main(int argc, char *argv[])
         "libs",
         "'(\"lib1.so\" ... \"libN.so\")'",
         "Pre-load additional libraries"
+    );
+
+    argList::addBoolOption
+    (
+        "solvers",
+        "List solvers"
     );
 
     argList::addOption
@@ -495,6 +509,12 @@ int main(int argc, char *argv[])
     {
         Info<< "ToC:" << nl
             << debug::runTimeSelectionToC << endl;
+        done = true;
+    }
+
+    if (args.optionFound("solvers"))
+    {
+        printToC("solver");
         done = true;
     }
 
