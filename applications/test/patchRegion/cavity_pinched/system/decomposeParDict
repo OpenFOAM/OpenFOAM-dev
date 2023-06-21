@@ -9,126 +9,18 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    note        "mesh decomposition control dictionary";
     object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 numberOfSubdomains  2;
 
-//- Keep owner and neighbour on same processor for faces in zones:
-// preserveFaceZones (heater solid1 solid3);
-
-//- Keep owner and neighbour on same processor for faces in patches:
-//  (makes sense only for cyclic patches)
-//preservePatches (cyclic_half0 cyclic_half1);
-
-//- Keep all of faceSet on a single processor. This puts all cells
-//  connected with a point, edge or face on the same processor.
-//  (just having face connected cells might not guarantee a balanced
-//  decomposition)
-// The processor can be -1 (the decompositionMethod chooses the processor
-// for a good load balance) or explicitly provided (upsets balance).
-//singleProcessorFaceSets ((f0 -1));
-
-
-//- Use the volScalarField named here as a weight for each cell in the
-//  decomposition.  For example, use a particle population field to decompose
-//  for a balanced number of particles in a lagrangian simulation.
-// weightField dsmcRhoNMean;
-
-//method          scotch;
 method          hierarchical;
-// method          simple;
-// method          metis;
-// method          manual;
-// method          multiLevel;
-// method          structured;  // does 2D decomposition of structured mesh
-
-multiLevelCoeffs
-{
-    // Decomposition methods to apply in turn. This is like hierarchical but
-    // fully general - every method can be used at every level.
-
-    level0
-    {
-        numberOfSubdomains  64;
-        // method simple;
-        // simpleCoeffs
-        //{
-        //    n           (2 1 1);
-        //}
-        method scotch;
-    }
-    level1
-    {
-        numberOfSubdomains  4;
-        method scotch;
-    }
-}
-
-// Desired output
-
-simpleCoeffs
-{
-    n           (2 1 1);
-}
 
 hierarchicalCoeffs
 {
     n           (2 1 1);
     order       xyz;
 }
-
-metisCoeffs
-{
- /*
-    processorWeights
-    (
-        1
-        1
-        1
-        1
-    );
-  */
-}
-
-scotchCoeffs
-{
-    // processorWeights
-    //(
-    //    1
-    //    1
-    //    1
-    //    1
-    //);
-    // writeGraph  true;
-    // strategy "b";
-}
-
-manualCoeffs
-{
-    dataFile    "decompositionData";
-}
-
-structuredCoeffs
-{
-    // Patches to do 2D decomposition on. Structured mesh only; cells have
-    // to be in 'columns' on top of patches.
-    patches     (movingWall);
-
-    // Method to use on the 2D subset
-    method      scotch;
-}
-
-//// Is the case distributed? Note: command-line argument -roots takes
-//// precedence
-//distributed     yes;
-//// Per slave (so nProcs-1 entries) the directory above the case.
-//roots
-//(
-//    "/tmp"
-//    "/tmp"
-//);
 
 // ************************************************************************* //
