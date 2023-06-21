@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ bool Foam::primitiveEntry::expandVariable
 
         // Substitute dictionary and environment variables. Do not allow
         // empty substitutions.
-        stringOps::inplaceExpand(s, dict, true, false);
+        stringOps::inplaceExpandEntry(s, dict, true, false);
         variable newW(w);
         newW.std::string::replace(1, newW.size() - 1, s);
 

@@ -93,7 +93,7 @@ ${typeName}FixedValueFvPatch${FieldType}
 :
     fixedValueFvPatchField<${TemplateType}>(p, iF, dict)
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"construct ${typeName} sha1: ${SHA1sum}"
             " from patch/dictionary\n";
@@ -112,7 +112,7 @@ ${typeName}FixedValueFvPatch${FieldType}
 :
     fixedValueFvPatchField<${TemplateType}>(ptf, p, iF, mapper)
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"construct ${typeName} sha1: ${SHA1sum}"
             " from patch/DimensionedField/mapper\n";
@@ -129,7 +129,7 @@ ${typeName}FixedValueFvPatch${FieldType}
 :
     fixedValueFvPatchField<${TemplateType}>(ptf, iF)
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"construct ${typeName} sha1: ${SHA1sum} "
             "as copy/DimensionedField\n";
@@ -142,7 +142,7 @@ ${typeName}FixedValueFvPatch${FieldType}
 ${typeName}FixedValueFvPatch${FieldType}::
 ~${typeName}FixedValueFvPatch${FieldType}()
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"destroy ${typeName} sha1: ${SHA1sum}\n";
     }
@@ -158,7 +158,7 @@ void ${typeName}FixedValueFvPatch${FieldType}::updateCoeffs()
         return;
     }
 
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"updateCoeffs ${typeName} sha1: ${SHA1sum}\n";
     }

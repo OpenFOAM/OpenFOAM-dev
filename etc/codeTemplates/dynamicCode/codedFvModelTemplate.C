@@ -103,7 +103,7 @@ ${typeName}FvModel${SourceType}
     fvModel(name, modelType, mesh, dict),
     set_(mesh, coeffs())
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"construct ${typeName} sha1: ${SHA1sum}"
             " from components\n";
@@ -116,7 +116,7 @@ ${typeName}FvModel${SourceType}
 ${typeName}FvModel${SourceType}::
 ~${typeName}FvModel${SourceType}()
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"destroy ${typeName} sha1: ${SHA1sum}\n";
     }
@@ -131,7 +131,7 @@ void ${typeName}FvModel${SourceType}::addSup
     const word& fieldName
 ) const
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"${typeName}FvModel${SourceType}::addSup()\n";
     }
@@ -149,7 +149,7 @@ void ${typeName}FvModel${SourceType}::addSup
     const word& fieldName
 ) const
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"${typeName}FvModel${SourceType}::addSup()\n";
     }
@@ -168,7 +168,7 @@ void ${typeName}FvModel${SourceType}::addSup
     const word& fieldName
 ) const
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"${typeName}FvModel${SourceType}::addSup()\n";
     }

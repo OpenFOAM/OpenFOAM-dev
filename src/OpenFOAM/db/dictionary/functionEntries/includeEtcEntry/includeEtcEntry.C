@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ Foam::fileName Foam::functionEntries::includeEtcEntry::includeEtcFileName
 
     // Substitute dictionary and environment variables.
     // Allow empty substitutions.
-    stringOps::inplaceExpand(fName, dict, true, true);
+    stringOps::inplaceExpandEntry(fName, dict, true, true);
 
     if (fName.empty() || fName.isAbsolute())
     {

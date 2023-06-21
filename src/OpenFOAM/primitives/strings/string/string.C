@@ -124,7 +124,7 @@ Foam::string Foam::string::replaceAll
 
 Foam::string& Foam::string::expand(const bool allowEmpty)
 {
-    stringOps::inplaceExpand(*this, allowEmpty);
+    stringOps::inplaceExpandEnvVar(*this, allowEmpty);
     return *this;
 }
 

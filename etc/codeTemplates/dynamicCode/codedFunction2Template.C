@@ -76,7 +76,7 @@ ${typeName}Function2${TemplateType}
         entryName
     )
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<< "Construct ${typeName} sha1: ${SHA1sum} from dictionary\n";
     }
@@ -94,7 +94,7 @@ ${typeName}Function2${TemplateType}
         f1
     )
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<< "Construct ${typeName} sha1: ${SHA1sum} as copy\n";
     }
@@ -106,7 +106,7 @@ ${typeName}Function2${TemplateType}
 Foam::Function2s::${typeName}Function2${TemplateType}::
 ~${typeName}Function2${TemplateType}()
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<< "Destroy ${typeName} sha1: ${SHA1sum}\n";
     }

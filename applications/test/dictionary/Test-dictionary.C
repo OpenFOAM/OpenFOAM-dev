@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
         dict.add("aaOpenFOAMcc", 1);
 
         string s("DDD${aa${WM_PROJECT}cc}EEE");
-        stringOps::inplaceExpand(s, dict, true, false);
+        stringOps::inplaceExpandEntry(s, dict, true, false);
         Info<< "variable expansion:" << s << endl;
     }
 

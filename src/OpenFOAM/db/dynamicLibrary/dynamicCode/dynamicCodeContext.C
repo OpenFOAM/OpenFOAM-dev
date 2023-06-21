@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,15 +63,9 @@ Foam::dynamicCodeContext::dynamicCodeContext
         codePtrs[i] = dict.lookupEntryPtr(key, false, false);
         if (codePtrs[i])
         {
-            code_.insert
-            (
-                key,
-                stringOps::expand
-                (
-                    stringOps::trim(verbatimString(codePtrs[i]->stream())),
-                    dict
-                )
-            );
+            string s(stringOps::trim(verbatimString(codePtrs[i]->stream())));
+            stringOps::inplaceExpandCodeString(s, dict);
+            code_.insert(key, s);
         }
         else
         {
@@ -83,24 +77,16 @@ Foam::dynamicCodeContext::dynamicCodeContext
     const entry* optionsPtr = dict.lookupEntryPtr("codeOptions", false, false);
     if (optionsPtr)
     {
-        options_ =
-            stringOps::expand
-            (
-                stringOps::trim(verbatimString(optionsPtr->stream())),
-                dict
-            );
+        options_ = stringOps::trim(verbatimString(optionsPtr->stream()));
+        stringOps::inplaceExpandCodeString(options_, dict);
     }
 
     // Libs
     const entry* libsPtr = dict.lookupEntryPtr("codeLibs", false, false);
     if (libsPtr)
     {
-        libs_ =
-            stringOps::expand
-            (
-                stringOps::trim(verbatimString(libsPtr->stream())),
-                dict
-            );
+        libs_ = stringOps::trim(verbatimString(libsPtr->stream()));
+        stringOps::inplaceExpandCodeString(libs_, dict);
     }
 
     // Calculate SHA1 digest from all entries

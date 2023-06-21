@@ -70,12 +70,12 @@ void Foam::codedFixedValueFvPatchField<Type>::prepare
     // Copy filtered H template
     dynCode.addCopyFile(codeTemplateH("codedFixedValueFvPatchField"));
 
-    // Debugging: make BC verbose
+    // Make verbose if debugging
+    dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
+
     if (debug)
     {
-        dynCode.setFilterVariable("verbose", "true");
-        Info<<"compile " << codeName() << " sha1: "
-            << context.sha1() << endl;
+        Info<<"compile " << codeName() << " sha1: " << context.sha1() << endl;
     }
 
     // Define Make/options

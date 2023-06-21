@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ Foam::fileName Foam::functionEntries::includeEntry::includeFileName
     fileName fName(is);
     // Substitute dictionary and environment variables. Allow empty
     // substitutions.
-    stringOps::inplaceExpand(fName, dict, true, true);
+    stringOps::inplaceExpandEntry(fName, dict, true, true);
 
     if (fName.empty() || fName.isAbsolute())
     {
@@ -102,7 +102,7 @@ Foam::fileName Foam::functionEntries::includeEntry::includeFileName
     fileName fName(f);
     // Substitute dictionary and environment variables. Allow empty
     // substitutions.
-    stringOps::inplaceExpand(fName, dict, true, true);
+    stringOps::inplaceExpandEntry(fName, dict, true, true);
 
     if (fName.empty() || fName.isAbsolute())
     {

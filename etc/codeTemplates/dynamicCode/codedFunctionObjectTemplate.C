@@ -108,7 +108,7 @@ ${typeName}FunctionObject::~${typeName}FunctionObject()
 
 bool ${typeName}FunctionObject::read(const dictionary& dict)
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"read ${typeName} sha1: ${SHA1sum}\n";
     }
@@ -123,7 +123,7 @@ bool ${typeName}FunctionObject::read(const dictionary& dict)
 
 Foam::wordList ${typeName}FunctionObject::fields() const
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"fields ${typeName} sha1: ${SHA1sum}\n";
     }
@@ -139,7 +139,7 @@ Foam::wordList ${typeName}FunctionObject::fields() const
 
 bool ${typeName}FunctionObject::execute()
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"execute ${typeName} sha1: ${SHA1sum}\n";
     }
@@ -154,7 +154,7 @@ bool ${typeName}FunctionObject::execute()
 
 bool ${typeName}FunctionObject::write()
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"write ${typeName} sha1: ${SHA1sum}\n";
     }
@@ -169,7 +169,7 @@ bool ${typeName}FunctionObject::write()
 
 bool ${typeName}FunctionObject::end()
 {
-    if (${verbose:-false})
+    if (${verbose})
     {
         Info<<"end ${typeName} sha1: ${SHA1sum}\n";
     }

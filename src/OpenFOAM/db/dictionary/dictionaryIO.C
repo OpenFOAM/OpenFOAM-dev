@@ -359,7 +359,7 @@ Foam::fileName Foam::findConfigFile
     {
         const fileName dictFile
         (
-            stringOps::expand("$FOAM_CASE")/"system"/region/configName
+            stringOps::expandEnvVar("$FOAM_CASE")/"system"/region/configName
         );
 
         if (isFile(dictFile))
@@ -374,7 +374,7 @@ Foam::fileName Foam::findConfigFile
     {
         const fileName dictFile
         (
-            stringOps::expand("$FOAM_CASE")/"system"/configName
+            stringOps::expandEnvVar("$FOAM_CASE")/"system"/configName
         );
 
         if (isFile(dictFile))

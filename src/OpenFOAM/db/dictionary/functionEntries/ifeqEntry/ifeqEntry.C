@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ Foam::token Foam::functionEntries::ifeqEntry::expand
         {
             // String expansion. Allow unset variables
             string expanded(var);
-            stringOps::inplaceExpand(expanded, dict, true, true);
+            stringOps::inplaceExpandEntry(expanded, dict, true, true);
 
             // Re-form as a string token so we can compare to string
             return token(expanded, t.lineNumber());

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,7 +192,7 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
 
                 // Substitute dictionary and environment variables. Do not allow
                 // empty substitutions.
-                stringOps::inplaceExpand(s, parentDict, true, false);
+                stringOps::inplaceExpandEntry(s, parentDict, true, false);
                 keyword.std::string::replace(1, keyword.size() - 1, s);
             }
 
