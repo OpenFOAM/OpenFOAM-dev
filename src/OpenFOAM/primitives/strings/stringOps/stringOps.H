@@ -110,6 +110,7 @@ namespace stringOps
     (
         string&,
         const dictionary& dict,
+        const word& dictVar = "dict",
         const char sigil = '$'
     );
 

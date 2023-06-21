@@ -513,14 +513,29 @@ public:
                 bool patternMatch=true
             ) const;
 
-            //- Find and return an entry data stream pointer if present
-            //  otherwise return nullptr. Allows scoping using '/' with
-            //  special handling for '!' and '..'.
+            //- Find and return an entry data stream pointer if present,
+            //  otherwise return nullptr.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            //  Allows scoping using '/' with special handling for '!' and '..'.
             const entry* lookupScopedEntryPtr
             (
                 const word&,
                 bool recursive,
                 bool patternMatch
+            ) const;
+
+            //- Find and return a T,
+            //  if not found throw a fatal error.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            //  Allows scoping using '/' with special handling for '!' and '..'.
+            template<class T>
+            T lookupScoped
+            (
+                const word&,
+                bool recursive=false,
+                bool patternMatch=true
             ) const;
 
             //- Check if entry is a sub-dictionary

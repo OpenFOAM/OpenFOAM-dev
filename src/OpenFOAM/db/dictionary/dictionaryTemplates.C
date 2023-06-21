@@ -224,6 +224,31 @@ bool Foam::dictionary::readIfPresent
 
 
 template<class T>
+T Foam::dictionary::lookupScoped
+(
+    const word& keyword,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr =
+        lookupScopedEntryPtr(keyword, recursive, patternMatch);
+
+    if (entryPtr == nullptr)
+    {
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "keyword " << keyword << " is undefined in dictionary "
+            << name()
+            << exit(FatalIOError);
+    }
+
+    return pTraits<T>(entryPtr->stream());
+}
+
+
+template<class T>
 void Foam::dictionary::add(const keyType& k, const T& t, bool overwrite)
 {
     add(new primitiveEntry(k, t), overwrite);

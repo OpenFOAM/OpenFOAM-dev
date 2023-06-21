@@ -410,6 +410,7 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
 (
     string& s,
     const dictionary& dict,
+    const word& dictVar,
     const char sigil
 )
 {
@@ -427,16 +428,28 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
         {
             // Find end of first occurrence
             string::size_type endVar = begVar;
-            string::size_type delim = 0;
+            string::size_type begDelim = 0, endDelim = 0;
 
-            if (s[begVar+1] == '{')
+            // Get the type, if any
+            word varType;
+            if (s[begVar+1] == '<')
             {
-                endVar = s.find('}', begVar);
-                delim = 1;
+                begDelim += s.findClosing('>', begVar+1) - begVar;
+                varType = s.substr(begVar+2, begDelim-2);
+            }
+
+            // Parse any braces and find the end of the variable
+            if (s[begVar+begDelim+1] == '{')
+            {
+                endVar = s.find('}', begVar+begDelim);
+                begDelim += 1;
+                endDelim += 1;
             }
             else
             {
-                string::iterator iter = s.begin() + begVar + 1;
+                endVar = begVar + begDelim;
+
+                string::iterator iter = s.begin() + begVar + begDelim + 1;
 
                 // Accept all dictionary and environment variable characters
                 while
@@ -474,8 +487,8 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
                 (
                     s.substr
                     (
-                        begVar + 1 + delim,
-                        endVar - begVar - 2*delim
+                        begVar + begDelim + 1,
+                        (endVar - endDelim) - (begVar + begDelim)
                     ),
                     false
                 );
@@ -491,25 +504,54 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
                 // Substitute if found
                 if (ePtr)
                 {
-                    // Write to string buffer. Force floating point numbers to
-                    // be printed with at least some decimal digits.
                     OStringStream buf;
-                    buf << scientific;
-                    buf.precision(IOstream::defaultPrecision());
 
-                    if (ePtr->isDict())
+                    if (!dictVar.empty() && !varType.empty())
                     {
-                        ePtr->dict().write(buf, false);
+                        // If the dictionary is accessible and the type is
+                        // known, then lookup the variable in the code, rather
+                        // than substituting its value. That way we don't need
+                        // to recompile this string if the value changes.
+                        buf << dictVar
+                            << ".lookupScoped<" << varType << ">"
+                            << "(\"" << varName << "\", true, false)";
                     }
-                    else if (isA<primitiveEntry>(*ePtr))
+
+                    if (dictVar.empty() && !varType.empty())
                     {
-                        dynamicCast<const primitiveEntry>(*ePtr)
-                           .write(buf, true);
+                        // If the dictionary is not accessible but the type is
+                        // known, then read the substituted value from a string
+                        buf << "read<" << varType << ">(\"";
                     }
-                    else
+
+                    if (dictVar.empty() || varType.empty())
                     {
-                        // Can't do any other types. Fail.
-                        dynamicCast<const primitiveEntry>(*ePtr);
+                        // If the dictionary is not accessible and/or the type
+                        // is not known, then we need to substitute the
+                        // variable's value
+
+                        // Make sure floating point values print with at least
+                        // some decimal points
+                        buf << scientific;
+                        buf.precision(IOstream::defaultPrecision());
+
+                        // Write the dictionary or primitive entry. Fail if
+                        // anything else.
+                        if (ePtr->isDict())
+                        {
+                            ePtr->dict().write(buf, false);
+                        }
+                        else
+                        {
+                            dynamicCast<const primitiveEntry>(*ePtr)
+                                .write(buf, true);
+                        }
+                    }
+
+                    if (dictVar.empty() && !varType.empty())
+                    {
+                        // Close the string and read function as necessary
+                        buf << "\")";
                     }
 
                     s.std::string::replace

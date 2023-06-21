@@ -244,6 +244,24 @@ public:
         //- Strip characters from the start and end of the string
         void strip(const string&);
 
+        //- Find the closing character. Brackets counting algorithm. The
+        //  opening bracket character is taken to be the one at the starting
+        //  position. The closing character is provided by argument.
+        //
+        //  Examples:
+        //
+        //          [char #1]       [char #15]
+        //               |             |
+        //               V             V
+        //      string("0(2(4,6)8,a(c)e)g").findClosing(')',1) == 15
+        //
+        //          [char #3] [char #7]
+        //                 |   |
+        //                 V   V
+        //      string("0(2(4,6)8,a(c)e)g").findClosing(')',3) == 7
+        //
+        size_type findClosing(const char, const size_type) const;
+
 
     // Member Operators
 
