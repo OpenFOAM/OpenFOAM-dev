@@ -32,6 +32,7 @@ Description
 #ifndef read_H
 #define read_H
 
+#include "pTraits.H"
 #include "IStringStream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -40,12 +41,6 @@ namespace Foam
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<typename Type>
-inline Type read(Istream& is)
-{
-    return pTraits<Type>(is);
-}
 
 template<typename Type>
 inline Type read(const string& str)
