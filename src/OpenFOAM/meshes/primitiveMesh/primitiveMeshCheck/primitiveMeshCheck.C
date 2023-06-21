@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,11 +33,11 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-Foam::scalar Foam::primitiveMesh::closedThreshold_  = 1.0e-6;
-Foam::scalar Foam::primitiveMesh::aspectThreshold_  = 1000;
-Foam::scalar Foam::primitiveMesh::nonOrthThreshold_ = 70;    // deg
-Foam::scalar Foam::primitiveMesh::skewThreshold_    = 4;
-Foam::scalar Foam::primitiveMesh::planarCosAngle_   = 1.0e-6;
+Foam::scalar Foam::primitiveMeshCheck::closedThreshold  = 1.0e-6;
+Foam::scalar Foam::primitiveMeshCheck::aspectThreshold  = 1000;
+Foam::scalar Foam::primitiveMeshCheck::nonOrthThreshold = 70;    // deg
+Foam::scalar Foam::primitiveMeshCheck::skewThreshold    = 4;
+Foam::scalar Foam::primitiveMeshCheck::planarCosAngle   = 1.0e-6;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -75,7 +75,7 @@ bool Foam::primitiveMesh::checkClosedBoundary
 
     vector openness = sumClosed/(sumMagClosedBoundary + vSmall);
 
-    if (cmptMax(cmptMag(openness)) > closedThreshold_)
+    if (cmptMax(cmptMag(openness)) > primitiveMeshCheck::closedThreshold)
     {
         if (debug || report)
         {
@@ -167,7 +167,7 @@ bool Foam::primitiveMesh::checkClosedCells
     // Check the sums
     forAll(openness, celli)
     {
-        if (openness[celli] > closedThreshold_)
+        if (openness[celli] > primitiveMeshCheck::closedThreshold)
         {
             if (setPtr)
             {
@@ -177,7 +177,7 @@ bool Foam::primitiveMesh::checkClosedCells
             nOpen++;
         }
 
-        if (aspectRatio[celli] > aspectThreshold_)
+        if (aspectRatio[celli] > primitiveMeshCheck::aspectThreshold)
         {
             if (aspectSetPtr)
             {
@@ -403,7 +403,7 @@ bool Foam::primitiveMesh::checkFaceOrthogonality
 
     // Severe nonorthogonality threshold
     const scalar severeNonorthogonalityThreshold =
-        ::cos(degToRad(nonOrthThreshold_));
+        ::cos(degToRad(primitiveMeshCheck::nonOrthThreshold));
 
     scalar minDDotS = min(ortho);
 
@@ -626,7 +626,7 @@ bool Foam::primitiveMesh::checkFaceSkewness
     {
         // Check if the skewness vector is greater than the PN vector.
         // This does not cause trouble but is a good indication of a poor mesh.
-        if (skewness[facei] > skewThreshold_)
+        if (skewness[facei] > primitiveMeshCheck::skewThreshold)
         {
             if (setPtr)
             {
@@ -916,7 +916,7 @@ bool Foam::primitiveMesh::checkConcaveCells
 
                     pC /= max(mag(pC), vSmall);
 
-                    if ((pC & fN) > -planarCosAngle_)
+                    if ((pC & fN) > -primitiveMeshCheck::planarCosAngle)
                     {
                         // Concave or planar face
 
@@ -1939,42 +1939,6 @@ bool Foam::primitiveMesh::checkMesh(const bool report) const
 
         return true;
     }
-}
-
-
-Foam::scalar Foam::primitiveMesh::setClosedThreshold(const scalar val)
-{
-    scalar prev = closedThreshold_;
-    closedThreshold_ = val;
-
-    return prev;
-}
-
-
-Foam::scalar Foam::primitiveMesh::setAspectThreshold(const scalar val)
-{
-    scalar prev = aspectThreshold_;
-    aspectThreshold_ = val;
-
-    return prev;
-}
-
-
-Foam::scalar Foam::primitiveMesh::setNonOrthThreshold(const scalar val)
-{
-    scalar prev = nonOrthThreshold_;
-    nonOrthThreshold_ = val;
-
-    return prev;
-}
-
-
-Foam::scalar Foam::primitiveMesh::setSkewThreshold(const scalar val)
-{
-    scalar prev = skewThreshold_;
-    skewThreshold_ = val;
-
-    return prev;
 }
 
 

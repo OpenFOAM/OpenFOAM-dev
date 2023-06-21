@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,10 +32,7 @@ License
 
 bool Foam::polyMesh::checkFaceOrthogonality
 (
-    const vectorField& fAreas,
-    const vectorField& cellCtrs,
     const bool report,
-    const bool detailedReport,
     labelHashSet* setPtr
 ) const
 {
@@ -44,8 +41,8 @@ bool Foam::polyMesh::checkFaceOrthogonality
         InfoInFunction << "Checking mesh non-orthogonality" << endl;
     }
 
-    const labelList& own = faceOwner();
-    const labelList& nei = faceNeighbour();
+    const vectorField& fAreas = faceAreas();
+    const vectorField& cellCtrs = cellCentres();
 
     // Calculate orthogonality for all internal and coupled boundary faces
     // (1 for uncoupled boundary faces)
@@ -59,7 +56,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
 
     // Severe nonorthogonality threshold
     const scalar severeNonorthogonalityThreshold =
-        ::cos(degToRad(primitiveMesh::nonOrthThreshold_));
+        ::cos(degToRad(primitiveMeshCheck::nonOrthThreshold));
 
 
     scalar minDDotS = great;
@@ -91,18 +88,6 @@ bool Foam::polyMesh::checkFaceOrthogonality
                 if (setPtr)
                 {
                     setPtr->insert(facei);
-                }
-                if (detailedReport && errorNonOrth == 0)
-                {
-                    // Non-orthogonality greater than 90 deg
-                    WarningInFunction
-                        << "Severe non-orthogonality for face "
-                        << facei
-                        << " between cells " << own[facei]
-                        << " and " << nei[facei]
-                        << ": Angle = "
-                        << radToDeg(::acos(min(1.0, max(-1.0, ortho[facei]))))
-                        << " deg." << endl;
                 }
 
                 errorNonOrth++;
@@ -140,7 +125,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
         if (severeNonOrth > 0)
         {
             Info<< "   *Number of severely non-orthogonal (> "
-                << primitiveMesh::nonOrthThreshold_ << " degrees) faces: "
+                << primitiveMeshCheck::nonOrthThreshold << " degrees) faces: "
                 << severeNonOrth << "." << endl;
         }
     }
@@ -169,12 +154,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
 
 bool Foam::polyMesh::checkFaceSkewness
 (
-    const pointField& points,
-    const vectorField& fCtrs,
-    const vectorField& fAreas,
-    const vectorField& cellCtrs,
     const bool report,
-    const bool detailedReport,
     labelHashSet* setPtr
 ) const
 {
@@ -183,8 +163,10 @@ bool Foam::polyMesh::checkFaceSkewness
         InfoInFunction << "Checking face skewness" << endl;
     }
 
-    const labelList& own = faceOwner();
-    const labelList& nei = faceNeighbour();
+    const pointField& points = this->points();
+    const vectorField& fCtrs = faceCentres();
+    const vectorField& fAreas = faceAreas();
+    const vectorField& cellCtrs = cellCentres();
 
     // Warn if the skew correction vector is more than skewWarning times
     // larger than the face area vector
@@ -209,30 +191,11 @@ bool Foam::polyMesh::checkFaceSkewness
     {
         // Check if the skewness vector is greater than the PN vector.
         // This does not cause trouble but is a good indication of a poor mesh.
-        if (skew[facei] > skewThreshold_)
+        if (skew[facei] > primitiveMeshCheck::skewThreshold)
         {
             if (setPtr)
             {
                 setPtr->insert(facei);
-            }
-            if (detailedReport && nWarnSkew == 0)
-            {
-                // Non-orthogonality greater than 90 deg
-                if (isInternalFace(facei))
-                {
-                    WarningInFunction
-                        << "Severe skewness " << skew[facei]
-                        << " for face " << facei
-                        << " between cells " << own[facei]
-                        << " and " << nei[facei];
-                }
-                else
-                {
-                    WarningInFunction
-                        << "Severe skewness " << skew[facei]
-                        << " for boundary face " << facei
-                        << " on cell " << own[facei];
-                }
             }
 
             if (isMasterFace[facei])
@@ -271,7 +234,6 @@ bool Foam::polyMesh::checkFaceSkewness
 
 bool Foam::polyMesh::checkEdgeAlignment
 (
-    const pointField& p,
     const bool report,
     const Vector<label>& directions,
     labelHashSet* setPtr
@@ -288,6 +250,8 @@ bool Foam::polyMesh::checkEdgeAlignment
     {
         InfoInFunction << "Checking edge alignment" << endl;
     }
+
+    const pointField& p = points();
 
     label nDirs = 0;
     for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
@@ -407,12 +371,13 @@ bool Foam::polyMesh::checkEdgeAlignment
 
 bool Foam::polyMesh::checkCellDeterminant
 (
-    const vectorField& faceAreas,
     const bool report,
-    labelHashSet* setPtr,
-    const Vector<label>& meshD
+    labelHashSet* setPtr
 ) const
 {
+    const vectorField& faceAreas = this->faceAreas();
+    const Vector<label>& meshD = geometricD();
+
     const scalar warnDet = 1e-3;
 
     if (debug)
@@ -489,9 +454,6 @@ bool Foam::polyMesh::checkCellDeterminant
 
 bool Foam::polyMesh::checkFaceWeight
 (
-    const vectorField& fCtrs,
-    const vectorField& fAreas,
-    const vectorField& cellCtrs,
     const bool report,
     const scalar minWeight,
     labelHashSet* setPtr
@@ -501,6 +463,10 @@ bool Foam::polyMesh::checkFaceWeight
     {
         InfoInFunction << "Checking for low face interpolation weights" << endl;
     }
+
+    const vectorField& fCtrs = faceCentres();
+    const vectorField& fAreas = faceAreas();
+    const vectorField& cellCtrs = this->cellCentres();
 
     tmp<scalarField> tfaceWght = polyMeshTools::faceWeights
     (
@@ -584,7 +550,6 @@ bool Foam::polyMesh::checkFaceWeight
 
 bool Foam::polyMesh::checkVolRatio
 (
-    const scalarField& cellVols,
     const bool report,
     const scalar minRatio,
     labelHashSet* setPtr
@@ -594,6 +559,8 @@ bool Foam::polyMesh::checkVolRatio
     {
         InfoInFunction << "Checking for volume ratio < " << minRatio << endl;
     }
+
+    const scalarField& cellVols = cellVolumes();
 
     tmp<scalarField> tvolRatio = polyMeshTools::volRatio(*this, cellVols);
     scalarField& volRatio = tvolRatio.ref();
@@ -666,186 +633,6 @@ bool Foam::polyMesh::checkVolRatio
     }
 
     return false;
-}
-
-
-bool Foam::polyMesh::checkFaceOrthogonality
-(
-    const bool report,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceOrthogonality
-    (
-        faceAreas(),
-        cellCentres(),
-        report,
-        false,  // detailedReport
-        setPtr
-    );
-}
-
-
-bool Foam::polyMesh::checkFaceSkewness
-(
-    const bool report,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceSkewness
-    (
-        points(),
-        faceCentres(),
-        faceAreas(),
-        cellCentres(),
-        report,
-        false,  // detailedReport
-        setPtr
-    );
-}
-
-
-bool Foam::polyMesh::checkEdgeAlignment
-(
-    const bool report,
-    const Vector<label>& directions,
-    labelHashSet* setPtr
-) const
-{
-    return checkEdgeAlignment
-    (
-        points(),
-        report,
-        directions,
-        setPtr
-    );
-}
-
-
-bool Foam::polyMesh::checkCellDeterminant
-(
-    const bool report,
-    labelHashSet* setPtr
-) const
-{
-    return checkCellDeterminant
-    (
-        faceAreas(),
-        report,
-        setPtr,
-        geometricD()
-    );
-}
-
-
-bool Foam::polyMesh::checkFaceWeight
-(
-    const bool report,
-    const scalar minWeight,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceWeight
-    (
-        faceCentres(),
-        faceAreas(),
-        cellCentres(),
-        report,
-        minWeight,
-        setPtr
-    );
-}
-
-
-bool Foam::polyMesh::checkVolRatio
-(
-    const bool report,
-    const scalar minRatio,
-    labelHashSet* setPtr
-) const
-{
-    return checkVolRatio(cellVolumes(), report, minRatio, setPtr);
-}
-
-
-bool Foam::polyMesh::checkMeshMotion
-(
-    const pointField& newPoints,
-    const bool report,
-    const bool detailedReport
-) const
-{
-    if (debug || report)
-    {
-        Pout<< "bool polyMesh::checkMeshMotion("
-            << "const pointField&, const bool, const bool) const: "
-            << "checking mesh motion" << endl;
-    }
-
-    vectorField fCtrs(nFaces());
-    vectorField fAreas(nFaces());
-    scalarField magfAreas(nFaces());
-
-    makeFaceCentresAndAreas(newPoints, fCtrs, fAreas, magfAreas);
-
-    // Check cell volumes and calculate new cell centres
-    vectorField cellCtrs(nCells());
-    scalarField cellVols(nCells());
-
-    makeCellCentresAndVols(fCtrs, fAreas, cellCtrs, cellVols);
-
-    // Check cell volumes
-    bool error = checkCellVolumes
-    (
-        cellVols,       // vols
-        report,         // report
-        detailedReport, // detailedReport
-        nullptr            // setPtr
-    );
-
-
-    // Check face areas
-    bool areaError = checkFaceAreas
-    (
-        fAreas,
-        report,         // report
-        detailedReport, // detailedReport,
-        nullptr            // setPtr
-    );
-    error = error || areaError;
-
-
-    // Check pyramid volumes
-    bool pyrVolError = checkFacePyramids
-    (
-        newPoints,
-        cellCtrs,
-        report,         // report,
-        detailedReport, // detailedReport,
-        -small,         // minPyrVol
-        nullptr            // setPtr
-    );
-    error = error || pyrVolError;
-
-
-    // Check face non-orthogonality
-    bool nonOrthoError = checkFaceOrthogonality
-    (
-        fAreas,
-        cellCtrs,
-        report,         // report
-        detailedReport, // detailedReport
-        nullptr            // setPtr
-    );
-    error = error || nonOrthoError;
-
-
-    if (!error && (debug || report))
-    {
-        Pout<< "Mesh motion check OK." << endl;
-    }
-
-    return error;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -221,25 +221,6 @@ class primitiveMesh
 protected:
 
     // Static Data Members
-
-        //- Static data to control mesh checking
-
-            //- Cell closedness warning threshold
-            //  set as the fraction of un-closed area to closed area
-            static scalar closedThreshold_;
-
-            //- Aspect ratio warning threshold
-            static scalar aspectThreshold_;
-
-            //- Non-orthogonality warning threshold in deg
-            static scalar nonOrthThreshold_;
-
-            //- Skewness warning threshold
-            static scalar skewThreshold_;
-
-            //- Threshold where faces are considered coplanar
-            static scalar planarCosAngle_;
-
 
         // Geometrical calculations
 
@@ -751,19 +732,6 @@ public:
             //- Check mesh for correctness. Returns false for no error.
             virtual bool checkMesh(const bool report = false) const;
 
-            //- Set the closedness ratio warning threshold
-            static scalar setClosedThreshold(const scalar);
-
-            //- Set the aspect ratio warning threshold
-            static scalar setAspectThreshold(const scalar);
-
-            //- Set the non-orthogonality warning threshold in degrees
-            static scalar setNonOrthThreshold(const scalar);
-
-            //- Set the skewness warning threshold as percentage
-            //  of the face area vector
-            static scalar setSkewThreshold(const scalar);
-
 
         // Useful derived info
 
@@ -905,6 +873,28 @@ public:
         //- Disallow default bitwise assignment
         void operator=(const primitiveMesh&) = delete;
 };
+
+
+namespace primitiveMeshCheck
+{
+    //- Data to control mesh checking
+
+        //- Cell closedness warning threshold
+        //  set as the fraction of un-closed area to closed area
+        extern scalar closedThreshold;
+
+        //- Aspect ratio warning threshold
+        extern scalar aspectThreshold;
+
+        //- Non-orthogonality warning threshold in deg
+        extern scalar nonOrthThreshold;
+
+        //- Skewness warning threshold
+        extern scalar skewThreshold;
+
+        //- Threshold where faces are considered coplanar
+        extern scalar planarCosAngle;
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

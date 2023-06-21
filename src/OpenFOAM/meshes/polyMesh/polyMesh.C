@@ -1515,21 +1515,6 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
 
     points_ = newPoints;
 
-    bool moveError = false;
-    if (debug)
-    {
-        // Check mesh motion
-        if (checkMeshMotion(points_, true))
-        {
-            moveError = true;
-
-            InfoInFunction
-                << "Moving the mesh with given points will "
-                << "invalidate the mesh." << nl
-                << "Mesh motion should not be executed." << endl;
-        }
-    }
-
     setPointsInstance(time().name());
 
     tmp<scalarField> sweptVols = primitiveMesh::movePoints
@@ -1562,13 +1547,6 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
 
     meshObjects::movePoints<polyMesh>(*this);
     meshObjects::movePoints<pointMesh>(*this);
-
-    if (debug && moveError)
-    {
-        // Write mesh to ease debugging. Note we want to avoid calling
-        // e.g. fvMesh::write since meshPhi not yet complete.
-        polyMesh::write();
-    }
 
     return sweptVols;
 }

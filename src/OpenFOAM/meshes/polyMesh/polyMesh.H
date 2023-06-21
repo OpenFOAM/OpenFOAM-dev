@@ -239,65 +239,6 @@ private:
             );
 
 
-        // Geometry checks
-
-            //- Check non-orthogonality
-            bool checkFaceOrthogonality
-            (
-                const vectorField& fAreas,
-                const vectorField& cellCtrs,
-                const bool report,
-                const bool detailedReport,
-                labelHashSet* setPtr
-            ) const;
-
-            //- Check face skewness
-            bool checkFaceSkewness
-            (
-                const pointField& points,
-                const vectorField& fCtrs,
-                const vectorField& fAreas,
-                const vectorField& cellCtrs,
-                const bool report,
-                const bool detailedReport,
-                labelHashSet* setPtr
-            ) const;
-
-            bool checkEdgeAlignment
-            (
-                const pointField& p,
-                const bool report,
-                const Vector<label>& directions,
-                labelHashSet* setPtr
-            ) const;
-
-            bool checkCellDeterminant
-            (
-                const vectorField& faceAreas,
-                const bool report,
-                labelHashSet* setPtr,
-                const Vector<label>& meshD
-            ) const;
-
-            bool checkFaceWeight
-            (
-                const vectorField& fCtrs,
-                const vectorField& fAreas,
-                const vectorField& cellCtrs,
-                const bool report,
-                const scalar minWeight,
-                labelHashSet* setPtr
-            ) const;
-
-            bool checkVolRatio
-            (
-                const scalarField& cellVols,
-                const bool report,
-                const scalar minRatio,
-                labelHashSet* setPtr
-            ) const;
-
-
 protected:
 
     // Protected Member Data
@@ -705,14 +646,6 @@ public:
             (
                 const bool report,
                 labelHashSet* setPtr
-            ) const;
-
-            //- Check mesh motion for correctness given motion points
-            virtual bool checkMeshMotion
-            (
-                const pointField& newPoints,
-                const bool report = false,
-                const bool detailedReport = false
             ) const;
 
             //- Check for face weights
