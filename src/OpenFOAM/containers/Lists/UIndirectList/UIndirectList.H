@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ class UIndirectList
     // Private Data
 
         UList<T>& completeList_;
-        const labelUList& addressing_;
+        const UList<label>& addressing_;
 
 
 public:
@@ -70,7 +70,7 @@ public:
     // Constructors
 
         //- Construct given the complete list and the addressing array
-        inline UIndirectList(const UList<T>&, const labelUList&);
+        inline UIndirectList(const UList<T>&, const UList<label>&);
 
         //- Copy constructor
         UIndirectList(const UIndirectList<T>&) = default;

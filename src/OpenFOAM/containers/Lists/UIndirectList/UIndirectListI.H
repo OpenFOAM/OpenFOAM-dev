@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ template<class T>
 inline Foam::UIndirectList<T>::UIndirectList
 (
     const UList<T>& completeList,
-    const labelUList& addr
+    const UList<label>& addr
 )
 :
     completeList_(const_cast<UList<T>&>(completeList)),
