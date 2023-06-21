@@ -201,7 +201,7 @@ Foam::List<Foam::remote> Foam::cellsToCells::distributeMesh
                 const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
                 const label nbrProci =
-                    isA<processorPolyPatch>(pp)
+                    isType<processorPolyPatch>(pp)
                   ? refCast<const processorPolyPatch>(pp).neighbProcNo()
                   : -1;
 
