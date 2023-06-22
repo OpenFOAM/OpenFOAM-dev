@@ -6,7 +6,7 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Writes the time step to a file for monitoring.
+    Executes primitiveMesh::checkMesh to check the distortion of moving meshes
 
 \*---------------------------------------------------------------------------*/
 
