@@ -114,8 +114,6 @@ Usage
        none          | no operation
        sum           | sum
        sumMag        | sum of component magnitudes
-       sumDirection  | sum values which are positive in given direction
-       sumDirectionBalance | sum of balance of values in given direction
        orientedSum   | sum with face orientations
        average       | ensemble average
        areaAverage   | area weighted average
@@ -206,8 +204,6 @@ public:
             none,
             sum,
             sumMag,
-            sumDirection,
-            sumDirectionBalance,
             orientedSum,
             average,
             areaAverage,
@@ -222,7 +218,7 @@ public:
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 16> operationTypeNames_;
+        static const NamedEnum<operationType, 14> operationTypeNames_;
 
 
 private:
@@ -347,7 +343,8 @@ protected:
             Type& result
         ) const;
 
-        //- Apply Type -> scalar operation to the values
+        //- Apply Type -> scalar operation to the values. Tries to apply
+        //  Type -> scalar specific operations, otherwise does nothing.
         template<class Type>
         bool processValues
         (
@@ -370,7 +367,8 @@ protected:
             scalar& result
         ) const;
 
-        //- Apply vector -> vector operation to the values.
+        //- Apply vector -> scalar operation to the values. Tries to apply
+        //  vector -> scalar specific operations, otherwise does nothing.
         bool processValues
         (
             const Field<vector>& values,
@@ -378,18 +376,6 @@ protected:
             const scalarField& weights,
             const vectorField& Sf,
             scalar& result
-        ) const;
-
-        //- Apply vector -> vector operation to the values. Tries to apply
-        //  vector -> vector specific operations, otherwise calls
-        //  processValuesTypeType.
-        bool processValues
-        (
-            const Field<vector>& values,
-            const scalarField& signs,
-            const scalarField& weights,
-            const vectorField& Sf,
-            vector& result
         ) const;
 
         //- Apply a Type -> Type operation to the values

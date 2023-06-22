@@ -182,6 +182,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
         }
         default:
         {
+            // No fall through
             return false;
         }
     }

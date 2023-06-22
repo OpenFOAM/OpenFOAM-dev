@@ -67,14 +67,12 @@ template<>
 const char* Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
-    16
+    14
 >::names[] =
 {
     "none",
     "sum",
     "sumMag",
-    "sumDirection",
-    "sumDirectionBalance",
     "orientedSum",
     "average",
     "areaAverage",
@@ -97,7 +95,7 @@ const Foam::NamedEnum
 const Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
-    16
+    14
 > Foam::functionObjects::fieldValues::surfaceFieldValue::operationTypeNames_;
 
 
@@ -548,19 +546,6 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
 {
     switch (operation_)
     {
-        case operationType::sumDirection:
-        {
-            const vector n(dict_.lookup("direction"));
-            result = gSum(weights*pos0(values*(Sf & n))*mag(values));
-            return true;
-        }
-        case operationType::sumDirectionBalance:
-        {
-            const vector n(dict_.lookup("direction"));
-            const scalarField nv(values*(Sf & n));
-            result = gSum(weights*(pos0(nv)*mag(values) - neg(nv)*mag(values)));
-            return true;
-        }
         default:
         {
             // Fall through to same-type operations
@@ -600,48 +585,8 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
         }
         default:
         {
+            // No fall through. Different types.
             return false;
-        }
-    }
-}
-
-
-bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
-(
-    const Field<vector>& values,
-    const scalarField& signs,
-    const scalarField& weights,
-    const vectorField& Sf,
-    vector& result
-) const
-{
-    switch (operation_)
-    {
-        case operationType::sumDirection:
-        {
-            const vector n = normalised(dict_.lookup<vector>("direction"));
-            const scalarField nv(n & values);
-            result = gSum(weights*pos0(nv)*n*(nv));
-            return true;
-        }
-        case operationType::sumDirectionBalance:
-        {
-            const vector n = normalised(dict_.lookup<vector>("direction"));
-            const scalarField nv(n & values);
-            result = gSum(weights*pos0(nv)*n*(nv));
-            return true;
-        }
-        default:
-        {
-            // Fall through to same-type operations
-            return processValuesTypeType
-            (
-                values,
-                signs,
-                weights,
-                Sf,
-                result
-            );
         }
     }
 }
