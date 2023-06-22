@@ -243,8 +243,7 @@ Type Foam::Function1s::Table<Type>::integral
     {
         const scalar t0 = values_.first().first();
         const scalar t1 = values_.last().first();
-        const scalar dt = t1 - t0;
-        const label n = floor((x2 - x1 - (bx2 - bx1))/dt);
+        const label n = floor(((x2 - x1) - (bx2 - bx1))/(t1 - t0) + 0.5);
 
         if (n != 0)
         {
