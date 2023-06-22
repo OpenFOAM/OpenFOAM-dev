@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,14 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+Foam::word Foam::name(const bool b)
+{
+    return b ? "true" : "false";
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 Foam::Istream& Foam::operator>>(Istream& is, bool& b)
 {
     if (is.good())
@@ -49,9 +57,7 @@ Foam::Istream& Foam::operator>>(Istream& is, bool& b)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const bool b)
 {
-    // we could also write as text string without any difficulty
-    // os  << (b ? "true" : "false");
-    os.write(label(b));
+    os.write(name(b));
     os.check("Ostream& operator<<(Ostream&, const bool)");
     return os;
 }
