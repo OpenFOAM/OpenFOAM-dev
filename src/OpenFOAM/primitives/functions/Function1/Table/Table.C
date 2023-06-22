@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -228,7 +228,8 @@ Type Foam::Function1s::Table<Type>::integral
     const scalar x2
 ) const
 {
-    const scalar bx1 = bound(x1), bx2 = bound(x2);
+    const scalar bx1 = bound(x1);
+    const scalar bx2 = bound(x2);
 
     Type sumY = Zero;
 
@@ -243,7 +244,7 @@ Type Foam::Function1s::Table<Type>::integral
         const scalar t0 = values_.first().first();
         const scalar t1 = values_.last().first();
         const scalar dt = t1 - t0;
-        const label n = floor((x2 - t0)/dt) - floor((x1 - t0)/dt);
+        const label n = floor((x2 - x1 - (bx2 - bx1))/dt);
 
         if (n != 0)
         {
@@ -255,6 +256,7 @@ Type Foam::Function1s::Table<Type>::integral
             {
                 sumY01 += weights_[i]*values_[indices_[i]].second();
             }
+
             sumY += n*sumY01;
         }
     }
