@@ -33,7 +33,7 @@ License
 #include "indirectPrimitivePatch.H"
 #include "cellSet.H"
 #include "searchableSurfaces.H"
-#include "polyMeshCheck.H"
+#include "dynamicMeshCheck.H"
 #include "IOmanip.H"
 #include "unitConversion.H"
 #include "snappySnapDriver.H"
@@ -1178,7 +1178,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             // const scalar minV(motionDict.lookup<scalar>("minVol", true));
             // if (minV > -great)
             //{
-            //    polyMeshCheck::checkFacePyramids
+            //    dynamicMeshCheck::checkFacePyramids
             //    (
             //        false,
             //        minV,
@@ -1207,7 +1207,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             scalar minArea(motionDict.lookup<scalar>("minArea"));
             if (minArea > -small)
             {
-                polyMeshCheck::checkFaceArea
+                dynamicMeshCheck::checkFaceArea
                 (
                     false,
                     minArea,
@@ -1234,7 +1234,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             scalar minDet(motionDict.lookup<scalar>("minDeterminant"));
             if (minDet > -1)
             {
-                polyMeshCheck::checkCellDeterminant
+                dynamicMeshCheck::checkCellDeterminant
                 (
                     false,
                     minDet,

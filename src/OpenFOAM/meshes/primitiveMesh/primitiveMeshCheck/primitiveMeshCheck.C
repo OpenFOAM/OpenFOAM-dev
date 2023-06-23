@@ -31,22 +31,11 @@ License
 #include "EdgeMap.H"
 #include "primitiveMeshTools.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-Foam::scalar Foam::primitiveMeshCheck::closedThreshold  = 1.0e-6;
-Foam::scalar Foam::primitiveMeshCheck::aspectThreshold  = 1000;
-Foam::scalar Foam::primitiveMeshCheck::nonOrthThreshold = 70;    // deg
-Foam::scalar Foam::primitiveMeshCheck::skewThreshold    = 4;
-Foam::scalar Foam::primitiveMeshCheck::planarCosAngle   = 1.0e-6;
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::primitiveMesh::checkClosedBoundary
 (
-    const vectorField& areas,
-    const bool report,
-    const PackedBoolList& internalOrCoupledFaces
+    const bool report
 ) const
 {
     if (debug)
@@ -54,6 +43,8 @@ bool Foam::primitiveMesh::checkClosedBoundary
         InfoInFunction
             << "Checking whether the boundary is closed" << endl;
     }
+
+    const vectorField& areas = faceAreas();
 
     // Loop through all boundary faces and sum up the face area vectors.
     // For a closed boundary, this should be zero in all vector components
@@ -63,11 +54,8 @@ bool Foam::primitiveMesh::checkClosedBoundary
 
     for (label facei = nInternalFaces(); facei < areas.size(); facei++)
     {
-        if (!internalOrCoupledFaces.size() || !internalOrCoupledFaces[facei])
-        {
-            sumClosed += areas[facei];
-            sumMagClosedBoundary += mag(areas[facei]);
-        }
+        sumClosed += areas[facei];
+        sumMagClosedBoundary += mag(areas[facei]);
     }
 
     reduce(sumClosed, sumOp<vector>());
@@ -75,7 +63,7 @@ bool Foam::primitiveMesh::checkClosedBoundary
 
     vector openness = sumClosed/(sumMagClosedBoundary + vSmall);
 
-    if (cmptMax(cmptMag(openness)) > primitiveMeshCheck::closedThreshold)
+    if (cmptMax(cmptMag(openness)) > polyMeshCheck::closedThreshold)
     {
         if (debug || report)
         {
@@ -101,8 +89,6 @@ bool Foam::primitiveMesh::checkClosedBoundary
 
 bool Foam::primitiveMesh::checkClosedCells
 (
-    const vectorField& faceAreas,
-    const scalarField& cellVolumes,
     const bool report,
     labelHashSet* setPtr,
     labelHashSet* aspectSetPtr,
@@ -114,6 +100,9 @@ bool Foam::primitiveMesh::checkClosedCells
         InfoInFunction
             << "Checking whether cells are closed" << endl;
     }
+
+    const vectorField& faceAreas = this->faceAreas();
+    const scalarField& cellVolumes = this->cellVolumes();
 
     // Check that all cells labels are valid
     const cellList& c = cells();
@@ -167,7 +156,7 @@ bool Foam::primitiveMesh::checkClosedCells
     // Check the sums
     forAll(openness, celli)
     {
-        if (openness[celli] > primitiveMeshCheck::closedThreshold)
+        if (openness[celli] > polyMeshCheck::closedThreshold)
         {
             if (setPtr)
             {
@@ -177,7 +166,7 @@ bool Foam::primitiveMesh::checkClosedCells
             nOpen++;
         }
 
-        if (aspectRatio[celli] > primitiveMeshCheck::aspectThreshold)
+        if (aspectRatio[celli] > polyMeshCheck::aspectThreshold)
         {
             if (aspectSetPtr)
             {
@@ -233,9 +222,7 @@ bool Foam::primitiveMesh::checkClosedCells
 
 bool Foam::primitiveMesh::checkFaceAreas
 (
-    const vectorField& faceAreas,
     const bool report,
-    const bool detailedReport,
     labelHashSet* setPtr
 ) const
 {
@@ -244,6 +231,7 @@ bool Foam::primitiveMesh::checkFaceAreas
         InfoInFunction << "Checking face area magnitudes" << endl;
     }
 
+    const vectorField& faceAreas = this->faceAreas();
     const scalarField magFaceAreas(mag(faceAreas));
 
     scalar minArea = great;
@@ -256,25 +244,6 @@ bool Foam::primitiveMesh::checkFaceAreas
             if (setPtr)
             {
                 setPtr->insert(facei);
-            }
-            if (detailedReport)
-            {
-                if (isInternalFace(facei))
-                {
-                    Pout<< "Zero or negative face area detected for "
-                        << "internal face "<< facei << " between cells "
-                        << faceOwner()[facei] << " and "
-                        << faceNeighbour()[facei]
-                        << ".  Face area magnitude = " << magFaceAreas[facei]
-                        << endl;
-                }
-                else
-                {
-                    Pout<< "Zero or negative face area detected for "
-                        << "boundary face " << facei << " next to cell "
-                        << faceOwner()[facei] << ".  Face area magnitude = "
-                        << magFaceAreas[facei] << endl;
-                }
             }
         }
 
@@ -311,9 +280,7 @@ bool Foam::primitiveMesh::checkFaceAreas
 
 bool Foam::primitiveMesh::checkCellVolumes
 (
-    const scalarField& vols,
     const bool report,
-    const bool detailedReport,
     labelHashSet* setPtr
 ) const
 {
@@ -322,6 +289,7 @@ bool Foam::primitiveMesh::checkCellVolumes
         InfoInFunction << "Checking cell volumes" << endl;
     }
 
+    const scalarField& vols = cellVolumes();
     scalar minVolume = great;
     scalar maxVolume = -great;
 
@@ -334,11 +302,6 @@ bool Foam::primitiveMesh::checkCellVolumes
             if (setPtr)
             {
                 setPtr->insert(celli);
-            }
-            if (detailedReport)
-            {
-                Pout<< "Zero or negative cell volume detected for cell "
-                    << celli << ".  Volume = " << vols[celli] << endl;
             }
 
             nNegVolCells++;
@@ -379,122 +342,9 @@ bool Foam::primitiveMesh::checkCellVolumes
 }
 
 
-bool Foam::primitiveMesh::checkFaceOrthogonality
-(
-    const vectorField& fAreas,
-    const vectorField& cellCtrs,
-    const bool report,
-    labelHashSet* setPtr
-) const
-{
-    if (debug)
-    {
-        InfoInFunction << "Checking mesh non-orthogonality" << endl;
-    }
-
-
-    tmp<scalarField> tortho = primitiveMeshTools::faceOrthogonality
-    (
-        *this,
-        fAreas,
-        cellCtrs
-    );
-    const scalarField& ortho = tortho();
-
-    // Severe nonorthogonality threshold
-    const scalar severeNonorthogonalityThreshold =
-        ::cos(degToRad(primitiveMeshCheck::nonOrthThreshold));
-
-    scalar minDDotS = min(ortho);
-
-    scalar sumDDotS = sum(ortho);
-
-    label severeNonOrth = 0;
-
-    label errorNonOrth = 0;
-
-
-    forAll(ortho, facei)
-    {
-        if (ortho[facei] < severeNonorthogonalityThreshold)
-        {
-            if (ortho[facei] > small)
-            {
-                if (setPtr)
-                {
-                    setPtr->insert(facei);
-                }
-
-                severeNonOrth++;
-            }
-            else
-            {
-                if (setPtr)
-                {
-                    setPtr->insert(facei);
-                }
-
-                errorNonOrth++;
-            }
-        }
-    }
-
-    reduce(minDDotS, minOp<scalar>());
-    reduce(sumDDotS, sumOp<scalar>());
-    reduce(severeNonOrth, sumOp<label>());
-    reduce(errorNonOrth, sumOp<label>());
-
-    if (debug || report)
-    {
-        label neiSize = ortho.size();
-        reduce(neiSize, sumOp<label>());
-
-        if (neiSize > 0)
-        {
-            if (debug || report)
-            {
-                Info<< "    Mesh non-orthogonality Max: "
-                    << radToDeg(::acos(minDDotS))
-                    << " average: " << radToDeg(::acos(sumDDotS/neiSize))
-                    << endl;
-            }
-        }
-
-        if (severeNonOrth > 0)
-        {
-            Info<< "   *Number of severely non-orthogonal faces: "
-                << severeNonOrth << "." << endl;
-        }
-    }
-
-    if (errorNonOrth > 0)
-    {
-        if (debug || report)
-        {
-            Info<< " ***Number of non-orthogonality errors: "
-                << errorNonOrth << "." << endl;
-        }
-
-        return true;
-    }
-    else
-    {
-        if (debug || report)
-        {
-            Info<< "    Non-orthogonality check OK." << endl;
-        }
-
-        return false;
-    }
-}
-
-
 bool Foam::primitiveMesh::checkFacePyramids
 (
-    const pointField& points,
-    const vectorField& ctrs,
     const bool report,
-    const bool detailedReport,
     const scalar minPyrVol,
     labelHashSet* setPtr
 ) const
@@ -504,9 +354,8 @@ bool Foam::primitiveMesh::checkFacePyramids
         InfoInFunction << "Checking face orientation" << endl;
     }
 
-    const labelList& own = faceOwner();
-    const labelList& nei = faceNeighbour();
-    const faceList& f = faces();
+    const pointField& points = this->points();
+    const vectorField& ctrs = cellCentres();
 
 
     scalarField ownPyrVol;
@@ -531,15 +380,6 @@ bool Foam::primitiveMesh::checkFacePyramids
             {
                 setPtr->insert(facei);
             }
-            if (detailedReport)
-            {
-                Pout<< "Negative pyramid volume: " << ownPyrVol[facei]
-                    << " for face " << facei << " " << f[facei]
-                    << "  and owner cell: " << own[facei] << endl
-                    << "Owner cell vertex labels: "
-                    << cells()[own[facei]].labels(faces())
-                    << endl;
-            }
 
             nErrorPyrs++;
         }
@@ -551,15 +391,6 @@ bool Foam::primitiveMesh::checkFacePyramids
                 if (setPtr)
                 {
                     setPtr->insert(facei);
-                }
-                if (detailedReport)
-                {
-                    Pout<< "Negative pyramid volume: " << neiPyrVol[facei]
-                        << " for face " << facei << " " << f[facei]
-                        << "  and neighbour cell: " << nei[facei] << nl
-                        << "Neighbour cell vertex labels: "
-                        << cells()[nei[facei]].labels(faces())
-                        << endl;
                 }
                 nErrorPyrs++;
             }
@@ -591,83 +422,8 @@ bool Foam::primitiveMesh::checkFacePyramids
 }
 
 
-bool Foam::primitiveMesh::checkFaceSkewness
-(
-    const pointField& points,
-    const vectorField& fCtrs,
-    const vectorField& fAreas,
-    const vectorField& cellCtrs,
-    const bool report,
-    labelHashSet* setPtr
-) const
-{
-    if (debug)
-    {
-        InfoInFunction << "Checking face skewness" << endl;
-    }
-
-    // Warn if the skew correction vector is more than skewWarning times
-    // larger than the face area vector
-
-    tmp<scalarField> tskewness = primitiveMeshTools::faceSkewness
-    (
-        *this,
-        points,
-        fCtrs,
-        fAreas,
-        cellCtrs
-    );
-    const scalarField& skewness = tskewness();
-
-    scalar maxSkew = max(skewness);
-    label nWarnSkew = 0;
-
-    forAll(skewness, facei)
-    {
-        // Check if the skewness vector is greater than the PN vector.
-        // This does not cause trouble but is a good indication of a poor mesh.
-        if (skewness[facei] > primitiveMeshCheck::skewThreshold)
-        {
-            if (setPtr)
-            {
-                setPtr->insert(facei);
-            }
-
-            nWarnSkew++;
-        }
-    }
-
-    reduce(maxSkew, maxOp<scalar>());
-    reduce(nWarnSkew, sumOp<label>());
-
-    if (nWarnSkew > 0)
-    {
-        if (debug || report)
-        {
-            Info<< " ***Max skewness = " << maxSkew
-                << ", " << nWarnSkew << " highly skew faces detected"
-                   " which may impair the quality of the results"
-                << endl;
-        }
-
-        return true;
-    }
-    else
-    {
-        if (debug || report)
-        {
-            Info<< "    Max skewness = " << maxSkew << " OK." << endl;
-        }
-
-        return false;
-    }
-}
-
-
 bool Foam::primitiveMesh::checkFaceAngles
 (
-    const pointField& points,
-    const vectorField& faceAreas,
     const bool report,
     const scalar maxDeg,
     labelHashSet* setPtr
@@ -687,6 +443,8 @@ bool Foam::primitiveMesh::checkFaceAngles
 
     const scalar maxSin = Foam::sin(degToRad(maxDeg));
 
+    const pointField& points = this->points();
+    const vectorField& faceAreas = this->faceAreas();
 
     tmp<scalarField> tfaceAngles = primitiveMeshTools::faceConcavity
     (
@@ -746,9 +504,6 @@ bool Foam::primitiveMesh::checkFaceAngles
 
 bool Foam::primitiveMesh::checkFaceFlatness
 (
-    const pointField& points,
-    const vectorField& faceCentres,
-    const vectorField& faceAreas,
     const bool report,
     const scalar warnFlatness,
     labelHashSet* setPtr
@@ -766,6 +521,9 @@ bool Foam::primitiveMesh::checkFaceFlatness
             << exit(FatalError);
     }
 
+    const pointField& points = this->points();
+    const vectorField& faceCentres = this->faceCentres();
+    const vectorField& faceAreas = this->faceAreas();
     const faceList& fcs = faces();
 
     tmp<scalarField> tfaceFlatness = primitiveMeshTools::faceFlatness
@@ -851,8 +609,6 @@ bool Foam::primitiveMesh::checkFaceFlatness
 
 bool Foam::primitiveMesh::checkConcaveCells
 (
-    const vectorField& fAreas,
-    const pointField& fCentres,
     const bool report,
     labelHashSet* setPtr
 ) const
@@ -862,6 +618,8 @@ bool Foam::primitiveMesh::checkConcaveCells
         InfoInFunction << "Checking for concave cells" << endl;
     }
 
+    const vectorField& fAreas = faceAreas();
+    const pointField& fCentres = faceCentres();
     const cellList& c = cells();
     const labelList& fOwner = faceOwner();
 
@@ -916,7 +674,7 @@ bool Foam::primitiveMesh::checkConcaveCells
 
                     pC /= max(mag(pC), vSmall);
 
-                    if ((pC & fN) > -primitiveMeshCheck::planarCosAngle)
+                    if ((pC & fN) > -polyMeshCheck::planarCosAngle)
                     {
                         // Concave or planar face
 
@@ -1676,268 +1434,6 @@ bool Foam::primitiveMesh::checkFaceFaces
         }
 
         return false;
-    }
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::primitiveMesh::checkClosedBoundary(const bool report) const
-{
-    return checkClosedBoundary(faceAreas(), report, PackedBoolList(0));
-}
-
-
-bool Foam::primitiveMesh::checkClosedCells
-(
-    const bool report,
-    labelHashSet* setPtr,
-    labelHashSet* aspectSetPtr,
-     const Vector<label>& solutionD
-) const
-{
-    return checkClosedCells
-    (
-        faceAreas(),
-        cellVolumes(),
-        report,
-        setPtr,
-        aspectSetPtr,
-        solutionD
-    );
-}
-
-
-bool Foam::primitiveMesh::checkFaceAreas
-(
-    const bool report,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceAreas
-    (
-        faceAreas(),
-        report,
-        false,  // detailedReport,
-        setPtr
-    );
-}
-
-
-bool Foam::primitiveMesh::checkCellVolumes
-(
-    const bool report,
-    labelHashSet* setPtr
-) const
-{
-    return checkCellVolumes
-    (
-        cellVolumes(),
-        report,
-        false,  // detailedReport,
-        setPtr
-    );
-}
-
-
-bool Foam::primitiveMesh::checkFaceOrthogonality
-(
-    const bool report,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceOrthogonality
-    (
-        faceAreas(),
-        cellCentres(),
-        report,
-        setPtr
-    );
-}
-
-
-bool Foam::primitiveMesh::checkFacePyramids
-(
-    const bool report,
-    const scalar minPyrVol,
-    labelHashSet* setPtr
-) const
-{
-    return checkFacePyramids
-    (
-        points(),
-        cellCentres(),
-        report,
-        false,  // detailedReport,
-        minPyrVol,
-        setPtr
-    );
-}
-
-
-bool Foam::primitiveMesh::checkFaceSkewness
-(
-    const bool report,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceSkewness
-    (
-        points(),
-        faceCentres(),
-        faceAreas(),
-        cellCentres(),
-        report,
-        setPtr
-    );
-}
-
-
-bool Foam::primitiveMesh::checkFaceAngles
-(
-    const bool report,
-    const scalar maxDeg,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceAngles
-    (
-        points(),
-        faceAreas(),
-        report,
-        maxDeg,
-        setPtr
-    );
-}
-
-
-bool Foam::primitiveMesh::checkFaceFlatness
-(
-    const bool report,
-    const scalar warnFlatness,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceFlatness
-    (
-        points(),
-        faceCentres(),
-        faceAreas(),
-        report,
-        warnFlatness,
-        setPtr
-    );
-}
-
-
-bool Foam::primitiveMesh::checkConcaveCells
-(
-    const bool report,
-    labelHashSet* setPtr
-) const
-{
-    return checkConcaveCells
-    (
-        faceAreas(),
-        faceCentres(),
-        report,
-        setPtr
-    );
-}
-
-
-bool Foam::primitiveMesh::checkTopology(const bool report) const
-{
-    label noFailedChecks = 0;
-
-    if (checkPoints(report)) noFailedChecks++;
-    if (checkUpperTriangular(report)) noFailedChecks++;
-    if (checkCellsZipUp(report)) noFailedChecks++;
-    if (checkFaceVertices(report)) noFailedChecks++;
-    if (checkFaceFaces(report)) noFailedChecks++;
-
-    if (noFailedChecks == 0)
-    {
-        if (debug || report)
-        {
-            Info<< "    Mesh topology OK." << endl;
-        }
-
-        return false;
-    }
-    else
-    {
-        if (debug || report)
-        {
-            Info<< "    Failed " << noFailedChecks
-                << " mesh topology checks." << endl;
-        }
-
-        return true;
-    }
-}
-
-
-bool Foam::primitiveMesh::checkGeometry(const bool report) const
-{
-    label noFailedChecks = 0;
-
-    if (checkClosedBoundary(report)) noFailedChecks++;
-    if (checkClosedCells(report)) noFailedChecks++;
-    if (checkFaceAreas(report)) noFailedChecks++;
-    if (checkCellVolumes(report)) noFailedChecks++;
-    if (checkFaceOrthogonality(report)) noFailedChecks++;
-    if (checkFacePyramids(report)) noFailedChecks++;
-    if (checkFaceSkewness(report)) noFailedChecks++;
-
-    if (noFailedChecks == 0)
-    {
-        if (debug || report)
-        {
-            Info<< "    Mesh geometry OK." << endl;
-        }
-        return false;
-    }
-    else
-    {
-        if (debug || report)
-        {
-            Info<< "    Failed " << noFailedChecks
-                << " mesh geometry checks." << endl;
-        }
-
-        return true;
-    }
-}
-
-
-bool Foam::primitiveMesh::checkMesh(const bool report) const
-{
-    if (debug)
-    {
-        InfoInFunction << "Checking primitiveMesh" << endl;
-    }
-
-    label noFailedChecks = checkTopology(report) + checkGeometry(report);
-
-    if (noFailedChecks == 0)
-    {
-        if (debug || report)
-        {
-            Info<< "Mesh OK." << endl;
-        }
-
-        return false;
-    }
-    else
-    {
-        if (debug || report)
-        {
-            Info<< "    Failed " << noFailedChecks
-                << " mesh checks." << endl;
-        }
-
-        return true;
     }
 }
 

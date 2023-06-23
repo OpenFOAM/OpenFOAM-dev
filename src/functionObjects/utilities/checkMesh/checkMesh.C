@@ -25,6 +25,7 @@ License
 
 #include "checkMesh.H"
 #include "fvMesh.H"
+#include "polyMeshCheck.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -66,7 +67,7 @@ bool Foam::functionObjects::checkMesh::execute()
 {
     if (mesh_.changing())
     {
-        return mesh_.checkMesh(true);
+        return polyMeshCheck::checkMesh(mesh_, true);
     }
     else
     {

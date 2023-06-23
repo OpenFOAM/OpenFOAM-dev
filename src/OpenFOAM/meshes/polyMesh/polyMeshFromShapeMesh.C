@@ -665,14 +665,6 @@ Foam::polyMesh::polyMesh
         // Calculate the geometry for the patches (transformation tensors etc.)
         boundary_.calcGeometry();
     }
-
-    if (debug)
-    {
-        if (checkMesh())
-        {
-            Info<< "Mesh OK" << endl;
-        }
-    }
 }
 
 
@@ -944,14 +936,6 @@ Foam::polyMesh::polyMesh
 
         // Calculate the geometry for the patches (transformation tensors etc.)
         boundary_.calcGeometry();
-    }
-
-    if (debug)
-    {
-        if (checkMesh())
-        {
-            Info << "Mesh OK" << endl;
-        }
     }
 }
 

@@ -23,10 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "polyMesh.H"
+#include "polyMeshCheck.H"
 #include "polyMeshTools.H"
 #include "unitConversion.H"
 #include "syncTools.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+Foam::scalar Foam::polyMeshCheck::closedThreshold  = 1.0e-6;
+Foam::scalar Foam::polyMeshCheck::aspectThreshold  = 1000;
+Foam::scalar Foam::polyMeshCheck::nonOrthThreshold = 70;    // deg
+Foam::scalar Foam::polyMeshCheck::skewThreshold    = 4;
+Foam::scalar Foam::polyMeshCheck::planarCosAngle   = 1.0e-6;
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -56,7 +64,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
 
     // Severe nonorthogonality threshold
     const scalar severeNonorthogonalityThreshold =
-        ::cos(degToRad(primitiveMeshCheck::nonOrthThreshold));
+        ::cos(degToRad(polyMeshCheck::nonOrthThreshold));
 
 
     scalar minDDotS = great;
@@ -125,7 +133,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
         if (severeNonOrth > 0)
         {
             Info<< "   *Number of severely non-orthogonal (> "
-                << primitiveMeshCheck::nonOrthThreshold << " degrees) faces: "
+                << polyMeshCheck::nonOrthThreshold << " degrees) faces: "
                 << severeNonOrth << "." << endl;
         }
     }
@@ -191,7 +199,7 @@ bool Foam::polyMesh::checkFaceSkewness
     {
         // Check if the skewness vector is greater than the PN vector.
         // This does not cause trouble but is a good indication of a poor mesh.
-        if (skew[facei] > primitiveMeshCheck::skewThreshold)
+        if (skew[facei] > polyMeshCheck::skewThreshold)
         {
             if (setPtr)
             {
@@ -633,6 +641,101 @@ bool Foam::polyMesh::checkVolRatio
     }
 
     return false;
+}
+
+
+
+bool Foam::polyMeshCheck::checkTopology(const polyMesh& mesh, const bool report)
+{
+    label noFailedChecks = 0;
+
+    if (mesh.checkPoints(report)) noFailedChecks++;
+    if (mesh.checkUpperTriangular(report)) noFailedChecks++;
+    if (mesh.checkCellsZipUp(report)) noFailedChecks++;
+    if (mesh.checkFaceVertices(report)) noFailedChecks++;
+    if (mesh.checkFaceFaces(report)) noFailedChecks++;
+
+    if (noFailedChecks == 0)
+    {
+        if (report)
+        {
+            Info<< "    Mesh topology OK." << endl;
+        }
+
+        return false;
+    }
+    else
+    {
+        if (report)
+        {
+            Info<< "    Failed " << noFailedChecks
+                << " mesh topology checks." << endl;
+        }
+
+        return true;
+    }
+}
+
+
+bool Foam::polyMeshCheck::checkGeometry(const polyMesh& mesh, const bool report)
+{
+    label noFailedChecks = 0;
+
+    if (mesh.checkClosedBoundary(report)) noFailedChecks++;
+    if (mesh.checkClosedCells(report)) noFailedChecks++;
+    if (mesh.checkFaceAreas(report)) noFailedChecks++;
+    if (mesh.checkCellVolumes(report)) noFailedChecks++;
+    if (mesh.checkFaceOrthogonality(report)) noFailedChecks++;
+    if (mesh.checkFacePyramids(report)) noFailedChecks++;
+    if (mesh.checkFaceSkewness(report)) noFailedChecks++;
+
+    if (noFailedChecks == 0)
+    {
+        if (report)
+        {
+            Info<< "    Mesh geometry OK." << endl;
+        }
+
+        return false;
+    }
+    else
+    {
+        if (report)
+        {
+            Info<< "    Failed " << noFailedChecks
+                << " mesh geometry checks." << endl;
+        }
+
+        return true;
+    }
+}
+
+
+bool Foam::polyMeshCheck::checkMesh(const polyMesh& mesh, const bool report)
+{
+    const label noFailedChecks =
+        checkTopology(mesh, report)
+      + checkGeometry(mesh, report);
+
+    if (noFailedChecks == 0)
+    {
+        if (report)
+        {
+            Info<< "Mesh OK." << endl;
+        }
+
+        return false;
+    }
+    else
+    {
+        if (report)
+        {
+            Info<< "    Failed " << noFailedChecks
+                << " mesh checks." << endl;
+        }
+
+        return true;
+    }
 }
 
 

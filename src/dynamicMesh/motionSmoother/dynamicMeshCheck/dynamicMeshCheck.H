@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,12 +27,12 @@ Description
     coupled faces are treated as internal).
 
 SourceFiles
-    polyMeshCheck.C
+    dynamicMeshCheck.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef polyMeshCheck_H
-#define polyMeshCheck_H
+#ifndef dynamicMeshCheck_H
+#define dynamicMeshCheck_H
 
 #include "pointFields.H"
 #include "HashSet.H"
@@ -41,7 +41,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace polyMeshCheck
+namespace dynamicMeshCheck
 {
 
 //- Check face non-orthogonality
@@ -204,7 +204,7 @@ bool checkCellDeterminant
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace polyMeshCheck
+} // End namespace dynamicMeshCheck
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
