@@ -44,258 +44,258 @@ geometry
 vertices
 (
     // X-pipe
-    (#neg $lPipe #neg $rCore 0)
-    (#neg $lPipe 0 #neg $rCore)
-    (#neg $lPipe $rCore 0)
-    (#neg $lPipe 0 $rCore)
+    name vx0 (#neg $lPipe #neg $rCore 0)
+    name vx1 (#neg $lPipe 0 #neg $rCore)
+    name vx2 (#neg $lPipe $rCore 0)
+    name vx3 (#neg $lPipe 0 $rCore)
 
-    (#neg $lPipe #neg $rPipe 0)
-    (#neg $lPipe 0 #neg $rPipe)
-    (#neg $lPipe $rPipe 0)
-    (#neg $lPipe 0 $rPipe)
+    name vx4 (#neg $lPipe #neg $rPipe 0)
+    name vx5 (#neg $lPipe 0 #neg $rPipe)
+    name vx6 (#neg $lPipe $rPipe 0)
+    name vx7 (#neg $lPipe 0 $rPipe)
 
-    project (#neg $rBend #neg $rCore 0) (sphere)
-    project (#neg $rBend 0 #neg $rCore) (sphere)
-    project (#neg $rBend $rCore 0) (sphere)
-    project (#neg $rBend 0 $rCore) (sphere)
+    name vx8 project (#neg $rBend #neg $rCore 0) (sphere)
+    name vx9 project (#neg $rBend 0 #neg $rCore) (sphere)
+    name vx10 project (#neg $rBend $rCore 0) (sphere)
+    name vx11 project (#neg $rBend 0 $rCore) (sphere)
 
-    (#neg $rBend #neg $rPipe 0)
-    (#neg $rBend 0 #neg $rPipe)
-    (#neg $rBend $rPipe 0)
-    (#neg $rBend 0 $rPipe)
+    name vx12 (#neg $rBend #neg $rPipe 0)
+    name vx13 (#neg $rBend 0 #neg $rPipe)
+    name vx14 (#neg $rBend $rPipe 0)
+    name vx15 (#neg $rBend 0 $rPipe)
 
     // Y-lower-pipe
-    ($rCore #neg $lPipe 0)
-    (0 #neg $lPipe #neg $rCore)
-    (#neg $rCore #neg $lPipe 0)
-    (0 #neg $lPipe $rCore)
+    name vl0 ($rCore #neg $lPipe 0)
+    name vl1 (0 #neg $lPipe #neg $rCore)
+    name vl2 (#neg $rCore #neg $lPipe 0)
+    name vl3 (0 #neg $lPipe $rCore)
 
-    ($rPipe #neg $lPipe 0)
-    (0 #neg $lPipe #neg $rPipe)
-    (#neg $rPipe #neg $lPipe 0)
-    (0 #neg $lPipe $rPipe)
+    name vl4 ($rPipe #neg $lPipe 0)
+    name vl5 (0 #neg $lPipe #neg $rPipe)
+    name vl6 (#neg $rPipe #neg $lPipe 0)
+    name vl7 (0 #neg $lPipe $rPipe)
 
-    project ($rCore #neg $rBend 0) (sphere)
-    project (0 #neg $rBend #neg $rCore) (sphere)
-    project (#neg $rCore #neg $rBend 0) (sphere)
-    project (0 #neg $rBend $rCore) (sphere)
+    name vl8 project ($rCore #neg $rBend 0) (sphere)
+    name vl9 project (0 #neg $rBend #neg $rCore) (sphere)
+    name vl10 project (#neg $rCore #neg $rBend 0) (sphere)
+    name vl11 project (0 #neg $rBend $rCore) (sphere)
 
-    ($rPipe #neg $rBend 0)
-    (0 #neg $rBend #neg $rPipe)
-    (#neg $rPipe #neg $rBend 0)
-    (0 #neg $rBend $rPipe)
+    name vl12 ($rPipe #neg $rBend 0)
+    name vl13 (0 #neg $rBend #neg $rPipe)
+    name vl14 (#neg $rPipe #neg $rBend 0)
+    name vl15 (0 #neg $rBend $rPipe)
 
     // Y-upper-pipe
-    (#neg $rCore $lPipe 0)
-    (0 $lPipe #neg $rCore)
-    ($rCore $lPipe 0)
-    (0 $lPipe $rCore)
+    name vu0 (#neg $rCore $lPipe 0)
+    name vu1 (0 $lPipe #neg $rCore)
+    name vu2 ($rCore $lPipe 0)
+    name vu3 (0 $lPipe $rCore)
 
-    (#neg $rPipe $lPipe 0)
-    (0 $lPipe #neg $rPipe)
-    ($rPipe $lPipe 0)
-    (0 $lPipe $rPipe)
+    name vu4 (#neg $rPipe $lPipe 0)
+    name vu5 (0 $lPipe #neg $rPipe)
+    name vu6 ($rPipe $lPipe 0)
+    name vu7 (0 $lPipe $rPipe)
 
-    project (#neg $rCore $rBend 0) (sphere)
-    project (0 $rBend #neg $rCore) (sphere)
-    project ($rCore $rBend 0) (sphere)
-    project (0 $rBend $rCore) (sphere)
+    name vu8 project (#neg $rCore $rBend 0) (sphere)
+    name vu9 project (0 $rBend #neg $rCore) (sphere)
+    name vu10 project ($rCore $rBend 0) (sphere)
+    name vu11 project (0 $rBend $rCore) (sphere)
 
-    (#neg $rPipe $rBend 0)
-    (0 $rBend #neg $rPipe)
-    ($rPipe $rBend 0)
-    (0 $rBend $rPipe)
+    name vu12 (#neg $rPipe $rBend 0)
+    name vu13 (0 $rBend #neg $rPipe)
+    name vu14 ($rPipe $rBend 0)
+    name vu15 (0 $rBend $rPipe)
 
     // Ball
-    project (#neg $rBend #neg $rCore 0) (sphere)
-    project (#neg $rBend 0 #neg $rCore) (sphere)
-    project (#neg $rBend $rCore 0) (sphere)
-    project (#neg $rBend 0 $rCore) (sphere)
+    name vb0 project (#neg $rBend #neg $rCore 0) (sphere)
+    name vb1 project (#neg $rBend 0 #neg $rCore) (sphere)
+    name vb2 project (#neg $rBend $rCore 0) (sphere)
+    name vb3 project (#neg $rBend 0 $rCore) (sphere)
 
-    (#neg $rBend #neg $rPipe 0)
-    (#neg $rBend 0 #neg $rPipe)
-    (#neg $rBend $rPipe 0)
-    (#neg $rBend 0 $rPipe)
+    name vb4 (#neg $rBend #neg $rPipe 0)
+    name vb5 (#neg $rBend 0 #neg $rPipe)
+    name vb6 (#neg $rBend $rPipe 0)
+    name vb7 (#neg $rBend 0 $rPipe)
 
-    project (#neg $rCore #neg $rBend 0) (sphere)
-    project (0 #neg $rBend #neg $rCore) (sphere)
-    project ($rCore #neg $rBend 0) (sphere)
-    project (0 #neg $rBend $rCore) (sphere)
+    name vb8 project (#neg $rCore #neg $rBend 0) (sphere)
+    name vb9 project (0 #neg $rBend #neg $rCore) (sphere)
+    name vb10 project ($rCore #neg $rBend 0) (sphere)
+    name vb11 project (0 #neg $rBend $rCore) (sphere)
 
-    (#neg $rPipe #neg $rBend 0)
-    (0 #neg $rBend #neg $rPipe)
-    ($rPipe #neg $rBend 0)
-    (0 #neg $rBend $rPipe)
+    name vb12 (#neg $rPipe #neg $rBend 0)
+    name vb13 (0 #neg $rBend #neg $rPipe)
+    name vb14 ($rPipe #neg $rBend 0)
+    name vb15 (0 #neg $rBend $rPipe)
 );
 
 blocks
 (
     // X-pipe
-    hex (0 1 2 3 8 9 10 11) pipes ($nCore $nCore $nLength) simpleGrading (1 1 1)
-    hex (1 0 4 5 9 8 12 13) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (2 1 5 6 10 9 13 14) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (3 2 6 7 11 10 14 15) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (0 3 7 4 8 11 15 12) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vx0 vx1 vx2 vx3 vx8 vx9 vx10 vx11) pipes ($nCore $nCore $nLength) simpleGrading (1 1 1)
+    hex (vx1 vx0 vx4 vx5 vx9 vx8 vx12 vx13) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vx2 vx1 vx5 vx6 vx10 vx9 vx13 vx14) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vx3 vx2 vx6 vx7 vx11 vx10 vx14 vx15) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vx0 vx3 vx7 vx4 vx8 vx11 vx15 vx12) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
 
     // Y-lower-pipe
-    hex (16 17 18 19 24 25 26 27) pipes ($nCore $nCore $nLength) simpleGrading (1 1 1)
-    hex (17 16 20 21 25 24 28 29) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (18 17 21 22 26 25 29 30) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (19 18 22 23 27 26 30 31) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (16 19 23 20 24 27 31 28) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vl0 vl1 vl2 vl3 vl8 vl9 vl10 vl11) pipes ($nCore $nCore $nLength) simpleGrading (1 1 1)
+    hex (vl1 vl0 vl4 vl5 vl9 vl8 vl12 vl13) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vl2 vl1 vl5 vl6 vl10 vl9 vl13 vl14) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vl3 vl2 vl6 vl7 vl11 vl10 vl14 vl15) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vl0 vl3 vl7 vl4 vl8 vl11 vl15 vl12) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
 
     // Y-upper-pipe
-    hex (32 33 34 35 40 41 42 43) pipes ($nCore $nCore $nLength) simpleGrading (1 1 1)
-    hex (33 32 36 37 41 40 44 45) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (34 33 37 38 42 41 45 46) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (35 34 38 39 43 42 46 47) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (32 35 39 36 40 43 47 44) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vu0 vu1 vu2 vu3 vu8 vu9 vu10 vu11) pipes ($nCore $nCore $nLength) simpleGrading (1 1 1)
+    hex (vu1 vu0 vu4 vu5 vu9 vu8 vu12 vu13) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vu2 vu1 vu5 vu6 vu10 vu9 vu13 vu14) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vu3 vu2 vu6 vu7 vu11 vu10 vu14 vu15) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vu0 vu3 vu7 vu4 vu8 vu11 vu15 vu12) pipes ($nCore $nPipe $nLength) simpleGrading (1 1 1)
 
     // Ball
-    hex (48 49 50 51 56 57 58 59) ball ($nCore $nCore $nLength) simpleGrading (1 1 1)
-    hex (49 48 52 53 57 56 60 61) ball ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (50 49 53 54 58 57 61 62) ball ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (51 50 54 55 59 58 62 63) ball ($nCore $nPipe $nLength) simpleGrading (1 1 1)
-    hex (48 51 55 52 56 59 63 60) ball ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vb0 vb1 vb2 vb3 vb8 vb9 vb10 vb11)  ball ($nCore $nCore $nLength) simpleGrading (1 1 1)
+    hex (vb1 vb0 vb4 vb5 vb9 vb8 vb12 vb13)  ball ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vb2 vb1 vb5 vb6 vb10 vb9 vb13 vb14) ball ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vb3 vb2 vb6 vb7 vb11 vb10 vb14 vb15) ball ($nCore $nPipe $nLength) simpleGrading (1 1 1)
+    hex (vb0 vb3 vb7 vb4 vb8 vb11 vb15 vb12) ball ($nCore $nPipe $nLength) simpleGrading (1 1 1)
 );
 
 edges
 (
     // X-pipe
-    arc 4 5 90 (1 0 0)
-    arc 5 6 90 (1 0 0)
-    arc 6 7 90 (1 0 0)
-    arc 7 4 90 (1 0 0)
-    arc 12 13 90 (1 0 0)
-    arc 13 14 90 (1 0 0)
-    arc 14 15 90 (1 0 0)
-    arc 15 12 90 (1 0 0)
+    arc vx4 vx5 90 (1 0 0)
+    arc vx5 vx6 90 (1 0 0)
+    arc vx6 vx7 90 (1 0 0)
+    arc vx7 vx4 90 (1 0 0)
+    arc vx12 vx13 90 (1 0 0)
+    arc vx13 vx14 90 (1 0 0)
+    arc vx14 vx15 90 (1 0 0)
+    arc vx15 vx12 90 (1 0 0)
 
-    project 8 9 (sphere)
-    project 9 10 (sphere)
-    project 10 11 (sphere)
-    project 11 8 (sphere)
-    project 8 12 (sphere)
-    project 9 13 (sphere)
-    project 10 14 (sphere)
-    project 11 15 (sphere)
+    project vx8 vx9 (sphere)
+    project vx9 vx10 (sphere)
+    project vx10 vx11 (sphere)
+    project vx11 vx8 (sphere)
+    project vx8 vx12 (sphere)
+    project vx9 vx13 (sphere)
+    project vx10 vx14 (sphere)
+    project vx11 vx15 (sphere)
 
     // Y-lower-pipe
-    arc 20 21 90 (0 1 0)
-    arc 21 22 90 (0 1 0)
-    arc 22 23 90 (0 1 0)
-    arc 23 20 90 (0 1 0)
-    arc 28 29 90 (0 1 0)
-    arc 29 30 90 (0 1 0)
-    arc 30 31 90 (0 1 0)
-    arc 31 28 90 (0 1 0)
+    arc vl4 vl5 90 (0 1 0)
+    arc vl5 vl6 90 (0 1 0)
+    arc vl6 vl7 90 (0 1 0)
+    arc vl7 vl4 90 (0 1 0)
+    arc vl12 vl13 90 (0 1 0)
+    arc vl13 vl14 90 (0 1 0)
+    arc vl14 vl15 90 (0 1 0)
+    arc vl15 vl12 90 (0 1 0)
 
-    project 24 25 (sphere)
-    project 25 26 (sphere)
-    project 26 27 (sphere)
-    project 27 24 (sphere)
-    project 24 28 (sphere)
-    project 25 29 (sphere)
-    project 26 30 (sphere)
-    project 27 31 (sphere)
+    project vl8 vl9 (sphere)
+    project vl9 vl10 (sphere)
+    project vl10 vl11 (sphere)
+    project vl11 vl8 (sphere)
+    project vl8 vl12 (sphere)
+    project vl9 vl13 (sphere)
+    project vl10 vl14 (sphere)
+    project vl11 vl15 (sphere)
 
     // Y-upper-pipe
-    arc 36 37 90 (0 -1 0)
-    arc 37 38 90 (0 -1 0)
-    arc 38 39 90 (0 -1 0)
-    arc 39 36 90 (0 -1 0)
-    arc 44 45 90 (0 -1 0)
-    arc 45 46 90 (0 -1 0)
-    arc 46 47 90 (0 -1 0)
-    arc 47 44 90 (0 -1 0)
+    arc vu4 vu5 90 (0 -1 0)
+    arc vu5 vu6 90 (0 -1 0)
+    arc vu6 vu7 90 (0 -1 0)
+    arc vu7 vu4 90 (0 -1 0)
+    arc vu12 vu13 90 (0 -1 0)
+    arc vu13 vu14 90 (0 -1 0)
+    arc vu14 vu15 90 (0 -1 0)
+    arc vu15 vu12 90 (0 -1 0)
 
-    project 40 41 (sphere)
-    project 41 42 (sphere)
-    project 42 43 (sphere)
-    project 43 40 (sphere)
-    project 40 44 (sphere)
-    project 41 45 (sphere)
-    project 42 46 (sphere)
-    project 43 47 (sphere)
+    project vu8 vu9 (sphere)
+    project vu9 vu10 (sphere)
+    project vu10 vu11 (sphere)
+    project vu11 vu8 (sphere)
+    project vu8 vu12 (sphere)
+    project vu9 vu13 (sphere)
+    project vu10 vu14 (sphere)
+    project vu11 vu15 (sphere)
 
     // Ball
-    arc 52 53 90 (1 0 0)
-    arc 53 54 90 (1 0 0)
-    arc 54 55 90 (1 0 0)
-    arc 55 52 90 (1 0 0)
-    arc 60 61 90 (0 -1 0)
-    arc 61 62 90 (0 -1 0)
-    arc 62 63 90 (0 -1 0)
-    arc 63 60 90 (0 -1 0)
+    arc vb4 vb5 90 (1 0 0)
+    arc vb5 vb6 90 (1 0 0)
+    arc vb6 vb7 90 (1 0 0)
+    arc vb7 vb4 90 (1 0 0)
+    arc vb12 vb13 90 (0 -1 0)
+    arc vb13 vb14 90 (0 -1 0)
+    arc vb14 vb15 90 (0 -1 0)
+    arc vb15 vb12 90 (0 -1 0)
 
-    arc 48 56 105 (0 0 -1)
-    arc 49 57 100 (0 0 -1)
-    arc 50 58 95 (0 0 -1)
-    arc 51 59 100 (0 0 -1)
-    arc 52 60 90 (0 0 -1)
-    arc 53 61 90 (0 0 -1)
-    arc 54 62 90 (0 0 -1)
-    arc 55 63 90 (0 0 -1)
+    arc vb0 vb8 105 (0 0 -1)
+    arc vb1 vb9 100 (0 0 -1)
+    arc vb2 vb10 95 (0 0 -1)
+    arc vb3 vb11 100 (0 0 -1)
+    arc vb4 vb12 90 (0 0 -1)
+    arc vb5 vb13 90 (0 0 -1)
+    arc vb6 vb14 90 (0 0 -1)
+    arc vb7 vb15 90 (0 0 -1)
 
-    project 48 49 (sphere)
-    project 49 50 (sphere)
-    project 50 51 (sphere)
-    project 51 48 (sphere)
-    project 48 52 (sphere)
-    project 49 53 (sphere)
-    project 50 54 (sphere)
-    project 51 55 (sphere)
+    project vb0 vb1 (sphere)
+    project vb1 vb2 (sphere)
+    project vb2 vb3 (sphere)
+    project vb3 vb0 (sphere)
+    project vb0 vb4 (sphere)
+    project vb1 vb5 (sphere)
+    project vb2 vb6 (sphere)
+    project vb3 vb7 (sphere)
 
-    project 56 57 (sphere)
-    project 57 58 (sphere)
-    project 58 59 (sphere)
-    project 59 56 (sphere)
-    project 56 60 (sphere)
-    project 57 61 (sphere)
-    project 58 62 (sphere)
-    project 59 63 (sphere)
+    project vb8 vb9 (sphere)
+    project vb9 vb10 (sphere)
+    project vb10 vb11 (sphere)
+    project vb11 vb8 (sphere)
+    project vb8 vb12 (sphere)
+    project vb9 vb13 (sphere)
+    project vb10 vb14 (sphere)
+    project vb11 vb15 (sphere)
 );
 
 faces
 (
     // X-pipe
-    project (8 9 10 11) sphere
-    project (9 8 12 13) sphere
-    project (10 9 13 14) sphere
-    project (11 10 14 15) sphere
-    project (8 11 15 12) sphere
+    project (vx8 vx9 vx10 vx11) sphere
+    project (vx9 vx8 vx12 vx13) sphere
+    project (vx10 vx9 vx13 vx14) sphere
+    project (vx11 vx10 vx14 vx15) sphere
+    project (vx8 vx11 vx15 vx12) sphere
 
     // Y-lower-pipe
-    project (24 25 26 27) sphere
-    project (25 24 28 29) sphere
-    project (26 25 29 30) sphere
-    project (27 26 30 31) sphere
-    project (24 27 31 28) sphere
+    project (vl8 vl9 vl10 vl11) sphere
+    project (vl9 vl8 vl12 vl13) sphere
+    project (vl10 vl9 vl13 vl14) sphere
+    project (vl11 vl10 vl14 vl15) sphere
+    project (vl8 vl11 vl15 vl12) sphere
 
     // Y-upper-pipe
-    project (40 41 42 43) sphere
-    project (41 40 44 45) sphere
-    project (42 41 45 46) sphere
-    project (43 42 46 47) sphere
-    project (40 43 47 44) sphere
+    project (vu8 vu9 vu10 vu11) sphere
+    project (vu9 vu8 vu12 vu13) sphere
+    project (vu10 vu9 vu13 vu14) sphere
+    project (vu11 vu10 vu14 vu15) sphere
+    project (vu8 vu11 vu15 vu12) sphere
 
     // Ball
-    project (48 49 50 51) sphere
-    project (49 48 52 53) sphere
-    project (50 49 53 54) sphere
-    project (51 50 54 55) sphere
-    project (48 51 55 52) sphere
+    project (vb0 vb1 vb2 vb3) sphere
+    project (vb1 vb0 vb4 vb5) sphere
+    project (vb2 vb1 vb5 vb6) sphere
+    project (vb3 vb2 vb6 vb7) sphere
+    project (vb0 vb3 vb7 vb4) sphere
 
-    project (56 57 58 59) sphere
-    project (57 56 60 61) sphere
-    project (58 57 61 62) sphere
-    project (59 58 62 63) sphere
-    project (56 59 63 60) sphere
+    project (vb8 vb9 vb10 vb11) sphere
+    project (vb9 vb8 vb12 vb13) sphere
+    project (vb10 vb9 vb13 vb14) sphere
+    project (vb11 vb10 vb14 vb15) sphere
+    project (vb8 vb11 vb15 vb12) sphere
 
-    project (52 53 61 60) torus
-    project (53 54 62 61) torus
-    project (54 55 63 62) torus
-    project (55 52 60 63) torus
+    project (vb4 vb5 vb13 vb12) torus
+    project (vb5 vb6 vb14 vb13) torus
+    project (vb6 vb7 vb15 vb14) torus
+    project (vb7 vb4 vb12 vb15) torus
 );
 
 defaultPatch
@@ -311,11 +311,11 @@ boundary
         type patch;
         faces
         (
-            (0 1 2 3)
-            (1 0 4 5)
-            (2 1 5 6)
-            (3 2 6 7)
-            (0 3 7 4)
+            (vx0 vx1 vx2 vx3)
+            (vx1 vx0 vx4 vx5)
+            (vx2 vx1 vx5 vx6)
+            (vx3 vx2 vx6 vx7)
+            (vx0 vx3 vx7 vx4)
         );
     }
     lowerOutlet
@@ -323,11 +323,11 @@ boundary
         type patch;
         faces
         (
-            (16 17 18 19)
-            (17 16 20 21)
-            (18 17 21 22)
-            (19 18 22 23)
-            (16 19 23 20)
+            (vl0 vl1 vl2 vl3)
+            (vl1 vl0 vl4 vl5)
+            (vl2 vl1 vl5 vl6)
+            (vl3 vl2 vl6 vl7)
+            (vl0 vl3 vl7 vl4)
         );
     }
     upperOutlet
@@ -335,11 +335,11 @@ boundary
         type patch;
         faces
         (
-            (32 33 34 35)
-            (33 32 36 37)
-            (34 33 37 38)
-            (35 34 38 39)
-            (32 35 39 36)
+            (vu0 vu1 vu2 vu3)
+            (vu1 vu0 vu4 vu5)
+            (vu2 vu1 vu5 vu6)
+            (vu3 vu2 vu6 vu7)
+            (vu0 vu3 vu7 vu4)
         );
     }
     pipeNonCouple
@@ -347,23 +347,23 @@ boundary
         type wall;
         faces
         (
-            (8 9 10 11)
-            (9 8 12 13)
-            (10 9 13 14)
-            (11 10 14 15)
-            (8 11 15 12)
+            (vx8 vx9 vx10 vx11)
+            (vx9 vx8 vx12 vx13)
+            (vx10 vx9 vx13 vx14)
+            (vx11 vx10 vx14 vx15)
+            (vx8 vx11 vx15 vx12)
 
-            (24 25 26 27)
-            (25 24 28 29)
-            (26 25 29 30)
-            (27 26 30 31)
-            (24 27 31 28)
+            (vl8 vl9 vl10 vl11)
+            (vl9 vl8 vl12 vl13)
+            (vl10 vl9 vl13 vl14)
+            (vl11 vl10 vl14 vl15)
+            (vl8 vl11 vl15 vl12)
 
-            (40 41 42 43)
-            (41 40 44 45)
-            (42 41 45 46)
-            (43 42 46 47)
-            (40 43 47 44)
+            (vu8 vu9 vu10 vu11)
+            (vu9 vu8 vu12 vu13)
+            (vu10 vu9 vu13 vu14)
+            (vu11 vu10 vu14 vu15)
+            (vu8 vu11 vu15 vu12)
         );
     }
     ballWalls
@@ -371,10 +371,10 @@ boundary
         type wall;
         faces
         (
-            (52 53 61 60)
-            (53 54 62 61)
-            (54 55 63 62)
-            (55 52 60 63)
+            (vb4 vb5 vb13 vb12)
+            (vb5 vb6 vb14 vb13)
+            (vb6 vb7 vb15 vb14)
+            (vb7 vb4 vb12 vb15)
         );
     }
     ballNonCouple
@@ -382,17 +382,17 @@ boundary
         type wall;
         faces
         (
-            (48 49 50 51)
-            (49 48 52 53)
-            (50 49 53 54)
-            (51 50 54 55)
-            (48 51 55 52)
+            (vb0 vb1 vb2 vb3)
+            (vb1 vb0 vb4 vb5)
+            (vb2 vb1 vb5 vb6)
+            (vb3 vb2 vb6 vb7)
+            (vb0 vb3 vb7 vb4)
 
-            (56 57 58 59)
-            (57 56 60 61)
-            (58 57 61 62)
-            (59 58 62 63)
-            (56 59 63 60)
+            (vb8 vb9 vb10 vb11)
+            (vb9 vb8 vb12 vb13)
+            (vb10 vb9 vb13 vb14)
+            (vb11 vb10 vb14 vb15)
+            (vb8 vb11 vb15 vb12)
         );
     }
 );
