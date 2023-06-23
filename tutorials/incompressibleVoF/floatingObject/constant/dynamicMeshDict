@@ -40,16 +40,13 @@ mover
                 parent          root;
 
                 // Cuboid dimensions
-                Lx              0.3;
-                Ly              0.2;
-                Lz              0.5;
+                L               (0.3 0.2 0.5);
 
                 // Density of the cuboid
                 rho             500;
 
                 // Cuboid mass
-                mass            #calc "$rho*$Lx*$Ly*$Lz";
-                L               ($Lx $Ly $Lz);
+                mass            #calc "$rho*cmptProduct($<vector>L)";
                 centreOfMass    (0 0 0.25);
                 transform       (1 0 0 0 1 0 0 0 1) (0.5 0.45 0.1);
 

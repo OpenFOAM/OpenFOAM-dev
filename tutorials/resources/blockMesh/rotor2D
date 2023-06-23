@@ -1,0 +1,224 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// In the case system/blockMeshDict, set the following variables:
+
+/*
+    nBlades         4;      // Number of rotor blades
+
+    rHub            0.005;  // Radius of the hub
+    rTip            0.02;   // Radius of the blade tips
+    rFreestream     0.1;    // Radius of the freestream boundary
+
+    halfDepth       0.005;  // Half-depth of the 2-D slab
+
+    nCellsHubTip    6;      // Number of cells radially from hub to blade tip
+    nCellsTipFreestream 24; // Number of cells radially from blade tip to the
+                            // freestream boundary
+    nCellsBladeBlade 24;    // Number of cells tangentially between blades
+*/
+
+// Then #include this file:
+
+/*
+    #include "$FOAM_TUTORIALS/resources/blockMesh/rotor2D"
+*/
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+vertices #codeStream
+{
+    codeInclude
+    #{
+        #include "pointField.H"
+        #include "SubField.H"
+        #include "transformField.H"
+    #};
+
+    code
+    #{
+        // Get the radii. Note using $<scalar>rHub instead of $rHub means that
+        // rHub can change without needing to recompile this code. The same is
+        // true for access of other settings throughout this file.
+        const scalarField rs
+        ({
+            $<scalar>rHub,
+            $<scalar>rHub,
+            $<scalar>rTip,
+            $<scalar>rFreestream
+        });
+
+        // Create points for the blade aligned with the X-axis
+        pointField points(4, point(0, 0, -$<scalar>halfDepth));
+        points.replace(0, -rs);
+
+        // Create equivalent points for other blades by rotating
+        for (label i = 1; i < $<label>nBlades; i ++)
+        {
+            points.append
+            (
+                transform
+                (
+                    Rz(degToRad(i*360/scalar($<label>nBlades))),
+                    SubField<point>(points, 4)
+                )
+            );
+        }
+
+        // Add the points on the other side of the slab
+        points.append(points + vector(0, 0, 2*$<scalar>halfDepth));
+
+        // Write out
+        os  << points;
+    #};
+};
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+blocks
+(
+    #codeStream
+    {
+        codeInclude
+        #{
+            #include "labelField.H"
+        #};
+
+        code
+        #{
+            const label viN = 4*$<label>nBlades;
+
+            auto makeBlock = [&]
+            (
+                const label v0,
+                const label v1,
+                const label v2,
+                const label v3,
+                const label nCellsRadial
+            )
+            {
+                labelList vs({v0%viN, v1%viN, v2%viN, v3%viN});
+                vs.append(labelField(vs) + viN);
+                os  << "hex " << vs << " all "
+                    << Vector<label>(nCellsRadial, $<label>nCellsBladeBlade, 1)
+                    << " simpleGrading " << Vector<label>(1, 1, 1) << nl;
+            };
+
+            for (label i = 0; i < $<label>nBlades; i ++)
+            {
+                const label vi0 = i*4;
+                makeBlock(vi0+1, vi0+2, vi0+6, vi0+4, $<label>nCellsHubTip);
+                makeBlock(vi0+2, vi0+3, vi0+7, vi0+6, $<label>nCellsTipFreestream);
+            }
+        #};
+    }
+);
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+edges
+(
+    #codeStream
+    {
+        code
+        #{
+            const label viN = 4*$<label>nBlades;
+
+            auto makeArc = [&](const label v0, const label v1)
+            {
+                for (label i = 0; i < 2; ++ i)
+                {
+                    os  << "arc " << v0%viN + i*viN << ' ' << v1%viN + i*viN << ' '
+                        << 360/scalar($<label>nBlades) << ' ' << vector(0, 0, 1) << nl;
+                }
+            };
+
+            for (label i = 0; i < $<label>nBlades; i ++)
+            {
+                const label vi0 = i*4;
+                makeArc(vi0+1, vi0+4);
+                makeArc(vi0+2, vi0+6);
+                makeArc(vi0+3, vi0+7);
+            }
+        #};
+    }
+);
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+defaultPatch
+{
+    name frontAndBack;
+    type empty;
+}
+
+boundary
+(
+    rotor
+    {
+        type wall;
+        faces
+        (
+            #codeStream
+            {
+                code
+                #{
+                    const label viN = 4*$<label>nBlades;
+
+                    auto makeFace = [&](const label v0, const label v1)
+                    {
+                        os  << labelList({v0%viN, v1%viN, v1%viN+viN, v0%viN+viN});
+                    };
+
+                    for (label i = 0; i < $<label>nBlades; i ++)
+                    {
+                        const label vi0 = i*4;
+                        makeFace(vi0+2, vi0+1);
+                        makeFace(vi0+1, vi0+4);
+                        makeFace(vi0+4, vi0+6);
+                    }
+                #};
+            }
+        );
+    }
+
+    freestream
+    {
+        type wall;
+        faces
+        (
+            #codeStream
+            {
+                code
+                #{
+                    const label viN = 4*$<label>nBlades;
+
+                    auto makeFace = [&](const label v0, const label v1)
+                    {
+                        os  << labelList({v0%viN, v1%viN, v1%viN+viN, v0%viN+viN});
+                    };
+
+                    for (label i = 0; i < $<label>nBlades; i ++)
+                    {
+                        const label vi0 = i*4;
+                        makeFace(vi0+3, vi0+7);
+                    }
+                #};
+            }
+        );
+    }
+);
+
+// ************************************************************************* //

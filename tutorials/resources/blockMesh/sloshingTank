@@ -1,0 +1,127 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+//depth     ?;      // Depth of tank (x-direction)
+width       40;     // Width of tank (y-direction)
+height      30;     // Depth of tank (z-direction)
+
+lowerHeight 5;      // Height to the top of lower chamfer
+upperHeight 10;     // Height of upper chamfer
+
+angleLower  45;     // Angle of lower chamfer to the horizontal
+angleUpper  45;     // Angle of upper chamfer to the horizontal
+moveZ       -10;    // Moving tank in z direction
+
+//xCells    ?;      // Number of cells in the depth
+yCells      40;     // Number of cells in the width
+zLowCells   6;      // Number of cells in the height of the lower chamfer
+zMidCells   16;     // Number of cells in the height between the chamfers
+zUpCells    12;     // Number of cells in the height of the upper chamfer
+
+//frontAndBackPatchType ?; // Type of the front and back patch
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+vertices #codeStream
+{
+    codeInclude
+    #{
+        #include "pointField.H"
+    #};
+
+    code
+    #{
+        const scalar halfDepth = ($depth)/2.0;
+        const scalar halfWidth = ($width)/2.0;
+
+        const scalar yBottom =
+            halfWidth - ($lowerHeight)/tan(degToRad($angleLower));
+        const scalar yTop =
+            halfWidth - ($upperHeight)/tan(degToRad($angleUpper));
+
+        const scalar zMid = $height - $upperHeight;
+
+        pointField points
+        ({
+            point(-halfDepth, -yBottom,   0),            // pt 0
+            point(-halfDepth, -halfWidth, $lowerHeight), // pt 1
+            point(-halfDepth, -halfWidth, zMid),         // pt 2
+            point(-halfDepth, -yTop,      $height),      // pt 3
+        });
+
+        // Move points in z direction
+        points += vector(0, 0, $moveZ);
+
+        // Duplicate y points
+        points.append(cmptMultiply(points, vector(1, -1, 1)));
+
+        // Duplicate x points
+        points.append(cmptMultiply(points, vector(-1, 1, 1)));
+
+        os  << points;
+    #};
+};
+
+blocks
+(
+    hex (0 8 12 4 1 9 13 5)  ($xCells $yCells $zLowCells) simpleGrading (1 1 1)
+    hex (1 9 13 5 2 10 14 6) ($xCells $yCells $zMidCells) simpleGrading (1 1 1)
+    hex (2 10 14 6 3 11 15 7) ($xCells $yCells $zUpCells) simpleGrading (1 1 1)
+);
+
+boundary
+(
+    walls
+    {
+        type wall;
+        faces
+        (
+            (0 4 12 8)
+            (4 5 13 12)
+            (5 6 14 13)
+            (6 7 15 14)
+            (7 3 11 15)
+            (3 2 10 11)
+            (2 1 9 10)
+            (1 0 8 9)
+        );
+    }
+
+    front
+    {
+        type $frontAndBackPatchType;
+        faces
+        (
+            (8 12 13 9)
+            (9 13 14 10)
+            (10 14 15 11)
+        );
+    }
+
+    back
+    {
+        type $frontAndBackPatchType;
+        faces
+        (
+            (0 1 5 4)
+            (1 2 6 5)
+            (2 3 7 6)
+        );
+    }
+);
+
+// ************************************************************************* //

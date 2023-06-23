@@ -8,37 +8,23 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      p;
+    class       dictionary;
+    object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -2 0 0 0 0];
+nBlades         4;
 
-internalField   uniform 0;
+rHub            0.005;
+rTip            0.02;
+rFreestream     0.1;
 
-boundaryField
-{
-    rotor
-    {
-        type            zeroGradient;
-    }
+halfDepth       0.005;
 
-    freestream
-    {
-        type            freestreamPressure;
-        freestreamValue $internalField;
-    }
+nCellsHubTip    6;
+nCellsTipFreestream 24;
+nCellsBladeBlade 24;
 
-    front
-    {
-        type            empty;
-    }
-
-    back
-    {
-        type            empty;
-    }
-}
+#include "$FOAM_TUTORIALS/resources/blockMesh/rotor2D"
 
 // ************************************************************************* //

@@ -13,173 +13,18 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1.0;
+nBlades         4;
 
-hub            0.005;
-rotorBlades     0.02;
-freestream       0.1;
-halfDepth      0.005;
-angle             90;
+rHub            0.005;
+rTip            0.02;
+rFreestream     0.1;
 
-nRadialRotorCells  6;
-nRadialOuterCells 24;
-nCircCells        24;
+halfDepth       0.005;
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+nCellsHubTip    6;
+nCellsTipFreestream 24;
+nCellsBladeBlade 24;
 
-vertices #codeStream
-{
-    codeInclude
-    #{
-        #include "pointField.H"
-        #include "transformField.H"
-    #};
-
-    code
-    #{
-        const pointField initPoints
-        ({
-            point(-$freestream,  0, -$halfDepth),
-            point(-$rotorBlades, 0, -$halfDepth),
-            point(-$hub,         0, -$halfDepth),
-            point(-$hub,         0, -$halfDepth),
-        });
-
-        pointField points;
-
-        // Rotate points around z-axis and append
-        for (label i = 0; i < 4; i++)
-        {
-            points.append(transform(Rz(degToRad(i*$angle)), initPoints));
-        }
-
-        // Duplicate z points
-        points.append(points + vector(0, 0, 2*$halfDepth));
-
-        os  << points;
-    #};
-};
-
-rotorBlock ($nCircCells $nRadialRotorCells 1) simpleGrading (1 1 1);
-outerBlock ($nCircCells $nRadialOuterCells 1) simpleGrading (1 1 1);
-
-blocks
-(
-    hex (6 2 1 5 22 18 17 21)    $rotorBlock
-    hex (10 7 5 9 26 23 21 25)   $rotorBlock
-    hex (14 11 9 13 30 27 25 29) $rotorBlock
-    hex (3 15 13 1 19 31 29 17)  $rotorBlock
-
-    hex (5 1 0 4 21 17 16 20)    $outerBlock
-    hex (9 5 4 8 25 21 20 24)    $outerBlock
-    hex (13 9 8 12 29 25 24 28)  $outerBlock
-    hex (1 13 12 0 17 29 28 16)  $outerBlock
-);
-
-circle $angle (0 0 1);
-
-edges
-(
-    arc 2 6   $circle
-    arc 7 10  $circle
-    arc 11 14 $circle
-    arc 15 3  $circle
-    arc 18 22 $circle
-    arc 23 26 $circle
-    arc 27 30 $circle
-    arc 31 19 $circle
-
-    arc 1 5   $circle
-    arc 5 9   $circle
-    arc 9 13  $circle
-    arc 13 1  $circle
-    arc 17 21 $circle
-    arc 21 25 $circle
-    arc 25 29 $circle
-    arc 29 17 $circle
-
-    arc 0 4   $circle
-    arc 4 8   $circle
-    arc 8 12  $circle
-    arc 12 0  $circle
-    arc 16 20 $circle
-    arc 20 24 $circle
-    arc 24 28 $circle
-    arc 28 16 $circle
-
-);
-
-defaultPatch
-{
-    name walls;
-    type wall;
-}
-
-boundary
-(
-    rotor
-    {
-        type wall;
-        faces
-        (
-            (2 18 22 6)
-            (7 23 26 10)
-            (11 27 30 14)
-            (15 31 19 3)
-            (1 17 18 2)
-            (17 1 3 19)
-            (5 21 22 6)
-            (21 5 7 23)
-            (26 10 9 25)
-            (11 27 25 9)
-            (30 14 13 29)
-            (29 13 15 31)
-        );
-    }
-
-    freestream
-    {
-        type patch;
-        faces
-        (
-            (16 0 4 20)
-            (20 4 8 24)
-            (24 8 12 28)
-            (28 12 0 16)
-        );
-    }
-
-    front
-    {
-        type empty;
-        faces
-        (
-            (17 21 22 18)
-            (21 25 26 23)
-            (25 29 30 27)
-            (29 17 19 31)
-            (16 20 21 17)
-            (20 24 25 21)
-            (25 24 28 29)
-            (29 28 16 17)
-        );
-    }
-
-    back
-    {
-        type empty;
-        faces
-        (
-            (5 1 2 6)
-            (5 7 10 9)
-            (9 11 14 13)
-            (15 3 1 13)
-            (0 1 5 4)
-            (4 5 9 8)
-            (8 9 13 12)
-            (12 13 1 0)
-        );
-    }
-);
+#include "$FOAM_TUTORIALS/resources/blockMesh/rotor2D"
 
 // ************************************************************************* //

@@ -25,18 +25,18 @@ baffles
         surface     searchableCylinder;
         point1      (0 0 -100);
         point2      (0 0 100);
-        radius      $rotorRegion;
+        radius      $rMid;
 
         owner
         {
-            name            nonCouple1;
-            type            patch;
+            name        nonCouple1;
+            type        patch;
         }
 
         neighbour
         {
-            name            nonCouple2;
-            type            patch;
+            name        nonCouple2;
+            type        patch;
         }
     }
 }

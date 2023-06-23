@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       volVectorField;
+    location    "0";
     object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -19,6 +20,8 @@ internalField   uniform (1 0 0);
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     rotor
     {
         type            MRFnoSlip;
@@ -29,16 +32,6 @@ boundaryField
         type                MRFFreestreamVelocity;
         freestreamValue0    (1 0 0);
         freestreamValue     $internalField;
-    }
-
-    front
-    {
-        type            empty;
-    }
-
-    back
-    {
-        type            empty;
     }
 }
 

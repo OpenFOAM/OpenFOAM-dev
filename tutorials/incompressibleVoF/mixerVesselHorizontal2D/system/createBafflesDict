@@ -25,7 +25,7 @@ baffles
         surface     searchableCylinder;
         point1      (0 0 -100);
         point2      (0 0 100);
-        radius      $rotorRegion;
+        radius      $rMid;
 
         owner
         {

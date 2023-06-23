@@ -20,6 +20,8 @@ internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     rotor
     {
         type            nutkWallFunction;
@@ -30,16 +32,6 @@ boundaryField
     {
         type            calculated;
         value           uniform 0;
-    }
-
-    front
-    {
-        type            empty;
-    }
-
-    back
-    {
-        type            empty;
     }
 }
 

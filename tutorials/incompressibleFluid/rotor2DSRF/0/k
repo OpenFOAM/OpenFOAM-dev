@@ -20,6 +20,8 @@ internalField   uniform 3.75e-3;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     rotor
     {
         type            kqRWallFunction;
@@ -30,16 +32,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform 3.75e-3;
-    }
-
-    front
-    {
-        type            empty;
-    }
-
-    back
-    {
-        type            empty;
     }
 }
 

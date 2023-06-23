@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
+    location    "0";
     object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -19,6 +20,8 @@ internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     rotor
     {
         type            zeroGradient;
@@ -28,16 +31,6 @@ boundaryField
     {
         type            freestreamPressure;
         freestreamValue $internalField;
-    }
-
-    front
-    {
-        type            empty;
-    }
-
-    back
-    {
-        type            empty;
     }
 }
 

@@ -19,7 +19,7 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    walls
+    wall
     {
         type            movingWallVelocity;
         value           uniform (0 0 0);

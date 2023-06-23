@@ -8,40 +8,31 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
+    class       volVectorField;
     location    "0";
-    object      nut;
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -1 0 0 0 0];
+dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform (1 0 0);
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     rotor
     {
-        type            nutkWallFunction;
-        value           uniform 0;
+        type            movingWallVelocity;
+        value           $internalField;
     }
 
     freestream
     {
-        type            calculated;
-        value           uniform 0;
-    }
-
-    front
-    {
-        type            empty;
-    }
-
-    back
-    {
-        type            empty;
+        type                freestreamVelocity;
+        freestreamValue     $internalField;
     }
 }
-
 
 // ************************************************************************* //

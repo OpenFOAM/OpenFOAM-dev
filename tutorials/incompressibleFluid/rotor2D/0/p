@@ -10,38 +10,28 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      epsilon;
+    object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
+dimensions      [0 2 -2 0 0 0 0];
 
-internalField   uniform 3.75e-4;
+internalField   uniform 0;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     rotor
     {
-        type            epsilonWallFunction;
-        value           uniform 3.75e-4;
+        type            zeroGradient;
     }
 
     freestream
     {
-        type            inletOutlet;
-        inletValue      uniform 3.75e-4;
-    }
-
-    front
-    {
-        type            empty;
-    }
-
-    back
-    {
-        type            empty;
+        type            freestreamPressure;
+        freestreamValue $internalField;
     }
 }
-
 
 // ************************************************************************* //

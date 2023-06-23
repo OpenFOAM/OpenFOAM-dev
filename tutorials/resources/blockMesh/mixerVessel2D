@@ -13,19 +13,19 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters   1.0;
+convertToMeters 1.0;
 
-hub               0.02;
-rotorBlades       0.05;
-rotorRegion       0.06;
-statorBlades      0.07;
-stator            0.1;
-halfDepth         0.005;
-angle             45;
+rHub            0.02;   // Radius of the rotor hub
+rRotorTip       0.05;   // Radius of the rotor blade tips
+rMid            0.06;   // Radius of the midpoint between rotor and stator
+rStatorTip      0.07;   // Radius of the stator blade tips
+rVessel         0.1;    // Radius of the outer vessel wall
 
-nRadialEndsCells  12;
-nRadialMidsCells  4;
-nCircCells        12;
+halfDepth       0.005;  // Half-depth of the 2-D slab
+
+nCellsRootTip   12;     // Number of cells radially along the blades
+nCellsMid       4;      // Number of cells radially across the mid section (/2)
+nCellsBladeBlade 12;    // Number of cells tangentially between blades (/2)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -39,166 +39,162 @@ vertices #codeStream
 
     code
     #{
-        const pointField initPoints
+        const pointField points0
         ({
-            point(-$stator,       0, -$halfDepth),
-            point(-$stator,       0, -$halfDepth),
-            point(-$statorBlades, 0, -$halfDepth),
-            point(-$rotorRegion,  0, -$halfDepth),
-            point(-$rotorBlades,  0, -$halfDepth),
-            point(-$hub,          0, -$halfDepth),
-            point(-$hub,          0, -$halfDepth),
+            point(-$rVessel,    0, -$halfDepth),
+            point(-$rVessel,    0, -$halfDepth),
+            point(-$rStatorTip, 0, -$halfDepth),
+            point(-$rMid,       0, -$halfDepth),
+            point(-$rRotorTip,  0, -$halfDepth),
+            point(-$rHub,       0, -$halfDepth),
+            point(-$rHub,       0, -$halfDepth),
         });
 
         pointField points;
-
-        // Rotate points around z-axis and append
         for (label i = 0; i < 8; i++)
         {
-            points.append(transform(Rz(degToRad(i*$angle)), initPoints));
+            points.append(transform(Rz(degToRad(i*45)), points0));
         }
-
-        // Duplicate z points
         points.append(points + vector(0, 0, 2*$halfDepth));
 
         os  << points;
     #};
 };
 
-hubTankBlocks ($nCircCells $nRadialEndsCells 1) simpleGrading (1 1 1);
-middleBocks   ($nCircCells $nRadialMidsCells 1) simpleGrading (1 1 1);
+bladeBlock ($nCellsBladeBlade $nCellsRootTip 1) simpleGrading (1 1 1);
+midBlock ($nCellsBladeBlade $nCellsMid 1) simpleGrading (1 1 1);
 
 blocks
 (
-    hex (0 8 9 2 56 64 65 58) stator $hubTankBlocks
-    hex (2 9 10 3 58 65 66 59) stator $middleBocks
-    hex (3 10 11 4 59 66 67 60) rotor $middleBocks
-    hex (4 11 12 5 60 67 68 61) rotor $hubTankBlocks
+    hex (0 8 9 2 56 64 65 58) stator $bladeBlock
+    hex (2 9 10 3 58 65 66 59) stator $midBlock
+    hex (3 10 11 4 59 66 67 60) rotor $midBlock
+    hex (4 11 12 5 60 67 68 61) rotor $bladeBlock
 
-    hex (7 14 16 9 63 70 72 65) stator $hubTankBlocks
-    hex (9 16 17 10 65 72 73 66) stator $middleBocks
-    hex (10 17 18 11 66 73 74 67) rotor $middleBocks
-    hex (11 18 20 12 67 74 76 68) rotor $hubTankBlocks
+    hex (7 14 16 9 63 70 72 65) stator $bladeBlock
+    hex (9 16 17 10 65 72 73 66) stator $midBlock
+    hex (10 17 18 11 66 73 74 67) rotor $midBlock
+    hex (11 18 20 12 67 74 76 68) rotor $bladeBlock
 
-    hex (14 22 23 16 70 78 79 72) stator $hubTankBlocks
-    hex (16 23 24 17 72 79 80 73) stator $middleBocks
-    hex (17 24 25 18 73 80 81 74) rotor $middleBocks
-    hex (18 25 26 19 74 81 82 75) rotor $hubTankBlocks
+    hex (14 22 23 16 70 78 79 72) stator $bladeBlock
+    hex (16 23 24 17 72 79 80 73) stator $midBlock
+    hex (17 24 25 18 73 80 81 74) rotor $midBlock
+    hex (18 25 26 19 74 81 82 75) rotor $bladeBlock
 
-    hex (21 28 30 23 77 84 86 79) stator $hubTankBlocks
-    hex (23 30 31 24 79 86 87 80) stator $middleBocks
-    hex (24 31 32 25 80 87 88 81) rotor $middleBocks
-    hex (25 32 34 26 81 88 90 82) rotor $hubTankBlocks
+    hex (21 28 30 23 77 84 86 79) stator $bladeBlock
+    hex (23 30 31 24 79 86 87 80) stator $midBlock
+    hex (24 31 32 25 80 87 88 81) rotor $midBlock
+    hex (25 32 34 26 81 88 90 82) rotor $bladeBlock
 
-    hex (28 36 37 30 84 92 93 86) stator $hubTankBlocks
-    hex (30 37 38 31 86 93 94 87) stator $middleBocks
-    hex (31 38 39 32 87 94 95 88) rotor $middleBocks
-    hex (32 39 40 33 88 95 96 89) rotor $hubTankBlocks
+    hex (28 36 37 30 84 92 93 86) stator $bladeBlock
+    hex (30 37 38 31 86 93 94 87) stator $midBlock
+    hex (31 38 39 32 87 94 95 88) rotor $midBlock
+    hex (32 39 40 33 88 95 96 89) rotor $bladeBlock
 
-    hex (35 42 44 37 91 98 100 93) stator $hubTankBlocks
-    hex (37 44 45 38 93 100 101 94) stator $middleBocks
-    hex (38 45 46 39 94 101 102 95) rotor $middleBocks
-    hex (39 46 48 40 95 102 104 96) rotor $hubTankBlocks
+    hex (35 42 44 37 91 98 100 93) stator $bladeBlock
+    hex (37 44 45 38 93 100 101 94) stator $midBlock
+    hex (38 45 46 39 94 101 102 95) rotor $midBlock
+    hex (39 46 48 40 95 102 104 96) rotor $bladeBlock
 
-    hex (42 50 51 44 98 106 107 100) stator $hubTankBlocks
-    hex (44 51 52 45 100 107 108 101) stator $middleBocks
-    hex (45 52 53 46 101 108 109 102) rotor $middleBocks
-    hex (46 53 54 47 102 109 110 103) rotor $hubTankBlocks
+    hex (42 50 51 44 98 106 107 100) stator $bladeBlock
+    hex (44 51 52 45 100 107 108 101) stator $midBlock
+    hex (45 52 53 46 101 108 109 102) rotor $midBlock
+    hex (46 53 54 47 102 109 110 103) rotor $bladeBlock
 
-    hex (49 0 2 51 105 56 58 107) stator $hubTankBlocks
-    hex (51 2 3 52 107 58 59 108) stator $middleBocks
-    hex (52 3 4 53 108 59 60 109) rotor $middleBocks
-    hex (53 4 6 54 109 60 62 110) rotor $hubTankBlocks
+    hex (49 0 2 51 105 56 58 107) stator $bladeBlock
+    hex (51 2 3 52 107 58 59 108) stator $midBlock
+    hex (52 3 4 53 108 59 60 109) rotor $midBlock
+    hex (53 4 6 54 109 60 62 110) rotor $bladeBlock
 );
 
-circle $angle (0 0 1);
+arc 45 (0 0 1);
 
 edges
 (
-    arc 0 8     $circle
-    arc 7 14    $circle
-    arc 14 22   $circle
-    arc 21 28   $circle
-    arc 28 36   $circle
-    arc 35 42   $circle
-    arc 42 50   $circle
-    arc 49 0    $circle
-    arc 56 64   $circle
-    arc 63 70   $circle
-    arc 70 78   $circle
-    arc 77 84   $circle
-    arc 84 92   $circle
-    arc 91 98   $circle
-    arc 98 106  $circle
-    arc 105 56  $circle
+    arc 0 8 $arc
+    arc 7 14 $arc
+    arc 14 22 $arc
+    arc 21 28 $arc
+    arc 28 36 $arc
+    arc 35 42 $arc
+    arc 42 50 $arc
+    arc 49 0 $arc
+    arc 56 64 $arc
+    arc 63 70 $arc
+    arc 70 78 $arc
+    arc 77 84 $arc
+    arc 84 92 $arc
+    arc 91 98 $arc
+    arc 98 106 $arc
+    arc 105 56 $arc
 
-    arc 2 9     $circle
-    arc 9 16    $circle
-    arc 16 23   $circle
-    arc 23 30   $circle
-    arc 30 37   $circle
-    arc 37 44   $circle
-    arc 44 51   $circle
-    arc 51 2    $circle
-    arc 58 65   $circle
-    arc 65 72   $circle
-    arc 72 79   $circle
-    arc 79 86   $circle
-    arc 86 93   $circle
-    arc 93 100  $circle
-    arc 100 107 $circle
-    arc 107 58  $circle
+    arc 2 9 $arc
+    arc 9 16 $arc
+    arc 16 23 $arc
+    arc 23 30 $arc
+    arc 30 37 $arc
+    arc 37 44 $arc
+    arc 44 51 $arc
+    arc 51 2 $arc
+    arc 58 65 $arc
+    arc 65 72 $arc
+    arc 72 79 $arc
+    arc 79 86 $arc
+    arc 86 93 $arc
+    arc 93 100 $arc
+    arc 100 107 $arc
+    arc 107 58 $arc
 
-    arc 3 10    $circle
-    arc 10 17   $circle
-    arc 17 24   $circle
-    arc 24 31   $circle
-    arc 31 38   $circle
-    arc 38 45   $circle
-    arc 45 52   $circle
-    arc 52 3    $circle
-    arc 59 66   $circle
-    arc 66 73   $circle
-    arc 73 80   $circle
-    arc 80 87   $circle
-    arc 87 94   $circle
-    arc 94 101  $circle
-    arc 101 108 $circle
-    arc 108 59  $circle
+    arc 3 10 $arc
+    arc 10 17 $arc
+    arc 17 24 $arc
+    arc 24 31 $arc
+    arc 31 38 $arc
+    arc 38 45 $arc
+    arc 45 52 $arc
+    arc 52 3 $arc
+    arc 59 66 $arc
+    arc 66 73 $arc
+    arc 73 80 $arc
+    arc 80 87 $arc
+    arc 87 94 $arc
+    arc 94 101 $arc
+    arc 101 108 $arc
+    arc 108 59 $arc
 
-    arc 4 11    $circle
-    arc 11 18   $circle
-    arc 18 25   $circle
-    arc 25 32   $circle
-    arc 32 39   $circle
-    arc 39 46   $circle
-    arc 46 53   $circle
-    arc 53 4    $circle
-    arc 60 67   $circle
-    arc 67 74   $circle
-    arc 74 81   $circle
-    arc 81 88   $circle
-    arc 88 95   $circle
-    arc 95 102  $circle
-    arc 102 109 $circle
-    arc 109 60  $circle
+    arc 4 11 $arc
+    arc 11 18 $arc
+    arc 18 25 $arc
+    arc 25 32 $arc
+    arc 32 39 $arc
+    arc 39 46 $arc
+    arc 46 53 $arc
+    arc 53 4 $arc
+    arc 60 67 $arc
+    arc 67 74 $arc
+    arc 74 81 $arc
+    arc 81 88 $arc
+    arc 88 95 $arc
+    arc 95 102 $arc
+    arc 102 109 $arc
+    arc 109 60 $arc
 
-    arc 5 12    $circle
-    arc 12 20   $circle
-    arc 19 26   $circle
-    arc 26 34   $circle
-    arc 33 40   $circle
-    arc 40 48   $circle
-    arc 47 54   $circle
-    arc 54 6    $circle
-    arc 61 68   $circle
-    arc 68 76   $circle
-    arc 75 82   $circle
-    arc 82 90   $circle
-    arc 89 96   $circle
-    arc 96 104  $circle
-    arc 103 110 $circle
-    arc 110 62  $circle
+    arc 5 12 $arc
+    arc 12 20 $arc
+    arc 19 26 $arc
+    arc 26 34 $arc
+    arc 33 40 $arc
+    arc 40 48 $arc
+    arc 47 54 $arc
+    arc 54 6 $arc
+    arc 61 68 $arc
+    arc 68 76 $arc
+    arc 75 82 $arc
+    arc 82 90 $arc
+    arc 89 96 $arc
+    arc 96 104 $arc
+    arc 103 110 $arc
+    arc 110 62 $arc
 );
 
 defaultPatch
