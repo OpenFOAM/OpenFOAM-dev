@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,9 +89,6 @@ int main(int argc, char *argv[])
     Info<< string(test).replaceAll("kj", "z") << endl;
 
     Info<< "expanded: " << string(test).expand() << endl;
-
-    Info<<"dictionary-based substitution: " << dict << endl;
-    Info<< "expand dict: " << stringOps::expand(test, dict) << endl;
 
     string test2("~OpenFOAM/controlDict");
     Info<< test2 << " => " << test2.expand() << endl;
