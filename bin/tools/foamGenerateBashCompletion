@@ -99,6 +99,41 @@ banner () {
 EOF
 }
 
+optionFunctions () {
+    cat<<EOF
+_solver ()
+{
+    foamToC -table solver | sed '1,/Contents/d' | awk '{print \$1}' | xargs
+}
+
+_table ()
+{
+    [ -z "\${1// }" ] && \\
+        foamToC -tables | \\
+        sed '1,/Run-time/d' | \\
+        sed 's/[[:space:]]\{4\}//' | grep -v ' ' && exit 0
+    foamToC -tables | sed '1,/Run-time/d' | tr -d " "
+}
+
+_func ()
+{
+    foamPostProcess -list | sed -n '/^(/,/^)/p' | grep -v '[()]'
+}
+
+
+_infoArgs ()
+{
+    foamToC -all | \\
+       grep -wx '[^ _]* [^ ]*.so' | \\
+       awk '{print \$1}' | \\
+       tr '<>,' '\n' | \\
+       sort -u | \\
+       xargs
+}
+
+EOF
+}
+
 declareLocals () {
     cat <<EOF
     local cur="\${COMP_WORDS[COMP_CWORD]}"
@@ -120,6 +155,10 @@ caseEnd () {
     esac
     COMPREPLY=( \$(compgen -W "\${opts}" \$extra -- \${cur}) )
 EOF
+}
+
+isScript () {
+    file "$(command -v "$1")" | grep -q "POSIX shell script"
 }
 
 # shellcheck disable=SC2154
@@ -220,35 +259,24 @@ EOF
 }
 
 # shellcheck disable=SC2154
-_foamToC () {
+_foamInfo () {
     cat<<EOF
-_foamToC_ ()
+_foamInfo_ ()
 {
 $(declareLocals)
 
-    _listSolvers () {
-        foamToC -table solver | sed '1,/Contents/d' | awk '{print \$1}' | xargs
-     }
-
-    _listTables () {
-        [ -z "\${1// }" ] && \\
-            foamToC -tables | \\
-            sed '1,/Run-time/d' | \\
-            sed 's/[[:space:]]\{4\}//' | grep -v ' ' && exit 0
-        foamToC -tables | sed '1,/Run-time/d' | tr -d " "
-     }
-
-    opts="-all -doc -functionObjects -fvConstraints -fvModels -help -libs -listLibs -noLibs -scalarBCs -search -solver -solvers -srcDoc -switches -table -tables -vectorBCs"
+    opts="-all -browser -help -keyword -web"
     for o in \$used ; do opts="\${opts/\$o/}" ; done
+    opts="\$opts \$(_infoArgs)"
     extra=""
 
 $(caseStart)
-       -solver) opts="\$(_listSolvers)" ;;
-       -table) opts="\$(_listTables \${cur})" ;;
-        *) ;;
+        -browser)
+            opts="" ; extra="" ;;
+       *) ;;
 $(caseEnd)
 }
-complete -o filenames -o nospace -F _foamToC_ foamToC
+complete -o filenames -o nospace -F _foamInfo_ foamInfo
 
 EOF
 }
@@ -259,9 +287,10 @@ apps="$(ls "$FOAM_APPBIN") \
       $(find "$WM_PROJECT_DIR/bin" -maxdepth 1 -type f | sort) \
       $(find "$WM_PROJECT_DIR/wmake" -maxdepth 1 -type f | sort)"
 
-specialApps="foamGet foamCloneCase foamToC surfaceTransformPoints"
+specialApps="foamGet foamCloneCase foamInfo surfaceTransformPoints"
 
 banner > "$file"
+optionFunctions >> "$file"
 
 for app in $apps
 do
@@ -310,6 +339,7 @@ do
     handlerOpts="" # file handler options -fileHandler
     rangesOpts=""  # ranges options -time
     argOpts=""     # options with unspecified arguments
+    specialOpts="" # -solver, -table, -func
 
     while read -r line
     do
@@ -319,8 +349,18 @@ do
         # Get the option
         opt=$(echo "$line" | cut -d " " -f1 | tr -d " ")
 
+        # Ignore "-solver" if app is a script
+        [ "$opt" = "-solver" ] && isScript "$appName" && continue
+
         # Deal with quoted option arguments for -libs
         [ "$opt" = "-libs" ] && next=libList
+
+        case "$opt" in
+            -solver|-table|-func)
+                specialOpts="$specialOpts $opt"
+                continue
+                ;;
+        esac
 
         # Get the adjacent string in <> brackets
         [ "$next" ] || \
@@ -345,7 +385,7 @@ do
     # Combine options into a single list
     # shellcheck disable=SC2086
     allOpts=$(printf '%s\n' \
-        $arglessOpts $dirOpts $fileOpts $handlerOpts $rangesOpts $argOpts | \
+        $arglessOpts $dirOpts $fileOpts $handlerOpts $rangesOpts $argOpts $specialOpts | \
         sort)
 
     # Write the completion function ...
@@ -402,6 +442,11 @@ do
             printf "        %s)\n" "$(echo $argOpts | tr " " "|")"
             echo "            opts=\"\" ; extra=\"\" ;;"
         fi
+
+        for sopt in $specialOpts
+        do
+            printf "        %s) opts=\"\$(_%s \${cur})\" ;;\n" "$sopt" "${sopt#-}"
+        done
 
         # Set argOpts to all options with arguments
         argOpts="$argOpts $dirOpts $fileOpts $handlerOpts $rangesOpts"

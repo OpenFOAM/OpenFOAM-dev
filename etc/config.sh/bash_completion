@@ -31,6 +31,36 @@
 #------------------------------------------------------------------------------
 # shellcheck disable=SC2155,SC2207,SC2086
 
+_solver ()
+{
+    foamToC -table solver | sed '1,/Contents/d' | awk '{print $1}' | xargs
+}
+
+_table ()
+{
+    [ -z "${1// }" ] && \
+        foamToC -tables | \
+        sed '1,/Run-time/d' | \
+        sed 's/[[:space:]]\{4\}//' | grep -v ' ' && exit 0
+    foamToC -tables | sed '1,/Run-time/d' | tr -d " "
+}
+
+_func ()
+{
+    foamPostProcess -list | sed -n '/^(/,/^)/p' | grep -v '[()]'
+}
+
+
+_infoArgs ()
+{
+    foamToC -all | \
+       grep -wx '[^ _]* [^ ]*.so' | \
+       awk '{print $1}' | \
+       tr '<>,' '\n' | \
+       sort -u | \
+       xargs
+}
+
 _adiabaticFlameT_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -1255,8 +1285,10 @@ _foamPostProcess_ ()
             opts="uncollated collated masterUncollated" ; extra="" ;;
         -time)
             opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
-        -field|-fields|-func|-funcs|-hostRoots|-libs|-region|-roots|-solver)
+        -field|-fields|-funcs|-hostRoots|-libs|-region|-roots)
             opts="" ; extra="" ;;
+        -func) opts="$(_func ${cur})" ;;
+        -solver) opts="$(_solver ${cur})" ;;
        *) ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
@@ -1280,8 +1312,9 @@ _foamRun_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
+        -solver) opts="$(_solver ${cur})" ;;
        *) ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
@@ -1320,27 +1353,17 @@ _foamToC_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    _listSolvers () {
-        foamToC -table solver | sed '1,/Contents/d' | awk '{print $1}' | xargs
-     }
-
-    _listTables () {
-        [ -z "${1// }" ] && \
-            foamToC -tables | \
-            sed '1,/Run-time/d' | \
-            sed 's/[[:space:]]\{4\}//' | grep -v ' ' && exit 0
-        foamToC -tables | sed '1,/Run-time/d' | tr -d " "
-     }
-
-    opts="-all -doc -functionObjects -fvConstraints -fvModels -help -libs -listLibs -noLibs -scalarBCs -search -solver -solvers -srcDoc -switches -table -tables -vectorBCs"
+    opts="-all -doc -functionObjects -fvConstraints -fvModels -help -libs -listLibs -noLibs -scalarBCs -search -solver -srcDoc -switches -table -tables -vectorBCs"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-       -solver) opts="$(_listSolvers)" ;;
-       -table) opts="$(_listTables ${cur})" ;;
-        *) ;;
+        -libs|-search)
+            opts="" ; extra="" ;;
+        -solver) opts="$(_solver ${cur})" ;;
+        -table) opts="$(_table ${cur})" ;;
+       *) ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -4131,7 +4154,7 @@ _buoyantFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4141,7 +4164,7 @@ _buoyantFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4156,7 +4179,7 @@ _buoyantReactingFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4166,7 +4189,7 @@ _buoyantReactingFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4206,7 +4229,7 @@ _compressibleInterFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4216,7 +4239,7 @@ _compressibleInterFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4231,7 +4254,7 @@ _compressibleMultiphaseInterFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4241,7 +4264,7 @@ _compressibleMultiphaseInterFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4256,7 +4279,7 @@ _denseParticleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4266,7 +4289,7 @@ _denseParticleFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4281,7 +4304,7 @@ _driftFluxFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4291,7 +4314,7 @@ _driftFluxFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4505,6 +4528,7 @@ _foamInfo_ ()
 
     opts="-all -browser -help -keyword -web"
     for o in $used ; do opts="${opts/$o/}" ; done
+    opts="$opts $(_infoArgs)"
     extra=""
 
     [ "$COMP_CWORD" = 1 ] || \
@@ -4755,7 +4779,7 @@ _interFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4765,7 +4789,7 @@ _interFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4780,7 +4804,7 @@ _moveDynamicMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4790,7 +4814,7 @@ _moveDynamicMesh_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4805,7 +4829,7 @@ _moveMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4815,7 +4839,7 @@ _moveMesh_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4849,7 +4873,7 @@ _multiphaseEulerFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4859,7 +4883,7 @@ _multiphaseEulerFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4874,7 +4898,7 @@ _multiphaseInterFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4884,7 +4908,7 @@ _multiphaseInterFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4922,7 +4946,7 @@ _pimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4932,7 +4956,7 @@ _pimpleFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4947,7 +4971,7 @@ _pisoFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4957,7 +4981,7 @@ _pisoFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4972,7 +4996,7 @@ _postProcess_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -dict -doc -field -fields -fileHandler -func -funcs -help -hostRoots -latestTime -libs -list -noFunctionObjects -noZero -parallel -region -roots -solver -srcDoc -time"
+    opts="-case -constant -dict -doc -field -fields -fileHandler -func -funcs -help -hostRoots -latestTime -libs -list -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4986,8 +5010,9 @@ _postProcess_ ()
             opts="uncollated collated masterUncollated" ; extra="" ;;
         -time)
             opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
-        -field|-fields|-func|-funcs|-hostRoots|-libs|-region|-roots|-solver)
+        -field|-fields|-funcs|-hostRoots|-libs|-region|-roots)
             opts="" ; extra="" ;;
+        -func) opts="$(_func ${cur})" ;;
        *) ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
@@ -5001,7 +5026,7 @@ _reactingFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5011,7 +5036,7 @@ _reactingFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -5026,7 +5051,7 @@ _rhoCentralFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5036,7 +5061,7 @@ _rhoCentralFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -5051,7 +5076,7 @@ _rhoPimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5061,7 +5086,7 @@ _rhoPimpleFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -5076,7 +5101,7 @@ _rhoSimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5086,7 +5111,7 @@ _rhoSimpleFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -5101,7 +5126,7 @@ _simpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5111,7 +5136,7 @@ _simpleFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -5126,7 +5151,7 @@ _solidDisplacementFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5136,7 +5161,7 @@ _solidDisplacementFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -5151,7 +5176,7 @@ _solidEquilibriumDisplacementFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5161,7 +5186,7 @@ _solidEquilibriumDisplacementFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -5176,7 +5201,7 @@ _XiFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -solver -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5186,7 +5211,7 @@ _XiFoam_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-solver)
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
