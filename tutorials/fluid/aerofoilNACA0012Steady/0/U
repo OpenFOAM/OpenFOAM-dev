@@ -18,8 +18,8 @@ angleOfAttack   0; // degs
 
 angle           #calc "degToRad($angleOfAttack)";
 
-liftDir         #calc "vector(-::sin($angle), 0, ::cos($angle))";
-dragDir         #calc "vector(::cos($angle), 0, ::sin($angle))";
+liftDir         #calc "vector(-sin($<scalar>angle), 0, cos($<scalar>angle))";
+dragDir         #calc "vector(cos($<scalar>angle), 0, sin($<scalar>angle))";
 
 Uinlet          #calc "$speed*$<vector>dragDir";
 

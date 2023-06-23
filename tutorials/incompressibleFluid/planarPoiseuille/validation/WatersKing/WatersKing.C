@@ -49,6 +49,7 @@ Description
 #include "OFstream.H"
 
 using namespace Foam;
+using namespace constant::mathematical;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
     const scalar h = mesh.bounds().span().y();
     Info<< "Height from centreline to wall = " << h << endl;
 
-    label centrelineID = mesh.boundary().findPatchID("centreline");
+    const label centrelineID = mesh.boundary().findPatchID("centreline");
     const vector patchToCell =
         mesh.boundary()[centrelineID].Cf()[0]
       - mesh.C()[mesh.findNearestCell(location)];
@@ -94,34 +95,34 @@ int main(int argc, char *argv[])
     forAll(ak, i)
     {
         scalar k = i + 1;
-        ak[i] = (2.0*k - 1)/2.0*constant::mathematical::pi*::sqrt(E);
+        ak[i] = (2.0*k - 1)/2.0*pi*Foam::sqrt(E);
         bk[i] = (1.0 + beta*sqr(ak[i]))/2.0;
-        ck[i] = ::sqrt(mag(sqr(bk[i]) - sqr(ak[i])));
-        B[i]  = 48*::pow(-1, k)/::pow((2*k - 1)*constant::mathematical::pi, 3)*
-                ::cos((2*k - 1)*constant::mathematical::pi*y/2);
+        ck[i] = Foam::sqrt(mag(sqr(bk[i]) - sqr(ak[i])));
+        B[i]  = 48*pow(-1, k)/pow((2*k - 1)*pi, 3)*
+                Foam::cos((2*k - 1)*pi*y/2);
     }
 
     scalarField A(order, 0);
     OFstream file(runTime.path()/"WatersKing.dat");
-    const scalar LOGvGreat = ::log(vGreat);
+    const scalar LOGvGreat = Foam::log(vGreat);
     while (!runTime.end())
     {
-        scalar t = runTime.userTimeValue()/lambda;
+        const scalar t = runTime.userTimeValue()/lambda;
         forAll(A, i)
         {
             if (bk[i]*t < LOGvGreat)
             {
                 if (bk[i] >= ak[i])
                 {
-                    A[i] = (bk[i] - sqr(ak[i]))/ck[i]*::sinh(ck[i]*t)
-                    + ::cosh(ck[i]*t);
+                    A[i] = (bk[i] - sqr(ak[i]))/ck[i]*Foam::sinh(ck[i]*t)
+                    + Foam::cosh(ck[i]*t);
                 }
                 else
                 {
-                    A[i] = (bk[i] - sqr(ak[i]))/ck[i]*::sin(ck[i]*t)
-                         + ::cos(ck[i]*t);
+                    A[i] = (bk[i] - sqr(ak[i]))/ck[i]*Foam::sin(ck[i]*t)
+                         + Foam::cos(ck[i]*t);
                 }
-                A[i] *= ::exp(-bk[i]*t);
+                A[i] *= Foam::exp(-bk[i]*t);
             }
             else
             {
@@ -132,7 +133,7 @@ int main(int argc, char *argv[])
                 B.resize(order);
             }
         }
-        scalar U = UInf*(1.5*(1 - sqr(y)) + sum(A*B));
+        const scalar U = UInf*(1.5*(1 - sqr(y)) + sum(A*B));
         file<< runTime.name() << token::TAB << U << endl;
         runTime++;
     }
