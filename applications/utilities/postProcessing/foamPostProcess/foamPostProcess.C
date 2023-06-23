@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
 
     #include "createTime.H"
 
-    instantList timeDirs = timeSelector::select0(runTime, args);
+    const instantList timeDirs = timeSelector::select0(runTime, args);
 
     word regionName = fvMesh::defaultRegion;
 

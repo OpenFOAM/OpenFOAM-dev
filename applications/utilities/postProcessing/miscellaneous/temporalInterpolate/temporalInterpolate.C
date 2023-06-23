@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
     Info<< "Using interpolation " << interpolationType << nl << endl;
 
 
-    instantList timeDirs = timeSelector::select0(runTime, args);
+    const instantList timeDirs = timeSelector::select0(runTime, args);
 
     scalarField timeVals(timeDirs.size());
     wordList timeNames(timeDirs.size());

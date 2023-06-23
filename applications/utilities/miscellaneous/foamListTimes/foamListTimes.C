@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 
     // Use the times list from the master processor
     // and select a subset based on the command-line options
-    instantList timeDirs = timeSelector::select
+    const instantList timeDirs = timeSelector::select
     (
         databases[0].times(),
         args

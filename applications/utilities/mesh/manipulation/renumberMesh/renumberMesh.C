@@ -34,6 +34,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
+#include "timeSelector.H"
 #include "IOobjectList.H"
 #include "fvMesh.H"
 #include "polyTopoChange.H"
@@ -605,7 +606,7 @@ int main(int argc, char *argv[])
 
     #include "addRegionOption.H"
     #include "addOverwriteOption.H"
-    #include "addTimeOptions.H"
+    timeSelector::addOptions();
     #include "addDictOption.H"
     argList::addBoolOption
     (
@@ -629,12 +630,7 @@ int main(int argc, char *argv[])
     #endif
 
     // Get times list
-    instantList Times = runTime.times();
-
-    // Set startTime and endTime depending on -time and -latestTime options
-    #include "checkTimeOptions.H"
-
-    runTime.setTime(Times[startTime], startTime);
+    const instantList Times = timeSelector::select0(runTime, args);
 
     #include "createNamedMesh.H"
     const word oldInstance = mesh.pointsInstance();

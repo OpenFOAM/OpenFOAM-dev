@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
     #include "addOverwriteOption.H"
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
-    instantList timeDirs = timeSelector::selectIfPresent(runTime, args);
+    const instantList timeDirs = timeSelector::selectIfPresent(runTime, args);
 
     #include "createMeshNoChangers.H"
 

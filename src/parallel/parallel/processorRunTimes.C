@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ void Foam::processorRunTimes::setTime
 
 Foam::instantList Foam::processorRunTimes::selectComplete(const argList& args)
 {
-    instantList timeDirs =
+    const instantList timeDirs =
         timeSelector::selectIfPresent(completeRunTime_, args);
 
     forAll(procRunTimes_, proci)
@@ -100,7 +100,7 @@ Foam::instantList Foam::processorRunTimes::selectComplete(const argList& args)
 
 Foam::instantList Foam::processorRunTimes::selectProc(const argList& args)
 {
-    instantList timeDirs =
+    const instantList timeDirs =
         timeSelector::select0(procRunTimes_[0], args);
 
     completeRunTime_.setTime(procRunTimes_[0]);

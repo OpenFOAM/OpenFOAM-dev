@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
 
-    instantList timeDirs = timeSelector::select0(runTime, args);
+    const instantList timeDirs = timeSelector::select0(runTime, args);
 
     const bool expand = args.optionFound("expand");
 

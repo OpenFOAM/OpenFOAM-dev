@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,9 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "IOField.H"
 #include "argList.H"
+#include "timeSelector.H"
+#include "IOField.H"
 #include "polyMesh.H"
 #include "Time.H"
 
@@ -131,9 +132,11 @@ void readIfPresent
 
 int main(int argc, char *argv[])
 {
-    #include "addTimeOptions.H"
+    timeSelector::addOptions();
+
     #include "setRootCase.H"
     #include "createTime.H"
+    timeSelector::select0(runTime, args);
     #include "createPolyMesh.H"
 
     label sz = 0;

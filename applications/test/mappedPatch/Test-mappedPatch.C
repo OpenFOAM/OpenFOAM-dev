@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
+#include "timeSelector.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "meshTools.H"
@@ -48,9 +49,10 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-    #include "addTimeOptions.H"
+    timeSelector::addOptions();
     #include "setRootCase.H"
     #include "createTime.H"
+    timeSelector::select0(runTime, args);
     #include "createMesh.H"
 
     wordList patchFieldTypes

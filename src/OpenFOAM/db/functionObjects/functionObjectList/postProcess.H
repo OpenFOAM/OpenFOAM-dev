@@ -87,7 +87,8 @@ if (argList::postProcess(argc, argv))
     }
 
     #include "createTime.H"
-    Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
+    const Foam::instantList timeDirs =
+        Foam::timeSelector::select0(runTime, args);
     #include INCLUDE_FILE(CREATE_MESH)
 
     #ifndef NO_CONTROL

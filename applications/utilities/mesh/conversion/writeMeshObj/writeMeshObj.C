@@ -436,7 +436,7 @@ int main(int argc, char *argv[])
         << "(for points, faces, cells) is consistent with"
         << " Foam numbering (starting from 0)." << endl << endl;
 
-    instantList timeDirs = timeSelector::select0(runTime, args);
+    const instantList timeDirs = timeSelector::select0(runTime, args);
 
     #include "createNamedPolyMesh.H"
 

@@ -62,10 +62,10 @@ int main(int argc, char *argv[])
 {
     argList::validArgs.append("field");
 
-    Foam::timeSelector::addOptions();
+    timeSelector::addOptions();
     #include "setRootCase.H"
     #include "createTime.H"
-    Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
+    const instantList timeDirs = timeSelector::select0(runTime, args);
     #include "createMesh.H"
 
     const pointMesh& pMesh = pointMesh::New(mesh);

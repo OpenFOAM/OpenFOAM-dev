@@ -30,6 +30,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
+#include "timeSelector.H"
 #include "fvMesh.H"
 #include "PatchTools.H"
 #include "OBJstream.H"
@@ -198,10 +199,11 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-    #include "addTimeOptions.H"
+    timeSelector::addOptions();
     argList::validArgs.append("patch");
     #include "setRootCase.H"
     #include "createTime.H"
+    timeSelector::select0(runTime, args);
 
     #include "createMesh.H"
 

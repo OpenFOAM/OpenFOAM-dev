@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
+#include "timeSelector.H"
 #include "Time.H"
 #include "polyMesh.H"
 #include "IStringStream.H"
@@ -51,7 +52,6 @@ Description
 #include "IFstream.H"
 #include "IOobjectList.H"
 #include "SortableList.H"
-#include "timeSelector.H"
 
 using namespace Foam;
 
@@ -73,14 +73,13 @@ int main(int argc, char *argv[])
     );
 
     #include "addRegionOption.H"
-    #include "addTimeOptions.H"
     #include "setRootCase.H"
     #include "createTime.H"
 
     const bool noFlipMap = args.optionFound("noFlipMap");
 
     // Get times list
-    (void)timeSelector::selectIfPresent(runTime, args);
+    timeSelector::selectIfPresent(runTime, args);
 
     #include "createNamedPolyMesh.H"
 

@@ -402,7 +402,7 @@ int main(int argc, char *argv[])
 
 
 
-    instantList timeDirs = timeSelector::select0(runTime, args);
+    const instantList timeDirs = timeSelector::select0(runTime, args);
 
     #include "createNamedMesh.H"
 

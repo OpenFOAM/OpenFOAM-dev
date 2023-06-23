@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
+#include "timeSelector.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "Time.H"
@@ -56,10 +57,11 @@ bool notEqual(const scalar s1, const scalar s2, const scalar tol)
 
 int main(int argc, char *argv[])
 {
-    #include "addTimeOptions.H"
+    timeSelector::addOptions();
     argList::validArgs.append("inflate (true|false)");
     #include "setRootCase.H"
     #include "createTime.H"
+    timeSelector::select0(runTime, args);
     #include "createMesh.H"
 
     const Switch inflate(args.args()[1]);
