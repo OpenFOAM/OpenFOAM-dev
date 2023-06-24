@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,41 +22,12 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionEntries::calcEntry
+    Foam::functionEntries::calcIncludeEntry
 
 Description
-    Uses dynamic compilation to provide calculating functionality
-    for entering dictionary entries.
+    Specify an include file for #calc, expects a single string to follow.
 
-    E.g.
-
-    \verbatim
-    a 1.0;
-    b 3;
-    c #calc "$a*$b";
-    \endverbatim
-
-    Note the explicit trailing 0 ('1.0') to force a to be read (and written)
-    as a floating point number.
-
-    Special care is required for calc entries that include a division since
-    "/" is also used as the scoping operator to identify keywords in
-    sub-dictionaries. For example, "$a/b" expects a keyword "b" within a
-    sub-dictionary named "a". A division can be correctly executed by using a
-    space between a variables and "/", e.g.
-
-    \verbatim
-    c #calc "$a / $b";
-    \endverbatim
-
-    or "()" scoping around the variable, e.g.
-
-    \verbatim
-    c #calc "($a)/$b";
-    \endverbatim
-
-    Additional include files for the #calc code compilation can be specified
-    using the #calcInclude entry, e.g. if functions from transform.H are used
+    For example if functions from transform.H are used in the #calc expression
     \verbatim
     angleOfAttack   5; // degs
 
@@ -67,20 +38,19 @@ Description
     dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
     \endverbatim
 
-    Note:
-        Internally this is just a wrapper around codeStream functionality - the
-        #calc string is used to construct a dictionary for codeStream.
+    The usual expansion of environment variables and other constructs
+    (eg, the \c ~OpenFOAM/ expansion) is retained.
 
 See also
-    Foam::functionEntries::calcIncludeEntry
+    Foam::functionEntries::calcEntry
 
 SourceFiles
-    calcEntry.C
+    calcIncludeEntry.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef calcEntry_H
-#define calcEntry_H
+#ifndef calcIncludeEntry_H
+#define calcIncludeEntry_H
 
 #include "functionEntry.H"
 
@@ -88,60 +58,52 @@ SourceFiles
 
 namespace Foam
 {
-
-class dlLibraryTable;
-
 namespace functionEntries
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class calcEntry Declaration
+                        Class calcIncludeEntry Declaration
 \*---------------------------------------------------------------------------*/
 
-class calcEntry
+class calcIncludeEntry
 :
     public functionEntry
 {
-    // Private Member Functions
+    // Private static data
 
-        //- Perform the calculation and return the resulting string
-        static string calc
-        (
-            const dictionary& dict,
-            Istream& is
-        );
+        // Static include file name cache
+        static DynamicList<fileName> includeFiles_;
 
 
 public:
 
     //- Runtime type information
-    ClassName("calc");
+    ClassName("calcInclude");
 
 
     // Constructors
 
         //- Disallow default bitwise copy construction
-        calcEntry(const calcEntry&) = delete;
+        calcIncludeEntry(const calcIncludeEntry&) = delete;
 
 
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
-        static bool execute(dictionary& dict, Istream&);
+        static bool execute(dictionary& parentDict, Istream&);
 
-        //- Execute the functionEntry in a primitiveEntry context
-        static bool execute
-        (
-            const dictionary& dict,
-            primitiveEntry&,
-            Istream&
-        );
+        //- Reset the cache of #calc include file names
+        static void clear();
+
+        //- Add the cached include file names to the codeInclude entry
+        //  in codeDict
+        static void codeInclude(dictionary& codeDict);
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const calcEntry&) = delete;
+        void operator=(const calcIncludeEntry&) = delete;
 };
 
 

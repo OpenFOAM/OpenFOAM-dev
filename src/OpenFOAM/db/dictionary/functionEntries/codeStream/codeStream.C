@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -333,9 +333,9 @@ Foam::string Foam::functionEntries::codeStream::run
         parentDict
     );
 
-    // Get code dictionary
-    // must reference parent for stringOps::expand to work nicely
-    const  dictionary codeDict("#codeStream", parentDict, is);
+    // Construct codeDict for codeStream
+    // Parent dictionary provided for string expansion and variable substitution
+    const dictionary codeDict("#codeStream", parentDict, is);
 
     const streamingFunctionType function = getFunction(parentDict, codeDict);
 

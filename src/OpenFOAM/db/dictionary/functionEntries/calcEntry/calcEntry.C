@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,10 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "calcEntry.H"
-#include "addToMemberFunctionSelectionTable.H"
+#include "calcIncludeEntry.H"
 #include "dictionary.H"
 #include "dynamicCode.H"
 #include "codeStream.H"
+#include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -78,8 +79,25 @@ Foam::string Foam::functionEntries::calcEntry::calc
     string s(is);
 
     // Construct codeDict for codeStream
-    // Must reference parent dictionary for stringOps::expand to work
-    dictionary codeDict(dict.parent(), dict);
+    // with dict as parent dictionary for string expansion
+    // and variable substitution
+    dictionary codeDict(dict, dictionary());
+
+    // if (dict.found("codeInclude", true))
+    // {
+    //     codeDict.add(dict.lookupEntry("codeInclude", true, false), true);
+    // }
+
+    // codeDict.add
+    // (
+    //     "codeInclude",
+    //     verbatimString
+    //     (
+    //         "#include \"scalar.H\"\n"
+    //         "#include \"transform.H\""
+    //     )
+    // );
+    calcIncludeEntry::codeInclude(codeDict);
     codeDict.add("code", "os << (" + s + ");");
 
     codeStream::streamingFunctionType function = codeStream::getFunction

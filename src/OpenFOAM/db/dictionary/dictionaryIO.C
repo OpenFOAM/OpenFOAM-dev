@@ -27,6 +27,7 @@ License
 #include "IOobject.H"
 #include "inputSyntaxEntry.H"
 #include "inputModeEntry.H"
+#include "calcIncludeEntry.H"
 #include "stringOps.H"
 #include "etcFiles.H"
 #include "wordAndDictionary.H"
@@ -63,6 +64,9 @@ Foam::dictionary::dictionary(Istream& is, const bool keepHeader)
 
     // Reset input mode as this is a "top-level" dictionary
     functionEntries::inputModeEntry::clear();
+
+    // Clear the cache of #calc include files
+    functionEntries::calcIncludeEntry::clear();
 
     read(is, keepHeader);
 }
@@ -190,6 +194,9 @@ Foam::Istream& Foam::operator>>(Istream& is, dictionary& dict)
 
     // Reset input mode assuming this is a "top-level" dictionary
     functionEntries::inputModeEntry::clear();
+
+    // Clear the cache of #calc include files
+    functionEntries::calcIncludeEntry::clear();
 
     dict.clear();
     dict.name() = is.name();
