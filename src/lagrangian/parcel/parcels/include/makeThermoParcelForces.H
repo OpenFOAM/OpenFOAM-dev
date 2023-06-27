@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,18 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sprayCloud.H"
-
-#include "makeParcelTurbulenceDispersionModels.H"
-#include "makeThermoParcelTurbulenceForces.H"
+#ifndef makeThermoParcelForces_H
+#define makeThermoParcelForces_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    makeThermoParcelTurbulenceForces(sprayCloud);
-    makeParcelTurbulenceDispersionModels(sprayCloud);
-}
+#include "makeParcelForces.H"
 
+#include "BrownianMotionForce.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define makeThermoParcelForces(CloudType)                                      \
+                                                                               \
+    makeParcelForces(CloudType);                                               \
+                                                                               \
+    makeParticleForceModelType(BrownianMotionForce, CloudType);
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

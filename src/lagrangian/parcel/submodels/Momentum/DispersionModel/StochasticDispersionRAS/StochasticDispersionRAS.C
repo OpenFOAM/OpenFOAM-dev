@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,74 +23,45 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "GradientDispersionRAS.H"
-#include "demandDrivenData.H"
-#include "fvcGrad.H"
+#include "StochasticDispersionRAS.H"
+#include "constants.H"
+
+using namespace Foam::constant::mathematical;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::GradientDispersionRAS<CloudType>::GradientDispersionRAS
+Foam::StochasticDispersionRAS<CloudType>::StochasticDispersionRAS
 (
     const dictionary& dict,
     CloudType& owner
 )
 :
-    DispersionRASModel<CloudType>(dict, owner),
-    gradkPtr_(nullptr),
-    ownGradK_(false)
+    DispersionRASModel<CloudType>(dict, owner)
 {}
 
 
 template<class CloudType>
-Foam::GradientDispersionRAS<CloudType>::GradientDispersionRAS
+Foam::StochasticDispersionRAS<CloudType>::StochasticDispersionRAS
 (
-    const GradientDispersionRAS<CloudType>& dm
+    const StochasticDispersionRAS<CloudType>& dm
 )
 :
-    DispersionRASModel<CloudType>(dm),
-    gradkPtr_(dm.gradkPtr_),
-    ownGradK_(dm.ownGradK_)
-{
-    dm.ownGradK_ = false;
-}
+    DispersionRASModel<CloudType>(dm)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::GradientDispersionRAS<CloudType>::~GradientDispersionRAS()
-{
-    cacheFields(false);
-}
+Foam::StochasticDispersionRAS<CloudType>::~StochasticDispersionRAS()
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::GradientDispersionRAS<CloudType>::cacheFields(const bool store)
-{
-    DispersionRASModel<CloudType>::cacheFields(store);
-
-    if (store)
-    {
-        gradkPtr_ = fvc::grad(*this->kPtr_).ptr();
-        ownGradK_ = true;
-    }
-    else
-    {
-        if (ownGradK_)
-        {
-            deleteDemandDrivenData(gradkPtr_);
-            gradkPtr_ = nullptr;
-            ownGradK_ = false;
-        }
-    }
-}
-
-
-template<class CloudType>
-Foam::vector Foam::GradientDispersionRAS<CloudType>::update
+Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
 (
     const scalar dt,
     const label celli,
@@ -107,7 +78,6 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
     const scalar k = this->kPtr_->primitiveField()[celli];
     const scalar epsilon =
         this->epsilonPtr_->primitiveField()[celli] + rootVSmall;
-    const vector& gradk = this->gradkPtr_->primitiveField()[celli];
 
     const scalar UrelMag = mag(U - Uc - UTurb);
 
@@ -122,27 +92,20 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
 
         if (tTurb > tTurbLoc)
         {
-            tTurb = 0.0;
+            tTurb = 0;
 
-            const scalar sigma = sqrt(2.0*k/3.0);
-            const vector dir = -gradk/(mag(gradk) + small);
+            const scalar sigma = sqrt(2*k/3.0);
 
-            scalar fac = 0.0;
+            // Calculate a random direction dir distributed uniformly
+            // in spherical coordinates
 
-            // In 2D calculations the -grad(k) is always
-            // away from the axis of symmetry
-            // This creates a 'hole' in the spray and to
-            // prevent this we let fac be both negative/positive
-            if (this->owner().mesh().nSolutionD() == 2)
-            {
-                fac = rnd.scalarNormal();
-            }
-            else
-            {
-                fac = mag(rnd.scalarNormal());
-            }
+            const scalar theta = rnd.scalar01()*twoPi;
+            const scalar u = 2*rnd.scalar01() - 1;
 
-            UTurb = sigma*fac*dir;
+            const scalar a = sqrt(1 - sqr(u));
+            const vector dir(a*cos(theta), a*sin(theta), u);
+
+            UTurb = sigma*mag(rnd.scalarNormal())*dir;
         }
     }
     else

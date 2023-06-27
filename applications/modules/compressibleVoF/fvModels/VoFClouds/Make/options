@@ -13,5 +13,4 @@ EXE_INC = \
 
 LIB_LIBS = \
     -llagrangian \
-    -llagrangianParcel \
-    -llagrangianParcelTurbulence
+    -llagrangianParcel

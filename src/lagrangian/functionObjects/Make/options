@@ -13,5 +13,4 @@ LIB_LIBS = \
     -lmeshTools \
     -llagrangian \
     -llagrangianParcel \
-    -llagrangianParcelTurbulence \
     -lutilityFunctionObjects

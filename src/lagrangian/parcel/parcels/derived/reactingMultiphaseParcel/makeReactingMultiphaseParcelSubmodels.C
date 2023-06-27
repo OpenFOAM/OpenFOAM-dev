@@ -28,18 +28,18 @@ License
 #include "makeParcelCloudFunctionObjects.H"
 
 // Momentum
-#include "makeParcelForces.H"
+#include "makeThermoParcelForces.H"
 #include "makeParcelDispersionModels.H"
-#include "makeReactingMultiphaseParcelInjectionModels.H" // MP variant
+#include "makeReactingMultiphaseParcelInjectionModels.H"
 #include "makeParcelPatchInteractionModels.H"
-#include "makeReactingMultiphaseParcelStochasticCollisionModels.H" // MP variant
+#include "makeReactingMultiphaseParcelStochasticCollisionModels.H"
 #include "makeParcelSurfaceFilmModels.H"
 
 // Thermodynamic
 #include "makeParcelHeatTransferModels.H"
 
 // Reacting
-#include "makeReactingMultiphaseParcelCompositionModels.H" // MP Variant
+#include "makeReactingMultiphaseParcelCompositionModels.H"
 #include "makeReactingParcelPhaseChangeModels.H"
 
 // Reacting multiphase
@@ -51,7 +51,7 @@ License
 makeParcelCloudFunctionObjects(reactingMultiphaseCloud);
 
 // Momentum sub-models
-makeParcelForces(reactingMultiphaseCloud);
+makeThermoParcelForces(reactingMultiphaseCloud);
 makeParcelDispersionModels(reactingMultiphaseCloud);
 makeReactingMultiphaseParcelInjectionModels(reactingMultiphaseCloud);
 makeParcelPatchInteractionModels(reactingMultiphaseCloud);
