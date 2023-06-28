@@ -179,30 +179,6 @@ void Foam::fvMesh::makeCf() const
 }
 
 
-Foam::volScalarField::Internal& Foam::fvMesh::V0Ref()
-{
-    if (!V0Ptr_)
-    {
-        FatalErrorInFunction
-            << "Vc0 is not available"
-            << abort(FatalError);
-    }
-
-    return *V0Ptr_;
-}
-
-
-Foam::volScalarField::Internal& Foam::fvMesh::V00Ref()
-{
-    if (!V00Ptr_)
-    {
-        V00();
-    }
-
-    return *V00Ptr_;
-}
-
-
 Foam::surfaceVectorField& Foam::fvMesh::SfRef()
 {
     if (!SfPtr_)
@@ -319,7 +295,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
                 *this,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                true
             ),
             V0()
         );

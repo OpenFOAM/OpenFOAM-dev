@@ -63,6 +63,8 @@ namespace Foam
 const Foam::HashSet<Foam::word> Foam::fvMesh::geometryFields
 {
     "Vc",
+    "Vc0",
+    "Vc00",
     "Sf",
     "magSf",
     "Cc",
@@ -237,7 +239,7 @@ void Foam::fvMesh::storeOldVol(const scalarField& V)
                     *this,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE,
-                    false
+                    true
                 ),
                 *this,
                 dimVolume
@@ -396,7 +398,7 @@ Foam::fvMesh::fvMesh
                     *this,
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE,
-                    false
+                    true
                 ),
                 *this
             );
@@ -681,19 +683,7 @@ bool Foam::fvMesh::update()
     bool updated = topoChanger_->update();
     topoChanged_ = updated;
 
-    // Register V0 for distribution
-    if (V0Ptr_)
-    {
-        V0Ptr_->checkIn();
-    }
-
     updated = distributor_->update() || updated;
-
-    // De-register V0 after distribution
-    if (V0Ptr_)
-    {
-        V0Ptr_->checkOut();
-    }
 
     if (hasV00)
     {

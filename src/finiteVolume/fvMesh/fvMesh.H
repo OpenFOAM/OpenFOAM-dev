@@ -281,12 +281,6 @@ private:
             //- Make the face centres
             void makeCf() const;
 
-            //- Modify old-time cell volumes
-            DimensionedField<scalar, volMesh>& V0Ref();
-
-            //- Modify old-old-time cell volumes
-            DimensionedField<scalar, volMesh>& V00Ref();
-
             //- Modify cell face area vectors
             surfaceVectorField& SfRef();
 
