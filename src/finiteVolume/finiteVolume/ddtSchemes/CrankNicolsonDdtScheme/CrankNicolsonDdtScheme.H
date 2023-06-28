@@ -225,7 +225,7 @@ public:
         //- Return the current off-centering coefficient
         scalar ocCoeff() const
         {
-            return ocCoeff_->value(mesh().time().value());
+            return ocCoeff_->value(mesh().time().userTimeValue());
         }
 
         virtual tmp<VolField<Type>> fvcDdt
