@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,16 @@ Description
               \left(1 + (\frac{\nu_0\gamma}{\tau^*} )^a \right)^{(n - 1)/a}
     \f]
 
-    Example specification for a polymer:
+    Example specification for a paint using the first form of the model:
+    \verbatim
+         viscosityModel BirdCarreau;
+
+         nuInf       1e-5;
+         k           10;
+         n           0.5;
+    \endverbatim
+
+    Example specification for a polymer using the second form of the model:
     \verbatim
          viscosityModel BirdCarreau;
 

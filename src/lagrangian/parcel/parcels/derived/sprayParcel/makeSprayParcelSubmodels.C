@@ -28,11 +28,11 @@ License
 #include "makeParcelCloudFunctionObjects.H"
 
 // Momentum
-#include "makeParcelForces.H"
+#include "makeThermoParcelForces.H"
 #include "makeParcelDispersionModels.H"
-#include "makeSprayParcelInjectionModels.H" // Spray variant
+#include "makeSprayParcelInjectionModels.H"
 #include "makeParcelPatchInteractionModels.H"
-#include "makeSprayParcelStochasticCollisionModels.H" // Spray variant
+#include "makeSprayParcelStochasticCollisionModels.H"
 
 // Thermodynamic
 #include "makeParcelHeatTransferModels.H"
@@ -52,7 +52,7 @@ License
 makeParcelCloudFunctionObjects(sprayCloud);
 
 // Momentum sub-models
-makeParcelForces(sprayCloud);
+makeThermoParcelForces(sprayCloud);
 makeParcelDispersionModels(sprayCloud);
 makeSprayParcelInjectionModels(sprayCloud);
 makeParcelPatchInteractionModels(sprayCloud);

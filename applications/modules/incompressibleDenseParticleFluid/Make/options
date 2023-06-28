@@ -17,7 +17,6 @@ LIB_LIBS = \
     -lphysicalProperties \
     -llagrangian \
     -llagrangianParcel \
-    -llagrangianParcelTurbulence \
     -lfiniteVolume \
     -lfvModels \
     -lfvConstraints \

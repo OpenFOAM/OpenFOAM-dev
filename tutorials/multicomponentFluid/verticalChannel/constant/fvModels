@@ -22,7 +22,7 @@ buoyancyForce
 clouds
 {
     type    clouds;
-    libs    ("liblagrangianParcel.so" "liblagrangianParcelTurbulence.so");
+    libs    ("liblagrangianParcel.so");
 }
 
 // ************************************************************************* //

@@ -28,7 +28,7 @@ License
 #include "makeParcelCloudFunctionObjects.H"
 
 // Momentum
-#include "makeParcelForces.H"
+#include "makeThermoParcelForces.H"
 #include "makeParcelDispersionModels.H"
 #include "makeThermoParcelInjectionModels.H"
 #include "makeParcelPatchInteractionModels.H"
@@ -47,7 +47,7 @@ License
 makeParcelCloudFunctionObjects(thermoCloud);
 
 // Momentum sub-models
-makeParcelForces(thermoCloud);
+makeThermoParcelForces(thermoCloud);
 makeParcelDispersionModels(thermoCloud);
 makeThermoParcelInjectionModels(thermoCloud);
 makeParcelPatchInteractionModels(thermoCloud);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,17 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::StochasticDispersionRAS
+    Foam::GradientDispersionRAS
 
 Description
-    The velocity is perturbed in random direction, with a
+    The velocity is perturbed in the direction of -grad(k), with a
     Gaussian random number distribution with variance sigma.
     where sigma is defined below
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef StochasticDispersionRAS_H
-#define StochasticDispersionRAS_H
+#ifndef GradientDispersionRAS_H
+#define GradientDispersionRAS_H
 
 #include "DispersionRASModel.H"
 
@@ -42,43 +42,59 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class StochasticDispersionRAS Declaration
+                    Class GradientDispersionRAS Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>
-class StochasticDispersionRAS
+class GradientDispersionRAS
 :
     public DispersionRASModel<CloudType>
 {
+protected:
+
+    // Protected data
+
+        // Locally cached turbulence fields
+
+            //- Gradient of k
+            const volVectorField* gradkPtr_;
+
+            //- Take ownership of the grad(k)
+            mutable bool ownGradK_;
+
+
 public:
 
     //- Runtime type information
-    TypeName("stochasticDispersionRAS");
+    TypeName("gradientDispersionRAS");
 
 
     // Constructors
 
         //- Construct from components
-        StochasticDispersionRAS(const dictionary& dict, CloudType& owner);
+        GradientDispersionRAS(const dictionary& dict, CloudType& owner);
 
         //- Construct copy
-        StochasticDispersionRAS(const StochasticDispersionRAS<CloudType>& dm);
+        GradientDispersionRAS(const GradientDispersionRAS<CloudType>& dm);
 
         //- Construct and return a clone
         virtual autoPtr<DispersionModel<CloudType>> clone() const
         {
             return autoPtr<DispersionModel<CloudType>>
             (
-                new StochasticDispersionRAS<CloudType>(*this)
+                new GradientDispersionRAS<CloudType>(*this)
             );
         }
 
 
     //- Destructor
-    virtual ~StochasticDispersionRAS();
+    virtual ~GradientDispersionRAS();
 
 
     // Member Functions
+
+        //- Cache carrier fields
+        virtual void cacheFields(const bool store);
 
         //- Update (disperse particles)
         virtual vector update
@@ -100,7 +116,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "StochasticDispersionRAS.C"
+    #include "GradientDispersionRAS.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
