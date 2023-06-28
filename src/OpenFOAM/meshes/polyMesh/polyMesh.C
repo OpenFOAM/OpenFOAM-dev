@@ -41,11 +41,10 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(polyMesh, 0);
-
-    word polyMesh::defaultRegion = "region0";
-    word polyMesh::meshSubDir = "polyMesh";
 }
 
+Foam::word Foam::polyMesh::defaultRegion = "region0";
+Foam::word Foam::polyMesh::meshSubDir = "polyMesh";
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 

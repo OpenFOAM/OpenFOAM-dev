@@ -126,7 +126,7 @@ void Foam::fvMesh::makeC() const
     (
         IOobject
         (
-            "C",
+            "Cc",
             pointsInstance(),
             meshSubDir,
             *this,
@@ -184,7 +184,7 @@ Foam::volScalarField::Internal& Foam::fvMesh::V0Ref()
     if (!V0Ptr_)
     {
         FatalErrorInFunction
-            << "V0 is not available"
+            << "Vc0 is not available"
             << abort(FatalError);
     }
 
@@ -271,7 +271,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V() const
         (
             IOobject
             (
-                "V",
+                "Vc",
                 time().name(),
                 *this,
                 IOobject::NO_READ,
@@ -293,7 +293,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V0() const
     if (!V0Ptr_)
     {
         FatalErrorInFunction
-            << "V0 is not available"
+            << "Vc0 is not available"
             << abort(FatalError);
     }
 
@@ -314,7 +314,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
         (
             IOobject
             (
-                "V00",
+                "Vc00",
                 time().name(),
                 *this,
                 IOobject::NO_READ,

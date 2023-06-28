@@ -53,42 +53,14 @@ void MeshToMeshMapVolFields
     const fvMeshToFvMesh& mapper
 )
 {
-    HashTable<const VolField<Type>*> fields
-    (
-        mesh.objectRegistry::template lookupClass<VolField<Type>>()
-    );
+    UPtrList<VolField<Type>> fields(mesh.curFields<VolField<Type>>());
 
-    // Deleted old time fields
-    for
-    (
-        typename HashTable<const VolField<Type>*>::
-            iterator fieldIter = fields.begin();
-        fieldIter != fields.end();
-        ++fieldIter
-    )
+    forAll(fields, i)
     {
-        VolField<Type>& field =
-            const_cast<VolField<Type>&>
-            (*fieldIter());
+        VolField<Type>& field = fields[i];
 
+        // Delete old time fields
         field.clearOldTimes();
-    }
-
-    fields =
-    (
-        mesh.objectRegistry::template lookupClass<VolField<Type>>()
-    );
-
-    for
-    (
-        typename HashTable<const VolField<Type>*>::
-            iterator fieldIter = fields.begin();
-        fieldIter != fields.end();
-        ++fieldIter
-    )
-    {
-        VolField<Type>& field =
-            const_cast<VolField<Type>&>(*fieldIter());
 
         if (fvMeshToFvMesh::debug)
         {
@@ -110,22 +82,14 @@ void MeshToMeshMapVolInternalFields
     const fvMeshToFvMesh& mapper
 )
 {
-    // Note: use strict flag on lookupClass to avoid picking up volFields
-    HashTable<const VolInternalField<Type>*> fields
+    UPtrList<VolInternalField<Type>> fields
     (
-        mesh.objectRegistry::template lookupClass<VolInternalField<Type>>(true)
+        mesh.fields<VolInternalField<Type>>(true)
     );
 
-    for
-    (
-        typename HashTable<const VolInternalField<Type>*>::
-            iterator fieldIter = fields.begin();
-        fieldIter != fields.end();
-        ++fieldIter
-    )
+    forAll(fields, i)
     {
-        VolInternalField<Type>& field =
-            const_cast<VolInternalField<Type>&>(*fieldIter());
+        VolInternalField<Type>& field = fields[i];
 
         if (fvMeshToFvMesh::debug)
         {
@@ -155,26 +119,6 @@ void NaNGeometricFields
 {
     typedef GeometricField<Type, PatchField, GeoMesh> GField;
 
-    HashTable<const GField*> fields
-    (
-        mesh.objectRegistry::template lookupClass<GField>()
-    );
-
-    // Deleted old time fields
-    for
-    (
-        typename HashTable<const GField*>::
-            iterator fieldIter = fields.begin();
-        fieldIter != fields.end();
-        ++fieldIter
-    )
-    {
-        GField& field = const_cast<GField&>(*fieldIter());
-        field.clearOldTimes();
-    }
-
-    fields = mesh.objectRegistry::template lookupClass<GField>();
-
     Type NaN;
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
@@ -182,14 +126,14 @@ void NaNGeometricFields
         setComponent(NaN, cmpt) = std::numeric_limits<scalar>::signaling_NaN();
     }
 
-    for
-    (
-        typename HashTable<const GField*>::iterator fieldIter = fields.begin();
-        fieldIter != fields.end();
-        ++fieldIter
-    )
+    UPtrList<GField> fields(mesh.curFields<GField>());
+
+    forAll(fields, i)
     {
-        GField& field = const_cast<GField&>(*fieldIter());
+        GField& field = fields[i];
+
+        // Delete old time fields
+        field.clearOldTimes();
 
         if (fvMeshToFvMesh::debug)
         {

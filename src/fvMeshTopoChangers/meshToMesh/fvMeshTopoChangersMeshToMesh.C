@@ -94,15 +94,11 @@ Foam::scalar Foam::fvMeshTopoChangers::meshToMesh::meshTime() const
 void Foam::fvMeshTopoChangers::meshToMesh::interpolateUfs()
 {
     // Interpolate U to Uf
+    UPtrList<surfaceVectorField> Ufs(mesh().curFields<surfaceVectorField>());
 
-    HashTable<surfaceVectorField*> Ufs
-    (
-        mesh().lookupClass<surfaceVectorField>()
-    );
-
-    forAllIter(HashTable<surfaceVectorField*>, Ufs, iter)
+    forAll(Ufs, i)
     {
-        surfaceVectorField& Uf = *iter();
+        surfaceVectorField& Uf = Ufs[i];
 
         const volVectorField& U = surfaceToVolVelocity(Uf);
 

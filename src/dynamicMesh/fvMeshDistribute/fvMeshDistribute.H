@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,9 +94,11 @@ class fvMeshDistribute
             const label value
         );
 
+        wordList fieldNames(const word& typeName, label& nFields) const;
+
         //- Check all procs have same names and in exactly same order
         //  and return the number of fields
-        static label checkEqualWordList(const string&, const wordList&);
+        static label checkEqualWordList(const word& typeName, const wordList&);
 
         //- Merge wordlists over all processors
         static wordList mergeWordList(const wordList&);

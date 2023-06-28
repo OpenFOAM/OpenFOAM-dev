@@ -1006,10 +1006,12 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
     // Wherever we find a movingWall-type boundary condition on an original
     // patch, override the corresponding error patch condition to
     // movingWallSlipVelocity
-    HashTable<volVectorField*> fields(mesh().lookupClass<volVectorField>());
-    forAllIter(typename HashTable<volVectorField*>, fields, iter)
+    UPtrList<volVectorField> fields(mesh().fields<volVectorField>());
+    forAll(fields, i)
     {
-        typename volVectorField::Boundary& Ub = iter()->boundaryFieldRef();
+        volVectorField& field = fields[i];
+
+        typename volVectorField::Boundary& Ub = field.boundaryFieldRef();
 
         forAll(origPatchIDs, i)
         {
@@ -1031,7 +1033,7 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
                     new movingWallSlipVelocityFvPatchVectorField
                     (
                         mesh().boundary()[errorPatchi],
-                        *iter()
+                        field
                     )
                 );
             }

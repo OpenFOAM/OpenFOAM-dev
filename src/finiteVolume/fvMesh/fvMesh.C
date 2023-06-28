@@ -60,6 +60,16 @@ namespace Foam
     defineTypeNameAndDebug(fvMesh, 0);
 }
 
+const Foam::HashSet<Foam::word> Foam::fvMesh::geometryFields
+{
+    "Vc",
+    "Sf",
+    "magSf",
+    "Cc",
+    "Cf",
+    "meshPhi"
+};
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -222,7 +232,7 @@ void Foam::fvMesh::storeOldVol(const scalarField& V)
             (
                 IOobject
                 (
-                    "V0",
+                    "Vc0",
                     time().name(),
                     *this,
                     IOobject::NO_READ,
@@ -375,13 +385,13 @@ Foam::fvMesh::fvMesh
 
         // Check the existence of the cell volumes and read if present
         // and set the storage of V00
-        if (fileHandler().isFile(time().timePath()/"V0"))
+        if (fileHandler().isFile(time().timePath()/"Vc0"))
         {
             V0Ptr_ = new DimensionedField<scalar, volMesh>
             (
                 IOobject
                 (
-                    "V0",
+                    "Vc0",
                     time().name(),
                     *this,
                     IOobject::MUST_READ,
@@ -1249,7 +1259,7 @@ void Foam::fvMesh::topoChange(const polyTopoChangeMap& map)
         if (VPtr_ && (VPtr_->size() != map.nOldCells()))
         {
             FatalErrorInFunction
-                << "V:" << V().size()
+                << "Vc:" << V().size()
                 << " not equal to the number of old cells "
                 << map.nOldCells()
                 << exit(FatalError);
@@ -1258,7 +1268,7 @@ void Foam::fvMesh::topoChange(const polyTopoChangeMap& map)
         if (V0Ptr_ && (V0Ptr_->size() != map.nOldCells()))
         {
             FatalErrorInFunction
-                << "V0:" << V0Ptr_->size()
+                << "Vc0:" << V0Ptr_->size()
                 << " not equal to the number of old cells "
                 << map.nOldCells()
                 << exit(FatalError);

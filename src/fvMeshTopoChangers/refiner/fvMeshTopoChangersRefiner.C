@@ -456,45 +456,45 @@ void Foam::fvMeshTopoChangers::refiner::refineFluxes
 {
     if (correctFluxes_.size())
     {
-        HashTable<surfaceScalarField*> fluxes
+        UPtrList<surfaceScalarField> fluxes
         (
-            mesh().lookupClass<surfaceScalarField>()
+            mesh().fields<surfaceScalarField>()
         );
 
-        forAllIter(HashTable<surfaceScalarField*>, fluxes, iter)
+        forAll(fluxes, i)
         {
-            if (!correctFluxes_.found(iter.key()))
+            surfaceScalarField& flux = fluxes[i];
+
+            if (!correctFluxes_.found(flux.name()))
             {
                 WarningInFunction
-                    << "Cannot find surfaceScalarField " << iter.key()
+                    << "Cannot find surfaceScalarField " << flux.name()
                     << " in user-provided flux mapping table "
                     << correctFluxes_ << endl
                     << "    The flux mapping table is used to recreate the"
                     << " flux on newly created faces." << endl
                     << "    Either add the entry if it is a flux or use ("
-                    << iter.key() << " none) to suppress this warning."
+                    << flux.name() << " none) to suppress this warning."
                     << endl;
             }
             else
             {
-                const word& method = correctFluxes_[iter.key()];
+                const word& method = correctFluxes_[flux.name()];
 
                 if (method == "none")
                 {}
                 else if (method == "NaN")
                 {
-                    Pout<< "Setting surfaceScalarField " << iter.key()
+                    Pout<< "Setting surfaceScalarField " << flux.name()
                         << " to NaN" << endl;
 
-                    surfaceScalarField& phi = *iter();
-
-                    sigFpe::fillNan(phi.primitiveFieldRef());
+                    sigFpe::fillNan(flux.primitiveFieldRef());
                 }
                 else
                 {
                     FatalErrorInFunction
                         << "Unknown refinement method " << method
-                        << " for surfaceScalarField " << iter.key()
+                        << " for surfaceScalarField " << flux.name()
                         << " in user-provided flux mapping table "
                         << correctFluxes_
                         << exit(FatalError);
@@ -513,34 +513,36 @@ void Foam::fvMeshTopoChangers::refiner::unrefineFluxes
 {
     if (correctFluxes_.size())
     {
-        HashTable<surfaceScalarField*> fluxes
+        UPtrList<surfaceScalarField> fluxes
         (
-            mesh().lookupClass<surfaceScalarField>()
+            mesh().fields<surfaceScalarField>()
         );
 
-        forAllIter(HashTable<surfaceScalarField*>, fluxes, iter)
+        forAll(fluxes, i)
         {
-            if (!correctFluxes_.found(iter.key()))
+            surfaceScalarField& flux = fluxes[i];
+
+            if (!correctFluxes_.found(flux.name()))
             {
                 WarningInFunction
-                    << "Cannot find surfaceScalarField " << iter.key()
+                    << "Cannot find surfaceScalarField " << flux.name()
                     << " in user-provided flux mapping table "
                     << correctFluxes_ << endl
                     << "    The flux mapping table is used to recreate the"
                     << " flux on newly created faces." << endl
                     << "    Either add the entry if it is a flux or use ("
-                    << iter.key() << " none) to suppress this warning."
+                    << flux.name() << " none) to suppress this warning."
                     << endl;
             }
             else
             {
-                const word& method = correctFluxes_[iter.key()];
+                const word& method = correctFluxes_[flux.name()];
 
                 if (method != "none")
                 {
                     FatalErrorInFunction
                         << "Unknown unrefinement method " << method
-                        << " for surfaceScalarField " << iter.key()
+                        << " for surfaceScalarField " << flux.name()
                         << " in user-provided flux mapping table "
                         << correctFluxes_
                         << exit(FatalError);
@@ -561,13 +563,11 @@ void Foam::fvMeshTopoChangers::refiner::refineUfs
     const labelList& reverseFaceMap = map.reverseFaceMap();
 
     // Interpolate U to Uf for added faces
-    HashTable<surfaceVectorField*> Ufs
-    (
-        mesh().lookupClass<surfaceVectorField>()
-    );
-    forAllIter(HashTable<surfaceVectorField*>, Ufs, iter)
+    UPtrList<surfaceVectorField> Ufs(mesh().fields<surfaceVectorField>());
+
+    forAll(Ufs, i)
     {
-        surfaceVectorField& Uf = *iter();
+        surfaceVectorField& Uf = Ufs[i];
 
         const word Uname(this->Uname(Uf));
 
@@ -666,13 +666,11 @@ void Foam::fvMeshTopoChangers::refiner::unrefineUfs
     const labelList& reverseFaceMap = map.reverseFaceMap();
 
     // Interpolate U to Uf for added faces
-    HashTable<surfaceVectorField*> Ufs
-    (
-        mesh().lookupClass<surfaceVectorField>()
-    );
-    forAllIter(HashTable<surfaceVectorField*>, Ufs, iter)
+    UPtrList<surfaceVectorField> Ufs(mesh().fields<surfaceVectorField>());
+
+    forAll(Ufs, i)
     {
-        surfaceVectorField& Uf = *iter();
+        surfaceVectorField& Uf = Ufs[i];
 
         const word Uname(this->Uname(Uf));
 

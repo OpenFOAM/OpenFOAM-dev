@@ -231,11 +231,6 @@ private:
             //- Preserve old volume(s)
             void storeOldVol(const scalarField&);
 
-            //- Return the list of current fields of type GeoField<Type>
-            //  i.e. fields that are not old-time or old-old-time etc.
-            template<class Type, template<class> class GeoField>
-            UPtrList<GeoField<Type>> curFields();
-
             //- Store old times fields for all fields of a given type and class
             template<class Type, template<class> class GeoField>
             void storeOldTimeFields();
@@ -316,10 +311,15 @@ public:
         typedef fvBoundaryMesh BoundaryMesh;
 
         friend fvMeshTopoChangers::list;
-        friend fvMeshDistributor;
 
     // Declare name of the class and its debug switch
     ClassName("fvMesh");
+
+    // Static data
+
+        //- Set of names of registered geometric fields
+        //  V, Sf, magSf, C, Cf
+        const static HashSet<word> geometryFields;
 
 
     // Constructors
@@ -520,6 +520,16 @@ public:
 
             //- Return cell face motion fluxes
             const surfaceScalarField& phi() const;
+
+            //- Return the list of fields of type GeoField
+            //  i.e. fields that are not geometry
+            template<class GeoField>
+            UPtrList<GeoField> fields(const bool strict = false) const;
+
+            //- Return the list of current fields of type GeoField
+            //  i.e. fields that are not old-times or geometry
+            template<class GeoField>
+            UPtrList<GeoField> curFields() const;
 
             //- Return a labelType of valid component indicators
             //  1 : valid (solved)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,20 +28,19 @@ License
 template<class Type>
 void Foam::singleRegionSolutionControl::storePrevIterTypeFields() const
 {
-    HashTable<VolField<Type>*>
-        flds(mesh_.objectRegistry::lookupClass<VolField<Type>>());
+    UPtrList<VolField<Type>> fields(mesh_.curFields<VolField<Type>>());
 
-    forAllIter(typename HashTable<VolField<Type>*>, flds, iter)
+    forAll(fields, i)
     {
-        VolField<Type>& fld = *iter();
+        VolField<Type>& field = fields[i];
 
-        const word& fName = fld.name();
+        const word& fName = field.name();
 
-        size_t prevIterField = fName.find("PrevIter");
+        const size_t prevIterField = fName.find("PrevIter");
 
         if (prevIterField == word::npos && mesh_.solution().relaxField(fName))
         {
-            fld.storePrevIter();
+            field.storePrevIter();
         }
     }
 }

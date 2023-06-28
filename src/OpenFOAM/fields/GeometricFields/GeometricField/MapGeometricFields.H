@@ -86,6 +86,8 @@ void MapGeometricFields
         ++fieldIter
     )
     {
+        if (GeoMesh::Mesh::geometryFields.found(fieldIter()->name())) continue;
+
         GeometricField<Type, PatchField, GeoMesh>& field =
             const_cast<GeometricField<Type, PatchField, GeoMesh>&>
             (*fieldIter());

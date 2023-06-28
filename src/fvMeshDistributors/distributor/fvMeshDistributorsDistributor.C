@@ -70,9 +70,6 @@ void Foam::fvMeshDistributors::distributor::distribute
     // Mesh distribution engine
     fvMeshDistribute distributor(mesh);
 
-    // Clear sliced and other non-distributable mesh data
-    fvMeshDistributor::update();
-
     // Do actual sending/receiving of mesh
     autoPtr<polyDistributionMap> map
     (

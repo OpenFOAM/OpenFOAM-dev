@@ -24,24 +24,15 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvMeshDistribute.H"
-#include "PstreamCombineReduceOps.H"
 #include "fvMeshAdder.H"
-#include "faceCoupleInfo.H"
-#include "processorFvPatchField.H"
-#include "processorFvsPatchField.H"
-#include "processorCyclicPolyPatch.H"
 #include "processorCyclicFvPatchField.H"
 #include "polyTopoChange.H"
 #include "removeCells.H"
 #include "polyModifyFace.H"
-#include "polyRemovePoint.H"
 #include "polyDistributionMap.H"
-#include "surfaceFields.H"
-#include "pointFields.H"
 #include "syncTools.H"
 #include "CompactListList.H"
 #include "fvMeshTools.H"
-#include "ListOps.H"
 #include "globalIndex.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -218,9 +209,29 @@ Foam::labelList Foam::fvMeshDistribute::select
 }
 
 
+Foam::wordList Foam::fvMeshDistribute::fieldNames
+(
+    const word& typeName,
+    label& nFields
+) const
+{
+    wordList fieldNames(mesh_.names(typeName));
+
+    if (fieldNames.size())
+    {
+        HashSet<word> fieldSet(fieldNames);
+        fieldSet -= fvMesh::geometryFields;
+        fieldNames = fieldSet.toc();
+        nFields += checkEqualWordList(typeName, fieldNames);
+    }
+
+    return fieldNames;
+}
+
+
 Foam::label Foam::fvMeshDistribute::checkEqualWordList
 (
-    const string& msg,
+    const word& typeName,
     const wordList& lst
 )
 {
@@ -234,10 +245,11 @@ Foam::label Foam::fvMeshDistribute::checkEqualWordList
         if (allNames[proci] != allNames[0])
         {
             FatalErrorInFunction
-                << "When checking for equal " << msg.c_str() << " :" << endl
-                << "processor0 has:" << allNames[0] << endl
-                << "processor" << proci << " has:" << allNames[proci] << endl
-                << msg.c_str() << " need to be synchronised on all processors."
+                << "When checking for equal numbers of " << typeName
+                << " :" << nl
+                << "processor0 has:" << allNames[0] << nl
+                << "processor" << proci << " has:" << allNames[proci] << nl
+                << typeName << " need to be synchronised on all processors."
                 << exit(FatalError);
         }
     }
@@ -561,16 +573,16 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
     // is currently not supported by topoChange.
 
     // Store boundary fields (we only do this for surfaceFields)
-    PtrList<FieldField<fvsPatchField, scalar>> sFlds;
-    saveBoundaryFields<scalar, surfaceMesh>(sFlds);
-    PtrList<FieldField<fvsPatchField, vector>> vFlds;
-    saveBoundaryFields<vector, surfaceMesh>(vFlds);
-    PtrList<FieldField<fvsPatchField, sphericalTensor>> sptFlds;
-    saveBoundaryFields<sphericalTensor, surfaceMesh>(sptFlds);
-    PtrList<FieldField<fvsPatchField, symmTensor>> sytFlds;
-    saveBoundaryFields<symmTensor, surfaceMesh>(sytFlds);
-    PtrList<FieldField<fvsPatchField, tensor>> tFlds;
-    saveBoundaryFields<tensor, surfaceMesh>(tFlds);
+    PtrList<FieldField<fvsPatchField, scalar>> sFields;
+    saveBoundaryFields<scalar, surfaceMesh>(sFields);
+    PtrList<FieldField<fvsPatchField, vector>> vFields;
+    saveBoundaryFields<vector, surfaceMesh>(vFields);
+    PtrList<FieldField<fvsPatchField, sphericalTensor>> sptFields;
+    saveBoundaryFields<sphericalTensor, surfaceMesh>(sptFields);
+    PtrList<FieldField<fvsPatchField, symmTensor>> sytFields;
+    saveBoundaryFields<symmTensor, surfaceMesh>(sytFields);
+    PtrList<FieldField<fvsPatchField, tensor>> tFields;
+    saveBoundaryFields<tensor, surfaceMesh>(tFields);
 
     // Change the mesh (no inflation). Note: parallel comms allowed.
     //
@@ -586,11 +598,11 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
 
     // Map patch fields using stored boundary fields. Note: assumes order
     // of fields has not changed in object registry!
-    mapBoundaryFields<scalar, surfaceMesh>(map, sFlds);
-    mapBoundaryFields<vector, surfaceMesh>(map, vFlds);
-    mapBoundaryFields<sphericalTensor, surfaceMesh>(map, sptFlds);
-    mapBoundaryFields<symmTensor, surfaceMesh>(map, sytFlds);
-    mapBoundaryFields<tensor, surfaceMesh>(map, tFlds);
+    mapBoundaryFields<scalar, surfaceMesh>(map, sFields);
+    mapBoundaryFields<vector, surfaceMesh>(map, vFields);
+    mapBoundaryFields<sphericalTensor, surfaceMesh>(map, sptFields);
+    mapBoundaryFields<symmTensor, surfaceMesh>(map, sytFields);
+    mapBoundaryFields<tensor, surfaceMesh>(map, tFields);
 
     // Adapt constructMaps.
 
@@ -1257,16 +1269,16 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::doRemoveCells
 
     // Save surface fields. This is not done as GeometricField as these would
     // get mapped. Fields are flattened for convenience.
-    PtrList<Field<scalar>> sFlds;
-    PtrList<Field<vector>> vFlds;
-    PtrList<Field<sphericalTensor>> sptFlds;
-    PtrList<Field<symmTensor>> sytFlds;
-    PtrList<Field<tensor>> tFlds;
-    initMapExposedFaces(sFlds);
-    initMapExposedFaces(vFlds);
-    initMapExposedFaces(sptFlds);
-    initMapExposedFaces(sytFlds);
-    initMapExposedFaces(tFlds);
+    PtrList<Field<scalar>> sFields;
+    PtrList<Field<vector>> vFields;
+    PtrList<Field<sphericalTensor>> sptFields;
+    PtrList<Field<symmTensor>> sytFields;
+    PtrList<Field<tensor>> tFields;
+    initMapExposedFaces(sFields);
+    initMapExposedFaces(vFields);
+    initMapExposedFaces(sptFields);
+    initMapExposedFaces(sytFields);
+    initMapExposedFaces(tFields);
 
     // Change the mesh. No inflation. Note: no parallel comms allowed.
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, false);
@@ -1277,11 +1289,11 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::doRemoveCells
     // Any exposed faces in a surfaceField will not be mapped. Map the value
     // of these separately (until there is support in all PatchFields for
     // mapping from internal faces ...)
-    mapExposedFaces(map(), sFlds);
-    mapExposedFaces(map(), vFlds);
-    mapExposedFaces(map(), sptFlds);
-    mapExposedFaces(map(), sytFlds);
-    mapExposedFaces(map(), tFlds);
+    mapExposedFaces(map(), sFields);
+    mapExposedFaces(map(), vFields);
+    mapExposedFaces(map(), sptFields);
+    mapExposedFaces(map(), sytFields);
+    mapExposedFaces(map(), tFields);
 
     return map;
 }
@@ -1609,10 +1621,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
     labelList domainAllNeighbour(fromNbr);
     PtrList<entry> patchEntries(fromNbr);
 
-    //*** Read the old-time volumes if present
-    // scalarField V0(fromNbr);
-    // scalarField V00(fromNbr);
-
     CompactListList<label> zonePoints(fromNbr);
     CompactListList<label> zoneFaces(fromNbr);
     CompactListList<bool> zoneFaceFlip(fromNbr);
@@ -1661,10 +1669,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
     }
     // Add patches; no parallel comms
     domainMesh.addFvPatches(patches, false);
-
-    //*** Set the old-time volumes if present
-    // domainMesh.V0Ref().field() = V0;
-    // domainMesh.V00Ref().field() = V00;
 
     // Construct zones
     List<pointZone*> pZonePtrs(pointZoneNames.size());
@@ -1885,90 +1889,89 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
     label nFields = 0;
 
     // Get data to send. Make sure is synchronised
-    const wordList volScalars(mesh_.names(volScalarField::typeName));
-    nFields += checkEqualWordList("volScalarFields", volScalars);
-    const wordList volVectors(mesh_.names(volVectorField::typeName));
-    nFields += checkEqualWordList("volVectorFields", volVectors);
+    const wordList volScalars
+    (
+        fieldNames(volScalarField::typeName, nFields)
+    );
+    const wordList volVectors
+    (
+        fieldNames(volVectorField::typeName, nFields)
+    );
     const wordList volSphereTensors
     (
-        mesh_.names(volSphericalTensorField::typeName)
+        fieldNames(volSphericalTensorField::typeName, nFields)
     );
-    nFields += checkEqualWordList("volSphericalTensorFields", volSphereTensors);
-    const wordList volSymmTensors(mesh_.names(volSymmTensorField::typeName));
-    nFields += checkEqualWordList("volSymmTensorFields", volSymmTensors);
-    const wordList volTensors(mesh_.names(volTensorField::typeName));
-    nFields += checkEqualWordList("volTensorField", volTensors);
+    const wordList volSymmTensors(fieldNames
+    (
+        volSymmTensorField::typeName, nFields)
+    );
+    const wordList volTensors
+    (
+        fieldNames(volTensorField::typeName, nFields)
+    );
 
-    const wordList surfScalars(mesh_.names(surfaceScalarField::typeName));
-    nFields += checkEqualWordList("surfaceScalarFields", surfScalars);
-    const wordList surfVectors(mesh_.names(surfaceVectorField::typeName));
-    nFields += checkEqualWordList("surfaceVectorFields", surfVectors);
+    const wordList surfScalars
+    (
+        fieldNames(surfaceScalarField::typeName, nFields)
+    );
+    const wordList surfVectors
+    (
+        fieldNames(surfaceVectorField::typeName, nFields)
+    );
     const wordList surfSphereTensors
     (
-        mesh_.names(surfaceSphericalTensorField::typeName)
-    );
-    nFields += checkEqualWordList
-    (
-        "surfaceSphericalTensorFields",
-        surfSphereTensors
+        fieldNames(surfaceSphericalTensorField::typeName, nFields)
     );
     const wordList surfSymmTensors
     (
-        mesh_.names(surfaceSymmTensorField::typeName)
+        fieldNames(surfaceSymmTensorField::typeName, nFields)
     );
-    nFields += checkEqualWordList("surfaceSymmTensorFields", surfSymmTensors);
-    const wordList surfTensors(mesh_.names(surfaceTensorField::typeName));
-    nFields += checkEqualWordList("surfaceTensorFields", surfTensors);
+    const wordList surfTensors
+    (
+        fieldNames(surfaceTensorField::typeName, nFields)
+    );
 
-    const wordList pointScalars(mesh_.names(pointScalarField::typeName));
-    nFields += checkEqualWordList("pointScalarFields", pointScalars);
-    const wordList pointVectors(mesh_.names(pointVectorField::typeName));
-    nFields += checkEqualWordList("pointVectorFields", pointVectors);
+    const wordList pointScalars
+    (
+        fieldNames(pointScalarField::typeName, nFields)
+    );
+    const wordList pointVectors
+    (
+        fieldNames(pointVectorField::typeName, nFields)
+    );
     const wordList pointSphereTensors
     (
-        mesh_.names(pointSphericalTensorField::typeName)
-    );
-    nFields += checkEqualWordList
-    (
-        "pointSphericalTensorFields",
-        pointSphereTensors
+        fieldNames(pointSphericalTensorField::typeName, nFields)
     );
     const wordList pointSymmTensors
     (
-        mesh_.names(pointSymmTensorField::typeName)
+        fieldNames(pointSymmTensorField::typeName, nFields)
     );
-    nFields += checkEqualWordList("pointSymmTensorFields", pointSymmTensors);
-    const wordList pointTensors(mesh_.names(pointTensorField::typeName));
-    nFields += checkEqualWordList("pointTensorFields", pointTensors);
+    const wordList pointTensors
+    (
+        fieldNames(pointTensorField::typeName, nFields)
+    );
 
-    const wordList dimScalars(mesh_.names(volScalarField::Internal::typeName));
-    nFields += checkEqualWordList("volScalarField::Internal", dimScalars);
-
-    const wordList dimVectors(mesh_.names(volVectorField::Internal::typeName));
-    nFields += checkEqualWordList("volVectorField::Internal", dimVectors);
-
+    const wordList dimScalars
+    (
+        fieldNames(volScalarField::Internal::typeName, nFields)
+    );
+    const wordList dimVectors
+    (
+        fieldNames(volVectorField::Internal::typeName, nFields)
+    );
     const wordList dimSphereTensors
     (
-        mesh_.names(volSphericalTensorField::Internal::typeName)
+        fieldNames(volSphericalTensorField::Internal::typeName, nFields)
     );
-    nFields += checkEqualWordList
-    (
-        "volSphericalTensorField::Internal",
-        dimSphereTensors
-    );
-
     const wordList dimSymmTensors
     (
-        mesh_.names(volSymmTensorField::Internal::typeName)
+        fieldNames(volSymmTensorField::Internal::typeName, nFields)
     );
-    nFields += checkEqualWordList
+    const wordList dimTensors
     (
-        "volSymmTensorField::Internal",
-        dimSymmTensors
+        fieldNames(volTensorField::Internal::typeName, nFields)
     );
-
-    const wordList dimTensors(mesh_.names(volTensorField::Internal::typeName));
-    nFields += checkEqualWordList("volTensorField::Internal", dimTensors);
 
     // Find patch to temporarily put exposed internal and processor faces into.
     // If there are no fields patch 0 is used,

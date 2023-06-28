@@ -92,11 +92,4 @@ void Foam::fvMeshDistributor::velocityMotionCorrection::update() const
 }
 
 
-bool Foam::fvMeshDistributor::update()
-{
-    mesh_.clearGeomNotOldVol();
-    return true;
-}
-
-
 // ************************************************************************* //

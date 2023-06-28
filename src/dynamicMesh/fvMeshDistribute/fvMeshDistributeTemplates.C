@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,24 +31,21 @@ License
 template<class GeoField>
 void Foam::fvMeshDistribute::printFieldInfo(const fvMesh& mesh)
 {
-    HashTable<const GeoField*> flds
-    (
-        mesh.objectRegistry::lookupClass<GeoField>()
-    );
+    const UPtrList<GeoField> fields(mesh.fields<GeoField>());
 
-    forAllConstIter(typename HashTable<const GeoField*>, flds, iter)
+    forAll(fields, i)
     {
-        const GeoField& fld = *iter();
+        const GeoField& field = fields[i];
 
-        Pout<< "Field:" << iter.key() << " internal size:" << fld.size()
+        Pout<< "Field:" << field.name() << " internal size:" << field.size()
             << endl;
 
-        forAll(fld.boundaryField(), patchi)
+        forAll(field.boundaryField(), patchi)
         {
             Pout<< "    " << patchi
-                << ' ' << fld.boundaryField()[patchi].patch().name()
-                << ' ' << fld.boundaryField()[patchi].type()
-                << ' ' << fld.boundaryField()[patchi].size()
+                << ' ' << field.boundaryField()[patchi].patch().name()
+                << ' ' << field.boundaryField()[patchi].type()
+                << ' ' << field.boundaryField()[patchi].size()
                 << endl;
         }
     }
@@ -58,28 +55,23 @@ void Foam::fvMeshDistribute::printFieldInfo(const fvMesh& mesh)
 template<class Type, class Mesh>
 void Foam::fvMeshDistribute::saveBoundaryFields
 (
-    PtrList<FieldField<fvsPatchField, Type>>& bflds
+    PtrList<FieldField<fvsPatchField, Type>>& bfields
 ) const
 {
     // Save whole boundary field
 
-    HashTable<const SurfaceField<Type>*> flds
+    const UPtrList<SurfaceField<Type>> fields
     (
-        static_cast<const fvMesh&>(mesh_)
-       .objectRegistry::lookupClass<SurfaceField<Type>>()
+        mesh_.fields<SurfaceField<Type>>()
     );
 
-    bflds.setSize(flds.size());
+    bfields.setSize(fields.size());
 
-    label i = 0;
-
-    forAllConstIter(typename HashTable<const SurfaceField<Type>*>, flds, iter)
+    forAll(fields, i)
     {
-        const SurfaceField<Type>& fld = *iter();
+        const SurfaceField<Type>& field = fields[i];
 
-        bflds.set(i, fld.boundaryField().clone().ptr());
-
-        i++;
+        bfields.set(i, field.boundaryField().clone().ptr());
     }
 }
 
@@ -88,7 +80,7 @@ template<class Type, class Mesh>
 void Foam::fvMeshDistribute::mapBoundaryFields
 (
     const polyTopoChangeMap& map,
-    const PtrList<FieldField<fvsPatchField, Type>>& oldBflds
+    const PtrList<FieldField<fvsPatchField, Type>>& oldBfields
 )
 {
     // Map boundary field
@@ -96,35 +88,27 @@ void Foam::fvMeshDistribute::mapBoundaryFields
     const labelList& oldPatchStarts = map.oldPatchStarts();
     const labelList& faceMap = map.faceMap();
 
-    HashTable<SurfaceField<Type>*> flds
+    UPtrList<SurfaceField<Type>> fields
     (
-        mesh_.objectRegistry::lookupClass<SurfaceField<Type>>()
+        mesh_.fields<SurfaceField<Type>>()
     );
 
-    if (flds.size() != oldBflds.size())
+    forAll(fields, i)
     {
-        FatalErrorInFunction
-            << abort(FatalError);
-    }
+        SurfaceField<Type>& field = fields[i];
+        typename SurfaceField<Type>::Boundary& bfield =
+            field.boundaryFieldRef();
 
-    label fieldi = 0;
+        const FieldField<fvsPatchField, Type>& oldBfield = oldBfields[i];
 
-    forAllIter(typename HashTable<SurfaceField<Type>*>, flds, iter)
-    {
-        SurfaceField<Type>& fld = *iter();
-        typename SurfaceField<Type>::Boundary& bfld =
-            fld.boundaryFieldRef();
+        // Pull from old boundary field into bfield.
 
-        const FieldField<fvsPatchField, Type>& oldBfld = oldBflds[fieldi++];
-
-        // Pull from old boundary field into bfld.
-
-        forAll(bfld, patchi)
+        forAll(bfield, patchi)
         {
-            fvsPatchField<Type>& patchFld = bfld[patchi];
-            label facei = patchFld.patch().start();
+            fvsPatchField<Type>& patchField = bfield[patchi];
+            label facei = patchField.patch().start();
 
-            forAll(patchFld, i)
+            forAll(patchField, i)
             {
                 label oldFacei = faceMap[facei++];
 
@@ -133,9 +117,13 @@ void Foam::fvMeshDistribute::mapBoundaryFields
                 {
                     label oldLocalI = oldFacei - oldPatchStarts[oldPatchi];
 
-                    if (oldLocalI >= 0 && oldLocalI < oldBfld[oldPatchi].size())
+                    if
+                    (
+                        oldLocalI >= 0
+                     && oldLocalI < oldBfield[oldPatchi].size()
+                    )
                     {
-                        patchFld[i] = oldBfld[oldPatchi][oldLocalI];
+                        patchField[i] = oldBfield[oldPatchi][oldLocalI];
                     }
                 }
             }
@@ -147,36 +135,32 @@ void Foam::fvMeshDistribute::mapBoundaryFields
 template<class Type>
 void Foam::fvMeshDistribute::initMapExposedFaces
 (
-    PtrList<Field<Type>>& iflds
+    PtrList<Field<Type>>& ifields
 ) const
 {
-    HashTable<const SurfaceField<Type>*> flds
+    const UPtrList<SurfaceField<Type>> fields
     (
-        static_cast<const fvMesh&>(mesh_).lookupClass<SurfaceField<Type>>()
+        mesh_.fields<SurfaceField<Type>>()
     );
 
-    iflds.setSize(flds.size());
+    ifields.setSize(fields.size());
 
-    label fieldi = 0;
-
-    forAllConstIter(typename HashTable<const SurfaceField<Type>*>, flds, iter)
+    forAll(fields, i)
     {
-        iflds.set(fieldi, Field<Type>(mesh_.nFaces()));
+        ifields.set(i, Field<Type>(mesh_.nFaces()));
 
-        const SurfaceField<Type>& fld = *iter();
+        const SurfaceField<Type>& field = fields[i];
 
-        SubList<Type>(iflds[fieldi], fld.primitiveField().size()) =
-            fld.primitiveField();
+        SubList<Type>(ifields[i], field.primitiveField().size()) =
+            field.primitiveField();
 
-        forAll(fld.boundaryField(), patchi)
+        forAll(field.boundaryField(), patchi)
         {
-            const fvsPatchField<Type>& pfld = fld.boundaryField()[patchi];
+            const fvsPatchField<Type>& pfield = field.boundaryField()[patchi];
 
-            SubList<Type>(iflds[fieldi], pfld.size(), pfld.patch().start()) =
-                pfld;
+            SubList<Type>(ifields[i], pfield.size(), pfield.patch().start()) =
+                pfield;
         }
-
-        fieldi++;
     }
 }
 
@@ -185,52 +169,48 @@ template<class Type>
 void Foam::fvMeshDistribute::mapExposedFaces
 (
     const polyTopoChangeMap& map,
-    const PtrList<Field<Type>>& oldFlds
+    const PtrList<Field<Type>>& oldFields
 )
 {
-    HashTable<SurfaceField<Type>*> flds
+    UPtrList<SurfaceField<Type>> fields
     (
-        mesh_.objectRegistry::lookupClass<SurfaceField<Type>>()
+        mesh_.fields<SurfaceField<Type>>()
     );
 
-    label fieldi = 0;
-
-    forAllIter(typename HashTable<SurfaceField<Type>*>, flds, iter)
+    forAll(fields, i)
     {
-        SurfaceField<Type>& fld = *iter();
+        SurfaceField<Type>& field = fields[i];
 
-        const Field<Type>& oldFld = oldFlds[fieldi];
+        const Field<Type>& oldField = oldFields[i];
 
-        const bool negateIfFlipped = isFlux(fld);
+        const bool negateIfFlipped = isFlux(field);
 
-        forAll(fld.boundaryField(), patchi)
+        forAll(field.boundaryField(), patchi)
         {
-            fvsPatchField<Type>& patchFld = fld.boundaryFieldRef()[patchi];
+            fvsPatchField<Type>& patchField = field.boundaryFieldRef()[patchi];
 
-            forAll(patchFld, i)
+            forAll(patchField, i)
             {
-                const label facei = patchFld.patch().start()+i;
+                const label facei = patchField.patch().start()+i;
                 const label oldFacei = map.faceMap()[facei];
 
                 if (oldFacei < map.nOldInternalFaces())
                 {
                     if (negateIfFlipped && map.flipFaceFlux().found(facei))
                     {
-                        patchFld[i] = flipOp()(oldFld[oldFacei]);
+                        patchField[i] = flipOp()(oldField[oldFacei]);
                     }
                     else
                     {
-                        patchFld[i] = oldFld[oldFacei];
+                        patchField[i] = oldField[oldFacei];
                     }
                 }
                 else
                 {
-                    patchFld[i] = oldFld[oldFacei];
+                    patchField[i] = oldField[oldFacei];
                 }
             }
         }
-
-        fieldi++;
     }
 }
 
@@ -238,16 +218,13 @@ void Foam::fvMeshDistribute::mapExposedFaces
 template<class GeoField>
 void Foam::fvMeshDistribute::correctCoupledPatchFields()
 {
-    HashTable<GeoField*> flds
-    (
-        mesh_.objectRegistry::lookupClass<GeoField>()
-    );
+    UPtrList<GeoField> fields(mesh_.fields<GeoField>());
 
-    forAllIter(typename HashTable<GeoField*>, flds, iter)
+    forAll(fields, i)
     {
-        GeoField& fld = *iter();
+        GeoField& field = fields[i];
 
-        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
+        typename GeoField::Boundary& bfield = field.boundaryFieldRef();
 
         if
         (
@@ -257,11 +234,11 @@ void Foam::fvMeshDistribute::correctCoupledPatchFields()
         {
             label nReq = Pstream::nRequests();
 
-            forAll(bfld, patchi)
+            forAll(bfield, patchi)
             {
-                if (bfld[patchi].coupled())
+                if (bfield[patchi].coupled())
                 {
-                    bfld[patchi].initEvaluate(Pstream::defaultCommsType);
+                    bfield[patchi].initEvaluate(Pstream::defaultCommsType);
                 }
             }
 
@@ -275,11 +252,11 @@ void Foam::fvMeshDistribute::correctCoupledPatchFields()
                 Pstream::waitRequests(nReq);
             }
 
-            forAll(bfld, patchi)
+            forAll(bfield, patchi)
             {
-                if (bfld[patchi].coupled())
+                if (bfield[patchi].coupled())
                 {
-                    bfld[patchi].evaluate(Pstream::defaultCommsType);
+                    bfield[patchi].evaluate(Pstream::defaultCommsType);
                 }
             }
         }
@@ -290,16 +267,16 @@ void Foam::fvMeshDistribute::correctCoupledPatchFields()
 
             forAll(patchSchedule, patchEvali)
             {
-                if (bfld[patchEvali].coupled())
+                if (bfield[patchEvali].coupled())
                 {
                     if (patchSchedule[patchEvali].init)
                     {
-                        bfld[patchSchedule[patchEvali].patch]
+                        bfield[patchSchedule[patchEvali].patch]
                             .initEvaluate(Pstream::commsTypes::scheduled);
                     }
                     else
                     {
-                        bfld[patchSchedule[patchEvali].patch]
+                        bfield[patchSchedule[patchEvali].patch]
                             .evaluate(Pstream::commsTypes::scheduled);
                     }
                 }
@@ -348,14 +325,14 @@ void Foam::fvMeshDistribute::sendFields
 
         // Send all fieldNames. This has to be exactly the same set as is
         // being received!
-        const GeoField& fld =
+        const GeoField& field =
             subsetter.baseMesh().lookupObject<GeoField>(fieldNames[i]);
 
-        tmp<GeoField> tsubfld = subsetter.interpolate(fld);
+        tmp<GeoField> tsubfield = subsetter.interpolate(field);
 
         toNbr
             << fieldNames[i] << token::NL << token::BEGIN_BLOCK
-            << tsubfld
+            << tsubfield
             << token::NL << token::END_BLOCK << token::NL;
     }
     toNbr << token::END_BLOCK << token::NL;

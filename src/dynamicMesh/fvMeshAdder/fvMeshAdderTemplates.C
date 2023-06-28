@@ -276,6 +276,8 @@ void Foam::fvMeshAdder::MapVolFields
         ++fieldIter
     )
     {
+        if (fvMesh::geometryFields.found(fieldIter()->name())) continue;
+
         VolField<Type>& fld =
             const_cast<VolField<Type>&>
             (
@@ -569,6 +571,8 @@ void Foam::fvMeshAdder::MapSurfaceFields
         ++fieldIter
     )
     {
+        if (fvMesh::geometryFields.found(fieldIter()->name())) continue;
+
         SurfaceField<Type>& fld = const_cast<SurfaceField<Type>&>(*fieldIter());
 
         if (fieldsToAdd.found(fld.name()))
@@ -870,6 +874,8 @@ void Foam::fvMeshAdder::MapPointFields
         ++fieldIter
     )
     {
+        if (fvMesh::geometryFields.found(fieldIter()->name())) continue;
+
         PointField<Type>& fld = const_cast<PointField<Type>&>(*fieldIter());
 
         if (fieldsToAdd.found(fld.name()))

@@ -233,11 +233,11 @@ bool Foam::functionObjects::nearWallFields::read(const dictionary& dict)
     reverseFieldMap_.resize(2*fieldSet_.size());
     forAll(fieldSet_, seti)
     {
-        const word& fldName = fieldSet_[seti].first();
-        const word& sampleFldName = fieldSet_[seti].second();
+        const word& fieldName = fieldSet_[seti].first();
+        const word& sampleFieldName = fieldSet_[seti].second();
 
-        fieldMap_.insert(fldName, sampleFldName);
-        reverseFieldMap_.insert(sampleFldName, fldName);
+        fieldMap_.insert(fieldName, sampleFieldName);
+        reverseFieldMap_.insert(sampleFieldName, fieldName);
     }
 
     Log  << type() << " " << name()

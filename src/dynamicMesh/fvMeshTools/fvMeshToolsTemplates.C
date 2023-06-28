@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,28 +39,30 @@ void Foam::fvMeshTools::setPatchFields
 {
     objectRegistry& obr = const_cast<objectRegistry&>(mesh.thisDb());
 
-    HashTable<GeoField*> flds(obr.lookupClass<GeoField>());
+    HashTable<GeoField*> fields(obr.lookupClass<GeoField>());
 
-    forAllIter(typename HashTable<GeoField*>, flds, iter)
+    forAllIter(typename HashTable<GeoField*>, fields, iter)
     {
-        GeoField& fld = *iter();
+        GeoField& field = *iter();
 
-        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
+        if (GeoField::Mesh::geometryFields.found(field.name())) continue;
+
+        typename GeoField::Boundary& bfield = field.boundaryFieldRef();
 
         if
         (
-            patchFieldDict.found(fld.name())
+            patchFieldDict.found(field.name())
         || !fvPatch::constraintType(mesh.boundary()[patchi].type())
         )
         {
-            bfld.set
+            bfield.set
             (
                 patchi,
                 GeoField::Patch::New
                 (
                     mesh.boundary()[patchi],
-                    fld(),
-                    patchFieldDict.subDict(fld.name())
+                    field(),
+                    patchFieldDict.subDict(field.name())
                 )
             );
         }
@@ -78,15 +80,17 @@ void Foam::fvMeshTools::setPatchFields
 {
     objectRegistry& obr = const_cast<objectRegistry&>(mesh.thisDb());
 
-    HashTable<GeoField*> flds(obr.lookupClass<GeoField>());
+    HashTable<GeoField*> fields(obr.lookupClass<GeoField>());
 
-    forAllIter(typename HashTable<GeoField*>, flds, iter)
+    forAllIter(typename HashTable<GeoField*>, fields, iter)
     {
-        GeoField& fld = *iter();
+        GeoField& field = *iter();
 
-        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
+        if (GeoField::Mesh::geometryFields.found(field.name())) continue;
 
-        bfld[patchi] == value;
+        typename GeoField::Boundary& bfield = field.boundaryFieldRef();
+
+        bfield[patchi] == value;
     }
 }
 

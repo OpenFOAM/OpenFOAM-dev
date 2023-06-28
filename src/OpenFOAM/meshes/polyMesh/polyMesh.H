@@ -263,11 +263,15 @@ public:
     //- Runtime type information
     TypeName("polyMesh");
 
-    //- Return the default region name
-    static word defaultRegion;
 
-    //- Return the mesh sub-directory name (usually "polyMesh")
-    static word meshSubDir;
+    // Static data
+
+        //- Return the default region name
+        static word defaultRegion;
+
+        //- Return the mesh sub-directory name (usually "polyMesh")
+        static word meshSubDir;
+
 
 
     // Constructors

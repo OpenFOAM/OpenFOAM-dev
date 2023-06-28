@@ -43,13 +43,13 @@ Description
 template<class Type, template<class> class GeoField>
 void Foam::fvMeshStitcher::resizePatchFields()
 {
-    HashTable<GeoField<Type>*> fields(mesh_.lookupClass<GeoField<Type>>());
-    forAllIter(typename HashTable<GeoField<Type>*>, fields, iter)
+    UPtrList<GeoField<Type>> fields(mesh_.fields<GeoField<Type>>());
+    forAll(fields, i)
     {
         forAll(mesh_.boundary(), patchi)
         {
             typename GeoField<Type>::Patch& pf =
-                iter()->boundaryFieldRef()[patchi];
+                fields[i].boundaryFieldRef()[patchi];
 
             if (isA<nonConformalFvPatch>(pf.patch()))
             {
@@ -73,25 +73,11 @@ void Foam::fvMeshStitcher::resizePatchFields()
 template<class Type>
 void Foam::fvMeshStitcher::preConformSurfaceFields()
 {
-    HashTable<SurfaceField<Type>*> fields
-    (
-        mesh_.lookupClass<SurfaceField<Type>>()
-    );
+    UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
 
-    const surfaceScalarField* phiPtr =
-        mesh_.foundObject<surfaceScalarField>("meshPhi")
-      ? &mesh_.lookupObject<surfaceScalarField>("meshPhi")
-      : nullptr;
-
-    forAllIter(typename HashTable<SurfaceField<Type>*>, fields, iter)
+    forAll(fields, i)
     {
-        SurfaceField<Type>& field = *iter();
-
-        if
-        (
-            &field == static_cast<const regIOobject*>(phiPtr)
-         || field.isOldTime()
-        ) continue;
+        SurfaceField<Type>& field = fields[i];
 
         autoPtr<SurfaceField<Type>> nccFieldPtr
         (
@@ -107,11 +93,11 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
             )
         );
 
-        for (label i = 0; i <= field.nOldTimes(); ++ i)
+        for (label ti=0; ti<=field.nOldTimes(); ti++)
         {
-            SurfaceField<Type>& field0 = field.oldTime(i);
+            SurfaceField<Type>& field0 = field.oldTime(ti);
 
-            nccFieldPtr->oldTime(i).boundaryFieldRef() =
+            nccFieldPtr->oldTime(ti).boundaryFieldRef() =
                 conformalNccBoundaryField<Type>(field0.boundaryField());
 
             field0.boundaryFieldRef() =
@@ -135,81 +121,76 @@ inline void Foam::fvMeshStitcher::preConformSurfaceFields()
 template<class Type>
 void Foam::fvMeshStitcher::postNonConformSurfaceFields()
 {
-    HashTable<SurfaceField<Type>*> fields
-    (
-        mesh_.lookupClass<SurfaceField<Type>>()
-    );
+    UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
 
-    const surfaceScalarField* phiPtr =
-        mesh_.foundObject<surfaceScalarField>("meshPhi")
-      ? &mesh_.lookupObject<surfaceScalarField>("meshPhi")
-      : nullptr;
-
-    forAllIter(typename HashTable<SurfaceField<Type>*>, fields, iter)
+    if (!mesh_.topoChanged())
     {
-        if (iter.key()(nccFieldPrefix_.size()) == nccFieldPrefix_) continue;
-
-        SurfaceField<Type>& field = *iter();
-
-        if
-        (
-            &field == static_cast<const regIOobject*>(phiPtr)
-         || field.isOldTime()
-         || mesh_.topoChanged()
-        ) continue;
-
-        const word nccFieldName = nccFieldPrefix_ + field.name();
-
-        const SurfaceField<Type>& nccField =
-            mesh_.lookupObject<SurfaceField<Type>>(nccFieldName);
-
-        for (label i = 0; i <= field.nOldTimes(); ++ i)
+        forAll(fields, i)
         {
-            SurfaceField<Type>& field0 = field.oldTime(i);
+            if (fields[i].name()(nccFieldPrefix_.size()) == nccFieldPrefix_)
+                continue;
 
-            field0.boundaryFieldRef() =
-                nonConformalBoundaryField<Type>
-                (
-                    nccField.oldTime(i).boundaryField(),
-                    field0.boundaryField()
-                );
+            SurfaceField<Type>& field = fields[i];
 
-            field0.boundaryFieldRef() =
-                synchronisedBoundaryField<Type>(field0.boundaryField());
+            const word nccFieldName = nccFieldPrefix_ + field.name();
+
+            const SurfaceField<Type>& nccField =
+                mesh_.lookupObject<SurfaceField<Type>>(nccFieldName);
+
+            for (label ti=0; ti<=field.nOldTimes(); ti++)
+            {
+                SurfaceField<Type>& field0 = field.oldTime(ti);
+
+                field0.boundaryFieldRef() =
+                    nonConformalBoundaryField<Type>
+                    (
+                        nccField.oldTime(ti).boundaryField(),
+                        field0.boundaryField()
+                    );
+
+                field0.boundaryFieldRef() =
+                    synchronisedBoundaryField<Type>(field0.boundaryField());
+            }
         }
     }
 
     // Remove NCC fields after all fields have been mapped. This is so that
     // old-time fields aren't removed by current-time fields in advance of the
     // old-time field being mapped.
-    forAllIter(typename HashTable<SurfaceField<Type>*>, fields, iter)
+
+    // Cache the nccField pointers
+    DynamicList<SurfaceField<Type>*> nccFields;
+    forAll(fields, i)
     {
-        if (iter.key()(nccFieldPrefix_.size()) == nccFieldPrefix_) continue;
+        if (fields[i].name()(nccFieldPrefix_.size()) == nccFieldPrefix_)
+            continue;
 
-        SurfaceField<Type>& field = *iter();
-
-        if
-        (
-            &field == static_cast<const regIOobject*>(phiPtr)
-         || field.isOldTime()
-        ) continue;
+        SurfaceField<Type>& field = fields[i];
 
         const word nccFieldName = nccFieldPrefix_ + field.name();
 
         SurfaceField<Type>& nccField =
             mesh_.lookupObjectRef<SurfaceField<Type>>(nccFieldName);
 
-        nccField.checkOut();
+        nccFields.append(&nccField);
+    }
+
+    // Checkout the nccFields after the loop over fields
+    // to avoid deleting a subsequent field in the list
+    forAll(nccFields, i)
+    {
+        nccFields[i]->checkOut();
     }
 
     // Check there are no NCC fields left over
-    fields = mesh_.lookupClass<SurfaceField<Type>>();
-    forAllIter(typename HashTable<SurfaceField<Type>*>, fields, iter)
+    fields = mesh_.curFields<SurfaceField<Type>>();
+    forAll(fields, i)
     {
-        if (iter.key()(nccFieldPrefix_.size()) != nccFieldPrefix_) continue;
+        if (fields[i].name()(nccFieldPrefix_.size()) != nccFieldPrefix_)
+            continue;
 
         FatalErrorInFunction
-            << "Stitching mapping field \"" << iter()->name()
+            << "Stitching mapping field \"" << fields[i].name()
             << "\" found, but the field it corresponds to no longer exists"
             << exit(FatalError);
     }
@@ -228,15 +209,15 @@ inline void Foam::fvMeshStitcher::postNonConformSurfaceFields()
 template<class Type>
 void Foam::fvMeshStitcher::evaluateVolFields()
 {
-    HashTable<VolField<Type>*> fields(mesh_.lookupClass<VolField<Type>>());
-    forAllIter(typename HashTable<VolField<Type>*>, fields, iter)
+    UPtrList<VolField<Type>> fields(mesh_.fields<VolField<Type>>());
+    forAll(fields, i)
     {
         const label nReq = Pstream::nRequests();
 
         forAll(mesh_.boundary(), patchi)
         {
             typename VolField<Type>::Patch& pf =
-                iter()->boundaryFieldRef()[patchi];
+                fields[i].boundaryFieldRef()[patchi];
 
             if (isA<nonConformalFvPatch>(pf.patch()))
             {
@@ -256,7 +237,7 @@ void Foam::fvMeshStitcher::evaluateVolFields()
         forAll(mesh_.boundary(), patchi)
         {
             typename VolField<Type>::Patch& pf =
-                iter()->boundaryFieldRef()[patchi];
+                fields[i].boundaryFieldRef()[patchi];
 
             if (isA<nonConformalFvPatch>(pf.patch()))
             {
@@ -280,14 +261,11 @@ inline void Foam::fvMeshStitcher::postNonConformSurfaceVelocities()
 {
     if (mesh_.topoChanged())
     {
-        HashTable<surfaceVectorField*> Ufs
-        (
-            mesh_.lookupClass<surfaceVectorField>()
-        );
+        UPtrList<surfaceVectorField> Ufs(mesh_.fields<surfaceVectorField>());
 
-        forAllIter(HashTable<surfaceVectorField*>, Ufs, iter)
+        forAll(Ufs, i)
         {
-            surfaceVectorField& Uf = *iter();
+            surfaceVectorField& Uf = Ufs[i];
 
             const volVectorField& U = surfaceToVolVelocity(Uf);
 
@@ -336,12 +314,12 @@ void Foam::fvMeshStitcher::resizeFieldPatchFields
     GeoField& field
 )
 {
-    for (label i = 0; i <= field.nOldTimes(); ++ i)
+    for (label ti=0; ti<=field.nOldTimes(); ti++)
     {
         resizeBoundaryFieldPatchFields
         (
             polyFacesBf,
-            field.oldTime(i).boundaryFieldRef()
+            field.oldTime(ti).boundaryFieldRef()
         );
     }
 }
