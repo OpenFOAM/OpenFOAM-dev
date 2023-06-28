@@ -25,19 +25,15 @@ Class
     Foam::functionEntries::calcEntry
 
 Description
-    Uses dynamic compilation to provide calculating functionality
-    for entering dictionary entries.
+    Compiles and executes code string expressions,
+    returning the result to the dictionary
 
-    E.g.
-
+Usage
     \verbatim
-    a 1.0;
-    b 3;
+    a 1.1;
+    b 3.2;
     c #calc "$a*$b";
     \endverbatim
-
-    Note the explicit trailing 0 ('1.0') to force a to be read (and written)
-    as a floating point number.
 
     Special care is required for calc entries that include a division since
     "/" is also used as the scoping operator to identify keywords in
@@ -49,10 +45,24 @@ Description
     c #calc "$a / $b";
     \endverbatim
 
-    or "()" scoping around the variable, e.g.
+    or bracketing the variable, e.g.
 
     \verbatim
     c #calc "($a)/$b";
+    \endverbatim
+
+    The code string can be delimited either by '"..."' in which newlines must be
+    escaped or '#{...#}' which directly supports multi-line strings and is more
+    convenient when evaluating string expressions by avoiding the need to
+    escape the quotes, e.g.
+
+    \verbatim
+    c #calc #{ $a*sqrt($b) #};
+    \endverbatim
+
+    \verbatim
+    s "field";
+    fieldName #calc #{ $<string>s + "Name" #};
     \endverbatim
 
     Additional include files for the #calc code compilation can be specified

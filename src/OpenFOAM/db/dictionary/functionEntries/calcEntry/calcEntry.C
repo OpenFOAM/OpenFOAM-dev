@@ -53,7 +53,6 @@ namespace functionEntries
         execute,
         primitiveEntryIstream
     );
-
 }
 }
 
@@ -75,28 +74,14 @@ Foam::string Foam::functionEntries::calcEntry::calc
         dict
     );
 
-    // Read string
-    string s(is);
+    // Read string delimited by either '"..."' or '#{...#}'
+    verbatimString s(is);
 
     // Construct codeDict for codeStream
     // with dict as parent dictionary for string expansion
     // and variable substitution
     dictionary codeDict(dict, dictionary());
 
-    // if (dict.found("codeInclude", true))
-    // {
-    //     codeDict.add(dict.lookupEntry("codeInclude", true, false), true);
-    // }
-
-    // codeDict.add
-    // (
-    //     "codeInclude",
-    //     verbatimString
-    //     (
-    //         "#include \"scalar.H\"\n"
-    //         "#include \"transform.H\""
-    //     )
-    // );
     calcIncludeEntry::codeInclude(codeDict);
     codeDict.add("code", "os << (" + s + ");");
 
