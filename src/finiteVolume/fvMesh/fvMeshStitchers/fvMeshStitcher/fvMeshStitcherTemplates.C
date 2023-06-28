@@ -307,6 +307,7 @@ void Foam::fvMeshStitcher::resizeBoundaryFieldPatchFields
     }
 }
 
+
 template<class GeoField>
 void Foam::fvMeshStitcher::resizeFieldPatchFields
 (

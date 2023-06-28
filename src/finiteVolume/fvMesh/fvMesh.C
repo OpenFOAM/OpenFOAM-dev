@@ -1161,7 +1161,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
     // Note: once set it remains true for the rest of the run
     moving_ = true;
 
-    // Grab old time volumes if the time has been incremented
+    // Store old time volumes if the time has been incremented
     // This will update V0, V00
     if (curTimeIndex_ < time().timeIndex())
     {
@@ -1188,8 +1188,8 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
     }
     else
     {
-        // Grab old time mesh motion fluxes if the time has been incremented
-        if (phiPtr_->timeIndex() != time().timeIndex())
+        // Store old time mesh motion fluxes if the time has been incremented
+        if (!topoChanging() && phiPtr_->timeIndex() != time().timeIndex())
         {
             phiPtr_->oldTime();
         }
