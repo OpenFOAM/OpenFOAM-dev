@@ -89,7 +89,7 @@ PIMPLE
     nCorrectors      1;
     nNonOrthogonalCorrectors 0;
 
-    faceMomentum        no;
+    faceMomentum        yes;
     VmDdtCorrection     no;
     dragCorrection      yes;
     partialElimination  no;
