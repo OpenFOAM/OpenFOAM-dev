@@ -23,8 +23,8 @@ filmVoFTransfer
 {
     type    filmVoFTransfer;
 
-    deltaFactorToVoF  0.3;
-    alphaToVoF        0.3;
+    deltaFactorToVoF  0.15;
+    alphaToVoF        0.15;
 
     transferRateCoeff 0.1;
 }
