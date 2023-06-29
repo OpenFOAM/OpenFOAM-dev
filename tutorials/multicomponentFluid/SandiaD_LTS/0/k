@@ -28,7 +28,8 @@ boundaryField
 
     outlet
     {
-        type            zeroGradient;
+        type            inletOutlet;
+        inletValue      $internalField;
     }
 
     inletPilot

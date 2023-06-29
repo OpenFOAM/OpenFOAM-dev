@@ -27,7 +27,7 @@ boundaryField
 
     outlet
     {
-        type            totalPressure;
+        type            entrainmentPressure;
         p0              $internalField;
     }
 
