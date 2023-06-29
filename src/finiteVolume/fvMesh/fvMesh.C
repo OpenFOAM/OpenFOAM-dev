@@ -646,13 +646,15 @@ Foam::fvMesh::~fvMesh()
 
 bool Foam::fvMesh::topoChanging() const
 {
-    return topoChanger_->dynamic();
+    return topoChanger_.valid() && topoChanger_->dynamic();
 }
 
 
 bool Foam::fvMesh::dynamic() const
 {
-    return topoChanger_->dynamic() || mover_->dynamic();
+    return
+        (topoChanger_.valid() && topoChanger_->dynamic())
+     || (mover_.valid() && mover_->dynamic());
 }
 
 
