@@ -32,7 +32,7 @@ cloneCase moriyoshiHomogeneous moriyoshiHomogeneousHydrogen
         runApplication -a foamDictionary system/controlDict -entry endTime -set 0.015
         runApplication -a foamDictionary system/controlDict -entry writeInterval -set 50
 
-        runApplication -a XiFoam
+        runApplication -a $(getApplication)
     fi
 )
 
