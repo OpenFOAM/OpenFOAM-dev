@@ -20,7 +20,6 @@ defaultFieldValues
     volScalarFieldValue alpha.water 0
     volScalarFieldValue alpha.oil 0
     volScalarFieldValue alpha.mercury 0
-    volVectorFieldValue U (0 0 0)
 );
 
 regions
