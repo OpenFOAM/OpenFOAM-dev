@@ -77,11 +77,10 @@ class regIOobject
         //- Return Istream
         Istream& readStream(const bool read = true);
 
-        //- Disallow assignment
-        void operator=(const regIOobject&) = delete;
-
 
 protected:
+
+    // Protected Member Functions
 
         //- Read header, check readOpt flags and read data if necessary.
         //  Format is set to ASCII if defaultFormat and file format are ASCII
@@ -309,7 +308,11 @@ public:
 
     // Member Operators
 
+        //- Assign to IOobject
         void operator=(const IOobject&);
+
+        //- Disallow default assignment
+        void operator=(const regIOobject&) = delete;
 };
 
 

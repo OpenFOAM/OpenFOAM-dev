@@ -82,10 +82,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        velocityMotionSolver
-        (
-            const velocityMotionSolver&
-        ) = delete;
+        velocityMotionSolver(const velocityMotionSolver&) = delete;
 
 
     //- Destructor

@@ -94,7 +94,6 @@ public:
         //- Disallow default bitwise copy construction
         sixDoFMotion(const sixDoFMotion&) = delete;
 
-
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const
         {

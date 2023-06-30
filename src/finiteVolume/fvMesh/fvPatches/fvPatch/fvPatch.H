@@ -93,6 +93,7 @@ public:
     friend class fvBoundaryMesh;
     friend class surfaceInterpolation;
 
+
     //- Runtime type information
     TypeName(polyPatch::typeName_());
 

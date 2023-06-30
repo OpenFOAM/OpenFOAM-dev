@@ -62,6 +62,7 @@ class vtkPVblockMeshReader
 {
 public:
     vtkTypeMacro(vtkPVblockMeshReader, vtkMultiBlockDataSetAlgorithm);
+
     void PrintSelf(ostream&, vtkIndent);
 
     static vtkPVblockMeshReader* New();
@@ -113,6 +114,9 @@ protected:
     //- Construct null
     vtkPVblockMeshReader();
 
+    //- Disallow default bitwise copy construct
+    vtkPVblockMeshReader(const vtkPVblockMeshReader&) = delete;
+
     //- Destructor
     ~vtkPVblockMeshReader();
 
@@ -135,19 +139,17 @@ protected:
     //- Fill in additional port information
     virtual int FillOutputPortInformation(int, vtkInformation*);
 
-    // The observer to modify this object when array selections are modified
+    //- The observer to modify this object when array selections are modified
     vtkCallbackCommand* SelectionObserver;
 
+    //- The file name for this case
     char* FileName;
-
-
-private:
-
-    //- Disallow default bitwise copy construct
-    vtkPVblockMeshReader(const vtkPVblockMeshReader&) = delete;
 
     //- Disallow default bitwise assignment
     void operator=(const vtkPVblockMeshReader&) = delete;
+
+
+private:
 
     //- Add/remove point numbers to/from the view
     void updatePointNumbersView(const bool show);

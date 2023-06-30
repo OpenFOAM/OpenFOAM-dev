@@ -69,12 +69,6 @@ class procLduInterface
         label comm_;
 
 
-    // Private Member Functions
-
-        //- Disallow construction as copy
-        procLduInterface(const procLduInterface&) = delete;
-
-
 public:
 
     friend class LUscalarMatrix;
@@ -89,6 +83,9 @@ public:
         );
 
         procLduInterface(Istream& is);
+
+        //- Disallow construction as copy
+        procLduInterface(const procLduInterface&) = delete;
 
         autoPtr<procLduInterface> clone()
         {

@@ -94,8 +94,6 @@ class fvPatchMapper
 
 public:
 
-    // Static Data Members
-
     // Constructors
 
         //- Construct from mappers
@@ -106,10 +104,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        fvPatchMapper
-        (
-            const fvPatchMapper&
-        ) = delete;
+        fvPatchMapper(const fvPatchMapper&) = delete;
 
 
     //- Destructor

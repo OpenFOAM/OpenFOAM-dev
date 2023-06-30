@@ -173,6 +173,9 @@ protected:
     //- Construct null
     vtkPVFoamReader();
 
+    //- Disallow default bitwise copy construct
+    vtkPVFoamReader(const vtkPVFoamReader&) = delete;
+
     //- Destructor
     ~vtkPVFoamReader();
 
@@ -201,14 +204,11 @@ protected:
     //- The file name for this case
     char* FileName;
 
-
-private:
-
-    //- Disallow default bitwise copy construct
-    vtkPVFoamReader(const vtkPVFoamReader&) = delete;
-
     //- Disallow default bitwise assignment
     void operator=(const vtkPVFoamReader&) = delete;
+
+
+private:
 
     //- Add/remove patch names to/from the view
     void updatePatchNamesView(const bool show);

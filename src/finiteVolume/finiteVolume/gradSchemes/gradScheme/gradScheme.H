@@ -67,15 +67,6 @@ class gradScheme
         const fvMesh& mesh_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        gradScheme(const gradScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const gradScheme&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -101,6 +92,9 @@ public:
         :
             mesh_(mesh)
         {}
+
+        //- Disallow default bitwise copy construction
+        gradScheme(const gradScheme&) = delete;
 
 
     // Selectors
@@ -161,6 +155,12 @@ public:
         (
             const tmp<VolField<Type>>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gradScheme&) = delete;
 };
 
 

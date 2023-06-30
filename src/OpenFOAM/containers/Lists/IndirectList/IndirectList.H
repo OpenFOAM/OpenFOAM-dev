@@ -104,15 +104,6 @@ class IndirectList
     private IndirectListAddressing,
     public  UIndirectList<T>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const IndirectList<T>&) = delete;
-
-        //- Disallow assignment from UIndirectList
-        void operator=(const UIndirectList<T>&) = delete;
-
-
 public:
 
     // Constructors
@@ -148,6 +139,12 @@ public:
 
             //- Assignment operator
             using UIndirectList<T>::operator=;
+
+            //- Disallow default bitwise assignment
+            void operator=(const IndirectList<T>&) = delete;
+
+            //- Disallow assignment from UIndirectList
+            void operator=(const UIndirectList<T>&) = delete;
 };
 
 

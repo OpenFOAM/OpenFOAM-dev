@@ -69,9 +69,6 @@ class dictionaryListEntry
         //- Returns size of dictionary without FoamFile
         static label realSize(const dictionary&);
 
-        //- Disallow bitwise copy
-        dictionaryListEntry(const dictionary&) = delete;
-
 
 public:
 
@@ -86,6 +83,9 @@ public:
             const dictionary& parentDict,
             const dictionaryListEntry&
         );
+
+        //- Disallow bitwise copy
+        dictionaryListEntry(const dictionary&) = delete;
 
         autoPtr<entry> clone(const dictionary& parentDict) const
         {

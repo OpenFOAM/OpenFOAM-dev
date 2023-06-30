@@ -132,7 +132,6 @@ private:
             //- Have the primitives been cleared
             bool clearedPrimitives_;
 
-
             //- Boundary mesh
             mutable polyBoundaryMesh boundary_;
 
@@ -271,7 +270,6 @@ public:
 
         //- Return the mesh sub-directory name (usually "polyMesh")
         static word meshSubDir;
-
 
 
     // Constructors

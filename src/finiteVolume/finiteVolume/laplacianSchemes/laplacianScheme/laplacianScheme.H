@@ -73,19 +73,10 @@ protected:
     // Protected data
 
         const fvMesh& mesh_;
+
         tmp<surfaceInterpolationScheme<GType>> tinterpGammaScheme_;
+
         tmp<snGradScheme<Type>> tsnGradScheme_;
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        laplacianScheme(const laplacianScheme&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const laplacianScheme&) = delete;
 
 
 public:
@@ -147,6 +138,9 @@ public:
             tsnGradScheme_(sngs)
         {}
 
+        //- Disallow default bitwise copy construction
+        laplacianScheme(const laplacianScheme&) = delete;
+
 
     // Selectors
 
@@ -198,6 +192,12 @@ public:
             const VolField<GType>&,
             const VolField<Type>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const laplacianScheme&) = delete;
 };
 
 

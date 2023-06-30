@@ -133,50 +133,51 @@ public:
 
 private:
 
-    //- Header
-    string header_;
+    // Private Data
 
-    //- Title
-    string title_;
+        //- Header
+        string header_;
 
-    //- DataType
-    string dataType_;
+        //- Title
+        string title_;
 
-
-    // Geometry
-
-        //- Points
-        pointField points_;
-
-        //- 3D cells.
-        cellShapeList cells_;
-
-        //- Map from cells back to original ID
-        labelList cellMap_;
-
-        //- 2D cells (=faces)
-        faceList faces_;
-
-        //- Map from faces back to original ID
-        labelList faceMap_;
-
-        //- 1D cells (=edges)
-        labelListList lines_;
-
-        labelList lineMap_;
+        //- DataType
+        string dataType_;
 
 
-    // Data
+        // Geometry
 
-        //- Cell based fields
-        objectRegistry cellData_;
+            //- Points
+            pointField points_;
 
-        //- Point based fields
-        objectRegistry pointData_;
+            //- 3D cells.
+            cellShapeList cells_;
 
-        //- Other fields
-        objectRegistry otherData_;
+            //- Map from cells back to original ID
+            labelList cellMap_;
 
+            //- 2D cells (=faces)
+            faceList faces_;
+
+            //- Map from faces back to original ID
+            labelList faceMap_;
+
+            //- 1D cells (=edges)
+            labelListList lines_;
+
+            labelList lineMap_;
+
+
+        // Data
+
+            //- Cell based fields
+            objectRegistry cellData_;
+
+            //- Point based fields
+            objectRegistry pointData_;
+
+            //- Other fields
+            objectRegistry otherData_;
 
 
     // Private Member Functions
@@ -227,19 +228,18 @@ private:
 
         void read(ISstream& inFile);
 
-        //- Disallow assignment
-        void operator=(const vtkUnstructuredReader&) = delete;
-
 
 public:
 
     //- Runtime type information
     ClassName("vtkUnstructuredReader");
 
+
     // Constructors
 
         //- Construct from Istream, read all
         vtkUnstructuredReader(const objectRegistry& obr, ISstream&);
+
 
     // Member Functions
 
@@ -260,7 +260,6 @@ public:
         {
             return dataType_;
         }
-
 
         //- Points
         const pointField& points() const
@@ -354,11 +353,15 @@ public:
             return otherData_;
         }
 
-
         //- Debug: print contents of objectRegistry
         template<class Type>
         void printFieldStats(const objectRegistry&) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const vtkUnstructuredReader&) = delete;
 };
 
 

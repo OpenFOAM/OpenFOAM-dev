@@ -71,12 +71,6 @@ class procLduMatrix
         PtrList<procLduInterface> interfaces_;
 
 
-    // Private Member Functions
-
-        //- Disallow construction as copy
-        procLduMatrix(const procLduMatrix&) = delete;
-
-
 public:
 
     friend class LUscalarMatrix;
@@ -92,6 +86,9 @@ public:
         );
 
         procLduMatrix(Istream& is);
+
+        //- Disallow construction as copy
+        procLduMatrix(const procLduMatrix&) = delete;
 
 
     // Member Functions

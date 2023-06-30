@@ -79,10 +79,6 @@ class MeshZones
         //- Read if IOobject flags set. Return true if read.
         bool read();
 
-        //- Disallow default bitwise assignment
-        void operator=(const MeshZones<ZoneType, MeshType>&) = delete;
-
-
         //- Create zone map
         void calcZoneMap() const;
 
@@ -189,6 +185,9 @@ public:
 
         //- Return reference to ZoneType by name.
         ZoneType& operator[](const word&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const MeshZones<ZoneType, MeshType>&) = delete;
 
 
     // Ostream operator

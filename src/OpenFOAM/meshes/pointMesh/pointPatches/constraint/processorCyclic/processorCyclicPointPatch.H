@@ -63,11 +63,6 @@ class processorCyclicPointPatch
 
         const processorCyclicPolyPatch& procCycPolyPatch_;
 
-        //- Disallow default bitwise copy construction
-        processorCyclicPointPatch(const processorCyclicPointPatch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorCyclicPointPatch&) = delete;
 
 public:
 
@@ -83,6 +78,9 @@ public:
             const polyPatch& patch,
             const pointBoundaryMesh& bm
         );
+
+        //- Disallow default bitwise copy construction
+        processorCyclicPointPatch(const processorCyclicPointPatch&) = delete;
 
 
     // Destructor
@@ -104,6 +102,12 @@ public:
         {
             return procCycPolyPatch_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorCyclicPointPatch&) = delete;
 };
 
 

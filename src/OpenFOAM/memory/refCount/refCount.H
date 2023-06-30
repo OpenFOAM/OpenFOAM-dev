@@ -54,15 +54,6 @@ class refCount
         int count_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy
-        refCount(const refCount&) = delete;
-
-        //- Disallow bitwise assignment
-        void operator=(const refCount&) = delete;
-
-
 protected:
 
     // Constructors
@@ -72,6 +63,9 @@ protected:
         :
             count_(0)
         {}
+
+        //- Disallow copy
+        refCount(const refCount&) = delete;
 
 
 public:
@@ -116,6 +110,9 @@ public:
         {
             count_--;
         }
+
+        //- Disallow bitwise assignment
+        void operator=(const refCount&) = delete;
 };
 
 

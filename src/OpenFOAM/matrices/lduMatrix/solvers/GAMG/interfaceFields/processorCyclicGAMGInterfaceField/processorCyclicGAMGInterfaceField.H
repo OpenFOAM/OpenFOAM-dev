@@ -50,18 +50,6 @@ class processorCyclicGAMGInterfaceField
 :
     public processorGAMGInterfaceField
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        processorCyclicGAMGInterfaceField
-        (
-            const processorCyclicGAMGInterfaceField&
-        ) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorCyclicGAMGInterfaceField&) = delete;
-
-
 public:
 
     //- Runtime type information
@@ -84,10 +72,22 @@ public:
             const int rank
         );
 
+        //- Disallow default bitwise copy construction
+        processorCyclicGAMGInterfaceField
+        (
+            const processorCyclicGAMGInterfaceField&
+        ) = delete;
+
 
     // Destructor
 
         virtual ~processorCyclicGAMGInterfaceField();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorCyclicGAMGInterfaceField&) = delete;
 };
 
 

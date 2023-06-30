@@ -58,15 +58,6 @@ class cyclicPointPatch
         const cyclicPolyPatch& cyclicPolyPatch_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        cyclicPointPatch(const cyclicPointPatch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const cyclicPointPatch&) = delete;
-
-
     // Demand driven private data
 
         //- Initialise the calculation of the patch geometry
@@ -102,6 +93,9 @@ public:
             const polyPatch& patch,
             const pointBoundaryMesh& bm
         );
+
+        //- Disallow default bitwise copy construction
+        cyclicPointPatch(const cyclicPointPatch&) = delete;
 
 
     //- Destructor
@@ -139,6 +133,12 @@ public:
             //  and/or mapping. First index is on this patch, second on the
             //  neighbour patch.
             virtual const edgeList& transformPairs() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cyclicPointPatch&) = delete;
 };
 
 

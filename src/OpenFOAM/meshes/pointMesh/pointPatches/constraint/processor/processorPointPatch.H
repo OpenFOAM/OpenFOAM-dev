@@ -87,12 +87,6 @@ class processorPointPatch
         virtual void topoChange(PstreamBuffers&);
 
 
-        //- Disallow default bitwise copy construction
-        processorPointPatch(const processorPointPatch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorPointPatch&) = delete;
-
 public:
 
     //- Runtime type information
@@ -107,6 +101,9 @@ public:
             const polyPatch& patch,
             const pointBoundaryMesh& bm
         );
+
+        //- Disallow default bitwise copy construction
+        processorPointPatch(const processorPointPatch&) = delete;
 
 
     //- Destructor
@@ -153,6 +150,12 @@ public:
 
         //- Return mesh points in the correct order for the receiving side
         const labelList& reverseMeshPoints() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorPointPatch&) = delete;
 };
 
 

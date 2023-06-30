@@ -61,21 +61,12 @@ class coupledFacePointPatch
         const coupledPolyPatch& coupledPolyPatch_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        coupledFacePointPatch(const coupledFacePointPatch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const coupledFacePointPatch&) = delete;
-
-
 protected:
 
-        // Construction of demand-driven data
+    // Protected Member Functions
 
-            //- Calculate mesh points
-            virtual void calcGeometry(PstreamBuffers&) = 0;
+        //- Calculate mesh points
+        virtual void calcGeometry(PstreamBuffers&) = 0;
 
 
 public:
@@ -93,9 +84,19 @@ public:
             const pointBoundaryMesh& bm
         );
 
+        //- Disallow default bitwise copy construction
+        coupledFacePointPatch(const coupledFacePointPatch&) = delete;
+
+
 
     //- Destructor
     virtual ~coupledFacePointPatch();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const coupledFacePointPatch&) = delete;
 };
 
 

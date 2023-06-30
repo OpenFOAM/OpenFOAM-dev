@@ -306,8 +306,10 @@ public:
 
         friend fvMeshTopoChangers::list;
 
+
     // Declare name of the class and its debug switch
     ClassName("fvMesh");
+
 
     // Static data
 
@@ -643,6 +645,7 @@ public:
         void operator=(const fvMesh&) = delete;
 
         bool operator!=(const fvMesh&) const;
+
         bool operator==(const fvMesh&) const;
 };
 

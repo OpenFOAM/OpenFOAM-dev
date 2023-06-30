@@ -51,15 +51,6 @@ class pointBoundaryMesh;
 
 class coupledPointPatch
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construction
-        coupledPointPatch(const coupledPointPatch&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const coupledPointPatch&) = delete;
-
-
 protected:
 
     // Protected Member Functions
@@ -94,10 +85,18 @@ public:
         //- Construct from components
         coupledPointPatch(const pointBoundaryMesh& bm);
 
+        //- Disallow default bitwise copy construction
+        coupledPointPatch(const coupledPointPatch&) = delete;
+
 
     //- Destructor
     virtual ~coupledPointPatch();
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const coupledPointPatch&) = delete;
 };
 
 

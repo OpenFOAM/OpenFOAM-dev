@@ -71,9 +71,6 @@ class dictionaryEntry
 
         void readData(Istream&);
 
-        //- Disallow bitwise copy
-        dictionaryEntry(const dictionary&) = delete;
-
 
 public:
 
@@ -104,6 +101,9 @@ public:
             const dictionary& parentDict,
             const dictionaryEntry&
         );
+
+        //- Disallow bitwise copy
+        dictionaryEntry(const dictionary&) = delete;
 
         autoPtr<entry> clone(const dictionary& parentDict) const
         {
