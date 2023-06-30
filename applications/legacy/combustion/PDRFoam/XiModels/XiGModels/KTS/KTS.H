@@ -76,7 +76,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        KTS(const KTS&);
+        KTS(const KTS&) = delete;
 
 
     //- Destructor

@@ -81,7 +81,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        instability(const instability&);
+        instability(const instability&) = delete;
 
 
     //- Destructor

@@ -83,7 +83,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        PaSR(const PaSR&);
+        PaSR(const PaSR&) = delete;
 
 
     //- Destructor

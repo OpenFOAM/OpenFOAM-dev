@@ -102,7 +102,7 @@ public:
         incompressibleInterPhaseTransportModel
         (
             const incompressibleInterPhaseTransportModel&
-        );
+        ) = delete;
 
 
     // Member Functions

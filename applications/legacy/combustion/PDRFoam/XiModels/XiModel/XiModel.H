@@ -175,7 +175,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        XiModel(const XiModel&);
+        XiModel(const XiModel&) = delete;
 
 
     // Selectors

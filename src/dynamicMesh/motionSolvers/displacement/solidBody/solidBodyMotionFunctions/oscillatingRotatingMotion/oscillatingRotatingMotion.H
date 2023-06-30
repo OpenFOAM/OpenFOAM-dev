@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        oscillatingRotatingMotion(const oscillatingRotatingMotion&);
+        oscillatingRotatingMotion(const oscillatingRotatingMotion&) = delete;
 
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const

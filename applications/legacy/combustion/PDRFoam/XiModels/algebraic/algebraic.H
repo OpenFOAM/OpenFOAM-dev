@@ -86,7 +86,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        algebraic(const algebraic&);
+        algebraic(const algebraic&) = delete;
 
 
     //- Destructor

@@ -113,7 +113,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        PDRDragModel(const PDRDragModel&);
+        PDRDragModel(const PDRDragModel&) = delete;
 
 
     // Selectors

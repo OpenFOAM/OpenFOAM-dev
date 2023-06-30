@@ -85,7 +85,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        instabilityG(const instabilityG&);
+        instabilityG(const instabilityG&) = delete;
 
 
     //- Destructor

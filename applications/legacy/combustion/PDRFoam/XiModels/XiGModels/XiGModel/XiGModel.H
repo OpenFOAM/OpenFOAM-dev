@@ -106,7 +106,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        XiGModel(const XiGModel&);
+        XiGModel(const XiGModel&) = delete;
 
 
     // Selectors

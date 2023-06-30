@@ -125,7 +125,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        basic(const basic&);
+        basic(const basic&) = delete;
 
 
     //- Destructor

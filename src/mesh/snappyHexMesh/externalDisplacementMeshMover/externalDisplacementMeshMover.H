@@ -104,7 +104,7 @@ public:
         externalDisplacementMeshMover
         (
             const externalDisplacementMeshMover&
-        );
+        ) = delete;
 
 
     // Selectors

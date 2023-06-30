@@ -115,7 +115,7 @@ public:
         fvPatch(const polyPatch&, const fvBoundaryMesh&);
 
         //- Disallow default bitwise copy construction
-        fvPatch(const fvPatch&);
+        fvPatch(const fvPatch&) = delete;
 
 
     // Selectors
@@ -268,7 +268,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const fvPatch&);
+        void operator=(const fvPatch&) = delete;
 };
 
 

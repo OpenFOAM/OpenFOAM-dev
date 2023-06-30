@@ -86,7 +86,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        transport(const transport&);
+        transport(const transport&) = delete;
 
 
     //- Destructor

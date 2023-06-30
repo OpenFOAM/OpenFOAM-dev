@@ -96,7 +96,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        laminar(const laminar&);
+        laminar(const laminar&) = delete;
 
 
     //- Destructor

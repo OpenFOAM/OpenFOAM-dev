@@ -122,7 +122,7 @@ public:
         interRegionExplicitPorositySource
         (
             const interRegionExplicitPorositySource&
-        );
+        ) = delete;
 
 
     //- Destructor

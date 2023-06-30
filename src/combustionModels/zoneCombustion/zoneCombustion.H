@@ -92,7 +92,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        zoneCombustion(const zoneCombustion&);
+        zoneCombustion(const zoneCombustion&) = delete;
 
 
     //- Destructor

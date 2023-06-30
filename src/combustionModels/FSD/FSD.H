@@ -138,7 +138,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        FSD(const FSD&);
+        FSD(const FSD&) = delete;
 
 
     //- Destructor

@@ -70,7 +70,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        noCombustion(const noCombustion&);
+        noCombustion(const noCombustion&) = delete;
 
 
     //- Destructor

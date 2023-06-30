@@ -106,7 +106,7 @@ public:
         {}
 
         //- Disallow default bitwise copy construction
-        surfaceInterpolationScheme(const surfaceInterpolationScheme&);
+        surfaceInterpolationScheme(const surfaceInterpolationScheme&) = delete;
 
 
 

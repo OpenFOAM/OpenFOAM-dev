@@ -115,7 +115,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        XiEqModel(const XiEqModel&);
+        XiEqModel(const XiEqModel&) = delete;
 
 
     // Selectors

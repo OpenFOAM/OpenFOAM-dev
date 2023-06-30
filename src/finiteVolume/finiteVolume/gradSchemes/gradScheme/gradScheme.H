@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ class gradScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construction
-        gradScheme(const gradScheme&);
+        gradScheme(const gradScheme&) = delete;
 
         //- Disallow default bitwise assignment
         void operator=(const gradScheme&) = delete;

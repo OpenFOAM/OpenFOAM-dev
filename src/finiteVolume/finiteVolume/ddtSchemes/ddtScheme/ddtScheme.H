@@ -107,7 +107,7 @@ public:
         {}
 
         //- Disallow default bitwise copy construction
-        ddtScheme(const ddtScheme&);
+        ddtScheme(const ddtScheme&) = delete;
 
 
     // Selectors

@@ -110,7 +110,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        SDA(const SDA&);
+        SDA(const SDA&) = delete;
 
 
         //- Construct and return a clone

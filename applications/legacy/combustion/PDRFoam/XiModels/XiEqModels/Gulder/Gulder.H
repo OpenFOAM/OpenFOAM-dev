@@ -86,7 +86,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        Gulder(const Gulder&);
+        Gulder(const Gulder&) = delete;
 
 
     //- Destructor

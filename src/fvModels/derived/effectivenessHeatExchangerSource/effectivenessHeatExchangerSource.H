@@ -195,7 +195,7 @@ public:
         effectivenessHeatExchangerSource
         (
             const effectivenessHeatExchangerSource&
-        );
+        ) = delete;
 
 
     //- Destructor

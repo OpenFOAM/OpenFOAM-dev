@@ -82,7 +82,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        SCOPEBlend(const SCOPEBlend&);
+        SCOPEBlend(const SCOPEBlend&) = delete;
 
 
     //- Destructor

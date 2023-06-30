@@ -98,7 +98,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        basicSubGrid(const basicSubGrid&);
+        basicSubGrid(const basicSubGrid&) = delete;
 
 
     //- Destructor

@@ -100,7 +100,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        SCOPEXiEq(const SCOPEXiEq&);
+        SCOPEXiEq(const SCOPEXiEq&) = delete;
 
 
     //- Destructor

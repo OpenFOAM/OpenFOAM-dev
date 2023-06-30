@@ -640,7 +640,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const fvMesh&);
+        void operator=(const fvMesh&) = delete;
 
         bool operator!=(const fvMesh&) const;
         bool operator==(const fvMesh&) const;

@@ -74,7 +74,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        fixed(const fixed&);
+        fixed(const fixed&) = delete;
 
 
     //- Destructor
