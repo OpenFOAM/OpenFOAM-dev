@@ -255,6 +255,9 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
             cellsToCellss::intersection::typeName
         );
 
+        // Ensure the deltaCoeffs are available for constraint patch evaluation
+        mesh().deltaCoeffs();
+
         // Map all the volFields in the objectRegistry
         #define mapVolFieldType(Type, nullArg)                                 \
             MeshToMeshMapVolFields<Type>(mesh(), mapper);
