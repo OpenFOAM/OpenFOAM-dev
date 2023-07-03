@@ -9,12 +9,10 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      testSlashDict;
+    object      testDict2;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-// This dictionary is read by entries in testSlashDict
-
-#inputSyntax slash;
+// This dictionary is read by entries in testDict
 
 internalField 5.6;
 

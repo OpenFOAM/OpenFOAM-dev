@@ -472,7 +472,7 @@ int main(int argc, char *argv[])
         }
 
         dict.dictionary::write(Info, false);
-        IOobject::writeDivider(Info);
+        IOobject::writeEndDivider(Info);
 
         return 0;
     }

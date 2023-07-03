@@ -5,47 +5,69 @@
     \\  /    A nd           | Version:  dev
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
+//
+// "testDict"
+//
 FoamFile
 {
-    format      ascii;
-    class       dictionary;
-    object      testSlashDict;
+    format          ascii;
+    class           dictionary;
+    object          testDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#inputSyntax dot;
-
-internalField 3.4;
+internalField   3.4;
 
 active
 {
     type            fixedValue;
-    value.air       $internalField;
+    value.air       3.4;
 }
 
 inactive
 {
     type            anotherFixedValue;
-
-    value           $..active.value.air;
-    anotherValue    $:active.value.air;
-
+    value           3.4;
+    anotherValue    3.4;
     sub
     {
-        value           $...active.value.air;
-        anotherValue    $:active.value.air;
+        value           3.4;
+        anotherValue    3.4;
     }
 }
 
 "U.*"
 {
-    solver GAMG;
+    solver          GAMG;
 }
 
 e.air
 {
-    // This doesn't expand
-    $U.air;
+    solver          GAMG;
 }
 
-// ************************************************************************* //
+external
+{
+    value           5.6;
+}
+
+activeWater
+{
+    type            fixedValue;
+    value.air       5.6;
+    value.water     1000;
+}
+
+activeAir
+{
+    type            fixedValue;
+    value.air       5.6;
+}
+
+whichActive     activeWater;
+
+active2
+{
+    type            fixedValue;
+    value.water     1000;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

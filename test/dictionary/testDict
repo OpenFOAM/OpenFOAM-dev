@@ -9,13 +9,11 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      testSlashDict;
+    object      testDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // To expand this dictionary run
-//     foamDictionary testSlashDict
-
-#inputSyntax slash;
+//     foamDictionary -expand testDict
 
 internalField 3.4;
 
@@ -52,25 +50,25 @@ e.air
 
 external
 {
-    value $testSlashDict2!active/value.air;
+    value $testDict2!active/value.air;
 }
 
 activeWater
 {
-    $testSlashDict2!active;
+    $testDict2!active;
     value.water     1000;
 }
 
 activeAir
 {
-    ${${FOAM_CASE}/testSlashDict2!active};
+    ${${FOAM_CASE}/testDict2!active};
 }
 
 whichActive activeWater;
 
 active2
 {
-    ${${FOAM_CASE}/testSlashDict2!$whichActive};
+    ${${FOAM_CASE}/testDict2!$whichActive};
 }
 
 // ************************************************************************* //
