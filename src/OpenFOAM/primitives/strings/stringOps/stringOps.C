@@ -70,7 +70,7 @@ static inline int findParameterAlternative
 }
 
 
-//- Get dictionary or (optionally) environment variable
+// Get dictionary or (optionally) environment variable
 string getVariable
 (
     const word& name,
@@ -140,8 +140,8 @@ string getVariable
 }
 
 
-//- Recursively expands dictionary or environment variable starting at index
-//  in string. Updates index.
+// Recursively expands dictionary or environment variable starting at index
+// in string. Updates index.
 string expand
 (
     const string& s,
@@ -176,7 +176,7 @@ string expand
 }
 
 
-//- Expand path parts of a string
+// Expand path parts of a string
 Foam::string& inplaceExpandPath(string& s)
 {
     if (!s.empty())

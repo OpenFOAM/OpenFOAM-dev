@@ -1,0 +1,62 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      testCalc;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+a   1.1;
+b   3.2;
+c   #calc "$a*$b";
+
+// Special care is required for calc entries that include a division since
+// "/" is also used as the scoping operator to identify keywords in
+// sub-dictionaries. For example, "$a/b" expects a keyword "b" within a
+// sub-dictionary named "a". A division can be correctly executed by using a
+// space between a variables and "/", e.g.
+
+c   #calc "$a / $b";
+
+// or bracketing the variable, e.g.
+
+c   #calc "($a)/$b";
+
+// The code string can be delimited either by '"..."' in which newlines must be
+// escaped or '#{...#}' which directly supports multi-line strings and is more
+// convenient when evaluating string expressions by avoiding the need to
+// escape the quotes, e.g.
+
+c   #calc #{ $a*sqrt($b) #};
+
+s   "field";
+fieldName #calc #{ $<string>s + "Name" #};
+
+// Additional include files for the #calc code compilation can be specified
+// using the #calcInclude entry, e.g. if functions from transform.H are used
+angleOfAttack   5; // degs
+
+angle           #calc "-degToRad($angleOfAttack)";
+
+#calcInclude    "transform.H"
+liftDir         #calc "transform(Ry($angle), vector(0, 0, 1))";
+dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
+
+// Get U from testCalc2 and cache locally for #calc
+U               ${${FOAM_CASE}/testCalc2!U};
+
+// The testCalc2 file is local so this simpler form could be used
+// U               $testCalc2!U;
+
+// Calculate the magnitude of the velocity and turbulent kinetic energy
+magU            #calc "mag($<vector>U)";
+k               #calc "1.5*magSqr(0.05*$<vector>U)";
+
+// ************************************************************************* //

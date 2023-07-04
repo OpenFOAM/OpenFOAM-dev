@@ -4,6 +4,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-runApplication foamDictionary -expand testDict
+runApplication -s testDict foamDictionary -expand testDict
+runApplication -s testCalc foamDictionary -expand testCalc
+runApplication -s simpleBlockMeshDict foamDictionary -expand simpleBlockMeshDict
 
 #------------------------------------------------------------------------------

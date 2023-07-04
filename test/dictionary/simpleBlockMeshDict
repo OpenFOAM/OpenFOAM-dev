@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      simpleBlockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+min         (-2.5 -1.2 -3.0);   // Minimum coordinates of the block
+max         (2.5 1.2 3.0);      // Maximum coordinates of the block
+nCellsByL   33.3333;            // Number of cells per unit length
+
+// Calculate the number of cells in each block direction
+nCells      #calc #{ Vector<label>($nCellsByL*($<vector>max - $<vector>min) + vector::one/2) #};
+
+// Generate the vertices using a boundBox
+#calcInclude "boundBox.H"
+vertices #calc "boundBox($<vector>min, $<vector>max).points()";
+
+blocks
+(
+    hex #calc "identityMap(8)" $nCells simpleGrading (1 1 1)
+);
+
+defaultPatch
+{
+    type patch;
+}
+
+boundary
+();
+
+// ************************************************************************* //
