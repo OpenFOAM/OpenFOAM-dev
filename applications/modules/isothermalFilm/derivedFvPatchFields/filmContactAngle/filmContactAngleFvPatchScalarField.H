@@ -71,7 +71,6 @@ Usage
     }
     \endverbatim
 
-
 See also
     Foam::contactAngleModel
     Foam::contactAngleModels::constant
