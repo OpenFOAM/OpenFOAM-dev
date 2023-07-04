@@ -50,7 +50,7 @@ static inline int findParameterAlternative
             if (pos < endPos)
             {
                 // Nn-range: check for '+' or '-' following the ':'
-                const int altType = s[pos+1];
+                const int altType = s[pos + 1];
                 if (altType == '+' || altType == '-')
                 {
                     return altType;
@@ -155,7 +155,7 @@ string expand
 
     while (index < s.size())
     {
-        if (s[index] == '$' && s[index+1] == '{')
+        if (s[index] == '$' && s[index + 1] == '{')
         {
             // Recurse to parse variable name
             index += 2;
@@ -261,10 +261,10 @@ Foam::string& Foam::stringOps::inplaceExpandEnvVar
     while
     (
         (begVar = s.find('$', begVar)) != string::npos
-     && begVar < s.size()-1
+     && begVar < s.size() - 1
     )
     {
-        if (begVar == 0 || s[begVar-1] != '\\')
+        if (begVar == 0 || s[begVar - 1] != '\\')
         {
             // Find end of first occurrence
             string::size_type endVar = begVar;
@@ -274,7 +274,7 @@ Foam::string& Foam::stringOps::inplaceExpandEnvVar
             int altType = 0;
             string::size_type altPos = string::npos;
 
-            if (s[begVar+1] == '{')
+            if (s[begVar + 1] == '{')
             {
                 endVar = s.find('}', begVar);
                 delim = 1;
@@ -421,10 +421,10 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
     while
     (
         (begVar = s.find(sigil, begVar)) != string::npos
-     && begVar < s.size()-1
+     && begVar < s.size() - 1
     )
     {
-        if (begVar == 0 || s[begVar-1] != '\\')
+        if (begVar == 0 || s[begVar - 1] != '\\')
         {
             // Find end of first occurrence
             string::size_type endVar = begVar;
@@ -432,16 +432,17 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
 
             // Get the type, if any
             word varType;
-            if (s[begVar+1] == '<')
+            if (s[begVar + 1] == '<')
             {
-                begDelim += s.findClosing('>', begVar+1) - begVar;
-                varType = s.substr(begVar+2, begDelim-2);
+                begDelim += s.findClosing('>', begVar + 1) - begVar;
+                varType = s.substr(begVar + 2, begDelim - 2);
             }
 
             // Parse any braces and find the end of the variable
-            if (s[begVar+begDelim+1] == '{')
+            if (s[begVar+begDelim + 1] == '{')
             {
-                endVar = s.find('}', begVar+begDelim);
+                // endVar = s.find('}', begVar+begDelim);
+                endVar = s.findClosing('}', begVar+begDelim + 1);
                 begDelim += 1;
                 endDelim += 1;
             }
@@ -483,7 +484,7 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
             }
             else
             {
-                const word varName
+                word varName
                 (
                     s.substr
                     (
@@ -492,6 +493,9 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
                     ),
                     false
                 );
+
+                // Expand any environment variable paths in the variable name
+                inplaceExpandEnvVar(varName);
 
                 // Lookup in the dictionary
                 const entry* ePtr = dict.lookupScopedEntryPtr
@@ -505,6 +509,34 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
                 if (ePtr)
                 {
                     OStringStream buf;
+
+                    // If the variable type is not specified
+                    // check if it can be obtained from the single token type
+                    if (varType.empty())
+                    {
+                        const primitiveEntry& pe =
+                            dynamicCast<const primitiveEntry>(*ePtr);
+
+                        // Check that the primitive entry is a single token
+                        if (pe.size() == 1)
+                        {
+                            const token& t = pe[0];
+
+                            // Map the token type to the variable type
+                            if (t.isScalar())
+                            {
+                                varType = "scalar";
+                            }
+                            else if (t.isLabel())
+                            {
+                                varType = "label";
+                            }
+                            else if (t.isString())
+                            {
+                                varType = "string";
+                            }
+                        }
+                    }
 
                     if (!dictVar.empty() && !varType.empty())
                     {
@@ -593,18 +625,18 @@ Foam::string& Foam::stringOps::inplaceExpandCodeTemplate
     while
     (
         (begVar = s.find(sigil, begVar)) != string::npos
-     && begVar < s.size()-1
+     && begVar < s.size() - 1
     )
     {
-        if (begVar == 0 || s[begVar-1] != '\\')
+        if (begVar == 0 || s[begVar - 1] != '\\')
         {
             // Find end of first occurrence
             string::size_type endVar = begVar;
             string::size_type delim = 0;
 
-            if (s[begVar+1] == '{')
+            if (s[begVar + 1] == '{')
             {
-                endVar = s.find('}', begVar);
+                endVar = s.findClosing('}', begVar + 1);
                 delim = 1;
             }
             else
@@ -701,12 +733,12 @@ Foam::string& Foam::stringOps::inplaceExpandEntry
     while
     (
         (begVar = s.find(sigil, begVar)) != string::npos
-     && begVar < s.size()-1
+     && begVar < s.size() - 1
     )
     {
-        if (begVar == 0 || s[begVar-1] != '\\')
+        if (begVar == 0 || s[begVar - 1] != '\\')
         {
-            if (s[begVar+1] == '{')
+            if (s[begVar + 1] == '{')
             {
                 // Recursive variable expansion mode
                 label stringStart = begVar;
@@ -780,7 +812,7 @@ Foam::string& Foam::stringOps::inplaceExpandEntry
                 s.std::string::replace
                 (
                     begVar,
-                    varName.size()+1,
+                    varName.size() + 1,
                     varValue
                 );
                 begVar += varValue.size();
@@ -841,7 +873,7 @@ Foam::string Foam::stringOps::trimRight(const string& s)
     if (!s.empty())
     {
         string::size_type sz = s.size();
-        while (sz && isspace(s[sz-1]))
+        while (sz && isspace(s[sz - 1]))
         {
             --sz;
         }
@@ -861,7 +893,7 @@ Foam::string& Foam::stringOps::inplaceTrimRight(string& s)
     if (!s.empty())
     {
         string::size_type sz = s.size();
-        while (sz && isspace(s[sz-1]))
+        while (sz && isspace(s[sz - 1]))
         {
             --sz;
         }

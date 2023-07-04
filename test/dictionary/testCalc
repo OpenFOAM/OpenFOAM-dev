@@ -49,14 +49,9 @@ angle           #calc "-degToRad($angleOfAttack)";
 liftDir         #calc "transform(Ry($angle), vector(0, 0, 1))";
 dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
 
-// Get U from testCalc2 and cache locally for #calc
-U               ${${FOAM_CASE}/testCalc2!U};
-
-// The testCalc2 file is local so this simpler form could be used
-// U               $testCalc2!U;
-
 // Calculate the magnitude of the velocity and turbulent kinetic energy
-magU            #calc "mag($<vector>U)";
-k               #calc "1.5*magSqr(0.05*$<vector>U)";
+// where the velocity is looked-up from testCalc2
+magU            #calc "mag($<vector>testCalc2!U)";
+k               #calc "1.5*magSqr(0.05*$<vector>{${FOAM_CASE}/testCalc2!U})";
 
 // ************************************************************************* //
