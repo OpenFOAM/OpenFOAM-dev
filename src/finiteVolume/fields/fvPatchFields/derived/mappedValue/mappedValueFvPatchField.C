@@ -27,7 +27,93 @@ License
 #include "mappedPolyPatch.H"
 #include "volFields.H"
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+const Foam::mappedPatchBase&
+Foam::mappedValueFvPatchField<Type>::mapper() const
+{
+    return
+        mapperPtr_.valid()
+      ? mapperPtr_()
+      : mappedPatchBase::getMap(this->patch().patch());
+}
+
+
+template<class Type>
+const Foam::fvPatchField<Type>&
+Foam::mappedValueFvPatchField<Type>::nbrPatchField() const
+{
+    const fvMesh& nbrMesh =
+        refCast<const fvMesh>(this->mapper().nbrMesh());
+
+    const VolField<Type>& nbrField =
+        this->mapper().sameRegion()
+     && this->fieldName_ == this->internalField().name()
+      ? refCast<const VolField<Type>>(this->internalField())
+      : nbrMesh.template lookupObject<VolField<Type>>(this->fieldName_);
+
+    const label nbrPatchi = this->mapper().nbrPolyPatch().index();
+
+    return nbrField.boundaryField()[nbrPatchi];
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::mappedValueFvPatchField<Type>::mappedValues
+(
+    const Field<Type>& nbrPatchField
+) const
+{
+    // Since we're inside initEvaluate/evaluate there might be processor
+    // comms underway. Change the tag we use.
+    int oldTag = UPstream::msgType();
+    UPstream::msgType() = oldTag + 1;
+
+    // Map values
+    tmp<Field<Type>> tResult = this->mapper().fromNeighbour(nbrPatchField);
+
+    // Set the average, if necessary
+    if (setAverage_)
+    {
+        const Type nbrAverageValue =
+            gSum(this->patch().magSf()*tResult())
+           /gSum(this->patch().magSf());
+
+        if (mag(nbrAverageValue)/mag(average_) > 0.5)
+        {
+            tResult.ref() *= mag(average_)/mag(nbrAverageValue);
+        }
+        else
+        {
+            tResult.ref() += average_ - nbrAverageValue;
+        }
+    }
+
+    // Restore tag
+    UPstream::msgType() = oldTag;
+
+    return tResult;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
+(
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF
+)
+:
+    fixedValueFvPatchField<Type>(p, iF),
+    fieldName_(iF.name()),
+    setAverage_(false),
+    average_(Zero),
+    mapperPtr_(nullptr)
+{}
+
 
 template<class Type>
 Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
@@ -38,8 +124,44 @@ Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF, dict),
-    mappedFvPatchField<Type>(p, iF, dict)
-{}
+    fieldName_(dict.lookupOrDefault<word>("field", iF.name())),
+    setAverage_
+    (
+        dict.lookupOrDefault<bool>("setAverage", dict.found("average"))
+    ),
+    average_(setAverage_ ? dict.lookup<Type>("average") : Zero),
+    mapperPtr_
+    (
+        mappedPatchBase::specified(dict)
+      ? new mappedPatchBase(p.patch(), dict, false)
+      : nullptr
+    )
+{
+    if (!mapperPtr_.valid() && !isA<mappedPatchBase>(p.patch()))
+    {
+        OStringStream str;
+        str << "Field " << this->internalField().name() << " of type "
+            << type() << " on patch " << this->patch().name()
+            << " of type " << p.patch().type() << " does not "
+            << "have mapping specified (i.e., neighbourPatch, and/or "
+            << "neighbourRegion entries) nor is the patch of "
+            << mappedPolyPatch::typeName << " type";
+        FatalIOErrorInFunction(dict)
+            << stringOps::breakIntoIndentedLines(str.str()).c_str()
+            << exit(FatalIOError);
+    }
+
+    this->mapper().validateForField
+    (
+        *this,
+        iF,
+        dict,
+        this->mapper().sameUntransformedPatch()
+     && this->fieldName_ == this->internalField().name()
+      ? mappedPatchBase::from::differentPatch
+      : mappedPatchBase::from::any
+    );
+}
 
 
 template<class Type>
@@ -52,7 +174,15 @@ Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
-    mappedFvPatchField<Type>(ptf, p, iF, mapper)
+    fieldName_(ptf.fieldName_),
+    setAverage_(ptf.setAverage_),
+    average_(ptf.average_),
+    mapperPtr_
+    (
+        ptf.mapperPtr_.valid()
+      ? new mappedPatchBase(p.patch(), ptf.mapperPtr_())
+      : nullptr
+    )
 {}
 
 
@@ -64,7 +194,15 @@ Foam::mappedValueFvPatchField<Type>::mappedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf, iF),
-    mappedFvPatchField<Type>(ptf, iF)
+    fieldName_(ptf.fieldName_),
+    setAverage_(ptf.setAverage_),
+    average_(ptf.average_),
+    mapperPtr_
+    (
+        ptf.mapperPtr_.valid()
+      ? new mappedPatchBase(ptf.patch().patch(), ptf.mapperPtr_())
+      : nullptr
+    )
 {}
 
 
@@ -78,7 +216,11 @@ void Foam::mappedValueFvPatchField<Type>::map
 )
 {
     fixedValueFvPatchField<Type>::map(ptf, mapper);
-    mappedFvPatchField<Type>::clearOut();
+
+    if (mapperPtr_.valid())
+    {
+        mapperPtr_->clearOut();
+    }
 }
 
 
@@ -89,7 +231,11 @@ void Foam::mappedValueFvPatchField<Type>::reset
 )
 {
     fixedValueFvPatchField<Type>::reset(ptf);
-    mappedFvPatchField<Type>::clearOut();
+
+    if (mapperPtr_.valid())
+    {
+        mapperPtr_->clearOut();
+    }
 }
 
 
@@ -101,7 +247,7 @@ void Foam::mappedValueFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    this->operator==(this->mappedValues(this->nbrPatchField()));
+    this->operator==(mappedValues(nbrPatchField()));
 
     fixedValueFvPatchField<Type>::updateCoeffs();
 }
@@ -112,7 +258,23 @@ void Foam::mappedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
 
-    mappedFvPatchField<Type>::write(os);
+    writeEntryIfDifferent
+    (
+        os,
+        "field",
+        this->internalField().name(),
+        fieldName_
+    );
+
+    if (setAverage_)
+    {
+        writeEntry(os, "average", average_);
+    }
+
+    if (mapperPtr_.valid())
+    {
+        mapperPtr_->write(os);
+    }
 
     writeEntry(os, "value", *this);
 }

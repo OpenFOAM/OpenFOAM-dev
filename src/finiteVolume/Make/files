@@ -193,9 +193,7 @@ $(derivedFvPatchFields)/zeroInletOutlet/zeroInletOutletFvPatchFields.C
 $(derivedFvPatchFields)/inletOutletTotalTemperature/inletOutletTotalTemperatureFvPatchScalarField.C
 $(derivedFvPatchFields)/mappedFlowRateVelocity/mappedFlowRateVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/mappedInternalValue/mappedInternalValueFvPatchFields.C
-$(derivedFvPatchFields)/mapped/mappedFvPatchFields.C
 $(derivedFvPatchFields)/mappedValue/mappedValueFvPatchFields.C
-$(derivedFvPatchFields)/mappedValueAndPatchInternalValue/mappedValueAndPatchInternalValueFvPatchFields.C
 $(derivedFvPatchFields)/mappedVelocityFlux/mappedVelocityFluxFvPatchField.C
 $(derivedFvPatchFields)/matchedFlowRateOutletVelocity/matchedFlowRateOutletVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/noSlip/noSlipFvPatchVectorField.C

@@ -25,6 +25,7 @@ License
 
 #include "mappedFilmPressureFvPatchScalarField.H"
 #include "volFields.H"
+#include "mappedPatchBase.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -36,8 +37,7 @@ Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    zeroGradientFvPatchField<scalar>(p, iF, dict),
-    mappedFvPatchField<scalar>(p, iF, dict)
+    zeroGradientFvPatchField<scalar>(p, iF, dict)
 {}
 
 
@@ -49,8 +49,7 @@ Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
     const fvPatchFieldMapper& mapper
 )
 :
-    zeroGradientFvPatchField<scalar>(ptf, p, iF, mapper),
-    mappedFvPatchField<scalar>(ptf, p, iF, mapper)
+    zeroGradientFvPatchField<scalar>(ptf, p, iF, mapper)
 {}
 
 
@@ -60,33 +59,11 @@ Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    zeroGradientFvPatchField<scalar>(ptf, iF),
-    mappedFvPatchField<scalar>(ptf, iF)
+    zeroGradientFvPatchField<scalar>(ptf, iF)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::mappedFilmPressureFvPatchScalarField::map
-(
-    const fvPatchField<scalar>& ptf,
-    const fvPatchFieldMapper& mapper
-)
-{
-    zeroGradientFvPatchField<scalar>::map(ptf, mapper);
-    mappedFvPatchField<scalar>::clearOut();
-}
-
-
-void Foam::mappedFilmPressureFvPatchScalarField::reset
-(
-    const fvPatchField<scalar>& ptf
-)
-{
-    zeroGradientFvPatchField<scalar>::reset(ptf);
-    mappedFvPatchField<scalar>::clearOut();
-}
-
 
 void Foam::mappedFilmPressureFvPatchScalarField::updateCoeffs()
 {
@@ -95,10 +72,23 @@ void Foam::mappedFilmPressureFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    // Map the neighbouring fluid patch pressure field to this patch
-    this->operator==(this->mappedValues(this->nbrPatchField()));
+    // Get the mapper and the neighbouring patch
+    const mappedPatchBase& mpb = mappedPatchBase::getMap(patch().patch());
+    const label patchiNbr = mpb.nbrPolyPatch().index();
+    const fvPatch& patchNbr =
+        refCast<const fvMesh>(mpb.nbrMesh()).boundary()[patchiNbr];
 
-    // Map the patch pressure to the internal field
+    // Look up the neighbouring pressure field
+    const fvPatchScalarField& pNbr =
+        patchNbr.lookupPatchField<volScalarField, scalar>
+        (
+            internalField().name()
+        );
+
+    // Map the neighbouring fluid patch pressure field to this patch
+    this->operator==(mpb.fromNeighbour(pNbr));
+
+    // Also assign the mapped pressure to the internal field
     UIndirectList<scalar>
     (
         const_cast<Field<scalar>&>(this->primitiveField()),
@@ -112,7 +102,6 @@ void Foam::mappedFilmPressureFvPatchScalarField::updateCoeffs()
 void Foam::mappedFilmPressureFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    mappedFvPatchField<scalar>::write(os);
     writeEntry(os, "value", *this);
 }
 
