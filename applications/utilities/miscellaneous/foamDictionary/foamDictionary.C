@@ -33,6 +33,7 @@ Description
 
 Usage
     \b foamDictionary [OPTION] dictionary
+
       - \par -case \<dir\>
         Select a case directory instead of the current working directory
 
