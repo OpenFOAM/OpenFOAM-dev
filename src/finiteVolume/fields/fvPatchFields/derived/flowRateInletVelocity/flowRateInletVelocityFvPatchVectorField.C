@@ -142,6 +142,7 @@ flowRateInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(p, iF, dict, false),
+    rhoName_("rho"),
     rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", -vGreat)),
     alphaName_(dict.lookupOrDefault<word>("alpha", word::null))
 {
