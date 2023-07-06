@@ -514,50 +514,82 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
                     // check if it can be obtained from the single token type
                     if (varType.empty())
                     {
-                        const primitiveEntry& pe =
-                            dynamicCast<const primitiveEntry>(*ePtr);
-
-                        // Check that the primitive entry is a single token
-                        if (pe.size() == 1)
+                        if (!ePtr->isDict())
                         {
-                            const token& t = pe[0];
+                            const primitiveEntry& pe =
+                                dynamicCast<const primitiveEntry>(*ePtr);
 
-                            // Map the token type to the variable type
-                            if (t.isScalar())
+                            // Check that the primitive entry is a single token
+                            if (pe.size() == 1)
                             {
-                                varType = "scalar";
-                            }
-                            else if (t.isLabel())
-                            {
-                                varType = "label";
-                            }
-                            else if (t.isString())
-                            {
-                                varType = "string";
+                                const token& t = pe[0];
+
+                                // Map the token type to the variable type
+                                if (t.isScalar())
+                                {
+                                    varType = "scalar";
+                                }
+                                else if (t.isLabel())
+                                {
+                                    varType = "label";
+                                }
+                                else if (t.isString())
+                                {
+                                    varType = "string";
+                                }
                             }
                         }
                     }
 
-                    if (!dictVar.empty() && !varType.empty())
+                    if (!dictVar.empty())
                     {
-                        // If the dictionary is accessible and the type is
-                        // known, then lookup the variable in the code, rather
-                        // than substituting its value. That way we don't need
-                        // to recompile this string if the value changes.
-                        buf << dictVar
-                            << ".lookupScoped<" << varType << ">"
-                            << "(\"" << varName << "\", true, false)";
-                    }
+                        if (!varType.empty())
+                        {
+                            // If the dictionary is accessible and the variable
+                            // type is specified or could be deduced
+                            // from the value, then lookup the variable in the
+                            // code, rather than substituting its value. That
+                            // way we don't need to recompile this string if the
+                            // value changes.
+                            buf << dictVar
+                                << ".lookupScoped<" << varType << ">"
+                                << "(\"" << varName << "\", true, false)";
+                        }
+                        else
+                        {
+                            // If the dictionary is accessible but the
+                            // variable type is not specified and cannot be
+                            // deduced from the value issue an error
+                            FatalIOErrorInFunction(dict)
+                                << "Type not specified for variable "
+                                << varName << " in code string " << nl
+                                << "    " << s << nl
+                                << "Variable " << varName << " expands to "
+                                << nl;
 
-                    if (dictVar.empty() && !varType.empty())
-                    {
-                        // If the dictionary is not accessible but the type is
-                        // known, then read the substituted value from a string
-                        buf << "read<" << varType << ">(\"";
-                    }
+                            if (ePtr->isDict())
+                            {
+                                ePtr->dict().write(FatalIOError, false);
+                            }
+                            else
+                            {
+                                dynamicCast<const primitiveEntry>(*ePtr)
+                                    .write(FatalIOError, true);
+                            }
 
-                    if (dictVar.empty() || varType.empty())
+                            FatalIOErrorInFunction(dict) << exit(FatalIOError);
+                        }
+                    }
+                    else
                     {
+                        if (!varType.empty())
+                        {
+                            // If the dictionary is not accessible but the
+                            // type is known, then read the substituted value
+                            // from a string
+                            buf << "read<" << varType << ">(\"";
+                        }
+
                         // If the dictionary is not accessible and/or the type
                         // is not known, then we need to substitute the
                         // variable's value
@@ -567,8 +599,8 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
                         buf << scientific;
                         buf.precision(IOstream::defaultPrecision());
 
-                        // Write the dictionary or primitive entry. Fail if
-                        // anything else.
+                        // Write the dictionary or primitive entry.
+                        // Fail if anything else.
                         if (ePtr->isDict())
                         {
                             ePtr->dict().write(buf, false);
@@ -578,12 +610,12 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
                             dynamicCast<const primitiveEntry>(*ePtr)
                                 .write(buf, true);
                         }
-                    }
 
-                    if (dictVar.empty() && !varType.empty())
-                    {
-                        // Close the string and read function as necessary
-                        buf << "\")";
+                        if (!varType.empty())
+                        {
+                            // Close the string and read function as necessary
+                            buf << "\")";
+                        }
                     }
 
                     s.std::string::replace
