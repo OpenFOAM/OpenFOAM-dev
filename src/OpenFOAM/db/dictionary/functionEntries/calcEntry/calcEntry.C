@@ -65,7 +65,7 @@ Foam::string Foam::functionEntries::calcEntry::calc
     Istream& is
 )
 {
-    Info<< "Using #calcEntry at line " << is.lineNumber()
+    Info<< "Expanding #calc at line " << is.lineNumber()
         << " in file " <<  dict.name() << endl;
 
     dynamicCode::checkSecurity
@@ -74,16 +74,37 @@ Foam::string Foam::functionEntries::calcEntry::calc
         dict
     );
 
-    // Read string delimited by either '"..."' or '#{...#}'
-    verbatimString s(is);
-
     // Construct codeDict for codeStream
     // with dict as parent dictionary for string expansion
     // and variable substitution
     dictionary codeDict(dict, dictionary());
 
-    calcIncludeEntry::codeInclude(codeDict);
-    codeDict.add("code", "os << (" + s + ");");
+    // Read the code expression string delimited by either '"..."' or '#{...#}'
+    token t(is);
+
+    if (t.isVerbatimString())
+    {
+        const verbatimString& s = t.verbatimStringToken();
+
+        calcIncludeEntry::codeInclude(codeDict);
+        codeDict.add("code", s);
+    }
+    else if (t.isString())
+    {
+        const string& s = t.stringToken();
+
+        calcIncludeEntry::codeInclude(codeDict);
+        codeDict.add("code", "os << (" + s + ");");
+    }
+    else
+    {
+        FatalIOErrorInFunction(is)
+            << "Wrong string type for #calc" << nl
+            << "    Expected either a string delimited by '\"...\"' "
+               "or a verbatim string delimited by '#{...#}' " << nl
+            << "    found token " << t
+            << exit(FatalIOError);
+    }
 
     codeStream::streamingFunctionType function = codeStream::getFunction
     (

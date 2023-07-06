@@ -29,15 +29,8 @@ c   #calc "$a / $b";
 
 c   #calc "($a)/$b";
 
-// The code string can be delimited either by '"..."' in which newlines must be
-// escaped or '#{...#}' which directly supports multi-line strings and is more
-// convenient when evaluating string expressions by avoiding the need to
-// escape the quotes, e.g.
-
-c   #calc #{ $a*sqrt($b) #};
-
 s   "field";
-fieldName #calc #{ $<string>s + "Name" #};
+fieldName #calc "$<string>s + \"Name\" ";
 
 // Additional include files for the #calc code compilation can be specified
 // using the #calcInclude entry, e.g. if functions from transform.H are used
@@ -53,5 +46,25 @@ dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
 // where the velocity is looked-up from testCalc2
 magU            #calc "mag($<vector>testCalc2!U)";
 k               #calc "1.5*magSqr(0.05*$<vector>{${FOAM_CASE}/testCalc2!U})";
+
+// If the code string is delimited by '#{...#}' multiple lines and multiple
+// code statements can be used to generate the entry  using 'os << ...;'.
+// This is equivalent to #codeStream but with a more compact syntax.
+#calcInclude    "transform.H"
+maxAngle        30;
+nAngles         7;
+Us              #calc
+#{
+    const vector U($<vector>testCalc2!U);
+    const int nAngles = $nAngles;
+    const scalar angleStep = ($<scalar>maxAngle)/(nAngles - 1);
+    List<vector> Us(nAngles);
+    for(int i=0; i<nAngles; i++)
+    {
+        const scalar angle = degToRad(i*angleStep);
+        Us[i] = transform(Ry(angle), U);
+    }
+    os << Us;
+#};
 
 // ************************************************************************* //

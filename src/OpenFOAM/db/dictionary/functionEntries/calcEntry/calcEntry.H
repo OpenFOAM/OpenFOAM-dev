@@ -51,18 +51,9 @@ Usage
     c #calc "($a)/$b";
     \endverbatim
 
-    The code string can be delimited either by '"..."' in which newlines must be
-    escaped or '#{...#}' which directly supports multi-line strings and is more
-    convenient when evaluating string expressions by avoiding the need to
-    escape the quotes, e.g.
-
-    \verbatim
-    c #calc #{ $a*sqrt($b) #};
-    \endverbatim
-
     \verbatim
     s "field";
-    fieldName #calc #{ $<string>s + "Name" #};
+    fieldName #calc "$<string>s + \"Name\" ";
     \endverbatim
 
     Additional include files for the #calc code compilation can be specified
@@ -77,12 +68,31 @@ Usage
     dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
     \endverbatim
 
-    Note:
-        Internally this is just a wrapper around codeStream functionality - the
-        #calc string is used to construct a dictionary for codeStream.
+    If the code string is delimited by '#{...#}' multiple lines and multiple
+    code statements can be used to generate the entry  using 'os << ...;'.
+    This is equivalent to #codeStream but with a more compact syntax.
+    \verbatim
+    #calcInclude    "transform.H"
+    maxAngle        30;
+    nAngles         7;
+    Us              #calc
+    #{
+        const vector U($<vector>testCalc2!U);
+        const int nAngles = $nAngles;
+        const scalar angleStep = ($<scalar>maxAngle)/(nAngles - 1);
+        List<vector> Us(nAngles);
+        for(int i=0; i<nAngles; i++)
+        {
+            const scalar angle = degToRad(i*angleStep);
+            Us[i] = transform(Ry(angle), U);
+        }
+        os << Us;
+    #};
+    \endverbatim
 
 See also
     Foam::functionEntries::calcIncludeEntry
+    Foam::functionEntries::codeStream
 
 SourceFiles
     calcEntry.C
