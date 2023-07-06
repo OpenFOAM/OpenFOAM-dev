@@ -19,11 +19,20 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
+    // For an MRF case, the rotating patch requires the MRFnoSlip BC
+    // For an NCC case, it requires a movingWallVelocity BC
+    // If steadyState, assume the case is MRF; otherwise, NCC.
     rotating
     {
+        timeScheme      ${${FOAM_CASE}/system/fvSchemes!ddtSchemes/default};
+    #ifeq $timeScheme steadyState
+        type            MRFnoSlip;
+    #else
         type            movingWallVelocity;
+    #endif
         value           uniform (0 0 0);
     }
+
     wall
     {
         type            noSlip;
