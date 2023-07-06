@@ -74,3 +74,5 @@ NCC Simulation
 + createNonConformalCouples must then be run to generate the couple patches
   required by NCC, e.g. by
     createNonConformalCouples -overwrite
++ disable MRF by deleting the constant/MRFProperties file
++ enable NCC by changing 'mover-disabled' to 'mover' in constant/dynamicMeshDict

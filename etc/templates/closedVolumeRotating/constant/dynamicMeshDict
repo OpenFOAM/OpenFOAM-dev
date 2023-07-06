@@ -13,7 +13,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-mover
+// Disable motion for an MRF simulation
+// Enable motion for an NCC simulation by changing 'mover-disabled' to 'mover'
+mover-disabled
 {
     type            motionSolver;
 
