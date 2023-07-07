@@ -15,7 +15,7 @@ FoamFile
 
 #include "$FOAM_CASE/constant/initialConditions"
 
-dimensions      [ 1 -1 -2 0 0 0 0 ];
+dimensions      [1 -1 -2 0 0 0 0];
 
 internalField   uniform 0;
 
@@ -24,13 +24,13 @@ boundaryField
     outlet
     {
         type            fixedValue;
-        value           uniform 0;
+        value           $internalField;
     }
 
     inlet
     {
         type            fixedFluxPressure;
-        value           uniform 0;
+        value           $internalField;
     }
 
     wall

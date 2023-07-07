@@ -13,14 +13,16 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// fixedTemperature
-// {
-//     type            fixedTemperatureConstraint;
-//     select          all;
+/*
+fixedTemperature
+{
+    type            fixedTemperatureConstraint;
+    select          all;
 
-//     mode            uniform;
+    mode            uniform;
 
-//     temperature     constant 300; // Set temperature (K)
-// }
+    temperature     constant 300; // Set temperature (K)
+}
+*/
 
 //************************************************************************** //
