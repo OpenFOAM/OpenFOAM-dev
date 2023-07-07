@@ -1353,7 +1353,7 @@ _foamToC_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-all -doc -functionObjects -fvConstraints -fvModels -help -libs -listLibs -noLibs -scalarBCs -search -solver -srcDoc -switches -table -tables -vectorBCs"
+    opts="-all -doc -functionObjects -fvConstraints -fvModels -help -libs -listLibs -noLibs -scalarBCs -search -solver -solvers -srcDoc -switches -table -tables -vectorBCs"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1519,7 +1519,9 @@ _foamToTetDualMesh_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots|-time)
+        -time)
+            opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
+        -hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -2633,7 +2635,9 @@ _renumberMesh_ ()
             opts="" ; extra="-d -f" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-region|-roots|-time)
+        -time)
+            opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
+        -hostRoots|-libs|-region|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -2791,7 +2795,9 @@ _setFields_ ()
             opts="" ; extra="-d -f" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-region|-roots|-time)
+        -time)
+            opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
+        -hostRoots|-libs|-region|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -2816,7 +2822,9 @@ _setsToZones_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-region|-roots|-time)
+        -time)
+            opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
+        -hostRoots|-libs|-region|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -2962,6 +2970,29 @@ _snappyHexMesh_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _snappyHexMesh_ snappyHexMesh
+
+_snappyHexMeshConfig_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="-baffles -bounds -cellZones -clearBoundary -cylindricalBackground -defaultPatch -doc -help -implicitFeatures -inletRegions -insidePoint -layers -nCells -nCellsBetweenLevels -outletRegions -refineBackground -refinementBoxes -refinementDists -refinementLevel -refinementRegions -rotatingZones -srcDoc -surface -surfaceLevels -xMaxPatch -xMinPatch -yMaxPatch -yMinPatch -zMaxPatch -zMinPatch"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -surface)
+            opts="" ; extra="-d -f" ;;
+        -baffles|-bounds|-cellZones|-defaultPatch|-inletRegions|-insidePoint|-layers|-nCells|-nCellsBetweenLevels|-outletRegions|-refineBackground|-refinementBoxes|-refinementDists|-refinementLevel|-refinementRegions|-rotatingZones|-surfaceLevels|-xMaxPatch|-xMinPatch|-yMaxPatch|-yMinPatch|-zMaxPatch|-zMinPatch)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _snappyHexMeshConfig_ snappyHexMeshConfig
 
 _splitBaffles_ ()
 {
