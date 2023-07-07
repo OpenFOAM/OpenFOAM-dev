@@ -1,0 +1,11 @@
+meshingSurface.C
+meshingSurfaceList.C
+caseFileConfiguration.C
+blockMeshConfigurationBase.C
+blockMeshCartesianConfiguration.C
+blockMeshCylindricalConfiguration.C
+snappyHexMeshConfiguration.C
+surfaceFeaturesConfiguration.C
+snappyHexMeshConfig.C
+
+EXE = $(FOAM_APPBIN)/snappyHexMeshConfig
