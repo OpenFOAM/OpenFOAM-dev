@@ -36,8 +36,7 @@ boundaryField
 
     wall
     {
-        type            compressible::turbulentTemperatureCoupledBaffleMixed;
-        Tnbr            T;
+        type            coupledTemperature;
         value           uniform $Tinitial;
     }
 
