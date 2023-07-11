@@ -25,7 +25,7 @@ Class
     Foam::solvers::twoPhaseVoFSolver
 
 Description
-    Solver module base-class for for 2 immiscible fluids using a VOF (volume
+    Solver module base-class for 2 immiscible fluids using a VOF (volume
     of fluid) phase-fraction based interface capturing approach, with optional
     mesh motion and mesh topology changes including adaptive re-meshing.
 

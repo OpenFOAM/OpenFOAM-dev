@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -358,25 +358,25 @@ bool Foam::coupledPolyPatch::order
             if (pp.size() != ownerNFaces)
             {
                 SeriousErrorInFunction<< "The patch " << name() << " has "
-                    << pp.size() << " faces whilst it's neighbour has "
+                    << pp.size() << " faces whilst its neighbour has "
                     << ownerNFaces << endl;
             }
             if (pp.nPoints() != ownerNPoints)
             {
                 SeriousErrorInFunction<< "The patch " << name() << " has "
-                    << pp.nPoints() << " points whilst it's neighbour has "
+                    << pp.nPoints() << " points whilst its neighbour has "
                     << ownerNPoints << endl;
             }
             if (pp.nEdges() != ownerNEdges)
             {
                 SeriousErrorInFunction<< "The patch " << name() << " has "
-                    << pp.nEdges() << " edges whilst it's neighbour has "
+                    << pp.nEdges() << " edges whilst its neighbour has "
                     << ownerNEdges << endl;
             }
             if (pp.nInternalEdges() != ownerNInternalEdges)
             {
                 SeriousErrorInFunction<< "The patch " << name() << " has "
-                    << pp.nInternalEdges() << " internal edges whilst it's "
+                    << pp.nInternalEdges() << " internal edges whilst its "
                     << "neighbour has " << ownerNInternalEdges << endl;
             }
         }

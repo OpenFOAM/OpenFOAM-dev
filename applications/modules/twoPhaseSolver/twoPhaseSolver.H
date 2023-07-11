@@ -25,7 +25,7 @@ Class
     Foam::solvers::twoPhaseSolver
 
 Description
-    Solver module base-class for for 2 immiscible fluids, with optional
+    Solver module base-class for 2 immiscible fluids, with optional
     mesh motion and mesh topology changes including adaptive re-meshing.
 
     The momentum and other fluid properties are of the "mixture" and a single

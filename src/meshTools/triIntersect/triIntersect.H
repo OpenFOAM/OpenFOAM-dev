@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 Description
     Functions with which to perform an intersection of a pair of triangles; the
     source and target. The source triangle is specified with three point
-    locations and three point normals. It is projected along it's point normals
+    locations and three point normals. It is projected along its point normals
     onto the target triangle in order to calculate the intersection. The target
     triangle is specified as three point locations only.
 

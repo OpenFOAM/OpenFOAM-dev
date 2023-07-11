@@ -25,7 +25,7 @@ Class
     Foam::mixtureViscosityModels::Quemada
 
 Description
-     Quemada viscosity model for for colloidal dispersions.
+     Quemada viscosity model for colloidal dispersions.
 
      References:
      \verbatim

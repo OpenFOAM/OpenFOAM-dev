@@ -158,7 +158,7 @@ Foam::cellEdgeAddressingData::cellEdgeAddressingData
             const label cfj = cfjAndFej[0], fej = cfjAndFej[1];
 
             // If the adjacent face has not been visited then set its ownership
-            // and it's starting face edge and move forwards into it
+            // and its starting face edge and move forwards into it
             if (workspace_.cfei0[cfj] == -1)
             {
                 // If the face-edges point in different directions then the

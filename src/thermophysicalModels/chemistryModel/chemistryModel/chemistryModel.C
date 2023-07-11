@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -865,7 +865,7 @@ Foam::chemistryModel<ThermoType>::tc() const
             c_[i] = rho*Yvf_[i][celli]/specieThermos_[i].W();
         }
 
-        // A reaction's rate scale is calculated as it's molar
+        // A reaction's rate scale is calculated as its molar
         // production rate divided by the total number of moles in the
         // system.
         //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Description
 // the public domain.  It has no warranty.
 //
 // You probably want to use hashlittle().  hashlittle() and hashbig()
-// hash byte arrays.  hashlittle() is is faster than hashbig() on
+// hash byte arrays.  hashlittle() is faster than hashbig() on
 // little-endian machines.  Intel and AMD are little-endian machines.
 // On second thought, you probably want hashlittle2(), which is identical to
 // hashlittle() except it returns two 32-bit hashes for the price of one.

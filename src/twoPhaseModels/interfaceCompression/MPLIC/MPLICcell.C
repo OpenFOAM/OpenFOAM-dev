@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -253,7 +253,7 @@ Foam::FixedList<Foam::scalar, 4> Foam::MPLICcell::solveVanderMatrix() const
     //          [8/27 4/9 2/3 1]
     //          [1    1   1   1]
     //
-    // This means it's inverse can be precomputed. This pre-computation is hard
+    // This means its inverse can be precomputed. This pre-computation is hard
     // coded below.
 
     const vector4& b = cCubicAlphas_;

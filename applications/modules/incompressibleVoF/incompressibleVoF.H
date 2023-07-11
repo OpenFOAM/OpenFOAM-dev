@@ -25,7 +25,7 @@ Class
     Foam::solvers::incompressibleVoF
 
 Description
-    Solver module for for 2 incompressible, isothermal immiscible fluids using a
+    Solver module for 2 incompressible, isothermal immiscible fluids using a
     VOF (volume of fluid) phase-fraction based interface capturing approach,
     with optional mesh motion and mesh topology changes including adaptive
     re-meshing.

@@ -552,9 +552,9 @@ void Foam::BlendedInterfacialModel<ModelType>::postProcessBlendingCoefficients
         // Polygon with as many vertices as there are phases. Each phase
         // fraction equals one at a unique vertex, they vary linearly between
         // vertices, and vary smoothly in the interior of the polygon. The sum
-        // of phase fractions is always one throughout the polygon (partition
-        // of unity). This is done using Wachspress coordinates. This does not
-        // cover the entire N-dimensional phase fraction space for N >= 4 (it's
+        // of phase fractions is always one throughout the polygon (partition of
+        // unity). This is done using Wachspress coordinates. This does not
+        // cover the entire N-dimensional phase fraction space for N >= 4 (it is
         // hard to imagine how that could be visualised) but it provides enough
         // to give a good indication of what is going on.
 
