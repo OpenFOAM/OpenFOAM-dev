@@ -13,17 +13,19 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+min <min>;
+max <max>;
 
 actions
 (
     {
-        name    range1;
+        name    refine;
         type    cellSet;
         action  new;
-        source fieldToCell;
-      field   radiusFieldXY;
-      min         13.36;
-      max         18.47;
+        source  fieldToCell;
+        field   R;
+        min     $min;
+        max     $max;
     }
 );
 

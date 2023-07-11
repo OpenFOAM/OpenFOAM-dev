@@ -1,0 +1,49 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+type            coded;
+
+libs            ("libutilityFunctionObjects.so");
+
+name            generateAlpha;
+
+codeInclude
+#{
+    #include "volFields.H"
+#};
+
+codeWrite
+#{
+    const tensor XY(1, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    const vectorField xy(XY & mesh().C().primitiveField());
+
+    const vectorField z((tensor::I - XY) & mesh().C().primitiveField());
+    const vector zLow(0, 0, 2*min(z.component(2)) - max(z.component(2)));
+    const vectorField zStar(z - zLow);
+
+    vectorIOField
+    (
+        IOobject("eR", mesh().time().timeName(), mesh()),
+        xy/mag(xy)
+    ).write();
+
+    vectorIOField
+    (
+        IOobject("eTheta", mesh().time().timeName(), mesh()),
+        (zStar ^ xy)/mag(zStar ^ xy)
+    ).write();
+
+    vectorIOField
+    (
+        IOobject("eZ", mesh().time().timeName(), mesh()),
+        zStar/mag(zStar)
+    ).write();
+#};
+
+// ************************************************************************* //

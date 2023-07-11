@@ -5,26 +5,32 @@
     \\  /    A nd           | Version:  dev
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
-FoamFile
-{
-    format      ascii;
-    class       dictionary;
-    object      topoSetDict;
-}
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+type            coded;
 
-actions
-(
-    {
-        name    tier2;
-        type    cellSet;
-        action  new;
-        source fieldToCell;
-      field   radiusFieldXY;
-      min         0.0;
-      max         1.03;
-    }
-);
+libs            ("libutilityFunctionObjects.so");
+
+name            generateAlpha;
+
+codeInclude
+#{
+    #include "volFields.H"
+#};
+
+codeWrite
+#{
+    const tensor XY(1, 0, 0, 0, 1, 0, 0, 0, 0);
+
+    volScalarField
+    (
+        IOobject
+        (
+            "R",
+            mesh().time().timeName(),
+            mesh()
+        ),
+        mag(XY & mesh().C())
+    ).write();
+#};
 
 // ************************************************************************* //

@@ -9,22 +9,32 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    object      refineMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Name of cell set to refine
+set refine;
 
-actions
+// Type of coordinate system
+coordinateSystem fieldBased;
+
+// List of directions to refine. These are all vector fields.
+directions
 (
-    {
-        name    tier1;
-        type    cellSet;
-        action  new;
-        source fieldToCell;
-      field   radiusFieldXY;
-      min         0.0;
-      max         0.64;
-    }
+    eR
+    eTheta
+    eZ
 );
+
+// Whether or not to use hex topology
+useHexTopology  false;
+
+// Cut purely geometric (will cut hexes through vertices) or take topology
+// into account. Incompatible with useHexTopology.
+geometricCut    true;
+
+// Write meshes from intermediate steps
+writeMesh       false;
 
 // ************************************************************************* //

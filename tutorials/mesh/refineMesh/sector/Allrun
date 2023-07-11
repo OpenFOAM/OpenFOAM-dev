@@ -1,0 +1,39 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+
+mkdir 0
+
+# Refine in the z direction 6 times
+min=0
+for max in 0.64 1.03 1.94 3.67 7.00 13.36
+do
+    runApplication -s R_z_${min}_to_${max} foamPostProcess -func R
+
+    foamDictionary system/topoSetDict -set "min=$min, max=$max"
+    runApplication -s z_${min}_to_${max} topoSet
+
+    runApplication -s z_${min}_to_${max} \
+        refineMesh -dict refineMeshDict.z -overwrite
+done
+
+# Refine in cylindrical coordinate directions 3 times
+max=18.47
+for min in 13.36 7.00 3.67
+do
+    runApplication -s R_cyl_${min}_to_${max} foamPostProcess -func R
+    runApplication -s eRThetaZ_cyl_${min}_to_${max} \
+        foamPostProcess -func eRThetaZ
+
+    foamDictionary system/topoSetDict -set "min=$min, max=$max"
+    runApplication -s cyl_${min}_to_${max} topoSet
+
+    runApplication -s cyl_${min}_to_${max} \
+        refineMesh -dict refineMeshDict.cyl -overwrite
+done
+
+#------------------------------------------------------------------------------
