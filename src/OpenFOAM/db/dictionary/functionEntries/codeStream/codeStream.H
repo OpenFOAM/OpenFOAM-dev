@@ -26,64 +26,156 @@ Class
 
 Description
     Dictionary entry that contains C++ OpenFOAM code that is compiled to
-    generate the entry itself. So
-    - codeStream reads three entries: 'code', 'codeInclude' (optional),
-    'codeOptions' (optional)
-    and uses those to generate library sources inside \c codeStream/
-    - these get compiled using 'wmake libso'
-    - the resulting library is loaded in executed with as arguments
+    generate the entry itself.
+
+    \c \#codeStream reads three entries: \c code, \c codeInclude (optional),
+    \c codeOptions (optional) to generate the library source code stored in the
+    local \c dynamicCode directory with a subdirectory name corresponding to the
+    SHA1 of the code.  The code is then compiled into a dynamically loaded
+    library libcodeStream_<SHA1>.so stored in the
+    \c dynamicCode/platforms/$WM_OPTIONS/lib directory using 'wmake libso'.
+    The resulting library is loaded in executed with arguments
     \code
         (const dictionary& dict, Ostream& os)
     \endcode
-    where the dictionary is the current dictionary.
-    - the code has to write into Ostream which is then used to construct
-    the actual dictionary entry.
+    where the dictionary is the current dictionary.  The code writes results to
+    the current entry via the \c Ostream \c os.
 
+    The verbatim string format \c \#{ ... \c \#} is used to allow multi-line
+    input without the need to escape the newlines.
 
-    E.g. to set the internal field of a field:
+    Dictionary entries constructed with \c \#codeStream can conveniently access
+    and use typed variables.  This means calculations involving vectors and
+    tensors and list etc. are possible.  To access a variable and construct it
+    as a given type within a \c \#codeStream entry, put the type immediately
+    after the $ symbol inside angled brackets <>. So, $<vector>var or
+    $<vector>{var} substitutes a variable named var as a vector.
 
+    The variable values are no longer embedded into the code but looked-up at
+    run-time making the code corresponding to each \c \#codeStream independent
+    of the values in the dictionary and of each other.  Hence the \c
+    \#codeStream code does not need to be recompiled when the values in the
+    dictionary are changed, only if the code is changed.
+
+Usage
+    Example to set the internal field of a field:
     \verbatim
-    internalField  #codeStream
-    {
-        code
-        #{
-            const IOdictionary& d = static_cast<const IOdictionary&>(dict);
-            const fvMesh& mesh = refCast<const fvMesh>(d.db());
-            scalarField fld(mesh.nCells(), 12.34);
-            writeEntry(os, "", fld);
-        #};
+        internalField  #codeStream
+        {
+            code
+            #{
+                const IOdictionary& d = static_cast<const IOdictionary&>(dict);
+                const fvMesh& mesh = refCast<const fvMesh>(d.db());
+                scalarField fld(mesh.nCells(), 12.34);
+                writeEntry(os, "", fld);
+            #};
 
-        //- Optional:
-        codeInclude
-        #{
-            #include "volFields.H"
-        #};
+            //- Optional:
+            codeInclude
+            #{
+                #include "volFields.H"
+            #};
 
-        //- Optional:
-        codeOptions
-        #{
-            -I$(LIB_SRC)/finiteVolume/lnInclude
-        #};
-    };
+            //- Optional:
+            codeOptions
+            #{
+                -I$(LIB_SRC)/finiteVolume/lnInclude
+            #};
+        };
     \endverbatim
 
+    Example to rotate a list of points around an axis by a given angle
+    \verbatim
+        points  ((3 0 0) (2 1 1) (1 2 2) (0 3 3));
+        rotation
+        {
+            axis    (0 1 1);
+            angle   45;
+        }
 
-    Note the \c \#{ ... \c \#} syntax is a 'verbatim' input mode that allows
-    inputting strings with embedded newlines.
+        #codeStream
+        {
+            codeInclude
+            #{
+                #include "pointField.H"
+                #include "transform.H"
+            #};
 
-    Limitations:
-    - '~' symbol not allowed inside the code sections.
-    - probably some other limitations (uses string::expand which expands
-      \c \$ and \c ~ sequences)
+            code
+            #{
+                const pointField points($<List<point>>points);
+                const vector axis = $<vector>!rotation/axis;
+                const scalar angle = degToRad($!rotation/angle);
+                os << "pointsRotated" << nl
+                   << (Ra(axis, angle) & points)() << ";";
+            #};
+        };
+    \endverbatim
 
-    Note:
-        The code to be compiled is stored under the local \c codeStream
-        directory with a subdirectory name corresponding to the SHA1 of the
-        contents.
+    Example Compute the centre and trianglation of a polygon
+    \verbatim
+       polygon  ((0 0 0) (1 0 0) (2 1 0) (0 2 0) (-1 1 0));
 
-        The corresponding library code is located under the local
-        \c codeStream/platforms/$WM_OPTIONS/lib directory in a library
-        \c libcodeStream_SHA1.so
+       #codeStream
+       {
+           codeInclude
+           #{
+               #include "polygonTriangulate.H"
+           #};
+
+           code
+           #{
+               const List<point> polygon($<List<point>>polygon);
+               writeEntry(os, "polygonCentre", face::centre(polygon));
+
+               polygonTriangulate triEngine;
+               triEngine.triangulate(polygon);
+               os << "polygonTris" << ' ' << triEngine.triPoints() << ";";
+           #};
+        };
+    \endverbatim
+
+    Example to generate a single block blockMeshDict for use with snappyHexMesh
+    with no redundant information
+    \verbatim
+        min         (-2.5 -1.2 -3.0);   // Minimum coordinates of the block
+        max         (2.5 1.2 3.0);      // Maximum coordinates of the block
+        nCellsByL   33.3333;            // Number of cells per unit length
+
+        // Calculate the number of cells in each block direction
+        nCells      #calc
+      "Vector<label>($nCellsByL*($<vector>max - $<vector>min) + vector::one/2)";
+
+        // Generate the vertices using a boundBox
+        vertices    #codeStream
+        {
+            codeInclude
+            #{
+                #include "boundBox.H"
+            #};
+
+            code
+            #{
+                os << boundBox($<vector>min, $<vector>max).points();
+            #};
+        };
+
+        blocks
+        (
+            hex (0 1 2 3 4 5 6 7) $nCells simpleGrading (1 1 1)
+        );
+
+        defaultPatch
+        {
+            type patch;
+        }
+
+        boundary
+        ();
+    \endverbatim
+
+See also
+    Foam::functionEntries::calcEntry
 
 SourceFiles
     codeStream.C
