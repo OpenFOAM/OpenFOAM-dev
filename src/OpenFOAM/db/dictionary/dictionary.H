@@ -177,25 +177,8 @@ class dictionary
    // Private Member Functions
 
         //- Find and return an entry data stream pointer if present
-        //  otherwise return nullptr.  Supports scoping using '.'
-        const entry* lookupDotScopedSubEntryPtr
-        (
-            const word&,
-            bool recursive,
-            bool patternMatch
-        ) const;
-
-        //- Find and return an entry data stream pointer if present
-        //  otherwise return nullptr.  Supports scoping using '/'
-        const entry* lookupSlashScopedSubEntryPtr
-        (
-            const word&,
-            bool recursive,
-            bool patternMatch
-        ) const;
-
-        //- Find and return an entry data stream pointer if present
-        //  otherwise return nullptr.  Supports scoping using '/' or '.'
+        //  otherwise return nullptr.
+        //  Allows scoping using '/' with special handling for '!' and '..'.
         const entry* lookupScopedSubEntryPtr
         (
             const word&,
