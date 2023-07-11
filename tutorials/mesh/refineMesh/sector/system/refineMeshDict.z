@@ -9,22 +9,38 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    object      refineMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Name of cell set to refine
+set refine;
 
-actions
+// Type of coordinate system ...
+coordinateSystem global;
+
+// ... and its coefficients. x, y in this case. The normal direction is
+// calculated as e1^e2.
+globalCoeffs
+{
+    e1      (1 0 0);
+    e2      (0 1 0);
+}
+
+// List of directions to refine
+directions
 (
-    {
-        name    range1;
-        type    cellSet;
-        action  new;
-        source fieldToCell;
-      field   radiusFieldXY;
-      min         3.67;
-      max         18.47;
-    }
+    e3
 );
+
+// Whether or not to use hex topology
+useHexTopology  false;
+
+// Cut purely geometric (will cut hexes through vertices) or take topology
+// into account. Incompatible with useHexTopology.
+geometricCut    true;
+
+// Write meshes from intermediate steps
+writeMesh       false;
 
 // ************************************************************************* //

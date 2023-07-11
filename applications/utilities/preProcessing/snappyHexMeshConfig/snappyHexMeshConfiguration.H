@@ -68,7 +68,7 @@ class snappyHexMeshConfiguration
         //- Refinement level applied across the snappyHexMeshDict file
         const label refinementLevel_;
 
-        //- Level of refinement on speficied surfaces
+        //- Level of refinement on specified surfaces
         const List<Tuple2<word, label>>& surfaceLevels_;
 
         //- Refinement regions specified by surface and level

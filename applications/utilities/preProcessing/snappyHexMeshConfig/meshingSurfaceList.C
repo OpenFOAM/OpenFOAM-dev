@@ -129,8 +129,8 @@ void Foam::meshingSurfaceList::setSurfaceTypes
                 (
                     !operator[](surfi).closed()
                  && (
-                        type == surfaceType::rotatingZone
-                     || type == surfaceType::cellZone
+                        type == meshingSurface::surfaceType::rotatingZone
+                     || type == meshingSurface::surfaceType::cellZone
                     )
                 )
                 {
@@ -288,7 +288,7 @@ void Foam::meshingSurfaceList::setBounds(const boundBox& bb)
 {
     if (bb.contains(bb_))
     {
-        Info<< "Specifed bounding box contains the overall bounding box"
+        Info<< "Specified bounding box contains the overall bounding box"
             << endl;
     }
     else

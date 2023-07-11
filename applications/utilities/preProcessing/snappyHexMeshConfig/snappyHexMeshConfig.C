@@ -117,10 +117,10 @@ Usage
         Refinement level at specified surfaces, e.g. '((pipe 2) (baffles 1))'
 
       - \par -refinementRegions \<entry\>
-        Refinement regions specfied by '( (<surface> <level>) (...) )'
+        Refinement regions specified by '( (<surface> <level>) (...) )'
 
       - \par -refinementBoxes \<entry\>
-        Refinement boxes specfied by '( (<min> <max> <level>) (...) )'
+        Refinement boxes specified by '( (<min> <max> <level>) (...) )'
 
       - \par -refinementDists \<entry\>
         Refinement distance specified by '( (<surface> <dist> <level>) (...) )'
@@ -261,14 +261,14 @@ int main(int argc, char *argv[])
     (
         "refinementRegions",
         "entry",
-        "refinement regions specfied by '( (<surface> <level>) (...) )'"
+        "refinement regions specified by '( (<surface> <level>) (...) )'"
     );
 
     argList::addOption
     (
         "refinementBoxes",
         "entry",
-        "refinement boxes specfied by '( (<min> <max> <level>) (...) )'"
+        "refinement boxes specified by '( (<min> <max> <level>) (...) )'"
     );
 
     argList::addOption
