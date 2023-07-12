@@ -3,7 +3,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -430,7 +430,7 @@ char* strRep(char* str, struct searchReplace* sr)
     {
         if (sr->replaceLen > sr->searchLen)
         {
-            const size_t start = str - searchStart;
+            const size_t start = searchStart - str;
             str = realloc
             (
                 str,
