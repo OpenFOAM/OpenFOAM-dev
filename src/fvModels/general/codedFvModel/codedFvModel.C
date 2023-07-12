@@ -85,6 +85,9 @@ void Foam::fv::codedFvModel::prepare
     // copy filtered H template
     dynCode.addCopyFile("codedFvModelTemplate.H");
 
+    // Make verbose if debugging
+    dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
+
     // define Make/options
     dynCode.setMakeOptions
     (
