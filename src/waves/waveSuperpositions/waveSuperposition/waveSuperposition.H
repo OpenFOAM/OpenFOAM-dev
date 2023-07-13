@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     A wrapper around a list of wave models. Superimposes the modelled values of
-    elevation and velocity. The New method looks up or or constructs an
+    elevation and velocity. The New method looks up or constructs an
     instance of this class on demand and returns a reference. Properties are
     read from a dictionary in constant.
 

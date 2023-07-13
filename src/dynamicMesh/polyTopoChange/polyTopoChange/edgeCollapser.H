@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,7 +153,7 @@ private:
         //- Return the target length scale for each face
         scalarField calcTargetFaceSizes() const;
 
-        //- Decides whether a face should be collapsed (and if so it it is to a
+        //- Decides whether a face should be collapsed (and if so it is to a
         //  point or an edge)
         collapseType collapseFace
         (

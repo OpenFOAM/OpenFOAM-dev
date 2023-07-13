@@ -37,7 +37,6 @@ SourceFiles
 #define mappedFilmPressureFvPatchScalarField_H
 
 #include "zeroGradientFvPatchFields.H"
-#include "mappedFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,8 +49,7 @@ namespace Foam
 
 class mappedFilmPressureFvPatchScalarField
 :
-    public zeroGradientFvPatchField<scalar>,
-    public mappedFvPatchField<scalar>
+    public zeroGradientFvPatchField<scalar>
 {
 
 public:
@@ -107,20 +105,6 @@ public:
 
 
     // Member Functions
-
-        // Mapping functions
-
-            //- Map the given fvPatchField onto this fvPatchField
-            virtual void map
-            (
-                const fvPatchField<scalar>&,
-                const fvPatchFieldMapper&
-            );
-
-            //- Reset the fvPatchField to the given fvPatchField
-            //  Used for mesh to mesh mapping
-            virtual void reset(const fvPatchField<scalar>&);
-
 
         // Evaluation functions
 

@@ -10,7 +10,7 @@ Contact: Elke.Goos@dlr.de
 *WARNING***The original 7-coeficient polynomials can accept molecules
 containing only four different elements. The new CHEMKIN program was changed to
 accept polynomials with 5 different elements. See the CHEMKIN manual.
-Where the fifth element exist, the new Chemkin convention was folowed.
+Where the fifth element exist, the new Chemkin convention was followed.
 
 This file was generated from therm.dat provided in this directory.
 Specie names have been transposed into a form supported by the OpenFOAM parser:

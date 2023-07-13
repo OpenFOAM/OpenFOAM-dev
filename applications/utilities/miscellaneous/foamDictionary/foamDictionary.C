@@ -155,7 +155,6 @@ Usage
 #include "IFstream.H"
 #include "OFstream.H"
 #include "includeEntry.H"
-#include "inputSyntaxEntry.H"
 
 using namespace Foam;
 
@@ -214,31 +213,6 @@ IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
 }
 
 
-//- Convert keyword syntax to "dot" if the dictionary is "dot" syntax
-word dotToSlash(const fileName& entryName)
-{
-    if
-    (
-        functionEntries::inputSyntaxEntry::dot()
-     && entryName.find('/') != string::npos
-    )
-    {
-        wordList entryNames(entryName.components('/'));
-
-        word entry(entryNames[0]);
-        for (label i = 1; i < entryNames.size(); i++)
-        {
-            entry += word('.') + entryNames[i];
-        }
-        return entry;
-    }
-    else
-    {
-        return entryName;
-    }
-}
-
-
 void remove(dictionary& dict, const dictionary& removeDict)
 {
     forAllConstIter(dictionary, removeDict, iter)
@@ -285,7 +259,7 @@ void substitute(dictionary& dict, string substitutions)
 
     forAll(namedArgs, i)
     {
-        const Pair<word> dAk(dictAndKeyword(dotToSlash(namedArgs[i].first())));
+        const Pair<word> dAk(dictAndKeyword(namedArgs[i].first()));
         dictionary& subDict(dict.scopedDict(dAk.first()));
         IStringStream entryStream
         (
@@ -491,7 +465,7 @@ int main(int argc, char *argv[])
     word entryName;
     if (args.optionReadIfPresent("entry", entryName))
     {
-        const word scopedName(dotToSlash(entryName));
+        const word scopedName(entryName);
 
         string newValue;
         if

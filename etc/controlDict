@@ -78,9 +78,6 @@ OptimisationSwitches
 
     // Force dumping and exit (at next timestep) upon signal (-1 to disable)
     stopAtWriteNowSignal        -1; // 12; // SIGUSR2
-
-    // Default dictionary scoping syntax
-    inputSyntax slash;
 }
 
 

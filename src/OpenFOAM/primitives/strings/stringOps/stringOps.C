@@ -459,10 +459,10 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
                  &&
                     (
                         isalnum(*iter)
-                     || *iter == '/' // For dictionary slash syntax
-                     || *iter == '!' // For dictionary slash syntax
-                     || *iter == '.' // For dictionary dot syntax
-                     || *iter == ':' // For dictionary dot syntax
+                     || *iter == '/'
+                     || *iter == '!'
+                     || *iter == '.'
+                     || *iter == ':'
                      || *iter == '_'
                     )
                 )
@@ -682,10 +682,10 @@ Foam::string& Foam::stringOps::inplaceExpandCodeTemplate
                  &&
                     (
                         isalnum(*iter)
-                     || *iter == '/' // For dictionary slash syntax
-                     || *iter == '!' // For dictionary slash syntax
-                     || *iter == '.' // For dictionary dot syntax
-                     || *iter == ':' // For dictionary dot syntax
+                     || *iter == '/'
+                     || *iter == '!'
+                     || *iter == '.'
+                     || *iter == ':'
                      || *iter == '_'
                     )
                 )
@@ -808,10 +808,10 @@ Foam::string& Foam::stringOps::inplaceExpandEntry
                  &&
                     (
                         isalnum(*iter)
-                     || *iter == '/' // For dictionary slash syntax
-                     || *iter == '!' // For dictionary slash syntax
-                     || *iter == '.' // For dictionary dot syntax
-                     || *iter == ':' // For dictionary dot syntax
+                     || *iter == '/'
+                     || *iter == '!'
+                     || *iter == '.'
+                     || *iter == ':'
                      || *iter == '_'
                     )
                 )

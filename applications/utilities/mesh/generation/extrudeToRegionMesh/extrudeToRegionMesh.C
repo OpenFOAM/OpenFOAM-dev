@@ -1277,7 +1277,7 @@ int main(int argc, char *argv[])
                         {
                             FatalIOErrorIn(args.executable().c_str(), dict)
                                 << "Opposite zone " << oppositeZoneNames[zonei]
-                                << "is a different size from it's "
+                                << "is a different size from its "
                                 << "corresponding zone " << zoneNames[zonei]
                                 << exit(FatalIOError);
                         }
@@ -1307,7 +1307,7 @@ int main(int argc, char *argv[])
                         {
                             FatalIOErrorIn(args.executable().c_str(), dict)
                                 << "Opposite set " << oppositeZoneNames[zonei]
-                                << "is a different size from it's "
+                                << "is a different size from its "
                                 << "corresponding zone " << zoneNames[zonei]
                                 << exit(FatalIOError);
                         }
@@ -1339,7 +1339,7 @@ int main(int argc, char *argv[])
                         {
                             FatalIOErrorIn(args.executable().c_str(), dict)
                                 << "Opposite patch " << oppositeZoneNames[zonei]
-                                << "is a different size from it's "
+                                << "is a different size from its "
                                 << "corresponding zone " << zoneNames[zonei]
                                 << exit(FatalIOError);
                         }

@@ -26,9 +26,39 @@ Class
 
 Description
     Compiles and executes code string expressions,
-    returning the result to the dictionary
+    returning the result to the dictionary entry.
+
+    \c \#calc reads the following code string to generate the library source
+    code stored in the local \c dynamicCode directory with a subdirectory name
+    corresponding to the SHA1 of the code.  The code is then compiled into a
+    dynamically loaded library libcodeStream_<SHA1>.so stored in the \c
+    dynamicCode/platforms/$WM_OPTIONS/lib directory using 'wmake libso'.  The
+    resulting library is loaded in executed with arguments
+    \code
+        (const dictionary& dict, Ostream& os)
+    \endcode
+    where the dictionary is the current dictionary.  The code writes results to
+    the current entry via the \c Ostream \c os.
+
+    The verbatim string format \c \#{ ... \c \#} can optionally be used to allow
+    multi-line input without the need to escape the newlines but in this case
+    the result must be written to the \c Ostream \c os explicitly.
+
+    Dictionary entries constructed \c \#calc can conveniently access and
+    use typed variables.  This means calculations involving vectors and tensors
+    and list etc. are possible.  To access a variable and construct it as a
+    given type within a \c \#calc entry, put the type immediately after the $
+    symbol inside angled brackets <>. So, $<vector>var or $<vector>{var}
+    substitutes a variable named var as a vector.
+
+    The variable values are no longer embedded into the code but looked-up at
+    run-time making the code corresponding to each \c \#calc independent of the
+    values in the dictionary and of each other.  Hence the \c \#calc code does
+    not need to be recompiled when the values in the dictionary are changed,
+    only if the code is changed.
 
 Usage
+    Simple variable multiplication
     \verbatim
     a 1.1;
     b 3.2;
@@ -40,24 +70,24 @@ Usage
     sub-dictionaries. For example, "$a/b" expects a keyword "b" within a
     sub-dictionary named "a". A division can be correctly executed by using a
     space between a variables and "/", e.g.
-
     \verbatim
     c #calc "$a / $b";
     \endverbatim
 
     or bracketing the variable, e.g.
-
     \verbatim
     c #calc "($a)/$b";
     \endverbatim
 
+    // Example using the string type
     \verbatim
-    s "field";
+    s   "field";
     fieldName #calc "$<string>s + \"Name\" ";
     \endverbatim
 
-    Additional include files for the #calc code compilation can be specified
-    using the #calcInclude entry, e.g. if functions from transform.H are used
+    Additional include files for the \c \#calc code compilation can be specified
+    using the \c \#calcInclude entry, e.g. if functions from transform.H are
+    used
     \verbatim
     angleOfAttack   5; // degs
 
@@ -68,9 +98,18 @@ Usage
     dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
     \endverbatim
 
-    If the code string is delimited by '#{...#}' multiple lines and multiple
-    code statements can be used to generate the entry  using 'os << ...;'.
-    This is equivalent to #codeStream but with a more compact syntax.
+    Calculate the magnitude of the velocity and turbulent kinetic energy
+    where the velocity is looked-up from testCalc2
+    \verbatim
+    magU        #calc "mag($<vector>testCalc2!U)";
+    k           #calc "1.5*magSqr(0.05*$<vector>{${FOAM_CASE}/testCalc2!U})";
+    \endverbatim
+
+    If the code string is delimited by \#{ ... \c \#} multiple lines
+    and multiple code statements can be used to generate the entry using
+    'os << ...;'. This is equivalent to \#codeStream but with a more
+    compact syntax.
+
     \verbatim
     #calcInclude    "transform.H"
     maxAngle        30;
@@ -88,6 +127,35 @@ Usage
         }
         os << Us;
     #};
+    \endverbatim
+
+    Example to generate a single block blockMeshDict for use with snappyHexMesh
+    with no redundant information
+    \verbatim
+        min         (-2.5 -1.2 -3.0);   // Minimum coordinates of the block
+        max         (2.5 1.2 3.0);      // Maximum coordinates of the block
+        nCellsByL   33.3333;            // Number of cells per unit length
+
+        // Calculate the number of cells in each block direction
+        nCells      #calc
+    "Vector<label>($nCellsByL*($<vector>max - $<vector>min) + vector::one/2)";
+
+        // Generate the vertices using a boundBox
+        #calcInclude "boundBox.H"
+        vertices #calc "boundBox($<vector>min, $<vector>max).points()";
+
+        blocks
+        (
+            hex #calc "identityMap(8)" $nCells simpleGrading (1 1 1)
+        );
+
+        defaultPatch
+        {
+            type patch;
+        }
+
+        boundary
+        ();
     \endverbatim
 
 See also

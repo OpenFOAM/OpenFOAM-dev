@@ -25,7 +25,6 @@ License
 
 #include "dictionary.H"
 #include "IOobject.H"
-#include "inputSyntaxEntry.H"
 #include "inputModeEntry.H"
 #include "calcIncludeEntry.H"
 #include "stringOps.H"
@@ -59,9 +58,6 @@ Foam::dictionary::dictionary(Istream& is, const bool keepHeader)
     dictionaryName(is.name()),
     parent_(dictionary::null)
 {
-    // Reset input syntax as this is a "top-level" dictionary
-    functionEntries::inputSyntaxEntry::clear();
-
     // Reset input mode as this is a "top-level" dictionary
     functionEntries::inputModeEntry::clear();
 
@@ -189,9 +185,6 @@ bool Foam::dictionary::substituteKeyword(const word& keyword)
 
 Foam::Istream& Foam::operator>>(Istream& is, dictionary& dict)
 {
-    // Reset input syntax as this is a "top-level" dictionary
-    functionEntries::inputSyntaxEntry::clear();
-
     // Reset input mode assuming this is a "top-level" dictionary
     functionEntries::inputModeEntry::clear();
 

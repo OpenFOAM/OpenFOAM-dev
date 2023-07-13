@@ -25,7 +25,6 @@ License
 
 #include "entry.H"
 #include "dictionaryListEntry.H"
-#include "inputSyntaxEntry.H"
 #include "includeEntry.H"
 #include "inputModeEntry.H"
 #include "stringOps.H"
@@ -152,20 +151,6 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
                     ),
                     false
                 );
-
-                if
-                (
-                    success
-                 && functionName == functionEntries::inputSyntaxEntry::typeName
-                )
-                {
-                   return functionEntry::execute
-                   (
-                       functionName,
-                       parentDict,
-                       parentDict.lookup(keyword)
-                   );
-                }
 
                 return success;
             }

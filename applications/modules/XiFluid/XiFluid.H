@@ -35,7 +35,7 @@ Description
     to be appropriate by comparison with the results from the
     spectral model.
 
-    Strain effects are encorporated directly into the Xi equation
+    Strain effects are incorporated directly into the Xi equation
     but not in the algebraic approximation.  Further work need to be
     done on this issue, particularly regarding the enhanced removal rate
     caused by flame compression.  Analysis using results of the spectral

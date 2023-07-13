@@ -2,10 +2,10 @@
 #
 #+TITLE:         Building the Doxygen help for OpenFOAM
 #+AUTHOR:               The OpenFOAM Foundation
-#+DATE:                     18th June 2016
+#+DATE:                     11nd June 2023
 #+LINK:                  http://www.openfoam.org
 #+OPTIONS: author:nil ^:{}
-# Copyright (c) 2015-2016 OpenFOAM Foundation.
+# Copyright (c) 2015-2023 OpenFOAM Foundation.
 
 * Doxygen
   The HTML documentation of OpenFOAM can be built using the Doxygen software.
@@ -22,7 +22,7 @@
   permission for the directory that Doxygen writes files to.
 
 * Configuration
-  The Doygen configuration file, Doxyfile, in the =$WM_PROJECT_DIR/doc/Doxygen=
+  The Doxygen configuration file, Doxyfile, in the =$WM_PROJECT_DIR/doc/Doxygen=
   directory is configured to work with Doxygen versions 1.6.3-1.8.5.
 
   The Header, Footer, and Stylesheet are generated automatically:
