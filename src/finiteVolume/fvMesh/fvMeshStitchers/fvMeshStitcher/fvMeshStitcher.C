@@ -1537,6 +1537,8 @@ void Foam::fvMeshStitcher::reconnect(const bool geometric) const
         return;
     }
 
+    const bool coupled = Pstream::parRun() || !mesh_.time().processorCase();
+
     // Create a copy of the conformal poly face addressing
     surfaceLabelField::Boundary polyFacesBf
     (
@@ -1552,7 +1554,7 @@ void Foam::fvMeshStitcher::reconnect(const bool geometric) const
     surfaceVectorField Cf(mesh_.Cf().cloneUnSliced()());
 
     // Construct non-conformal geometry
-    if (geometric)
+    if (coupled && geometric)
     {
         // Do the intersection and create the non-conformal cyclic faces
         intersectNonConformalCyclics(polyFacesBf, Sf, Cf, true);
