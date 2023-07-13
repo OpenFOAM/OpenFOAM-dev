@@ -77,6 +77,9 @@ class blockMeshCylindricalConfiguration
         //- Inflate a bounding box by a scaling vector
         void bbInflate(boundBox& bb, const vector& s);
 
+        //- Are the geometry bounds aligned with the z-axis
+        bool isBoundBoxOnZaxis();
+
         //- Calculate the parameters for the blockMeshDict file
         void calcBlockMeshDict();
 

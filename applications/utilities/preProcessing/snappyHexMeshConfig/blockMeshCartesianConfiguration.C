@@ -37,20 +37,26 @@ const Foam::List<Foam::word> Foam::blockMeshCartesianConfiguration::patches =
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::blockMeshCartesianConfiguration::calcBlockMeshDict()
+void Foam::blockMeshCartesianConfiguration::calcBlockMeshDict
+(
+    const bool& boundsOpt
+)
 {
     Info<< "Surface bounding box is " << bb_ << endl;
 
-    // Round the bounding box
+    // Round the bounding box if it is not specified with '-bounds' option
     const scalar roundFactor = roundingScale(bb_.minDim());
-    roundBoundingBox(bb_, roundFactor);
+    if (!boundsOpt)
+    {
+        roundBoundingBox(bb_, roundFactor);
+    }
 
     // Set nCells with the lowest number of cells within the range 10-20
     if (nCells_ == Vector<label>::zero)
     {
         nCells_ = Vector<label>(bb_.span()/roundFactor);
 
-        if (!isEven(nCells_) && cmptMin(nCells_) > 20)
+        if (!isEven(nCells_) && cmptMin(nCells_) > 20 && !boundsOpt)
         {
             roundBoundingBox(bb_, 2*roundFactor);
             nCells_ = Vector<label>(bb_.span()/roundFactor);
@@ -258,6 +264,7 @@ Foam::blockMeshCartesianConfiguration::blockMeshCartesianConfiguration
     const fileName& dir,
     const Time& time,
     const meshingSurfaceList& surfaces,
+    const bool& boundsOpt,
     const Vector<label>& nCells,
     const label refineFactor,
     const HashTable<Pair<word>>& patchOpts,
@@ -269,7 +276,7 @@ Foam::blockMeshCartesianConfiguration::blockMeshCartesianConfiguration
     refineFactor_(refineFactor),
     clearBoundary_(clearBoundary)
 {
-    calcBlockMeshDict();
+    calcBlockMeshDict(boundsOpt);
 }
 
 

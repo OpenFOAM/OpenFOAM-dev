@@ -48,6 +48,11 @@ void Foam::blockMeshCylindricalConfiguration::bbInflate
     bb.max() = cmptMultiply(s, bb.max());
 }
 
+bool Foam::blockMeshCylindricalConfiguration::isBoundBoxOnZaxis()
+{
+    const vector bbMidNorm = bb_.midpoint()/bb_.mag();
+    return mag(bbMidNorm.x()) < rootSmall && mag(bbMidNorm.y()) < rootSmall;
+}
 
 void Foam::blockMeshCylindricalConfiguration::calcBlockMeshDict()
 {
@@ -406,6 +411,14 @@ Foam::blockMeshCylindricalConfiguration::blockMeshCylindricalConfiguration
     refineFactor_(refineFactor),
     clearBoundary_(clearBoundary)
 {
+    if (!isBoundBoxOnZaxis())
+    {
+        FatalErrorInFunction
+            << "Attempting to create a cylindrical background mesh"
+            << nl << "but the geometry bounds are not aligned with the z-axis."
+            << exit(FatalError);
+    }
+
     if (rzbb_.volume() == 0)
     {
         FatalErrorInFunction
