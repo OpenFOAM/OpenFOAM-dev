@@ -42,11 +42,11 @@ uniformFixedMultiphaseHeatFluxFvPatchScalarField
     q_(Function1<scalar>::New("q", dict)),
     relax_(dict.lookupOrDefault<scalar>("relax", 1))
 {
+    fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
+
     valueFraction() = 1;
     refValue() = patchInternalField();
     refGrad() = Zero;
-
-    operator==(patchInternalField());
 }
 
 
@@ -97,9 +97,9 @@ void Foam::uniformFixedMultiphaseHeatFluxFvPatchScalarField::updateCoeffs()
     const phaseModel& thisPhase = fluid.phases()[internalField().group()];
 
     // Sums of alpha*kappaEff
-    scalarField sumAlphaKappaEff(patch().size(), rootVSmall);
-    scalarField sumNotThisAlphaKappaEff(patch().size(), rootVSmall);
-    scalarField sumNotThisAlphaKappaEffT(patch().size(), rootVSmall);
+    scalarField sumNotThisAlphaKappaEff(patch().size(), 0);
+    scalarField sumNotThisAlphaKappaEffT(patch().size(), 0);
+    scalarField sumNotThisAlphaKappaEffTw(patch().size(), 0);
 
     // Contributions from phases other than this one
     forAll(fluid.phases(), phasei)
@@ -114,9 +114,9 @@ void Foam::uniformFixedMultiphaseHeatFluxFvPatchScalarField::updateCoeffs()
             const fvPatchScalarField& T =
                 phase.thermo().T().boundaryField()[patchi];
 
-            sumAlphaKappaEff += alphaKappaEff;
             sumNotThisAlphaKappaEff += alphaKappaEff;
             sumNotThisAlphaKappaEffT += alphaKappaEff*T.patchInternalField();
+            sumNotThisAlphaKappaEffTw += alphaKappaEff*T;
         }
     }
 
@@ -124,34 +124,34 @@ void Foam::uniformFixedMultiphaseHeatFluxFvPatchScalarField::updateCoeffs()
     const scalarField& alpha = thisPhase.boundaryField()[patchi];
     const scalarField kappaEff(thisPhase.kappaEff(patchi));
     const scalarField alphaKappaEff(alpha*kappaEff);
-    const fvPatchScalarField& T =
-        thisPhase.thermo().T().boundaryField()[patchi];
+    const fvPatchScalarField& T = *this;
 
-    sumAlphaKappaEff += alphaKappaEff;
-    sumNotThisAlphaKappaEff =
-        max
-        (
-            sumNotThisAlphaKappaEff,
-            rootSmall*kappaEff
-        );
+    // Calculate the phase average wall temperature
+    const scalarField Tw =
+        (sumNotThisAlphaKappaEffTw + alphaKappaEff*T)
+       /(sumNotThisAlphaKappaEff + alphaKappaEff);
+
+    valueFraction() =
+        sumNotThisAlphaKappaEff/(sumNotThisAlphaKappaEff + alphaKappaEff);
+
+    // Stabilisation for refValue
+    sumNotThisAlphaKappaEff = max(sumNotThisAlphaKappaEff, rootSmall*kappaEff);
     sumNotThisAlphaKappaEffT =
         max
         (
             sumNotThisAlphaKappaEffT,
             rootSmall*kappaEff*T.patchInternalField()
         );
-
-    // Mixed parameters
-    valueFraction() = sumNotThisAlphaKappaEff/sumAlphaKappaEff;
     refValue() = sumNotThisAlphaKappaEffT/sumNotThisAlphaKappaEff;
-    refGrad() = q/max(alpha, rootSmall)/kappaEff;
+
+    refGrad() = q/(max(alpha, rootSmall)*kappaEff);
 
     // Modify mixed parameters for under-relaxation
     if (relax_ != 1)
     {
         const scalarField f(valueFraction());
         valueFraction() = 1 - relax_*(1 - f);
-        refValue() = (f*relax_*refValue() + (1 - relax_)*T)/valueFraction();
+        refValue() = (f*relax_*refValue() + (1 - relax_)*Tw)/valueFraction();
         //refGrad() = refGrad(); // No change
     }
 

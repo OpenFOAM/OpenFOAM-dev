@@ -138,6 +138,15 @@ public:
 
     // Member Functions
 
+        // Access
+
+            //- Allow manipulation of the boundary values
+            virtual bool fixesValue() const
+            {
+                return false;
+            }
+
+
         // Evaluation functions
 
             //- Update the coefficients associated with the patch field
