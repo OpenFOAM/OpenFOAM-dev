@@ -34,7 +34,7 @@ boundaryField
     }
     wall
     {
-        type            uniformFixedMultiphaseHeatFlux;
+        type            multiphaseExternalTemperature;
         q
         {
             type            scale;
@@ -46,7 +46,7 @@ boundaryField
                 duration        0.01;
             }
         }
-        relax           0.3;
+        relaxation      0.3;
         value           $internalField;
     }
     front

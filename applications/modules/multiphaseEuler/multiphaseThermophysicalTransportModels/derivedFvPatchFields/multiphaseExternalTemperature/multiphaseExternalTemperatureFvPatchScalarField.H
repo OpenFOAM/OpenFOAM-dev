@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,44 +22,26 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::uniformFixedMultiphaseHeatFluxFvPatchScalarField
+    Foam::multiphaseExternalTemperatureFvPatchScalarField
 
 Description
-    Uniform fixed heat flux boundary condition for Eulerian multi-phase cases.
-    Constructs a mixed constraint which portions the heat flux between the
-    phases in such a way as to keep the boundary temperature uniform across all
-    phases. The heat flux can be specified as a time-varying function, and an
-    under-relaxation factor can be supplied if this is necessary to maintain
-    stability.
+    Mixed boundary condition for the phase temperature of a phase in an
+    Euler-Euler multiphase simulation, to be used for heat-transfer with another
+    region in a CHT case.  Optional thin wall material layer resistances can be
+    specified through thicknessLayers and kappaLayers entries.
 
-Usage
-    \table
-        Property     | Description                | Required | Default value
-        q            | Heat flux [w/m^2]          | yes      |
-        relax        | Relaxation factor          | no       | 1
-    \endtable
-
-    Example of the boundary condition specification:
-    \verbatim
-    <patchName>
-    {
-        type            uniformFixedMultiphaseHeatFlux;
-        q               1000;
-        relax           0.3;
-        value           $internalField;
-    }
-    \endverbatim
+See also
+    Foam::externalTemperatureFvPatchScalarField
 
 SourceFiles
-    uniformFixedMultiphaseHeatFluxFvPatchScalarField.C
+    multiphaseExternalTemperatureFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformFixedMultiphaseHeatFluxFvPatchScalarField_H
-#define uniformFixedMultiphaseHeatFluxFvPatchScalarField_H
+#ifndef multiphaseExternalTemperatureFvPatchScalarField_H
+#define multiphaseExternalTemperatureFvPatchScalarField_H
 
-#include "mixedFvPatchFields.H"
-#include "Function1.H"
+#include "externalTemperatureFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,32 +49,42 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-          Class uniformFixedMultiphaseHeatFluxFvPatchScalarField Declaration
+        Class multiphaseExternalTemperatureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniformFixedMultiphaseHeatFluxFvPatchScalarField
+class multiphaseExternalTemperatureFvPatchScalarField
 :
-    public mixedFvPatchScalarField
+    public externalTemperatureFvPatchScalarField
 {
-    // Private Data
 
-        //- Heat flux [W/m^2]
-        autoPtr<Function1<scalar>> q_;
+protected:
 
-        //- Relaxation factor
-        scalar relax_;
+    //- Get the patch kappa, sum kappa*Tc/delta, kappa/delta and
+    //  reference temperature for all phases except the phase being solved
+    //  and also the current phase-average wall T and phase heat-flux
+    //  obtained by partitioning the sum heat-flux provided
+    virtual void getKappa
+    (
+        scalarField& kappa,
+        scalarField& sumKappaTByDelta,
+        scalarField& sumKappaByDelta,
+        scalarField& Tref,
+        scalarField& Tw,
+        scalarField& sumq,
+        scalarField& qByKappa
+    ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("uniformFixedMultiphaseHeatFlux");
+    TypeName("multiphaseExternalTemperature");
 
 
     // Constructors
 
         //- Construct from patch, internal field and dictionary
-        uniformFixedMultiphaseHeatFluxFvPatchScalarField
+        multiphaseExternalTemperatureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -100,26 +92,26 @@ public:
         );
 
         //- Construct by mapping given
-        //  uniformFixedMultiphaseHeatFluxFvPatchScalarField
+        //  multiphaseExternalTemperatureFvPatchScalarField
         //  onto a new patch
-        uniformFixedMultiphaseHeatFluxFvPatchScalarField
+        multiphaseExternalTemperatureFvPatchScalarField
         (
-            const uniformFixedMultiphaseHeatFluxFvPatchScalarField&,
+            const multiphaseExternalTemperatureFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        uniformFixedMultiphaseHeatFluxFvPatchScalarField
+        multiphaseExternalTemperatureFvPatchScalarField
         (
-            const uniformFixedMultiphaseHeatFluxFvPatchScalarField&
+            const multiphaseExternalTemperatureFvPatchScalarField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        uniformFixedMultiphaseHeatFluxFvPatchScalarField
+        multiphaseExternalTemperatureFvPatchScalarField
         (
-            const uniformFixedMultiphaseHeatFluxFvPatchScalarField&,
+            const multiphaseExternalTemperatureFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -131,32 +123,9 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new uniformFixedMultiphaseHeatFluxFvPatchScalarField(*this, iF)
+                new multiphaseExternalTemperatureFvPatchScalarField(*this, iF)
             );
         }
-
-
-    // Member Functions
-
-        // Access
-
-            //- Allow manipulation of the boundary values
-            virtual bool fixesValue() const
-            {
-                return false;
-            }
-
-
-        // Evaluation functions
-
-            //- Update the coefficients associated with the patch field
-            virtual void updateCoeffs();
-
-
-        // I-O
-
-            //- Write
-            virtual void write(Ostream&) const;
 };
 
 
