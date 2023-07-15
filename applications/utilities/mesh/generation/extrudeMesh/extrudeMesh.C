@@ -81,59 +81,6 @@ namespace Foam
 static const NamedEnum<ExtrudeMode, 3> ExtrudeModeNames;
 
 
-void createDummyFvMeshFiles(const polyMesh& mesh, const word& regionName)
-{
-    // Create dummy system/fv*
-    {
-        typeIOobject<IOdictionary> io
-        (
-            "fvSchemes",
-            mesh.time().system(),
-            regionName,
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        );
-
-        Info<< "Testing:" << io.objectPath() << endl;
-
-        if (!io.headerOk())
-        {
-            Info<< "Writing dummy " << regionName/io.name() << endl;
-            dictionary dummyDict;
-            dictionary divDict;
-            dummyDict.add("divSchemes", divDict);
-            dictionary gradDict;
-            dummyDict.add("gradSchemes", gradDict);
-            dictionary laplDict;
-            dummyDict.add("laplacianSchemes", laplDict);
-
-            IOdictionary(io, dummyDict).regIOobject::write();
-        }
-    }
-    {
-        typeIOobject<IOdictionary> io
-        (
-            "fvSolution",
-            mesh.time().system(),
-            regionName,
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        );
-
-        if (!io.headerOk())
-        {
-            Info<< "Writing dummy " << regionName/io.name() << endl;
-            dictionary dummyDict;
-            IOdictionary(io, dummyDict).regIOobject::write();
-        }
-    }
-}
-
-
 label findPatchID(const polyBoundaryMesh& patches, const word& name)
 {
     const label patchID = patches.findPatchID(name);
@@ -688,9 +635,6 @@ int main(int argc, char *argv[])
             frontPatchFaces[patchFacei] = layerFaces[patchFacei].last();
         }
 
-
-        // Create dummy fvSchemes, fvSolution
-        createDummyFvMeshFiles(mesh, regionDir);
 
         // Create actual mesh from polyTopoChange container
         autoPtr<polyTopoChangeMap> map = meshMod().makeMesh
