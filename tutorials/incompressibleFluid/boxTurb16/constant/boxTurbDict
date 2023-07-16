@@ -10,13 +10,13 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      momentumTransport;
+    object      boxTurbDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-sigma   0.090295;
-alpha   0.81532;
-kUpper  10;
-kLower  7;
+Ea              10;
+
+k0              5;
+
 
 // ************************************************************************* //

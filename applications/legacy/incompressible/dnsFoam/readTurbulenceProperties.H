@@ -18,4 +18,4 @@
     );
 
     Kmesh K(mesh);
-    UOprocess forceGen(K, runTime.deltaTValue(), momentumTransport);
+    OUprocess forceGen(K, runTime.deltaTValue(), momentumTransport);

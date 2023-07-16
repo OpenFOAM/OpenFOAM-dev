@@ -301,7 +301,7 @@ bool Foam::fvConstraints::writeData(Ostream& os) const
 
 bool Foam::fvConstraints::read()
 {
-    if (IOdictionary::regIOobject::read())
+    if (regIOobject::read())
     {
         checkTimeIndex_ = mesh().time().timeIndex() + 1;
 

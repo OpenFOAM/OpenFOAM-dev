@@ -10,13 +10,12 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      momentumTransport;
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-sigma   0.090295;
-alpha   0.81532;
-kUpper  10;
-kLower  7;
+viscosityModel  constant;
+
+nu              0.025;
 
 // ************************************************************************* //

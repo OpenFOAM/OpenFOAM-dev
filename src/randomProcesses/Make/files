@@ -5,7 +5,9 @@ fft/fftRenumber.C
 fft/writeEk.C
 fft/kShellIntegration.C
 
-processes/UOprocess/UOprocess.C
+processes/OUprocess/OUprocess.C
+
+OUForce/OUForce.C
 
 turbulence/turbGen.C
 

@@ -8,15 +8,43 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      momentumTransport;
+    class       volVectorField;
+    location    "0";
+    object      U.orig;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-sigma   0.090295;
-alpha   0.81532;
-kUpper  10;
-kLower  7;
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    patch0_half0
+    {
+        type            cyclic;
+    }
+    patch0_half1
+    {
+        type            cyclic;
+    }
+    patch1_half0
+    {
+        type            cyclic;
+    }
+    patch1_half1
+    {
+        type            cyclic;
+    }
+    patch2_half0
+    {
+        type            cyclic;
+    }
+    patch2_half1
+    {
+        type            cyclic;
+    }
+}
+
 
 // ************************************************************************* //

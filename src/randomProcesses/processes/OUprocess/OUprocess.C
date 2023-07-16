@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,11 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
-
-#include "UOprocess.H"
+#include "OUprocess.H"
 #include "Kmesh.H"
-#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,54 +33,51 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-complexVector UOprocess::WeinerProcess()
+complexVector OUprocess::WeinerProcess(const scalar deltaT) const
 {
-    return RootDeltaT*complexVector
+    return sqrt(deltaT)*complexVector
     (
-        complex(GaussGen.scalarNormal(), GaussGen.scalarNormal()),
-        complex(GaussGen.scalarNormal(), GaussGen.scalarNormal()),
-        complex(GaussGen.scalarNormal(), GaussGen.scalarNormal())
+        complex(GaussGen_.scalarNormal(), GaussGen_.scalarNormal()),
+        complex(GaussGen_.scalarNormal(), GaussGen_.scalarNormal()),
+        complex(GaussGen_.scalarNormal(), GaussGen_.scalarNormal())
     );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// from components
-UOprocess::UOprocess
+OUprocess::OUprocess
 (
     const Kmesh& kmesh,
     const scalar deltaT,
-    const dictionary& UOdict
+    const dictionary& OUdict
 )
 :
-    GaussGen(label(0)),
-    Mesh(kmesh),
-    DeltaT(deltaT),
-    RootDeltaT(sqrt(DeltaT)),
-    UOfield(Mesh.size()),
+    GaussGen_(label(0)),
+    Kmesh_(kmesh),
+    OUfield_(Kmesh_.size()),
 
-    Alpha(UOdict.lookup<scalar>("UOalpha")),
-    Sigma(UOdict.lookup<scalar>("UOsigma")),
-    Kupper(UOdict.lookup<scalar>("UOKupper")),
-    Klower(UOdict.lookup<scalar>("UOKlower")),
-    Scale((Kupper - Klower)*pow(scalar(Mesh.size()), 1.0/vector::dim))
+    alpha_(OUdict.lookup<scalar>("alpha")),
+    sigma_(OUdict.lookup<scalar>("sigma")),
+    kUpper_(OUdict.lookup<scalar>("kUpper")),
+    kLower_(OUdict.lookup<scalar>("kLower")),
+    scale_((kUpper_ - kLower_)*pow(scalar(Kmesh_.size()), 1.0/vector::dim))
 {
-    const vectorField& K = Mesh;
+    const vectorField& K = Kmesh_;
 
-    scalar sqrKupper = sqr(Kupper);
-    scalar sqrKlower = sqr(Klower) + small;
+    scalar sqrkUpper_ = sqr(kUpper_);
+    scalar sqrkLower_ = sqr(kLower_) + small;
     scalar sqrK;
 
-    forAll(UOfield, i)
+    forAll(OUfield_, i)
     {
-        if ((sqrK = magSqr(K[i])) < sqrKupper && sqrK > sqrKlower)
+        if ((sqrK = magSqr(K[i])) < sqrkUpper_ && sqrK > sqrkLower_)
         {
-            UOfield[i] = Scale*Sigma*WeinerProcess();
+            OUfield_[i] = scale_*sigma_*WeinerProcess(deltaT);
         }
         else
         {
-            UOfield[i] = complexVector
+            OUfield_[i] = complexVector
             (
                 complex(0, 0),
                 complex(0, 0),
@@ -96,29 +90,27 @@ UOprocess::UOprocess
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const complexVectorField& UOprocess::newField()
+const complexVectorField& OUprocess::newField(const scalar deltaT) const
 {
-    const vectorField& K = Mesh;
+    const vectorField& K = Kmesh_;
 
     label count = 0;
-    scalar sqrKupper = sqr(Kupper);
-    scalar sqrKlower = sqr(Klower) + small;
+    scalar sqrkUpper_ = sqr(kUpper_);
+    scalar sqrkLower_ = sqr(kLower_) + small;
     scalar sqrK;
 
-    forAll(UOfield, i)
+    forAll(OUfield_, i)
     {
-        if ((sqrK = magSqr(K[i])) < sqrKupper && sqrK > sqrKlower)
+        if ((sqrK = magSqr(K[i])) < sqrkUpper_ && sqrK > sqrkLower_)
         {
             count++;
-            UOfield[i] =
-                (1.0 - Alpha*DeltaT)*UOfield[i]
-              + Scale*Sigma*WeinerProcess();
+            OUfield_[i] =
+                (1.0 - alpha_*deltaT)*OUfield_[i]
+              + scale_*sigma_*WeinerProcess(deltaT);
         }
     }
 
-    Info<< "    Number of forced K = " << count << nl;
-
-    return UOfield;
+    return OUfield_;
 }
 
 

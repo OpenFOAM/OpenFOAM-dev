@@ -32,7 +32,7 @@ Description
 #include "argList.H"
 #include "timeSelector.H"
 #include "Kmesh.H"
-#include "UOprocess.H"
+#include "OUprocess.H"
 #include "fft.H"
 #include "writeEk.H"
 #include "writeFile.H"
@@ -76,7 +76,8 @@ int main(int argc, char *argv[])
         (
             fft::reverseTransform
             (
-                K/(mag(K) + 1.0e-6) ^ forceGen.newField(), K.nn()
+                (K/(mag(K) + 1.0e-6))
+              ^ forceGen.newField(runTime.deltaTValue()), K.nn()
             )
         );
 

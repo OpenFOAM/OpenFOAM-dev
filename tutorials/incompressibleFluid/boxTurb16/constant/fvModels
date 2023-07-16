@@ -10,13 +10,20 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      momentumTransport;
+    object      fvModels;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-sigma   0.090295;
-alpha   0.81532;
-kUpper  10;
-kLower  7;
+OUForce
+{
+    type    OUForce;
+
+    libs    ("librandomProcesses.so");
+
+    sigma   0.090295;
+    alpha   0.81532;
+    kUpper  10;
+    kLower  7;
+}
 
 // ************************************************************************* //

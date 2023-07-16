@@ -332,7 +332,7 @@ bool Foam::fvModels::writeData(Ostream& os) const
 
 bool Foam::fvModels::read()
 {
-    if (IOdictionary::regIOobject::read())
+    if (regIOobject::read())
     {
         checkTimeIndex_ = mesh().time().timeIndex() + 1;
 

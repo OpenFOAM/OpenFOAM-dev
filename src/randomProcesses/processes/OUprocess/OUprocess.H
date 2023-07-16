@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::UOprocess
+    Foam::OUprocess
 
 Description
-    Random UO process.
+    Random Ornstein-Uhlenbeck process
 
 SourceFiles
-    UOprocess.C
+    OUprocess.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef UOprocess_H
-#define UOprocess_H
+#ifndef OUprocess_H
+#define OUprocess_H
 
 #include "complexFields.H"
 #include "scalar.H"
@@ -45,40 +45,40 @@ namespace Foam
 {
 
 class Kmesh;
-class dictionary;
 
 /*---------------------------------------------------------------------------*\
-                          Class UOprocess Declaration
+                          Class OUprocess Declaration
 \*---------------------------------------------------------------------------*/
 
-class UOprocess
+class OUprocess
 {
     // Private Data
 
-        Random GaussGen;
+        mutable Random GaussGen_;
 
-        const Kmesh& Mesh;
-        const scalar DeltaT, RootDeltaT;
-        complexVectorField UOfield;
+        const Kmesh& Kmesh_;
+        mutable complexVectorField OUfield_;
 
-        scalar Alpha;
-        scalar Sigma;
-        scalar Kupper;
-        scalar Klower;
-        scalar Scale;
+        // Ornstein-Uhlenbeck process coefficients
+        scalar alpha_;
+        scalar sigma_;
+        scalar kUpper_;
+        scalar kLower_;
+        scalar scale_;
 
 
     // Private Member Functions
 
-        complexVector WeinerProcess();
+        //- Return the Weiner process field
+        complexVector WeinerProcess(const scalar deltaT) const;
 
 
 public:
 
     // Constructors
 
-        //- Construct from wavenumber mesh and timestep
-        UOprocess
+        //- Construct from wavenumber mesh, timestep and coefficients dict
+        OUprocess
         (
             const Kmesh& kmesh,
             const scalar deltaT,
@@ -88,7 +88,8 @@ public:
 
     // Member Functions
 
-        const complexVectorField& newField();
+        //- Return the current random Ornstein-Uhlenbeck process field
+        const complexVectorField& newField(const scalar deltaT) const;
 };
 
 
