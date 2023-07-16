@@ -1,0 +1,62 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     dnsFoam
+#
+# Description
+#     Script to inform the user that dnsFoam has been superseded
+#     and replaced by the more general incompressibleFluid solver module
+#     with the OUForce fvModel executed by the foamRun application.
+#
+#------------------------------------------------------------------------------
+
+cat <<EOF
+
+dnsFoam has been superseded and replaced by the more general
+incompressibleFluid solver module with the OUForce fvModel
+executed by the foamRun application:
+
+    foamRun -solver incompressibleFluid
+
+The random OU process force is applied using the OUForce fvModel specified in the
+contant/fvModels dictionary, e.g.:
+
+OUForce
+{
+    type    OUForce;
+
+    libs    ("librandomProcesses.so");
+
+    sigma   0.090295;
+    alpha   0.81532;
+    kUpper  10;
+    kLower  7;
+}
+
+See: tutorials/incompressibleFluid/boxTurb16
+
+EOF
+
+#------------------------------------------------------------------------------

@@ -1,9 +1,0 @@
-EXE_INC = \
-    -I$(LIB_SRC)/randomProcesses/lnInclude \
-    -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/meshTools/lnInclude
-
-EXE_LIBS = \
-    -lrandomProcesses \
-    -lfiniteVolume \
-    -lmeshTools
