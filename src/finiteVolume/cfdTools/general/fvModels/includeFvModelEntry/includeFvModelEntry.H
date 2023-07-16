@@ -50,7 +50,6 @@ Description
     Examples:
     \verbatim
         #includeModel clouds
-        #includeModel surfaceFilms
     \endverbatim
 
     Other dictionary entries may also be specified using named arguments.
