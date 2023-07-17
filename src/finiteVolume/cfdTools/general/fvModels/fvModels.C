@@ -356,7 +356,6 @@ bool Foam::fvModels::writeObject
     const bool write
 ) const
 {
-    InfoInFunction << endl;
     bool allOk = true;
 
     const PtrListDictionary<fvModel>& modelList(*this);
