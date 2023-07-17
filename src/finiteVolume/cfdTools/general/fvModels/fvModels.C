@@ -48,7 +48,7 @@ Foam::IOobject Foam::fvModels::createIOobject
         mesh.time().constant(),
         mesh,
         IOobject::MUST_READ,
-        IOobject::NO_WRITE
+        IOobject::AUTO_WRITE
     );
 
     if (io.headerOk())
@@ -316,20 +316,6 @@ void Foam::fvModels::distribute(const polyDistributionMap& map)
 }
 
 
-bool Foam::fvModels::readData(Istream& is)
-{
-    is >> *this;
-    return !is.bad();
-}
-
-
-bool Foam::fvModels::writeData(Ostream& os) const
-{
-    dictionary::write(os, false);
-    return os.good();
-}
-
-
 bool Foam::fvModels::read()
 {
     if (regIOobject::read())
@@ -355,6 +341,36 @@ bool Foam::fvModels::read()
 }
 
 
+bool Foam::fvModels::readData(Istream& is)
+{
+    is >> *this;
+    return !is.bad();
+}
+
+
+bool Foam::fvModels::writeObject
+(
+    IOstream::streamFormat fmt,
+    IOstream::versionNumber ver,
+    IOstream::compressionType cmp,
+    const bool write
+) const
+{
+    InfoInFunction << endl;
+    bool allOk = true;
+
+    const PtrListDictionary<fvModel>& modelList(*this);
+
+    forAll(modelList, i)
+    {
+        const bool ok = modelList[i].write(write);
+        allOk = (allOk && ok);
+    }
+
+    return allOk;
+}
+
+
 void Foam::fvModels::correct()
 {
     PtrListDictionary<fvModel>& modelList(*this);
@@ -374,7 +390,7 @@ Foam::Ostream& Foam::operator<<
     const fvModels& models
 )
 {
-    models.writeData(os);
+    models.dictionary::write(os, false);
     return os;
 }
 

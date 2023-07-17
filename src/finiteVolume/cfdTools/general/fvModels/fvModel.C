@@ -184,6 +184,14 @@ FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fvModel);
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fvModel);
 
 
+void Foam::fvModel::preUpdateMesh()
+{}
+
+
+void Foam::fvModel::correct()
+{}
+
+
 bool Foam::fvModel::read(const dictionary& dict)
 {
     coeffs_ = dict.optionalSubDict(modelType_ + "Coeffs");
@@ -192,12 +200,10 @@ bool Foam::fvModel::read(const dictionary& dict)
 }
 
 
-void Foam::fvModel::preUpdateMesh()
-{}
-
-
-void Foam::fvModel::correct()
-{}
+bool Foam::fvModel::write(const bool write) const
+{
+    return true;
+}
 
 
 // ************************************************************************* //

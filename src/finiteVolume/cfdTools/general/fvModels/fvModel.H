@@ -396,6 +396,9 @@ public:
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
+
+            //- Write fvModel data
+            virtual bool write(const bool write = true) const;
 };
 
 

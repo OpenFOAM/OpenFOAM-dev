@@ -267,16 +267,30 @@ public:
 
         // IO
 
+            //- Read the fvModels dictionary if it has changed
+            //  and update the models
+            virtual bool read();
+
             //- ReadData function which reads the fvModels dictionary
             //  required for regIOobject read operation
             virtual bool readData(Istream&);
 
-            //- Write data to Ostream
-            virtual bool writeData(Ostream& os) const;
+            //- writeData function required by regIOobject but not used
+            //  for this class, writeObject is used instead
+            virtual bool writeData(Ostream& os) const
+            {
+                NotImplemented;
+                return false;
+            }
 
-            //- Read the fvModels dictionary if it has changed
-            //  and update the models
-            virtual bool read();
+            //- Write the fvModels
+            virtual bool writeObject
+            (
+                IOstream::streamFormat fmt,
+                IOstream::versionNumber ver,
+                IOstream::compressionType cmp,
+                const bool write
+            ) const;
 
 
     // Member Operators
