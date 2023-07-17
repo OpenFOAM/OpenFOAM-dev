@@ -160,45 +160,41 @@ template<class Type>
 void Foam::fv::rotorDiskSource::writeField
 (
     const word& name,
-    const List<Type>& values,
-    const bool writeNow
+    const List<Type>& values
 ) const
 {
-    if (mesh().time().writeTime() || writeNow)
-    {
-        tmp<VolField<Type>> tfield
+    tmp<VolInternalField<Type>> tfield
+    (
+        new VolField<Type>
         (
-            new VolField<Type>
+            IOobject
             (
-                IOobject
-                (
-                    name,
-                    mesh().time().name(),
-                    mesh(),
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
+                name,
+                mesh().time().name(),
                 mesh(),
-                dimensioned<Type>("zero", dimless, Zero)
-            )
-        );
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh(),
+            dimensioned<Type>("zero", dimless, Zero)
+        )
+    );
 
-        Field<Type>& field = tfield.ref().primitiveFieldRef();
+    Field<Type>& field = tfield.ref();
 
-        const labelUList cells = set_.cells();
+    const labelUList cells = set_.cells();
 
-        if (cells.size() != values.size())
-        {
-            FatalErrorInFunction << abort(FatalError);
-        }
-
-        forAll(cells, i)
-        {
-            field[cells[i]] = values[i];
-        }
-
-        tfield().write();
+    if (cells.size() != values.size())
+    {
+        FatalErrorInFunction << abort(FatalError);
     }
+
+    forAll(cells, i)
+    {
+        field[cells[i]] = values[i];
+    }
+
+    tfield().write();
 }
 
 

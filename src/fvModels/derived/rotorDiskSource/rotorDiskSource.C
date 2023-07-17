@@ -102,8 +102,8 @@ void Foam::fv::rotorDiskSource::readCoeffs()
 
     if (debug)
     {
-        writeField("thetag", trim_->thetag()(), true);
-        writeField("faceArea", area_, true);
+        writeField("thetag", trim_->thetag()());
+        writeField("faceArea", area_);
     }
 }
 
@@ -558,7 +558,7 @@ void Foam::fv::rotorDiskSource::addSup
     const word& fieldName
 ) const
 {
-    volVectorField force
+    volVectorField::Internal force
     (
         IOobject
         (
@@ -599,7 +599,7 @@ void Foam::fv::rotorDiskSource::addSup
     const word& fieldName
 ) const
 {
-    volVectorField force
+    volVectorField::Internal force
     (
         IOobject
         (

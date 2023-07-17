@@ -242,14 +242,9 @@ private:
         //- Return the inlet flow field
         tmp<vectorField> inflowVelocity(const volVectorField& U) const;
 
-        //- Helper function to write rotor values
+        //- Helper function to write rotor data
         template<class Type>
-        void writeField
-        (
-            const word& name,
-            const List<Type>& values,
-            const bool writeNow = false
-        ) const;
+        void writeField(const word& name, const List<Type>& values) const;
 
 
 public:
