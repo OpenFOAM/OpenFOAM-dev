@@ -88,11 +88,6 @@ void Foam::fv::OUForce::addSup
     const word& fieldName
 ) const
 {
-    if (mesh().time().writeTime())
-    {
-        writeEk(eqn.psi(), K_);
-    }
-
     eqn += volVectorField::Internal
     (
         IOobject
@@ -144,6 +139,16 @@ bool Foam::fv::OUForce::read(const dictionary& dict)
     {
         return false;
     }
+}
+
+
+bool Foam::fv::OUForce::write(const bool write) const
+{
+    InfoInFunction << endl;
+    const volVectorField& U = mesh().lookupObject<volVectorField>(UName_);
+    writeEk(U, K_);
+
+    return true;
 }
 
 

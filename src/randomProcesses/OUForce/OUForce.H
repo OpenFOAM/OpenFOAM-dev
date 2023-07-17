@@ -158,6 +158,9 @@ public:
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
 
+            //- Write energy spectrum
+            virtual bool write(const bool write = true) const;
+
 
     // Member Operators
 
