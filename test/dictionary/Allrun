@@ -6,6 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication -s testDict foamDictionary -expand testDict
 runApplication -s testCalc foamDictionary -expand testCalc
+runApplication -s testCalcNewton foamDictionary -expand testCalcNewton
 runApplication -s simpleBlockMeshDict foamDictionary -expand simpleBlockMeshDict
 
 #------------------------------------------------------------------------------
