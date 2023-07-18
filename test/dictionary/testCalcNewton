@@ -54,4 +54,63 @@ x       #calc
     os << x;
 #};
 
+
+// Write a x-y data for plotting with
+// gnuplot -e 'plot "fx.xy" us 1:2 title "f(x)" with lines; pause mouse close'
+x0      -2;     // Start x
+xn      2;      // End x
+n       101;    // Number of x increments
+
+y #codeStream
+{
+    code
+    #{
+        // Lookup the coefficients
+        const scalar A = $A;
+        const scalar B = $B;
+
+        const scalar x0 = $x0;
+        const scalar xn = $xn;
+        const int n = $n;
+
+        const scalar deltax = (xn - x0)/(n - 1);
+
+        Field<scalar> x(n);
+        Field<scalar> fx(n);
+
+        forAll(x, i)
+        {
+            x[i] = x0 + i*deltax;
+            fx[i] = x[i] + B*x[i]/sqrt(1 + sqr(x[i])) - A;
+        }
+
+        // Write the x-y data
+        setWriter::New("raw")->write
+        (
+            ".",
+            "fx",
+            coordSet(true,"x", x),
+            "f(x)",
+            fx
+        );
+    #};
+
+    codeInclude
+    #{
+        #include "setWriter.H"
+    #};
+
+    codeOptions
+    #{
+        -I$(LIB_SRC)/sampling/lnInclude
+    #};
+
+    codeLibs
+    #{
+        -lsampling
+    #};
+};
+
+#remove y
+
 // ************************************************************************* //
