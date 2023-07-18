@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -26,22 +26,40 @@
 #     foamExec
 #
 # Description
-#     Usage: foamExec [-v foamVersion] <foamCommand> ...
+#     Usage: foamExec <foamCommand> ...
 #
-#     Runs the <foamVersion> version of executable <foamCommand>
-#     with the rest of the arguments.
+#     Runs the executable <foamCommand> with any subsequent options. This does
+#     not require the OpenFOAM bashrc file to have been sourced. This script
+#     will source the bashrc file and initialise the OpenFOAM environment
+#     temporarily for the duration of command's execution. For example:
 #
-#     Can also be used for parallel runs. For example,
 #     \code
-#         mpirun -np <nProcs> \
-#             foamExec -version <foamVersion> <foamCommand> ... -parallel
+#         ~/OpenFOAM/OpenFOAM-dev/bin/foamExec blockMesh
+#         ~/OpenFOAM/OpenFOAM-dev/bin/foamExec decomposePar
+#         ~/OpenFOAM/OpenFOAM-dev/bin/foamExec mpirun -n 4 foamRun -parallel
+#         ~/OpenFOAM/OpenFOAM-dev/bin/foamExec reconstructPar
+#     \endcode
+#
+#     Or, perhaps equivalently:
+#
+#     \code
+#        ~/OpenFOAM/OpenFOAM-dev/bin/foamExec ./Allrun
+#     \endcode
+#
+#     Note that commands including environment variables must have the '$'
+#     character escaped with '\' so that the variables do not get expanded to
+#     nothing in the outer/interactive shell. For example, to copy a tutorial:
+#
+#     \code
+#         ~/OpenFOAM/OpenFOAM-dev/bin/foamExec ls \$FOAM_TUTORIALS/*
+#         ~/OpenFOAM/OpenFOAM-dev/bin/foamExec \
+#             cp -r \$FOAM_TUTORIALS/incompressibleFluid/pitzDaily .
 #     \endcode
 #
 # Note
 #     This script must exist in $FOAM_INST_DIR/OpenFOAM-<VERSION>/bin/
-#     or $FOAM_INST_DIR/openfoam<VERSION>/bin/ (for the debian version)
-#
-#     foamEtcFile must be found in the same directory as this script
+#     or $FOAM_INST_DIR/openfoam<VERSION>/bin/ (for deb packages), and the
+#     foamEtcFile script must also be in the same directory
 #
 # See also
 #    foamEtcFile
@@ -59,7 +77,11 @@ options:
                     pass through to foamEtcFile
   -help             print the usage
 
-* run a particular OpenFOAM version of <application>
+Runs an OpenFOAM <application> without the OpenFOAM environment having been
+initialised. The environment is set up on the fly. Can be used as a single
+executable via which any part of OpenFOAM can be run. Useful for working with
+packaging processes that require a single executable per package, and also if
+frequently changing versions on the same system.
 
 USAGE
 }
@@ -73,21 +95,17 @@ error() {
 
 #-------------------------------------------------------------------------------
 
-# the bin dir:
+# The bin dir
 binDir="${0%/*}"
 
-# the project dir:
+# The project dir
 projectDir="${binDir%/bin}"
 
-# the prefix dir (same as $FOAM_INST_DIR):
+# The prefix dir (same as $FOAM_INST_DIR by default)
 prefixDir="${projectDir%/*}"
 
-# # the name used for the project directory
-# projectDirName="${projectDir##*/}"
-
-
-unset etcOpts version
-# parse options
+# Parse options
+unset foamEtcFileOpts version
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -96,18 +114,18 @@ do
         ;;
     -m | -mode)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-        etcOpts="$etcOpts $1 $2"    # pass through to foamEtcFile
+        foamEtcFileOpts="$foamEtcFileOpts $1 $2" # pass through to foamEtcFile
         shift
         ;;
     -p | -prefix)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-        etcOpts="$etcOpts $1 $2"    # pass through to foamEtcFile
+        foamEtcFileOpts="$foamEtcFileOpts $1 $2" # pass through to foamEtcFile
         prefixDir="$2"
         shift
         ;;
     -v | -version)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-        etcOpts="$etcOpts $1 $2"    # pass through to foamEtcFile
+        foamEtcFileOpts="$foamEtcFileOpts $1 $2" # pass through to foamEtcFile
         version="$2"
         shift
         ;;
@@ -125,27 +143,26 @@ do
     shift
 done
 
-#
-# Find and source OpenFOAM settings (bashrc)
-# placed in function to preserve command-line arguments
-#
-sourceRc()
-{
-    foamDotFile="$($binDir/foamEtcFile $etcOpts bashrc)" || {
-        echo "Error : bashrc file could not be found for OpenFOAM-${version:-${WM_PROJECT_VERSION:-???}}" 1>&2
-        exit 1
-    }
-
-    # set to consistent value before sourcing the bashrc
-    export FOAM_INST_DIR="$prefixDir"
-
-    . $foamDotFile $FOAM_SETTINGS
-}
-
-
+# Check that something is being executed
 [ "$#" -ge 1 ] || error "no application specified"
 
-sourceRc
-exec "$@"
+# Locate the bashrc file
+bashrcFile="$("$binDir"/foamEtcFile $foamEtcFileOpts bashrc)" || \
+    error echo "bashrc file could not be found for \
+OpenFOAM-${version:-${WM_PROJECT_VERSION:-???}}"
+
+# Source the bashrc file
+FOAM_INST_DIR="$prefixDir" . "$bashrcFile"
+
+# Expand any escaped variables
+cmd=()
+while [ "$#" -gt 0 ]
+do
+    cmd+=($(printf -- "$1" | envsubst))
+    shift
+done
+
+# Execute the command
+exec "${cmd[@]}"
 
 #------------------------------------------------------------------------------
