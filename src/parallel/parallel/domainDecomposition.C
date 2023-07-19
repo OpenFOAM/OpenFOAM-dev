@@ -1331,13 +1331,14 @@ Foam::domainDecomposition::procFaceAddressingBf() const
                 procMeshes_[proci].boundary().size()
             );
         }
-        if (completeMesh().conformal() && procMeshes_[0].conformal())
+        if (completeConformal() && procsConformal())
         {
             // Nothing to do
         }
-        else if (!completeMesh().conformal())
+        else if (!completeConformal())
         {
             // Decompose non-conformal addressing
+
             const surfaceLabelField::Boundary& polyFacesBf =
                 completeMesh().polyFacesBf();
 
@@ -1399,7 +1400,7 @@ Foam::domainDecomposition::procFaceAddressingBf() const
                 }
             }
         }
-        else // if (!procMeshes_[0].conformal())
+        else // if (!procsConformal())
         {
             // Reconstruct non-conformal addressing
 
