@@ -5,6 +5,7 @@ blockMeshConfigurationBase.C
 blockMeshCartesianConfiguration.C
 blockMeshCylindricalConfiguration.C
 snappyHexMeshConfiguration.C
+meshQualityConfiguration.C
 surfaceFeaturesConfiguration.C
 snappyHexMeshConfig.C
 

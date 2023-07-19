@@ -133,7 +133,7 @@ void Foam::snappyHexMeshConfiguration::writeFeatures()
 {
     beginList(os_, "features");
 
-    if (!implicitFeatures_)
+    if (explicitFeatures_)
     {
         forAll(surfaces_, i)
         {
@@ -422,9 +422,9 @@ void Foam::snappyHexMeshConfiguration::writeSnapControls()
     beginDict(os_, "snapControls");
 
     os_ << indent << "explicitFeatureSnap    "
-        << (implicitFeatures_ ? "off" : "on") << ";" << endl;
+        << (explicitFeatures_ ? "on" : "off") << ";" << endl;
     os_ << indent << "implicitFeatureSnap    "
-        << (implicitFeatures_ ? "on" : "off") << ";" << endl;
+        << (explicitFeatures_ ? "off" : "on") << ";" << endl;
 
     endDict(os_);
 }
@@ -432,10 +432,8 @@ void Foam::snappyHexMeshConfiguration::writeSnapControls()
 
 void Foam::snappyHexMeshConfiguration::writeAddLayersControls()
 {
-    if (layers_ == 0)
-    {
-        return;
-    }
+    // Include addLayersControls sub-dict with zero layers when layers are
+    // switched off, so they can be conveniently switched on later.
 
     beginDict(os_, "addLayersControls");
 
@@ -499,7 +497,7 @@ Foam::snappyHexMeshConfiguration::snappyHexMeshConfiguration
     const List<Tuple2<word, label>>& refinementRegions,
     const List<Tuple3<vector, vector, label>>& refinementBoxes,
     const List<Tuple3<word, scalar, label>>& refinementDists,
-    const bool implicitFeatures,
+    const bool explicitFeatures,
     const label layers,
     const point& insidePoint,
     const label nCellsBetweenLevels
@@ -512,7 +510,7 @@ Foam::snappyHexMeshConfiguration::snappyHexMeshConfiguration
     refinementRegions_(refinementRegions),
     refinementBoxes_(refinementBoxes),
     refinementDists_(refinementDists),
-    implicitFeatures_(implicitFeatures),
+    explicitFeatures_(explicitFeatures),
     layers_(layers),
     insidePoint_(insidePoint),
     nCellsBetweenLevels_(nCellsBetweenLevels)

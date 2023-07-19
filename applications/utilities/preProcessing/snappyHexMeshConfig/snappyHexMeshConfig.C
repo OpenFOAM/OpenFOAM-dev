@@ -75,20 +75,20 @@ Description
     oriented along the z-axis along x = y = 0.
 
     The snappyHexMesh configuration is generated automatically, applying a set
-    of defaults to the main configuration parameters. By default, explicit
-    feature capturing is configured, for which a surfaceFeaturesDict file is
-    written for the user to generate the features files with the
-    surfaceFeatures utility. Implicit feature capturing can alternatively be
-    selected with the '-implicitFeatures' option. Refinement levels can be
+    of defaults to the main configuration parameters. By default, implicit
+    feature capturing is configured.  Explicit feature capturing can
+    alternatively be selected with the '-explicitFeatures' option, when an
+    additional surfaceFeaturesDict file is written for the user to generate the
+    features files with the surfaceFeatures utility.  Refinement levels can be
     controlled with a range of options including: '-refinementLevel' for the
     baseline refinement level; '-refinementSurfaces' for levels on specific
     surfaces; '-refinementRegions' for levels inside specific surfaces;
-    '-refinementBoxes' for quick, box-shaped refinement regions specified by
-    min and max bounds; '-refinementDists' for distance-based refinement; and
+    '-refinementBoxes' for quick, box-shaped refinement regions specified by min
+    and max bounds; '-refinementDists' for distance-based refinement; and
     '-nCellsBetweenLevels' to control the transition between refinement
     levels. A '-layers' option specifies additional layers of cells at wall
-    boundaries. The insidePoint parameter is set to '(0 0 0)' by default but
-    can be overridden using the '-insidePoint' option.
+    boundaries. The insidePoint parameter is set to '(0 0 0)' by default but can
+    be overridden using the '-insidePoint' option.
 
 Usage
     \b snappyHexMeshConfig [OPTIONS]
@@ -134,8 +134,8 @@ Usage
       - \par -clearBoundary,
         Do not set default patch entries, i.e. xMin, xMax, yMin, etc...
 
-      - \par -implicitFeatures,
-        Use implicit feature capturing
+      - \par -explicitFeatures,
+        Use explicit feature capturing, default is implicit
 
       - \par -layers \<int\>
         Specify <int> surface layers at wall boundaries, default 0
@@ -169,6 +169,7 @@ Usage
 #include "blockMeshCartesianConfiguration.H"
 #include "blockMeshCylindricalConfiguration.H"
 #include "snappyHexMeshConfiguration.H"
+#include "meshQualityConfiguration.H"
 #include "surfaceFeaturesConfiguration.H"
 #include "boundBox.H"
 #include "searchableSurface.H"
@@ -308,8 +309,8 @@ int main(int argc, char *argv[])
 
     argList::addBoolOption
     (
-        "implicitFeatures",
-        "use implicit feature capturing"
+        "explicitFeatures",
+        "use explicit feature capturing"
     );
 
     argList::addOption
@@ -569,7 +570,7 @@ int main(int argc, char *argv[])
         );
     }
 
-    const bool implicitFeatures(args.optionFound("implicitFeatures"));
+    const bool explicitFeatures(args.optionFound("explicitFeatures"));
 
     const label layers(args.optionLookupOrDefault<label>("layers", 0));
 
@@ -583,15 +584,18 @@ int main(int argc, char *argv[])
         args.optionLookupOrDefault<label>("nCellsBetweenLevels", 3)
     );
 
-    surfaceFeaturesConfiguration surfaceFeaturesConfig
-    (
-        "surfaceFeaturesDict",
-        runTime.system(),
-        runTime,
-        surfaces
-    );
+    if (explicitFeatures)
+    {
+        surfaceFeaturesConfiguration surfaceFeaturesConfig
+        (
+            "surfaceFeaturesDict",
+            runTime.system(),
+            runTime,
+            surfaces
+        );
 
-    surfaceFeaturesConfig.write();
+        surfaceFeaturesConfig.write();
+    }
 
     snappyHexMeshConfiguration snappyConfig
     (
@@ -604,13 +608,22 @@ int main(int argc, char *argv[])
         refinementRegions,
         refinementBoxes,
         refinementDists,
-        implicitFeatures,
+        explicitFeatures,
         layers,
         insidePoint,
         nCellsBetweenLevels
     );
 
     snappyConfig.write();
+
+    meshQualityConfiguration meshQualityConfig
+    (
+        "meshQualityDict",
+        runTime.system(),
+        runTime
+    );
+
+    meshQualityConfig.write();
 
     Info<< "\nEnd\n" << endl;
 
