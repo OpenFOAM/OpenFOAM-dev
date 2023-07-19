@@ -80,8 +80,8 @@ class snappyHexMeshConfiguration
         //- Refinement distances with level of refinement
         const List<Tuple3<word, scalar, label>>& refinementDists_;
 
-        //- Using implicit feature capturing?
-        const bool implicitFeatures_;
+        //- Using explicit feature capturing?
+        const bool explicitFeatures_;
 
         //- Number of layers at wall patches, default 0
         const label layers_;
@@ -173,7 +173,7 @@ public:
             const List<Tuple2<word, label>>& refinementRegions,
             const List<Tuple3<vector, vector, label>>& refinementBoxes,
             const List<Tuple3<word, scalar, label>>& refinementDists,
-            const bool implicitFeatures,
+            const bool explicitFeatures,
             const label layers,
             const point& insidePoint,
             const label nCellsBetweenLevels
