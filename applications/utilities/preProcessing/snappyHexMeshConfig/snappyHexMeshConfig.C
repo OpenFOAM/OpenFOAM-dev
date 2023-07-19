@@ -169,6 +169,7 @@ Usage
 #include "blockMeshCartesianConfiguration.H"
 #include "blockMeshCylindricalConfiguration.H"
 #include "snappyHexMeshConfiguration.H"
+#include "meshQualityConfiguration.H"
 #include "surfaceFeaturesConfiguration.H"
 #include "boundBox.H"
 #include "searchableSurface.H"
@@ -614,6 +615,15 @@ int main(int argc, char *argv[])
     );
 
     snappyConfig.write();
+
+    meshQualityConfiguration meshQualityConfig
+    (
+        "meshQualityDict",
+        runTime.system(),
+        runTime
+    );
+
+    meshQualityConfig.write();
 
     Info<< "\nEnd\n" << endl;
 
