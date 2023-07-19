@@ -432,10 +432,8 @@ void Foam::snappyHexMeshConfiguration::writeSnapControls()
 
 void Foam::snappyHexMeshConfiguration::writeAddLayersControls()
 {
-    if (layers_ == 0)
-    {
-        return;
-    }
+    // Include addLayersControls sub-dict with zero layers when layers are
+    // switched off, so they can be conveniently switched on later.
 
     beginDict(os_, "addLayersControls");
 
