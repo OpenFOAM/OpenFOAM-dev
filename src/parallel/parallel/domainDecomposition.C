@@ -684,6 +684,7 @@ void Foam::domainDecomposition::readAddressing()
 {
     readCompleteAddressing();
     readProcsAddressing();
+    procFaceAddressingBf_.clear();
 }
 
 
@@ -1138,7 +1139,6 @@ Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdateDecompose()
         // If there has been matching topology change then reload the addressing
         if (facesCompare == 0 && stat >= fvMesh::TOPO_CHANGE)
         {
-            procFaceAddressingBf_.clear();
             readAddressing();
         }
 
@@ -1222,7 +1222,6 @@ Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdateReconstruct()
         // If there has been matching topology change then reload the addressing
         if (facesCompare == 0 && stat >= fvMesh::TOPO_CHANGE)
         {
-            procFaceAddressingBf_.clear();
             readAddressing();
         }
 
