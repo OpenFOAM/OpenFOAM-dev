@@ -42,7 +42,7 @@ void Foam::solvers::incompressibleDenseParticleFluid::momentumPredictor()
       - fvm::Sp(fvc::ddt(alphac) + fvc::div(alphaPhic), Uc)
       + momentumTransport->divDevSigma(Uc)
      ==
-        fvModels().source(Uc)
+        fvModels().source(alphac, Uc)
     );
     fvVectorMatrix& UcEqn = tUcEqn.ref();
 
