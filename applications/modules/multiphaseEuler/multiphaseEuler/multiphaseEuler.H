@@ -156,7 +156,7 @@ protected:
         autoPtr<volScalarField> divU;
 
         //- Read controls
-        void readControls();
+        void readControls(const bool construct = false);
 
 
 private:

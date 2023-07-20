@@ -244,7 +244,7 @@ protected:
     // Protected Member Functions
 
         //- Read controls
-        void readControls();
+        void readControls(const bool construct = false);
 
 
 public:

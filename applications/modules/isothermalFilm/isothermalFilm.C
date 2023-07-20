@@ -51,13 +51,21 @@ namespace solvers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solvers::isothermalFilm::readControls()
+void Foam::solvers::isothermalFilm::readControls(const bool construct)
 {
-    maxCo =
-        runTime.controlDict().lookupOrDefault<scalar>("maxCo", 1.0);
+    if (construct || runTime.controlDict().modified())
+    {
+        maxCo =
+            runTime.controlDict().lookupOrDefault<scalar>("maxCo", vGreat);
 
-    maxDeltaT_ =
-        runTime.controlDict().lookupOrDefault<scalar>("maxDeltaT", vGreat);
+        maxDeltaT_ =
+            runTime.controlDict().found("maxDeltaT")
+          ? runTime.userTimeToTime
+            (
+                runTime.controlDict().lookup<scalar>("maxDeltaT")
+            )
+          : vGreat;
+    }
 }
 
 
@@ -394,7 +402,7 @@ Foam::solvers::isothermalFilm::isothermalFilm
     )
 {
     // Read the controls
-    readControls();
+    readControls(true);
 
     mesh.schemes().setFluxRequired(alpha.name());
     momentumTransport->validate();

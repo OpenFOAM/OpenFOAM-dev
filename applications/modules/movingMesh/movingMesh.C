@@ -45,7 +45,12 @@ Foam::solvers::movingMesh::movingMesh(fvMesh& mesh)
     solver(mesh),
     maxDeltaT_
     (
-        runTime.controlDict().lookupOrDefault<scalar>("maxDeltaT", vGreat)
+        runTime.controlDict().found("maxDeltaT")
+      ? runTime.userTimeToTime
+        (
+            runTime.controlDict().lookup<scalar>("maxDeltaT")
+        )
+      : vGreat
     )
 {}
 

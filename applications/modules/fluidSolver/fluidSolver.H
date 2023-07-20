@@ -99,7 +99,7 @@ protected:
         scalar CoNum_;
 
         //- Read controls
-        void readControls();
+        void readControls(const bool construct = false);
 
         //- Check mesh Courant numbers for moving mesh cases
         void meshCourantNo() const;

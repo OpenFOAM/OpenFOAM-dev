@@ -42,9 +42,23 @@ namespace solvers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solvers::fluidSolver::readControls()
+void Foam::solvers::fluidSolver::readControls(const bool construct)
 {
-    if (mesh.solution().modified())
+    if (construct || runTime.controlDict().modified())
+    {
+        maxCo =
+            runTime.controlDict().lookupOrDefault<scalar>("maxCo", vGreat);
+
+        maxDeltaT_ =
+            runTime.controlDict().found("maxDeltaT")
+          ? runTime.userTimeToTime
+            (
+                runTime.controlDict().lookup<scalar>("maxDeltaT")
+            )
+          : vGreat;
+    }
+
+    if (construct || mesh.solution().modified())
     {
         correctPhi = pimple.dict().lookupOrDefault
         (
@@ -189,20 +203,14 @@ void Foam::solvers::fluidSolver::continuityErrors
 Foam::solvers::fluidSolver::fluidSolver(fvMesh& mesh)
 :
     solver(mesh),
-    maxCo
-    (
-        mesh.time().controlDict().lookupOrDefault<scalar>("maxCo", vGreat)
-    ),
-    maxDeltaT_
-    (
-        mesh.time().controlDict().lookupOrDefault<scalar>("maxDeltaT", vGreat)
-    ),
+    maxCo(0),
+    maxDeltaT_(0),
     cumulativeContErr(0),
     CoNum_(0),
     CoNum(CoNum_)
 {
     // Read the controls
-    readControls();
+    readControls(true);
 }
 
 

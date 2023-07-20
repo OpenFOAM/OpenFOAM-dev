@@ -187,7 +187,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
     phi(phi_)
 {
     // Read the controls
-    readControls();
+    readControls(true);
 
     mesh.schemes().setFluxRequired(p.name());
     momentumTransport->validate();

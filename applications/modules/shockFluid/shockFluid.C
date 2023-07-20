@@ -184,7 +184,7 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
     phi(phi_)
 {
     // Read the controls
-    readControls();
+    readControls(true);
 
     thermo.validate(type(), "e");
 

@@ -45,14 +45,17 @@ namespace solvers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solvers::solidDisplacement::readControls()
+void Foam::solvers::solidDisplacement::readControls(const bool construct)
 {
-    solid::readControls();
+    solid::readControls(construct);
 
-    nCorr = pimple.dict().lookupOrDefault<int>("nCorrectors", 1);
-    convergenceTolerance = pimple.dict().lookupOrDefault<scalar>("D", 0);
-    pimple.dict().lookup("compactNormalStress") >> compactNormalStress;
-    accFac = pimple.dict().lookupOrDefault<scalar>("accelerationFactor", 1);
+    if (construct || mesh.solution().modified())
+    {
+        nCorr = pimple.dict().lookupOrDefault<int>("nCorrectors", 1);
+        convergenceTolerance = pimple.dict().lookupOrDefault<scalar>("D", 0);
+        pimple.dict().lookup("compactNormalStress") >> compactNormalStress;
+        accFac = pimple.dict().lookupOrDefault<scalar>("accelerationFactor", 1);
+    }
 }
 
 
@@ -137,7 +140,7 @@ Foam::solvers::solidDisplacement::solidDisplacement(fvMesh& mesh)
     mesh.schemes().setFluxRequired(D.name());
 
     // Read the controls
-    readControls();
+    readControls(true);
 }
 
 

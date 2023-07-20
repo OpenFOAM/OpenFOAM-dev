@@ -263,7 +263,7 @@ public:
             using TimePaths::path;
 
             //- Return the control dict
-            const dictionary& controlDict() const
+            const IOdictionary& controlDict() const
             {
                 return controlDict_;
             }
