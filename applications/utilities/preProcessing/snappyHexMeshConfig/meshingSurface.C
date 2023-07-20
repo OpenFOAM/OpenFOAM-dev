@@ -88,6 +88,8 @@ Foam::meshingSurface::meshingSurface(const fileName& file, const Time& time)
         triSurface(path_/file_)
     );
 
+    surf.cleanup(false);
+
     boundBox_ = Foam::boundBox(surf.points(), false);
     closed_ = surf.hasVolumeType();
     nParts_ = nSurfaceParts(surf);
