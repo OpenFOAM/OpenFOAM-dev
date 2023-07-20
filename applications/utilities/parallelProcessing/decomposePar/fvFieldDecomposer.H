@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
 SourceFiles
     fvFieldDecomposer.C
-    fvFieldDecomposerDecomposeFields.C
+    fvFieldDecomposerTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -37,8 +37,10 @@ SourceFiles
 #define fvFieldDecomposer_H
 
 #include "fvMesh.H"
-#include "directFvPatchFieldMapper.H"
+#include "IOobjectList.H"
+#include "volFields.H"
 #include "surfaceFields.H"
+#include "directFvPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,26 +81,26 @@ private:
         //- Reference to complete mesh
         const fvMesh& completeMesh_;
 
-        //- Reference to processor mesh
-        const fvMesh& procMesh_;
+        //- List of processor meshes
+        const PtrList<fvMesh>& procMeshes_;
 
         //- Reference to face addressing
-        const labelList& faceAddressing_;
+        const labelListList& faceProcAddressing_;
 
         //- Reference to cell addressing
-        const labelList& cellAddressing_;
+        const labelListList& cellProcAddressing_;
 
         //- Reference to face addressing boundary field
-        const surfaceLabelField::Boundary& faceAddressingBf_;
+        const PtrList<surfaceLabelField::Boundary>& faceProcAddressingBf_;
 
         //- List of patch field decomposers
-        PtrList<patchFieldDecomposer> patchFieldDecomposers_;
+        PtrList<PtrList<patchFieldDecomposer>> patchFieldDecomposers_;
 
 
     // Private Member Functions
 
         //- Convert a processor patch to the corresponding complete patch index
-        label completePatchID(const label procPatchi) const;
+        label completePatchID(const label proci, const label procPatchi) const;
 
         //- Map cell values to faces
         template<class Type>
@@ -119,6 +121,21 @@ private:
             const bool isFlux
         );
 
+        //- Decompose a volume internal field
+        template<class Type>
+        PtrList<typename VolField<Type>::Internal>
+        decomposeVolInternalField(const IOobject& fieldIoObject) const;
+
+        //- Decompose a volume field
+        template<class Type>
+        PtrList<VolField<Type>>
+        decomposeVolField(const IOobject& fieldIoObject) const;
+
+        //- Decompose a surface field
+        template<class Type>
+        PtrList<SurfaceField<Type>>
+        decomposeFvSurfaceField(const IOobject& fieldIoObject) const;
+
 
 public:
 
@@ -128,10 +145,10 @@ public:
         fvFieldDecomposer
         (
             const fvMesh& completeMesh,
-            const fvMesh& procMesh,
-            const labelList& faceAddressing,
-            const labelList& cellAddressing,
-            const surfaceLabelField::Boundary& faceAddressingBf
+            const PtrList<fvMesh>& procMeshes,
+            const labelListList& faceProcAddressing,
+            const labelListList& cellProcAddressing,
+            const PtrList<surfaceLabelField::Boundary>& faceProcAddressingBf
         );
 
         //- Disallow default bitwise copy construction
@@ -144,25 +161,20 @@ public:
 
     // Member Functions
 
-        //- Decompose volume field
-        template<class Type>
-        tmp<VolField<Type>>
-        decomposeField
-        (
-            const VolField<Type>& field
-        ) const;
+        //- Return whether anything in the object list gets decomposed
+        static bool decomposes(const IOobjectList& objects);
 
-        //- Decompose surface field
+        //- Read, decompose and write all volume internal fields
         template<class Type>
-        tmp<SurfaceField<Type>>
-        decomposeField
-        (
-            const SurfaceField<Type>& field
-        ) const;
+        void decomposeVolInternalFields(const IOobjectList& objects);
 
-        //- Decompose a list of fields
-        template<class GeoField>
-        void decomposeFields(const PtrList<GeoField>& fields) const;
+        //- Read, decompose and write all volume fields
+        template<class Type>
+        void decomposeVolFields(const IOobjectList& objects);
+
+        //- Read, decompose and write all surface fields
+        template<class Type>
+        void decomposeFvSurfaceFields(const IOobjectList& objects);
 
 
     // Member Operators
@@ -179,7 +191,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "fvFieldDecomposerDecomposeFields.C"
+    #include "fvFieldDecomposerTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -133,7 +133,7 @@ void Foam::domainDecomposition::addInterProcFace
 
 Foam::labelList Foam::domainDecomposition::distributeCells()
 {
-    Info<< "\nCalculating distribution of cells" << endl;
+    Info<< "Calculating distribution of cells" << nl << endl;
 
     cpuTime decompositionTime;
 
@@ -167,7 +167,7 @@ Foam::labelList Foam::domainDecomposition::distributeCells()
             cellWeights
         );
 
-    Info<< "\nFinished decomposition in "
+    Info<< nl << "Finished decomposition in "
         << decompositionTime.elapsedCpuTime()
         << " s" << endl;
 
@@ -269,17 +269,16 @@ inline void Foam::domainDecomposition::processInterCyclics
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
 void Foam::domainDecomposition::decompose()
 {
     // Decide which cell goes to which processor
     cellProc_ = distributeCells();
+    Info<< nl;
 
     // Distribute the cells according to the given processor label
 
     // calculate the addressing information for the original mesh
-    Info<< "\nCalculating original mesh data" << endl;
+    Info<< "Calculating original mesh data" << nl << endl;
 
     // set references to the original mesh
     const polyBoundaryMesh& patches = completeMesh().boundaryMesh();
@@ -290,12 +289,12 @@ void Foam::domainDecomposition::decompose()
     // loop through the list of processor labels for the cell and add the
     // cell shape to the list of cells for the appropriate processor
 
-    Info<< "\nDistributing cells to processors" << endl;
+    Info<< "Distributing cells to processors" << nl << endl;
 
     // Cells per processor
     procCellAddressing_ = invertOneToMany(nProcs(), cellProc_);
 
-    Info<< "\nDistributing faces to processors" << endl;
+    Info<< "Distributing faces to processors" << nl << endl;
 
     // Loop through all internal faces and decide which processor they belong to
     // First visit all internal faces. If cells at both sides belong to the
@@ -606,7 +605,7 @@ void Foam::domainDecomposition::decompose()
         }
     }
 
-    Info<< "\nDistributing points to processors" << endl;
+    Info<< "Distributing points to processors" << nl << endl;
 
     // For every processor, loop through the list of faces for the processor.
     // For every face, loop through the list of points and mark the point as
@@ -653,7 +652,7 @@ void Foam::domainDecomposition::decompose()
         procPointLabels.setSize(nUsedPoints);
     }
 
-    Info<< "\nConstructing processor meshes" << endl;
+    Info<< "Constructing processor meshes" << nl << endl;
 
     // Mark point/faces/cells that are in zones.
     // -1   : not in zone
@@ -1150,8 +1149,7 @@ void Foam::domainDecomposition::decompose()
 
         // Report processor and update global statistics
         {
-            Info<< endl
-                << "Processor " << proci << nl
+            Info<< "Processor " << proci << nl
                 << "    Number of cells = " << procMesh.nCells()
                 << endl;
 
@@ -1185,7 +1183,8 @@ void Foam::domainDecomposition::decompose()
 
             Info<< "    Number of processor patches = " << nProcPatches << nl
                 << "    Number of processor faces = " << nProcFaces << nl
-                << "    Number of boundary faces = " << nBoundaryFaces << endl;
+                << "    Number of boundary faces = " << nBoundaryFaces << nl
+                << endl;
 
             totProcFaces += nProcFaces;
             totProcPatches += nProcPatches;
@@ -1209,8 +1208,7 @@ void Foam::domainDecomposition::decompose()
         avgProcFaces = 1;
     }
 
-    Info<< nl
-        << "Number of processor faces = " << totProcFaces/2 << nl
+    Info<< "Number of processor faces = " << totProcFaces/2 << nl
         << "Max number of cells = " << maxProcCells
         << " (" << 100.0*(maxProcCells-avgProcCells)/avgProcCells
         << "% above average " << avgProcCells << ")" << nl
@@ -1219,14 +1217,41 @@ void Foam::domainDecomposition::decompose()
         << "% above average " << avgProcPatches << ")" << nl
         << "Max number of faces between processors = " << maxProcFaces
         << " (" << 100.0*(maxProcFaces-avgProcFaces)/avgProcFaces
-        << "% above average " << avgProcFaces << ")" << nl
-        << endl;
+        << "% above average " << avgProcFaces << ")" << endl;
 
     // Clear (and thus trigger re-generation) of finite volume face addressing
     procFaceAddressingBf_.clear();
 
     // Unconform any non-conformal parts of the processor meshes
     unconform();
+}
+
+
+void Foam::domainDecomposition::decomposePoints()
+{
+    for (label proci = 0; proci < nProcs(); proci++)
+    {
+        fvMesh& procMesh = procMeshes_[proci];
+
+        const label pointsCompare =
+            compareInstances
+            (
+                completeMesh().pointsInstance(),
+                procMeshes_[proci].pointsInstance()
+            );
+
+        if (pointsCompare == -1)
+        {
+            procMesh.setPoints
+            (
+                pointField
+                (
+                    completeMesh().points(),
+                    procPointAddressing_[proci]
+                )
+            );
+        }
+    }
 }
 
 

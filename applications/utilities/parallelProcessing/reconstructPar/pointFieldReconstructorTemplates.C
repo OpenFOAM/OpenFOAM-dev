@@ -27,17 +27,40 @@ License
 #include "fvMesh.H"
 #include "reversePointPatchFieldMapper.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class FieldType>
+bool Foam::pointFieldReconstructor::reconstructs
+(
+    const IOobjectList& objects,
+    const HashSet<word>& selectedFields
+)
+{
+    IOobjectList fields = objects.lookupClass(FieldType::typeName);
+
+    if (fields.size() && selectedFields.empty())
+    {
+        return true;
+    }
+
+    forAllConstIter(IOobjectList, fields, fieldIter)
+    {
+        if (selectedFields.found(fieldIter()->name()))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 
 template<class Type>
 Foam::tmp<Foam::PointField<Type>>
 Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
 {
     // Read the field for all the processors
-    PtrList<PointField<Type>> procFields
-    (
-        procMeshes_.size()
-    );
+    PtrList<PointField<Type>> procFields(procMeshes_.size());
 
     forAll(procMeshes_, proci)
     {
@@ -59,13 +82,11 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
         );
     }
 
-
     // Create the internalField
     Field<Type> internalField(completeMesh_.size());
 
     // Create the patch fields
     PtrList<pointPatchField<Type>> patchFields(completeMesh_.boundary().size());
-
 
     forAll(procMeshes_, proci)
     {
@@ -122,8 +143,7 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
         }
     }
 
-    // Construct and write the field
-    // setting the internalField and patchFields
+    // Construct and return the field
     return tmp<PointField<Type>>
     (
         new PointField<Type>
@@ -145,7 +165,8 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
 }
 
 
-// Reconstruct and write all point fields
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 template<class Type>
 void Foam::pointFieldReconstructor::reconstructFields
 (
@@ -162,7 +183,8 @@ void Foam::pointFieldReconstructor::reconstructFields
 
     if (fields.size())
     {
-        Info<< "    Reconstructing " << fieldClassName << "s\n" << endl;
+        Info<< nl << "    Reconstructing " << fieldClassName << "s"
+            << nl << endl;
 
         forAllConstIter(IOobjectList, fields, fieldIter)
         {
@@ -175,12 +197,8 @@ void Foam::pointFieldReconstructor::reconstructFields
                 Info<< "        " << fieldIter()->name() << endl;
 
                 reconstructField<Type>(*fieldIter())().write();
-
-                nReconstructed_++;
             }
         }
-
-        Info<< endl;
     }
 }
 

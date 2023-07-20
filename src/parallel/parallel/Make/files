@@ -2,5 +2,8 @@ processorRunTimes.C
 domainDecomposition.C
 domainDecompositionDecompose.C
 domainDecompositionReconstruct.C
+domainDecompositionNonConformal.C
+multiRegionPrefixer.C
+multiDomainDecomposition.C
 
 LIB = $(FOAM_LIBBIN)/libparallel

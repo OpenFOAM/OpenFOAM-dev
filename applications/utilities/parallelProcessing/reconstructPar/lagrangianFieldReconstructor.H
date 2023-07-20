@@ -22,54 +22,46 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvFieldReconstructor
+    Foam::lagrangianFieldReconstructor
 
 Description
-    Finite volume reconstructor for volume and surface fields.
+    Lagrangian field reconstructor.
 
 SourceFiles
-    fvFieldReconstructor.C
-    fvFieldReconstructorTemplates.C
+    lagrangianFieldReconstructor.C
+    lagrangianFieldReconstructorTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvFieldReconstructor_H
-#define fvFieldReconstructor_H
+#ifndef lagrangianFieldReconstructor_H
+#define lagrangianFieldReconstructor_H
 
-#include "PtrList.H"
-#include "surfaceFields.H"
-#include "IOobjectList.H"
-#include "fvPatchFieldMapper.H"
-#include "setSizeFvPatchFieldMapper.H"
-#include "labelIOList.H"
+#include "cloud.H"
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+class IOobjectList;
+
 /*---------------------------------------------------------------------------*\
-                    Class fvFieldReconstructor Declaration
+                  Class lagrangianFieldReconstructor Declaration
 \*---------------------------------------------------------------------------*/
 
-class fvFieldReconstructor
+class lagrangianFieldReconstructor
 {
     // Private Data
 
-        //- Reconstructed mesh reference
+        //- Reference to complete mesh
         const fvMesh& completeMesh_;
 
         //- List of processor meshes
         const PtrList<fvMesh>& procMeshes_;
 
-        //- List of processor face addressing lists
-        const labelListList& faceProcAddressing_;
-
-        //- List of processor cell addressing lists
-        const labelListList& cellProcAddressing_;
-
-        //- Boundary field of face addressing
-        const PtrList<surfaceLabelField::Boundary>& faceProcAddressingBf_;
+        //- The name of the cloud
+        const word cloudName_;
 
 
     // Private Member Functions
@@ -82,33 +74,28 @@ class fvFieldReconstructor
             const HashSet<word>& selectedFields
         );
 
-        //- Convert a processor patch to the corresponding complete patch index
-        label completePatchID(const label proci, const label procPatchi) const;
+        //- Reconstruct a field
+        template
+        <
+            class Type,
+            template<class> class IOContainer,
+            template<class> class IOContainerType
+        >
+        tmp<IOContainer<Type>>
+        reconstructField(const IOobject& fieldIoObject) const;
 
-        //- ...
-        template<class Type>
-        static void rmapFaceToFace
+        //- Read, reconstruct and write all fields
+        template
+        <
+            class Type,
+            template<class> class IOContainer,
+            template<class> class IOContainerType
+        >
+        void reconstructFields
         (
-            Field<Type>& toField,
-            const Field<Type>& fromField,
-            const labelUList& addressing,
-            const bool isFlux
+            const IOobjectList& objects,
+            const HashSet<word>& selectedFields
         );
-
-        //- Read and reconstruct a volume internal field
-        template<class Type>
-        tmp<DimensionedField<Type, volMesh>>
-        reconstructVolInternalField(const IOobject& fieldIoObject) const;
-
-        //- Read and reconstruct a volume field
-        template<class Type>
-        tmp<VolField<Type>>
-        reconstructVolField(const IOobject& fieldIoObject) const;
-
-        //- Read and reconstruct a surface field
-        template<class Type>
-        tmp<SurfaceField<Type>>
-        reconstructFvSurfaceField(const IOobject& fieldIoObject) const;
 
 
 public:
@@ -116,17 +103,24 @@ public:
     // Constructors
 
         //- Construct from components
-        fvFieldReconstructor
+        lagrangianFieldReconstructor
         (
-            const fvMesh& mesh,
+            const fvMesh& completeMesh,
             const PtrList<fvMesh>& procMeshes,
             const labelListList& faceProcAddressing,
             const labelListList& cellProcAddressing,
-            const PtrList<surfaceLabelField::Boundary>& faceProcAddressingBf
+            const word& cloudName
         );
 
         //- Disallow default bitwise copy construction
-        fvFieldReconstructor(const fvFieldReconstructor&) = delete;
+        lagrangianFieldReconstructor
+        (
+            const lagrangianFieldReconstructor&
+        ) = delete;
+
+
+    //- Destructor
+    ~lagrangianFieldReconstructor();
 
 
     // Member Functions
@@ -138,25 +132,9 @@ public:
             const HashSet<word>& selectedFields
         );
 
-        //- Read, reconstruct and write all/selected volume internal fields
+        //- Read, reconstruct and write all fields
         template<class Type>
-        void reconstructVolInternalFields
-        (
-            const IOobjectList& objects,
-            const HashSet<word>& selectedFields
-        );
-
-        //- Read, reconstruct and write all/selected volume fields
-        template<class Type>
-        void reconstructVolFields
-        (
-            const IOobjectList& objects,
-            const HashSet<word>& selectedFields
-        );
-
-        //- Read, reconstruct and write all/selected surface fields
-        template<class Type>
-        void reconstructFvSurfaceFields
+        void reconstructFields
         (
             const IOobjectList& objects,
             const HashSet<word>& selectedFields
@@ -166,7 +144,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const fvFieldReconstructor&) = delete;
+        void operator=(const lagrangianFieldReconstructor&) = delete;
 };
 
 
@@ -177,7 +155,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "fvFieldReconstructorTemplates.C"
+    #include "lagrangianFieldReconstructorTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
