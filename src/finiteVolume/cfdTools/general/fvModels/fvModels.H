@@ -277,11 +277,7 @@ public:
 
             //- writeData function required by regIOobject but not used
             //  for this class, writeObject is used instead
-            virtual bool writeData(Ostream& os) const
-            {
-                NotImplemented;
-                return false;
-            }
+            virtual bool writeData(Ostream& os) const;
 
             //- Write the fvModels
             virtual bool writeObject

@@ -348,6 +348,13 @@ bool Foam::fvModels::readData(Istream& is)
 }
 
 
+bool Foam::fvModels::writeData(Ostream& os) const
+{
+    dictionary::write(os, false);
+    return os.good();
+}
+
+
 bool Foam::fvModels::writeObject
 (
     IOstream::streamFormat fmt,
