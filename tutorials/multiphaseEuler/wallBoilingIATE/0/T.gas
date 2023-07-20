@@ -35,7 +35,7 @@ boundaryField
     wall
     {
         type            multiphaseExternalTemperature;
-        q0
+        q
         {
             type            scale;
             value           73890;
