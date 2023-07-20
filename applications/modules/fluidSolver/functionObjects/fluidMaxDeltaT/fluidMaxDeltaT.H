@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,42 +22,48 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::adjustTimeStepToChemistry
+    Foam::functionObjects::fluidMaxDeltaT
 
 Description
-    Returns the minimum chemistry chemical time scale
+    Returns the maximum time-step evaluated from time-dependent
+    maximum Courant number and maximum time-step specifications.
 
-    This allows the solver to temporally resolve chemical changes, in order to
-    better couple the chemistry and transport, or in order to accurately
-    post-process the chemical changes.
+    The \c maxCo and \c maxDeltaT are provided as \c Function1 of time,
+    supporting constant, tabulated and functional specifications.
 
-    Note that this function only does anything if time step adjustment is
-    enabled in the controlDict.
-
-    Example of function object specification:
+Usage
+    Example of a time-dependent maximum Courant number:
     \verbatim
-    adjustTimeStepToChemistry
+    fluidMaxDeltaT
     {
-        type            adjustTimeStepToChemistry;
-        libs            ("libchemistryModel.so");
+        type      fluidMaxDeltaT;
+
+        maxCo     table
+        (
+            (0   0.2)
+            (0.6 0.2)
+            (0.7 0.1)
+        );
+
+        maxDeltaT 1;
     }
     \endverbatim
 
-Usage
-    \table
-        Property     | Description             | Required    | Default value
-        type         | type name: adjustTimeStepToChemistry | yes |
-    \endtable
+See also
+    Foam::functionObject
+    Foam::functionObjects::fvMeshFunctionObject
+    Foam::Function1
 
 SourceFiles
-    adjustTimeStepToChemistry.C
+    fluidMaxDeltaT.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_adjustTimeStepToChemistry_H
-#define functionObjects_adjustTimeStepToChemistry_H
+#ifndef fluidMaxDeltaT_H
+#define fluidMaxDeltaT_H
 
-#include "regionFunctionObject.H"
+#include "fvMeshFunctionObject.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,29 +73,32 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class adjustTimeStepToChemistry Declaration
+                          Class fluidMaxDeltaT Declaration
 \*---------------------------------------------------------------------------*/
 
-class adjustTimeStepToChemistry
+class fluidMaxDeltaT
 :
-    public regionFunctionObject
+    public fvMeshFunctionObject
 {
     // Private Data
 
-        //- Name of the phase
-        word phaseName_;
+        //- Max Courant number function/table
+        autoPtr<Function1<scalar>> maxCoPtr_;
+
+        //- Max time-step function/table
+        autoPtr<Function1<scalar>> maxDeltaTPtr_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("adjustTimeStepToChemistry");
+    TypeName("fluidMaxDeltaT");
 
 
     // Constructors
 
-        //- Construct from components
-        adjustTimeStepToChemistry
+        //- Construct from Time and dictionary
+        fluidMaxDeltaT
         (
             const word& name,
             const Time& runTime,
@@ -97,16 +106,16 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        adjustTimeStepToChemistry(const adjustTimeStepToChemistry&) = delete;
+        fluidMaxDeltaT(const fluidMaxDeltaT&) = delete;
 
 
-    // Destructor
-    virtual ~adjustTimeStepToChemistry();
+    //- Destructor
+    virtual ~fluidMaxDeltaT();
 
 
     // Member Functions
 
-        //-  Read and reset the timeStep Function1
+        //- Read the controls
         virtual bool read(const dictionary&);
 
         //- Return the list of fields required
@@ -115,20 +124,20 @@ public:
             return wordList::null();
         }
 
-        //- Do nothing
+        //- Execute, currently does nothing
         virtual bool execute();
 
-        //- Do nothing
+        //- Write the time step value
         virtual bool write();
 
-        //- Return the minimum chemistry.deltaTChem()
+        //- Return the maximum time-step for stable operation
         virtual scalar maxDeltaT() const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const adjustTimeStepToChemistry&) = delete;
+        void operator=(const fluidMaxDeltaT&) = delete;
 };
 
 

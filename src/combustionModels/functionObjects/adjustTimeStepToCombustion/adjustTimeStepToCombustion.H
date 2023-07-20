@@ -25,17 +25,18 @@ Class
     Foam::functionObjects::adjustTimeStepToCombustion
 
 Description
-    Adjusts the time step to match bulk reaction time scales. This allows the
-    solver to temporally resolve chemical changes, in order to better couple
-    the chemistry and transport, or to improve the time-accuracy of
-    post-processing.
+    Returns the minimum bulk reaction time scale
+
+    This allows the solver to temporally resolve chemical changes, in order to
+    better couple the chemistry and transport, or to improve the time-accuracy
+    of post-processing.
 
     Note that this function only does anything if time step adjustment is
     enabled in the controlDict.
 
     Example of function object specification:
     \verbatim
-    adjustTimeStepToCombustion1
+    adjustTimeStepToCombustion
     {
         type            adjustTimeStepToCombustion;
         libs            ("libcombustionModels.so");
@@ -94,10 +95,10 @@ class adjustTimeStepToCombustion
         bool extrapolate_;
 
         //- Do we have the previous combustion time-step?
-        bool haveCombustionDeltaT0_;
+        mutable bool haveCombustionDeltaT0_;
 
         //- The previous combustion time-step
-        scalar combustionDeltaT0_;
+        mutable scalar combustionDeltaT0_;
 
 
     // Private Member Functions
@@ -143,11 +144,14 @@ public:
             return wordList::null();
         }
 
-        //- Reset the timeStep from the Function1 of time
+        //- Do nothing
         virtual bool execute();
 
         //- Do nothing
         virtual bool write();
+
+        //- Return the minimum combustion time-scale
+        virtual scalar maxDeltaT() const;
 
 
     // Member Operators

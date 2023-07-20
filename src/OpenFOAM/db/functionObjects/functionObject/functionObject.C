@@ -163,6 +163,12 @@ Foam::scalar Foam::functionObject::timeToNextAction()
 }
 
 
+Foam::scalar Foam::functionObject::maxDeltaT() const
+{
+    return vGreat;
+}
+
+
 void Foam::functionObject::movePoints(const polyMesh&)
 {}
 

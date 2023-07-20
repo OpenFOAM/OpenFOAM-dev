@@ -299,6 +299,19 @@ Foam::scalar Foam::functionObjectList::timeToNextAction()
 }
 
 
+Foam::scalar Foam::functionObjectList::maxDeltaT() const
+{
+    scalar result = vGreat;
+
+    forAll(*this, oi)
+    {
+        result = min(result, operator[](oi).maxDeltaT());
+    }
+
+    return result;
+}
+
+
 bool Foam::functionObjectList::read()
 {
     bool ok = true;

@@ -178,6 +178,9 @@ public:
         //- Return the time to the next write
         scalar timeToNextAction();
 
+        //- Return the maximum time-step for stable operation
+        virtual scalar maxDeltaT() const;
+
         //- Update topology using the given map
         virtual void movePoints(const polyMesh& mesh);
 

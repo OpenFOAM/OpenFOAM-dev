@@ -44,23 +44,20 @@ namespace solvers
 
 void Foam::solvers::fluidSolver::readControls()
 {
-    maxCo =
-        runTime.controlDict().lookupOrDefault<scalar>("maxCo", 1.0);
+    if (mesh.solution().modified())
+    {
+        correctPhi = pimple.dict().lookupOrDefault
+        (
+            "correctPhi",
+            mesh.dynamic()
+        );
 
-    maxDeltaT_ =
-        runTime.controlDict().lookupOrDefault<scalar>("maxDeltaT", vGreat);
-
-    correctPhi = pimple.dict().lookupOrDefault
-    (
-        "correctPhi",
-        mesh.dynamic()
-    );
-
-    checkMeshCourantNo = pimple.dict().lookupOrDefault
-    (
-        "checkMeshCourantNo",
-        false
-    );
+        checkMeshCourantNo = pimple.dict().lookupOrDefault
+        (
+            "checkMeshCourantNo",
+            false
+        );
+    }
 }
 
 
@@ -101,7 +98,7 @@ void Foam::solvers::fluidSolver::correctCoNum
         fvc::surfaceSum(mag(phi))().primitiveField()/rho.primitiveField()
     );
 
-    CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
+    CoNum_ = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
 
     const scalar meanCoNum =
         0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
@@ -192,8 +189,17 @@ void Foam::solvers::fluidSolver::continuityErrors
 Foam::solvers::fluidSolver::fluidSolver(fvMesh& mesh)
 :
     solver(mesh),
+    maxCo
+    (
+        mesh.time().controlDict().lookupOrDefault<scalar>("maxCo", vGreat)
+    ),
+    maxDeltaT_
+    (
+        mesh.time().controlDict().lookupOrDefault<scalar>("maxDeltaT", vGreat)
+    ),
     cumulativeContErr(0),
-    CoNum(0)
+    CoNum_(0),
+    CoNum(CoNum_)
 {
     // Read the controls
     readControls();
@@ -212,7 +218,7 @@ Foam::scalar Foam::solvers::fluidSolver::maxDeltaT() const
 {
     scalar deltaT = min(fvModels().maxDeltaT(), maxDeltaT_);
 
-    if (CoNum > small)
+    if (maxCo < vGreat && CoNum > small)
     {
         deltaT = min(deltaT, maxCo/CoNum*runTime.deltaTValue());
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,7 +158,7 @@ bool Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
 
 bool Foam::functionObjects::turbulenceFields::execute()
 {
-    if (obr_.foundObject<fluidThermophysicalTransportModel>(phaseName_))
+    if (obr_.foundType<fluidThermophysicalTransportModel>(phaseName_))
     {
         const fluidThermophysicalTransportModel& ttm =
             obr_.lookupType<fluidThermophysicalTransportModel>(phaseName_);

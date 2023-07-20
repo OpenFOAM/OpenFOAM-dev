@@ -208,6 +208,10 @@ public:
             template<class Type>
             const Type& lookupObject(const word& name) const;
 
+            //- Lookup and return the object reference of the given Type
+            template<class Type>
+            Type& lookupObjectRef(const word& name) const;
+
             //- Is the Type in registry
             //  the name is derived from the type name and given group
             template<class Type>
@@ -217,10 +221,6 @@ public:
             //  the name is derived from the type name and given group
             template<class Type>
             const Type& lookupType(const word& group = word::null) const;
-
-            //- Lookup and return the object reference of the given Type
-            template<class Type>
-            Type& lookupObjectRef(const word& name) const;
 
             //- Return new event number.
             label getEvent() const;

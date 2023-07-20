@@ -23,9 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "adjustTimeStepToChemistry.H"
-#include "basicChemistryModel.H"
-#include "solver.H"
+#include "fluidMaxDeltaT.H"
+#include "fluidSolver.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,12 +33,12 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(adjustTimeStepToChemistry, 0);
+    defineTypeNameAndDebug(fluidMaxDeltaT, 0);
 
     addToRunTimeSelectionTable
     (
         functionObject,
-        adjustTimeStepToChemistry,
+        fluidMaxDeltaT,
         dictionary
     );
 }
@@ -48,15 +47,14 @@ namespace functionObjects
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::adjustTimeStepToChemistry::adjustTimeStepToChemistry
+Foam::functionObjects::fluidMaxDeltaT::fluidMaxDeltaT
 (
     const word& name,
     const Time& runTime,
     const dictionary& dict
 )
 :
-    regionFunctionObject(name, runTime, dict),
-    phaseName_(word::null)
+    fvMeshFunctionObject(name, runTime, dict)
 {
     read(dict);
 }
@@ -64,49 +62,51 @@ Foam::functionObjects::adjustTimeStepToChemistry::adjustTimeStepToChemistry
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::adjustTimeStepToChemistry::~adjustTimeStepToChemistry()
+Foam::functionObjects::fluidMaxDeltaT::~fluidMaxDeltaT()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::adjustTimeStepToChemistry::read
-(
-    const dictionary& dict
-)
+bool Foam::functionObjects::fluidMaxDeltaT::read(const dictionary& dict)
 {
-    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
+    fvMeshFunctionObject::read(dict);
+
+    maxCoPtr_ = Function1<scalar>::New("maxCo", dict);
+    maxDeltaTPtr_ = Function1<scalar>::New("maxDeltaT", dict);
 
     return true;
 }
 
 
-bool Foam::functionObjects::adjustTimeStepToChemistry::execute()
+bool Foam::functionObjects::fluidMaxDeltaT::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::adjustTimeStepToChemistry::write()
+bool Foam::functionObjects::fluidMaxDeltaT::write()
 {
     return true;
 }
 
 
-Foam::scalar Foam::functionObjects::adjustTimeStepToChemistry::maxDeltaT() const
+Foam::scalar Foam::functionObjects::fluidMaxDeltaT::maxDeltaT() const
 {
-    if (!time_.controlDict().lookupOrDefault("adjustTimeStep", false))
+    scalar deltaT =
+        time_.userTimeToTime(maxDeltaTPtr_().value(time_.userTimeValue()));
+
+    const scalar CoNum =
+        mesh_.lookupObject<solvers::fluidSolver>(solver::typeName).CoNum;
+
+    if (CoNum > small)
     {
-        return vGreat;
+        const scalar maxCo = maxCoPtr_().value(time_.userTimeValue());
+
+        deltaT = min(deltaT, maxCo/CoNum*time_.deltaTValue());
     }
 
-    const basicChemistryModel& chemistry =
-        obr_.lookupObject<basicChemistryModel>
-        (
-            IOobject::groupName("chemistryProperties", phaseName_)
-        );
-
-    return gMin(chemistry.deltaTChem());
+    return deltaT;
 }
 
 

@@ -47,6 +47,11 @@ void Foam::setDeltaT(Time& runTime, const PtrList<solver>& solvers)
             }
         }
 
+        if (transient)
+        {
+            deltaT = min(deltaT, runTime.functionObjects().maxDeltaT());
+        }
+
         if (transient && deltaT < rootVGreat)
         {
             runTime.setDeltaT(min(runTime.deltaTValue(), deltaT));
@@ -70,6 +75,11 @@ void Foam::adjustDeltaT(Time& runTime, const PtrList<solver>& solvers)
                 transient = true;
                 deltaT = min(deltaT, solvers[i].maxDeltaT());
             }
+        }
+
+        if (transient)
+        {
+            deltaT = min(deltaT, runTime.functionObjects().maxDeltaT());
         }
 
         if (transient && deltaT < rootVGreat)

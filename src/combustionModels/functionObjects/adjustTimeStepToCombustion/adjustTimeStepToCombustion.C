@@ -127,9 +127,31 @@ bool Foam::functionObjects::adjustTimeStepToCombustion::read
 
 bool Foam::functionObjects::adjustTimeStepToCombustion::execute()
 {
+    return true;
+}
+
+
+bool Foam::functionObjects::adjustTimeStepToCombustion::write()
+{
+    if (extrapolate_ && obr_.time().writeTime())
+    {
+        timeIOdictionary propsDict(propsDictIo(IOobject::NO_READ));
+
+        propsDict.add("combustionDeltaT", combustionDeltaT0_);
+
+        propsDict.regIOobject::write();
+    }
+
+    return true;
+}
+
+
+Foam::scalar
+Foam::functionObjects::adjustTimeStepToCombustion::maxDeltaT() const
+{
     if (!time_.controlDict().lookupOrDefault("adjustTimeStep", false))
     {
-        return true;
+        return vGreat;
     }
 
     const combustionModel& combustion =
@@ -185,32 +207,7 @@ bool Foam::functionObjects::adjustTimeStepToCombustion::execute()
     haveCombustionDeltaT0_ = true;
     combustionDeltaT0_ = combustionDeltaT1;
 
-    // The solver has not adjusted the time-step yet. When it does, if it is
-    // within the physical and specified limits it will increase it by a
-    // fixed factor. So, we clip it here to the combustion time-step divided by
-    // that factor. The solver will then increase it to the combustion
-    // time-step if it can.
-    const_cast<Time&>(time_).setDeltaTNoAdjust
-    (
-        min(deltaT/solver::deltaTFactor, time_.deltaTValue())
-    );
-
-    return true;
-}
-
-
-bool Foam::functionObjects::adjustTimeStepToCombustion::write()
-{
-    if (extrapolate_ && obr_.time().writeTime())
-    {
-        timeIOdictionary propsDict(propsDictIo(IOobject::NO_READ));
-
-        propsDict.add("combustionDeltaT", combustionDeltaT0_);
-
-        propsDict.regIOobject::write();
-    }
-
-    return true;
+    return deltaT;
 }
 
 

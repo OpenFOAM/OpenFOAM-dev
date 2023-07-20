@@ -34,10 +34,15 @@ void Foam::setDeltaT(Time& runTime, const solver& solver)
         runTime.timeIndex() == 0
      && runTime.controlDict().lookupOrDefault("adjustTimeStep", false)
      && solver.transient()
-     && solver.maxDeltaT() < rootVGreat
     )
     {
-        runTime.setDeltaT(min(runTime.deltaTValue(), solver.maxDeltaT()));
+        const scalar deltaT =
+            min(solver.maxDeltaT(), runTime.functionObjects().maxDeltaT());
+
+        if (deltaT < rootVGreat)
+        {
+            runTime.setDeltaT(min(runTime.deltaTValue(), deltaT));
+        }
     }
 }
 
@@ -49,18 +54,19 @@ void Foam::adjustDeltaT(Time& runTime, const solver& solver)
     (
         runTime.controlDict().lookupOrDefault("adjustTimeStep", false)
      && solver.transient()
-     && solver.maxDeltaT() < rootVGreat
     )
     {
-        runTime.setDeltaT
-        (
-            min
+        const scalar deltaT =
+            min(solver.maxDeltaT(), runTime.functionObjects().maxDeltaT());
+
+        if (deltaT < rootVGreat)
+        {
+            runTime.setDeltaT
             (
-                solver::deltaTFactor*runTime.deltaTValue(),
-                solver.maxDeltaT()
-            )
-        );
-        Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
+                min(solver::deltaTFactor*runTime.deltaTValue(), deltaT)
+            );
+            Info<< "deltaT = " <<  runTime.deltaTValue() << endl;
+        }
     }
 }
 

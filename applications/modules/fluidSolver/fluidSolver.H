@@ -96,7 +96,7 @@ protected:
         bool correctPhi;
 
         //- Current maximum Courant number for time-step control
-        scalar CoNum;
+        scalar CoNum_;
 
         //- Read controls
         void readControls();
@@ -127,6 +127,14 @@ protected:
             const volScalarField& thermoRho,
             const surfaceScalarField& phi
         );
+
+
+public:
+
+    // Public Data
+
+        //- Current maximum Courant number for time-step control
+        const scalar& CoNum;
 
 
 public:

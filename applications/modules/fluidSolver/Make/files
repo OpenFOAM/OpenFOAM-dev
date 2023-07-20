@@ -1,3 +1,4 @@
 fluidSolver.C
+functionObjects/fluidMaxDeltaT/fluidMaxDeltaT.C
 
 LIB = $(FOAM_LIBBIN)/libfluidSolver
