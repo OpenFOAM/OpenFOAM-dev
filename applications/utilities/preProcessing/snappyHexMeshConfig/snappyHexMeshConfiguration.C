@@ -459,13 +459,36 @@ void Foam::snappyHexMeshConfiguration::writeAddLayersControls()
 
     endDict(os_);
 
-    os_ << indent << "relativeSizes       on; "
-        << "// off, usually with firstLayerThickness" << nl
-        << indent << "expansionRatio      1.2;" << nl
-        << indent << "finalLayerThickness 0.5;" << nl
-        << indent << "minThickness        1e-3;" << nl
-        << indent << "firstLayerThickness-disabled 0.01;" << nl << nl
-        << indent << "maxThicknessToMedialRatio-disabled 0.3;" << endl;
+    bool relativeSizes(firstLayerThickness_ == 0);
+
+    // relativeSizes
+    os_ << indent << "relativeSizes       "
+        << (
+                relativeSizes
+              ? "on; // off, usually with firstLayerThickness"
+              : "off; // on, usually with finalLayerThickness"
+           ) << endl;
+
+    // expansionRatio
+    os_ << indent << "expansionRatio      "<< layerExpansionRatio_
+        << ";" << endl;
+
+    // finalLayerThickness
+    os_ << indent << "finalLayerThickness"
+        << (relativeSizes ? " " : "-disabled ") << "0.5;" << endl;
+
+    // minimumThickness
+    os_ << indent << "minThickness        "
+        << (relativeSizes ? scalar(0.001) : 0.5*firstLayerThickness_)
+        << ";" << endl;
+
+    // firstLayerThickness
+    os_ << indent << "firstLayerThickness"
+        << (relativeSizes ? "-disabled " : " ")
+        << firstLayerThickness_ << ";" << endl;
+
+    // maxThicknessToMedialRatio
+    os_ << indent << "maxThicknessToMedialRatio-disabled 0.3;" << endl;
 
     endDict(os_);
 }
@@ -499,6 +522,8 @@ Foam::snappyHexMeshConfiguration::snappyHexMeshConfiguration
     const List<Tuple3<word, scalar, label>>& refinementDists,
     const bool explicitFeatures,
     const label layers,
+    const scalar firstLayerThickness,
+    const scalar layerExpansionRatio,
     const point& insidePoint,
     const label nCellsBetweenLevels
 )
@@ -512,6 +537,8 @@ Foam::snappyHexMeshConfiguration::snappyHexMeshConfiguration
     refinementDists_(refinementDists),
     explicitFeatures_(explicitFeatures),
     layers_(layers),
+    firstLayerThickness_(firstLayerThickness),
+    layerExpansionRatio_(layerExpansionRatio),
     insidePoint_(insidePoint),
     nCellsBetweenLevels_(nCellsBetweenLevels)
 {}
