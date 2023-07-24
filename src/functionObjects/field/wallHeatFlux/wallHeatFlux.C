@@ -221,8 +221,10 @@ bool Foam::functionObjects::wallHeatFlux::execute()
     else
     {
         FatalErrorInFunction
-            << "Unable to find thermophysicalTransportModel in the "
-            << "database" << exit(FatalError);
+            << "Unable to find thermophysicalTransportModel "
+            << thermophysicalTransportModelName
+            << " in the database"
+            << exit(FatalError);
     }
 
     return true;
