@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,25 @@ Application
     engineCompRatio
 
 Description
-    Calculate the geometric compression ratio.
+    Calculate the compression ratio of the engine combustion chamber
 
-    Note that if you have valves and/or extra volumes it will not work,
-    since it calculates the volume at BDC and TDC.
+    If the combustion chamber is not the entire mesh a \c cellSet or
+    \c cellZone name of the cells in the combustion chamber can be provided.
+
+Usage
+    \b engineCompRatio [OPTION]
+
+      - \par -cellSet \<name\>
+        Specify the cellSet name of the combustion chamber
+
+      - \par -cellZone zoneName
+        Specify the cellZone name of the combustion chamber
 
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
 #include "volMesh.H"
+#include "cellSet.H"
 
 using namespace Foam;
 
@@ -41,49 +51,83 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
+    argList::addOption
+    (
+        "cellSet",
+        "name",
+        "Calculate the volume of the specified cellSet"
+    );
+
+    argList::addOption
+    (
+        "cellZone",
+        "name",
+        "Calculate the volume of the specified cellZone"
+    );
+
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
 
+    // Cell labels of the cells in the combustion chamber
+    // Defaults to all cells
+    labelList ccCells(identityMap(mesh.nCells()));
+
+    word cellSetName;
+    word cellZoneName;
+    if (args.optionReadIfPresent("cellSet", cellSetName))
+    {
+        // Read the cellSet for the combustion chamber
+        const cellSet ccCellSet(mesh, cellSetName);
+        ccCells = ccCellSet.toc();
+    }
+    else if (args.optionReadIfPresent("cellZone", cellZoneName))
+    {
+        const cellZone& ccCellZone = mesh.cellZones()[cellZoneName];
+        ccCells = ccCellZone;
+    }
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    scalar eps = 1.0e-10;
-    scalar fullCycle = 360.0;
+    const scalar eps = 1.0e-10;
 
-    scalar ca0 = -180.0;
-    scalar ca1 = 0.0;
-
+    // Search for the CA >= the current CA which is divisible by 180
+    int ca0 = -360;
     while (runTime.userTimeValue() > ca0)
     {
-        ca0 += fullCycle;
-        ca1 += fullCycle;
+        ca0 += 180;
     }
+    int ca1 = ca0 + 180;
 
-    while (mag(runTime.userTimeValue() - ca0) > eps)
+    if (mag(runTime.userTimeValue() - ca0) > eps)
     {
-        scalar t0 = runTime.userTimeToTime(ca0 - runTime.userTimeValue());
+        const scalar t0 = runTime.userTimeToTime(ca0 - runTime.userTimeValue());
         runTime.setDeltaT(t0);
         runTime++;
-        Info<< "CA = " << runTime.userTimeValue() << endl;
+        Info<< "Moving to CA = " << runTime.userTimeValue() << endl;
         mesh.move();
     }
 
-    scalar Vmax = sum(mesh.V().field());
+    const scalar V0 = gSum(scalarField(mesh.V(), ccCells));
+    Info << "Volume at " << runTime.userTimeValue() << "CA = " << V0 << endl;
 
-    while (mag(runTime.userTimeValue()-ca1) > eps)
+    if (mag(runTime.userTimeValue()-ca1) > eps)
     {
-        scalar t1 = runTime.userTimeToTime(ca1 - runTime.userTimeValue());
+        const scalar t1 = runTime.userTimeToTime(ca1 - runTime.userTimeValue());
         runTime.setDeltaT(t1);
         runTime++;
-        Info<< "CA = " << runTime.userTimeValue() << endl;
+        Info<< "Moving to CA = " << runTime.userTimeValue() << endl;
         mesh.move();
     }
 
-    scalar Vmin = sum(mesh.V().field());
+    const scalar V1 = gSum(scalarField(mesh.V(), ccCells));
+    Info << "Volume at " << runTime.userTimeValue() << "CA = " << V1 << endl;
 
-    Info<< "\nVmax = " << Vmax;
-    Info<< ", Vmin = " << Vmin << endl;
-    Info<< "Compression ratio Vmax/Vmin = " << Vmax/Vmin << endl;
+    const scalar Vmin(min(V0, V1));
+    const scalar Vmax(max(V0, V1));
+
+    Info<< "\nCompression ratio = " << Vmax/Vmin << endl;
+
     Info<< "\nEnd\n" << endl;
 
     return 0;
