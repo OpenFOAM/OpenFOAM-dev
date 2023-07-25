@@ -153,7 +153,8 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
     autoPtr<Function1<scalar>> flowRateProfile =
         Function1<scalar>::New("flowRateProfile", dict);
 
-    const scalar sumFlowRateProfile = flowRateProfile->integral(0, duration);
+    const scalar sumFlowRateProfile =
+        TimeFunction1<scalar>(time, flowRateProfile).integral(0, duration);
 
     return
         TimeFunction1<scalar>
