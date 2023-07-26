@@ -59,21 +59,22 @@ Description
 
     Where:
     \table
-        Property | Description                       | Required | Default value
-        type     | Type of functionObject                | yes      |
-        libs     | Libraries containing implementation   | yes      |
-        region   | Name of region for multi-region cases | no       |
-        enabled  | On/off switch                         | no       | yes
-        log      | Log information to standard output    | no       | no
-        startTime| Start time                            | no       |
-        endTime  | End time                              | no       |
-        executeAtStart  | Execute at start time switch   | no       | yes
-        executeControl  | See time controls below        | no       | timeStep
-        executeInterval | Steps between each execution   | no       |
-        executeTimes    | List of execution times        | no       |
-        writeControl    | See time controls below        | no       | timeStep
-        writeInterval   | Steps between each write       | no       |
-        writeTimes      | List of write times            | no       |
+        Property          | Description              | Required | Default value
+        type              | Type of functionObject         | yes |
+        libs              | Shared libraries               | no  |
+        region            | Name of region                 | no  |
+        enabled           | On/off switch                  | no  | yes
+        log               | Print data to log              | no  | no
+        startTime         | Start time                     | no  |
+        endTime           | End time                       | no  |
+        executeAtStart    | Execute at start time switch   | no  | yes
+        executeControl    | See time controls below        | no  | timeStep
+        executeInterval   | Steps between each execution   | no  |
+        executeTimes      | List of execution times        | no  |
+        writeControl      | See time controls below        | no  | timeStep
+        writeInterval     | Steps between each write       | no  |
+        writeTimes        | List of write times            | no  |
+        writeFrequencies  | List of write frequencies      | no  |
     \endtable
 
     Time controls:

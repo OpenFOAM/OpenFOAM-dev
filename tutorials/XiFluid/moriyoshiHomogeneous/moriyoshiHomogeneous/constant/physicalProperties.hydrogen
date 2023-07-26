@@ -25,7 +25,7 @@ thermoType
     energy          absoluteEnthalpy;
 }
 
-stoichiometricAirFuelMassRatio stoichiometricAirFuelMassRatio [0 0 0 0 0 0 0] 34.074;
+stoichiometricAirFuelMassRatio 34.074;
 
 reactants
 {

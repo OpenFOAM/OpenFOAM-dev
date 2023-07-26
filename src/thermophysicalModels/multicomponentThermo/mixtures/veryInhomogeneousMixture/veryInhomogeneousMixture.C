@@ -55,7 +55,7 @@ Foam::veryInhomogeneousMixture<ThermoType>::veryInhomogeneousMixture
         phaseName
     ),
 
-    stoicRatio_(thermoDict.lookup("stoichiometricAirFuelMassRatio")),
+    stoicRatio_("stoichiometricAirFuelMassRatio", dimless, thermoDict),
 
     fuel_("fuel", thermoDict.subDict("fuel")),
     oxidant_("oxidant", thermoDict.subDict("oxidant")),

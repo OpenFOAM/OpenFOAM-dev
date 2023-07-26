@@ -83,7 +83,6 @@ void Foam::timeControl::read(const dictionary& dict)
 {
     word controlName(prefix_ + "Control");
     word intervalName(prefix_ + "Interval");
-    const word timesName(prefix_ + "Times");
 
     // For backward compatibility support the deprecated 'outputControl' option
     // now superseded by 'writeControl' for compatibility with Time
@@ -147,8 +146,69 @@ void Foam::timeControl::read(const dictionary& dict)
 
         case timeControls::runTimes:
         {
-            times_ = dict.lookup<scalarList>(timesName);
-            timeDelta_ = dict.lookupOrDefault("timeDelta", 1e-6);
+            const word timesName(prefix_ + "Times");
+            const word frequenciesName(prefix_ + "Frequencies");
+            const bool repeat = dict.lookupOrDefault("writeRepeat", false);
+
+            timeDelta_ = dict.lookupOrDefault
+            (
+                "timeDelta",
+                1e-3*time_.deltaTValue()
+            );
+
+            if (dict.found(timesName))
+            {
+                times_ = dict.lookup<scalarList>(timesName);
+            }
+            else if (dict.found(frequenciesName))
+            {
+                List<Pair<scalar>> frequencies
+                (
+                    dict.lookup(frequenciesName)
+                );
+
+                if (!repeat)
+                {
+                    frequencies.append
+                    (
+                        {time_.endTime().value(), frequencies.last().second()}
+                    );
+                }
+
+                const scalar frequenciesDuration =
+                    frequencies.last().first() - frequencies.first().first();
+
+                DynamicList<scalar> times(1, frequencies[0].first());
+                label i = 0;
+                label repeati = 0;
+                while (times[i] < time_.endTime().value())
+                {
+                    for(label pi=0; pi<frequencies.size()-1; pi++)
+                    {
+                        while
+                        (
+                            times[i]
+                          < frequencies[pi + 1].first()
+                          + repeati*frequenciesDuration - timeDelta_
+                        )
+                        {
+                            times(i + 1) = times[i] + frequencies[pi].second();
+                            i++;
+                        }
+                    }
+                    repeati++;
+                }
+
+                times_ = times;
+            }
+            else
+            {
+                FatalErrorInFunction
+                    << "Undefined " << timesName
+                    << " or " << frequenciesName << " for output control: "
+                    << timeControlNames_[timeControl_] << nl
+                    << exit(FatalError);
+            }
 
             forAll(times_, i)
             {
@@ -265,7 +325,7 @@ bool Foam::timeControl::execute()
             FatalErrorInFunction
                 << "Undefined output control: "
                 << timeControlNames_[timeControl_] << nl
-                << abort(FatalError);
+                << exit(FatalError);
             break;
         }
     }
@@ -328,7 +388,7 @@ Foam::scalar Foam::timeControl::timeToNextAction()
             FatalErrorInFunction
                 << "Undefined output control: "
                 << timeControlNames_[timeControl_] << nl
-                << abort(FatalError);
+                << exit(FatalError);
             break;
         }
     }

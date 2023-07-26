@@ -54,7 +54,7 @@ Foam::inhomogeneousMixture<ThermoType>::inhomogeneousMixture
         phaseName
     ),
 
-    stoicRatio_(thermoDict.lookup("stoichiometricAirFuelMassRatio")),
+    stoicRatio_("stoichiometricAirFuelMassRatio", dimless, thermoDict),
 
     fuel_("fuel", thermoDict.subDict("fuel")),
     oxidant_("oxidant", thermoDict.subDict("oxidant")),
@@ -98,7 +98,12 @@ const ThermoType& Foam::inhomogeneousMixture<ThermoType>::mixture
 template<class ThermoType>
 void Foam::inhomogeneousMixture<ThermoType>::read(const dictionary& thermoDict)
 {
-    stoicRatio_ = thermoDict.lookup("stoichiometricAirFuelMassRatio");
+    stoicRatio_ = dimensionedScalar
+    (
+        "stoichiometricAirFuelMassRatio",
+        dimless,
+        thermoDict
+    );
 
     fuel_ = ThermoType("fuel", thermoDict.subDict("fuel"));
     oxidant_ = ThermoType("oxidant", thermoDict.subDict("oxidant"));

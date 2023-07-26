@@ -16,21 +16,21 @@ FoamFile
 
 #include        "combustionPropertiesInclude"
 
-Su              Su [0 1 -1 0 0 0 0] 0.434;
+Su              0.434;
 
 SuModel         unstrained;
 
-equivalenceRatio equivalenceRatio [0 0 0 0 0 0 0] 1;
+equivalenceRatio 1;
 
-sigmaExt        sigmaExt [0 0 -1 0 0 0 0] 100000;
+sigmaExt        100000;
 
 XiModel         transport;
 
-XiCoef          XiCoef [0 0 0 0 0 0 0] 0.62;
+XiCoef          0.62;
 
-XiShapeCoef     XiShapeCoef [0 0 0 0 0 0 0] 1;
+XiShapeCoef     1;
 
-uPrimeCoef      uPrimeCoef [0 0 0 0 0 0 0] 1;
+uPrimeCoef      1;
 
 GuldersCoeffs
 {

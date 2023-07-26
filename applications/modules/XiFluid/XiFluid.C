@@ -116,30 +116,18 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         combustionProperties.lookup("SuModel")
     ),
 
-    sigmaExt
-    (
-        combustionProperties.lookup("sigmaExt")
-    ),
+    sigmaExt("sigmaExt", dimless/dimTime, combustionProperties),
 
     XiModel
     (
         combustionProperties.lookup("XiModel")
     ),
 
-    XiCoef
-    (
-        combustionProperties.lookup("XiCoef")
-    ),
+    XiCoef("XiCoef", dimless, combustionProperties),
 
-    XiShapeCoef
-    (
-        combustionProperties.lookup("XiShapeCoef")
-    ),
+    XiShapeCoef("XiShapeCoef", dimless, combustionProperties),
 
-    uPrimeCoef
-    (
-        combustionProperties.lookup("uPrimeCoef")
-    ),
+    uPrimeCoef("uPrimeCoef", dimless, combustionProperties),
 
     ign(combustionProperties, runTime, mesh),
 
