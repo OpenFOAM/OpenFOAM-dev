@@ -23,23 +23,51 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "rhoThermo.H"
+#include "rhoFluidThermo.H"
 
-#include "pureMixture.H"
-
-#include "forGases.H"
-#include "forLiquids.H"
-#include "forTabulated.H"
-
-#include "makeFluidThermo.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    forGases(makeFluidThermo, rhoThermo, pureMixture);
-    forLiquids(makeFluidThermo, rhoThermo, pureMixture);
-    forTabulated(makeFluidThermo, rhoThermo, pureMixture);
+    defineTypeNameAndDebug(rhoFluidThermo, 0);
+    defineRunTimeSelectionTable(rhoFluidThermo, fvMesh);
 }
+
+const Foam::word Foam::rhoFluidThermo::derivedThermoName("heRhoThermo");
+
+
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::rhoFluidThermo> Foam::rhoFluidThermo::New
+(
+    const fvMesh& mesh,
+    const word& phaseName
+)
+{
+    return basicThermo::New<rhoFluidThermo>(mesh, phaseName);
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::rhoFluidThermo::~rhoFluidThermo()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::rhoFluidThermo::renameRho()
+{
+    rho().rename(phasePropertyName(Foam::typedName<rhoFluidThermo>("rho")));
+    return rho();
+}
+
+
+void Foam::rhoFluidThermo::correctRho(const volScalarField& deltaRho)
+{
+    rho() += deltaRho;
+}
+
 
 // ************************************************************************* //

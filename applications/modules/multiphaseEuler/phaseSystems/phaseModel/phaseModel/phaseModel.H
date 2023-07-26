@@ -37,7 +37,7 @@ SourceFiles
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "fvMatricesFwd.H"
-#include "rhoThermo.H"
+#include "rhoFluidThermo.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -255,10 +255,10 @@ public:
         // Thermo
 
             //- Return the thermophysical model
-            virtual const rhoThermo& thermo() const = 0;
+            virtual const rhoFluidThermo& thermo() const = 0;
 
             //- Access the thermophysical model
-            virtual rhoThermo& thermo() = 0;
+            virtual rhoFluidThermo& thermo() = 0;
 
             //- Return the density field
             virtual const volScalarField& rho() const = 0;

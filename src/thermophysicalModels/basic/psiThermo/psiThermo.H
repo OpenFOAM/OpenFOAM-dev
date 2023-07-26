@@ -39,8 +39,8 @@ SourceFiles
 #define psiThermo_H
 
 #include "PsiThermo.H"
-#include "fluidThermo.H"
 #include "pureThermo.H"
+#include "fluidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -110,11 +110,6 @@ public:
 
         // Fields derived from thermodynamic state variables
 
-            //- Add the given density correction to the density field.
-            //  Used to update the density field following pressure solution.
-            //  For psiThermo does nothing.
-            virtual void correctRho(const volScalarField& deltaRho);
-
             //- Density [kg/m^3] - uses current value of pressure
             virtual tmp<volScalarField> rho() const = 0;
 
@@ -123,7 +118,12 @@ public:
 
             //- Return the thermodynamic density field [kg/m^3]
             //  This is used by solvers which create a separate continuity rho
-            virtual tmp<volScalarField> renameRho() = 0;
+            virtual tmp<volScalarField> renameRho();
+
+            //- Add the given density correction to the density field.
+            //  Used to update the density field following pressure solution.
+            //  For psiThermo does nothing.
+            virtual void correctRho(const volScalarField& deltaRho);
 };
 
 
@@ -135,7 +135,6 @@ class psiThermo::implementation
 :
     virtual public psiThermo
 {
-
 public:
 
     // Constructors
@@ -160,10 +159,6 @@ public:
 
             //- Density for patch [kg/m^3]
             virtual tmp<scalarField> rho(const label patchi) const;
-
-            //- Return the thermodynamic density field [kg/m^3]
-            //  This is used by solvers which create a separate continuity rho
-            virtual tmp<volScalarField> renameRho();
 
 
     // Member Operators

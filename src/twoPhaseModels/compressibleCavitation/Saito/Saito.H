@@ -107,7 +107,7 @@ class Saito
     // Private Member functions
 
         //- Return the function of temperature
-        tmp<volScalarField::Internal> fT(const rhoThermo& thermo) const;
+        tmp<volScalarField::Internal> fT(const rhoFluidThermo& thermo) const;
 
 
 public:

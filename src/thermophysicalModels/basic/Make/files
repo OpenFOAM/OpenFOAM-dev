@@ -3,14 +3,16 @@ basicThermo/BasicThermoName.C
 
 pureThermo/pureThermo.C
 
+rhoThermo/rhoThermo.C
+
 fluidThermo/fluidThermo.C
 fluidThermo/hydrostaticInitialisation.C
 
 psiThermo/psiThermo.C
 psiThermo/psiThermos.C
 
-rhoThermo/rhoThermo.C
-rhoThermo/rhoThermos.C
+rhoFluidThermo/rhoFluidThermo.C
+rhoFluidThermo/rhoFluidThermos.C
 
 liquidThermo/liquidThermo.C
 liquidThermo/liquidThermos.C

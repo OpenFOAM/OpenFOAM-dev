@@ -22,25 +22,26 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::rhoMulticomponentThermo
+    Foam::rhoFluidThermo
 
 Description
-    Base-class for multi-component fluid thermodynamic properties based on
-    density.
+    Base-class for fluid thermodynamic properties based on density.
 
 See also
     Foam::basicThermo
 
 SourceFiles
-    rhoMulticomponentThermo.C
+    rhoFluidThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef rhoMulticomponentThermo_H
-#define rhoMulticomponentThermo_H
+#ifndef rhoFluidThermo_H
+#define rhoFluidThermo_H
 
+#include "RhoFluidThermo.H"
+#include "pureThermo.H"
 #include "rhoThermo.H"
-#include "fluidMulticomponentThermo.H"
+#include "fluidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,13 +49,13 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class rhoMulticomponentThermo Declaration
+                          Class rhoFluidThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-class rhoMulticomponentThermo
+class rhoFluidThermo
 :
     virtual public rhoThermo,
-    virtual public fluidMulticomponentThermo
+    virtual public fluidThermo
 {
 public:
 
@@ -69,27 +70,21 @@ public:
         //- The derived type
         template<class MixtureType>
         using DerivedThermoType =
-            FluidMulticomponentThermo
-            <
-                MulticomponentThermo
-                <
-                    RhoThermo
-                    <
-                        BasicThermo<MixtureType, composite>
-                    >
-                >
-            >;
+            RhoFluidThermo<BasicThermo<MixtureType, composite>>;
+
+        //- The derived name
+        static const word derivedThermoName;
 
 
     //- Runtime type information
-    TypeName("rhoMulticomponentThermo");
+    TypeName("rhoFluidThermo");
 
 
-    //- Declare run-time constructor selection tables
+    //- Declare run-time constructor selection table
     declareRunTimeSelectionTable
     (
         autoPtr,
-        rhoMulticomponentThermo,
+        rhoFluidThermo,
         fvMesh,
         (const fvMesh& mesh, const word& phaseName),
         (mesh, phaseName)
@@ -99,7 +94,7 @@ public:
     // Selectors
 
         //- Standard selection based on fvMesh
-        static autoPtr<rhoMulticomponentThermo> New
+        static autoPtr<rhoFluidThermo> New
         (
             const fvMesh&,
             const word& phaseName=word::null
@@ -107,21 +102,34 @@ public:
 
 
     //- Destructor
-    virtual ~rhoMulticomponentThermo();
+    virtual ~rhoFluidThermo();
+
+
+    // Member Functions
+
+        // Fields derived from thermodynamic state variables
+
+            //- Rename and return the thermodynamic density field [kg/m^3]
+            //  This is used by solvers which create a separate continuity rho
+            virtual tmp<volScalarField> renameRho();
+
+            //- Add the given density correction to the density field.
+            //  Used to update the density field following pressure solution
+            virtual void correctRho(const volScalarField& deltaRho);
 };
 
 
 /*---------------------------------------------------------------------------*\
-                Class rhoMulticomponentThermo::composite Declaration
+                    Class rhoFluidThermo::composite Declaration
 \*---------------------------------------------------------------------------*/
 
-class rhoMulticomponentThermo::composite
+class rhoFluidThermo::composite
 :
     public basicThermo::implementation,
-    public fluidThermo::implementation,
+    public pureThermo,
     public rhoThermo::implementation,
-    public multicomponentThermo::implementation,
-    public rhoMulticomponentThermo
+    public fluidThermo::implementation,
+    public rhoFluidThermo
 {
 public:
 
@@ -138,15 +146,8 @@ public:
         )
         :
             basicThermo::implementation(dict, mesh, phaseName),
-            fluidThermo::implementation(dict, mesh, phaseName),
             rhoThermo::implementation(dict, mesh, phaseName),
-            multicomponentThermo::implementation
-            (
-                dict,
-                mixture.specieNames(),
-                mesh,
-                phaseName
-            )
+            fluidThermo::implementation(dict, mesh, phaseName)
         {}
 };
 

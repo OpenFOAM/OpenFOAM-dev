@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::RhoThermo
+    Foam::RhoFluidThermo
 
 Description
     Thermo implementation based on density
 
 SourceFiles
-    RhoThermo.C
+    RhoFluidThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef RhoThermo_H
-#define RhoThermo_H
+#ifndef RhoFluidThermo_H
+#define RhoFluidThermo_H
 
 #include "BasicThermo.H"
 
@@ -43,11 +43,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class RhoThermo Declaration
+                         Class RhoFluidThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BaseThermo>
-class RhoThermo
+class RhoFluidThermo
 :
     public BaseThermo
 {
@@ -62,14 +62,14 @@ public:
     // Constructors
 
         //- Construct from mesh and phase name
-        RhoThermo(const fvMesh&, const word& phaseName);
+        RhoFluidThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        RhoThermo(const RhoThermo<BaseThermo>&) = delete;
+        RhoFluidThermo(const RhoFluidThermo<BaseThermo>&) = delete;
 
 
     //- Destructor
-    virtual ~RhoThermo();
+    virtual ~RhoFluidThermo();
 
 
     // Member Functions
@@ -81,7 +81,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const RhoThermo<BaseThermo>&) = delete;
+        void operator=(const RhoFluidThermo<BaseThermo>&) = delete;
 };
 
 
@@ -92,7 +92,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "RhoThermo.C"
+    #include "RhoFluidThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

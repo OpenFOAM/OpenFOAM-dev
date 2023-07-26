@@ -43,7 +43,7 @@ See also
 #define compressibleVoFphase_H
 
 #include "VoFphase.H"
-#include "rhoThermo.H"
+#include "rhoFluidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,7 +61,7 @@ class compressibleVoFphase
     // Private Data
 
         //- Phase thermo
-        autoPtr<rhoThermo> thermo_;
+        autoPtr<rhoFluidThermo> thermo_;
 
         //- Phase mass-fraction
         volScalarField Alpha_;
@@ -115,14 +115,14 @@ public:
 
     // Member Functions
 
-        //- Return const-access to phase rhoThermo
-        const rhoThermo& thermo() const
+        //- Return const-access to phase rhoFluidThermo
+        const rhoFluidThermo& thermo() const
         {
             return thermo_();
         }
 
-        //- Return access to phase rhoThermo
-        rhoThermo& thermo()
+        //- Return access to phase rhoFluidThermo
+        rhoFluidThermo& thermo()
         {
             return thermo_();
         }

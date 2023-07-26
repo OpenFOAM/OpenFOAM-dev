@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,42 +23,34 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "interfaceCompositionModel.H"
 #include "rhoFluidMulticomponentThermo.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::sidedPhaseInterface&
-Foam::interfaceCompositionModel::interface() const
+namespace Foam
 {
-    return interface_;
+    defineTypeNameAndDebug(rhoFluidMulticomponentThermo, 0);
+    defineRunTimeSelectionTable(rhoFluidMulticomponentThermo, fvMesh);
 }
 
 
-const Foam::hashedWordList& Foam::interfaceCompositionModel::species() const
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::rhoFluidMulticomponentThermo>
+Foam::rhoFluidMulticomponentThermo::New
+(
+    const fvMesh& mesh,
+    const word& phaseName
+)
 {
-    return species_;
+    return basicThermo::New<rhoFluidMulticomponentThermo>(mesh, phaseName);
 }
 
 
-const Foam::rhoFluidMulticomponentThermo&
-Foam::interfaceCompositionModel::thermo() const
-{
-    return thermo_;
-}
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-
-const Foam::rhoFluidThermo& Foam::interfaceCompositionModel::otherThermo() const
-{
-    return otherThermo_;
-}
-
-
-const Foam::rhoFluidMulticomponentThermo&
-Foam::interfaceCompositionModel::otherMulticomponentThermo() const
-{
-    return refCast<const rhoFluidMulticomponentThermo>(otherThermo_);
-}
+Foam::rhoFluidMulticomponentThermo::~rhoFluidMulticomponentThermo()
+{}
 
 
 // ************************************************************************* //

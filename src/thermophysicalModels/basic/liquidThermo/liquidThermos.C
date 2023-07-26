@@ -42,7 +42,7 @@ License
                                                                                \
     addThermo(basicThermo, liquidThermo, pureMixture, ThermoPhysics);          \
     addThermo(fluidThermo, liquidThermo, pureMixture, ThermoPhysics);          \
-    addThermo(rhoThermo, liquidThermo, pureMixture, ThermoPhysics);            \
+    addThermo(rhoFluidThermo, liquidThermo, pureMixture, ThermoPhysics);       \
     addThermo(liquidThermo, liquidThermo, pureMixture, ThermoPhysics)
 
 namespace Foam

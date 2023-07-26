@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,13 +94,13 @@ protected:
         }
 
         //- Return the liquid thermo
-        inline const rhoThermo& thermol() const
+        inline const rhoFluidThermo& thermol() const
         {
             return phases_.thermo(liquidIndex_);
         }
 
         //- Return the vapour thermo
-        inline const rhoThermo& thermov() const
+        inline const rhoFluidThermo& thermov() const
         {
             return phases_.thermo(!liquidIndex_);
         }

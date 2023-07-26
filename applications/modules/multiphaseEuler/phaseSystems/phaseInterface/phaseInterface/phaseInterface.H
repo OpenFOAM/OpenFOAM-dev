@@ -300,10 +300,10 @@ public:
             virtual inline const volScalarField& alpha2() const;
 
             //- Return the thermo for phase 1
-            virtual inline const rhoThermo& thermo1() const;
+            virtual inline const rhoFluidThermo& thermo1() const;
 
             //- Return the thermo for phase 2
-            virtual inline const rhoThermo& thermo2() const;
+            virtual inline const rhoFluidThermo& thermo2() const;
 
             //- Return the density of phase 1
             virtual inline const volScalarField& rho1() const;

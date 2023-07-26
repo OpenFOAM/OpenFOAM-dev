@@ -57,19 +57,6 @@ Foam::solidThermo::implementation::implementation
             IOobject::NO_WRITE
         ),
         dimensionedScalar(phasePropertyName("p", phaseName), dimPressure, NaN)
-    ),
-    rho_
-    (
-        IOobject
-        (
-            phasePropertyName("rho", phaseName),
-            mesh.time().name(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimDensity
     )
 {}
 
@@ -94,29 +81,6 @@ Foam::solidThermo::~solidThermo()
 
 Foam::solidThermo::implementation::~implementation()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField> Foam::solidThermo::implementation::rho() const
-{
-    return rho_;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::solidThermo::implementation::rho
-(
-    const label patchi
-) const
-{
-    return rho_.boundaryField()[patchi];
-}
-
-
-Foam::volScalarField& Foam::solidThermo::implementation::rho()
-{
-    return rho_;
-}
 
 
 // ************************************************************************* //

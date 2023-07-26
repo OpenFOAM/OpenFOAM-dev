@@ -25,8 +25,8 @@ License
 
 #include "addToRunTimeSelectionTable.H"
 
-#include "rhoThermo.H"
-#include "rhoMulticomponentThermo.H"
+#include "rhoFluidThermo.H"
+#include "rhoFluidMulticomponentThermo.H"
 
 #include "combustionModel.H"
 
@@ -54,7 +54,11 @@ namespace Foam
                 <
                     MovingPhaseModel
                     <
-                        ThermoPhaseModel<phaseModel, rhoThermo>
+                        ThermoPhaseModel
+                        <
+                            phaseModel,
+                            rhoFluidThermo
+                        >
                     >
                 >
             >
@@ -78,7 +82,11 @@ namespace Foam
                 <
                     StationaryPhaseModel
                     <
-                        ThermoPhaseModel<phaseModel, rhoThermo>
+                        ThermoPhaseModel
+                        <
+                            phaseModel,
+                            rhoFluidThermo
+                        >
                     >
                 >
             >
@@ -102,7 +110,11 @@ namespace Foam
                 <
                     MovingPhaseModel
                     <
-                        ThermoPhaseModel<phaseModel, rhoThermo>
+                        ThermoPhaseModel
+                        <
+                            phaseModel,
+                            rhoFluidThermo
+                        >
                     >
                 >
             >
@@ -126,7 +138,11 @@ namespace Foam
                 <
                     StationaryPhaseModel
                     <
-                        ThermoPhaseModel<phaseModel, rhoThermo>
+                        ThermoPhaseModel
+                        <
+                            phaseModel,
+                            rhoFluidThermo
+                        >
                     >
                 >
             >
@@ -150,7 +166,11 @@ namespace Foam
                 <
                     MovingPhaseModel
                     <
-                        ThermoPhaseModel<phaseModel, rhoMulticomponentThermo>
+                        ThermoPhaseModel
+                        <
+                            phaseModel,
+                            rhoFluidMulticomponentThermo
+                        >
                     >
                 >
             >
@@ -184,7 +204,11 @@ namespace Foam
                 <
                     MovingPhaseModel
                     <
-                        ThermoPhaseModel<phaseModel, rhoMulticomponentThermo>
+                        ThermoPhaseModel
+                        <
+                            phaseModel,
+                            rhoFluidMulticomponentThermo
+                        >
                     >
                 >
             >
@@ -208,7 +232,11 @@ namespace Foam
                 <
                     MovingPhaseModel
                     <
-                        ThermoPhaseModel<phaseModel, rhoMulticomponentThermo>
+                        ThermoPhaseModel
+                        <
+                            phaseModel,
+                            rhoFluidMulticomponentThermo
+                        >
                     >
                 >
             >

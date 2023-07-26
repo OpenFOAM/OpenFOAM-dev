@@ -25,17 +25,6 @@ License
 
 #include "rhoThermo.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    defineTypeNameAndDebug(rhoThermo, 0);
-    defineRunTimeSelectionTable(rhoThermo, fvMesh);
-}
-
-const Foam::word Foam::rhoThermo::derivedThermoName("heRhoThermo");
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::rhoThermo::implementation::implementation
@@ -61,18 +50,6 @@ Foam::rhoThermo::implementation::implementation
 {}
 
 
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::rhoThermo> Foam::rhoThermo::New
-(
-    const fvMesh& mesh,
-    const word& phaseName
-)
-{
-    return basicThermo::New<rhoThermo>(mesh, phaseName);
-}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::rhoThermo::~rhoThermo()
@@ -85,7 +62,8 @@ Foam::rhoThermo::implementation::~implementation()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::rhoThermo::implementation::rho() const
+Foam::tmp<Foam::volScalarField>
+Foam::rhoThermo::implementation::rho() const
 {
     return rho_;
 }
@@ -100,22 +78,9 @@ Foam::tmp<Foam::scalarField> Foam::rhoThermo::implementation::rho
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::rhoThermo::implementation::renameRho()
-{
-    rho_.rename(phasePropertyName(Foam::typedName<rhoThermo>("rho")));
-    return rho_;
-}
-
-
 Foam::volScalarField& Foam::rhoThermo::implementation::rho()
 {
     return rho_;
-}
-
-
-void Foam::rhoThermo::implementation::correctRho(const volScalarField& deltaRho)
-{
-    rho_ += deltaRho;
 }
 
 

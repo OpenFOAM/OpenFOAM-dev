@@ -23,12 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "RhoThermo.H"
+#include "RhoFluidThermo.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class BaseThermo>
-void Foam::RhoThermo<BaseThermo>::calculate()
+void Foam::RhoFluidThermo<BaseThermo>::calculate()
 {
     const scalarField& hCells = this->he();
     const scalarField& pCells = this->p_;
@@ -163,7 +163,7 @@ void Foam::RhoThermo<BaseThermo>::calculate()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-Foam::RhoThermo<BaseThermo>::RhoThermo
+Foam::RhoFluidThermo<BaseThermo>::RhoFluidThermo
 (
     const fvMesh& mesh,
     const word& phaseName
@@ -178,14 +178,14 @@ Foam::RhoThermo<BaseThermo>::RhoThermo
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-Foam::RhoThermo<BaseThermo>::~RhoThermo()
+Foam::RhoFluidThermo<BaseThermo>::~RhoFluidThermo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-void Foam::RhoThermo<BaseThermo>::correct()
+void Foam::RhoFluidThermo<BaseThermo>::correct()
 {
     if (BaseThermo::debug)
     {

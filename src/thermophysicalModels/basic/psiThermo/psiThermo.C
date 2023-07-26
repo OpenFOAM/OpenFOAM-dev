@@ -75,6 +75,12 @@ void Foam::psiThermo::correctRho(const Foam::volScalarField& deltaRho)
 {}
 
 
+Foam::tmp<Foam::volScalarField> Foam::psiThermo::renameRho()
+{
+    return rho();
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::psiThermo::implementation::rho() const
 {
     return p()*psi();
@@ -87,12 +93,6 @@ Foam::tmp<Foam::scalarField> Foam::psiThermo::implementation::rho
 ) const
 {
     return p().boundaryField()[patchi]*psi().boundaryField()[patchi];
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::psiThermo::implementation::renameRho()
-{
-    return rho();
 }
 
 

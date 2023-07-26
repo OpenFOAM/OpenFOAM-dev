@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "rhoMulticomponentThermo.H"
+#include "rhoFluidMulticomponentThermo.H"
 
 #include "coefficientMulticomponentMixture.H"
 #include "coefficientWilkeMulticomponentMixture.H"
@@ -43,56 +43,56 @@ namespace Foam
     forCoeffGases
     (
         makeFluidMulticomponentThermos,
-        rhoThermo,
-        rhoMulticomponentThermo,
+        rhoFluidThermo,
+        rhoFluidMulticomponentThermo,
         coefficientMulticomponentMixture
     );
     forCoeffGases
     (
         makeFluidMulticomponentThermos,
-        rhoThermo,
-        rhoMulticomponentThermo,
+        rhoFluidThermo,
+        rhoFluidMulticomponentThermo,
         coefficientWilkeMulticomponentMixture
     );
     forGases
     (
         makeFluidMulticomponentThermo,
-        rhoMulticomponentThermo,
+        rhoFluidMulticomponentThermo,
         singleComponentMixture
     );
 
     forCoeffLiquids
     (
         makeFluidMulticomponentThermos,
-        rhoThermo,
-        rhoMulticomponentThermo,
+        rhoFluidThermo,
+        rhoFluidMulticomponentThermo,
         coefficientMulticomponentMixture
     );
     forLiquids
     (
         makeFluidMulticomponentThermos,
-        rhoThermo,
-        rhoMulticomponentThermo,
+        rhoFluidThermo,
+        rhoFluidMulticomponentThermo,
         valueMulticomponentMixture
     );
     forLiquids
     (
         makeFluidMulticomponentThermo,
-        rhoMulticomponentThermo,
+        rhoFluidMulticomponentThermo,
         singleComponentMixture
     );
 
     forTabulated
     (
         makeFluidMulticomponentThermos,
-        rhoThermo,
-        rhoMulticomponentThermo,
+        rhoFluidThermo,
+        rhoFluidMulticomponentThermo,
         valueMulticomponentMixture
     );
     forTabulated
     (
         makeFluidMulticomponentThermo,
-        rhoMulticomponentThermo,
+        rhoFluidMulticomponentThermo,
         singleComponentMixture
     );
 }

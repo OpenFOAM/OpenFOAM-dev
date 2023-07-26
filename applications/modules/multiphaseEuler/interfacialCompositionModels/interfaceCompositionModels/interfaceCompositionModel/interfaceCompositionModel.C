@@ -26,7 +26,7 @@ License
 #include "interfaceCompositionModel.H"
 #include "phaseModel.H"
 #include "phaseSystem.H"
-#include "rhoMulticomponentThermo.H"
+#include "rhoFluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -54,7 +54,7 @@ Foam::interfaceCompositionModel::interfaceCompositionModel
     Le_("Le", dimless, dict),
     thermo_
     (
-        refCast<const rhoMulticomponentThermo>(interface_.phase().thermo())
+        refCast<const rhoFluidMulticomponentThermo>(interface_.phase().thermo())
     ),
     otherThermo_(interface_.otherPhase().thermo())
 {}

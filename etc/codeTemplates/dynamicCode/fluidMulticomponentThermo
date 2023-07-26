@@ -22,7 +22,7 @@ type
 typeRenamed
 (
     hePsiThermo psiMulticomponentThermo
-    heRhoThermo rhoMulticomponentThermo
+    heRhoThermo rhoFluidMulticomponentThermo
 );
 
 energy

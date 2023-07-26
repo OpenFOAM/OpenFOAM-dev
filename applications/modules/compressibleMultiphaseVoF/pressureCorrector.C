@@ -79,7 +79,7 @@ void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
         forAll(phases, phasei)
         {
             const compressibleVoFphase& phase = phases[phasei];
-            const rhoThermo& thermo = phase.thermo();
+            const rhoFluidThermo& thermo = phase.thermo();
             const volScalarField& rho = phases[phasei].thermo().rho();
 
             p_rghEqnComps.set

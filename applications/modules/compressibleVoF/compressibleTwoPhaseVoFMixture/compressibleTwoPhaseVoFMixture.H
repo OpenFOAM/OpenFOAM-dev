@@ -25,7 +25,7 @@ Class
     Foam::compressibleTwoPhaseVoFMixture
 
 Description
-    Class to represent a mixture of two rhoThermo-based phases
+    Class to represent a mixture of two rhoFluidThermo-based phases
 
 SourceFiles
     compressibleTwoPhaseVoFMixture.C
@@ -37,7 +37,7 @@ SourceFiles
 
 #include "twoPhaseVoFMixture.H"
 #include "compressibleTwoPhases.H"
-#include "rhoThermo.H"
+#include "rhoFluidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,10 +67,10 @@ class compressibleTwoPhaseVoFMixture
         volScalarField T_;
 
         //- Thermo-package of phase 1
-        autoPtr<rhoThermo> thermo1_;
+        autoPtr<rhoFluidThermo> thermo1_;
 
         //- Thermo-package of phase 2
-        autoPtr<rhoThermo> thermo2_;
+        autoPtr<rhoFluidThermo> thermo2_;
 
         //- Mixture density
         volScalarField rho_;
@@ -126,25 +126,25 @@ public:
         }
 
         //- Return the thermo for phase 1
-        const rhoThermo& thermo1() const
+        const rhoFluidThermo& thermo1() const
         {
             return thermo1_();
         }
 
         //- Return the thermo for phase 2
-        const rhoThermo& thermo2() const
+        const rhoFluidThermo& thermo2() const
         {
             return thermo2_();
         }
 
         //- Return the thermo for phase 1
-        rhoThermo& thermo1()
+        rhoFluidThermo& thermo1()
         {
             return thermo1_();
         }
 
         //- Return the thermo for phase 2
-        rhoThermo& thermo2()
+        rhoFluidThermo& thermo2()
         {
             return thermo2_();
         }

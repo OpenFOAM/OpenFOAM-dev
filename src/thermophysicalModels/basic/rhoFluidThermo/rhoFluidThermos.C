@@ -23,33 +23,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "rhoMulticomponentThermo.H"
+#include "rhoFluidThermo.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+#include "pureMixture.H"
+
+#include "forGases.H"
+#include "forLiquids.H"
+#include "forTabulated.H"
+
+#include "makeFluidThermo.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(rhoMulticomponentThermo, 0);
-    defineRunTimeSelectionTable(rhoMulticomponentThermo, fvMesh);
+    forGases(makeFluidThermo, rhoFluidThermo, pureMixture);
+    forLiquids(makeFluidThermo, rhoFluidThermo, pureMixture);
+    forTabulated(makeFluidThermo, rhoFluidThermo, pureMixture);
 }
-
-
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::rhoMulticomponentThermo> Foam::rhoMulticomponentThermo::New
-(
-    const fvMesh& mesh,
-    const word& phaseName
-)
-{
-    return basicThermo::New<rhoMulticomponentThermo>(mesh, phaseName);
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::rhoMulticomponentThermo::~rhoMulticomponentThermo()
-{}
-
 
 // ************************************************************************* //

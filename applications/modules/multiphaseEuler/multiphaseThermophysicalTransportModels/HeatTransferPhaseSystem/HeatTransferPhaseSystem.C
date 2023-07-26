@@ -25,7 +25,7 @@ License
 
 #include "HeatTransferPhaseSystem.H"
 #include "fvmSup.H"
-#include "rhoMulticomponentThermo.H"
+#include "rhoFluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 
@@ -47,8 +47,8 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoThermo& thermo1 = phase1.thermo();
-        const rhoThermo& thermo2 = phase2.thermo();
+        const rhoFluidThermo& thermo1 = phase1.thermo();
+        const rhoFluidThermo& thermo2 = phase2.thermo();
         const volScalarField& he1 = thermo1.he();
         const volScalarField& he2 = thermo2.he();
         const volScalarField hs1(thermo1.hs());
@@ -89,16 +89,16 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoThermo& thermo1 = phase1.thermo();
-        const rhoThermo& thermo2 = phase2.thermo();
-        const rhoMulticomponentThermo* mcThermoPtr1 =
-            isA<rhoMulticomponentThermo>(thermo1)
-          ? &refCast<const rhoMulticomponentThermo>(thermo1)
-          : static_cast<const rhoMulticomponentThermo*>(nullptr);
-        const rhoMulticomponentThermo* mcThermoPtr2 =
-            isA<rhoMulticomponentThermo>(thermo2)
-          ? &refCast<const rhoMulticomponentThermo>(thermo2)
-          : static_cast<const rhoMulticomponentThermo*>(nullptr);
+        const rhoFluidThermo& thermo1 = phase1.thermo();
+        const rhoFluidThermo& thermo2 = phase2.thermo();
+        const rhoFluidMulticomponentThermo* mcThermoPtr1 =
+            isA<rhoFluidMulticomponentThermo>(thermo1)
+          ? &refCast<const rhoFluidMulticomponentThermo>(thermo1)
+          : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
+        const rhoFluidMulticomponentThermo* mcThermoPtr2 =
+            isA<rhoFluidMulticomponentThermo>(thermo2)
+          ? &refCast<const rhoFluidMulticomponentThermo>(thermo2)
+          : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
         const volScalarField& he1 = thermo1.he();
         const volScalarField& he2 = thermo2.he();
         const volScalarField hs1(thermo1.hs());
@@ -195,8 +195,8 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefsWithoutL
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoThermo& thermo1 = phase1.thermo();
-        const rhoThermo& thermo2 = phase2.thermo();
+        const rhoFluidThermo& thermo1 = phase1.thermo();
+        const rhoFluidThermo& thermo2 = phase2.thermo();
         const volScalarField& he1 = thermo1.he();
         const volScalarField& he2 = thermo2.he();
         const volScalarField K1(phase1.K());
@@ -305,16 +305,16 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefsWithoutL
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoThermo& thermo1 = phase1.thermo();
-        const rhoThermo& thermo2 = phase2.thermo();
-        const rhoMulticomponentThermo* mcThermoPtr1 =
-            isA<rhoMulticomponentThermo>(thermo1)
-          ? &refCast<const rhoMulticomponentThermo>(thermo1)
-          : static_cast<const rhoMulticomponentThermo*>(nullptr);
-        const rhoMulticomponentThermo* mcThermoPtr2 =
-            isA<rhoMulticomponentThermo>(thermo2)
-          ? &refCast<const rhoMulticomponentThermo>(thermo2)
-          : static_cast<const rhoMulticomponentThermo*>(nullptr);
+        const rhoFluidThermo& thermo1 = phase1.thermo();
+        const rhoFluidThermo& thermo2 = phase2.thermo();
+        const rhoFluidMulticomponentThermo* mcThermoPtr1 =
+            isA<rhoFluidMulticomponentThermo>(thermo1)
+          ? &refCast<const rhoFluidMulticomponentThermo>(thermo1)
+          : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
+        const rhoFluidMulticomponentThermo* mcThermoPtr2 =
+            isA<rhoFluidMulticomponentThermo>(thermo2)
+          ? &refCast<const rhoFluidMulticomponentThermo>(thermo2)
+          : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
         const volScalarField& he1 = thermo1.he();
         const volScalarField& he2 = thermo2.he();
         const volScalarField K1(phase1.K());
@@ -512,8 +512,8 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::L
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = interface.phase1().thermo();
-    const rhoThermo& thermo2 = interface.phase2().thermo();
+    const rhoFluidThermo& thermo1 = interface.phase1().thermo();
+    const rhoFluidThermo& thermo2 = interface.phase2().thermo();
 
     // Interface enthalpies
     const volScalarField haf1(thermo1.ha(thermo1.p(), Tf));
@@ -552,8 +552,8 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::L
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = interface.phase1().thermo();
-    const rhoThermo& thermo2 = interface.phase2().thermo();
+    const rhoFluidThermo& thermo1 = interface.phase1().thermo();
+    const rhoFluidThermo& thermo2 = interface.phase2().thermo();
 
     // Interface enthalpies
     const scalarField haf1(thermo1.ha(Tf, cells));
@@ -595,16 +595,16 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = interface.phase1().thermo();
-    const rhoThermo& thermo2 = interface.phase2().thermo();
-    const rhoMulticomponentThermo* mcThermoPtr1 =
-        isA<rhoMulticomponentThermo>(thermo1)
-      ? &refCast<const rhoMulticomponentThermo>(thermo1)
-      : static_cast<const rhoMulticomponentThermo*>(nullptr);
-    const rhoMulticomponentThermo* mcThermoPtr2 =
-        isA<rhoMulticomponentThermo>(thermo2)
-      ? &refCast<const rhoMulticomponentThermo>(thermo2)
-      : static_cast<const rhoMulticomponentThermo*>(nullptr);
+    const rhoFluidThermo& thermo1 = interface.phase1().thermo();
+    const rhoFluidThermo& thermo2 = interface.phase2().thermo();
+    const rhoFluidMulticomponentThermo* mcThermoPtr1 =
+        isA<rhoFluidMulticomponentThermo>(thermo1)
+      ? &refCast<const rhoFluidMulticomponentThermo>(thermo1)
+      : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
+    const rhoFluidMulticomponentThermo* mcThermoPtr2 =
+        isA<rhoFluidMulticomponentThermo>(thermo2)
+      ? &refCast<const rhoFluidMulticomponentThermo>(thermo2)
+      : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
     const label speciei1 =
         mcThermoPtr1 ? mcThermoPtr1->species()[specie] : -1;
     const label speciei2 =
@@ -668,16 +668,16 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = interface.phase1().thermo();
-    const rhoThermo& thermo2 = interface.phase2().thermo();
-    const rhoMulticomponentThermo* mcThermoPtr1 =
-        isA<rhoMulticomponentThermo>(thermo1)
-      ? &refCast<const rhoMulticomponentThermo>(thermo1)
-      : static_cast<const rhoMulticomponentThermo*>(nullptr);
-    const rhoMulticomponentThermo* mcThermoPtr2 =
-        isA<rhoMulticomponentThermo>(thermo2)
-      ? &refCast<const rhoMulticomponentThermo>(thermo2)
-      : static_cast<const rhoMulticomponentThermo*>(nullptr);
+    const rhoFluidThermo& thermo1 = interface.phase1().thermo();
+    const rhoFluidThermo& thermo2 = interface.phase2().thermo();
+    const rhoFluidMulticomponentThermo* mcThermoPtr1 =
+        isA<rhoFluidMulticomponentThermo>(thermo1)
+      ? &refCast<const rhoFluidMulticomponentThermo>(thermo1)
+      : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
+    const rhoFluidMulticomponentThermo* mcThermoPtr2 =
+        isA<rhoFluidMulticomponentThermo>(thermo2)
+      ? &refCast<const rhoFluidMulticomponentThermo>(thermo2)
+      : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
     const label speciei1 =
         mcThermoPtr1 ? mcThermoPtr1->species()[specie] : -1;
     const label speciei2 =

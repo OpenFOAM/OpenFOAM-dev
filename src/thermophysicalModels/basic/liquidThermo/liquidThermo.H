@@ -39,7 +39,7 @@ SourceFiles
 #define liquidThermo_H
 
 #include "LiquidThermo.H"
-#include "rhoThermo.H"
+#include "rhoFluidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,7 +52,7 @@ namespace Foam
 
 class liquidThermo
 :
-    virtual public rhoThermo
+    virtual public rhoFluidThermo
 {
 public:
 
@@ -67,7 +67,7 @@ public:
         //- The derived type
         template<class MixtureType>
         using DerivedThermoType =
-            LiquidThermo<RhoThermo<BasicThermo<MixtureType, composite>>>;
+            LiquidThermo<RhoFluidThermo<BasicThermo<MixtureType, composite>>>;
 
 
     //- Runtime type information
@@ -114,8 +114,8 @@ class liquidThermo::composite
 :
     public basicThermo::implementation,
     public pureThermo,
-    public fluidThermo::implementation,
     public rhoThermo::implementation,
+    public fluidThermo::implementation,
     public liquidThermo
 {
 public:
@@ -133,8 +133,8 @@ public:
         )
         :
             basicThermo::implementation(dict, mesh, phaseName),
-            fluidThermo::implementation(dict, mesh, phaseName),
-            rhoThermo::implementation(dict, mesh, phaseName)
+            rhoThermo::implementation(dict, mesh, phaseName),
+            fluidThermo::implementation(dict, mesh, phaseName)
         {}
 };
 

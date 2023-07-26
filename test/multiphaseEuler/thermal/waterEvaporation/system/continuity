@@ -23,11 +23,11 @@ codeOptions
 
 codeInclude
 #{
-    #include "rhoThermo.H"
+    #include "rhoFluidThermo.H"
 
     namespace Foam
     {
-        tmp<volScalarField> ea(const rhoThermo& thermo)
+        tmp<volScalarField> ea(const rhoFluidThermo& thermo)
         {
             tmp<volScalarField> tEa = thermo.he() + thermo.hc();
 
@@ -70,10 +70,10 @@ codeRead
         mesh().lookupObject<volScalarField>("alpha.steam");
     const volScalarField& alphaLiq =
         mesh().lookupObject<volScalarField>("alpha.water");
-    const rhoThermo& thermoGas =
-        mesh().lookupObject<rhoThermo>("physicalProperties.steam");
-    const rhoThermo& thermoLiq =
-        mesh().lookupObject<rhoThermo>("physicalProperties.water");
+    const rhoFluidThermo& thermoGas =
+        mesh().lookupObject<rhoFluidThermo>("physicalProperties.steam");
+    const rhoFluidThermo& thermoLiq =
+        mesh().lookupObject<rhoFluidThermo>("physicalProperties.water");
 
     *mass0Gas = alphaGas*thermoGas.rho();
     *mass0Liq = alphaLiq*thermoLiq.rho();
@@ -124,10 +124,10 @@ codeExecute
         mesh().lookupObject<volScalarField>("alpha.steam");
     const volScalarField& alphaLiq =
         mesh().lookupObject<volScalarField>("alpha.water");
-    const rhoThermo& thermoGas =
-        mesh().lookupObject<rhoThermo>("physicalProperties.steam");
-    const rhoThermo& thermoLiq =
-        mesh().lookupObject<rhoThermo>("physicalProperties.water");
+    const rhoFluidThermo& thermoGas =
+        mesh().lookupObject<rhoFluidThermo>("physicalProperties.steam");
+    const rhoFluidThermo& thermoLiq =
+        mesh().lookupObject<rhoFluidThermo>("physicalProperties.water");
 
     dMassGas = alphaGas*thermoGas.rho() - mass0Gas;
     dMassLiq = alphaLiq*thermoLiq.rho() - mass0Liq;

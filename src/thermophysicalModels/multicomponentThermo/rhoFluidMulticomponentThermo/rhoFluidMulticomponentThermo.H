@@ -22,27 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solidThermo
+    Foam::rhoFluidMulticomponentThermo
 
 Description
-    Base-class for solid thermodynamic properties.
+    Base-class for multi-component fluid thermodynamic properties based on
+    density.
 
 See also
     Foam::basicThermo
 
 SourceFiles
-    solidThermo.C
+    rhoFluidMulticomponentThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef solidThermo_H
-#define solidThermo_H
+#ifndef rhoFluidMulticomponentThermo_H
+#define rhoFluidMulticomponentThermo_H
 
-#include "SolidThermo.H"
-#include "pureThermo.H"
-#include "rhoThermo.H"
-#include "uniformGeometricFields.H"
-#include "fvScalarMatrix.H"
+#include "rhoFluidThermo.H"
+#include "fluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,20 +48,17 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class solidThermo Declaration
+                      Class rhoFluidMulticomponentThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-class solidThermo
+class rhoFluidMulticomponentThermo
 :
-    virtual public basicThermo,
-    virtual public rhoThermo
+    virtual public rhoFluidThermo,
+    virtual public fluidMulticomponentThermo
 {
 public:
 
     // Public Classes
-
-        //- Forward declare the implementation class
-        class implementation;
 
         //- Forward declare the composite class
         class composite;
@@ -74,21 +69,27 @@ public:
         //- The derived type
         template<class MixtureType>
         using DerivedThermoType =
-            SolidThermo<BasicThermo<MixtureType, composite>>;
-
-        //- The derived name
-        static const word derivedThermoName;
+            FluidMulticomponentThermo
+            <
+                MulticomponentThermo
+                <
+                    RhoFluidThermo
+                    <
+                        BasicThermo<MixtureType, composite>
+                    >
+                >
+            >;
 
 
     //- Runtime type information
-    TypeName("solidThermo");
+    TypeName("rhoFluidMulticomponentThermo");
 
 
-    // Declare run-time constructor selection tables
+    //- Declare run-time constructor selection tables
     declareRunTimeSelectionTable
     (
         autoPtr,
-        solidThermo,
+        rhoFluidMulticomponentThermo,
         fvMesh,
         (const fvMesh& mesh, const word& phaseName),
         (mesh, phaseName)
@@ -98,90 +99,33 @@ public:
     // Selectors
 
         //- Standard selection based on fvMesh
-        static autoPtr<solidThermo> New
+        static autoPtr<rhoFluidMulticomponentThermo> New
         (
             const fvMesh&,
-            const word& phaseName = word::null
+            const word& phaseName=word::null
         );
 
 
     //- Destructor
-    virtual ~solidThermo();
-
-
-    // Member Functions
-
-        //- Return true if thermal conductivity is isotropic
-        virtual bool isotropic() const = 0;
-
-        //- Anisotropic thermal conductivity [W/m/K]
-        virtual const volVectorField& Kappa() const = 0;
+    virtual ~rhoFluidMulticomponentThermo();
 };
 
 
 /*---------------------------------------------------------------------------*\
-                 Class solidThermo::implementation Declaration
+                Class rhoFluidMulticomponentThermo::composite Declaration
 \*---------------------------------------------------------------------------*/
 
-class solidThermo::implementation
-:
-    virtual public solidThermo
-{
-protected:
-
-    // Protected data
-
-        // Fields
-
-            //- Pressure [Pa]
-            //  Note: This value should never be used. Solid thermo should only
-            //  be instantiated with thermo models that do not depend on
-            //  pressure. This uniform field takes a value of NaN, so that if
-            //  any thermo models that do depend on pressure are used then the
-            //  code will exit.
-            uniformGeometricScalarField p_;
-
-
-public:
-
-    // Constructors
-
-        //- Construct from dictionary, mesh and phase name
-        implementation(const dictionary&, const fvMesh&, const word&);
-
-
-    //- Destructor
-    virtual ~implementation();
-};
-
-
-/*---------------------------------------------------------------------------*\
-                   Class solidThermo::composite Declaration
-\*---------------------------------------------------------------------------*/
-
-class solidThermo::composite
+class rhoFluidMulticomponentThermo::composite
 :
     public basicThermo::implementation,
-    public pureThermo,
     public rhoThermo::implementation,
-    public solidThermo::implementation
+    public fluidThermo::implementation,
+    public multicomponentThermo::implementation,
+    public rhoFluidMulticomponentThermo
 {
 public:
 
     // Constructors
-
-        //- Construct from dictionary, mesh and phase name
-        composite
-        (
-            const dictionary& dict,
-            const fvMesh& mesh,
-            const word& phaseName
-        )
-        :
-            basicThermo::implementation(dict, mesh, phaseName),
-            rhoThermo::implementation(dict, mesh, phaseName),
-            solidThermo::implementation(dict, mesh, phaseName)
-        {}
 
         //- Construct from dictionary, mesh and phase name
         template<class MixtureType>
@@ -193,7 +137,16 @@ public:
             const word& phaseName
         )
         :
-            composite(dict, mesh, phaseName)
+            basicThermo::implementation(dict, mesh, phaseName),
+            rhoThermo::implementation(dict, mesh, phaseName),
+            fluidThermo::implementation(dict, mesh, phaseName),
+            multicomponentThermo::implementation
+            (
+                dict,
+                mixture.specieNames(),
+                mesh,
+                phaseName
+            )
         {}
 };
 

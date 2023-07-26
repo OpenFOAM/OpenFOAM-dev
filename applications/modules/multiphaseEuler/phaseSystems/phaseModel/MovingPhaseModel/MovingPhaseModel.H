@@ -62,13 +62,13 @@ template<class ThermoModel>
 struct MovingPhaseModelTransportThermoModel;
 
 template<>
-struct MovingPhaseModelTransportThermoModel<rhoThermo>
+struct MovingPhaseModelTransportThermoModel<rhoFluidThermo>
 {
     typedef fluidThermo type;
 };
 
 template<>
-struct MovingPhaseModelTransportThermoModel<rhoMulticomponentThermo>
+struct MovingPhaseModelTransportThermoModel<rhoFluidMulticomponentThermo>
 {
     typedef fluidMulticomponentThermo type;
 };
