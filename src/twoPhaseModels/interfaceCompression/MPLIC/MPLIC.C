@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,6 +185,13 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::surfaceAlpha
         {
             initAlphaf[facei] = alphaf[facei];
         }
+    }
+
+    if (!mesh.conformal())
+    {
+        FatalErrorInFunction
+            << "The " << type() << " scheme is not compatible with "
+            << "non-conformal meshes" << exit(FatalError);
     }
 
     // Convert the alphaPhi spliced field into a surfaceScalarField

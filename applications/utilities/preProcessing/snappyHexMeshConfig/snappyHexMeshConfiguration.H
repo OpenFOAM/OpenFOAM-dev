@@ -86,6 +86,12 @@ class snappyHexMeshConfiguration
         //- Number of layers at wall patches, default 0
         const label layers_;
 
+        //- Thickness of the near wall cells with layer addition
+        const scalar firstLayerThickness_;
+
+        //- Expansion ratio used with layer addition
+        const scalar layerExpansionRatio_;
+
         //- insidePoint parameter
         point insidePoint_;
 
@@ -175,6 +181,8 @@ public:
             const List<Tuple3<word, scalar, label>>& refinementDists,
             const bool explicitFeatures,
             const label layers,
+            const scalar firstLayerThickness,
+            const scalar layerExpansionRatio,
             const point& insidePoint,
             const label nCellsBetweenLevels
         );

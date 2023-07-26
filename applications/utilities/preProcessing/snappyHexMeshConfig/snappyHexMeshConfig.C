@@ -140,6 +140,12 @@ Usage
       - \par -layers \<int\>
         Specify <int> surface layers at wall boundaries, default 0
 
+      - \par -firstLayerThickness \<value\>
+        Specify the thickness of the near wall cells for layer addition
+
+      - \par -layerExpansionRatio \<value\>
+        Specify the expansion ratio between layers, default 1.2
+
       - \par -cellZones \<list\>
         Surfaces that form cellZones, e.g. '(porousZone heatSource)'
 
@@ -197,7 +203,7 @@ void readPatchOption
 
 int main(int argc, char *argv[])
 {
-    argList::usageMin = 30;
+    argList::usageMin = 32;
     argList::usageMax = 105;
 
     argList::addNote
@@ -318,6 +324,20 @@ int main(int argc, char *argv[])
         "layers",
         "int",
         "specify <int> surface layers at wall boundaries, default 0"
+    );
+
+    argList::addOption
+    (
+        "firstLayerThickness",
+        "value",
+        "specify the thickness of the near wall cells for layer addition"
+    );
+
+    argList::addOption
+    (
+        "layerExpansionRatio",
+        "value",
+        "specify the expansion ratio between layers, default 1.2"
     );
 
     argList::addOption
@@ -574,6 +594,16 @@ int main(int argc, char *argv[])
 
     const label layers(args.optionLookupOrDefault<label>("layers", 0));
 
+    const scalar firstLayerThickness
+    (
+        args.optionLookupOrDefault<scalar>("firstLayerThickness", 0)
+    );
+
+    const scalar layerExpansionRatio
+    (
+        args.optionLookupOrDefault<scalar>("layerExpansionRatio", 1.2)
+    );
+
     const point insidePoint
     (
         args.optionLookupOrDefault<point>("insidePoint", point::zero)
@@ -610,6 +640,8 @@ int main(int argc, char *argv[])
         refinementDists,
         explicitFeatures,
         layers,
+        firstLayerThickness,
+        layerExpansionRatio,
         insidePoint,
         nCellsBetweenLevels
     );
