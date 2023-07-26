@@ -54,7 +54,7 @@ functions
     (
         fieldType = volScalarField,
         field = half,
-        dimensions = [0 0 0 0 0 0 0],
+        dimensions = [],
         value = 0.5
     )
 

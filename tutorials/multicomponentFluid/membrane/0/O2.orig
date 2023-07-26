@@ -16,7 +16,7 @@ FoamFile
 
 #include "include"
 
-dimensions      [0 0 0 0 0 0 0];
+dimensions      [];
 
 internalField   uniform 0;
 
