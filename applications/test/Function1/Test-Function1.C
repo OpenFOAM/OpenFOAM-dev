@@ -29,11 +29,10 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
+#include "argList.H"
 #include "Function1.H"
 #include "IFstream.H"
 #include "OFstream.H"
-#include "ListOps.H"
-#include "argList.H"
 
 using namespace Foam;
 
