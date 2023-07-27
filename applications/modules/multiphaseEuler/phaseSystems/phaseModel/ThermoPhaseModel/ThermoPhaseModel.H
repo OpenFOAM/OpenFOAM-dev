@@ -46,7 +46,7 @@ SourceFiles
 namespace Foam
 {
 
-class rhoThermo;
+class rhoFluidThermo;
 
 /*---------------------------------------------------------------------------*\
                       Class ThermoPhaseModel Declaration
@@ -97,10 +97,10 @@ public:
             virtual bool isochoric() const;
 
             //- Return the thermophysical model
-            virtual const rhoThermo& thermo() const;
+            virtual const rhoFluidThermo& thermo() const;
 
             //- Access the thermophysical model
-            virtual rhoThermo& thermo();
+            virtual rhoFluidThermo& thermo();
 
             //- Return the density field
             virtual const volScalarField& rho() const;

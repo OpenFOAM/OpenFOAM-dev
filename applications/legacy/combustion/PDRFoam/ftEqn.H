@@ -1,6 +1,6 @@
-if (composition.contains("ft"))
+if (thermo.containsSpecie("ft"))
 {
-    volScalarField& ft = composition.Y("ft");
+    volScalarField& ft = thermo.Y("ft");
 
     solve
     (

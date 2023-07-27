@@ -28,7 +28,7 @@ License
 #include "alphatPhaseChangeWallFunctionBase.H"
 #include "fvcVolumeIntegrate.H"
 #include "fvmSup.H"
-#include "rhoMulticomponentThermo.H"
+#include "rhoFluidMulticomponentThermo.H"
 #include "wallBoilingHeatTransfer.H"
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
@@ -562,8 +562,8 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
         const phaseInterface& interface = saturationModelIter()->interface();
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoThermo& thermo1 = phase1.thermo();
-        const rhoThermo& thermo2 = phase2.thermo();
+        const rhoFluidThermo& thermo1 = phase1.thermo();
+        const rhoFluidThermo& thermo2 = phase2.thermo();
         const volScalarField& T1(thermo1.T());
         const volScalarField& T2(thermo2.T());
 

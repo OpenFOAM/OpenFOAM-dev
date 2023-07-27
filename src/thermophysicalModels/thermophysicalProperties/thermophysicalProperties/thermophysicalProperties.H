@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ public:
 
     // Member Functions
 
-        //- Return the name of the liquid
+        //- Return the name of the substance
         virtual const word& name() const = 0;
 
 
@@ -129,16 +129,13 @@ public:
 
         // Fundamental equation of state properties
 
-            //- Liquid density [kg/m^3]
+            //- Density [kg/m^3]
             virtual scalar rho(scalar p, scalar T) const = 0;
 
-            //- Liquid compressibility [s^2/m^2]
-            //  Note: currently it is assumed the liquid is incompressible
+            //- Compressibility [s^2/m^2]
             virtual scalar psi(scalar p, scalar T) const = 0;
 
             //- Return (Cp - Cv) [J/(kg K]
-            //  Note: currently it is assumed the liquid is incompressible
-            //  so CpMCv 0
             virtual scalar CpMCv(scalar p, scalar T) const = 0;
 
 
@@ -162,10 +159,10 @@ public:
 
         // Physical properties
 
-            //- Liquid viscosity [Pa s]
+            //- Viscosity [Pa s]
             virtual scalar mu(scalar p, scalar T) const = 0;
 
-            //- Liquid thermal conductivity  [W/m/K]
+            //- Thermal conductivity  [W/m/K]
             virtual scalar kappa(scalar p, scalar T) const = 0;
 
 

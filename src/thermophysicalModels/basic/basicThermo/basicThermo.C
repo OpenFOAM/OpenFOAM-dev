@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -262,12 +262,11 @@ Foam::wordList Foam::basicThermo::heBoundaryTypes()
 
 Foam::basicThermo::implementation::implementation
 (
+    const dictionary& dict,
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    physicalProperties(mesh, phaseName),
-
     mesh_(mesh),
 
     phaseName_(phaseName),
@@ -299,7 +298,7 @@ Foam::basicThermo::implementation::implementation
         dimensionedScalar(dimEnergy/dimTime/dimLength/dimTemperature, Zero)
     ),
 
-    dpdt_(lookupOrDefault<Switch>("dpdt", true))
+    dpdt_(dict.lookupOrDefault<Switch>("dpdt", true))
 {}
 
 
@@ -384,10 +383,8 @@ const Foam::volScalarField& Foam::basicThermo::implementation::kappa() const
 }
 
 
-bool Foam::basicThermo::implementation::read()
-{
-    return regIOobject::read();
-}
+void Foam::basicThermo::implementation::read(const dictionary&)
+{}
 
 
 // ************************************************************************* //

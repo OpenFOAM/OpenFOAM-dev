@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,21 +181,76 @@ Ostream& operator<<(Ostream&, const IOerror&);
 
 
 /*---------------------------------------------------------------------------*\
-                           Class IOerror Declaration
+                       Class IOerrorLocation Declaration
 \*---------------------------------------------------------------------------*/
 
-//- Report an I/O error
-class IOerror
-:
-    public error
+class IOerrorLocation
 {
     // Private Data
 
+        //- File name
         string ioFileName_;
+
+        //- Start line number
         label ioStartLineNumber_;
+
+        //- End Line number
         label ioEndLineNumber_;
 
 
+public:
+
+    // Constructors
+
+        //- Construct null
+        IOerrorLocation();
+
+        //- Construct from components
+        IOerrorLocation
+        (
+            const string& ioFileName,
+            const label ioStartLineNumber = -1,
+            const label ioEndLineNumber = -1
+        );
+
+        //- Construct from a stream
+        IOerrorLocation(const IOstream&);
+
+        //- Construct from a dictionary
+        IOerrorLocation(const dictionary&);
+
+
+    // Member Functions
+
+        //- Access the file name
+        inline const string& ioFileName() const
+        {
+            return ioFileName_;
+        }
+
+        //- Access the start line number
+        inline label ioStartLineNumber() const
+        {
+            return ioStartLineNumber_;
+        }
+
+        //- Access the end line number
+        inline label ioEndLineNumber() const
+        {
+            return ioEndLineNumber_;
+        }
+};
+
+
+/*---------------------------------------------------------------------------*\
+                           Class IOerror Declaration
+\*---------------------------------------------------------------------------*/
+
+class IOerror
+:
+    public error,
+    public IOerrorLocation
+{
 public:
 
     // Constructors
@@ -206,21 +261,6 @@ public:
 
     // Member Functions
 
-        const string& ioFileName() const
-        {
-            return ioFileName_;
-        }
-
-        label ioStartLineNumber() const
-        {
-            return ioStartLineNumber_;
-        }
-
-        label ioEndLineNumber() const
-        {
-            return ioEndLineNumber_;
-        }
-
         //- Convert to OSstream
         //  Prints basic message and returns OSstream for further info.
         OSstream& operator()
@@ -228,29 +268,7 @@ public:
             const char* functionName,
             const char* sourceFileName,
             const int sourceFileLineNumber,
-            const string& ioFileName,
-            const label ioStartLineNumber = -1,
-            const label ioEndLineNumber = -1
-        );
-
-        //- Convert to OSstream
-        //  Prints basic message and returns OSstream for further info.
-        OSstream& operator()
-        (
-            const char* functionName,
-            const char* sourceFileName,
-            const int sourceFileLineNumber,
-            const IOstream&
-        );
-
-        //- Convert to OSstream
-        //  Prints basic message and returns OSstream for further info.
-        OSstream& operator()
-        (
-            const char* functionName,
-            const char* sourceFileName,
-            const int sourceFileLineNumber,
-            const dictionary&
+            const IOerrorLocation& location
         );
 
         //- Print basic message and exit. Uses cerr if streams not constructed

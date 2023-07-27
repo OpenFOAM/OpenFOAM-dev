@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "solidThermo.H"
 #include "fvMesh.H"
 
-/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
@@ -34,11 +34,14 @@ namespace Foam
     defineRunTimeSelectionTable(solidThermo, fvMesh);
 }
 
+const Foam::word Foam::solidThermo::derivedThermoName("heSolidThermo");
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::solidThermo::implementation::implementation
 (
+    const dictionary& dict,
     const fvMesh& mesh,
     const word& phaseName
 )
@@ -54,31 +57,7 @@ Foam::solidThermo::implementation::implementation
             IOobject::NO_WRITE
         ),
         dimensionedScalar(phasePropertyName("p", phaseName), dimPressure, NaN)
-    ),
-    rho_
-    (
-        IOobject
-        (
-            phasePropertyName("rho", phaseName),
-            mesh.time().name(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimDensity
     )
-{}
-
-
-Foam::solidThermo::implementation::implementation
-(
-    const fvMesh& mesh,
-    const dictionary& dict,
-    const word& phaseName
-)
-:
-    solidThermo::implementation::implementation(mesh, phaseName)
 {}
 
 
@@ -94,17 +73,6 @@ Foam::autoPtr<Foam::solidThermo> Foam::solidThermo::New
 }
 
 
-// Foam::autoPtr<Foam::solidThermo> Foam::solidThermo::New
-// (
-//     const fvMesh& mesh,
-//     const dictionary& dict,
-//     const word& phaseName
-// )
-// {
-//     return basicThermo::New<solidThermo>(mesh, dict, phaseName);
-// }
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::solidThermo::~solidThermo()
@@ -113,29 +81,6 @@ Foam::solidThermo::~solidThermo()
 
 Foam::solidThermo::implementation::~implementation()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField> Foam::solidThermo::implementation::rho() const
-{
-    return rho_;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::solidThermo::implementation::rho
-(
-    const label patchi
-) const
-{
-    return rho_.boundaryField()[patchi];
-}
-
-
-Foam::volScalarField& Foam::solidThermo::implementation::rho()
-{
-    return rho_;
-}
 
 
 // ************************************************************************* //

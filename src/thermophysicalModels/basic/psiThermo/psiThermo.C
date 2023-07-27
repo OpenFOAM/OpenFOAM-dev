@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,11 +33,14 @@ namespace Foam
     defineRunTimeSelectionTable(psiThermo, fvMesh);
 }
 
+const Foam::word Foam::psiThermo::derivedThermoName("hePsiThermo");
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::psiThermo::implementation::implementation
 (
+    const dictionary& dict,
     const fvMesh& mesh,
     const word& phaseName
 )
@@ -72,6 +75,12 @@ void Foam::psiThermo::correctRho(const Foam::volScalarField& deltaRho)
 {}
 
 
+Foam::tmp<Foam::volScalarField> Foam::psiThermo::renameRho()
+{
+    return rho();
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::psiThermo::implementation::rho() const
 {
     return p()*psi();
@@ -84,12 +93,6 @@ Foam::tmp<Foam::scalarField> Foam::psiThermo::implementation::rho
 ) const
 {
     return p().boundaryField()[patchi]*psi().boundaryField()[patchi];
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::psiThermo::implementation::renameRho()
-{
-    return rho();
 }
 
 

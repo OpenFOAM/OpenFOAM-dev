@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,15 +33,6 @@ namespace Foam
     defineRunTimeSelectionTable(psiMulticomponentThermo, fvMesh);
 }
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::psiMulticomponentThermo::implementation::implementation
-(
-    const fvMesh& mesh,
-    const word& phaseName
-)
-{}
-
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
@@ -58,10 +49,6 @@ Foam::autoPtr<Foam::psiMulticomponentThermo> Foam::psiMulticomponentThermo::New
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::psiMulticomponentThermo::~psiMulticomponentThermo()
-{}
-
-
-Foam::psiMulticomponentThermo::implementation::~implementation()
 {}
 
 

@@ -42,8 +42,7 @@ template<class BasicThermophysicalTransportModel>
 void MaxwellStefan<BasicThermophysicalTransportModel>::
 transformDiffusionCoefficient() const
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const label d = composition.defaultSpecie();
+    const label d = this->thermo().defaultSpecie();
 
     // Calculate the molecular weight of the mixture and the mole fractions
     scalar Wm = 0;
@@ -110,8 +109,7 @@ template<class BasicThermophysicalTransportModel>
 void MaxwellStefan<BasicThermophysicalTransportModel>::
 transformDiffusionCoefficientFields() const
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const label d = composition.defaultSpecie();
+    const label d = this->thermo().defaultSpecie();
 
     // For each cell or patch face
     forAll(*(YPtrs[0]), pi)
@@ -166,13 +164,12 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::transform
     List<PtrList<volScalarField>>& Dij
 ) const
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const PtrList<volScalarField>& Y = composition.Y();
+    const PtrList<volScalarField>& Y = this->thermo().Y();
     const volScalarField& Y0 = Y[0];
 
     forAll(W, i)
     {
-        // Map composition.Y() internal fields -> YPtrs
+        // Map this->thermo().Y() internal fields -> YPtrs
         YPtrs[i] = &Y[i].primitiveField();
 
         // Map Dii_ internal fields -> DijPtrs
@@ -196,7 +193,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::transform
     {
         forAll(W, i)
         {
-            // Map composition.Y() patch fields -> YPtrs
+            // Map this->thermo().Y() patch fields -> YPtrs
             YPtrs[i] = &Y[i].boundaryField()[patchi];
 
             // Map Dii_ patch fields -> DijPtrs
@@ -222,10 +219,9 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::transform
 template<class BasicThermophysicalTransportModel>
 void MaxwellStefan<BasicThermophysicalTransportModel>::updateDii() const
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const label d = composition.defaultSpecie();
+    const label d = this->thermo().defaultSpecie();
 
-    const PtrList<volScalarField>& Y = composition.Y();
+    const PtrList<volScalarField>& Y = this->thermo().Y();
     const volScalarField& p = this->thermo().p();
     const volScalarField& T = this->thermo().T();
     const volScalarField& rho = this->momentumTransport().rho();
@@ -363,16 +359,16 @@ MaxwellStefan<BasicThermophysicalTransportModel>::MaxwellStefan
 
     UpdateableMeshObject(*this, thermo.mesh()),
 
-    DFuncs_(this->thermo().composition().species().size()),
+    DFuncs_(this->thermo().species().size()),
 
     DTFuncs_
     (
         this->coeffDict_.found("DT")
-      ? this->thermo().composition().species().size()
+      ? this->thermo().species().size()
       : 0
     ),
 
-    W(this->thermo().composition().species().size()),
+    W(this->thermo().species().size()),
 
     YPtrs(W.size()),
     DijPtrs(W.size()),
@@ -385,12 +381,10 @@ MaxwellStefan<BasicThermophysicalTransportModel>::MaxwellStefan
     invA(A.m()),
     D(W.size())
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
-
     // Set the molecular weights of the species
     forAll(W, i)
     {
-        W[i] = composition.Wi(i);
+        W[i] = this->thermo().Wi(i);
     }
 }
 
@@ -405,8 +399,7 @@ bool MaxwellStefan<BasicThermophysicalTransportModel>::read()
         BasicThermophysicalTransportModel::read()
     )
     {
-        const basicSpecieMixture& composition = this->thermo().composition();
-        const speciesTable& species = composition.species();
+        const speciesTable& species = this->thermo().species();
 
         const dictionary& Ddict = this->coeffDict_.subDict("D");
 
@@ -492,12 +485,10 @@ tmp<volScalarField> MaxwellStefan<BasicThermophysicalTransportModel>::DEff
     const volScalarField& Yi
 ) const
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
-
     return volScalarField::New
     (
         "DEff",
-        this->momentumTransport().rho()*Dii()[composition.index(Yi)]
+        this->momentumTransport().rho()*Dii()[this->thermo().specieIndex(Yi)]
     );
 }
 
@@ -509,11 +500,9 @@ tmp<scalarField> MaxwellStefan<BasicThermophysicalTransportModel>::DEff
     const label patchi
 ) const
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
-
     return
         this->momentumTransport().rho().boundaryField()[patchi]
-       *Dii()[composition.index(Yi)].boundaryField()[patchi];
+       *Dii()[this->thermo().specieIndex(Yi)].boundaryField()[patchi];
 }
 
 
@@ -535,10 +524,11 @@ MaxwellStefan<BasicThermophysicalTransportModel>::q() const
         )
     );
 
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const label d = composition.defaultSpecie();
+    const label d = this->thermo().defaultSpecie();
 
-    const PtrList<volScalarField>& Y = composition.Y();
+    const PtrList<volScalarField>& Y = this->thermo().Y();
+    const volScalarField& p = this->thermo().p();
+    const volScalarField& T = this->thermo().T();
 
     if (Y.size())
     {
@@ -566,10 +556,7 @@ MaxwellStefan<BasicThermophysicalTransportModel>::q() const
         {
             if (i != d)
             {
-                const volScalarField hi
-                (
-                    composition.Hs(i, this->thermo().p(), this->thermo().T())
-                );
+                const volScalarField hi(this->thermo().hsi(i, p, T));
 
                 const surfaceScalarField ji(this->j(Y[i]));
                 sumJ += ji;
@@ -581,10 +568,7 @@ MaxwellStefan<BasicThermophysicalTransportModel>::q() const
         {
             const label i = d;
 
-            const volScalarField hi
-            (
-                composition.Hs(i, this->thermo().p(), this->thermo().T())
-            );
+            const volScalarField hi(this->thermo().hsi(i, p, T));
 
             sumJh -= sumJ*fvc::interpolate(hi);
         }
@@ -611,10 +595,11 @@ tmp<fvScalarMatrix> MaxwellStefan<BasicThermophysicalTransportModel>::divq
         )
     );
 
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const label d = composition.defaultSpecie();
+    const label d = this->thermo().defaultSpecie();
 
-    const PtrList<volScalarField>& Y = composition.Y();
+    const PtrList<volScalarField>& Y = this->thermo().Y();
+    const volScalarField& p = this->thermo().p();
+    const volScalarField& T = this->thermo().T();
 
     tmpDivq.ref() -=
         fvm::laplacianCorrection(this->alpha()*this->alphaEff(), he);
@@ -643,10 +628,7 @@ tmp<fvScalarMatrix> MaxwellStefan<BasicThermophysicalTransportModel>::divq
     {
         if (i != d)
         {
-            const volScalarField hi
-            (
-                composition.Hs(i, this->thermo().p(), this->thermo().T())
-            );
+            const volScalarField hi(this->thermo().hsi(i, p, T));
 
             const surfaceScalarField ji(this->j(Y[i]));
             sumJ += ji;
@@ -658,10 +640,7 @@ tmp<fvScalarMatrix> MaxwellStefan<BasicThermophysicalTransportModel>::divq
     {
         const label i = d;
 
-        const volScalarField hi
-        (
-            composition.Hs(i, this->thermo().p(), this->thermo().T())
-        );
+        const volScalarField hi(this->thermo().hsi(i, p, T));
 
         sumJh -= sumJ*fvc::interpolate(hi);
     }
@@ -678,12 +657,11 @@ tmp<surfaceScalarField> MaxwellStefan<BasicThermophysicalTransportModel>::j
     const volScalarField& Yi
 ) const
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
-    const label d = composition.defaultSpecie();
+    const label d = this->thermo().defaultSpecie();
 
-    if (composition.index(Yi) == d)
+    if (this->thermo().specieIndex(Yi) == d)
     {
-        const PtrList<volScalarField>& Y = composition.Y();
+        const PtrList<volScalarField>& Y = this->thermo().Y();
 
         tmp<surfaceScalarField> tjd
         (
@@ -715,7 +693,7 @@ tmp<surfaceScalarField> MaxwellStefan<BasicThermophysicalTransportModel>::j
     {
         return
             BasicThermophysicalTransportModel::j(Yi)
-          + jexp()[composition.index(Yi)];
+          + jexp()[this->thermo().specieIndex(Yi)];
     }
 }
 
@@ -726,10 +704,9 @@ tmp<fvScalarMatrix> MaxwellStefan<BasicThermophysicalTransportModel>::divj
     volScalarField& Yi
 ) const
 {
-    const basicSpecieMixture& composition = this->thermo().composition();
     return
         BasicThermophysicalTransportModel::divj(Yi)
-      + fvc::div(jexp()[composition.index(Yi)]*Yi.mesh().magSf());
+      + fvc::div(jexp()[this->thermo().specieIndex(Yi)]*Yi.mesh().magSf());
 }
 
 

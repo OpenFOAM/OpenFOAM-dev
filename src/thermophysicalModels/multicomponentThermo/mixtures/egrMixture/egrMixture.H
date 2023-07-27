@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,8 @@ SourceFiles
 #ifndef egrMixture_H
 #define egrMixture_H
 
-#include "basicCombustionMixture.H"
+#include "dimensionedTypes.H"
+#include "FieldListSlice.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,53 +49,53 @@ namespace Foam
 
 template<class ThermoType>
 class egrMixture
-:
-    public basicCombustionMixture
 {
-
 public:
 
-    //- The type of thermodynamics this mixture is instantiated for
-    typedef ThermoType thermoType;
+    // Public Typedefs
 
-    //- Mixing type for thermodynamic properties
-    typedef ThermoType thermoMixtureType;
+        //- The type of thermodynamics this mixture is instantiated for
+        typedef ThermoType thermoType;
 
-    //- Mixing type for transport properties
-    typedef ThermoType transportMixtureType;
+        //- Mixing type for thermodynamic properties
+        typedef ThermoType thermoMixtureType;
+
+        //- Mixing type for transport properties
+        typedef ThermoType transportMixtureType;
 
 
 private:
 
+    // Private Enumerations
+
+        //- Specie indices
+        enum species { FT, B, EGR };
+
+
     // Private Data
 
-        static const int nSpecies_ = 3;
-        static const char* specieNames_[3];
-
+        //- Stoichiometric air/fuel ratio
         dimensionedScalar stoicRatio_;
 
-        ThermoType fuel_;
-        ThermoType oxidant_;
-        ThermoType products_;
+        //- Fuel thermodynamic model
+        thermoType fuel_;
 
+        //- Oxidant thermodynamic model
+        thermoType oxidant_;
+
+        //- Product thermodynamic model
+        thermoType products_;
+
+        //- Mutable storage for the mixed thermodynamic model
         mutable thermoType mixture_;
-
-        //- Mixture fraction
-        volScalarField& ft_;
-
-        //- Regress variable
-        volScalarField& b_;
-
-        //- Residual gases
-        volScalarField& egr_;
 
 
 public:
 
     // Constructors
 
-        //- Construct from dictionary, mesh and phaseName
-        egrMixture(const dictionary&, const fvMesh&, const word&);
+        //- Construct from a dictionary
+        egrMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
         egrMixture(const egrMixture<ThermoType>&) = delete;
@@ -113,116 +114,53 @@ public:
             return "egrMixture<" + ThermoType::typeName() + '>';
         }
 
-        const dimensionedScalar& stoicRatio() const
+        //- Return the specie names
+        static wordList specieNames()
         {
-            return stoicRatio_;
+            return {"ft", "b", "egr"};
         }
 
+        //- Return the residual fraction of fuel in the burnt mixture
+        scalar fres(const scalar ft) const
+        {
+            return max(ft - (scalar(1) - ft)/stoicRatio_.value(), scalar(0));
+        }
+
+        //- Return the mixture for the given composition
         const thermoType& mixture
         (
-            const scalar,
-            const scalar,
-            const scalar
+            const scalar ft,
+            const scalar b,
+            const scalar egr
         ) const;
 
-        const thermoMixtureType& cellThermoMixture(const label celli) const
-        {
-            return mixture(ft_[celli], b_[celli], egr_[celli]);
-        }
-
-        const thermoMixtureType& patchFaceThermoMixture
+        //- Return the mixture for thermodynamic properties
+        const thermoMixtureType& thermoMixture
         (
-            const label patchi,
-            const label facei
-        ) const
-        {
-            return mixture
-            (
-                ft_.boundaryField()[patchi][facei],
-                b_.boundaryField()[patchi][facei],
-                egr_.boundaryField()[patchi][facei]
-            );
-        }
+            const scalarFieldListSlice&
+        ) const;
 
-        const transportMixtureType& cellTransportMixture
+        //- Return the mixture for transport properties
+        const transportMixtureType& transportMixture
         (
-            const label celli
-        ) const
-        {
-            return cellThermoMixture(celli);
-        }
+            const scalarFieldListSlice&
+        ) const;
 
-        const transportMixtureType& patchFaceTransportMixture
+        //- Return the mixture for transport properties
+        const transportMixtureType& transportMixture
         (
-            const label patchi,
-            const label facei
-        ) const
-        {
-            return patchFaceThermoMixture(patchi, facei);
-        }
+            const scalarFieldListSlice&,
+            const thermoMixtureType&
+        ) const;
 
-        const transportMixtureType& cellTransportMixture
-        (
-            const label,
-            const thermoMixtureType& thermoMixture
-        ) const
-        {
-            return thermoMixture;
-        }
+        //- Return the reactant mixture
+        const thermoType& reactants(const scalarFieldListSlice&) const;
 
-        const transportMixtureType& patchFaceTransportMixture
-        (
-            const label,
-            const label,
-            const thermoMixtureType& thermoMixture
-        ) const
-        {
-            return thermoMixture;
-        }
-
-        const thermoType& cellReactants(const label celli) const
-        {
-            return mixture(ft_[celli], 1, egr_[celli]);
-        }
-
-        const thermoType& patchFaceReactants
-        (
-            const label patchi,
-            const label facei
-        ) const
-        {
-            return mixture
-            (
-                ft_.boundaryField()[patchi][facei],
-                1,
-                egr_.boundaryField()[patchi][facei]
-            );
-        }
-
-        const thermoType& cellProducts(const label celli) const
-        {
-            return mixture(ft_[celli], 0, 0);
-        }
-
-        const thermoType& patchFaceProducts
-        (
-            const label patchi,
-            const label facei
-        ) const
-        {
-            return mixture
-            (
-                ft_.boundaryField()[patchi][facei],
-                0,
-                0
-            );
-        }
+        //- Return the product mixture
+        const thermoType& products(const scalarFieldListSlice&) const;
 
         //- Read dictionary
         void read(const dictionary&);
-
-        //- Return thermo based on index
-        const ThermoType& specieThermo(const label speciei) const;
 
 
     // Member Operators

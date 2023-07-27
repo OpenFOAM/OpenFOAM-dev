@@ -123,7 +123,7 @@ bool Foam::functionObjects::massFractions::execute()
     autoPtr<fluidMulticomponentThermo> thermoPtr =
         fluidMulticomponentThermo::New(mesh_);
     fluidMulticomponentThermo& thermo = thermoPtr();
-    const PtrList<volScalarField>& Y = thermo.composition().Y();
+    const PtrList<volScalarField>& Y = thermo.Y();
 
     // Restore the original Ydefault if it exists, and create a new Ydefault if
     // it does not
@@ -157,7 +157,7 @@ bool Foam::functionObjects::massFractions::execute()
     forAll(Y, i)
     {
         W[i].dimensions().reset(dimMass/dimMoles);
-        W[i].value() = thermo.composition().Wi(i);
+        W[i].value() = thermo.Wi(i);
 
         typeIOobject<volScalarField> YIo
         (
@@ -214,7 +214,7 @@ bool Foam::functionObjects::massFractions::execute()
     }
 
     // Steal the thermo's mass fraction fields and delete the thermo
-    Y_.transfer(thermo.composition().Y());
+    Y_.transfer(thermo.Y());
     thermoPtr.clear();
 
     // Divide the specie masses by the total mass to get the mass fractions

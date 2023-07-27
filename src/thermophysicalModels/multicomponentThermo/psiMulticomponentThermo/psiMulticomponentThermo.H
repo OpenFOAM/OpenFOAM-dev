@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,11 +60,25 @@ public:
 
     // Public Classes
 
-        //- Forward declare the implementation class
-        class implementation;
-
         //- Forward declare the composite class
         class composite;
+
+
+    // Public Typedefs
+
+        //- The derived type
+        template<class MixtureType>
+        using DerivedThermoType =
+            FluidMulticomponentThermo
+            <
+                MulticomponentThermo
+                <
+                    PsiThermo
+                    <
+                        BasicThermo<MixtureType, composite>
+                    >
+                >
+            >;
 
 
     //- Runtime type information
@@ -98,27 +112,6 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-              Class psiMulticomponentThermo::implementation Declaration
-\*---------------------------------------------------------------------------*/
-
-class psiMulticomponentThermo::implementation
-:
-    virtual public psiMulticomponentThermo
-{
-public:
-
-    // Constructors
-
-        //- Construct from mesh and phase name
-        implementation(const fvMesh&, const word& phaseName);
-
-
-    //- Destructor
-    virtual ~implementation();
-};
-
-
-/*---------------------------------------------------------------------------*\
                 Class psiMulticomponentThermo::composite Declaration
 \*---------------------------------------------------------------------------*/
 
@@ -127,25 +120,33 @@ class psiMulticomponentThermo::composite
     public basicThermo::implementation,
     public fluidThermo::implementation,
     public psiThermo::implementation,
-    public fluidMulticomponentThermo::implementation,
-    public psiMulticomponentThermo::implementation
+    public multicomponentThermo::implementation,
+    public psiMulticomponentThermo
 {
 public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
+        //- Construct from dictionary, mesh and phase name
+        template<class MixtureType>
         composite
         (
+            const dictionary& dict,
+            const MixtureType& mixture,
             const fvMesh& mesh,
             const word& phaseName
         )
         :
-            basicThermo::implementation(mesh, phaseName),
-            fluidThermo::implementation(mesh, phaseName),
-            psiThermo::implementation(mesh, phaseName),
-            fluidMulticomponentThermo::implementation(mesh, phaseName),
-            psiMulticomponentThermo::implementation(mesh, phaseName)
+            basicThermo::implementation(dict, mesh, phaseName),
+            fluidThermo::implementation(dict, mesh, phaseName),
+            psiThermo::implementation(dict, mesh, phaseName),
+            multicomponentThermo::implementation
+            (
+                dict,
+                mixture.specieNames(),
+                mesh,
+                phaseName
+            )
         {}
 };
 

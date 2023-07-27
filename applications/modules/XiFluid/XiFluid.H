@@ -106,11 +106,7 @@ protected:
 
     // Composition
 
-        //- Reference to the combustion mixture
-        basicCombustionMixture& composition;
-
         //- Reference to the combustion regress variable
-        //  obtained from the combustion mixture
         volScalarField& b_;
 
         //- Set of fields used for the multivariate convection scheme

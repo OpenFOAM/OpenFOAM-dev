@@ -86,7 +86,6 @@ protected:
 
     // Composition
 
-        basicSpecieMixture& composition;
         PtrList<volScalarField>& Y_;
 
 

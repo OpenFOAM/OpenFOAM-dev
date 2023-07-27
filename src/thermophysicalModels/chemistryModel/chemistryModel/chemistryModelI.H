@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,20 +61,6 @@ inline const Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
 Foam::chemistryModel<ThermoType>::RR() const
 {
     return RR_;
-}
-
-
-template<class ThermoType>
-inline void Foam::chemistryModel<ThermoType>::setActive(const label i)
-{
-    this->thermo().composition().setActive(i);
-}
-
-
-template<class ThermoType>
-inline bool Foam::chemistryModel<ThermoType>::active(const label i) const
-{
-    return this->thermo().composition().active(i);
 }
 
 

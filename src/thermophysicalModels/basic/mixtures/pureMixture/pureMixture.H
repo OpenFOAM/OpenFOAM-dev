@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,8 @@ Class
     Foam::pureMixture
 
 Description
-    Foam::pureMixture
+    Pure mixture model. This does no mixing, it just returns the single
+    underlying thermo model.
 
 SourceFiles
     pureMixture.C
@@ -35,7 +36,7 @@ SourceFiles
 #ifndef pureMixture_H
 #define pureMixture_H
 
-#include "basicMixture.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,26 +49,26 @@ namespace Foam
 
 template<class ThermoType>
 class pureMixture
-:
-    public basicMixture
 {
-
 public:
 
-    //- The type of thermodynamics this mixture is instantiated for
-    typedef ThermoType thermoType;
+    // Public Typedefs
 
-    //- Mixing type for thermodynamic properties
-    typedef ThermoType thermoMixtureType;
+        //- The type of thermodynamics this mixture is instantiated for
+        typedef ThermoType thermoType;
 
-    //- Mixing type for transport properties
-    typedef ThermoType transportMixtureType;
+        //- Mixing type for thermodynamic properties
+        typedef ThermoType thermoMixtureType;
+
+        //- Mixing type for transport properties
+        typedef ThermoType transportMixtureType;
 
 
 private:
 
     // Private Data
 
+        //- Thermo model
         ThermoType mixture_;
 
 
@@ -75,8 +76,8 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary, mesh and phase name
-        pureMixture(const dictionary&, const fvMesh&, const word&);
+        //- Construct from a dictionary
+        pureMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
         pureMixture(const pureMixture<ThermoType>&) = delete;
@@ -90,47 +91,22 @@ public:
             return "pureMixture<" + ThermoType::typeName() + '>';
         }
 
-        const thermoMixtureType& cellThermoMixture(const label) const
+        //- Return the mixture for thermodynamic properties
+        const thermoMixtureType& thermoMixture(const nil) const
         {
             return mixture_;
         }
 
-        const thermoMixtureType& patchFaceThermoMixture
+        //- Return the mixture for transport properties
+        const transportMixtureType& transportMixture(const nil) const
+        {
+            return mixture_;
+        }
+
+        //- Return the mixture for transport properties
+        const transportMixtureType& transportMixture
         (
-            const label,
-            const label
-        ) const
-        {
-            return mixture_;
-        }
-
-        const transportMixtureType& cellTransportMixture(const label) const
-        {
-            return mixture_;
-        }
-
-        const transportMixtureType& patchFaceTransportMixture
-        (
-            const label,
-            const label
-        ) const
-        {
-            return mixture_;
-        }
-
-        const transportMixtureType& cellTransportMixture
-        (
-            const label,
-            const thermoMixtureType&
-        ) const
-        {
-            return mixture_;
-        }
-
-        const transportMixtureType& patchFaceTransportMixture
-        (
-            const label,
-            const label,
+            const nil,
             const thermoMixtureType&
         ) const
         {

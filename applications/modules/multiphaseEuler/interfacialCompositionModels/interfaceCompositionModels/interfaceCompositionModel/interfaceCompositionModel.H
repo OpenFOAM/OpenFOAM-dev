@@ -42,7 +42,7 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "hashedWordList.H"
-#include "rhoMulticomponentThermo.H"
+#include "rhoFluidMulticomponentThermo.H"
 #include "runTimeSelectionTables.H"
 #include "sidedPhaseInterface.H"
 #include "SidedInterfacialModel.H"
@@ -68,10 +68,10 @@ class interfaceCompositionModel
         const dimensionedScalar Le_;
 
         //- Multi-component thermo model for this side of the interface
-        const rhoMulticomponentThermo& thermo_;
+        const rhoFluidMulticomponentThermo& thermo_;
 
         //- General thermo model for the other side of the interface
-        const rhoThermo& otherThermo_;
+        const rhoFluidThermo& otherThermo_;
 
 
 public:
@@ -130,19 +130,14 @@ public:
             inline const hashedWordList& species() const;
 
             //- Return the thermo
-            inline const rhoMulticomponentThermo& thermo() const;
-
-            //- Return the composition
-            inline const basicSpecieMixture& composition() const;
+            inline const rhoFluidMulticomponentThermo& thermo() const;
 
             //- Return the other thermo
-            inline const rhoThermo& otherThermo() const;
+            inline const rhoFluidThermo& otherThermo() const;
 
-            //- Return whether the other side has a multi-specie composition
-            inline bool otherHasComposition() const;
-
-            //- Return the other composition
-            inline const basicSpecieMixture& otherComposition() const;
+            //- Return the other multicomponent thermo
+            inline const rhoFluidMulticomponentThermo&
+                otherMulticomponentThermo() const;
 
 
         // Evaluation

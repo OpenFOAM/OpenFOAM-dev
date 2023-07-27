@@ -74,7 +74,7 @@ bool Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::isochoric() const
 
 
 template<class BasePhaseModel, class ThermoModel>
-const Foam::rhoThermo&
+const Foam::rhoFluidThermo&
 Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::thermo() const
 {
     return thermo_();
@@ -82,7 +82,7 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::thermo() const
 
 
 template<class BasePhaseModel, class ThermoModel>
-Foam::rhoThermo&
+Foam::rhoFluidThermo&
 Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::thermo()
 {
     return thermo_();

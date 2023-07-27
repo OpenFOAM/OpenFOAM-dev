@@ -24,29 +24,22 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pureMixture.H"
-#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::pureMixture<ThermoType>::pureMixture
-(
-    const dictionary& thermoDict,
-    const fvMesh& mesh,
-    const word& phaseName
-)
+Foam::pureMixture<ThermoType>::pureMixture(const dictionary& dict)
 :
-    basicMixture(thermoDict, mesh, phaseName),
-    mixture_("mixture", thermoDict.subDict("mixture"))
+    mixture_("mixture", dict.subDict("mixture"))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-void Foam::pureMixture<ThermoType>::read(const dictionary& thermoDict)
+void Foam::pureMixture<ThermoType>::read(const dictionary& dict)
 {
-    mixture_ = ThermoType("mixture", thermoDict.subDict("mixture"));
+    mixture_ = ThermoType("mixture", dict.subDict("mixture"));
 }
 
 

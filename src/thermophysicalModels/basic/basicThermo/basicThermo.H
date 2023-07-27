@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Description
     obtaining a single copy of all the implementation classes it needs to form
     a complete implementation. The use of virtual inheritance does not result
     in additional constructor calls propagating further down the hierarchy
-    (into heThermo and similar) because all virtually inherited interface
+    (into BasicThermo and similar) because all virtually inherited interface
     classes are default constructable.
 
 SourceFiles
@@ -415,8 +415,7 @@ public:
 
 class basicThermo::implementation
 :
-    virtual public basicThermo,
-    public physicalProperties
+    virtual public basicThermo
 {
     // Private Member Data
 
@@ -447,16 +446,10 @@ protected:
 
 public:
 
-    // Static Member data
-
-        //- Name of the thermophysical properties dictionary
-        using physicalProperties::typeName;
-
-
     // Constructors
 
-        //- Construct from mesh and phase name
-        implementation(const fvMesh&, const word& phaseName);
+        //- Construct from dictionary, mesh and phase name
+        implementation(const dictionary&, const fvMesh&, const word&);
 
         //- Disallow default bitwise copy construction
         implementation(const implementation&) = delete;
@@ -468,18 +461,6 @@ public:
 
 
     // Member Functions
-
-        //- Properties dictionary
-        virtual const IOdictionary& properties() const
-        {
-            return *this;
-        }
-
-        //- Non-const access the properties dictionary
-        virtual IOdictionary& properties()
-        {
-            return *this;
-        }
 
         //- Return const access to the mesh
         virtual const fvMesh& mesh() const
@@ -517,7 +498,7 @@ public:
 
 
         //- Read thermophysical properties dictionary
-        virtual bool read();
+        virtual void read(const dictionary&);
 
 
     // Member Operators
@@ -525,6 +506,7 @@ public:
         //- Disallow default bitwise assignment
         void operator=(const implementation&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

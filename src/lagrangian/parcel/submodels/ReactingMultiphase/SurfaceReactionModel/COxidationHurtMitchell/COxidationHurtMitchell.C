@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::COxidationHurtMitchell<CloudType>::COxidationHurtMitchell
     const scalar WCO2 = owner.composition().carrier().Wi(CO2GlobalId_);
     WC_ = WCO2 - WO2_;
 
-    HcCO2_ = owner.composition().carrier().Hf(CO2GlobalId_);
+    HcCO2_ = owner.composition().carrier().hfi(CO2GlobalId_);
 
     const scalar YCloc = owner.composition().Y0(idSolid)[CsLocalId_];
     const scalar YSolidTot = owner.composition().YMixture0()[idSolid];
@@ -131,10 +131,11 @@ Foam::scalar Foam::COxidationHurtMitchell<CloudType>::calculate
     }
 
     const parcelThermo& thermo = this->owner().thermo();
-    const basicSpecieMixture& carrier = this->owner().composition().carrier();
+    const fluidMulticomponentThermo& carrierThermo =
+        this->owner().composition().carrier();
 
     // Local mass fraction of O2 in the carrier phase
-    const scalar YO2 = carrier.Y(O2GlobalId_)[celli];
+    const scalar YO2 = carrierThermo.Y(O2GlobalId_)[celli];
 
     // No combustion if no oxygen present
     if (YO2 < small)

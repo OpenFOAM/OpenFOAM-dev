@@ -132,7 +132,7 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
         {
             const label cid = composition.localToCarrierId(idPhase, i);
 
-            const scalar Cp = composition.carrier().Cp(cid, td.pc(), Tsdash);
+            const scalar Cp = composition.carrier().Cpi(cid, td.pc(), Tsdash);
             const scalar W = composition.carrier().Wi(cid);
             const scalar Ni = dMassPC[i]/(this->areaS(d)*dt*W);
 
@@ -254,7 +254,7 @@ void Foam::ReactingParcel<ParcelType>::cellValueSourceCorrection
     forAll(cloud.rhoTrans(), i)
     {
         scalar Y = cloud.rhoTrans(i)[this->cell()]/addedMass;
-        CpEff += Y*cloud.composition().carrier().Cp(i, td.pc(), td.Tc());
+        CpEff += Y*cloud.composition().carrier().Cpi(i, td.pc(), td.Tc());
     }
 
     const scalar Cpc = td.CpInterp().psi()[this->cell()];
@@ -296,14 +296,15 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
         return;
     }
 
-    const basicSpecieMixture& carrier = cloud.composition().carrier();
+    const fluidMulticomponentThermo& carrierThermo =
+        cloud.composition().carrier();
 
     // Far field carrier  molar fractions
-    scalarField Xinf(carrier.species().size());
+    scalarField Xinf(carrierThermo.species().size());
 
     forAll(Xinf, i)
     {
-        Xinf[i] = carrier.Y(i)[this->cell()]/carrier.Wi(i);
+        Xinf[i] = carrierThermo.Y(i)[this->cell()]/carrierThermo.Wi(i);
     }
     Xinf /= sum(Xinf);
 
@@ -325,7 +326,7 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
         const scalar Csi = Cs[i] + Xsff*Xinf[i]*CsTot;
 
         Xs[i] = (2.0*Csi + Xinf[i]*CsTot)/3.0;
-        Ys[i] = Xs[i]*carrier.Wi(i);
+        Ys[i] = Xs[i]*carrierThermo.Wi(i);
     }
     Xs /= sum(Xs);
     Ys /= sum(Ys);
@@ -340,14 +341,14 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
 
     forAll(Ys, i)
     {
-        const scalar W = carrier.Wi(i);
+        const scalar W = carrierThermo.Wi(i);
         const scalar sqrtW = sqrt(W);
         const scalar cbrtW = cbrt(W);
 
         rhos += Xs[i]*W;
-        mus += Ys[i]*sqrtW*carrier.mu(i, td.pc(), T);
-        kappas += Ys[i]*cbrtW*carrier.kappa(i, td.pc(), T);
-        Cps += Xs[i]*carrier.Cp(i, td.pc(), T);
+        mus += Ys[i]*sqrtW*carrierThermo.mui(i, td.pc(), T);
+        kappas += Ys[i]*cbrtW*carrierThermo.kappai(i, td.pc(), T);
+        Cps += Xs[i]*carrierThermo.Cpi(i, td.pc(), T);
 
         sumYiSqrtW += Ys[i]*sqrtW;
         sumYiCbrtW += Ys[i]*cbrtW;
@@ -494,7 +495,7 @@ void Foam::ReactingParcel<ParcelType>::calc
             {
                 scalar dmi = dm*Y_[i];
                 label gid = composition.localToCarrierId(0, i);
-                scalar hs = composition.carrier().Hs(gid, td.pc(), T0);
+                scalar hs = composition.carrier().hsi(gid, td.pc(), T0);
 
                 cloud.rhoTrans(gid)[this->cell()] += dmi;
                 cloud.hsTransRef()[this->cell()] += dmi*hs;
@@ -555,7 +556,7 @@ void Foam::ReactingParcel<ParcelType>::calc
         {
             scalar dm = np0*dMass[i];
             label gid = composition.localToCarrierId(0, i);
-            scalar hs = composition.carrier().Hs(gid, td.pc(), T0);
+            scalar hs = composition.carrier().hsi(gid, td.pc(), T0);
 
             cloud.rhoTrans(gid)[this->cell()] += dm;
             cloud.UTransRef()[this->cell()] += dm*U0;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,7 @@ SourceFiles
 #define coefficientWilkeMulticomponentMixture_H
 
 #include "multicomponentMixture.H"
+#include "FieldListSlice.H"
 #include "scalarMatrices.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -61,68 +62,66 @@ class coefficientWilkeMulticomponentMixture
 :
     public multicomponentMixture<ThermoType>
 {
-
 public:
 
-    class transportMixture
-    {
-        //- List of specie thermo
-        const PtrList<ThermoType>& specieThermos_;
+    // Public Classes/Typedefs
 
-        //- List of molecular weights
-        scalarList M_;
+        //- Mixing type for thermodynamic properties
+        typedef typename ThermoType::thermoType thermoMixtureType;
 
-        //- Matrix of (4/sqrt(2.0))*sqrt(1 + M_[i]/M_[j])
-        scalarSquareMatrix A_;
+        //- Mixing type for transport properties
+        class transportMixtureType
+        {
+            // Private Data
 
-        //- Matrix of sqrt(M_[j]/M_[i])
-        scalarSquareMatrix B_;
+                //- List of specie thermo
+                const PtrList<ThermoType>& specieThermos_;
 
-        //- List of mole fractions
-        mutable scalarList X_;
+                //- List of molecular weights
+                scalarList M_;
 
-        //- List of specie viscosities
-        mutable scalarList mu_;
+                //- Matrix of (4/sqrt(2.0))*sqrt(1 + M_[i]/M_[j])
+                scalarSquareMatrix A_;
 
-        //- List of Wilke weights
-        mutable scalarList w_;
+                //- Matrix of sqrt(M_[j]/M_[i])
+                scalarSquareMatrix B_;
 
-        //- mu cache state to avoid recalculation of the Wilke weight for kappa
-        mutable bool muCached_;
+                //- List of mole fractions
+                mutable scalarList X_;
 
-        //- Calculate the Wilke weights and store in w_
-        void WilkeWeights(const scalar p, const scalar T) const;
+                //- List of specie viscosities
+                mutable scalarList mu_;
 
+                //- List of Wilke weights
+                mutable scalarList w_;
 
-    public:
+                //- Viscosity cache state to avoid recalculation of the Wilke
+                //  weight for kappa
+                mutable bool muCached_;
 
-        friend class coefficientWilkeMulticomponentMixture;
-
-        // Constructors
-
-            transportMixture
-            (
-                const PtrList<ThermoType>& specieThermos
-            );
+                //- Calculate the Wilke weights and store in w_
+                void WilkeWeights(const scalar p, const scalar T) const;
 
 
-        // Transport properties
+        public:
 
-            //- Dynamic viscosity [kg/m/s]
-            scalar mu(const scalar p, const scalar T) const;
-
-            //- Thermal conductivity [W/m/K]
-            scalar kappa(const scalar p, const scalar T) const;
-    };
+            friend class coefficientWilkeMulticomponentMixture;
 
 
-public:
+            // Constructors
 
-    //- Mixing type for thermodynamic properties
-    typedef typename ThermoType::thermoType thermoMixtureType;
+                //- Construct from list of specie thermo
+                transportMixtureType(const PtrList<ThermoType>& specieThermos);
 
-    //- Mixing type for transport properties
-    typedef transportMixture transportMixtureType;
+
+            // Transport properties
+
+                //- Dynamic viscosity [kg/m/s]
+                scalar mu(const scalar p, const scalar T) const;
+
+                //- Thermal conductivity [W/m/K]
+                scalar kappa(const scalar p, const scalar T) const;
+        };
 
 
 private:
@@ -140,13 +139,8 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary, mesh and phase name
-        coefficientWilkeMulticomponentMixture
-        (
-            const dictionary&,
-            const fvMesh&,
-            const word&
-        );
+        //- Construct from a dictionary
+        coefficientWilkeMulticomponentMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
         coefficientWilkeMulticomponentMixture
@@ -170,36 +164,23 @@ public:
                + ThermoType::typeName() + '>';
         }
 
-        const thermoMixtureType& cellThermoMixture(const label celli) const;
-
-        const thermoMixtureType& patchFaceThermoMixture
+        //- Return the mixture for thermodynamic properties
+        const thermoMixtureType& thermoMixture
         (
-            const label patchi,
-            const label facei
+            const scalarFieldListSlice&
         ) const;
 
-        const transportMixtureType& cellTransportMixture
+        //- Return the mixture for transport properties
+        const transportMixtureType& transportMixture
         (
-            const label celli
+            const scalarFieldListSlice&
         ) const;
 
-        const transportMixtureType& patchFaceTransportMixture
+        //- Return the mixture for transport properties
+        const transportMixtureType& transportMixture
         (
-            const label patchi,
-            const label facei
-        ) const;
-
-        const transportMixtureType& cellTransportMixture
-        (
-            const label celli,
-            const thermoMixtureType& thermoMixture
-        ) const;
-
-        const transportMixtureType& patchFaceTransportMixture
-        (
-            const label patchi,
-            const label facei,
-            const thermoMixtureType& thermoMixture
+            const scalarFieldListSlice&,
+            const thermoMixtureType&
         ) const;
 };
 

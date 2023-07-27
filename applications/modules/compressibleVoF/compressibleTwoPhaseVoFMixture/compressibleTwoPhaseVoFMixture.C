@@ -143,8 +143,8 @@ Foam::compressibleTwoPhaseVoFMixture::compressibleTwoPhaseVoFMixture
     //       Avoid any thread-writing problems.
     // fileHandler().flush();
 
-    thermo1_ = rhoThermo::New(mesh, phase1Name());
-    thermo2_ = rhoThermo::New(mesh, phase2Name());
+    thermo1_ = rhoFluidThermo::New(mesh, phase1Name());
+    thermo2_ = rhoFluidThermo::New(mesh, phase2Name());
 
     // thermo1_->validate(phase1Name(), "e");
     // thermo2_->validate(phase2Name(), "e");

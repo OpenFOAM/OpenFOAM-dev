@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::COxidationMurphyShaddix<CloudType>::COxidationMurphyShaddix
     const scalar WCO2 = owner.composition().carrier().Wi(CO2GlobalId_);
     WC_ = WCO2 - WO2_;
 
-    HcCO2_ = owner.composition().carrier().Hf(CO2GlobalId_);
+    HcCO2_ = owner.composition().carrier().hfi(CO2GlobalId_);
 
     const scalar YCloc = owner.composition().Y0(idSolid)[CsLocalId_];
     const scalar YSolidTot = owner.composition().YMixture0()[idSolid];
@@ -143,10 +143,11 @@ Foam::scalar Foam::COxidationMurphyShaddix<CloudType>::calculate
     }
 
     const parcelThermo& thermo = this->owner().thermo();
-    const basicSpecieMixture& carrier = this->owner().composition().carrier();
+    const fluidMulticomponentThermo& carrierThermo =
+        this->owner().composition().carrier();
 
     // Cell carrier phase O2 species density [kg/m^3]
-    const scalar rhoO2 = rhoc*carrier.Y(O2GlobalId_)[celli];
+    const scalar rhoO2 = rhoc*carrierThermo.Y(O2GlobalId_)[celli];
 
     if (rhoO2 < small)
     {

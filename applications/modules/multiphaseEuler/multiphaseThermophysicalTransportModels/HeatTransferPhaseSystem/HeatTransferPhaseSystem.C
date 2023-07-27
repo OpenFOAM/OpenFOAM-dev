@@ -25,7 +25,7 @@ License
 
 #include "HeatTransferPhaseSystem.H"
 #include "fvmSup.H"
-#include "rhoMulticomponentThermo.H"
+#include "rhoFluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 
@@ -47,8 +47,8 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoThermo& thermo1 = phase1.thermo();
-        const rhoThermo& thermo2 = phase2.thermo();
+        const rhoFluidThermo& thermo1 = phase1.thermo();
+        const rhoFluidThermo& thermo2 = phase2.thermo();
         const volScalarField& he1 = thermo1.he();
         const volScalarField& he2 = thermo2.he();
         const volScalarField hs1(thermo1.hs());
@@ -89,16 +89,16 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoThermo& thermo1 = phase1.thermo();
-        const rhoThermo& thermo2 = phase2.thermo();
-        const basicSpecieMixture* compositionPtr1 =
-            isA<rhoMulticomponentThermo>(thermo1)
-          ? &refCast<const rhoMulticomponentThermo>(thermo1).composition()
-          : static_cast<const basicSpecieMixture*>(nullptr);
-        const basicSpecieMixture* compositionPtr2 =
-            isA<rhoMulticomponentThermo>(thermo2)
-          ? &refCast<const rhoMulticomponentThermo>(thermo2).composition()
-          : static_cast<const basicSpecieMixture*>(nullptr);
+        const rhoFluidThermo& thermo1 = phase1.thermo();
+        const rhoFluidThermo& thermo2 = phase2.thermo();
+        const rhoFluidMulticomponentThermo* mcThermoPtr1 =
+            isA<rhoFluidMulticomponentThermo>(thermo1)
+          ? &refCast<const rhoFluidMulticomponentThermo>(thermo1)
+          : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
+        const rhoFluidMulticomponentThermo* mcThermoPtr2 =
+            isA<rhoFluidMulticomponentThermo>(thermo2)
+          ? &refCast<const rhoFluidMulticomponentThermo>(thermo2)
+          : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
         const volScalarField& he1 = thermo1.he();
         const volScalarField& he2 = thermo2.he();
         const volScalarField hs1(thermo1.hs());
@@ -118,21 +118,21 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
 
             // Specie indices
             const label speciei1 =
-                compositionPtr1 ? compositionPtr1->species()[specie] : -1;
+                mcThermoPtr1 ? mcThermoPtr1->species()[specie] : -1;
             const label speciei2 =
-                compositionPtr2 ? compositionPtr2->species()[specie] : -1;
+                mcThermoPtr2 ? mcThermoPtr2->species()[specie] : -1;
 
             // Enthalpies
             const volScalarField hsi1
             (
-                compositionPtr1
-              ? compositionPtr1->Hs(speciei1, thermo1.p(), thermo1.T())
+                mcThermoPtr1
+              ? mcThermoPtr1->hsi(speciei1, thermo1.p(), thermo1.T())
               : tmp<volScalarField>(hs1)
             );
             const volScalarField hsi2
             (
-                compositionPtr2
-              ? compositionPtr2->Hs(speciei2, thermo2.p(), thermo2.T())
+                mcThermoPtr2
+              ? mcThermoPtr2->hsi(speciei2, thermo2.p(), thermo2.T())
               : tmp<volScalarField>(hs2)
             );
 
@@ -141,12 +141,12 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
             if (residualY_ > 0)
             {
                 tYi1 =
-                    compositionPtr1
-                  ? max(compositionPtr1->Y(speciei1), residualY_)
+                    mcThermoPtr1
+                  ? max(mcThermoPtr1->Y(speciei1), residualY_)
                   : volScalarField::New("Yi1", this->mesh(), one);
                 tYi2 =
-                    compositionPtr2
-                  ? max(compositionPtr2->Y(speciei2), residualY_)
+                    mcThermoPtr2
+                  ? max(mcThermoPtr2->Y(speciei2), residualY_)
                   : volScalarField::New("Yi2", this->mesh(), one);
             }
 
@@ -195,8 +195,8 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefsWithoutL
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoThermo& thermo1 = phase1.thermo();
-        const rhoThermo& thermo2 = phase2.thermo();
+        const rhoFluidThermo& thermo1 = phase1.thermo();
+        const rhoFluidThermo& thermo2 = phase2.thermo();
         const volScalarField& he1 = thermo1.he();
         const volScalarField& he2 = thermo2.he();
         const volScalarField K1(phase1.K());
@@ -305,16 +305,16 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefsWithoutL
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoThermo& thermo1 = phase1.thermo();
-        const rhoThermo& thermo2 = phase2.thermo();
-        const basicSpecieMixture* compositionPtr1 =
-            isA<rhoMulticomponentThermo>(thermo1)
-          ? &refCast<const rhoMulticomponentThermo>(thermo1).composition()
-          : static_cast<const basicSpecieMixture*>(nullptr);
-        const basicSpecieMixture* compositionPtr2 =
-            isA<rhoMulticomponentThermo>(thermo2)
-          ? &refCast<const rhoMulticomponentThermo>(thermo2).composition()
-          : static_cast<const basicSpecieMixture*>(nullptr);
+        const rhoFluidThermo& thermo1 = phase1.thermo();
+        const rhoFluidThermo& thermo2 = phase2.thermo();
+        const rhoFluidMulticomponentThermo* mcThermoPtr1 =
+            isA<rhoFluidMulticomponentThermo>(thermo1)
+          ? &refCast<const rhoFluidMulticomponentThermo>(thermo1)
+          : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
+        const rhoFluidMulticomponentThermo* mcThermoPtr2 =
+            isA<rhoFluidMulticomponentThermo>(thermo2)
+          ? &refCast<const rhoFluidMulticomponentThermo>(thermo2)
+          : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
         const volScalarField& he1 = thermo1.he();
         const volScalarField& he2 = thermo2.he();
         const volScalarField K1(phase1.K());
@@ -336,21 +336,21 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefsWithoutL
 
             // Specie indices
             const label speciei1 =
-                compositionPtr1 ? compositionPtr1->species()[specie] : -1;
+                mcThermoPtr1 ? mcThermoPtr1->species()[specie] : -1;
             const label speciei2 =
-                compositionPtr2 ? compositionPtr2->species()[specie] : -1;
+                mcThermoPtr2 ? mcThermoPtr2->species()[specie] : -1;
 
             // Interface enthalpies
             const volScalarField hsfi1
             (
-                compositionPtr1
-              ? compositionPtr1->Hs(speciei1, thermo1.p(), Tf)
+                mcThermoPtr1
+              ? mcThermoPtr1->hsi(speciei1, thermo1.p(), Tf)
               : tmp<volScalarField>(hsf1)
             );
             const volScalarField hsfi2
             (
-                compositionPtr2
-              ? compositionPtr2->Hs(speciei2, thermo2.p(), Tf)
+                mcThermoPtr2
+              ? mcThermoPtr2->hsi(speciei2, thermo2.p(), Tf)
               : tmp<volScalarField>(hsf2)
             );
 
@@ -359,12 +359,12 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefsWithoutL
             if (this->residualY_ > 0)
             {
                 tYi1 =
-                    compositionPtr1
-                  ? max(compositionPtr1->Y(speciei1), this->residualY_)
+                    mcThermoPtr1
+                  ? max(mcThermoPtr1->Y(speciei1), this->residualY_)
                   : volScalarField::New("Yi1", this->mesh(), one);
                 tYi2 =
-                    compositionPtr2
-                  ? max(compositionPtr2->Y(speciei2), this->residualY_)
+                    mcThermoPtr2
+                  ? max(mcThermoPtr2->Y(speciei2), this->residualY_)
                   : volScalarField::New("Yi2", this->mesh(), one);
             }
 
@@ -383,14 +383,14 @@ void Foam::HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefsWithoutL
                     // Bulk enthalpies
                     const volScalarField hsi1
                     (
-                        compositionPtr1
-                      ? compositionPtr1->Hs(speciei1, thermo1.p(), thermo1.T())
+                        mcThermoPtr1
+                      ? mcThermoPtr1->hsi(speciei1, thermo1.p(), thermo1.T())
                       : thermo1.hs()
                     );
                     const volScalarField hsi2
                     (
-                        compositionPtr2
-                      ? compositionPtr2->Hs(speciei2, thermo2.p(), thermo2.T())
+                        mcThermoPtr2
+                      ? mcThermoPtr2->hsi(speciei2, thermo2.p(), thermo2.T())
                       : thermo2.hs()
                     );
 
@@ -512,8 +512,8 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::L
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = interface.phase1().thermo();
-    const rhoThermo& thermo2 = interface.phase2().thermo();
+    const rhoFluidThermo& thermo1 = interface.phase1().thermo();
+    const rhoFluidThermo& thermo2 = interface.phase2().thermo();
 
     // Interface enthalpies
     const volScalarField haf1(thermo1.ha(thermo1.p(), Tf));
@@ -552,8 +552,8 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::L
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = interface.phase1().thermo();
-    const rhoThermo& thermo2 = interface.phase2().thermo();
+    const rhoFluidThermo& thermo1 = interface.phase1().thermo();
+    const rhoFluidThermo& thermo2 = interface.phase2().thermo();
 
     // Interface enthalpies
     const scalarField haf1(thermo1.ha(Tf, cells));
@@ -595,32 +595,32 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = interface.phase1().thermo();
-    const rhoThermo& thermo2 = interface.phase2().thermo();
-    const basicSpecieMixture* compositionPtr1 =
-        isA<rhoMulticomponentThermo>(thermo1)
-      ? &refCast<const rhoMulticomponentThermo>(thermo1).composition()
-      : static_cast<const basicSpecieMixture*>(nullptr);
-    const basicSpecieMixture* compositionPtr2 =
-        isA<rhoMulticomponentThermo>(thermo2)
-      ? &refCast<const rhoMulticomponentThermo>(thermo2).composition()
-      : static_cast<const basicSpecieMixture*>(nullptr);
+    const rhoFluidThermo& thermo1 = interface.phase1().thermo();
+    const rhoFluidThermo& thermo2 = interface.phase2().thermo();
+    const rhoFluidMulticomponentThermo* mcThermoPtr1 =
+        isA<rhoFluidMulticomponentThermo>(thermo1)
+      ? &refCast<const rhoFluidMulticomponentThermo>(thermo1)
+      : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
+    const rhoFluidMulticomponentThermo* mcThermoPtr2 =
+        isA<rhoFluidMulticomponentThermo>(thermo2)
+      ? &refCast<const rhoFluidMulticomponentThermo>(thermo2)
+      : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
     const label speciei1 =
-        compositionPtr1 ? compositionPtr1->species()[specie] : -1;
+        mcThermoPtr1 ? mcThermoPtr1->species()[specie] : -1;
     const label speciei2 =
-        compositionPtr2 ? compositionPtr2->species()[specie] : -1;
+        mcThermoPtr2 ? mcThermoPtr2->species()[specie] : -1;
 
     // Interface enthalpies
     const volScalarField hafi1
     (
-        compositionPtr1
-      ? compositionPtr1->Ha(speciei1, thermo1.p(), Tf)
+        mcThermoPtr1
+      ? mcThermoPtr1->hai(speciei1, thermo1.p(), Tf)
       : thermo1.ha(thermo1.p(), Tf)
     );
     const volScalarField hafi2
     (
-        compositionPtr2
-      ? compositionPtr2->Ha(speciei2, thermo2.p(), Tf)
+        mcThermoPtr2
+      ? mcThermoPtr2->hai(speciei2, thermo2.p(), Tf)
       : thermo2.ha(thermo1.p(), Tf)
     );
 
@@ -635,14 +635,14 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
             // Bulk enthalpies
             const volScalarField hai1
             (
-                compositionPtr1
-              ? compositionPtr1->Ha(speciei1, thermo1.p(), thermo1.T())
+                mcThermoPtr1
+              ? mcThermoPtr1->hai(speciei1, thermo1.p(), thermo1.T())
               : thermo1.ha()
             );
             const volScalarField hai2
             (
-                compositionPtr2
-              ? compositionPtr2->Ha(speciei2, thermo2.p(), thermo2.T())
+                mcThermoPtr2
+              ? mcThermoPtr2->hai(speciei2, thermo2.p(), thermo2.T())
               : thermo2.ha()
             );
 
@@ -668,20 +668,20 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
     const latentHeatScheme scheme
 ) const
 {
-    const rhoThermo& thermo1 = interface.phase1().thermo();
-    const rhoThermo& thermo2 = interface.phase2().thermo();
-    const basicSpecieMixture* compositionPtr1 =
-        isA<rhoMulticomponentThermo>(thermo1)
-      ? &refCast<const rhoMulticomponentThermo>(thermo1).composition()
-      : static_cast<const basicSpecieMixture*>(nullptr);
-    const basicSpecieMixture* compositionPtr2 =
-        isA<rhoMulticomponentThermo>(thermo2)
-      ? &refCast<const rhoMulticomponentThermo>(thermo2).composition()
-      : static_cast<const basicSpecieMixture*>(nullptr);
+    const rhoFluidThermo& thermo1 = interface.phase1().thermo();
+    const rhoFluidThermo& thermo2 = interface.phase2().thermo();
+    const rhoFluidMulticomponentThermo* mcThermoPtr1 =
+        isA<rhoFluidMulticomponentThermo>(thermo1)
+      ? &refCast<const rhoFluidMulticomponentThermo>(thermo1)
+      : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
+    const rhoFluidMulticomponentThermo* mcThermoPtr2 =
+        isA<rhoFluidMulticomponentThermo>(thermo2)
+      ? &refCast<const rhoFluidMulticomponentThermo>(thermo2)
+      : static_cast<const rhoFluidMulticomponentThermo*>(nullptr);
     const label speciei1 =
-        compositionPtr1 ? compositionPtr1->species()[specie] : -1;
+        mcThermoPtr1 ? mcThermoPtr1->species()[specie] : -1;
     const label speciei2 =
-        compositionPtr2 ? compositionPtr2->species()[specie] : -1;
+        mcThermoPtr2 ? mcThermoPtr2->species()[specie] : -1;
 
     const scalarField p1(UIndirectList<scalar>(thermo1.p(), cells));
     const scalarField p2(UIndirectList<scalar>(thermo2.p(), cells));
@@ -689,14 +689,14 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
     // Interface enthalpies
     const scalarField hafi1
     (
-        compositionPtr1
-      ? compositionPtr1->Ha(speciei1, p1, Tf)
+        mcThermoPtr1
+      ? mcThermoPtr1->hai(speciei1, p1, Tf)
       : thermo1.ha(Tf, cells)
     );
     const scalarField hafi2
     (
-        compositionPtr2
-      ? compositionPtr2->Ha(speciei2, p2, Tf)
+        mcThermoPtr2
+      ? mcThermoPtr2->hai(speciei2, p2, Tf)
       : thermo2.ha(Tf, cells)
     );
 
@@ -714,14 +714,14 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::Li
             // Bulk enthalpies
             const scalarField hai1
             (
-                compositionPtr1
-              ? compositionPtr1->Ha(speciei1, p1, T1)
+                mcThermoPtr1
+              ? mcThermoPtr1->hai(speciei1, p1, T1)
               : thermo1.ha(T1, cells)
             );
             const scalarField hai2
             (
-                compositionPtr2
-              ? compositionPtr2->Ha(speciei2, p2, T2)
+                mcThermoPtr2
+              ? mcThermoPtr2->hai(speciei2, p2, T2)
               : thermo2.ha(T2, cells)
             );
 

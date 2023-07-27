@@ -106,7 +106,7 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
 
         forAll(Y, i)
         {
-            if (composition.solve(i))
+            if (thermo_.solveSpecie(i))
             {
                 volScalarField& Yi = Y_[i];
 

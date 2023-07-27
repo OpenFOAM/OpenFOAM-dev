@@ -28,13 +28,11 @@ namespace Foam
 
 scalarList W(const fluidMulticomponentThermo& thermo)
 {
-    const basicSpecieMixture& composition = thermo.composition();
-
-    scalarList W(composition.Y().size());
+    scalarList W(thermo.Y().size());
 
     forAll(W, i)
     {
-        W[i] = composition.Wi(i);
+        W[i] = thermo.Wi(i);
     }
 
     return W;
@@ -49,13 +47,11 @@ scalar h0
     const scalar T
 )
 {
-    const basicSpecieMixture& composition = thermo.composition();
-
     scalar h0 = 0;
 
     forAll(Y, i)
     {
-        h0 += Y[i]*composition.Hs(i, p, T);
+        h0 += Y[i]*thermo.hsi(i, p, T);
     }
 
     return h0;

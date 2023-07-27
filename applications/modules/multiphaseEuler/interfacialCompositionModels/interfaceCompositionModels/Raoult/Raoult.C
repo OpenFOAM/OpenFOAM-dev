@@ -110,11 +110,11 @@ void Foam::interfaceCompositionModels::Raoult::update(const volScalarField& Tf)
         iter()->update(Tf);
 
         YNonVapour_ -=
-            otherComposition().Y(iter.key())
+            otherMulticomponentThermo().Y(iter.key())
            *iter()->Yf(iter.key(), Tf);
 
         YNonVapourPrime_ -=
-            otherComposition().Y(iter.key())
+            otherMulticomponentThermo().Y(iter.key())
            *iter()->YfPrime(iter.key(), Tf);
     }
 }
@@ -129,12 +129,12 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModels::Raoult::Yf
     if (species().found(speciesName))
     {
         return
-            otherComposition().Y(speciesName)
+            otherMulticomponentThermo().Y(speciesName)
            *speciesModels_[speciesName]->Yf(speciesName, Tf);
     }
     else
     {
-        return composition().Y(speciesName)*YNonVapour_;
+        return thermo().Y(speciesName)*YNonVapour_;
     }
 }
 
@@ -149,12 +149,12 @@ Foam::interfaceCompositionModels::Raoult::YfPrime
     if (species().found(speciesName))
     {
         return
-            otherComposition().Y(speciesName)
+            otherMulticomponentThermo().Y(speciesName)
            *speciesModels_[speciesName]->YfPrime(speciesName, Tf);
     }
     else
     {
-        return composition().Y(speciesName)*YNonVapourPrime_;
+        return thermo().Y(speciesName)*YNonVapourPrime_;
     }
 }
 

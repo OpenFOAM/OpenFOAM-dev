@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,9 @@ SourceFiles
 #define psiuMulticomponentThermo_H
 
 #include "psiThermo.H"
-#include "basicCombustionMixture.H"
+#include "PsiuMulticomponentThermo.H"
+#include "speciesTable.H"
+#include "GeometricFieldListSlicer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,6 +80,17 @@ public:
         class composite;
 
 
+    // Public Typedefs
+
+        //- The derived type
+        template<class MixtureType>
+        using DerivedThermoType =
+            PsiuMulticomponentThermo<BasicThermo<MixtureType, composite>>;
+
+        //- The derived name
+        static const word derivedThermoName;
+
+
     //- Runtime type information
     TypeName("psiuMulticomponentThermo");
 
@@ -110,14 +123,28 @@ public:
 
     // Member Functions
 
-        //- Update properties
-        virtual void correct() = 0;
+        // Species set
 
-        //- Return the composition of the combustion mixture
-        virtual basicCombustionMixture& composition() = 0;
+            //- The table of species
+            virtual const speciesTable& species() const = 0;
 
-        //- Return the composition of the combustion mixture
-        virtual const basicCombustionMixture& composition() const = 0;
+            //- Does the mixture include this specie?
+            inline bool containsSpecie(const word& specieName) const;
+
+
+        // Mass fractions
+
+            //- Access the mass-fraction fields
+            virtual PtrList<volScalarField>& Y() = 0;
+
+            //- Access the mass-fraction fields
+            virtual const PtrList<volScalarField>& Y() const = 0;
+
+            //- Return the mass-fraction field for a specie given by name
+            inline volScalarField& Y(const word& specieName);
+
+            //- Return the const mass-fraction field for a specie given by name
+            inline const volScalarField& Y(const word& specieName) const;
 
 
         // Access to thermodynamic state variables.
@@ -179,23 +206,65 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-             Class psiuMulticomponentThermo::implementation Declaration
+           Class psiuMulticomponentThermo::implementation Declaration
 \*---------------------------------------------------------------------------*/
 
 class psiuMulticomponentThermo::implementation
 :
     virtual public psiuMulticomponentThermo
 {
+protected:
+
+    // Protected data
+
+        //- Table of specie names
+        speciesTable species_;
+
+        //- Species mass fractions
+        PtrList<volScalarField> Y_;
+
+        //- Species mass fractions slicing engine
+        volScalarFieldListSlicer Yslicer_;
+
+
 public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
-        implementation(const fvMesh&, const word& phaseName);
+        //- Construct from dictionary, specie names, mesh and phase name
+        implementation
+        (
+            const dictionary&,
+            const wordList&,
+            const fvMesh&,
+            const word&
+        );
 
 
     //- Destructor
     virtual ~implementation();
+
+
+    // Member Functions
+
+        //- The table of species
+        virtual const speciesTable& species() const;
+
+        //- Access the mass-fraction fields
+        virtual PtrList<volScalarField>& Y();
+
+        //- Access the mass-fraction fields
+        virtual const PtrList<volScalarField>& Y() const;
+
+        //- Get the composition of an internal cell
+        inline scalarFieldListSlice cellComposition(const label celli) const;
+
+        //- Get the composition of a boundary face
+        inline scalarFieldListSlice patchFaceComposition
+        (
+            const label patchi,
+            const label facei
+        ) const;
 };
 
 
@@ -214,17 +283,26 @@ public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
+        //- Construct from dictionary, mesh and phase name
+        template<class MixtureType>
         composite
         (
+            const dictionary& dict,
+            const MixtureType& mixture,
             const fvMesh& mesh,
             const word& phaseName
         )
         :
-            basicThermo::implementation(mesh, phaseName),
-            fluidThermo::implementation(mesh, phaseName),
-            psiThermo::implementation(mesh, phaseName),
-            psiuMulticomponentThermo::implementation(mesh, phaseName)
+            basicThermo::implementation(dict, mesh, phaseName),
+            fluidThermo::implementation(dict, mesh, phaseName),
+            psiThermo::implementation(dict, mesh, phaseName),
+            psiuMulticomponentThermo::implementation
+            (
+                dict,
+                MixtureType::specieNames(),
+                mesh,
+                phaseName
+            )
         {}
 };
 
@@ -232,6 +310,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "psiuMulticomponentThermoI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,8 +35,7 @@ SourceFiles
 #ifndef multicomponentMixture_H
 #define multicomponentMixture_H
 
-#include "basicSpecieMixture.H"
-#include "HashPtrTable.H"
+#include "PtrList.H"
 #include "specieElement.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -50,14 +49,13 @@ namespace Foam
 
 template<class ThermoType>
 class multicomponentMixture
-:
-    public basicSpecieMixture
 {
-
 public:
 
-    //- The type of thermodynamics this mixture is instantiated for
-    typedef ThermoType thermoType;
+    // Public Typedefs
+
+        //- The type of thermodynamics this mixture is instantiated for
+        typedef ThermoType thermoType;
 
 
 private:
@@ -70,25 +68,16 @@ private:
         //- Table of species composition
         List<List<specieElement>> specieCompositions_;
 
-
-    // Private Member Functions
-
-        //- Read the species data from the given dictionary and return
-        PtrList<ThermoType> readSpeciesData(const dictionary& thermoDict) const;
-
-        //- Read the species composition from the given dictionary and return
-        List<List<specieElement>> readSpeciesComposition
-        (
-            const dictionary& thermoDict
-        ) const;
+        //- Cached IO error locations for delayed error messages
+        List<IOerrorLocation> specieDictLocations_;
 
 
 public:
 
     // Constructors
 
-        //- Construct from dictionary, mesh and phase name
-        multicomponentMixture(const dictionary&, const fvMesh&, const word&);
+        //- Construct from a dictionary
+        multicomponentMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
         multicomponentMixture
@@ -104,14 +93,17 @@ public:
 
     // Member Functions
 
+        //- Return the specie names
+        wordList specieNames() const;
+
+        //- Read dictionary
+        void read(const dictionary&);
+
         //- Return the raw specie thermodynamic data
         inline const PtrList<ThermoType>& specieThermos() const
         {
             return specieThermos_;
         }
-
-        //- Read dictionary
-        void read(const dictionary&);
 
         //- Return thermo based on index
         inline const ThermoType& specieThermo(const label speciei) const
@@ -120,10 +112,7 @@ public:
         }
 
         //- Return composition based on index
-        const List<specieElement>& specieComposition
-        (
-            const label speciei
-        ) const;
+        const List<specieElement>& specieComposition(const label speciei) const;
 };
 
 

@@ -19,10 +19,10 @@ type
     heRhoThermo
 );
 
-typeBase
+typeRenamed
 (
     hePsiThermo psiThermo
-    heRhoThermo rhoThermo
+    heRhoThermo rhoFluidThermo
 );
 
 energy

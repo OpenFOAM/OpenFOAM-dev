@@ -66,7 +66,7 @@ Foam::compressibleVoFphase::compressibleVoFphase
         Tp.write();
     }
 
-    thermo_ = rhoThermo::New(mesh, name);
+    thermo_ = rhoFluidThermo::New(mesh, name);
     thermo_->validate(name, "e");
 }
 

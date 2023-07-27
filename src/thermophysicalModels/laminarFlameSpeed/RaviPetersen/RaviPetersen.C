@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -310,10 +310,9 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
         dimensionedScalar(dimless, 0)
     );
 
-    if (psiuMulticomponentThermo_.composition().contains("ft"))
+    if (psiuMulticomponentThermo_.containsSpecie("ft"))
     {
-        const volScalarField& ft =
-            psiuMulticomponentThermo_.composition().Y("ft");
+        const volScalarField& ft = psiuMulticomponentThermo_.Y("ft");
 
         EqR =
             dimensionedScalar

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "psiuMulticomponentThermo.H"
-#include "fvMesh.H"
 #include "zeroGradientFvPatchFields.H"
 #include "fixedUnburntEnthalpyFvPatchScalarField.H"
 #include "gradientUnburntEnthalpyFvPatchScalarField.H"
@@ -37,6 +36,12 @@ namespace Foam
     defineTypeNameAndDebug(psiuMulticomponentThermo, 0);
     defineRunTimeSelectionTable(psiuMulticomponentThermo, fvMesh);
 }
+
+const Foam::word Foam::psiuMulticomponentThermo::derivedThermoName
+(
+    "heheuPsiThermo"
+);
+
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -100,10 +105,38 @@ void Foam::psiuMulticomponentThermo::heuBoundaryCorrection(volScalarField& heu)
 
 Foam::psiuMulticomponentThermo::implementation::implementation
 (
+    const dictionary& dict,
+    const wordList& specieNames,
     const fvMesh& mesh,
     const word& phaseName
 )
-{}
+:
+    species_(specieNames),
+    Y_(species_.size()),
+    Yslicer_()
+{
+    forAll(species_, i)
+    {
+        Y_.set
+        (
+            i,
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName(species_[i], phaseName),
+                    mesh.time().name(),
+                    mesh,
+                    IOobject::MUST_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                mesh
+            )
+        );
+    }
+
+    Yslicer_.set(Y_);
+}
 
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
@@ -127,6 +160,29 @@ Foam::psiuMulticomponentThermo::~psiuMulticomponentThermo()
 
 Foam::psiuMulticomponentThermo::implementation::~implementation()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::speciesTable&
+Foam::psiuMulticomponentThermo::implementation::species() const
+{
+    return species_;
+}
+
+
+Foam::PtrList<Foam::volScalarField>&
+Foam::psiuMulticomponentThermo::implementation::Y()
+{
+    return Y_;
+}
+
+
+const Foam::PtrList<Foam::volScalarField>&
+Foam::psiuMulticomponentThermo::implementation::Y() const
+{
+    return Y_;
+}
 
 
 // ************************************************************************* //

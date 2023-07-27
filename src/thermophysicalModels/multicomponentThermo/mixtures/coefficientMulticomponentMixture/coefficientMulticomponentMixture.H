@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,6 +37,7 @@ SourceFiles
 #define coefficientMulticomponentMixture_H
 
 #include "multicomponentMixture.H"
+#include "FieldListSlice.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,14 +53,15 @@ class coefficientMulticomponentMixture
 :
     public multicomponentMixture<ThermoType>
 {
-
 public:
 
-    //- Mixing type for thermodynamic properties
-    typedef ThermoType thermoMixtureType;
+    // Public Typedefs
 
-    //- Mixing type for transport properties
-    typedef ThermoType transportMixtureType;
+        //- Mixing type for thermodynamic properties
+        typedef ThermoType thermoMixtureType;
+
+        //- Mixing type for transport properties
+        typedef ThermoType transportMixtureType;
 
 
 private:
@@ -74,13 +76,8 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary, mesh and phase name
-        coefficientMulticomponentMixture
-        (
-            const dictionary&,
-            const fvMesh&,
-            const word&
-        );
+        //- Construct from a dictionary
+        coefficientMulticomponentMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
         coefficientMulticomponentMixture
@@ -102,49 +99,24 @@ public:
             return "multicomponentMixture<" + ThermoType::typeName() + '>';
         }
 
-        const thermoMixtureType& cellThermoMixture(const label celli) const;
-
-        const thermoMixtureType& patchFaceThermoMixture
+        //- Return the mixture for thermodynamic properties
+        const thermoMixtureType& thermoMixture
         (
-            const label patchi,
-            const label facei
+            const scalarFieldListSlice&
         ) const;
 
-        const transportMixtureType& cellTransportMixture
+        //- Return the mixture for transport properties
+        const transportMixtureType& transportMixture
         (
-            const label celli
-        ) const
-        {
-            return cellThermoMixture(celli);
-        }
+            const scalarFieldListSlice&
+        ) const;
 
-        const transportMixtureType& patchFaceTransportMixture
+        //- Return the mixture for transport properties
+        const transportMixtureType& transportMixture
         (
-            const label patchi,
-            const label facei
-        ) const
-        {
-            return patchFaceThermoMixture(patchi, facei);
-        }
-
-        const transportMixtureType& cellTransportMixture
-        (
-            const label,
-            const thermoMixtureType& thermoMixture
-        ) const
-        {
-            return thermoMixture;
-        }
-
-        const transportMixtureType& patchFaceTransportMixture
-        (
-            const label,
-            const label,
-            const thermoMixtureType& thermoMixture
-        ) const
-        {
-            return thermoMixture;
-        }
+            const scalarFieldListSlice&,
+            const thermoMixtureType&
+        ) const;
 };
 
 

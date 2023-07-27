@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,56 +25,52 @@ InClass
     Foam::fluidThermo
 
 Description
-    Macros for creating basic fluid thermo packages
+    Macros for creating basic thermo packages
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef makeThermo_H
 #define makeThermo_H
 
-#include "fluidThermo.H"
+#include "basicThermo.H"
+#include "NamedThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineThermo(BaseThermo, CThermo, Mixture, ThermoPhys)                 \
+#define defineThermo(BaseThermo, Mixture, ThermoPhysics)                       \
                                                                                \
     typedef                                                                    \
-        CThermo                                                                \
-        <                                                                      \
-            BaseThermo::composite,                                             \
-            Mixture<ThermoPhys>                                                \
-        >                                                                      \
-        CThermo##Mixture##ThermoPhys;                                          \
+        NamedThermo<BaseThermo::DerivedThermoType<Mixture<ThermoPhysics>>>     \
+        BaseThermo##Mixture##ThermoPhysics;                                    \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        CThermo##Mixture##ThermoPhys,                                          \
+        BaseThermo##Mixture##ThermoPhysics,                                    \
         (                                                                      \
-            word(CThermo##Mixture##ThermoPhys::typeName_()) + "<"              \
-          + Mixture<ThermoPhys>::typeName() + ">"                              \
+            BaseThermo::derivedThermoName + "<"                                \
+          + Mixture<ThermoPhysics>::typeName() + ">"                           \
         ).c_str(),                                                             \
         0                                                                      \
-    )
+    );
 
 
-#define addThermo(BaseThermo, CThermo, Mixture, ThermoPhys)                    \
+#define addThermo(SelectThermo, BaseThermo, Mixture, ThermoPhysics)            \
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
-        BaseThermo,                                                            \
-        CThermo##Mixture##ThermoPhys,                                          \
+        SelectThermo,                                                          \
+        BaseThermo##Mixture##ThermoPhysics,                                    \
         fvMesh                                                                 \
-    )
+    );
 
 
-#define makeThermo(BaseThermo, CThermo, Mixture, ThermoPhys)                   \
+#define makeThermo(BaseThermo, Mixture, ThermoPhysics)                         \
                                                                                \
-    defineThermo(BaseThermo, CThermo, Mixture, ThermoPhys);                    \
+    defineThermo(BaseThermo, Mixture, ThermoPhysics);                          \
                                                                                \
-    addThermo(basicThermo, CThermo, Mixture, ThermoPhys);                      \
-    addThermo(fluidThermo, CThermo, Mixture, ThermoPhys);                      \
-    addThermo(BaseThermo, CThermo, Mixture, ThermoPhys)
+    addThermo(basicThermo, BaseThermo, Mixture, ThermoPhysics);                \
+    addThermo(BaseThermo, BaseThermo, Mixture, ThermoPhysics);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

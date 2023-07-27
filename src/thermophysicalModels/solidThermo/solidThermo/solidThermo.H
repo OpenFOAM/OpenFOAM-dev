@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,9 @@ SourceFiles
 #ifndef solidThermo_H
 #define solidThermo_H
 
-#include "basicThermo.H"
+#include "SolidThermo.H"
+#include "pureThermo.H"
+#include "rhoThermo.H"
 #include "uniformGeometricFields.H"
 #include "fvScalarMatrix.H"
 
@@ -53,7 +55,8 @@ namespace Foam
 
 class solidThermo
 :
-    virtual public basicThermo
+    virtual public basicThermo,
+    virtual public rhoThermo
 {
 public:
 
@@ -64,6 +67,17 @@ public:
 
         //- Forward declare the composite class
         class composite;
+
+
+    // Public Typedefs
+
+        //- The derived type
+        template<class MixtureType>
+        using DerivedThermoType =
+            SolidThermo<BasicThermo<MixtureType, composite>>;
+
+        //- The derived name
+        static const word derivedThermoName;
 
 
     //- Runtime type information
@@ -97,15 +111,6 @@ public:
 
     // Member Functions
 
-        //- Density [kg/m^3]
-        virtual tmp<volScalarField> rho() const = 0;
-
-        //- Density for patch [kg/m^3]
-        virtual tmp<scalarField> rho(const label patchi) const = 0;
-
-        //- Return non-const access to the local density field [kg/m^3]
-        virtual volScalarField& rho() = 0;
-
         //- Return true if thermal conductivity is isotropic
         virtual bool isotropic() const = 0;
 
@@ -136,40 +141,17 @@ protected:
             //  code will exit.
             uniformGeometricScalarField p_;
 
-            //- Density field [kg/m^3]
-            volScalarField rho_;
-
 
 public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
-        implementation(const fvMesh&, const word& phaseName);
-
-        //- Construct from mesh, dictionary and phase name
-        implementation
-        (
-            const fvMesh&,
-            const dictionary& dict,
-            const word& phaseName
-        );
+        //- Construct from dictionary, mesh and phase name
+        implementation(const dictionary&, const fvMesh&, const word&);
 
 
     //- Destructor
     virtual ~implementation();
-
-
-    // Member Functions
-
-        //- Density [kg/m^3]
-        virtual tmp<volScalarField> rho() const;
-
-        //- Density for patch [kg/m^3]
-        virtual tmp<scalarField> rho(const label patchi) const;
-
-        //- Return non-const access to the local density field [kg/m^3]
-        virtual volScalarField& rho();
 };
 
 
@@ -180,21 +162,38 @@ public:
 class solidThermo::composite
 :
     public basicThermo::implementation,
+    public pureThermo,
+    public rhoThermo::implementation,
     public solidThermo::implementation
 {
 public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
+        //- Construct from dictionary, mesh and phase name
         composite
         (
+            const dictionary& dict,
             const fvMesh& mesh,
             const word& phaseName
         )
         :
-            basicThermo::implementation(mesh, phaseName),
-            solidThermo::implementation(mesh, phaseName)
+            basicThermo::implementation(dict, mesh, phaseName),
+            rhoThermo::implementation(dict, mesh, phaseName),
+            solidThermo::implementation(dict, mesh, phaseName)
+        {}
+
+        //- Construct from dictionary, mesh and phase name
+        template<class MixtureType>
+        composite
+        (
+            const dictionary& dict,
+            const MixtureType& mixture,
+            const fvMesh& mesh,
+            const word& phaseName
+        )
+        :
+            composite(dict, mesh, phaseName)
         {}
 };
 

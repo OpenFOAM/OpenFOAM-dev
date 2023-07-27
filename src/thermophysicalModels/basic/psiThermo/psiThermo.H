@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,8 @@ SourceFiles
 #ifndef psiThermo_H
 #define psiThermo_H
 
+#include "PsiThermo.H"
+#include "pureThermo.H"
 #include "fluidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -62,6 +64,17 @@ public:
 
         //- Forward declare the composite class
         class composite;
+
+
+    // Public Typedefs
+
+        //- The derived type
+        template<class MixtureType>
+        using DerivedThermoType =
+            PsiThermo<BasicThermo<MixtureType, composite>>;
+
+        //- The derived name
+        static const word derivedThermoName;
 
 
     //- Runtime type information
@@ -97,11 +110,6 @@ public:
 
         // Fields derived from thermodynamic state variables
 
-            //- Add the given density correction to the density field.
-            //  Used to update the density field following pressure solution.
-            //  For psiThermo does nothing.
-            virtual void correctRho(const volScalarField& deltaRho);
-
             //- Density [kg/m^3] - uses current value of pressure
             virtual tmp<volScalarField> rho() const = 0;
 
@@ -110,7 +118,12 @@ public:
 
             //- Return the thermodynamic density field [kg/m^3]
             //  This is used by solvers which create a separate continuity rho
-            virtual tmp<volScalarField> renameRho() = 0;
+            virtual tmp<volScalarField> renameRho();
+
+            //- Add the given density correction to the density field.
+            //  Used to update the density field following pressure solution.
+            //  For psiThermo does nothing.
+            virtual void correctRho(const volScalarField& deltaRho);
 };
 
 
@@ -122,13 +135,12 @@ class psiThermo::implementation
 :
     virtual public psiThermo
 {
-
 public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
-        implementation(const fvMesh&, const word& phaseName);
+        //- Construct from dictionary, mesh and phase name
+        implementation(const dictionary&, const fvMesh&, const word&);
 
         //- Disallow default bitwise copy construction
         implementation(const implementation&) = delete;
@@ -148,10 +160,6 @@ public:
             //- Density for patch [kg/m^3]
             virtual tmp<scalarField> rho(const label patchi) const;
 
-            //- Return the thermodynamic density field [kg/m^3]
-            //  This is used by solvers which create a separate continuity rho
-            virtual tmp<volScalarField> renameRho();
-
 
     // Member Operators
 
@@ -167,6 +175,7 @@ public:
 class psiThermo::composite
 :
     public basicThermo::implementation,
+    public pureThermo,
     public fluidThermo::implementation,
     public psiThermo::implementation
 {
@@ -174,16 +183,19 @@ public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
+        //- Construct from dictionary, mesh and phase name
+        template<class MixtureType>
         composite
         (
+            const dictionary& dict,
+            const MixtureType& mixture,
             const fvMesh& mesh,
             const word& phaseName
         )
         :
-            basicThermo::implementation(mesh, phaseName),
-            fluidThermo::implementation(mesh, phaseName),
-            psiThermo::implementation(mesh, phaseName)
+            basicThermo::implementation(dict, mesh, phaseName),
+            fluidThermo::implementation(dict, mesh, phaseName),
+            psiThermo::implementation(dict, mesh, phaseName)
         {}
 };
 

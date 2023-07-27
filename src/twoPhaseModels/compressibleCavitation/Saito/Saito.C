@@ -71,7 +71,10 @@ Foam::compressible::cavitationModels::Saito::Saito
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::compressible::cavitationModels::Saito::fT(const rhoThermo& thermo) const
+Foam::compressible::cavitationModels::Saito::fT
+(
+    const rhoFluidThermo& thermo
+) const
 {
     return sqrt(2*pi*(RR/thermo.W()()())*thermo.T()());
 }

@@ -1,5 +1,4 @@
-mixtures/basicSpecieMixture/basicSpecieMixture.C
-mixtures/basicCombustionMixture/basicCombustionMixture.C
+multicomponentThermo/multicomponentThermo.C
 
 fluidMulticomponentThermo/fluidMulticomponentThermo.C
 
@@ -9,8 +8,8 @@ psiMulticomponentThermo/psiMulticomponentThermos.C
 psiuMulticomponentThermo/psiuMulticomponentThermo.C
 psiuMulticomponentThermo/psiuMulticomponentThermos.C
 
-rhoMulticomponentThermo/rhoMulticomponentThermo.C
-rhoMulticomponentThermo/rhoMulticomponentThermos.C
+rhoFluidMulticomponentThermo/rhoFluidMulticomponentThermo.C
+rhoFluidMulticomponentThermo/rhoFluidMulticomponentThermos.C
 
 derivedFvPatchFields/fixedUnburntEnthalpy/fixedUnburntEnthalpyFvPatchScalarField.C
 derivedFvPatchFields/gradientUnburntEnthalpy/gradientUnburntEnthalpyFvPatchScalarField.C

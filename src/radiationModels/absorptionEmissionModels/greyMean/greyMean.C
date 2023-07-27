@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "unitConversion.H"
 #include "extrapolatedCalculatedFvPatchFields.H"
-#include "basicSpecieMixture.H"
+#include "fluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -67,7 +67,7 @@ Foam::radiationModels::absorptionEmissionModels::greyMean::greyMean
     thermo_(mesh.lookupObject<fluidThermo>(physicalProperties::typeName)),
     Yj_(nSpecies_)
 {
-    if (!isA<basicSpecieMixture>(thermo_))
+    if (!isA<fluidMulticomponentThermo>(thermo_))
     {
         FatalErrorInFunction
             << "Model requires a multi-component thermo package"
@@ -180,8 +180,8 @@ Foam::radiationModels::absorptionEmissionModels::greyMean::aCont
     const label bandI
 ) const
 {
-    const basicSpecieMixture& mixture =
-        dynamic_cast<const basicSpecieMixture&>(thermo_);
+    const fluidMulticomponentThermo& mcThermo =
+        dynamic_cast<const fluidMulticomponentThermo&>(thermo_);
 
     const volScalarField& T = thermo_.T();
     const volScalarField& p = thermo_.p();
@@ -219,13 +219,13 @@ Foam::radiationModels::absorptionEmissionModels::greyMean::aCont
             else
             {
                 scalar invWt = 0.0;
-                forAll(mixture.Y(), s)
+                forAll(mcThermo.Y(), s)
                 {
-                    invWt += mixture.Y(s)[celli]/mixture.Wi(s);
+                    invWt += mcThermo.Y(s)[celli]/mcThermo.Wi(s);
                 }
 
-                label index = mixture.species()[iter.key()];
-                scalar Xk = mixture.Y(index)[celli]/(mixture.Wi(index)*invWt);
+                label index = mcThermo.species()[iter.key()];
+                scalar Xk = mcThermo.Y(index)[celli]/(mcThermo.Wi(index)*invWt);
 
                 Xipi = Xk*paToAtm(p[celli]);
             }

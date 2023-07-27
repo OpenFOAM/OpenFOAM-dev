@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ License
     forSolidEquations(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);  \
     forSolidEquations                                                          \
         (Mu, sensibleInternalEnergy, ePolynomialThermo, Macro, Args);          \
-    forSolidEquations(Mu, sensibleInternalEnergy, ePowerThermo, Macro, Args)   \
+    forSolidEquations(Mu, sensibleInternalEnergy, ePowerThermo, Macro, Args);  \
     forSolidEquations                                                          \
         (Mu, sensibleInternalEnergy, eIcoTabulatedThermo, Macro, Args)
 
@@ -64,7 +64,7 @@ License
     forSolidEnergiesAndThermos(constIsoSolidTransport, Macro, Args);           \
     forSolidEnergiesAndThermos(constAnisoSolidTransport, Macro, Args);         \
     forSolidEnergiesAndThermos(exponentialSolidTransport, Macro, Args);        \
-    forSolidEnergiesAndThermos(polynomialSolidTransport, Macro, Args)          \
+    forSolidEnergiesAndThermos(polynomialSolidTransport, Macro, Args);         \
     forSolidEnergiesAndThermos(tabulatedSolidTransport, Macro, Args)
 
 #define forSolids(Macro, Args...)                                              \

@@ -1,4 +1,9 @@
 basicThermo/basicThermo.C
+basicThermo/BasicThermoName.C
+
+pureThermo/pureThermo.C
+
+rhoThermo/rhoThermo.C
 
 fluidThermo/fluidThermo.C
 fluidThermo/hydrostaticInitialisation.C
@@ -6,9 +11,11 @@ fluidThermo/hydrostaticInitialisation.C
 psiThermo/psiThermo.C
 psiThermo/psiThermos.C
 
-rhoThermo/rhoThermo.C
-rhoThermo/rhoThermos.C
-rhoThermo/liquidThermo.C
+rhoFluidThermo/rhoFluidThermo.C
+rhoFluidThermo/rhoFluidThermos.C
+
+liquidThermo/liquidThermo.C
+liquidThermo/liquidThermos.C
 
 derivedFvPatchFields/energyJump/energyJumpFvPatchScalarField.C
 derivedFvPatchFields/fixedEnergy/fixedEnergyFvPatchScalarField.C

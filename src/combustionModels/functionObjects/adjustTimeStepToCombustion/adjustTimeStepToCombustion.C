@@ -176,9 +176,9 @@ Foam::functionObjects::adjustTimeStepToCombustion::maxDeltaT() const
             dimensionedScalar(dimless/dimTime, 0)
         )
     );
-    forAll(thermo.composition().Y(), i)
+    forAll(thermo.Y(), i)
     {
-        if (thermo.composition().solve(i))
+        if (thermo.solveSpecie(i))
         {
             rhoDotByRho += mag(combustion.R(i))/2/thermo.rho()();
         }

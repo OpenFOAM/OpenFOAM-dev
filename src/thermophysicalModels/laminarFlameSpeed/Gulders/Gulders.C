@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,10 +196,9 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
 Foam::tmp<Foam::volScalarField>
 Foam::laminarFlameSpeedModels::Gulders::operator()() const
 {
-    if (psiuMulticomponentThermo_.composition().contains("ft"))
+    if (psiuMulticomponentThermo_.containsSpecie("ft"))
     {
-        const volScalarField& ft =
-            psiuMulticomponentThermo_.composition().Y("ft");
+        const volScalarField& ft = psiuMulticomponentThermo_.Y("ft");
 
         return Su0pTphi
         (

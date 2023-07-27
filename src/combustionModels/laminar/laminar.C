@@ -140,7 +140,7 @@ Foam::combustionModels::laminar::R(volScalarField& Y) const
     tmp<fvScalarMatrix> tSu(new fvScalarMatrix(Y, dimMass/dimTime));
     fvScalarMatrix& Su = tSu.ref();
 
-    const label specieI = this->thermo().composition().species()[Y.member()];
+    const label specieI = this->thermo().species()[Y.member()];
     Su += chemistryPtr_->RR()[specieI];
 
     return tSu;

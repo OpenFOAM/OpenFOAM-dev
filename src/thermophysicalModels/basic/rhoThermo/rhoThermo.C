@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,19 +25,11 @@ License
 
 #include "rhoThermo.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    defineTypeNameAndDebug(rhoThermo, 0);
-    defineRunTimeSelectionTable(rhoThermo, fvMesh);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::rhoThermo::implementation::implementation
 (
+    const dictionary& dict,
     const fvMesh& mesh,
     const word& phaseName
 )
@@ -58,18 +50,6 @@ Foam::rhoThermo::implementation::implementation
 {}
 
 
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::rhoThermo> Foam::rhoThermo::New
-(
-    const fvMesh& mesh,
-    const word& phaseName
-)
-{
-    return basicThermo::New<rhoThermo>(mesh, phaseName);
-}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::rhoThermo::~rhoThermo()
@@ -82,7 +62,8 @@ Foam::rhoThermo::implementation::~implementation()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::rhoThermo::implementation::rho() const
+Foam::tmp<Foam::volScalarField>
+Foam::rhoThermo::implementation::rho() const
 {
     return rho_;
 }
@@ -97,22 +78,9 @@ Foam::tmp<Foam::scalarField> Foam::rhoThermo::implementation::rho
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::rhoThermo::implementation::renameRho()
-{
-    rho_.rename(phasePropertyName(Foam::typedName<rhoThermo>("rho")));
-    return rho_;
-}
-
-
 Foam::volScalarField& Foam::rhoThermo::implementation::rho()
 {
     return rho_;
-}
-
-
-void Foam::rhoThermo::implementation::correctRho(const volScalarField& deltaRho)
-{
-    rho_ += deltaRho;
 }
 
 

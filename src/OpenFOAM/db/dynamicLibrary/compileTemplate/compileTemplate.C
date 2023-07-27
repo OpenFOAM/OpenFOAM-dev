@@ -99,13 +99,6 @@ void Foam::compileTemplate::setFilterVariable
     }
 
     dynCode.setFilterVariable(name, type);
-
-    const word typeBase(name + "Base");
-    if (context.dict().found(typeBase))
-    {
-        const HashTable<word> typeToBaseMap(context.dict().lookup(typeBase));
-        dynCode.setFilterVariable(typeBase, typeToBaseMap[type]);
-    }
 }
 
 

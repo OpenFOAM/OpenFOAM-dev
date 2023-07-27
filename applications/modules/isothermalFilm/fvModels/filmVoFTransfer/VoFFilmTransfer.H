@@ -86,7 +86,7 @@ class VoFFilmTransfer
         word phaseName_;
 
         //- Reference to the transferred phase thermo
-        const rhoThermo& thermo_;
+        const rhoFluidThermo& thermo_;
 
         //- Reference to the transferred phase volume fraction
         const volScalarField& alpha_;

@@ -25,7 +25,7 @@ Class
     Foam::compressibleTwoPhaseMixture
 
 Description
-    Interface to two rhoThermo-based phases
+    Interface to two rhoFluidThermo-based phases
 
 SourceFiles
     compressibleTwoPhases.C
@@ -36,7 +36,7 @@ SourceFiles
 #define compressibleTwoPhases_H
 
 #include "twoPhases.H"
-#include "rhoThermo.H"
+#include "rhoFluidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -72,13 +72,13 @@ public:
     // Member Functions
 
         //- Return the thermo for phase 1
-        virtual const rhoThermo& thermo1() const = 0;
+        virtual const rhoFluidThermo& thermo1() const = 0;
 
         //- Return the thermo for phase 2
-        virtual const rhoThermo& thermo2() const = 0;
+        virtual const rhoFluidThermo& thermo2() const = 0;
 
         //- Return the density of a given phase
-        inline const rhoThermo& thermo(const bool index) const
+        inline const rhoFluidThermo& thermo(const bool index) const
         {
             return index ? thermo2() : thermo1();
         }

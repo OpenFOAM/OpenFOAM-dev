@@ -28,7 +28,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "fluidThermophysicalTransportModel.H"
-#include "basicSpecieMixture.H"
+#include "fluidMulticomponentThermo.H"
 #include "mappedPatchBase.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -134,8 +134,8 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     scalar Wi = NaN;
     if (property_ != massFraction)
     {
-        const basicSpecieMixture& mixture = composition(db());
-        Wi = mixture.Wi(mixture.species()[YName]);
+        const fluidMulticomponentThermo& thermo = this->thermo(db());
+        Wi = thermo.Wi(thermo.species()[YName]);
     }
 
     // Get the mixture molecular weights, if needed

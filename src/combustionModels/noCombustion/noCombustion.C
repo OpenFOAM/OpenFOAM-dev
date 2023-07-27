@@ -71,7 +71,7 @@ Foam::combustionModels::noCombustion::R(const label speciei) const
     return
         volScalarField::Internal::New
         (
-            typedName("R_" + this->thermo().composition().Y()[speciei].name()),
+            typedName("R_" + this->thermo().Y()[speciei].name()),
             this->mesh(),
             dimensionedScalar(dimDensity/dimTime, 0)
         );

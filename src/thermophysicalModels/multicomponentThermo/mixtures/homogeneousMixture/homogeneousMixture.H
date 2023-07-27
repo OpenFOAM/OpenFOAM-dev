@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,8 @@ SourceFiles
 #ifndef homogeneousMixture_H
 #define homogeneousMixture_H
 
-#include "basicCombustionMixture.H"
+#include "dimensionedTypes.H"
+#include "FieldListSlice.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,44 +49,47 @@ namespace Foam
 
 template<class ThermoType>
 class homogeneousMixture
-:
-    public basicCombustionMixture
 {
-
 public:
 
-    //- The type of thermodynamics this mixture is instantiated for
-    typedef ThermoType thermoType;
+    // Public Typedefs
 
-    //- Mixing type for thermodynamic properties
-    typedef ThermoType thermoMixtureType;
+        //- The type of thermodynamics this mixture is instantiated for
+        typedef ThermoType thermoType;
 
-    //- Mixing type for transport properties
-    typedef ThermoType transportMixtureType;
+        //- Mixing type for thermodynamic properties
+        typedef ThermoType thermoMixtureType;
+
+        //- Mixing type for transport properties
+        typedef ThermoType transportMixtureType;
 
 
 private:
 
+    // Private Enumerations
+
+        //- Specie indices
+        enum species { B };
+
+
     // Private Data
 
-        static const int nSpecies_ = 1;
-        static const char* specieNames_[1];
-
+        //- Reactant thermodynamic model
         thermoType reactants_;
+
+        //- Product thermodynamic model
         thermoType products_;
 
+        //- Mutable storage for the mixed thermodynamic model
         mutable thermoType mixture_;
-
-        //- Regress variable
-        volScalarField& b_;
 
 
 public:
 
     // Constructors
 
-        //- Construct from dictionary, mesh and phase name
-        homogeneousMixture(const dictionary&, const fvMesh&, const word&);
+        //- Construct from a dictionary
+        homogeneousMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
         homogeneousMixture(const homogeneousMixture<ThermoType>&) = delete;
@@ -104,83 +108,42 @@ public:
             return "homogeneousMixture<" + ThermoType::typeName() + '>';
         }
 
+        //- Return the specie names
+        static wordList specieNames()
+        {
+            return {"b"};
+        }
+
+        //- Return the mixture for the given composition
         const thermoType& mixture(const scalar) const;
 
-        const thermoMixtureType& cellThermoMixture(const label celli) const
-        {
-            return mixture(b_[celli]);
-        }
-
-        const transportMixtureType& patchFaceThermoMixture
+        //- Return the mixture for thermodynamic properties
+        const thermoMixtureType& thermoMixture
         (
-            const label patchi,
-            const label facei
-        ) const
-        {
-            return mixture(b_.boundaryField()[patchi][facei]);
-        }
+            const scalarFieldListSlice&
+        ) const;
 
-        const transportMixtureType& cellTransportMixture
+        //- Return the mixture for transport properties
+        const transportMixtureType& transportMixture
         (
-            const label celli
-        ) const
-        {
-            return cellThermoMixture(celli);
-        }
+            const scalarFieldListSlice&
+        ) const;
 
-        const transportMixtureType& patchFaceTransportMixture
+        //- Return the mixture for transport properties
+        const transportMixtureType& transportMixture
         (
-            const label patchi,
-            const label facei
-        ) const
-        {
-            return patchFaceThermoMixture(patchi, facei);
-        }
+            const scalarFieldListSlice&,
+            const thermoMixtureType&
+        ) const;
 
-        const transportMixtureType& cellTransportMixture
-        (
-            const label,
-            const thermoMixtureType& thermoMixture
-        ) const
-        {
-            return thermoMixture;
-        }
+        //- Return the reactant mixture
+        const thermoType& reactants(const scalarFieldListSlice&) const;
 
-        const transportMixtureType& patchFaceTransportMixture
-        (
-            const label,
-            const label,
-            const thermoMixtureType& thermoMixture
-        ) const
-        {
-            return thermoMixture;
-        }
-
-        const thermoType& cellReactants(const label) const
-        {
-            return reactants_;
-        }
-
-        const thermoType& patchFaceReactants(const label, const label) const
-        {
-            return reactants_;
-        }
-
-        const thermoType& cellProducts(const label) const
-        {
-            return products_;
-        }
-
-        const thermoType& patchFaceProducts(const label, const label) const
-        {
-            return products_;
-        }
+        //- Return the product mixture
+        const thermoType& products(const scalarFieldListSlice&) const;
 
         //- Read dictionary
         void read(const dictionary&);
-
-        //- Return thermo based on index
-        const ThermoType& specieThermo(const label speciei) const;
 
 
     // Member Operators

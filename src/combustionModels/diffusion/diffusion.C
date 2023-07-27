@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,12 +79,11 @@ void Foam::combustionModels::diffusion::correct()
 
     const label fuelI = this->fuelIndex();
 
-    const volScalarField& YFuel = this->thermo().composition().Y()[fuelI];
+    const volScalarField& YFuel = this->thermo().Y()[fuelI];
 
-    if (this->thermo().composition().contains(oxidantName_))
+    if (this->thermo().containsSpecie(oxidantName_))
     {
-        const volScalarField& YO2 =
-            this->thermo().composition().Y(oxidantName_);
+        const volScalarField& YO2 = this->thermo().Y(oxidantName_);
 
         this->wFuel_ ==
             C_*this->thermo().rho()*this->turbulence().nuEff()

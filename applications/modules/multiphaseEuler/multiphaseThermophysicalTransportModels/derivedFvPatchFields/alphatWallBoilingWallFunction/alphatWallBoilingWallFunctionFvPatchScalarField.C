@@ -31,7 +31,7 @@ License
 #include "compressibleMomentumTransportModel.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "interfaceSaturationTemperatureModel.H"
-#include "rhoMulticomponentThermo.H"
+#include "rhoFluidMulticomponentThermo.H"
 
 #include "fixedValueFvPatchFields.H"
 #include "zeroGradientFvPatchFields.H"

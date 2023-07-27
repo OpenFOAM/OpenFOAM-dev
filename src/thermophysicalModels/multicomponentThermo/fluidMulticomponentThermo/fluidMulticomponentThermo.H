@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,8 @@ SourceFiles
 #define fluidMulticomponentThermo_H
 
 #include "fluidThermo.H"
-#include "basicSpecieMixture.H"
+#include "multicomponentThermo.H"
+#include "FluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,15 +53,10 @@ namespace Foam
 
 class fluidMulticomponentThermo
 :
-    virtual public fluidThermo
+    virtual public fluidThermo,
+    virtual public multicomponentThermo
 {
 public:
-
-    // Public Classes
-
-        //- Forward declare the implementation class
-        class implementation;
-
 
     //- Runtime type information
     TypeName("fluidMulticomponentThermo");
@@ -93,32 +89,23 @@ public:
 
     // Member Functions
 
-        //- Return the composition of the multi-component mixture
-        virtual basicSpecieMixture& composition() = 0;
+        // Specie transport properties
 
-        //- Return the composition of the multi-component mixture
-        virtual const basicSpecieMixture& composition() const = 0;
-};
+            //- Dynamic viscosity [kg/m/s]
+            virtual scalar mui
+            (
+                const label speciei,
+                const scalar p,
+                const scalar T
+            ) const = 0;
 
-
-/*---------------------------------------------------------------------------*\
-                     Class fluidMulticomponentThermo Declaration
-\*---------------------------------------------------------------------------*/
-
-class fluidMulticomponentThermo::implementation
-:
-    virtual public fluidMulticomponentThermo
-{
-public:
-
-    // Constructors
-
-        //- Construct from mesh and phase name
-        implementation(const fvMesh&, const word& phaseName);
-
-
-    //- Destructor
-    virtual ~implementation();
+            //- Dynamic viscosity [kg/m/s]
+            virtual tmp<volScalarField> mui
+            (
+                const label speciei,
+                const volScalarField& p,
+                const volScalarField& T
+            ) const = 0;
 };
 
 

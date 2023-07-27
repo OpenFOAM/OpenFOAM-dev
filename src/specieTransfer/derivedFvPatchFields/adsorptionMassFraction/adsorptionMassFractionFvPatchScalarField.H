@@ -91,8 +91,6 @@ SourceFiles
 namespace Foam
 {
 
-class basicSpecieMixture;
-
 /*---------------------------------------------------------------------------*\
           Class adsorptionMassFractionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/

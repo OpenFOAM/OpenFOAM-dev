@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::odeChemistryModel::odeChemistryModel
 :
     basicChemistryModel(thermo),
     ODESystem(),
-    Yvf_(this->thermo().composition().Y()),
+    Yvf_(this->thermo().Y()),
     nSpecie_(Yvf_.size()),
     reduction_(false),
     cTos_(nSpecie_, -1),

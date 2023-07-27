@@ -57,15 +57,17 @@ const Foam::NamedEnum
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-const Foam::basicSpecieMixture&
-Foam::specieTransferMassFractionFvPatchScalarField::composition
+const Foam::fluidMulticomponentThermo&
+Foam::specieTransferMassFractionFvPatchScalarField::thermo
 (
     const objectRegistry& db
 )
 {
-    const word& name = physicalProperties::typeName;
-
-    return db.lookupObject<fluidMulticomponentThermo>(name).composition();
+    return
+        db.lookupObject<fluidMulticomponentThermo>
+        (
+            physicalProperties::typeName
+        );
 }
 
 

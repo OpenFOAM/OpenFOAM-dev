@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -288,15 +288,6 @@ public:
                 scalar& deltaT,
                 scalar& subDeltaT
             ) const = 0;
-
-
-        // Mechanism reduction functions
-
-            //- Return true if specie i is active
-            inline bool active(const label i) const;
-
-            //- Set specie i active
-            inline void setActive(const label i);
 
 
     // Member Operators

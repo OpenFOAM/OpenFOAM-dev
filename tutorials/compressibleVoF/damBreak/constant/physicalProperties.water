@@ -28,40 +28,4 @@ mixture
 }
 
 
-/*
-thermoType
-{
-    type            heRhoThermo;
-    mixture         pureMixture;
-    transport       const;
-    thermo          eConst;
-    equationOfState rPolynomial;
-    specie          specie;
-    energy          sensibleInternalEnergy;
-}
-
-mixture
-{
-    specie
-    {
-        molWeight   18.0;
-    }
-    equationOfState
-    {
-        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16);
-    }
-    thermodynamics
-    {
-        Cv          4195;
-        Hf          0;
-    }
-    transport
-    {
-        mu          3.645e-4;
-        Pr          2.289;
-    }
-}
-*/
-
-
 // ************************************************************************* //

@@ -38,7 +38,7 @@ void Foam::solvers::XiFluid::ftSolve
     const fv::convectionScheme<scalar>& mvConvection
 )
 {
-    volScalarField& ft = composition.Y("ft");
+    volScalarField& ft = thermo_.Y("ft");
 
     fvScalarMatrix ftEqn
     (
@@ -569,7 +569,7 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
         )
     );
 
-    if (composition.contains("ft"))
+    if (thermo_.containsSpecie("ft"))
     {
         ftSolve(mvConvection());
     }
