@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,12 +65,9 @@ void Foam::TableFileReader<Type>::read
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::TableFileReader<Type>::TableFileReader
-(
-    const dictionary& dict
-)
+Foam::TableFileReader<Type>::TableFileReader(const dictionary& dict)
 :
-    TableReader<Type>(dict),
+    TableReader<Type>(),
     fName_(dict.lookup("file"))
 {}
 
@@ -83,6 +80,16 @@ Foam::TableFileReader<Type>::~TableFileReader()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::List<Foam::Tuple2<Foam::scalar, Type>>
+Foam::TableFileReader<Type>::read(const dictionary& dict) const
+{
+    List<Tuple2<scalar, Type>> data;
+    read(dict, data);
+    return data;
+}
+
 
 template<class Type>
 void Foam::TableFileReader<Type>::write

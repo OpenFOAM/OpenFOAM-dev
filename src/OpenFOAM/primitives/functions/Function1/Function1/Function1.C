@@ -36,10 +36,10 @@ Foam::Function1<Type>::Function1(const word& name)
 
 
 template<class Type>
-Foam::Function1<Type>::Function1(const Function1<Type>& de)
+Foam::Function1<Type>::Function1(const Function1<Type>& f1)
 :
     tmp<Function1<Type>>::refCount(),
-    name_(de.name_)
+    name_(f1.name_)
 {}
 
 
@@ -82,6 +82,13 @@ template<class Type>
 const Foam::word& Foam::Function1<Type>::name() const
 {
     return name_;
+}
+
+
+template<class Type>
+bool Foam::Function1<Type>::constant() const
+{
+    return false;
 }
 
 

@@ -133,7 +133,7 @@ Foam::label Foam::ThermoLookupTableInjection<CloudType>::nParcelsToInject
             floor
             (
                 injectorCells_.size()
-               *parcelsPerSecond_.integral(time0, time1)
+               *parcelsPerSecond_->integral(time0, time1)
             );
     }
     else

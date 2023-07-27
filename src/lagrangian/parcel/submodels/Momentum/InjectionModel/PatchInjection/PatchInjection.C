@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PatchInjection.H"
-#include "TimeFunction1.H"
 #include "distribution.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -103,7 +102,7 @@ Foam::label Foam::PatchInjection<CloudType>::nParcelsToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        scalar nParcels = parcelsPerSecond_.integral(time0, time1);
+        scalar nParcels = parcelsPerSecond_->integral(time0, time1);
 
         Random& rnd = this->owner().rndGen();
 
@@ -138,7 +137,7 @@ Foam::scalar Foam::PatchInjection<CloudType>::massToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        return massFlowRate_.integral(time0, time1);
+        return massFlowRate_->integral(time0, time1);
     }
     else
     {

@@ -33,7 +33,7 @@ namespace Foam
 {
 namespace Function1s
 {
-    makeScalarFunction1(integratedNonUniformTable);
+    addScalarFunction1(integratedNonUniformTable);
 }
 }
 

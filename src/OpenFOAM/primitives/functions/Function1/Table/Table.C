@@ -145,8 +145,8 @@ Foam::Function1s::Table<Type>::Table
     FieldFunction1<Type, Table<Type>>(name),
     boundsHandling_(boundsHandling),
     interpolationScheme_(interpolationScheme),
-    values_(table),
-    reader_(reader, false)
+    reader_(reader, false),
+    values_(table)
 {}
 
 
@@ -172,8 +172,25 @@ Foam::Function1s::Table<Type>::Table
             linearInterpolationWeights::typeName
         )
     ),
-    values_(),
-    reader_(TableReader<Type>::New(name, dict, this->values_))
+    reader_(TableReader<Type>::New(name, dict)),
+    values_(reader_->read(dict))
+{
+    check();
+}
+
+
+template<class Type>
+Foam::Function1s::Table<Type>::Table
+(
+    const word& name,
+    Istream& is
+)
+:
+    FieldFunction1<Type, Table<Type>>(name),
+    boundsHandling_(tableBase::boundsHandling::clamp),
+    interpolationScheme_(linearInterpolationWeights::typeName),
+    reader_(new TableReaders::Embedded<Type>()),
+    values_(is)
 {
     check();
 }
@@ -185,10 +202,10 @@ Foam::Function1s::Table<Type>::Table(const Table<Type>& tbl)
     FieldFunction1<Type, Table<Type>>(tbl),
     boundsHandling_(tbl.boundsHandling_),
     interpolationScheme_(tbl.interpolationScheme_),
+    reader_(tbl.reader_, false),
     values_(tbl.values_),
     tableSamplesPtr_(tbl.tableSamplesPtr_),
-    interpolatorPtr_(tbl.interpolatorPtr_),
-    reader_(tbl.reader_, false)
+    interpolatorPtr_(tbl.interpolatorPtr_)
 {}
 
 

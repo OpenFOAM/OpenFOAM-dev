@@ -32,7 +32,6 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-
 #ifndef dimensionSets_H
 #define dimensionSets_H
 
@@ -131,6 +130,9 @@ public:
 
 //- Top level dictionary
 dictionary& dimensionSystems();
+
+//- Add a unit
+void addUnit(const dimensionedScalar& unit);
 
 //- Set of all dimensions
 const HashTable<dimensionedScalar>& unitSet();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,21 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "TableReader.H"
+#include "makeTableReaders.H"
 #include "fieldTypes.H"
-#include "EmbeddedTableReader.H"
-#include "FoamTableReader.H"
-#include "CsvTableReader.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    makeTableReaders(scalar);
-    makeTableReaders(vector);
-    makeTableReaders(sphericalTensor);
-    makeTableReaders(symmTensor);
-    makeTableReaders(tensor);
+    FOR_ALL_FIELD_TYPES(makeTableReaders);
 }
 
 // ************************************************************************* //

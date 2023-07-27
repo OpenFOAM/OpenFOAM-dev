@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,8 @@ class TableFileReader
 
 protected:
 
+    // Protected Member Functions
+
         //- Read a 1D table
         void read(const dictionary& dict, List<Tuple2<scalar, Type>>&) const;
 
@@ -82,6 +84,9 @@ public:
 
 
     // Member Functions
+
+        //- Read values
+        virtual List<Tuple2<scalar, Type>> read(const dictionary& dict) const;
 
         //- Write additional information
         virtual void write

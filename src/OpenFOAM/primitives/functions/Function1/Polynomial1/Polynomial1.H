@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,8 +70,11 @@ class Polynomial
         //- Polynomial coefficients - list of prefactor, exponent
         List<Tuple2<Type, Type>> coeffs_;
 
-        //- Flag to indicate whether poly can be integrald
-        bool canIntegrate_;
+        //- Flag to indicate whether the function can be integrated
+        bool integrable_;
+
+
+    // Private member functions
 
 
 public:
@@ -82,15 +85,18 @@ public:
 
     // Constructors
 
-        //- Construct from name and dictionary
-        Polynomial(const word& name, const dictionary& dict);
-
         //- Construct from components
         Polynomial
         (
             const word& name,
             const List<Tuple2<Type, Type>>&
         );
+
+        //- Construct from name and dictionary
+        Polynomial(const word& name, const dictionary& dict);
+
+        //- Construct from name and Istream
+        Polynomial(const word& name, Istream& is);
 
         //- Copy constructor
         Polynomial(const Polynomial& poly);

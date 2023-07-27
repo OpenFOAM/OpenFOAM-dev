@@ -35,10 +35,10 @@ Foam::Function2<Type>::Function2(const word& name)
 
 
 template<class Type>
-Foam::Function2<Type>::Function2(const Function2<Type>& de)
+Foam::Function2<Type>::Function2(const Function2<Type>& f2)
 :
     tmp<Function2<Type>>::refCount(),
-    name_(de.name_)
+    name_(f2.name_)
 {}
 
 

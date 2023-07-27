@@ -36,6 +36,7 @@ namespace Foam
 // the controlDict subDict (v.s. a reference to the subDict for e.g.
 // dimensionedConstants)
 dictionary* dimensionSystemsPtr_(nullptr);
+HashTable<dimensionedScalar>* addedUnitsPtr_(nullptr);
 HashTable<dimensionedScalar>* unitSetPtr_(nullptr);
 dimensionSets* writeUnitSetPtr_(nullptr);
 
@@ -71,6 +72,20 @@ Foam::dictionary& Foam::dimensionSystems()
         );
     }
     return *dimensionSystemsPtr_;
+}
+
+
+void Foam::addUnit(const dimensionedScalar& unit)
+{
+    deleteDemandDrivenData(unitSetPtr_);
+    deleteDemandDrivenData(writeUnitSetPtr_);
+
+    if (!addedUnitsPtr_)
+    {
+        addedUnitsPtr_ = new HashTable<dimensionedScalar>();
+    }
+
+    addedUnitsPtr_->insert(unit.name(), unit);
 }
 
 
@@ -113,6 +128,14 @@ const Foam::HashTable<Foam::dimensionedScalar>& Foam::unitSet()
                         << " in DimensionSets dictionary"
                         << exit(FatalIOError);
                 }
+            }
+        }
+
+        if (addedUnitsPtr_)
+        {
+            forAllConstIter(HashTable<dimensionedScalar>, *addedUnitsPtr_, iter)
+            {
+                unitSetPtr_->insert(iter.key(), iter());
             }
         }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,7 @@ void Foam::Function1s::Sine<Type>::read(const dictionary& dict)
     start_ = dict.lookupOrDefault<scalar>("start", 0);
     level_ = Function1<Type>::New("level", dict);
 
-    integrable_ =
-        isA<Constant<Type>>(amplitude_())
-     && isA<Constant<Type>>(level_());
+    integrable_ = amplitude_->constant() && level_->constant();
 }
 
 

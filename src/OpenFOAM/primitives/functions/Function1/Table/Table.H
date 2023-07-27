@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,8 +129,11 @@ class Table
         //- Interpolation scheme
         const word interpolationScheme_;
 
+        //- Table reader
+        const autoPtr<TableReader<Type>> reader_;
+
         //- Table data
-        List<Tuple2<scalar, Type>> values_;
+        const List<Tuple2<scalar, Type>> values_;
 
         //- Extracted values
         mutable autoPtr<scalarField> tableSamplesPtr_;
@@ -143,9 +146,6 @@ class Table
 
         //- Cached weights
         mutable scalarField weights_;
-
-        //- Table reader
-        const autoPtr<TableReader<Type>> reader_;
 
 
     // Private Member Functions
@@ -183,6 +183,9 @@ public:
         //- Construct from name and dictionary
         Table(const word& name, const dictionary& dict);
 
+        //- Construct from name and Istream
+        Table(const word& name, Istream& dict);
+
         //- Copy constructor
         Table(const Table<Type>& tbl);
 
@@ -203,12 +206,6 @@ public:
         const word& interpolationScheme() const
         {
             return interpolationScheme_;
-        }
-
-        //- Return the reader
-        const autoPtr<TableReader<Type>>& reader() const
-        {
-            return reader_;
         }
 
         //- Return table data

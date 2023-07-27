@@ -66,7 +66,7 @@ class Function1
 
 protected:
 
-    // Protected data
+    // Protected Data
 
         //- Name of entry
         const word name_;
@@ -76,21 +76,36 @@ public:
 
     typedef Type returnType;
 
+
     //- Runtime type information
     TypeName("Function1");
 
-    //- Declare runtime constructor selection table
-    declareRunTimeSelectionTable
-    (
-        autoPtr,
-        Function1,
-        dictionary,
+
+    // Declare runtime constructor selection tables
+
+        declareRunTimeSelectionTable
         (
-            const word& name,
-            const dictionary& dict
-        ),
-        (name, dict)
-    );
+            autoPtr,
+            Function1,
+            dictionary,
+            (
+                const word& name,
+                const dictionary& dict
+            ),
+            (name, dict)
+        );
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            Function1,
+            Istream,
+            (
+                const word& name,
+                Istream& is
+            ),
+            (name, is)
+        );
 
 
     // Constructors
@@ -105,12 +120,22 @@ public:
         virtual tmp<Function1<Type>> clone() const = 0;
 
 
-    //- Selector
-    static autoPtr<Function1<Type>> New
-    (
-        const word& name,
-        const dictionary& dict
-    );
+    // Selectors
+
+        //- Select from dictionary
+        static autoPtr<Function1<Type>> New
+        (
+            const word& name,
+            const dictionary& dict
+        );
+
+        //- Select from Istream
+        static autoPtr<Function1<Type>> New
+        (
+            const word& name,
+            const word& Function1Type,
+            Istream& is
+        );
 
 
     //- Destructor
@@ -138,6 +163,9 @@ public:
             const scalarField& x2
         ) const = 0;
 
+        //- Is this function guaranteed to be constant?
+        virtual bool constant() const;
+
         //- Write data to dictionary stream
         virtual void write(Ostream& os) const = 0;
 
@@ -150,12 +178,12 @@ public:
 
     // IOstream Operators
 
-            //- Ostream Operator
-            friend Ostream& operator<< <Type>
-            (
-                Ostream& os,
-                const Function1<Type>& func
-            );
+        //- Ostream Operator
+        friend Ostream& operator<< <Type>
+        (
+            Ostream& os,
+            const Function1<Type>& func
+        );
 };
 
 
@@ -214,13 +242,14 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeFunction1(Type)                                                    \
+#define defineFunction1(Type)                                                  \
                                                                                \
     defineNamedTemplateTypeNameAndDebug(Function1<Type>, 0);                   \
-    defineTemplateRunTimeSelectionTable(Function1<Type>, dictionary);
+    defineTemplateRunTimeSelectionTable(Function1<Type>, dictionary);          \
+    defineTemplateRunTimeSelectionTable(Function1<Type>, Istream);
 
 
-#define makeFunction1Type(SS, Type)                                            \
+#define addFunction1(SS, Type)                                                 \
                                                                                \
     defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                          \
     typedef Function1<Type> Type##Function1;                                   \
@@ -233,7 +262,18 @@ public:
     )
 
 
-#define makeNamedFunction1Type(SS, Type, Name)                                 \
+#define addStreamConstructableFunction1(SS, Type)                              \
+                                                                               \
+    addFunction1(SS, Type);                                                    \
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        Type##Function1,                                                       \
+        Type##SS##Function1,                                                   \
+        Istream                                                                \
+    )
+
+
+#define addNamedFunction1(SS, Type, Name)                                      \
                                                                                \
     typedef Function1<Type> Type##Function1;                                   \
     typedef SS<Type> Type##SS##Function1;                                      \
@@ -246,40 +286,11 @@ public:
     )
 
 
-#define makeScalarFunction1(SS)                                                \
+#define addScalarFunction1(SS)                                                 \
                                                                                \
     defineTypeNameAndDebug(SS, 0);                                             \
     typedef Function1<scalar> scalarFunction1;                                 \
     addToRunTimeSelectionTable(scalarFunction1, SS, dictionary)
-
-
-#define makeFunction1s(Type, nullArg)                                          \
-                                                                               \
-    template<>                                                                 \
-    const char* const Foam::Tuple2<Foam::scalar, Type>::typeName               \
-    (                                                                          \
-        "Tuple2<scalar," #Type ">"                                             \
-    );                                                                         \
-                                                                               \
-    makeFunction1(Type);                                                       \
-                                                                               \
-    namespace Function1s                                                       \
-    {                                                                          \
-        makeFunction1Type(None, Type);                                         \
-        makeFunction1Type(Constant, Type);                                     \
-        makeFunction1Type(Uniform, Type);                                      \
-        makeFunction1Type(ZeroConstant, Type);                                 \
-        makeFunction1Type(OneConstant, Type);                                  \
-        makeFunction1Type(Polynomial, Type);                                   \
-        makeFunction1Type(Sine, Type);                                         \
-        makeFunction1Type(Square, Type);                                       \
-        makeFunction1Type(Table, Type);                                        \
-        makeFunction1Type(UniformTable, Type);                                 \
-        makeFunction1Type(NonUniformTable, Type);                              \
-        makeNamedFunction1Type(Table, Type, tableFile);                        \
-        makeFunction1Type(Scale, Type);                                        \
-        makeFunction1Type(Coded, Type);                                        \
-    }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -48,7 +48,6 @@ SourceFiles
 
 #include "InjectionModel.H"
 #include "patchInjectionBase.H"
-#include "TimeFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,7 +78,7 @@ class PatchFlowRateInjection
         const scalar duration_;
 
         //- Concentration profile of particle volume to carrier volume [-]
-        const TimeFunction1<scalar> concentration_;
+        autoPtr<Function1<scalar>> concentration_;
 
         //- Parcels to introduce per unit volume flow rate m3 [n/m^3]
         const scalar parcelConcentration_;

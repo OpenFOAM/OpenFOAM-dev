@@ -23,33 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "None.H"
-#include "Constant.H"
-#include "Uniform.H"
-#include "ZeroConstant.H"
-#include "OneConstant.H"
-#include "Polynomial1.H"
-#include "Sine.H"
-#include "Square.H"
-#include "Table.H"
-#include "UniformTable1.H"
-#include "NonUniformTable1.H"
-#include "Scale.H"
-#include "CodedFunction1.H"
-
+#include "makeFunction1s.H"
 #include "fieldTypes.H"
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    makeFunction1(label);
+    defineFunction1(label);
 
     namespace Function1s
     {
-        makeFunction1Type(None, label);
-        makeFunction1Type(Constant, label);
+        addFunction1(None, label);
+        addFunction1(Constant, label);
     }
 
     FOR_ALL_FIELD_TYPES(makeFunction1s);

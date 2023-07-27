@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,10 @@ Foam::Function1s::NonUniformTable<Type>::NonUniformTable
     high_(-great),
     values_(),
     delta_(great),
-    reader_(TableReader<Type>::New(name, dict, this->values_))
+    reader_(TableReader<Type>::New(name, dict))
 {
+    values_ = reader_->read(dict);
+
     if (values_.size() < 2)
     {
         FatalIOErrorInFunction(dict)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,26 +47,8 @@ Foam::Function2s::Constant<Type>::Constant
 )
 :
     FieldFunction2<Type, Constant<Type>>(name),
-    value_(Zero)
-{
-    if (!dict.found(name))
-    {
-        dict.lookup("value") >> value_;
-    }
-    else
-    {
-        Istream& is(dict.lookup(name));
-        word entryType(is);
-        if (is.eof())
-        {
-            dict.lookup("value") >> value_;
-        }
-        else
-        {
-            is  >> value_;
-        }
-    }
-}
+    value_(dict.lookup<Type>("value"))
+{}
 
 
 template<class Type>

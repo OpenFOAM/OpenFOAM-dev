@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,13 @@ inline Type Foam::Function1s::Constant<Type>::integral
 ) const
 {
     return (x2 - x1)*value_;
+}
+
+
+template<class Type>
+inline bool Foam::Function1s::Constant<Type>::constant() const
+{
+    return true;
 }
 
 

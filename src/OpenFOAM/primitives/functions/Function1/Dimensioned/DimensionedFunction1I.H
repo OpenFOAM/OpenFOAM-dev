@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,49 +23,71 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Scale.H"
+#include "DimensionedFunction1.H"
+#include "dimensionedType.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-inline Type Foam::Function1s::Scale<Type>::value(const scalar x) const
+inline Type Foam::Function1s::Dimensioned<Type>::value(const scalar x) const
 {
-    const scalar sx = xScale_->value(x)*x;
-    return scale_->value(sx)*value_->value(sx);
+    return
+        value_->value(x/xUnits_.value())
+       *units_.value();
 }
 
 
 template<class Type>
-inline Type Foam::Function1s::Scale<Type>::integral
+inline Type Foam::Function1s::Dimensioned<Type>::integral
 (
     const scalar x1,
     const scalar x2
 ) const
 {
-    if (integrableScale_)
-    {
-        const scalar sx = xScale_->value(NaN);
-        return scale_->value(NaN)*value_->integral(sx*x1, sx*x2)/sx;
-    }
-
-    if (integrableValue_)
-    {
-        const scalar sx = xScale_->value(NaN);
-        return scale_->integral(sx*x1, sx*x2)/sx*value_->value(NaN);
-    }
-
-    FatalErrorInFunction
-        << "Integration is not defined for " << type() << " functions "
-        << "unless x-scaling is constant and either scaling is constant or "
-        << "the value is constant"
-        << exit(FatalError);
-
-    return Zero;
+    return
+        value_->integral(x1/xUnits_.value(), x2/xUnits_.value())
+       *xUnits_.value()*units_.value();
 }
 
 
 template<class Type>
-inline bool Foam::Function1s::Scale<Type>::constant() const
+inline Foam::dimensioned<Type> Foam::Function1s::Dimensioned<Type>::value
+(
+    const dimensionedScalar& x
+) const
+{
+    x.dimensions() = xUnits_.dimensions();
+
+    return
+        dimensioned<Type>
+        (
+            units_.dimensions(),
+            value(x.value())
+        );
+}
+
+
+template<class Type>
+inline Foam::dimensioned<Type> Foam::Function1s::Dimensioned<Type>::integral
+(
+    const dimensionedScalar& x1,
+    const dimensionedScalar& x2
+) const
+{
+    x1.dimensions() = xUnits_.dimensions();
+    x2.dimensions() = xUnits_.dimensions();
+
+    return
+        dimensioned<Type>
+        (
+            units_.dimensions()*xUnits_.dimensions(),
+            integral(x1.value(), x2.value())
+        );
+}
+
+
+template<class Type>
+inline bool Foam::Function1s::Dimensioned<Type>::constant() const
 {
     return value_->constant();
 }

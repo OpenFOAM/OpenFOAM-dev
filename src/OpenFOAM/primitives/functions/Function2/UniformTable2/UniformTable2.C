@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,8 +125,7 @@ Type Foam::Function2s::UniformTable<Type>::value
 
 
 template<class Type>
-Type Foam::Function2s::UniformTable<Type>::
-dfdp
+Type Foam::Function2s::UniformTable<Type>::dfdp
 (
     scalar p,
     scalar T
@@ -154,8 +153,7 @@ dfdp
 
 
 template<class Type>
-Type Foam::Function2s::UniformTable<Type>::
-dfdT
+Type Foam::Function2s::UniformTable<Type>::dfdT
 (
     scalar p,
     scalar T

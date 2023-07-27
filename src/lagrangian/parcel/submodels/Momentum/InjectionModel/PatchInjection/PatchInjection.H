@@ -47,15 +47,13 @@ SourceFiles
 #define PatchInjection_H
 
 #include "InjectionModel.H"
+#include "Function1.H"
 #include "patchInjectionBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-template<class Type>
-class TimeFunction1;
 
 class distribution;
 
@@ -74,11 +72,11 @@ class PatchInjection
         //- Injection duration [s]
         const scalar duration_;
 
-        //- Mass flow rate relative to SOI []
-        const TimeFunction1<scalar> massFlowRate_;
+        //- Mass flow rate relative to SOI [kg/s]
+        autoPtr<Function1<scalar>> massFlowRate_;
 
-        //- Number of parcels to introduce per second []
-        const TimeFunction1<scalar> parcelsPerSecond_;
+        //- Number of parcels to introduce per second [1/s]
+        autoPtr<Function1<scalar>> parcelsPerSecond_;
 
         //- Initial parcel velocity [m/s]
         const vector U0_;

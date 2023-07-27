@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,8 +204,7 @@ template<class Type>
 Foam::TableReaders::Csv<Type>::Csv
 (
     const word& name,
-    const dictionary& dict,
-    List<Tuple2<scalar, Type>>& table
+    const dictionary& dict
 )
 :
     TableFileReader<Type>(dict),
@@ -222,8 +221,6 @@ Foam::TableReaders::Csv<Type>::Csv
             << pTraits<Type>::nComponents << endl
             << exit(FatalError);
     }
-
-    TableFileReader<Type>::read(dict, table);
 }
 
 

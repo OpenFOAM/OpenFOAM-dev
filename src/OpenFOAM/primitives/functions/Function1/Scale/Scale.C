@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,13 +37,8 @@ void Foam::Function1s::Scale<Type>::read(const dictionary& dict)
       : autoPtr<Function1<scalar>>(new Constant<scalar>("xScale", 1));
     value_ = Function1<Type>::New("value", dict);
 
-    integrableScale_ =
-        isA<Constant<scalar>>(xScale_())
-     && isA<Constant<scalar>>(scale_());
-
-    integrableValue_ =
-        isA<Constant<scalar>>(xScale_())
-     && isA<Constant<Type>>(value_());
+    integrableScale_ = xScale_->constant() && scale_->constant();
+    integrableValue_ = xScale_->constant() && value_->constant();
 }
 
 
@@ -62,16 +57,8 @@ Foam::Function1s::Scale<Type>::Scale
     scale_(scale.clone().ptr()),
     xScale_(xScale.clone().ptr()),
     value_(value.clone().ptr()),
-    integrableScale_
-    (
-        isA<Constant<scalar>>(xScale_())
-     && isA<Constant<scalar>>(scale_())
-    ),
-    integrableValue_
-    (
-        isA<Constant<scalar>>(xScale_())
-     && isA<Constant<Type>>(value_())
-    )
+    integrableScale_(xScale_->constant() && scale_->constant()),
+    integrableValue_(xScale_->constant() && value_->constant())
 {}
 
 

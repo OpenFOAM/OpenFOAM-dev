@@ -78,7 +78,7 @@ class ThermoLookupTableInjection
         const scalar duration_;
 
         //- Number of parcels per injector - common to all injection sources
-        const TimeFunction1<scalar> parcelsPerSecond_;
+        autoPtr<Function1<scalar>> parcelsPerSecond_;
 
         //- Flag to indicate to randomise injection positions
         bool randomise_;

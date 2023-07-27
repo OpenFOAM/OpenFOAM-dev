@@ -62,7 +62,7 @@ Foam::scalar Foam::InjectionModel<CloudType>::readMassTotal
         return NaN;
     }
 
-    return dict.lookup<scalar>("massTotal");
+    return dimensionedScalar("massTotal", dimMass, dict).value();
 }
 
 
@@ -73,23 +73,17 @@ Foam::scalar Foam::InjectionModel<CloudType>::readDuration
     CloudType& owner
 )
 {
-    const Time& time = owner.mesh().time();
-
     if (owner.solution().steadyState())
     {
         return vGreat;
     }
 
-    return
-        time.userTimeToTime
-        (
-            this->coeffDict().template lookup<scalar>("duration")
-        );
+    return dimensionedScalar("duration", dimTime, dict).value();
 }
 
 
 template<class CloudType>
-Foam::TimeFunction1<Foam::scalar>
+Foam::autoPtr<Foam::Function1<Foam::scalar>>
 Foam::InjectionModel<CloudType>::readMassFlowRate
 (
     const dictionary& dict,
@@ -97,8 +91,6 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
     const scalar duration
 )
 {
-    const Time& time = owner.mesh().time();
-
     const bool haveMassFlowRate = dict.found("massFlowRate");
     const bool haveMassTotal = dict.found("massTotal");
 
@@ -112,10 +104,9 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
         }
 
         return
-            TimeFunction1<scalar>
+            autoPtr<Function1<scalar>>
             (
-                time,
-                Function1s::Constant<scalar>("NaN", NaN)
+                new Function1s::Constant<scalar>("NaN", NaN)
             );
     }
 
@@ -135,32 +126,52 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
 
     if (owner.solution().steadyState() || haveMassFlowRate)
     {
-        return TimeFunction1<scalar>(time, "massFlowRate", dict);
+        return
+            autoPtr<Function1<scalar>>
+            (
+                new Function1s::Dimensioned<scalar>
+                (
+                    "massFlowRate",
+                    dimTime,
+                    dimMass/dimTime,
+                    dict
+                )
+            );
     }
 
-    const scalar massTotal = dict.lookup<scalar>("massTotal");
+    const scalar massTotal =
+        dimensionedScalar("massTotal", dimMass, dict).value();
 
     if (!dict.found("flowRateProfile"))
     {
         return
-            TimeFunction1<scalar>
+            autoPtr<Function1<scalar>>
             (
-                time,
-                Function1s::Constant<scalar>("massFlowRate", massTotal/duration)
+                new Function1s::Constant<scalar>
+                (
+                    "massFlowRate",
+                    massTotal/duration
+                )
             );
     }
 
-    autoPtr<Function1<scalar>> flowRateProfile =
-        Function1<scalar>::New("flowRateProfile", dict);
+    autoPtr<Function1<scalar>> flowRateProfile
+    (
+        new Function1s::Dimensioned<scalar>
+        (
+            "flowRateProfile",
+            dimTime,
+            dimless,
+            dict
+        )
+    );
 
-    const scalar sumFlowRateProfile =
-        TimeFunction1<scalar>(time, flowRateProfile).integral(0, duration);
+    const scalar sumFlowRateProfile = flowRateProfile->integral(0, duration);
 
     return
-        TimeFunction1<scalar>
+        autoPtr<Function1<scalar>>
         (
-            time,
-            Function1s::Scale<scalar>
+            new Function1s::Scale<scalar>
             (
                 "massFlowRate",
                 Function1s::Constant<scalar>("m", massTotal/sumFlowRateProfile),
@@ -172,16 +183,24 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
 
 
 template<class CloudType>
-Foam::TimeFunction1<Foam::scalar>
+Foam::autoPtr<Foam::Function1<Foam::scalar>>
 Foam::InjectionModel<CloudType>::readParcelsPerSecond
 (
     const dictionary& dict,
     CloudType& owner
 )
 {
-    const Time& time = owner.mesh().time();
-
-    return TimeFunction1<scalar>(time, "parcelsPerSecond", dict);
+    return
+        autoPtr<Function1<scalar>>
+        (
+            new Function1s::Dimensioned<scalar>
+            (
+                "parcelsPerSecond",
+                dimTime,
+                dimless/dimTime,
+                dict
+            )
+        );
 }
 
 
@@ -515,11 +534,7 @@ Foam::InjectionModel<CloudType>::InjectionModel
 
     if (owner.solution().transient())
     {
-        SOI_ =
-            owner.db().time().userTimeToTime
-            (
-                this->coeffDict().template lookup<scalar>("SOI")
-            );
+        SOI_ = dimensionedScalar("SOI", dimTime, dict).value();
     }
 }
 

@@ -76,21 +76,36 @@ public:
 
     typedef Type returnType;
 
+
     //- Runtime type information
     TypeName("Function2");
 
-    //- Declare runtime constructor selection table
-    declareRunTimeSelectionTable
-    (
-        autoPtr,
-        Function2,
-        dictionary,
+
+    // Declare runtime constructor selection tables
+
+        declareRunTimeSelectionTable
         (
-            const word& name,
-            const dictionary& dict
-        ),
-        (name, dict)
-    );
+            autoPtr,
+            Function2,
+            dictionary,
+            (
+                const word& name,
+                const dictionary& dict
+            ),
+            (name, dict)
+        );
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            Function2,
+            Istream,
+            (
+                const word& name,
+                Istream& is
+            ),
+            (name, is)
+        );
 
 
     // Constructors
@@ -99,18 +114,28 @@ public:
         Function2(const word& name);
 
         //- Copy constructor
-        Function2(const Function2<Type>& f1);
+        Function2(const Function2<Type>& f2);
 
         //- Construct and return a clone
         virtual tmp<Function2<Type>> clone() const = 0;
 
 
-    //- Selector
-    static autoPtr<Function2<Type>> New
-    (
-        const word& name,
-        const dictionary& dict
-    );
+    // Selectors
+
+        //- Select from dictionary
+        static autoPtr<Function2<Type>> New
+        (
+            const word& name,
+            const dictionary& dict
+        );
+
+        //- Select from Istream
+        static autoPtr<Function2<Type>> New
+        (
+            const word& name,
+            const word& Function2Type,
+            Istream& is
+        );
 
 
     //- Destructor
@@ -154,7 +179,7 @@ public:
 
 
 template<class Type>
-void writeEntry(Ostream& os, const Function2<Type>& f1);
+void writeEntry(Ostream& os, const Function2<Type>& f2);
 
 
 /*---------------------------------------------------------------------------*\
@@ -202,13 +227,14 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeFunction2(Type)                                                    \
+#define defineFunction2(Type)                                                  \
                                                                                \
     defineNamedTemplateTypeNameAndDebug(Function2<Type>, 0);                   \
-    defineTemplateRunTimeSelectionTable(Function2<Type>, dictionary);
+    defineTemplateRunTimeSelectionTable(Function2<Type>, dictionary);          \
+    defineTemplateRunTimeSelectionTable(Function2<Type>, Istream);
 
 
-#define makeFunction2Type(SS, Type)                                            \
+#define addFunction2(SS, Type)                                                 \
                                                                                \
     defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                          \
     typedef Function2<Type> Type##Function2;                                   \
@@ -221,7 +247,18 @@ public:
     )
 
 
-#define makeScalarFunction2(SS)                                                \
+#define addStreamConstructableFunction2(SS, Type)                              \
+                                                                               \
+    addFunction2(SS, Type);                                                    \
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        Type##Function2,                                                       \
+        Type##SS##Function2,                                                   \
+        Istream                                                                \
+    )
+
+
+#define addScalarFunction2(SS)                                                 \
                                                                                \
     defineTypeNameAndDebug(SS, 0);                                             \
     typedef Function2<scalar> scalarFunction2;                                 \

@@ -32,7 +32,7 @@ namespace Foam
 {
 namespace Function1s
 {
-    makeScalarFunction1(NSRDS6);
+    addScalarFunction1(NSRDS6);
 }
 }
 

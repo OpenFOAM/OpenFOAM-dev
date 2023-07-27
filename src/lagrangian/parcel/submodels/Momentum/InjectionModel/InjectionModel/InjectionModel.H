@@ -36,8 +36,7 @@ Description
     populated using values supplied in the constant properties.
 
     If, however, all of a parcel's properties are described in the model, the
-    fullDescribed() flag should be set to 1 (true).
-
+    fullyDescribed() flag should be set to 1 (true).
 
 SourceFiles
     InjectionModel.C
@@ -51,7 +50,7 @@ SourceFiles
 #include "injectionModel.H"
 #include "CloudSubModelBase.H"
 #include "particle.H"
-#include "TimeFunction1.H"
+#include "DimensionedFunction1.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -130,7 +129,7 @@ protected:
         );
 
         //- Read the mass flow rate function for continuous injections
-        TimeFunction1<scalar> readMassFlowRate
+        autoPtr<Function1<scalar>> readMassFlowRate
         (
             const dictionary& dict,
             CloudType& owner,
@@ -139,7 +138,7 @@ protected:
 
         //- Read the number of parcels injected per second for continuous
         //  injections
-        TimeFunction1<scalar> readParcelsPerSecond
+        autoPtr<Function1<scalar>> readParcelsPerSecond
         (
             const dictionary& dict,
             CloudType& owner

@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PatchFlowRateInjection.H"
-#include "TimeFunction1.H"
 #include "distribution.H"
 #include "mathematicalConstants.H"
 #include "surfaceFields.H"
@@ -46,10 +45,11 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
     duration_(this->readDuration(dict, owner)),
     concentration_
     (
-        TimeFunction1<scalar>
+        new Function1s::Dimensioned<scalar>
         (
-            owner.db().time(),
             "concentration",
+            dimTime,
+            dimless,
             this->coeffDict()
         )
     ),
@@ -150,7 +150,7 @@ Foam::label Foam::PatchFlowRateInjection<CloudType>::nParcelsToInject
     {
         scalar dt = time1 - time0;
 
-        scalar c = concentration_.value(0.5*(time0 + time1));
+        scalar c = concentration_->value(0.5*(time0 + time1));
 
         scalar nParcels = parcelConcentration_*c*flowRate()*dt;
 
@@ -189,7 +189,7 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::massToInject
 
     if (time0 >= 0 && time0 < duration_)
     {
-        scalar c = concentration_.value(0.5*(time0 + time1));
+        scalar c = concentration_->value(0.5*(time0 + time1));
 
         volume = c*(time1 - time0)*flowRate();
     }

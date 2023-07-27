@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,32 +31,13 @@ template<class Type>
 Foam::Function1s::Polynomial<Type>::Polynomial
 (
     const word& name,
-    const dictionary& dict
+    const List<Tuple2<Type, Type>>& coeffs
 )
 :
     FieldFunction1<Type, Polynomial<Type>>(name),
-    coeffs_(),
-    canIntegrate_(true)
+    coeffs_(coeffs),
+    integrable_(true)
 {
-    if (!dict.found(name))
-    {
-        dict.lookup("coeffs") >> coeffs_;
-    }
-    else
-    {
-        Istream& is(dict.lookup(name));
-        word entryType(is);
-
-        if (is.eof())
-        {
-            dict.lookup("coeffs") >> coeffs_;
-        }
-        else
-        {
-            is  >> coeffs_;
-        }
-    }
-
     if (!coeffs_.size())
     {
         FatalErrorInFunction
@@ -68,14 +49,14 @@ Foam::Function1s::Polynomial<Type>::Polynomial
     {
         if (mag(coeffs_[i].second() + pTraits<Type>::one) < rootVSmall)
         {
-            canIntegrate_ = false;
+            integrable_ = false;
             break;
         }
     }
 
     if (debug)
     {
-        if (!canIntegrate_)
+        if (!integrable_)
         {
             WarningInFunction
                 << "Polynomial " << this->name_ << " cannot be integrald"
@@ -89,39 +70,22 @@ template<class Type>
 Foam::Function1s::Polynomial<Type>::Polynomial
 (
     const word& name,
-    const List<Tuple2<Type, Type>>& coeffs
+    const dictionary& dict
 )
 :
-    FieldFunction1<Type, Polynomial<Type>>(name),
-    coeffs_(coeffs),
-    canIntegrate_(true)
-{
-    if (!coeffs_.size())
-    {
-        FatalErrorInFunction
-            << "Polynomial coefficients for entry " << this->name_
-            << " are invalid (empty)" << nl << exit(FatalError);
-    }
+    Polynomial<Type>(name, dict.lookup("coeffs"))
+{}
 
-    forAll(coeffs_, i)
-    {
-        if (mag(coeffs_[i].second() + 1) < rootVSmall)
-        {
-            canIntegrate_ = false;
-            break;
-        }
-    }
 
-    if (debug)
-    {
-        if (!canIntegrate_)
-        {
-            WarningInFunction
-                << "Polynomial " << this->name_ << " cannot be integrald"
-                << endl;
-        }
-    }
-}
+template<class Type>
+Foam::Function1s::Polynomial<Type>::Polynomial
+(
+    const word& name,
+    Istream& is
+)
+:
+    Polynomial<Type>(name, List<Tuple2<Type, Type>>(is))
+{}
 
 
 template<class Type>
@@ -129,7 +93,7 @@ Foam::Function1s::Polynomial<Type>::Polynomial(const Polynomial& poly)
 :
     FieldFunction1<Type, Polynomial<Type>>(poly),
     coeffs_(poly.coeffs_),
-    canIntegrate_(poly.canIntegrate_)
+    integrable_(poly.integrable_)
 {}
 
 
@@ -168,7 +132,7 @@ Type Foam::Function1s::Polynomial<Type>::integral
 {
     Type intx(Zero);
 
-    if (canIntegrate_)
+    if (integrable_)
     {
         forAll(coeffs_, i)
         {

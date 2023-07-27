@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,7 @@ Foam::userTimes::engine::engine(const dictionary& controlDict)
     rpm_("rpm", dimless/dimTime, 0)
 {
     read(controlDict);
+    addUnit(dimensionedScalar(unit(), dimTime, userTimeToTime(1)));
 }
 
 
@@ -87,6 +88,7 @@ Foam::word Foam::userTimes::engine::unit() const
 bool Foam::userTimes::engine::read(const dictionary& controlDict)
 {
     rpm_.read(dict(controlDict));
+    addUnit(dimensionedScalar(unit(), dimTime, userTimeToTime(1)));
     return true;
 }
 

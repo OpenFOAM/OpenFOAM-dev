@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,6 +201,9 @@ public:
 
         //- Integrate between two values
         virtual inline Type integral(const scalar x1, const scalar x2) const;
+
+        //- Is this function guaranteed to be constant?
+        virtual inline bool constant() const;
 
         //- Write data to dictionary stream
         virtual void write(Ostream& os) const;

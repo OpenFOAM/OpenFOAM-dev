@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,13 +77,8 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary
-        Foam
-        (
-            const word& name,
-            const dictionary &dict,
-            List<Tuple2<scalar, Type>>& table
-        );
+        //- Construct from name and dictionary
+        Foam(const word& name, const dictionary& dict);
 
         //- Construct and return a copy
         virtual autoPtr<TableReader<Type>> clone() const

@@ -145,7 +145,7 @@ SourceFiles
 
 #include "InjectionModel.H"
 #include "distribution.H"
-#include "TimeFunction1.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -190,13 +190,10 @@ private:
         flowType flowType_;
 
         //- Position of the injector
-        const TimeFunction1<vector> position_;
-
-        //- Is the position constant?
-        const bool positionIsConstant_;
+        const autoPtr<Function1<vector>> position_;
 
         //- Centreline direction in which to inject
-        const TimeFunction1<vector> direction_;
+        const autoPtr<Function1<vector>> direction_;
 
         //- Coordinates corresponding to the injector position
         barycentric injectorCoordinates_;
@@ -214,16 +211,16 @@ private:
         const scalar duration_;
 
         //- Mass flow rate relative to SOI []
-        const TimeFunction1<scalar> massFlowRate_;
+        const autoPtr<Function1<scalar>> massFlowRate_;
 
         //- Number of parcels to introduce per second
-        const TimeFunction1<scalar> parcelsPerSecond_;
+        const autoPtr<Function1<scalar>> parcelsPerSecond_;
 
         //- Inner half-cone angle relative to SOI [deg]
-        const TimeFunction1<scalar> thetaInner_;
+        const autoPtr<Function1<scalar>> thetaInner_;
 
         //- Outer half-cone angle relative to SOI [deg]
-        const TimeFunction1<scalar> thetaOuter_;
+        const autoPtr<Function1<scalar>> thetaOuter_;
 
         //- Parcel size distribution model
         const autoPtr<distribution> sizeDistribution_;
@@ -241,13 +238,13 @@ private:
         // Velocity model coefficients
 
             //- Parcel velocity [m/s]
-            TimeFunction1<scalar> Umag_;
+            autoPtr<Function1<scalar>> Umag_;
 
             //- Discharge coefficient []
-            TimeFunction1<scalar> Cd_;
+            autoPtr<Function1<scalar>> Cd_;
 
             //- Injection pressure [Pa]
-            TimeFunction1<scalar> Pinj_;
+            autoPtr<Function1<scalar>> Pinj_;
 
 
     // Private Member Functions

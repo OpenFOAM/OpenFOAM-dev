@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,33 +28,21 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
+Foam::TableReaders::Embedded<Type>::Embedded()
+:
+    TableReader<Type>()
+{}
+
+
+template<class Type>
 Foam::TableReaders::Embedded<Type>::Embedded
 (
     const word& name,
-    const dictionary& dict,
-    List<Tuple2<scalar, Type>>& table
+    const dictionary& dict
 )
 :
-    TableReader<Type>(dict)
-{
-    if (!dict.found(name))
-    {
-        dict.lookup("values") >> table;
-    }
-    else
-    {
-        Istream& is(dict.lookup(name));
-        word entryType(is);
-        if (is.eof())
-        {
-            dict.lookup("values") >> table;
-        }
-        else
-        {
-            is  >> table;
-        }
-    }
-}
+    TableReader<Type>()
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -65,6 +53,14 @@ Foam::TableReaders::Embedded<Type>::~Embedded()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::List<Foam::Tuple2<Foam::scalar, Type>>
+Foam::TableReaders::Embedded<Type>::read(const dictionary& dict) const
+{
+    return dict.lookup<List<Tuple2<scalar, Type>>>("values");
+}
+
 
 template<class Type>
 void Foam::TableReaders::Embedded<Type>::write

@@ -32,7 +32,7 @@ namespace Foam
 {
 namespace Function2s
 {
-    makeScalarFunction2(APIdiffCoef);
+    addScalarFunction2(APIdiffCoef);
 }
 }
 

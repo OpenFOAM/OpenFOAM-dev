@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,13 +74,11 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary
-        Embedded
-        (
-            const word& name,
-            const dictionary &dict,
-            List<Tuple2<scalar, Type>>& table
-        );
+        //- Default construct
+        Embedded();
+
+        //- Construct from name and dictionary
+        Embedded(const word& name, const dictionary& dict);
 
         //- Construct and return a copy
         virtual autoPtr<TableReader<Type>> clone() const
@@ -95,7 +93,10 @@ public:
 
     // Member Functions
 
-        //- Write the table values
+        //- Read values
+        virtual List<Tuple2<scalar, Type>> read(const dictionary& dict) const;
+
+        //- Write settings and values
         virtual void write
         (
             Ostream& os,

@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ConeInjection.H"
-#include "TimeFunction1.H"
 #include "Constant.H"
 #include "mathematicalConstants.H"
 #include "unitConversion.H"
@@ -79,13 +78,31 @@ void Foam::ConeInjection<CloudType>::setFlowType()
     {
         flowType_ = ftConstantVelocity;
 
-        Umag_.reset(this->coeffDict());
+        Umag_.reset
+        (
+            new Function1s::Dimensioned<scalar>
+            (
+                "Umag",
+                dimTime,
+                dimVelocity,
+                this->coeffDict()
+            )
+        );
     }
     else if (flowType == "pressureDrivenVelocity")
     {
         flowType_ = ftPressureDrivenVelocity;
 
-        Pinj_.reset(this->coeffDict());
+        Pinj_.reset
+        (
+            new Function1s::Dimensioned<scalar>
+            (
+                "Pinj",
+                dimTime,
+                dimPressure,
+                this->coeffDict()
+            )
+        );
     }
     else if (flowType == "flowRateAndDischarge")
     {
@@ -94,7 +111,16 @@ void Foam::ConeInjection<CloudType>::setFlowType()
         this->coeffDict().lookup("dInner") >> dInner_;
         this->coeffDict().lookup("dOuter") >> dOuter_;
 
-        Cd_.reset(this->coeffDict());
+        Cd_.reset
+        (
+            new Function1s::Dimensioned<scalar>
+            (
+                "Cd",
+                dimTime,
+                dimless,
+                this->coeffDict()
+            )
+        );
     }
     else
     {
@@ -121,20 +147,21 @@ Foam::ConeInjection<CloudType>::ConeInjection
     flowType_(ftConstantVelocity),
     position_
     (
-        TimeFunction1<vector>
+        new Function1s::Dimensioned<vector>
         (
-            owner.db().time(),
             "position",
+            dimTime,
+            dimLength,
             this->coeffDict()
         )
     ),
-    positionIsConstant_(isA<Function1s::Constant<vector>>(position_)),
     direction_
     (
-        TimeFunction1<vector>
+        new Function1s::Dimensioned<vector>
         (
-            owner.db().time(),
             "direction",
+            dimTime,
+            dimless,
             this->coeffDict()
         )
     ),
@@ -147,19 +174,21 @@ Foam::ConeInjection<CloudType>::ConeInjection
     parcelsPerSecond_(this->readParcelsPerSecond(dict, owner)),
     thetaInner_
     (
-        TimeFunction1<scalar>
+        new Function1s::Dimensioned<scalar>
         (
-            owner.db().time(),
             "thetaInner",
+            dimTime,
+            dimless,
             this->coeffDict()
         )
     ),
     thetaOuter_
     (
-        TimeFunction1<scalar>
+        new Function1s::Dimensioned<scalar>
         (
-            owner.db().time(),
             "thetaOuter",
+            dimTime,
+            dimless,
             this->coeffDict()
         )
     ),
@@ -174,9 +203,9 @@ Foam::ConeInjection<CloudType>::ConeInjection
     ),
     dInner_(vGreat),
     dOuter_(vGreat),
-    Umag_(owner.db().time(), "Umag"),
-    Cd_(owner.db().time(), "Cd"),
-    Pinj_(owner.db().time(), "Pinj")
+    Umag_(nullptr),
+    Cd_(nullptr),
+    Pinj_(nullptr)
 {
     setInjectionMethod();
 
@@ -195,24 +224,23 @@ Foam::ConeInjection<CloudType>::ConeInjection
     InjectionModel<CloudType>(im),
     injectionMethod_(im.injectionMethod_),
     flowType_(im.flowType_),
-    position_(im.position_),
-    positionIsConstant_(im.positionIsConstant_),
-    direction_(im.direction_),
+    position_(im.position_, false),
+    direction_(im.direction_, false),
     injectorCoordinates_(im.injectorCoordinates_),
     injectorCell_(im.injectorCell_),
     injectorTetFace_(im.injectorTetFace_),
     injectorTetPt_(im.injectorTetPt_),
     duration_(im.duration_),
-    massFlowRate_(im.massFlowRate_),
-    parcelsPerSecond_(im.parcelsPerSecond_),
-    thetaInner_(im.thetaInner_),
-    thetaOuter_(im.thetaOuter_),
+    massFlowRate_(im.massFlowRate_, false),
+    parcelsPerSecond_(im.parcelsPerSecond_, false),
+    thetaInner_(im.thetaInner_, false),
+    thetaOuter_(im.thetaOuter_, false),
     sizeDistribution_(im.sizeDistribution_().clone().ptr()),
     dInner_(im.dInner_),
     dOuter_(im.dOuter_),
-    Umag_(im.Umag_),
-    Cd_(im.Cd_),
-    Pinj_(im.Pinj_)
+    Umag_(im.Umag_, false),
+    Cd_(im.Cd_, false),
+    Pinj_(im.Pinj_, false)
 {}
 
 
@@ -228,9 +256,9 @@ Foam::ConeInjection<CloudType>::~ConeInjection()
 template<class CloudType>
 void Foam::ConeInjection<CloudType>::topoChange()
 {
-    if (injectionMethod_ == imPoint && positionIsConstant_)
+    if (injectionMethod_ == imPoint && position_->constant())
     {
-        vector position = position_.value(0);
+        vector position = position_->value(0);
         this->findCellAtPosition
         (
             position,
@@ -260,13 +288,13 @@ Foam::label Foam::ConeInjection<CloudType>::nParcelsToInject
     if (time0 >= 0 && time0 < duration_)
     {
         //// Standard calculation
-        //return floor(parcelsPerSecond_.integral(time0, time1));
+        //return floor(parcelsPerSecond_->integral(time0, time1));
 
         // Modified calculation to make numbers exact
         return
             floor
             (
-                parcelsPerSecond_.integral(0, time1)
+                parcelsPerSecond_->integral(0, time1)
               - this->parcelsAddedTotal()
             );
     }
@@ -286,7 +314,7 @@ Foam::scalar Foam::ConeInjection<CloudType>::massToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        return massFlowRate_.integral(time0, time1);
+        return massFlowRate_->integral(time0, time1);
     }
     else
     {
@@ -316,8 +344,8 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
     {
         case imPoint:
         {
-            const point pos = position_.value(t);
-            if (positionIsConstant_)
+            const point pos = position_->value(t);
+            if (position_->constant())
             {
                 coordinates = injectorCoordinates_;
                 celli = injectorCell_;
@@ -342,12 +370,12 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
         {
             const scalar beta = twoPi*rndGen.globalScalar01();
             const scalar frac = rndGen.globalScalar01();
-            const vector n = normalised(direction_.value(t));
+            const vector n = normalised(direction_->value(t));
             const vector t1 = normalised(perpendicular(n));
             const vector t2 = normalised(n ^ t1);
             const vector tanVec = t1*cos(beta) + t2*sin(beta);
             const scalar d = sqrt((1 - frac)*sqr(dInner_) + frac*sqr(dOuter_));
-            const point pos = position_.value(t) + d/2*tanVec;
+            const point pos = position_->value(t) + d/2*tanVec;
             this->findCellAtPosition
             (
                 pos,
@@ -395,7 +423,7 @@ void Foam::ConeInjection<CloudType>::setProperties
         {
             const scalar beta = twoPi*rndGen.scalar01();
             const scalar frac = rndGen.scalar01();
-            const vector n = normalised(direction_.value(t));
+            const vector n = normalised(direction_->value(t));
             const vector t1 = normalised(perpendicular(n));
             const vector t2 = normalised(n ^ t1);
             tanVec = t1*cos(beta) + t2*sin(beta);
@@ -404,22 +432,22 @@ void Foam::ConeInjection<CloudType>::setProperties
                 (
                     sqrt
                     (
-                        (1 - frac)*sqr(thetaInner_.value(t))
-                        + frac*sqr(thetaOuter_.value(t))
+                        (1 - frac)*sqr(thetaInner_->value(t))
+                        + frac*sqr(thetaOuter_->value(t))
                     )
                 );
             break;
         }
         case imDisc:
         {
-            const scalar r = mag(parcel.position(mesh) - position_.value(t));
+            const scalar r = mag(parcel.position(mesh) - position_->value(t));
             const scalar frac = (2*r - dInner_)/(dOuter_ - dInner_);
-            tanVec = normalised(parcel.position(mesh) - position_.value(t));
+            tanVec = normalised(parcel.position(mesh) - position_->value(t));
             theta =
                 degToRad
                 (
-                    (1 - frac)*thetaInner_.value(t)
-                    + frac*thetaOuter_.value(t)
+                    (1 - frac)*thetaInner_->value(t)
+                    + frac*thetaOuter_->value(t)
                 );
             break;
         }
@@ -433,7 +461,7 @@ void Foam::ConeInjection<CloudType>::setProperties
     const vector dirVec =
         normalised
         (
-            cos(theta)*normalised(direction_.value(t))
+            cos(theta)*normalised(direction_->value(t))
           + sin(theta)*tanVec
         );
 
@@ -442,14 +470,14 @@ void Foam::ConeInjection<CloudType>::setProperties
     {
         case ftConstantVelocity:
         {
-            parcel.U() = Umag_.value(t)*dirVec;
+            parcel.U() = Umag_->value(t)*dirVec;
             break;
         }
         case ftPressureDrivenVelocity:
         {
             const scalar pAmbient = this->owner().pAmbient();
             const scalar rho = parcel.rho();
-            const scalar Umag = ::sqrt(2*(Pinj_.value(t) - pAmbient)/rho);
+            const scalar Umag = ::sqrt(2*(Pinj_->value(t) - pAmbient)/rho);
             parcel.U() = Umag*dirVec;
             break;
         }
@@ -457,7 +485,7 @@ void Foam::ConeInjection<CloudType>::setProperties
         {
             const scalar A = 0.25*pi*(sqr(dOuter_) - sqr(dInner_));
             const scalar Umag =
-                massFlowRate_.value(t)/(parcel.rho()*Cd_.value(t)*A);
+                massFlowRate_->value(t)/(parcel.rho()*Cd_->value(t)*A);
             parcel.U() = Umag*dirVec;
             break;
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,10 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Constant.H"
+#include "Constant2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+/*
 template<class Type>
 Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
 (
@@ -92,6 +93,119 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
 
         return cstrIter()(name, dict);
     }
+}
+*/
+
+
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
+(
+    const word& name,
+    const dictionary& dict
+)
+{
+    // If the function is a dictionary (preferred) then read straightforwardly
+    if (dict.isDict(name))
+    {
+        const dictionary& coeffsDict(dict.subDict(name));
+
+        const word Function2Type(coeffsDict.lookup("type"));
+
+        typename dictionaryConstructorTable::iterator cstrIter =
+            dictionaryConstructorTablePtr_->find(Function2Type);
+
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
+        {
+            FatalErrorInFunction
+                << "Unknown Function2 type "
+                << Function2Type << " for Function2 "
+                << name << nl << nl
+                << "Valid Function2 types are:" << nl
+                << dictionaryConstructorTablePtr_->sortedToc() << nl
+                << exit(FatalError);
+        }
+
+        return cstrIter()(name, coeffsDict);
+    }
+
+    // Find the entry
+    Istream& is(dict.lookup(name));
+
+    // Peek at the first token
+    token firstToken(is);
+    is.putBack(firstToken);
+
+    // Read the type, or assume constant
+    const word Function2Type =
+        firstToken.isWord() ? word(is) : Function2s::Constant<Type>::typeName;
+
+    // If the entry is not a type followed by a end statement then
+    // construct the function from the stream
+    if (!firstToken.isWord() || !is.eof())
+    {
+        return New(name, Function2Type, is);
+    }
+
+    // Otherwise, construct from the current dictionary
+    typename dictionaryConstructorTable::iterator dictCstrIter =
+        dictionaryConstructorTablePtr_->find(Function2Type);
+
+    if (dictCstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown Function2 type "
+            << Function2Type << " for Function2 "
+            << name << nl << nl
+            << "Valid Function2 types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc() << nl
+            << exit(FatalError);
+    }
+
+    return dictCstrIter()(name, dict);
+}
+
+
+template<class Type>
+Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
+(
+    const word& name,
+    const word& Function2Type,
+    Istream& is
+)
+{
+    typename dictionaryConstructorTable::iterator dictCstrIter =
+        dictionaryConstructorTablePtr_->find(Function2Type);
+    const bool haveDictCstrIter =
+        dictCstrIter != dictionaryConstructorTablePtr_->end();
+
+    typename IstreamConstructorTable::iterator isCstrIter =
+        IstreamConstructorTablePtr_->find(Function2Type);
+    const bool haveIstreamCstrIter =
+        isCstrIter != IstreamConstructorTablePtr_->end();
+
+    if (!haveDictCstrIter && !haveIstreamCstrIter)
+    {
+        FatalErrorInFunction
+            << "Unknown Function2 type "
+            << Function2Type << " for Function2 "
+            << name << nl << nl
+            << "Valid Function2 types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc() << nl
+            << exit(FatalError);
+    }
+
+    if (!haveIstreamCstrIter)
+    {
+        FatalErrorInFunction
+            << "Function2 type "
+            << name << " cannot be specified inline" << nl << nl
+            << "Make " << name << " a sub-dictionary"
+            << exit(FatalError);
+    }
+
+    return isCstrIter()(name, is);
 }
 
 

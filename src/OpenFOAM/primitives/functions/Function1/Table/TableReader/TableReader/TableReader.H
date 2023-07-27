@@ -66,17 +66,16 @@ public:
             dictionary,
             (
                 const word& name,
-                const dictionary& dict,
-                List<Tuple2<scalar, Type>>& table
+                const dictionary& dict
             ),
-            (name, dict, table)
+            (name, dict)
         );
 
 
     // Constructors
 
-        //- Construct from dictionary
-        TableReader(const dictionary& dict);
+        //- Default construct
+        TableReader();
 
         //- Construct and return a clone
         virtual autoPtr<TableReader<Type>> clone() const = 0;
@@ -86,8 +85,7 @@ public:
     static autoPtr<TableReader<Type>> New
     (
         const word& name,
-        const dictionary& dict,
-        List<Tuple2<scalar, Type>>& table
+        const dictionary& dict
     );
 
 
@@ -97,12 +95,18 @@ public:
 
     // Member Functions
 
-        //- Write additional information
+        //- Read values
+        virtual List<Tuple2<scalar, Type>> read
+        (
+            const dictionary& dict
+        ) const = 0;
+
+        //- Write settings and values
         virtual void write
         (
             Ostream& os,
             const List<Tuple2<scalar, Type>>& table
-        ) const;
+        ) const = 0;
 };
 
 
@@ -119,21 +123,11 @@ public:
     defineTemplateRunTimeSelectionTable(TableReader<Type>, dictionary);
 
 
-#define makeTableReader(SS, Type)                                              \
+#define addTableReader(SS, Type)                                               \
                                                                                \
     defineNamedTemplateTypeNameAndDebug(TableReaders::SS<Type>, 0);            \
                                                                                \
     addTemplatedToRunTimeSelectionTable(TableReader, SS, Type, dictionary)
-
-#define makeTableReaders(Type)                                                 \
-    defineTableReader(Type);                                                   \
-                                                                               \
-    namespace TableReaders                                                     \
-    {                                                                          \
-        makeTableReader(Embedded, Type);                                       \
-        makeTableReader(Foam, Type);                                           \
-        makeTableReader(Csv, Type);                                            \
-    }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
