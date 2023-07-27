@@ -1344,22 +1344,6 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::partialElimination
 
     phaseSystem::phaseModelList& phases = this->phaseModels_;
 
-    // Calculate the mean velocity from the current velocity
-    // of the moving phases
-    volVectorField Um(this->movingPhases()[0]*this->movingPhases()[0].U());
-
-    for
-    (
-        label movingPhasei=1;
-        movingPhasei<this->movingPhases().size();
-        movingPhasei++
-    )
-    {
-        Um +=
-            this->movingPhases()[movingPhasei]
-           *this->movingPhases()[movingPhasei].U();
-    }
-
     // Remove the drag contributions from the velocity and flux of the phases
     // in preparation for the partial elimination of these terms
     forAll(phases, i)
@@ -1509,7 +1493,8 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::partialElimination
         }
     }
 
-    this->setMixtureU(Um);
+    // Adjust the phase-fluxes such that the mean flux
+    // obtained from the pressure solution is retained
     this->setMixturePhi(alphafs, this->phi());
 }
 
@@ -1643,6 +1628,8 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::partialEliminationf
         }
     }
 
+    // Adjust the phase-fluxes such that the mean flux
+    // obtained from the pressure solution is retained
     this->setMixturePhi(alphafs, this->phi());
 }
 
