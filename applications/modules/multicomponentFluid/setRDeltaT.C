@@ -45,21 +45,26 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
         const scalar maxCo(pimpleDict.lookup<scalar>("maxCo"));
 
         // Set the reciprocal time-step from the local Courant number
-        // and maximum and minimum time-steps
         rDeltaT.ref() =
             fvc::surfaceSum(mag(phi))()()/((2*maxCo)*mesh.V()*rho());
-        if (pimpleDict.found("maxDeltaT"))
+
+        // Clip to user-defined maximum and minimum time-steps
+        scalar minRDeltaT = gMin(rDeltaT.primitiveField());
+        if (pimpleDict.found("maxDeltaT") || minRDeltaT < rootVSmall)
         {
-            rDeltaT.max(1/pimpleDict.lookup<scalar>("maxDeltaT"));
+            const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("maxDeltaT");
+            rDeltaT.max(clipRDeltaT);
+            minRDeltaT = max(minRDeltaT, clipRDeltaT);
         }
         if (pimpleDict.found("minDeltaT"))
         {
-            rDeltaT.min(1/pimpleDict.lookup<scalar>("minDeltaT"));
+            const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("minDeltaT");
+            rDeltaT.min(clipRDeltaT);
+            minRDeltaT = min(minRDeltaT, clipRDeltaT);
         }
 
-        Info<< "    Flow        = "
-            << 1/gMax(rDeltaT.primitiveField()) << ", "
-            << 1/gMin(rDeltaT.primitiveField()) << endl;
+        Info<< "Flow time scale min/max = "
+            << gMin(1/rDeltaT.primitiveField()) << ", " << 1/minRDeltaT << endl;
     }
 
     // Maximum change in cell temperature per iteration

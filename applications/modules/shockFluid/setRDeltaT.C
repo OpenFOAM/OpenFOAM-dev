@@ -50,17 +50,31 @@ void Foam::solvers::shockFluid::setRDeltaT(const surfaceScalarField& amaxSf)
 
     // Set the reciprocal time-step from the local Courant number
     rDeltaT.ref() = fvc::surfaceSum(amaxSf)()()/((2*maxCo)*mesh.V());
-    if (pimpleDict.found("maxDeltaT"))
+
+    // Clip to user-defined maximum and minimum time-steps
+    scalar minRDeltaT = gMin(rDeltaT.primitiveField());
+    if (pimpleDict.found("maxDeltaT") || minRDeltaT < rootVSmall)
     {
-        rDeltaT.max(1/pimpleDict.lookup<scalar>("maxDeltaT"));
+        const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("maxDeltaT");
+        rDeltaT.max(clipRDeltaT);
+        minRDeltaT = max(minRDeltaT, clipRDeltaT);
     }
+    if (pimpleDict.found("minDeltaT"))
+    {
+        const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("minDeltaT");
+        rDeltaT.min(clipRDeltaT);
+        minRDeltaT = min(minRDeltaT, clipRDeltaT);
+    }
+
+    Info<< "Flow time scale min/max = "
+        << gMin(1/rDeltaT.primitiveField()) << ", " << 1/minRDeltaT << endl;
 
     // Update the boundary values of the reciprocal time-step
     rDeltaT.correctBoundaryConditions();
 
     fvc::smooth(rDeltaT, rDeltaTSmoothingCoeff);
 
-    Info<< "Flow time scale min/max = "
+    Info<< "Smoothed flow time scale min/max = "
         << gMin(1/rDeltaT.primitiveField())
         << ", " << gMax(1/rDeltaT.primitiveField()) << endl;
 }

@@ -53,23 +53,31 @@ void Foam::solvers::incompressibleFluid::setRDeltaT()
     const volScalarField rDeltaT0("rDeltaT0", rDeltaT);
 
     // Set the reciprocal time-step from the local Courant number
-    // and maximum and minimum time-steps
     rDeltaT.ref() = fvc::surfaceSum(mag(phi))()()/((2*maxCo)*mesh.V());
-    if (pimpleDict.found("maxDeltaT"))
+
+    // Clip to user-defined maximum and minimum time-steps
+    scalar minRDeltaT = gMin(rDeltaT.primitiveField());
+    scalar maxRDeltaT = gMax(rDeltaT.primitiveField());
+    if (pimpleDict.found("maxDeltaT") || minRDeltaT < rootVSmall)
     {
-        rDeltaT.max(1/pimpleDict.lookup<scalar>("maxDeltaT"));
+        const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("maxDeltaT");
+        rDeltaT.max(clipRDeltaT);
+        minRDeltaT = max(minRDeltaT, clipRDeltaT);
+        maxRDeltaT = max(maxRDeltaT, clipRDeltaT);
     }
-    if (pimpleDict.found("minDeltaT"))
+    if (pimpleDict.found("minDeltaT") || maxRDeltaT > rootVGreat)
     {
-        rDeltaT.min(1/pimpleDict.lookup<scalar>("minDeltaT"));
+        const scalar clipRDeltaT = 1/pimpleDict.lookup<scalar>("minDeltaT");
+        rDeltaT.min(clipRDeltaT);
+        minRDeltaT = min(minRDeltaT, clipRDeltaT);
+        maxRDeltaT = min(maxRDeltaT, clipRDeltaT);
     }
+
+    Info<< "Flow time scale min/max = "
+        << 1/maxRDeltaT << ", " << 1/minRDeltaT << endl;
 
     // Update the boundary values of the reciprocal time-step
     rDeltaT.correctBoundaryConditions();
-
-    Info<< "Flow time scale min/max = "
-        << gMin(1/rDeltaT.primitiveField())
-        << ", " << gMax(1/rDeltaT.primitiveField()) << endl;
 
     if (rDeltaTSmoothingCoeff < 1.0)
     {
