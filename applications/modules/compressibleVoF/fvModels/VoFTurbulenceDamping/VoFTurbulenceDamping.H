@@ -53,7 +53,7 @@ Usage
     \verbatim
     VoFTurbulenceDamping
     {
-        type    VoFTurbulenceDamping;
+        type    compressible::VoFTurbulenceDamping;
 
         // Interface momentumTransport damping length scale
         // This is a required input as described in section 3.3 of the paper
