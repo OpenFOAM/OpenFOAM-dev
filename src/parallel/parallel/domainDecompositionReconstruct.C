@@ -28,12 +28,10 @@ License
 #include "processorPolyPatch.H"
 #include "processorCyclicPolyPatch.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-namespace Foam
-{
-
-autoPtr<faceCoupleInfo> determineCoupledFaces
+Foam::autoPtr<Foam::faceCoupleInfo>
+Foam::domainDecomposition::determineCoupledFaces
 (
     const label masterMeshProcStart,
     const label masterMeshProcEnd,
@@ -136,9 +134,6 @@ autoPtr<faceCoupleInfo> determineCoupledFaces
     );
 }
 
-}
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::domainDecomposition::reconstruct()
 {
@@ -225,7 +220,7 @@ void Foam::domainDecomposition::reconstruct()
             Info<< indent << "Merging mesh " << proci
                 << " with " << procj << endl;
 
-            // Find shared points/faces
+            // Find shared points and faces
             autoPtr<faceCoupleInfo> couples = determineCoupledFaces
             (
                 proci,
@@ -521,7 +516,32 @@ void Foam::domainDecomposition::reconstruct()
     completeMesh_->setInstance(procMeshes()[0].facesInstance());
     completeMesh_->setPointsInstance(procMeshes()[0].pointsInstance());
 
-    Info<< decrIndent << endl;
+    Info<< decrIndent;
+}
+
+
+void Foam::domainDecomposition::reconstructPoints()
+{
+    const label pointsCompare =
+        compareInstances
+        (
+            completeMesh().pointsInstance(),
+            procMeshes_[0].pointsInstance()
+        );
+
+    if (pointsCompare == 1)
+    {
+        pointField completePoints(completeMesh().nPoints());
+
+        for (label proci = 0; proci < nProcs(); proci++)
+        {
+            const fvMesh& procMesh = procMeshes_[proci];
+
+            completePoints.rmap(procMesh.points(), procPointAddressing_[proci]);
+        }
+
+        completeMesh_->setPoints(completePoints);
+    }
 }
 
 

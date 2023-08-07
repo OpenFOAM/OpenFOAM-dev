@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,8 +38,7 @@ Foam::pointFieldReconstructor::pointFieldReconstructor
     completeMesh_(completeMesh),
     procMeshes_(procMeshes),
     pointProcAddressing_(pointProcAddressing),
-    patchPointAddressing_(procMeshes.size()),
-    nReconstructed_(0)
+    patchPointAddressing_(procMeshes.size())
 {
     // Inverse-addressing of the patch point labels.
     labelList pointMap(completeMesh_.size(), -1);
@@ -88,6 +87,26 @@ Foam::pointFieldReconstructor::pointFieldReconstructor
             }
         }
     }
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::pointFieldReconstructor::reconstructs
+(
+    const IOobjectList& objects,
+    const HashSet<word>& selectedFields
+)
+{
+    bool result = false;
+
+    #define DO_POINT_FIELDS_TYPE(Type, nullArg)                                \
+        result = result                                                        \
+         || reconstructs<PointField<Type>>(objects, selectedFields);
+    FOR_ALL_FIELD_TYPES(DO_POINT_FIELDS_TYPE)
+    #undef DO_POINT_FIELDS_TYPE
+
+    return result;
 }
 
 

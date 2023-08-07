@@ -31,6 +31,7 @@ SourceFiles
     domainDecomposition.C
     domainDecompositionDecompose.C
     domainDecompositionReconstruct.C
+    domainDecompositionReconstruct.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -46,6 +47,8 @@ SourceFiles
 
 namespace Foam
 {
+
+class faceCoupleInfo;
 
 /*---------------------------------------------------------------------------*\
                      Class domainDecomposition Declaration
@@ -100,8 +103,6 @@ class domainDecomposition
             mutable PtrList<surfaceLabelField::Boundary> procFaceAddressingBf_;
 
 
-
-
     // Private Member Functions
 
         // Decomposition
@@ -145,25 +146,62 @@ class domainDecomposition
                 BinaryOp bop
             ) const;
 
+            //- Decompose the complete mesh to create the processor meshes and
+            //  populate the addressing
+            void decompose();
 
-        //- Decompose the complete mesh's points and apply the result to the
-        //  processor meshes
-        void decomposePoints();
+            //- Decompose the complete mesh's points and apply the result to
+            //  the processor meshes
+            void decomposePoints();
 
-        //- Reconstruct the processor meshes' points and apply the result to
-        //  the complete mesh
-        void reconstructPoints();
 
-        //- Is the complete mesh conformal?
-        bool completeConformal() const;
+        // Reconstruction
 
-        //- Are the processor meshes conformal?
-        bool procsConformal() const;
+            //- Find shared points and faces between two meshes that are to be
+            //  added together
+            static autoPtr<faceCoupleInfo> determineCoupledFaces
+            (
+                const label masterMeshProcStart,
+                const label masterMeshProcEnd,
+                const polyMesh& masterMesh,
+                const label meshToAddProcStart,
+                const label meshToAddProcEnd,
+                const polyMesh& meshToAdd
+            );
 
-        //- If the complete mesh is non-conformal and the processor meshes are
-        //  not, then map the non-conformal addressing across and unconform the
-        //  processor meshes. And vice versa.
-        void unconform();
+            //- Reconstruct the processor meshes to create the complete mesh
+            //  and populate the addressing
+            void reconstruct();
+
+            //- Reconstruct the processor meshes' points and apply the result
+            //  to the complete mesh
+            void reconstructPoints();
+
+
+        // Non conformal
+
+            //- Is the complete mesh conformal?
+            bool completeConformal() const;
+
+            //- Are the processor meshes conformal?
+            bool procsConformal() const;
+
+            //- ...
+            List<List<DynamicList<label>>>
+                nonConformalProcFaceAddressingBf() const;
+
+            // Map the polyFacesBf from the processor to the complete meshes and
+            // unconform the complete mesh
+            void unconformComplete();
+
+            // Map the polyFacesBf from the complete to the processor meshes and
+            // unconform the processor meshes
+            void unconformProcs();
+
+            //- If the complete mesh is non-conformal and the processor meshes
+            //  are not, then unconform the processor meshes. And vice versa.
+            void unconform();
+
 
         //- Compare two instances. A return value of -1 means a is newer than b
         //  (i.e., the arguments are in reverse order), 0 means a is equal to
@@ -193,14 +231,6 @@ class domainDecomposition
 
         //- Read-update the complete and processor meshes for a change in time
         fvMesh::readUpdateState readUpdate();
-
-        //- Decompose the complete mesh to create the processor meshes and
-        //  populate the addressing
-        void decompose();
-
-        //- Reconstruct the processor meshes to create the complete mesh and
-        //  populate the addressing
-        void reconstruct();
 
         //- Write the decomposition addressing
         void writeCompleteAddressing() const;
@@ -244,22 +274,34 @@ public:
 
     // Member Functions
 
+        //- Access the run times
+        inline const processorRunTimes& procRunTimes() const
+        {
+            return runTimes_;
+        }
+
+        //- Access the region name
+        inline const word& regionName() const
+        {
+            return regionName_;
+        }
+
         //- Access the global mesh
-        const fvMesh& completeMesh() const
+        inline const fvMesh& completeMesh() const
         {
             validateComplete();
             return completeMesh_();
         }
 
         //- Access the processor meshes
-        const PtrList<fvMesh>& procMeshes() const
+        inline const PtrList<fvMesh>& procMeshes() const
         {
             validateProcs();
             return procMeshes_;
         }
 
         //- Return the number of processors in the decomposition
-        label nProcs() const
+        inline label nProcs() const
         {
             return runTimes_.nProcs();
         }
@@ -281,27 +323,27 @@ public:
         fvMesh::readUpdateState readUpdateReconstruct();
 
         //- Return the distribution as an FV field for writing
-        const labelList& cellProc() const
+        inline const labelList& cellProc() const
         {
             return cellProc_;
         }
 
         //- Access the labels of points for each processor
-        const labelListList& procPointAddressing() const
+        inline const labelListList& procPointAddressing() const
         {
             validateProcs();
             return procPointAddressing_;
         }
 
         //- Access the labels of faces for each processor (see notes above)
-        const labelListList& procFaceAddressing() const
+        inline const labelListList& procFaceAddressing() const
         {
             validateProcs();
             return procFaceAddressing_;
         }
 
         //- Access the labels of cells for each processor
-        const labelListList& procCellAddressing() const
+        inline const labelListList& procCellAddressing() const
         {
             validateProcs();
             return procCellAddressing_;

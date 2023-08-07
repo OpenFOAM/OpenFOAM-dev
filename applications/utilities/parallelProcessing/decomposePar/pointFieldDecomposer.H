@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
 SourceFiles
     pointFieldDecomposer.C
-    pointFieldDecomposerDecomposeFields.C
+    pointFieldDecomposerTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -37,13 +37,16 @@ SourceFiles
 #define pointFieldDecomposer_H
 
 #include "pointMesh.H"
-#include "pointPatchFieldMapperPatchRef.H"
 #include "pointFields.H"
+#include "pointPatchFieldMapperPatchRef.H"
+#include "IOobjectList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+class fvMesh;
 
 /*---------------------------------------------------------------------------*\
                     Class pointFieldDecomposer Declaration
@@ -111,14 +114,22 @@ private:
         //- Reference to complete mesh
         const pointMesh& completeMesh_;
 
-        //- Reference to processor mesh
-        const pointMesh& procMesh_;
+        //- Reference to processor meshes
+        const PtrList<fvMesh>& procMeshes_;
 
         //- Reference to point addressing
-        const labelList& pointAddressing_;
+        const labelListList& pointProcAddressing_;
 
         //- List of patch field decomposers
-        PtrList<patchFieldDecomposer> patchFieldDecomposers_;
+        PtrList<PtrList<patchFieldDecomposer>> patchFieldDecomposers_;
+
+
+    // Private Member Functions
+
+        //- Decompose a field
+        template<class Type>
+        PtrList<PointField<Type>>
+        decomposeField(const IOobject& fieldIoObject) const;
 
 
 public:
@@ -129,8 +140,8 @@ public:
         pointFieldDecomposer
         (
             const pointMesh& completeMesh,
-            const pointMesh& procMesh,
-            const labelList& pointAddressing
+            const PtrList<fvMesh>& procMeshes,
+            const labelListList& pointAddressing
         );
 
         //- Disallow default bitwise copy construction
@@ -143,17 +154,12 @@ public:
 
     // Member Functions
 
-        //- Decompose point field
-        template<class Type>
-        tmp<PointField<Type>>
-        decomposeField
-        (
-            const PointField<Type>&
-        ) const;
+        //- Return whether anything in the object list gets decomposed
+        static bool decomposes(const IOobjectList& objects);
 
-        //- Decompose a list of fields
-        template<class GeoField>
-        void decomposeFields(const PtrList<GeoField>& fields) const;
+        //- Read, decompose and write all fields
+        template<class Type>
+        void decomposeFields(const IOobjectList& objects);
 
 
     // Member Operators
@@ -170,7 +176,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "pointFieldDecomposerDecomposeFields.C"
+    #include "pointFieldDecomposerTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

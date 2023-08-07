@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,10 +29,11 @@ License
 
 Foam::label Foam::fvFieldDecomposer::completePatchID
 (
+    const label proci,
     const label procPatchi
 ) const
 {
-    const fvPatch& procPatch = procMesh_.boundary()[procPatchi];
+    const fvPatch& procPatch = procMeshes_[proci].boundary()[procPatchi];
 
     if (procPatchi < completeMesh_.boundary().size())
     {
@@ -64,34 +65,45 @@ Foam::fvFieldDecomposer::patchFieldDecomposer::patchFieldDecomposer
 Foam::fvFieldDecomposer::fvFieldDecomposer
 (
     const fvMesh& completeMesh,
-    const fvMesh& procMesh,
-    const labelList& faceAddressing,
-    const labelList& cellAddressing,
-    const surfaceLabelField::Boundary& faceAddressingBf
+    const PtrList<fvMesh>& procMeshes,
+    const labelListList& faceProcAddressing,
+    const labelListList& cellProcAddressing,
+    const PtrList<surfaceLabelField::Boundary>& faceProcAddressingBf
 )
 :
     completeMesh_(completeMesh),
-    procMesh_(procMesh),
-    faceAddressing_(faceAddressing),
-    cellAddressing_(cellAddressing),
-    faceAddressingBf_(faceAddressingBf),
-    patchFieldDecomposers_(procMesh_.boundary().size())
+    procMeshes_(procMeshes),
+    faceProcAddressing_(faceProcAddressing),
+    cellProcAddressing_(cellProcAddressing),
+    faceProcAddressingBf_(faceProcAddressingBf),
+    patchFieldDecomposers_(procMeshes_.size())
 {
-    forAll(procMesh_.boundary(), procPatchi)
+    forAll(procMeshes_, proci)
     {
-        const label completePatchi = completePatchID(procPatchi);
-
-        // If there is a corresponding complete patch then create a patch mapper
-        if (completePatchi >= 0)
-        {
-            patchFieldDecomposers_.set
+        patchFieldDecomposers_.set
+        (
+            proci,
+            new PtrList<patchFieldDecomposer>
             (
-                procPatchi,
-                new patchFieldDecomposer
+                procMeshes_[proci].boundary().size()
+            )
+        );
+
+        forAll(procMeshes_[proci].boundary(), procPatchi)
+        {
+            const label completePatchi = completePatchID(proci, procPatchi);
+
+            if (completePatchi >= 0)
+            {
+                patchFieldDecomposers_[proci].set
                 (
-                    faceAddressingBf[completePatchi]
-                )
-            );
+                    procPatchi,
+                    new patchFieldDecomposer
+                    (
+                        faceProcAddressingBf[proci][completePatchi]
+                    )
+                );
+            }
         }
     }
 }
@@ -101,6 +113,24 @@ Foam::fvFieldDecomposer::fvFieldDecomposer
 
 Foam::fvFieldDecomposer::~fvFieldDecomposer()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::fvFieldDecomposer::decomposes(const IOobjectList& objects)
+{
+    bool result = false;
+
+    #define DO_FV_FIELDS_TYPE(Type, nullArg)                                   \
+        result = result                                                        \
+         || !objects.lookupClass(VolField<Type>::Internal::typeName).empty()   \
+         || !objects.lookupClass(VolField<Type>::typeName).empty()             \
+         || !objects.lookupClass(SurfaceField<Type>::typeName).empty();
+    FOR_ALL_FIELD_TYPES(DO_FV_FIELDS_TYPE)
+    #undef DO_FV_FIELDS_TYPE
+
+    return result;
+}
 
 
 // ************************************************************************* //

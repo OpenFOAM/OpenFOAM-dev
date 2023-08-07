@@ -1,6 +1,6 @@
 reconstructPar.C
 fvFieldReconstructor.C
 pointFieldReconstructor.C
-reconstructLagrangianPositions.C
+lagrangianFieldReconstructor.C
 
 EXE = $(FOAM_APPBIN)/reconstructPar

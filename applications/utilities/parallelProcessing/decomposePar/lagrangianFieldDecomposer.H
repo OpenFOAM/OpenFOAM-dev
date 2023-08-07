@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,17 +29,15 @@ Description
 
 SourceFiles
     lagrangianFieldDecomposer.C
-    lagrangianFieldDecomposerDecomposeFields.C
+    lagrangianFieldDecomposerTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef lagrangianFieldDecomposer_H
 #define lagrangianFieldDecomposer_H
 
-#include "Cloud.H"
-#include "CompactIOField.H"
-#include "indexedParticle.H"
-#include "passiveParticle.H"
+#include "cloud.H"
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,14 +54,34 @@ class lagrangianFieldDecomposer
 {
     // Private Data
 
-        //- Reference to processor mesh
-        const polyMesh& procMesh_;
+        //- Reference to complete mesh
+        const fvMesh& completeMesh_;
 
-        //- Lagrangian positions for this processor
-        Cloud<passiveParticle> positions_;
+        //- List of processor meshes
+        const PtrList<fvMesh>& procMeshes_;
 
-        //- The indices of the particles on this processor
-        labelList particleIndices_;
+        //- For each processor, for each particle, the global particle index
+        labelListList particleProcAddressing_;
+
+        //- The name of the cloud
+        const word cloudName_;
+
+
+    // Private Member Functions
+
+        //- Decompose a field
+        template<class Type, template<class> class IOContainer>
+        PtrList<IOContainer<Type>>
+        decomposeField(const IOobject& fieldIoObject) const;
+
+        //- Read, decompose and write all fields
+        template
+        <
+            class Type,
+            template<class> class IOContainer,
+            template<class> class IOContainerType
+        >
+        void decomposeFields(const IOobjectList& objects);
 
 
 public:
@@ -73,68 +91,29 @@ public:
         //- Construct from components
         lagrangianFieldDecomposer
         (
-            const polyMesh& mesh,
-            const polyMesh& procMesh,
-            const labelList& faceProcAddressing,
-            const labelList& cellProcAddressing,
-            const word& cloudName,
-            const Cloud<indexedParticle>& lagrangianPositions,
-            const List<SLList<indexedParticle*>*>& cellParticles
+            const fvMesh& completeMesh,
+            const PtrList<fvMesh>& procMeshes,
+            const labelListList& faceProcAddressing,
+            const labelListList& cellProcAddressing,
+            const word& cloudName
         );
 
         //- Disallow default bitwise copy construction
         lagrangianFieldDecomposer(const lagrangianFieldDecomposer&) = delete;
 
 
+    //- Destructor
+    ~lagrangianFieldDecomposer();
+
+
     // Member Functions
 
-        // Read the fields and hold on the pointer list
+        //- Return whether anything in the object list gets decomposed
+        static bool decomposes(const IOobjectList& objects);
+
+        //- Read, decompose and write all fields
         template<class Type>
-        static void readFields
-        (
-            const label cloudI,
-            const IOobjectList& lagrangianObjects,
-            PtrList<PtrList<IOField<Type>>>& lagrangianFields
-        );
-
-        template<class Type>
-        static void readFieldFields
-        (
-            const label cloudI,
-            const IOobjectList& lagrangianObjects,
-            PtrList<PtrList<CompactIOField<Field<Type>>>>& lagrangianFields
-        );
-
-
-        //- Decompose volume field
-        template<class Type>
-        tmp<IOField<Type>> decomposeField
-        (
-            const word& cloudName,
-            const IOField<Type>& field
-        ) const;
-
-        template<class Type>
-        tmp<CompactIOField<Field<Type>>> decomposeFieldField
-        (
-            const word& cloudName,
-            const CompactIOField<Field<Type>>& field
-        ) const;
-
-
-        template<class GeoField>
-        void decomposeFields
-        (
-            const word& cloudName,
-            const PtrList<GeoField>& fields
-        ) const;
-
-        template<class GeoField>
-        void decomposeFieldFields
-        (
-            const word& cloudName,
-            const PtrList<GeoField>& fields
-        ) const;
+        void decomposeFields(const IOobjectList& objects);
 
 
     // Member Operators
@@ -151,7 +130,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "lagrangianFieldDecomposerDecomposeFields.C"
+    #include "lagrangianFieldDecomposerTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

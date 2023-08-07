@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pointFieldDecomposer.H"
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -77,29 +78,40 @@ Foam::pointFieldDecomposer::patchFieldDecomposer::patchFieldDecomposer
 Foam::pointFieldDecomposer::pointFieldDecomposer
 (
     const pointMesh& completeMesh,
-    const pointMesh& procMesh,
-    const labelList& pointAddressing
+    const PtrList<fvMesh>& procMeshes,
+    const labelListList& pointProcAddressing
 )
 :
     completeMesh_(completeMesh),
-    procMesh_(procMesh),
-    pointAddressing_(pointAddressing),
-    patchFieldDecomposers_(procMesh_.boundary().size())
+    procMeshes_(procMeshes),
+    pointProcAddressing_(pointProcAddressing),
+    patchFieldDecomposers_(procMeshes_.size())
 {
-    forAll(procMesh_.boundary(), patchi)
+    forAll(procMeshes_, proci)
     {
-        if (patchi < completeMesh_.boundary().size())
+        const pointMesh& procMesh = pointMesh::New(procMeshes_[proci]);
+
+        patchFieldDecomposers_.set
+        (
+            proci,
+            new PtrList<patchFieldDecomposer>(procMesh.boundary().size())
+        );
+
+        forAll(procMesh.boundary(), procPatchi)
         {
-            patchFieldDecomposers_.set
-            (
-                patchi,
-                new patchFieldDecomposer
+            if (procPatchi < completeMesh_.boundary().size())
+            {
+                patchFieldDecomposers_[proci].set
                 (
-                    completeMesh_.boundary()[patchi],
-                    procMesh_.boundary()[patchi],
-                    pointAddressing_
-                )
-            );
+                    procPatchi,
+                    new patchFieldDecomposer
+                    (
+                        completeMesh_.boundary()[procPatchi],
+                        procMesh.boundary()[procPatchi],
+                        pointProcAddressing_[proci]
+                    )
+                );
+            }
         }
     }
 }
@@ -109,6 +121,22 @@ Foam::pointFieldDecomposer::pointFieldDecomposer
 
 Foam::pointFieldDecomposer::~pointFieldDecomposer()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::pointFieldDecomposer::decomposes(const IOobjectList& objects)
+{
+    bool result = false;
+
+    #define DO_POINT_FIELDS_TYPE(Type, nullArg)                                \
+        result = result                                                        \
+         || !objects.lookupClass(PointField<Type>::typeName).empty();
+    FOR_ALL_FIELD_TYPES(DO_POINT_FIELDS_TYPE)
+    #undef DO_POINT_FIELDS_TYPE
+
+    return result;
+}
 
 
 // ************************************************************************* //

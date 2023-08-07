@@ -29,6 +29,7 @@ Description
 
 SourceFiles
     pointFieldReconstructor.C
+    pointFieldReconstructorTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -68,8 +69,21 @@ class pointFieldReconstructor
         //- Point patch addressing
         labelListListList patchPointAddressing_;
 
-        //- Number of fields reconstructed
-        label nReconstructed_;
+
+    // Private Member Functions
+
+        //- Return whether anything in the object list gets reconstructed
+        template<class FieldType>
+        static bool reconstructs
+        (
+            const IOobjectList& objects,
+            const HashSet<word>& selectedFields
+        );
+
+        //- Reconstruct field
+        template<class Type>
+        tmp<PointField<Type>>
+        reconstructField(const IOobject& fieldIoObject);
 
 
 public:
@@ -90,16 +104,12 @@ public:
 
     // Member Functions
 
-        //- Return number of fields reconstructed
-        label nReconstructed() const
-        {
-            return nReconstructed_;
-        }
-
-        //- Reconstruct field
-        template<class Type>
-        tmp<PointField<Type>>
-        reconstructField(const IOobject& fieldIoObject);
+        //- Return whether anything in the object list gets reconstructed
+        static bool reconstructs
+        (
+            const IOobjectList& objects,
+            const HashSet<word>& selectedFields
+        );
 
         //- Reconstruct and write all fields
         template<class Type>
@@ -124,7 +134,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "pointFieldReconstructorReconstructFields.C"
+    #include "pointFieldReconstructorTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

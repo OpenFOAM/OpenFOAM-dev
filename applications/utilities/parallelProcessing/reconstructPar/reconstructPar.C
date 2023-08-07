@@ -34,10 +34,10 @@ Description
 #include "timeSelector.H"
 #include "IOobjectList.H"
 #include "processorRunTimes.H"
-#include "domainDecomposition.H"
+#include "multiDomainDecomposition.H"
 #include "fvFieldReconstructor.H"
 #include "pointFieldReconstructor.H"
-#include "reconstructLagrangian.H"
+#include "lagrangianFieldReconstructor.H"
 
 using namespace Foam;
 
@@ -46,21 +46,37 @@ using namespace Foam;
 namespace Foam
 {
 
-bool haveAllTimes
+bool haveUniform
 (
-    const HashSet<word>& masterTimeDirSet,
-    const instantList& timeDirs
+    const processorRunTimes& runTimes,
+    const word& regionDir = word::null
 )
 {
-    // Loop over all times
-    forAll(timeDirs, timei)
-    {
-        if (!masterTimeDirSet.found(timeDirs[timei].name()))
-        {
-            return false;
-        }
-    }
-    return true;
+    return
+        fileHandler().isDir
+        (
+            fileHandler().filePath
+            (
+                runTimes.procTimes()[0].timePath()/regionDir/"uniform"
+            )
+        );
+}
+
+
+void reconstructUniform
+(
+    const processorRunTimes& runTimes,
+    const word& regionDir = word::null
+)
+{
+    fileHandler().cp
+    (
+        fileHandler().filePath
+        (
+            runTimes.procTimes()[0].timePath()/regionDir/"uniform"
+        ),
+        runTimes.completeTime().timePath()/regionDir
+    );
 }
 
 
@@ -85,10 +101,37 @@ void writeDecomposition(const domainDecomposition& meshes)
     cellProc.write();
 
     Info<< "Wrote decomposition as volScalarField::Internal to "
-        << cellProc.name() << " for use in postprocessing."
-        << nl << endl;
+        << cellProc.name() << " for use in postprocessing"
+        << endl;
 }
 
+
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+class delayedNewLine
+{
+    mutable bool first_;
+
+public:
+
+    delayedNewLine()
+    :
+        first_(true)
+    {}
+
+    friend Ostream& operator<<(Ostream& os, const delayedNewLine& dnl)
+    {
+        if (!dnl.first_) os << nl;
+        dnl.first_ = false;
+        return os;
+    }
+};
 
 }
 
@@ -102,9 +145,6 @@ int main(int argc, char *argv[])
         "Reconstruct fields of a parallel case"
     );
 
-    // Enable -constant ... if someone really wants it
-    // Enable -withZero to prevent accidentally trashing the initial fields
-    timeSelector::addOptions(true, true);
     argList::noParallel();
     #include "addRegionOption.H"
     #include "addAllRegionsOption.H"
@@ -112,7 +152,7 @@ int main(int argc, char *argv[])
     (
         "cellProc",
         "write cell processor indices as a volScalarField::Internal for "
-        "post-processing."
+        "post-processing"
     );
     argList::addOption
     (
@@ -132,7 +172,7 @@ int main(int argc, char *argv[])
         "list",
         "specify a list of lagrangian fields to be reconstructed. Eg, '(U d)' -"
         "regular expressions not currently supported, "
-        "positions always included."
+        "positions always included"
     );
     argList::addBoolOption
     (
@@ -150,6 +190,10 @@ int main(int argc, char *argv[])
         "only reconstruct new times (i.e. that do not exist already)"
     );
 
+    // Include explicit constant options, and explicit zero option (to prevent
+    // the user accidentally trashing the initial fields)
+    timeSelector::addOptions(true, true);
+
     #include "setRootCase.H"
 
     const bool writeCellProc = args.optionFound("cellProc");
@@ -164,8 +208,7 @@ int main(int argc, char *argv[])
 
     if (noFields)
     {
-        Info<< "Skipping reconstructing fields"
-            << nl << endl;
+        Info<< "Skipping reconstructing fields" << nl << endl;
     }
 
     const bool noLagrangian = args.optionFound("noLagrangian");
@@ -191,7 +234,7 @@ int main(int argc, char *argv[])
         {
             FatalErrorInFunction
                 << "Cannot specify noLagrangian and lagrangianFields "
-                << "options together."
+                << "options together"
                 << exit(FatalError);
         }
 
@@ -199,11 +242,11 @@ int main(int argc, char *argv[])
     }
 
     // Set time from database
-    Info<< "Create time\n" << endl;
+    Info<< "Create time" << nl << endl;
     processorRunTimes runTimes(Foam::Time::controlDictName, args);
 
-    // Allow override of time
-    const instantList times = runTimes.selectProc(args);
+    // Get the times to reconstruct
+    instantList times = runTimes.selectProc(args);
 
     const Time& runTime = runTimes.procTimes()[0];
 
@@ -228,484 +271,335 @@ int main(int argc, char *argv[])
     // Warn fileHandler of number of processors
     const_cast<fileOperation&>(fileHandler()).setNProcs(nProcs);
 
-    // Note that we do not set the runTime time so it is still the
-    // one set through the controlDict. The -time option
-    // only affects the selected set of times from processor0.
-    // - can be illogical
-    // + any point motion handled through mesh.readUpdate
+    // Quit if no times
     if (times.empty())
     {
-        WarningInFunction << "No times selected" << endl;
+        WarningInFunction << "No times selected" << nl << endl;
         exit(1);
     }
 
-    // Get current times if -newTimes
-    const bool newTimes   = args.optionFound("newTimes");
-    instantList masterTimeDirs;
-    if (newTimes)
+    // If only reconstructing new times then filter out existing times
+    if (args.optionFound("newTimes"))
     {
-        masterTimeDirs = runTimes.completeTime().times();
+        // Get all existing times
+        const instantList existingTimes = runTimes.completeTime().times();
+
+        // Put into a set
+        HashSet<word> existingTimesSet;
+        existingTimesSet.resize(2*existingTimes.size());
+        forAll(existingTimes, i)
+        {
+            existingTimesSet.insert(existingTimes[i].name());
+        }
+
+        // Remove times from the existing time set by shuffling up
+        label timei = 0;
+        forAll(times, timej)
+        {
+            if (!existingTimesSet.found(times[timej].name()))
+            {
+                times[timei ++] = times[timej];
+            }
+        }
+        times.resize(timei);
     }
-    HashSet<word> masterTimeDirSet(2*masterTimeDirs.size());
-    forAll(masterTimeDirs, i)
+
+    // Quit if no times
+    if (times.empty())
     {
-        masterTimeDirSet.insert(masterTimeDirs[i].name());
-    }
-    if
-    (
-        newTimes
-     && regionNames.size() == 1
-     && regionNames[0] == fvMesh::defaultRegion
-     && haveAllTimes(masterTimeDirSet, times)
-    )
-    {
-        Info<< "All times already reconstructed.\n\nEnd\n" << endl;
+        Info<< "All times already reconstructed" << nl << nl
+            << "End" << nl << endl;
         return 0;
     }
 
-    // Reconstruct all regions
-    forAll(regionNames, regioni)
+    // Create meshes
+    multiDomainDecomposition regionMeshes(runTimes, regionNames);
+    if (regionMeshes.readReconstruct(!noReconstructSets))
     {
-        const word& regionName = regionNames[regioni];
+        Info<< endl;
 
-        const word& regionDir =
-            regionName == polyMesh::defaultRegion
-          ? word::null
-          : regionName;
-
-        // Create meshes
-        Info<< "\n\nReconstructing mesh " << regionName << nl << endl;
-        domainDecomposition meshes(runTimes, regionName);
-        if (meshes.readReconstruct(!noReconstructSets) && writeCellProc)
+        if (writeCellProc)
         {
-            writeDecomposition(meshes);
-            fileHandler().flush();
-        }
-
-        // Loop over all times
-        forAll(times, timei)
-        {
-            if (newTimes && masterTimeDirSet.found(times[timei].name()))
+            forAll(regionNames, regioni)
             {
-                Info<< "Skipping time " << times[timei].name()
-                    << endl << endl;
-                continue;
-            }
-
-            // Set the time
-            runTimes.setTime(times[timei], timei);
-
-            Info<< "Time = " << runTimes.completeTime().userTimeName()
-                << nl << endl;
-
-            // Update the meshes
-            const fvMesh::readUpdateState state =
-                meshes.readUpdateReconstruct();
-
-            // Write the mesh out, if necessary
-            if (state != fvMesh::UNCHANGED)
-            {
-                meshes.writeComplete(!noReconstructSets);
-            }
-
-            // Write the decomposition, if necessary
-            if
-            (
-                writeCellProc
-             && meshes.completeMesh().facesInstance()
-             == runTimes.completeTime().name()
-            )
-            {
-                writeDecomposition(meshes);
+                writeDecomposition(regionMeshes.meshes(regioni)());
+                Info<< endl;
                 fileHandler().flush();
             }
+        }
+    }
 
-            // Get list of objects from processor0 database
-            IOobjectList objects
-            (
-                meshes.procMeshes()[0],
-                runTimes.procTimes()[0].name()
-            );
+    // Loop over all times
+    forAll(times, timei)
+    {
+        // Set the time
+        runTimes.setTime(times[timei], timei);
 
-            if (!noFields)
+        Info<< "Time = " << runTimes.completeTime().userTimeName()
+            << nl << endl;
+
+        // Update the meshes
+        const fvMesh::readUpdateState stat =
+            regionMeshes.readUpdateReconstruct();
+        if (stat >= fvMesh::TOPO_CHANGE) Info<< endl;
+
+        // Write the mesh out (if anything has changed)
+        regionMeshes.writeComplete(!noReconstructSets);
+
+        // Write the decomposition, if necessary
+        forAll(regionNames, regioni)
+        {
+            if (writeCellProc && stat >= fvMesh::TOPO_CHANGE)
             {
-                // If there are any FV fields, reconstruct them
-                Info<< "Reconstructing FV fields" << nl << endl;
-
-                fvFieldReconstructor fvReconstructor
-                (
-                    meshes.completeMesh(),
-                    meshes.procMeshes(),
-                    meshes.procFaceAddressing(),
-                    meshes.procCellAddressing(),
-                    meshes.procFaceAddressingBf()
-                );
-
-                fvReconstructor.reconstructFvVolumeInternalFields<scalar>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvVolumeInternalFields<vector>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvVolumeInternalFields
-                <sphericalTensor>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvVolumeInternalFields<symmTensor>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvVolumeInternalFields<tensor>
-                (
-                    objects,
-                    selectedFields
-                );
-
-                fvReconstructor.reconstructFvVolumeFields<scalar>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvVolumeFields<vector>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvVolumeFields<sphericalTensor>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvVolumeFields<symmTensor>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvVolumeFields<tensor>
-                (
-                    objects,
-                    selectedFields
-                );
-
-                fvReconstructor.reconstructFvSurfaceFields<scalar>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvSurfaceFields<vector>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvSurfaceFields<sphericalTensor>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvSurfaceFields<symmTensor>
-                (
-                    objects,
-                    selectedFields
-                );
-                fvReconstructor.reconstructFvSurfaceFields<tensor>
-                (
-                    objects,
-                    selectedFields
-                );
-
-                if (fvReconstructor.nReconstructed() == 0)
-                {
-                    Info<< "No FV fields" << nl << endl;
-                }
+                writeDecomposition(regionMeshes.meshes(regioni)());
+                Info<< endl;
+                fileHandler().flush();
             }
+        }
 
-            if (!noFields)
+        // Do a region-by-region reconstruction of all the available fields
+        forAll(regionNames, regioni)
+        {
+            const word& regionName = regionNames[regioni];
+            const word regionDir =
+                regionName == polyMesh::defaultRegion ? word::null : regionName;
+
+            const delayedNewLine dnl;
+
+            // Prefixed scope
             {
-                Info<< "Reconstructing point fields" << nl << endl;
+                const RegionConstRef<domainDecomposition> meshes =
+                    regionMeshes.meshes(regioni);
 
-                const pointMesh& completePMesh =
-                    pointMesh::New(meshes.completeMesh());
-
-                pointFieldReconstructor pointReconstructor
+                // Search for objects at this time
+                IOobjectList objects
                 (
-                    completePMesh,
-                    meshes.procMeshes(),
-                    meshes.procPointAddressing()
+                    meshes().procMeshes()[0],
+                    runTimes.procTimes()[0].name()
                 );
 
-                pointReconstructor.reconstructFields<scalar>
-                (
-                    objects,
-                    selectedFields
-                );
-                pointReconstructor.reconstructFields<vector>
-                (
-                    objects,
-                    selectedFields
-                );
-                pointReconstructor.reconstructFields<sphericalTensor>
-                (
-                    objects,
-                    selectedFields
-                );
-                pointReconstructor.reconstructFields<symmTensor>
-                (
-                    objects,
-                    selectedFields
-                );
-                pointReconstructor.reconstructFields<tensor>
-                (
-                    objects,
-                    selectedFields
-                );
-
-                if (pointReconstructor.nReconstructed() == 0)
+                if (!noFields)
                 {
-                    Info<< "No point fields" << nl << endl;
-                }
-            }
+                    Info<< dnl << "Reconstructing FV fields" << endl;
 
-
-            // If there are any clouds, reconstruct them.
-            // The problem is that a cloud of size zero will not get written so
-            // in pass 1 we determine the cloud names and per cloud name the
-            // fields. Note that the fields are stored as IOobjectList from
-            // the first processor that has them. They are in pass2 only used
-            // for name and type (scalar, vector etc).
-
-            if (!noLagrangian)
-            {
-                HashTable<IOobjectList> cloudObjects;
-
-                forAll(runTimes.procTimes(), proci)
-                {
-                    fileName lagrangianDir
+                    if
                     (
-                        fileHandler().filePath
+                        fvFieldReconstructor::reconstructs
                         (
-                            runTimes.procTimes()[proci].timePath()
-                           /regionDir
-                           /cloud::prefix
+                            objects,
+                            selectedFields
                         )
-                    );
-
-                    fileNameList cloudDirs;
-                    if (!lagrangianDir.empty())
+                    )
                     {
-                        cloudDirs = fileHandler().readDir
+                        fvFieldReconstructor fvReconstructor
                         (
-                            lagrangianDir,
-                            fileType::directory
+                            meshes().completeMesh(),
+                            meshes().procMeshes(),
+                            meshes().procFaceAddressing(),
+                            meshes().procCellAddressing(),
+                            meshes().procFaceAddressingBf()
                         );
+
+                        #define DO_FV_VOL_INTERNAL_FIELDS_TYPE(Type, nullArg)  \
+                            fvReconstructor.reconstructVolInternalFields<Type> \
+                            (objects, selectedFields);
+                        FOR_ALL_FIELD_TYPES(DO_FV_VOL_INTERNAL_FIELDS_TYPE)
+                        #undef DO_FV_VOL_INTERNAL_FIELDS_TYPE
+
+                        #define DO_FV_VOL_FIELDS_TYPE(Type, nullArg)           \
+                            fvReconstructor.reconstructVolFields<Type>         \
+                            (objects, selectedFields);
+                        FOR_ALL_FIELD_TYPES(DO_FV_VOL_FIELDS_TYPE)
+                        #undef DO_FV_VOL_FIELDS_TYPE
+
+                        #define DO_FV_SURFACE_FIELDS_TYPE(Type, nullArg)       \
+                            fvReconstructor.reconstructFvSurfaceFields<Type>   \
+                            (objects, selectedFields);
+                        FOR_ALL_FIELD_TYPES(DO_FV_SURFACE_FIELDS_TYPE)
+                        #undef DO_FV_SURFACE_FIELDS_TYPE
                     }
-
-                    forAll(cloudDirs, i)
+                    else
                     {
-                        // Check if we already have cloud objects for this
-                        // cloudname
-                        HashTable<IOobjectList>::const_iterator iter =
-                            cloudObjects.find(cloudDirs[i]);
+                        Info<< dnl << "    (no FV fields)" << endl;
+                    }
+                }
 
-                        if (iter == cloudObjects.end())
-                        {
-                            // Do local scan for valid cloud objects
-                            IOobjectList sprayObjs
+                if (!noFields)
+                {
+                    Info<< dnl << "Reconstructing point fields" << endl;
+
+                    if
+                    (
+                        pointFieldReconstructor::reconstructs
+                        (
+                            objects,
+                            selectedFields
+                        )
+                    )
+                    {
+                        pointFieldReconstructor pointReconstructor
+                        (
+                            pointMesh::New(meshes().completeMesh()),
+                            meshes().procMeshes(),
+                            meshes().procPointAddressing()
+                        );
+
+                        #define DO_POINT_FIELDS_TYPE(Type, nullArg)            \
+                            pointReconstructor.reconstructFields<Type>         \
+                            (objects, selectedFields);
+                        FOR_ALL_FIELD_TYPES(DO_POINT_FIELDS_TYPE)
+                        #undef DO_POINT_FIELDS_TYPE
+                    }
+                    else
+                    {
+                        Info<< dnl << "    (no point fields)" << endl;
+                    }
+                }
+
+                if (!noLagrangian)
+                {
+                    // Search for clouds that exist on any processor and add
+                    // them into this table of cloud objects
+                    HashTable<IOobjectList> cloudsObjects;
+                    forAll(runTimes.procTimes(), proci)
+                    {
+                        // Find cloud directories
+                        fileNameList cloudDirs
+                        (
+                            fileHandler().readDir
                             (
-                                meshes.procMeshes()[proci],
+                                fileHandler().filePath
+                                (
+                                    runTimes.procTimes()[proci].timePath()
+                                   /regionDir
+                                   /cloud::prefix
+                                ),
+                                fileType::directory
+                            )
+                        );
+
+                        // Add objects in any found cloud directories
+                        forAll(cloudDirs, i)
+                        {
+                            // Pass if we already have an objects for this name
+                            HashTable<IOobjectList>::const_iterator iter =
+                                cloudsObjects.find(cloudDirs[i]);
+                            if (iter != cloudsObjects.end()) continue;
+
+                            // Do local scan for valid cloud objects
+                            IOobjectList cloudObjs
+                            (
+                                meshes().procMeshes()[proci],
                                 runTimes.procTimes()[proci].name(),
-                                cloud::prefix/cloudDirs[i]
+                                cloud::prefix/cloudDirs[i],
+                                IOobject::MUST_READ,
+                                IOobject::NO_WRITE,
+                                false
                             );
 
-                            IOobject* positionsPtr =
-                                sprayObjs.lookup(word("positions"));
-
-                            if (positionsPtr)
+                            // If "positions" is present, then add to the table
+                            if (cloudObjs.lookup(word("positions")))
                             {
-                                cloudObjects.insert(cloudDirs[i], sprayObjs);
+                                cloudsObjects.insert(cloudDirs[i], cloudObjs);
+                            }
+                        }
+                    }
+
+                    // Reconstruct the objects found above
+                    if (cloudsObjects.size())
+                    {
+                        forAllConstIter
+                        (
+                            HashTable<IOobjectList>,
+                            cloudsObjects,
+                            iter
+                        )
+                        {
+                            const word cloudName =
+                                string::validate<word>(iter.key());
+
+                            const IOobjectList& cloudObjects = iter();
+
+                            Info<< dnl << "Reconstructing lagrangian fields "
+                                << "for cloud " << cloudName << endl;
+
+                            if
+                            (
+                                lagrangianFieldReconstructor::reconstructs
+                                (
+                                    cloudObjects,
+                                    selectedLagrangianFields
+                                )
+                            )
+                            {
+                                lagrangianFieldReconstructor
+                                    lagrangianReconstructor
+                                    (
+                                        meshes().completeMesh(),
+                                        meshes().procMeshes(),
+                                        meshes().procFaceAddressing(),
+                                        meshes().procCellAddressing(),
+                                        cloudName
+                                    );
+
+                                #define DO_CLOUD_FIELDS_TYPE(Type, nullArg)    \
+                                    lagrangianReconstructor                    \
+                                   .reconstructFields<Type>                    \
+                                    (cloudObjects, selectedLagrangianFields);
+                                DO_CLOUD_FIELDS_TYPE(label, );
+                                FOR_ALL_FIELD_TYPES(DO_CLOUD_FIELDS_TYPE)
+                                #undef DO_CLOUD_FIELDS_TYPE
+                            }
+                            else
+                            {
+                                Info<< dnl << "    (no lagrangian fields)"
+                                    << endl;
                             }
                         }
                     }
                 }
-
-                if (cloudObjects.size())
-                {
-                    // Pass2: reconstruct the cloud
-                    forAllConstIter(HashTable<IOobjectList>, cloudObjects, iter)
-                    {
-                        const word cloudName =
-                            string::validate<word>(iter.key());
-
-                        // Objects (on arbitrary processor)
-                        const IOobjectList& sprayObjs = iter();
-
-                        Info<< "Reconstructing lagrangian fields for cloud "
-                            << cloudName << nl << endl;
-
-                        reconstructLagrangianPositions
-                        (
-                            meshes.completeMesh(),
-                            cloudName,
-                            meshes.procMeshes(),
-                            meshes.procFaceAddressing(),
-                            meshes.procCellAddressing()
-                        );
-                        reconstructLagrangianFields<label>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                        reconstructLagrangianFieldFields<label>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                        reconstructLagrangianFields<scalar>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                        reconstructLagrangianFieldFields<scalar>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                        reconstructLagrangianFields<vector>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                        reconstructLagrangianFieldFields<vector>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                        reconstructLagrangianFields<sphericalTensor>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                        reconstructLagrangianFieldFields<sphericalTensor>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                        reconstructLagrangianFields<symmTensor>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                        reconstructLagrangianFieldFields<symmTensor>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                        reconstructLagrangianFields<tensor>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                        reconstructLagrangianFieldFields<tensor>
-                        (
-                            cloudName,
-                            meshes.completeMesh(),
-                            meshes.procMeshes(),
-                            sprayObjs,
-                            selectedLagrangianFields
-                        );
-                    }
-                }
-                else
-                {
-                    Info<< "No lagrangian fields" << nl << endl;
-                }
             }
 
-            // If there is a "uniform" directory in the time region
-            // directory copy from the master processor
+            Info<< dnl;
+        }
+
+        // Collect the uniform directory
+        if (haveUniform(runTimes))
+        {
+            Info<< "Collecting uniform files" << endl;
+
+            reconstructUniform(runTimes);
+
+            Info<< endl;
+        }
+
+        if (regionNames == wordList(1, polyMesh::defaultRegion)) continue;
+
+        // Collect the region uniform directories
+        forAll(regionNames, regioni)
+        {
+            const word& regionName = regionNames[regioni];
+            const word regionDir =
+                regionName == polyMesh::defaultRegion ? word::null : regionName;
+
+            if (haveUniform(runTimes, regionDir))
             {
-                fileName uniformDir0
-                (
-                    fileHandler().filePath
-                    (
-                        runTimes.procTimes()[0].timePath()/regionDir/"uniform"
-                    )
-                );
-
-                if (!uniformDir0.empty() && fileHandler().isDir(uniformDir0))
+                // Prefixed scope
                 {
-                    fileHandler().cp
-                    (
-                        uniformDir0,
-                        runTimes.completeTime().timePath()/regionDir
-                    );
-                }
-            }
+                    const RegionConstRef<domainDecomposition> meshes =
+                        regionMeshes.meshes(regioni);
 
-            // For the first region of a multi-region case additionally
-            // copy the "uniform" directory in the time directory
-            if (regioni == 0 && regionDir != word::null)
-            {
-                fileName uniformDir0
-                (
-                    fileHandler().filePath
-                    (
-                        runTimes.procTimes()[0].timePath()/"uniform"
-                    )
-                );
+                    Info<< "Collecting uniform files" << endl;
 
-                if (!uniformDir0.empty() && fileHandler().isDir(uniformDir0))
-                {
-                    fileHandler().cp
-                    (
-                        uniformDir0,
-                        runTimes.completeTime().timePath()
-                    );
+                    reconstructUniform(runTimes, regionDir);
                 }
+
+                Info<< endl;
             }
         }
     }
 
-    Info<< "\nEnd\n" << endl;
+    Info<< "End" << nl << endl;
 
     return 0;
 }
