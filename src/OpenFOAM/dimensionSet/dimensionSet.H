@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,6 @@ Description
 SourceFiles
     dimensionSet.C
     dimensionSetIO.C
-    dimensionSets.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -55,7 +54,6 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 class dimensionSet;
-class dimensionSets;
 
 // Friend Functions
 
@@ -174,6 +172,7 @@ private:
 
                 void unpop(const token&);
 
+
         public:
 
             // Constructors
@@ -202,22 +201,25 @@ private:
         };
 
 
+    // Private Data
+
+        //- Array of dimension exponents
+        scalar exponents_[nDimensions];
+
+
+    // Private Member Functions
+
         //- Reset exponents to nearest integer if close to it. Used to
         //  handle reading with insufficient precision.
         void round(const scalar tol);
 
+        //- Parse tokens into a dimensioned scalar
         dimensionedScalar parse
         (
             const label lastPrior,
             tokeniser& tis,
-            const HashTable<dimensionedScalar>&
+            const HashTable<dimensionedScalar>& readSet
         ) const;
-
-
-    // private data
-
-        // dimensionSet stored as an array of dimension exponents
-        scalar exponents_[nDimensions];
 
 
 public:
@@ -275,43 +277,12 @@ public:
 
     // I/O
 
-        //- Read using provided units. Used only in initial parsing
-        Istream& read
-        (
-            Istream& is,
-            scalar& multiplier,
-            const dictionary&
-        );
+        //- Read using units from the system table. Return the multiplier with
+        //  which to convert associated values to the given units.
+        Istream& read(Istream& is, scalar& multiplier);
 
-        //- Read using provided units
-        Istream& read
-        (
-            Istream& is,
-            scalar& multiplier,
-            const HashTable<dimensionedScalar>&
-        );
-
-        //- Read using system units
-        Istream& read
-        (
-            Istream& is,
-            scalar& multiplier
-        );
-
-        //- Write using provided units
-        Ostream& write
-        (
-            Ostream& os,
-            scalar& multiplier,
-            const dimensionSets&
-        ) const;
-
-        //- Write using system units
-        Ostream& write
-        (
-            Ostream& os,
-            scalar& multiplier
-        ) const;
+        //- Write
+        Ostream& write(Ostream& os) const;
 
 
     // Member Operators

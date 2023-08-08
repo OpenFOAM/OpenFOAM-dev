@@ -35,9 +35,7 @@ SourceFiles
 #ifndef dimensionSets_H
 #define dimensionSets_H
 
-#include "scalarMatrices.H"
-#include "dimensionedScalarFwd.H"
-#include "PtrList.H"
+#include "dimensionSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -80,65 +78,12 @@ extern const dimensionSet dimFlux;
 extern const dimensionSet dimMassFlux;
 
 
-class dimensionSets
-{
-    // Private Data
-
-        //- Set of dimensions
-        PtrList<dimensionedScalar> units_;
-
-        //- LU decomposition of dimensions
-        scalarSquareMatrix conversion_;
-
-        //- See above
-        labelList conversionPivots_;
-
-        //- Is LU decomposition valid
-        bool valid_;
-
-
-public:
-
-    // Constructors
-
-        //- Construct from all units and set of units to use for inversion
-        dimensionSets
-        (
-            const HashTable<dimensionedScalar>&,
-            const wordList& unitNames
-        );
-
-
-    // Member Functions
-
-        //- Return the units
-        const PtrList<dimensionedScalar>& units() const
-        {
-            return units_;
-        }
-
-        //- Is there a valid inverse of the selected unit
-        bool valid() const
-        {
-            return valid_;
-        }
-
-        //- (if valid) obtain set of coefficients of unitNames
-        void coefficients(scalarField&) const;
-};
-
-
-//- Top level dictionary
-dictionary& dimensionSystems();
-
 //- Add a unit
 void addUnit(const dimensionedScalar& unit);
 
-//- Set of all dimensions
-const HashTable<dimensionedScalar>& unitSet();
 
-//- Set of units
-const dimensionSets& writeUnitSet();
+//- Set of all units
+const HashTable<dimensionedScalar>& unitSet();
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

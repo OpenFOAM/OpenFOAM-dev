@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -335,60 +335,6 @@ bool Foam::dimensioned<Type>::readIfPresent(const dictionary& dict)
 
 
 template<class Type>
-Foam::Istream&
-Foam::dimensioned<Type>::read(Istream& is, const dictionary& readSet)
-{
-    // Read name
-    is >> name_;
-
-    // Read dimensionSet + multiplier
-    scalar mult;
-    dimensions_.read(is, mult, readSet);
-
-    // Read value
-    is >> value_;
-    value_ *= mult;
-
-    // Check state of Istream
-    is.check
-    (
-        "Istream& dimensioned<Type>::read(Istream& is, const dictionary&)"
-    );
-
-    return is;
-}
-
-
-template<class Type>
-Foam::Istream& Foam::dimensioned<Type>::read
-(
-    Istream& is,
-    const HashTable<dimensionedScalar>& readSet
-)
-{
-    // Read name
-    is >> name_;
-
-    // Read dimensionSet + multiplier
-    scalar mult;
-    dimensions_.read(is, mult, readSet);
-
-    // Read value
-    is >> value_;
-    value_ *= mult;
-
-    // Check state of Istream
-    is.check
-    (
-        "Istream& dimensioned<Type>::read"
-        "(Istream& is, const HashTable<dimensionedScalar>&)"
-    );
-
-    return is;
-}
-
-
-template<class Type>
 Foam::Istream& Foam::dimensioned<Type>::read(Istream& is)
 {
     // Read name
@@ -645,13 +591,12 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const dimensioned<Type>& dt)
     os << dt.name() << token::SPACE;
 
     // Write the dimensions
-    scalar mult;
-    dt.dimensions().write(os, mult);
+    dt.dimensions().write(os);
 
     os << token::SPACE;
 
     // Write the value
-    os << dt.value()/mult;
+    os << dt.value();
 
     // Check state of Ostream
     os.check("Ostream& operator<<(Ostream&, const dimensioned<Type>&)");

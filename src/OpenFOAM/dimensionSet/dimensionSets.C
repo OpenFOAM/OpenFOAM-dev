@@ -29,150 +29,6 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// Since dimensionSystems() can be reread we actually store a copy of
-// the controlDict subDict (v.s. a reference to the subDict for e.g.
-// dimensionedConstants)
-dictionary* dimensionSystemsPtr_(nullptr);
-HashTable<dimensionedScalar>* addedUnitsPtr_(nullptr);
-HashTable<dimensionedScalar>* unitSetPtr_(nullptr);
-dimensionSets* writeUnitSetPtr_(nullptr);
-
-// Delete the above data at the end of the run
-struct deleteDimensionSystemsPtr
-{
-    ~deleteDimensionSystemsPtr()
-    {
-        deleteDemandDrivenData(dimensionSystemsPtr_);
-        deleteDemandDrivenData(unitSetPtr_);
-        deleteDemandDrivenData(writeUnitSetPtr_);
-    }
-};
-
-deleteDimensionSystemsPtr deleteDimensionSystemsPtr_;
-
-}
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-Foam::dictionary& Foam::dimensionSystems()
-{
-    if (!dimensionSystemsPtr_)
-    {
-        dictionary* cachedPtr = nullptr;
-        dimensionSystemsPtr_ = new dictionary
-        (
-            debug::switchSet
-            (
-                "DimensionSets",
-                cachedPtr
-            )
-        );
-    }
-    return *dimensionSystemsPtr_;
-}
-
-
-void Foam::addUnit(const dimensionedScalar& unit)
-{
-    deleteDemandDrivenData(unitSetPtr_);
-    deleteDemandDrivenData(writeUnitSetPtr_);
-
-    if (!addedUnitsPtr_)
-    {
-        addedUnitsPtr_ = new HashTable<dimensionedScalar>();
-    }
-
-    addedUnitsPtr_->insert(unit.name(), unit);
-}
-
-
-const Foam::HashTable<Foam::dimensionedScalar>& Foam::unitSet()
-{
-    if (!unitSetPtr_)
-    {
-        const dictionary& dict = dimensionSystems();
-
-        if (!dict.found("unitSet"))
-        {
-            FatalIOErrorInFunction(dict)
-                << "Cannot find unitSet in dictionary " << dict.name()
-                << exit(FatalIOError);
-        }
-
-        const word unitSetCoeffs(word(dict.lookup("unitSet")) + "Coeffs");
-
-        if (!dict.found(unitSetCoeffs))
-        {
-            FatalIOErrorInFunction(dict)
-                << "Cannot find " << unitSetCoeffs << " in dictionary "
-                << dict.name() << exit(FatalIOError);
-        }
-
-        const dictionary& unitDict = dict.subDict(unitSetCoeffs);
-
-        unitSetPtr_ = new HashTable<dimensionedScalar>(unitDict.size());
-
-        forAllConstIter(dictionary, unitDict, iter)
-        {
-            if (iter().keyword() != "writeUnits")
-            {
-                dimensionedScalar dt(iter().keyword(), iter().stream());
-                const bool ok = unitSetPtr_->insert(iter().keyword(), dt);
-                if (!ok)
-                {
-                    FatalIOErrorInFunction(dict)
-                        << "Duplicate unit " << iter().keyword()
-                        << " in DimensionSets dictionary"
-                        << exit(FatalIOError);
-                }
-            }
-        }
-
-        if (addedUnitsPtr_)
-        {
-            forAllConstIter(HashTable<dimensionedScalar>, *addedUnitsPtr_, iter)
-            {
-                unitSetPtr_->insert(iter.key(), iter());
-            }
-        }
-
-        const wordList writeUnitNames
-        (
-            unitDict.lookupOrDefault<wordList>
-            (
-                "writeUnits",
-                wordList(0)
-            )
-        );
-
-        writeUnitSetPtr_ = new dimensionSets(*unitSetPtr_, writeUnitNames);
-
-        if (writeUnitNames.size() != 0 && writeUnitNames.size() != 7)
-        {
-            FatalIOErrorInFunction(dict)
-                << "Cannot find entry \"writeUnits\" in " << unitDict.name()
-                << " or it is not a wordList of size 7"
-                << exit(FatalIOError);
-        }
-    }
-
-    return *unitSetPtr_;
-}
-
-
-const Foam::dimensionSets& Foam::writeUnitSet()
-{
-    if (!writeUnitSetPtr_)
-    {
-        (void)unitSet();
-    }
-    return *writeUnitSetPtr_;
-}
-
-
 const Foam::dimensionSet Foam::dimless(0, 0, 0, 0, 0, 0, 0);
 
 const Foam::dimensionSet Foam::dimMass(1, 0, 0, 0, 0, 0, 0);
@@ -207,56 +63,126 @@ const Foam::dimensionSet Foam::dimFlux(dimArea*dimVelocity);
 const Foam::dimensionSet Foam::dimMassFlux(dimDensity*dimFlux);
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::dimensionSets::dimensionSets
-(
-    const HashTable<dimensionedScalar>& units,
-    const wordList& unitNames
-)
-:
-    units_(unitNames.size()),
-    conversion_(unitNames.size()),
-    conversionPivots_(unitNames.size()),
-    valid_(false)
+namespace Foam
 {
-    forAll(unitNames, i)
+
+dictionary* dimensionSetsDictPtr_(nullptr);
+
+const dictionary& dimensionSetsDict()
+{
+    if (!dimensionSetsDictPtr_)
     {
-        units_.set
+        dictionary* cachedPtr = nullptr;
+        dimensionSetsDictPtr_ = new dictionary
         (
-            i,
-            new dimensionedScalar
+            debug::switchSet
             (
-                units[unitNames[i]]
+                "DimensionSets",
+                cachedPtr
             )
         );
     }
 
-    if (unitNames.size() == 7)
+    return *dimensionSetsDictPtr_;
+}
+
+HashTable<dimensionedScalar>* addedUnitsPtr_(nullptr);
+HashTable<dimensionedScalar>* unitSetPtr_(nullptr);
+
+// Delete the above data at the end of the run
+struct deleteDimensionSystemsPtr
+{
+    ~deleteDimensionSystemsPtr()
     {
-        valid_ = true;
-
-        // Determine conversion from basic units to write units
-        for (label rowI = 0; rowI < conversion_.m(); rowI++)
-        {
-            scalar* row = conversion_[rowI];
-
-            for (label columnI = 0; columnI < conversion_.n(); columnI++)
-            {
-                const dimensionedScalar& dSet = units_[columnI];
-                row[columnI] = dSet.dimensions()[rowI];
-            }
-        }
-
-        conversionPivots_.setSize(conversion_.m());
-        LUDecompose(conversion_, conversionPivots_);
+        deleteDemandDrivenData(dimensionSetsDictPtr_);
+        deleteDemandDrivenData(addedUnitsPtr_);
+        deleteDemandDrivenData(unitSetPtr_);
     }
+};
+
+deleteDimensionSystemsPtr deleteDimensionSystemsPtr_;
+
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+void Foam::addUnit(const dimensionedScalar& unit)
+{
+    deleteDemandDrivenData(dimensionSetsDictPtr_);
+
+    if (!addedUnitsPtr_)
+    {
+        addedUnitsPtr_ = new HashTable<dimensionedScalar>();
+    }
+
+    addedUnitsPtr_->insert(unit.name(), unit);
+
+    deleteDemandDrivenData(unitSetPtr_);
 }
 
 
-void Foam::dimensionSets::coefficients(scalarField& exponents) const
+const Foam::HashTable<Foam::dimensionedScalar>& Foam::unitSet()
 {
-    LUBacksubstitute(conversion_, conversionPivots_, exponents);
+    if (!unitSetPtr_)
+    {
+        const dictionary& dimSetsDict = dimensionSetsDict();
+
+        if (!dimSetsDict.found("unitSet"))
+        {
+            FatalIOErrorInFunction(dimSetsDict)
+                << "Cannot find unitSet in dictionary " << dimSetsDict.name()
+                << exit(FatalIOError);
+        }
+
+        const word unitSetDictName =
+            dimSetsDict.lookup<word>("unitSet") + "Coeffs";
+
+        if (!dimSetsDict.found(unitSetDictName))
+        {
+            FatalIOErrorInFunction(dimSetsDict)
+                << "Cannot find " << unitSetDictName << " in dictionary "
+                << dimSetsDict.name() << exit(FatalIOError);
+        }
+
+        const dictionary& unitSetDict = dimSetsDict.subDict(unitSetDictName);
+
+        unitSetPtr_ = new HashTable<dimensionedScalar>(unitSetDict.size());
+
+        forAllConstIter(dictionary, unitSetDict, iter)
+        {
+            const dimensionedScalar dt(iter().keyword(), iter().stream());
+
+            const bool ok = unitSetPtr_->insert(iter().keyword(), dt);
+
+            if (!ok)
+            {
+                FatalIOErrorInFunction(dimSetsDict)
+                    << "Duplicate unit " << iter().keyword()
+                    << " read from dictionary"
+                    << exit(FatalIOError);
+            }
+        }
+
+        if (addedUnitsPtr_)
+        {
+            forAllConstIter(HashTable<dimensionedScalar>, *addedUnitsPtr_, iter)
+            {
+                const bool ok = unitSetPtr_->insert(iter.key(), iter());
+
+                if (!ok)
+                {
+                    FatalIOErrorInFunction(dimSetsDict)
+                        << "Duplicate unit " << iter.key()
+                        << " added to dictionary"
+                        << exit(FatalIOError);
+                }
+            }
+        }
+    }
+
+    return *unitSetPtr_;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,13 +198,7 @@ public:
 
     // I/O
 
-        //- Read value from stream and units from dictionary
-        Istream& read(Istream& is, const dictionary&);
-
-        //- Read value from stream and units from table
-        Istream& read(Istream& is, const HashTable<dimensionedScalar>&);
-
-        //- Read value from stream and units from system table
+        //- Read value from stream using units from the system table
         Istream& read(Istream& is);
 
 

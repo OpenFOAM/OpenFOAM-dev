@@ -200,18 +200,14 @@ DimensionSets
         acceleration [m s^-2]           1;
         kinematicPressure [Pa density^-1] 1;
 
-        // Scaled units. Only allowed in dimensionedType (dimensionedScalar,
-        // dimensionedVector etc.) and UniformDimensionedField, not
-        // in DimensionedField or GeometricField
+        // Scaled units. Supported in dimensionedType and
+        // UniformDimensionedField. Not supported in DimensionedField or
+        // GeometricField.
         cm          [m]                 1e-2;
         mm          [m]                 1e-3;
         km          [m]                 1e3;
         ms          [s]                 1e-3;
         us          [s]                 1e-6;
-
-        // Set of units used for printing. Can be any basic or derived
-        // but not scaled (only supported for dimensionedScalar, etc)
-        // writeUnits (kg m s K mol A Cd);
     }
 
     USCSCoeffs
@@ -224,10 +220,6 @@ DimensionSets
         mol         [0 0 0 0 1 0 0]     1;
         A           [0 0 0 0 0 1 0]     1;
         Cd          [0 0 0 0 0 0 1]     1;
-
-        // Set of units used for printing. Can be any basic or derived
-        // but not scaled (only supported for dimensionedScalar, etc)
-        // writeUnits (lb ft s R mol A Cd);
     }
 }
 
