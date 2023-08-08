@@ -52,8 +52,10 @@ void Foam::ConeInjection<CloudType>::setInjectionMethod()
     {
         injectionMethod_ = imDisc;
 
-        this->coeffDict().lookup("dInner") >> dInner_;
-        this->coeffDict().lookup("dOuter") >> dOuter_;
+        dInner_ =
+            dimensionedScalar("dInner", dimLength, this->coeffDict()).value();
+        dOuter_ =
+            dimensionedScalar("dOuter", dimLength, this->coeffDict()).value();
     }
     else
     {
@@ -108,8 +110,10 @@ void Foam::ConeInjection<CloudType>::setFlowType()
     {
         flowType_ = ftFlowRateAndDischarge;
 
-        this->coeffDict().lookup("dInner") >> dInner_;
-        this->coeffDict().lookup("dOuter") >> dOuter_;
+        dInner_ =
+            dimensionedScalar("dInner", dimLength, this->coeffDict()).value();
+        dOuter_ =
+            dimensionedScalar("dOuter", dimLength, this->coeffDict()).value();
 
         Cd_.reset
         (
