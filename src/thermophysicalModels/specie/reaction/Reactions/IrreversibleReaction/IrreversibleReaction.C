@@ -69,7 +69,7 @@ Foam::IrreversibleReaction<ThermoType, ReactionRate>::IrreversibleReaction
 template<class ThermoType, class ReactionRate>
 Foam::IrreversibleReaction<ThermoType, ReactionRate>::IrreversibleReaction
 (
-    const IrreversibleReaction<ThermoType,ReactionRate>& irr,
+    const IrreversibleReaction<ThermoType, ReactionRate>& irr,
     const speciesTable& species
 )
 :
