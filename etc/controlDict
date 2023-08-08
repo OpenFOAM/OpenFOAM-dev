@@ -206,6 +206,8 @@ DimensionSets
         cm          [m]                 1e-2;
         mm          [m]                 1e-3;
         km          [m]                 1e3;
+        ms          [s]                 1e-3;
+        us          [s]                 1e-6;
 
         // Set of units used for printing. Can be any basic or derived
         // but not scaled (only supported for dimensionedScalar, etc)
