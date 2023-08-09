@@ -25,6 +25,94 @@ License
 
 #include "DimensionedFunction1.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+inline dimensionedScalar readUnits(Istream& is)
+{
+    scalar multiplier;
+
+    dimensionSet d(dimless);
+    d.read(is, multiplier);
+
+    return dimensionedScalar(d, multiplier);
+}
+
+
+inline void setUnits
+(
+    Istream& is,
+    const word& prefix,
+    const dimensionedScalar& from,
+    dimensionedScalar& to
+)
+{
+    to.name() =
+        prefix + (prefix.empty() ? 'u' : 'U') + "nits";
+
+    if (from.dimensions() != to.dimensions())
+    {
+        FatalIOErrorInFunction(is)
+            << "The " << prefix << (prefix.empty() ? "" : "-")
+            << "dimensions " << from.dimensions()
+            << " provided do not match the required "
+            << "dimensions " << to.dimensions()
+            << exit(FatalIOError);
+    }
+
+    to.value() = from.value();
+}
+
+
+inline void readAndSetUnits
+(
+    Istream& is,
+    const word& prefix,
+    dimensionedScalar& units
+)
+{
+    setUnits(is, prefix, readUnits(is), units);
+}
+
+
+inline void lookupUnitsIfPresent
+(
+    const dictionary& dict,
+    const word& prefix,
+    dimensionedScalar& units
+)
+{
+    const word unitsKey =
+        prefix + (prefix.empty() ? 'u' : 'U') + "nits";
+    const word dimsKey =
+        prefix + (prefix.empty() ? 'd' : 'D') + "imensions";
+
+    const bool haveUnits = dict.found(unitsKey);
+    const bool haveDims = dict.found(dimsKey);
+
+    if (haveUnits && haveDims)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Both " << unitsKey << " and " << dimsKey
+            << " are specified. Only one is permitted."
+            << exit(FatalError);
+    }
+
+    if (haveUnits)
+    {
+        units = dimensionedScalar(unitsKey, units.dimensions(), dict);
+    }
+
+    if (haveDims)
+    {
+        readAndSetUnits(dict.lookup(dimsKey), prefix, units);
+    }
+}
+
+}
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
@@ -34,65 +122,6 @@ void Foam::Function1s::Dimensioned<Type>::read
     const dictionary& dict
 )
 {
-    // Read units from the given stream
-    auto readUnits = []
-    (
-        Istream& is,
-        const word& prefix,
-        dimensionedScalar& units
-    )
-    {
-        units.name() =
-            prefix + (prefix.empty() ? 'u' : 'U') + "nits";
-
-        dimensionSet d(dimless);
-        d.read(is, units.value());
-
-        if (d != units.dimensions())
-        {
-            FatalIOErrorInFunction(is)
-                << "The " << prefix << (prefix.empty() ? "" : "-")
-                << "dimensions " << d << " provided do not match the required "
-                << "dimensions " << units.dimensions()
-                << exit(FatalIOError);
-        }
-    };
-
-    // Read units if present in the given dictionary
-    auto lookupUnitsIfPresent = [&readUnits]
-    (
-        const dictionary& dict,
-        const word& prefix,
-        dimensionedScalar& units
-    )
-    {
-        const word unitsKey =
-            prefix + (prefix.empty() ? 'u' : 'U') + "nits";
-        const word dimsKey =
-            prefix + (prefix.empty() ? 'd' : 'D') + "imensions";
-
-        const bool haveUnits = dict.found(unitsKey);
-        const bool haveDims = dict.found(dimsKey);
-
-        if (haveUnits && haveDims)
-        {
-            FatalIOErrorInFunction(dict)
-                << "Both " << unitsKey << " and " << dimsKey
-                << " are specified. Only one is permitted."
-                << exit(FatalError);
-        }
-
-        if (haveUnits)
-        {
-            units = dimensionedScalar(unitsKey, units.dimensions(), dict);
-        }
-
-        if (haveDims)
-        {
-            readUnits(dict.lookup(dimsKey), prefix, units);
-        }
-    };
-
     // If the function is a dictionary (preferred) then read straightforwardly
     if (dict.isDict(name))
     {
@@ -121,15 +150,29 @@ void Foam::Function1s::Dimensioned<Type>::read
     // construct the function from the stream
     if (!firstToken.isWord() || !is.eof())
     {
-        // Peek at the next token
+        PtrList<dimensionedScalar> units;
+
+        // Peek at the next token and read the units, if provided
         token nextToken(is);
         is.putBack(nextToken);
-
-        // Read dimensions if they are provided
         if (nextToken == token::BEGIN_SQR)
         {
-            readUnits(is, "", units_);
+            units.append(new dimensionedScalar(readUnits(is)));
+
+            // And again ...
+            token nextToken(is);
+            is.putBack(nextToken);
+            if (nextToken == token::BEGIN_SQR)
+            {
+                units.append(new dimensionedScalar(readUnits(is)));
+            }
         }
+
+        // Set the units. If there is just one, then just take this to be the
+        // value units. If two, then the first is the argument units and the
+        // second is the value units.
+        if (units.size() == 2) setUnits(is, "x", units.first(), xUnits_);
+        if (units.size() >= 1) setUnits(is, "", units.last(), units_);
 
         // Construct from a stream
         value_.reset(Function1<Type>::New(name, Function1Type, is).ptr());

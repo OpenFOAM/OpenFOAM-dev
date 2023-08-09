@@ -203,11 +203,12 @@ DimensionSets
         // Scaled units. Supported in dimensionedType and
         // UniformDimensionedField. Not supported in DimensionedField or
         // GeometricField.
-        cm          [m]                 1e-2;
+        g           [kg]                1e-3;
         mm          [m]                 1e-3;
+        cm          [m]                 1e-2;
         km          [m]                 1e3;
-        ms          [s]                 1e-3;
         us          [s]                 1e-6;
+        ms          [s]                 1e-3;
     }
 
     USCSCoeffs
