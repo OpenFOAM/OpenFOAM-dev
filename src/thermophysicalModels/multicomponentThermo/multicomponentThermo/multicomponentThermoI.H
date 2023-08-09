@@ -104,24 +104,33 @@ inline Foam::label Foam::multicomponentThermo::specieIndex
 }
 
 
+inline Foam::volScalarFieldListSlicer
+Foam::multicomponentThermo::implementation::Yslicer() const
+{
+    return volScalarFieldListSlicer(Y_);
+}
+
+
 inline Foam::scalarFieldListSlice
 Foam::multicomponentThermo::implementation::cellComposition
 (
+    const volScalarFieldListSlicer& Yslicer,
     const label celli
 ) const
 {
-    return Yslicer_.slice(celli);
+    return Yslicer.slice(celli);
 }
 
 
 inline Foam::scalarFieldListSlice
 Foam::multicomponentThermo::implementation::patchFaceComposition
 (
+    const volScalarFieldListSlicer& Yslicer,
     const label patchi,
     const label facei
 ) const
 {
-    return Yslicer_.patchSlice(patchi, facei);
+    return Yslicer.patchSlice(patchi, facei);
 }
 
 

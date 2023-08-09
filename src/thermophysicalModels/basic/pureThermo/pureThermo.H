@@ -61,12 +61,20 @@ public:
 
     // Member Functions
 
+        //- Get the slicer
+        inline nil Yslicer() const;
+
         //- Get the composition of an internal cell
-        inline nil cellComposition(const label celli) const;
+        inline nil cellComposition
+        (
+            const nil,
+            const label celli
+        ) const;
 
         //- Get the composition of a boundary face
         inline nil patchFaceComposition
         (
+            const nil,
             const label patchi,
             const label facei
         ) const;

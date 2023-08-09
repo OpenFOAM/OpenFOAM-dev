@@ -294,9 +294,6 @@ protected:
         //- Species mass fractions
         PtrList<volScalarField> Y_;
 
-        //- Species mass fractions slicing engine
-        volScalarFieldListSlicer Yslicer_;
-
 
     // Protected Member Functions
 
@@ -339,12 +336,20 @@ public:
         //- Access the mass-fraction fields
         virtual const PtrList<volScalarField>& Y() const;
 
+        //- Get the slicer
+        inline volScalarFieldListSlicer Yslicer() const;
+
         //- Get the composition of an internal cell
-        inline scalarFieldListSlice cellComposition(const label celli) const;
+        inline scalarFieldListSlice cellComposition
+        (
+            const volScalarFieldListSlicer& Yslicer,
+            const label celli
+        ) const;
 
         //- Get the composition of a boundary face
         inline scalarFieldListSlice patchFaceComposition
         (
+            const volScalarFieldListSlicer& Yslicer,
             const label patchi,
             const label facei
         ) const;

@@ -55,24 +55,33 @@ inline const Foam::volScalarField& Foam::psiuMulticomponentThermo::Y
 }
 
 
+inline Foam::volScalarFieldListSlicer
+Foam::psiuMulticomponentThermo::implementation::Yslicer() const
+{
+    return volScalarFieldListSlicer(Y_);
+}
+
+
 inline Foam::scalarFieldListSlice
 Foam::psiuMulticomponentThermo::implementation::cellComposition
 (
+    const volScalarFieldListSlicer& Yslicer,
     const label celli
 ) const
 {
-    return Yslicer_.slice(celli);
+    return Yslicer.slice(celli);
 }
 
 
 inline Foam::scalarFieldListSlice
 Foam::psiuMulticomponentThermo::implementation::patchFaceComposition
 (
+    const volScalarFieldListSlicer& Yslicer,
     const label patchi,
     const label facei
 ) const
 {
-    return Yslicer_.patchSlice(patchi, facei);
+    return Yslicer.patchSlice(patchi, facei);
 }
 
 

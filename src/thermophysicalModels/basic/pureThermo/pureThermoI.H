@@ -27,7 +27,17 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::nil Foam::pureThermo::cellComposition(const label celli) const
+inline Foam::nil Foam::pureThermo::Yslicer() const
+{
+    return nil();
+}
+
+
+inline Foam::nil Foam::pureThermo::cellComposition
+(
+    const nil,
+    const label celli
+) const
 {
     return nil();
 }
@@ -35,6 +45,7 @@ inline Foam::nil Foam::pureThermo::cellComposition(const label celli) const
 
 inline Foam::nil Foam::pureThermo::patchFaceComposition
 (
+    const nil,
     const label patchi,
     const label facei
 ) const

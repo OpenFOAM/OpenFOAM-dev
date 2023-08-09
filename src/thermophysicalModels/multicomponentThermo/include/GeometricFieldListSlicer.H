@@ -56,6 +56,7 @@ class GeometricFieldListSlicer
         // Type of the geometric field
         typedef GeometricField<Type, PatchField, GeoMesh> geoFieldType;
 
+
     // Private Data
 
         //- Pointers to the internal fields

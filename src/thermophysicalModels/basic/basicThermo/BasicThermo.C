@@ -53,9 +53,11 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::volScalarFieldProperty
 
     volScalarField& psi = tPsi.ref();
 
+    auto Yslicer = this->Yslicer();
+
     forAll(psi, celli)
     {
-        auto composition = this->cellComposition(celli);
+        auto composition = this->cellComposition(Yslicer, celli);
 
         psi[celli] =
             ((this->*mixture)(composition).*psiMethod)(args[celli] ...);
@@ -67,7 +69,8 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::volScalarFieldProperty
     {
         forAll(psiBf[patchi], patchFacei)
         {
-            auto composition = this->patchFaceComposition(patchi, patchFacei);
+            auto composition =
+                this->patchFaceComposition(Yslicer, patchi, patchFacei);
 
             psiBf[patchi][patchFacei] =
                 ((this->*mixture)(composition).*psiMethod)
@@ -98,9 +101,11 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::cellSetProperty
     tmp<scalarField> tPsi(new scalarField(cells.size()));
     scalarField& psi = tPsi.ref();
 
+    auto Yslicer = this->Yslicer();
+
     forAll(cells, celli)
     {
-        auto composition = this->cellComposition(cells[celli]);
+        auto composition = this->cellComposition(Yslicer, cells[celli]);
 
         psi[celli] =
             ((this->*mixture)(composition).*psiMethod)(args[celli] ...);
@@ -127,9 +132,12 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::patchFieldProperty
     );
     scalarField& psi = tPsi.ref();
 
+    auto Yslicer = this->Yslicer();
+
     forAll(psi, patchFacei)
     {
-        auto composition = this->patchFaceComposition(patchi, patchFacei);
+        auto composition =
+            this->patchFaceComposition(Yslicer, patchi, patchFacei);
 
         psi[patchFacei] =
             ((this->*mixture)(composition).*psiMethod)(args[patchFacei] ...);

@@ -42,9 +42,11 @@ void Foam::SolidThermo<BaseThermo>::calculate()
     scalarField& kappaCells = this->kappa_.primitiveFieldRef();
     vectorField& KappaCells = this->Kappa_.primitiveFieldRef();
 
+    auto Yslicer = this->Yslicer();
+
     forAll(TCells, celli)
     {
-        auto composition = this->cellComposition(celli);
+        auto composition = this->cellComposition(Yslicer, celli);
 
         const typename BaseThermo::mixtureType::thermoMixtureType&
             thermoMixture = this->thermoMixture(composition);
@@ -115,7 +117,8 @@ void Foam::SolidThermo<BaseThermo>::calculate()
         {
             forAll(pT, facei)
             {
-                auto composition = this->patchFaceComposition(patchi, facei);
+                auto composition =
+                    this->patchFaceComposition(Yslicer, patchi, facei);
 
                 const typename BaseThermo::mixtureType::thermoMixtureType&
                     thermoMixture = this->thermoMixture(composition);
@@ -146,7 +149,8 @@ void Foam::SolidThermo<BaseThermo>::calculate()
         {
             forAll(pT, facei)
             {
-                auto composition = this->patchFaceComposition(patchi, facei);
+                auto composition =
+                    this->patchFaceComposition(Yslicer, patchi, facei);
 
                 const typename BaseThermo::mixtureType::thermoMixtureType&
                     thermoMixture = this->thermoMixture(composition);

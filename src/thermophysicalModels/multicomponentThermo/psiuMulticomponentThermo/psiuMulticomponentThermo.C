@@ -112,8 +112,7 @@ Foam::psiuMulticomponentThermo::implementation::implementation
 )
 :
     species_(specieNames),
-    Y_(species_.size()),
-    Yslicer_()
+    Y_(species_.size())
 {
     forAll(species_, i)
     {
@@ -134,8 +133,6 @@ Foam::psiuMulticomponentThermo::implementation::implementation
             )
         );
     }
-
-    Yslicer_.set(Y_);
 }
 
 

@@ -90,8 +90,7 @@ Foam::multicomponentThermo::implementation::implementation
       : -1
     ),
     active_(species_.size(), true),
-    Y_(species_.size()),
-    Yslicer_()
+    Y_(species_.size())
 {
     if (species_.size() && defaultSpeciei_ == -1)
     {
@@ -202,8 +201,6 @@ Foam::multicomponentThermo::implementation::implementation
             );
         }
     }
-
-    Yslicer_.set(Y_);
 
     correctMassFractions();
 }
