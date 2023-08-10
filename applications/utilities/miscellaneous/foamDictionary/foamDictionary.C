@@ -419,7 +419,7 @@ int main(int argc, char *argv[])
     else
     {
         dictPtr = new dictionary(dictPath);
-        dictFormat = readDict(*dictPtr, dictPath);
+        dictFormat = readDict(*dictPtr, args.path()/dictPath);
     }
 
     dictionary& dict = localDictPtr ? *localDictPtr : *dictPtr;
@@ -648,7 +648,7 @@ int main(int argc, char *argv[])
         }
         else if (dictPtr)
         {
-            OFstream os(dictPath, dictFormat);
+            OFstream os(args.path()/dictPath, dictFormat);
             IOobject::writeBanner(os);
             if (dictPtr->found(IOobject::foamFile))
             {
