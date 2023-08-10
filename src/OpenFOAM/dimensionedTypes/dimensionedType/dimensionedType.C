@@ -54,13 +54,10 @@ void Foam::dimensioned<Type>::initialise(Istream& is)
 
         if (dims != dimensions_)
         {
-            FatalIOErrorInFunction
-            (
-                is
-            ) << "The dimensions " << dims
-              << " provided do not match the required dimensions "
-              << dimensions_
-              << abort(FatalIOError);
+            FatalIOErrorInFunction(is)
+                << "The dimensions " << dims
+                << " provided do not match the required dimensions "
+                << dimensions_ << abort(FatalIOError);
         }
     }
 
@@ -337,16 +334,27 @@ bool Foam::dimensioned<Type>::readIfPresent(const dictionary& dict)
 template<class Type>
 Foam::Istream& Foam::dimensioned<Type>::read(Istream& is)
 {
-    // Read name
-    is >> name_;
+    // If the name is present, read it
+    token nextToken(is);
+    is.putBack(nextToken);
+    if (nextToken.isWord())
+    {
+        is >> name_;
+    }
 
-    // Read dimensionSet + multiplier
-    scalar mult;
-    dimensions_.read(is, mult);
+    // Read the dimensions and multiplier
+    scalar multiplier;
+    dimensions_.read(is, multiplier);
 
-    // Read value
+    // Read and scale the value
     is >> value_;
-    value_ *= mult;
+    value_ *= multiplier;
+
+    // If the name is not present, set it
+    if (!nextToken.isWord())
+    {
+        name_ = Foam::name(value_);
+    }
 
     // Check state of Istream
     is.check
