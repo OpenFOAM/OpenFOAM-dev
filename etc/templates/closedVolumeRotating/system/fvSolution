@@ -65,7 +65,7 @@ solvers
     }
 }
 
-"(PIMPLE|PISO)"
+PIMPLE
 {
     correctPhi          yes;
     correctMeshPhi      yes;

@@ -49,7 +49,7 @@ solvers
     }
 }
 
-"(PIMPLE|PISO)"
+PIMPLE
 {
     nOuterCorrectors 1;
     nCorrectors     2;
