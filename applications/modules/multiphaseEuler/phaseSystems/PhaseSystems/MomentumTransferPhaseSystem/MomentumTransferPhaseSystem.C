@@ -1442,8 +1442,8 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::partialElimination
         {
             for (label j = i + 1; j < phases.size(); j++)
             {
-                KdByAs[i][j] /= KdByAs[i][i];
-                KdByAfs[i][j] /= KdByAfs[i][i];
+                KdByAs[j][i] /= KdByAs[i][i];
+                KdByAfs[j][i] /= KdByAfs[i][i];
                 for (label k = i + 1; k < phases.size(); ++ k)
                 {
                     KdByAs[j][k] -= KdByAs[j][i]*KdByAs[i][k];
@@ -1584,7 +1584,7 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::partialEliminationf
         {
             for (label j = i + 1; j < phases.size(); j++)
             {
-                phiKdfs[i][j] /= phiKdfs[i][i];
+                phiKdfs[j][i] /= phiKdfs[i][i];
                 for (label k = i + 1; k < phases.size(); ++ k)
                 {
                     phiKdfs[j][k] -= phiKdfs[j][i]*phiKdfs[i][k];
