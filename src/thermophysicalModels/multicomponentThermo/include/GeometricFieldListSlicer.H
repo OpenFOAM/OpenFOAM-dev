@@ -74,21 +74,29 @@ public:
         inline GeometricFieldListSlicer()
         {}
 
-        //- Construct from a list of fields
-        inline GeometricFieldListSlicer(const PtrList<geoFieldType>& geoFields)
+        //- Construct from a mesh and a list of fields
+        inline GeometricFieldListSlicer
+        (
+            const typename geoFieldType::Mesh& mesh,
+            const PtrList<geoFieldType>& geoFields
+        )
         {
-            set(geoFields);
+            set(mesh, geoFields);
         }
 
 
     // Member Functions
 
         //- Set the field pointers
-        inline void set(const PtrList<geoFieldType>& geoFields)
+        inline void set
+        (
+            const typename geoFieldType::Mesh& mesh,
+            const PtrList<geoFieldType>& geoFields
+        )
         {
             fields_.resize(geoFields.size());
 
-            patchFields_.resize(geoFields[0].boundaryField().size(), fields_);
+            patchFields_.resize(mesh.boundary().size(), fields_);
 
             forAll(geoFields, fieldi)
             {

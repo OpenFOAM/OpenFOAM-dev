@@ -107,7 +107,7 @@ inline Foam::label Foam::multicomponentThermo::specieIndex
 inline Foam::volScalarFieldListSlicer
 Foam::multicomponentThermo::implementation::Yslicer() const
 {
-    return volScalarFieldListSlicer(Y_);
+    return volScalarFieldListSlicer(mesh(), Y_);
 }
 
 

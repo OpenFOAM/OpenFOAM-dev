@@ -58,7 +58,7 @@ inline const Foam::volScalarField& Foam::psiuMulticomponentThermo::Y
 inline Foam::volScalarFieldListSlicer
 Foam::psiuMulticomponentThermo::implementation::Yslicer() const
 {
-    return volScalarFieldListSlicer(Y_);
+    return volScalarFieldListSlicer(mesh(), Y_);
 }
 
 
