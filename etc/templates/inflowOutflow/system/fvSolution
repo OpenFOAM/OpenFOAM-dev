@@ -77,17 +77,32 @@ potentialFlow
     nNonOrthogonalCorrectors 10;
 }
 
+// timeScheme = steadyState for a steady-state simulation; otherwise transient
+timeScheme $fvSchemes!ddtSchemes/default;
+
+#ifeq $timeScheme steadyState
 relaxationFactors
 {
+    // Steady-state relaxation factors
     fields
     {
-        p               0.3;
+        p     0.3;
     }
     equations
     {
-        U               0.7;
+        U     0.7;
         "(k|omega|epsilon)" 0.7;
     }
 }
+#else
+relaxationFactors
+{
+    // Transient relaxation factors
+    equations
+    {
+        ".*"  1;
+    }
+}
+#endif
 
 // ************************************************************************* //
