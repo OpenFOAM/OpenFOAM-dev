@@ -136,7 +136,7 @@ void Foam::blockMeshCylindricalConfiguration::writeDefaultPatch()
     }
     else
     {
-        defaultPatch = {"sides", "patch"};
+        defaultPatch = {"background", "internal"};
     }
 
     beginDict(os_, "defaultPatch");
@@ -421,10 +421,17 @@ Foam::blockMeshCylindricalConfiguration::blockMeshCylindricalConfiguration
 
     if (rzbb_.volume() == 0)
     {
-        FatalErrorInFunction
-            << "Attempting to create a cylindrical background mesh"
-            << nl << "but the rotatingZone surface has zero volume."
-            << exit(FatalError);
+        WarningInFunction
+            << "Creating a cylindrical background mesh without a "
+            << "rotatingZone specified by the '-rotatingZones' option."
+            << nl <<endl;
+
+        // Create the intermediate interface at 40% of domain size if no
+        // rotating zone is specified
+        scalar factor = 0.4;
+
+        rzbb_.min() = factor*bb_.min();
+        rzbb_.max() = factor*bb_.max();
     }
 
     calcBlockMeshDict();
