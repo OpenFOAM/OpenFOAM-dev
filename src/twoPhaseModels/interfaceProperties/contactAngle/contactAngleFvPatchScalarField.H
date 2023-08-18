@@ -37,8 +37,31 @@ Description
 
     Note that if any of the first three options are used the boundary condition
     on \c p_rgh must set to guarantee that the flux is corrected to be zero at
-    the wall e.g.:
+    the wall.
 
+Usage
+    \table
+        Property     | Description                  | Required | Default value
+        limit        | Limiting option              | yes      |
+        contantAngle | Contact angle model settings | no       | none
+    \endtable
+
+    Example of the boundary condition specification for a constant angle:
+    \verbatim
+    <patchName>
+    {
+        type            contactAngle;
+        limit           none;
+        contactAngle
+        {
+            type            constant;
+            theta0          70;
+        }
+    }
+    \endverbatim
+
+    If the contactAngle sub-dictionary is not given, a constant angle will be
+    assumed. Example:
     \verbatim
     <patchName>
     {
@@ -77,10 +100,32 @@ class contactAngleFvPatchScalarField
 :
     public fixedGradientFvPatchScalarField
 {
+public:
+
+    // Public Enumerations
+
+        //- Alpha limit options
+        enum limitControls
+        {
+            lcNone,
+            lcGradient,
+            lcZeroGradient,
+            lcAlpha
+        };
+
+        //- Alpha limit option names
+        static const NamedEnum<limitControls, 4> limitControlNames_;
+
+
+private:
+
     // Private Data
 
         //- Equilibrium contact angle function
         autoPtr<contactAngleModel> contactAngle_;
+
+        //- Alpha limiting option
+        limitControls limit_;
 
 
 public:
@@ -88,17 +133,6 @@ public:
     //- Runtime type information
     TypeName("contactAngle");
 
-    //- Alpha limit options
-    enum limitControls
-    {
-        lcNone,
-        lcGradient,
-        lcZeroGradient,
-        lcAlpha
-    };
-
-    static const NamedEnum<limitControls, 4> limitControlNames_;
-    limitControls limit_;
 
     // Constructors
 

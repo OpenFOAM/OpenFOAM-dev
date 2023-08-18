@@ -26,7 +26,46 @@ Class
 
 Description
     Contact-angle boundary condition for multi-phase interface-capturing
-    simulations.
+    simulations. Sets of coefficients are given for the contact angle with each
+    other phase. These coefficients can specify either a constant or a dynamic
+    contact angle.
+
+Usage
+    \table
+        Property | Description                      | Required  | Default value
+        theta0   | Equilibrium contact angle        | yes       |
+        uTheta   | Velocity scale                   | no        | none
+        thetaA   | Limiting advancing contact angle | if uTheta | none
+        thetaR   | Limiting receding contact angle  | if uTheta | none
+    \endtable
+
+    Example of the boundary condition specification:
+    \verbatim
+    <patchName>
+    {
+        type            alphaContactAngle;
+
+        contactAngleProperties
+        {
+            // Constant contact angle with air
+            air
+            {
+                theta0          90;
+            }
+
+            // Dynamic contact angle with water
+            oil
+            {
+                theta0          70;
+                uTheta          1;
+                thetaA          100;
+                thetaR          50;
+            }
+        }
+
+        value           uniform 0;
+    }
+    \endverbatim
 
 SourceFiles
     alphaContactAngleFvPatchScalarField.C
