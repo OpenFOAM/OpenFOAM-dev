@@ -83,8 +83,8 @@ class snappyHexMeshConfiguration
         //- Using explicit feature capturing?
         const bool explicitFeatures_;
 
-        //- Number of layers at wall patches, default 0
-        const label layers_;
+        //- Number of layers on specified surfaces
+        const List<Tuple2<word, label>> layers_;
 
         //- Thickness of the near wall cells with layer addition
         const scalar firstLayerThickness_;
@@ -180,7 +180,7 @@ public:
             const List<Tuple3<vector, vector, label>>& refinementBoxes,
             const List<Tuple3<word, scalar, label>>& refinementDists,
             const bool explicitFeatures,
-            const label layers,
+            const List<Tuple2<word, label>>& layers,
             const scalar firstLayerThickness,
             const scalar layerExpansionRatio,
             const point& insidePoint,

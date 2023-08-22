@@ -37,7 +37,7 @@ void Foam::snappyHexMeshConfiguration::writeSnappySwitches()
     dict.add
     (
         "addLayers",
-        layers_ == 0 ? "off" : "on",
+        layers_.empty() ? "off" : "on",
         true
     );
 
@@ -439,21 +439,33 @@ void Foam::snappyHexMeshConfiguration::writeAddLayersControls()
 
     beginDict(os_, "layers");
 
-    forAll(surfaces_, i)
+    if (layers_.empty())
     {
-        switch (surfaces_[i].type())
+        // Add convenient entries with zero layers if layers are switched off.
+        forAll(surfaces_, i)
         {
-            case surfaceType::wall:
-            case surfaceType::external:
-            case surfaceType::baffle:
+            switch (surfaces_[i].type())
             {
-                os_ << indent << "\"" << surfaces_[i].name()
-                    << ".*\" { nSurfaceLayers "
-                    << layers_ << "; }" << endl;
-                break;
+                case surfaceType::wall:
+                case surfaceType::external:
+                case surfaceType::baffle:
+                {
+                    os_ << indent << "\"" << surfaces_[i].name()
+                        << ".*\" { nSurfaceLayers 0; }" << endl;
+                    break;
+                }
+                default: break;
             }
-
-            default: break;
+        }
+    }
+    else
+    {
+        // Add entries for specified surfaces.
+        forAll(layers_, i)
+        {
+            os_ << indent << "\"" << layers_[i].first()
+                << ".*\" { nSurfaceLayers "
+                << layers_[i].second() << "; }" << endl;
         }
     }
 
@@ -521,7 +533,7 @@ Foam::snappyHexMeshConfiguration::snappyHexMeshConfiguration
     const List<Tuple3<vector, vector, label>>& refinementBoxes,
     const List<Tuple3<word, scalar, label>>& refinementDists,
     const bool explicitFeatures,
-    const label layers,
+    const List<Tuple2<word, label>>& layers,
     const scalar firstLayerThickness,
     const scalar layerExpansionRatio,
     const point& insidePoint,

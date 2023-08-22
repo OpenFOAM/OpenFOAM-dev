@@ -86,8 +86,8 @@ Description
     '-refinementBoxes' for quick, box-shaped refinement regions specified by min
     and max bounds; '-refinementDists' for distance-based refinement; and
     '-nCellsBetweenLevels' to control the transition between refinement
-    levels. A '-layers' option specifies additional layers of cells at wall
-    boundaries. The insidePoint parameter is set to '(0 0 0)' by default but can
+    levels. A '-layers' option controls additional layers of cells at specified
+    surfaces. The insidePoint parameter is set to '(0 0 0)' by default but can
     be overridden using the '-insidePoint' option.
 
 Usage
@@ -137,8 +137,8 @@ Usage
       - \par -explicitFeatures,
         Use explicit feature capturing, default is implicit
 
-      - \par -layers \<int\>
-        Specify <int> surface layers at wall boundaries, default 0
+      - \par -layers \<entry\>
+        Number of layers on specified surfaces, e.g. '((car 3) (ground 4))'
 
       - \par -firstLayerThickness \<value\>
         Specify the thickness of the near wall cells for layer addition
@@ -322,8 +322,8 @@ int main(int argc, char *argv[])
     argList::addOption
     (
         "layers",
-        "int",
-        "specify <int> surface layers at wall boundaries, default 0"
+        "entry",
+        "number of layers on specified surfaces, e.g. '((car 3) (ground 4))'"
     );
 
     argList::addOption
@@ -592,7 +592,14 @@ int main(int argc, char *argv[])
 
     const bool explicitFeatures(args.optionFound("explicitFeatures"));
 
-    const label layers(args.optionLookupOrDefault<label>("layers", 0));
+    List<Tuple2<word, label>> layers;
+    if (args.optionFound("layers"))
+    {
+        layers.append
+        (
+            args.optionReadList<Tuple2<word, label>>("layers")
+        );
+    }
 
     const scalar firstLayerThickness
     (
