@@ -859,12 +859,12 @@ void Foam::polyMesh::swap(polyMesh& otherMesh)
         const polyPatchList patches
         (
             boundary_,
-            boundary_
+            otherMesh.boundary_
         );
         const polyPatchList otherPatches
         (
             otherMesh.boundary_,
-            otherMesh.boundary_
+            boundary_
         );
 
         updatePatches(otherPatches, boundary_);
