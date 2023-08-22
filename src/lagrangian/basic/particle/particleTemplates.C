@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,73 @@ License
 #include "wedgePolyPatch.H"
 #include "meshTools.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class BoundaryMsg>
+bool Foam::particle::locate
+(
+    const polyMesh& mesh,
+    const vector& position,
+    label celli,
+    const bool boundaryFail,
+    BoundaryMsg boundaryMsg
+)
+{
+    if (locate(mesh, position, celli))
+    {
+        return true;
+    }
+
+    // If we are here then we hit a boundary
+    if (boundaryFail)
+    {
+        FatalErrorInFunction << boundaryMsg(position).c_str()
+            << exit(FatalError);
+    }
+    else
+    {
+        static label nWarnings = 0;
+        static const label maxNWarnings = 100;
+        if (nWarnings < maxNWarnings)
+        {
+            WarningInFunction << boundaryMsg(position).c_str() << endl;
+            ++ nWarnings;
+        }
+        if (nWarnings == maxNWarnings)
+        {
+            WarningInFunction
+                << "Suppressing any further warnings about particles being "
+                << "located outside of the mesh." << endl;
+            ++ nWarnings;
+        }
+    }
+
+    return false;
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class BoundaryMsg>
+bool Foam::particle::map
+(
+    const polyMesh& mesh,
+    const vector& position,
+    const label celli,
+    BoundaryMsg boundaryMsg
+)
+{
+    return
+        locate
+        (
+            mesh,
+            position,
+            celli,
+            true,
+            boundaryMsg
+        );
+}
+
 
 template<class TrackCloudType>
 void Foam::particle::readFields(TrackCloudType& c)

@@ -180,6 +180,16 @@ void Foam::Cloud<ParticleType>::storeRays() const
 }
 
 
+template<class ParticleType>
+Foam::string Foam::Cloud<ParticleType>::mapOutsideMsg(const point& position)
+{
+    OStringStream oss;
+    oss << "Particle at " << position << " mapped to a location outside of "
+        << "the new mesh. This particle will be removed.";
+    return oss.str();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ParticleType>
@@ -439,8 +449,14 @@ void Foam::Cloud<ParticleType>::topoChange(const polyTopoChangeMap& map)
     label particlei = 0;
     forAllIter(typename Cloud<ParticleType>, *this, iter)
     {
+        const point& pos = positions[particlei ++];
+
         const label celli = map.reverseCellMap()[iter().cell()];
-        iter().map(pMesh_, positions[particlei++], celli);
+
+        if (!iter().map(pMesh_, pos, celli, mapOutsideMsg))
+        {
+            this->remove(iter);
+        }
     }
 }
 
@@ -482,22 +498,26 @@ void Foam::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
 
             const remote tgtProcCell =
                 map.mapper().srcToTgtPoint(iter().cell(), pos);
+            const label proci = tgtProcCell.proci;
+            const label celli = tgtProcCell.elementi;
 
             if (tgtProcCell == remote())
             {
-                WarningInFunction
-                    << "Particle at " << pos << " mapped to a location outside "
-                    << "of the new mesh. This particle will be removed." << nl;
+                WarningInFunction << mapOutsideMsg(pos) << nl;
+                this->remove(iter);
             }
-            else if (tgtProcCell.proci == Pstream::myProcNo())
+            else if (proci == Pstream::myProcNo())
             {
-                iter().map(pMesh_, pos, tgtProcCell.elementi);
+                if (!iter().map(pMesh_, pos, celli, mapOutsideMsg))
+                {
+                    this->remove(iter);
+                }
             }
             else
             {
-                sendCellIndices[tgtProcCell.proci].append(tgtProcCell.elementi);
-                sendPositions[tgtProcCell.proci].append(pos);
-                sendParticles[tgtProcCell.proci].append(this->remove(iter));
+                sendCellIndices[proci].append(celli);
+                sendPositions[proci].append(pos);
+                sendParticles[proci].append(this->remove(iter));
             }
         }
     }
@@ -546,8 +566,10 @@ void Foam::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
                 const label celli = receiveCellIndices[particlei];
                 const vector& pos = receivePositions[particlei ++];
 
-                iter().map(pMesh_, pos, celli);
-                this->append(receiveParticles.remove(iter));
+                if (iter().map(pMesh_, pos, celli, mapOutsideMsg))
+                {
+                    this->append(receiveParticles.remove(iter));
+                }
             }
         }
     }
@@ -646,9 +668,10 @@ void Foam::Cloud<ParticleType>::distribute(const polyDistributionMap& map)
         {
             const point& pos = cellParticlePositions[celli][cellParticlei++];
 
-            iter().map(pMesh_, pos, celli);
-
-            this->append(cellParticles[celli].remove(iter));
+            if (iter().map(pMesh_, pos, celli, mapOutsideMsg))
+            {
+                this->append(cellParticles[celli].remove(iter));
+            }
         }
     }
 }

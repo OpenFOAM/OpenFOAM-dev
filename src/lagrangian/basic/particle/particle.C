@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -369,13 +369,11 @@ void Foam::particle::changeCell(const polyMesh& mesh)
 }
 
 
-void Foam::particle::locate
+bool Foam::particle::locate
 (
     const polyMesh& mesh,
     const vector& position,
-    label celli,
-    const bool boundaryFail,
-    const string boundaryMsg
+    label celli
 )
 {
     if (debug)
@@ -421,7 +419,7 @@ void Foam::particle::locate
 
             if (tetTriI == -1)
             {
-                return;
+                return true;
             }
 
             if (f < minF)
@@ -444,31 +442,10 @@ void Foam::particle::locate
     track(mesh, displacement, 0);
     if (!onFace())
     {
-        return;
+        return true;
     }
 
-    // If we are here then we hit a boundary
-    if (boundaryFail)
-    {
-        FatalErrorInFunction << boundaryMsg << exit(FatalError);
-    }
-    else
-    {
-        static label nWarnings = 0;
-        static const label maxNWarnings = 100;
-        if (nWarnings < maxNWarnings)
-        {
-            WarningInFunction << boundaryMsg.c_str() << endl;
-            ++ nWarnings;
-        }
-        if (nWarnings == maxNWarnings)
-        {
-            WarningInFunction
-                << "Suppressing any further warnings about particles being "
-                << "located outside of the mesh." << endl;
-            ++ nWarnings;
-        }
-    }
+    return false;
 }
 
 
@@ -515,13 +492,21 @@ Foam::particle::particle
     origProc_(Pstream::myProcNo()),
     origId_(getNewParticleID())
 {
+    auto boundaryMsg = [](const point& position)
+    {
+        OStringStream oss;
+        oss << "Particle at " << position << " initialised in a location "
+            << "outside of the mesh.";
+        return oss.str();
+    };
+
     locate
     (
         mesh,
         position,
         celli,
         false,
-        "Particle initialised with a location outside of the mesh."
+        boundaryMsg
     );
 }
 
@@ -1118,6 +1103,15 @@ void Foam::particle::correctAfterNonConformalCyclicTransfer
         coordinates_.d()
     );
 
+    auto boundaryMsg = [&nccpp](const point& position)
+    {
+        return
+            "Particle at " + name(position) + " crossed between "
+          + nonConformalCyclicPolyPatch::typeName + " patches "
+          + nccpp.name() + " and " + nccpp.nbrPatch().name()
+          + " to a location outside of the mesh.";
+    };
+
     // Locate the particle on the receiving side
     locate
     (
@@ -1125,9 +1119,7 @@ void Foam::particle::correctAfterNonConformalCyclicTransfer
         receivePos,
         mesh.faceOwner()[facei_ + nccpp.origPatch().start()],
         false,
-        "Particle crossed between " + nonConformalCyclicPolyPatch::typeName +
-        " patches " + nccpp.name() + " and " + nccpp.nbrPatch().name() +
-        " to a location outside of the mesh."
+        boundaryMsg
     );
 
     // The particle must remain associated with a face for the tracking to
@@ -1225,24 +1217,6 @@ Foam::label Foam::particle::procTetPt
     {
         return procMesh.faces()[procTetFace].size() - 1 - tetPti_;
     }
-}
-
-
-void Foam::particle::map
-(
-    const polyMesh& mesh,
-    const vector& position,
-    const label celli
-)
-{
-    locate
-    (
-        mesh,
-        position,
-        celli,
-        true,
-        "Particle mapped to a location outside of the mesh."
-    );
 }
 
 

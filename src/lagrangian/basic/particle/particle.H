@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -301,13 +301,22 @@ private:
         // Geometry changes
 
             //- Locate the particle at the given position
-            void locate
+            bool locate
+            (
+                const polyMesh& mesh,
+                const vector& position,
+                label celli
+            );
+
+            //- Locate the particle at the given position
+            template<class BoundaryMsg>
+            bool locate
             (
                 const polyMesh& mesh,
                 const vector& position,
                 label celli,
                 const bool boundaryFail,
-                const string boundaryMsg
+                BoundaryMsg boundaryMsg
             );
 
 
@@ -694,11 +703,13 @@ public:
         // Mapping
 
             //- Map after a mesh change
-            void map
+            template<class BoundaryMsg>
+            bool map
             (
                 const polyMesh& mesh,
                 const point& position,
-                const label celli
+                const label celli,
+                BoundaryMsg boundaryMsg
             );
 
 
