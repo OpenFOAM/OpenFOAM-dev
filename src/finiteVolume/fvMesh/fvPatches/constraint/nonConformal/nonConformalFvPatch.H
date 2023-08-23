@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,10 @@ public:
 
         // Access
 
-            //- Return the reference to the polyPatch
+            //- Reference to the fvPatch
+            const fvPatch& patch() const;
+
+            //- Reference to the polyPatch
             const nonConformalPolyPatch& nonConformalPatch() const;
 
             //- Original patch name

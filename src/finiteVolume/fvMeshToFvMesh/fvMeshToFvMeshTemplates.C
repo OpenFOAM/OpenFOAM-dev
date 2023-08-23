@@ -311,4 +311,71 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMeshToFvMesh::srcToTgt
 }
 
 
+template<class Type>
+Foam::tmp<Foam::fvMeshToFvMesh::SurfaceFieldBoundary<Type>>
+Foam::fvMeshToFvMesh::srcToTgt
+(
+    const SurfaceFieldBoundary<Type>& srcBfld
+) const
+{
+    const fvMesh& tgtMesh = static_cast<const fvMesh&>(meshToMesh::tgtMesh());
+
+    // Map all patch fields
+    PtrList<fvsPatchField<Type>> tgtPatchFields(tgtMesh.boundary().size());
+    forAll(patchIDs(), i)
+    {
+        const label srcPatchi = patchIDs()[i].first();
+        const label tgtPatchi = patchIDs()[i].second();
+
+        if (!tgtPatchFields.set(tgtPatchi))
+        {
+            tgtPatchFields.set
+            (
+                tgtPatchi,
+                fvsPatchField<Type>::New
+                (
+                    srcBfld[srcPatchi],
+                    tgtMesh.boundary()[tgtPatchi],
+                    DimensionedField<Type, surfaceMesh>::null(),
+                    patchToPatchNormalisedFvPatchFieldMapper
+                    (
+                        patchInterpolation(i),
+                        tgtPatchStabilisation(i)
+                    )
+                )
+            );
+        }
+    }
+
+    // Create any patch fields not explicitly mapped; e.g., constraints
+    forAll(tgtPatchFields, tgtPatchi)
+    {
+        if (!tgtPatchFields.set(tgtPatchi))
+        {
+            tgtPatchFields.set
+            (
+                tgtPatchi,
+                fvsPatchField<Type>::New
+                (
+                    calculatedFvPatchField<Type>::typeName,
+                    tgtMesh.boundary()[tgtPatchi],
+                    DimensionedField<Type, surfaceMesh>::null()
+                )
+            );
+        }
+    }
+
+    return
+        tmp<SurfaceFieldBoundary<Type>>
+        (
+            new SurfaceFieldBoundary<Type>
+            (
+                tgtMesh.boundary(),
+                DimensionedField<Type, surfaceMesh>::null(),
+                tgtPatchFields
+            )
+        );
+}
+
+
 // ************************************************************************* //

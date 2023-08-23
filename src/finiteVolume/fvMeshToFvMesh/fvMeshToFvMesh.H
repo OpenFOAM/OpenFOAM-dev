@@ -36,6 +36,7 @@ SourceFiles
 
 #include "meshToMesh.H"
 #include "volFields.H"
+#include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,6 +52,15 @@ class fvMeshToFvMesh
     public meshToMesh
 {
 private:
+
+    // Private Typedefs
+
+        //- Alias for surface boundary fields to reduce verbosity of method
+        //  definitions below
+        template<class Type>
+        using SurfaceFieldBoundary =
+            GeometricBoundaryField<Type, fvsPatchField, surfaceMesh>;
+
 
     // Private Member Functions
 
@@ -117,6 +127,13 @@ public:
             (
                 const VolInternalField<Type>& srcFld,
                 const VolInternalField<Type>& leftOverTgtFld
+            ) const;
+
+            //- ...
+            template<class Type>
+            tmp<SurfaceFieldBoundary<Type>> srcToTgt
+            (
+                const SurfaceFieldBoundary<Type>& srcFld
             ) const;
 };
 

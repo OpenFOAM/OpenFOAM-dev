@@ -38,6 +38,7 @@ SourceFiles
 #define fvMeshStitcher_H
 
 #include "fvMesh.H"
+#include "HashPtrTable.H"
 #include "intersectionPatchToPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -72,17 +73,72 @@ protected:
 
 private:
 
-    // Private Static Data
-
-        //- Prefix applied to the names of non-conformal fields which are
-        //  stored for mapping purposes
-        static const word nccFieldPrefix_;
-
-
     // Private Data
 
         //- Non-const fvMesh reference to allow update
         fvMesh& mesh_;
+
+        //- Cache of the surface boundary fields with non-conformal parts
+        //  averaged/summed (as appropriate) into the corresponding conformal
+        //  faces. Maintained between disconnect and connect so that
+        //  non-conformal fields can be reconstructed again at the new time.
+        class
+        :
+            #define PrivateTypeTable(Type, nullArg) \
+                private HashPtrTable<SurfaceFieldBoundary<Type>>,
+            FOR_ALL_FIELD_TYPES(PrivateTypeTable)
+            #undef PrivateTypeTable
+            private nil
+        {
+        private:
+
+            template<class Type>
+            using Base = HashPtrTable<SurfaceFieldBoundary<Type>>;
+
+
+        public:
+
+            template<class Type>
+            const HashPtrTable<SurfaceFieldBoundary<Type>>& table() const
+            {
+                return *this;
+            }
+
+            template<class Type>
+            HashPtrTable<SurfaceFieldBoundary<Type>>& table()
+            {
+                return *this;
+            }
+
+            template<class Type>
+            bool insert
+            (
+                const word& name,
+                SurfaceFieldBoundary<Type>* fieldPtr
+            )
+            {
+                return Base<Type>::insert(name, fieldPtr);
+            }
+
+            template<class Type>
+            bool found(const word& name) const
+            {
+                return Base<Type>::found(name);
+            }
+
+            template<class Type>
+            tmp<SurfaceFieldBoundary<Type>> remove(const word& name)
+            {
+                typename Base<Type>::iterator iter = Base<Type>::find(name);
+
+                return
+                    tmp<SurfaceFieldBoundary<Type>>
+                    (
+                        Base<Type>::remove(iter)
+                    );
+            }
+
+        } conformalNccBoundaryFields_;
 
 
     // Private Member Functions
@@ -178,21 +234,12 @@ private:
 
         // Field Mapping
 
-            //- Return the boundary field reference for the given field,
-            //  without updating the time index, storing old time fields,
-            //  etc...
-            template<class GeoField>
-            static typename GeoField::Boundary& boundaryFieldRefNoUpdate
-            (
-                GeoField& fld
-            );
-
             //- Resize the patch fields of a given type and class to match the
-            //  mesh
+            //  sizes of the patches in the mesh
             template<class Type, template<class> class GeoField>
             void resizePatchFields();
 
-            //- Resize the patch fields of a given class to match the mesh
+            //- As above, for all types
             template<template<class> class GeoField>
             void resizePatchFields();
 
@@ -202,10 +249,8 @@ private:
             template<class Type>
             void preConformSurfaceFields();
 
-            //- Pre-conform surface fields by separating NCC and original
-            //  parts of non-conformal couplings and storing them in the
-            //  database as separate fields
-            inline void preConformSurfaceFields();
+            //- As above, for all types
+            void preConformSurfaceFields();
 
             //- Post-non-conform surface fields of a given type by looking up
             //  NCC and original parts of non-conformal couplings and combining
@@ -213,110 +258,31 @@ private:
             template<class Type>
             void postNonConformSurfaceFields();
 
-            //- Post-non-conform surface fields by looking up NCC and
-            //  original parts of non-conformal couplings and combining them
-            //  into a single non-conformal boundary field
-            inline void postNonConformSurfaceFields();
+            //- As above, for all types
+            void postNonConformSurfaceFields();
 
             //- Evaluate all non-conformal vol patch fields of a given type
             template<class Type>
             void evaluateVolFields();
 
-            //- Evaluate all non-conformal vol patch fields
-            inline void evaluateVolFields();
+            //- As above, for all types
+            void evaluateVolFields();
 
             //- Special post-non-conform for surface velocities
-            inline void postNonConformSurfaceVelocities();
+            void postNonConformSurfaceVelocities();
 
 
 protected:
 
     // Protected Member Functions
 
-        // Field Mapping
-
-            //- Resize the patch field of a given field to match the mesh
-            template<class GeoBoundaryField>
-            void resizeBoundaryFieldPatchFields
-            (
-                const SurfaceFieldBoundary<label>& polyFacesBf,
-                GeoBoundaryField& fieldBf
-            );
-
-            //- Resize the patch field of a given field to match the mesh
-            template<class GeoField>
-            void resizeFieldPatchFields
-            (
-                const SurfaceFieldBoundary<label>& polyFacesBf,
-                GeoField& field
-            );
-
-            //- Reverse-map sum the values of a field
-            template<class Type>
-            static tmp<Field<Type>> fieldRMapSum
-            (
-                const Field<Type>& f,
-                const label size,
-                const labelUList& addr
-            );
-
-            //- Reverse-map sum the values of a field
-            template<class Type>
-            static tmp<Field<Type>> fieldRMapSum
-            (
-                const tmp<Field<Type>>& f,
-                const label size,
-                const labelUList& addr
-            );
-
-            //- Return the total non-conformal area associated with each
-            //  original face
-            inline tmp<SurfaceFieldBoundary<scalar>> getOrigNccMagSfb() const;
-
-            //- Extract the non-conformal-coupled parts of the boundary field
-            //  and store it on the conformal faces
-            template<class Type>
-            tmp<SurfaceFieldBoundary<Type>> conformalNccBoundaryField
-            (
-                const SurfaceFieldBoundary<Type>& fieldb
-            ) const;
-
-            //- Extract the original parts of the boundary field and store it
-            //  on the conformal faces
-            template<class Type>
-            tmp<SurfaceFieldBoundary<Type>> conformalOrigBoundaryField
-            (
-                const SurfaceFieldBoundary<Type>& fieldb
-            ) const;
-
-            //- Combine non-conformal-coupled and original parts of the
-            //  boundary field from the conformal faces to construct the
-            //  complete non-conformal boundary field
-            template<class Type>
-            tmp<SurfaceFieldBoundary<Type>> nonConformalBoundaryField
-            (
-                const SurfaceFieldBoundary<Type>& nccFieldb,
-                const SurfaceFieldBoundary<Type>& origFieldb
-            ) const;
-
-            //- Synchronise the boundary field by combining corresponding
-            //  values across couplings with the given weightings
-            template<class Type>
-            tmp<SurfaceFieldBoundary<Type>> synchronisedBoundaryField
-            (
-                const SurfaceFieldBoundary<Type>& fieldb,
-                const bool flip,
-                const scalar ownerWeight,
-                const scalar neighbourWeight
-            ) const;
-
-            //- Synchronise the boundary field by combining corresponding
-            //  values across couplings with equal weightings
-            template<class Type>
-            tmp<SurfaceFieldBoundary<Type>> synchronisedBoundaryField
-            (
-                const SurfaceFieldBoundary<Type>& fieldb
-            ) const;
+        //- Access the boundary field reference of a field, without updating
+        //  the time index, storing old time fields, etc...
+        template<class GeoField>
+        static typename GeoField::Boundary& boundaryFieldRefNoUpdate
+        (
+            GeoField& fld
+        );
 
 
         // Checking

@@ -26,8 +26,11 @@ License
 #include "fvMeshStitcher.H"
 #include "globalIndex.H"
 #include "fvcSurfaceIntegrate.H"
+#include "fvMeshToFvMesh.H"
 #include "meshObjects.H"
 #include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "syncTools.H"
 #include "surfaceToVolVelocity.H"
 
@@ -60,10 +63,6 @@ namespace Foam
     defineTypeNameAndDebug(fvMeshStitcher, 0);
     defineRunTimeSelectionTable(fvMeshStitcher, fvMesh);
 }
-
-
-const Foam::word Foam::fvMeshStitcher::nccFieldPrefix_ =
-    fvMeshStitcher::typeName + ":";
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -1084,6 +1083,58 @@ inline void Foam::fvMeshStitcher::createNonConformalStabilisationGeometry
 }
 
 
+void Foam::fvMeshStitcher::preConformSurfaceFields()
+{
+    #define PreConformSurfaceFields(Type, nullArg) \
+        preConformSurfaceFields<Type>();
+    FOR_ALL_FIELD_TYPES(PreConformSurfaceFields);
+    #undef PreConformSurfaceFields
+}
+
+
+void Foam::fvMeshStitcher::postNonConformSurfaceFields()
+{
+    #define PostNonConformSurfaceFields(Type, nullArg) \
+        postNonConformSurfaceFields<Type>();
+    FOR_ALL_FIELD_TYPES(PostNonConformSurfaceFields);
+    #undef PostNonConformSurfaceFields
+}
+
+
+void Foam::fvMeshStitcher::evaluateVolFields()
+{
+    #define EvaluateVolFields(Type, nullArg) \
+        evaluateVolFields<Type>();
+    FOR_ALL_FIELD_TYPES(EvaluateVolFields);
+    #undef EvaluateVolFields
+}
+
+
+void Foam::fvMeshStitcher::postNonConformSurfaceVelocities()
+{
+    UPtrList<surfaceVectorField> Ufs(mesh_.fields<surfaceVectorField>());
+
+    forAll(Ufs, i)
+    {
+        surfaceVectorField& Uf = Ufs[i];
+
+        const volVectorField& U = surfaceToVolVelocity(Uf);
+
+        if (!isNull(U))
+        {
+            forAll(Uf.boundaryField(), patchi)
+            {
+                if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
+                {
+                    boundaryFieldRefNoUpdate(Uf)[patchi] ==
+                        U.boundaryField()[patchi];
+                }
+            }
+        }
+    }
+}
+
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 bool Foam::fvMeshStitcher::geometric() const
@@ -1605,7 +1656,7 @@ void Foam::fvMeshStitcher::topoChange(const polyTopoChangeMap&)
 {}
 
 
-void Foam::fvMeshStitcher::mapMesh(const polyMeshMap&)
+void Foam::fvMeshStitcher::mapMesh(const polyMeshMap& map)
 {}
 
 
