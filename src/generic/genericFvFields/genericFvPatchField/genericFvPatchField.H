@@ -51,7 +51,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class genericFvPatch Declaration
+                    Class genericFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
