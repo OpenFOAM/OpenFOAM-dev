@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -375,21 +375,15 @@ public:
         //- Does this stitcher do anything?
         bool stitches() const;
 
-        //- Update local data for topology changes
-        virtual void updateMesh(const polyTopoChangeMap&);
-
-        //- Update local data for mesh motion
-        virtual void movePoints();
-
         //- Disconnect the mesh by removing faces from the nonConformalCyclics
-        virtual bool disconnect
+        bool disconnect
         (
             const bool changing,
             const bool geometric
         );
 
         //- Connect the mesh by adding faces into the nonConformalCyclics
-        virtual bool connect
+        bool connect
         (
             const bool changing,
             const bool geometric,
@@ -400,7 +394,16 @@ public:
         //  in whether or not the connection is "geometric".
         void reconnect(const bool geometric) const;
 
-        //- Write the mover state
+        //- Update corresponding to the given map
+        virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
+
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const polyDistributionMap&);
+
+        //- Write the stitcher state
         virtual bool write(const bool write = true) const
         {
             return true;

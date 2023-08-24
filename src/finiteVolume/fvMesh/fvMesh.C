@@ -1329,6 +1329,11 @@ void Foam::fvMesh::topoChange(const polyTopoChangeMap& map)
 
     const_cast<Time&>(time()).functionObjects().topoChange(map);
 
+    if (stitcher_.valid())
+    {
+        stitcher_->topoChange(map);
+    }
+
     if (topoChanger_.valid())
     {
         topoChanger_->topoChange(map);
@@ -1365,6 +1370,7 @@ void Foam::fvMesh::mapMesh(const polyMeshMap& map)
 
     const_cast<Time&>(time()).functionObjects().mapMesh(map);
 
+    stitcher_->mapMesh(map);
     topoChanger_->mapMesh(map);
     distributor_->mapMesh(map);
     mover_->mapMesh(map);
@@ -1390,6 +1396,7 @@ void Foam::fvMesh::distribute(const polyDistributionMap& map)
 
     const_cast<Time&>(time()).functionObjects().distribute(map);
 
+    stitcher_->distribute(map);
     topoChanger_->distribute(map);
     distributor_->distribute(map);
     mover_->distribute(map);
@@ -1712,6 +1719,11 @@ bool Foam::fvMesh::writeObject
     if (V00Ptr_)
     {
         ok = ok && V0Ptr_->write(write);
+    }
+
+    if (stitcher_.valid())
+    {
+        stitcher_->write(write);
     }
 
     if (topoChanger_.valid())

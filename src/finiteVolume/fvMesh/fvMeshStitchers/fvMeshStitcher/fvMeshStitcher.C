@@ -1185,14 +1185,6 @@ bool Foam::fvMeshStitcher::stitches() const
 }
 
 
-void Foam::fvMeshStitcher::updateMesh(const polyTopoChangeMap&)
-{}
-
-
-void Foam::fvMeshStitcher::movePoints()
-{}
-
-
 bool Foam::fvMeshStitcher::disconnect
 (
     const bool changing,
@@ -1594,6 +1586,18 @@ void Foam::fvMeshStitcher::reconnect(const bool geometric) const
 
     const_cast<Time&>(mesh_.time()).functionObjects().topoChange(map);
 }
+
+
+void Foam::fvMeshStitcher::topoChange(const polyTopoChangeMap&)
+{}
+
+
+void Foam::fvMeshStitcher::mapMesh(const polyMeshMap&)
+{}
+
+
+void Foam::fvMeshStitcher::distribute(const polyDistributionMap&)
+{}
 
 
 // ************************************************************************* //
