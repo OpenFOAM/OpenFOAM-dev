@@ -7,4 +7,4 @@ EXE_LIBS = \
     -ldynamicMesh \
     -lmeshTools \
     -lfiniteVolume \
-    -lgenericPatchFields
+    -lgenericFvFields

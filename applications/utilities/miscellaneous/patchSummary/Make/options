@@ -1,9 +1,9 @@
 EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/genericPatchFields/lnInclude \
+    -I$(LIB_SRC)/generic/genericFields/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
-    -lgenericPatchFields \
+    -lgenericFvFields \
     -lfiniteVolume \
     -lmeshTools

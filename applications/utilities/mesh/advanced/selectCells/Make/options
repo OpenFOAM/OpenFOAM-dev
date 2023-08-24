@@ -4,7 +4,6 @@ EXE_INC = \
     -I$(LIB_SRC)/triSurface/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude
 
-
 EXE_LIBS = \
     -ldynamicMesh \
     -lmeshTools \

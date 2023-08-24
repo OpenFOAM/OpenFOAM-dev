@@ -2,6 +2,6 @@ EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude
 
 EXE_LIBS = \
-    -lgenericPatchFields \
+    -lgenericFvFields \
     -lfiniteVolume
 

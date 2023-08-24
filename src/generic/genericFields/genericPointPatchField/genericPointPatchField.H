@@ -25,8 +25,13 @@ Class
     Foam::genericPointPatchField
 
 Description
-    A generic version of calculatedPointPatchField, useful as a fallback for
-    handling unknown patch types.
+    This boundary condition provides a generic version of the \c calculated
+    condition, useful as a fallback for handling unknown patch types when
+    post-processing or running mesh manipulation utilities. Not generally
+    applicable as a user-specified condition.
+
+See also
+    Foam::calculatedPointPatchField
 
 SourceFiles
     genericPointPatchField.C
@@ -36,7 +41,7 @@ SourceFiles
 #ifndef genericPointPatchField_H
 #define genericPointPatchField_H
 
-#include "genericPatchField.H"
+#include "genericFieldBase.H"
 #include "calculatedPointPatchField.H"
 #include "HashPtrTable.H"
 
@@ -52,18 +57,19 @@ namespace Foam
 template<class Type>
 class genericPointPatchField
 :
-    public genericPatchField,
+    public genericFieldBase,
     public calculatedPointPatchField<Type>
 {
     // Private Data
 
+        //- Patch field dictionary
         dictionary dict_;
 
-        HashPtrTable<scalarField> scalarFields_;
-        HashPtrTable<vectorField> vectorFields_;
-        HashPtrTable<sphericalTensorField> sphericalTensorFields_;
-        HashPtrTable<symmTensorField> symmTensorFields_;
-        HashPtrTable<tensorField> tensorFields_;
+        //- Fields
+        #define DeclareTypeFields(Type, nullArg) \
+            HashPtrTable<Field<Type>> Type##Fields_;
+        FOR_ALL_FIELD_TYPES(DeclareTypeFields);
+        #undef DeclareTypeFields
 
 
 public:

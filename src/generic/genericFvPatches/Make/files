@@ -1,0 +1,3 @@
+genericFvPatch/genericFvPatch.C
+
+LIB = $(FOAM_LIBBIN)/libgenericFvPatches

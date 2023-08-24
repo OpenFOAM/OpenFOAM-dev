@@ -26,7 +26,7 @@ License
 #include "genericPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
@@ -37,7 +37,7 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::genericPolyPatch::genericPolyPatch
 (

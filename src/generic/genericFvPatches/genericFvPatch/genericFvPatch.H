@@ -25,7 +25,8 @@ Class
     Foam::genericFvPatch
 
 Description
-    FV variant of the genericPolyPatch.
+    Substitute for unknown patches. Used for post-processing when only
+    basic fvPatch info is needed.
 
 SourceFiles
     genericFvPatch.C

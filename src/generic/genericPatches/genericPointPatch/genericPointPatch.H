@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,22 +21,57 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::genericPointPatch
+
+Description
+    Substitute for unknown patches. Used for post-processing when only
+    basic pointPatch info is needed.
+
+SourceFiles
+    genericPointPatch.C
+
 \*---------------------------------------------------------------------------*/
 
-#ifndef genericFvPatchFields_H
-#define genericFvPatchFields_H
+#ifndef genericPointPatch_H
+#define genericPointPatch_H
 
-#include "genericFvPatchField.H"
-#include "fieldTypes.H"
+#include "facePointPatch.H"
+#include "genericPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/*---------------------------------------------------------------------------*\
+                      Class genericPointPatch Declaration
+\*---------------------------------------------------------------------------*/
 
-makePatchTypeFieldTypedefs(generic);
+class genericPointPatch
+:
+    public facePointPatch
+{
+
+public:
+
+    //- Runtime type information
+    TypeName(genericPolyPatch::typeName_());
+
+
+    // Constructors
+
+        //- Construct from polyPatch
+        genericPointPatch
+        (
+            const polyPatch& patch,
+            const pointBoundaryMesh& bm
+        )
+        :
+            facePointPatch(patch, bm)
+        {}
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -1,0 +1,3 @@
+genericFvPatchField/genericFvPatchFields.C
+
+LIB = $(FOAM_LIBBIN)/libgenericFvFields

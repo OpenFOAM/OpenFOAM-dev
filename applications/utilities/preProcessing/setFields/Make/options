@@ -4,5 +4,5 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lfiniteVolume \
-    -lgenericPatchFields \
+    -lgenericFvFields \
     -lmeshTools

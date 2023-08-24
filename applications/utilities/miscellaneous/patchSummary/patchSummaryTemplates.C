@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "patchSummaryTemplates.H"
-#include "genericPatchField.H"
+#include "genericFieldBase.H"
 #include "IOmanip.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -32,9 +32,9 @@ License
 template<class PatchField>
 Foam::word Foam::patchFieldType(const PatchField& pf)
 {
-    if (isA<genericPatchField>(pf))
+    if (isA<genericFieldBase>(pf))
     {
-        return refCast<const genericPatchField>(pf).actualTypeName();
+        return refCast<const genericFieldBase>(pf).actualTypeName();
     }
     else
     {

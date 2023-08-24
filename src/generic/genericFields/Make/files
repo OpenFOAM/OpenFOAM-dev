@@ -1,0 +1,4 @@
+genericFieldBase/genericFieldBase.C
+genericPointPatchField/genericPointPatchFields.C
+
+LIB = $(FOAM_LIBBIN)/libgenericFields

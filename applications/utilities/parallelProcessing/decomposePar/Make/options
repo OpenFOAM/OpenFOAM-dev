@@ -11,4 +11,4 @@ EXE_LIBS = \
     -lparallel \
     -ldecompositionMethods \
     -llagrangian \
-    -lgenericPatchFields
+    -lgenericFvFields

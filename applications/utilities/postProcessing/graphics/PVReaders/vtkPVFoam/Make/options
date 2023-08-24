@@ -15,7 +15,7 @@ EXE_INC = \
 
 LIB_LIBS = \
     -ldynamicMesh \
-    -lgenericPatchFields \
+    -lgenericFvFields \
     -llagrangian \
     -L$(FOAM_LIBBIN) \
     $(GLIBS)

@@ -25,12 +25,8 @@ Class
     Foam::genericPolyPatch
 
 Description
-    Substitute for unknown patches. Used for postprocessing when only
+    Substitute for unknown patches. Used for post-processing when only
     basic polyPatch info is needed.
-
-    Note:
-        Storage is not optimal. It stores all face centres and cells on all
-        processors to keep the addressing calculation simple.
 
 SourceFiles
     genericPolyPatch.C
@@ -57,8 +53,12 @@ class genericPolyPatch
 {
     // Private Data
 
+        //- Actual patch type name
         word actualTypeName_;
+
+        //- Patch dictionary
         dictionary dict_;
+
 
 public:
 

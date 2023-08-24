@@ -5,9 +5,8 @@ EXE_INC = \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
-
 EXE_LIBS = \
     -llagrangian \
     -ldynamicMesh \
-    -lgenericPatchFields \
+    -lgenericFvFields \
     -L$(FOAM_EXT_LIBBIN) -ltecio
