@@ -83,7 +83,6 @@ PIMPLE
     faceMomentum        no;
     VmDdtCorrection     no;
     dragCorrection      yes;
-    partialElimination  no;
 }
 
 cache

@@ -41,11 +41,7 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::phaseSystem::solve
-(
-    const PtrList<volScalarField>& rAUs,
-    const PtrList<surfaceScalarField>& rAUfs
-)
+void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
 {
     const dictionary& alphaControls = mesh_.solution().solverDict("alpha");
 
@@ -251,9 +247,9 @@ void Foam::phaseSystem::solve
             PtrList<surfaceScalarField> alphaPhis(phases().size());
 
             tmp<surfaceScalarField> alphaDByAf;
-            if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
+            if (implicitPhasePressure() && (rAs.size()))
             {
-                alphaDByAf = this->alphaDByAf(rAUs, rAUfs);
+                alphaDByAf = this->alphaDByAf(rAs);
             }
 
             forAll(movingPhases(), movingPhasei)
@@ -454,7 +450,7 @@ void Foam::phaseSystem::solve
             if (alphaDByAf.valid())
             {
                 // Update alphaDByAf due to changes in alpha
-                alphaDByAf = this->alphaDByAf(rAUs, rAUfs);
+                alphaDByAf = this->alphaDByAf(rAs);
 
                 forAll(solvePhases, solvePhasei)
                 {

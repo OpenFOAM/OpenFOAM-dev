@@ -175,11 +175,10 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::specieTransfer() const
 template<class BasePhaseSystem>
 void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::solve
 (
-    const PtrList<volScalarField>& rAUs,
-    const PtrList<surfaceScalarField>& rAUfs
+    const PtrList<volScalarField>& rAs
 )
 {
-    BasePhaseSystem::solve(rAUs, rAUfs);
+    BasePhaseSystem::solve(rAs);
 
     forAll(populationBalances_, i)
     {

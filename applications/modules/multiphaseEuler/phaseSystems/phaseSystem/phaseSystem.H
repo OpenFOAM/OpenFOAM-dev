@@ -523,7 +523,7 @@ public:
 
             //- Return the implicit force coefficients for the face-based
             //  algorithm
-            virtual PtrList<surfaceScalarField> KdVmfs() const = 0;
+            virtual PtrList<surfaceScalarField> Vmfs() const = 0;
 
             //- Return the force fluxes for the cell-based algorithm
             virtual PtrList<surfaceScalarField> Fs() const = 0;
@@ -531,17 +531,19 @@ public:
             //- Return the force fluxes for the face-based algorithm
             virtual PtrList<surfaceScalarField> Ffs() const = 0;
 
-            //- Return the force fluxes for the cell-based algorithm
-            virtual PtrList<surfaceScalarField> KdPhis() const = 0;
+            //- Return the inverse of (As + Ds)
+            virtual void invADs
+            (
+                const PtrList<volScalarField>& As,
+                PtrList<PtrList<volScalarField>>& invADs,
+                PtrList<PtrList<surfaceScalarField>>& invADfs
+            ) const = 0;
 
-            //- Return the force fluxes for the face-based algorithm
-            virtual PtrList<surfaceScalarField> KdPhifs() const = 0;
-
-            //- Return the implicit part of the drag force
-            virtual PtrList<volScalarField> Kds() const = 0;
-
-            //- Return the explicit part of the drag force
-            virtual PtrList<volVectorField> KdUs() const = 0;
+            //- Return the inverse of (Afs + Dfs)
+            virtual PtrList<PtrList<surfaceScalarField>> invADfs
+            (
+                const PtrList<surfaceScalarField>& Afs
+            ) const = 0;
 
             //- Returns true if the phase pressure is treated implicitly
             //  in the phase fraction equation
@@ -555,8 +557,7 @@ public:
             //  divided by the momentum central coefficient
             virtual tmp<surfaceScalarField> alphaDByAf
             (
-                const PtrList<volScalarField>& rAUs,
-                const PtrList<surfaceScalarField>& rAUfs
+                const PtrList<volScalarField>& rAs
             ) const = 0;
 
             //- Return the flux corrections for the cell-based algorithm
@@ -568,24 +569,6 @@ public:
                 PtrList<volVectorField>& dragCorrs,
                 PtrList<surfaceScalarField>& dragCorrf
             ) const = 0;
-
-            //- Solve the drag system for the new velocities and fluxes
-            virtual void partialElimination
-            (
-                const PtrList<volScalarField>& rAUs,
-                const PtrList<volVectorField>& KdUs,
-                const PtrList<surfaceScalarField>& alphafs,
-                const PtrList<surfaceScalarField>& rAUfs,
-                const PtrList<surfaceScalarField>& KdPhis
-            ) = 0;
-
-            //- Solve the drag system for the new fluxes
-            virtual void partialEliminationf
-            (
-                const PtrList<surfaceScalarField>& rAUfs,
-                const PtrList<surfaceScalarField>& alphafs,
-                const PtrList<surfaceScalarField>& KdPhifs
-            ) = 0;
 
             //- Re-normalise the flux of the phases
             //  around the specified mixture mean
@@ -611,11 +594,7 @@ public:
         // Evolution
 
             //- Solve for the phase fractions
-            virtual void solve
-            (
-                const PtrList<volScalarField>& rAUs,
-                const PtrList<surfaceScalarField>& rAUfs
-            );
+            virtual void solve(const PtrList<volScalarField>& rAs);
 
             //- Correct the fluid properties other than those listed below
             virtual void correct();

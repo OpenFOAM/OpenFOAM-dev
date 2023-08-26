@@ -457,7 +457,7 @@ EulerDdtScheme<Type>::fvcDdtUfCorr
     return fluxFieldType::New
     (
         "ddtCorr(" + U.name() + ',' + Uf.name() + ')',
-        this->fvcDdtPhiCoeff(U.oldTime(), phiUf0, phiCorr) *rDeltaT*phiCorr
+        this->fvcDdtPhiCoeff(U.oldTime(), phiUf0, phiCorr)*rDeltaT*phiCorr
     );
 }
 

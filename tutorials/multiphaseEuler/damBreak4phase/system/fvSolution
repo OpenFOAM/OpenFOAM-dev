@@ -79,8 +79,7 @@ PIMPLE
 
     faceMomentum        no;
     VmDdtCorrection     no;
-    dragCorrection      no;
-    partialElimination  no;
+    dragCorrection      yes;
 }
 
 relaxationFactors

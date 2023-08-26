@@ -97,11 +97,7 @@ public:
             specieTransfer() const;
 
         //- Solve all population balance equations
-        virtual void solve
-        (
-            const PtrList<volScalarField>& rAUs,
-            const PtrList<surfaceScalarField>& rAUfs
-        );
+        virtual void solve(const PtrList<volScalarField>& rAs);
 
         //- Correct derived properties
         virtual void correct();

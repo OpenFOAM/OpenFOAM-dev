@@ -77,6 +77,10 @@ protected:
 
     // Controls
 
+        //- Momentum equation predictor switch
+        //  Defaults to false
+        Switch predictMomentum;
+
         //- Cell/face momentum equation switch
         //  Defaults to false, i.e. uses the cell momentum equation
         Switch faceMomentum;
@@ -84,10 +88,6 @@ protected:
         //- Cell/face drag correction for cell momentum corrector
         //  Defaults to false
         Switch dragCorrection;
-
-        //- Partial elimination drag contribution optimisation
-        //  Defaults to false
-        Switch partialElimination;
 
         //- Number of energy correctors
         //  Used to improve stability of phase-change sibulations
@@ -144,11 +144,7 @@ protected:
 
         //- Temporary storage for the reciprocal momentum equation diagonal
         //  Used by the phase-fraction predictor and pressure corrector
-        PtrList<volScalarField> rAUs;
-
-        //- Temporary storage for the reciprocal momentum equation diagonal
-        //  Used by the phase-fraction predictor and face pressure corrector
-        PtrList<surfaceScalarField> rAUfs;
+        PtrList<volScalarField> rAs;
 
         //- Stored divU from the previous mesh so that it can be
         //  mapped and used in correctPhi to ensure the corrected phi
