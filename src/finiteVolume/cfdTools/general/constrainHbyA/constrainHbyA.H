@@ -51,14 +51,6 @@ tmp<volVectorField> constrainHbyA
     const volScalarField& p
 );
 
-tmp<volVectorField> constrainH
-(
-    const tmp<volVectorField>& tH,
-    const volScalarField& rA,
-    const volVectorField& U,
-    const volScalarField& p
-);
-
 tmp<surfaceScalarField> constrainPhiHbyA
 (
     const tmp<surfaceScalarField>& tphiHbyA,

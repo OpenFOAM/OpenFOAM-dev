@@ -75,52 +75,6 @@ Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
 }
 
 
-Foam::tmp<Foam::volVectorField> Foam::constrainH
-(
-    const tmp<volVectorField>& tH,
-    const volScalarField& rA,
-    const volVectorField& U,
-    const volScalarField& p
-)
-{
-    tmp<volVectorField> tHNew;
-
-    if (tH.isTmp())
-    {
-        tHNew = tH;
-        tHNew.ref().rename(IOobject::groupName("H", U.group()));
-    }
-    else
-    {
-        tHNew = volVectorField::New
-        (
-            IOobject::groupName("H", U.group()),
-            tH
-        );
-    }
-
-    volVectorField& H = tHNew.ref();
-    volVectorField::Boundary& Hbf = H.boundaryFieldRef();
-
-    forAll(U.boundaryField(), patchi)
-    {
-        if
-        (
-           !U.boundaryField()[patchi].assignable()
-        && !isA<fixedFluxExtrapolatedPressureFvPatchScalarField>
-            (
-                p.boundaryField()[patchi]
-            )
-        )
-        {
-            Hbf[patchi] = U.boundaryField()[patchi]/rA.boundaryField()[patchi];
-        }
-    }
-
-    return tHNew;
-}
-
-
 Foam::tmp<Foam::surfaceScalarField> Foam::constrainPhiHbyA
 (
     const tmp<surfaceScalarField>& tphiHbyA,
