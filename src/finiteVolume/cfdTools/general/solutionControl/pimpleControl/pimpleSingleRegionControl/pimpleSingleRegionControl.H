@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,6 +76,15 @@ class pimpleSingleRegionControl
 {
     pimpleNoLoopControl& pimple_;
 
+
+protected:
+
+    // Protected Member Functions
+
+        //- Read controls
+        virtual bool read();
+
+
 public:
 
     // Static Data Members
@@ -98,12 +107,6 @@ public:
 
 
     // Member Functions
-
-        // IO
-
-            //- Read controls
-            virtual bool read();
-
 
         // Evolution
 

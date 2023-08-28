@@ -47,6 +47,14 @@ bool Foam::solver::writeData(Ostream&) const
 }
 
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+bool Foam::solver::read()
+{
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::solver::solver(fvMesh& mesh)

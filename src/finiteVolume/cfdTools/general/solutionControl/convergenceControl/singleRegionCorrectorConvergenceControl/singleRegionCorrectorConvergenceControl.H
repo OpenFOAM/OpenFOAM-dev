@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,12 @@ protected:
         HashTable<label> solveIndex_;
 
 
+    // Protected Member Functions
+
+        //- Read controls
+        virtual bool read();
+
+
 public:
 
     // Static Data Members
@@ -93,9 +99,6 @@ public:
     // Member Functions
 
         // IO
-
-            //- Read residual controls
-            bool readCorrResidualControls();
 
             //- Print the residual controls
             void printCorrResidualControls(const label n) const;

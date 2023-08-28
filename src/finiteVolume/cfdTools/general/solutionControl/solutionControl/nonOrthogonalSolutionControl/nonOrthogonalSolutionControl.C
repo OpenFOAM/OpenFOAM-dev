@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,24 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+bool Foam::nonOrthogonalSolutionControl::read()
+{
+    if (!singleRegionSolutionControl::read())
+    {
+        return false;
+    }
+
+    const dictionary& solutionDict = dict();
+
+    nCorrNonOrth_ =
+        solutionDict.lookupOrDefault<label>("nNonOrthogonalCorrectors", 0);
+
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::nonOrthogonalSolutionControl::nonOrthogonalSolutionControl
@@ -57,22 +75,6 @@ Foam::nonOrthogonalSolutionControl::~nonOrthogonalSolutionControl()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::nonOrthogonalSolutionControl::read()
-{
-    if (!singleRegionSolutionControl::read())
-    {
-        return false;
-    }
-
-    const dictionary& solutionDict = dict();
-
-    nCorrNonOrth_ =
-        solutionDict.lookupOrDefault<label>("nNonOrthogonalCorrectors", 0);
-
-    return true;
-}
-
-
 bool Foam::nonOrthogonalSolutionControl::isFinal(const bool finalIter) const
 {
     return finalIter && (finalNonOrthogonalIter() || !anyNonOrthogonalIter());
@@ -84,8 +86,6 @@ bool Foam::nonOrthogonalSolutionControl::correctNonOrthogonal
     const bool finalIter
 )
 {
-    read();
-
     if (finalNonOrthogonalIter())
     {
         corrNonOrth_ = 0;

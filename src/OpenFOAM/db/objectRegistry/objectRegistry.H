@@ -80,6 +80,8 @@ class objectRegistry
         //  available
         mutable HashSet<word> temporaryObjects_;
 
+        mutable List<regIOobject*> dependents_;
+
 
     // Private Member Functions
 
@@ -270,11 +272,17 @@ public:
             //- Return true if any of the object's files have been modified
             virtual bool modified() const;
 
-            //- Read the objects that have been modified
-            void readModifiedObjects();
+            //- Cache pointers to objects who's dependencies have been modified
+            virtual bool dependenciesModified() const;
 
             //- Read object if modified
             virtual bool readIfModified();
+
+            //- Read dependent objects
+            virtual bool read();
+
+            //- Read the objects that have been modified
+            void readModifiedObjects();
 
 
         // Writing

@@ -186,9 +186,6 @@ Foam::solvers::isothermalFluid::isothermalFluid
     U(U_),
     phi(phi_)
 {
-    // Read the controls
-    readControls(true);
-
     mesh.schemes().setFluxRequired(p.name());
     momentumTransport->validate();
 
@@ -268,9 +265,6 @@ Foam::solvers::isothermalFluid::~isothermalFluid()
 
 void Foam::solvers::isothermalFluid::preSolve()
 {
-    // Read the controls
-    readControls();
-
     if ((mesh.dynamic() || MRF.size()) && !rhoUf.valid())
     {
         Info<< "Constructing face momentum rhoUf" << endl;

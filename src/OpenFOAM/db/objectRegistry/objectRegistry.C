@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -502,8 +502,28 @@ bool Foam::objectRegistry::modified() const
 }
 
 
-void Foam::objectRegistry::readModifiedObjects()
+bool Foam::objectRegistry::dependenciesModified() const
 {
+    dependents_.setSize(size());
+
+    label count=0;
+    forAllConstIter(HashTable<regIOobject*>, *this, iter)
+    {
+        if (iter()->dependenciesModified())
+        {
+            dependents_[count++] = iter();
+        }
+    }
+    dependents_.setSize(count);
+
+    return count != 0;
+}
+
+
+bool Foam::objectRegistry::readIfModified()
+{
+    bool modified = false;
+
     for (iterator iter = begin(); iter != end(); ++iter)
     {
         if (objectRegistry::debug)
@@ -513,15 +533,37 @@ void Foam::objectRegistry::readModifiedObjects()
                 << iter.key() << endl;
         }
 
-        iter()->readIfModified();
+        modified = modified || iter()->readIfModified();
     }
+
+    return modified;
 }
 
 
-bool Foam::objectRegistry::readIfModified()
+bool Foam::objectRegistry::read()
 {
-    readModifiedObjects();
-    return true;
+    bool readOk = true;
+
+    forAll(dependents_, i)
+    {
+        dependents_[i]->read();
+    }
+
+    return readOk;
+}
+
+
+void Foam::objectRegistry::readModifiedObjects()
+{
+    dependenciesModified();
+
+    const bool modified = readIfModified();
+
+    // If any objects have been modified and re-read, read the dependants
+    if (modified)
+    {
+        objectRegistry::read();
+    }
 }
 
 

@@ -33,6 +33,14 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+bool Foam::pimpleSingleRegionControl::read()
+{
+    return pimple_.read() && pimpleLoop::read();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::pimpleSingleRegionControl::pimpleSingleRegionControl
@@ -45,7 +53,7 @@ Foam::pimpleSingleRegionControl::pimpleSingleRegionControl
 {
     pimple_.pimpleLoopPtr_ = this;
 
-    pimpleLoop::read();
+    read();
 
     pimple_.printResidualControls();
 
@@ -82,16 +90,8 @@ Foam::pimpleSingleRegionControl::~pimpleSingleRegionControl()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::pimpleSingleRegionControl::read()
-{
-    return pimple_.read() && pimpleLoop::read();
-}
-
-
 bool Foam::pimpleSingleRegionControl::loop()
 {
-    read();
-
     if (!pimpleLoop::loop(pimple_))
     {
         pimple_.updateFinal(pimple_.isFinal(finalIter()));
@@ -109,8 +109,6 @@ bool Foam::pimpleSingleRegionControl::loop()
 
 bool Foam::pimpleSingleRegionControl::run(Time& time)
 {
-    read();
-
     if (!pimple_.endIfConverged(time))
     {
         pimple_.storePrevIterFields();
@@ -122,8 +120,6 @@ bool Foam::pimpleSingleRegionControl::run(Time& time)
 
 bool Foam::pimpleSingleRegionControl::loop(Time& time)
 {
-    read();
-
     if (!pimple_.endIfConverged(time))
     {
         pimple_.storePrevIterFields();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,23 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+bool Foam::pisoControl::read()
+{
+    if (!fluidSolutionControl::read())
+    {
+        return false;
+    }
+
+    const dictionary& solutionDict = dict();
+
+    nCorrPiso_ = solutionDict.lookupOrDefault<label>("nCorrectors", 1);
+
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::pisoControl::pisoControl(fvMesh& mesh, const word& algorithmName)
@@ -53,21 +70,6 @@ Foam::pisoControl::~pisoControl()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::pisoControl::read()
-{
-    if (!fluidSolutionControl::read())
-    {
-        return false;
-    }
-
-    const dictionary& solutionDict = dict();
-
-    nCorrPiso_ = solutionDict.lookupOrDefault<label>("nCorrectors", 1);
-
-    return true;
-}
-
-
 bool Foam::pisoControl::isFinal(const bool finalIter) const
 {
     return (finalIter && !anyPisoIter()) || finalPisoIter();
@@ -76,8 +78,6 @@ bool Foam::pisoControl::isFinal(const bool finalIter) const
 
 bool Foam::pisoControl::correct(const bool finalIter)
 {
-    read();
-
     if (finalPisoIter())
     {
         corrPiso_ = 0;

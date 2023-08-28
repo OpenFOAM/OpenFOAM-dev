@@ -43,24 +43,6 @@ namespace solvers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solvers::solid::readControls(const bool construct)
-{
-    if (construct || runTime.controlDict().modified())
-    {
-        maxDi =
-            runTime.controlDict().lookupOrDefault<scalar>("maxDi", 1.0);
-
-        maxDeltaT_ =
-            runTime.controlDict().found("maxDeltaT")
-          ? runTime.userTimeToTime
-            (
-                runTime.controlDict().lookup<scalar>("maxDeltaT")
-            )
-          : vGreat;
-    }
-}
-
-
 void Foam::solvers::solid::correctDiNum()
 {
     const volScalarField kappa
@@ -89,6 +71,33 @@ void Foam::solvers::solid::correctDiNum()
         << " max: " << maxDiNum << endl;
 
     DiNum = maxDiNum;
+}
+
+
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+bool Foam::solvers::solid::dependenciesModified() const
+{
+    return runTime.controlDict().modified();
+}
+
+
+bool Foam::solvers::solid::read()
+{
+    solver::read();
+
+    maxDi =
+        runTime.controlDict().lookupOrDefault<scalar>("maxDi", 1.0);
+
+    maxDeltaT_ =
+        runTime.controlDict().found("maxDeltaT")
+      ? runTime.userTimeToTime
+        (
+            runTime.controlDict().lookup<scalar>("maxDeltaT")
+        )
+      : vGreat;
+
+    return true;
 }
 
 
@@ -136,7 +145,7 @@ Foam::solvers::solid::solid(fvMesh& mesh)
     solid(mesh, solidThermo::New(mesh))
 {
     // Read the controls
-    readControls(true);
+    read();
 }
 
 
@@ -163,9 +172,6 @@ Foam::scalar Foam::solvers::solid::maxDeltaT() const
 
 void Foam::solvers::solid::preSolve()
 {
-    // Read the controls
-    readControls();
-
     fvModels().preUpdateMesh();
 
     // Update the mesh for topology change, mesh to mesh mapping

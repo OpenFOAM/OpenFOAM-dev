@@ -122,9 +122,6 @@ Foam::solvers::incompressibleDriftFlux::incompressibleDriftFlux(fvMesh& mesh)
         compressible::momentumTransportModel::New(rho, U, rhoPhi, mixture)
     )
 {
-    // Read the controls
-    readControls();
-
     if (transient())
     {
         correctCoNum();

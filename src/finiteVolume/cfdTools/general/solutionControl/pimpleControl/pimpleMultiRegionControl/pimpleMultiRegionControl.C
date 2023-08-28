@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,24 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(pimpleMultiRegionControl, 0);
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+bool Foam::pimpleMultiRegionControl::read()
+{
+    multiRegionSolutionControl::read();
+    pimpleLoop::read();
+
+    forAll(pimpleControls_, i)
+    {
+        pimpleControls_[i].read();
+    }
+
+    nEcorr_ = dict().lookupOrDefault<label>("nEnergyCorrectors", 1);
+
+    return pimpleLoop::read();
 }
 
 
@@ -108,24 +126,6 @@ Foam::pimpleMultiRegionControl::~pimpleMultiRegionControl()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::pimpleMultiRegionControl::read()
-{
-    forAll(pimpleControls_, i)
-    {
-        pimpleControls_[i].read();
-    }
-
-    nEcorr_ = dict().lookupOrDefault<label>("nEnergyCorrectors", 1);
-
-    if (!pimpleLoop::read())
-    {
-        return false;
-    }
-
-    return true;
-}
-
-
 bool Foam::pimpleMultiRegionControl::hasResidualControls() const
 {
     bool result = true;
@@ -198,8 +198,6 @@ void Foam::pimpleMultiRegionControl::updateCorrSolveIndex()
 
 bool Foam::pimpleMultiRegionControl::loop()
 {
-    read();
-
     if (!pimpleLoop::loop(*this))
     {
         forAll(pimpleControls_, i)
@@ -246,8 +244,6 @@ bool Foam::pimpleMultiRegionControl::correctEnergy()
 
 bool Foam::pimpleMultiRegionControl::run(Time& time)
 {
-    read();
-
     if (!endIfConverged(time))
     {
         forAll(pimpleControls_, i)
@@ -262,8 +258,6 @@ bool Foam::pimpleMultiRegionControl::run(Time& time)
 
 bool Foam::pimpleMultiRegionControl::loop(Time& time)
 {
-    read();
-
     if (!endIfConverged(time))
     {
         forAll(pimpleControls_, i)

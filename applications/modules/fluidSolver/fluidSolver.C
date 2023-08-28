@@ -40,40 +40,43 @@ namespace solvers
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::solvers::fluidSolver::readControls(const bool construct)
+bool Foam::solvers::fluidSolver::dependenciesModified() const
 {
-    if (construct || runTime.controlDict().modified())
-    {
-        maxCo =
-            runTime.controlDict().lookupOrDefault<scalar>("maxCo", vGreat);
-
-        maxDeltaT_ =
-            runTime.controlDict().found("maxDeltaT")
-          ? runTime.userTimeToTime
-            (
-                runTime.controlDict().lookup<scalar>("maxDeltaT")
-            )
-          : vGreat;
-    }
-
-    if (construct || mesh.solution().modified())
-    {
-        correctPhi = pimple.dict().lookupOrDefault
-        (
-            "correctPhi",
-            mesh.dynamic()
-        );
-
-        checkMeshCourantNo = pimple.dict().lookupOrDefault
-        (
-            "checkMeshCourantNo",
-            false
-        );
-    }
+    return runTime.controlDict().modified() || mesh.solution().modified();
 }
 
+
+bool Foam::solvers::fluidSolver::read()
+{
+    solver::read();
+
+    maxCo =
+        runTime.controlDict().lookupOrDefault<scalar>("maxCo", vGreat);
+
+    maxDeltaT_ =
+        runTime.controlDict().found("maxDeltaT")
+      ? runTime.userTimeToTime
+        (
+            runTime.controlDict().lookup<scalar>("maxDeltaT")
+        )
+      : vGreat;
+
+    correctPhi = pimple.dict().lookupOrDefault
+    (
+        "correctPhi",
+        mesh.dynamic()
+    );
+
+    checkMeshCourantNo = pimple.dict().lookupOrDefault
+    (
+        "checkMeshCourantNo",
+        false
+    );
+
+    return true;
+}
 
 void Foam::solvers::fluidSolver::meshCourantNo() const
 {
@@ -210,7 +213,7 @@ Foam::solvers::fluidSolver::fluidSolver(fvMesh& mesh)
     CoNum(CoNum_)
 {
     // Read the controls
-    readControls(true);
+    read();
 }
 
 

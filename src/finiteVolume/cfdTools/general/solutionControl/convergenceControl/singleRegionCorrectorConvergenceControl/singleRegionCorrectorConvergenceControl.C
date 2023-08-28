@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,31 +35,9 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-Foam::singleRegionCorrectorConvergenceControl::
-singleRegionCorrectorConvergenceControl
-(
-    const singleRegionSolutionControl& control,
-    const word& loopName
-)
-:
-    correctorConvergenceControl(control, loopName),
-    mesh_(control.mesh()),
-    corrResidualControl_()
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::singleRegionCorrectorConvergenceControl::
-~singleRegionCorrectorConvergenceControl()
-{}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-bool Foam::singleRegionCorrectorConvergenceControl::readCorrResidualControls()
+bool Foam::singleRegionCorrectorConvergenceControl::read()
 {
     const dictionary residualDict
     (
@@ -124,6 +102,32 @@ bool Foam::singleRegionCorrectorConvergenceControl::readCorrResidualControls()
     return true;
 }
 
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::singleRegionCorrectorConvergenceControl::
+singleRegionCorrectorConvergenceControl
+(
+    const singleRegionSolutionControl& control,
+    const word& loopName
+)
+:
+    correctorConvergenceControl(control, loopName),
+    mesh_(control.mesh()),
+    corrResidualControl_()
+{
+    read();
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::singleRegionCorrectorConvergenceControl::
+~singleRegionCorrectorConvergenceControl()
+{}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 void Foam::singleRegionCorrectorConvergenceControl::printCorrResidualControls
 (

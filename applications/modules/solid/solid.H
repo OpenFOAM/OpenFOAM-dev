@@ -87,8 +87,11 @@ protected:
 
     // Protected Member Functions
 
+        //- Return true if the solver's dependencies have been modified
+        virtual bool dependenciesModified() const;
+
         //- Read controls
-        virtual void readControls(const bool construct = false);
+        virtual bool read();
 
 
 private:

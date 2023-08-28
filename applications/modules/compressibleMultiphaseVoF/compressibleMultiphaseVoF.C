@@ -92,9 +92,6 @@ Foam::solvers::compressibleMultiphaseVoF::compressibleMultiphaseVoF
 
     momentumTransport(momentumTransport_())
 {
-    // Read the controls
-    readControls();
-
     if (correctPhi || mesh.topoChanging())
     {
         rAU = new volScalarField

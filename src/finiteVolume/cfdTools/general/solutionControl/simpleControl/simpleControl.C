@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,16 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+bool Foam::simpleControl::read()
+{
+    return
+        fluidSolutionControl::read()
+     && singleRegionConvergenceControl::read();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::simpleControl::simpleControl(fvMesh& mesh, const word& algorithmName)
@@ -56,16 +66,8 @@ Foam::simpleControl::~simpleControl()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::simpleControl::read()
-{
-    return fluidSolutionControl::read() && readResidualControls();
-}
-
-
 bool Foam::simpleControl::run(Time& time)
 {
-    read();
-
     if (!endIfConverged(time))
     {
         storePrevIterFields();
@@ -77,8 +79,6 @@ bool Foam::simpleControl::run(Time& time)
 
 bool Foam::simpleControl::loop(Time& time)
 {
-    read();
-
     if (!endIfConverged(time))
     {
         storePrevIterFields();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,28 +34,9 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-Foam::singleRegionConvergenceControl::singleRegionConvergenceControl
-(
-    const singleRegionSolutionControl& control
-)
-:
-    convergenceControl(control),
-    mesh_(control.mesh()),
-    residualControl_()
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::singleRegionConvergenceControl::~singleRegionConvergenceControl()
-{}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-bool Foam::singleRegionConvergenceControl::readResidualControls()
+bool Foam::singleRegionConvergenceControl::read()
 {
     const dictionary residualDict
     (
@@ -111,6 +92,29 @@ bool Foam::singleRegionConvergenceControl::readResidualControls()
     return true;
 }
 
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::singleRegionConvergenceControl::singleRegionConvergenceControl
+(
+    const singleRegionSolutionControl& control
+)
+:
+    convergenceControl(control),
+    mesh_(control.mesh()),
+    residualControl_()
+{
+    read();
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::singleRegionConvergenceControl::~singleRegionConvergenceControl()
+{}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 void Foam::singleRegionConvergenceControl::printResidualControls() const
 {

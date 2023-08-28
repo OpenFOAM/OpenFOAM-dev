@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,47 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(pimpleNoLoopControl, 0);
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+bool Foam::pimpleNoLoopControl::read()
+{
+    if
+    (
+        !pisoControl::read()
+     || !singleRegionConvergenceControl::read()
+     || !singleRegionCorrectorConvergenceControl::read()
+    )
+    {
+        return false;
+    }
+
+    moveMeshOuterCorrectors_ = dict().lookupOrDefault
+    (
+        "moveMeshOuterCorrectors",
+        false
+    );
+
+    simpleRho_ =
+        dict().lookupOrDefaultBackwardsCompatible<bool>
+        (
+            {"simpleRho", "SIMPLErho"},
+            mesh().schemes().steady()
+        );
+
+    transportPredictionFirst_ =
+        dict().lookupOrDefault<bool>("transportPredictionFirst", true);
+
+    transportCorrectionFinal_ =
+        dict().lookupOrDefaultBackwardsCompatible<bool>
+        (
+            {"transportCorrectionFinal", "turbOnFinalIterOnly"},
+            true
+        );
+
+    return true;
 }
 
 
@@ -67,46 +108,6 @@ Foam::pimpleNoLoopControl::~pimpleNoLoopControl()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-bool Foam::pimpleNoLoopControl::read()
-{
-    if
-    (
-        !pisoControl::read()
-     || !readResidualControls()
-     || !readCorrResidualControls()
-    )
-    {
-        return false;
-    }
-
-    moveMeshOuterCorrectors_ = dict().lookupOrDefault
-    (
-        "moveMeshOuterCorrectors",
-        false
-    );
-
-    simpleRho_ =
-        dict().lookupOrDefaultBackwardsCompatible<bool>
-        (
-            {"simpleRho", "SIMPLErho"},
-            mesh().schemes().steady()
-        );
-
-    transportPredictionFirst_ =
-        dict().lookupOrDefault<bool>("transportPredictionFirst", true);
-
-    transportCorrectionFinal_ =
-        dict().lookupOrDefaultBackwardsCompatible<bool>
-        (
-            {"transportCorrectionFinal", "turbOnFinalIterOnly"},
-            true
-        );
-
-    return true;
-}
-
-
 
 bool Foam::pimpleNoLoopControl::correct()
 {

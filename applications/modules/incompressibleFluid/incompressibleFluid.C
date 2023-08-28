@@ -162,9 +162,6 @@ Foam::solvers::incompressibleFluid::~incompressibleFluid()
 
 void Foam::solvers::incompressibleFluid::preSolve()
 {
-    // Read the controls
-    readControls();
-
     if ((mesh.dynamic() || MRF.size()) && !Uf.valid())
     {
         Info<< "Constructing face momentum Uf" << endl;

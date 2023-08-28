@@ -92,14 +92,17 @@ class fluidSolver
 
 protected:
 
+        //- Return true if the solver's dependencies have been modified
+        virtual bool dependenciesModified() const;
+
+        //- Read controls
+        virtual bool read();
+
         //- Switch to correct the flux after mesh change
         bool correctPhi;
 
         //- Current maximum Courant number for time-step control
         scalar CoNum_;
-
-        //- Read controls
-        void readControls(const bool construct = false);
 
         //- Check mesh Courant numbers for moving mesh cases
         void meshCourantNo() const;

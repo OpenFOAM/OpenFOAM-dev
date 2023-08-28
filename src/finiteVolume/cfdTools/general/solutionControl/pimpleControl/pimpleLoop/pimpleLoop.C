@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,8 +37,7 @@ namespace Foam
 
 bool Foam::pimpleLoop::read()
 {
-    nCorr_ =
-        control_.dict().lookupOrDefault<label>("nOuterCorrectors", 1);
+    nCorr_ = control_.dict().lookupOrDefault<label>("nOuterCorrectors", 1);
 
     return true;
 }
@@ -52,7 +51,9 @@ Foam::pimpleLoop::pimpleLoop(const solutionControl& control)
     nCorr_(-1),
     corr_(0),
     converged_(false)
-{}
+{
+    read();
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -65,8 +66,6 @@ Foam::pimpleLoop::~pimpleLoop()
 
 bool Foam::pimpleLoop::loop(correctorConvergenceControl& convergence)
 {
-    read();
-
     // Handle quit conditions first
     {
         // If converged on the last iteration then end the correction loop

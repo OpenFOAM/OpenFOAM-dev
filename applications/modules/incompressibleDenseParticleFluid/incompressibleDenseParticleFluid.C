@@ -245,9 +245,6 @@ Foam::solvers::incompressibleDenseParticleFluid::
 
 void Foam::solvers::incompressibleDenseParticleFluid::preSolve()
 {
-    // Read the controls
-    readControls();
-
     if (mesh.dynamic() && !Ucf.valid())
     {
         Info<< "Constructing face momentum Ucf" << endl;

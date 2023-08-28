@@ -87,6 +87,12 @@ private:
         virtual bool writeData(Ostream&) const;
 
 
+protected:
+
+        //- Read controls
+        virtual bool read();
+
+
 public:
 
     // Public Data

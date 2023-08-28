@@ -240,21 +240,7 @@ void Foam::Time::readModifiedObjects()
             Pstream::parRun()
         );
 
-        // Time handling is special since controlDict_ is the one dictionary
-        // that is not registered to any database.
-
-        if (controlDict_.readIfModified())
-        {
-            readDict();
-            functionObjects_.read();
-        }
-
-        bool registryModified = objectRegistry::modified();
-
-        if (registryModified)
-        {
-            objectRegistry::readModifiedObjects();
-        }
+        objectRegistry::readModifiedObjects();
     }
 }
 

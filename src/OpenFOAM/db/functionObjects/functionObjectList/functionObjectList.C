@@ -58,6 +58,13 @@ Foam::functionObject* Foam::functionObjectList::remove
 }
 
 
+bool Foam::functionObjectList::writeData(Ostream&) const
+{
+    NotImplemented;
+    return false;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjectList::functionObjectList
@@ -66,6 +73,15 @@ Foam::functionObjectList::functionObjectList
     const bool execution
 )
 :
+    regIOobject
+    (
+        IOobject
+        (
+            "functionObjectList",
+            t.system(),
+            t
+        )
+    ),
     PtrList<functionObject>(),
     digests_(),
     indices_(),
@@ -83,6 +99,15 @@ Foam::functionObjectList::functionObjectList
     const bool execution
 )
 :
+    regIOobject
+    (
+        IOobject
+        (
+            "functionObjectList",
+            t.system(),
+            t
+        )
+    ),
     PtrList<functionObject>(),
     digests_(),
     indices_(),
@@ -309,6 +334,19 @@ Foam::scalar Foam::functionObjectList::maxDeltaT() const
     }
 
     return result;
+}
+
+
+bool Foam::functionObjectList::dependenciesModified() const
+{
+    if (&parentDict_ == &time_.controlDict())
+    {
+        return time_.controlDict().modified();
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

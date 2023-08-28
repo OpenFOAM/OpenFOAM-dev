@@ -84,9 +84,6 @@ Foam::solvers::incompressibleVoF::incompressibleVoF(fvMesh& mesh)
         mixture
     )
 {
-    // Read the controls
-    readControls();
-
     if (correctPhi || mesh.topoChanging())
     {
         rAU = new volScalarField

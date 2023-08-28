@@ -197,9 +197,6 @@ Foam::scalar Foam::solvers::VoFSolver::maxDeltaT() const
 
 void Foam::solvers::VoFSolver::preSolve()
 {
-    // Read the controls
-    readControls();
-
     if ((mesh.dynamic() || MRF.size()) && !Uf.valid())
     {
         Info<< "Constructing face momentum Uf" << endl;

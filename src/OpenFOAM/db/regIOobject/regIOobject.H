@@ -283,6 +283,12 @@ public:
             //  have been modified. (modified state is cached by Time)
             virtual bool modified() const;
 
+            //- Return true if the object's dependencies have been modified
+            virtual bool dependenciesModified() const
+            {
+                return false;
+            }
+
             //- Read object if modified (as set by call to modified)
             virtual bool readIfModified();
 

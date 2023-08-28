@@ -40,6 +40,7 @@ SourceFiles
 #ifndef functionObjectList_H
 #define functionObjectList_H
 
+#include "regIOobject.H"
 #include "PtrList.H"
 #include "functionObject.H"
 #include "SHA1Digest.H"
@@ -62,6 +63,7 @@ class argList;
 
 class functionObjectList
 :
+    public regIOobject,
     private PtrList<functionObject>
 {
     // Private Data
@@ -92,6 +94,9 @@ class functionObjectList
         //  and returns the old index via the parameter.
         //  Returns a nullptr (and index -1) if it didn't exist
         functionObject* remove(const word&, label& oldIndex);
+
+        //- Dummy write for regIOobject
+        virtual bool writeData(Ostream&) const;
 
 
 public:
@@ -161,8 +166,11 @@ public:
         //- Find the ID of a given function object by name
         label findObjectID(const word& name) const;
 
+        //- Return true if the functionObjects dependencies have been modified
+        virtual bool dependenciesModified() const;
+
         //- Read and set the function objects if their data have changed
-        bool read();
+        virtual bool read();
 
         //- Called at the start of the time-loop
         bool start();

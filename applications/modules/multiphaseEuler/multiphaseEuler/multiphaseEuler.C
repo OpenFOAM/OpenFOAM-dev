@@ -45,24 +45,23 @@ namespace solvers
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solvers::multiphaseEuler::readControls(const bool construct)
+bool Foam::solvers::multiphaseEuler::read()
 {
-    fluidSolver::readControls(construct);
+    fluidSolver::read();
 
-    if (construct || mesh.solution().modified())
-    {
-        predictMomentum =
-            pimple.dict().lookupOrDefault<bool>("momentumPredictor", false);
+    predictMomentum =
+        pimple.dict().lookupOrDefault<bool>("momentumPredictor", false);
 
-        faceMomentum =
-            pimple.dict().lookupOrDefault<Switch>("faceMomentum", false);
+    faceMomentum =
+        pimple.dict().lookupOrDefault<Switch>("faceMomentum", false);
 
-        dragCorrection =
-            pimple.dict().lookupOrDefault<Switch>("dragCorrection", false);
+    dragCorrection =
+        pimple.dict().lookupOrDefault<Switch>("dragCorrection", false);
 
-        nEnergyCorrectors =
-            pimple.dict().lookupOrDefault<int>("nEnergyCorrectors", 1);
-    }
+    nEnergyCorrectors =
+        pimple.dict().lookupOrDefault<int>("nEnergyCorrectors", 1);
+
+    return true;
 }
 
 
@@ -187,7 +186,7 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
     phi(phi_)
 {
     // Read the controls
-    readControls(true);
+    read();
 
     mesh.schemes().setFluxRequired(p_rgh.name());
 
@@ -208,9 +207,6 @@ Foam::solvers::multiphaseEuler::~multiphaseEuler()
 
 void Foam::solvers::multiphaseEuler::preSolve()
 {
-    // Read the controls
-    readControls();
-
     if (transient())
     {
         correctCoNum();
