@@ -173,6 +173,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
                 args["func"],
                 functionsDict,
                 functionEntries::includeFuncEntry::functionObjectDictPath,
+                "system",
                 {"command", args.commandLine()},
                 region
             );
@@ -190,6 +191,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
                     funcs[i],
                     functionsDict,
                     functionEntries::includeFuncEntry::functionObjectDictPath,
+                    "system",
                     {"command", args.commandLine()},
                     region
                 );

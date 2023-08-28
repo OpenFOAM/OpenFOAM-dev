@@ -835,6 +835,7 @@ fileName findConfigFile
 (
     const word& configName,
     const fileName& configFilesPath,
+    const word& configFilesDir,
     const word& region = word::null
 );
 
@@ -862,6 +863,7 @@ bool readConfigFile
     const string& argString,
     dictionary& parentDict,
     const fileName& configFilesPath,
+    const word& configFilesDir,
     const Pair<string>& contextTypeAndValue,
     const word& region = word::null
 );
