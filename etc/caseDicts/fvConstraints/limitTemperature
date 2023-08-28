@@ -15,7 +15,7 @@ FoamFile
 
 type       limitTemperature;
 
-select        all;
+select     all;
 
 min        <200>;
 max        <6000>;

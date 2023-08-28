@@ -15,7 +15,7 @@ FoamFile
 
 type       limitPressure;
 
-select        all;
+select     all;
 
 min        <1e4>;
 

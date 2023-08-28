@@ -9,20 +9,12 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      limitPressure;
+    location    "system";
+    object      fvConstraints;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type       limitPressure;
+// include packaged fvConstraints using #includeConstraint
+// #includeConstraint
 
-select     all;
-
-// limits can be specified absolute
-// min        <200>;
-// max        <500>;
-
-// ... or as multipliers on initial min/max values
-minFactor  <0.1>;
-maxFactor  <1.5>;
-
-//************************************************************************** //
+// ************************************************************************* //
