@@ -23,6 +23,67 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type>
+class wordListAndType
+{
+    public:
+
+        wordList wl;
+        Type t;
+
+        wordListAndType()
+        {}
+
+        wordListAndType(Istream& is)
+        :
+            wl(is),
+            t(is)
+        {}
+};
+
+template<class Type>
+inline Istream& operator>>(Istream& is, wordListAndType<Type>& wlat)
+{
+    return is >> wlat.wl >> wlat.t;
+}
+
+template<class Type>
+inline Ostream& operator<<(Ostream& os, const wordListAndType<Type>& wlat)
+{
+    return os << wlat.wl << wlat.t;
+}
+
+template<class Type>
+inline bool operator==
+(
+    const wordListAndType<Type>& a,
+    const wordListAndType<Type>& b
+)
+{
+    return a.wl == b.wl && a.t == b.t;
+}
+
+template<class Type>
+inline bool operator!=
+(
+    const wordListAndType<Type>& a,
+    const wordListAndType<Type>& b
+)
+{
+    return !(a == b);
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 inline const Foam::fvMesh& Foam::phaseSystem::mesh() const
@@ -189,5 +250,152 @@ inline const Foam::dimensionedScalar& Foam::phaseSystem::deltaN() const
     return deltaN_;
 }
 
+
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class GeoField>
+inline void addField
+(
+    const label phasei,
+    const word& name,
+    tmp<GeoField> field,
+    PtrList<GeoField>& fieldList
+)
+{
+    if (fieldList.set(phasei))
+    {
+        fieldList[phasei] += field;
+    }
+    else
+    {
+        fieldList.set
+        (
+            phasei,
+            new GeoField
+            (
+                name, // IOobject::groupName(name, group.name()),
+                field
+            )
+        );
+    }
+}
+
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    tmp<GeoField> field,
+    PtrList<GeoField>& fieldList
+)
+{
+    if (fieldList.set(group.index()))
+    {
+        fieldList[group.index()] += field;
+    }
+    else
+    {
+        fieldList.set
+        (
+            group.index(),
+            new GeoField
+            (
+                IOobject::groupName(name, group.name()),
+                field
+            )
+        );
+    }
+}
+
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    const GeoField& field,
+    PtrList<GeoField>& fieldList
+)
+{
+    addField(group, name, tmp<GeoField>(field), fieldList);
+}
+
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    tmp<GeoField> field,
+    HashPtrTable<GeoField>& fieldTable
+)
+{
+    if (fieldTable.found(group.name()))
+    {
+        *fieldTable[group.name()] += field;
+    }
+    else
+    {
+        fieldTable.set
+        (
+            group.name(),
+            new GeoField
+            (
+                IOobject::groupName(name, group.name()),
+                field
+            )
+        );
+    }
+}
+
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    const GeoField& field,
+    HashPtrTable<GeoField>& fieldTable
+)
+{
+    addField(group, name, tmp<GeoField>(field), fieldTable);
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+PtrList<GeometricField<Type, PatchField, GeoMesh>> operator&
+(
+    const PtrList<PtrList<GeometricField<scalar, PatchField, GeoMesh>>>& As,
+    const PtrList<GeometricField<Type, PatchField, GeoMesh>>& fs
+)
+{
+    PtrList<GeometricField<Type, PatchField, GeoMesh >> Afs(fs.size());
+
+    forAll(Afs, i)
+    {
+        Afs.set(i, As[i][i]*fs[i]);
+
+        forAll(Afs, j)
+        {
+            if (j != i)
+            {
+                Afs[i] += As[i][j]*fs[j];
+            }
+        }
+    }
+
+    return Afs;
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // ************************************************************************* //

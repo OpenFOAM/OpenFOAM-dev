@@ -28,62 +28,6 @@ License
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-namespace Foam
-{
-
-template<class Type>
-class wordListAndType
-{
-    public:
-
-        wordList wl;
-        Type t;
-
-        wordListAndType()
-        {}
-
-        wordListAndType(Istream& is)
-        :
-            wl(is),
-            t(is)
-        {}
-};
-
-template<class Type>
-inline Istream& operator>>(Istream& is, wordListAndType<Type>& wlat)
-{
-    return is >> wlat.wl >> wlat.t;
-}
-
-template<class Type>
-inline Ostream& operator<<(Ostream& os, const wordListAndType<Type>& wlat)
-{
-    return os << wlat.wl << wlat.t;
-}
-
-template<class Type>
-inline bool operator==
-(
-    const wordListAndType<Type>& a,
-    const wordListAndType<Type>& b
-)
-{
-    return a.wl == b.wl && a.t == b.t;
-}
-
-template<class Type>
-inline bool operator!=
-(
-    const wordListAndType<Type>& a,
-    const wordListAndType<Type>& b
-)
-{
-    return !(a == b);
-}
-
-}
-
-
 template<class Type>
 Foam::dictionary Foam::phaseSystem::interfacialDict(const word& name) const
 {
@@ -362,7 +306,6 @@ void Foam::phaseSystem::generateInterfacialModels
 }
 
 
-
 template<class ModelType>
 void Foam::phaseSystem::generateInterfacialModels
 (
@@ -482,97 +425,5 @@ const ModelType& Foam::phaseSystem::lookupInterfacialModel
         );
 }
 
-
-// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class GeoField, class Group>
-inline void addField
-(
-    const Group& group,
-    const word& name,
-    tmp<GeoField> field,
-    PtrList<GeoField>& fieldList
-)
-{
-    if (fieldList.set(group.index()))
-    {
-        fieldList[group.index()] += field;
-    }
-    else
-    {
-        fieldList.set
-        (
-            group.index(),
-            new GeoField
-            (
-                IOobject::groupName(name, group.name()),
-                field
-            )
-        );
-    }
-}
-
-
-template<class GeoField, class Group>
-inline void addField
-(
-    const Group& group,
-    const word& name,
-    const GeoField& field,
-    PtrList<GeoField>& fieldList
-)
-{
-    addField(group, name, tmp<GeoField>(field), fieldList);
-}
-
-
-template<class GeoField, class Group>
-inline void addField
-(
-    const Group& group,
-    const word& name,
-    tmp<GeoField> field,
-    HashPtrTable<GeoField>& fieldTable
-)
-{
-    if (fieldTable.found(group.name()))
-    {
-        *fieldTable[group.name()] += field;
-    }
-    else
-    {
-        fieldTable.set
-        (
-            group.name(),
-            new GeoField
-            (
-                IOobject::groupName(name, group.name()),
-                field
-            )
-        );
-    }
-}
-
-
-template<class GeoField, class Group>
-inline void addField
-(
-    const Group& group,
-    const word& name,
-    const GeoField& field,
-    HashPtrTable<GeoField>& fieldTable
-)
-{
-    addField(group, name, tmp<GeoField>(field), fieldTable);
-}
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

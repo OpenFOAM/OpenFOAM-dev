@@ -5,4 +5,4 @@ EXE_INC = \
 
 EXE_LIBS = \
     -ldynamicMesh \
-    -lgenericPatchFields
+    -lgenericFvFields

@@ -536,7 +536,7 @@ public:
             //- Return the fvSchemes
             const fvSchemes& schemes() const;
 
-            //- Return the fvSchemes
+            //- Return the fvSolution
             const fvSolution& solution() const;
 
 

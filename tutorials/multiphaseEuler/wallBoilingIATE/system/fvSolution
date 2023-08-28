@@ -68,6 +68,7 @@ solvers
 
 PIMPLE
 {
+    momentumPredictor   no;
     nOuterCorrectors    1;
     nCorrectors         1;
     nNonOrthogonalCorrectors 0;
@@ -76,19 +77,19 @@ PIMPLE
     faceMomentum        no;
     VmDdtCorrection     yes;
     dragCorrection      yes;
-    partialElimination  no;
 }
 
 relaxationFactors
 {
     fields
     {
-        thermalPhaseChange:dmdtf 1.0;
+        thermalPhaseChange:dmdtf 1;
     }
 
     equations
     {
         ".*"            1;
+        "U\..*"         1;
         "h\..*"         1;
     }
 }

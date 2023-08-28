@@ -240,10 +240,12 @@ public:
 
         // Access
 
-            //- Allow manipulation of the boundary values
+            //- Disallow manipulation of the boundary values
+            //  The boundary temperature is evaluated only by
+            //  this boundary condition
             virtual bool fixesValue() const
             {
-                return false;
+                return true;
             }
 
 

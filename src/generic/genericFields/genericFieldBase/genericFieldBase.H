@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::genericPointPatch
+    Foam::genericFieldBase
 
 Description
-    Substitute for unknown patches. Used for postprocessing when only
-    basic polyPatch info is needed.
+    Base class for generic field types. Facilitates down-casting so that the
+    actual type can be queried.
 
 SourceFiles
-    genericPointPatch.C
+    genericFieldBase.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef genericPointPatch_H
-#define genericPointPatch_H
+#ifndef genericFieldBase_H
+#define genericFieldBase_H
 
-#include "facePointPatch.H"
-#include "genericPolyPatch.H"
+#include "typeInfo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,31 +44,43 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class genericPointPatch Declaration
+                       Class genericFieldBase Declaration
 \*---------------------------------------------------------------------------*/
 
-class genericPointPatch
-:
-    public facePointPatch
+class genericFieldBase
 {
+    // Private Data
+
+        //- Actual field type name
+        word actualTypeName_;
+
 
 public:
 
     //- Runtime type information
-    TypeName(genericPolyPatch::typeName_());
+    TypeName("generic");
 
 
     // Constructors
 
-        //- Construct from polyPatch
-        genericPointPatch
-        (
-            const polyPatch& patch,
-            const pointBoundaryMesh& bm
-        )
-        :
-            facePointPatch(patch, bm)
-        {}
+        //- Construct null
+        genericFieldBase();
+
+        //- Construct from actual type name
+        genericFieldBase(const word& actualTypeName);
+
+
+    //- Destructor
+    virtual ~genericFieldBase();
+
+
+    // Member Functions
+
+        //- Return the actual type name
+        inline const word& actualTypeName() const
+        {
+            return actualTypeName_;
+        }
 };
 
 

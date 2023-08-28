@@ -45,6 +45,11 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 {
     volScalarField& p(p_);
 
+    const phaseSystem::phaseModelPartialList& movingPhases
+    (
+        fluid.movingPhases()
+    );
+
     // Face volume fractions
     PtrList<surfaceScalarField> alphafs(phases.size());
     forAll(phases, phasei)
@@ -57,21 +62,25 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
     }
 
     // Diagonal coefficients
-    rAUs.clear();
-    rAUs.setSize(phases.size());
-
-    PtrList<surfaceScalarField> rAUfs(phases.size());
-
+    rAs.clear();
+    if (fluid.implicitPhasePressure())
     {
-        PtrList<volScalarField> Kds(fluid.Kds());
+        rAs.setSize(phases.size());
+    }
 
-        forAll(fluid.movingPhases(), movingPhasei)
+    PtrList<PtrList<volScalarField>> invADs;
+    PtrList<PtrList<surfaceScalarField>> invADfs;
+    {
+        PtrList<volScalarField> As(movingPhases.size());
+        PtrList<surfaceScalarField> Afs(movingPhases.size());
+        forAll(movingPhases, movingPhasei)
         {
-            const phaseModel& phase = fluid.movingPhases()[movingPhasei];
+            const phaseModel& phase = movingPhases[movingPhasei];
             const volScalarField& alpha = phase;
 
-            volScalarField AU
+            As.set
             (
+                movingPhasei,
                 UEqns[phase.index()].A()
               + byDt
                 (
@@ -80,153 +89,189 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                 )
             );
 
-            if (Kds.set(phase.index()))
-            {
-                AU += Kds[phase.index()];
-            }
-
-            rAUs.set
+            Afs.set
             (
-                phase.index(),
-                new volScalarField
-                (
-                    IOobject::groupName("rAU", phase.name()),
-                    1/AU
-                )
+                movingPhasei,
+                fvc::interpolate(As[movingPhasei])
             );
 
-            rAUfs.set(phase.index(), 1/fvc::interpolate(AU));
+            if (fluid.implicitPhasePressure())
+            {
+                rAs.set
+                (
+                    phase.index(),
+                    new volScalarField
+                    (
+                        IOobject::groupName("rA", phase.name()),
+                        1/As[movingPhasei]
+                    )
+                );
+            }
         }
-        fluid.fillFields("rAU", dimTime/dimDensity, rAUs);
-        fluid.fillFields("rAUf", dimTime/dimDensity, rAUfs);
+
+        fluid.invADs(As, invADs, invADfs);
     }
 
-    // Phase diagonal coefficients
-    PtrList<surfaceScalarField> alpharAUfs(phases.size());
-    forAll(phases, phasei)
-    {
-        const phaseModel& phase = phases[phasei];
-        const volScalarField& alpha = phase;
-
-        alpharAUfs.set
-        (
-            phasei,
-            (
-                fvc::interpolate(max(alpha, phase.residualAlpha()))
-               *rAUfs[phasei]
-            ).ptr()
-        );
-    }
+    volScalarField rho("rho", fluid.rho());
 
     // Explicit force fluxes
-    PtrList<surfaceScalarField> Fs(fluid.Fs());
+    PtrList<surfaceScalarField> alphaByADfs;
+    PtrList<surfaceScalarField> FgByADfs;
+    {
+        PtrList<surfaceScalarField> Ffs(fluid.Fs());
+
+        const surfaceScalarField ghSnGradRho
+        (
+            "ghSnGradRho",
+            buoyancy.ghf*fvc::snGrad(rho)*mesh.magSf()
+        );
+
+        PtrList<surfaceScalarField> lalphafs(movingPhases.size());
+        PtrList<surfaceScalarField> Fgfs(movingPhases.size());
+
+        forAll(movingPhases, movingPhasei)
+        {
+            const phaseModel& phase = movingPhases[movingPhasei];
+            const volScalarField& alpha = phase;
+
+            lalphafs.set
+            (
+                movingPhasei,
+                fvc::interpolate(max(alpha, phase.residualAlpha()))
+            );
+
+            Fgfs.set
+            (
+                movingPhasei,
+                (
+                    Ffs[phase.index()]
+                  + lalphafs[movingPhasei]
+                   *(
+                       ghSnGradRho
+                     - (fvc::interpolate(phase.rho() - rho))
+                      *(buoyancy.g & mesh.Sf())
+                     - fluid.surfaceTension(phase)*mesh.magSf()
+                    )
+                ).ptr()
+            );
+        }
+
+        alphaByADfs = invADfs & lalphafs;
+        FgByADfs = invADfs & Fgfs;
+    }
+
 
     // Mass transfer rates
     PtrList<volScalarField> dmdts(fluid.dmdts());
     PtrList<volScalarField> d2mdtdps(fluid.d2mdtdps());
 
+    // --- Optional momentum predictor
+    if (predictMomentum)
+    {
+        InfoInFunction << endl;
+        PtrList<volVectorField> HbyADs;
+        {
+            PtrList<volVectorField> Hs(movingPhases.size());
+
+            forAll(movingPhases, movingPhasei)
+            {
+                const phaseModel& phase = movingPhases[movingPhasei];
+                const volScalarField& alpha = phase;
+
+                Hs.set
+                (
+                    movingPhasei,
+                    UEqns[phase.index()].H()
+                  + byDt
+                    (
+                        max(phase.residualAlpha() - alpha, scalar(0))
+                       *phase.rho()
+                    )
+                   *phase.U()().oldTime()
+                );
+            }
+
+            HbyADs = invADs & Hs;
+        }
+
+        forAll(movingPhases, movingPhasei)
+        {
+            const phaseModel& phase = movingPhases[movingPhasei];
+            constrainHbyA(HbyADs[movingPhasei], phase.U(), p_rgh);
+        }
+
+        const surfaceScalarField mSfGradp(-mesh.magSf()*fvc::snGrad(p_rgh));
+
+        forAll(movingPhases, movingPhasei)
+        {
+            phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+
+            phase.URef() =
+                HbyADs[movingPhasei]
+              + fvc::reconstruct
+                (
+                    alphaByADfs[movingPhasei]*mSfGradp
+                  - FgByADfs[movingPhasei]
+                );
+
+            phase.URef().correctBoundaryConditions();
+            fvConstraints().constrain(phase.URef());
+        }
+    }
+
+
     // --- Pressure corrector loop
     while (pimple.correct())
     {
-        volScalarField rho("rho", fluid.rho());
-
-        // Correct p_rgh for consistency with p and the updated densities
-        p_rgh = p - rho*buoyancy.gh;
-
         // Correct fixed-flux BCs to be consistent with the velocity BCs
         fluid_.correctBoundaryFlux();
 
-        // Combined buoyancy and force fluxes
-        PtrList<surfaceScalarField> phigFs(phases.size());
+        PtrList<volVectorField> HbyADs;
+        PtrList<surfaceScalarField> phiHbyADs;
         {
-            const surfaceScalarField ghSnGradRho
-            (
-                "ghSnGradRho",
-                buoyancy.ghf*fvc::snGrad(rho)*mesh.magSf()
-            );
+            // Predicted velocities and fluxes for each phase
+            PtrList<volVectorField> Hs(movingPhases.size());
+            PtrList<surfaceScalarField> phiHs(movingPhases.size());
 
-            forAll(phases, phasei)
-            {
-                const phaseModel& phase = phases[phasei];
-
-                phigFs.set
-                (
-                    phasei,
-                    (
-                        (
-                           ghSnGradRho
-                         - (fvc::interpolate(phase.rho() - rho))
-                          *(buoyancy.g & mesh.Sf())
-                         - fluid.surfaceTension(phase)*mesh.magSf()
-                        )
-                    ).ptr()
-                );
-            }
-        }
-
-        // Predicted velocities and fluxes for each phase
-        PtrList<volVectorField> HbyAs(phases.size());
-        PtrList<surfaceScalarField> phiHbyAs(phases.size());
-        {
             // Correction force fluxes
             PtrList<surfaceScalarField> ddtCorrs(fluid.ddtCorrs());
 
-            forAll(fluid.movingPhases(), movingPhasei)
+            forAll(movingPhases, movingPhasei)
             {
-                const phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                const phaseModel& phase = movingPhases[movingPhasei];
                 const volScalarField& alpha = phase;
-                const label phasei = phase.index();
 
-                const volVectorField H
+                Hs.set
                 (
-                    constrainH
+                    movingPhasei,
+                    UEqns[phase.index()].H()
+                  + byDt
                     (
-                        UEqns[phasei].H()
-                      + byDt
-                        (
-                            max(phase.residualAlpha() - alpha, scalar(0))
-                           *phase.rho()
-                        )
-                       *phase.U()().oldTime(),
-                        rAUs[phasei],
-                        phase.U(),
-                        p_rgh
+                        max(phase.residualAlpha() - alpha, scalar(0))
+                       *phase.rho()
                     )
+                   *phase.U()().oldTime()
                 );
 
-                HbyAs.set(phasei, rAUs[phasei]*H);
-
-                phiHbyAs.set
+                phiHs.set
                 (
-                    phasei,
-                    new surfaceScalarField
-                    (
-                        IOobject::groupName("phiHbyA", phase.name()),
-                        rAUfs[phasei]*(fvc::flux(H) + ddtCorrs[phasei])
-                      - alpharAUfs[phasei]*phigFs[phasei]
-                      - rAUfs[phasei]*Fs[phasei]
-                    )
+                    movingPhasei,
+                    fvc::flux(Hs[movingPhasei]) + ddtCorrs[phase.index()]
                 );
             }
+
+            HbyADs = invADs & Hs;
+            phiHbyADs = invADfs & phiHs;
         }
-        fluid.fillFields("HbyA", dimVelocity, HbyAs);
-        fluid.fillFields("phiHbyA", dimForce/dimDensity/dimVelocity, phiHbyAs);
 
-        // Add explicit drag forces and fluxes
-        PtrList<volVectorField> KdUs(fluid.KdUs());
-        PtrList<surfaceScalarField> KdPhis(fluid.KdPhis());
-
-        forAll(phases, phasei)
+        forAll(movingPhases, movingPhasei)
         {
-            if (KdUs.set(phasei))
-            {
-                HbyAs[phasei] -= rAUs[phasei]*KdUs[phasei];
-            }
+            const phaseModel& phase = movingPhases[movingPhasei];
 
-            if (KdPhis.set(phasei))
-            {
-                phiHbyAs[phasei] -= rAUfs[phasei]*KdPhis[phasei];
-            }
+            constrainHbyA(HbyADs[movingPhasei], phase.U(), p_rgh);
+            constrainPhiHbyA(phiHbyADs[movingPhasei], phase.U(), p_rgh);
+
+            phiHbyADs[movingPhasei] -= FgByADfs[movingPhasei];
         }
 
         // Total predicted flux
@@ -236,28 +281,28 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             (
                 "phiHbyA",
                 runTime.name(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
+                mesh
             ),
             mesh,
             dimensionedScalar(dimFlux, 0)
         );
 
-        forAll(phases, phasei)
+        forAll(movingPhases, movingPhasei)
         {
-            phiHbyA += alphafs[phasei]*phiHbyAs[phasei];
+            const phaseModel& phase = movingPhases[movingPhasei];
+
+            phiHbyA += alphafs[phase.index()]*phiHbyADs[movingPhasei];
         }
 
         MRF.makeRelative(phiHbyA);
-        fvc::makeRelative(phiHbyA, fluid.movingPhases()[0].U());
+        fvc::makeRelative(phiHbyA, movingPhases[0].U());
 
-        // Construct pressure "diffusivity"
-        surfaceScalarField rAUf
+        // Pressure "diffusivity"
+        surfaceScalarField rAf
         (
             IOobject
             (
-                "rAUf",
+                "rAf",
                 runTime.name(),
                 mesh
             ),
@@ -265,9 +310,11 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             dimensionedScalar(dimTime/dimDensity, 0)
         );
 
-        forAll(phases, phasei)
+        forAll(movingPhases, movingPhasei)
         {
-            rAUf += alphafs[phasei]*alpharAUfs[phasei];
+            const phaseModel& phase = movingPhases[movingPhasei];
+
+            rAf += alphafs[phase.index()]*alphaByADfs[movingPhasei];
         }
 
         // Update the fixedFluxPressure BCs to ensure flux consistency
@@ -279,11 +326,12 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             );
             phib = 0;
 
-            forAll(phases, phasei)
+            forAll(movingPhases, movingPhasei)
             {
-                const phaseModel& phase = phases[phasei];
+                phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+
                 phib +=
-                    alphafs[phasei].boundaryField()
+                    alphafs[phase.index()].boundaryField()
                    *phase.phi()().boundaryField();
             }
 
@@ -292,7 +340,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                 p_rgh.boundaryFieldRef(),
                 (
                     phiHbyA.boundaryField() - phib
-                )/(mesh.magSf().boundaryField()*rAUf.boundaryField())
+                )/(mesh.magSf().boundaryField()*rAf.boundaryField())
             );
         }
 
@@ -309,7 +357,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             fvScalarMatrix pEqnIncomp
             (
                 fvc::div(phiHbyA)
-              - fvm::laplacian(rAUf, p_rgh)
+              - fvm::laplacian(rAf, p_rgh)
             );
 
             // Solve
@@ -340,86 +388,76 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             {
                 phi_ = phiHbyA + pEqnIncomp.flux();
 
-                surfaceScalarField mSfGradp("mSfGradp", pEqnIncomp.flux()/rAUf);
+                surfaceScalarField mSfGradp("mSfGradp", pEqnIncomp.flux()/rAf);
 
-                forAll(fluid.movingPhases(), movingPhasei)
+                forAll(movingPhases, movingPhasei)
                 {
                     phaseModel& phase = fluid_.movingPhases()[movingPhasei];
 
                     phase.phiRef() =
-                        phiHbyAs[phase.index()]
-                      + alpharAUfs[phase.index()]*mSfGradp;
+                        phiHbyADs[movingPhasei]
+                      + alphaByADfs[movingPhasei]*mSfGradp;
 
                     // Set the phase dilatation rate
                     phase.divU(-pEqnComps[phase.index()] & p_rgh);
+
+                    MRF.makeRelative(phase.phiRef());
+                    fvc::makeRelative(phase.phiRef(), phase.U());
                 }
 
                 // Optionally relax pressure for velocity correction
                 p_rgh.relax();
 
-                mSfGradp = pEqnIncomp.flux()/rAUf;
+                mSfGradp = pEqnIncomp.flux()/rAf;
 
-                if (!dragCorrection)
+                if (dragCorrection)
                 {
-                    forAll(fluid.movingPhases(), movingPhasei)
+                    PtrList<volVectorField> dragCorrs(movingPhases.size());
+                    PtrList<surfaceScalarField> dragCorrfs(movingPhases.size());
+                    fluid.dragCorrs(dragCorrs, dragCorrfs);
+
+                    PtrList<volVectorField> dragCorrByADs
+                    (
+                        invADs & dragCorrs
+                    );
+
+                    PtrList<surfaceScalarField> dragCorrByADfs
+                    (
+                        invADfs & dragCorrfs
+                    );
+
+                    forAll(movingPhases, movingPhasei)
                     {
                         phaseModel& phase = fluid_.movingPhases()[movingPhasei];
-                        const label phasei = phase.index();
 
                         phase.URef() =
-                            HbyAs[phasei]
+                            HbyADs[movingPhasei]
                           + fvc::reconstruct
                             (
-                                alpharAUfs[phasei]*(mSfGradp - phigFs[phasei])
-                              - rAUfs[phasei]*Fs[phasei]
+                                alphaByADfs[movingPhasei]*mSfGradp
+                              - FgByADfs[movingPhasei]
+                              + dragCorrByADfs[movingPhasei]
+                            )
+                          - dragCorrByADs[movingPhasei];
+                    }
+                }
+                else
+                {
+                    forAll(movingPhases, movingPhasei)
+                    {
+                        phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+
+                        phase.URef() =
+                            HbyADs[movingPhasei]
+                          + fvc::reconstruct
+                            (
+                                alphaByADfs[movingPhasei]*mSfGradp
+                              - FgByADfs[movingPhasei]
                             );
                     }
                 }
-                else
-                {
-                    PtrList<volVectorField> dragCorrs(phases.size());
-                    PtrList<surfaceScalarField> dragCorrfs(phases.size());
-                    fluid.dragCorrs(dragCorrs, dragCorrfs);
 
-                    forAll(fluid.movingPhases(), movingPhasei)
-                    {
-                        phaseModel& phase = fluid_.movingPhases()[movingPhasei];
-                        const label phasei = phase.index();
-
-                        phase.URef() =
-                            HbyAs[phasei]
-                          + fvc::reconstruct
-                            (
-                                alpharAUfs[phasei]*(mSfGradp - phigFs[phasei])
-                              + rAUfs[phasei]*(dragCorrfs[phasei] - Fs[phasei])
-                            )
-                        - rAUs[phasei]*dragCorrs[phasei];
-                    }
-                }
-
-                if (partialElimination)
-                {
-                    fluid_.partialElimination
-                    (
-                        rAUs,
-                        KdUs,
-                        alphafs,
-                        rAUfs,
-                        KdPhis
-                    );
-                }
-                else
-                {
-                    forAll(fluid.movingPhases(), movingPhasei)
-                    {
-                        phaseModel& phase = fluid_.movingPhases()[movingPhasei];
-
-                        MRF.makeRelative(phase.phiRef());
-                        fvc::makeRelative(phase.phiRef(), phase.U());
-                    }
-                }
-
-                forAll(fluid.movingPhases(), movingPhasei)
+                forAll(movingPhases, movingPhasei)
                 {
                     phaseModel& phase = fluid_.movingPhases()[movingPhasei];
 
@@ -472,11 +510,6 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
     }
 
     UEqns.clear();
-
-    if (!fluid.implicitPhasePressure())
-    {
-        rAUs.clear();
-    }
 }
 
 

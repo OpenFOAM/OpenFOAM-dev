@@ -9,7 +9,7 @@ EXE_LIBS = \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
     -lphysicalProperties \
-    -lgenericPatchFields \
+    -lgenericFvFields \
     -lfiniteVolume \
     -lmeshTools \
     -lfvModels

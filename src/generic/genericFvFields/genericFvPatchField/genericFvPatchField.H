@@ -26,8 +26,9 @@ Class
 
 Description
     This boundary condition provides a generic version of the \c calculated
-    condition, useful as a fallback for handling unknown patch types.  Not
-    generally applicable as a user-specified condition.
+    condition, useful as a fallback for handling unknown patch types when
+    post-processing or running mesh manipulation utilities. Not generally
+    applicable as a user-specified condition.
 
 See also
     Foam::calculatedFvPatchField
@@ -40,7 +41,7 @@ SourceFiles
 #ifndef genericFvPatchField_H
 #define genericFvPatchField_H
 
-#include "genericPatchField.H"
+#include "genericFieldBase.H"
 #include "calculatedFvPatchField.H"
 #include "HashPtrTable.H"
 
@@ -50,24 +51,25 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class genericFvPatch Declaration
+                    Class genericFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
 class genericFvPatchField
 :
-    public genericPatchField,
+    public genericFieldBase,
     public calculatedFvPatchField<Type>
 {
     // Private Data
 
+        //- Patch field dictionary
         dictionary dict_;
 
-        HashPtrTable<scalarField> scalarFields_;
-        HashPtrTable<vectorField> vectorFields_;
-        HashPtrTable<sphericalTensorField> sphericalTensorFields_;
-        HashPtrTable<symmTensorField> symmTensorFields_;
-        HashPtrTable<tensorField> tensorFields_;
+        //- Fields
+        #define DeclareTypeFields(Type, nullArg) \
+            HashPtrTable<Field<Type>> Type##Fields_;
+        FOR_ALL_FIELD_TYPES(DeclareTypeFields);
+        #undef DeclareTypeFields
 
 
 public:

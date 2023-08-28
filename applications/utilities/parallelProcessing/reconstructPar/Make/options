@@ -9,4 +9,4 @@ EXE_LIBS = \
     -lmeshTools \
     -lparallel \
     -llagrangian \
-    -lgenericPatchFields
+    -lgenericFvFields

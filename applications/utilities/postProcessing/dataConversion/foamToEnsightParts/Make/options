@@ -8,5 +8,5 @@ EXE_LIBS = \
     -lfiniteVolume \
     -llagrangian \
     -lmeshTools \
-    -lgenericPatchFields \
+    -lgenericFvFields \
     -lconversion

@@ -8,7 +8,7 @@ EXE_INC = \
 EXE_LIBS = \
     -lfileFormats \
     -lfiniteVolume \
-    -lgenericPatchFields \
+    -lgenericFvFields \
     -lmeshTools \
     -ldynamicMesh \
     -lextrudeModel

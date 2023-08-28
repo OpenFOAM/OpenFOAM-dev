@@ -51,14 +51,14 @@ void Foam::solvers::multiphaseEuler::readControls(const bool construct)
 
     if (construct || mesh.solution().modified())
     {
+        predictMomentum =
+            pimple.dict().lookupOrDefault<bool>("momentumPredictor", false);
+
         faceMomentum =
             pimple.dict().lookupOrDefault<Switch>("faceMomentum", false);
 
         dragCorrection =
             pimple.dict().lookupOrDefault<Switch>("dragCorrection", false);
-
-        partialElimination =
-            pimple.dict().lookupOrDefault<Switch>("partialElimination", false);
 
         nEnergyCorrectors =
             pimple.dict().lookupOrDefault<int>("nEnergyCorrectors", 1);
@@ -98,6 +98,11 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
 :
     fluidSolver(mesh),
 
+    predictMomentum
+    (
+        pimple.dict().lookupOrDefault<Switch>("momentumPredictor", false)
+    ),
+
     faceMomentum
     (
         pimple.dict().lookupOrDefault<Switch>("faceMomentum", false)
@@ -106,11 +111,6 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
     dragCorrection
     (
         pimple.dict().lookupOrDefault<Switch>("dragCorrection", false)
-    ),
-
-    partialElimination
-    (
-        pimple.dict().lookupOrDefault<Switch>("partialElimination", false)
     ),
 
     nEnergyCorrectors
@@ -247,7 +247,7 @@ void Foam::solvers::multiphaseEuler::prePredictor()
 {
     if (pimple.thermophysics() || pimple.flow())
     {
-        fluid_.solve(rAUs, rAUfs);
+        fluid_.solve(rAs);
         fluid_.correct();
         fluid_.correctContinuityError();
     }

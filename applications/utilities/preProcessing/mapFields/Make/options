@@ -9,4 +9,4 @@ EXE_LIBS = \
     -lmeshTools \
     -llagrangian \
     -lfiniteVolume \
-    -lgenericPatchFields
+    -lgenericFvFields

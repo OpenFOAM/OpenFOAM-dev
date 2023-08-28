@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,67 +21,22 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::genericPatchField
-
-Description
-
-SourceFiles
-    genericPatchField.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef genericPatchField_H
-#define genericPatchField_H
+#ifndef genericPointPatchFields_H
+#define genericPointPatchFields_H
 
-#include "typeInfo.H"
+#include "genericPointPatchField.H"
+#include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-/*---------------------------------------------------------------------------*\
-                       Class genericFvPatch Declaration
-\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-class genericPatchField
-{
-    // Private Data
-
-        word actualTypeName_;
-
-public:
-
-    //- Runtime type information
-    TypeName("generic");
-
-
-    // Constructors
-
-        genericPatchField()
-        {}
-
-        genericPatchField(const word& atn)
-        :
-            actualTypeName_(atn)
-        {}
-
-
-    //- Destructor
-    virtual ~genericPatchField()
-    {}
-
-
-    // Member Functions
-
-        //- Return the actual type name
-        word actualTypeName() const
-        {
-            return actualTypeName_;
-        }
-};
-
+makePointPatchFieldTypedefs(generic);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

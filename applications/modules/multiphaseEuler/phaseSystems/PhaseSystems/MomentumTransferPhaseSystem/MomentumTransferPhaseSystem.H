@@ -169,6 +169,16 @@ protected:
             const tmp<surfaceScalarField>& field
         ) const;
 
+        //- Invert the ADs matrix inplace
+        void invADs(List<UPtrList<scalarField>>& ADs) const;
+
+        //- Invert the ADs matrix inplace
+        template<template<class> class PatchField, class GeoMesh>
+        void invADs
+        (
+            PtrList<PtrList<GeometricField<scalar, PatchField, GeoMesh>>>& ADs
+        ) const;
+
 
 public:
 
@@ -194,7 +204,7 @@ public:
 
         //- Return implicit force coefficients on the faces, for the face-based
         //  algorithm.
-        virtual PtrList<surfaceScalarField> KdVmfs() const;
+        virtual PtrList<surfaceScalarField> Vmfs() const;
 
         //- Return the explicit force fluxes for the cell-based algorithm, that
         //  do not depend on phase mass/volume fluxes, and can therefore be
@@ -205,22 +215,19 @@ public:
         //- As Fs, but for the face-based algorithm
         virtual PtrList<surfaceScalarField> Ffs() const;
 
-        //- Return the explicit drag force fluxes for the cell-based algorithm.
-        //  These depend on phase mass/volume fluxes, and must therefore be
-        //  evaluated inside the corrector loop.
-        virtual PtrList<surfaceScalarField> KdPhis() const;
+        //- Return the inverse of (As + Ds)
+        virtual void invADs
+        (
+            const PtrList<volScalarField>& As,
+            PtrList<PtrList<volScalarField>>& invADs,
+            PtrList<PtrList<surfaceScalarField>>& invADfs
+        ) const;
 
-        //- As KdPhis, but for the face-based algorithm
-        virtual PtrList<surfaceScalarField> KdPhifs() const;
-
-        //- Return the implicit part of the drag force
-        virtual PtrList<volScalarField> Kds() const;
-
-        //- Return the explicit part of the drag force for the cell-based
-        //  algorithm. This is the cell-equivalent of KdPhis. These depend on
-        //  phase velocities, and must therefore be evaluated inside the
-        //  corrector loop.
-        virtual PtrList<volVectorField> KdUs() const;
+        //- Return the inverse of (Afs + Dfs)
+        virtual PtrList<PtrList<surfaceScalarField>> invADfs
+        (
+            const PtrList<surfaceScalarField>& Afs
+        ) const;
 
         //- Returns true if the phase pressure is treated implicitly
         //  in the phase fraction equation
@@ -234,8 +241,7 @@ public:
         //  divided by the momentum central coefficient
         virtual tmp<surfaceScalarField> alphaDByAf
         (
-            const PtrList<volScalarField>& rAUs,
-            const PtrList<surfaceScalarField>& rAUfs
+            const PtrList<volScalarField>& rAs
         ) const;
 
         //- Return the flux corrections for the cell-based algorithm. These
@@ -249,25 +255,6 @@ public:
             PtrList<volVectorField>& dragCorrs,
             PtrList<surfaceScalarField>& dragCorrf
         ) const;
-
-        //- Solve the drag system for the velocities and fluxes
-        virtual void partialElimination
-        (
-            const PtrList<volScalarField>& rAUs,
-            const PtrList<volVectorField>& KdUs,
-            const PtrList<surfaceScalarField>& alphafs,
-            const PtrList<surfaceScalarField>& rAUfs,
-            const PtrList<surfaceScalarField>& KdPhis
-        );
-
-        //- As partialElimination, but for the face-based algorithm. Only solves
-        //  for the fluxes.
-        virtual void partialEliminationf
-        (
-            const PtrList<surfaceScalarField>& rAUfs,
-            const PtrList<surfaceScalarField>& alphafs,
-            const PtrList<surfaceScalarField>& KdPhifs
-        );
 
         //- Read base phaseProperties dictionary
         virtual bool read();
