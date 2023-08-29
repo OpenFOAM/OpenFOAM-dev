@@ -690,31 +690,6 @@ _deformedGeom_ ()
 }
 complete -o filenames -o nospace -F _deformedGeom_ deformedGeom
 
-_dnsFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _dnsFoam_ dnsFoam
-
 _dsmcFoam_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -797,7 +772,7 @@ _engineCompRatio_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
+    opts="-case -cellSet -cellZone -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -807,7 +782,7 @@ _engineCompRatio_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots)
+        -cellSet|-cellZone|-hostRoots|-libs|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -1136,7 +1111,7 @@ _foamDictionary_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-add -case -dict -diff -doc -entry -expand -fileHandler -help -hostRoots -includes -keywords -libs -merge -noFunctionObjects -parallel -remove -roots -set -srcDoc -value -writePrecision"
+    opts="-add -case -dict -diff -doc -entry -expand -fileHandler -help -hostRoots -includes -keywords -libs -merge -noFunctionObjects -output -parallel -remove -roots -set -srcDoc -value -writePrecision"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -1146,12 +1121,12 @@ _foamDictionary_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -add|-diff|-entry|-hostRoots|-libs|-merge|-roots|-set|-writePrecision)
+        -add|-diff|-entry|-hostRoots|-libs|-merge|-output|-roots|-set|-writePrecision)
             opts="" ; extra="" ;;
        -*) ;;
         *)
             case "${COMP_WORDS[COMP_CWORD-2]}" in
-                -add|-diff|-entry|-hostRoots|-libs|-merge|-roots|-set|-writePrecision|-case|-fileHandler) ;;
+                -add|-diff|-entry|-hostRoots|-libs|-merge|-output|-roots|-set|-writePrecision|-case|-fileHandler) ;;
                 *) opts=""; extra="" ;;
             esac
             ;;
@@ -4559,7 +4534,7 @@ _foamInfo_ ()
 
     opts="-all -browser -help -keyword -web"
     for o in $used ; do opts="${opts/$o/}" ; done
-    opts="$opts $(_infoArgs)"
+    opts="$opts $(_infoArgs) $(ls $FOAM_APPBIN)"
     extra=""
 
     [ "$COMP_CWORD" = 1 ] || \
