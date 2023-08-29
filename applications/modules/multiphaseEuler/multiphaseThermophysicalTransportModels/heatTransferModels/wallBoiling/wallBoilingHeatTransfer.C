@@ -345,7 +345,7 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::K
         min(pi*sqr(dDep_)*nucleationSiteDensity_*Al/4, scalar(5))
     );
 
-    const volScalarField Av(solid.dPtr()->Av());
+    const volScalarField Av(solid.diameter().Av());
 
     // Volumetric mass source in due to the wall boiling and bulk nucleation
     dmdtf_ =

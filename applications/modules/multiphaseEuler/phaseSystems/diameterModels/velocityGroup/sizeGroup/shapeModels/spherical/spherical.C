@@ -50,14 +50,14 @@ using Foam::constant::mathematical::pi;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::shapeModels::spherical::
-spherical
+Foam::diameterModels::shapeModels::spherical::spherical
 (
     const dictionary& dict,
-    const sizeGroup& group
+    const sizeGroup& group,
+    const dictionary& groupDict
 )
 :
-    shapeModel(dict, group)
+    shapeModel(group)
 {}
 
 
@@ -77,8 +77,8 @@ Foam::diameterModels::shapeModels::spherical::a() const
         volScalarField::New
         (
             "a",
-            sizeGroup_.mesh(),
-            6/sizeGroup_.dSph()*sizeGroup_.x()
+            group().mesh(),
+            6/group().dSph()*group().x()
         )
     );
 }
@@ -89,7 +89,7 @@ Foam::diameterModels::shapeModels::spherical::d() const
 {
     return tmp<volScalarField>
     (
-        volScalarField::New("d", sizeGroup_.mesh(), sizeGroup_.dSph())
+        volScalarField::New("d", group().mesh(), group().dSph())
     );
 }
 

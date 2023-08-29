@@ -66,7 +66,7 @@ protected:
     // Protected Data
 
         //- Reference to sizeGroup
-        const sizeGroup& sizeGroup_;
+        const sizeGroup& group_;
 
 
 public:
@@ -84,20 +84,17 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const sizeGroup& group
+                const sizeGroup& group,
+                const dictionary& groupDict
             ),
-            (dict, group)
+            (dict, group, groupDict)
         );
 
 
     // Constructors
 
-        //- Construct from dictionary and sizeGroup
-        shapeModel
-        (
-            const dictionary& dict,
-            const sizeGroup& group
-        );
+        //- Construct from sizeGroup
+        shapeModel(const sizeGroup& group);
 
         //- Disallow default bitwise copy construction
         shapeModel(const shapeModel&) = delete;
@@ -108,7 +105,8 @@ public:
         static autoPtr<shapeModel> New
         (
             const dictionary& dict,
-            const sizeGroup& group
+            const sizeGroup& group,
+            const dictionary& groupDict
         );
 
 
@@ -121,7 +119,7 @@ public:
         // Access
 
             //- Return reference to size group
-            const sizeGroup& SizeGroup() const;
+            const sizeGroup& group() const;
 
             //- Return representative surface area of the sizeGroup
             virtual const tmp<volScalarField> a() const = 0;

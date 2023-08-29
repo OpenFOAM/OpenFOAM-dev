@@ -125,8 +125,15 @@ private:
         autoPtr<sinteringModel> sinteringModel_;
 
 
+    // Private Static Member Functions
+
+        //- Read and return the kappa field. Construction helper.
+        static tmp<volScalarField> readKappa(const sizeGroup& group);
+
+
     // Private Member Functions
 
+        //- Compute and return the collisional diameter
         tmp<volScalarField> dColl() const;
 
 
@@ -138,11 +145,12 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and sizeGroup
+        //- Construct from dictionaries and sizeGroup
         fractal
         (
             const dictionary& dict,
-            const sizeGroup& group
+            const sizeGroup& group,
+            const dictionary& groupDict
         );
 
         //- Disallow default bitwise copy construction

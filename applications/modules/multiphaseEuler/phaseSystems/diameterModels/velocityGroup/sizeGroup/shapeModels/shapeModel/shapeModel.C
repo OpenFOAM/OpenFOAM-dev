@@ -39,13 +39,9 @@ namespace diameterModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::shapeModel::shapeModel
-(
-    const dictionary& dict,
-    const sizeGroup& group
-)
+Foam::diameterModels::shapeModel::shapeModel(const sizeGroup& group)
 :
-    sizeGroup_(group)
+    group_(group)
 {}
 
 
@@ -55,7 +51,8 @@ Foam::autoPtr<Foam::diameterModels::shapeModel>
 Foam::diameterModels::shapeModel::New
 (
     const dictionary& dict,
-    const sizeGroup& group
+    const sizeGroup& group,
+    const dictionary& groupDict
 )
 {
     word shapeModelType(dict.lookup("shapeModel"));
@@ -73,7 +70,7 @@ Foam::diameterModels::shapeModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, group);
+    return cstrIter()(dict, group, groupDict);
 }
 
 
@@ -85,10 +82,10 @@ Foam::diameterModels::shapeModel::~shapeModel()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-const Foam::diameterModels::sizeGroup& Foam::diameterModels::shapeModel::
-SizeGroup() const
+const Foam::diameterModels::sizeGroup&
+Foam::diameterModels::shapeModel::group() const
 {
-    return sizeGroup_;
+    return group_;
 }
 
 

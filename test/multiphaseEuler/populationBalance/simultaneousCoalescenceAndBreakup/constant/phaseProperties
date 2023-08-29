@@ -23,7 +23,9 @@ populationBalances (bubbles);
 air1
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   velocityGroup;
+
     velocityGroupCoeffs
     {
         populationBalance   bubbles;
@@ -32,19 +34,19 @@ air1
 
         sizeGroups
         (
-           f0 {dSph 1.2407009818E+00; value 1.0;}
-           f1 {dSph 1.3400311786E+00; value 0.0;}
-           f2 {dSph 1.4473137252E+00; value 0.0;}
-           f3 {dSph 1.5631852837E+00; value 0.0;}
-           f4 {dSph 1.6883334890E+00; value 0.0;}
-           f5 {dSph 1.8235010272E+00; value 0.0;}
-           f6 {dSph 1.9694900437E+00; value 0.0;}
-           f7 {dSph 2.1271669027E+00; value 0.0;}
-           f8 {dSph 2.2974673296E+00; value 0.0;}
-           f9 {dSph 2.4814019636E+00; value 0.0;}
-           f10{dSph 2.6800623572E+00; value 0.0;}
-           f11{dSph 2.8946274492E+00; value 0.0;}
-           f12{dSph 3.1263705674E+00; value 0.0;}
+           { dSph 1.2407009818E+00; }
+           { dSph 1.3400311786E+00; }
+           { dSph 1.4473137252E+00; }
+           { dSph 1.5631852837E+00; }
+           { dSph 1.6883334890E+00; }
+           { dSph 1.8235010272E+00; }
+           { dSph 1.9694900437E+00; }
+           { dSph 2.1271669027E+00; }
+           { dSph 2.2974673296E+00; }
+           { dSph 2.4814019636E+00; }
+           { dSph 2.6800623572E+00; }
+           { dSph 2.8946274492E+00; }
+           { dSph 3.1263705674E+00; }
         );
     }
 
@@ -54,7 +56,9 @@ air1
 air2
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   velocityGroup;
+
     velocityGroupCoeffs
     {
         populationBalance   bubbles;
@@ -63,16 +67,16 @@ air2
 
         sizeGroups
         (
-           f13{dSph 3.3766669780E+00; value 1.0;}
-           f14{dSph 3.6470020557E+00; value 0.0;}
-           f15{dSph 3.9389800874E+00; value 0.0;}
-           f16{dSph 4.2543338042E+00; value 0.0;}
-           f17{dSph 4.5949346580E+00; value 0.0;}
-           f18{dSph 4.9628039272E+00; value 0.0;}
-           f19{dSph 5.3601247143E+00; value 0.0;}
-           f20{dSph 5.7892548984E+00; value 0.0;}
-           f21{dSph 6.2527411349E+00; value 0.0;}
-           f22{dSph 6.7533339573E+00; value 0.0;}
+           { dSph 3.3766669780E+00; }
+           { dSph 3.6470020557E+00; }
+           { dSph 3.9389800874E+00; }
+           { dSph 4.2543338042E+00; }
+           { dSph 4.5949346580E+00; }
+           { dSph 4.9628039272E+00; }
+           { dSph 5.3601247143E+00; }
+           { dSph 5.7892548984E+00; }
+           { dSph 6.2527411349E+00; }
+           { dSph 6.7533339573E+00; }
         );
     }
 
@@ -82,7 +86,9 @@ air2
 air3
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   velocityGroup;
+
     velocityGroupCoeffs
     {
         populationBalance   bubbles;
@@ -91,14 +97,14 @@ air3
 
         sizeGroups
         (
-           f23{dSph 7.2940041101E+00; value 1.0;}
-           f24{dSph 7.8779601749E+00; value 0.0;}
-           f25{dSph 8.5086676096E+00; value 0.0;}
-           f26{dSph 9.1898693161E+00; value 0.0;}
-           f27{dSph 9.9256078544E+00; value 0.0;}
-           f28{dSph 1.0720249427E+01; value 0.0;}
-           f29{dSph 1.1578509798E+01; value 0.0;}
-           f30{dSph 1.2505482270E+01; value 0.0;}
+           { dSph 7.2940041101E+00; }
+           { dSph 7.8779601749E+00; }
+           { dSph 8.5086676096E+00; }
+           { dSph 9.1898693161E+00; }
+           { dSph 9.9256078544E+00; }
+           { dSph 1.0720249427E+01; }
+           { dSph 1.1578509798E+01; }
+           { dSph 1.2505482270E+01; }
         );
     }
 
@@ -108,6 +114,7 @@ air3
 water
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   none;
 
     residualAlpha   1e-6;

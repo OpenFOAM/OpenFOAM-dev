@@ -81,16 +81,16 @@ Foam::diameterModels::shapeModels::sinteringModels::KochFriedlander::tau() const
         volScalarField::Internal::New
         (
             "tau",
-            fractal_.SizeGroup().mesh(),
+            fractal_.group().mesh(),
             dimensionedScalar(dimTime, Zero)
         )
     );
 
     volScalarField::Internal& tau = tTau.ref();
 
-    const sizeGroup& fi = fractal_.SizeGroup();
+    const sizeGroup& fi = fractal_.group();
     const volScalarField& kappai = fractal_.fld();
-    const volScalarField& T = fractal_.SizeGroup().phase().thermo().T();
+    const volScalarField& T = fractal_.group().phase().thermo().T();
 
     forAll(tau, celli)
     {
@@ -107,7 +107,7 @@ Foam::diameterModels::shapeModels::sinteringModels::KochFriedlander::tau() const
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::diameterModels::shapeModels::sinteringModels::KochFriedlander::R() const
 {
-    const sizeGroup& fi = fractal_.SizeGroup();
+    const sizeGroup& fi = fractal_.group();
     const volScalarField& kappai = fractal_.fld();
     const volScalarField& alpha = fi.phase();
 

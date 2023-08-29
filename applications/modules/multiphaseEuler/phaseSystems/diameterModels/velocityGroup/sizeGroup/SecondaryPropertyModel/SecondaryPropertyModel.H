@@ -70,10 +70,11 @@ protected:
 
         using SpTable = HashTable<const SecondaryPropertyModel<ModelType>*>;
 
+
     // Protected Data
 
         //- Reference to sizeGroup
-        const sizeGroup& sizeGroup_;
+        const sizeGroup& group_;
 
         //- Table with pointers to all secondary properties of ModelType
         //  available in the registry
@@ -84,12 +85,8 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and sizeGroup
-        SecondaryPropertyModel
-        (
-            const dictionary& dict,
-            const sizeGroup& group
-        );
+        //- Construct from sizeGroup
+        SecondaryPropertyModel(const sizeGroup& group);
 
         //- Disallow default bitwise copy construction
         SecondaryPropertyModel
@@ -106,6 +103,9 @@ public:
 
         // Access
 
+            //- Access the sizeGroup
+            const sizeGroup& group() const;
+
             //- Return table with pointers to all secondary properties of
             //  ModelType available in the registry
             const SpTable& SecondaryPropertyModelTable();
@@ -119,6 +119,7 @@ public:
 
             //- Access to secondary property source
             virtual volScalarField& src() = 0;
+
 
         // Edit
 
@@ -155,6 +156,7 @@ public:
 
             //- Reset secondary property source
             virtual void reset();
+
 
         // Write
 

@@ -97,29 +97,26 @@ void Foam::diameterModels::driftModels::phaseChange::precompute()
 
     forAll(interfaces_, k)
     {
-        forAllConstIter
-        (
-            HashTable<const velocityGroup*>,
-            popBal_.velocityGroupPtrs(),
-            iter
-        )
+        forAllConstIter(phaseInterface, interfaces_[k], iter)
         {
-            const velocityGroup& velGrp = *iter();
+            const phaseModel& phase = iter();
 
-            if (interfaces_[k].contains(velGrp.phase()))
+            if (!isA<velocityGroup>(phase.diameter())) continue;
+
+            const velocityGroup& velGroup =
+                refCast<const velocityGroup>(phase.diameter());
+
+            forAll(velGroup.sizeGroups(), i)
             {
-                forAll(velGrp.sizeGroups(), i)
-                {
-                    const sizeGroup& fi = velGrp.sizeGroups()[i];
+                const sizeGroup& fi = velGroup.sizeGroups()[i];
 
-                    if (numberWeighted_)
-                    {
-                        W_[k] += fi*max(fi.phase(), small)/fi.x();
-                    }
-                    else
-                    {
-                        W_[k] += fi*max(fi.phase(), small)/fi.x()*fi.a();
-                    }
+                if (numberWeighted_)
+                {
+                    W_[k] += fi*max(fi.phase(), small)/fi.x();
+                }
+                else
+                {
+                    W_[k] += fi*max(fi.phase(), small)/fi.x()*fi.a();
                 }
             }
         }
@@ -133,7 +130,7 @@ void Foam::diameterModels::driftModels::phaseChange::addToDriftRate
     const label i
 )
 {
-    const velocityGroup& velGrp = popBal_.sizeGroups()[i].VelocityGroup();
+    const velocityGroup& velGrp = popBal_.sizeGroups()[i].group();
 
     forAll(interfaces_, k)
     {

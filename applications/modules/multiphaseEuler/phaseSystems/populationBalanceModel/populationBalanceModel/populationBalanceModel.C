@@ -52,152 +52,12 @@ namespace diameterModels
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
-void Foam::diameterModels::populationBalanceModel::registerVelocityGroups()
-{
-    forAll(fluid_.phases(), phasei)
-    {
-        if (isA<velocityGroup>(fluid_.phases()[phasei].dPtr()()))
-        {
-            const velocityGroup& velGroup =
-                refCast<const velocityGroup>(fluid_.phases()[phasei].dPtr()());
-
-            if (velGroup.popBalName() == this->name())
-            {
-                velocityGroupPtrs_.insert(velGroup.phase().name(), &velGroup);
-
-                dilatationErrors_.insert
-                (
-                    velGroup.phase().name(),
-                    volScalarField
-                    (
-                        IOobject
-                        (
-                            IOobject::groupName
-                            (
-                                "dilatationError",
-                                velGroup.phase().name()
-                            ),
-                            fluid_.time().name(),
-                            mesh_
-                        ),
-                        mesh_,
-                        dimensionedScalar(inv(dimTime), 0)
-                    )
-                );
-
-                forAll(velGroup.sizeGroups(), i)
-                {
-                    this->registerSizeGroups
-                    (
-                        const_cast<sizeGroup&>(velGroup.sizeGroups()[i])
-                    );
-                }
-            }
-        }
-    }
-}
-
-
-void Foam::diameterModels::populationBalanceModel::registerSizeGroups
-(
-    sizeGroup& group
-)
-{
-    if
-    (
-        sizeGroups().size() != 0
-        &&
-        group.x().value() <= sizeGroups().last().x().value()
-    )
-    {
-        FatalErrorInFunction
-            << "Size groups must be entered according to their representative"
-            << " size"
-            << exit(FatalError);
-    }
-
-    sizeGroups_.resize(sizeGroups().size() + 1);
-    sizeGroups_.set(sizeGroups().size() - 1, &group);
-
-    if (sizeGroups().size() == 1)
-    {
-        v_.append
-        (
-            new dimensionedScalar
-            (
-                "v",
-                sizeGroups().last().x()
-            )
-        );
-
-        v_.append
-        (
-            new dimensionedScalar
-            (
-                "v",
-                sizeGroups().last().x()
-            )
-        );
-    }
-    else
-    {
-        v_.last() =
-            0.5
-           *(
-                sizeGroups()[sizeGroups().size()-2].x()
-              + sizeGroups().last().x()
-            );
-
-        v_.append
-        (
-            new dimensionedScalar
-            (
-                "v",
-                sizeGroups().last().x()
-            )
-        );
-    }
-
-    delta_.append(new PtrList<dimensionedScalar>());
-
-    Su_.append
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "Su",
-                fluid_.time().name(),
-                mesh_
-            ),
-            mesh_,
-            dimensionedScalar(inv(dimTime), 0)
-        )
-    );
-
-    Sp_.append
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "Sp",
-                fluid_.time().name(),
-                mesh_
-            ),
-            mesh_,
-            dimensionedScalar(inv(dimTime), 0)
-        )
-    );
-}
-
-
 void Foam::diameterModels::populationBalanceModel::initialiseDmdtfs()
 {
     forAllConstIter
     (
         HashTable<const diameterModels::velocityGroup*>,
-        velocityGroupPtrs(),
+        velocityGroupPtrs_,
         iter1
     )
     {
@@ -206,7 +66,7 @@ void Foam::diameterModels::populationBalanceModel::initialiseDmdtfs()
         forAllConstIter
         (
             HashTable<const diameterModels::velocityGroup*>,
-            velocityGroupPtrs(),
+            velocityGroupPtrs_,
             iter2
         )
         {
@@ -857,7 +717,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
     U_(),
     sourceUpdateCounter_(0)
 {
-    this->registerVelocityGroups();
+    groups::retrieve(*this, velocityGroupPtrs_, sizeGroups_);
 
     if (sizeGroups().size() < 3)
     {
@@ -865,6 +725,89 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
             << "The populationBalance " << name_
             << " requires a minimum number of three sizeGroups to be specified."
             << exit(FatalError);
+    }
+
+    // Create velocity-group dilatation errors
+    forAllConstIter
+    (
+        HashTable<const diameterModels::velocityGroup*>,
+        velocityGroupPtrs_,
+        iter
+    )
+    {
+        const velocityGroup& velGroup = *iter();
+
+        dilatationErrors_.insert
+        (
+            velGroup.phase().name(),
+            volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName
+                    (
+                        "dilatationError",
+                        velGroup.phase().name()
+                    ),
+                    fluid_.time().name(),
+                    mesh_
+                ),
+                mesh_,
+                dimensionedScalar(inv(dimTime), 0)
+            )
+        );
+    }
+
+    // Create size-group boundaries
+    v_.setSize(sizeGroups().size() + 1);
+    v_.set(0, new dimensionedScalar("v", sizeGroups()[0].x()));
+    for (label i = 1; i < sizeGroups().size(); ++ i)
+    {
+        v_.set
+        (
+            i,
+            new dimensionedScalar
+            (
+                "v",
+                (sizeGroups()[i-1].x() + sizeGroups()[i].x())/2
+            )
+        );
+    }
+    v_.set(v_.size() - 1, new dimensionedScalar("v", sizeGroups().last().x()));
+
+    // ???
+    delta_.setSize(sizeGroups().size());
+    forAll(sizeGroups(), i)
+    {
+        delta_.set(i, new PtrList<dimensionedScalar>());
+    }
+
+    // Create size-group source terms
+    Su_.setSize(sizeGroups().size());
+    Sp_.setSize(sizeGroups().size());
+    forAll(sizeGroups(), i)
+    {
+        Su_.set
+        (
+            i,
+            new volScalarField
+            (
+                IOobject("Su", fluid_.time().name(), mesh_),
+                mesh_,
+                dimensionedScalar(inv(dimTime), 0)
+            )
+        );
+
+        Sp_.set
+        (
+            i,
+            new volScalarField
+            (
+                IOobject("Sp", fluid_.time().name(), mesh_),
+                mesh_,
+                dimensionedScalar(inv(dimTime), 0)
+            )
+        );
     }
 
     this->initialiseDmdtfs();

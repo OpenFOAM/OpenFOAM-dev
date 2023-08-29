@@ -81,14 +81,7 @@ Foam::diameterModels::nucleationModel::nucleationModel
     (
         refCast<const velocityGroup>
         (
-            popBal.mesh().lookupObject<phaseModel>
-            (
-                IOobject::groupName
-                (
-                    "alpha",
-                    dict.lookup("velocityGroup")
-                )
-            ).dPtr()()
+            popBal.fluid().phases()[dict.lookup("velocityGroup")].diameter()
         )
     )
 {}
