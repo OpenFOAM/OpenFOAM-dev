@@ -87,11 +87,13 @@ relaxationFactors
     // Steady-state relaxation factors
     fields
     {
-        p     0.3;
+        rho      1.0;
+        p_rgh    0.7;
     }
     equations
     {
-        U     0.7;
+        U        0.3;
+        "(e|h)"  0.5;
         "(k|omega|epsilon)" 0.7;
     }
 }
