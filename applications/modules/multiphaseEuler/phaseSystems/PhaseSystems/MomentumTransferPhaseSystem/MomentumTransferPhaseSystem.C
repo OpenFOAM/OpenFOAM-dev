@@ -1094,17 +1094,16 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::alphaDByAf
     tmp<surfaceScalarField> alphaDByAf;
 
     // Add the phase pressure
-    forAll(this->phaseModels_, phasei)
+    forAll(this->movingPhases(), movingPhasei)
     {
-        const phaseModel& phase = this->phaseModels_[phasei];
-
+        const phaseModel& phase = this->movingPhases()[movingPhasei];
         const tmp<volScalarField> pPrime(phase.pPrime());
 
         addTmpField
         (
             alphaDByAf,
             fvc::interpolate(max(phase, scalar(0)))
-           *fvc::interpolate(rAs[phasei]*pPrime(), pPrime().name())
+           *fvc::interpolate(rAs[phase.index()]*pPrime(), pPrime().name())
         );
     }
 
