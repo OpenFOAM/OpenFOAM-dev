@@ -304,7 +304,7 @@ probesFunctions
     (
         fieldType=volScalarField,
         field=alpha.dummy,
-        dimensions=[0 0 0 0 0 0 0],
+        dimensions=[],
         value=0.2
     )
 
