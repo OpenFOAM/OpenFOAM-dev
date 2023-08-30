@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,32 @@ namespace Foam
 
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+Foam::word Foam::codedBase::codeName(const word& name)
+{
+    word result(name);
+
+    if (!isalpha(result[0]))
+    {
+        FatalErrorInFunction
+            << "Cannot construct code name from function name \"" << name
+            << "\" as the first character is not alphabetic"
+            << exit(FatalError);
+    }
+
+    for (word::size_type i = 1; i < name.size(); ++ i)
+    {
+        const bool valid = isalnum(result[i]) || result[i] == '_';
+
+        if (!valid)
+        {
+            result[i] = '_';
+        }
+    }
+
+    return result;
+}
+
 
 void* Foam::codedBase::loadLibrary
 (
@@ -367,14 +393,14 @@ Foam::codedBase::codedBase()
 
 Foam::codedBase::codedBase(const word& name, const dictionary& dict)
 :
-    codeName_(name.replaceAll("-", "_")),
+    codeName_(codeName(name)),
     dict_(dict)
 {}
 
 
 Foam::codedBase::codedBase(const dictionary& dict)
 :
-    codeName_(dict.lookup("name")),
+    codeName_(codeName(dict.lookup("name"))),
     dict_(dict)
 {}
 

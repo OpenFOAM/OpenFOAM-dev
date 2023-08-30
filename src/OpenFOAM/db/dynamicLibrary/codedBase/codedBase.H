@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,6 +70,9 @@ class codedBase
         //- Global loader/unloader function type
         typedef void (*loaderFunctionType)(bool);
 
+        //- Create a code name from the given function name
+        static word codeName(const word& name);
+
         //- Load specified library and execute globalFuncName(true)
         void* loadLibrary
         (
@@ -91,6 +94,8 @@ class codedBase
 
 
 protected:
+
+    // Protected Member Functions
 
         //- Update library as required
         void updateLibrary() const;
