@@ -469,7 +469,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
         }
 
         // Update and limit the static pressure
-        p_ = p_rgh + rho*buoyancy.gh;
+        p_ = p_rgh + rho*buoyancy.gh + buoyancy.pRef;
         fvConstraints().constrain(p_);
 
         // Account for static pressure reference
@@ -485,7 +485,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
         }
 
         // Limit p_rgh
-        p_rgh = p - rho*buoyancy.gh;
+        p_rgh = p - rho*buoyancy.gh - buoyancy.pRef;
 
         // Update densities from change in p_rgh
         forAll(phases, phasei)
@@ -505,7 +505,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
         // Correct p_rgh for consistency with p and the updated densities
         rho = fluid.rho();
-        p_rgh = p - rho*buoyancy.gh;
+        p_rgh = p - rho*buoyancy.gh - buoyancy.pRef;
         p_rgh.correctBoundaryConditions();
     }
 
