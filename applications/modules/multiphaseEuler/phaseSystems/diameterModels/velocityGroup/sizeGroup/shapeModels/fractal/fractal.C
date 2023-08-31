@@ -62,61 +62,6 @@ const Foam::NamedEnum
 > Foam::diameterModels::shapeModels::fractal::sgTypeNames_;
 
 
-// * * * * * * * * * * * Private Static Member Functions * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::shapeModels::fractal::readKappa(const sizeGroup& group)
-{
-    auto io = [&](const word& name, const IOobject::readOption r)
-    {
-        return
-            IOobject
-            (
-                IOobject::groupName
-                (
-                    "kappa" + name,
-                    group.phase().name()
-                ),
-                group.mesh().time().name(),
-                group.mesh(),
-                r,
-                IOobject::AUTO_WRITE
-            );
-    };
-
-    const word name(Foam::name(group.i()));
-
-    typeIOobject<volScalarField> fio(io(name, IOobject::MUST_READ));
-
-    // Read the field, if it is available
-    if (fio.headerOk())
-    {
-        return tmp<volScalarField>(new volScalarField(fio, group.mesh()));
-    }
-
-    // Read the default field
-    tmp<volScalarField> tfDefault
-    (
-        new volScalarField
-        (
-            io("Default", IOobject::MUST_READ),
-            group.mesh()
-        )
-    );
-
-    // Transfer it into a result field with the correct name
-    return
-        tmp<volScalarField>
-        (
-            new volScalarField
-            (
-                io(name, IOobject::NO_READ),
-                tfDefault
-            )
-        );
-}
-
-
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
@@ -152,7 +97,11 @@ Foam::diameterModels::shapeModels::fractal::fractal
 )
 :
     SecondaryPropertyModel<shapeModel>(group),
-    kappa_(readKappa(group)),
+    kappa_
+    (
+        sizeGroup::fieldIo("kappa", group.i(), group.group()),
+        sizeGroup::field("kappa", group.i(), group.group())
+    ),
     Df_("Df", dimless, groupDict),
     alphaC_("alphaC", dimless, groupDict),
     dColl_

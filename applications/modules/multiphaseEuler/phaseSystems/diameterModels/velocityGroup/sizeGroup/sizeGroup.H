@@ -104,17 +104,28 @@ private:
         autoPtr<shapeModel> shapeModel_;
 
 
-    // Private Static Member Functions
+public:
 
-        //- Read and return the fraction field. Construction helper.
-        static tmp<volScalarField> readF
+    // Static Member Functions
+
+        //- Return IO for a size-group field. Construction helper.
+        static IOobject fieldIo
         (
+            const word& name,
+            const label i,
+            const velocityGroup& group,
+            const IOobject::readOption r = IOobject::NO_READ,
+            const bool registerObject = true
+        );
+
+        //- Return IO a size-group field. Construction helper.
+        static tmp<volScalarField> field
+        (
+            const word& name,
             const label i,
             const velocityGroup& group
         );
 
-
-public:
 
     // Constructors
 

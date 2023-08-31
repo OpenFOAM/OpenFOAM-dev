@@ -29,63 +29,55 @@ License
 
 using Foam::constant::mathematical::pi;
 
-// * * * * * * * * * * * Private Static Member Functions * * * * * * * * * * //
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::sizeGroup::readF
+Foam::IOobject Foam::diameterModels::sizeGroup::fieldIo
 (
+    const word& name,
+    const label i,
+    const velocityGroup& group,
+    const IOobject::readOption r,
+    const bool registerObject
+)
+{
+    return
+        IOobject
+        (
+            IOobject::groupName
+            (
+                "f" + (i == -1 ? "Default" : Foam::name(i)),
+                group.phase().name()
+            ),
+            group.phase().mesh().time().name(),
+            group.phase().mesh(),
+            r,
+            IOobject::AUTO_WRITE,
+            registerObject
+        );
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::sizeGroup::field
+(
+    const word& name,
     const label i,
     const velocityGroup& group
 )
 {
-    auto io = [&](const word& name, const IOobject::readOption r)
-    {
-        return
-            IOobject
-            (
-                IOobject::groupName
-                (
-                    "f" + name,
-                    group.phase().name()
-                ),
-                group.phase().mesh().time().name(),
-                group.phase().mesh(),
-                r,
-                IOobject::AUTO_WRITE
-            );
-    };
-
-    const word name(Foam::name(i));
-
-    typeIOobject<volScalarField> fio(io(name, IOobject::MUST_READ));
-
-    // Read the field, if it is available
-    if (fio.headerOk())
-    {
-        return
-            tmp<volScalarField>
-            (
-                new volScalarField(fio, group.phase().mesh())
-            );
-    }
-
-    // Read the default field
-    tmp<volScalarField> tfDefault
+    typeIOobject<volScalarField> io
     (
-        new volScalarField
-        (
-            io("Default", IOobject::MUST_READ),
-            group.phase().mesh()
-        )
+        fieldIo(name, i, group, IOobject::MUST_READ, false)
     );
 
-    // Transfer it into a result field with the correct name
     return
         tmp<volScalarField>
         (
             new volScalarField
             (
-                io(name, IOobject::NO_READ),
-                tfDefault
+                io.headerOk()
+              ? io
+              : fieldIo(name, -1, group, IOobject::MUST_READ, false),
+                group.phase().mesh()
             )
         );
 }
@@ -100,7 +92,7 @@ Foam::diameterModels::sizeGroup::sizeGroup
     const velocityGroup& group
 )
 :
-    volScalarField(readF(i, group)),
+    volScalarField(fieldIo("f", i, group), field("f", i, group)),
     i_(i),
     group_(group),
     dSph_("dSph", dimLength, dict),
