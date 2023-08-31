@@ -45,7 +45,7 @@ Foam::IOobject Foam::diameterModels::sizeGroup::fieldIo
         (
             IOobject::groupName
             (
-                "f" + (i == -1 ? "Default" : Foam::name(i)),
+                name + (i == -1 ? "Default" : Foam::name(i)),
                 group.phase().name()
             ),
             group.phase().mesh().time().name(),
