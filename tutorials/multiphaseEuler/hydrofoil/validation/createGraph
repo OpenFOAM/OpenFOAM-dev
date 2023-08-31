@@ -25,7 +25,7 @@ gnuplot<<EOF
 0.50  0.040
 end
 
-set terminal postscript eps size 8,9 color enhanced font "Helvetica,20"
+set terminal postscript eps size 4,3 color enhanced font "Helvetica,20"
 set output "./validation/$(basename "$PWD").eps"
 
 set grid
@@ -40,7 +40,7 @@ set ylabel 'Cp'
 plot [0:1] \
     '$lowerFile' u (\$2/0.15):(2*(\$6-pInf)/(rhoInf*UInf*UInf)) w l lt 1 t 'Simulation Lower', \
     '$upperFile' u (\$2/0.15):(2*(\$6-pInf)/(rhoInf*UInf*UInf)) w l lt 2 t 'Simulation Upper', \
-    '\$experiment' u 1:2 w p lt rgb "black" pt 4 t 'Experiment'
+    '\$experiment' u 1:2 w p lt rgb "black" pt 2 t 'Experiment'
 
 EOF
 
