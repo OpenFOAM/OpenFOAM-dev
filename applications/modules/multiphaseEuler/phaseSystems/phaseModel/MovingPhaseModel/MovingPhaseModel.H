@@ -112,12 +112,6 @@ protected:
         //- Face velocity field
         autoPtr<surfaceVectorField> Uf_;
 
-        //- Lagrangian acceleration field (needed for virtual-mass)
-        mutable tmp<volVectorField> DUDt_;
-
-        //- Lagrangian acceleration field on the faces (needed for virtual-mass)
-        mutable tmp<surfaceScalarField> DUDtf_;
-
         //- Dilatation rate
         autoPtr<volScalarField> divU_;
 
@@ -253,11 +247,11 @@ public:
             //- Access the mass flux of the phase
             virtual const surfaceScalarField& alphaRhoPhiRef() const;
 
-            //- Return the substantive acceleration
-            virtual tmp<volVectorField> DUDt() const;
+            //- Return the velocity transport matrix
+            virtual tmp<fvVectorMatrix> UgradU() const;
 
-            //- Return the substantive acceleration on the faces
-            virtual tmp<surfaceScalarField> DUDtf() const;
+            //- Return the substantive acceleration matrix
+            virtual tmp<fvVectorMatrix> DUDt() const;
 
             //- Return the continuity error
             virtual tmp<volScalarField> continuityError() const;

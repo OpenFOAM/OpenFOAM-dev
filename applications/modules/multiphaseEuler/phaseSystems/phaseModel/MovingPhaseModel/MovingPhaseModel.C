@@ -162,8 +162,6 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         dimensionedScalar(dimensionSet(1, 0, -1, 0, 0), 0)
     ),
     Uf_(nullptr),
-    DUDt_(nullptr),
-    DUDtf_(nullptr),
     divU_(nullptr),
     momentumTransport_
     (
@@ -251,18 +249,6 @@ template<class BasePhaseModel>
 void Foam::MovingPhaseModel<BasePhaseModel>::correctKinematics()
 {
     BasePhaseModel::correctKinematics();
-
-    if (DUDt_.valid())
-    {
-        DUDt_.clear();
-        DUDt();
-    }
-
-    if (DUDtf_.valid())
-    {
-        DUDtf_.clear();
-        DUDtf();
-    }
 
     if (K_.valid())
     {
@@ -509,40 +495,23 @@ Foam::MovingPhaseModel<BasePhaseModel>::alphaRhoPhiRef() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volVectorField>
-Foam::MovingPhaseModel<BasePhaseModel>::DUDt() const
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::MovingPhaseModel<BasePhaseModel>::UgradU() const
 {
-    if (!DUDt_.valid())
-    {
-        const tmp<surfaceScalarField> taphi(fvc::absolute(phi_, U_));
-        const surfaceScalarField& aphi(taphi());
-        DUDt_ =
-            new volVectorField
-            (
-                IOobject::groupName("DUDt", this->name()),
-                fvc::ddt(U_) + fvc::div(aphi, U_) - fvc::div(aphi)*U_
-            );
-    }
+    const tmp<surfaceScalarField> taphi(fvc::absolute(phi_, U_));
+    const surfaceScalarField& aphi(taphi());
 
-    return tmp<volVectorField>(DUDt_());
+    return
+        fvm::div(aphi, U_) - fvm::Sp(fvc::div(aphi), U_)
+      + this->fluid().MRF().DDt(U_);
 }
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::surfaceScalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::DUDtf() const
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::MovingPhaseModel<BasePhaseModel>::DUDt() const
 {
-    if (!DUDtf_.valid())
-    {
-        DUDtf_ =
-            new surfaceScalarField
-            (
-                IOobject::groupName("DUDtf", this->name()),
-                byDt(phi_ - phi_.oldTime())
-            );
-    }
-
-    return tmp<surfaceScalarField>(DUDtf_());
+    return fvm::ddt(U_) + UgradU();
 }
 
 

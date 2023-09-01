@@ -79,13 +79,6 @@ class MomentumTransferPhaseSystem
             phaseInterfaceKey::hash
         > KdfTable;
 
-        typedef HashPtrTable
-        <
-            volScalarField,
-            phaseInterfaceKey,
-            phaseInterfaceKey::hash
-        > VmTable;
-
         typedef HashTable
         <
             autoPtr<blendedDragModel>,
@@ -129,9 +122,6 @@ class MomentumTransferPhaseSystem
 
         //- Face drag coefficients
         KdfTable Kdfs_;
-
-        //- Virtual mass coefficients
-        VmTable Vms_;
 
 
         // Sub Models
@@ -202,10 +192,6 @@ public:
         //- As momentumTransfer, but for the face-based algorithm
         virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransferf();
 
-        //- Return implicit force coefficients on the faces, for the face-based
-        //  algorithm.
-        virtual PtrList<surfaceScalarField> Vmfs() const;
-
         //- Return the explicit force fluxes for the cell-based algorithm, that
         //  do not depend on phase mass/volume fluxes, and can therefore be
         //  evaluated outside the corrector loop. This includes things like
@@ -219,6 +205,7 @@ public:
         virtual void invADs
         (
             const PtrList<volScalarField>& As,
+            PtrList<volVectorField>& HVms,
             PtrList<PtrList<volScalarField>>& invADs,
             PtrList<PtrList<surfaceScalarField>>& invADfs
         ) const;
@@ -226,7 +213,8 @@ public:
         //- Return the inverse of (Afs + Dfs)
         virtual PtrList<PtrList<surfaceScalarField>> invADfs
         (
-            const PtrList<surfaceScalarField>& Afs
+            const PtrList<surfaceScalarField>& Afs,
+            PtrList<surfaceScalarField>& HVmfs
         ) const;
 
         //- Returns true if the phase pressure is treated implicitly

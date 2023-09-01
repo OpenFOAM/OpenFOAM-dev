@@ -267,28 +267,26 @@ Foam::StationaryPhaseModel<BasePhaseModel>::alphaRhoPhiRef() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volVectorField>
-Foam::StationaryPhaseModel<BasePhaseModel>::DUDt() const
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::StationaryPhaseModel<BasePhaseModel>::UgradU() const
 {
-    return volVectorField::New
-    (
-        IOobject::groupName("DUDt", this->name()),
-        this->mesh(),
-        dimensionedVector(dimVelocity/dimTime, Zero)
-    );
+    FatalErrorInFunction
+        << "Cannot calculate DUDt of a stationary phase"
+        << exit(FatalError);
+
+    return tmp<fvVectorMatrix>(nullptr);
 }
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::surfaceScalarField>
-Foam::StationaryPhaseModel<BasePhaseModel>::DUDtf() const
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::StationaryPhaseModel<BasePhaseModel>::DUDt() const
 {
-    return surfaceScalarField::New
-    (
-        IOobject::groupName("DUDtf", this->name()),
-        this->mesh(),
-        dimensionedScalar(dimVolume/sqr(dimTime), 0)
-    );
+    FatalErrorInFunction
+        << "Cannot calculate DUDt of a stationary phase"
+        << exit(FatalError);
+
+    return tmp<fvVectorMatrix>(nullptr);
 }
 
 

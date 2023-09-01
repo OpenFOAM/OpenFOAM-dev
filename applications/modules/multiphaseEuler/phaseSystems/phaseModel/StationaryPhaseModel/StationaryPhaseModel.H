@@ -136,11 +136,11 @@ public:
             //- Access the mass flux of the phase
             virtual const surfaceScalarField& alphaRhoPhiRef() const;
 
-            //- Return the substantive acceleration
-            virtual tmp<volVectorField> DUDt() const;
+            //- Return the velocity transport matrix
+            virtual tmp<fvVectorMatrix> UgradU() const;
 
-            //- Return the substantive acceleration on the faces
-            virtual tmp<surfaceScalarField> DUDtf() const;
+            //- Return the substantive acceleration matrix
+            virtual tmp<fvVectorMatrix> DUDt() const;
 
             //- Return the continuity error
             virtual tmp<volScalarField> continuityError() const;

@@ -241,7 +241,10 @@ bool Foam::functionObjects::phaseForces::execute()
             *forceFields_[virtualMassModel::typeName] +=
                 fluid_.lookupInterfacialModel
                 <blendedVirtualMassModel>(interface).K()
-               *(otherPhase.DUDt() - phase_.DUDt());
+               *(
+                    (otherPhase.DUDt() & otherPhase.U())
+                  - (phase_.DUDt() & phase_.U())
+                );
         }
 
         if (fluid_.foundInterfacialModel<blendedLiftModel>(interface))
