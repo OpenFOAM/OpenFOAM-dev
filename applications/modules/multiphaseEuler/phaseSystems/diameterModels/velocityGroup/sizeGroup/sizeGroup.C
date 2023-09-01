@@ -27,68 +27,91 @@ License
 #include "mixedFvPatchField.H"
 #include "shapeModel.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
 using Foam::constant::mathematical::pi;
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+Foam::IOobject Foam::diameterModels::sizeGroup::fieldIo
+(
+    const word& name,
+    const label i,
+    const velocityGroup& group,
+    const IOobject::readOption r,
+    const bool registerObject
+)
+{
+    return
+        IOobject
+        (
+            IOobject::groupName
+            (
+                name + (i == -1 ? "Default" : Foam::name(i)),
+                group.phase().name()
+            ),
+            group.phase().mesh().time().name(),
+            group.phase().mesh(),
+            r,
+            IOobject::AUTO_WRITE,
+            registerObject
+        );
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::sizeGroup::field
+(
+    const word& name,
+    const label i,
+    const velocityGroup& group
+)
+{
+    typeIOobject<volScalarField> io
+    (
+        fieldIo(name, i, group, IOobject::MUST_READ, false)
+    );
+
+    return
+        tmp<volScalarField>
+        (
+            new volScalarField
+            (
+                io.headerOk()
+              ? io
+              : fieldIo(name, -1, group, IOobject::MUST_READ, false),
+                group.phase().mesh()
+            )
+        );
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::diameterModels::sizeGroup::sizeGroup
 (
-    const word& name,
+    const label i,
     const dictionary& dict,
-    const phaseModel& phase,
-    const velocityGroup& velocityGroup,
-    const fvMesh& mesh
+    const velocityGroup& group
 )
 :
-    volScalarField
-    (
-        IOobject
-        (
-            IOobject::groupName
-            (
-                name,
-                velocityGroup.phase().name()
-            ),
-            mesh.time().name(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        dimensionedScalar(name, dimless, dict.lookup<scalar>("value")),
-        velocityGroup.f().boundaryField().types()
-    ),
-    dict_(dict),
-    phase_(phase),
-    velocityGroup_(velocityGroup),
+    volScalarField(fieldIo("f", i, group), field("f", i, group)),
+    i_(i),
+    group_(group),
     dSph_("dSph", dimLength, dict),
     x_("x", pi/6*pow3(dSph_)),
-    value_(dict.lookup<scalar>("value"))
+    shapeModel_(shapeModel::New(group_.diameterProperties(), *this, dict))
 {
-    // Adjust refValue at mixedFvPatchField boundaries
-    forAll(this->boundaryField(), patchi)
+    // Check and filter for old syntax (remove in due course)
+    if (dict.found("value"))
     {
-        typedef mixedFvPatchField<scalar> mixedFvPatchScalarField;
-
-        if
-        (
-            isA<const mixedFvPatchScalarField>(this->boundaryField()[patchi])
-        )
-        {
-            mixedFvPatchScalarField& f =
-                refCast<mixedFvPatchScalarField>
-                (
-                    this->boundaryFieldRef()[patchi]
-                );
-
-            f.refValue() = value_;
-        }
+        FatalErrorInFunction
+            << "A 'value' entry should not be specified for size-group #"
+            << i << " of population balance "
+            << group.popBalName()
+            << ". Instead, the value should be initialised within the field, "
+            << this->name() << " (or the default field, "
+            << IOobject::groupName("fDefault", group.phase().name())
+            << ", as appropriate)."
+            << exit(FatalError);
     }
-
-    shapeModel_ = shapeModel::New(velocityGroup_.diameterProperties(), *this);
 }
 
 
@@ -103,31 +126,8 @@ Foam::diameterModels::sizeGroup::~sizeGroup()
 Foam::autoPtr<Foam::diameterModels::sizeGroup>
 Foam::diameterModels::sizeGroup::clone() const
 {
-    notImplemented("sizeGroup::clone() const");
+    NotImplemented;
     return autoPtr<sizeGroup>(nullptr);
-}
-
-
-const Foam::label& Foam::diameterModels::sizeGroup::i() const
-{
-    if (!i_.valid())
-    {
-        const populationBalanceModel& popBal =
-            this->mesh().lookupObject<populationBalanceModel>
-            (
-                velocityGroup_.popBalName()
-            );
-
-        forAll(popBal.sizeGroups(), j)
-        {
-            if (&popBal.sizeGroups()[j] == &*this)
-            {
-                i_.set(new label(j));
-            }
-        }
-    }
-
-    return i_();
 }
 
 

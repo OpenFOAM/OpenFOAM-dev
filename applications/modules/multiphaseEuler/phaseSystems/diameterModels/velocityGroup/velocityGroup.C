@@ -122,11 +122,11 @@ void Foam::diameterModels::velocityGroup::scale()
         sizeGroups_[i].max(0);
     };
 
-    f_ = fSum();
+    const volScalarField fSum(this->fSum());
 
     forAll(sizeGroups_, i)
     {
-        sizeGroups_[i] /= f_;
+        sizeGroups_[i] /= fSum;
 
         sizeGroups_[i].correctBoundaryConditions();
     };
@@ -143,29 +143,27 @@ Foam::diameterModels::velocityGroup::velocityGroup
 :
     diameterModel(diameterProperties, phase),
     popBalName_(diameterProperties.lookup("populationBalance")),
-    f_
-    (
-        IOobject
-        (
-            IOobject::groupName
-            (
-                "f",
-                phase.name()
-            ),
-            phase.time().name(),
-            phase.mesh(),
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        phase.mesh()
-    ),
     sizeGroups_
     (
         diameterProperties.lookup("sizeGroups"),
-        sizeGroup::iNew(phase, *this)
+        sizeGroup::iNew
+        (
+            *this,
+            populationBalanceModel::groups::New
+            (
+                popBalName_,
+                phase.mesh()
+            ).nSizeGroups()
+        )
     ),
     d_(IOobject::groupName("d", phase.name()), dsm())
-{}
+{
+    populationBalanceModel::groups::New
+    (
+        popBalName_,
+        phase.mesh()
+    ).insert(*this);
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -232,14 +230,12 @@ void Foam::diameterModels::velocityGroup::correct()
             scale();
         }
 
-        f_ = fSum();
-
-        f_.correctBoundaryConditions();
+        volScalarField::Internal fSum(this->fSum());
 
         Info<< phase().name() << " sizeGroups-sum volume fraction, min, max = "
-            << f_.weightedAverage(phase().mesh().V()).value()
-            << ' ' << min(f_).value()
-            << ' ' << max(f_).value()
+            << fSum.weightedAverage(phase().mesh().V()).value()
+            << ' ' << min(fSum).value()
+            << ' ' << max(fSum).value()
             << endl;
 
         d_ = dsm();

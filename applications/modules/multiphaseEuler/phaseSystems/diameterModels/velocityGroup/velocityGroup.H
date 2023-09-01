@@ -90,10 +90,6 @@ class velocityGroup
         //- Name of the populationBalance this velocityGroup belongs to
         word popBalName_;
 
-        //- Sum of the sizeGroup volume fractions and reference field from which
-        //  the sizeGroup fields are derived
-        volScalarField f_;
-
         //- sizeGroups belonging to this velocityGroup
         PtrList<sizeGroup> sizeGroups_;
 
@@ -137,11 +133,11 @@ public:
         //- Return name of populationBalance this velocityGroup belongs to
         inline const word& popBalName() const;
 
-        //- Return reference field for sizeGroup's
-        inline const volScalarField& f() const;
-
         //- Return sizeGroups belonging to this velocityGroup
         inline const PtrList<sizeGroup>& sizeGroups() const;
+
+        //- Return sizeGroups belonging to this velocityGroup
+        inline PtrList<sizeGroup>& sizeGroups();
 
         //- Get the diameter field
         virtual tmp<volScalarField> d() const;

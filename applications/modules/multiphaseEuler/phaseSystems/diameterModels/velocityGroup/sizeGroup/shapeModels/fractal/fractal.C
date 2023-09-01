@@ -31,6 +31,8 @@ License
 #include "fvmSup.H"
 #include "mixedFvPatchField.H"
 
+using Foam::constant::mathematical::pi;
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -60,7 +62,29 @@ const Foam::NamedEnum
 > Foam::diameterModels::shapeModels::fractal::sgTypeNames_;
 
 
-using Foam::constant::mathematical::pi;
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::shapeModels::fractal::dColl() const
+{
+    tmp<volScalarField> tDColl
+    (
+        volScalarField::New
+        (
+            "dColl",
+            group().mesh(),
+            dimensionedScalar(dimLength, Zero)
+        )
+    );
+
+    volScalarField& dColl = tDColl.ref();
+
+    dColl =
+        6/kappa_
+       *pow(group().x()*pow3(kappa_)/(36*pi*alphaC_), 1/Df_);
+
+    return tDColl;
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -68,31 +92,18 @@ using Foam::constant::mathematical::pi;
 Foam::diameterModels::shapeModels::fractal::fractal
 (
     const dictionary& dict,
-    const sizeGroup& group
+    const sizeGroup& group,
+    const dictionary& groupDict
 )
 :
-    SecondaryPropertyModel<shapeModel>(dict, group),
+    SecondaryPropertyModel<shapeModel>(group),
     kappa_
     (
-        IOobject
-        (
-            "kappa" + group.name().substr(1),
-            group.mesh().time().name(),
-            group.mesh(),
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        group.mesh(),
-        dimensionedScalar
-        (
-            "kappa",
-            inv(dimLength),
-            group.dict()
-        ),
-        group.VelocityGroup().f().boundaryField().types()
+        sizeGroup::fieldIo("kappa", group.i(), group.group()),
+        sizeGroup::field("kappa", group.i(), group.group())
     ),
-    Df_("Df", dimless, group.dict()),
-    alphaC_("alphaC", dimless, group.dict()),
+    Df_("Df", dimless, groupDict),
+    alphaC_("alphaC", dimless, groupDict),
     dColl_
     (
         IOobject
@@ -113,30 +124,22 @@ Foam::diameterModels::shapeModels::fractal::fractal
         ),
         group.mesh(),
         dimensionedScalar(kappa_.dimensions()/dimTime, Zero)
-    )
+    ),
+    sinteringModel_(sinteringModel::New(dict.subDict(type() + "Coeffs"), *this))
 {
-    // Adjust refValue at mixedFvPatchField boundaries
-    forAll(kappa_.boundaryField(), patchi)
+    // Check and filter for old syntax (remove in due course)
+    if (groupDict.found("kappa"))
     {
-        typedef mixedFvPatchField<scalar> mixedFvPatchScalarField;
-
-        if
-        (
-            isA<const mixedFvPatchScalarField>(kappa_.boundaryField()[patchi])
-        )
-        {
-            mixedFvPatchScalarField& kappa =
-                refCast<mixedFvPatchScalarField>
-                (
-                    kappa_.boundaryFieldRef()[patchi]
-                );
-
-            kappa.refValue() = sizeGroup_.dict().lookup<scalar>("kappa");
-        }
+        FatalErrorInFunction
+            << "A 'kappa' entry should not be specified for size-group #"
+            << group.i() << " of population balance "
+            << group.group().popBalName()
+            << ". Instead, the value should be initialised within the field, "
+            << this->name() << " (or the default field, "
+            << IOobject::groupName("kappaDefault", group.phase().name())
+            << ", as appropriate)."
+            << exit(FatalError);
     }
-
-    sinteringModel_ =
-        sinteringModel::New(dict.subDict(type() + "Coeffs"), *this);
 }
 
 
@@ -162,39 +165,16 @@ Foam::diameterModels::shapeModels::fractal::src()
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::shapeModels::fractal::dColl() const
-{
-    tmp<volScalarField> tDColl
-    (
-        volScalarField::New
-        (
-            "dColl",
-            sizeGroup_.mesh(),
-            dimensionedScalar(dimLength, Zero)
-        )
-    );
-
-    volScalarField& dColl = tDColl.ref();
-
-    dColl =
-        6/kappa_
-       *pow(sizeGroup_.x()*pow3(kappa_)/(36*pi*alphaC_), 1/Df_);
-
-    return tDColl;
-}
-
-
 void Foam::diameterModels::shapeModels::fractal::correct()
 {
-    const sizeGroup& fi = sizeGroup_;
+    const sizeGroup& fi = group();
     const phaseModel& phase = fi.phase();
     const volScalarField& alpha = phase;
 
     const populationBalanceModel& popBal =
-        sizeGroup_.mesh().lookupObject<populationBalanceModel>
+        group().mesh().lookupObject<populationBalanceModel>
         (
-            sizeGroup_.VelocityGroup().popBalName()
+            group().group().popBalName()
         );
 
     surfaceScalarField fAlphaPhi
@@ -216,7 +196,7 @@ void Foam::diameterModels::shapeModels::fractal::correct()
             fvm::Sp
             (
                 max(phase.residualAlpha() - alpha*fi, scalar(0))
-               /sizeGroup_.mesh().time().deltaT(),
+               /group().mesh().time().deltaT(),
                 kappa_
             )
         )
@@ -231,7 +211,7 @@ void Foam::diameterModels::shapeModels::fractal::correct()
     kappa_ =
         min
         (
-            max(kappa_, 6/sizeGroup_.dSph()),
+            max(kappa_, 6/group().dSph()),
             6/popBal.sizeGroups().first().dSph()
         );
 
@@ -245,7 +225,7 @@ void Foam::diameterModels::shapeModels::fractal::correct()
 const Foam::tmp<Foam::volScalarField>
 Foam::diameterModels::shapeModels::fractal::a() const
 {
-    return kappa_*sizeGroup_.x();
+    return kappa_*group().x();
 }
 
 
@@ -271,7 +251,7 @@ void Foam::diameterModels::shapeModels::fractal::addDrift
     {
         case sgHardSphere:
         {
-            Su_ += sourceKappa*fu.dSph()/sizeGroup_.dSph()*Su;
+            Su_ += sourceKappa*fu.dSph()/group().dSph()*Su;
 
             break;
         }
@@ -286,7 +266,7 @@ void Foam::diameterModels::shapeModels::fractal::addDrift
 
             volScalarField dp(6/sourceKappa);
             const volScalarField a(sourceKappa*fu.x());
-            const dimensionedScalar dv(sizeGroup_.x() - fu.x());
+            const dimensionedScalar dv(group().x() - fu.x());
 
             const volScalarField da1
             (
@@ -299,7 +279,7 @@ void Foam::diameterModels::shapeModels::fractal::addDrift
 
             dp += 6*(dv*a - fu.x()*da1)/sqr(a);
 
-            const volScalarField np(6*sizeGroup_.x()/pi/pow3(dp));
+            const volScalarField np(6*group().x()/pi/pow3(dp));
             const volScalarField dc(dp*pow(np/alphaC_, 1/Df_));
 
             const volScalarField da2
@@ -307,7 +287,7 @@ void Foam::diameterModels::shapeModels::fractal::addDrift
                 dv*(4/dp + 2*Df_/3*(1/dc - 1/dp))
             );
 
-            Su_ += (a + 0.5*da1 + 0.5*da2)/sizeGroup_.x()*Su;
+            Su_ += (a + 0.5*da1 + 0.5*da2)/group().x()*Su;
 
             break;
         }

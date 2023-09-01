@@ -25,7 +25,9 @@ populationBalances (bubbles);
 air
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   velocityGroup;
+
     velocityGroupCoeffs
     {
         populationBalance   bubbles;
@@ -34,35 +36,35 @@ air
 
         sizeGroups
         (
-            f0 {dSph 1.000; value 0.0000;}
-            f1 {dSph 1.074; value 0.0000;}
-            f2 {dSph 1.147; value 0.0000;}
-            f3 {dSph 1.221; value 0.0000;}
-            f4 {dSph 1.294; value 0.0000;}
-            f5 {dSph 1.368; value 0.0000;}
-            f6 {dSph 1.441; value 0.0000;}
-            f7 {dSph 1.515; value 0.0000;}
-            f8 {dSph 1.588; value 0.0918;}
-            f9 {dSph 1.662; value 0.1151;}
-            f10{dSph 1.735; value 0.1429;}
-            f11{dSph 1.809; value 0.1758;}
-            f12{dSph 1.882; value 0.2146;}
-            f13{dSph 1.956; value 0.2599;}
-            f14{dSph 2.029; value 0.0000;}
-            f15{dSph 2.103; value 0.0000;}
-            f16{dSph 2.176; value 0.0000;}
-            f17{dSph 2.250; value 0.0000;}
-            f18{dSph 2.323; value 0.0000;}
-            f19{dSph 2.397; value 0.0000;}
-            f20{dSph 2.470; value 0.0000;}
-            f21{dSph 2.544; value 0.0000;}
-            f22{dSph 2.617; value 0.0000;}
-            f23{dSph 2.691; value 0.0000;}
-            f24{dSph 2.764; value 0.0000;}
-            f25{dSph 2.838; value 0.0000;}
-            f26{dSph 2.911; value 0.0000;}
-            f27{dSph 2.985; value 0.0000;}
-            f28{dSph 3.058; value 0.0000;}
+            { dSph 1.000; }
+            { dSph 1.074; }
+            { dSph 1.147; }
+            { dSph 1.221; }
+            { dSph 1.294; }
+            { dSph 1.368; }
+            { dSph 1.441; }
+            { dSph 1.515; }
+            { dSph 1.588; }
+            { dSph 1.662; }
+            { dSph 1.735; }
+            { dSph 1.809; }
+            { dSph 1.882; }
+            { dSph 1.956; }
+            { dSph 2.029; }
+            { dSph 2.103; }
+            { dSph 2.176; }
+            { dSph 2.250; }
+            { dSph 2.323; }
+            { dSph 2.397; }
+            { dSph 2.470; }
+            { dSph 2.544; }
+            { dSph 2.617; }
+            { dSph 2.691; }
+            { dSph 2.764; }
+            { dSph 2.838; }
+            { dSph 2.911; }
+            { dSph 2.985; }
+            { dSph 3.058; }
         );
     }
 
@@ -72,6 +74,7 @@ air
 water
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   none;
 
     residualAlpha   1e-6;

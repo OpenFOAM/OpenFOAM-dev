@@ -231,6 +231,147 @@ class populationBalanceModel
 :
     public regIOobject
 {
+public:
+
+    // Public Classes
+
+        //- Class to accumulate population balance sub-class pointers
+        class groups
+        :
+            public regIOobject
+        {
+            // Private Data
+
+                //- Velocity group pointers
+                HashTable<const velocityGroup*> velocityGroupPtrs_;
+
+                //- Size group pointers
+                UPtrList<sizeGroup> sizeGroups_;
+
+
+            // Private Constructor
+
+                //- Construct with a name on a database
+                groups(const word& popBalName, const objectRegistry& db)
+                :
+                    regIOobject
+                    (
+                        IOobject
+                        (
+                            name(popBalName),
+                            db.time().constant(),
+                            db
+                        )
+                    )
+                {}
+
+
+            // Private Member Functions
+
+                //- Return the name of the pointer cache
+                static word name(const word& popBalName)
+                {
+                    return popBalName + ":groups";
+                }
+
+
+        public:
+
+            // Constructors
+
+                //- Lookup in the registry or construct new
+                static groups& New
+                (
+                    const word& popBalName,
+                    const objectRegistry& db
+                )
+                {
+                    if (db.foundObject<groups>(name(popBalName)))
+                    {
+                        return db.lookupObjectRef<groups>(name(popBalName));
+                    }
+
+                    groups* ps = new groups(popBalName, db);
+
+                    ps->store();
+
+                    return *ps;
+                }
+
+
+            // Member Functions
+
+                //- Return the current number of size groups
+                label nSizeGroups()
+                {
+                    return sizeGroups_.size();
+                }
+
+                //- Insert a velocity group into the table
+                void insert(velocityGroup& group)
+                {
+                    velocityGroupPtrs_.insert(group.phase().name(), &group);
+
+                    const label i0 = nSizeGroups();
+
+                    sizeGroups_.resize(i0 + group.sizeGroups().size());
+
+                    forAll(group.sizeGroups(), i)
+                    {
+                        sizeGroups_.set(i0 + i, &group.sizeGroups()[i]);
+
+                        if
+                        (
+                            i0 + i != 0
+                         && sizeGroups_[i0 + i - 1].x().value()
+                         >= sizeGroups_[i0 + i].x().value()
+                        )
+                        {
+                            FatalErrorInFunction
+                                << "Size groups must be specified in order of "
+                                << "their representative size"
+                                << exit(FatalError);
+                        }
+                    }
+                }
+
+                //- Retrieve the pointers
+                static void retrieve
+                (
+                    const populationBalanceModel& popBal,
+                    HashTable<const velocityGroup*>& velGroupPtrs,
+                    UPtrList<sizeGroup>& szGroupPtrs
+                )
+                {
+                    const objectRegistry& db = popBal.fluid().mesh();
+
+                    if (!db.foundObject<groups>(name(popBal.name())))
+                    {
+                        FatalErrorInFunction
+                            << "No velocity groups exist for population "
+                            << "balance \"" << popBal.name() << "\""
+                            << exit(FatalError);
+                    }
+
+                    groups& ps =
+                        db.lookupObjectRef<groups>(name(popBal.name()));
+
+                    velGroupPtrs.transfer(ps.velocityGroupPtrs_);
+                    szGroupPtrs.transfer(ps.sizeGroups_);
+
+                    ps.checkOut();
+                }
+
+                //- Dummy write for regIOobject
+                virtual bool writeData(Ostream&) const
+                {
+                    return true;
+                }
+        };
+
+
+private:
+
     // Private Data
 
         //- Reference to the phaseSystem
@@ -327,8 +468,6 @@ class populationBalanceModel
     // Private Member Functions
 
         void registerVelocityGroups();
-
-        void registerSizeGroups(sizeGroup& group);
 
         void initialiseDmdtfs();
 
@@ -440,9 +579,6 @@ public:
 
         //- Return continuous phase
         inline const phaseModel& continuousPhase() const;
-
-        //- Return the velocity groups belonging to this populationBalance
-        inline const HashTable<const velocityGroup*>& velocityGroupPtrs() const;
 
         //- Return the size groups belonging to this populationBalance
         inline const UPtrList<sizeGroup>& sizeGroups() const;

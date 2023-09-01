@@ -89,13 +89,6 @@ Foam::diameterModels::populationBalanceModel::continuousPhase() const
 }
 
 
-inline const Foam::HashTable<const Foam::diameterModels::velocityGroup*>&
-Foam::diameterModels::populationBalanceModel::velocityGroupPtrs() const
-{
-    return velocityGroupPtrs_;
-}
-
-
 inline const Foam::UPtrList<Foam::diameterModels::sizeGroup>&
 Foam::diameterModels::populationBalanceModel::sizeGroups() const
 {
@@ -133,7 +126,7 @@ Foam::diameterModels::populationBalanceModel::alphas() const
     }
     else
     {
-        return velocityGroupPtrs_[velocityGroupPtrs_.begin().key()]->phase();
+        return velocityGroupPtrs_.begin()()->phase();
     }
 }
 
@@ -147,8 +140,7 @@ Foam::diameterModels::populationBalanceModel::U() const
     }
     else
     {
-        return
-            velocityGroupPtrs_[velocityGroupPtrs_.begin().key()]->phase().U();
+        return velocityGroupPtrs_.begin()()->phase().U();
     }
 }
 

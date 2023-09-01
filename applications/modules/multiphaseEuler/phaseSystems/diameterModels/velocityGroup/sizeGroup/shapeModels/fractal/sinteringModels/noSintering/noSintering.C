@@ -68,7 +68,7 @@ Foam::diameterModels::shapeModels::sinteringModels::noSintering::~noSintering()
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::diameterModels::shapeModels::sinteringModels::noSintering::R() const
 {
-    const sizeGroup& fi = fractal_.SizeGroup();
+    const sizeGroup& fi = fractal_.group();
 
     volScalarField::Internal R
     (

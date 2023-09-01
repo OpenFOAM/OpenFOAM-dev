@@ -53,7 +53,7 @@ inline void Foam::phaseSurfaceArrheniusReactionRate::preEvaluate() const
     const phaseModel& phase =
         ob_.lookupObject<phaseModel>(IOobject::groupName("alpha", phaseName_));
 
-    tAv_ = phase.dPtr()->Av();
+    tAv_ = phase.diameter().Av();
 }
 
 

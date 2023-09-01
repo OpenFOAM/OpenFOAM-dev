@@ -23,6 +23,7 @@ populationBalances (bubbles);
 gas
 {
     type            purePhaseModel;
+
     diameterModel   velocityGroup;
 
     velocityGroupCoeffs
@@ -33,33 +34,33 @@ gas
 
         sizeGroups
         (
-            f1  {dSph  1.0e-4; value 0     ;}
-            f2  {dSph  1.2e-4; value 0     ;}
-            f3  {dSph  1.44e-4; value 0    ;}
-            f4  {dSph  1.728e-4; value 0   ;}
-            f5  {dSph  2.074e-4; value 0   ;}
-            f6  {dSph  2.49e-4; value 0    ;}
-            f7  {dSph  2.99e-4; value 0    ;}
-            f8  {dSph  3.6e-4; value 1.0   ;}
-            f9  {dSph  4.3e-4; value 0     ;}
-            f10 {dSph  5.16e-4; value 0    ;}
-            f11 {dSph  6.19e-4; value 0    ;}
-            f12 {dSph  7.43e-4; value 0    ;}
-            f13 {dSph  8.92e-4; value 0    ;}
-            f14 {dSph  1.07e-3; value 0    ;}
-            f15 {dSph  1.28e-3; value 0    ;}
-            f16 {dSph  1.54e-3; value 0    ;}
-            f17 {dSph  1.85e-3; value 0    ;}
-            f18 {dSph  2.22e-3; value 0    ;}
-            f19 {dSph  2.67e-3; value 0    ;}
-            f20 {dSph  3.19e-3; value 0    ;}
-            f21 {dSph  3.85e-3; value 0    ;}
-            f22 {dSph  4.6e-3; value 0     ;}
-            f23 {dSph  5.52e-3; value 0    ;}
-            f24 {dSph  6.62e-3; value 0    ;}
-            f25 {dSph  7.95e-3; value 0    ;}
-            f26 {dSph  9.54e-3; value 0    ;}
-            f27 {dSph  1.14e-2; value 0    ;}
+            { dSph 1.0e-4; }
+            { dSph 1.2e-4; }
+            { dSph 1.44e-4; }
+            { dSph 1.728e-4; }
+            { dSph 2.074e-4; }
+            { dSph 2.49e-4; }
+            { dSph 2.99e-4; }
+            { dSph 3.6e-4; }
+            { dSph 4.3e-4; }
+            { dSph 5.16e-4; }
+            { dSph 6.19e-4; }
+            { dSph 7.43e-4; }
+            { dSph 8.92e-4; }
+            { dSph 1.07e-3; }
+            { dSph 1.28e-3; }
+            { dSph 1.54e-3; }
+            { dSph 1.85e-3; }
+            { dSph 2.22e-3; }
+            { dSph 2.67e-3; }
+            { dSph 3.19e-3; }
+            { dSph 3.85e-3; }
+            { dSph 4.6e-3; }
+            { dSph 5.52e-3; }
+            { dSph 6.62e-3; }
+            { dSph 7.95e-3; }
+            { dSph 9.54e-3; }
+            { dSph 1.14e-2; }
         );
     }
 
@@ -69,7 +70,9 @@ gas
 liquid
 {
     type            purePhaseModel;
+
     diameterModel   none;
+
     Sc              0.7;
 
     residualAlpha   1e-6;
@@ -94,7 +97,8 @@ populationBalanceCoeffs
 
         binaryBreakupModels
         (
-            LehrMilliesMewes{}
+            LehrMilliesMewes
+            {}
         );
 
         breakupModels
@@ -109,8 +113,7 @@ populationBalanceCoeffs
             }
 
             densityChange
-            {
-            }
+            {}
         );
 
         nucleationModels

@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "velocityGroup.H"
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 inline const Foam::word&
@@ -32,15 +34,15 @@ Foam::diameterModels::velocityGroup::popBalName() const
 }
 
 
-inline const Foam::volScalarField&
-Foam::diameterModels::velocityGroup::f() const
+inline const Foam::PtrList<Foam::diameterModels::sizeGroup>&
+Foam::diameterModels::velocityGroup::sizeGroups() const
 {
-    return f_;
+    return sizeGroups_;
 }
 
 
-inline const Foam::PtrList<Foam::diameterModels::sizeGroup>&
-Foam::diameterModels::velocityGroup::sizeGroups() const
+inline Foam::PtrList<Foam::diameterModels::sizeGroup>&
+Foam::diameterModels::velocityGroup::sizeGroups()
 {
     return sizeGroups_;
 }

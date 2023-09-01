@@ -24,7 +24,9 @@ populationBalances (bubbles);
 air1
 {
     type                pureIsothermalPhaseModel;
+
     diameterModel       velocityGroup;
+
     velocityGroupCoeffs
     {
         populationBalance   bubbles;
@@ -33,12 +35,12 @@ air1
 
         sizeGroups
         (
-            f0 {dSph 3.00e-03; value 1;}
-            f1 {dSph 3.01e-03; value 0;}
-            f2 {dSph 3.02e-03; value 0;}
-            f3 {dSph 3.03e-03; value 0;}
-            f4 {dSph 3.04e-03; value 0;}
-            f5 {dSph 3.05e-03; value 0;}
+            { dSph 3.00e-03; }
+            { dSph 3.01e-03; }
+            { dSph 3.02e-03; }
+            { dSph 3.03e-03; }
+            { dSph 3.04e-03; }
+            { dSph 3.05e-03; }
         );
     }
 
@@ -48,7 +50,9 @@ air1
 air2
 {
     type                pureIsothermalPhaseModel;
+
     diameterModel       velocityGroup;
+
     velocityGroupCoeffs
     {
         populationBalance   bubbles;
@@ -57,11 +61,11 @@ air2
 
         sizeGroups
         (
-            f6 {dSph 3.06e-03; value 1;}
-            f7 {dSph 3.07e-03; value 0;}
-            f8 {dSph 3.08e-03; value 0;}
-            f9 {dSph 3.09e-03; value 0;}
-            f10{dSph 3.10e-03; value 0;}
+            { dSph 3.06e-03; }
+            { dSph 3.07e-03; }
+            { dSph 3.08e-03; }
+            { dSph 3.09e-03; }
+            { dSph 3.10e-03; }
         );
     }
 
@@ -71,7 +75,9 @@ air2
 air3
 {
     type                pureIsothermalPhaseModel;
+
     diameterModel       velocityGroup;
+
     velocityGroupCoeffs
     {
         populationBalance   bubbles;
@@ -80,11 +86,11 @@ air3
 
         sizeGroups
         (
-            f11{dSph 3.11e-03; value 1;}
-            f12{dSph 3.12e-03; value 0;}
-            f13{dSph 3.13e-03; value 0;}
-            f14{dSph 3.14e-03; value 0;}
-            f15{dSph 3.15e-03; value 0;}
+            { dSph 3.11e-03; }
+            { dSph 3.12e-03; }
+            { dSph 3.13e-03; }
+            { dSph 3.14e-03; }
+            { dSph 3.15e-03; }
         );
     }
 
@@ -94,6 +100,7 @@ air3
 water
 {
     type                pureIsothermalPhaseModel;
+
     diameterModel       none;
 
     residualAlpha       1e-6;

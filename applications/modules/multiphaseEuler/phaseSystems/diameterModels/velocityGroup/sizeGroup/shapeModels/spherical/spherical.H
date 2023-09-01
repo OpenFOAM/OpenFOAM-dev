@@ -62,11 +62,12 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and sizeGroup
+        //- Construct from dictionaries and sizeGroup
         spherical
         (
             const dictionary& dict,
-            const sizeGroup& group
+            const sizeGroup& group,
+            const dictionary& groupDict
         );
 
 

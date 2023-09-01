@@ -7,6 +7,13 @@ cd "${0%/*}" || exit 1
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication zeroDimensionalMesh
+runApplication foamPostProcess -func "
+    populationBalanceInitialDistributionFs
+    (
+        phase=air1,
+        initialDistributionFile=\"constant/initialDistribution.air1\"
+    )
+    "
 runApplication $(getApplication)
 
 ( cd validation && ./createGraphs )

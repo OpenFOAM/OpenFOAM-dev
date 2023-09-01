@@ -23,26 +23,27 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "sizeGroup.H"
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::dictionary&
-Foam::diameterModels::sizeGroup::dict() const
+inline Foam::label Foam::diameterModels::sizeGroup::i() const
 {
-    return dict_;
+    return i_;
 }
 
 
 inline const Foam::phaseModel&
 Foam::diameterModels::sizeGroup::phase() const
 {
-    return phase_;
+    return group().phase();
 }
 
 
 inline const Foam::diameterModels::velocityGroup&
-Foam::diameterModels::sizeGroup::VelocityGroup() const
+Foam::diameterModels::sizeGroup::group() const
 {
-    return velocityGroup_;
+    return group_;
 }
 
 

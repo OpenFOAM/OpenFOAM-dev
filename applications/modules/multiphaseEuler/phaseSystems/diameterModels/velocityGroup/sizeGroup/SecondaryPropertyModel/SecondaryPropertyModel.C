@@ -31,11 +31,10 @@ License
 template<class ModelType>
 Foam::diameterModels::SecondaryPropertyModel<ModelType>::SecondaryPropertyModel
 (
-    const dictionary& dict,
     const sizeGroup& group
 )
 :
-    ModelType(dict, group),
+    ModelType(group),
     regIOobject
     (
         IOobject
@@ -45,7 +44,7 @@ Foam::diameterModels::SecondaryPropertyModel<ModelType>::SecondaryPropertyModel
             group.mesh()
         )
     ),
-    sizeGroup_(group),
+    group_(group),
     SecondaryPropertyModelTable_()
 {}
 
@@ -61,6 +60,14 @@ Foam::diameterModels::SecondaryPropertyModel<ModelType>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class ModelType>
+const Foam::diameterModels::sizeGroup&
+Foam::diameterModels::SecondaryPropertyModel<ModelType>::group() const
+{
+    return group_;
+}
+
+
+template<class ModelType>
 const typename Foam::diameterModels::SecondaryPropertyModel<ModelType>::SpTable&
 Foam::diameterModels::SecondaryPropertyModel<ModelType>::
 SecondaryPropertyModelTable()
@@ -68,7 +75,7 @@ SecondaryPropertyModelTable()
     if (SecondaryPropertyModelTable_.empty())
     {
         SecondaryPropertyModelTable_ =
-            sizeGroup_.mesh().template lookupClass
+            group_.mesh().template lookupClass
             <
                 SecondaryPropertyModel<ModelType>
             >();

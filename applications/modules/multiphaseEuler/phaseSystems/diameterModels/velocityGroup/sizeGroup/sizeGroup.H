@@ -87,25 +87,17 @@ private:
 
     // Private Data
 
-        dictionary dict_;
-
-        //- Phase this  sizeGroup belongs to
-        const phaseModel& phase_;
+        //- Label of this sizeGroup within the corresponding populationBalance
+        const label i_;
 
         //- VelocityGroup this sizeGroup belongs to
-        const velocityGroup& velocityGroup_;
+        const velocityGroup& group_;
 
         //- Sphere equivalent diameter of the sizeGroup
         const dimensionedScalar dSph_;
 
         //- Representative volume of the sizeGroup
         const dimensionedScalar x_;
-
-        //- Initial value and value at boundaries
-        const scalar value_;
-
-        //- Label of this sizeGroup within the corresponding populationBalance
-        mutable autoPtr<label> i_;
 
         //- Model for describing the representative shape of the elements in the
         //  sizeGroup
@@ -114,53 +106,87 @@ private:
 
 public:
 
-    // Constructors
+    // Static Member Functions
 
-        sizeGroup
+        //- Return IO for a size-group field. Construction helper.
+        static IOobject fieldIo
         (
             const word& name,
+            const label i,
+            const velocityGroup& group,
+            const IOobject::readOption r = IOobject::NO_READ,
+            const bool registerObject = true
+        );
+
+        //- Return IO a size-group field. Construction helper.
+        static tmp<volScalarField> field
+        (
+            const word& name,
+            const label i,
+            const velocityGroup& group
+        );
+
+
+    // Constructors
+
+        //- Construct from index, dictionary and velocity group
+        sizeGroup
+        (
+            const label i,
             const dictionary& dict,
-            const phaseModel& phase,
-            const velocityGroup& velocityGroup,
-            const fvMesh& mesh
+            const velocityGroup& group
         );
 
         //- Return clone
         autoPtr<sizeGroup> clone() const;
 
-        //- Return a pointer to a new sizeGroup created on freestore
-        //  from Istream
+        //- Return a pointer to a new sizeGroup created from Istream
         class iNew
         {
-            const phaseModel& phase_;
-            const velocityGroup& velocityGroup_;
+            const velocityGroup& group_;
+
+            mutable label i_;
+
 
         public:
 
-            iNew
-            (
-                const phaseModel& phase,
-                const velocityGroup& velocityGroup
-            )
+            iNew(const velocityGroup& group, const label i0)
             :
-                phase_(phase),
-                velocityGroup_(velocityGroup)
+                group_(group),
+                i_(i0)
             {}
 
             autoPtr<sizeGroup> operator()(Istream& is) const
             {
-                dictionaryEntry ent(dictionary::null, is);
-                return autoPtr<sizeGroup>
-                (
-                    new sizeGroup
-                    (
-                        ent.keyword(),
-                        ent,
-                        phase_,
-                        velocityGroup_,
-                        phase_.mesh()
-                    )
-                );
+                token t(is);
+
+                // Check and filter for old syntax (remove in due course)
+                if (t.isWord())
+                {
+                    const word fName = "f" + Foam::name(i_);
+
+                    if (t.wordToken() != fName)
+                    {
+                        FatalErrorInFunction
+                            << "The name '" << t.wordToken() << "' should not "
+                            << "have been provided for the fraction field "
+                            << IOobject::groupName(fName, group_.phase().name())
+                            << " of size-group #" << i_
+                            << " of population balance " << group_.popBalName()
+                            << ". Only the coefficients are required."
+                            << exit(FatalError);
+                    }
+                }
+                else
+                {
+                    is.putBack(t);
+                }
+
+                autoPtr<sizeGroup> result(new sizeGroup(i_, is, group_));
+
+                i_ ++;
+
+                return result;
             }
         };
 
@@ -171,14 +197,14 @@ public:
 
     // Member Functions
 
-        //- Return const-reference to the dictionary
-        inline const dictionary& dict() const;
+        //- Return index of the size group within the population balance
+        label i() const;
 
         //- Return const-reference to the phase
         inline const phaseModel& phase() const;
 
         //- Return const-reference to the velocityGroup
-        inline const velocityGroup& VelocityGroup() const;
+        inline const velocityGroup& group() const;
 
         //- Return representative spherical diameter of the sizeGroup
         inline const dimensionedScalar& dSph() const;
@@ -191,9 +217,6 @@ public:
 
         //- Return const-reference to diameterModel of the phase
         inline const autoPtr<shapeModel>& shapeModelPtr() const;
-
-        //- Return index of the size group within the population balance
-        const label& i() const;
 
         //- Return representative surface area of the sizeGroup
         const tmp<volScalarField> a() const;

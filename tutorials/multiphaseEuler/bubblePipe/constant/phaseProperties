@@ -27,17 +27,17 @@ air1
 
     velocityGroupCoeffs
     {
-        populationBalance    bubbles;
+        populationBalance bubbles;
 
-        shapeModel           spherical;
+        shapeModel      spherical;
 
         sizeGroups
         (
-            f1 {dSph  1e-3; value 1.0;}
-            f2 {dSph  2e-3; value 0.0;}
-            f3 {dSph  3e-3; value 0.0;}
-            f4 {dSph  4e-3; value 0.0;}
-            f5 {dSph  5e-3; value 0.0;}
+            { dSph 1e-3; }
+            { dSph 2e-3; }
+            { dSph 3e-3; }
+            { dSph 4e-3; }
+            { dSph 5e-3; }
         );
     }
 
@@ -52,19 +52,19 @@ air2
 
     velocityGroupCoeffs
     {
-        populationBalance    bubbles;
+        populationBalance bubbles;
 
-        shapeModel           spherical;
+        shapeModel      spherical;
 
         sizeGroups
         (
-            f6 {dSph  6e-3; value 1.0;}
-            f7 {dSph  7e-3; value 0.0;}
-            f8 {dSph  8e-3; value 0.0;}
-            f9 {dSph  9e-3; value 0.0;}
-            f10{dSph 10e-3; value 0.0;}
-            f11{dSph 11e-3; value 0.0;}
-            f12{dSph 12e-3; value 0.0;}
+            { dSph 6e-3; }
+            { dSph 7e-3; }
+            { dSph 8e-3; }
+            { dSph 9e-3; }
+            { dSph 10e-3; }
+            { dSph 11e-3; }
+            { dSph 12e-3; }
         );
     }
 
@@ -88,12 +88,14 @@ populationBalanceCoeffs
 
         coalescenceModels
         (
-            LehrMilliesMewes{}
+            LehrMilliesMewes
+            {}
         );
 
         binaryBreakupModels
         (
-            LehrMilliesMewes{}
+            LehrMilliesMewes
+            {}
         );
 
         breakupModels
@@ -101,7 +103,8 @@ populationBalanceCoeffs
 
         driftModels
         (
-            densityChange{}
+            densityChange
+            {}
         );
 
         nucleationModels

@@ -27,12 +27,12 @@ massSource
 
     fieldValues
     {
-        f1.air1     0;
-        f2.air1     0;
-        f3.air1     1;
-        f4.air1     0;
-        f5.air1     0;
-        U.air1      (0 0 0);
+        f0.air1         0;
+        f1.air1         0;
+        f2.air1         1;
+        f3.air1         0;
+        f4.air1         0;
+        U.air1          (0 0 0);
     }
 }
 
