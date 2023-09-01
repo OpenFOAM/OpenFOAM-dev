@@ -527,17 +527,19 @@ public:
             //- Return the force fluxes for the face-based algorithm
             virtual PtrList<surfaceScalarField> Ffs() const = 0;
 
-            //- Return the inverse of (As + Ds)
-            virtual void invADs
+            //- Return the inverse of the central + drag + virtual mass
+            //  coefficient matrix
+            virtual void invADVs
             (
                 const PtrList<volScalarField>& As,
                 PtrList<volVectorField>& HVms,
-                PtrList<PtrList<volScalarField>>& invADs,
-                PtrList<PtrList<surfaceScalarField>>& invADfs
+                PtrList<PtrList<volScalarField>>& invADVs,
+                PtrList<PtrList<surfaceScalarField>>& invADVfs
             ) const = 0;
 
-            //- Return the inverse of (Afs + Dfs)
-            virtual PtrList<PtrList<surfaceScalarField>> invADfs
+            //- Return the inverse of the face central + drag + virtual mass
+            //  coefficient matrix
+            virtual PtrList<PtrList<surfaceScalarField>> invADVfs
             (
                 const PtrList<surfaceScalarField>& Afs,
                 PtrList<surfaceScalarField>& HVmfs
