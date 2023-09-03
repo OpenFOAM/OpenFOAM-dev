@@ -72,12 +72,12 @@ void Foam::solvers::multiphaseEuler::correctCoNum()
         fvc::surfaceSum(mag(phi))().primitiveField()
     );
 
-    forAll(phases, phasei)
+    forAll(movingPhases, movingPhasei)
     {
         sumPhi = max
         (
             sumPhi,
-            fvc::surfaceSum(mag(phases[phasei].phi()))().primitiveField()
+            fvc::surfaceSum(mag(phases[movingPhasei].phi()))().primitiveField()
         );
     }
 
@@ -164,6 +164,8 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
 
     phases_(fluid_.phases()),
 
+    movingPhases_(fluid_.movingPhases()),
+
     phi_(fluid_.phi()),
 
     p_(phases_[0].thermo().p()),
@@ -182,6 +184,7 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
 
     fluid(fluid_),
     phases(phases_),
+    movingPhases(movingPhases_),
     p(p_),
     phi(phi_)
 {

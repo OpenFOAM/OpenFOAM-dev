@@ -63,7 +63,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::UEqn()
 {
     FatalErrorInFunction
         << "Cannot construct a momentum equation for a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 
     return tmp<fvVectorMatrix>();
 }
@@ -75,7 +75,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::UfEqn()
 {
     FatalErrorInFunction
         << "Cannot construct a momentum equation for a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 
     return tmp<fvVectorMatrix>();
 }
@@ -85,12 +85,11 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volVectorField>
 Foam::StationaryPhaseModel<BasePhaseModel>::U() const
 {
-    return volVectorField::New
-    (
-        IOobject::groupName("U", this->name()),
-        this->mesh(),
-        dimensionedVector(dimVelocity, Zero)
-    );
+    FatalErrorInFunction
+        << "Cannot access the velocity of a stationary phase"
+        << abort(FatalError);
+
+    return volVectorField::null();
 }
 
 
@@ -100,7 +99,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::URef()
 {
     FatalErrorInFunction
         << "Cannot access the velocity of a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 
     return const_cast<volVectorField&>(volVectorField::null());
 }
@@ -112,7 +111,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::URef() const
 {
     FatalErrorInFunction
         << "Cannot access the velocity of a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 
     return volVectorField::null();
 }
@@ -122,12 +121,11 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::phi() const
 {
-    return surfaceScalarField::New
-    (
-        IOobject::groupName("phi", this->name()),
-        this->mesh(),
-        dimensionedScalar(dimVolume/dimTime, 0)
-    );
+    FatalErrorInFunction
+        << "Cannot access the flux of a stationary phase"
+        << abort(FatalError);
+
+    return surfaceScalarField::null();
 }
 
 
@@ -137,7 +135,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::phiRef()
 {
     FatalErrorInFunction
         << "Cannot access the flux of a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 
     return const_cast<surfaceScalarField&>(surfaceScalarField::null());
 }
@@ -149,7 +147,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::phiRef() const
 {
     FatalErrorInFunction
         << "Cannot access the flux of a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 
     return surfaceScalarField::null();
 }
@@ -174,7 +172,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::UfRef()
 {
     FatalErrorInFunction
         << "Cannot access the face velocity of a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 
     return const_cast<surfaceVectorField&>(surfaceVectorField::null());
 }
@@ -186,7 +184,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::UfRef() const
 {
     FatalErrorInFunction
         << "Cannot access the face velocity of a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 
     return surfaceVectorField::null();
 }
@@ -196,12 +194,11 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::alphaPhi() const
 {
-    return surfaceScalarField::New
-    (
-        IOobject::groupName("alphaPhi", this->name()),
-        this->mesh(),
-        dimensionedScalar(dimVolume/dimTime, 0)
-    );
+    FatalErrorInFunction
+        << "Cannot access the flux of a stationary phase"
+        << abort(FatalError);
+
+    return surfaceScalarField::null();
 }
 
 
@@ -211,7 +208,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::alphaPhiRef()
 {
     FatalErrorInFunction
         << "Cannot access the volumetric flux of a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 
     return const_cast<surfaceScalarField&>(surfaceScalarField::null());
 }
@@ -222,8 +219,8 @@ const Foam::surfaceScalarField&
 Foam::StationaryPhaseModel<BasePhaseModel>::alphaPhiRef() const
 {
     FatalErrorInFunction
-        << "Cannot access the volumetric flux of a stationary phase"
-        << exit(FatalError);
+        << "Cannot access the flux of a stationary phase"
+        << abort(FatalError);
 
     return surfaceScalarField::null();
 }
@@ -233,12 +230,11 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::alphaRhoPhi() const
 {
-    return surfaceScalarField::New
-    (
-        IOobject::groupName("alphaRhoPhi", this->name()),
-        this->mesh(),
-        dimensionedScalar(dimMass/dimTime, 0)
-    );
+    FatalErrorInFunction
+        << "Cannot access the flux of a stationary phase"
+        << abort(FatalError);
+
+    return surfaceScalarField::null();
 }
 
 
@@ -247,8 +243,8 @@ Foam::surfaceScalarField&
 Foam::StationaryPhaseModel<BasePhaseModel>::alphaRhoPhiRef()
 {
     FatalErrorInFunction
-        << "Cannot access the mass flux of a stationary phase"
-        << exit(FatalError);
+        << "Cannot access the flux of a stationary phase"
+        << abort(FatalError);
 
     return const_cast<surfaceScalarField&>(surfaceScalarField::null());
 }
@@ -259,8 +255,8 @@ const Foam::surfaceScalarField&
 Foam::StationaryPhaseModel<BasePhaseModel>::alphaRhoPhiRef() const
 {
     FatalErrorInFunction
-        << "Cannot access the mass flux of a stationary phase"
-        << exit(FatalError);
+        << "Cannot access the flux of a stationary phase"
+        << abort(FatalError);
 
     return surfaceScalarField::null();
 }
@@ -271,8 +267,8 @@ Foam::tmp<Foam::fvVectorMatrix>
 Foam::StationaryPhaseModel<BasePhaseModel>::UgradU() const
 {
     FatalErrorInFunction
-        << "Cannot calculate DUDt of a stationary phase"
-        << exit(FatalError);
+        << "Cannot calculate UgradU of a stationary phase"
+        << abort(FatalError);
 
     return tmp<fvVectorMatrix>(nullptr);
 }
@@ -284,7 +280,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::DUDt() const
 {
     FatalErrorInFunction
         << "Cannot calculate DUDt of a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 
     return tmp<fvVectorMatrix>(nullptr);
 }
@@ -294,12 +290,11 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::continuityError() const
 {
-    return volScalarField::New
-    (
-        IOobject::groupName("continuityError", this->name()),
-        this->mesh(),
-        dimensionedScalar(dimDensity/dimTime, 0)
-    );
+    FatalErrorInFunction
+        << "Cannot access the continuityError of a stationary phase"
+        << abort(FatalError);
+
+    return volScalarField::null();
 }
 
 
@@ -307,12 +302,11 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::K() const
 {
-    return volScalarField::New
-    (
-        IOobject::groupName("K", this->name()),
-        this->mesh(),
-        dimensionedScalar(sqr(dimVelocity), 0)
-    );
+    FatalErrorInFunction
+        << "Cannot access the kinetic energy of a stationary phase"
+        << abort(FatalError);
+
+    return volScalarField::null();
 }
 
 
@@ -320,6 +314,10 @@ template<class BasePhaseModel>
 const Foam::autoPtr<Foam::volScalarField>&
 Foam::StationaryPhaseModel<BasePhaseModel>::divU() const
 {
+    FatalErrorInFunction
+        << "Cannot access the dilatation rate of a stationary phase"
+        << abort(FatalError);
+
     static autoPtr<volScalarField> divU_;
     return divU_;
 }
@@ -333,7 +331,7 @@ void Foam::StationaryPhaseModel<BasePhaseModel>::divU
 {
     FatalErrorInFunction
         << "Cannot set the dilatation rate of a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 }
 
 
@@ -362,12 +360,11 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::pPrime() const
 {
-    return volScalarField::New
-    (
-        IOobject::groupName("pPrime", this->name()),
-        this->mesh(),
-        dimensionedScalar(dimPressure, 0)
-    );
+    FatalErrorInFunction
+        << "Cannot access the pPrime of a stationary phase"
+        << abort(FatalError);
+
+    return volScalarField::null();
 }
 
 

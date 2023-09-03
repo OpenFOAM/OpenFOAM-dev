@@ -253,10 +253,9 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
     }
 
     // Add the phase pressure
-    forAll(this->phaseModels_, phasei)
+    forAll(this->movingPhases(), movingPhasei)
     {
-        const phaseModel& phase = this->phaseModels_[phasei];
-
+        const phaseModel& phase = this->movingPhases()[movingPhasei];
         const tmp<volScalarField> pPrime(phase.pPrime());
 
         addField
@@ -375,9 +374,9 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Ffs() const
     }
 
     // Add the phase pressure
-    forAll(this->phaseModels_, phasei)
+    forAll(this->movingPhases(), movingPhasei)
     {
-        const phaseModel& phase = this->phaseModels_[phasei];
+        const phaseModel& phase = this->movingPhases()[movingPhasei];
 
         addField
         (

@@ -172,19 +172,7 @@ protected:
             interfaceSurfaceTensionModelTable interfaceSurfaceTensionModels_;
 
 
-        //- Flag to indicate that returned lists of fields are "complete"; i.e.,
-        //  that an absence of force is returned as a constructed list of zeros,
-        //  rather than a null pointer
-        static const bool fillFields_ = false;
-
-
     // Protected member functions
-
-        //- Calculate and return the mixture flux
-        tmp<surfaceScalarField> calcPhi
-        (
-            const phaseModelList& phaseModels
-        ) const;
 
         //- Return the sum of the phase fractions of the moving phases
         tmp<volScalarField> sumAlphaMoving() const;
@@ -433,38 +421,6 @@ public:
             const ModelType& lookupInterfacialModel
             (
                 const phaseInterface& interface
-            ) const;
-
-
-        // Field construction
-
-            //- Fill up gaps in a phase-indexed list of fields with zeros
-            template
-            <
-                class Type,
-                template<class> class PatchField,
-                class GeoMesh
-            >
-            void fillFields
-            (
-                const word& name,
-                const dimensionSet& dims,
-                PtrList<GeometricField<Type, PatchField, GeoMesh>>& fieldList
-            ) const;
-
-            //- Fill up gaps in a phase-indexed table of fields with zeros
-            template
-            <
-                class Type,
-                template<class> class PatchField,
-                class GeoMesh
-            >
-            void fillFields
-            (
-                const word& name,
-                const dimensionSet& dims,
-                HashPtrTable<GeometricField<Type, PatchField, GeoMesh>>&
-                    fieldTable
             ) const;
 
 

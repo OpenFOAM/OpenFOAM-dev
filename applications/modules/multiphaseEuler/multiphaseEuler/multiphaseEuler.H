@@ -113,6 +113,8 @@ protected:
 
         phaseSystem::phaseModelList& phases_;
 
+        phaseSystem::phaseModelPartialList& movingPhases_;
+
         surfaceScalarField& phi_;
 
 
@@ -201,6 +203,9 @@ public:
 
         //- Reference to the phases
         const phaseSystem::phaseModelList& phases;
+
+        //- Reference to the moving phases
+        const phaseSystem::phaseModelPartialList& movingPhases;
 
         //- Reference to the pressure field
         const volScalarField& p;

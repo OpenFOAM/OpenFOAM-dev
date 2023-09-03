@@ -34,7 +34,7 @@ License
 #include "fvCorrectPhi.H"
 #include "fvcMeshPhi.H"
 #include "correctContactAngle.H"
-#include "dragModel.H"
+#include "fixedValueFvsPatchFields.H"
 #include "movingWallVelocityFvPatchVectorField.H"
 #include "pressureReference.H"
 
@@ -50,30 +50,6 @@ const Foam::word Foam::phaseSystem::propertiesName("phaseProperties");
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-Foam::tmp<Foam::surfaceScalarField> Foam::phaseSystem::calcPhi
-(
-    const phaseModelList& phaseModels
-) const
-{
-    tmp<surfaceScalarField> tmpPhi
-    (
-        surfaceScalarField::New
-        (
-            "phi",
-            fvc::interpolate(phaseModels[0])*phaseModels[0].phi()
-        )
-    );
-
-    for (label phasei=1; phasei<phaseModels.size(); phasei++)
-    {
-        tmpPhi.ref() +=
-            fvc::interpolate(phaseModels[phasei])*phaseModels[phasei].phi();
-    }
-
-    return tmpPhi;
-}
-
 
 Foam::tmp<Foam::volScalarField> Foam::phaseSystem::sumAlphaMoving() const
 {
@@ -237,7 +213,17 @@ Foam::phaseSystem::phaseSystem
         phaseModel::iNew(*this, referencePhaseName_)
     ),
 
-    phi_("phi", calcPhi(phaseModels_)),
+    phi_
+    (
+        IOobject
+        (
+            "phi",
+            mesh.time().name(),
+            mesh
+        ),
+        mesh,
+        dimensionedScalar(dimFlux, 0)
+    ),
 
     dpdt_
     (
@@ -300,6 +286,13 @@ Foam::phaseSystem::phaseSystem
         }
     }
 
+    forAll(movingPhaseModels_, movingPhasei)
+    {
+        phi_ +=
+            fvc::interpolate(movingPhaseModels_[movingPhasei])
+           *movingPhaseModels_[movingPhasei].phi();
+    }
+
     // Write phi
     phi_.writeOpt() = IOobject::AUTO_WRITE;
 
@@ -332,7 +325,7 @@ Foam::phaseSystem::phaseSystem
         }
     }
 
-    forAll(phases(), phasei)
+    forAll(phaseModels_, phasei)
     {
         const volScalarField& alphai = phases()[phasei];
         mesh_.schemes().setFluxRequired(alphai.name());

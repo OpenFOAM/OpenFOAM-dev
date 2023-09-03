@@ -45,11 +45,6 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 {
     volScalarField& p(p_);
 
-    const phaseSystem::phaseModelPartialList& movingPhases
-    (
-        fluid.movingPhases()
-    );
-
     // Face volume fractions
     PtrList<surfaceScalarField> alphafs(phases.size());
     forAll(phases, phasei)
