@@ -40,9 +40,9 @@ void Foam::solvers::multiphaseEuler::cellMomentumPredictor()
     phaseSystem::momentumTransferTable&
         momentumTransfer(momentumTransferPtr());
 
-    forAll(fluid.movingPhases(), movingPhasei)
+    forAll(movingPhases, movingPhasei)
     {
-        phaseModel& phase = fluid.movingPhases()[movingPhasei];
+        phaseModel& phase = movingPhases_[movingPhasei];
 
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();
@@ -80,9 +80,9 @@ void Foam::solvers::multiphaseEuler::faceMomentumPredictor()
     phaseSystem::momentumTransferTable&
         momentumTransfer(momentumTransferPtr());
 
-    forAll(fluid.movingPhases(), movingPhasei)
+    forAll(movingPhases, movingPhasei)
     {
-        phaseModel& phase = fluid.movingPhases()[movingPhasei];
+        phaseModel& phase = movingPhases_[movingPhasei];
 
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();

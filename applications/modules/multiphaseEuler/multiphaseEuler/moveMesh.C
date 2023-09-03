@@ -50,7 +50,7 @@ void Foam::solvers::multiphaseEuler::moveMesh()
                 "divU0",
                 fvc::div
                 (
-                    fvc::absolute(phi, fluid.movingPhases()[0].U())
+                    fvc::absolute(phi, movingPhases[0].U())
                 )
             );
         }

@@ -68,9 +68,9 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
     {
         PtrList<surfaceScalarField> Afs(movingPhases.size());
 
-        forAll(fluid.movingPhases(), movingPhasei)
+        forAll(movingPhases, movingPhasei)
         {
-            const phaseModel& phase = fluid.movingPhases()[movingPhasei];
+            const phaseModel& phase = movingPhases[movingPhasei];
             const volScalarField& alpha = phase;
 
             const volScalarField A
@@ -172,9 +172,9 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
         {
             PtrList<surfaceScalarField> phiHs(movingPhases.size());
 
-            forAll(fluid.movingPhases(), movingPhasei)
+            forAll(movingPhases, movingPhasei)
             {
-                const phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                const phaseModel& phase = movingPhases[movingPhasei];
                 const volScalarField& alpha = phase;
 
                 phiHs.set
@@ -270,7 +270,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
 
             forAll(movingPhases, movingPhasei)
             {
-                phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+                phaseModel& phase = movingPhases_[movingPhasei];
 
                 phib +=
                     alphafs[phase.index()].boundaryField()
@@ -332,9 +332,9 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
 
                 surfaceScalarField mSfGradp("mSfGradp", pEqnIncomp.flux()/rAf);
 
-                forAll(fluid.movingPhases(), movingPhasei)
+                forAll(movingPhases, movingPhasei)
                 {
-                    phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+                    phaseModel& phase = movingPhases_[movingPhasei];
                     const label phasei = phase.index();
 
                     phase.phiRef() =
@@ -345,9 +345,9 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
                     phase.divU(-pEqnComps[phasei] & p_rgh);
                 }
 
-                forAll(fluid.movingPhases(), movingPhasei)
+                forAll(movingPhases, movingPhasei)
                 {
-                    phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+                    phaseModel& phase = movingPhases_[movingPhasei];
 
                     MRF.makeRelative(phase.phiRef());
                     fvc::makeRelative(phase.phiRef(), phase.U());

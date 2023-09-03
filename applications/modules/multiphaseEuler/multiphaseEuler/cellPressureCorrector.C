@@ -204,7 +204,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
         forAll(movingPhases, movingPhasei)
         {
-            phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+            phaseModel& phase = movingPhases_[movingPhasei];
 
             phase.URef() =
                 HbyADs[movingPhasei]
@@ -333,7 +333,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
             forAll(movingPhases, movingPhasei)
             {
-                phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+                phaseModel& phase = movingPhases_[movingPhasei];
 
                 phib +=
                     alphafs[phase.index()].boundaryField()
@@ -397,7 +397,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
                 forAll(movingPhases, movingPhasei)
                 {
-                    phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+                    phaseModel& phase = movingPhases_[movingPhasei];
 
                     phase.phiRef() =
                         phiHbyADs[movingPhasei]
@@ -433,7 +433,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
                     forAll(movingPhases, movingPhasei)
                     {
-                        phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+                        phaseModel& phase = movingPhases_[movingPhasei];
 
                         phase.URef() =
                             HbyADs[movingPhasei]
@@ -450,7 +450,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                 {
                     forAll(movingPhases, movingPhasei)
                     {
-                        phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+                        phaseModel& phase = movingPhases_[movingPhasei];
 
                         phase.URef() =
                             HbyADs[movingPhasei]
@@ -464,7 +464,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
                 forAll(movingPhases, movingPhasei)
                 {
-                    phaseModel& phase = fluid_.movingPhases()[movingPhasei];
+                    phaseModel& phase = movingPhases_[movingPhasei];
 
                     phase.URef().correctBoundaryConditions();
                     phase.correctUf();

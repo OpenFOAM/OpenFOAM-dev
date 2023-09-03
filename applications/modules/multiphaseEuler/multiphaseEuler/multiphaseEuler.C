@@ -228,10 +228,7 @@ void Foam::solvers::multiphaseEuler::preSolve()
         divU = new volScalarField
         (
             "divU0",
-            fvc::div
-            (
-                fvc::absolute(phi, fluid.movingPhases()[0].U())
-            )
+            fvc::div(fvc::absolute(phi, movingPhases[0].U()))
         );
     }
 
