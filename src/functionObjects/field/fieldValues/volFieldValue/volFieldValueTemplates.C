@@ -79,23 +79,33 @@ template<class Op>
 void Foam::functionObjects::fieldValues::volFieldValue::compareScalars
 (
     const scalarField& values,
+    const scalar emptyVal,
     Result<scalar>& result,
     const Op& op
 ) const
 {
-    label i = 0;
-    forAll(values, j)
+    // Check if the zone on this processor is non-zero sized
+    if (values.size())
     {
-        if (op(values[j], values[i]))
+        label i = 0;
+        forAll(values, j)
         {
-            i = j;
+            if (op(values[j], values[i]))
+            {
+                i = j;
+            }
         }
+
+        result.value = values[i];
+        result.celli = celli(i);
+        result.cc = fieldValue::mesh_.C()[result.celli];
+    }
+    else
+    {
+        result.value = emptyVal;
     }
 
-    result.value = values[i];
-    result.celli = celli(i);
     result.proci = Pstream::parRun() ? Pstream::myProcNo() : -1;
-    result.cc = fieldValue::mesh_.C()[result.celli];
 
     reduce
     (
@@ -147,12 +157,12 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValues
     {
         case operationType::minMag:
         {
-            compareScalars(mag(values), result, lessOp<scalar>());
+            compareScalars(mag(values), vGreat, result, lessOp<scalar>());
             return true;
         }
         case operationType::maxMag:
         {
-            compareScalars(mag(values), result, greaterOp<scalar>());
+            compareScalars(mag(values), -vGreat, result, greaterOp<scalar>());
             return true;
         }
         default:

@@ -194,22 +194,22 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValues
     {
         case operationType::min:
         {
-            compareScalars(values, result, lessOp<scalar>());
+            compareScalars(values, vGreat, result, lessOp<scalar>());
             return true;
         }
         case operationType::minMag:
         {
-            compareScalars(mag(values), result, lessOp<scalar>());
+            compareScalars(mag(values), vGreat, result, lessOp<scalar>());
             return true;
         }
         case operationType::max:
         {
-            compareScalars(values, result, greaterOp<scalar>());
+            compareScalars(values, -vGreat, result, greaterOp<scalar>());
             return true;
         }
         case operationType::maxMag:
         {
-            compareScalars(mag(values), result, greaterOp<scalar>());
+            compareScalars(mag(values), -vGreat, result, greaterOp<scalar>());
             return true;
         }
         default:

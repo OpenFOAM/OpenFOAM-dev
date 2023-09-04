@@ -193,6 +193,7 @@ protected:
         void compareScalars
         (
             const scalarField& values,
+            const scalar emptyVal,
             Result<scalar>& result,
             const Op& op
         ) const;
