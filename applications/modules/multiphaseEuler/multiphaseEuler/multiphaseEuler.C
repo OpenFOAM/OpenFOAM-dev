@@ -77,7 +77,8 @@ void Foam::solvers::multiphaseEuler::correctCoNum()
         sumPhi = max
         (
             sumPhi,
-            fvc::surfaceSum(mag(phases[movingPhasei].phi()))().primitiveField()
+            fvc::surfaceSum(mag(movingPhases[movingPhasei].phi()))()
+           .primitiveField()
         );
     }
 
