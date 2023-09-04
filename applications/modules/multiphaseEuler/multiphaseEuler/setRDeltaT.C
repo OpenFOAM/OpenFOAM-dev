@@ -47,9 +47,9 @@ void Foam::solvers::multiphaseEuler::setRDeltaT()
 
     surfaceScalarField maxPhi("maxPhi", phi);
 
-    forAll(phases, phasei)
+    forAll(movingPhases, movingPhasei)
     {
-        maxPhi = max(maxPhi, mag(phases[phasei].phi()));
+        maxPhi = max(maxPhi, mag(movingPhases[movingPhasei].phi()));
     }
 
     // Set the reciprocal time-step from the local Courant number
