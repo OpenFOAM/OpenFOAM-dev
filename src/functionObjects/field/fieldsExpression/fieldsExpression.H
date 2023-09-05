@@ -25,12 +25,14 @@ Class
     Foam::functionObjects::fieldsExpression
 
 Description
+    Base class for expressions involving multiple fields
 
 See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
     fieldsExpression.C
+    fieldsExpressionTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
