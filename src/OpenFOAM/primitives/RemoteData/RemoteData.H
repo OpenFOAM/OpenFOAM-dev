@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,10 @@ class RemoteData
     public remote
 {
 public:
+
+    //- Component type
+    typedef RemoteData<Type> cmptType;
+
 
     // Public Data
 
@@ -139,13 +143,6 @@ public:
             Istream& is,
             RemoteData<Type>& p
         );
-};
-
-
-template<class Type>
-struct pTraits<RemoteData<Type>>
-{
-    typedef RemoteData<Type> cmptType;
 };
 
 

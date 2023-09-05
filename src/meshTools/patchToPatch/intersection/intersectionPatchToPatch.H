@@ -94,10 +94,13 @@ public:
             //- Construct from a polygon
             template<class PointField>
             part(const PointField& ps)
-            :
-                area(face::area(ps)),
-                centre(face::centre(ps))
-            {}
+            {
+                const Tuple2<vector, point> areaAndCentre =
+                    face::areaAndCentreStabilised(ps);
+
+                area = areaAndCentre.first();
+                centre = areaAndCentre.second();
+            }
 
             //- Negate this part
             part operator-() const

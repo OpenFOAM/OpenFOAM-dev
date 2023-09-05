@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -303,22 +303,24 @@ inline void VectorSpace<Form, Cmpt, Ncmpts>::operator=(const Foam::zero)
 
 
 template<class Form, class Cmpt, direction Ncmpts>
+template<class Type, class Enable>
 inline void VectorSpace<Form, Cmpt, Ncmpts>::operator*=
 (
-    const scalar s
+    const Type s
 )
 {
-    VectorSpaceOps<Ncmpts,0>::eqOpS(*this, s, multiplyEqOp2<Cmpt, scalar>());
+    VectorSpaceOps<Ncmpts,0>::eqOpS(*this, s, multiplyEqOp2<Cmpt, Type>());
 }
 
 
 template<class Form, class Cmpt, direction Ncmpts>
+template<class Type, class Enable>
 inline void VectorSpace<Form, Cmpt, Ncmpts>::operator/=
 (
-    const scalar s
+    const Type s
 )
 {
-    VectorSpaceOps<Ncmpts,0>::eqOpS(*this, s, divideEqOp2<Cmpt, scalar>());
+    VectorSpaceOps<Ncmpts,0>::eqOpS(*this, s, divideEqOp2<Cmpt, Type>());
 }
 
 
@@ -353,8 +355,8 @@ template<class Form, class Cmpt, direction Ncmpts>
 inline typename powProduct<Form, 0>::type pow
 (
     const VectorSpace<Form, Cmpt, Ncmpts>&,
-    typename powProduct<Form, 0>::type
-    = pTraits<typename powProduct<Form, 0>::type>::zero
+    typename powProduct<Form, 0>::type =
+        pTraits<typename powProduct<Form, 0>::type>::zero
 )
 {
     return 1.0;
@@ -365,8 +367,8 @@ template<class Form, class Cmpt, direction Ncmpts>
 inline typename powProduct<Form, 1>::type pow
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& v,
-    typename powProduct<Form, 1>::type
-  = pTraits<typename powProduct<Form, 1>::type>::zero
+    typename powProduct<Form, 1>::type =
+        pTraits<typename powProduct<Form, 1>::type>::zero
 )
 {
     return static_cast<const Form&>(v);
@@ -378,8 +380,8 @@ template<class Form, class Cmpt, direction Ncmpts>
 inline typename powProduct<Form, 2>::type pow
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& v,
-    typename powProduct<Form, 2>::type
-  = pTraits<typename powProduct<Form, 2>::type>::zero
+    typename powProduct<Form, 2>::type =
+        pTraits<typename powProduct<Form, 2>::type>::zero
 )
 {
     return sqr(static_cast<const Form&>(v));
@@ -387,24 +389,29 @@ inline typename powProduct<Form, 2>::type pow
 
 
 template<class Form, class Cmpt, direction Ncmpts>
-inline scalar magSqr
+inline auto magSqr
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& vs
 )
 {
-    scalar ms = magSqr(vs.v_[0]);
-    VectorSpaceOps<Ncmpts,1>::SeqOp(ms, vs, plusEqMagSqrOp2<scalar, Cmpt>());
+    auto ms = magSqr(vs.v_[0]);
+    VectorSpaceOps<Ncmpts,1>::SeqOp
+    (
+        ms,
+        vs,
+        plusEqMagSqrOp2<decltype(ms), Cmpt>()
+    );
     return ms;
 }
 
 
 template<class Form, class Cmpt, direction Ncmpts>
-inline scalar mag
+inline auto mag
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& vs
 )
 {
-    return ::sqrt(magSqr(static_cast<const Form&>(vs)));
+    return sqrt(magSqr(static_cast<const Form&>(vs)));
 }
 
 
@@ -414,7 +421,7 @@ inline Form normalised
     const VectorSpace<Form, Cmpt, Ncmpts>& vs
 )
 {
-    const scalar magVs = mag(vs);
+    const auto magVs = mag(vs);
     return magVs > 0 ? vs/magVs : Zero;
 }
 
@@ -591,20 +598,6 @@ inline Form minMod
 }
 
 
-template<class Type>
-inline Type dot(const scalar s, const Type& t)
-{
-    return s * t;
-}
-
-
-template<class Type>
-inline Type dot(const Type& t, const scalar s)
-{
-    return t * s;
-}
-
-
 template
 <
     class Form1, class Cmpt1, direction Ncmpts1,
@@ -683,70 +676,64 @@ inline Form operator-
 }
 
 
-template<class Form, class Cmpt, direction Ncmpts>
+template
+<
+    class Form,
+    class Cmpt,
+    direction Ncmpts,
+    class Type,
+    class Enable = EnableRank0<Type>
+>
 inline Form operator*
 (
-    scalar s,
+    Type s,
     const VectorSpace<Form, Cmpt, Ncmpts>& vs
 )
 {
     Form v;
-    VectorSpaceOps<Ncmpts,0>::opSV(v, s, vs, multiplyOp3<Cmpt, scalar, Cmpt>());
+    VectorSpaceOps<Ncmpts,0>::opSV(v, s, vs, multiplyOp3<Cmpt, Type, Cmpt>());
     return v;
 }
 
 
-template<class Form, class Cmpt, direction Ncmpts>
+template
+<
+    class Form,
+    class Cmpt,
+    direction Ncmpts,
+    class Type,
+    class Enable = EnableRank0<Type>
+>
 inline Form operator*
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& vs,
-    scalar s
+    Type s
 )
 {
     Form v;
-    VectorSpaceOps<Ncmpts,0>::opVS(v, vs, s, multiplyOp3<Cmpt, Cmpt, scalar>());
+    VectorSpaceOps<Ncmpts,0>::opVS(v, vs, s, multiplyOp3<Cmpt, Cmpt, Type>());
     return v;
 }
 
 
-template<class Form, class Cmpt, direction Ncmpts>
+template
+<
+    class Form,
+    class Cmpt,
+    direction Ncmpts,
+    class Type,
+    class Enable = EnableRank0<Type>
+>
 inline Form operator/
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& vs,
-    scalar s
+    Type s
 )
 {
     Form v;
-    VectorSpaceOps<Ncmpts,0>::opVS(v, vs, s, divideOp3<Cmpt, Cmpt, scalar>());
+    VectorSpaceOps<Ncmpts,0>::opVS(v, vs, s, divideOp3<Cmpt, Cmpt, Type>());
     return v;
 }
-
-/*
-template<class Form, class Cmpt, direction Ncmpts>
-inline Form operator/
-(
-    const VectorSpace<Form, Cmpt, Ncmpts>& vs1,
-    const VectorSpace<Form, Cmpt, Ncmpts>& vs2
-)
-{
-    Form v;
-    VectorSpaceOps<Ncmpts,0>::op(v, vs1, vs2, divideOp<Cmpt>());
-    return v;
-}
-
-
-template<class Form, class Cmpt, direction Ncmpts>
-inline Form operator/
-(
-    scalar s,
-    const VectorSpace<Form, Cmpt, Ncmpts>& vs
-)
-{
-    Form v;
-    VectorSpaceOps<Ncmpts,0>::opSV(v, s, vs, divideOp2<scalar, Cmpt>());
-    return v;
-}
-*/
 
 
 template<class Form, class Cmpt, direction Ncmpts>

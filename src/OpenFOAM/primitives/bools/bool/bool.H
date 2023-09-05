@@ -85,6 +85,7 @@ public:
     //- Component type
     typedef bool cmptType;
 
+
     // Member constants
 
         //- Dimensionality of space

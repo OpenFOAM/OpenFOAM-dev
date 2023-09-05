@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,6 +71,12 @@ Ostream& operator<<
 );
 
 
+// Helper to restrict templated methods to rank-0 primitives
+
+template<class Type>
+using EnableRank0 = typename std::enable_if<pTraits<Type>::rank == 0>::type;
+
+
 /*---------------------------------------------------------------------------*\
                          Class VectorSpace Declaration
 \*---------------------------------------------------------------------------*/
@@ -98,7 +104,6 @@ public:
 
         //- Number of components in this vector space
         static const direction nComponents = Ncmpts;
-
 
         // VectorSpace currently defaults to a column-vector
         // This will be removed when column-vector is introduced
@@ -194,8 +199,11 @@ public:
         inline void operator-=(const VectorSpace<Form, Cmpt, Ncmpts>&);
 
         inline void operator=(const Foam::zero);
-        inline void operator*=(const scalar);
-        inline void operator/=(const scalar);
+
+        template<class Type, class Enable = EnableRank0<Type>>
+        inline void operator*=(const Type);
+        template<class Type, class Enable = EnableRank0<Type>>
+        inline void operator/=(const Type);
 
 
     // IOstream Operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,17 +24,72 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "face.H"
-#include "DynamicList.H"
+#include "vectorAndError.H"
 
 // * * * * * * * * * * * * * * * Static Functions  * * * * * * * * * * * * * //
 
 template<class PointField>
-Foam::point Foam::face::centre(const PointField& ps)
+Foam::vector Foam::face::area(const PointField& ps)
 {
     // If the face is a triangle, do a direct calculation
     if (ps.size() == 3)
     {
-        return (1.0/3.0)*(ps[0] + ps[1] + ps[2]);
+        return (1.0/2.0)*((ps[1] - ps[0])^(ps[2] - ps[0]));
+    }
+
+    // For more complex faces, decompose into triangles ...
+
+    // Compute an estimate of the centre as the average of the points
+    point pAvg = Zero;
+    forAll(ps, pi)
+    {
+        pAvg += ps[pi];
+    }
+    pAvg /= ps.size();
+
+    // Compute the face area normal and unit normal by summing up the
+    // normals of the triangles formed by connecting each edge to the
+    // point average.
+    vector sumA = Zero;
+    forAll(ps, pi)
+    {
+        const point& p = ps[pi];
+        const point& pNext = ps[ps.fcIndex(pi)];
+
+        const vector a = (pNext - p)^(pAvg - p);
+
+        sumA += a;
+    }
+
+    return (1.0/2.0)*sumA;
+}
+
+
+template<class PointField>
+Foam::point Foam::face::centre(const PointField& ps)
+{
+    // The overhead associated with additionally calculating the area is small,
+    // and the optimiser may even remove the additional expense all together,
+    // so just use the face::areaAndCentre function and discard the area
+    return areaAndCentre(ps).second();
+}
+
+
+template<class PointField>
+Foam::Tuple2<Foam::vector, Foam::point> Foam::face::areaAndCentre
+(
+    const PointField& ps
+)
+{
+    // If the face is a triangle, do a direct calculation
+    if (ps.size() == 3)
+    {
+        return
+            Tuple2<vector, point>
+            (
+                (1.0/2.0)*((ps[1] - ps[0])^(ps[2] - ps[0])),
+                (1.0/3.0)*(ps[0] + ps[1] + ps[2])
+            );
     }
 
     // For more complex faces, decompose into triangles ...
@@ -84,30 +139,30 @@ Foam::point Foam::face::centre(const PointField& ps)
 
     // Complete calculating centres and areas. If the face is too small
     // for the sums to be reliably divided then just set the centre to
-    // the initial estimate.
-    if (sumAn > vSmall)
-    {
-        return (1.0/3.0)*sumAnc/sumAn;
-    }
-    else
-    {
-        return pAvg;
-    }
+    // the point average.
+    return
+        Tuple2<vector, point>
+        (
+            (1.0/2.0)*sumA,
+            sumAn > vSmall ? (1.0/3.0)*sumAnc/sumAn : pAvg
+        );
 }
 
 
 template<class PointField>
-Foam::vector Foam::face::area(const PointField& ps)
+Foam::Tuple2<Foam::vector, Foam::point> Foam::face::areaAndCentreStabilised
+(
+    const PointField& ps
+)
 {
-    // If the face is a triangle, do a direct calculation
+    // If the face is a triangle then there are no stability concerns, so use
+    // the un-stabilised algorithm
     if (ps.size() == 3)
     {
-        return 0.5*((ps[1] - ps[0])^(ps[2] - ps[0]));
+        return areaAndCentre(ps);
     }
 
-    // For more complex faces, decompose into triangles ...
-
-    // Compute an estimate of the centre as the average of the points
+    // As face::areaAndCentre
     point pAvg = Zero;
     forAll(ps, pi)
     {
@@ -115,23 +170,50 @@ Foam::vector Foam::face::area(const PointField& ps)
     }
     pAvg /= ps.size();
 
-    // Compute the face area normal and unit normal by summing up the
-    // normals of the triangles formed by connecting each edge to the
-    // point average.
-    vector sumA = Zero;
+    // As face::areaAndCentre, but also track round-off error in the calculation
+    vectorAndError sumA(Zero);
     forAll(ps, pi)
     {
         const point& p = ps[pi];
         const point& pNext = ps[ps.fcIndex(pi)];
 
-        const vector a = (pNext - p)^(pAvg - p);
+        const vectorAndError a =
+            (vectorAndError(pNext) - vectorAndError(p))
+           ^(vectorAndError(pAvg) - vectorAndError(p));
 
         sumA += a;
     }
+    const vectorAndError sumAHat = normalised(sumA);
 
-    return 0.5*sumA;
+    // As face::areaAndCentre, but also track round-off error in the calculation
+    scalarAndError sumAn = 0;
+    vector sumAnc(Zero);
+    forAll(ps, pi)
+    {
+        const point& p = ps[pi];
+        const point& pNext = ps[ps.fcIndex(pi)];
+
+        const vectorAndError a =
+            (vectorAndError(pNext) - vectorAndError(p))
+           ^(vectorAndError(pAvg) - vectorAndError(p));
+        const point c = p + pNext + pAvg;
+
+        const scalarAndError an = a & sumAHat;
+
+        sumAn += an;
+        sumAnc += an.value*c;
+    }
+
+    // As face::areaAndCentre, but blend the calculated centroid and the point
+    // average by the fraction of error in the calculated normal area
+    Tuple2<vector, point> result((1.0/2.0)*sumA.value(), pAvg);
+    if (sumAn.value >= vSmall)
+    {
+        const scalar f = min(max(sumAn.error/sumAn.value, 0), 1);
+        result.second() = (1 - f)*(1.0/3.0)*sumAnc/sumAn.value + f*pAvg;
+    }
+    return result;
 }
-
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

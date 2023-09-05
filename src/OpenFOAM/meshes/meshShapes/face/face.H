@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,13 +92,23 @@ public:
 
     // Static Functions
 
+        //- Return vector area given face points
+        template<class PointField>
+        static vector area(const PointField& ps);
+
         //- Return centre point given face points
         template<class PointField>
         static vector centre(const PointField& ps);
 
-        //- Return vector area given face points
+        //- Return vector area and centre point given face points
         template<class PointField>
-        static vector area(const PointField& ps);
+        static Tuple2<vector, point> areaAndCentre(const PointField&);
+
+        //- Return vector area and centre point given face points. Stabilised
+        //  version. More expensive, but less likely to generate wildly
+        //  inaccurate face-centres on degenerate faces.
+        template<class PointField>
+        static Tuple2<vector, point> areaAndCentreStabilised(const PointField&);
 
 
     // Constructors

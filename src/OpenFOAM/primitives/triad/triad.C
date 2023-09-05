@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,7 @@ void Foam::triad::orthogonalise()
     // If all the axes are set
     if (set())
     {
-        for (int i=0; i<2; i++)
+        for (direction i=0; i<2; i++)
         {
             const scalar o01
             (
@@ -209,7 +209,7 @@ void Foam::triad::operator+=(const triad& t2)
     if (set() && t2.set())
     {
         direction correspondence[3]{0, 0, 0};
-        short signd[3];
+        label signd[3];
 
         for (direction i=0; i<3; i++)
         {

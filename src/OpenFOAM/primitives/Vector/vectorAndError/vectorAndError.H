@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,93 +22,64 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::remote
+    Foam::vectorAndError
 
 Description
-    Struct for keeping processor, element (cell, face, point) index.
-
-SourceFiles
-    remoteI.H
+    Vector of scalarAndError-s.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef remote_H
-#define remote_H
+#ifndef vectorAndError_H
+#define vectorAndError_H
 
-#include "Istream.H"
-#include "Ostream.H"
+#include "scalarAndError.H"
+#include "Vector.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// Forward declaration of friend functions and operators
-class remote;
-inline bool operator==(const remote&, const remote&);
-inline bool operator!=(const remote&, const remote&);
-inline Istream& operator>>(Istream&, remote&);
-inline Ostream& operator<<(Ostream&, const remote&);
-
 /*---------------------------------------------------------------------------*\
-                          Class remote Declaration
+                        Class vectorAndError Declaration
 \*---------------------------------------------------------------------------*/
 
-class remote
+class vectorAndError
+:
+    public Vector<scalarAndError>
 {
 public:
 
-    //- Component type
-    typedef remote cmptType;
-
-
-    // Public Data
-
-        //- Processor index
-        label proci;
-
-        //- Element index
-        label elementi;
-
-
     // Constructors
 
-        //- Construct null
-        inline remote();
-
-        //- Construct from components
-        inline remote(const label, const label);
-
-        //- Construct from stream
-        inline remote(Istream& is);
+        //- Inherit Constructors
+        using Vector<scalarAndError>::Vector;
 
 
-    // Friend Operators
+    // Member Functions
 
-        //- Equality comparison
-        friend bool operator==(const remote& a, const remote& b);
+        //- Return the value
+        inline Vector<scalar> value() const
+        {
+            return Vector<scalar>(x().value, y().value, z().value);
+        }
 
-        //- Inequality comparison
-        friend bool operator!=(const remote& a, const remote& b);
-
-
-    // IOstream Operators
-
-        //- Write to stream
-        friend Ostream& operator<<(Ostream& os, const remote& p);
-
-        //- Read from stream
-        friend Istream& operator>>(Istream& is, remote& p);
+        //- Return the error
+        inline Vector<scalar> error() const
+        {
+            return Vector<scalar>(x().error, y().error, z().error);
+        }
 };
+
+
+//- Data associated with the vector-and-error type is contiguous
+template<>
+inline bool contiguous<vectorAndError>() { return true; }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "remoteI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
