@@ -63,10 +63,10 @@ Foam::PatchInjection<CloudType>::PatchInjection
     InjectionModel<CloudType>(im),
     patchInjectionBase(im),
     duration_(im.duration_),
-    massFlowRate_(im.massFlowRate_),
-    parcelsPerSecond_(im.parcelsPerSecond_),
+    massFlowRate_(im.massFlowRate_, false),
+    parcelsPerSecond_(im.parcelsPerSecond_, false),
     U0_(im.U0_),
-    sizeDistribution_(im.sizeDistribution_().clone().ptr())
+    sizeDistribution_(im.sizeDistribution_, false)
 {}
 
 

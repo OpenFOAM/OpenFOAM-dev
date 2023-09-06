@@ -80,9 +80,9 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
     phiName_(im.phiName_),
     rhoName_(im.rhoName_),
     duration_(im.duration_),
-    concentration_(im.concentration_),
+    concentration_(im.concentration_, false),
     parcelConcentration_(im.parcelConcentration_),
-    sizeDistribution_(im.sizeDistribution_().clone().ptr())
+    sizeDistribution_(im.sizeDistribution_, false)
 {}
 
 

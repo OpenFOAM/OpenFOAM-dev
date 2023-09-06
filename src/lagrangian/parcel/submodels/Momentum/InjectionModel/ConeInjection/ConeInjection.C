@@ -239,7 +239,7 @@ Foam::ConeInjection<CloudType>::ConeInjection
     parcelsPerSecond_(im.parcelsPerSecond_, false),
     thetaInner_(im.thetaInner_, false),
     thetaOuter_(im.thetaOuter_, false),
-    sizeDistribution_(im.sizeDistribution_().clone().ptr()),
+    sizeDistribution_(im.sizeDistribution_, false),
     dInner_(im.dInner_),
     dOuter_(im.dOuter_),
     Umag_(im.Umag_, false),

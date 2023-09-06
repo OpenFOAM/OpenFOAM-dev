@@ -75,7 +75,7 @@ Foam::ReactingLookupTableInjection<CloudType>::ReactingLookupTableInjection
     InjectionModel<CloudType>(im),
     inputFileName_(im.inputFileName_),
     duration_(im.duration_),
-    parcelsPerSecond_(im.parcelsPerSecond_),
+    parcelsPerSecond_(im.parcelsPerSecond_, false),
     randomise_(im.randomise_),
     injectors_(im.injectors_),
     injectorCoordinates_(im.injectorCoordinates_),
