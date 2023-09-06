@@ -225,7 +225,7 @@ incompressibleDenseParticleFluid
     momentumTransport->validate();
 
     // Update alphac from the particle locations
-    alphac_ = max(1 - clouds.theta(), alphacMin);
+    alphac_ = max(1 - clouds.alpha(), alphacMin);
     alphac_.correctBoundaryConditions();
     alphacf = fvc::interpolate(alphac);
     alphaPhic = alphacf*phic;
@@ -288,7 +288,7 @@ void Foam::solvers::incompressibleDenseParticleFluid::prePredictor()
         clouds.evolve();
 
         // Update continuous phase volume fraction field
-        alphac_ = max(1 - clouds.theta(), alphacMin);
+        alphac_ = max(1 - clouds.alpha(), alphacMin);
         alphac_.correctBoundaryConditions();
         alphacf = fvc::interpolate(alphac);
 

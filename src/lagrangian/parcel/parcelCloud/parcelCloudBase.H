@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,10 +90,10 @@ public:
             virtual const tmp<volScalarField> vDotSweep() const = 0;
 
             //- Return the particle volume fraction field
-            virtual const tmp<volScalarField> theta() const = 0;
+            virtual const tmp<volScalarField> alpha() const = 0;
 
             //- Return the particle mass fraction field
-            virtual const tmp<volScalarField> alpha() const = 0;
+            virtual const tmp<volScalarField> Y() const = 0;
 
             //- Return the particle effective density field
             virtual const tmp<volScalarField> rhoEff() const = 0;

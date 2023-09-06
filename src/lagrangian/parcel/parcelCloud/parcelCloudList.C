@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,13 +154,13 @@ Foam::parcelCloudList::~parcelCloudList()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-const Foam::tmp<Foam::volScalarField> Foam::parcelCloudList::theta() const
+const Foam::tmp<Foam::volScalarField> Foam::parcelCloudList::alpha() const
 {
     tmp<volScalarField> ttheta
     (
         volScalarField::New
         (
-            cloudNamesName + ":theta",
+            cloudNamesName + ":alpha",
             mesh_,
             dimensionedScalar(dimless, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
@@ -168,7 +168,7 @@ const Foam::tmp<Foam::volScalarField> Foam::parcelCloudList::theta() const
     );
     forAll(*this, i)
     {
-        ttheta.ref() += operator[](i).theta();
+        ttheta.ref() += operator[](i).alpha();
     }
     return ttheta;
 }

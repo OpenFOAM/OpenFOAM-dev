@@ -518,11 +518,11 @@ public:
 
                 //- Return the particle volume fraction field
                 //  Note: for particles belonging to this cloud only
-                inline const tmp<volScalarField> theta() const;
+                inline const tmp<volScalarField> alpha() const;
 
                 //- Return the particle mass fraction field
                 //  Note: for particles belonging to this cloud only
-                inline const tmp<volScalarField> alpha() const;
+                inline const tmp<volScalarField> Y() const;
 
                 //- Return the particle effective density field
                 //  Note: for particles belonging to this cloud only

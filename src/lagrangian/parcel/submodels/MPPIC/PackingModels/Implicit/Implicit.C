@@ -64,7 +64,7 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
     alphaMin_(this->coeffDict().template lookup<scalar>("alphaMin")),
     rhoMin_(this->coeffDict().template lookup<scalar>("rhoMin"))
 {
-    alpha_ = this->owner().theta();
+    alpha_ = this->owner().alpha();
     alpha_.oldTime();
 }
 
@@ -143,7 +143,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
         // ~~~~~~~~~~~~~~~
 
         // volume fraction field
-        alpha_ = max(this->owner().theta(), alphaMin_);
+        alpha_ = max(this->owner().alpha(), alphaMin_);
         alpha_.correctBoundaryConditions();
 
         // average density

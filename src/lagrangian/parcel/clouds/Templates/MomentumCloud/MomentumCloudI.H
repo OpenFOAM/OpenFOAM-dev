@@ -488,30 +488,30 @@ Foam::MomentumCloud<CloudType>::vDotSweep() const
 
 template<class CloudType>
 inline const Foam::tmp<Foam::volScalarField>
-Foam::MomentumCloud<CloudType>::theta() const
+Foam::MomentumCloud<CloudType>::alpha() const
 {
     tmp<volScalarField> ttheta
     (
         volScalarField::New
         (
-            this->name() + ":theta",
+            this->name() + ":alpha",
             this->mesh(),
             dimensionedScalar(dimless, 0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
 
-    volScalarField& theta = ttheta.ref();
+    volScalarField& alpha = ttheta.ref();
     forAllConstIter(typename MomentumCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
         const label celli = p.cell();
 
-        theta[celli] += p.nParticle()*p.volume();
+        alpha[celli] += p.nParticle()*p.volume();
     }
 
-    theta.primitiveFieldRef() /= this->mesh().V();
-    theta.correctBoundaryConditions();
+    alpha.primitiveFieldRef() /= this->mesh().V();
+    alpha.correctBoundaryConditions();
 
     return ttheta;
 }
@@ -519,30 +519,30 @@ Foam::MomentumCloud<CloudType>::theta() const
 
 template<class CloudType>
 inline const Foam::tmp<Foam::volScalarField>
-Foam::MomentumCloud<CloudType>::alpha() const
+Foam::MomentumCloud<CloudType>::Y() const
 {
-    tmp<volScalarField> talpha
+    tmp<volScalarField> tY
     (
         volScalarField::New
         (
-            this->name() + ":alpha",
+            this->name() + ":Y",
             this->mesh(),
             dimensionedScalar(dimless, 0)
         )
     );
 
-    scalarField& alpha = talpha.ref().primitiveFieldRef();
+    scalarField& Y = tY.ref().primitiveFieldRef();
     forAllConstIter(typename MomentumCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
         const label celli = p.cell();
 
-        alpha[celli] += p.nParticle()*p.mass();
+        Y[celli] += p.nParticle()*p.mass();
     }
 
-    alpha /= (this->mesh().V()*rho_);
+    Y /= (this->mesh().V()*rho_);
 
-    return talpha;
+    return tY;
 }
 
 
