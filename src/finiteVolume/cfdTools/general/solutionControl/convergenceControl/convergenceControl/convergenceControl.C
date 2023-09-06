@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,10 +88,12 @@ Foam::convergenceControl::~convergenceControl()
 
 bool Foam::convergenceControl::converged()
 {
+    const convergenceData cd(criteriaSatisfied());
+
     if
     (
         control_.time().timeIndex() != control_.time().startTimeIndex()
-     && criteriaSatisfied()
+     && cd.checked && cd.satisfied
     )
     {
         Info<< nl << control_.algorithmName() << " solution converged in "

@@ -128,11 +128,11 @@ Foam::pimpleMultiRegionControl::~pimpleMultiRegionControl()
 
 bool Foam::pimpleMultiRegionControl::hasResidualControls() const
 {
-    bool result = true;
+    bool result = false;
 
     forAll(pimpleControls_, i)
     {
-        result = result && pimpleControls_[i].hasResidualControls();
+        result = result || pimpleControls_[i].hasResidualControls();
     }
 
     return result;
@@ -141,27 +141,34 @@ bool Foam::pimpleMultiRegionControl::hasResidualControls() const
 
 bool Foam::pimpleMultiRegionControl::hasCorrResidualControls() const
 {
-    bool result = true;
+    bool result = false;
 
     forAll(pimpleControls_, i)
     {
-        result = result && pimpleControls_[i].hasCorrResidualControls();
+        result = result || pimpleControls_[i].hasCorrResidualControls();
     }
 
     return result;
 }
 
 
-bool Foam::pimpleMultiRegionControl::criteriaSatisfied() const
+Foam::convergenceControl::convergenceData
+Foam::pimpleMultiRegionControl::criteriaSatisfied() const
 {
-    bool result = true;
+    convergenceData cs{false, true};
 
     forAll(pimpleControls_, i)
     {
-        result = pimpleControls_[i].criteriaSatisfied() && result;
+        const convergenceData csi(pimpleControls_[i].criteriaSatisfied());
+
+        cs.checked = csi.checked || cs.checked;
+        if (csi.checked)
+        {
+            cs.satisfied = csi.satisfied && cs.satisfied;
+        }
     }
 
-    return result;
+    return cs;
 }
 
 

@@ -37,14 +37,13 @@ solvers
 
 PIMPLE
 {
-    momentumPredictor no;
+    momentumPredictor yes;
     nNonOrthogonalCorrectors 0;
     pRefCell        0;
     pRefValue       0;
 
     residualControl
     {
-        p_rgh           1e-3;
         U               1e-4;
         h               1e-4;
 

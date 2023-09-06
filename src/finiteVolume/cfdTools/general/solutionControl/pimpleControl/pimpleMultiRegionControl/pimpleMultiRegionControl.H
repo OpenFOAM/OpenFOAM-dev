@@ -120,7 +120,7 @@ public:
             virtual bool hasCorrResidualControls() const;
 
             //- Return true if all convergence checks are satisfied
-            virtual bool criteriaSatisfied() const;
+            virtual convergenceData criteriaSatisfied() const;
 
             //- Return true if all correction convergence checks are satisfied
             virtual bool corrCriteriaSatisfied() const;

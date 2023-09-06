@@ -29,6 +29,11 @@ solvers
 PIMPLE
 {
     nNonOrthogonalCorrectors 0;
+
+    residualControl
+    {
+        e                 1e-4;
+    }
 }
 
 

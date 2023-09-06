@@ -103,7 +103,7 @@ public:
             virtual bool hasResidualControls() const;
 
             //- Return true if all convergence checks are satisfied
-            virtual bool criteriaSatisfied() const;
+            virtual convergenceData criteriaSatisfied() const;
 };
 
 
