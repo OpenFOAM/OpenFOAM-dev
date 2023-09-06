@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::VoidFraction
+    Foam::VolumeFraction
 
 Description
-    Creates particle void fraction field on carrier phase
+    Creates particle volume fraction field on carrier phase
 
 SourceFiles
-    VoidFraction.C
+    VolumeFraction.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef VoidFraction_H
-#define VoidFraction_H
+#ifndef VolumeFraction_H
+#define VolumeFraction_H
 
 #include "CloudFunctionObject.H"
-#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,26 +43,14 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class VoidFraction Declaration
+                        Class VolumeFraction Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>
-class VoidFraction
+class VolumeFraction
 :
     public CloudFunctionObject<CloudType>
 {
-    // Private Data
-
-        // Typedefs
-
-            //- Convenience typedef for parcel type
-            typedef typename CloudType::parcelType parcelType;
-
-
-        //- Void fraction field
-        autoPtr<volScalarField> thetaPtr_;
-
-
 protected:
 
     // Protected Member Functions
@@ -75,13 +62,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("voidFraction");
+    TypeName("volumeFraction");
 
 
     // Constructors
 
         //- Construct from dictionary
-        VoidFraction
+        VolumeFraction
         (
             const dictionary& dict,
             CloudType& owner,
@@ -89,40 +76,20 @@ public:
         );
 
         //- Construct copy
-        VoidFraction(const VoidFraction<CloudType>& vf);
+        VolumeFraction(const VolumeFraction<CloudType>& vf);
 
         //- Construct and return a clone
         virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
             return autoPtr<CloudFunctionObject<CloudType>>
             (
-                new VoidFraction<CloudType>(*this)
+                new VolumeFraction<CloudType>(*this)
             );
         }
 
 
     //- Destructor
-    virtual ~VoidFraction();
-
-
-    // Member Functions
-
-        // Evaluation
-
-            //- Pre-evolve hook
-            virtual void preEvolve();
-
-            //- Post-evolve hook
-            virtual void postEvolve();
-
-            //- Post-move hook
-            virtual void postMove
-            (
-                parcelType& p,
-                const scalar dt,
-                const point& position0,
-                bool& keepParticle
-            );
+    virtual ~VolumeFraction();
 };
 
 
@@ -133,7 +100,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "VoidFraction.C"
+    #include "VolumeFraction.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
