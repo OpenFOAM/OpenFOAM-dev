@@ -94,7 +94,6 @@ const complexVectorField& OUprocess::newField(const scalar deltaT) const
 {
     const vectorField& K = Kmesh_;
 
-    label count = 0;
     scalar sqrkUpper_ = sqr(kUpper_);
     scalar sqrkLower_ = sqr(kLower_) + small;
     scalar sqrK;
@@ -103,7 +102,6 @@ const complexVectorField& OUprocess::newField(const scalar deltaT) const
     {
         if ((sqrK = magSqr(K[i])) < sqrkUpper_ && sqrK > sqrkLower_)
         {
-            count++;
             OUfield_[i] =
                 (1.0 - alpha_*deltaT)*OUfield_[i]
               + scale_*sigma_*WeinerProcess(deltaT);

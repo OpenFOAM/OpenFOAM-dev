@@ -56,9 +56,6 @@ class multiDomainDecomposition
         //- Run times
         const processorRunTimes& runTimes_;
 
-        //- Region names
-        const wordList& regionNames_;
-
         //- The region complete and processor meshes
         PtrList<domainDecomposition> regionMeshes_;
 

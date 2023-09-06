@@ -75,6 +75,9 @@ public:
         virtual IOdictionary& properties();
 
         //- Read the properties dictionary
+        using BasicThermoType::read;
+
+        //- Read the properties dictionary
         virtual bool read();
 };
 

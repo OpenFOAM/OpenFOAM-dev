@@ -79,12 +79,6 @@ public:
         {
             return tmp<Function1<Type>>(new Uniform<Type>(*this));
         }
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const Uniform<Type>&) = delete;
 };
 
 
