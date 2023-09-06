@@ -146,6 +146,12 @@ public:
         //- Integrate between two values
         virtual inline Type integral(const scalar x1, const scalar x2) const;
 
+        //- Inherit field value evaluation
+        using FieldFunction1<Type, Dimensioned<Type>>::value;
+
+        //- Inherit field integral evaluation
+        using FieldFunction1<Type, Dimensioned<Type>>::integral;
+
         //- Return a dimensioned value
         virtual inline dimensioned<Type> value
         (

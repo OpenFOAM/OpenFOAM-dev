@@ -43,7 +43,6 @@ Foam::multiDomainDecomposition::multiDomainDecomposition
 :
     multiRegionPrefixer(false, regionNames),
     runTimes_(runTimes),
-    regionNames_(regionNames),
     regionMeshes_(regionNames.size())
 {
     forAll(regionMeshes_, regioni)

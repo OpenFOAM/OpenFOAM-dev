@@ -370,6 +370,9 @@ public:
 
 
         //- Read thermophysical properties dictionary
+        using BasicThermoType::read;
+
+        //- Read thermophysical properties dictionary
         virtual bool read();
 };
 
