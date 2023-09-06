@@ -195,8 +195,9 @@ void printToC(const word& tableName)
 
         forAll(toc, i)
         {
-            Info<< "    " << setf(ios_base::left) << setw(40) << toc[i]
-                << debug::runTimeSelectionToC[tableName].second()[toc[i]]
+            Info<< "    " << setf(ios_base::left)
+                << setw(39) << toc[i]
+                << ' ' << debug::runTimeSelectionToC[tableName].second()[toc[i]]
                 << endl;
         }
 
@@ -474,8 +475,9 @@ int main(int argc, char *argv[])
                      && toc[i] == baseTypeNameTables[toc[i]].begin().key()
                     )
                     {
-                        Info<< "    " << setf(ios_base::left) << setw(40)
-                            << toc[i] << baseTypeNameTables[toc[i]].begin()()
+                        Info<< "    " << setf(ios_base::left)
+                            << setw(39) << toc[i]
+                            << ' ' << baseTypeNameTables[toc[i]].begin()()
                             << endl;
                     }
                     else
@@ -489,8 +491,9 @@ int main(int argc, char *argv[])
                         forAll(tocc, j)
                         {
                             Info<< "        "
-                                << setf(ios_base::left) << setw(40) << tocc[j]
-                                << baseTypeNameTables[toc[i]][tocc[j]]
+                                << setf(ios_base::left)
+                                << setw(39) << tocc[j]
+                                << ' ' << baseTypeNameTables[toc[i]][tocc[j]]
                                 << endl;
                         }
                     }
