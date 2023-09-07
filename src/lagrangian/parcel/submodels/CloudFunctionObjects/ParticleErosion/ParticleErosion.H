@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,8 +169,8 @@ public:
             //- Pre-evolve hook
             virtual void preEvolve();
 
-            //- Post-patch hook
-            virtual void postPatch(const parcelType& p, const polyPatch& pp);
+            //- Pre-face hook
+            virtual void preFace(const parcelType& p);
 };
 
 

@@ -280,12 +280,12 @@ void Foam::PatchCollisionDensity<CloudType>::preEvolve()
 
 
 template<class CloudType>
-void Foam::PatchCollisionDensity<CloudType>::postPatch
-(
-    const parcelType& p,
-    const polyPatch& pp
-)
+void Foam::PatchCollisionDensity<CloudType>::preFace(const parcelType& p)
 {
+    const fvMesh& mesh = this->owner().mesh();
+    if (!p.onBoundaryFace(mesh)) return;
+
+    const polyPatch& pp = mesh.boundaryMesh()[p.patch(mesh)];
     if (pp.coupled()) return;
 
     const label patchi = pp.index();

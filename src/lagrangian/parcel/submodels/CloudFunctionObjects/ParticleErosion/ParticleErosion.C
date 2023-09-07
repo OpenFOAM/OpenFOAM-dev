@@ -161,12 +161,12 @@ void Foam::ParticleErosion<CloudType>::preEvolve()
 
 
 template<class CloudType>
-void Foam::ParticleErosion<CloudType>::postPatch
-(
-    const parcelType& p,
-    const polyPatch& pp
-)
+void Foam::ParticleErosion<CloudType>::preFace(const parcelType& p)
 {
+    const fvMesh& mesh = this->owner().mesh();
+    if (!p.onBoundaryFace(mesh)) return;
+
+    const polyPatch& pp = mesh.boundaryMesh()[p.patch(mesh)];
     const label patchi = pp.index();
     const label localPatchi = applyToPatch(patchi);
 
