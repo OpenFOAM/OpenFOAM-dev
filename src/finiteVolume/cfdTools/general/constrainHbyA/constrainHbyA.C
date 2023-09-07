@@ -30,6 +30,60 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+void Foam::constrainHbyA
+(
+    volVectorField& HbyA,
+    const volVectorField& U,
+    const volScalarField& p
+)
+{
+    volVectorField::Boundary& HbyAbf = HbyA.boundaryFieldRef();
+
+    forAll(HbyAbf, patchi)
+    {
+        if
+        (
+           !U.boundaryField()[patchi].assignable()
+        && !isA<fixedFluxExtrapolatedPressureFvPatchScalarField>
+            (
+                p.boundaryField()[patchi]
+            )
+        )
+        {
+            HbyAbf[patchi] = U.boundaryField()[patchi];
+        }
+    }
+}
+
+
+void Foam::constrainPhiHbyA
+(
+    surfaceScalarField& phiHbyA,
+    const volVectorField& U,
+    const volScalarField& p
+)
+{
+    surfaceScalarField::Boundary& phiHbyAbf = phiHbyA.boundaryFieldRef();
+
+    forAll(phiHbyAbf, patchi)
+    {
+        if
+        (
+           !U.boundaryField()[patchi].assignable()
+        && !isA<fixedFluxExtrapolatedPressureFvPatchScalarField>
+            (
+                p.boundaryField()[patchi]
+            )
+        )
+        {
+            phiHbyAbf[patchi] =
+                U.mesh().Sf().boundaryField()[patchi]
+              & U.boundaryField()[patchi];
+        }
+    }
+}
+
+
 Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
 (
     const tmp<volVectorField>& tHbyA,
@@ -53,23 +107,7 @@ Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
         );
     }
 
-    volVectorField& HbyA = tHbyANew.ref();
-    volVectorField::Boundary& HbyAbf = HbyA.boundaryFieldRef();
-
-    forAll(U.boundaryField(), patchi)
-    {
-        if
-        (
-           !U.boundaryField()[patchi].assignable()
-        && !isA<fixedFluxExtrapolatedPressureFvPatchScalarField>
-            (
-                p.boundaryField()[patchi]
-            )
-        )
-        {
-            HbyAbf[patchi] = U.boundaryField()[patchi];
-        }
-    }
+    constrainHbyA(tHbyANew.ref(), U, p);
 
     return tHbyANew;
 }
@@ -98,25 +136,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::constrainPhiHbyA
         );
     }
 
-    surfaceScalarField& phiHbyA = tphiHbyANew.ref();
-    surfaceScalarField::Boundary& phiHbyAbf = phiHbyA.boundaryFieldRef();
-
-    forAll(U.boundaryField(), patchi)
-    {
-        if
-        (
-           !U.boundaryField()[patchi].assignable()
-        && !isA<fixedFluxExtrapolatedPressureFvPatchScalarField>
-            (
-                p.boundaryField()[patchi]
-            )
-        )
-        {
-            phiHbyAbf[patchi] =
-                U.mesh().Sf().boundaryField()[patchi]
-              & U.boundaryField()[patchi];
-        }
-    }
+    constrainPhiHbyA(tphiHbyANew.ref(), U, p);
 
     return tphiHbyANew;
 }
@@ -133,7 +153,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::constrainPhid
 
     const volScalarField::Boundary& pBf = p.boundaryField();
 
-    forAll(pBf, patchi)
+    forAll(phidBf, patchi)
     {
         if (isA<fixedFluxPressureFvPatchScalarField>(pBf[patchi]))
         {

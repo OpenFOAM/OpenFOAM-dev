@@ -44,6 +44,20 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+void constrainHbyA
+(
+    volVectorField& HbyA,
+    const volVectorField& U,
+    const volScalarField& p
+);
+
+void constrainPhiHbyA
+(
+    surfaceScalarField& phiHbyA,
+    const volVectorField& U,
+    const volScalarField& p
+);
+
 tmp<volVectorField> constrainHbyA
 (
     const tmp<volVectorField>& tHbyA,
