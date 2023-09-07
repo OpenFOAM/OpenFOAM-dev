@@ -158,7 +158,7 @@ void Foam::fvMeshStitchers::moving::conformCorrectMeshPhi
                         nccOrigPatchFace
                     );
 
-                phi.oldTime(i).boundaryFieldRef()[nccPatchi] = 0;
+                phi.oldTime(i).boundaryFieldRef()[nccPatchi].clear();
             }
         }
     }
