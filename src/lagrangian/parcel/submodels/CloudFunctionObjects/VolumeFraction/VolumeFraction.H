@@ -36,6 +36,7 @@ SourceFiles
 #define VolumeFraction_H
 
 #include "CloudFunctionObject.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,6 +53,12 @@ class VolumeFraction
     public CloudFunctionObject<CloudType>
 {
 protected:
+
+    // Private Data
+
+        //- Volume fraction field
+        volScalarField alpha_;
+
 
     // Protected Member Functions
 
@@ -90,6 +97,14 @@ public:
 
     //- Destructor
     virtual ~VolumeFraction();
+
+
+    // Member Functions
+
+        // Evaluation
+
+            //- Post-evolve hook
+            virtual void postEvolve();
 };
 
 
