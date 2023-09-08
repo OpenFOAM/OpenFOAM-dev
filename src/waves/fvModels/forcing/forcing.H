@@ -62,10 +62,13 @@ protected:
 
     // Protected Data
 
-        //- Damping coefficient [1/s]
+        //- Optionally write the forcing fields
+        bool writeForceFields_;
+
+        //- Forcing coefficient [1/s]
         dimensionedScalar lambda_;
 
-        //- Optional boundary damping coefficient [1/s]
+        //- Optional boundary forcing coefficient [1/s]
         dimensionedScalar lambdaBoundary_;
 
         //- The scaling function

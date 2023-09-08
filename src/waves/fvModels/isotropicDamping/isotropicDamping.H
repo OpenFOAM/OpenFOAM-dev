@@ -64,6 +64,9 @@ Usage
         value           (2 0 0);            // Value towards which the field is
                                             // relaxed
         lambda          [0 0 -1 0 0 0 0] 1; // Damping coefficient
+
+        // Write the forcing fields: forcing:scale, forcing:forceCoeff
+        writeForceFields true;
     }
     \endverbatim
 

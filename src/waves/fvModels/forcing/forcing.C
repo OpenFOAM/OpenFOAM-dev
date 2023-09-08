@@ -42,6 +42,8 @@ namespace fv
 
 void Foam::fv::forcing::readCoeffs()
 {
+    writeForceFields_ = coeffs().lookupOrDefault("writeForceFields", false);
+
     lambda_ =
         dimensionedScalar
         (
@@ -145,12 +147,6 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::scale() const
         scale = max(scale, scale_->value(x));
     }
 
-    // Write out the force coefficient for debugging
-    if (debug && mesh().time().writeTime())
-    {
-        tscale->write();
-    }
-
     return tscale;
 }
 
@@ -181,12 +177,6 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff
         }
     }
 
-    // Write out the force coefficient for debugging
-    if (debug && mesh().time().writeTime())
-    {
-        tforceCoeff->write();
-    }
-
     return tforceCoeff;
 }
 
@@ -208,6 +198,7 @@ Foam::fv::forcing::forcing
 )
 :
     fvModel(name, modelType, mesh, dict),
+    writeForceFields_(false),
     lambda_("lambda", dimless/dimTime, NaN),
     lambdaBoundary_("lambdaBoundary", dimless/dimTime, 0.0),
     scale_(nullptr),
@@ -215,6 +206,16 @@ Foam::fv::forcing::forcing
     directions_()
 {
     readCoeffs();
+
+    if (writeForceFields_)
+    {
+        Info<< "    Writing forcing fields: forcing:scale, forcing:forceCoeff"
+            << endl;
+
+        const volScalarField::Internal scale(this->scale());
+        scale.write();
+        forceCoeff(scale)->write();
+    }
 }
 
 

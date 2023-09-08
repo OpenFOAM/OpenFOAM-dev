@@ -78,6 +78,9 @@ Usage
 
         timeStart       0;
         duration        1e6;
+
+        // Write the forcing fields: forcing:scale, forcing:forceCoeff
+        writeForceFields true;
     }
     \endverbatim
 

@@ -64,9 +64,12 @@ Usage
 
         lambda          0.5; // Forcing coefficient
 
-     // lambda          2;   // Optional boundary forcing coefficient
+     // lambdaBoundary  2;   // Optional boundary forcing coefficient
                              // Useful when wave BCs are specified
                              // without mean flow
+
+        // Write the forcing fields: forcing:scale, forcing:forceCoeff
+        writeForceFields true;
     }
     \endverbatim
 
