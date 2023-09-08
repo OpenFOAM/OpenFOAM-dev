@@ -27,7 +27,7 @@ License
 #include "OSspecific.H"
 #include "setWriter.H"
 
-// * * * * * * * * * * * * * Protectd Member Functions * * * * * * * * * * * //
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 template<class CloudType>
 void Foam::SizeDistribution<CloudType>::write()

@@ -25,12 +25,12 @@ License
 
 #include "VolumeFraction.H"
 
-// * * * * * * * * * * * * * Protectd Member Functions * * * * * * * * * * * //
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 template<class CloudType>
 void Foam::VolumeFraction<CloudType>::write()
 {
-    this->owner().alpha()->write();
+    alpha_.write();
 }
 
 
@@ -44,7 +44,20 @@ Foam::VolumeFraction<CloudType>::VolumeFraction
     const word& modelName
 )
 :
-    CloudFunctionObject<CloudType>(dict, owner, modelName, typeName)
+    CloudFunctionObject<CloudType>(dict, owner, modelName, typeName),
+    alpha_
+    (
+        IOobject
+        (
+            this->owner().name() + ":alpha",
+            this->owner().mesh().time().name(),
+            this->owner().mesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        this->owner().mesh(),
+        dimensionedScalar(dimless, 0)
+    )
 {}
 
 
@@ -54,7 +67,8 @@ Foam::VolumeFraction<CloudType>::VolumeFraction
     const VolumeFraction<CloudType>& vf
 )
 :
-    CloudFunctionObject<CloudType>(vf)
+    CloudFunctionObject<CloudType>(vf),
+    alpha_(this->owner().name() + ":alpha", vf.alpha_)
 {}
 
 
@@ -63,6 +77,17 @@ Foam::VolumeFraction<CloudType>::VolumeFraction
 template<class CloudType>
 Foam::VolumeFraction<CloudType>::~VolumeFraction()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class CloudType>
+void Foam::VolumeFraction<CloudType>::postEvolve()
+{
+    alpha_ = this->owner().alpha();
+
+    CloudFunctionObject<CloudType>::postEvolve();
+}
 
 
 // ************************************************************************* //

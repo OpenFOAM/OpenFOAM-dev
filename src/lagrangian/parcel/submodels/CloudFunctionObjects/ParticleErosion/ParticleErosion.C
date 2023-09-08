@@ -28,7 +28,7 @@ License
 
 using namespace Foam::constant;
 
-// * * * * * * * * * * * * * Protectd Member Functions * * * * * * * * * * * //
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 template<class CloudType>
 Foam::label Foam::ParticleErosion<CloudType>::applyToPatch
