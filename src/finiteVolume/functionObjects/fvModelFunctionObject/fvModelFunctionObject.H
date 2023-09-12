@@ -124,6 +124,9 @@ public:
         //- Do nothing
         virtual bool write();
 
+        //- Return the maximum time-step for stable operation
+        virtual scalar maxDeltaT() const;
+
 
     // Member Operators
 

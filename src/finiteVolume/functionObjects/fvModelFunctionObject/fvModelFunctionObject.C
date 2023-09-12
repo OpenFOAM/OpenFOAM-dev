@@ -78,4 +78,10 @@ bool Foam::functionObjects::fvModel::write()
 }
 
 
+Foam::scalar Foam::functionObjects::fvModel::maxDeltaT() const
+{
+    return fvModelPtr_().maxDeltaT();
+}
+
+
 // ************************************************************************* //

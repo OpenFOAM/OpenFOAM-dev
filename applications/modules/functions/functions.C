@@ -100,7 +100,7 @@ Foam::solvers::functions::~functions()
 
 Foam::scalar Foam::solvers::functions::maxDeltaT() const
 {
-    return solverPtr->maxDeltaT();
+    return vGreat;
 }
 
 
