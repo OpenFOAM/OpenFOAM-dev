@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,13 +67,13 @@ Foam::LESModels::PrandtlDelta::PrandtlDelta
         (
             name,
             turbulence,
-            dict.optionalSubDict(type() + "Coeffs")
+            dict.subDict(type() + "Coeffs")
         )
     ),
     kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
     Cdelta_
     (
-        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<scalar>
+        dict.subDict(type() + "Coeffs").lookupOrDefault<scalar>
         (
             "Cdelta",
             0.158
@@ -88,7 +88,7 @@ Foam::LESModels::PrandtlDelta::PrandtlDelta
 
 void Foam::LESModels::PrandtlDelta::read(const dictionary& dict)
 {
-    const dictionary& coeffDict(dict.optionalSubDict(type() + "Coeffs"));
+    const dictionary& coeffDict(dict.subDict(type() + "Coeffs"));
 
     geometricDelta_().read(coeffDict);
     dict.readIfPresent<scalar>("kappa", kappa_);

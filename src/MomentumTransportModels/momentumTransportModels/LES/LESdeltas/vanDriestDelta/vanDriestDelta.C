@@ -122,13 +122,13 @@ Foam::LESModels::vanDriestDelta::vanDriestDelta
         (
             IOobject::groupName("geometricDelta", turbulence.U().group()),
             turbulence,
-            dict.optionalSubDict(type() + "Coeffs")
+            dict.subDict(type() + "Coeffs")
         )
     ),
     kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
     Aplus_
     (
-        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<scalar>
+        dict.subDict(type() + "Coeffs").lookupOrDefault<scalar>
         (
             "Aplus",
             26.0
@@ -136,7 +136,7 @@ Foam::LESModels::vanDriestDelta::vanDriestDelta
     ),
     Cdelta_
     (
-        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<scalar>
+        dict.subDict(type() + "Coeffs").lookupOrDefault<scalar>
         (
             "Cdelta",
             0.158
@@ -144,7 +144,7 @@ Foam::LESModels::vanDriestDelta::vanDriestDelta
     ),
     calcInterval_
     (
-        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<label>
+        dict.subDict(type() + "Coeffs").lookupOrDefault<label>
         (
             "calcInterval",
             1
@@ -152,7 +152,7 @@ Foam::LESModels::vanDriestDelta::vanDriestDelta
     ),
     yPlusCutOff_
     (
-        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<scalar>
+        dict.subDict(type() + "Coeffs").lookupOrDefault<scalar>
         (
             "yPlusCutOff",
             500
@@ -160,7 +160,7 @@ Foam::LESModels::vanDriestDelta::vanDriestDelta
     ),
     minWallFaceFraction_
     (
-        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<scalar>
+        dict.subDict(type() + "Coeffs").lookupOrDefault<scalar>
         (
             "minWallFaceFraction",
             0.1
@@ -175,7 +175,7 @@ Foam::LESModels::vanDriestDelta::vanDriestDelta
 
 void Foam::LESModels::vanDriestDelta::read(const dictionary& dict)
 {
-    const dictionary& coeffsDict(dict.optionalSubDict(type() + "Coeffs"));
+    const dictionary& coeffsDict(dict.subDict(type() + "Coeffs"));
 
     geometricDelta_().read(coeffsDict);
     dict.readIfPresent<scalar>("kappa", kappa_);
