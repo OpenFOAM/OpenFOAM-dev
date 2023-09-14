@@ -2,6 +2,8 @@ EXE_INC = \
     -I$(FOAM_MODULES)/twoPhaseSolver/lnInclude \
     -I$(FOAM_MODULES)/VoFSolver/lnInclude \
     -I$(FOAM_MODULES)/fluidSolver/lnInclude \
+    -ImixtureViscosityModels/lnInclude \
+    -IrelativeVelocityModels/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/VoF \
     -I$(LIB_SRC)/twoPhaseModels/interfaceCompression/lnInclude \

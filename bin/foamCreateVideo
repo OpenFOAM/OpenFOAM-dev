@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -178,13 +178,14 @@ done
 
 ffmpegCreateVideo () {
     _image_list="$1"
-    _out="$2"
-    _fmt="$3"
+    _fps="$2"
+    _out="$3"
+    _fmt="$4"
 
     _video_output="\
         -c:v libx264 \
         -b:v 5M \
-        -r:v 40 \
+        -r:v $_fps \
         -vf format=yuv420p,pad=ceil(iw/2)*2:ceil(ih/2)*2 \
         -flags +cgop \
         -threads 2 \
@@ -260,7 +261,4 @@ do
     echo "duration $delay" >> "$image_list"
 done
 
-[ "$app" = ffmpeg ] && \
-    ffmpegCreateVideo "$image_list" "$video" "$fmt" && exit 0
-
-mencoderCreateVideo "$image_list" "$fps" "$video" "$fmt"
+eval "$app"CreateVideo "$image_list" "$fps" "$video" "$fmt"

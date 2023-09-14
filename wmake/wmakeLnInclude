@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 #------------------------------------------------------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -116,27 +116,27 @@ do
         baseDir="."
     fi
 done
-incDir=$baseDir/lnInclude
+incDir="$baseDir"/lnInclude
 
 
-[ -d $baseDir ] || {
+[ -d "$baseDir" ] || {
     echo "$Script error: base directory $baseDir does not exist" 1>&2
     exit 2
 }
 
-if [ -d $incDir ]
+if [ -d "$incDir" ]
 then
     [ "$update" = true ] || exit 0
 else
-    mkdir $incDir
+    mkdir "$incDir"
 fi
 
-[ -d $incDir ] || {
+[ -d "$incDir" ] || {
     echo "$Script error: failed to create include directory $incDir" 1>&2
     exit 0
 }
 
-cd $incDir || exit 1
+cd "$incDir" || exit 1
 
 if [ "$silentOpt" = true ] || [ -n "$WM_QUIET" ]
 then
@@ -153,19 +153,35 @@ find -L . -type l -print0 | xargs -0 rm -f
 
 
 #------------------------------------------------------------------------------
-# Create links, avoid recreating links unless necessary
-# things placed in the 'noLink' directory are skipped
+# Create links. Avoid recreating links unless necessary. Files in lnInclude,
+# Make, config and noLink are ignored, as is anything within a sub-library.
 #------------------------------------------------------------------------------
+
+filter()
+{
+    kind="$1"
+    shift
+
+    while [ "$#" -gt 1 ]
+    do
+        echo "-$kind" && echo "$1"
+        shift
+        echo "-o"
+    done
+
+    echo "-$kind" && echo "$1"
+    shift
+}
+
+mapfile -t pruneNames < <(filter name lnInclude Make config noLink)
+mapfile -t prunePaths < <(find .. -mindepth 2 -type d -name Make -printf '%h\n')
+mapfile -t prunePaths < <(filter path "${prunePaths[@]}")
+mapfile -t matchNames < <(filter name '*.[CHh]' '*.[ch]xx' '*.[ch]pp' '*.type')
+
 find .. \
-     \( -name lnInclude -o -name Make -o -name config -o -name noLink \) \
-     -prune \
-     -o \( \
-     -name '*.[CHh]' \
-     -o -name '*.[ch]xx' \
-     -o -name '*.[ch]pp' \
-     -o -name '*.type' \
-     \)  \
-     -exec ln $lnOpt {} . \;
+    \( "${pruneNames[@]}" -o "${prunePaths[@]}" \) -prune \
+    -o \( "${matchNames[@]}" \) \
+    -exec ln $lnOpt {} . \;
 
 
 #------------------------------------------------------------------------------
