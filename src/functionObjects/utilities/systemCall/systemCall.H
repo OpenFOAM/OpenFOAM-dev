@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,18 +61,19 @@ Description
 
 Usage
     \table
-        Property     | Description              | Required    | Default value
-        type         | type name: systemCall    | yes         |
-        executeCalls | list of calls on execute | yes         |
-        writeCalls   | list of calls on write   | yes         |
-        endCalls     | list of calls on end     | yes         |
+        Property     | Description               | Required   | Default value
+        type         | type name: systemCall     | yes        |
+        parallel     | execute on all processors | no         | false
+        executeCalls | list of calls on execute  | yes        |
+        writeCalls   | list of calls on write    | yes        |
+        endCalls     | list of calls on end      | yes        |
     \endtable
 
-    Note:
-        Since this function object executes system calls, there is a potential
-        security risk.  In order to use the \c systemCall function object, the
-        \c allowSystemOperations must be set to '1'; otherwise, system calls
-        will not be allowed.
+Note
+    Since this function object executes system calls, there is a potential
+    security risk.  In order to use the \c systemCall function object, the \c
+    allowSystemOperations must be set to '1'; otherwise, system calls will not
+    be allowed.
 
 See also
     Foam::functionObject
@@ -107,6 +108,9 @@ class systemCall
 protected:
 
     // Private Data
+
+        //- Perform the call by each processor or by the master only
+        bool parallel_;
 
         //- List of calls to execute - every step
         stringList executeCalls_;
