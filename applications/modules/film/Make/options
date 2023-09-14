@@ -1,5 +1,6 @@
 EXE_INC = \
     -I$(FOAM_MODULES)/isothermalFilm/lnInclude \
+    -I$(FOAM_MODULES)/isothermalFilm/filmCompressibleMomentumTransportModels/lnInclude \
     -IfilmThermophysicalTransportModels/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \

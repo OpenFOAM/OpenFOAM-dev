@@ -1,5 +1,6 @@
 EXE_INC = \
     -I$(FOAM_MODULES)/solid/lnInclude \
+    -IsolidDisplacementThermo/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/solidThermo/lnInclude \
