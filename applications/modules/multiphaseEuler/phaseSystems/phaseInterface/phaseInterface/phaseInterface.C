@@ -508,7 +508,18 @@ Foam::tmp<Foam::volScalarField> Foam::phaseInterface::rho() const
 
 Foam::tmp<Foam::volScalarField> Foam::phaseInterface::magUr() const
 {
-    return mag(phase1().U() - phase2().U());
+    if (phase1().stationary())
+    {
+        return mag(phase2().U());
+    }
+    else if (phase2().stationary())
+    {
+        return mag(phase1().U());
+    }
+    else
+    {
+        return mag(phase1().U() - phase2().U());
+    }
 }
 
 
