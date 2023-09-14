@@ -4,13 +4,16 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-wmake $targetType phaseSystems
+wmake $targetType phaseSystem
 wmake $targetType interfacialModels
-wmake $targetType interfacialCompositionModels
-wmake $targetType multiphaseCompressibleMomentumTransportModels
-wmake $targetType multiphaseThermophysicalTransportModels
-wmake $targetType multiphaseReactions
-multiphaseEuler/Allwmake $targetType $*
+wmake $targetType populationBalance
+wmake $targetType momentumTransportModels
+wmake $targetType thermophysicalTransportModels
+wmake $targetType reactions
+wmake $targetType phaseSystems
+
+wmake $targetType
+
 wmake $targetType fvModels
 wmake $targetType functionObjects
 

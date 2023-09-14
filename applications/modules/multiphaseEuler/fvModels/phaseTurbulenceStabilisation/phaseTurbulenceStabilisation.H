@@ -56,7 +56,7 @@ Usage
     {
         type    phaseTurbulenceStabilisation;
 
-        libs    ("libmultiphaseEulerFoamFvModels.so");
+        libs    ("libmultiphaseEulerFvModels.so");
 
         phase   air;
 

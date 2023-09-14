@@ -37,7 +37,7 @@ Description
     populationBalanceMoments
     {
         type                populationBalanceMoments;
-        libs                ("libmultiphaseEulerFoamFunctionObjects.so");
+        libs                ("libmultiphaseEulerFunctionObjects.so");
         executeControl      timeStep;
         writeControl        writeTime;
         populationBalance   bubbles;

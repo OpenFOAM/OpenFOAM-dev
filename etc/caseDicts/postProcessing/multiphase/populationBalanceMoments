@@ -7,13 +7,13 @@
 -------------------------------------------------------------------------------
 Description
     Calculates and writes out integral (integer moments) or mean properties
-    (mean, variance, standard deviation) of a size distribution computed with
-    multiphaseEulerFoam. Requires solver post-processing.
+    (mean, variance, standard deviation) of a size distribution. Requires the
+    multiphaseEuler solver module.
 
 \*---------------------------------------------------------------------------*/
 
 type                populationBalanceMoments;
-libs                ("libmultiphaseEulerFoamFunctionObjects.so");
+libs                ("libmultiphaseEulerFunctionObjects.so");
 
 populationBalance   <populationBalance>;
 momentType          <moment>;             // integerMoment, mean, variance,

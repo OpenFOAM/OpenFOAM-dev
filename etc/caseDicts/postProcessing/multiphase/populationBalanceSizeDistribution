@@ -6,13 +6,13 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Writes out the size distribution computed with multiphaseEulerFoam for the
-    entire domain or a volume region. Requires solver post-processing.
+    Writes out the population balance size distribution for the entire mesh
+    or a specified cell zone. Requires the multiphaseEuler solver module.
 
 \*---------------------------------------------------------------------------*/
 
 type                populationBalanceSizeDistribution;
-libs                ("libmultiphaseEulerFoamFunctionObjects.so");
+libs                ("libmultiphaseEulerFunctionObjects.so");
 
 populationBalance   <populationBalance>;
 functionType        <function>;           // numberConcentration, numberDensity

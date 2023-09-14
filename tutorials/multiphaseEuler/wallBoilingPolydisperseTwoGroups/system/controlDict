@@ -57,14 +57,14 @@ functions
     writeWallBoilingProperties
     {
         type            wallBoilingProperties;
-        libs            ( "libmultiphaseEulerFoamFunctionObjects.so" );
+        libs            ( "libmultiphaseEulerFunctionObjects.so" );
         writeControl    writeTime;
         phase           liquid;
     }
     volumeDensity.diameter.bubbles
     {
         type            populationBalanceSizeDistribution;
-        libs            ( "libmultiphaseEulerFoamFunctionObjects.so" );
+        libs            ( "libmultiphaseEulerFunctionObjects.so" );
         writeControl    runTime;
         writeInterval   0.5;
         setFormat       raw;
@@ -78,7 +78,7 @@ functions
     volumeDensity_bulk.diameter.bubbles
     {
         type            populationBalanceSizeDistribution;
-        libs            ( "libmultiphaseEulerFoamFunctionObjects.so" );
+        libs            ( "libmultiphaseEulerFunctionObjects.so" );
         writeControl    runTime;
         writeInterval   0.5;
         setFormat       raw;
@@ -92,7 +92,7 @@ functions
     volumeDensity_wall.diameter.bubbles
     {
         type            populationBalanceSizeDistribution;
-        libs            ( "libmultiphaseEulerFoamFunctionObjects.so" );
+        libs            ( "libmultiphaseEulerFunctionObjects.so" );
         writeControl    runTime;
         writeInterval   0.5;
         setFormat       raw;

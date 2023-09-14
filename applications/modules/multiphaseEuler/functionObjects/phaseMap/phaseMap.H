@@ -34,7 +34,7 @@ Description
     phaseMap
     {
         type            phaseMap;
-        libs            ("libmultiphaseEulerFoamFunctionObjects.so");
+        libs            ("libmultiphaseEulerFunctionObjects.so");
         writeControl    writeTime;
     }
     \endverbatim

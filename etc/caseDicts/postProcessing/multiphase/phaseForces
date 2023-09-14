@@ -8,15 +8,12 @@
 Description
     Calculates the blended interfacial forces acting on a given phase,
     i.e. drag, virtual mass, lift, wall-lubrication and turbulent
-    dispersion. Note that it works only in solver post processing mode and in
-    combination with multiphaseEulerFoam. For a simulation involving more than
-    two phases, the accumulated force is calculated by looping over all
-    phasePairs the phase is a part of.
+    dispersion. Requires the multiphaseEuler solver module.
 
 \*---------------------------------------------------------------------------*/
 
 type            phaseForces;
-libs            ("libmultiphaseEulerFoamFunctionObjects.so");
+libs            ("libmultiphaseEulerFunctionObjects.so");
 
 phase           <phaseName>;
 

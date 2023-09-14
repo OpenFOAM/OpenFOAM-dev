@@ -1,13 +1,16 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
 
-wclean libso phaseSystems
+wclean libso phaseSystem
 wclean libso interfacialModels
-wclean libso interfacialCompositionModels
-wclean libso multiphaseCompressibleMomentumTransportModels
-wclean libso multiphaseThermophysicalTransportModels
-wclean libso multiphaseReactions
-multiphaseEuler/Allwclean
+wclean libso populationBalance
+wclean libso momentumTransportModels
+wclean libso thermophysicalTransportModels
+wclean libso reactions
+wclean libso phaseSystems
+
+wclean
+
 wclean libso fvModels
 wclean libso functionObjects
 

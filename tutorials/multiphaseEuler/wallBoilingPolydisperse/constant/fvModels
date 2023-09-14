@@ -19,7 +19,7 @@ phaseTurbulenceStabilisationGas
 {
     type    phaseTurbulenceStabilisation;
 
-    libs    ("libmultiphaseEulerFoamFvModels.so");
+    libs    ("libmultiphaseEulerFvModels.so");
 
     phase   gas;
 
@@ -30,9 +30,12 @@ phaseTurbulenceStabilisationLiquid
 {
     type    phaseTurbulenceStabilisation;
 
-    libs    ("libmultiphaseEulerFoamFvModels.so");
+    libs    ("libmultiphaseEulerFvModels.so");
 
     phase   liquid;
 
     alphaInversion  0.1;
 }
+
+
+// ************************************************************************* //

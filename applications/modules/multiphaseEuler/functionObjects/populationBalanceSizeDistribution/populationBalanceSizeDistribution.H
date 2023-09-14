@@ -37,7 +37,7 @@ Description
     numberDensity
     {
         type                populationBalanceSizeDistribution;
-        libs                ("libmultiphaseEulerFoamFunctionObjects.so");
+        libs                ("libmultiphaseEulerFunctionObjects.so");
         writeControl        writeTime;
         populationBalance   bubbles;
         functionType        numberDensity;

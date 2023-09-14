@@ -28,7 +28,7 @@ Description
     This functionObject calculates and outputs the blended interfacial forces
     acting on a given phase, i.e. drag, virtual mass, lift, wall-lubrication and
     turbulent dispersion. Note that it works only in run-time processing mode
-    and in combination with the multiphaseEulerFoam solver.
+    and in combination with the multiphaseEuler solver module.
 
     For a simulation involving more than two phases, the accumulated force is
     calculated by looping over all interfaces involving that phase. The fields
@@ -41,7 +41,7 @@ Description
     {
         type            phaseForces;
 
-        libs ("libmultiphaseEulerFoamFunctionObjects.so");
+        libs ("libmultiphaseEulerFunctionObjects.so");
 
         phase           water;
     }

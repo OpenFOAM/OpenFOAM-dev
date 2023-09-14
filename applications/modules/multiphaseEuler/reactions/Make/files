@@ -1,0 +1,3 @@
+phaseSurfaceArrheniusReactionRate/makephaseSurfaceArrheniusReactions.C
+
+LIB = $(FOAM_LIBBIN)/libmultiphaseEulerReactions

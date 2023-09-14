@@ -40,7 +40,7 @@ Description
     writeWallBoilingProperties
     {
         type            wallBoilingProperties;
-        libs            ( "libmultiphaseEulerFoamFunctionObjects.so" );
+        libs            ( "libmultiphaseEulerFunctionObjects.so" );
         writeControl    writeTime;
         phase           liquid;
     }

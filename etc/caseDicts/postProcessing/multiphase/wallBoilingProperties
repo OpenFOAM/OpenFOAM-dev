@@ -14,7 +14,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 type                wallBoilingProperties;
-libs                ("libmultiphaseEulerFoamFunctionObjects.so");
+libs                ("libmultiphaseEulerFunctionObjects.so");
 
 phase               <phaseName>;
 

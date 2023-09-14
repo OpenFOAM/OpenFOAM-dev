@@ -4,4 +4,4 @@ phaseForces/phaseForces.C
 phaseMap/phaseMap.C
 wallBoilingProperties/wallBoilingProperties.C
 
-LIB = $(FOAM_LIBBIN)/libmultiphaseEulerFoamFunctionObjects
+LIB = $(FOAM_LIBBIN)/libmultiphaseEulerFunctionObjects

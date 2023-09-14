@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -27,12 +27,12 @@
 #
 # Description
 #     Script to inform the user that the twoPhaseEulerFoam solver
-#     has been replaced by the more general multiphaseEulerFoam solver.
+#     has been replaced by the more general multiphaseEuler solver module.
 #
 #------------------------------------------------------------------------------
 
 echo "The twoPhaseEulerFoam solver has been replaced" \
-     "by the more general multiphaseEulerFoam solver"
+     "by the more general multiphaseEuler solver module"
 echo "which supports two-phase and multiphase systems containing" \
      "fluid and stationary phases,"
 echo "compressible or incompressible," \

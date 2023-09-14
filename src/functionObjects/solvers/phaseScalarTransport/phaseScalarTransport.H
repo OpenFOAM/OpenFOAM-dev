@@ -60,7 +60,7 @@ Usage
                         | no | true
     \endtable
 
-    Example specification for interFoam:
+    Example specification for incompressibleVoF:
     \verbatim
     phaseScalarTransport1
     {
@@ -72,7 +72,7 @@ Usage
     }
     \endverbatim
 
-    Example specification for multiphaseEulerFoam:
+    Example specification for multiphaseEuler:
     \verbatim
     phaseScalarTransport1
     {

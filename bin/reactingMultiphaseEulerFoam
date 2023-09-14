@@ -26,14 +26,18 @@
 #     reactingMultiphaseEulerFoam
 #
 # Description
-#     Script to inform the user that the reactingMultiphaseEulerFoam solver has
-#     been renamed and replaces the original multiphaseEulerFoam, providing
-#     much more general and extensible functionality.
+#     Script to inform the user that the reactingtMultiphaseEulerFoam solver
+#     has been replaced by the more general multiphaseEuler solver module.
 #
 #------------------------------------------------------------------------------
 
-echo "The reactingMultiphaseEulerFoam solver has been renamed" \
-     "and replaces the original multiphaseEulerFoam,"
-echo "providing much more general and extensible functionality."
+echo "The reactingtMultiphaseEulerFoam solver has been replaced" \
+     "by the more general multiphaseEuler solver module"
+echo "which supports two-phase and multiphase systems containing" \
+     "fluid and stationary phases,"
+echo "compressible or incompressible," \
+     "with heat and mass transfer, reactions, size distribution"
+echo "and all the usual phase interaction and transfer models."
 
 #------------------------------------------------------------------------------
+
