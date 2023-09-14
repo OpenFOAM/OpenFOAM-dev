@@ -47,6 +47,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         type         | type name: adjustTimeStepToChemistry | yes |
+        phase        | name of the reacting phase | no       |
     \endtable
 
 SourceFiles
