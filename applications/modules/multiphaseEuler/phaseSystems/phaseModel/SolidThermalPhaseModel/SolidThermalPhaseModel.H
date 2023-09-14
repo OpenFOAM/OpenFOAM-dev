@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::AnisothermalPhaseModel
+    Foam::SolidThermalPhaseModel
 
 Description
-    Class which represents a phase for which the temperature (strictly energy)
-    varies. Returns the energy equation and corrects the thermodynamic model.
+    Class which represents a solid stationary phase for which the temperature
+    (strictly energy) varies. Returns the energy equation and corrects the
+    thermodynamic model.
 
 SourceFiles
-    AnisothermalPhaseModel.C
+    SolidThermalPhaseModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef AnisothermalPhaseModel_H
-#define AnisothermalPhaseModel_H
+#ifndef SolidThermalPhaseModel_H
+#define SolidThermalPhaseModel_H
 
 #include "phaseModel.H"
-#include "uniformDimensionedFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,34 +45,20 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class AnisothermalPhaseModel Declaration
+                   Class SolidThermalPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseModel>
-class AnisothermalPhaseModel
+class SolidThermalPhaseModel
 :
     public BasePhaseModel
 {
-    // Private Member Data
-
-        //- Gravitational acceleration
-        const uniformDimensionedVectorField& g_;
-
-
-    // Private Member Functions
-
-        //- Optionally filter the pressure work term as the phase-fraction -> 0
-        tmp<volScalarField> filterPressureWork
-        (
-            const tmp<volScalarField>& pressureWork
-        ) const;
-
 
 public:
 
     // Constructors
 
-        AnisothermalPhaseModel
+        SolidThermalPhaseModel
         (
             const phaseSystem& fluid,
             const word& phaseName,
@@ -82,7 +68,7 @@ public:
 
 
     //- Destructor
-    virtual ~AnisothermalPhaseModel();
+    virtual ~SolidThermalPhaseModel();
 
 
     // Member Functions
@@ -105,7 +91,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "AnisothermalPhaseModel.C"
+    #include "SolidThermalPhaseModel.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

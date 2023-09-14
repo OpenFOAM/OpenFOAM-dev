@@ -85,15 +85,12 @@ void Foam::solvers::multiphaseEuler::energyPredictor()
 
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();
-        const tmp<volVectorField> tU(phase.U());
-        const volVectorField& U(tU());
 
         fvScalarMatrix EEqn
         (
             phase.heEqn()
          ==
            *heatTransfer[phase.name()]
-          + alpha*rho*(U&buoyancy.g)
           + fvModels().source(alpha, rho, phase.thermo().he())
         );
 

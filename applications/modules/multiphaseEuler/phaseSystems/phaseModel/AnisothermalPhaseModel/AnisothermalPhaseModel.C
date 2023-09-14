@@ -71,7 +71,8 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::AnisothermalPhaseModel
     const label index
 )
 :
-    BasePhaseModel(fluid, phaseName, referencePhase, index)
+    BasePhaseModel(fluid, phaseName, referencePhase, index),
+    g_(fluid.mesh().lookupObject<uniformDimensionedVectorField>("g"))
 {}
 
 
@@ -132,7 +133,8 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
 
       + this->divq(he)
      ==
-        alpha*this->Qdot()
+        alpha*rho*(U&g_)
+      + alpha*this->Qdot()
     );
 
     // Add the appropriate pressure-work term
