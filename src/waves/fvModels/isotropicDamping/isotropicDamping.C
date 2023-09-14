@@ -44,6 +44,8 @@ namespace fv
 
 void Foam::fv::isotropicDamping::readCoeffs()
 {
+    readLambda();
+
     value_ =
         dimensionedVector
         (
@@ -80,6 +82,7 @@ Foam::fv::isotropicDamping::isotropicDamping
     value_("value", dimVelocity, vector::uniform(NaN))
 {
     readCoeffs();
+    writeForceFields();
 }
 
 

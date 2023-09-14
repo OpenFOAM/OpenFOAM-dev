@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,12 +127,6 @@ protected:
             return deep(depth(), length());
         }
 
-        //- The wave celerity [m/s]
-        virtual scalar celerity() const
-        {
-            return celerity(depth(), amplitude(), length(), g());
-        }
-
         //- Angle of the oscillation [rad]
         tmp<scalarField> angle
         (
@@ -214,6 +208,12 @@ public:
             {
                 return phase_;
             }
+
+        //- The wave celerity [m/s]
+        virtual scalar celerity() const
+        {
+            return celerity(depth(), amplitude(), length(), g());
+        }
 
         //- Get the wave elevation at a given time and local coordinates. Local
         //  x is aligned with the direction of propagation.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,9 +81,6 @@ class solitary
         //- The dimensionless amplitude [1]
         scalar alpha() const;
 
-        //- The wave celerity [m/s]
-        scalar celerity() const;
-
         //- The evolution parameter [1]
         //  This is analogous to the oscillation angle of a periodic wave
         tmp<scalarField> parameter
@@ -146,6 +143,9 @@ public:
             {
                 return offset_;
             }
+
+        //- The wave celerity [m/s]
+        scalar celerity() const;
 
         //- Get the wave elevation at a given time and local coordinates. Local
         //  x is aligned with the direction of propagation.

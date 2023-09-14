@@ -29,12 +29,21 @@ Description
     components of the vector field to relax the fields towards those
     calculated from the current wave distribution.
 
-    The forcing force coefficient \f$\lambda\f$ should be set based on the
-    desired level of forcing and the residence time the waves through the
-    forcing zone.  For example, if waves moving at 2 [m/s] are travelling
-    through a forcing zone 8 [m] in length, then the residence time is 4 [s]. If
-    it is deemed necessary to force for 5 time-scales, then \f$\lambda\f$ should
-    be set to equal 5/(4 [s]) = 1.2 [1/s].
+    The force coefficient \f$\lambda\f$ should be set based on the desired level
+    of forcing and the residence time the waves through the forcing zone.  For
+    example, if waves moving at 2 [m/s] are travelling through a forcing zone 8
+    [m] in length, then the residence time is 4 [s]. If it is deemed necessary
+    to force for 5 time-scales, then \f$\lambda\f$ should be set to equal 5/(4
+    [s]) = 1.2 [1/s].  If more aggressive forcing is required adjacent to the
+    boundaries, which is often the case if wave boundary conditions are
+    specified at outflow boundaries, the optional \f$\lambdaBoundary\f$
+    coefficient can be specified higher than the value of \f$\lambda\f$.
+
+    Alternatively the forcing force coefficient \f$\lambdaCoeff\f$ can be
+    specified in which case \f$\lambda\f$ is evaluated by multiplying the
+    maximum wave speed by \f$\lambdaCoeff\f$ and dividing by the forcing region
+    length.  \f$\lambdaBoundary\f$ is similarly evaluated from
+    \f$\lambdaBoundaryCoeff\f$ if specified.
 
 Usage
     Example usage:
@@ -62,11 +71,10 @@ Usage
             duration    300;
         }
 
-        lambda          0.5; // Forcing coefficient
+        lambdaCoeff     2;   // Forcing coefficient
 
-     // lambdaBoundary  2;   // Optional boundary forcing coefficient
-                             // Useful when wave BCs are specified
-                             // without mean flow
+     // lambdaBoundaryCoeff  10;  // Optional boundary forcing coefficient
+                             // Useful when wave BCs are specified at outlets
 
         // Write the forcing fields: forcing:scale, forcing:forceCoeff
         writeForceFields true;
@@ -104,6 +112,12 @@ class waveForcing
 {
     // Private Data
 
+        scalar lambdaCoeff_;
+
+        scalar lambdaBoundaryCoeff_;
+
+        dimensionedScalar regionLength_;
+
         //- Reference to the waves
         const waveSuperposition& waves_;
 
@@ -123,7 +137,19 @@ class waveForcing
         tmp<volVectorField::Internal> Uwaves_;
 
         //- Forcing coefficient scale field
-        tmp<volScalarField::Internal> scale_;
+        autoPtr<volScalarField::Internal> scale_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
+
+        //- Return the scale distribution
+        virtual tmp<volScalarField::Internal> scale() const;
+
+        //- Return the force coefficient
+        virtual tmp<volScalarField::Internal> forceCoeff() const;
 
 
 public:
@@ -150,6 +176,10 @@ public:
 
 
     // Member Functions
+
+        //- Read dictionary
+        virtual bool read(const dictionary& dict);
+
 
         // Checks
 

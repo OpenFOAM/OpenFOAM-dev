@@ -24,6 +24,7 @@ waves
     {
         length      0.5;
         amplitude   0.03;
+        depth       0.5;
         phase       0;
         angle       0;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -247,6 +247,18 @@ Foam::waveSuperposition::~waveSuperposition()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::scalar Foam::waveSuperposition::maxWaveSpeed(const scalar t) const
+{
+    scalar maxCelerity = 0;
+    forAll(waveModels_, wavei)
+    {
+        maxCelerity = max(waveModels_[wavei].celerity(), maxCelerity);
+    }
+
+    return mag(maxCelerity + (direction_& UMean_->value(t)));
+}
+
 
 Foam::tmp<Foam::scalarField> Foam::waveSuperposition::height
 (

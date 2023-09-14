@@ -66,10 +66,10 @@ protected:
         bool writeForceFields_;
 
         //- Forcing coefficient [1/s]
-        dimensionedScalar lambda_;
+        mutable dimensionedScalar lambda_;
 
         //- Optional boundary forcing coefficient [1/s]
-        dimensionedScalar lambdaBoundary_;
+        mutable dimensionedScalar lambdaBoundary_;
 
         //- The scaling function
         autoPtr<Function1<scalar>> scale_;
@@ -86,17 +86,21 @@ protected:
         //- Non-virtual read
         void readCoeffs();
 
-        //- Return the scale distribution
-        tmp<volScalarField::Internal> scale() const;
+        //- Read the forcing coefficients
+        void readLambda();
 
-        //- Return the force coefficient given the scale distribution
-        tmp<volScalarField::Internal> forceCoeff
-        (
-            const volScalarField::Internal& scale
-        ) const;
+        //- Calculate and return the volume average forcing region length
+        dimensionedScalar regionLength() const;
+
+        //- Return the scale distribution
+        virtual tmp<volScalarField::Internal> scale() const;
 
         //- Return the force coefficient
-        tmp<volScalarField::Internal> forceCoeff() const;
+        virtual tmp<volScalarField::Internal> forceCoeff() const;
+
+        //- Optionally write the forcing fields:
+        //  forcing:scale, forcing:forceCoeff
+        void writeForceFields() const;
 
 
 public:
@@ -124,10 +128,8 @@ public:
 
     // Member Functions
 
-        // IO
-
-            //- Read dictionary
-            virtual bool read(const dictionary& dict);
+        //- Read dictionary
+        virtual bool read(const dictionary& dict);
 };
 
 

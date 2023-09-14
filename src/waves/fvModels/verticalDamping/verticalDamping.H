@@ -121,6 +121,9 @@ class verticalDamping
 
     // Private Member Functions
 
+        //- Non-virtual read
+        void readCoeffs();
+
         //- Source term to momentum equation
         void add
         (
@@ -153,6 +156,10 @@ public:
 
 
     // Member Functions
+
+        //- Read dictionary
+        virtual bool read(const dictionary& dict);
+
 
         // Checks
 

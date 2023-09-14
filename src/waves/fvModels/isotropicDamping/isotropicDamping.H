@@ -146,6 +146,10 @@ public:
 
     // Member Functions
 
+        //- Read dictionary
+        virtual bool read(const dictionary& dict);
+
+
         // Checks
 
             //- Return the list of fields for which the fvModel adds source term
@@ -193,12 +197,6 @@ public:
 
             //- Redistribute or update using the given distribution map
             virtual void distribute(const polyDistributionMap&);
-
-
-        // IO
-
-            //- Read dictionary
-            virtual bool read(const dictionary& dict);
 };
 
 

@@ -25,7 +25,9 @@ License
 
 #include "forcing.H"
 #include "fvMatrix.H"
-#include "zeroGradientFvPatchField.H"
+#include "Function1Evaluate.H"
+#include "fvcGrad.H"
+#include "fvcVolumeIntegrate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -40,10 +42,8 @@ namespace fv
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::fv::forcing::readCoeffs()
+void Foam::fv::forcing::readLambda()
 {
-    writeForceFields_ = coeffs().lookupOrDefault("writeForceFields", false);
-
     lambda_ =
         dimensionedScalar
         (
@@ -59,6 +59,12 @@ void Foam::fv::forcing::readCoeffs()
             lambdaBoundary_.dimensions(),
             coeffs().lookupOrDefault(lambdaBoundary_.name(), 0.0)
         );
+}
+
+
+void Foam::fv::forcing::readCoeffs()
+{
+    writeForceFields_ = coeffs().lookupOrDefault("writeForceFields", false);
 
     const bool foundScale = coeffs().found("scale");
     const bool foundOgn = coeffs().found("origin");
@@ -126,6 +132,38 @@ void Foam::fv::forcing::readCoeffs()
 }
 
 
+Foam::dimensionedScalar Foam::fv::forcing::regionLength() const
+{
+    dimensionedScalar vs("vs", dimVolume, 0);
+    dimensionedScalar vgrads("vs", dimArea, 0);
+
+    forAll(origins_, i)
+    {
+        const volScalarField x
+        (
+            (mesh().C() - dimensionedVector(dimLength, origins_[i]))
+          & directions_[i]
+        );
+
+        const volScalarField scale
+        (
+            evaluate
+            (
+                *scale_,
+                dimless,
+                x
+            )
+        );
+
+        vs += fvc::domainIntegrate(scale);
+        vgrads += fvc::domainIntegrate(directions_[i] & fvc::grad(scale));
+    }
+
+    return vs/vgrads;
+}
+
+
+
 Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::scale() const
 {
     tmp<volScalarField::Internal> tscale
@@ -134,7 +172,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::scale() const
         (
             typedName("scale"),
             mesh(),
-            dimensionedScalar(dimless, scale_.valid() ? 0 : 1)
+            dimensionedScalar(dimless, 0)
         )
     );
 
@@ -151,11 +189,11 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::scale() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff
-(
-    const volScalarField::Internal& scale
-) const
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff() const
 {
+    tmp<volScalarField::Internal> tscale(this->scale());
+    const volScalarField::Internal& scale = tscale();
+
     tmp<volScalarField::Internal> tforceCoeff
     (
         volScalarField::Internal::New(typedName("forceCoeff"), lambda_*scale)
@@ -181,9 +219,16 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::forcing::forceCoeff() const
+void Foam::fv::forcing::writeForceFields() const
 {
-    return forceCoeff(scale());
+    if (writeForceFields_)
+    {
+        Info<< "    Writing forcing fields: forcing:scale, forcing:forceCoeff"
+            << endl;
+
+        scale()().write();
+        forceCoeff()().write();
+    }
 }
 
 
@@ -206,16 +251,6 @@ Foam::fv::forcing::forcing
     directions_()
 {
     readCoeffs();
-
-    if (writeForceFields_)
-    {
-        Info<< "    Writing forcing fields: forcing:scale, forcing:forceCoeff"
-            << endl;
-
-        const volScalarField::Internal scale(this->scale());
-        scale.write();
-        forceCoeff(scale)->write();
-    }
 }
 
 

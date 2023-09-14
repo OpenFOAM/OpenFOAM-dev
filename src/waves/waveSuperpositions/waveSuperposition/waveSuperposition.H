@@ -205,6 +205,10 @@ public:
 
     // Member Functions
 
+        //- Return the maximum wave speed for the given time t
+        //  used to evaluate the mean velocity
+        scalar maxWaveSpeed(const scalar t) const;
+
         //- Get the height above the waves at a given time and global positions
         virtual tmp<scalarField> height
         (

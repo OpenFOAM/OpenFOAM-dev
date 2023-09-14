@@ -45,8 +45,8 @@ forcing
         duration    0.5;
     }
 
-    lambda          5;
-    lambdaBoundary  25;
+    lambdaCoeff         2;
+    lambdaBoundaryCoeff 10;
 
     // Write the forcing fields: forcing:scale, forcing:forceCoeff
     writeForceFields true;

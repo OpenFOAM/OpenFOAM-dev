@@ -42,6 +42,12 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+void Foam::fv::verticalDamping::readCoeffs()
+{
+    readLambda();
+}
+
+
 void Foam::fv::verticalDamping::add
 (
     const volVectorField& alphaRhoU,
@@ -69,7 +75,9 @@ Foam::fv::verticalDamping::verticalDamping
 :
     forcing(name, modelType, mesh, dict),
     UName_(coeffs().lookupOrDefault<word>("U", "U"))
-{}
+{
+    writeForceFields();
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -129,6 +137,20 @@ void Foam::fv::verticalDamping::mapMesh(const polyMeshMap& map)
 
 void Foam::fv::verticalDamping::distribute(const polyDistributionMap&)
 {}
+
+
+bool Foam::fv::verticalDamping::read(const dictionary& dict)
+{
+    if (forcing::read(dict))
+    {
+        readCoeffs();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 
 // ************************************************************************* //
