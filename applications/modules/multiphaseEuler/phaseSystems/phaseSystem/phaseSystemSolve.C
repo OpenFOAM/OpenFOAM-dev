@@ -182,19 +182,19 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
                     )
                 );
 
-                forAll(movingPhases(), movingPhasej)
+                forAll(phases(), phasej)
                 {
-                    const phaseModel& phase2 = movingPhases()[movingPhasej];
+                    const phaseModel& phase2 = phases()[phasej];
                     const volScalarField& alpha2 = phase2;
 
                     if (&phase2 != &phase)
                     {
-                        if (phase.divU().valid())
+                        if (!phase.stationary() && phase.divU().valid())
                         {
                             dgdt += alpha2()*phase.divU()()();
                         }
 
-                        if (phase2.divU().valid())
+                        if (!phase2.stationary() && phase2.divU().valid())
                         {
                             dgdt -= alpha()*phase2.divU()()();
                         }
