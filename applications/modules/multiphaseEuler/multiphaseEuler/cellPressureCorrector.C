@@ -45,6 +45,11 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 {
     volScalarField& p(p_);
 
+    volScalarField rho("rho", fluid.rho());
+
+    // Correct p_rgh for consistency with the current density
+    p_rgh = p - rho*buoyancy.gh - buoyancy.pRef;
+
     // Face volume fractions
     PtrList<surfaceScalarField> alphafs(phases.size());
     forAll(phases, phasei)
@@ -107,8 +112,6 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
 
         fluid.invADVs(As, HVms, invADVs, invADVfs);
     }
-
-    volScalarField rho("rho", fluid.rho());
 
     // Explicit force fluxes
     PtrList<surfaceScalarField> alphaByADfs;
@@ -218,7 +221,6 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             fvConstraints().constrain(phase.URef());
         }
     }
-
 
     // --- Pressure corrector loop
     while (pimple.correct())
@@ -511,7 +513,6 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
         // Correct p_rgh for consistency with p and the updated densities
         rho = fluid.rho();
         p_rgh = p - rho*buoyancy.gh - buoyancy.pRef;
-        p_rgh.correctBoundaryConditions();
     }
 
     UEqns.clear();
