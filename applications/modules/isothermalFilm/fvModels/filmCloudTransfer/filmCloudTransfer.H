@@ -75,7 +75,6 @@ class filmCloudTransfer
 
             scalarField massFromCloud_;
             vectorField momentumFromCloud_;
-            scalarField pressureFromCloud_;
             scalarField energyFromCloud_;
 
         //- Switch to ensure the ejection rate is not updated until
@@ -147,13 +146,6 @@ public:
 
         // Add explicit and implicit contributions to compressible equation
 
-            //- Add explicit droplet impingement contribution to pressure field
-            virtual void addSup
-            (
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
-            ) const;
-
             //- Add explicit contribution to phase continuity
             virtual void addSup
             (
@@ -193,7 +185,6 @@ public:
                 const label facei,
                 const scalar mass,
                 const vector& momentum,
-                const scalar pressure,
                 const scalar energy
             );
 

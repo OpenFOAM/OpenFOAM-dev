@@ -83,20 +83,11 @@ void Foam::CloudFilmTransfer<CloudType>::absorbInteraction
     const parcelThermo& thermo =
         static_cast<const ThermoCloud<CloudType>&>(this->owner()).thermo();
 
-    // Patch face normal
-    const vector& nf = pp.faceNormals()[facei];
-
     // Patch velocity
     const vector& Up = this->owner().U().boundaryField()[pp.index()][facei];
 
     // Relative parcel velocity
     const vector Urel = p.U() - Up;
-
-    // Parcel normal velocity
-    const vector Un = nf*(Urel & nf);
-
-    // Parcel tangential velocity
-    const vector Ut = Urel - Un;
 
     const liquidProperties& liq = thermo.liquids().properties()[0];
 
@@ -107,8 +98,7 @@ void Foam::CloudFilmTransfer<CloudType>::absorbInteraction
     (
         facei,
         mass,                           // mass
-        mass*Ut,                        // tangential momentum
-        mass*mag(Un),                   // impingement pressure
+        mass*Urel,                      // momentum
         mass*liq.Hs(pc, p.T())          // energy
     );
 

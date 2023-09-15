@@ -76,8 +76,9 @@ Foam::solvers::isothermalFilm::pe() const
     // Update the pressure, mapping from the fluid region as required
     p.correctBoundaryConditions();
 
-    // Add the droplet impingement pressure
-    p.ref() += mesh.time().deltaT()*fvModels().source(p, "pi")().Su();
+    // Add the pressure caused normal momentum sources (e.g., parcels impinging
+    // with a normal velocity)
+    p.ref() += VbyA*(nHat & (fvModels().source(alpha, rho, U) & U));
 
     return p;
 }
@@ -90,6 +91,10 @@ void Foam::solvers::isothermalFilm::momentumPredictor()
     // Calculate the surface tension coefficient
     const volScalarField sigma(this->sigma());
 
+    // Get the momentum source and remove any normal components
+    fvVectorMatrix alphaRhoUsource(fvModels().source(alpha, rho, U));
+    alphaRhoUsource.source() -= nHat*(nHat & alphaRhoUsource.source());
+
     tUEqn =
     (
         fvm::ddt(alpha, rho, U) + fvm::div(alphaRhoPhi, U)
@@ -97,7 +102,7 @@ void Foam::solvers::isothermalFilm::momentumPredictor()
       + momentumTransport->divDevTau(U)
      ==
         contactForce(sigma)
-      + fvModels().source(alpha, rho, U)
+      + alphaRhoUsource
     );
     fvVectorMatrix& UEqn = tUEqn.ref();
 
