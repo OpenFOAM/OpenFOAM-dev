@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -827,11 +827,11 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::A() const
 
 
 template<class Type>
-Foam::tmp<Foam::volScalarField::Internal> Foam::fvMatrix<Type>::Su() const
+Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMatrix<Type>::Su() const
 {
-    tmp<volScalarField::Internal> tSu
+    tmp<VolInternalField<Type>> tSu
     (
-        volScalarField::Internal::New
+        VolInternalField<Type>::New
         (
             "Su(" +psi_.name() + ')',
             psi_.mesh(),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -438,7 +438,7 @@ public:
             tmp<volScalarField> A() const;
 
             //- Return the explicit source
-            tmp<volScalarField::Internal> Su() const;
+            tmp<VolInternalField<Type>> Su() const;
 
             //- Return the implicit source
             tmp<volScalarField::Internal> Sp() const;
