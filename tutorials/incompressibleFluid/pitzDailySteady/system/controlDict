@@ -63,6 +63,8 @@ functions
     )
 
     #includeFunc writeObjects(kEpsilon:G)
+
+    #includeFunc strainRate(writeControl=writeTime)
 }
 
 // ************************************************************************* //

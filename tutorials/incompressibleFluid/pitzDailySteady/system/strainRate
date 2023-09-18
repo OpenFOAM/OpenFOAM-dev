@@ -1,0 +1,32 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+type            coded;
+
+// Load the library containing the 'coded' functionObject
+libs            ("libutilityFunctionObjects.so");
+
+name            strainRate;
+
+codeInclude
+#{
+    #include "fvcGrad.H"
+#};
+
+codeWrite
+#{
+    const volVectorField& U(mesh().lookupObject<volVectorField>("U"));
+
+    volScalarField::New
+    (
+        "strainRate",
+        sqrt(2.0)*mag(symm(fvc::grad(U)))
+    )->write();
+#};
+
+// ************************************************************************* //
