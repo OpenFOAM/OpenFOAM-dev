@@ -10,7 +10,7 @@ type            coded;
 
 libs            ("libutilityFunctionObjects.so");
 
-name            generateAlpha;
+name            eRThetaZ;
 
 codeInclude
 #{
