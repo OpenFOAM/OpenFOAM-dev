@@ -229,7 +229,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
     if (timeIndices_.found((meshTime + timeDelta_/2)/timeDelta_))
     {
         const word otherMeshDir =
-            "meshToMesh_" + time.timeName(meshTime);
+            mesh().dbDir()/"meshToMesh_" + time.timeName(meshTime);
 
         Info << "Mapping to mesh " << otherMeshDir << endl;
 
