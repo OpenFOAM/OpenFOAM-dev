@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,6 +161,7 @@ void Foam::FreeStream<CloudType>::inflow()
         cloud.boundaryU().boundaryField()
     );
 
+    label nLocateBoundaryHits = 0;
 
     forAll(patches_, p)
     {
@@ -401,7 +402,15 @@ void Foam::FreeStream<CloudType>::inflow()
                         cloud.constProps(typeId).internalDegreesOfFreedom()
                     );
 
-                    cloud.addNewParcel(p, celli, U, Ei, typeId);
+                    cloud.addNewParcel
+                    (
+                        p,
+                        celli,
+                        nLocateBoundaryHits,
+                        U,
+                        Ei,
+                        typeId
+                    );
 
                     particlesInserted++;
                 }
@@ -409,11 +418,19 @@ void Foam::FreeStream<CloudType>::inflow()
         }
     }
 
+    reduce(nLocateBoundaryHits, sumOp<label>());
+    if (nLocateBoundaryHits != 0)
+    {
+        WarningInFunction
+            << "Freestream inflow  model for cloud " << this->owner().name()
+            << " did not accurately locate " << nLocateBoundaryHits
+            << " particles" << endl;
+    }
+
     reduce(particlesInserted, sumOp<label>());
 
     Info<< "    Particles inserted              = "
         << particlesInserted << endl;
-
 }
 
 

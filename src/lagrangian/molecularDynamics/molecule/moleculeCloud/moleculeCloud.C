@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -490,6 +490,8 @@ void Foam::moleculeCloud::initialiseMolecules
             << abort(FatalError);
     }
 
+    label nLocateBoundaryHits = 0;
+
     forAll(cellZones, z)
     {
         const cellZone& zone(cellZones[z]);
@@ -750,6 +752,7 @@ void Foam::moleculeCloud::initialiseMolecules
                                 (
                                     globalPosition,
                                     cell,
+                                    nLocateBoundaryHits,
                                     id,
                                     tethered,
                                     temperature,
@@ -830,6 +833,7 @@ void Foam::moleculeCloud::initialiseMolecules
                                             (
                                                 globalPosition,
                                                 cell,
+                                                nLocateBoundaryHits,
                                                 id,
                                                 tethered,
                                                 temperature,
@@ -901,6 +905,7 @@ void Foam::moleculeCloud::initialiseMolecules
                                             (
                                                 globalPosition,
                                                 cell,
+                                                nLocateBoundaryHits,
                                                 id,
                                                 tethered,
                                                 temperature,
@@ -957,6 +962,15 @@ void Foam::moleculeCloud::initialiseMolecules
             }
         }
     }
+
+    reduce(nLocateBoundaryHits, sumOp<label>());
+    if (nLocateBoundaryHits != 0)
+    {
+        WarningInFunction
+            << "Initialisation of cloud " << this->name()
+            << " did not accurately locate " << nLocateBoundaryHits
+            << " particles" << endl;
+    }
 }
 
 
@@ -964,6 +978,7 @@ void Foam::moleculeCloud::createMolecule
 (
     const point& position,
     label cell,
+    label& nLocateBoundaryHits,
     label id,
     bool tethered,
     scalar temperature,
@@ -1022,6 +1037,7 @@ void Foam::moleculeCloud::createMolecule
             mesh_,
             position,
             cell,
+            nLocateBoundaryHits,
             Q,
             v,
             Zero,

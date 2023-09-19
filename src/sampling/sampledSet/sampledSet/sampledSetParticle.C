@@ -33,12 +33,13 @@ Foam::sampledSetParticle::sampledSetParticle
     const polyMesh& mesh,
     const point& position,
     const label celli,
+    label& nLocateBoundaryHits,
     const label seti,
     const scalar setF,
     const scalar distance
 )
 :
-    particle(mesh, position, celli),
+    particle(mesh, position, celli, nLocateBoundaryHits),
     seti_(seti),
     setF_(setF),
     distance_(distance),

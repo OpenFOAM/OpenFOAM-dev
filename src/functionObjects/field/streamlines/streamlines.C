@@ -285,6 +285,7 @@ bool Foam::functionObjects::streamlines::write()
             cloudName_,
             IDLList<streamlinesParticle>()
         );
+        label nLocateBoundaryHits;
         forAll(sampledSetPtr_(), i)
         {
             particles.addParticle
@@ -294,6 +295,7 @@ bool Foam::functionObjects::streamlines::write()
                     mesh_,
                     sampledSetPtr_().positions()[i],
                     sampledSetPtr_().cells()[i],
+                    nLocateBoundaryHits,
                     lifeTime_,
                     gi.toGlobal(i)
                 )

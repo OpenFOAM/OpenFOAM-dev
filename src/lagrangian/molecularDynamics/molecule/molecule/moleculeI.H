@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -224,6 +224,7 @@ inline Foam::molecule::molecule
     const polyMesh& mesh,
     const vector& position,
     const label celli,
+    label& nLocateBoundaryHits,
     const tensor& Q,
     const vector& v,
     const vector& a,
@@ -236,7 +237,7 @@ inline Foam::molecule::molecule
 
 )
 :
-    particle(mesh, position, celli),
+    particle(mesh, position, celli, nLocateBoundaryHits),
     Q_(Q),
     v_(v),
     a_(a),

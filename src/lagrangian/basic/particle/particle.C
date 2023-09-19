@@ -369,6 +369,74 @@ void Foam::particle::changeCell(const polyMesh& mesh)
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::particle::particle
+(
+    const polyMesh& mesh,
+    const barycentric& coordinates,
+    const label celli,
+    const label tetFacei,
+    const label tetPti,
+    const label facei
+)
+:
+    coordinates_(coordinates),
+    celli_(celli),
+    tetFacei_(tetFacei),
+    tetPti_(tetPti),
+    facei_(facei),
+    stepFraction_(1),
+    stepFractionBehind_(0),
+    nTracksBehind_(0),
+    origProc_(Pstream::myProcNo()),
+    origId_(getNewParticleID())
+{}
+
+
+Foam::particle::particle
+(
+    const polyMesh& mesh,
+    const vector& position,
+    const label celli,
+    label& nLocateBoundaryHits
+)
+:
+    coordinates_(- vGreat, - vGreat, - vGreat, - vGreat),
+    celli_(celli),
+    tetFacei_(-1),
+    tetPti_(-1),
+    facei_(-1),
+    stepFraction_(1),
+    stepFractionBehind_(0),
+    nTracksBehind_(0),
+    origProc_(Pstream::myProcNo()),
+    origId_(getNewParticleID())
+{
+    if (!locate(mesh, position, celli))
+    {
+        nLocateBoundaryHits ++;
+    }
+}
+
+
+Foam::particle::particle(const particle& p)
+:
+    coordinates_(p.coordinates_),
+    celli_(p.celli_),
+    tetFacei_(p.tetFacei_),
+    tetPti_(p.tetPti_),
+    facei_(p.facei_),
+    stepFraction_(p.stepFraction_),
+    stepFractionBehind_(p.stepFractionBehind_),
+    nTracksBehind_(p.nTracksBehind_),
+    origProc_(p.origProc_),
+    origId_(p.origId_)
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 bool Foam::particle::locate
 (
     const polyMesh& mesh,
@@ -438,95 +506,12 @@ bool Foam::particle::locate
     tetPti_ = minTetPti;
     facei_ = -1;
     reset(1);
-
     track(mesh, displacement, 0);
-    if (!onFace())
-    {
-        return true;
-    }
 
-    return false;
+    // Return successful if in a cell
+    return !onBoundaryFace(mesh);
 }
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::particle::particle
-(
-    const polyMesh& mesh,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPti,
-    const label facei
-)
-:
-    coordinates_(coordinates),
-    celli_(celli),
-    tetFacei_(tetFacei),
-    tetPti_(tetPti),
-    facei_(facei),
-    stepFraction_(1),
-    stepFractionBehind_(0),
-    nTracksBehind_(0),
-    origProc_(Pstream::myProcNo()),
-    origId_(getNewParticleID())
-{}
-
-
-Foam::particle::particle
-(
-    const polyMesh& mesh,
-    const vector& position,
-    const label celli
-)
-:
-    coordinates_(- vGreat, - vGreat, - vGreat, - vGreat),
-    celli_(celli),
-    tetFacei_(-1),
-    tetPti_(-1),
-    facei_(-1),
-    stepFraction_(1),
-    stepFractionBehind_(0),
-    nTracksBehind_(0),
-    origProc_(Pstream::myProcNo()),
-    origId_(getNewParticleID())
-{
-    auto boundaryMsg = [](const point& position)
-    {
-        OStringStream oss;
-        oss << "Particle at " << position << " initialised in a location "
-            << "outside of the mesh.";
-        return oss.str();
-    };
-
-    locate
-    (
-        mesh,
-        position,
-        celli,
-        false,
-        boundaryMsg
-    );
-}
-
-
-Foam::particle::particle(const particle& p)
-:
-    coordinates_(p.coordinates_),
-    celli_(p.celli_),
-    tetFacei_(p.tetFacei_),
-    tetPti_(p.tetPti_),
-    facei_(p.facei_),
-    stepFraction_(p.stepFraction_),
-    stepFractionBehind_(p.stepFractionBehind_),
-    nTracksBehind_(p.nTracksBehind_),
-    origProc_(p.origProc_),
-    origId_(p.origId_)
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::scalar Foam::particle::track
 (
@@ -1086,7 +1071,8 @@ void Foam::particle::prepareForNonConformalCyclicTransfer
 void Foam::particle::correctAfterNonConformalCyclicTransfer
 (
     const polyMesh& mesh,
-    const label sendToPatch
+    const label sendToPatch,
+    labelList& patchNLocateBoundaryHits
 )
 {
     const nonConformalCyclicPolyPatch& nccpp =
@@ -1103,24 +1089,12 @@ void Foam::particle::correctAfterNonConformalCyclicTransfer
         coordinates_.d()
     );
 
-    auto boundaryMsg = [&nccpp](const point& position)
-    {
-        return
-            "Particle at " + name(position) + " crossed between "
-          + nonConformalCyclicPolyPatch::typeName + " patches "
-          + nccpp.name() + " and " + nccpp.nbrPatch().name()
-          + " to a location outside of the mesh.";
-    };
-
     // Locate the particle on the receiving side
-    locate
-    (
-        mesh,
-        receivePos,
-        mesh.faceOwner()[facei_ + nccpp.origPatch().start()],
-        false,
-        boundaryMsg
-    );
+    const label celli = mesh.faceOwner()[facei_ + nccpp.origPatch().start()];
+    if (!locate(mesh, receivePos, celli))
+    {
+        patchNLocateBoundaryHits[sendToPatch] ++;
+    }
 
     // The particle must remain associated with a face for the tracking to
     // register as incomplete
@@ -1221,6 +1195,7 @@ Foam::label Foam::particle::procTetPt
 
 
 // * * * * * * * * * * * * * * Friend Operators * * * * * * * * * * * * * * //
+//
 
 bool Foam::operator==(const particle& pA, const particle& pB)
 {

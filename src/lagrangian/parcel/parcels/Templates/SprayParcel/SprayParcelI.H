@@ -138,10 +138,11 @@ inline Foam::SprayParcel<ParcelType>::SprayParcel
 (
     const polyMesh& mesh,
     const vector& position,
-    const label celli
+    const label celli,
+    label& nLocateBoundaryHits
 )
 :
-    ParcelType(mesh, position, celli),
+    ParcelType(mesh, position, celli, nLocateBoundaryHits),
     d0_(this->d()),
     mass0_(this->mass()),
     position0_(this->position(mesh)),

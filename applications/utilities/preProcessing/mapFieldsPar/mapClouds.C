@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -241,15 +241,22 @@ void Foam::mapClouds(const fvMeshToFvMesh& interp)
         );
         forAll(positions, tgtParticlei)
         {
-            tgtCloud.addParticle
+            label nLocateBoundaryHits = 0;
+            autoPtr<passiveParticle> pPtr
             (
                 new passiveParticle
                 (
                     tgtMesh,
                     positions[tgtParticlei],
-                    tgtCells[tgtParticlei]
+                    tgtCells[tgtParticlei],
+                    nLocateBoundaryHits
                 )
             );
+
+            if (nLocateBoundaryHits == 0)
+            {
+                tgtCloud.addParticle(pPtr.ptr());
+            }
         }
 
         Info<< "    mapped "

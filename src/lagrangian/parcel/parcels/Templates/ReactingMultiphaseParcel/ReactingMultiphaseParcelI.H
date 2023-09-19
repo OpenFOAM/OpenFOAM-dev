@@ -91,10 +91,11 @@ inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 (
     const polyMesh& mesh,
     const vector& position,
-    const label celli
+    const label celli,
+    label& nLocateBoundaryHits
 )
 :
-    ParcelType(mesh, position, celli),
+    ParcelType(mesh, position, celli, nLocateBoundaryHits),
     mass0_(0),
     YGas_(0),
     YLiquid_(0),

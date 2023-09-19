@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ Foam::trackedParticle::trackedParticle
     const polyMesh& mesh,
     const vector& position,
     const label celli,
+    label& nLocateBoundaryHits,
     const point& end,
     const label level,
     const label i,
@@ -40,7 +41,7 @@ Foam::trackedParticle::trackedParticle
     const label k
 )
 :
-    particle(mesh, position, celli),
+    particle(mesh, position, celli, nLocateBoundaryHits),
     start_(this->position(mesh)),
     end_(end),
     level_(level),

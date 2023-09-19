@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,6 +66,7 @@ void Foam::sampledSets::points::calcSamples
 
     // Consider each point
     label segmenti = 0, samplei = 0, pointi0 = labelMax, pointi = 0;
+    label nLocateBoundaryHits = 0;
     scalar distance = 0;
     while (pointi < points.size())
     {
@@ -129,6 +130,7 @@ void Foam::sampledSets::points::calcSamples
                         mesh,
                         points[pointi],
                         procAndCelli.second(),
+                        nLocateBoundaryHits,
                         pointi,
                         1,
                         distance

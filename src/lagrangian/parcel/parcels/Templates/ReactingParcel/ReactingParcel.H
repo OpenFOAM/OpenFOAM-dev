@@ -203,7 +203,8 @@ public:
         (
             const polyMesh& mesh,
             const vector& position,
-            const label celli
+            const label celli,
+            label& nLocateBoundaryHits
         );
 
         //- Construct from Istream

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,6 +107,8 @@ void Foam::DSMCCloud<ParcelType>::initialise
 
     numberDensities /= nParticle_;
 
+    label nLocateBoundaryHits = 0;
+
     forAll(mesh_.cells(), celli)
     {
         List<tetIndices> cellTets = polyMeshTetDecomposition::cellTetIndices
@@ -174,10 +176,19 @@ void Foam::DSMCCloud<ParcelType>::initialise
 
                     U += velocity;
 
-                    addNewParcel(p, celli, U, Ei, typeId);
+                    addNewParcel(p, celli, nLocateBoundaryHits, U, Ei, typeId);
                 }
             }
         }
+    }
+
+    reduce(nLocateBoundaryHits, sumOp<label>());
+    if (nLocateBoundaryHits != 0)
+    {
+        WarningInFunction
+            << "Initialisation of cloud " << this->name()
+            << " did not accurately locate " << nLocateBoundaryHits
+            << " particles" << endl;
     }
 
     // Initialise the sigmaTcRMax_ field to the product of the cross section of
@@ -454,12 +465,25 @@ void Foam::DSMCCloud<ParcelType>::addNewParcel
 (
     const vector& position,
     const label celli,
+    label& nLocateBoundaryHits,
     const vector& U,
     const scalar Ei,
     const label typeId
 )
 {
-    this->addParticle(new ParcelType(mesh_, position, celli, U, Ei, typeId));
+    this->addParticle
+    (
+        new ParcelType
+        (
+            mesh_,
+            position,
+            celli,
+            nLocateBoundaryHits,
+            U,
+            Ei,
+            typeId
+        )
+    );
 }
 
 

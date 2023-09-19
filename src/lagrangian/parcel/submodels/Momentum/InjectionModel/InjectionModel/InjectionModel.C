@@ -281,7 +281,18 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
     // Found it. Construct the barycentric coordinates.
     if (proci == Pstream::myProcNo())
     {
-        particle p(this->owner().mesh(), pos, celli);
+        label nLocateBoundaryHits;
+        particle p(this->owner().mesh(), pos, celli, nLocateBoundaryHits);
+
+        if (nLocateBoundaryHits != 0)
+        {
+            WarningInFunction
+                << "Injection model " << this->modelName()
+                << " for cloud " << this->owner().name()
+                << " did not accurately locate the position "
+                << pos << " within the mesh" << endl;
+        }
+
         coordinates = p.coordinates();
         celli = p.cell();
         tetFacei = p.tetFace();

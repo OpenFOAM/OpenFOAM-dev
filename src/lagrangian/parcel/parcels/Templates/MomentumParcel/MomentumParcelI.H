@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,10 +100,11 @@ inline Foam::MomentumParcel<ParcelType>::MomentumParcel
 (
     const polyMesh& owner,
     const vector& position,
-    const label celli
+    const label celli,
+    label& nLocateBoundaryHits
 )
 :
-    ParcelType(owner, position, celli),
+    ParcelType(owner, position, celli, nLocateBoundaryHits),
     moving_(true),
     typeId_(-1),
     nParticle_(0),

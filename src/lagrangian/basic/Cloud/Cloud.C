@@ -180,16 +180,6 @@ void Foam::Cloud<ParticleType>::storeRays() const
 }
 
 
-template<class ParticleType>
-Foam::string Foam::Cloud<ParticleType>::mapOutsideMsg(const point& position)
-{
-    OStringStream oss;
-    oss << "Particle at " << position << " mapped to a location outside of "
-        << "the new mesh. This particle will be removed.";
-    return oss.str();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ParticleType>
@@ -241,18 +231,23 @@ void Foam::Cloud<ParticleType>::deleteParticle(ParticleType& p)
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::deleteLostParticles()
 {
+    label lostCount = 0;
+
     forAllIter(typename Cloud<ParticleType>, *this, pIter)
     {
-        ParticleType& p = pIter();
-
-        if (p.cell() == -1)
+        if (pIter().cell() == -1)
         {
-            WarningInFunction
-                << "deleting lost particle at position "
-                << p.position(pMesh_) << endl;
-
-            deleteParticle(p);
+            deleteParticle(pIter());
+            lostCount ++;
         }
+    }
+
+    reduce(lostCount, sumOp<label>());
+    if (lostCount != 0)
+    {
+        WarningInFunction
+            << "Cloud " << this->name()
+            << " deleted " << lostCount << " lost particles" << endl;
     }
 }
 
@@ -422,6 +417,23 @@ void Foam::Cloud<ParticleType>::move
             }
         }
     }
+
+    // Warn about any approximate locates
+    Pstream::listCombineGather(td.patchNLocateBoundaryHits, plusEqOp<label>());
+    if (Pstream::master())
+    {
+        forAll(td.patchNLocateBoundaryHits, patchi)
+        {
+            if (td.patchNLocateBoundaryHits[patchi] != 0)
+            {
+                WarningInFunction
+                    << "Cloud " << name() << " did not accurately locate "
+                    << td.patchNLocateBoundaryHits[patchi]
+                    << " particles that transferred to patch "
+                    << pMesh_.boundaryMesh()[patchi].name() << nl;
+            }
+        }
+    }
 }
 
 
@@ -446,6 +458,8 @@ void Foam::Cloud<ParticleType>::topoChange(const polyTopoChangeMap& map)
 
     const vectorField& positions = globalPositionsPtr_();
 
+    label lostCount = 0;
+
     label particlei = 0;
     forAllIter(typename Cloud<ParticleType>, *this, iter)
     {
@@ -453,10 +467,19 @@ void Foam::Cloud<ParticleType>::topoChange(const polyTopoChangeMap& map)
 
         const label celli = map.reverseCellMap()[iter().cell()];
 
-        if (!iter().map(pMesh_, pos, celli, mapOutsideMsg))
+        if (!iter().locate(pMesh_, pos, celli))
         {
             this->remove(iter);
+            lostCount ++;
         }
+    }
+
+    reduce(lostCount, sumOp<label>());
+    if (lostCount != 0)
+    {
+        WarningInFunction
+            << "Topology change of cloud " << this->name()
+            << " lost " << lostCount << " particles" << endl;
     }
 }
 
@@ -485,6 +508,8 @@ void Foam::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
 
     const vectorField& positions = globalPositionsPtr_();
 
+    label lostCount = 0;
+
     // Loop the particles. Map those that remain on this processor, and
     // transfer others into send arrays.
     List<DynamicList<label>> sendCellIndices(Pstream::nProcs());
@@ -503,14 +528,15 @@ void Foam::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
 
             if (tgtProcCell == remote())
             {
-                WarningInFunction << mapOutsideMsg(pos) << nl;
                 this->remove(iter);
+                lostCount ++;
             }
             else if (proci == Pstream::myProcNo())
             {
-                if (!iter().map(pMesh_, pos, celli, mapOutsideMsg))
+                if (!iter().locate(pMesh_, pos, celli))
                 {
                     this->remove(iter);
+                    lostCount ++;
                 }
             }
             else
@@ -522,56 +548,68 @@ void Foam::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
         }
     }
 
-    // If serial then there is nothing more to do
-    if (!Pstream::parRun())
+    // If parallel then send and receive particles that move processes and map
+    // those sent to this process
+    if (Pstream::parRun())
     {
-        return;
-    }
+        // Create transfer buffers
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
-    // Create transfer buffers
-    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
-
-    // Stream into send buffers
-    forAll(sendParticles, proci)
-    {
-        if (sendParticles[proci].size())
+        // Stream into send buffers
+        forAll(sendParticles, proci)
         {
-            UOPstream particleStream(proci, pBufs);
-
-            particleStream
-                << sendCellIndices[proci]
-                << sendPositions[proci]
-                << sendParticles[proci];
-        }
-    }
-
-    // Finish sending
-    labelList receiveSizes(Pstream::nProcs());
-    pBufs.finishedSends(receiveSizes);
-
-    // Retrieve from receive buffers and map into the new mesh
-    forAll(sendParticles, proci)
-    {
-        if (receiveSizes[proci])
-        {
-            UIPstream particleStream(proci, pBufs);
-
-            const labelList receiveCellIndices(particleStream);
-            const List<point> receivePositions(particleStream);
-            IDLList<ParticleType> receiveParticles(particleStream);
-
-            label particlei = 0;
-            forAllIter(typename Cloud<ParticleType>, receiveParticles, iter)
+            if (sendParticles[proci].size())
             {
-                const label celli = receiveCellIndices[particlei];
-                const vector& pos = receivePositions[particlei ++];
+                UOPstream particleStream(proci, pBufs);
 
-                if (iter().map(pMesh_, pos, celli, mapOutsideMsg))
+                particleStream
+                    << sendCellIndices[proci]
+                    << sendPositions[proci]
+                    << sendParticles[proci];
+            }
+        }
+
+        // Finish sending
+        labelList receiveSizes(Pstream::nProcs());
+        pBufs.finishedSends(receiveSizes);
+
+        // Retrieve from receive buffers and map into the new mesh
+        forAll(sendParticles, proci)
+        {
+            if (receiveSizes[proci])
+            {
+                UIPstream particleStream(proci, pBufs);
+
+                const labelList receiveCellIndices(particleStream);
+                const List<point> receivePositions(particleStream);
+                IDLList<ParticleType> receiveParticles(particleStream);
+
+                label particlei = 0;
+                forAllIter(typename Cloud<ParticleType>, receiveParticles, iter)
                 {
-                    this->append(receiveParticles.remove(iter));
+                    const label celli = receiveCellIndices[particlei];
+                    const vector& pos = receivePositions[particlei ++];
+
+                    if (iter().locate(pMesh_, pos, celli))
+                    {
+                        this->append(receiveParticles.remove(iter));
+                    }
+                    else
+                    {
+                        receiveParticles.remove(iter);
+                        lostCount ++;
+                    }
                 }
             }
         }
+    }
+
+    reduce(lostCount, sumOp<label>());
+    if (lostCount != 0)
+    {
+        WarningInFunction
+            << "Mesh-to-mesh mapping of cloud " << this->name()
+            << " lost " << lostCount << " particles" << endl;
     }
 }
 
@@ -660,6 +698,8 @@ void Foam::Cloud<ParticleType>::distribute(const polyDistributionMap& map)
         IDLList<ParticleType>()
     );
 
+    label lostCount = 0;
+
     // Locate the particles within the new mesh
     forAll(cellParticles, celli)
     {
@@ -668,11 +708,24 @@ void Foam::Cloud<ParticleType>::distribute(const polyDistributionMap& map)
         {
             const point& pos = cellParticlePositions[celli][cellParticlei++];
 
-            if (iter().map(pMesh_, pos, celli, mapOutsideMsg))
+            if (iter().locate(pMesh_, pos, celli))
             {
                 this->append(cellParticles[celli].remove(iter));
             }
+            else
+            {
+                cellParticles[celli].remove(iter);
+                lostCount ++;
+            }
         }
+    }
+
+    reduce(lostCount, sumOp<label>());
+    if (lostCount != 0)
+    {
+        WarningInFunction
+            << "Mesh-to-mesh mapping of cloud " << this->name()
+            << " lost " << lostCount << " particles" << endl;
     }
 }
 

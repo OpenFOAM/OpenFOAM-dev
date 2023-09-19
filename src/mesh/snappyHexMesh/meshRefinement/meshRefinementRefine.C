@@ -347,6 +347,8 @@ void Foam::meshRefinement::markFeatureCellLevel
     // what to seed. Do this on only the processor that
     // holds the insidePoint.
 
+    label nLocateBoundaryHits = 0;
+
     forAll(insidePoints, i)
     {
         const point& insidePoint = insidePoints[i];
@@ -395,6 +397,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                                 mesh_,
                                 insidePoint,
                                 celli,
+                                nLocateBoundaryHits,
                                 featureMesh.points()[pointi],   // endpos
                                 featureLevel,                   // level
                                 feati,                          // featureMesh
@@ -438,6 +441,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                                 mesh_,
                                 insidePoint,
                                 celli,
+                                nLocateBoundaryHits,
                                 featureMesh.points()[pointi],   // endpos
                                 featureLevel,                   // level
                                 feati,                          // featureMesh

@@ -121,6 +121,7 @@ void Foam::sampledSets::lineFace::calcSamples
 
     // Create each segment in turn
     label segmenti = 0;
+    label nLocateBoundaryHits = 0;
     forAll(procCandidateCells, proci)
     {
         forAll(procCandidateCells[proci], candidatei)
@@ -160,6 +161,7 @@ void Foam::sampledSets::lineFace::calcSamples
                             mesh,
                             p,
                             celli,
+                            nLocateBoundaryHits,
                             0,
                             i == 0 ? t : 1 - t,
                             0
@@ -206,7 +208,8 @@ void Foam::sampledSets::lineFace::calcSamples
                 // the tracks
                 if (proci == Pstream::myProcNo() && i == 0 && storeCells)
                 {
-                    particle trackBwd(mesh, p, celli), trackFwd(trackBwd);
+                    particle trackBwd(mesh, p, celli, nLocateBoundaryHits);
+                    particle trackFwd(trackBwd);
                     trackBwd.trackToFace(mesh, start - p, 0);
                     trackFwd.trackToFace(mesh, end - p, 0);
                     if (trackBwd.onFace() && trackFwd.onFace())

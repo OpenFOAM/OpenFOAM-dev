@@ -113,6 +113,8 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
         const vectorField& Sf = mesh.Sf().boundaryField()[filmPatchi];
         const scalarField& magSf = mesh.magSf().boundaryField()[filmPatchi];
 
+        label nLocateBoundaryHits = 0;
+
         if (massParcelPatch_.size())
         {
             forAll(injectorCellsPatch, j)
@@ -131,7 +133,13 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
 
                     // Create a new parcel
                     parcelType* pPtr =
-                        new parcelType(this->owner().pMesh(), pos, celli);
+                        new parcelType
+                        (
+                            this->owner().pMesh(),
+                            pos,
+                            celli,
+                            nLocateBoundaryHits
+                        );
 
                     // Check/set new parcel thermo properties
                     cloud.setParcelThermoProperties(*pPtr);
@@ -155,6 +163,17 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
                     }
                 }
             }
+        }
+
+        reduce(nLocateBoundaryHits, sumOp<label>());
+        if (nLocateBoundaryHits != 0)
+        {
+            WarningInFunction
+                << "Injection by surface film model for cloud "
+                << this->owner().name()
+                << " on patch " << pbm[filmPatchi].name()
+                << " did not accurately locate " << nLocateBoundaryHits
+                << " particles" << endl;
         }
     }
 }

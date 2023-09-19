@@ -119,9 +119,6 @@ class Cloud
         //- Store rays necessary for non conformal cyclic transfer
         void storeRays() const;
 
-        //- Generate a "mapped outside" warning messgage
-        static string mapOutsideMsg(const point& position);
-
 
 public:
 

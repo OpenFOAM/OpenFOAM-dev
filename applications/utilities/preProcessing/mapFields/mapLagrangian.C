@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -243,18 +243,25 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
 
                         if (targetCell >= 0)
                         {
-                            unmappedSource.erase(sourceParticleI);
-                            addParticles.append(sourceParticleI);
-                            targetParcels.addParticle
+                            label nLocateBoundaryHits = 0;
+                            autoPtr<passiveParticle> pPtr
                             (
                                 new passiveParticle
                                 (
                                     meshTarget,
                                     iter().position(meshSource),
-                                    targetCell
+                                    targetCell,
+                                    nLocateBoundaryHits
                                 )
                             );
-                            sourceParcels.remove(&iter());
+
+                            if (nLocateBoundaryHits == 0)
+                            {
+                                unmappedSource.erase(sourceParticleI);
+                                addParticles.append(sourceParticleI);
+                                targetParcels.addParticle(pPtr.ptr());
+                                sourceParcels.remove(&iter());
+                            }
                         }
                     }
                     sourceParticleI++;

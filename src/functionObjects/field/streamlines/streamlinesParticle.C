@@ -132,11 +132,12 @@ Foam::streamlinesParticle::streamlinesParticle
     const polyMesh& mesh,
     const vector& position,
     const label celli,
+    label& nLocateBoundaryHits,
     const label lifeTime,
     const label trackIndex
 )
 :
-    particle(mesh, position, celli),
+    particle(mesh, position, celli, nLocateBoundaryHits),
     lifeTime_(lifeTime),
     trackIndex_(trackIndex),
     trackPartIndex_(0),

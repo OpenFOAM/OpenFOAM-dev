@@ -70,6 +70,8 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
     // Add particles to track to sample locations
     nPatchFaces = 0;
 
+    label nLocateBoundaryHits = 0;
+
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
         label patchi = iter.key();
@@ -86,6 +88,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
                     mesh_,
                     patch.Cf()[patchFacei],
                     patch.faceCells()[patchFacei],
+                    nLocateBoundaryHits,
                   - distance_*nf[patchFacei],
                     globalWalls.toGlobal(nPatchFaces) // passive data
                 )

@@ -149,6 +149,7 @@ public:
             const polyMesh& mesh,
             const point& position,
             const label celli,
+            label& nLocateBoundaryHits,
             const label seti,
             const scalar setF,
             const scalar distance
