@@ -8,8 +8,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Copy the source case
 isTest "$@" && path=.. || path=$FOAM_TUTORIALS/incompressibleFluid
 cp -r $path/pitzDailySteady/constant .
-cp -r $path/pitzDailySteady/system/controlDict system
-cp -r $path/pitzDailySteady/system/fv* system
+cp -rn $path/pitzDailySteady/system/* system
 cp -r $path/pitzDailySteady .
 
 # Run the source case in parallel
@@ -19,7 +18,7 @@ cp -r $path/pitzDailySteady .
     cp ../system/decomposeParDict system
     runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/pitzDaily
     runApplication decomposePar
-    runParallel foamRun
+    runParallel foamRun -noFunctionObjects
 )
 
 # Mesh
@@ -38,7 +37,7 @@ runApplication decomposePar
 #
 runParallel mapFieldsPar pitzDailySteady -sourceTime latestTime -fields "(epsilon k nut p U)"
 runApplication foamDictionary system/fvSolution -entry relaxationFactors/equations -set '{ ".*" 0.1; }'
-runParallel foamRun
+runParallel foamRun -noFunctionObjects
 
 # Reconstruct, including the values mapped to the zero directory
 runApplication reconstructPar -withZero

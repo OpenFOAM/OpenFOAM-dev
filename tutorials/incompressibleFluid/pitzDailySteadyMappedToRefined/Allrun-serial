@@ -8,14 +8,15 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Copy the source case
 isTest "$@" && path=.. || path=$FOAM_TUTORIALS/incompressibleFluid
 cp -r $path/pitzDailySteady/constant .
-cp -r $path/pitzDailySteady/system/* system
+cp -rn $path/pitzDailySteady/system/* system
 cp -r $path/pitzDailySteady .
 
 # Run the source case
 (
     cd pitzDailySteady
     isTest "$@" && cleanCase
-    ./Allrun
+    runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/pitzDaily
+    runApplication foamRun -noFunctionObjects
 )
 
 # Mesh
@@ -23,6 +24,6 @@ cp -r $path/pitzDailySteady .
 
 # Map from the source case into this case and run
 runApplication mapFieldsPar pitzDailySteady -consistent -sourceTime latestTime
-runApplication foamRun
+runApplication foamRun -noFunctionObjects
 
 #------------------------------------------------------------------------------
