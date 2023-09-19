@@ -122,6 +122,9 @@ public:
             //- Patch face to which to send the particle
             label sendToPatchFace;
 
+            //- Position to which to send
+            vector sendToPosition;
+
             //- Number of boundary hits that occurred during locate executions
             //  following (non-conformal) patch transfers. For reporting.
             labelList patchNLocateBoundaryHits;
@@ -137,6 +140,7 @@ public:
             sendFromPatch(-1),
             sendToPatch(-1),
             sendToPatchFace(-1),
+            sendToPosition(vector::uniform(NaN)),
             patchNLocateBoundaryHits
             (
                 mesh.boundaryMesh().size()
@@ -598,7 +602,8 @@ public:
             (
                 const polyMesh& mesh,
                 const label sendToPatch,
-                const label sendToPatchFace
+                const label sendToPatchFace,
+                const vector& sendToPosition
             );
 
             //- Make changes following a transfer across a non conformal cyclic

@@ -1036,7 +1036,8 @@ void Foam::particle::prepareForNonConformalCyclicTransfer
 (
     const polyMesh& mesh,
     const label sendFromPatch,
-    const label sendToPatchFace
+    const label sendToPatchFace,
+    const vector& sendToPosition
 )
 {
     const nonConformalCyclicPolyPatch& nccpp =
@@ -1045,12 +1046,15 @@ void Foam::particle::prepareForNonConformalCyclicTransfer
             mesh.boundaryMesh()[sendFromPatch]
         );
 
-    // Get the transformed position
-    const vector pos =
-        nccpp.transform().invTransformPosition(position(mesh));
-
     // Store the position in the barycentric data
-    coordinates_ = barycentric(1 - cmptSum(pos), pos.x(), pos.y(), pos.z());
+    coordinates_ =
+        barycentric
+        (
+            1 - cmptSum(sendToPosition),
+            sendToPosition.x(),
+            sendToPosition.y(),
+            sendToPosition.z()
+        );
 
     // Break the topology
     celli_ = -1;

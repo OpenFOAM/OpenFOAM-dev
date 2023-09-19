@@ -119,7 +119,8 @@ void Foam::particle::prepareForParallelTransfer
         (
             td.mesh,
             td.sendFromPatch,
-            td.sendToPatchFace
+            td.sendToPatchFace,
+            td.sendToPosition
         );
     }
 }
@@ -372,6 +373,7 @@ bool Foam::particle::hitNonConformalCyclicPatch
         td.sendToProc = receiveProcFace.proci;
         td.sendToPatch = nccpp.nbrPatchID();
         td.sendToPatchFace = receiveProcFace.elementi;
+        td.sendToPosition = receivePos;
 
         return true;
     }
@@ -381,7 +383,8 @@ bool Foam::particle::hitNonConformalCyclicPatch
     (
         td.mesh,
         nccpp.index(),
-        receiveProcFace.elementi
+        receiveProcFace.elementi,
+        receivePos
     );
     correctAfterNonConformalCyclicTransfer
     (
