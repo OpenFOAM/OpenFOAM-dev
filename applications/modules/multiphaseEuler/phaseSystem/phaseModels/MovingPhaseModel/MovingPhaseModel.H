@@ -274,9 +274,9 @@ public:
             //- Return the turbulent kinetic energy
             virtual tmp<volScalarField> k() const;
 
-            //- Return the phase-pressure'
-            //  (derivative of phase-pressure w.r.t. phase-fraction)
-            virtual tmp<volScalarField> pPrime() const;
+            //- Return the face-phase-pressure'
+            // (derivative of phase-pressure w.r.t. phase-fraction)
+            virtual tmp<surfaceScalarField> pPrimef() const;
 
 
         // Thermophysical transport

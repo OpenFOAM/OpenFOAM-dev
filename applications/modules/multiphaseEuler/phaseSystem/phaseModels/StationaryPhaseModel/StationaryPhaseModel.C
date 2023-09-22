@@ -357,14 +357,14 @@ Foam::StationaryPhaseModel<BasePhaseModel>::k() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
-Foam::StationaryPhaseModel<BasePhaseModel>::pPrime() const
+Foam::tmp<Foam::surfaceScalarField>
+Foam::StationaryPhaseModel<BasePhaseModel>::pPrimef() const
 {
     FatalErrorInFunction
         << "Cannot access the pPrime of a stationary phase"
         << abort(FatalError);
 
-    return volScalarField::null();
+    return surfaceScalarField::null();
 }
 
 

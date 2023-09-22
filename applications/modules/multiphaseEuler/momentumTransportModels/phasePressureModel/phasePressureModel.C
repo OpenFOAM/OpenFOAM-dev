@@ -174,36 +174,47 @@ Foam::RASModels::phasePressureModel::pPrime() const
 }
 
 
+// Foam::tmp<Foam::surfaceScalarField>
+// Foam::RASModels::phasePressureModel::pPrimef() const
+// {
+//     tmp<surfaceScalarField> tpPrime
+//     (
+//         surfaceScalarField::New
+//         (
+//             IOobject::groupName("pPrimef", U_.group()),
+//             g0_
+//            *min
+//             (
+//                 exp(preAlphaExp_
+//                 *(fvc::interpolate(alpha_, "hmm") - phase_.alphaMax())),
+//                 expMax_
+//             )
+//         )
+//     );
+
+//    surfaceScalarField::Boundary& bpPrime =
+//        tpPrime.ref().boundaryFieldRef();
+
+//     forAll(bpPrime, patchi)
+//     {
+//         if (!bpPrime[patchi].coupled())
+//         {
+//             bpPrime[patchi] == 0;
+//         }
+//     }
+
+//     return tpPrime;
+// }
+
+
 Foam::tmp<Foam::surfaceScalarField>
 Foam::RASModels::phasePressureModel::pPrimef() const
 {
-    tmp<surfaceScalarField> tpPrime
+    return surfaceScalarField::New
     (
-        surfaceScalarField::New
-        (
-            IOobject::groupName("pPrimef", U_.group()),
-            g0_
-           *min
-            (
-                exp(preAlphaExp_
-               *(fvc::interpolate(alpha_) - phase_.alphaMax())),
-                expMax_
-            )
-        )
+        IOobject::groupName("pPrimef", U_.group()),
+        fvc::interpolate(pPrime())
     );
-
-   surfaceScalarField::Boundary& bpPrime =
-       tpPrime.ref().boundaryFieldRef();
-
-    forAll(bpPrime, patchi)
-    {
-        if (!bpPrime[patchi].coupled())
-        {
-            bpPrime[patchi] == 0;
-        }
-    }
-
-    return tpPrime;
 }
 
 

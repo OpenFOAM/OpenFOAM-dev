@@ -574,10 +574,10 @@ Foam::MovingPhaseModel<BasePhaseModel>::k() const
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::pPrime() const
+Foam::tmp<Foam::surfaceScalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::pPrimef() const
 {
-    return momentumTransport_->pPrime();
+    return momentumTransport_->pPrimef();
 }
 
 

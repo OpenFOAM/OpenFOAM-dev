@@ -256,13 +256,12 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
     forAll(this->movingPhases(), movingPhasei)
     {
         const phaseModel& phase = this->movingPhases()[movingPhasei];
-        const tmp<volScalarField> pPrime(phase.pPrime());
 
         addField
         (
             phase,
             "F",
-            fvc::interpolate(pPrime(), pPrime().name())
+            phase.pPrimef()
            *fvc::snGrad(phase)*this->mesh_.magSf(),
             Fs
         );
@@ -382,7 +381,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Ffs() const
         (
             phase,
             "Ff",
-            fvc::interpolate(phase.pPrime())
+            phase.pPrimef()
            *fvc::snGrad(phase)*this->mesh_.magSf(),
             Ffs
         );
@@ -983,13 +982,13 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::alphaDByAf
     forAll(this->movingPhases(), movingPhasei)
     {
         const phaseModel& phase = this->movingPhases()[movingPhasei];
-        const tmp<volScalarField> pPrime(phase.pPrime());
 
         addTmpField
         (
             alphaDByAf,
             fvc::interpolate(max(phase, scalar(0)))
-           *fvc::interpolate(rAs[phase.index()]*pPrime(), pPrime().name())
+           *fvc::interpolate(rAs[phase.index()])
+           *phase.pPrimef()
         );
     }
 

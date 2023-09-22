@@ -91,6 +91,10 @@ class phasePressureModel
         void correctNut()
         {}
 
+        //- Return the phase-pressure'
+        // (derivative of phase-pressure w.r.t. phase-fraction)
+        tmp<volScalarField> pPrime() const;
+
 
 public:
 
@@ -148,10 +152,6 @@ public:
 
         //- Return the stress tensor [m^2/s^2]
         virtual tmp<volSymmTensorField> sigma() const;
-
-        //- Return the phase-pressure'
-        // (derivative of phase-pressure w.r.t. phase-fraction)
-        virtual tmp<volScalarField> pPrime() const;
 
         //- Return the face-phase-pressure'
         // (derivative of phase-pressure w.r.t. phase-fraction)
