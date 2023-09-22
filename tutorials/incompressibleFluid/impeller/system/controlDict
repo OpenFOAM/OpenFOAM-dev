@@ -65,7 +65,7 @@ functions
 
         field       U;
 
-        writeControl    outputTime;
+        writeControl    writeTime;
         writeInterval   1;
     }
 }

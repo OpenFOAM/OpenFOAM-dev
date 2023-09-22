@@ -62,7 +62,7 @@ functions
 
         field       U;
 
-        writeControl    outputTime;
+        writeControl    writeTime;
         writeInterval   1;
     }
 
@@ -80,7 +80,7 @@ functions
         toCartesian true;
         result      UMean;
 
-        writeControl    outputTime;
+        writeControl    writeTime;
         writeInterval   1;
     }
 }
