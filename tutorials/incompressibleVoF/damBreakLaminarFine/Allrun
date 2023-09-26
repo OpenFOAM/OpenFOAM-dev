@@ -6,16 +6,23 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 # Copy the case
 isTest "$@" && path=.. || path=$FOAM_TUTORIALS/incompressibleVoF
+cp -rn $path/damBreakLaminar/constant $path/damBreakFine/system .
 cp -rn $path/damBreak/0 $path/damBreak/constant $path/damBreak/system .
 rm -f 0/alpha.water
 
+# Set a new time-step
+runApplication -s controlDict foamDictionary system/controlDict \
+    -entry deltaT -set 5e-4
+
 # Increase the number of limiter iterations
-runApplication foamDictionary system/fvSolution \
+runApplication -s fvSolution foamDictionary system/fvSolution \
     -entry solvers/"alpha.water.*"/nLimiterIter -set 5
 
 # Run
-runApplication blockMesh
+runApplication blockMesh -dict system/blockMeshDict.fine
 runApplication setFields
-runApplication $(getApplication)
+runApplication decomposePar
+runParallel $(getApplication)
+runApplication reconstructPar
 
 #------------------------------------------------------------------------------

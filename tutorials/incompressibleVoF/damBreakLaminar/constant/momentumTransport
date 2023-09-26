@@ -7,44 +7,20 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      T;
+    format          ascii;
+    class           dictionary;
+    location        "constant";
+    object          momentumTransport;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+simulationType  laminar;
 
-internalField   uniform 300;
-
-boundaryField
+RAS
 {
-    leftWall
-    {
-        type            zeroGradient;
-    }
-
-    rightWall
-    {
-        type            zeroGradient;
-    }
-
-    lowerWall
-    {
-        type            zeroGradient;
-    }
-
-    atmosphere
-    {
-        type            inletOutlet;
-        inletValue      $internalField;
-    }
-
-    defaultFaces
-    {
-        type            empty;
-    }
+    model           kEpsilon;
+    turbulence      on;
+    printCoeffs     on;
 }
 
 

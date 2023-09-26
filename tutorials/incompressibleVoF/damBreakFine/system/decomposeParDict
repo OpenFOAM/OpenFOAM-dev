@@ -8,43 +8,19 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      T;
+    class       dictionary;
+    location    "system";
+    object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+numberOfSubdomains 4;
 
-internalField   uniform 300;
+method          simple;
 
-boundaryField
+simpleCoeffs
 {
-    leftWall
-    {
-        type            zeroGradient;
-    }
-
-    rightWall
-    {
-        type            zeroGradient;
-    }
-
-    lowerWall
-    {
-        type            zeroGradient;
-    }
-
-    atmosphere
-    {
-        type            inletOutlet;
-        inletValue      $internalField;
-    }
-
-    defaultFaces
-    {
-        type            empty;
-    }
+    n               (2 2 1);
 }
 
 

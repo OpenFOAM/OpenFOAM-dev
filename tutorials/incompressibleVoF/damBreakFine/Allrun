@@ -9,13 +9,15 @@ isTest "$@" && path=.. || path=$FOAM_TUTORIALS/incompressibleVoF
 cp -rn $path/damBreak/0 $path/damBreak/constant $path/damBreak/system .
 rm -f 0/alpha.water
 
-# Increase the number of limiter iterations
-runApplication foamDictionary system/fvSolution \
-    -entry solvers/"alpha.water.*"/nLimiterIter -set 5
+# Set a new time-step
+runApplication foamDictionary system/controlDict \
+    -entry deltaT -set 5e-4
 
 # Run
-runApplication blockMesh
+runApplication blockMesh -dict system/blockMeshDict.fine
 runApplication setFields
-runApplication $(getApplication)
+runApplication decomposePar
+runParallel $(getApplication)
+runApplication reconstructPar
 
 #------------------------------------------------------------------------------

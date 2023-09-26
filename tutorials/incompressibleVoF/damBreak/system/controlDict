@@ -8,44 +8,50 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      T;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+application     foamRun;
 
-internalField   uniform 300;
+solver          incompressibleVoF;
 
-boundaryField
-{
-    leftWall
-    {
-        type            zeroGradient;
-    }
+startFrom       startTime;
 
-    rightWall
-    {
-        type            zeroGradient;
-    }
+startTime       0;
 
-    lowerWall
-    {
-        type            zeroGradient;
-    }
+stopAt          endTime;
 
-    atmosphere
-    {
-        type            inletOutlet;
-        inletValue      $internalField;
-    }
+endTime         1;
 
-    defaultFaces
-    {
-        type            empty;
-    }
-}
+deltaT          0.001;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.05;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           1;
+maxAlphaCo      1;
+
+maxDeltaT       1;
 
 
 // ************************************************************************* //

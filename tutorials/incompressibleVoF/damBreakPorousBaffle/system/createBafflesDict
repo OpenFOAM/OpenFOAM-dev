@@ -24,7 +24,7 @@ baffles
         type        searchableSurface;
         surface     searchablePlate;
         origin      (0.3042 0.0493 -100);
-        span        (0 0.1584  200);
+        span        (0 0.1584 200);
 
         owner
         {

@@ -4,14 +4,23 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Get application name
-application=$(getApplication)
+# Copy the case
+isTest "$@" && path=.. || path=$FOAM_TUTORIALS/incompressibleVoF
+cp -rn $path/damBreak/0 $path/damBreak/constant $path/damBreak/system .
+rm -f 0/alpha.water
 
+# Change Courant numbers
+runApplication -s controlDict foamDictionary system/controlDict \
+    -set "maxCo=0.1, maxAlphaCo=0.1"
+
+# Change numbers of correctors
+runApplication -s fvSolution foamDictionary system/fvSolution \
+    -set "PIMPLE/nOuterCorrectors=3, PIMPLE/nCorrectors=1"
+
+# Run
 runApplication blockMesh
 runApplication setFields
-
 runApplication createBaffles -overwrite
-
-runApplication $application
+runApplication $(getApplication)
 
 #------------------------------------------------------------------------------

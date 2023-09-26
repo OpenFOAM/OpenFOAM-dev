@@ -30,15 +30,9 @@ divSchemes
 
     div(rhoPhi,U)   Gauss linearUpwind grad(U);
 
-    div(alphaRhoPhi,e) Gauss upwind;
-    div(alphaRhoPhi,T) Gauss upwind;
-
-    div(rhoPhi,K)   Gauss upwind;
-    div(phi,p)      Gauss upwind;
-
-    div(rhoPhi,k)   Gauss upwind;
-    div(rhoPhi,epsilon) Gauss upwind;
-    div(rhoPhi,omega) Gauss upwind;
+    div(phi,k)      Gauss upwind;
+    div(phi,epsilon) Gauss upwind;
+    div(phi,omega)  Gauss upwind;
 
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }

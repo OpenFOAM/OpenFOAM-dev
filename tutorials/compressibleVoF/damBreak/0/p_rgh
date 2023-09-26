@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
+    location    "0";
     object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,5 +49,6 @@ boundaryField
         type            empty;
     }
 }
+
 
 // ************************************************************************* //

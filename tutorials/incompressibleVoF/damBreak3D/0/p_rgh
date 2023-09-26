@@ -10,44 +10,29 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      omega;
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 -1 0 0 0 0];
+dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 11.1;
+internalField   uniform 0;
 
 boundaryField
 {
-    leftWall
-    {
-        type            omegaWallFunction;
-        value           $internalField;
-    }
-
-    rightWall
-    {
-        type            omegaWallFunction;
-        value           $internalField;
-    }
-
-    lowerWall
-    {
-        type            omegaWallFunction;
-        value           $internalField;
-    }
-
     atmosphere
     {
-        type            inletOutlet;
-        inletValue      $internalField;
+        type            prghTotalPressure;
+        psi             none;
+        gamma           1;
+        p0              $internalField;
         value           $internalField;
     }
-
-    defaultFaces
+    walls
     {
-        type            empty;
+        type            fixedFluxPressure;
+        gradient        $internalField;
+        value           $internalField;
     }
 }
 
