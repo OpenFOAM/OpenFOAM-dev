@@ -128,21 +128,20 @@ Foam::tmp<Foam::volScalarField> Foam::fv::volumeFractionSource::D
 
 
 template <class Type, class AlphaFieldType>
-void Foam::fv::volumeFractionSource::addGeneralSup
+void Foam::fv::volumeFractionSource::addGeneralSupType
 (
     const AlphaFieldType& alpha,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    fvMatrix<Type>& eqn
 ) const
 {
     const word phiName =
-        IOobject::groupName(phiName_, IOobject::group(fieldName));
+        IOobject::groupName(phiName_, IOobject::group(eqn.psi().name()));
     const surfaceScalarField& phi =
         mesh().lookupObject<surfaceScalarField>(phiName);
 
     const volScalarField B(1 - volumeAlpha());
     const volScalarField AByB(volumeAlpha()/B);
-    const volScalarField D(this->D(fieldName));
+    const volScalarField D(this->D(eqn.psi().name()));
 
     // Divergence term
     const word divScheme = "div(" + phiName + "," + eqn.psi().name() + ")";
@@ -161,11 +160,11 @@ template<class Type, class AlphaFieldType>
 void Foam::fv::volumeFractionSource::addAlphaSupType
 (
     const AlphaFieldType& alpha,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
-    addGeneralSup(alpha, eqn, fieldName);
+    addGeneralSupType(alpha, eqn);
 }
 
 
@@ -173,14 +172,14 @@ template<class AlphaFieldType>
 void Foam::fv::volumeFractionSource::addAlphaSupType
 (
     const AlphaFieldType& alpha,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& field,
+    fvMatrix<scalar>& eqn
 ) const
 {
-    if (IOobject::member(fieldName) == rhoName_)
+    if (IOobject::member(field.name()) == rhoName_)
     {
         const word phiName =
-            IOobject::groupName(phiName_, IOobject::group(fieldName));
+            IOobject::groupName(phiName_, IOobject::group(field.name()));
         const surfaceScalarField& phi =
             mesh().lookupObject<surfaceScalarField>(phiName);
 
@@ -190,7 +189,7 @@ void Foam::fv::volumeFractionSource::addAlphaSupType
     }
     else
     {
-        addGeneralSup(alpha, eqn, fieldName);
+        addGeneralSupType(alpha, eqn);
     }
 }
 
@@ -199,14 +198,14 @@ template<class AlphaFieldType>
 void Foam::fv::volumeFractionSource::addAlphaSupType
 (
     const AlphaFieldType& alpha,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& field,
+    fvMatrix<vector>& eqn
 ) const
 {
-    if (IOobject::member(fieldName) == UName_)
+    if (IOobject::member(field.name()) == UName_)
     {
         const word phiName =
-            IOobject::groupName(phiName_, IOobject::group(fieldName));
+            IOobject::groupName(phiName_, IOobject::group(field.name()));
         const surfaceScalarField& phi =
             mesh().lookupObject<surfaceScalarField>(phiName);
 
@@ -218,7 +217,7 @@ void Foam::fv::volumeFractionSource::addAlphaSupType
     }
     else
     {
-        addGeneralSup(alpha, eqn, fieldName);
+        addGeneralSupType(alpha, eqn);
     }
 }
 
@@ -226,11 +225,11 @@ void Foam::fv::volumeFractionSource::addAlphaSupType
 template<class Type>
 void Foam::fv::volumeFractionSource::addSupType
 (
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
-    addAlphaSupType(geometricOneField(), eqn, fieldName);
+    addAlphaSupType(geometricOneField(), field, eqn);
 }
 
 
@@ -238,11 +237,11 @@ template<class Type>
 void Foam::fv::volumeFractionSource::addSupType
 (
     const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
-    addAlphaSupType(geometricOneField(), eqn, fieldName);
+    addAlphaSupType(geometricOneField(), field, eqn);
 }
 
 
@@ -251,11 +250,11 @@ void Foam::fv::volumeFractionSource::addSupType
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
-    addAlphaSupType(alpha, eqn, fieldName);
+    addAlphaSupType(alpha, field, eqn);
 }
 
 
@@ -300,17 +299,25 @@ Foam::wordList Foam::fv::volumeFractionSource::addSupFields() const
 }
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_SUP, fv::volumeFractionSource);
-
-
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::volumeFractionSource);
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FV_MODEL_ADD_FIELD_SUP,
+    fv::volumeFractionSource
+)
 
 
 FOR_ALL_FIELD_TYPES
 (
-    IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP,
+    IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP,
     fv::volumeFractionSource
-);
+)
+
+
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP,
+    fv::volumeFractionSource
+)
 
 
 bool Foam::fv::volumeFractionSource::movePoints()

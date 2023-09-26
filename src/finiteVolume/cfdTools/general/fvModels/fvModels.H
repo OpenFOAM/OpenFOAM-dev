@@ -81,14 +81,13 @@ class fvModels
         //- Check that all fvModels have been applied
         void checkApplied() const;
 
-        //- Return source for equation with specified name and dimensions
+        //- Return a source for an equation
         template<class Type, class ... AlphaRhoFieldTypes>
-        tmp<fvMatrix<Type>> source
+        tmp<fvMatrix<Type>> sourceTerm
         (
-            const VolField<Type>& field,
-            const word& fieldName,
+            const VolField<Type>& eqnField,
             const dimensionSet& ds,
-            const AlphaRhoFieldTypes& ... alphaRhos
+            const AlphaRhoFieldTypes& ... alphaRhoFields
         ) const;
 
 
@@ -155,17 +154,24 @@ public:
 
             //- Return source for an equation
             template<class Type>
+            tmp<fvMatrix<Type>> sourceProxy
+            (
+                const VolField<Type>& eqnField
+            ) const;
+
+            //- Return source for an equation
+            template<class Type>
             tmp<fvMatrix<Type>> source
             (
                 const VolField<Type>& field
             ) const;
 
-            //- Return source for an equation with a specified name
+            //- Return source for an equation
             template<class Type>
-            tmp<fvMatrix<Type>> source
+            tmp<fvMatrix<Type>> sourceProxy
             (
                 const VolField<Type>& field,
-                const word& fieldName
+                const VolField<Type>& eqnField
             ) const;
 
             //- Return source for a compressible equation
@@ -176,13 +182,13 @@ public:
                 const VolField<Type>& field
             ) const;
 
-            //- Return source for a compressible equation with a specified name
+            //- Return source for a compressible equation
             template<class Type>
-            tmp<fvMatrix<Type>> source
+            tmp<fvMatrix<Type>> sourceProxy
             (
                 const volScalarField& rho,
                 const VolField<Type>& field,
-                const word& fieldName
+                const VolField<Type>& eqnField
             ) const;
 
             //- Return source for a phase equation
@@ -194,14 +200,14 @@ public:
                 const VolField<Type>& field
             ) const;
 
-            //- Return source for a phase equation with a specified name
+            //- Return source for a phase equation
             template<class Type>
-            tmp<fvMatrix<Type>> source
+            tmp<fvMatrix<Type>> sourceProxy
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
                 const VolField<Type>& field,
-                const word& fieldName
+                const VolField<Type>& eqnField
             ) const;
 
             //- Return source for a phase equation
@@ -236,14 +242,6 @@ public:
             tmp<fvMatrix<Type>> d2dt2
             (
                 const VolField<Type>& field
-            ) const;
-
-            //- Return source for an equation with a second time derivative
-            template<class Type>
-            tmp<fvMatrix<Type>> d2dt2
-            (
-                const VolField<Type>& field,
-                const word& fieldName
             ) const;
 
 

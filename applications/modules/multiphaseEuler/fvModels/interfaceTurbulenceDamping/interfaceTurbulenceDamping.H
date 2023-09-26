@@ -131,8 +131,8 @@ class interfaceTurbulenceDamping
         void addRhoSup
         (
             const RhoType& rho,
-            fvMatrix<scalar>& eqn,
-            const word& fieldName
+            const volScalarField& field,
+            fvMatrix<scalar>& eqn
         ) const;
 
 
@@ -162,34 +162,38 @@ public:
 
     // Member Functions
 
-        //- Return the list of fields for which the option adds source term
-        //  to the transport equation
-        virtual wordList addSupFields() const;
+        // Checks
 
-        //- Add explicit contribution to mixture epsilon or omega equation
-        virtual void addSup
-        (
-            fvMatrix<scalar>& eqn,
-            const word& fieldName
-        ) const;
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addSupFields() const;
 
-        //- Add explicit contribution to compressible
-        //  mixture epsilon or omega equation
-        virtual void addSup
-        (
-            const volScalarField& rho,
-            fvMatrix<scalar>& eqn,
-            const word& fieldName
-        ) const;
 
-        //- Add explicit contribution to phase epsilon or omega equation
-        virtual void addSup
-        (
-            const volScalarField& alpha,
-            const volScalarField& rho,
-            fvMatrix<scalar>& eqn,
-            const word& fieldName
-        ) const;
+        // Sources
+
+            //- Add source to mixture epsilon or omega equation
+            virtual void addSup
+            (
+                const volScalarField& field,
+                fvMatrix<scalar>& eqn
+            ) const;
+
+            //- Add source to compressible mixture epsilon or omega equation
+            virtual void addSup
+            (
+                const volScalarField& rho,
+                const volScalarField& field,
+                fvMatrix<scalar>& eqn
+            ) const;
+
+            //- Add source to phase epsilon or omega equation
+            virtual void addSup
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                const volScalarField& field,
+                fvMatrix<scalar>& eqn
+            ) const;
 
 
         // Mesh changes

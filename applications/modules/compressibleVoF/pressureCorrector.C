@@ -81,19 +81,11 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
         // Update the pressure BCs to ensure flux consistency
         constrainPressure(p_rgh, U, phiHbyA, rAUf, MRF);
 
-        // Cache the phase change pressure source
-        fvScalarMatrix Sp_rgh
+        // Cache any sources
+        fvScalarMatrix p_rghEqnSource
         (
-            fvModels().source
-            (
-                volScalarField::New
-                (
-                    "1",
-                    mesh,
-                    dimensionedScalar(dimless/dimPressure, 1)
-                ),
-                p_rgh
-            )
+            fvModels().sourceProxy(alpha1, rho1, p_rgh)/rho1
+          + fvModels().sourceProxy(alpha2, rho2, p_rgh)/rho2
         );
 
         // Make the fluxes relative to the mesh motion
@@ -163,11 +155,6 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
         p_rghEqnComp1.ref() *= pos(alpha1);
         p_rghEqnComp2.ref() *= pos(alpha2);
 
-        p_rghEqnComp1.ref() -=
-            (fvModels().source(alpha1, mixture_.thermo1().rho())&rho1)/rho1;
-        p_rghEqnComp2.ref() -=
-            (fvModels().source(alpha2, mixture_.thermo2().rho())&rho2)/rho2;
-
         if (pimple.transonic())
         {
             p_rghEqnComp1.ref().relax();
@@ -182,7 +169,7 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
             fvScalarMatrix p_rghEqnIncomp
             (
                 fvc::div(phiHbyA) - fvm::laplacian(rAUf, p_rgh)
-             == Sp_rgh
+             == p_rghEqnSource
             );
 
             {

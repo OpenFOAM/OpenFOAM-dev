@@ -243,8 +243,8 @@ inline Foam::fv::filmVoFTransfer::VoFToFilmTransferRate
 void Foam::fv::filmVoFTransfer::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& alpha,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -252,20 +252,30 @@ void Foam::fv::filmVoFTransfer::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == film_.alpha.name())
+    if (&alpha == &film_.alpha)
     {
+        // Explicit transfer into the film
         eqn +=
             VoFToFilmTransferRate<scalar>
             (
                 &VoFFilmTransfer::rhoTransferRate,
                 dimMass
-            )
-          - fvm::Sp(transferRate_*rho(), eqn.psi());
+            );
+
+        // Potentially implicit transfer out of the film
+        if (&alpha == &eqn.psi())
+        {
+            eqn -= fvm::Sp(rho()*transferRate_, eqn.psi());
+        }
+        else
+        {
+            eqn -= alpha()*rho()*transferRate_;
+        }
     }
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << alpha.name() << " is not implemented"
             << exit(FatalError);
     }
 }
@@ -275,8 +285,8 @@ void Foam::fv::filmVoFTransfer::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -284,20 +294,30 @@ void Foam::fv::filmVoFTransfer::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == film_.thermo.he().name())
+    if (&he == &film_.thermo.he())
     {
+        // Explicit transfer into the film
         eqn +=
             VoFToFilmTransferRate<scalar>
             (
                 &VoFFilmTransfer::heTransferRate,
                 dimEnergy
-            )
-          - fvm::Sp(alpha()*rho()*transferRate_, eqn.psi());
+            );
+
+        // Potentially implicit transfer out of the film
+        if (&he == &eqn.psi())
+        {
+            eqn -= fvm::Sp(alpha()*rho()*transferRate_, eqn.psi());
+        }
+        else
+        {
+            eqn -= alpha()*rho()*he*transferRate_;
+        }
     }
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << he.name() << " is not implemented"
             << exit(FatalError);
     }
 }
@@ -307,8 +327,8 @@ void Foam::fv::filmVoFTransfer::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     if (debug)
@@ -316,13 +336,32 @@ void Foam::fv::filmVoFTransfer::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    eqn +=
-        VoFToFilmTransferRate<vector>
-        (
-            &VoFFilmTransfer::UTransferRate,
-            dimMomentum
-        )
-      - fvm::Sp(alpha()*rho()*transferRate_, eqn.psi());
+    if (&U == &film_.U)
+    {
+        // Explicit transfer into the film
+        eqn +=
+            VoFToFilmTransferRate<vector>
+            (
+                &VoFFilmTransfer::UTransferRate,
+                dimMomentum
+            );
+
+        // Potentially implicit transfer out of the film
+        if (&U == &eqn.psi())
+        {
+            eqn -= fvm::Sp(alpha()*rho()*transferRate_, eqn.psi());
+        }
+        else
+        {
+            eqn -= alpha()*rho()*U()*transferRate_;
+        }
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Support for field " << U.name() << " is not implemented"
+            << exit(FatalError);
+    }
 }
 
 

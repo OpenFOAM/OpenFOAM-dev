@@ -133,7 +133,6 @@ const Foam::dictionary& Foam::fv::codedFvModel::codeDict() const
 
 Foam::wordList Foam::fv::codedFvModel::codeKeys() const
 {
-
     return
     {
         "codeAddSup",
@@ -165,8 +164,8 @@ Foam::fvModel& Foam::fv::codedFvModel::redirectFvModel() const
 template<class Type>
 void Foam::fv::codedFvModel::addSupType
 (
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
     if (fieldPrimitiveTypeName() != word::null)
@@ -177,7 +176,7 @@ void Foam::fv::codedFvModel::addSupType
         }
 
         updateLibrary();
-        redirectFvModel().addSup(eqn, fieldName);
+        redirectFvModel().addSup(field, eqn);
     }
 }
 
@@ -186,8 +185,8 @@ template<class Type>
 void Foam::fv::codedFvModel::addSupType
 (
     const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
     if (fieldPrimitiveTypeName() != word::null)
@@ -198,7 +197,7 @@ void Foam::fv::codedFvModel::addSupType
         }
 
         updateLibrary();
-        redirectFvModel().addSup(rho, eqn, fieldName);
+        redirectFvModel().addSup(rho, field, eqn);
     }
 }
 
@@ -208,8 +207,8 @@ void Foam::fv::codedFvModel::addSupType
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
     if (fieldPrimitiveTypeName() != word::null)
@@ -220,7 +219,7 @@ void Foam::fv::codedFvModel::addSupType
         }
 
         updateLibrary();
-        redirectFvModel().addSup(alpha, rho, eqn, fieldName);
+        redirectFvModel().addSup(alpha, rho, field, eqn);
     }
 }
 
@@ -250,13 +249,17 @@ Foam::wordList Foam::fv::codedFvModel::addSupFields() const
 }
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_SUP, fv::codedFvModel);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_FIELD_SUP, fv::codedFvModel)
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::codedFvModel);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP, fv::codedFvModel)
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::codedFvModel);
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP,
+    fv::codedFvModel
+)
 
 
 bool Foam::fv::codedFvModel::movePoints()

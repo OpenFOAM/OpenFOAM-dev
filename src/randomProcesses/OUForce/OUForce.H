@@ -133,8 +133,8 @@ public:
             //- Add explicit contribution to incompressible momentum equation
             virtual void addSup
             (
-                fvMatrix<vector>& eqn,
-                const word& fieldName
+                const volVectorField& field,
+                fvMatrix<vector>& eqn
             ) const;
 
 

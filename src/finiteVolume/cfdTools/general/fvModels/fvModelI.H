@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "fvModel.H"
+
+// * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
+
+inline const Foam::dimensionSet& Foam::fvModel::sourceDims
+(
+    const dimensionSet& ds
+)
+{
+    return ds;
+}
+
+
+inline const Foam::word& Foam::fvModel::fieldName()
+{
+    return word::null;
+}
+
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 

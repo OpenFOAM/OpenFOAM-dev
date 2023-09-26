@@ -160,8 +160,9 @@ public:
         // Constraints
 
             //- Return the mass or volume source for the pressure equation
-            const volScalarField::Internal& pEqnSource
+            tmp<volScalarField::Internal> pEqnSource
             (
+                const volScalarField& rho,
                 fvMatrix<scalar>& pEqn
             ) const;
 

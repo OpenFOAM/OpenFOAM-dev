@@ -168,37 +168,46 @@ Foam::fv::zeroDimensionalFixedPressureConstraint::constrainedFields() const
 }
 
 
-const Foam::volScalarField::Internal&
+Foam::tmp<Foam::volScalarField::Internal>
 Foam::fv::zeroDimensionalFixedPressureConstraint::pEqnSource
 (
+    const volScalarField& rho,
     fvMatrix<scalar>& pEqn
 ) const
 {
     // Ensure the corresponding fvModel exits
     model();
 
-    // Construct the source if it does not yet exist
+    // Return zero if the source does not yet exist
     if (!sourcePtr_.valid())
     {
-        sourcePtr_.set
-        (
-            new volScalarField::Internal
+        return
+            volScalarField::Internal::New
             (
-                IOobject
-                (
-                    typedName("source"),
-                    mesh().time().timeName(),
-                    mesh(),
-                    IOobject::READ_IF_PRESENT,
-                    IOobject::AUTO_WRITE
-                ),
+                typedName("source"),
                 mesh(),
                 dimensionedScalar(pEqn.dimensions()/dimVolume, 0)
-            )
-        );
+            );
     }
 
-    return sourcePtr_();
+    // Return the source, multiplying by density if needed
+    if (sourcePtr_->dimensions() == pEqn.dimensions()/dimVolume)
+    {
+        return sourcePtr_();
+    }
+    else if (sourcePtr_->dimensions() == pEqn.dimensions()/dimMass)
+    {
+        return rho()*sourcePtr_();
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Dimensions of equation for pressure "
+            << pEqn.psi().name() << " not recognised"
+            << exit(FatalError);
+
+        return tmp<volScalarField::Internal>(nullptr);
+    }
 }
 
 
@@ -229,11 +238,26 @@ bool Foam::fv::zeroDimensionalFixedPressureConstraint::constrain
     const word& fieldName
 ) const
 {
-    // Construct the source if it does not yet exist
-    pEqnSource(pEqn);
-
-    // Check the dimensions have not changed
-    sourcePtr_->dimensions() = pEqn.dimensions()/dimVolume;
+    // Create the source field if it does not already exist
+    if (!sourcePtr_.valid())
+    {
+        sourcePtr_.set
+        (
+            new volScalarField::Internal
+            (
+                IOobject
+                (
+                    typedName("source"),
+                    mesh().time().timeName(),
+                    mesh(),
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::AUTO_WRITE
+                ),
+                mesh(),
+                dimensionedScalar(pEqn.dimensions()/dimVolume, 0)
+            )
+        );
+    }
 
     // Remove the previous iteration's source from the pressure equation
     pEqn += sourcePtr_();

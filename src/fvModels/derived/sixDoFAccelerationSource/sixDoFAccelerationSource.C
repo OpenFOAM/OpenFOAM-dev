@@ -26,6 +26,7 @@ License
 #include "sixDoFAccelerationSource.H"
 #include "fvMatrices.H"
 #include "geometricOneField.H"
+#include "uniformDimensionedFields.H"
 #include "makeFunction1s.H"
 #include "makeTableReaders.H"
 #include "addToRunTimeSelectionTable.H"
@@ -105,6 +106,68 @@ void Foam::fv::sixDoFAccelerationSource::readCoeffs()
 }
 
 
+template<class AlphaFieldType, class RhoFieldType>
+void Foam::fv::sixDoFAccelerationSource::addForce
+(
+    const AlphaFieldType& alpha,
+    const RhoFieldType& rho,
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
+) const
+{
+    const Vector<vector> accelerations
+    (
+        accelerations_->value(mesh().time().userTimeValue())
+    );
+
+    // If gravitational force is present combine with the linear acceleration
+    if (mesh().foundObject<uniformDimensionedVectorField>("g"))
+    {
+        uniformDimensionedVectorField& g =
+            mesh().lookupObjectRef<uniformDimensionedVectorField>("g");
+
+        const uniformDimensionedScalarField& hRef =
+            mesh().lookupObject<uniformDimensionedScalarField>("hRef");
+
+        g = g_ - dimensionedVector("a", dimAcceleration, accelerations.x());
+
+        dimensionedScalar ghRef(- mag(g)*hRef);
+
+        mesh().lookupObjectRef<volScalarField>("gh") = (g & mesh().C()) - ghRef;
+
+        mesh().lookupObjectRef<surfaceScalarField>("ghf") =
+            (g & mesh().Cf()) - ghRef;
+    }
+    // ... otherwise include explicitly in the momentum equation
+    else
+    {
+        const dimensionedVector a("a", dimAcceleration, accelerations.x());
+        eqn -= alpha*rho*a;
+    }
+
+    dimensionedVector Omega
+    (
+        "Omega",
+        dimensionSet(0, 0, -1, 0, 0),
+        accelerations.y()
+    );
+
+    dimensionedVector dOmegaDT
+    (
+        "dOmegaDT",
+        dimensionSet(0, 0, -2, 0, 0),
+        accelerations.z()
+    );
+
+    eqn -=
+    (
+        alpha*rho*(2*Omega ^ U)                  // Coriolis force
+      + alpha*rho*(Omega ^ (Omega ^ mesh().C())) // Centrifugal force
+      + alpha*rho*(dOmegaDT ^ mesh().C())        // Angular acceleration force
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::sixDoFAccelerationSource::sixDoFAccelerationSource
@@ -139,22 +202,22 @@ Foam::wordList Foam::fv::sixDoFAccelerationSource::addSupFields() const
 
 void Foam::fv::sixDoFAccelerationSource::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    addForce(geometricOneField(), geometricOneField(), eqn, fieldName);
+    addForce(geometricOneField(), geometricOneField(), U, eqn);
 }
 
 
 void Foam::fv::sixDoFAccelerationSource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    addForce(geometricOneField(), rho, eqn, fieldName);
+    addForce(geometricOneField(), rho, U, eqn);
 }
 
 
@@ -162,11 +225,11 @@ void Foam::fv::sixDoFAccelerationSource::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    addForce(alpha, rho, eqn, fieldName);
+    addForce(alpha, rho, U, eqn);
 }
 
 

@@ -38,10 +38,15 @@ namespace Foam
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
+void Foam::fvModel::addSupType(fvMatrix<Type>& eqn) const
+{}
+
+
+template<class Type>
 void Foam::fvModel::addSupType
 (
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {}
 
@@ -50,8 +55,8 @@ template<class Type>
 void Foam::fvModel::addSupType
 (
     const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {}
 
@@ -61,8 +66,8 @@ void Foam::fvModel::addSupType
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {}
 
@@ -175,13 +180,16 @@ Foam::scalar Foam::fvModel::maxDeltaT() const
 }
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_SUP, fvModel);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_SUP, fvModel)
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fvModel);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_FIELD_SUP, fvModel)
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fvModel);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP, fvModel)
+
+
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP, fvModel)
 
 
 void Foam::fvModel::preUpdateMesh()

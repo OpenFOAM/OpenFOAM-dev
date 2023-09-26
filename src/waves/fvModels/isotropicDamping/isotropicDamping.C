@@ -96,8 +96,8 @@ Foam::wordList Foam::fv::isotropicDamping::addSupFields() const
 
 void Foam::fv::isotropicDamping::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     add(this->forceCoeff(), eqn);
@@ -107,11 +107,11 @@ void Foam::fv::isotropicDamping::addSup
 void Foam::fv::isotropicDamping::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    add(rho*forceCoeff(), eqn);
+    add(rho*this->forceCoeff(), eqn);
 }
 
 
@@ -119,8 +119,8 @@ void Foam::fv::isotropicDamping::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     add(alpha()*rho()*this->forceCoeff(), eqn);

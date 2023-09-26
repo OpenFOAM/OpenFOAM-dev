@@ -102,7 +102,7 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
         // Option sources
         if (fvModels().addsSupToField(rho.name()))
         {
-            pEqnComp -= (fvModels().source(alpha, rho) & rho)/rho;
+            pEqnComp -= fvModels().sourceProxy(alpha, rho, p_rgh)/rho;
         }
 
         // Mass transfer

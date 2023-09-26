@@ -23,6 +23,7 @@ derived/phaseLimitStabilisation/phaseLimitStabilisation.C
 derived/accelerationSource/accelerationSource.C
 derived/volumeFractionSource/volumeFractionSource.C
 derived/solidEquilibriumEnergySource/solidEquilibriumEnergySource.C
+derived/volumeSource/volumeSource.C
 derived/massSource/massSource.C
 derived/heatSource/heatSource.C
 derived/heatTransfer/heatTransfer.C

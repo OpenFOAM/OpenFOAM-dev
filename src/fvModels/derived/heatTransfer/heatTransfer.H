@@ -124,11 +124,10 @@ class heatTransfer
 
         //- Source term to energy equation
         template<class AlphaFieldType>
-        void add
+        inline void add
         (
             const AlphaFieldType& alpha,
-            fvMatrix<scalar>& eqn,
-            const word& fieldName
+            fvMatrix<scalar>& eqn
         ) const;
 
 
@@ -168,16 +167,16 @@ public:
             //- Source term to energy equation
             virtual void addSup
             (
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Source term to compressible energy equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Source term to phase energy equation
@@ -185,8 +184,8 @@ public:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
 

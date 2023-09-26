@@ -210,8 +210,8 @@ Foam::wordList Foam::fv::effectivenessHeatExchangerSource::addSupFields() const
 void Foam::fv::effectivenessHeatExchangerSource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     const basicThermo& thermo =

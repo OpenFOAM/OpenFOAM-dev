@@ -74,20 +74,68 @@ void Foam::fv::massSourceBase::readCoeffs()
 
 
 template<class Type>
-void Foam::fv::massSourceBase::addGeneralSupType
+void Foam::fv::massSourceBase::addSupType
 (
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
+) const
+{
+    FatalErrorInFunction
+        << "Cannot add a mass source for field " << field.name()
+        << " because this field's equation is not in mass-conservative form"
+        << exit(FatalError);
+}
+
+
+void Foam::fv::massSourceBase::addSupType
+(
+    const volScalarField& field,
+    fvMatrix<scalar>& eqn
+) const
+{
+    // Continuity equation. Add the mass flow rate.
+    if (field.name() == rhoName_)
+    {
+        const labelUList cells = set_.cells();
+
+        const scalar massFlowRate = this->massFlowRate();
+
+        forAll(cells, i)
+        {
+            eqn.source()[cells[i]] -=
+                mesh().V()[cells[i]]/set_.V()*massFlowRate;
+        }
+
+        return;
+    }
+
+    // Non-mass conservative property equation. Fail.
+    addSupType<scalar>(field, eqn);
+}
+
+
+template<class Type>
+void Foam::fv::massSourceBase::addSupType
+(
+    const volScalarField& rho,
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
     const labelUList cells = set_.cells();
 
     const scalar massFlowRate = this->massFlowRate();
 
+    // Property equation. If the source is positive, introduce the value
+    // specified by the user. If negative, then sink the current internal value
+    // using an implicit term.
     if (massFlowRate > 0)
     {
         const Type value =
-            fieldValues_[fieldName]->value<Type>(mesh().time().userTimeValue());
+            fieldValues_[field.name()]->template value<Type>
+            (
+                mesh().time().userTimeValue()
+            );
 
         forAll(cells, i)
         {
@@ -106,37 +154,25 @@ void Foam::fv::massSourceBase::addGeneralSupType
 }
 
 
-template<class Type>
 void Foam::fv::massSourceBase::addSupType
 (
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const volScalarField& rho,
+    const volScalarField& field,
+    fvMatrix<scalar>& eqn
 ) const
 {
-    addGeneralSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::massSourceBase::addSupType
-(
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    const labelUList cells = set_.cells();
-
-    if (fieldName == rhoName_)
+    // Multiphase continuity equation. Same source as single-phase case.
+    if (field.name() == rhoName_)
     {
-        const scalar massFlowRate = this->massFlowRate();
-
-        forAll(cells, i)
-        {
-            eqn.source()[cells[i]] -=
-                mesh().V()[cells[i]]/set_.V()*massFlowRate;
-        }
+        addSupType(field, eqn);
+        return;
     }
-    else if (fieldName == heName_ && fieldValues_.found(TName_))
+
+    // Energy equation. Special handling for if temperature is specified.
+    if (field.name() == heName_ && fieldValues_.found(TName_))
     {
+        const labelUList cells = set_.cells();
+
         const scalar massFlowRate = this->massFlowRate();
 
         if (massFlowRate > 0)
@@ -184,23 +220,12 @@ void Foam::fv::massSourceBase::addSupType
                     mesh().V()[cells[i]]/set_.V()*massFlowRate;
             }
         }
-    }
-    else
-    {
-        addGeneralSupType(eqn, fieldName);
-    }
-}
 
+        return;
+    }
 
-template<class Type>
-void Foam::fv::massSourceBase::addSupType
-(
-    const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
+    // Property equation
+    addSupType<scalar>(rho, field, eqn);
 }
 
 
@@ -209,11 +234,12 @@ void Foam::fv::massSourceBase::addSupType
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
-    addSupType(eqn, fieldName);
+    // Multiphase property equation. Same source as the single phase case.
+    addSupType(rho, field, eqn);
 }
 
 
@@ -300,11 +326,12 @@ Foam::fv::massSource::massSource
 
 bool Foam::fv::massSourceBase::addsSupToField(const word& fieldName) const
 {
+    const bool isMixture = IOobject::group(fieldName) == word::null;
     const bool isThisPhase = IOobject::group(fieldName) == phaseName_;
 
     if
     (
-        isThisPhase
+        (isMixture || isThisPhase)
      && massFlowRate() > 0
      && !(fieldName == rhoName_)
      && !(fieldName == heName_ && fieldValues_.found(TName_))
@@ -318,7 +345,7 @@ bool Foam::fv::massSourceBase::addsSupToField(const word& fieldName) const
         return false;
     }
 
-    return isThisPhase;
+    return isMixture || isThisPhase;
 }
 
 
@@ -335,13 +362,25 @@ Foam::wordList Foam::fv::massSourceBase::addSupFields() const
 }
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_SUP, fv::massSourceBase);
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FV_MODEL_ADD_FIELD_SUP,
+    fv::massSourceBase
+)
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::massSourceBase);
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP,
+    fv::massSourceBase
+)
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::massSourceBase);
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP,
+    fv::massSourceBase
+)
 
 
 bool Foam::fv::massSourceBase::movePoints()

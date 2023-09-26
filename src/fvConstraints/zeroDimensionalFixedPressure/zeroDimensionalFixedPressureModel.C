@@ -76,12 +76,12 @@ Foam::fv::zeroDimensionalFixedPressureModel::constraint() const
 template<class Type>
 void Foam::fv::zeroDimensionalFixedPressureModel::addSupType
 (
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
     FatalErrorInFunction
-        << "Cannot add a fixed pressure source to field " << fieldName
+        << "Cannot add a fixed pressure source of field " << field.name()
         << " because this field's equation is not in mass-conservative form"
         << exit(FatalError);
 }
@@ -89,17 +89,26 @@ void Foam::fv::zeroDimensionalFixedPressureModel::addSupType
 
 void Foam::fv::zeroDimensionalFixedPressureModel::addSupType
 (
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& rho,
+    fvMatrix<scalar>& eqn
 ) const
 {
-    if (IOobject::member(fieldName) == constraint().rhoName())
+    if (IOobject::member(rho.name()) == constraint().rhoName())
     {
-        eqn += constraint().massSource(eqn.psi()());
+        if (IOobject::member(eqn.psi().name()) == constraint().pName())
+        {
+            eqn += constraint().pEqnSource(rho, eqn);
+        }
+        else
+        {
+            eqn += constraint().massSource(rho());
+        }
     }
     else
     {
-        addSupType<scalar>(eqn, fieldName); // error above
+        // This is actually an incompressible single-phase equation. Rho is
+        // actually a property field. Fall back (and error).
+        addSupType<scalar>(rho, eqn);
     }
 }
 
@@ -108,46 +117,45 @@ template<class Type>
 void Foam::fv::zeroDimensionalFixedPressureModel::addSupType
 (
     const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
+    if (&field != &eqn.psi())
+    {
+        FatalErrorInFunction
+            << "Cannot add a fixed pressure source of field " << field.name()
+            << " into an equation for field " << eqn.psi().name()
+            << exit(FatalError);
+    }
+
     eqn -= fvm::SuSp(-constraint().massSource(rho()), eqn.psi());
 }
 
 
 void Foam::fv::zeroDimensionalFixedPressureModel::addSupType
 (
+    const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    fvMatrix<scalar>& eqn
 ) const
 {
-    if (IOobject::member(fieldName) == constraint().rhoName())
+    if (IOobject::member(rho.name()) == constraint().rhoName())
     {
         if (IOobject::member(eqn.psi().name()) == constraint().pName())
         {
-            eqn += constraint().pEqnSource(eqn);
-        }
-        else if (IOobject::member(eqn.psi().name()) == constraint().rhoName())
-        {
-            // Phase density equation. Argument names are misleading.
-            const volScalarField& alpha = rho;
-            const volScalarField& rho = eqn.psi();
-
-            eqn += constraint().massSource(alpha(), rho());
+            eqn += alpha()*constraint().pEqnSource(rho, eqn);
         }
         else
         {
-            FatalErrorInFunction
-                << "Cannot add source for density field " << fieldName
-                << " into an equation for " << eqn.psi().name()
-                << exit(FatalError);
+            eqn += constraint().massSource(alpha(), rho());
         }
     }
     else
     {
-        addSupType<scalar>(rho, eqn, fieldName);
+        // This is actually a compressible single-phase equation. Alpha is
+        // actually rho, and rho is actually a property field. Fall back.
+        addSupType<scalar>(alpha, rho, eqn);
     }
 }
 
@@ -157,47 +165,19 @@ void Foam::fv::zeroDimensionalFixedPressureModel::addSupType
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
+    if (&field != &eqn.psi())
+    {
+        FatalErrorInFunction
+            << "Cannot add a fixed pressure source of field " << field.name()
+            << " into an equation for field " << eqn.psi().name()
+            << exit(FatalError);
+    }
+
     eqn -= fvm::SuSp(-constraint().massSource(alpha(), rho()), eqn.psi());
-}
-
-
-void Foam::fv::zeroDimensionalFixedPressureModel::addSupType
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    if (IOobject::member(fieldName) == constraint().rhoName())
-    {
-        if (IOobject::member(eqn.psi().name()) == constraint().pName())
-        {
-            eqn += alpha*constraint().pEqnSource(eqn);
-        }
-        else if (IOobject::member(eqn.psi().name()) == constraint().rhoName())
-        {
-            FatalErrorInFunction
-                << "Cannot add source for density field " << fieldName
-                << " into a phase-conservative equation for "
-                << eqn.psi().name() << exit(FatalError);
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Cannot add source for density field " << fieldName
-                << " into an equation for " << eqn.psi().name()
-                << exit(FatalError);
-        }
-    }
-    else
-    {
-        addSupType<scalar>(alpha, rho, eqn, fieldName);
-    }
 }
 
 
@@ -243,23 +223,23 @@ bool Foam::fv::zeroDimensionalFixedPressureModel::addsSupToField
 
 FOR_ALL_FIELD_TYPES
 (
-    IMPLEMENT_FV_MODEL_ADD_SUP,
+    IMPLEMENT_FV_MODEL_ADD_FIELD_SUP,
     fv::zeroDimensionalFixedPressureModel
-);
+)
 
 
 FOR_ALL_FIELD_TYPES
 (
-    IMPLEMENT_FV_MODEL_ADD_RHO_SUP,
+    IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP,
     fv::zeroDimensionalFixedPressureModel
-);
+)
 
 
 FOR_ALL_FIELD_TYPES
 (
-    IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP,
+    IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP,
     fv::zeroDimensionalFixedPressureModel
-);
+)
 
 
 bool Foam::fv::zeroDimensionalFixedPressureModel::movePoints()

@@ -68,9 +68,7 @@ Foam::fv::VoFCavitation::VoFCavitation
         )
     ),
 
-    cavitation_(cavitationModel::New(dict, mixture_)),
-
-    alphaName_(mixture_.alpha1().name())
+    cavitation_(cavitationModel::New(dict, mixture_))
 {}
 
 
@@ -78,14 +76,19 @@ Foam::fv::VoFCavitation::VoFCavitation
 
 Foam::wordList Foam::fv::VoFCavitation::addSupFields() const
 {
-    return {alphaName_, "p_rgh", "U"};
+    return
+    {
+        mixture_.alpha1().name(),
+        mixture_.alpha2().name(),
+        "U"
+    };
 }
 
 
 void Foam::fv::VoFCavitation::addSup
 (
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& alpha,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -93,63 +96,70 @@ void Foam::fv::VoFCavitation::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == alphaName_)
+    if (&alpha == &mixture_.alpha1() || &alpha == &mixture_.alpha2())
     {
-        const volScalarField::Internal alpha1Coeff
-        (
-            1.0/mixture_.rho1()
-          - mixture_.alpha1()()*(1.0/mixture_.rho1() - 1.0/mixture_.rho2())
-        );
+        const volScalarField& alpha1 = mixture_.alpha1();
+        const volScalarField& alpha2 = mixture_.alpha2();
 
-        const Pair<tmp<volScalarField::Internal>> mDot12Alpha
-        (
-            cavitation_->mDot12Alpha()
-        );
+        const dimensionedScalar& rho =
+            &alpha == &alpha1 ? mixture_.rho1() : mixture_.rho2();
 
-        const volScalarField::Internal vDot1Alpha(alpha1Coeff*mDot12Alpha[0]());
-        const volScalarField::Internal vDot2Alpha(alpha1Coeff*mDot12Alpha[1]());
+        const scalar s = &alpha == &alpha1 ? +1 : -1;
 
-        eqn += fvm::Sp(-vDot2Alpha - vDot1Alpha, eqn.psi()) + vDot1Alpha;
+        // Volume-fraction linearisation
+        if (&alpha == &eqn.psi())
+        {
+            const Pair<tmp<volScalarField::Internal>> mDot12Alpha
+            (
+                cavitation_->mDot12Alpha()
+            );
+            const volScalarField::Internal vDot1Alpha2(mDot12Alpha[0]/rho);
+            const volScalarField::Internal vDot2Alpha1(mDot12Alpha[1]/rho);
+
+            eqn +=
+                (&alpha == &alpha1 ? vDot1Alpha2 : vDot2Alpha1)
+              - fvm::Sp(vDot1Alpha2 + vDot2Alpha1, eqn.psi());
+        }
+
+        // Pressure linearisation
+        else if (eqn.psi().name() == "p_rgh")
+        {
+            const Pair<tmp<volScalarField::Internal>> mDot12P
+            (
+                cavitation_->mDot12P()
+            );
+            const volScalarField::Internal vDot1P(mDot12P[0]/rho);
+            const volScalarField::Internal vDot2P(mDot12P[1]/rho);
+
+            const volScalarField::Internal& rho =
+                mesh().lookupObject<volScalarField>("rho");
+            const volScalarField::Internal& gh =
+                mesh().lookupObject<volScalarField>("gh");
+
+            eqn +=
+                fvm::Sp(s*(vDot1P - vDot2P), eqn.psi())
+              + s*(vDot1P - vDot2P)*rho*gh
+              - s*(vDot1P - vDot2P)*cavitation_->pSat();
+        }
+
+        // Explicit non-linearised value. Probably not used.
+        else
+        {
+            const Pair<tmp<volScalarField::Internal>> mDot12Alpha
+            (
+                cavitation_->mDot12Alpha()
+            );
+            const volScalarField::Internal vDot1(mDot12Alpha[0]*alpha2/rho);
+            const volScalarField::Internal vDot2(mDot12Alpha[1]*alpha1/rho);
+
+            eqn += s*(vDot1 - vDot2);
+        }
     }
-}
-
-
-void Foam::fv::VoFCavitation::addSup
-(
-    const volScalarField&,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    if (debug)
+    else
     {
-        Info<< type() << ": applying source to " << eqn.psi().name() << endl;
-    }
-
-    if (fieldName == "p_rgh")
-    {
-        const volScalarField::Internal& rho =
-            mesh().lookupObject<volScalarField>("rho");
-
-        const volScalarField::Internal& gh =
-            mesh().lookupObject<volScalarField>("gh");
-
-        const dimensionedScalar pCoeff
-        (
-            1.0/mixture_.rho1() - 1.0/mixture_.rho2()
-        );
-
-        const Pair<tmp<volScalarField::Internal>> mDot12P
-        (
-            cavitation_->mDot12P()
-        );
-
-        const volScalarField::Internal vDot1P(pCoeff*mDot12P[0]);
-        const volScalarField::Internal vDot2P(pCoeff*mDot12P[1]);
-
-        eqn +=
-            (vDot2P - vDot1P)*(cavitation_->pSat() - rho*gh)
-          - fvm::Sp(vDot2P - vDot1P, eqn.psi());
+        FatalErrorInFunction
+            << "Support for field " << alpha.name() << " is not implemented"
+            << exit(FatalError);
     }
 }
 
@@ -157,8 +167,8 @@ void Foam::fv::VoFCavitation::addSup
 void Foam::fv::VoFCavitation::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     if (debug)
@@ -166,12 +176,25 @@ void Foam::fv::VoFCavitation::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == "U")
+    if (U.name() == "U")
     {
         const surfaceScalarField& rhoPhi =
             mesh().lookupObject<surfaceScalarField>("rhoPhi");
 
-        eqn += fvm::Sp(fvc::ddt(rho) + fvc::div(rhoPhi), eqn.psi());
+        if (&U == &eqn.psi())
+        {
+            eqn += fvm::Sp(fvc::ddt(rho) + fvc::div(rhoPhi), eqn.psi());
+        }
+        else
+        {
+            eqn += (fvc::ddt(rho) + fvc::div(rhoPhi))*U;
+        }
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Support for field " << U.name() << " is not implemented"
+            << exit(FatalError);
     }
 }
 

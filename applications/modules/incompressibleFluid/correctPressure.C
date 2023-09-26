@@ -80,12 +80,18 @@ void Foam::solvers::incompressibleFluid::correctPressure()
     // Update the pressure BCs to ensure flux consistency
     constrainPressure(p, U, phiHbyA, rAtU(), MRF);
 
+    // Evaluate any volume sources
+    fvScalarMatrix p_rghEqnSource(fvModels().sourceProxy(p));
+
     // Non-orthogonal pressure corrector loop
     while (pimple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
-            fvm::laplacian(rAtU(), p) == fvc::div(phiHbyA)
+            fvm::laplacian(rAtU(), p)
+         ==
+            fvc::div(phiHbyA)
+          - p_rghEqnSource
         );
 
         pEqn.setReference

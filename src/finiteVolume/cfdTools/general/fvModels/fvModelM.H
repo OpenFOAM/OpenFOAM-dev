@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,60 +24,69 @@ License
 \*---------------------------------------------------------------------------*/
 
 #define DEFINE_FV_MODEL_ADD_SUP(Type, nullArg)                                 \
-    virtual void addSup                                                        \
-    (                                                                          \
-        fvMatrix<Type>& eqn,                                                   \
-        const word& fieldName                                                  \
-    ) const;
+    virtual void addSup(fvMatrix<Type>& eqn) const;
 
 #define IMPLEMENT_FV_MODEL_ADD_SUP(Type, modelType)                            \
-    void Foam::modelType::addSup                                               \
-    (                                                                          \
-        fvMatrix<Type>& eqn,                                                   \
-        const word& fieldName                                                  \
-    ) const                                                                    \
+    void Foam::modelType::addSup(fvMatrix<Type>& eqn) const                    \
     {                                                                          \
-        addSupType(eqn, fieldName);                                            \
+        addSupType(eqn);                                                       \
     }
 
-#define DEFINE_FV_MODEL_ADD_RHO_SUP(Type, nullArg)                             \
+#define DEFINE_FV_MODEL_ADD_FIELD_SUP(Type, nullArg)                           \
+    virtual void addSup                                                        \
+    (                                                                          \
+        const VolField<Type>& field,                                           \
+        fvMatrix<Type>& eqn                                                    \
+    ) const;
+
+#define IMPLEMENT_FV_MODEL_ADD_FIELD_SUP(Type, modelType)                      \
+    void Foam::modelType::addSup                                               \
+    (                                                                          \
+        const VolField<Type>& field,                                           \
+        fvMatrix<Type>& eqn                                                    \
+    ) const                                                                    \
+    {                                                                          \
+        addSupType(field, eqn);                                                \
+    }
+
+#define DEFINE_FV_MODEL_ADD_RHO_FIELD_SUP(Type, nullArg)                       \
     virtual void addSup                                                        \
     (                                                                          \
         const volScalarField& rho,                                             \
-        fvMatrix<Type>& eqn,                                                   \
-        const word& fieldName                                                  \
+        const VolField<Type>& field,                                           \
+        fvMatrix<Type>& eqn                                                    \
     ) const;
 
-#define IMPLEMENT_FV_MODEL_ADD_RHO_SUP(Type, modelType)                        \
+#define IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP(Type, modelType)                  \
     void Foam::modelType::addSup                                               \
     (                                                                          \
         const volScalarField& rho,                                             \
-        fvMatrix<Type>& eqn,                                                   \
-        const word& fieldName                                                  \
+        const VolField<Type>& field,                                           \
+        fvMatrix<Type>& eqn                                                    \
     ) const                                                                    \
     {                                                                          \
-        addSupType(rho, eqn, fieldName);                                       \
+        addSupType(rho, field, eqn);                                           \
     }
 
-#define DEFINE_FV_MODEL_ADD_ALPHA_RHO_SUP(Type, nullArg)                       \
+#define DEFINE_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP(Type, nullArg)                 \
     virtual void addSup                                                        \
     (                                                                          \
         const volScalarField& alpha,                                           \
         const volScalarField& rho,                                             \
-        fvMatrix<Type>& eqn,                                                   \
-        const word& fieldName                                                  \
+        const VolField<Type>& field,                                           \
+        fvMatrix<Type>& eqn                                                    \
     ) const;
 
-#define IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP(Type, modelType)                  \
+#define IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP(Type, modelType)            \
     void Foam::modelType::addSup                                               \
     (                                                                          \
         const volScalarField& alpha,                                           \
         const volScalarField& rho,                                             \
-        fvMatrix<Type>& eqn,                                                   \
-        const word& fieldName                                                  \
+        const VolField<Type>& field,                                           \
+        fvMatrix<Type>& eqn                                                    \
     ) const                                                                    \
     {                                                                          \
-        addSupType(alpha, rho, eqn, fieldName);                                \
+        addSupType(alpha, rho, field, eqn);                                    \
     }
 
 

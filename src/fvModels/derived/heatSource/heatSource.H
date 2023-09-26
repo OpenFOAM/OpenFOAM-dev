@@ -117,16 +117,16 @@ public:
             //- Source term to energy equation
             virtual void addSup
             (
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Source term to compressible energy equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
 

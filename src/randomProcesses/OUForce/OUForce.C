@@ -84,8 +84,8 @@ Foam::wordList Foam::fv::OUForce::addSupFields() const
 
 void Foam::fv::OUForce::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& field,
+    fvMatrix<vector>& eqn
 ) const
 {
     eqn += volVectorField::Internal

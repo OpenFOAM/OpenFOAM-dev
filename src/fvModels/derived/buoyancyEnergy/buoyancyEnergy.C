@@ -96,8 +96,8 @@ Foam::wordList Foam::fv::buoyancyEnergy::addSupFields() const
 void Foam::fv::buoyancyEnergy::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     const uniformDimensionedVectorField& g =
@@ -113,8 +113,8 @@ void Foam::fv::buoyancyEnergy::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     const uniformDimensionedVectorField& g =

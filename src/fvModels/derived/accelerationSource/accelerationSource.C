@@ -51,6 +51,32 @@ void Foam::fv::accelerationSource::readCoeffs()
 }
 
 
+template<class AlphaRhoFieldType>
+void Foam::fv::accelerationSource::add
+(
+    const AlphaRhoFieldType& alphaRho,
+    fvMatrix<vector>& eqn
+) const
+{
+    const DimensionedField<scalar, volMesh>& V = mesh().V();
+
+    const scalar t = mesh().time().value();
+    const scalar dt = mesh().time().deltaTValue();
+    const vector dU =
+        velocity_->value(mesh().time().timeToUserTime(t))
+      - velocity_->value(mesh().time().timeToUserTime(t - dt));
+    const vector a = dU/mesh().time().deltaTValue();
+
+    const labelUList cells = set_.cells();
+
+    forAll(cells, i)
+    {
+        const label celli = cells[i];
+        eqn.source()[celli] -= V[celli]*alphaRho[celli]*a;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::accelerationSource::accelerationSource
@@ -80,22 +106,22 @@ Foam::wordList Foam::fv::accelerationSource::addSupFields() const
 
 void Foam::fv::accelerationSource::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    add(geometricOneField(), eqn, fieldName);
+    add(geometricOneField(), eqn);
 }
 
 
 void Foam::fv::accelerationSource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    add(rho, eqn, fieldName);
+    add(rho, eqn);
 }
 
 
@@ -103,11 +129,11 @@ void Foam::fv::accelerationSource::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    add((alpha*rho)(), eqn, fieldName);
+    add((alpha*rho)(), eqn);
 }
 
 

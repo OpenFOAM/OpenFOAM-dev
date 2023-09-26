@@ -154,16 +154,16 @@ public:
             //- Add implicit contribution to momentum equation
             virtual void addSup
             (
-                fvMatrix<vector>& eqn,
-                const word& fieldName
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
             //- Add implicit contribution to compressible momentum equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                fvMatrix<vector>& eqn,
-                const word& fieldName
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
             //- Add implicit contribution to phase momentum equation
@@ -171,8 +171,8 @@ public:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                fvMatrix<vector>& eqn,
-                const word& fieldName
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
 

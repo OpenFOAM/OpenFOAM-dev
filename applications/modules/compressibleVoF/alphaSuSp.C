@@ -30,46 +30,52 @@ License
 
 void Foam::solvers::compressibleVoF::alphaSuSp
 (
-    tmp<volScalarField::Internal>& Su,
-    tmp<volScalarField::Internal>& Sp
+    tmp<volScalarField::Internal>& tSu,
+    tmp<volScalarField::Internal>& tSp
 )
 {
-    Sp = volScalarField::Internal::New
-    (
-        "Sp",
-        mesh,
-        dimensionedScalar(dgdt.dimensions(), 0)
-    );
+    const dimensionedScalar Szero(dgdt.dimensions(), 0);
 
-    Su = volScalarField::Internal::New
-    (
-        "Su",
-        mesh,
-        dimensionedScalar(dgdt.dimensions(), 0)
-    );
+    tSp = volScalarField::Internal::New("Sp", mesh, Szero);
+    tSu = volScalarField::Internal::New("Su", mesh, Szero);
 
-    if (fvModels().addsSupToField(alpha1.name()))
+    volScalarField::Internal& Sp = tSp.ref();
+    volScalarField::Internal& Su = tSu.ref();
+
+    if (fvModels().addsSupToField(mixture.rho1().name()))
     {
-        // Phase change alpha1 source
-        const fvScalarMatrix alphaSup(fvModels().source(alpha1));
+        const volScalarField::Internal alpha2ByRho1(alpha2()/mixture.rho1()());
+        const fvScalarMatrix alphaRho1Sup
+        (
+            fvModels().sourceProxy(alpha1, mixture.rho1(), alpha1)
+        );
 
-        Su = alphaSup.Su();
-        Sp = alphaSup.Sp();
+        Su += alpha2ByRho1*alphaRho1Sup.Su();
+        Sp += alpha2ByRho1*alphaRho1Sup.Sp();
     }
 
-    volScalarField::Internal& SpRef = Sp.ref();
-    volScalarField::Internal& SuRef = Su.ref();
+    if (fvModels().addsSupToField(mixture.rho2().name()))
+    {
+        const volScalarField::Internal alpha1ByRho2(alpha1()/mixture.rho2()());
+        const fvScalarMatrix alphaRho2Sup
+        (
+            fvModels().sourceProxy(alpha2, mixture.rho2(), alpha2)
+        );
+
+        Su -= alpha1ByRho2*(alphaRho2Sup.Su() + alphaRho2Sup.Sp());
+        Sp += alpha1ByRho2*alphaRho2Sup.Sp();
+    }
 
     forAll(dgdt, celli)
     {
         if (dgdt[celli] > 0.0)
         {
-            SpRef[celli] -= dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
-            SuRef[celli] += dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
+            Sp[celli] -= dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
+            Su[celli] += dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
         }
         else if (dgdt[celli] < 0.0)
         {
-            SpRef[celli] += dgdt[celli]/max(alpha1[celli], 1e-4);
+            Sp[celli] += dgdt[celli]/max(alpha1[celli], 1e-4);
         }
     }
 }

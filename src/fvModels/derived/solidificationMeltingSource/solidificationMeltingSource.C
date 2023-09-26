@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "solidificationMeltingSource.H"
+#include "fvcDdt.H"
 #include "fvMatrices.H"
 #include "basicThermo.H"
 #include "uniformDimensionedFields.H"
@@ -214,6 +215,36 @@ void Foam::fv::solidificationMeltingSource::update
 }
 
 
+template<class RhoFieldType>
+void Foam::fv::solidificationMeltingSource::apply
+(
+    const RhoFieldType& rho,
+    fvMatrix<scalar>& eqn
+) const
+{
+    if (debug)
+    {
+        Info<< type() << ": applying source to " << eqn.psi().name() << endl;
+    }
+
+    const volScalarField Cp(this->Cp());
+
+    update(Cp);
+
+    dimensionedScalar L("L", dimEnergy/dimMass, L_);
+
+    // Contributions added to rhs of solver equation
+    if (eqn.psi().dimensions() == dimTemperature)
+    {
+        eqn -= L/Cp*(fvc::ddt(rho, alpha1_));
+    }
+    else
+    {
+        eqn -= L*(fvc::ddt(rho, alpha1_));
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::solidificationMeltingSource::solidificationMeltingSource
@@ -286,8 +317,8 @@ Foam::wordList Foam::fv::solidificationMeltingSource::addSupFields() const
 
 void Foam::fv::solidificationMeltingSource::addSup
 (
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     apply(geometricOneField(), eqn);
@@ -297,8 +328,8 @@ void Foam::fv::solidificationMeltingSource::addSup
 void Foam::fv::solidificationMeltingSource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     apply(rho, eqn);
@@ -307,8 +338,8 @@ void Foam::fv::solidificationMeltingSource::addSup
 
 void Foam::fv::solidificationMeltingSource::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     if (debug)
@@ -347,12 +378,11 @@ void Foam::fv::solidificationMeltingSource::addSup
 void Foam::fv::solidificationMeltingSource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    // Momentum source uses a Boussinesq approximation - redirect
-    addSup(eqn, fieldName);
+    addSup(U, eqn);
 }
 
 

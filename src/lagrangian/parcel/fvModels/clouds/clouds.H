@@ -177,31 +177,31 @@ public:
             //- Add source to continuity equation
             virtual void addSup
             (
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& rho,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Add source to enthalpy or species equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& field,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Add source to incompressible momentum equation
             virtual void addSup
             (
-                fvMatrix<vector>& eqn,
-                const word& fieldName
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
             //- Add source to compressible momentum equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                fvMatrix<vector>& eqn,
-                const word& fieldName
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
 

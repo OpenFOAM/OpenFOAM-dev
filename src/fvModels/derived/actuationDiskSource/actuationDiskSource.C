@@ -95,6 +95,37 @@ void Foam::fv::actuationDiskSource::readCoeffs()
 }
 
 
+template<class AlphaFieldType, class RhoFieldType>
+void Foam::fv::actuationDiskSource::addActuationDiskAxialInertialResistance
+(
+    vectorField& Usource,
+    const labelList& cells,
+    const scalarField& Vcells,
+    const AlphaFieldType& alpha,
+    const RhoFieldType& rho,
+    const vectorField& U
+) const
+{
+    const scalar a = 1 - Cp_/Ct_;
+    const vector dHat(diskDir_/mag(diskDir_));
+
+    scalar dHatUo(vGreat);
+    if (upstreamCellId_ != -1)
+    {
+        dHatUo = dHat & U[upstreamCellId_];
+    }
+    reduce(dHatUo, minOp<scalar>());
+
+    const vector T = 2*diskArea_*sqr(dHatUo)*a*(1 - a)*dHat;
+
+    forAll(cells, i)
+    {
+        Usource[cells[i]] +=
+            (alpha[cells[i]]*rho[cells[i]]*(Vcells[cells[i]]/set_.V()))*T;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::actuationDiskSource::actuationDiskSource
@@ -130,19 +161,15 @@ Foam::wordList Foam::fv::actuationDiskSource::addSupFields() const
 
 void Foam::fv::actuationDiskSource::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    const scalarField& cellsV = mesh().V();
-    vectorField& Usource = eqn.source();
-    const vectorField& U = eqn.psi();
-
     addActuationDiskAxialInertialResistance
     (
-        Usource,
+        eqn.source(),
         set_.cells(),
-        cellsV,
+        mesh().V(),
         geometricOneField(),
         geometricOneField(),
         U
@@ -153,19 +180,15 @@ void Foam::fv::actuationDiskSource::addSup
 void Foam::fv::actuationDiskSource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    const scalarField& cellsV = mesh().V();
-    vectorField& Usource = eqn.source();
-    const vectorField& U = eqn.psi();
-
     addActuationDiskAxialInertialResistance
     (
-        Usource,
+        eqn.source(),
         set_.cells(),
-        cellsV,
+        mesh().V(),
         geometricOneField(),
         rho,
         U
@@ -177,19 +200,15 @@ void Foam::fv::actuationDiskSource::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    const scalarField& cellsV = mesh().V();
-    vectorField& Usource = eqn.source();
-    const vectorField& U = eqn.psi();
-
     addActuationDiskAxialInertialResistance
     (
-        Usource,
+        eqn.source(),
         set_.cells(),
-        cellsV,
+        mesh().V(),
         alpha,
         rho,
         U

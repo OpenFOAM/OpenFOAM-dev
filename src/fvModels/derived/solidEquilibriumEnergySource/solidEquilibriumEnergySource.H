@@ -138,18 +138,18 @@ public:
             //- Explicit and implicit sources for compressible equations
             virtual void addSup
             (
-                const volScalarField&,
-                fvMatrix<scalar>&,
-                const word& fieldName
+                const volScalarField& rho,
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Explicit and implicit sources for phase equations
             virtual void addSup
             (
-                const volScalarField&,
-                const volScalarField&,
-                fvMatrix<scalar>&,
-                const word& fieldName
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
 

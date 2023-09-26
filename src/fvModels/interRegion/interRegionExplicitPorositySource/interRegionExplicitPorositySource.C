@@ -152,14 +152,40 @@ Foam::fv::interRegionExplicitPorositySource::addSupFields() const
 
 void Foam::fv::interRegionExplicitPorositySource::addSup
 (
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
     porosityPtr_->addResistance(porosityEqn);
     eqn -= filter_*porosityEqn;
+}
+
+
+void Foam::fv::interRegionExplicitPorositySource::addSup
+(
+    const volScalarField& rho,
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
+) const
+{
+    fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
+    porosityPtr_->addResistance(porosityEqn);
+    eqn -= filter_*porosityEqn;
+}
+
+
+void Foam::fv::interRegionExplicitPorositySource::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
+) const
+{
+    fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
+    porosityPtr_->addResistance(porosityEqn);
+    eqn -= alpha*filter_*porosityEqn;
 }
 
 

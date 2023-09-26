@@ -127,11 +127,11 @@ Foam::wordList Foam::fv::waveForcing::addSupFields() const
 
 void Foam::fv::waveForcing::addSup
 (
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& alpha,
+    fvMatrix<scalar>& eqn
 ) const
 {
-    if (fieldName == alphaName_)
+    if (alpha.name() == alphaName_ && &alpha == &eqn.psi())
     {
         const volScalarField::Internal forceCoeff(this->forceCoeff());
 
@@ -144,11 +144,11 @@ void Foam::fv::waveForcing::addSup
 void Foam::fv::waveForcing::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    if (fieldName == UName_)
+    if (U.name() == UName_ && &U == &eqn.psi())
     {
         const volScalarField::Internal forceCoeff(rho*this->forceCoeff());
 

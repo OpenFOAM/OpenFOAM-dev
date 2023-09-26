@@ -86,16 +86,10 @@ void Foam::fv::semiImplicitSource::readCoeffs()
 template<class Type>
 void Foam::fv::semiImplicitSource::addSupType
 (
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
-    if (debug)
-    {
-        Info<< "semiImplicitSource<" << pTraits<Type>::typeName
-            << ">::addSup for source " << name() << endl;
-    }
-
     const scalar t = mesh().time().userTimeValue();
 
     const VolField<Type>& psi = eqn.psi();
@@ -104,7 +98,7 @@ void Foam::fv::semiImplicitSource::addSupType
     (
         IOobject
         (
-            name() + fieldName + "Su",
+            name() + field.name() + "Su",
             mesh().time().name(),
             mesh(),
             IOobject::NO_READ,
@@ -134,13 +128,13 @@ void Foam::fv::semiImplicitSource::addSupType
 
     // Explicit source function for the field
     UIndirectList<Type>(Su, set_.cells()) =
-        fieldSu_[fieldName]->value<Type>(t)/VDash;
+        fieldSu_[field.name()]->template value<Type>(t)/VDash;
 
     volScalarField::Internal Sp
     (
         IOobject
         (
-            name() + fieldName + "Sp",
+            name() + field.name() + "Sp",
             mesh().time().name(),
             mesh(),
             IOobject::NO_READ,
@@ -158,7 +152,7 @@ void Foam::fv::semiImplicitSource::addSupType
 
     // Implicit source function for the field
     UIndirectList<scalar>(Sp, set_.cells()) =
-        fieldSp_[fieldName]->value(t)/VDash;
+        fieldSp_[field.name()]->value(t)/VDash;
 
     eqn += Su - fvm::SuSp(-Sp, psi);
 }
@@ -168,11 +162,11 @@ template<class Type>
 void Foam::fv::semiImplicitSource::addSupType
 (
     const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
-    return this->addSup(eqn, fieldName);
+    return addSup(field, eqn);
 }
 
 
@@ -181,11 +175,11 @@ void Foam::fv::semiImplicitSource::addSupType
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<Type>& eqn,
-    const word& fieldName
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
 ) const
 {
-    return this->addSup(eqn, fieldName);
+    return addSup(field, eqn);
 }
 
 
@@ -221,17 +215,25 @@ Foam::wordList Foam::fv::semiImplicitSource::addSupFields() const
 }
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_SUP, fv::semiImplicitSource);
-
-
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::semiImplicitSource);
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FV_MODEL_ADD_FIELD_SUP,
+    fv::semiImplicitSource
+)
 
 
 FOR_ALL_FIELD_TYPES
 (
-    IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP,
+    IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP,
     fv::semiImplicitSource
-);
+)
+
+
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP,
+    fv::semiImplicitSource
+)
 
 
 bool Foam::fv::semiImplicitSource::movePoints()

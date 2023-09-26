@@ -133,7 +133,9 @@ protected:
         //  i.e. includes phase-fraction sources
         virtual bool divergent() const
         {
-            return fvModels().addsSupToField(alpha1.name());
+            return
+                fvModels().addsSupToField(alpha1.name())
+             || fvModels().addsSupToField(alpha2.name());
         }
 
         //- Return the mixture compressibility/density

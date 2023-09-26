@@ -71,8 +71,7 @@ template<class AlphaFieldType>
 void Foam::fv::heatTransfer::add
 (
     const AlphaFieldType& alpha,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    fvMatrix<scalar>& eqn
 ) const
 {
     const volScalarField& he = eqn.psi();
@@ -162,22 +161,22 @@ Foam::wordList Foam::fv::heatTransfer::addSupFields() const
 
 void Foam::fv::heatTransfer::addSup
 (
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
-    add(geometricOneField(), eqn, fieldName);
+    add(geometricOneField(), eqn);
 }
 
 
 void Foam::fv::heatTransfer::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
-    add(geometricOneField(), eqn, fieldName);
+    add(geometricOneField(), eqn);
 }
 
 
@@ -185,11 +184,11 @@ void Foam::fv::heatTransfer::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
-    add(alpha, eqn, fieldName);
+    add(alpha, eqn);
 }
 
 

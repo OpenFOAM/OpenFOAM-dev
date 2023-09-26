@@ -90,22 +90,22 @@ Foam::wordList Foam::fv::verticalDamping::addSupFields() const
 
 void Foam::fv::verticalDamping::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    add(eqn.psi(), eqn);
+    add(U, eqn);
 }
 
 
 void Foam::fv::verticalDamping::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    add(rho*eqn.psi(), eqn);
+    add(rho*U, eqn);
 }
 
 
@@ -113,11 +113,11 @@ void Foam::fv::verticalDamping::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    add(alpha*rho*eqn.psi(), eqn);
+    add(alpha*rho*U, eqn);
 }
 
 

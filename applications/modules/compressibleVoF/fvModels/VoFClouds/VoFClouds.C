@@ -109,8 +109,8 @@ void Foam::fv::VoFClouds::correct()
 void Foam::fv::VoFClouds::addSup
 (
     const volScalarField& alpha,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& rho,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -118,14 +118,14 @@ void Foam::fv::VoFClouds::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == thermo_.rho()().name())
+    if (&rho == &thermo_.rho()())
     {
         eqn += clouds_.Srho();
     }
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << rho.name() << " is not implemented"
             << exit(FatalError);
     }
 }
@@ -135,8 +135,8 @@ void Foam::fv::VoFClouds::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -144,14 +144,14 @@ void Foam::fv::VoFClouds::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == thermo_.he().name())
+    if (&he == &thermo_.he())
     {
         eqn += clouds_.Sh(eqn.psi());
     }
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << he.name() << " is not implemented"
             << exit(FatalError);
     }
 }
@@ -160,8 +160,8 @@ void Foam::fv::VoFClouds::addSup
 void Foam::fv::VoFClouds::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     if (debug)
@@ -169,7 +169,16 @@ void Foam::fv::VoFClouds::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    eqn += clouds_.SU(eqn.psi());
+    if (U.name() == "U")
+    {
+        eqn += clouds_.SU(eqn.psi());
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Support for field " << U.name() << " is not implemented"
+            << exit(FatalError);
+    }
 }
 
 

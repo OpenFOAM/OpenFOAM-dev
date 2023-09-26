@@ -554,8 +554,8 @@ Foam::wordList Foam::fv::rotorDiskSource::addSupFields() const
 
 void Foam::fv::rotorDiskSource::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     volVectorField::Internal force
@@ -578,7 +578,7 @@ void Foam::fv::rotorDiskSource::addSup
     // Read the reference density for incompressible flow
     coeffs().lookup("rhoRef") >> rhoRef_;
 
-    const vectorField Uin(inflowVelocity(eqn.psi()));
+    const vectorField Uin(inflowVelocity(U));
     trim_->correct(Uin, force);
     calculate(geometricOneField(), Uin, trim_->thetag(), force);
 
@@ -595,8 +595,8 @@ void Foam::fv::rotorDiskSource::addSup
 void Foam::fv::rotorDiskSource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     volVectorField::Internal force
@@ -616,7 +616,7 @@ void Foam::fv::rotorDiskSource::addSup
         )
     );
 
-    const vectorField Uin(inflowVelocity(eqn.psi()));
+    const vectorField Uin(inflowVelocity(U));
     trim_->correct(rho, Uin, force);
     calculate(rho, Uin, trim_->thetag(), force);
 

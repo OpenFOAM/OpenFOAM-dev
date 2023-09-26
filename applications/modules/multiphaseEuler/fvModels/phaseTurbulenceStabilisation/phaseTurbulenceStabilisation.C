@@ -50,10 +50,11 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::phaseTurbulenceStabilisation::addSup
+void Foam::fv::phaseTurbulenceStabilisation::addAlphaRhoSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
+    const volScalarField& field,
     fvMatrix<scalar>& eqn,
     tmp<volScalarField>
     (phaseCompressible::momentumTransportModel::*psi)() const
@@ -184,36 +185,39 @@ void Foam::fv::phaseTurbulenceStabilisation::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& field,
+    fvMatrix<scalar>& eqn
 ) const
 {
-    if (fieldName == IOobject::groupName("k", phaseName_))
+    if (field.name() == IOobject::groupName("k", phaseName_))
     {
-        addSup
+        addAlphaRhoSup
         (
             alpha,
             rho,
+            field,
             eqn,
             &phaseCompressible::momentumTransportModel::k
         );
     }
-    else if (fieldName == IOobject::groupName("epsilon", phaseName_))
+    else if (field.name() == IOobject::groupName("epsilon", phaseName_))
     {
-        addSup
+        addAlphaRhoSup
         (
             alpha,
             rho,
+            field,
             eqn,
             &phaseCompressible::momentumTransportModel::epsilon
         );
     }
-    else if (fieldName == IOobject::groupName("omega", phaseName_))
+    else if (field.name() == IOobject::groupName("omega", phaseName_))
     {
-        addSup
+        addAlphaRhoSup
         (
             alpha,
             rho,
+            field,
             eqn,
             &phaseCompressible::momentumTransportModel::omega
         );
@@ -221,7 +225,7 @@ void Foam::fv::phaseTurbulenceStabilisation::addSup
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << field.name() << " is not implemented"
             << exit(FatalError);
     }
 }

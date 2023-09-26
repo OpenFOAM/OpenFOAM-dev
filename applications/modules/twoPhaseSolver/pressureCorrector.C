@@ -83,19 +83,11 @@ void Foam::solvers::twoPhaseSolver::incompressiblePressureCorrector
         // Update the pressure BCs to ensure flux consistency
         constrainPressure(p_rgh, U, phiHbyA, rAUf, MRF);
 
-        // Cache the phase change pressure source
-        fvScalarMatrix Sp_rgh
+        // Cache any sources
+        fvScalarMatrix p_rghEqnSource
         (
-            fvModels().source
-            (
-                volScalarField::New
-                (
-                    "1",
-                    mesh,
-                    dimensionedScalar(dimless/dimPressure, 1)
-                ),
-                p_rgh
-            )
+            fvModels().sourceProxy(alpha1, p_rgh)
+          + fvModels().sourceProxy(alpha2, p_rgh)
         );
 
         while (pimple.correctNonOrthogonal())
@@ -103,7 +95,7 @@ void Foam::solvers::twoPhaseSolver::incompressiblePressureCorrector
             fvScalarMatrix p_rghEqn
             (
                 fvc::div(phiHbyA) - fvm::laplacian(rAUf, p_rgh)
-             == Sp_rgh
+             == p_rghEqnSource
             );
 
             p_rghEqn.setReference

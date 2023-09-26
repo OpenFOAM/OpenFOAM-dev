@@ -854,7 +854,9 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fvMatrix<Type>::Sp() const
             "Sp(" + psi_.name() + ')',
             psi_.mesh(),
             dimensions_/psi_.dimensions()/dimVol,
-            diag()/psi_.mesh().V()
+            hasDiag()
+          ? diag()/psi_.mesh().V()
+          : tmp<scalarField>(new scalarField(lduAddr().size(), scalar(0)))
         )
     );
 

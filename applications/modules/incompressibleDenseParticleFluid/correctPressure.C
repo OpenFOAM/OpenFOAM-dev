@@ -89,6 +89,7 @@ void Foam::solvers::incompressibleDenseParticleFluid::correctPressure()
          ==
             fvc::ddt(alphac)
           + fvc::div(alphacf*phiHbyAD)
+          + fvModels().sourceProxy(alphac, p)
         );
 
         pEqn.setReference

@@ -123,8 +123,8 @@ Foam::wordList Foam::fv::heatSource::addSupFields() const
 
 void Foam::fv::heatSource::addSup
 (
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     const labelUList cells = set_.cells();
@@ -142,11 +142,11 @@ void Foam::fv::heatSource::addSup
 void Foam::fv::heatSource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
-    addSup(eqn, fieldName);
+    addSup(he, eqn);
 }
 
 

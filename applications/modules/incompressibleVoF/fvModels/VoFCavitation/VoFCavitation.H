@@ -102,10 +102,8 @@ class VoFCavitation
         //- Reference to the mixture properties
         const incompressibleTwoPhaseVoFMixture& mixture_;
 
+        //- The cavitation model
         autoPtr<cavitationModel> cavitation_;
-
-        //- The name of the VoF phase-fraction
-        word alphaName_;
 
 
 public:
@@ -138,27 +136,19 @@ public:
         //  to the transport equation
         virtual wordList addSupFields() const;
 
-        //- Add implicit/explicit contributions to VoF phase-fraction equation
+        //- Add a source to the phase continuity equation
         virtual void addSup
         (
-            fvMatrix<scalar>& eqn,
-            const word& fieldName
+            const volScalarField& alpha,
+            fvMatrix<scalar>& eqn
         ) const;
 
-        //- Add implicit/explicit contributions to p_rgh equation
-        virtual void addSup
-        (
-            const volScalarField& psi,
-            fvMatrix<scalar>& eqn,
-            const word& fieldName
-        ) const;
-
-        //- Add contribution to U equation
+        //- Add a source to the mixture momentum equation
         virtual void addSup
         (
             const volScalarField& rho,
-            fvMatrix<vector>& eqn,
-            const word& fieldName
+            const volVectorField& U,
+            fvMatrix<vector>& eqn
         ) const;
 
 

@@ -156,7 +156,8 @@ protected:
         {
             return
                !incompressible()
-             || fvModels().addsSupToField(alpha1.name());
+             || fvModels().addsSupToField(alpha1.name())
+             || fvModels().addsSupToField(alpha2.name());
         }
 
         //- Return the mixture compressibility/density

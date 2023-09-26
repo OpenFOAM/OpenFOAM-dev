@@ -115,7 +115,7 @@ class radialActuationDiskSource
 
         //- Add resistance to the UEqn
         template<class RhoFieldType>
-        void addRadialActuationDiskAxialInertialResistance
+        inline void addRadialActuationDiskAxialInertialResistance
         (
             vectorField& Usource,
             const labelList& cells,
@@ -156,16 +156,16 @@ public:
         //- Source term to momentum equation
         virtual void addSup
         (
-            fvMatrix<vector>& eqn,
-            const word& fieldName
+            const volVectorField& U,
+            fvMatrix<vector>& eqn
         ) const;
 
         //- Source term to compressible momentum equation
         virtual void addSup
         (
             const volScalarField& rho,
-            fvMatrix<vector>& eqn,
-            const word& fieldName
+            const volVectorField& U,
+            fvMatrix<vector>& eqn
         ) const;
 
 
@@ -186,12 +186,6 @@ public:
 
 } // End namespace fv
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "radialActuationDiskSourceTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

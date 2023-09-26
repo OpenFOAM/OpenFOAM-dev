@@ -24,7 +24,7 @@ if (pimple.transonic())
           + fvm::div(phid, p)
           - fvm::laplacian(rho*invA, p)
          ==
-            betav*fvModels.source(psi, p, rho.name())
+            betav*fvModels.sourceProxy(rho, p)
         );
 
         pEqn.solve();
@@ -54,7 +54,7 @@ else
           + fvc::div(phiHbyA)
           - fvm::laplacian(rho*invA, p)
          ==
-            betav*fvModels.source(psi, p, rho.name())
+            betav*fvModels.sourceProxy(rho, p)
         );
 
         pEqn.solve();

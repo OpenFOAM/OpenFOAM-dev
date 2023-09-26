@@ -142,7 +142,7 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
             fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
           + fvc::div(phiHbyA) + fvm::div(phid, p_rgh)
          ==
-            fvModels().source(psi, p_rgh, rho.name())
+            fvModels().sourceProxy(rho, p_rgh)
         );
 
         while (pimple.correctNonOrthogonal())
@@ -183,7 +183,7 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
             fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
           + fvc::div(phiHbyA)
          ==
-            fvModels().source(psi, p_rgh, rho.name())
+            fvModels().sourceProxy(rho, p_rgh)
         );
 
         while (pimple.correctNonOrthogonal())

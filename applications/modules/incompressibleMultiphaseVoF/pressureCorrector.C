@@ -80,27 +80,20 @@ void Foam::solvers::incompressibleMultiphaseVoF::pressureCorrector()
         // Update the pressure BCs to ensure flux consistency
         constrainPressure(p_rgh, U, phiHbyA, rAUf, MRF);
 
-        // Cache the phase change pressure source
-        fvScalarMatrix Sp_rgh
-        (
-            fvModels().source
-            (
-                volScalarField::New
-                (
-                    "1",
-                    mesh,
-                    dimensionedScalar(dimless/dimPressure, 1)
-                ),
-                p_rgh
-            )
-        );
+        // Evaluate any phase sources
+        fvScalarMatrix p_rghEqnSource(p_rgh, dimVolume/dimTime);
+        forAll(phases, phasei)
+        {
+            p_rghEqnSource +=
+                fvModels().sourceProxy(phases[phasei], p_rgh);
+        }
 
         while (pimple.correctNonOrthogonal())
         {
             fvScalarMatrix p_rghEqn
             (
                 fvc::div(phiHbyA) - fvm::laplacian(rAUf, p_rgh)
-             == Sp_rgh
+             == p_rghEqnSource
             );
 
             p_rghEqn.setReference

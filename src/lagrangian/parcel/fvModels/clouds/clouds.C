@@ -172,13 +172,11 @@ Foam::wordList Foam::fv::clouds::addSupFields() const
             const multicomponentThermo& carrierMcThermo =
                 refCast<const multicomponentThermo>(carrierThermo);
 
-            const PtrList<volScalarField>& Y = carrierMcThermo.Y();
-
-            forAll(Y, i)
+            forAll(carrierMcThermo.Y(), i)
             {
                 if (carrierMcThermo.solveSpecie(i))
                 {
-                    fieldNames.append(Y[i].name());
+                    fieldNames.append(carrierMcThermo.Y()[i].name());
                 }
             }
         }
@@ -208,8 +206,8 @@ void Foam::fv::clouds::correct()
 
 void Foam::fv::clouds::addSup
 (
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& rho,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -225,9 +223,15 @@ void Foam::fv::clouds::addSup
             << exit(FatalError);
     }
 
-    if (fieldName == rhoName_)
+    if (rho.name() == rhoName_)
     {
         eqn += cloudsPtr_().Srho(eqn.psi());
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Support for field " << rho.name() << " is not implemented"
+            << exit(FatalError);
     }
 }
 
@@ -235,8 +239,8 @@ void Foam::fv::clouds::addSup
 void Foam::fv::clouds::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& field,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -254,36 +258,41 @@ void Foam::fv::clouds::addSup
 
     const fluidThermo& carrierThermo = tCarrierThermo_();
 
-    if (fieldName == rhoName_)
-    {
-        eqn += cloudsPtr_().Srho(eqn.psi());
-    }
-    else if (fieldName == carrierThermo.he().name())
+    if (&field == &carrierThermo.he())
     {
         eqn += cloudsPtr_().Sh(eqn.psi());
+        return;
     }
-    else if (isA<multicomponentThermo>(carrierThermo))
+
+    if (isA<multicomponentThermo>(carrierThermo))
     {
         const multicomponentThermo& carrierMcThermo =
             refCast<const multicomponentThermo>(carrierThermo);
 
-        if (carrierMcThermo.containsSpecie(eqn.psi().name()))
+        if (carrierMcThermo.containsSpecie(field.name()))
         {
             eqn +=
                 cloudsPtr_().SYi
                 (
-                    carrierMcThermo.specieIndex(eqn.psi()),
-                    eqn.psi()
+                    carrierMcThermo.specieIndex(field),
+                    field
                 );
+            return;
         }
+    }
+
+    {
+        FatalErrorInFunction
+            << "Support for field " << field.name() << " is not implemented"
+            << exit(FatalError);
     }
 }
 
 
 void Foam::fv::clouds::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     if (debug)
@@ -299,9 +308,15 @@ void Foam::fv::clouds::addSup
             << exit(FatalError);
     }
 
-    if (fieldName == UName_)
+    if (U.name() == UName_)
     {
         eqn += cloudsPtr_().SU(eqn.psi())/tRho_();
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Support for field " << U.name() << " is not implemented"
+            << exit(FatalError);
     }
 }
 
@@ -309,8 +324,8 @@ void Foam::fv::clouds::addSup
 void Foam::fv::clouds::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     if (debug)
@@ -326,9 +341,15 @@ void Foam::fv::clouds::addSup
             << exit(FatalError);
     }
 
-    if (fieldName == UName_)
+    if (U.name() == UName_)
     {
         eqn += cloudsPtr_().SU(eqn.psi());
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Support for field " << U.name() << " is not implemented"
+            << exit(FatalError);
     }
 }
 

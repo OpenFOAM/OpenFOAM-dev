@@ -30,17 +30,34 @@ License
 
 void Foam::solvers::incompressibleVoF::alphaSuSp
 (
-    tmp<volScalarField::Internal>& Su,
-    tmp<volScalarField::Internal>& Sp
+    tmp<volScalarField::Internal>& tSu,
+    tmp<volScalarField::Internal>& tSp
 )
 {
-    if (divergent())
-    {
-        // Phase change alpha1 source
-        const fvScalarMatrix alphaSup(fvModels().source(alpha1));
+    if (!divergent()) return;
 
-        Su = alphaSup.Su();
-        Sp = alphaSup.Sp();
+    const dimensionedScalar Szero(dimless/dimTime, 0);
+
+    tSp = volScalarField::Internal::New("Sp", mesh, Szero);
+    tSu = volScalarField::Internal::New("Su", mesh, Szero);
+
+    volScalarField::Internal& Sp = tSp.ref();
+    volScalarField::Internal& Su = tSu.ref();
+
+    if (fvModels().addsSupToField(alpha1.name()))
+    {
+        const fvScalarMatrix alpha1Sup(fvModels().source(alpha1));
+
+        Su += alpha2()*alpha1Sup.Su();
+        Sp += alpha2()*alpha1Sup.Sp();
+    }
+
+    if (fvModels().addsSupToField(alpha2.name()))
+    {
+        const fvScalarMatrix alpha2Sup(fvModels().source(alpha2));
+
+        Su -= alpha1()*(alpha2Sup.Su() + alpha2Sup.Sp());
+        Sp += alpha1()*alpha2Sup.Sp();
     }
 }
 

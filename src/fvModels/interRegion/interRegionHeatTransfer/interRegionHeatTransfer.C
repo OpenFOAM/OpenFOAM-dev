@@ -114,12 +114,10 @@ Foam::wordList Foam::fv::interRegionHeatTransfer::addSupFields() const
 
 void Foam::fv::interRegionHeatTransfer::addSup
 (
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
-    const volScalarField& he = eqn.psi();
-
     const volScalarField& T =
         mesh().lookupObject<volScalarField>(TName_);
 
@@ -199,11 +197,11 @@ void Foam::fv::interRegionHeatTransfer::addSup
 void Foam::fv::interRegionHeatTransfer::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
-    addSup(eqn, fieldName);
+    addSup(he, eqn);
 }
 
 

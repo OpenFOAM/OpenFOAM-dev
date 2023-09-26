@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "radialActuationDiskSource.H"
+#include "volFields.H"
+#include "fvMatrix.H"
 #include "geometricOneField.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -51,6 +53,70 @@ void Foam::fv::radialActuationDiskSource::readCoeffs()
 }
 
 
+
+template<class RhoFieldType>
+void Foam::fv::radialActuationDiskSource::
+addRadialActuationDiskAxialInertialResistance
+(
+    vectorField& Usource,
+    const labelList& cells,
+    const scalarField& Vcells,
+    const RhoFieldType& rho,
+    const vectorField& U
+) const
+{
+    scalar a = 1.0 - Cp_/Ct_;
+    scalarField Tr(cells.size());
+    const vector uniDiskDir = diskDir_/mag(diskDir_);
+
+    tensor E(Zero);
+    E.xx() = uniDiskDir.x();
+    E.yy() = uniDiskDir.y();
+    E.zz() = uniDiskDir.z();
+
+    const Field<vector> zoneCellCentres(mesh().cellCentres(), cells);
+    const Field<scalar> zoneCellVolumes(mesh().cellVolumes(), cells);
+
+    const vector avgCentre = gSum(zoneCellVolumes*zoneCellCentres)/set_.V();
+    const scalar maxR = gMax(mag(zoneCellCentres - avgCentre));
+
+    scalar intCoeffs =
+        radialCoeffs_[0]
+      + radialCoeffs_[1]*sqr(maxR)/2.0
+      + radialCoeffs_[2]*pow4(maxR)/3.0;
+
+    vector upU = vector(vGreat, vGreat, vGreat);
+    scalar upRho = vGreat;
+    if (upstreamCellId_ != -1)
+    {
+        upU =  U[upstreamCellId_];
+        upRho = rho[upstreamCellId_];
+    }
+    reduce(upU, minOp<vector>());
+    reduce(upRho, minOp<scalar>());
+
+    scalar T = 2.0*upRho*diskArea_*mag(upU)*a*(1.0 - a);
+    forAll(cells, i)
+    {
+        scalar r2 = magSqr(mesh().cellCentres()[cells[i]] - avgCentre);
+
+        Tr[i] =
+            T
+           *(radialCoeffs_[0] + radialCoeffs_[1]*r2 + radialCoeffs_[2]*sqr(r2))
+           /intCoeffs;
+
+        Usource[cells[i]] += ((Vcells[cells[i]]/set_.V())*Tr[i]*E) & upU;
+    }
+
+    if (debug)
+    {
+        Info<< "Source name: " << name() << nl
+            << "Average centre: " << avgCentre << nl
+            << "Maximum radius: " << maxR << endl;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::radialActuationDiskSource::radialActuationDiskSource
@@ -72,19 +138,15 @@ Foam::fv::radialActuationDiskSource::radialActuationDiskSource
 
 void Foam::fv::radialActuationDiskSource::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    const scalarField& cellsV = mesh().V();
-    vectorField& Usource = eqn.source();
-    const vectorField& U = eqn.psi();
-
     addRadialActuationDiskAxialInertialResistance
     (
-        Usource,
+        eqn.source(),
         set_.cells(),
-        cellsV,
+        mesh().V(),
         geometricOneField(),
         U
     );
@@ -94,19 +156,15 @@ void Foam::fv::radialActuationDiskSource::addSup
 void Foam::fv::radialActuationDiskSource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
-    const scalarField& cellsV = mesh().V();
-    vectorField& Usource = eqn.source();
-    const vectorField& U = eqn.psi();
-
     addRadialActuationDiskAxialInertialResistance
     (
-        Usource,
+        eqn.source(),
         set_.cells(),
-        cellsV,
+        mesh().V(),
         rho,
         U
     );

@@ -88,7 +88,7 @@ void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
                 (
                     fvc::ddt(rho) + thermo.psi()*correction(fvm::ddt(p_rgh))
                   + fvc::div(phi, rho) - fvc::Sp(fvc::div(phi), rho)
-                  - (fvModels().source(phase, rho)&rho)
+                  - fvModels().sourceProxy(phase, rho, p_rgh)
                 ).ptr()
             );
         }

@@ -132,8 +132,8 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -148,8 +148,8 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 void Foam::fv::VoFSolidificationMeltingSource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     if (debug)

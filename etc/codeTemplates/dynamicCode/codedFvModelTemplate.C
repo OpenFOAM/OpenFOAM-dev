@@ -127,8 +127,8 @@ ${typeName}FvModel${SourceType}::
 
 void ${typeName}FvModel${SourceType}::addSup
 (
-    fvMatrix<${TemplateType}>& eqn,
-    const word& fieldName
+    const VolField<${TemplateType}>& field,
+    fvMatrix<${TemplateType}>& eqn
 ) const
 {
     if (${verbose})
@@ -145,8 +145,8 @@ void ${typeName}FvModel${SourceType}::addSup
 void ${typeName}FvModel${SourceType}::addSup
 (
     const volScalarField& rho,
-    fvMatrix<${TemplateType}>& eqn,
-    const word& fieldName
+    const VolField<${TemplateType}>& field,
+    fvMatrix<${TemplateType}>& eqn
 ) const
 {
     if (${verbose})
@@ -164,8 +164,8 @@ void ${typeName}FvModel${SourceType}::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<${TemplateType}>& eqn,
-    const word& fieldName
+    const VolField<${TemplateType}>& field,
+    fvMatrix<${TemplateType}>& eqn
 ) const
 {
     if (${verbose})

@@ -118,8 +118,8 @@ Foam::wordList Foam::fv::VoFTurbulenceDamping::addSupFields() const
 
 void Foam::fv::VoFTurbulenceDamping::addSup
 (
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& field,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -133,12 +133,12 @@ void Foam::fv::VoFTurbulenceDamping::addSup
       + mixture_.alpha2()()*sqr(mixture_.nuModel2().nu()()())
     );
 
-    if (fieldName == "epsilon")
+    if (field.name() == "epsilon")
     {
         eqn += mixture_.interfaceFraction()*C2_*aSqrnu*turbulence_.k()()
            /pow4(delta_);
     }
-    else if (fieldName == "omega")
+    else if (field.name() == "omega")
     {
         eqn += mixture_.interfaceFraction()*beta_*aSqrnu/(sqr(betaStar_)
            *pow4(delta_));
@@ -146,7 +146,7 @@ void Foam::fv::VoFTurbulenceDamping::addSup
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << field.name() << " is not implemented"
             << exit(FatalError);
     }
 }
@@ -155,9 +155,9 @@ void Foam::fv::VoFTurbulenceDamping::addSup
 void Foam::fv::VoFTurbulenceDamping::addSup
 (
     const volScalarField& alpha,
-    const volScalarField&,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& rho,
+    const volScalarField& field,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -182,12 +182,12 @@ void Foam::fv::VoFTurbulenceDamping::addSup
             << exit(FatalError);
     }
 
-    if (fieldName == IOobject::groupName("epsilon", phaseName_))
+    if (field.name() == IOobject::groupName("epsilon", phaseName_))
     {
         eqn += mixture_.interfaceFraction()*C2_*taSqrnu*turbulence_.k()()
            /pow4(delta_);
     }
-    else if (fieldName == IOobject::groupName("omega", phaseName_))
+    else if (field.name() == IOobject::groupName("omega", phaseName_))
     {
         eqn += mixture_.interfaceFraction()*beta_*taSqrnu
            /(sqr(betaStar_)*pow4(delta_));
@@ -195,7 +195,7 @@ void Foam::fv::VoFTurbulenceDamping::addSup
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << field.name() << " is not implemented"
             << exit(FatalError);
     }
 }

@@ -138,8 +138,8 @@ inline Foam::fv::filmCloudTransfer::CloudToFilmTransferRate
 void Foam::fv::filmCloudTransfer::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& alpha,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -147,7 +147,7 @@ void Foam::fv::filmCloudTransfer::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == film_.alpha.name())
+    if (&alpha == &film_.alpha && &eqn.psi() == &film_.alpha)
     {
         eqn += CloudToFilmTransferRate<scalar>(massFromCloud_, dimMass);
 
@@ -159,7 +159,7 @@ void Foam::fv::filmCloudTransfer::addSup
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << alpha.name() << " is not implemented"
             << exit(FatalError);
     }
 }
@@ -169,8 +169,8 @@ void Foam::fv::filmCloudTransfer::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -178,7 +178,7 @@ void Foam::fv::filmCloudTransfer::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == film_.thermo.he().name())
+    if (&he == &film_.thermo.he() && &eqn.psi() == &film_.thermo.he())
     {
         eqn += CloudToFilmTransferRate<scalar>(energyFromCloud_, dimEnergy);
 
@@ -190,7 +190,7 @@ void Foam::fv::filmCloudTransfer::addSup
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << he.name() << " is not implemented"
             << exit(FatalError);
     }
 }
@@ -200,8 +200,8 @@ void Foam::fv::filmCloudTransfer::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     if (debug)
@@ -209,7 +209,7 @@ void Foam::fv::filmCloudTransfer::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    if (fieldName == film_.U.name())
+    if (&U == &film_.U && &U == &film_.U)
     {
         eqn += CloudToFilmTransferRate<vector>(momentumFromCloud_, dimMomentum);
 
@@ -221,7 +221,7 @@ void Foam::fv::filmCloudTransfer::addSup
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << U.name() << " is not implemented"
             << exit(FatalError);
     }
 }

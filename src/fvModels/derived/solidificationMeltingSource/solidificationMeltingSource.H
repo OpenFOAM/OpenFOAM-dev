@@ -230,7 +230,7 @@ private:
 
         //- Helper function to apply to the energy equation
         template<class RhoFieldType>
-        void apply(const RhoFieldType& rho, fvMatrix<scalar>& eqn) const;
+        inline void apply(const RhoFieldType& rho, fvMatrix<scalar>& eqn) const;
 
 
 public:
@@ -266,39 +266,36 @@ public:
             virtual wordList addSupFields() const;
 
 
-        // Add explicit and implicit contributions
+        // Evaluation
 
             //- Add explicit contribution to enthalpy equation
             virtual void addSup
             (
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Add implicit contribution to momentum equation
             virtual void addSup
             (
-                fvMatrix<vector>& eqn,
-                const word& fieldName
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
-
-
-        // Add explicit and implicit contributions to compressible equation
 
             //- Add explicit contribution to compressible enthalpy equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Add implicit contribution to compressible momentum equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                fvMatrix<vector>& eqn,
-                const word& fieldName
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
 
@@ -334,12 +331,6 @@ public:
 
 } // End namespace fv
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "solidificationMeltingSourceTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

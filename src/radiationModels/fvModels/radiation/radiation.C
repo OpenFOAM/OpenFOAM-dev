@@ -81,8 +81,8 @@ Foam::wordList Foam::fv::radiation::addSupFields() const
 void Foam::fv::radiation::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     const basicThermo& thermo =

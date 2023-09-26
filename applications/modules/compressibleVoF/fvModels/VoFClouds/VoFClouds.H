@@ -130,8 +130,8 @@ public:
             virtual void addSup
             (
                 const volScalarField& alpha,
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& rho,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Add explicit contribution to phase energy equation
@@ -139,16 +139,16 @@ public:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Add implicit contribution to mixture momentum equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                fvMatrix<vector>& eqn,
-                const word& fieldName
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
 

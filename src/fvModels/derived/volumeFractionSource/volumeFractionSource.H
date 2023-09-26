@@ -120,11 +120,10 @@ class volumeFractionSource
 
             //- Add source terms to an equation
             template<class Type, class AlphaFieldType>
-            void addGeneralSup
+            void addGeneralSupType
             (
                 const AlphaFieldType& alpha,
-                fvMatrix<Type>&,
-                const word& fieldName
+                fvMatrix<Type>&
             ) const;
 
             //- Add a source term to an equation
@@ -132,8 +131,8 @@ class volumeFractionSource
             void addAlphaSupType
             (
                 const AlphaFieldType& alpha,
-                fvMatrix<Type>& eqn,
-                const word& fieldName
+                const VolField<Type>& field,
+                fvMatrix<Type>& eqn
             ) const;
 
             //- Add a source term to a scalar equation
@@ -141,8 +140,8 @@ class volumeFractionSource
             void addAlphaSupType
             (
                 const AlphaFieldType& alpha,
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& field,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Add a source term to a vector equation
@@ -150,21 +149,25 @@ class volumeFractionSource
             void addAlphaSupType
             (
                 const AlphaFieldType& alpha,
-                fvMatrix<vector>& eqn,
-                const word& fieldName
+                const volVectorField& field,
+                fvMatrix<vector>& eqn
             ) const;
 
             //- Add a source term to an equation
             template<class Type>
-            void addSupType(fvMatrix<Type>& eqn, const word& fieldName) const;
+            void addSupType
+            (
+                const VolField<Type>& field,
+                fvMatrix<Type>& eqn
+            ) const;
 
             //- Add a source term to a compressible equation
             template<class Type>
             void addSupType
             (
                 const volScalarField& rho,
-                fvMatrix<Type>& eqn,
-                const word& fieldName
+                const VolField<Type>& field,
+                fvMatrix<Type>& eqn
             ) const;
 
             //- Add a source term to a phase equation
@@ -173,11 +176,9 @@ class volumeFractionSource
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                fvMatrix<Type>& eqn,
-                const word& fieldName
+                const VolField<Type>& field,
+                fvMatrix<Type>& eqn
             ) const;
-
-
 
 
 public:
@@ -221,13 +222,13 @@ public:
         // Sources
 
             //- Add a source term to an equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_SUP);
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_FIELD_SUP)
 
             //- Add a source term to a compressible equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_RHO_SUP);
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_RHO_FIELD_SUP)
 
             //- Add a source term to a phase equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_SUP);
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP)
 
 
         // Mesh changes

@@ -82,10 +82,14 @@ protected:
 
         //- Add a source term to an equation
         template<class Type>
+        void addSupType(fvMatrix<Type>& eqn) const;
+
+        //- Add a source term to an equation
+        template<class Type>
         void addSupType
         (
-            fvMatrix<Type>& eqn,
-            const word& fieldName
+            const VolField<Type>& field,
+            fvMatrix<Type>& eqn
         ) const;
 
         //- Add a source term to a compressible equation
@@ -93,8 +97,8 @@ protected:
         void addSupType
         (
             const volScalarField& rho,
-            fvMatrix<Type>& eqn,
-            const word& fieldName
+            const VolField<Type>& field,
+            fvMatrix<Type>& eqn
         ) const;
 
         //- Add a source term to a phase equation
@@ -103,19 +107,17 @@ protected:
         (
             const volScalarField& alpha,
             const volScalarField& rho,
-            fvMatrix<Type>& eqn,
-            const word& fieldName
+            const VolField<Type>& field,
+            fvMatrix<Type>& eqn
         ) const;
 
-
-        //- Return source for equation with specified name and dimensions
+        //- Return a source for an equation
         template<class Type, class ... AlphaRhoFieldTypes>
-        tmp<fvMatrix<Type>> source
+        tmp<fvMatrix<Type>> sourceTerm
         (
-            const VolField<Type>& field,
-            const word& fieldName,
+            const VolField<Type>& eqnField,
             const dimensionSet& ds,
-            const AlphaRhoFieldTypes& ... alphaRhos
+            const AlphaRhoFieldTypes& ... alphaRhoFields
         ) const;
 
 
@@ -145,28 +147,34 @@ public:
     // Static Member Functions
 
         //- Return the dimensions of the matrix of a source term
-        template
-        <
-            class Type,
-            class AlphaRhoFieldType,
-            class ... AlphaRhoFieldTypes
-        >
-        inline static dimensionSet sourceDims
+        template<class AlphaRhoFieldType, class ... AlphaRhoFieldTypes>
+        static dimensionSet sourceDims
         (
-            const VolField<Type>& field,
             const dimensionSet& ds,
-            const AlphaRhoFieldType& alphaRho,
-            const AlphaRhoFieldTypes& ... alphaRhos
+            const AlphaRhoFieldType& alphaRhoField,
+            const AlphaRhoFieldTypes& ... alphaRhoFields
         );
 
         //- Return the dimensions of the matrix of a source term (base
         //  condition for the above)
-        template<class Type>
-        inline static dimensionSet sourceDims
+        inline static const dimensionSet& sourceDims(const dimensionSet& ds);
+
+        //- Return the name of the field associated with a source term
+        template<class AlphaRhoFieldType, class ... AlphaRhoFieldTypes>
+        static const word& fieldName
         (
-            const VolField<Type>& field,
-            const dimensionSet& ds
+            const AlphaRhoFieldType& alphaRhoField,
+            const AlphaRhoFieldTypes& ... alphaRhoFields
         );
+
+        //- Return the name of the field associated with a source term (base
+        //  condition for the above)
+        template<class AlphaRhoFieldType>
+        static const word& fieldName(const AlphaRhoFieldType& alphaRhoField);
+
+        //- Return the name of the field associated with a source term. Special
+        //  overload for volume sources with no associated field.
+        static const word& fieldName();
 
 
     // Constructors
@@ -267,13 +275,23 @@ public:
         // Sources
 
             //- Add a source term to an equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_SUP);
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_SUP)
+
+            //- Add a source term to an equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_FIELD_SUP)
 
             //- Add a source term to a compressible equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_RHO_SUP);
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_RHO_FIELD_SUP)
 
             //- Add a source term to a phase equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_SUP);
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP)
+
+            //- Return source for an equation
+            template<class Type>
+            tmp<fvMatrix<Type>> sourceProxy
+            (
+                const VolField<Type>& eqnField
+            ) const;
 
             //- Return source for an equation
             template<class Type>
@@ -282,12 +300,12 @@ public:
                 const VolField<Type>& field
             ) const;
 
-            //- Return source for an equation with a specified name
+            //- Return source for an equation
             template<class Type>
-            tmp<fvMatrix<Type>> source
+            tmp<fvMatrix<Type>> sourceProxy
             (
                 const VolField<Type>& field,
-                const word& fieldName
+                const VolField<Type>& eqnField
             ) const;
 
             //- Return source for a compressible equation
@@ -298,13 +316,13 @@ public:
                 const VolField<Type>& field
             ) const;
 
-            //- Return source for a compressible equation with a specified name
+            //- Return source for a compressible equation
             template<class Type>
-            tmp<fvMatrix<Type>> source
+            tmp<fvMatrix<Type>> sourceProxy
             (
                 const volScalarField& rho,
                 const VolField<Type>& field,
-                const word& fieldName
+                const VolField<Type>& eqnField
             ) const;
 
             //- Return source for a phase equation
@@ -316,14 +334,14 @@ public:
                 const VolField<Type>& field
             ) const;
 
-            //- Return source for a phase equation with a specified name
+            //- Return source for a phase equation
             template<class Type>
-            tmp<fvMatrix<Type>> source
+            tmp<fvMatrix<Type>> sourceProxy
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
                 const VolField<Type>& field,
-                const word& fieldName
+                const VolField<Type>& eqnField
             ) const;
 
             //- Return source for a phase equation
@@ -358,14 +376,6 @@ public:
             tmp<fvMatrix<Type>> d2dt2
             (
                 const VolField<Type>& field
-            ) const;
-
-            //- Return source for an equation with a second time derivative
-            template<class Type>
-            tmp<fvMatrix<Type>> d2dt2
-            (
-                const VolField<Type>& field,
-                const word& fieldName
             ) const;
 
 

@@ -111,7 +111,7 @@ class interRegionHeatTransfer
 
     // Private member functions
 
-        //- Non-virtual read
+        //- Non-virtual readalpha*
         void readCoeffs();
 
         //- Get the neighbour heat transfer
@@ -160,16 +160,16 @@ public:
             //- Source term to energy equation
             virtual void addSup
             (
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Source term to compressible energy equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
             ) const;
 
 

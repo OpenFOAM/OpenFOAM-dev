@@ -34,7 +34,7 @@
             tpEqn =
             (
                 fvm::laplacian(rho*trTU(), p)
-              + fvModels.source(psi, p, rho.name())
+              + fvModels.sourceProxy(rho, p)
              ==
                 fvc::div(phiHbyA)
             );
@@ -44,7 +44,7 @@
             tpEqn =
             (
                 fvm::laplacian(rho*trAU(), p)
-              + fvModels.source(psi, p, rho.name())
+              + fvModels.sourceProxy(rho, p)
              ==
                 fvc::div(phiHbyA)
             );

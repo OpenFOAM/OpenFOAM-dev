@@ -127,8 +127,8 @@ Foam::fv::compressible::VoFTurbulenceDamping::addSupFields() const
 void Foam::fv::compressible::VoFTurbulenceDamping::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& field,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -142,12 +142,12 @@ void Foam::fv::compressible::VoFTurbulenceDamping::addSup
       + mixture_.alpha2()()*mixture_.rho2()()*sqr(mixture_.thermo2().nu()()())
     );
 
-    if (fieldName == "epsilon")
+    if (field.name() == "epsilon")
     {
         eqn += mixture_.interfaceFraction()
            *C2_*aRhoSqrnu*momentumTransport_.k()()/pow4(delta_);
     }
-    else if (fieldName == "omega")
+    else if (field.name() == "omega")
     {
         eqn += mixture_.interfaceFraction()
            *beta_*aRhoSqrnu/(sqr(betaStar_)*pow4(delta_));
@@ -155,7 +155,7 @@ void Foam::fv::compressible::VoFTurbulenceDamping::addSup
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << field.name() << " is not implemented"
             << exit(FatalError);
     }
 }
@@ -164,9 +164,9 @@ void Foam::fv::compressible::VoFTurbulenceDamping::addSup
 void Foam::fv::compressible::VoFTurbulenceDamping::addSup
 (
     const volScalarField& alpha,
-    const volScalarField&,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& rho,
+    const volScalarField& field,
+    fvMatrix<scalar>& eqn
 ) const
 {
     if (debug)
@@ -193,12 +193,12 @@ void Foam::fv::compressible::VoFTurbulenceDamping::addSup
             << exit(FatalError);
     }
 
-    if (fieldName == IOobject::groupName("epsilon", phaseName_))
+    if (field.name() == IOobject::groupName("epsilon", phaseName_))
     {
         eqn += mixture_.interfaceFraction()
            *C2_*taRhoSqrnu*momentumTransport_.k()()/pow4(delta_);
     }
-    else if (fieldName == IOobject::groupName("omega", phaseName_))
+    else if (field.name() == IOobject::groupName("omega", phaseName_))
     {
         eqn += mixture_.interfaceFraction()
            *beta_*taRhoSqrnu/(sqr(betaStar_)*pow4(delta_));
@@ -206,7 +206,7 @@ void Foam::fv::compressible::VoFTurbulenceDamping::addSup
     else
     {
         FatalErrorInFunction
-            << "Support for field " << fieldName << " is not implemented"
+            << "Support for field " << field.name() << " is not implemented"
             << exit(FatalError);
     }
 }

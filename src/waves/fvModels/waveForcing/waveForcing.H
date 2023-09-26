@@ -193,16 +193,16 @@ public:
             //- Source term to VoF phase-fraction equation
             virtual void addSup
             (
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
+                const volScalarField& alpha,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Source term to momentum equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                fvMatrix<vector>& eqn,
-                const word& fieldName
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
 

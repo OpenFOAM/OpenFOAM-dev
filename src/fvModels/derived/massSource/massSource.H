@@ -123,26 +123,34 @@ private:
 
             //- Add a source term to an equation
             template<class Type>
-            void addGeneralSupType
+            void addSupType
             (
-                fvMatrix<Type>& eqn,
-                const word& fieldName
+                const VolField<Type>& field,
+                fvMatrix<Type>& eqn
             ) const;
 
-            //- Add a source term to an equation
-            template<class Type>
-            void addSupType(fvMatrix<Type>& eqn, const word& fieldName) const;
-
             //- Add a source term to a scalar equation
-            void addSupType(fvMatrix<scalar>& eqn, const word& fieldName) const;
+            void addSupType
+            (
+                const volScalarField& field,
+                fvMatrix<scalar>& eqn
+            ) const;
 
             //- Add a source term to a compressible equation
             template<class Type>
             void addSupType
             (
                 const volScalarField& rho,
-                fvMatrix<Type>& eqn,
-                const word& fieldName
+                const VolField<Type>& field,
+                fvMatrix<Type>& eqn
+            ) const;
+
+            //- Add a source term to a compressible scalar equation
+            void addSupType
+            (
+                const volScalarField& rho,
+                const volScalarField& field,
+                fvMatrix<scalar>& eqn
             ) const;
 
             //- Add a source term to a phase equation
@@ -151,8 +159,8 @@ private:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                fvMatrix<Type>& eqn,
-                const word& fieldName
+                const VolField<Type>& field,
+                fvMatrix<Type>& eqn
             ) const;
 
 
@@ -204,13 +212,13 @@ public:
         // Sources
 
             //- Add a source term to an equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_SUP);
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_FIELD_SUP)
 
             //- Add a source term to a compressible equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_RHO_SUP);
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_RHO_FIELD_SUP)
 
             //- Add a source term to a phase equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_SUP);
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP)
 
 
         // Mesh changes

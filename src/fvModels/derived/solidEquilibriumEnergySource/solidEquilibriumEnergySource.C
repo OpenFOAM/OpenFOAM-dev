@@ -144,8 +144,8 @@ Foam::wordList Foam::fv::solidEquilibriumEnergySource::addSupFields() const
 void Foam::fv::solidEquilibriumEnergySource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     const volScalarField alphahe
@@ -172,8 +172,8 @@ void Foam::fv::solidEquilibriumEnergySource::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
+    const volScalarField& he,
+    fvMatrix<scalar>& eqn
 ) const
 {
     const volScalarField alphahe

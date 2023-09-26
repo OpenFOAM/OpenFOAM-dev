@@ -213,8 +213,8 @@ public:
         virtual void addSup
         (
             const volScalarField& rho,
-            fvMatrix<scalar>& eqn,
-            const word& fieldName
+            const volScalarField& he,
+            fvMatrix<scalar>& eqn
         ) const;
 
 

@@ -89,8 +89,8 @@ public:
             //- Explicit and implicit matrix contributions
             virtual void addSup
             (
-                fvMatrix<${TemplateType}>& eqn,
-                const word& fieldName
+                const VolField<${TemplateType}>& field,
+                fvMatrix<${TemplateType}>& eqn
             ) const;
 
             //- Explicit and implicit matrix contributions for compressible
@@ -98,8 +98,8 @@ public:
             virtual void addSup
             (
                 const volScalarField& rho,
-                fvMatrix<${TemplateType}>& eqn,
-                const word& fieldName
+                const VolField<${TemplateType}>& field,
+                fvMatrix<${TemplateType}>& eqn
             ) const;
 
             //- Explicit and implicit matrix contributions for phase equations
@@ -107,8 +107,8 @@ public:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                fvMatrix<${TemplateType}>& eqn,
-                const word& fieldName
+                const VolField<${TemplateType}>& field,
+                fvMatrix<${TemplateType}>& eqn
             ) const;
 
 

@@ -146,26 +146,31 @@ public:
 
     // Member Functions
 
-        //- Return the list of fields for which the option adds source term
-        //  to the transport equation
-        virtual wordList addSupFields() const;
+        // Checks
 
-        //- Add explicit contribution to epsilon or omega equation
-        virtual void addSup
-        (
-            const volScalarField& rho,
-            fvMatrix<scalar>& eqn,
-            const word& fieldName
-        ) const;
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addSupFields() const;
 
-        //- Add explicit contribution to phase epsilon or omega equation
-        virtual void addSup
-        (
-            const volScalarField& alpha,
-            const volScalarField& rho,
-            fvMatrix<scalar>& eqn,
-            const word& fieldName
-        ) const;
+
+        // Sources
+
+            //- Add explicit contribution to epsilon or omega equation
+            virtual void addSup
+            (
+                const volScalarField& rho,
+                const volScalarField& field,
+                fvMatrix<scalar>& eqn
+            ) const;
+
+            //- Add explicit contribution to phase epsilon or omega equation
+            virtual void addSup
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                const volScalarField& field,
+                fvMatrix<scalar>& eqn
+            ) const;
 
 
         // Mesh changes

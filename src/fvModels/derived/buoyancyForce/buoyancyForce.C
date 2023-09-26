@@ -99,8 +99,8 @@ Foam::wordList Foam::fv::buoyancyForce::addSupFields() const
 
 void Foam::fv::buoyancyForce::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     eqn += g_;
@@ -110,8 +110,8 @@ void Foam::fv::buoyancyForce::addSup
 void Foam::fv::buoyancyForce::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     eqn += rho*g_;
@@ -122,8 +122,8 @@ void Foam::fv::buoyancyForce::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     eqn += alpha*rho*g_;

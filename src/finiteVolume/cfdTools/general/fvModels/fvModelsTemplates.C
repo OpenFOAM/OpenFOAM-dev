@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,15 +23,16 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "fvModels.H"
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type, class ... AlphaRhoFieldTypes>
-Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
+Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::sourceTerm
 (
-    const VolField<Type>& field,
-    const word& fieldName,
+    const VolField<Type>& eqnField,
     const dimensionSet& ds,
-    const AlphaRhoFieldTypes& ... alphaRhos
+    const AlphaRhoFieldTypes& ... alphaRhoFields
 ) const
 {
     checkApplied();
@@ -40,13 +41,15 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
     (
         new fvMatrix<Type>
         (
-            field,
-            fvModel::sourceDims(field, ds, alphaRhos ...)
+            eqnField,
+            fvModel::sourceDims(ds, alphaRhoFields ...)
         )
     );
     fvMatrix<Type>& mtx = tmtx.ref();
 
     const PtrListDictionary<fvModel>& modelList(*this);
+
+    const word& fieldName = fvModel::fieldName(alphaRhoFields ...);
 
     forAll(modelList, i)
     {
@@ -62,7 +65,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
                     << fieldName << endl;
             }
 
-            model.addSup(alphaRhos ..., mtx, fieldName);
+            model.addSup(alphaRhoFields ..., mtx);
         }
     }
 
@@ -73,23 +76,33 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
+Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::sourceProxy
 (
-    const VolField<Type>& field
+    const VolField<Type>& eqnField
 ) const
 {
-    return this->source(field, field.name());
+    return sourceTerm(eqnField, dimVolume/dimTime);
 }
 
 
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 (
-    const VolField<Type>& field,
-    const word& fieldName
+    const VolField<Type>& field
 ) const
 {
-    return source(field, fieldName, dimVolume/dimTime);
+    return sourceTerm(field, dimVolume/dimTime, field);
+}
+
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::sourceProxy
+(
+    const VolField<Type>& field,
+    const VolField<Type>& eqnField
+) const
+{
+    return sourceTerm(eqnField, dimVolume/dimTime, field);
 }
 
 
@@ -100,19 +113,19 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
     const VolField<Type>& field
 ) const
 {
-    return this->source(rho, field, field.name());
+    return sourceTerm(field, dimVolume/dimTime, rho, field);
 }
 
 
 template<class Type>
-Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
+Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::sourceProxy
 (
     const volScalarField& rho,
     const VolField<Type>& field,
-    const word& fieldName
+    const VolField<Type>& eqnField
 ) const
 {
-    return source(field, fieldName, dimVolume/dimTime, rho);
+    return sourceTerm(eqnField, dimVolume/dimTime, rho, field);
 }
 
 
@@ -124,20 +137,20 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
     const VolField<Type>& field
 ) const
 {
-    return this->source(alpha, rho, field, field.name());
+    return sourceTerm(field, dimVolume/dimTime, alpha, rho, field);
 }
 
 
 template<class Type>
-Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
+Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::sourceProxy
 (
     const volScalarField& alpha,
     const volScalarField& rho,
     const VolField<Type>& field,
-    const word& fieldName
+    const VolField<Type>& eqnField
 ) const
 {
-    return source(field, fieldName, dimVolume/dimTime, alpha, rho);
+    return sourceTerm(eqnField, dimVolume/dimTime, alpha, rho, field);
 }
 
 
@@ -149,7 +162,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
     const VolField<Type>& field
 ) const
 {
-    return this->source(field, field.name());
+    return this->source(field);
 }
 
 
@@ -176,7 +189,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
         dimensionedScalar(dimless, 1.0)
     );
 
-    return this->source(alpha, one, field, field.name());
+    return this->source(alpha, one, field);
 }
 
 
@@ -188,11 +201,9 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
     const VolField<Type>& field
 ) const
 {
-    return this->source(rho, field, field.name());
+    return this->source(rho, field);
 }
 
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::d2dt2
@@ -200,18 +211,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::d2dt2
     const VolField<Type>& field
 ) const
 {
-    return this->d2dt2(field, field.name());
-}
-
-
-template<class Type>
-Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::d2dt2
-(
-    const VolField<Type>& field,
-    const word& fieldName
-) const
-{
-    return source(field, fieldName, dimVolume/sqr(dimTime));
+    return sourceTerm(field, dimVolume/sqr(dimTime), field);
 }
 
 

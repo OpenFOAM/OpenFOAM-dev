@@ -102,8 +102,8 @@ Foam::wordList Foam::fv::explicitPorositySource::addSupFields() const
 
 void Foam::fv::explicitPorositySource::addSup
 (
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -115,8 +115,8 @@ void Foam::fv::explicitPorositySource::addSup
 void Foam::fv::explicitPorositySource::addSup
 (
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -129,8 +129,8 @@ void Foam::fv::explicitPorositySource::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
+    const volVectorField& U,
+    fvMatrix<vector>& eqn
 ) const
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
