@@ -61,6 +61,21 @@ template<class Type>
 void Foam::fv::phaseLimitStabilisation::addSupType
 (
     const volScalarField& alpha,
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
+) const
+{
+    const uniformDimensionedScalarField& rate =
+        mesh().lookupObjectRef<uniformDimensionedScalarField>(rateName_);
+
+    eqn -= fvm::Sp(max(residualAlpha_ - alpha, scalar(0))*rate, eqn.psi());
+}
+
+
+template<class Type>
+void Foam::fv::phaseLimitStabilisation::addSupType
+(
+    const volScalarField& alpha,
     const volScalarField& rho,
     const VolField<Type>& field,
     fvMatrix<Type>& eqn
@@ -98,6 +113,13 @@ Foam::wordList Foam::fv::phaseLimitStabilisation::addSupFields() const
 {
     return wordList(1, fieldName_);
 }
+
+
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP,
+    fv::phaseLimitStabilisation
+)
 
 
 FOR_ALL_FIELD_TYPES

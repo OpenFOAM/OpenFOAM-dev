@@ -174,22 +174,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
     const VolField<Type>& field
 ) const
 {
-    volScalarField one
-    (
-        IOobject
-        (
-            "one",
-            this->mesh().time().name(),
-            this->mesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        this->mesh(),
-        dimensionedScalar(dimless, 1.0)
-    );
-
-    return this->source(alpha, one, field);
+    return this->source(alpha, field);
 }
 
 

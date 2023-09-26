@@ -22,55 +22,54 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::massSource
+    Foam::fv::volumeSource
 
 Description
-    This fvModel applies a mass source to the continuity equation and to all
-    field equations. It can be applied to compressible solvers, such as fluid,
-    isothermalFluid, compressibleVoF and multiphaseEuler. For incompressible
-    solvers, use the volumeSource model instead.
+    This fvModel applies a volume source to the continuity equation and to all
+    field equations. It can be applied to incompressible solvers, such as
+    incompressibleFluid and incompressibleVoF. For compressible solvers, use
+    the massSource model instead.
 
-    If the mass flow rate is positive then user-supplied fixed property values
-    are introduced to the field equations. If the mass flow rate is negative
-    then properties are removed at their current value.
+    If the volumetric flow rate is positive then user-supplied fixed property
+    values are introduced to the field equations. If the volumetric flow rate
+    is negative then properties are removed at their current value.
 
 Usage
     Example usage:
     \verbatim
-    massSource
+    volumeSource
     {
-        type            massSource;
+        type            volumeSource;
 
         select          cellSet;
-        cellSet         massSource;
+        cellSet         volumeSource;
 
-        massFlowRate    1e-4;
+        volumetricFlowRate 1e-4;
 
         fieldValues
         {
             U               (10 0 0);
-            T               300;
             k               0.375;
             epsilon         14.855;
         }
     }
     \endverbatim
 
-    If the mass flow rate is positive then values should be provided for all
-    solved for fields. Warnings will be issued if values are not provided for
-    fields for which transport equations are solved. Warnings will also be
+    If the volumetric flow rate is positive then values should be provided for
+    all solved for fields. Warnings will be issued if values are not provided
+    for fields for which transport equations are solved. Warnings will also be
     issued if values are provided for fields which are not solved for.
 
 SourceFiles
-    massSource.C
+    volumeSource.C
 
 See also
-    Foam::fv::volumeSource
+    Foam::fv::massSource
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef massSource_H
-#define massSource_H
+#ifndef volumeSource_H
+#define volumeSource_H
 
 #include "fvModel.H"
 #include "fvCellSet.H"
@@ -85,10 +84,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class massSourceBase Declaration
+                        Class volumeSource Declaration
 \*---------------------------------------------------------------------------*/
 
-class massSourceBase
+class volumeSource
 :
     public fvModel
 {
@@ -99,14 +98,8 @@ private:
         //- Name of the phase
         word phaseName_;
 
-        //- Name of the density field
-        word rhoName_;
-
-        //- Name of the energy field
-        word heName_;
-
-        //- Name of the temperature field
-        word TName_;
+        //- Name of the volume fraction field
+        word alphaName_;
 
         //- The set of cells the fvConstraint applies to
         fvCellSet set_;
@@ -114,17 +107,36 @@ private:
         //- Field values
         HashPtrTable<unknownTypeFunction1> fieldValues_;
 
+        //- Volumetric flow rate
+        autoPtr<Function1<scalar>> volumetricFlowRate_;
+
 
     // Private Member Functions
 
         //- Non-virtual read
         void readCoeffs();
 
-        //- Return the mass flow rate
-        virtual scalar massFlowRate() const = 0;
+        //- Return the volumetric flow rate
+        scalar volumetricFlowRate() const;
 
 
         // Sources
+
+            //- Add a source term to an equation
+            template<class Type>
+            void addSupType(fvMatrix<Type>& eqn) const;
+
+            //- Add a source term to a scalar equation
+            void addSupType(fvMatrix<scalar>& eqn) const;
+
+            //- Add a source term to an equation
+            template<class Type>
+            void addSupType
+            (
+                const dimensionedScalar& oneOrRho,
+                const VolField<Type>& field,
+                fvMatrix<Type>& eqn
+            ) const;
 
             //- Add a source term to an equation
             template<class Type>
@@ -148,14 +160,6 @@ private:
                 const volScalarField& rho,
                 const VolField<Type>& field,
                 fvMatrix<Type>& eqn
-            ) const;
-
-            //- Add a source term to a compressible scalar equation
-            void addSupType
-            (
-                const volScalarField& rho,
-                const volScalarField& field,
-                fvMatrix<scalar>& eqn
             ) const;
 
             //- Add a source term to a phase equation
@@ -183,13 +187,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("massSourceBase");
+    TypeName("volumeSource");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        massSourceBase
+        volumeSource
         (
             const word& name,
             const word& modelType,
@@ -198,7 +202,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        massSourceBase(const massSourceBase&) = delete;
+        volumeSource(const volumeSource&) = delete;
 
 
     // Member Functions
@@ -215,6 +219,9 @@ public:
 
 
         // Sources
+
+            //- Add a source term to an equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_SUP)
 
             //- Add a source term to an equation
             FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_FIELD_SUP)
@@ -250,59 +257,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const massSourceBase&) = delete;
-};
-
-
-/*---------------------------------------------------------------------------*\
-                          Class massSource Declaration
-\*---------------------------------------------------------------------------*/
-
-class massSource
-:
-    public massSourceBase
-{
-private:
-
-    // Private Data
-
-        //- Mass flow rate
-        autoPtr<Function1<scalar>> massFlowRate_;
-
-
-    // Private Member Functions
-
-        //- Non-virtual read
-        void readCoeffs();
-
-        //- Return the mass flow rate
-        virtual scalar massFlowRate() const;
-
-
-public:
-
-    //- Runtime type information
-    TypeName("massSource");
-
-
-    // Constructors
-
-        //- Construct from explicit source name and mesh
-        massSource
-        (
-            const word& name,
-            const word& modelType,
-            const fvMesh& mesh,
-            const dictionary& dict
-        );
-
-
-    // Member Functions
-
-        // IO
-
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
+        void operator=(const volumeSource&) = delete;
 };
 
 

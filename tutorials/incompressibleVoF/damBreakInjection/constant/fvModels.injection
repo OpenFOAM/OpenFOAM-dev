@@ -10,29 +10,27 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      fvModels;
+    object      fvModels.injection;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-volumeFraction
-{
-    type            volumeFractionSource;
-    volumePhase     volume;
-}
-
-volumeSource
+injection
 {
     type            volumeSource;
 
-    cellZone        volumeSource;
+    points          ((0.438 0.438 0.0073));
 
-    volumetricFlowRate 0.00064;
+    volumetricFlowRate 0.0003;
+
+    phase           water;
 
     fieldValues
     {
-        U               (0 0 0);
-        tracer          1;
+        U               (-1 0 0);
+        k               0.1;
+        epsilon         0.1;
     }
 }
 
-// ************************************************************************* //
+
+//************************************************************************* //

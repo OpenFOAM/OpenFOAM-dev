@@ -42,7 +42,7 @@ codeWrite
             mesh().time().constant(),
             mesh()
         ),
-        0.5*pos(y - (-0.088))*pos((-0.056) - y)*f
+        0.5*pos(y - (-0.124))*pos((-0.056) - y)*f
     ).write();
 #};
 
