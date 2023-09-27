@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -216,12 +216,15 @@ inline Foam::spatialVector Foam::RBD::rigidBodyModel::a
 {
     return
     (
-        spatialTransform
         (
-            X0_[master(bodyID)].E().T(),
-            masterPoint(bodyID, p)
+            spatialTransform
+            (
+                X0_[master(bodyID)].E().T(),
+                masterPoint(bodyID, p)
+            )
+          & a_[master(bodyID)]
         )
-      & a_[master(bodyID)]
+      + spatialVector(Zero, g_)
     );
 }
 

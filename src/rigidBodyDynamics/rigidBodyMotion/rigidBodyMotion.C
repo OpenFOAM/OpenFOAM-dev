@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,12 +171,15 @@ void Foam::RBD::rigidBodyMotion::status(const label bodyID) const
 {
     const spatialTransform CofR(X0(bodyID));
     const spatialVector vCofR(v(bodyID, Zero));
+    const spatialVector aCofR(a(bodyID, Zero));
 
     Info<< "Rigid-body motion of the " << name(bodyID) << nl
         << "    Centre of rotation: " << CofR.r() << nl
         << "    Orientation: " << CofR.E() << nl
         << "    Linear velocity: " << vCofR.l() << nl
-        << "    Angular velocity: " << vCofR.w()
+        << "    Angular velocity: " << vCofR.w() << nl
+        << "    Linear acceleration: " << aCofR.l() << nl
+        << "    Angular acceleration: " << aCofR.w()
         << endl;
 }
 
