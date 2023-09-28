@@ -1,0 +1,104 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    "alpha.*"
+    {
+        nAlphaCorr      1;
+        nAlphaSubCycles 1;
+    }
+
+    p_rgh
+    {
+        solver          GAMG;
+        smoother        DIC;
+        tolerance       1e-8;
+        relTol          0.01;
+        minIter         2;
+        maxIter         20;
+    }
+
+    p_rghFinal
+    {
+        $p_rgh;
+        relTol          0;
+    }
+
+    "(e|h).*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-12;
+        relTol          0.001;
+        minIter         1;
+        maxIter         20;
+    }
+
+    "(e|h)\.solid.*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DIC;
+        tolerance       1e-12;
+        relTol          0.001;
+        minIter         1;
+        maxIter         20;
+    }
+
+    "(k|omega).*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-8;
+        relTol          0;
+        minIter         1;
+    }
+}
+
+PIMPLE
+{
+    nOuterCorrectors 3;
+    nCorrectors     2;
+    nNonOrthogonalCorrectors 0;
+    nEnergyCorrectors 1;
+
+    transportPredictionFirst false;
+    transportCorrectionFinal true;
+
+    faceMomentum        no;
+    VmDdtCorrection     yes;
+    dragCorrection      yes;
+}
+
+relaxationFactors
+{
+    fields
+    {
+        thermalPhaseChange:dmdtf 1;
+    }
+
+    equations
+    {
+        ".*"            1;
+        "h\..*"         1;
+        "e\..*"         1;
+        "k.*"           1;
+        "omega.*"       1;
+    }
+}
+
+
+// ************************************************************************* //

@@ -1,0 +1,234 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type            thermalPhaseChangeMultiphaseSystem;
+
+phases          (gas liquid solid);
+
+gas
+{
+    type            purePhaseModel;
+
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               0.001;
+    }
+
+    residualAlpha   1e-6;
+}
+
+liquid
+{
+    type            purePhaseModel;
+
+    diameterModel   residualDiameter;
+    residualDiameterCoeffs
+    {
+        d               0.003;
+        dResidual       0.0001;
+    }
+
+    residualAlpha   1e-6;
+}
+
+solid
+{
+    type            pureStationaryPhaseModel;
+
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               0.01;
+    }
+
+    residualAlpha   1e-6;
+}
+
+blending
+{
+    default
+    {
+        type            linear;
+        minFullyContinuousAlpha.gas 0.7;
+        minPartlyContinuousAlpha.gas 0.5;
+        minFullyContinuousAlpha.liquid 0.5;
+        minPartlyContinuousAlpha.liquid 0.3;
+        minFullyContinuousAlpha.solid none;
+        minPartlyContinuousAlpha.solid none;
+    }
+}
+
+surfaceTension
+{
+    liquid_gas
+    {
+        type            constant;
+        sigma           0.0589;
+    }
+}
+
+drag
+{
+    gas_dispersedIn_liquid
+    {
+        type            IshiiZuber;
+        residualRe      1e-3;
+    }
+
+    liquid_dispersedIn_gas
+    {
+        type            WenYu;
+        residualRe      1e-3;
+    }
+
+    solid_dispersedIn_gas
+    {
+        type            GidaspowErgunWenYu;
+        residualRe      1e-3;
+    }
+
+    solid_dispersedIn_liquid
+    {
+        type            GidaspowErgunWenYu;
+        residualRe      1e-3;
+    }
+}
+
+virtualMass
+{
+    gas_dispersedIn_liquid
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+
+    liquid_dispersedIn_gas
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+}
+
+heatTransfer
+{
+    gas_dispersedIn_liquid_inThe_gas
+    {
+        type            spherical;
+    }
+
+    liquid_dispersedIn_gas_inThe_gas
+    {
+        type            RanzMarshall;
+    }
+
+    solid_dispersedIn_gas_inThe_gas
+    {
+        type            Gunn;
+    }
+
+    gas_dispersedIn_liquid_inThe_liquid
+    {
+        type            RanzMarshall;
+    }
+
+    liquid_dispersedIn_gas_inThe_liquid
+    {
+        type            spherical;
+    }
+
+    solid_dispersedIn_liquid_inThe_liquid
+    {
+        type            wallBoiling;
+
+        vapourPhase     gas;
+        liquidPhase     liquid;
+
+        partitioningModel
+        {
+            type            Lavieville;
+            alphaCrit       0.2;
+        }
+        nucleationSiteModel
+        {
+            type            LemmertChawla;
+        }
+        departureDiameterModel
+        {
+            type            TolubinskiKostanchuk;
+        }
+        departureFrequencyModel
+        {
+            type            KocamustafaogullariIshii;
+            Cf              1.18;
+        }
+        heatTransferModel
+        {
+            type            Gunn;
+        }
+    }
+
+    solid_dispersedIn_liquid_inThe_solid
+    {
+        type            nonSpherical;
+        factor          5;
+    }
+
+    solid_dispersedIn_gas_inThe_solid
+    {
+        type            nonSpherical;
+        factor          5;
+    }
+}
+
+lift
+{}
+
+wallLubrication
+{}
+
+turbulentDispersion
+{}
+
+saturationTemperature
+{
+    gas_liquid
+    {
+        type            function1;
+
+        function        scale;
+
+        xScale          1e-5;
+        scale           1;
+        value
+        {
+            type            table;
+            format          csv;
+            nHeaderLine     1;
+            refColumn       1;
+            componentColumns (0);
+            mergeSeparators no;
+            file            "constant/water-saturation.csv";
+            outOfBounds     clamp;
+            interpolationScheme linear;
+        }
+    }
+}
+
+phaseTransfer
+{}
+
+// ************************************************************************* //

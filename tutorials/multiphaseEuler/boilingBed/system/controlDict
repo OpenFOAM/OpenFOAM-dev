@@ -1,0 +1,170 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     foamRun;
+
+solver          multiphaseEuler;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         7;
+
+deltaT          0.0001;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.2;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  9;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.5;
+
+maxDeltaT       0.005;
+
+functions
+{
+    #includeFunc cellMinMag
+    (
+        name=fieldMin,
+        executeAtStart=no,
+        continuityError.gas,
+        continuityError.liquid,
+        log=yes
+    )
+
+    #includeFunc cellMaxMag
+    (
+        name=fieldMax,
+        executeAtStart=no,
+        continuityError.gas,
+        continuityError.liquid,
+        log=yes
+    )
+
+    #includeFunc writeObjects
+    (
+        continuityError.gas,
+        continuityError.liquid
+    )
+
+    outflow
+    {
+        type            surfaceFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        log             yes;
+        writeFields     false;
+        select          patch;
+        patch           outlet;
+        operation       sum;
+        fields          (alphaRhoPhi.gas alphaRhoPhi.liquid);
+    }
+
+    inflow
+    {
+        type            surfaceFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        log             yes;
+        writeFields     false;
+        select          patch;
+        patch           inlet;
+        operation       sum;
+        fields          (alphaRhoPhi.gas alphaRhoPhi.liquid);
+    }
+
+    outletGas
+    {
+        type            surfaceFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        log             yes;
+        writeFields     false;
+        select          patch;
+        patch           outlet;
+        operation       sum;
+        weightField     alphaRhoPhi.gas;
+        fields          (h.gas);
+    }
+
+    outletLiquid
+    {
+        type            surfaceFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        log             yes;
+        writeFields     false;
+        select          patch;
+        patch           outlet;
+        operation       sum;
+        weightField     alphaRhoPhi.liquid;
+        fields          (e.liquid);
+    }
+
+    inletGas
+    {
+        type            surfaceFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        log             yes;
+        writeFields     false;
+        select          patch;
+        patch           inlet;
+        operation       sum;
+        weightField     alphaRhoPhi.gas;
+        fields          (h.gas);
+    }
+
+    inletLiquid
+    {
+        type            surfaceFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        log             yes;
+        writeFields     false;
+        select          patch;
+        patch           inlet;
+        operation       sum;
+        weightField     alphaRhoPhi.liquid;
+        fields          (e.liquid);
+    }
+
+    contError
+    {
+        type            volFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        log             yes;
+        writeFields     false;
+        select          all;
+        operation       volIntegrate;
+        fields          (continuityError.gas continuityError.liquid);
+    }
+}
+
+
+// ************************************************************************* //
