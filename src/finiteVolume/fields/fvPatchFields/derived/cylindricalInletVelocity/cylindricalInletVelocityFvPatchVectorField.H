@@ -60,6 +60,7 @@ Usage
 
 See also
     Foam::fixedValueFvPatchField
+    Foam::Function1s::omega
     Foam::Function1s
 
 SourceFiles

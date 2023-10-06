@@ -64,6 +64,7 @@ Usage
 
 See also
     Foam::pressureInletOutletVelocityFvPatchVectorField
+    Foam::Function1s::omega
     Foam::Function1s
 
 SourceFiles
