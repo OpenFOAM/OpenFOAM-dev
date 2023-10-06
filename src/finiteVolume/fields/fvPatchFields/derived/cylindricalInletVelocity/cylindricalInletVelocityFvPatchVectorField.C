@@ -45,7 +45,7 @@ cylindricalInletVelocityFvPatchVectorField
     axis_(dict.lookup("axis")),
     axialVelocity_(Function1<scalar>::New("axialVelocity", dict)),
     radialVelocity_(Function1<scalar>::New("radialVelocity", dict)),
-    rpm_(Function1<scalar>::New("rpm", dict))
+    omega_(dict)
 {}
 
 
@@ -63,7 +63,7 @@ cylindricalInletVelocityFvPatchVectorField
     axis_(ptf.axis_),
     axialVelocity_(ptf.axialVelocity_, false),
     radialVelocity_(ptf.radialVelocity_, false),
-    rpm_(ptf.rpm_, false)
+    omega_(ptf.omega_)
 {}
 
 
@@ -79,7 +79,7 @@ cylindricalInletVelocityFvPatchVectorField
     axis_(ptf.axis_),
     axialVelocity_(ptf.axialVelocity_, false),
     radialVelocity_(ptf.radialVelocity_, false),
-    rpm_(ptf.rpm_, false)
+    omega_(ptf.omega_)
 {}
 
 
@@ -95,17 +95,14 @@ void Foam::cylindricalInletVelocityFvPatchVectorField::updateCoeffs()
     const scalar t = this->db().time().userTimeValue();
     const scalar axialVelocity = axialVelocity_->value(t);
     const scalar radialVelocity = radialVelocity_->value(t);
-    const scalar rpm = rpm_->value(t);
+    const scalar omega = omega_.value(t);
 
     const vector axisHat = axis_/mag(axis_);
 
     const vectorField r(patch().Cf() - origin_);
     const vectorField d(r - (axisHat & r)*axisHat);
 
-    tmp<vectorField> tangVel
-    (
-        (rpm*constant::mathematical::pi/30.0)*(axisHat) ^ d
-    );
+    const vectorField tangVel(omega*(axisHat) ^ d);
 
     operator==(tangVel + axisHat*axialVelocity + radialVelocity*d/mag(d));
 
@@ -120,7 +117,7 @@ void Foam::cylindricalInletVelocityFvPatchVectorField::write(Ostream& os) const
     writeEntry(os, "axis", axis_);
     writeEntry(os, axialVelocity_());
     writeEntry(os, radialVelocity_());
-    writeEntry(os, rpm_());
+    writeEntry(os, omega_);
     writeEntry(os, "value", *this);
 }
 

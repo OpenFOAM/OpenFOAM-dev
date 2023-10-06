@@ -36,7 +36,8 @@ Usage
         origin       | origin of rotation      | yes         |
         axialVelocity | axial velocity profile [m/s] | yes    |
         radialVelocity | radial velocity profile [m/s] | yes  |
-        rpm          | rotational speed (revolutions per minute) | yes|
+        omega        | angular velocity of the frame [rad/s] | no |
+        rpm          | angular velocity of the frame [rpm]   | no |
     \endtable
 
     Example of the boundary condition specification:
@@ -53,9 +54,9 @@ Usage
     \endverbatim
 
     Note:
-        The \c axialVelocity, \c radialVelocity and \c rpm entries are Function1
-        types, able to describe time varying functions.  The example above gives
-        the usage for supplying constant values.
+        The \c axialVelocity, \c radialVelocity and \c omega or \c rpm entries
+        are Function1 types, able to describe time varying functions.  The
+        example above gives the usage for supplying constant values.
 
 See also
     Foam::fixedValueFvPatchField
@@ -70,7 +71,7 @@ SourceFiles
 #define cylindricalInletVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "Function1.H"
+#include "omega.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -98,8 +99,8 @@ class cylindricalInletVelocityFvPatchVectorField
         //- Radial velocity
         autoPtr<Function1<scalar>> radialVelocity_;
 
-        //- RPM
-        autoPtr<Function1<scalar>> rpm_;
+        //- Angular velocity of the frame (rad/sec)
+        Function1s::omega omega_;
 
 
 public:
