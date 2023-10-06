@@ -256,8 +256,8 @@ void Foam::solvers::twoPhaseSolver::alphaSolve
                     alpha1,
                     talphaPhi1Un(),
                     talphaPhi1Corr.ref(),
-                    Sp(),
-                    (-Sp()*alpha1)(),
+                    (Sp() + divU())(),
+                    (-(Sp() + divU())*alpha1)(),
                     oneField(),
                     zeroField()
                 );
