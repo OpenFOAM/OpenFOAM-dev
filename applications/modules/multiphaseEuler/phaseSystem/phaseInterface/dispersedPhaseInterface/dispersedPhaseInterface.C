@@ -111,14 +111,14 @@ Foam::tmp<Foam::volVectorField> Foam::dispersedPhaseInterface::Ur() const
 
 Foam::tmp<Foam::volScalarField> Foam::dispersedPhaseInterface::Re() const
 {
-    return magUr()*dispersed().d()/continuous().thermo().nu();
+    return magUr()*dispersed().d()/continuous().fluidThermo().nu();
 }
 
 
 Foam::tmp<Foam::volScalarField> Foam::dispersedPhaseInterface::Pr() const
 {
     return
-         continuous().thermo().nu()
+         continuous().fluidThermo().nu()
         *continuous().thermo().Cp()
         *continuous().rho()
         /continuous().thermo().kappa();
@@ -148,10 +148,10 @@ Foam::tmp<Foam::volScalarField> Foam::dispersedPhaseInterface::Mo() const
 {
     return
         mag(g())
-       *continuous().thermo().nu()
+       *continuous().fluidThermo().nu()
        *pow3
         (
-            continuous().thermo().nu()
+            continuous().fluidThermo().nu()
            *continuous().rho()
            /sigma()
         );

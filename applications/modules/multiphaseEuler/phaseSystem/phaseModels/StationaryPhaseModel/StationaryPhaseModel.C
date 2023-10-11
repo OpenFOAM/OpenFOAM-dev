@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "StationaryPhaseModel.H"
-#include "fvcLaplacian.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -336,14 +335,6 @@ void Foam::StationaryPhaseModel<BasePhaseModel>::divU
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::scalarField>
-Foam::StationaryPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
-{
-    return this->thermo().kappa().boundaryField()[patchi];
-}
-
-
-template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::k() const
 {
@@ -365,30 +356,6 @@ Foam::StationaryPhaseModel<BasePhaseModel>::pPrimef() const
         << abort(FatalError);
 
     return surfaceScalarField::null();
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::fvScalarMatrix>
-Foam::StationaryPhaseModel<BasePhaseModel>::divq(volScalarField& he) const
-{
-    const volScalarField& alpha = *this;
-
-    const surfaceScalarField alphaKappa
-    (
-        alpha.name() + '*' + this->thermo().kappa().name(),
-        fvc::interpolate(alpha)*fvc::interpolate(this->thermo().kappa())
-    );
-
-    // Return heat flux source as an implicit energy correction
-    // to the temperature gradient flux
-    return
-       -fvc::laplacian(alphaKappa, this->thermo().T())
-       -fvm::laplacianCorrection
-        (
-            alphaKappa/fvc::interpolate(this->thermo().Cpv()),
-            he
-        );
 }
 
 

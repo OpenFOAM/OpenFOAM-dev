@@ -606,7 +606,7 @@ void Foam::phaseSystem::correctKinematics()
     // Update the pressure time-derivative if required
     if (updateDpdt)
     {
-        dpdt_ = fvc::ddt(phaseModels_.begin()().thermo().p());
+        dpdt_ = fvc::ddt(phaseModels_.begin()().fluidThermo().p());
     }
 }
 
@@ -800,7 +800,7 @@ void Foam::phaseSystem::correctPhi
             phaseModel& phase = phases()[phasei];
             const volScalarField& alpha = phase;
 
-            psi += alpha*phase.thermo().psi()/phase.rho();
+            psi += alpha*phase.fluidThermo().psi()/phase.rho();
         }
 
         fv::correctPhi

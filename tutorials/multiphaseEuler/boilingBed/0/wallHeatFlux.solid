@@ -8,41 +8,40 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      physicalProperties.solid;
+    class       volScalarField;
+    location    "0";
+    object      wallHeatFlux.solid;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-thermoType
-{
-    type            heSolidThermo;
-    mixture         pureMixture;
-    transport       constIsoSolid;
-    thermo          eConst;
-    equationOfState rhoConst;
-    specie          specie;
-    energy          sensibleInternalEnergy;
-}
+dimensions      [1 0 -3 0 0 0 0];
 
-mixture
+internalField   uniform 0;
+
+boundaryField
 {
-    specie
+    inlet
     {
-        molWeight   100;
+        type            calculated;
+        value           uniform 0;
     }
-    equationOfState
+    outlet
     {
-        rho         2500;
+        type            calculated;
+        value           uniform 0;
     }
-    thermodynamics
+    front
     {
-        Cv          6000;
-        Hf          0;
+        type            wedge;
     }
-    transport
+    back
     {
-        kappa       0;
+        type            wedge;
+    }
+    wall
+    {
+        type            calculated;
+        value           uniform 0;
     }
 }
 

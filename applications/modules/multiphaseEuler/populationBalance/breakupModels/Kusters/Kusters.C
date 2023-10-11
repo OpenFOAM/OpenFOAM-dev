@@ -76,7 +76,7 @@ void Foam::diameterModels::breakupModels::Kusters::setBreakupRate
         sqrt
         (
             4*popBal_.continuousTurbulence().epsilon()
-           /(15*pi*popBal_.continuousPhase().thermo().nu())
+           /(15*pi*popBal_.continuousPhase().fluidThermo().nu())
         )
        *exp
         (

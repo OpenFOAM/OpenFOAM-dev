@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ThermoPhaseModel.H"
+#include "SolidThermoPhaseModel.H"
 #include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasePhaseModel, class ThermoModel>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::ThermoPhaseModel
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::SolidThermoPhaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
@@ -53,21 +53,23 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::ThermoPhaseModel
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class BasePhaseModel, class ThermoModel>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::~ThermoPhaseModel()
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::
+~SolidThermoPhaseModel()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel, class ThermoModel>
-bool Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::incompressible() const
+bool
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::incompressible() const
 {
     return thermo_().incompressible();
 }
 
 
 template<class BasePhaseModel, class ThermoModel>
-bool Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::isochoric() const
+bool Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::isochoric() const
 {
     return thermo_().isochoric();
 }
@@ -75,7 +77,7 @@ bool Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::isochoric() const
 
 template<class BasePhaseModel, class ThermoModel>
 const Foam::rhoThermo&
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::thermo() const
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::thermo() const
 {
     return thermo_();
 }
@@ -83,7 +85,7 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::thermo() const
 
 template<class BasePhaseModel, class ThermoModel>
 Foam::rhoThermo&
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::thermo()
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::thermo()
 {
     return thermo_();
 }
@@ -91,23 +93,25 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::thermo()
 
 template<class BasePhaseModel, class ThermoModel>
 const Foam::rhoFluidThermo&
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::fluidThermo() const
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::fluidThermo() const
 {
-    return thermo_();
+    NotImplemented;
+    return refCast<const rhoFluidThermo>(thermo_());
 }
 
 
 template<class BasePhaseModel, class ThermoModel>
 Foam::rhoFluidThermo&
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::fluidThermo()
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::fluidThermo()
 {
-    return thermo_();
+    NotImplemented;
+    return refCast<rhoFluidThermo>(thermo_());
 }
 
 
 template<class BasePhaseModel, class ThermoModel>
 const Foam::volScalarField&
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::rho() const
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::rho() const
 {
     return thermo_->rho();
 }
@@ -115,7 +119,7 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::rho() const
 
 template<class BasePhaseModel, class ThermoModel>
 Foam::volScalarField&
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::rho()
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::rho()
 {
     return thermo_->rho();
 }
@@ -123,39 +127,43 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::rho()
 
 template<class BasePhaseModel, class ThermoModel>
 Foam::tmp<Foam::volScalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::mu() const
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::mu() const
 {
-    return thermo_->mu();
+    NotImplemented;
+    return tmp<volScalarField>(nullptr);
 }
 
 
 template<class BasePhaseModel, class ThermoModel>
 Foam::tmp<Foam::scalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::mu
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::mu
 (
     const label patchi
 ) const
 {
-    return thermo_->mu(patchi);
+    NotImplemented;
+    return tmp<scalarField>(nullptr);
 }
 
 
 template<class BasePhaseModel, class ThermoModel>
 Foam::tmp<Foam::volScalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::nu() const
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::nu() const
 {
-    return thermo_->nu();
+    NotImplemented;
+    return tmp<volScalarField>(nullptr);
 }
 
 
 template<class BasePhaseModel, class ThermoModel>
 Foam::tmp<Foam::scalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::nu
+Foam::SolidThermoPhaseModel<BasePhaseModel, ThermoModel>::nu
 (
     const label patchi
 ) const
 {
-    return thermo_->nu(patchi);
+    NotImplemented;
+    return tmp<scalarField>(nullptr);
 }
 
 

@@ -38,6 +38,7 @@ SourceFiles
 #define SolidThermalPhaseModel_H
 
 #include "phaseModel.H"
+#include "phaseSolidThermophysicalTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,6 +54,12 @@ class SolidThermalPhaseModel
 :
     public BasePhaseModel
 {
+    // Thermophysical transport
+
+        //- Pointer to the solid thermophysical transport model
+        autoPtr<phaseSolidThermophysicalTransportModel>
+            thermophysicalTransport_;
+
 
 public:
 
@@ -73,11 +80,23 @@ public:
 
     // Member Functions
 
+        //- Return whether the phase is isothermal
+        virtual bool isothermal() const;
+
         //- Correct the thermodynamics
         virtual void correctThermo();
 
-        //- Return whether the phase is isothermal
-        virtual bool isothermal() const;
+        //- Predict the energy transport e.g. alphat
+        virtual void predictThermophysicalTransport();
+
+        //- Correct the energy transport e.g. alphat
+        virtual void correctThermophysicalTransport();
+
+        //- Return the effective thermal conductivity on a patch
+        virtual tmp<scalarField> kappaEff(const label patchi) const;
+
+        //- Return the source term for the energy equation
+        virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 
         //- Return the enthalpy equation
         virtual tmp<fvScalarMatrix> heEqn();

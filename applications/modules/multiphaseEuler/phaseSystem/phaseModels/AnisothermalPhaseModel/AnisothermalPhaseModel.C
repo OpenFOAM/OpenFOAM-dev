@@ -72,7 +72,15 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::AnisothermalPhaseModel
 )
 :
     BasePhaseModel(fluid, phaseName, referencePhase, index),
-    g_(fluid.mesh().lookupObject<uniformDimensionedVectorField>("g"))
+    g_(fluid.mesh().lookupObject<uniformDimensionedVectorField>("g")),
+    thermophysicalTransport_
+    (
+        PhaseThermophysicalTransportModel
+        <
+            phaseCompressible::momentumTransportModel,
+            transportThermoModel
+        >::New(this->momentumTransport_, this->thermo_)
+    )
 {}
 
 
@@ -98,6 +106,48 @@ template<class BasePhaseModel>
 bool Foam::AnisothermalPhaseModel<BasePhaseModel>::isothermal() const
 {
     return false;
+}
+
+
+template<class BasePhaseModel>
+void Foam::AnisothermalPhaseModel<BasePhaseModel>::
+predictThermophysicalTransport()
+{
+    BasePhaseModel::predictThermophysicalTransport();
+    thermophysicalTransport_->predict();
+}
+
+
+template<class BasePhaseModel>
+void Foam::AnisothermalPhaseModel<BasePhaseModel>::
+correctThermophysicalTransport()
+{
+    BasePhaseModel::correctThermophysicalTransport();
+    thermophysicalTransport_->correct();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::scalarField>
+Foam::AnisothermalPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
+{
+    return thermophysicalTransport_->kappaEff(patchi);
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::AnisothermalPhaseModel<BasePhaseModel>::divq(volScalarField& he) const
+{
+    return thermophysicalTransport_->divq(he);
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::AnisothermalPhaseModel<BasePhaseModel>::divj(volScalarField& Yi) const
+{
+    return thermophysicalTransport_->divj(Yi);
 }
 
 
@@ -145,9 +195,9 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
             fvc::div
             (
                 fvc::absolute(alphaRhoPhi, alpha, rho, U),
-                this->thermo().p()/rho
+                this->fluidThermo().p()/rho
             )
-          + (fvc::ddt(alpha) - contErr/rho)*this->thermo().p()
+          + (fvc::ddt(alpha) - contErr/rho)*this->fluidThermo().p()
         );
     }
     else if (this->thermo_->dpdt())

@@ -145,13 +145,14 @@ void Foam::fv::interfaceTurbulenceDamping::addRhoSup
 
     volScalarField::Internal aSqrnu
     (
-        movingPhases[0]*sqr(movingPhases[0].thermo().nu()()())
+        movingPhases[0]*sqr(movingPhases[0].fluidThermo().nu()()())
     );
 
     for (label phasei=1; phasei<movingPhases.size(); phasei++)
     {
         aSqrnu +=
-            movingPhases[phasei]*sqr(movingPhases[phasei].thermo().nu()()());
+            movingPhases[phasei]
+           *sqr(movingPhases[phasei].fluidThermo().nu()()());
     }
 
     if (field.name() == "epsilon")
@@ -275,7 +276,7 @@ void Foam::fv::interfaceTurbulenceDamping::addSup
 
     const volScalarField::Internal aSqrnu
     (
-        alpha*sqr(phase_.thermo().nu()()())
+        alpha*sqr(phase_.fluidThermo().nu()()())
     );
 
     if (field.name() == IOobject::groupName("epsilon", phaseName_))

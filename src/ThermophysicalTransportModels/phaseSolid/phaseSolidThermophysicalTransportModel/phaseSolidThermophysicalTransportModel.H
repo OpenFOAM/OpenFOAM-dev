@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solidThermophysicalTransportModel
+    Foam::phaseSolidThermophysicalTransportModel
 
 Description
     Abstract base class for solid thermophysical transport models
 
 SourceFiles
-    solidThermophysicalTransportModel.C
+    phaseSolidThermophysicalTransportModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef solidThermophysicalTransportModel_H
-#define solidThermophysicalTransportModel_H
+#ifndef phaseSolidThermophysicalTransportModel_H
+#define phaseSolidThermophysicalTransportModel_H
 
 #include "thermophysicalTransportModel.H"
 #include "solidThermo.H"
@@ -44,23 +44,23 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-              Class solidThermophysicalTransportModel Declaration
+              Class phaseSolidThermophysicalTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class solidThermophysicalTransportModel
+class phaseSolidThermophysicalTransportModel
 :
     public thermophysicalTransportModel
 {
 public:
 
-    typedef geometricOneField alphaField;
+    typedef volScalarField alphaField;
 
 
 protected:
 
     // Protected data
 
-        alphaField alpha_;
+        const alphaField& alpha_;
 
         //- Reference to the solid thermophysical properties
         const solidThermo& thermo_;
@@ -85,7 +85,7 @@ public:
         declareRunTimeSelectionTable
         (
             autoPtr,
-            solidThermophysicalTransportModel,
+            phaseSolidThermophysicalTransportModel,
             dictionary,
             (
                 const alphaField& alpha,
@@ -98,7 +98,7 @@ public:
     // Constructors
 
         //- Construct from solid thermophysical properties
-        solidThermophysicalTransportModel
+        phaseSolidThermophysicalTransportModel
         (
             const word& type,
             const alphaField& alpha,
@@ -109,14 +109,15 @@ public:
     // Selectors
 
         //- Return a reference to the selected thermophysical transport model
-        static autoPtr<solidThermophysicalTransportModel> New
+        static autoPtr<phaseSolidThermophysicalTransportModel> New
         (
+            const alphaField& alpha,
             const solidThermo& thermo
         );
 
 
     //- Destructor
-    virtual ~solidThermophysicalTransportModel()
+    virtual ~phaseSolidThermophysicalTransportModel()
     {}
 
 

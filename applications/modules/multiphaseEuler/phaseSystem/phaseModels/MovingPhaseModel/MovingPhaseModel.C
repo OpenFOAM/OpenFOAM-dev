@@ -175,14 +175,6 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             *this
         )
     ),
-    thermophysicalTransport_
-    (
-        PhaseThermophysicalTransportModel
-        <
-            phaseCompressible::momentumTransportModel,
-            transportThermoModel
-        >::New(momentumTransport_, this->thermo_)
-    ),
     continuityError_
     (
         IOobject
@@ -266,26 +258,10 @@ void Foam::MovingPhaseModel<BasePhaseModel>::predictMomentumTransport()
 
 
 template<class BasePhaseModel>
-void Foam::MovingPhaseModel<BasePhaseModel>::predictThermophysicalTransport()
-{
-    BasePhaseModel::predictThermophysicalTransport();
-    thermophysicalTransport_->predict();
-}
-
-
-template<class BasePhaseModel>
 void Foam::MovingPhaseModel<BasePhaseModel>::correctMomentumTransport()
 {
     BasePhaseModel::correctMomentumTransport();
     momentumTransport_->correct();
-}
-
-
-template<class BasePhaseModel>
-void Foam::MovingPhaseModel<BasePhaseModel>::correctThermophysicalTransport()
-{
-    BasePhaseModel::correctThermophysicalTransport();
-    thermophysicalTransport_->correct();
 }
 
 
@@ -578,30 +554,6 @@ Foam::tmp<Foam::surfaceScalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::pPrimef() const
 {
     return momentumTransport_->pPrimef();
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::scalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
-{
-    return thermophysicalTransport_->kappaEff(patchi);
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::fvScalarMatrix>
-Foam::MovingPhaseModel<BasePhaseModel>::divq(volScalarField& he) const
-{
-    return thermophysicalTransport_->divq(he);
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::fvScalarMatrix>
-Foam::MovingPhaseModel<BasePhaseModel>::divj(volScalarField& Yi) const
-{
-    return thermophysicalTransport_->divj(Yi);
 }
 
 

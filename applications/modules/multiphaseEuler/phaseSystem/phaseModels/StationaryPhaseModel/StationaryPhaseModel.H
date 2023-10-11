@@ -160,21 +160,12 @@ public:
 
         // Momentum transport
 
-            //- Return the effective thermal conductivity on a patch
-            virtual tmp<scalarField> kappaEff(const label patchi) const;
-
             //- Return the turbulent kinetic energy
             virtual tmp<volScalarField> k() const;
 
             //- Return the face-phase-pressure'
             // (derivative of phase-pressure w.r.t. phase-fraction)
             virtual tmp<surfaceScalarField> pPrimef() const;
-
-
-        // Thermophysical transport
-
-            //- Return the source term for the energy equation
-            virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 };
 
 

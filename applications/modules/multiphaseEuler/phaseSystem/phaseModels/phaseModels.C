@@ -28,10 +28,13 @@ License
 #include "rhoFluidThermo.H"
 #include "rhoFluidMulticomponentThermo.H"
 
+#include "solidThermo.H"
+
 #include "combustionModel.H"
 
 #include "phaseModel.H"
 #include "ThermoPhaseModel.H"
+#include "SolidThermoPhaseModel.H"
 #include "IsothermalPhaseModel.H"
 #include "AnisothermalPhaseModel.H"
 #include "SolidThermalPhaseModel.H"
@@ -83,10 +86,10 @@ namespace Foam
                 <
                     StationaryPhaseModel
                     <
-                        ThermoPhaseModel
+                        SolidThermoPhaseModel
                         <
                             phaseModel,
-                            rhoFluidThermo
+                            solidThermo
                         >
                     >
                 >
@@ -139,10 +142,10 @@ namespace Foam
                 <
                     StationaryPhaseModel
                     <
-                        ThermoPhaseModel
+                        SolidThermoPhaseModel
                         <
                             phaseModel,
-                            rhoFluidThermo
+                            solidThermo
                         >
                     >
                 >
@@ -159,9 +162,9 @@ namespace Foam
     );
 
     typedef
-        AnisothermalPhaseModel
+        MulticomponentPhaseModel
         <
-            MulticomponentPhaseModel
+            AnisothermalPhaseModel
             <
                 InertPhaseModel
                 <
@@ -197,37 +200,9 @@ namespace Foam
     );
 
     typedef
-        IsothermalPhaseModel
+        MulticomponentPhaseModel
         <
-            MulticomponentPhaseModel
-            <
-                InertPhaseModel
-                <
-                    MovingPhaseModel
-                    <
-                        ThermoPhaseModel
-                        <
-                            phaseModel,
-                            rhoFluidMulticomponentThermo
-                        >
-                    >
-                >
-            >
-        >
-        multicomponentIsothermalPhaseModel;
-
-    addNamedToRunTimeSelectionTable
-    (
-        phaseModel,
-        multicomponentIsothermalPhaseModel,
-        phaseSystem,
-        multicomponentIsothermalPhaseModel
-    );
-
-    typedef
-        AnisothermalPhaseModel
-        <
-            MulticomponentPhaseModel
+            AnisothermalPhaseModel
             <
                 ReactingPhaseModel
                 <

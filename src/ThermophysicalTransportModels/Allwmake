@@ -10,8 +10,12 @@ wmake $targetType solid
 
 wmake $targetType fluidThermo
 wmake $targetType fluidMulticomponentThermo
+
 wmake $targetType phaseFluidThermo
 wmake $targetType phaseFluidMulticomponentThermo
+
+wmake $targetType phaseSolid
+
 wmake $targetType coupledThermophysicalTransportModels
 
 #------------------------------------------------------------------------------

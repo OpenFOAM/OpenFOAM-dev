@@ -180,8 +180,8 @@ ThermalPhaseChangePhaseSystem
                     IOobject::AUTO_WRITE
                 ),
                 (
-                    interface.phase1().thermo().T()
-                  + interface.phase2().thermo().T()
+                    interface.phase1().fluidThermo().T()
+                  + interface.phase2().fluidThermo().T()
                 )/2
             )
         );
@@ -205,7 +205,7 @@ ThermalPhaseChangePhaseSystem
                 ),
                 saturationModels_[interface]->Tsat
                 (
-                    interface.phase1().thermo().p()
+                    interface.phase1().fluidThermo().p()
                 )
             )
         );
@@ -363,7 +363,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
         Tns.insert
         (
             interface,
-            satModel.Tsat(interface.phase1().thermo().p()).ptr()
+            satModel.Tsat(interface.phase1().fluidThermo().p()).ptr()
         );
     }
 
@@ -457,7 +457,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
                     fvm::Sp
                     (
                         dmdt0s_[phase.index()] - dmdts[phase.index()],
-                        phase.thermo().he()
+                        phase.fluidThermo().he()
                     );
             }
         }
@@ -562,8 +562,8 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
         const phaseInterface& interface = saturationModelIter()->interface();
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoFluidThermo& thermo1 = phase1.thermo();
-        const rhoFluidThermo& thermo2 = phase2.thermo();
+        const rhoFluidThermo& thermo1 = phase1.fluidThermo();
+        const rhoFluidThermo& thermo2 = phase2.fluidThermo();
         const volScalarField& T1(thermo1.T());
         const volScalarField& T2(thermo2.T());
 

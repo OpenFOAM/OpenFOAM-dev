@@ -83,7 +83,7 @@ Foam::dragModels::timeScaleFilteredDrag::CdRe() const
        /0.75
        /swarmCorrection_->Cs()
        /interface_.continuous().rho()
-       /interface_.continuous().thermo().nu()
+       /interface_.continuous().fluidThermo().nu()
        /minRelaxTime_
     );
 

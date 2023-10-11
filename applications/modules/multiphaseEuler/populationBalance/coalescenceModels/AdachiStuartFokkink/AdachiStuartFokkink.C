@@ -79,7 +79,7 @@ addToCoalescenceRate
        *sqrt
         (
             0.3*pi*popBal_.continuousTurbulence().epsilon()
-           /popBal_.continuousPhase().thermo().nu()
+           /popBal_.continuousPhase().fluidThermo().nu()
         )
        *pow3(fi.d() + fj.d());
 }

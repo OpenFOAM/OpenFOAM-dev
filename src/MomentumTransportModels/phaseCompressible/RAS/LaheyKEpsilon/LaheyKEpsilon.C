@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,7 +203,7 @@ tmp<volScalarField> LaheyKEpsilon<BasicMomentumTransportModel>::bubbleG() const
         Cp_
        *(
             pow3(magUr)
-          + pow(drag.CdRe()*liquid.thermo().nu()/gas.d(), 4.0/3.0)
+          + pow(drag.CdRe()*liquid.fluidThermo().nu()/gas.d(), 4.0/3.0)
            *pow(magUr, 5.0/3.0)
         )
        *gas

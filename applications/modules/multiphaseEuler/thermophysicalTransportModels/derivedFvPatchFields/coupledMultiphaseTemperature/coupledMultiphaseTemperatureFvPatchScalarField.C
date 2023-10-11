@@ -52,7 +52,7 @@ void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getThis
     forAll(fluid.phases(), phasei)
     {
         const phaseModel& phase = fluid.phases()[phasei];
-        const fluidThermo& thermo = phase.thermo();
+        const rhoThermo& thermo = phase.thermo();
 
         const fvPatchScalarField& Tw =
             thermo.T().boundaryField()[patch().index()];
@@ -105,7 +105,7 @@ void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getNbr
     forAll(fluid.phases(), phasei)
     {
         const phaseModel& phase = fluid.phases()[phasei];
-        const fluidThermo& thermo = phase.thermo();
+        const rhoThermo& thermo = phase.thermo();
 
         const fvPatchScalarField& alpha =
             phase.boundaryField()[patch().index()];
@@ -143,7 +143,7 @@ void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getNbr
     forAll(fluid.phases(), phasei)
     {
         const phaseModel& phase = fluid.phases()[phasei];
-        const fluidThermo& thermo = phase.thermo();
+        const rhoThermo& thermo = phase.thermo();
 
         const fvPatchScalarField& alpha =
             phase.boundaryField()[patch().index()];

@@ -46,32 +46,12 @@ SourceFiles
 #define MovingPhaseModel_H
 
 #include "phaseModel.H"
-#include "PhaseThermophysicalTransportModel.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Trait for converting the ThermoModel's thermo type to the thermo type needed
-// for the thermophysical transport model type; i.e., from rho-type thermo to
-// fluid-type thermo.
-
-template<class ThermoModel>
-struct MovingPhaseModelTransportThermoModel;
-
-template<>
-struct MovingPhaseModelTransportThermoModel<rhoFluidThermo>
-{
-    typedef fluidThermo type;
-};
-
-template<>
-struct MovingPhaseModelTransportThermoModel<rhoFluidMulticomponentThermo>
-{
-    typedef fluidMulticomponentThermo type;
-};
 
 /*---------------------------------------------------------------------------*\
                       Class MovingPhaseModel Declaration
@@ -83,17 +63,6 @@ class MovingPhaseModel
     public BasePhaseModel
 {
 protected:
-
-    // Protected typedefs
-
-        //- Thermo type for the thermophysical transport model
-        typedef
-            typename MovingPhaseModelTransportThermoModel
-            <
-                typename BasePhaseModel::thermoModel
-            >::type
-            transportThermoModel;
-
 
     // Protected data
 
@@ -117,16 +86,6 @@ protected:
 
         //- Turbulence model
         autoPtr<phaseCompressible::momentumTransportModel> momentumTransport_;
-
-        //- Thermophysical transport model
-        autoPtr
-        <
-            PhaseThermophysicalTransportModel
-            <
-                phaseCompressible::momentumTransportModel,
-                transportThermoModel
-            >
-        > thermophysicalTransport_;
 
         //- Continuity error
         volScalarField continuityError_;
@@ -175,14 +134,8 @@ public:
         //- Predict the momentumTransport
         virtual void predictMomentumTransport();
 
-        //- Predict the energy transport e.g. alphat
-        virtual void predictThermophysicalTransport();
-
         //- Correct the momentumTransport
         virtual void correctMomentumTransport();
-
-        //- Correct the energy transport e.g. alphat
-        virtual void correctThermophysicalTransport();
 
         //- Correct the face velocity for moving meshes
         virtual void correctUf();
@@ -277,19 +230,6 @@ public:
             //- Return the face-phase-pressure'
             // (derivative of phase-pressure w.r.t. phase-fraction)
             virtual tmp<surfaceScalarField> pPrimef() const;
-
-
-        // Thermophysical transport
-
-            //- Return the effective thermal conductivity on a patch
-            virtual tmp<scalarField> kappaEff(const label patchi) const;
-
-            //- Return the source term for the energy equation
-            virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
-
-            //- Return the source term for the given specie mass-fraction
-            //  equation
-            virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
 };
 
 

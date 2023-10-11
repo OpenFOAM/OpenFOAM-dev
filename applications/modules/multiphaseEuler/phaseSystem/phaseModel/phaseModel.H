@@ -255,10 +255,16 @@ public:
         // Thermo
 
             //- Return the thermophysical model
-            virtual const rhoFluidThermo& thermo() const = 0;
+            virtual const rhoThermo& thermo() const = 0;
 
             //- Access the thermophysical model
-            virtual rhoFluidThermo& thermo() = 0;
+            virtual rhoThermo& thermo() = 0;
+
+            //- Return the thermophysical model
+            virtual const rhoFluidThermo& fluidThermo() const = 0;
+
+            //- Access the thermophysical model
+            virtual rhoFluidThermo& fluidThermo() = 0;
 
             //- Return the density field
             virtual const volScalarField& rho() const = 0;

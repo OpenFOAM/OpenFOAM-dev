@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,9 +114,10 @@ namespace solidThermophysicalTransportModels
                            Class anisotropic Declaration
 \*---------------------------------------------------------------------------*/
 
+template<class SolidThermophysicalTransportModel>
 class anisotropic
 :
-    public solidThermophysicalTransportModel,
+    public SolidThermophysicalTransportModel,
     public UpdateableMeshObject<fvMesh>
 {
     // Private member data
@@ -150,6 +151,9 @@ class anisotropic
 
 public:
 
+    typedef typename SolidThermophysicalTransportModel::alphaField
+        alphaField;
+
     //- Runtime type information
     TypeName("anisotropic");
 
@@ -157,7 +161,11 @@ public:
     // Constructors
 
         //- Construct from solid thermophysical properties
-        anisotropic(const solidThermo& thermo);
+        anisotropic
+        (
+            const alphaField& alpha,
+            const solidThermo& thermo
+        );
 
 
     //- Destructor
@@ -210,6 +218,12 @@ public:
 
 } // End namespace solidThermophysicalTransportModels
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "anisotropic.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

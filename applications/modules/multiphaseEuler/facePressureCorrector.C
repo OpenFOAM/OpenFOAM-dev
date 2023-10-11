@@ -387,7 +387,10 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
         forAll(phases, phasei)
         {
             phaseModel& phase = phases_[phasei];
-            phase.rho() += phase.thermo().psi()*(p_rgh - p_rgh_0);
+            if (!phase.incompressible())
+            {
+                phase.rho() += phase.fluidThermo().psi()*(p_rgh - p_rgh_0);
+            }
         }
 
         // Update mass transfer rates for change in p_rgh

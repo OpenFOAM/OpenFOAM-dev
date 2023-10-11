@@ -30,7 +30,8 @@ boundaryField
     }
     wall
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 350;
     }
     front
     {

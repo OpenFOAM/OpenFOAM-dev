@@ -65,8 +65,8 @@ Foam::dragModels::IshiiZuber::CdRe() const
     const volScalarField Re(interface_.Re());
     const volScalarField Eo(interface_.Eo());
 
-    const volScalarField mud(interface_.dispersed().thermo().mu());
-    const volScalarField muc(interface_.continuous().thermo().mu());
+    const volScalarField mud(interface_.dispersed().fluidThermo().mu());
+    const volScalarField muc(interface_.continuous().fluidThermo().mu());
 
     const volScalarField muStar((mud + 0.4*muc)/(mud + muc));
 

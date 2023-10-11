@@ -56,17 +56,17 @@ void Foam::IsothermalPhaseModel<BasePhaseModel>::correctThermo()
     BasePhaseModel::correctThermo();
 
     // Correct the thermo, but make sure that the temperature remains the same
-    tmp<volScalarField> TCopy
-    (
-        volScalarField::New
-        (
-            this->thermo().T().name() + ":Copy",
-            this->thermo().T()
-        )
-    );
-    this->thermo_->he() = this->thermo().he(this->thermo().p(), TCopy);
-    this->thermo_->correct();
-    this->thermo_->T() = TCopy;
+    // tmp<volScalarField> TCopy
+    // (
+    //     volScalarField::New
+    //     (
+    //         this->thermo().T().name() + ":Copy",
+    //         this->thermo().T()
+    //     )
+    // );
+    // this->thermo_->he() = this->thermo().he(this->fluidThermo().p(), TCopy);
+    // this->thermo_->correct();
+    // this->thermo_->T() = TCopy;
 }
 
 
@@ -74,6 +74,15 @@ template<class BasePhaseModel>
 bool Foam::IsothermalPhaseModel<BasePhaseModel>::isothermal() const
 {
     return true;
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::scalarField>
+Foam::IsothermalPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
+{
+    NotImplemented;
+    return this->thermo().kappa().boundaryField()[patchi];
 }
 
 

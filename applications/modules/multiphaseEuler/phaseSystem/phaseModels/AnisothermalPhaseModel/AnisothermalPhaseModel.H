@@ -38,11 +38,33 @@ SourceFiles
 
 #include "phaseModel.H"
 #include "uniformDimensionedFields.H"
+#include "phaseCompressibleMomentumTransportModel.H"
+#include "PhaseThermophysicalTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+// Trait for converting the ThermoModel's thermo type to the thermo type needed
+// for the thermophysical transport model type; i.e., from rho-type thermo to
+// fluid-type thermo.
+
+template<class ThermoModel>
+struct MovingPhaseModelTransportThermoModel;
+
+template<>
+struct MovingPhaseModelTransportThermoModel<rhoFluidThermo>
+{
+    typedef fluidThermo type;
+};
+
+template<>
+struct MovingPhaseModelTransportThermoModel<rhoFluidMulticomponentThermo>
+{
+    typedef fluidMulticomponentThermo type;
+};
+
 
 /*---------------------------------------------------------------------------*\
                    Class AnisothermalPhaseModel Declaration
@@ -57,6 +79,24 @@ class AnisothermalPhaseModel
 
         //- Gravitational acceleration
         const uniformDimensionedVectorField& g_;
+
+        //- Thermo type for the thermophysical transport model
+        typedef
+            typename MovingPhaseModelTransportThermoModel
+            <
+                typename BasePhaseModel::thermoModel
+            >::type
+            transportThermoModel;
+
+        //- Thermophysical transport model
+        autoPtr
+        <
+            PhaseThermophysicalTransportModel
+            <
+                phaseCompressible::momentumTransportModel,
+                transportThermoModel
+            >
+        > thermophysicalTransport_;
 
 
     // Private Member Functions
@@ -87,14 +127,31 @@ public:
 
     // Member Functions
 
-        //- Correct the thermodynamics
-        virtual void correctThermo();
-
         //- Return whether the phase is isothermal
         virtual bool isothermal() const;
 
+        //- Correct the thermodynamics
+        virtual void correctThermo();
+
+        //- Predict the energy transport e.g. alphat
+        virtual void predictThermophysicalTransport();
+
+        //- Correct the energy transport e.g. alphat
+        virtual void correctThermophysicalTransport();
+
+        //- Return the effective thermal conductivity on a patch
+        virtual tmp<scalarField> kappaEff(const label patchi) const;
+
+        //- Return the source term for the energy equation
+        virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
+
+        //- Return the source term for the given specie mass-fraction
+        //  equation
+        virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
+
         //- Return the enthalpy equation
         virtual tmp<fvScalarMatrix> heEqn();
+
 };
 
 

@@ -67,7 +67,7 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::LegendreMagnaudet::Cl() const
     const volScalarField Sr
     (
         sqr(interface_.dispersed().d())
-       /(Re*interface_.continuous().thermo().nu())
+       /(Re*interface_.continuous().fluidThermo().nu())
        *mag(fvc::grad(interface_.continuous().U()))
     );
 

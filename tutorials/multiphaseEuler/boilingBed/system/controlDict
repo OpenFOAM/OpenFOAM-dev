@@ -164,6 +164,14 @@ functions
         operation       volIntegrate;
         fields          (continuityError.gas continuityError.liquid);
     }
+
+    writeWallheatfluxSolid
+    {
+        type            wallHeatFlux;
+        libs            ( "libmultiphaseEulerFoamFunctionObjects.so" );
+        writeControl    writeTime;
+        phase           solid;
+    }
 }
 
 

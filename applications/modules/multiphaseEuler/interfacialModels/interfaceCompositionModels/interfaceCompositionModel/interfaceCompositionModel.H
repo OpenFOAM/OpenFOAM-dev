@@ -71,7 +71,7 @@ class interfaceCompositionModel
         const rhoFluidMulticomponentThermo& thermo_;
 
         //- General thermo model for the other side of the interface
-        const rhoFluidThermo& otherThermo_;
+        const rhoThermo& otherThermo_;
 
 
 public:
@@ -133,7 +133,7 @@ public:
             inline const rhoFluidMulticomponentThermo& thermo() const;
 
             //- Return the other thermo
-            inline const rhoFluidThermo& otherThermo() const;
+            inline const rhoThermo& otherThermo() const;
 
             //- Return the other multicomponent thermo
             inline const rhoFluidMulticomponentThermo&

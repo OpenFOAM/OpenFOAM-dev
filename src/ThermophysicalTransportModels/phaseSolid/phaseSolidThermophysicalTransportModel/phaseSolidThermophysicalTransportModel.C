@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,20 +23,24 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "solidThermophysicalTransportModel.H"
+#include "phaseSolidThermophysicalTransportModel.H"
 #include "isotropic.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineRunTimeSelectionTable(solidThermophysicalTransportModel, dictionary);
+    defineRunTimeSelectionTable
+    (
+        phaseSolidThermophysicalTransportModel,
+        dictionary
+    );
 }
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::solidThermophysicalTransportModel::printCoeffs
+void Foam::phaseSolidThermophysicalTransportModel::printCoeffs
 (const word& type)
 {
     if (printCoeffs_)
@@ -48,14 +52,15 @@ void Foam::solidThermophysicalTransportModel::printCoeffs
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solidThermophysicalTransportModel::solidThermophysicalTransportModel
+Foam::phaseSolidThermophysicalTransportModel::
+phaseSolidThermophysicalTransportModel
 (
     const word& type,
     const alphaField& alpha,
     const solidThermo& thermo
 )
 :
-    thermophysicalTransportModel(thermo.mesh(), word::null),
+    thermophysicalTransportModel(thermo.mesh(), alpha.group()),
     alpha_(alpha),
     thermo_(thermo),
     printCoeffs_(lookupOrDefault<Switch>("printCoeffs", false)),
@@ -65,12 +70,20 @@ Foam::solidThermophysicalTransportModel::solidThermophysicalTransportModel
 
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::solidThermophysicalTransportModel>
-Foam::solidThermophysicalTransportModel::New(const solidThermo& thermo)
+Foam::autoPtr<Foam::phaseSolidThermophysicalTransportModel>
+Foam::phaseSolidThermophysicalTransportModel::New
+(
+    const alphaField& alpha,
+    const solidThermo& thermo
+)
 {
     typeIOobject<IOdictionary> header
     (
-        solidThermophysicalTransportModel::typeName,
+        IOobject::groupName
+        (
+            phaseSolidThermophysicalTransportModel::typeName,
+            alpha.group()
+        ),
         thermo.mesh().time().constant(),
         thermo.mesh(),
         IOobject::MUST_READ,
@@ -98,26 +111,22 @@ Foam::solidThermophysicalTransportModel::New(const solidThermo& thermo)
                 << exit(FatalError);
         }
 
-        return autoPtr<solidThermophysicalTransportModel>
+        return autoPtr<phaseSolidThermophysicalTransportModel>
         (
-            cstrIter()(geometricOneField(), thermo)
+            cstrIter()(alpha, thermo)
         );
     }
     else
     {
         Info<< "Selecting default solid thermophysical transport model "
             << solidThermophysicalTransportModels::
-               isotropic<solidThermophysicalTransportModel>::typeName
+               isotropic<phaseSolidThermophysicalTransportModel>::typeName
             << endl;
 
-        return autoPtr<solidThermophysicalTransportModel>
+        return autoPtr<phaseSolidThermophysicalTransportModel>
         (
             new solidThermophysicalTransportModels::
-            isotropic<solidThermophysicalTransportModel>
-            (
-                geometricOneField(),
-                thermo
-            )
+            isotropic<phaseSolidThermophysicalTransportModel>(alpha, thermo)
         );
     }
 }
@@ -126,14 +135,14 @@ Foam::solidThermophysicalTransportModel::New(const solidThermo& thermo)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::solidThermophysicalTransportModel::kappa() const
+Foam::phaseSolidThermophysicalTransportModel::kappa() const
 {
     return thermo().kappa();
 }
 
 
 Foam::tmp<Foam::scalarField>
-Foam::solidThermophysicalTransportModel::kappa
+Foam::phaseSolidThermophysicalTransportModel::kappa
 (
     const label patchi
 ) const
@@ -142,7 +151,7 @@ Foam::solidThermophysicalTransportModel::kappa
 }
 
 
-bool Foam::solidThermophysicalTransportModel::read()
+bool Foam::phaseSolidThermophysicalTransportModel::read()
 {
     if (regIOobject::read())
     {
@@ -156,11 +165,11 @@ bool Foam::solidThermophysicalTransportModel::read()
 }
 
 
-void Foam::solidThermophysicalTransportModel::predict()
+void Foam::phaseSolidThermophysicalTransportModel::predict()
 {}
 
 
-void Foam::solidThermophysicalTransportModel::correct()
+void Foam::phaseSolidThermophysicalTransportModel::correct()
 {}
 
 

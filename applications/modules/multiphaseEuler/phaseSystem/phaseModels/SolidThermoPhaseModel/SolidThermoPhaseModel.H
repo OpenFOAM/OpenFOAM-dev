@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::ThermoPhaseModel
+    Foam::SolidThermoPhaseModel
 
 Description
-    Class which represents a phase with a thermodynamic model. Provides access
-    to the thermodynamic variables. Note that the thermo model itself is not
-    returned as this class could be substituted in the hierarchy for one which
-    mirrors the functionality, but does not include a thermo model; an
+    Class which represents a solid phase with a thermodynamic model. Provides
+    access to the thermodynamic variables. Note that the thermo model itself is
+    not returned as this class could be substituted in the hierarchy for one
+    which mirrors the functionality, but does not include a thermo model; an
     incompressible phase model, for example.
 
 SourceFiles
-    ThermoPhaseModel.C
+    SolidThermoPhaseModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ThermoPhaseModel_H
-#define ThermoPhaseModel_H
+#ifndef SolidThermoPhaseModel_H
+#define SolidThermoPhaseModel_H
 
 #include "phaseModel.H"
 
@@ -50,11 +50,11 @@ class rhoThermo;
 class rhoFluidThermo;
 
 /*---------------------------------------------------------------------------*\
-                      Class ThermoPhaseModel Declaration
+                      Class SolidThermoPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseModel, class ThermoModel>
-class ThermoPhaseModel
+class SolidThermoPhaseModel
 :
     public BasePhaseModel,
     public viscosity
@@ -74,7 +74,7 @@ public:
 
     // Constructors
 
-        ThermoPhaseModel
+        SolidThermoPhaseModel
         (
             const phaseSystem& fluid,
             const word& phaseName,
@@ -84,7 +84,7 @@ public:
 
 
     //- Destructor
-    virtual ~ThermoPhaseModel();
+    virtual ~SolidThermoPhaseModel();
 
 
     // Member Functions
@@ -139,7 +139,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "ThermoPhaseModel.C"
+    #include "SolidThermoPhaseModel.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

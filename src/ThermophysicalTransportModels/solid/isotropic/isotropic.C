@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,31 +29,17 @@ License
 #include "fvcSnGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace solidThermophysicalTransportModels
-{
-    defineTypeNameAndDebug(isotropic, 0);
-    addToRunTimeSelectionTable
-    (
-        solidThermophysicalTransportModel,
-        isotropic,
-        dictionary
-    );
-}
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solidThermophysicalTransportModels::isotropic::isotropic
+template<class SolidThermophysicalTransportModel>
+Foam::solidThermophysicalTransportModels::
+isotropic<SolidThermophysicalTransportModel>::isotropic
 (
+    const alphaField& alpha,
     const solidThermo& thermo
 )
 :
-    solidThermophysicalTransportModel(typeName, thermo)
+    SolidThermophysicalTransportModel(typeName, alpha, thermo)
 {
     if (!thermo.isotropic())
     {
@@ -67,32 +53,41 @@ Foam::solidThermophysicalTransportModels::isotropic::isotropic
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+template<class SolidThermophysicalTransportModel>
 const Foam::dictionary&
-Foam::solidThermophysicalTransportModels::isotropic::coeffDict() const
+Foam::solidThermophysicalTransportModels::
+isotropic<SolidThermophysicalTransportModel>::coeffDict() const
 {
     return dictionary::null;
 }
 
 
-bool Foam::solidThermophysicalTransportModels::isotropic::read()
+template<class SolidThermophysicalTransportModel>
+bool Foam::solidThermophysicalTransportModels::
+isotropic<SolidThermophysicalTransportModel>::read()
 {
     return true;
 }
 
 
+template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::surfaceScalarField>
-Foam::solidThermophysicalTransportModels::isotropic::q() const
+Foam::solidThermophysicalTransportModels::
+isotropic<SolidThermophysicalTransportModel>::q() const
 {
     return surfaceScalarField::New
     (
         "q",
-       -fvc::interpolate(kappa())*fvc::snGrad(thermo().T())
+       -fvc::interpolate(this->alpha()*this->kappa())
+       *fvc::snGrad(this->thermo().T())
     );
 }
 
 
+template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::scalarField>
-Foam::solidThermophysicalTransportModels::isotropic::qCorr
+Foam::solidThermophysicalTransportModels::
+isotropic<SolidThermophysicalTransportModel>::qCorr
 (
     const label patchi
 ) const
@@ -101,8 +96,10 @@ Foam::solidThermophysicalTransportModels::isotropic::qCorr
 }
 
 
+template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::solidThermophysicalTransportModels::isotropic::divq
+Foam::solidThermophysicalTransportModels::
+isotropic<SolidThermophysicalTransportModel>::divq
 (
     volScalarField& e
 ) const
@@ -112,14 +109,16 @@ Foam::solidThermophysicalTransportModels::isotropic::divq
     // Return heat flux source as an implicit energy correction
     // to the temperature gradient flux
     return
-       -fvc::laplacian(kappa(), thermo.T())
-       -fvm::laplacianCorrection(kappa()/thermo.Cv(), e);
+       -fvc::laplacian(this->alpha()*this->kappa(), thermo.T())
+       -fvm::laplacianCorrection(this->alpha()*this->kappa()/thermo.Cv(), e);
 }
 
 
-void Foam::solidThermophysicalTransportModels::isotropic::predict()
+template<class SolidThermophysicalTransportModel>
+void Foam::solidThermophysicalTransportModels::
+isotropic<SolidThermophysicalTransportModel>::predict()
 {
-    solidThermophysicalTransportModel::predict();
+    SolidThermophysicalTransportModel::predict();
 }
 
 

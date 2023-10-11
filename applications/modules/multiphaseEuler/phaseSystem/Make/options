@@ -7,6 +7,7 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/multicomponentThermo/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/solidThermo/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/saturationModels/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/compressibleTwoPhases/lnInclude \
@@ -16,6 +17,8 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/thermophysicalTransportModel/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/fluid/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/solid/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/phaseSolid/lnInclude \
     -I$(LIB_SRC)/combustionModels/lnInclude
 
 LIB_LIBS = \
@@ -26,4 +29,5 @@ LIB_LIBS = \
     -lmultiphaseProperties \
     -lphaseCompressibleMomentumTransportModels \
     -lphaseFluidMulticomponentThermophysicalTransportModels \
+    -lphaseSolidThermophysicalTransportModels \
     -lcombustionModels

@@ -26,6 +26,7 @@ License
 #include "SolidThermalPhaseModel.H"
 #include "fvmDdt.H"
 #include "fvmSup.H"
+#include "fvcLaplacian.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -38,7 +39,11 @@ Foam::SolidThermalPhaseModel<BasePhaseModel>::SolidThermalPhaseModel
     const label index
 )
 :
-    BasePhaseModel(fluid, phaseName, referencePhase, index)
+    BasePhaseModel(fluid, phaseName, referencePhase, index),
+    thermophysicalTransport_
+    (
+        phaseSolidThermophysicalTransportModel::New(*this, this->thermo_)
+    )
 {}
 
 
@@ -52,6 +57,13 @@ Foam::SolidThermalPhaseModel<BasePhaseModel>::~SolidThermalPhaseModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
+bool Foam::SolidThermalPhaseModel<BasePhaseModel>::isothermal() const
+{
+    return false;
+}
+
+
+template<class BasePhaseModel>
 void Foam::SolidThermalPhaseModel<BasePhaseModel>::correctThermo()
 {
     BasePhaseModel::correctThermo();
@@ -61,9 +73,36 @@ void Foam::SolidThermalPhaseModel<BasePhaseModel>::correctThermo()
 
 
 template<class BasePhaseModel>
-bool Foam::SolidThermalPhaseModel<BasePhaseModel>::isothermal() const
+void Foam::SolidThermalPhaseModel<BasePhaseModel>::
+predictThermophysicalTransport()
 {
-    return false;
+    BasePhaseModel::predictThermophysicalTransport();
+    thermophysicalTransport_->predict();
+}
+
+
+template<class BasePhaseModel>
+void Foam::SolidThermalPhaseModel<BasePhaseModel>::
+correctThermophysicalTransport()
+{
+    BasePhaseModel::correctThermophysicalTransport();
+    thermophysicalTransport_->correct();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::scalarField>
+Foam::SolidThermalPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
+{
+    return thermophysicalTransport_->kappaEff(patchi);
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::SolidThermalPhaseModel<BasePhaseModel>::divq(volScalarField& he) const
+{
+    return thermophysicalTransport_->divq(he);
 }
 
 

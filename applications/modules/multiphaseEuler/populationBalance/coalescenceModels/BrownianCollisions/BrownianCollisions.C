@@ -88,7 +88,7 @@ BrownianCollisions
 void Foam::diameterModels::coalescenceModels::BrownianCollisions::precompute()
 {
     const volScalarField& T = popBal_.continuousPhase().thermo().T();
-    const volScalarField& p = popBal_.continuousPhase().thermo().p();
+    const volScalarField& p = popBal_.continuousPhase().fluidThermo().p();
 
     lambda_ = k*T/(sqrt(2.0)*pi*p*sqr(sigma_));
 }
@@ -108,7 +108,7 @@ addToCoalescenceRate
 
     const volScalarField& T = popBal_.continuousPhase().thermo().T();
 
-    tmp<volScalarField> tmu(popBal_.continuousPhase().thermo().mu());
+    tmp<volScalarField> tmu(popBal_.continuousPhase().fluidThermo().mu());
     const volScalarField& mu = tmu();
 
     const volScalarField Cci

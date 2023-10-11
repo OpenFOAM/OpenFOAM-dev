@@ -225,7 +225,7 @@ struct alphatWallBoilingWallFunctionFvPatchScalarField::boilingLiquidProperties
         trhoVapourw(vapour.thermo().rho(patchi())),
         rhoVapourw(trhoVapourw()),
         Cpw(liquid.thermo().Cp().boundaryField()[patchi()]),
-        tnuw(liquid.thermo().nu(patchi())),
+        tnuw(liquid.fluidThermo().nu(patchi())),
         nuw(tnuw()),
         kappaByCp
         (
@@ -265,7 +265,7 @@ struct alphatWallBoilingWallFunctionFvPatchScalarField::boilingLiquidProperties
                 interfaceSaturationTemperatureModel
             >
             (interface)
-           .Tsat(liquid.thermo().p())()
+           .Tsat(liquid.fluidThermo().p())()
            .boundaryField()[patchi()]
         ),
         L

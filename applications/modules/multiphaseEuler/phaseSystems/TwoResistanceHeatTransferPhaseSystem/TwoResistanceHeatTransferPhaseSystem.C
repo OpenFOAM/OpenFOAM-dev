@@ -59,8 +59,8 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoFluidThermo& thermo1 = phase1.thermo();
-        const rhoFluidThermo& thermo2 = phase2.thermo();
+        const rhoThermo& thermo1 = phase1.thermo();
+        const rhoThermo& thermo2 = phase2.thermo();
 
         // Transfer coefficients
         const sidedBlendedHeatTransferModel& heatTransferModel =
@@ -124,8 +124,8 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
 
         const phaseModel& phase1 = interface.phase1();
         const phaseModel& phase2 = interface.phase2();
-        const rhoFluidThermo& thermo1 = phase1.thermo();
-        const rhoFluidThermo& thermo2 = phase2.thermo();
+        const rhoThermo& thermo1 = phase1.thermo();
+        const rhoThermo& thermo2 = phase2.thermo();
 
         // Transfer coefficients
         const sidedBlendedHeatTransferModel& heatTransferModel =

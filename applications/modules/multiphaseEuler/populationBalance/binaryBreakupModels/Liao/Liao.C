@@ -122,7 +122,7 @@ addToBinaryBreakupRate
     {
         const volScalarField tauShear
         (
-            BShear_*continuousPhase.thermo().mu()*shearStrainRate_
+            BShear_*continuousPhase.fluidThermo().mu()*shearStrainRate_
         );
 
         binaryBreakupRate +=
@@ -135,7 +135,7 @@ addToBinaryBreakupRate
         const volScalarField tauEddy
         (
             pos0(kolmogorovLengthScale_ - fj.dSph())
-           *BEddy_*continuousPhase.thermo().mu()*eddyStrainRate_
+           *BEddy_*continuousPhase.fluidThermo().mu()*eddyStrainRate_
         );
 
         binaryBreakupRate +=

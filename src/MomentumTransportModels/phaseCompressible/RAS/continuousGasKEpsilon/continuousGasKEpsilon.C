@@ -132,7 +132,7 @@ void continuousGasKEpsilon<BasicMomentumTransportModel>::correctNut()
     volScalarField rhodv(gas.rho() + virtualMass.Cvm()*liquid.rho());
     volScalarField thetag
     (
-        (rhodv/(18*liquid.rho()*liquid.thermo().nu()))*sqr(gas.d())
+        (rhodv/(18*liquid.rho()*liquid.fluidThermo().nu()))*sqr(gas.d())
     );
     volScalarField expThetar
     (

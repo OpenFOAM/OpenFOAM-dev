@@ -75,7 +75,7 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
                 const surfaceScalarField phid
                 (
                     IOobject::groupName("phid", phase.name()),
-                    fvc::interpolate(phase.thermo().psi())*phase.phi()
+                    fvc::interpolate(phase.fluidThermo().psi())*phase.phi()
                 );
 
                 pEqnComp +=
@@ -83,7 +83,7 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
                     (
                         (alpha/rho)*
                         (
-                            phase.thermo().psi()*fvm::ddt(p_rgh)
+                            phase.fluidThermo().psi()*fvm::ddt(p_rgh)
                           + fvm::div(phid, p_rgh)
                           - fvm::Sp(fvc::div(phid), p_rgh)
                         )
@@ -94,7 +94,7 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
             else
             {
                 pEqnComp +=
-                    (alpha*phase.thermo().psi()/rho)
+                    (alpha*phase.fluidThermo().psi()/rho)
                    *correction(fvm::ddt(p_rgh));
             }
         }

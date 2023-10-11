@@ -87,7 +87,7 @@ Foam::phaseTransferModels::cavitation::dmdtf() const
 
     const Pair<tmp<volScalarField::Internal>> coeffs(cavitation_->mDot12P());
 
-    const volScalarField::Internal& p = interface_.phase1().thermo().p();
+    const volScalarField::Internal& p = interface_.phase1().fluidThermo().p();
     const volScalarField::Internal pSat1(cavitation_->pSat1());
     const volScalarField::Internal pSat2(cavitation_->pSat2());
 

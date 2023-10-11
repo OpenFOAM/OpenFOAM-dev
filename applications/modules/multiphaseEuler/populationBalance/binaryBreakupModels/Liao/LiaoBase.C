@@ -93,7 +93,7 @@ void Foam::diameterModels::LiaoBase::precompute()
     kolmogorovLengthScale_ =
         pow025
         (
-            pow3(populationBalance_.continuousPhase().thermo().nu())
+            pow3(populationBalance_.continuousPhase().fluidThermo().nu())
            /populationBalance_.continuousTurbulence().epsilon()
         );
 
@@ -106,7 +106,7 @@ void Foam::diameterModels::LiaoBase::precompute()
            (
                populationBalance_.continuousPhase().rho()
               *populationBalance_.continuousTurbulence().epsilon()
-              /populationBalance_.continuousPhase().thermo().mu()
+              /populationBalance_.continuousPhase().fluidThermo().mu()
            );
 
     if (uTerminal_.empty())
@@ -119,7 +119,7 @@ void Foam::diameterModels::LiaoBase::precompute()
         (
             "nuc",
             dimViscosity,
-            gAverage(populationBalance_.continuousPhase().thermo().nu()())
+            gAverage(populationBalance_.continuousPhase().fluidThermo().nu()())
         );
 
         const dimensionedScalar rhoc

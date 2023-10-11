@@ -231,7 +231,7 @@ addToCoalescenceRate
       + pos0(kolmogorovLengthScale_ - (fi.dSph() + fj.dSph()))
        *exp
         (
-          - 3*continuousPhase.thermo().mu()*dEq*eddyStrainRate_
+          - 3*continuousPhase.fluidThermo().mu()*dEq*eddyStrainRate_
            /(4*popBal_.sigmaWithContinuousPhase(fi.phase()))
            *log
             (

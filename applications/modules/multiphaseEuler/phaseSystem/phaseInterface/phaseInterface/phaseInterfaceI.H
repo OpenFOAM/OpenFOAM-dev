@@ -41,13 +41,13 @@ inline const Foam::volScalarField& Foam::phaseInterface::alpha2() const
 
 inline const Foam::rhoFluidThermo& Foam::phaseInterface::thermo1() const
 {
-    return phase1().thermo();
+    return phase1().fluidThermo();
 }
 
 
 inline const Foam::rhoFluidThermo& Foam::phaseInterface::thermo2() const
 {
-    return phase2().thermo();
+    return phase2().fluidThermo();
 }
 
 

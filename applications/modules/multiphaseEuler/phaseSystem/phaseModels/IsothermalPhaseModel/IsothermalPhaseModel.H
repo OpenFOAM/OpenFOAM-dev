@@ -78,6 +78,9 @@ public:
         //- Return whether the phase is isothermal
         virtual bool isothermal() const;
 
+        //- Return the effective thermal conductivity on a patch
+        virtual tmp<scalarField> kappaEff(const label patchi) const;
+
         //- Return the enthalpy equation
         virtual tmp<fvScalarMatrix> heEqn();
 };

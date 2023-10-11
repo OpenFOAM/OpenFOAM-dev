@@ -66,7 +66,7 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::Moraga::Cl() const
     volScalarField sqrSr
     (
         sqr(interface_.dispersed().d())
-       /interface_.continuous().thermo().nu()
+       /interface_.continuous().fluidThermo().nu()
        *mag(fvc::grad(interface_.continuous().U()))
     );
 

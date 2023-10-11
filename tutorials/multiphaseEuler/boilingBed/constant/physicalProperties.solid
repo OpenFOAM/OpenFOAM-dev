@@ -10,15 +10,15 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      thermophysicalProperties.solid;
+    object      physicalProperties.solid;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 thermoType
 {
-    type            heRhoThermo;
+    type            heSolidThermo;
     mixture         pureMixture;
-    transport       const;
+    transport       constIsoSolid;
     thermo          eConst;
     equationOfState rhoConst;
     specie          specie;
@@ -37,12 +37,11 @@ mixture
     }
     thermodynamics
     {
-        Hf          0;
         Cv          520;
+        Hf          0;
     }
     transport
     {
-        mu          1;
         kappa       16.7;
     }
 }

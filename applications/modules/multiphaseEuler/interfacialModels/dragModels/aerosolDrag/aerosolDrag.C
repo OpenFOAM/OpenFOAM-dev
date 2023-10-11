@@ -71,7 +71,7 @@ Foam::dragModels::aerosolDrag::~aerosolDrag()
 Foam::tmp<Foam::volScalarField> Foam::dragModels::aerosolDrag::CdRe() const
 {
     const volScalarField& T = interface_.continuous().thermo().T();
-    const volScalarField& p = interface_.continuous().thermo().p();
+    const volScalarField& p = interface_.continuous().fluidThermo().p();
     tmp<volScalarField> td(interface_.dispersed().d());
     const volScalarField& d = td();
 

@@ -472,7 +472,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::bubbleG() const
        *pos(alphap_ - gas)*liquid*liquid.rho()
        *(
             pow3(magUr)
-          + pow(drag.CdRe()*liquid.thermo().nu()/gas.d(), 4.0/3.0)
+          + pow(drag.CdRe()*liquid.fluidThermo().nu()/gas.d(), 4.0/3.0)
            *pow(magUr, 5.0/3.0)
         )
        *gas

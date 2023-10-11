@@ -156,7 +156,7 @@ void Foam::diameterModels::binaryBreakupModels::LuoSvendsen::precompute()
         (
             pow3
             (
-                popBal_.continuousPhase().thermo().nu()
+                popBal_.continuousPhase().fluidThermo().nu()
             )
            /popBal_.continuousTurbulence().epsilon()
         );

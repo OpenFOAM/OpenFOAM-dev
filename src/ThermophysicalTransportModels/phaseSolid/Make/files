@@ -1,0 +1,4 @@
+phaseSolidThermophysicalTransportModel/phaseSolidThermophysicalTransportModel.C
+phaseSolidThermophysicalTransportModels.C
+
+LIB = $(FOAM_LIBBIN)/libphaseSolidThermophysicalTransportModels

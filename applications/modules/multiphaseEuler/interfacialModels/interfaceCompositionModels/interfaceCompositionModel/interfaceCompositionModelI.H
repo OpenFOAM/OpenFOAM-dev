@@ -48,7 +48,7 @@ Foam::interfaceCompositionModel::thermo() const
 }
 
 
-const Foam::rhoFluidThermo& Foam::interfaceCompositionModel::otherThermo() const
+const Foam::rhoThermo& Foam::interfaceCompositionModel::otherThermo() const
 {
     return otherThermo_;
 }

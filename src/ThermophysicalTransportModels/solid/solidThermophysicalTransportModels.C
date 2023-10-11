@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,62 +23,48 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "turbulentShear.H"
-#include "addToRunTimeSelectionTable.H"
+#include "solidThermophysicalTransportModel.H"
+#include "isotropic.H"
+#include "anisotropic.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace diameterModels
+namespace solidThermophysicalTransportModels
 {
-namespace coalescenceModels
-{
-    defineTypeNameAndDebug(turbulentShear, 0);
+    typedef isotropic<solidThermophysicalTransportModel>
+        isotropicSolidThermophysicalTransportModel;
+
+    defineNamedTemplateTypeNameAndDebug
+    (
+        isotropicSolidThermophysicalTransportModel,
+        0
+    );
+
     addToRunTimeSelectionTable
     (
-        coalescenceModel,
-        turbulentShear,
+        solidThermophysicalTransportModel,
+        isotropicSolidThermophysicalTransportModel,
+        dictionary
+    );
+
+    typedef anisotropic<solidThermophysicalTransportModel>
+        anisotropicSolidThermophysicalTransportModel;
+
+    defineNamedTemplateTypeNameAndDebug
+    (
+        anisotropicSolidThermophysicalTransportModel,
+        0
+    );
+
+    addToRunTimeSelectionTable
+    (
+        solidThermophysicalTransportModel,
+        anisotropicSolidThermophysicalTransportModel,
         dictionary
     );
 }
-}
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::diameterModels::coalescenceModels::turbulentShear::
-turbulentShear
-(
-    const populationBalanceModel& popBal,
-    const dictionary& dict
-)
-:
-    coalescenceModel(popBal, dict),
-    C_("C", dimless, dict)
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void
-Foam::diameterModels::coalescenceModels::turbulentShear::
-addToCoalescenceRate
-(
-    volScalarField& coalescenceRate,
-    const label i,
-    const label j
-)
-{
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
-    const sizeGroup& fj = popBal_.sizeGroups()[j];
-
-    const volScalarField& rho = popBal_.continuousPhase().rho();
-    tmp<volScalarField> epsilon(popBal_.continuousTurbulence().epsilon());
-    tmp<volScalarField> mu(popBal_.continuousPhase().fluidThermo().mu());
-
-    coalescenceRate += C_*sqrt(epsilon*rho/mu)*pow3(fi.d() + fj.d());
 }
 
 

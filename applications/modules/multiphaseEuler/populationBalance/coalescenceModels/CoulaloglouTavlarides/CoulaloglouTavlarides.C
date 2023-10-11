@@ -82,7 +82,7 @@ addToCoalescenceRate
        *cbrt(popBal_.continuousTurbulence().epsilon())/(1 + popBal_.alphas())
        *exp
         (
-          - C2_*continuousPhase.thermo().mu()*continuousPhase.rho()
+          - C2_*continuousPhase.fluidThermo().mu()*continuousPhase.rho()
            *popBal_.continuousTurbulence().epsilon()
            /sqr(popBal_.sigmaWithContinuousPhase(fi.phase()))
            /pow3(1 + popBal_.alphas())

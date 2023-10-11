@@ -69,7 +69,7 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::SaffmanMei::Cl() const
         mag(fvc::curl(interface_.continuous().U()))
        *sqr(interface_.dispersed().d())
        /(
-            interface_.continuous().thermo().nu()
+            interface_.continuous().fluidThermo().nu()
           + dimensionedScalar(dimViscosity, small)
         )
     );

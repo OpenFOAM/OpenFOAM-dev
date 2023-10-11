@@ -62,7 +62,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::dispersedDragModel::Ki() const
        *CdRe()
        *swarmCorrection_->Cs()
        *interface_.continuous().rho()
-       *interface_.continuous().thermo().nu()
+       *interface_.continuous().fluidThermo().nu()
        /sqr(interface_.dispersed().d());
 }
 

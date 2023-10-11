@@ -237,9 +237,9 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::K
     const phaseModel& vapour = fluid.phases()[vapourPhaseName_];
     const phaseModel& solid = interface_.dispersed();
 
-    const rhoFluidThermo& lThermo = liquid.thermo();
-    const rhoFluidThermo& vThermo = vapour.thermo();
-    const rhoFluidThermo& sThermo = solid.thermo();
+    const rhoThermo& lThermo = liquid.thermo();
+    const rhoThermo& vThermo = vapour.thermo();
+    const rhoThermo& sThermo = solid.thermo();
 
     // Estimate the surface temperature from the surrounding temperature and
     // heat transfer coefficients. Note that a lagged value of K is used in
@@ -263,12 +263,12 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::K
             interfaceSaturationTemperatureModel
         >
         (phaseInterface(liquid, vapour))
-       .Tsat(liquid.thermo().p())()
+       .Tsat(liquid.fluidThermo().p())()
     );
 
     const volScalarField L
     (
-        vThermo.ha(lThermo.p(), Tsat) - lThermo.ha()
+        vThermo.ha(liquid.fluidThermo().p(), Tsat) - lThermo.ha()
     );
 
     // Wetted fraction

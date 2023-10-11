@@ -119,7 +119,7 @@ void Foam::diameterModels::linearTsub::correct()
 
         const volScalarField Tsub
         (
-            satModel.Tsat(liquid.thermo().p()) - liquid.thermo().T()
+            satModel.Tsat(liquid.fluidThermo().p()) - liquid.thermo().T()
         );
 
         d_ = max

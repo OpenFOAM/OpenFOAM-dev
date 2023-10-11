@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,33 +29,18 @@ License
 #include "fvcSnGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace solidThermophysicalTransportModels
-{
-    defineTypeNameAndDebug(anisotropic, 0);
-    addToRunTimeSelectionTable
-    (
-        solidThermophysicalTransportModel,
-        anisotropic,
-        dictionary
-    );
-}
-}
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solidThermophysicalTransportModels::anisotropic::
+template<class SolidThermophysicalTransportModel>
+void Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::
 setZonesPatchFaces() const
 {
     if (!zoneCoordinateSystems_.size()) return;
 
     // Find all the patch faces adjacent to zones
 
-    const fvMesh& mesh = thermo().mesh();
+    const fvMesh& mesh = this->thermo().mesh();
     const fvBoundaryMesh& patches = mesh.boundary();
     const labelList& own = mesh.faceOwner();
 
@@ -110,23 +95,30 @@ setZonesPatchFaces() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solidThermophysicalTransportModels::anisotropic::anisotropic
+template<class SolidThermophysicalTransportModel>
+Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::anisotropic
 (
+    const alphaField& alpha,
     const solidThermo& thermo
 )
 :
-    solidThermophysicalTransportModel(typeName, thermo),
+    SolidThermophysicalTransportModel(typeName, alpha, thermo),
     UpdateableMeshObject(*this, thermo.mesh()),
-    coordinateSystem_(coordinateSystem::New(thermo.mesh(), coeffDict())),
+    coordinateSystem_(coordinateSystem::New(thermo.mesh(), this->coeffDict())),
     boundaryAligned_
     (
-        coeffDict().lookupOrDefault<Switch>("boundaryAligned", false)
+        this->coeffDict().template lookupOrDefault<Switch>
+        (
+            "boundaryAligned",
+            false
+        )
     ),
     aligned_(thermo.mesh().boundary().size(), true)
 {
-    if (coeffDict().found("zones"))
+    if (this->coeffDict().found("zones"))
     {
-        const dictionary& zonesDict(coeffDict().subDict("zones"));
+        const dictionary& zonesDict(this->coeffDict().subDict("zones"));
 
         Info<< "    Reading coordinate system for zones:" << endl;
 
@@ -216,15 +208,19 @@ Foam::solidThermophysicalTransportModels::anisotropic::anisotropic
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::solidThermophysicalTransportModels::anisotropic::read()
+template<class SolidThermophysicalTransportModel>
+bool Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::read()
 {
 
     return true;
 }
 
 
+template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::volSymmTensorField>
-Foam::solidThermophysicalTransportModels::anisotropic::Kappa() const
+Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::Kappa() const
 {
     const solidThermo& thermo = this->thermo();
     const fvMesh& mesh = thermo.mesh();
@@ -308,8 +304,10 @@ Foam::solidThermophysicalTransportModels::anisotropic::Kappa() const
 }
 
 
+template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::symmTensorField>
-Foam::solidThermophysicalTransportModels::anisotropic::Kappa
+Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::Kappa
 (
     const label patchi
 ) const
@@ -356,27 +354,33 @@ Foam::solidThermophysicalTransportModels::anisotropic::Kappa
 }
 
 
+template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::volScalarField>
-Foam::solidThermophysicalTransportModels::anisotropic::kappa() const
+Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::kappa() const
 {
     NotImplemented;
     return tmp<volScalarField>(nullptr);
 }
 
 
+template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::scalarField>
-Foam::solidThermophysicalTransportModels::anisotropic::kappa
+Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::kappa
 (
     const label patchi
 ) const
 {
-    const vectorField n(thermo().mesh().boundary()[patchi].nf());
+    const vectorField n(this->thermo().mesh().boundary()[patchi].nf());
     return n & Kappa(patchi) & n;
 }
 
 
+template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::surfaceScalarField>
-Foam::solidThermophysicalTransportModels::anisotropic::q() const
+Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::q() const
 {
     const solidThermo& thermo = this->thermo();
     const fvMesh& mesh = thermo.mesh();
@@ -384,25 +388,31 @@ Foam::solidThermophysicalTransportModels::anisotropic::q() const
     return surfaceScalarField::New
     (
         "q",
-       -fvm::laplacian(Kappa(), thermo.T())().flux()/mesh.magSf()
+       -fvm::laplacian(this->alpha()*Kappa(), thermo.T())().flux()/mesh.magSf()
     );
 }
 
 
+template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::scalarField>
-Foam::solidThermophysicalTransportModels::anisotropic::qCorr
+Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::qCorr
 (
     const label patchi
 ) const
 {
     if (!aligned_[patchi])
     {
-        tmp<volVectorField> gradT(fvc::grad(thermo().T()));
+        tmp<volVectorField> gradT(fvc::grad(this->thermo().T()));
 
-        const vectorField n(thermo().mesh().boundary()[patchi].nf());
+        const vectorField n(this->thermo().mesh().boundary()[patchi].nf());
         const vectorField nKappa(n & Kappa(patchi));
 
-        return -(nKappa - n*(nKappa & n)) & gradT().boundaryField()[patchi];
+        return
+           -(
+                this->alpha().boundaryField()[patchi]
+               *((nKappa - n*(nKappa & n)) & gradT().boundaryField()[patchi])
+            );
     }
     else
     {
@@ -411,8 +421,10 @@ Foam::solidThermophysicalTransportModels::anisotropic::qCorr
 }
 
 
+template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::solidThermophysicalTransportModels::anisotropic::divq
+Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::divq
 (
     volScalarField& e
 ) const
@@ -425,18 +437,21 @@ Foam::solidThermophysicalTransportModels::anisotropic::divq
     // Return heat flux source as an implicit energy correction
     // to the temperature gradient flux
     return
-       -fvc::laplacian(Kappa, thermo.T())
+       -fvc::laplacian(this->alpha()*Kappa, thermo.T())
        -fvm::laplacianCorrection
         (
-            (Sf & fvc::interpolate(Kappa/thermo.Cv()) & Sf)/sqr(magSf),
+            (Sf & fvc::interpolate(this->alpha()*Kappa/thermo.Cv()) & Sf)
+           /sqr(magSf),
             e
         );
 }
 
 
-void Foam::solidThermophysicalTransportModels::anisotropic::predict()
+template<class SolidThermophysicalTransportModel>
+void Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::predict()
 {
-    solidThermophysicalTransportModel::predict();
+    SolidThermophysicalTransportModel::predict();
 
     // Recalculate zonesPatchFaces if they have been deleted
     // following mesh changes
@@ -447,13 +462,17 @@ void Foam::solidThermophysicalTransportModels::anisotropic::predict()
 }
 
 
-bool Foam::solidThermophysicalTransportModels::anisotropic::movePoints()
+template<class SolidThermophysicalTransportModel>
+bool Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::movePoints()
 {
     return true;
 }
 
 
-void Foam::solidThermophysicalTransportModels::anisotropic::topoChange
+template<class SolidThermophysicalTransportModel>
+void Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::topoChange
 (
     const polyTopoChangeMap& map
 )
@@ -463,7 +482,9 @@ void Foam::solidThermophysicalTransportModels::anisotropic::topoChange
 }
 
 
-void Foam::solidThermophysicalTransportModels::anisotropic::mapMesh
+template<class SolidThermophysicalTransportModel>
+void Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::mapMesh
 (
     const polyMeshMap& map
 )
@@ -473,7 +494,9 @@ void Foam::solidThermophysicalTransportModels::anisotropic::mapMesh
 }
 
 
-void Foam::solidThermophysicalTransportModels::anisotropic::distribute
+template<class SolidThermophysicalTransportModel>
+void Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::distribute
 (
     const polyDistributionMap& map
 )
