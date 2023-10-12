@@ -20,19 +20,9 @@ internalField   uniform 1e5;
 
 boundaryField
 {
-    leftWall
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
+    #includeEtc "caseDicts/setConstraintTypes"
 
-    rightWall
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
-
-    lowerWall
+    wall
     {
         type            fixedFluxPressure;
         value           $internalField;
@@ -42,11 +32,6 @@ boundaryField
     {
         type            prghTotalPressure;
         p0              $internalField;
-    }
-
-    defaultFaces
-    {
-        type            empty;
     }
 }
 

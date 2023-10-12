@@ -50,6 +50,7 @@ Description
 #include "timeSelector.H"
 #include "decompositionMethod.H"
 #include "PstreamReduceOps.H"
+#include "volFields.H"
 #include "fvMeshDistribute.H"
 #include "polyDistributionMap.H"
 #include "IOobjectList.H"

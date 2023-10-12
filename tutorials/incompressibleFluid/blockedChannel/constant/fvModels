@@ -27,12 +27,6 @@ volumeSource
     cellZone        volumeSource;
 
     volumetricFlowRate 0.00064;
-
-    fieldValues
-    {
-        U               (0 0 0);
-        tracer          1;
-    }
 }
 
 // ************************************************************************* //

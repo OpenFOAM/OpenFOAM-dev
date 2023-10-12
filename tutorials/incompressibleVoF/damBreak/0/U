@@ -20,17 +20,9 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    leftWall
-    {
-        type            noSlip;
-    }
+    #includeEtc "caseDicts/setConstraintTypes"
 
-    rightWall
-    {
-        type            noSlip;
-    }
-
-    lowerWall
+    wall
     {
         type            noSlip;
     }
@@ -39,11 +31,6 @@ boundaryField
     {
         type            pressureInletOutletVelocity;
         value           $internalField;
-    }
-
-    defaultFaces
-    {
-        type            empty;
     }
 }
 

@@ -4,8 +4,14 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial clean functions
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-cleanVoFCase && rm -rf 0 system
+cleanVoFCase
 
-find constant -type f -not -name fvModels.injection -delete
+find 0 -type f -not \( \
+    -name epsilon -or -name k -or -name U \
+    \) -delete
+
+find constant -type f -not -name fvModels -delete
+
+rm -rf system
 
 #------------------------------------------------------------------------------

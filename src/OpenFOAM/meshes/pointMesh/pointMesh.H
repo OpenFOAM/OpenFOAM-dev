@@ -36,6 +36,7 @@ Description
 #include "DemandDrivenMeshObject.H"
 #include "polyMesh.H"
 #include "pointBoundaryMesh.H"
+#include "pointFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -71,8 +72,15 @@ public:
 
     // Public Typedefs
 
+        //- Mesh type
         typedef pointMesh Mesh;
+
+        //- Boundary mesh type
         typedef pointBoundaryMesh BoundaryMesh;
+
+        //- Field source type
+        template<class Type>
+        using FieldSource = pointFieldSource<Type>;
 
 
     // Declare name of the class and its debug switch

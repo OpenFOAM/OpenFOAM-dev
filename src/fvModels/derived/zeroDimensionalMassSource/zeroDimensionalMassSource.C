@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "zeroDimensionalMassSource.H"
+#include "fvCellSet.H"
 #include "basicThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,7 +34,6 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(zeroDimensionalMassSourceBase, 0);
     defineTypeNameAndDebug(zeroDimensionalMassSource, 0);
     addToRunTimeSelectionTable(fvModel, zeroDimensionalMassSource, dictionary);
 }
@@ -42,144 +42,8 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::fv::zeroDimensionalMassSourceBase::calcM0D() const
-{
-    tmp<volScalarField> tm =
-        volScalarField::New
-        (
-            typedName("m0D"),
-            mesh(),
-            dimensionedScalar(dimMass, 0)
-        );
-
-    HashTable<const basicThermo*> thermos(mesh().lookupClass<basicThermo>());
-
-    forAllConstIter(HashTable<const basicThermo*>, thermos, thermoIter)
-    {
-        const basicThermo& thermo = *thermoIter();
-
-        tmp<volScalarField> tRho = thermo.rho();
-        const volScalarField& rho = tRho();
-
-        const word phaseName = thermo.phaseName();
-
-        if (thermo.phaseName() != word::null)
-        {
-            const volScalarField& alpha =
-                mesh().lookupObject<volScalarField>
-                (
-                    IOobject::groupName("alpha", phaseName)
-                );
-
-            tm.ref().ref() += alpha()*rho()*mesh().V();
-        }
-        else
-        {
-            tm.ref().ref() += rho()*mesh().V();
-        }
-    }
-
-    return tm;
-}
-
-
-Foam::volScalarField& Foam::fv::zeroDimensionalMassSourceBase::initM0D() const
-{
-    if (!mesh().foundObject<volScalarField>(typedName("m0D")))
-    {
-        volScalarField* mPtr =
-            new volScalarField
-            (
-                calcM0D()
-            );
-
-        mPtr->store();
-    }
-
-    return mesh().lookupObjectRef<volScalarField>(typedName("m0D"));
-}
-
-
-const Foam::volScalarField& Foam::fv::zeroDimensionalMassSourceBase::m() const
-{
-    // If not registered, then read or create the mass field
-    if (!mesh().foundObject<volScalarField>(typedName("m")))
-    {
-        typeIOobject<volScalarField> mIo
-        (
-            typedName("m"),
-            mesh().time().timeName(),
-            mesh(),
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        );
-
-        volScalarField* mPtr =
-            new volScalarField
-            (
-                mIo,
-                mesh(),
-                dimensionedScalar(dimMass, 0)
-            );
-
-        mPtr->store();
-
-        if (!mIo.headerOk())
-        {
-            *mPtr = m0D_;
-        }
-
-        volScalarField* factorPtr =
-            new volScalarField
-            (
-                IOobject
-                (
-                    typedName("factor"),
-                    mesh().time().timeName(),
-                    mesh(),
-                    IOobject::NO_READ,
-                    IOobject::AUTO_WRITE
-                ),
-                *mPtr/m0D_
-            );
-
-        factorPtr->store();
-    }
-
-    volScalarField& m =
-        mesh().lookupObjectRef<volScalarField>(typedName("m"));
-
-    volScalarField& factor =
-        mesh().lookupObjectRef<volScalarField>(typedName("factor"));
-
-    // Update the mass if changes are available
-    if (mesh().foundObject<volScalarField>(typedName("deltaM")))
-    {
-        volScalarField& deltaM =
-            mesh().lookupObjectRef<volScalarField>(typedName("deltaM"));
-
-        m = m.oldTime() + deltaM;
-
-        factor = m/m0D_;
-
-        deltaM.checkOut();
-    }
-
-    return m;
-}
-
-
-Foam::scalar Foam::fv::zeroDimensionalMassSourceBase::massFlowRate() const
-{
-    return zeroDimensionalMassFlowRate()*m0D_[0]/m()[0];
-}
-
-
 void Foam::fv::zeroDimensionalMassSource::readCoeffs()
 {
-    readFieldValues();
-
     zeroDimensionalMassFlowRate_.reset
     (
         Function1<scalar>::New("massFlowRate", coeffs()).ptr()
@@ -188,34 +52,13 @@ void Foam::fv::zeroDimensionalMassSource::readCoeffs()
 
 
 Foam::scalar
-Foam::fv::zeroDimensionalMassSource::zeroDimensionalMassFlowRate() const
+Foam::fv::zeroDimensionalMassSource::massFlowRate() const
 {
     return zeroDimensionalMassFlowRate_->value(mesh().time().userTimeValue());
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::fv::zeroDimensionalMassSourceBase::zeroDimensionalMassSourceBase
-(
-    const word& name,
-    const word& modelType,
-    const fvMesh& mesh,
-    const dictionary& dict
-)
-:
-    massSourceBase(name, modelType, mesh, dict),
-    m0D_(initM0D())
-{
-    if (mesh.nGeometricD() != 0)
-    {
-        FatalIOErrorInFunction(dict)
-            << "Zero-dimensional fvModel applied to a "
-            << mesh.nGeometricD() << "-dimensional mesh"
-            << exit(FatalIOError);
-    }
-}
-
 
 Foam::fv::zeroDimensionalMassSource::zeroDimensionalMassSource
 (
@@ -233,39 +76,6 @@ Foam::fv::zeroDimensionalMassSource::zeroDimensionalMassSource
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::fv::zeroDimensionalMassSourceBase::correct()
-{
-    // Correct the zero-dimensional mass
-    m0D_ = calcM0D();
-
-    // Create the mass change
-    if (!mesh().foundObject<volScalarField>(typedName("deltaM")))
-    {
-        volScalarField* dMPtr =
-            new volScalarField
-            (
-                IOobject
-                (
-                    typedName("deltaM"),
-                    mesh().time().timeName(),
-                    mesh()
-                ),
-                mesh(),
-                dimensionedScalar(dimMass, 0)
-            );
-
-        dMPtr->store();
-    }
-
-    volScalarField& deltaM =
-        mesh().lookupObjectRef<volScalarField>(typedName("deltaM"));
-
-    deltaM +=
-        mesh().time().deltaT()
-       *dimensionedScalar(dimMass/dimTime, zeroDimensionalMassFlowRate());
-}
-
 
 bool Foam::fv::zeroDimensionalMassSource::read(const dictionary& dict)
 {

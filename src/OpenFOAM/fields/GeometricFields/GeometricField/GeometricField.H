@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,7 @@ SourceFiles
 #include "lduInterfaceFieldPtrsList.H"
 #include "LduInterfaceFieldPtrsList.H"
 #include "GeometricBoundaryField.H"
+#include "GeometricFieldSources.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -103,6 +104,12 @@ public:
         //- Type of the boundary field
         typedef GeometricBoundaryField<Type, PatchField, GeoMesh> Boundary;
 
+        //- Type of the field source of which the Sources is composed
+        typedef typename GeoMesh::template FieldSource<Type> Source;
+
+        //- Type of the field sources
+        typedef GeometricFieldSources<Type, GeoMesh> Sources;
+
 
 private:
 
@@ -120,6 +127,9 @@ private:
 
         //- Boundary Type field containing boundary field values
         Boundary boundaryField_;
+
+        //- Type field sources containing field source values
+        Sources sources_;
 
 
     // Private Member Functions
@@ -163,7 +173,7 @@ public:
             const IOobject&,
             const Mesh&,
             const dimensionSet&,
-            const word& patchFieldType=PatchField<Type>::calculatedType()
+            const word& patchFieldType = PatchField<Type>::calculatedType()
         );
 
         //- Constructor given IOobject, mesh, dimensions and patch field types.
@@ -175,7 +185,8 @@ public:
             const Mesh&,
             const dimensionSet&,
             const wordList& wantedPatchTypes,
-            const wordList& actualPatchTypes = wordList()
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
         );
 
         //- Constructor given IOobject, mesh, dimensioned<Type>
@@ -185,7 +196,7 @@ public:
             const IOobject&,
             const Mesh&,
             const dimensioned<Type>&,
-            const word& patchFieldType=PatchField<Type>::calculatedType()
+            const word& patchFieldType = PatchField<Type>::calculatedType()
         );
 
         //- Constructor given IOobject, mesh, dimensioned<Type>
@@ -196,7 +207,8 @@ public:
             const Mesh&,
             const dimensioned<Type>&,
             const wordList& wantedPatchTypes,
-            const wordList& actualPatchTypes = wordList()
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
         );
 
         //- Constructor from components
@@ -204,7 +216,8 @@ public:
         (
             const IOobject&,
             const Internal&,
-            const PtrList<PatchField<Type>>&
+            const PtrList<PatchField<Type>>&,
+            const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
         //- Constructor from components
@@ -214,7 +227,8 @@ public:
             const Mesh&,
             const dimensionSet&,
             const Field<Type>&,
-            const PtrList<PatchField<Type>>&
+            const PtrList<PatchField<Type>>&,
+            const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
         //- Construct and read given IOobject
@@ -283,7 +297,8 @@ public:
             const IOobject&,
             const GeometricField<Type, PatchField, GeoMesh>&,
             const wordList& patchFieldTypes,
-            const wordList& actualPatchTypes = wordList()
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
         );
 
         //- Construct as copy resetting IO parameters and boundary types
@@ -292,7 +307,8 @@ public:
             const IOobject&,
             const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
             const wordList& patchFieldTypes,
-            const wordList& actualPatchTypes = wordList()
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
         );
 
         //- Clone
@@ -307,7 +323,8 @@ public:
         (
             const word& name,
             const Internal&,
-            const PtrList<PatchField<Type>>&
+            const PtrList<PatchField<Type>>&,
+            const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
         //- Return a temporary field constructed from name, mesh, dimensionSet
@@ -317,7 +334,7 @@ public:
             const word& name,
             const Mesh&,
             const dimensionSet&,
-            const word& patchFieldType=PatchField<Type>::calculatedType()
+            const word& patchFieldType = PatchField<Type>::calculatedType()
         );
 
         //- Return a temporary field constructed from mesh, dimensioned<Type>
@@ -327,7 +344,7 @@ public:
             const word& name,
             const Mesh&,
             const dimensioned<Type>&,
-            const word& patchFieldType=PatchField<Type>::calculatedType()
+            const word& patchFieldType = PatchField<Type>::calculatedType()
         );
 
         //- Return a temporary field constructed from mesh, dimensioned<Type>
@@ -338,7 +355,8 @@ public:
             const Mesh&,
             const dimensioned<Type>&,
             const wordList& patchFieldTypes,
-            const wordList& actualPatchTypes = wordList()
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
         );
 
         //- Rename temporary field and return
@@ -353,7 +371,7 @@ public:
         (
             const word& newName,
             const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
-            const word&
+            const word& patchFieldType
         );
 
         //- Rename and reset patch fields types of temporary field and return
@@ -362,7 +380,8 @@ public:
             const word& newName,
             const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
             const wordList& patchFieldTypes,
-            const wordList& actualPatchTypes = wordList()
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
         );
 
 
@@ -400,6 +419,9 @@ public:
 
         //- Return const-reference to the boundary field
         inline const Boundary& boundaryField() const;
+
+        //- Return const-reference to the sources
+        inline const Sources& sources() const;
 
         //- Return the time index of the field
         inline label timeIndex() const;

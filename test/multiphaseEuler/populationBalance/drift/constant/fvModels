@@ -18,15 +18,11 @@ waterSink
 {
     type            massSource;
 
+    phase           water;
+
     select          all;
 
     massFlowRate    -21.86682;
-
-    phase           water;
-    rho             rho.water;
-
-    fieldValues
-    {}
 }
 
 // ************************************************************************* //

@@ -38,4 +38,13 @@ boundaryField
     }
 }
 
+sources
+{
+    massSource
+    {
+        type            uniformFixedValue;
+        uniformValue    0;
+    }
+}
+
 // ************************************************************************* //

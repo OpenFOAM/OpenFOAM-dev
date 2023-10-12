@@ -71,10 +71,8 @@ See also
 #ifndef volumeSource_H
 #define volumeSource_H
 
-#include "fvModel.H"
-#include "fvCellSet.H"
-#include "HashPtrTable.H"
-#include "unknownTypeFunction1.H"
+#include "fvTotalSource.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -89,23 +87,17 @@ namespace fv
 
 class volumeSource
 :
-    public fvModel
+    public fvTotalSource
 {
 private:
 
     // Private Data
 
-        //- Name of the phase
-        word phaseName_;
-
-        //- Name of the volume fraction field
+        //- Name of the volume fraction field (if any)
         word alphaName_;
 
-        //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
-
-        //- Field values
-        HashPtrTable<unknownTypeFunction1> fieldValues_;
+        //- The set of cells the source applies to
+        autoPtr<fvCellSet> setPtr_;
 
         //- Volumetric flow rate
         autoPtr<Function1<scalar>> volumetricFlowRate_;
@@ -116,30 +108,11 @@ private:
         //- Non-virtual read
         void readCoeffs();
 
-        //- Return the volumetric flow rate
-        scalar volumetricFlowRate() const;
-
 
         // Sources
 
             //- Add a source term to an equation
             template<class Type>
-            void addSupType(fvMatrix<Type>& eqn) const;
-
-            //- Add a source term to a scalar equation
-            void addSupType(fvMatrix<scalar>& eqn) const;
-
-            //- Add a source term to an equation
-            template<class Type>
-            void addSupType
-            (
-                const dimensionedScalar& oneOrRho,
-                const VolField<Type>& field,
-                fvMatrix<Type>& eqn
-            ) const;
-
-            //- Add a source term to an equation
-            template<class Type>
             void addSupType
             (
                 const VolField<Type>& field,
@@ -149,7 +122,7 @@ private:
             //- Add a source term to a scalar equation
             void addSupType
             (
-                const volScalarField& field,
+                const volScalarField& alphaOrField,
                 fvMatrix<scalar>& eqn
             ) const;
 
@@ -157,7 +130,7 @@ private:
             template<class Type>
             void addSupType
             (
-                const volScalarField& rho,
+                const volScalarField& alphaOrRho,
                 const VolField<Type>& field,
                 fvMatrix<Type>& eqn
             ) const;
@@ -171,17 +144,6 @@ private:
                 const VolField<Type>& field,
                 fvMatrix<Type>& eqn
             ) const;
-
-
-protected:
-
-    // Protected Member Functions
-
-        //- Read the set
-        void readSet();
-
-        //- Read the field values
-        void readFieldValues();
 
 
 public:
@@ -201,27 +163,28 @@ public:
             const dictionary& dict
         );
 
-        //- Disallow default bitwise copy construction
-        volumeSource(const volumeSource&) = delete;
-
 
     // Member Functions
 
-        // Checks
+        // Access
 
-            //- Return true if the fvModel adds a source term to the given
-            //  field's transport equation
-            virtual bool addsSupToField(const word& fieldName) const;
+            //- Return the cells that the source applies to
+            virtual labelUList cells() const;
 
-            //- Return the list of fields for which the fvModel adds source term
-            //  to the transport equation
-            virtual wordList addSupFields() const;
+            //- Return the number of cells that the source applies to
+            virtual label nCells() const;
+
+            //- Return the volume of cells that the source applies to
+            virtual scalar V() const;
 
 
         // Sources
 
-            //- Add a source term to an equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_SUP)
+            //- Return the source value
+            virtual dimensionedScalar S() const;
+
+            //- Add a source term to a field-less proxy equation
+            virtual void addSup(fvMatrix<scalar>& eqn) const;
 
             //- Add a source term to an equation
             FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_FIELD_SUP)
@@ -252,12 +215,6 @@ public:
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const volumeSource&) = delete;
 };
 
 

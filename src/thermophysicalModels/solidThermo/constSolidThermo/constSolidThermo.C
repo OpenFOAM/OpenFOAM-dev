@@ -59,7 +59,8 @@ Foam::constSolidThermo::constSolidThermo
         ),
         Cv_*T_,
         this->heBoundaryTypes(),
-        this->heBoundaryBaseTypes()
+        this->heBoundaryBaseTypes(),
+        this->heSourcesTypes()
     )
 {
     rho_ = readProperty<scalar>("rho", rho_.dimensions());
@@ -136,6 +137,17 @@ Foam::tmp<Foam::scalarField> Foam::constSolidThermo::he
 ) const
 {
     return Cv_.boundaryField()[patchi]*T;
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::constSolidThermo::he
+(
+    const scalarField& T,
+    const fvSource& source
+) const
+{
+    NotImplemented;
+    return tmp<scalarField>(nullptr);
 }
 
 

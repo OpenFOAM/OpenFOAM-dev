@@ -103,12 +103,11 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::cellSetProperty
 
     auto Yslicer = this->Yslicer();
 
-    forAll(cells, celli)
+    forAll(cells, i)
     {
-        auto composition = this->cellComposition(Yslicer, cells[celli]);
+        auto composition = this->cellComposition(Yslicer, cells[i]);
 
-        psi[celli] =
-            ((this->*mixture)(composition).*psiMethod)(args[celli] ...);
+        psi[i] = ((this->*mixture)(composition).*psiMethod)(args[i] ...);
     }
 
     return tPsi;
@@ -148,11 +147,42 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::patchFieldProperty
 
 
 template<class MixtureType, class BasicThermoType>
+template<class Mixture, class Method, class ... Args>
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::fieldSourceProperty
+(
+    Mixture mixture,
+    Method psiMethod,
+    const fvSource& source,
+    const Args& ... args
+) const
+{
+    const labelUList cells = source.cells();
+
+    tmp<scalarField> tPsi(new scalarField(cells.size()));
+    scalarField& psi = tPsi.ref();
+
+    auto Yslicer = this->Yslicer(source);
+
+    forAll(cells, i)
+    {
+        auto composition =
+            this->sourceCellComposition(Yslicer, i);
+
+        psi[i] =
+            ((this->*mixture)(composition).*psiMethod)(args[i] ...);
+    }
+
+    return tPsi;
+}
+
+
+template<class MixtureType, class BasicThermoType>
 Foam::UIndirectList<Foam::scalar>
 Foam::BasicThermo<MixtureType, BasicThermoType>::cellSetScalarList
 (
     const volScalarField& psi,
-    const labelList& cells
+    const labelUList& cells
 )
 {
     return UIndirectList<scalar>(psi, cells);
@@ -164,7 +194,7 @@ Foam::UniformField<Foam::scalar>
 Foam::BasicThermo<MixtureType, BasicThermoType>::cellSetScalarList
 (
     const uniformGeometricScalarField& psi,
-    const labelList&
+    const labelUList&
 )
 {
     return psi.primitiveField();
@@ -230,7 +260,8 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::BasicThermo
             this->T_
         ),
         this->heBoundaryTypes(),
-        this->heBoundaryBaseTypes()
+        this->heBoundaryBaseTypes(),
+        this->heSourcesTypes()
     ),
 
     Cp_
@@ -338,6 +369,25 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::he
         &MixtureType::thermoMixtureType::HE,
         patchi,
         this->p_.boundaryField()[patchi],
+        T
+    );
+}
+
+
+template<class MixtureType, class BasicThermoType>
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::he
+(
+    const scalarField& T,
+    const fvSource& source
+) const
+{
+    return fieldSourceProperty
+    (
+        &MixtureType::thermoMixture,
+        &MixtureType::thermoMixtureType::HE,
+        source,
+        cellSetScalarList(this->p_, source.cells()),
         T
     );
 }

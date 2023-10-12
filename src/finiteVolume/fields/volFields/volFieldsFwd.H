@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,9 @@ class GeometricField;
 
 template<class Type>
 using VolField = GeometricField<Type, fvPatchField, volMesh>;
+
+template<class Type>
+class fvFieldSource;
 
 template<class Type>
 using VolInternalField = typename VolField<Type>::Internal;

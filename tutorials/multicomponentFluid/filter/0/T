@@ -56,5 +56,14 @@ boundaryField
     }
 }
 
+sources
+{
+    massSource
+    {
+        type            uniformInletOutlet;
+        uniformInletValue 450;
+    }
+}
+
 
 // ************************************************************************* //

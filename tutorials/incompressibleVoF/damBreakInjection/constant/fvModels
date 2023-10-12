@@ -10,27 +10,26 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      fvModels.injection;
+    object      fvModels;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+turbulenceDamping
+{
+    type            VoFTurbulenceDamping;
+
+    delta           1e-4;
+}
+
 injection
 {
-    type            massSource;
-
-    points          ((0.438 0.438 0.0073));
-
-    massFlowRate    0.3;
+    type            volumeSource;
 
     phase           water;
 
-    fieldValues
-    {
-        T.water         350;
-        U               (-1 0 0);
-        k               0.1;
-        epsilon         0.1;
-    }
+    points          ((0.438 0.438 0.0073));
+
+    volumetricFlowRate 0.0003;
 }
 
 

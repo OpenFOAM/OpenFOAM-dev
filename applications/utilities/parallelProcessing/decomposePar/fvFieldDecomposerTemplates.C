@@ -197,7 +197,8 @@ Foam::fvFieldDecomposer::decomposeVolField
                 procMeshes_[proci],
                 field.dimensions(),
                 Field<Type>(field.primitiveField(), cellProcAddressing_[proci]),
-                patchFields
+                patchFields,
+                field.sources().table()
             )
         );
 

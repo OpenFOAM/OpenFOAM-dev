@@ -85,4 +85,36 @@ Foam::psiuMulticomponentThermo::implementation::patchFaceComposition
 }
 
 
+Foam::PtrList<Foam::scalarField>
+Foam::psiuMulticomponentThermo::implementation::Yslicer
+(
+    const fvSource& source
+) const
+{
+    PtrList<scalarField> result(Y_.size());
+
+    forAll(Y_, i)
+    {
+        result.set
+        (
+            i,
+            Y_[i].sources()[source.name()].sourceValue(source).ptr()
+        );
+    }
+
+    return result;
+}
+
+
+inline Foam::scalarFieldListSlice
+Foam::psiuMulticomponentThermo::implementation::sourceCellComposition
+(
+    const PtrList<scalarField>& Yslicer,
+    const label i
+) const
+{
+    return scalarFieldListSlice(Yslicer, i);
+}
+
+
 // ************************************************************************* //

@@ -279,6 +279,15 @@ derivedFvsPatchFields = $(fvsPatchFields)/derived
 $(derivedFvsPatchFields)/polyFaces/polyFacesFvsPatchLabelField.C
 $(derivedFvsPatchFields)/nonConformalPolyFaces/nonConformalPolyFacesFvsPatchLabelField.C
 
+fvFieldSources = fields/fvFieldSources
+$(fvFieldSources)/fvFieldSource/fvFieldSources.C
+
+derivedFvFieldSources = $(fvFieldSources)/derived
+$(derivedFvFieldSources)/internal/internalFvFieldSources.C
+$(derivedFvFieldSources)/uniformFixedValue/uniformFixedValueFvFieldSources.C
+$(derivedFvFieldSources)/uniformInletOutlet/uniformInletOutletFvFieldSources.C
+$(derivedFvFieldSources)/turbulentIntensityKineticEnergy/turbulentIntensityKineticEnergyFvScalarFieldSource.C
+
 fields/volFields/volFields.C
 fields/surfaceFields/surfaceFields.C
 
@@ -508,6 +517,9 @@ fvConstraints = $(general)/fvConstraints
 $(fvConstraints)/fvConstraint.C
 $(fvConstraints)/fvConstraints.C
 $(fvConstraints)/includeFvConstraintEntry/includeFvConstraintEntry.C
+
+$(general)/fvSource/fvSource.C
+$(general)/fvSource/fvTotalSource.C
 
 cellSources = sets/cellSources
 $(cellSources)/fieldToCell/fieldToCell.C

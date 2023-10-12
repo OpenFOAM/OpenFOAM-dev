@@ -18,13 +18,12 @@ massSource
 {
     type            massSource;
 
+    phase           steam;
+
     points
     (
         (0.075 0.2 0.05)
     );
-
-    phase           steam;
-    rho             rho.steam;
 
     massFlowRate
     {
@@ -34,13 +33,6 @@ massSource
         duration        1e6;
         value           1e-3;
     }
-
-    fieldValues
-    {
-        U.steam         (0 10 0);
-        h.steam         3700000;
-    }
 }
-
 
 // ************************************************************************* //

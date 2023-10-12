@@ -30,12 +30,11 @@ Description
     isothermalFluid, compressibleVoF and multiphaseEuler. For incompressible
     solvers, use the volumeSource model instead.
 
-    If the mass flow rate is positive then user-supplied fixed property values
-    are introduced to the field equations. If the mass flow rate is negative
-    then properties are removed at their current value.
+    This model requires a corresponding field source to be specified for all
+    solved-for fields.
 
 Usage
-    Example usage:
+    Example usage for a constant mass flow rate applied to a cell set:
     \verbatim
     massSource
     {
@@ -45,21 +44,28 @@ Usage
         cellSet         massSource;
 
         massFlowRate    1e-4;
-
-        fieldValues
-        {
-            U               (10 0 0);
-            T               300;
-            k               0.375;
-            epsilon         14.855;
-        }
     }
     \endverbatim
 
-    If the mass flow rate is positive then values should be provided for all
-    solved for fields. Warnings will be issued if values are not provided for
-    fields for which transport equations are solved. Warnings will also be
-    issued if values are provided for fields which are not solved for.
+    Example usage for a pulsing flow rate applied at a point:
+    \verbatim
+    massSource
+    {
+        type            massSource;
+
+        select          points;
+        points          ((2.75 0.5 0));
+
+        massFlowRate
+        {
+            type            scale;
+            scale           squarePulse;
+            start           0.2;
+            duration        2;
+            value           1e-4;
+        }
+    }
+    \endverbatim
 
 SourceFiles
     massSource.C
@@ -72,10 +78,8 @@ See also
 #ifndef massSource_H
 #define massSource_H
 
-#include "fvModel.H"
-#include "fvCellSet.H"
-#include "HashPtrTable.H"
-#include "unknownTypeFunction1.H"
+#include "massSourceBase.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -83,176 +87,6 @@ namespace Foam
 {
 namespace fv
 {
-
-/*---------------------------------------------------------------------------*\
-                        Class massSourceBase Declaration
-\*---------------------------------------------------------------------------*/
-
-class massSourceBase
-:
-    public fvModel
-{
-private:
-
-    // Private Data
-
-        //- Name of the phase
-        word phaseName_;
-
-        //- Name of the density field
-        word rhoName_;
-
-        //- Name of the energy field
-        word heName_;
-
-        //- Name of the temperature field
-        word TName_;
-
-        //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
-
-        //- Field values
-        HashPtrTable<unknownTypeFunction1> fieldValues_;
-
-
-    // Private Member Functions
-
-        //- Non-virtual read
-        void readCoeffs();
-
-        //- Return the mass flow rate
-        virtual scalar massFlowRate() const = 0;
-
-
-        // Sources
-
-            //- Add a source term to an equation
-            template<class Type>
-            void addSupType
-            (
-                const VolField<Type>& field,
-                fvMatrix<Type>& eqn
-            ) const;
-
-            //- Add a source term to a scalar equation
-            void addSupType
-            (
-                const volScalarField& field,
-                fvMatrix<scalar>& eqn
-            ) const;
-
-            //- Add a source term to a compressible equation
-            template<class Type>
-            void addSupType
-            (
-                const volScalarField& rho,
-                const VolField<Type>& field,
-                fvMatrix<Type>& eqn
-            ) const;
-
-            //- Add a source term to a compressible scalar equation
-            void addSupType
-            (
-                const volScalarField& rho,
-                const volScalarField& field,
-                fvMatrix<scalar>& eqn
-            ) const;
-
-            //- Add a source term to a phase equation
-            template<class Type>
-            void addSupType
-            (
-                const volScalarField& alpha,
-                const volScalarField& rho,
-                const VolField<Type>& field,
-                fvMatrix<Type>& eqn
-            ) const;
-
-
-protected:
-
-    // Protected Member Functions
-
-        //- Read the set
-        void readSet();
-
-        //- Read the field values
-        void readFieldValues();
-
-
-public:
-
-    //- Runtime type information
-    TypeName("massSourceBase");
-
-
-    // Constructors
-
-        //- Construct from explicit source name and mesh
-        massSourceBase
-        (
-            const word& name,
-            const word& modelType,
-            const fvMesh& mesh,
-            const dictionary& dict
-        );
-
-        //- Disallow default bitwise copy construction
-        massSourceBase(const massSourceBase&) = delete;
-
-
-    // Member Functions
-
-        // Checks
-
-            //- Return true if the fvModel adds a source term to the given
-            //  field's transport equation
-            virtual bool addsSupToField(const word& fieldName) const;
-
-            //- Return the list of fields for which the fvModel adds source term
-            //  to the transport equation
-            virtual wordList addSupFields() const;
-
-
-        // Sources
-
-            //- Add a source term to an equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_FIELD_SUP)
-
-            //- Add a source term to a compressible equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_RHO_FIELD_SUP)
-
-            //- Add a source term to a phase equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP)
-
-
-        // Mesh changes
-
-            //- Update for mesh motion
-            virtual bool movePoints();
-
-            //- Update topology using the given map
-            virtual void topoChange(const polyTopoChangeMap&);
-
-            //- Update from another mesh using the given map
-            virtual void mapMesh(const polyMeshMap&);
-
-            //- Redistribute or update using the given distribution map
-            virtual void distribute(const polyDistributionMap&);
-
-
-        // IO
-
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const massSourceBase&) = delete;
-};
-
 
 /*---------------------------------------------------------------------------*\
                           Class massSource Declaration
@@ -266,6 +100,9 @@ private:
 
     // Private Data
 
+        //- The set of cells the source applies to
+        autoPtr<fvCellSet> setPtr_;
+
         //- Mass flow rate
         autoPtr<Function1<scalar>> massFlowRate_;
 
@@ -274,9 +111,6 @@ private:
 
         //- Non-virtual read
         void readCoeffs();
-
-        //- Return the mass flow rate
-        virtual scalar massFlowRate() const;
 
 
 public:
@@ -299,10 +133,41 @@ public:
 
     // Member Functions
 
-        // IO
+        // Access
 
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
+            //- Return the cells that the source applies to
+            virtual labelUList cells() const;
+
+            //- Return the number of cells that the source applies to
+            virtual label nCells() const;
+
+            //- Return the volume of cells that the source applies to
+            virtual scalar V() const;
+
+
+        // Sources
+
+            //- Return the source value
+            virtual dimensionedScalar S() const;
+
+
+        // Mesh changes
+
+            //- Update for mesh motion
+            virtual bool movePoints();
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap&);
+
+
+        //- Read source dictionary
+        virtual bool read(const dictionary& dict);
 };
 
 

@@ -30,6 +30,9 @@ Description
     for the mass that exits the domain due to expansion in space, so that the
     model correctly applies a total mass flow rate.
 
+    This model requires a corresponding field source to be specified for all
+    solved-for fields.
+
     This model will write out additional fields, zeroDimensionalMassSource:m
     and zeroDimensionalMassSource:factor. The zeroDimensionalMassSource:m field
     is the total accumulated mass; the sum of the starting mass, plus all mass
@@ -39,10 +42,6 @@ Description
     the ratio between the current mass or volume and the total accumulated mass
     or volume.
 
-    If the mass flow rate is positive then user-supplied fixed property values
-    are introduced to the field equations. If the mass flow rate is negative
-    then properties are removed at their current value.
-
 Usage
     Example usage:
     \verbatim
@@ -51,21 +50,8 @@ Usage
         type            zeroDimensionalMassSource;
 
         massFlowRate    1e-4;
-
-        fieldValues
-        {
-            U               (10 0 0);
-            T               300;
-            k               0.375;
-            epsilon         14.855;
-        }
     }
     \endverbatim
-
-    If the mass flow rate is positive then values should be provided for all
-    solved for fields. Warnings will be issued if values are not provided for
-    fields for which transport equations are solved. Warnings will also be
-    issued if values are provided for fields which are not solved for.
 
 SourceFiles
     zeroDimensionalMassSource.C
@@ -75,7 +61,8 @@ SourceFiles
 #ifndef zeroDimensionalMassSource_H
 #define zeroDimensionalMassSource_H
 
-#include "massSource.H"
+#include "zeroDimensionalMassSourceBase.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -83,65 +70,6 @@ namespace Foam
 {
 namespace fv
 {
-
-/*---------------------------------------------------------------------------*\
-                  Class zeroDimensionalMassSourceBase Declaration
-\*---------------------------------------------------------------------------*/
-
-class zeroDimensionalMassSourceBase
-:
-    public massSourceBase
-{
-private:
-
-    // Private Data
-
-        //- Reference to the zero-dimensional mass
-        volScalarField& m0D_;
-
-
-    // Private Member Functions
-
-        //- Calculate and return the zero-dimensional mass
-        tmp<volScalarField> calcM0D() const;
-
-        //- Initialise and return a reference to the zero-dimensional mass
-        volScalarField& initM0D() const;
-
-        //- Get a reference to the mass
-        const volScalarField& m() const;
-
-        //- Return the zero-dimensional mass flow rate
-        virtual scalar zeroDimensionalMassFlowRate() const = 0;
-
-        //- Return the mass flow rate
-        virtual scalar massFlowRate() const;
-
-
-public:
-
-    //- Runtime type information
-    TypeName("zeroDimensionalMassSourceBase");
-
-
-    // Constructors
-
-        //- Construct from explicit source name and mesh
-        zeroDimensionalMassSourceBase
-        (
-            const word& name,
-            const word& modelType,
-            const fvMesh& mesh,
-            const dictionary& dict
-        );
-
-
-    // Member Functions
-
-        //- Update the model
-        virtual void correct();
-};
-
 
 /*---------------------------------------------------------------------------*\
                     Class zeroDimensionalMassSource Declaration
@@ -164,8 +92,8 @@ private:
         //- Non-virtual read
         void readCoeffs();
 
-        //- Return the zero-dimensional mass flow rate
-        virtual scalar zeroDimensionalMassFlowRate() const;
+        //- Return the mass flow rate
+        virtual scalar massFlowRate() const;
 
 
 public:
@@ -188,10 +116,8 @@ public:
 
     // Member Functions
 
-        // IO
-
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
+        //- Read source dictionary
+        virtual bool read(const dictionary& dict);
 };
 
 

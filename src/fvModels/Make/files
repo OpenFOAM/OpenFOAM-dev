@@ -24,9 +24,11 @@ derived/accelerationSource/accelerationSource.C
 derived/volumeFractionSource/volumeFractionSource.C
 derived/solidEquilibriumEnergySource/solidEquilibriumEnergySource.C
 derived/volumeSource/volumeSource.C
+derived/massSource/massSourceBase.C
 derived/massSource/massSource.C
 derived/heatSource/heatSource.C
 derived/heatTransfer/heatTransfer.C
+derived/zeroDimensionalMassSource/zeroDimensionalMassSourceBase.C
 derived/zeroDimensionalMassSource/zeroDimensionalMassSource.C
 
 interRegion/interRegionModel/interRegionModel.C

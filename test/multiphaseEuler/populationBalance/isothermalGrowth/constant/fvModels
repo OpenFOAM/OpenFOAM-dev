@@ -18,24 +18,11 @@ massSource
 {
     type            massSource;
 
-    select          cellZone;
+    phase           air1;
+
     cellZone        injection;
 
     massFlowRate    1e-3;
-
-    phase           air1;
-    rho             rho.air1;
-
-    fieldValues
-    {
-        f0.air1     1;
-        f1.air1     0;
-        f2.air1     0;
-        f3.air1     0;
-        f4.air1     0;
-        f5.air1     0;
-        U.air1      (0 0 0);
-    }
 }
 
 // ************************************************************************* //

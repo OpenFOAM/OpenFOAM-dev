@@ -25,7 +25,6 @@ License
 
 #include "massSource.H"
 #include "fvMatrices.H"
-#include "basicThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -34,7 +33,6 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(massSourceBase, 0);
     defineTypeNameAndDebug(massSource, 0);
     addToRunTimeSelectionTable(fvModel, massSource, dictionary);
 }
@@ -43,211 +41,9 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::massSourceBase::readCoeffs()
-{
-    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
-
-    rhoName_ =
-        coeffs().lookupOrDefault<word>
-        (
-            "rho",
-            IOobject::groupName("rho", phaseName_)
-        );
-
-    if
-    (
-        mesh().foundObject<basicThermo>
-        (
-            IOobject::groupName(physicalProperties::typeName, phaseName_)
-        )
-    )
-    {
-        const basicThermo& thermo =
-            mesh().lookupObject<basicThermo>
-            (
-                IOobject::groupName(physicalProperties::typeName, phaseName_)
-            );
-        heName_ = thermo.he().name();
-        TName_ = thermo.T().name();
-    }
-}
-
-
-template<class Type>
-void Foam::fv::massSourceBase::addSupType
-(
-    const VolField<Type>& field,
-    fvMatrix<Type>& eqn
-) const
-{
-    FatalErrorInFunction
-        << "Cannot add a mass source for field " << field.name()
-        << " because this field's equation is not in mass-conservative form"
-        << exit(FatalError);
-}
-
-
-void Foam::fv::massSourceBase::addSupType
-(
-    const volScalarField& field,
-    fvMatrix<scalar>& eqn
-) const
-{
-    // Continuity equation. Add the mass flow rate.
-    if (field.name() == rhoName_)
-    {
-        const labelUList cells = set_.cells();
-
-        const scalar massFlowRate = this->massFlowRate();
-
-        forAll(cells, i)
-        {
-            eqn.source()[cells[i]] -=
-                mesh().V()[cells[i]]/set_.V()*massFlowRate;
-        }
-
-        return;
-    }
-
-    // Non-mass conservative property equation. Fail.
-    addSupType<scalar>(field, eqn);
-}
-
-
-template<class Type>
-void Foam::fv::massSourceBase::addSupType
-(
-    const volScalarField& rho,
-    const VolField<Type>& field,
-    fvMatrix<Type>& eqn
-) const
-{
-    const labelUList cells = set_.cells();
-
-    const scalar massFlowRate = this->massFlowRate();
-
-    // Property equation. If the source is positive, introduce the value
-    // specified by the user. If negative, then sink the current internal value
-    // using an implicit term.
-    if (massFlowRate > 0)
-    {
-        const Type value =
-            fieldValues_[field.name()]->template value<Type>
-            (
-                mesh().time().userTimeValue()
-            );
-
-        forAll(cells, i)
-        {
-            eqn.source()[cells[i]] -=
-                mesh().V()[cells[i]]/set_.V()*massFlowRate*value;
-        }
-    }
-    else
-    {
-        forAll(cells, i)
-        {
-            eqn.diag()[cells[i]] +=
-                mesh().V()[cells[i]]/set_.V()*massFlowRate;
-        }
-    }
-}
-
-
-void Foam::fv::massSourceBase::addSupType
-(
-    const volScalarField& rho,
-    const volScalarField& field,
-    fvMatrix<scalar>& eqn
-) const
-{
-    // Multiphase continuity equation. Same source as single-phase case.
-    if (field.name() == rhoName_)
-    {
-        addSupType(field, eqn);
-        return;
-    }
-
-    // Energy equation. Special handling for if temperature is specified.
-    if (field.name() == heName_ && fieldValues_.found(TName_))
-    {
-        const labelUList cells = set_.cells();
-
-        const scalar massFlowRate = this->massFlowRate();
-
-        if (massFlowRate > 0)
-        {
-            if (fieldValues_.found(heName_))
-            {
-                WarningInFunction
-                    << "Source " << name() << " defined for both field "
-                    << heName_ << " and " << TName_
-                    << ". Only one of these should be present." << endl;
-            }
-
-            const basicThermo& thermo =
-                mesh().lookupObject<basicThermo>
-                (
-                    IOobject::groupName
-                    (
-                        physicalProperties::typeName,
-                        phaseName_
-                    )
-                );
-
-            const scalar T =
-                fieldValues_[TName_]->value<scalar>
-                (
-                    mesh().time().userTimeValue()
-                );
-
-            const scalarField hs
-            (
-                thermo.hs(scalarField(cells.size(), T), cells)
-            );
-
-            forAll(cells, i)
-            {
-                eqn.source()[cells[i]] -=
-                    mesh().V()[cells[i]]/set_.V()*massFlowRate*hs[i];
-            }
-        }
-        else
-        {
-            forAll(cells, i)
-            {
-                eqn.diag()[cells[i]] +=
-                    mesh().V()[cells[i]]/set_.V()*massFlowRate;
-            }
-        }
-
-        return;
-    }
-
-    // Property equation
-    addSupType<scalar>(rho, field, eqn);
-}
-
-
-template<class Type>
-void Foam::fv::massSourceBase::addSupType
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    const VolField<Type>& field,
-    fvMatrix<Type>& eqn
-) const
-{
-    // Multiphase property equation. Same source as the single phase case.
-    addSupType(rho, field, eqn);
-}
-
-
 void Foam::fv::massSource::readCoeffs()
 {
-    readSet();
-
-    readFieldValues();
+    setPtr_->read(coeffs());
 
     massFlowRate_.reset
     (
@@ -256,56 +52,7 @@ void Foam::fv::massSource::readCoeffs()
 }
 
 
-Foam::scalar Foam::fv::massSource::massFlowRate() const
-{
-    return massFlowRate_->value(mesh().time().userTimeValue());
-}
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void Foam::fv::massSourceBase::readSet()
-{
-    set_.read(coeffs());
-}
-
-
-void Foam::fv::massSourceBase::readFieldValues()
-{
-    fieldValues_.clear();
-    const dictionary& fieldCoeffs = coeffs().subDict("fieldValues");
-    forAllConstIter(dictionary, fieldCoeffs, iter)
-    {
-        fieldValues_.set
-        (
-            iter().keyword(),
-            new unknownTypeFunction1(iter().keyword(), fieldCoeffs)
-        );
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::fv::massSourceBase::massSourceBase
-(
-    const word& name,
-    const word& modelType,
-    const fvMesh& mesh,
-    const dictionary& dict
-)
-:
-    fvModel(name, modelType, mesh, dict),
-    phaseName_(),
-    rhoName_(),
-    heName_(),
-    TName_(),
-    set_(fvCellSet(mesh)),
-    fieldValues_()
-{
-    readCoeffs();
-}
-
 
 Foam::fv::massSource::massSource
 (
@@ -316,6 +63,7 @@ Foam::fv::massSource::massSource
 )
 :
     massSourceBase(name, modelType, mesh, dict),
+    setPtr_(new fvCellSet(mesh)),
     massFlowRate_()
 {
     readCoeffs();
@@ -324,101 +72,57 @@ Foam::fv::massSource::massSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::massSourceBase::addsSupToField(const word& fieldName) const
+Foam::labelUList Foam::fv::massSource::cells() const
 {
-    const bool isMixture = IOobject::group(fieldName) == word::null;
-    const bool isThisPhase = IOobject::group(fieldName) == phaseName_;
-
-    if
-    (
-        (isMixture || isThisPhase)
-     && massFlowRate() > 0
-     && !(fieldName == rhoName_)
-     && !(fieldName == heName_ && fieldValues_.found(TName_))
-     && !fieldValues_.found(fieldName)
-    )
-    {
-        WarningInFunction
-            << "No value supplied for field " << fieldName << " in "
-            << type() << " fvModel " << name() << endl;
-
-        return false;
-    }
-
-    return isMixture || isThisPhase;
+    return setPtr_->cells();
 }
 
 
-Foam::wordList Foam::fv::massSourceBase::addSupFields() const
+Foam::label Foam::fv::massSource::nCells() const
 {
-    wordList fieldNames = fieldValues_.toc();
-
-    if (fieldValues_.found(TName_))
-    {
-        fieldNames[findIndex(fieldNames, TName_)] = heName_;
-    }
-
-    return fieldNames;
+    return setPtr_->nCells();
 }
 
 
-FOR_ALL_FIELD_TYPES
-(
-    IMPLEMENT_FV_MODEL_ADD_FIELD_SUP,
-    fv::massSourceBase
-)
-
-
-FOR_ALL_FIELD_TYPES
-(
-    IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP,
-    fv::massSourceBase
-)
-
-
-FOR_ALL_FIELD_TYPES
-(
-    IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP,
-    fv::massSourceBase
-)
-
-
-bool Foam::fv::massSourceBase::movePoints()
+Foam::scalar Foam::fv::massSource::V() const
 {
-    set_.movePoints();
+    return setPtr_->V();
+}
+
+
+Foam::dimensionedScalar Foam::fv::massSource::S() const
+{
+    return
+        dimensionedScalar
+        (
+            dimMass/dimTime,
+            massFlowRate_->value(mesh().time().userTimeValue())
+        );
+}
+
+
+bool Foam::fv::massSource::movePoints()
+{
+    setPtr_->movePoints();
     return true;
 }
 
 
-void Foam::fv::massSourceBase::topoChange(const polyTopoChangeMap& map)
+void Foam::fv::massSource::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    setPtr_->topoChange(map);
 }
 
 
-void Foam::fv::massSourceBase::mapMesh(const polyMeshMap& map)
+void Foam::fv::massSource::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    setPtr_->mapMesh(map);
 }
 
 
-void Foam::fv::massSourceBase::distribute(const polyDistributionMap& map)
+void Foam::fv::massSource::distribute(const polyDistributionMap& map)
 {
-    set_.distribute(map);
-}
-
-
-bool Foam::fv::massSourceBase::read(const dictionary& dict)
-{
-    if (fvModel::read(dict))
-    {
-        readCoeffs();
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    setPtr_->distribute(map);
 }
 
 

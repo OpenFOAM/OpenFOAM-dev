@@ -78,11 +78,25 @@ public:
         inline GeometricFieldListSlicer
         (
             const typename geoFieldType::Mesh& mesh,
-            const PtrList<geoFieldType>& geoFields
+            const UPtrList<const geoFieldType>& geoFields
         )
         {
             set(mesh, geoFields);
         }
+
+        //- Construct from a mesh and a list of fields
+        inline GeometricFieldListSlicer
+        (
+            const typename geoFieldType::Mesh& mesh,
+            const UPtrList<geoFieldType>& geoFields
+        )
+        :
+            GeometricFieldListSlicer
+            (
+                mesh,
+                reinterpret_cast<const UPtrList<const geoFieldType>&>(geoFields)
+            )
+        {}
 
 
     // Member Functions
@@ -91,7 +105,7 @@ public:
         inline void set
         (
             const typename geoFieldType::Mesh& mesh,
-            const PtrList<geoFieldType>& geoFields
+            const UPtrList<const geoFieldType>& geoFields
         )
         {
             fields_.resize(geoFields.size());

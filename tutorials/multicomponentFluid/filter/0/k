@@ -56,5 +56,14 @@ boundaryField
     }
 }
 
+sources
+{
+    massSource
+    {
+        type            turbulentIntensityKineticEnergy;
+        intensity       0.05;
+    }
+}
+
 
 // ************************************************************************* //

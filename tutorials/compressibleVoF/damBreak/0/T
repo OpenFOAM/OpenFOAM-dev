@@ -20,17 +20,9 @@ internalField   uniform 300;
 
 boundaryField
 {
-    leftWall
-    {
-        type            zeroGradient;
-    }
+    #includeEtc "caseDicts/setConstraintTypes"
 
-    rightWall
-    {
-        type            zeroGradient;
-    }
-
-    lowerWall
+    wall
     {
         type            zeroGradient;
     }
@@ -39,11 +31,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      $internalField;
-    }
-
-    defaultFaces
-    {
-        type            empty;
     }
 }
 

@@ -20,4 +20,13 @@ internalField   uniform (0 0 0);
 
 boundaryField   {}
 
+sources
+{
+    waterSource
+    {
+        type        uniformFixedValue;
+        uniformValue (0 0 0);
+    }
+}
+
 // ************************************************************************* //

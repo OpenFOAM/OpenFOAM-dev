@@ -20,19 +20,9 @@ internalField   uniform 11.1;
 
 boundaryField
 {
-    leftWall
-    {
-        type            omegaWallFunction;
-        value           $internalField;
-    }
+    #includeEtc "caseDicts/setConstraintTypes"
 
-    rightWall
-    {
-        type            omegaWallFunction;
-        value           $internalField;
-    }
-
-    lowerWall
+    wall
     {
         type            omegaWallFunction;
         value           $internalField;
@@ -43,11 +33,6 @@ boundaryField
         type            inletOutlet;
         inletValue      $internalField;
         value           $internalField;
-    }
-
-    defaultFaces
-    {
-        type            empty;
     }
 }
 

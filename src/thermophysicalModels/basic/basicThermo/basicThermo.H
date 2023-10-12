@@ -121,6 +121,10 @@ protected:
         //  by interrogating the temperature field boundary types
         wordList heBoundaryBaseTypes();
 
+        //- Enthalpy/internal energy field sources types
+        //  by interrogating the temperature field sources types
+        HashTable<word> heSourcesTypes();
+
 
 public:
 
@@ -153,8 +157,9 @@ public:
             return IOobject::groupName(name, phaseName);
         }
 
-        //- Lookup the thermo associated with the given patch field
-        static const basicThermo& lookupThermo(const fvPatchScalarField& pf);
+        //- Lookup the thermo associated with the given field
+        template<class FieldType>
+        static const basicThermo& lookupThermo(const FieldType& f);
 
         //- Split name of thermo package into a list of the components names
         static wordList splitThermoName
@@ -282,6 +287,13 @@ public:
             (
                 const scalarField& T,
                 const label patchi
+            ) const = 0;
+
+            //- Enthalpy/Internal energy for source [J/kg]
+            virtual tmp<scalarField> he
+            (
+                const scalarField& T,
+                const fvSource& source
             ) const = 0;
 
             //- Sensible enthalpy [J/kg]

@@ -18,17 +18,13 @@ waterSource
 {
     type            massSource;
 
+    phase           water;
+
     select          all;
 
     massFlowRate    30.785654;
 
-    phase           water;
     rho             rho.water;
-
-    fieldValues
-    {
-        U.water     (0 0 0);
-    }
 }
 
 // ************************************************************************* //

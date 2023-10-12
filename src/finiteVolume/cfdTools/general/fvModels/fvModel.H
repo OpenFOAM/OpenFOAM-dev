@@ -36,7 +36,7 @@ SourceFiles
 #define fvModel_H
 
 #include "fvMatricesFwd.H"
-#include "volFields.H"
+#include "volFieldsFwd.H"
 #include "dictionary.H"
 #include "dimensionSet.H"
 #include "fvModelM.H"
@@ -79,10 +79,6 @@ class fvModel
 protected:
 
     // Protected Member Functions
-
-        //- Add a source term to an equation
-        template<class Type>
-        void addSupType(fvMatrix<Type>& eqn) const;
 
         //- Add a source term to an equation
         template<class Type>
@@ -274,8 +270,8 @@ public:
 
         // Sources
 
-            //- Add a source term to an equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_SUP)
+            //- Add a source term to a field-less proxy equation
+            virtual void addSup(fvMatrix<scalar>& eqn) const;
 
             //- Add a source term to an equation
             FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_FIELD_SUP)

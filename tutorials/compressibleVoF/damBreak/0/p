@@ -20,19 +20,9 @@ internalField   uniform 1e5;
 
 boundaryField
 {
-    leftWall
-    {
-        type            calculated;
-        value           $internalField;
-    }
+    #includeEtc "caseDicts/setConstraintTypes"
 
-    rightWall
-    {
-        type            calculated;
-        value           $internalField;
-    }
-
-    lowerWall
+    wall
     {
         type            calculated;
         value           $internalField;
@@ -42,11 +32,6 @@ boundaryField
     {
         type            calculated;
         value           $internalField;
-    }
-
-    defaultFaces
-    {
-        type            empty;
     }
 }
 

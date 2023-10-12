@@ -21,9 +21,9 @@ boundaryField
 {
     top
     {
-        type                pressureInletOutletVelocity;
-        phi                 phi.air;
-        value               $internalField;
+        type           pressureInletOutletVelocity;
+        phi            phi.air;
+        value          $internalField;
     }
     walls
     {

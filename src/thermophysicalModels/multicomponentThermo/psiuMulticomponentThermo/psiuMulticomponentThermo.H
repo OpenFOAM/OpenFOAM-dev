@@ -270,6 +270,16 @@ public:
             const label patchi,
             const label facei
         ) const;
+
+        //- Get the slicer for the given source
+        inline PtrList<scalarField> Yslicer(const fvSource& source) const;
+
+        //- Get the composition of a source cell
+        inline scalarFieldListSlice sourceCellComposition
+        (
+            const PtrList<scalarField>& Yslicer,
+            const label i
+        ) const;
 };
 
 

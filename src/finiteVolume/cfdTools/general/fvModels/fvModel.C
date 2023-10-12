@@ -35,12 +35,7 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::fvModel::addSupType(fvMatrix<Type>& eqn) const
-{}
-
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
 void Foam::fvModel::addSupType
@@ -180,7 +175,8 @@ Foam::scalar Foam::fvModel::maxDeltaT() const
 }
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_SUP, fvModel)
+void Foam::fvModel::addSup(fvMatrix<scalar>& eqn) const
+{}
 
 
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_FIELD_SUP, fvModel)

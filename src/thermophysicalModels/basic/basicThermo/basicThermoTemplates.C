@@ -244,6 +244,42 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
 }
 
 
+template<class FieldType>
+const Foam::basicThermo& Foam::basicThermo::lookupThermo
+(
+    const FieldType& f
+)
+{
+    const word& name = physicalProperties::typeName;
+
+    if (f.db().template foundObject<basicThermo>(name))
+    {
+        return f.db().template lookupObject<basicThermo>(name);
+    }
+    else
+    {
+        HashTable<const basicThermo*> thermos =
+            f.db().template lookupClass<basicThermo>();
+
+        for
+        (
+            HashTable<const basicThermo*>::iterator iter = thermos.begin();
+            iter != thermos.end();
+            ++iter
+        )
+        {
+            if (&(iter()->he().internalField()) == &(f.internalField()))
+            {
+                return *iter();
+            }
+        }
+    }
+
+    return f.db().template lookupObject<basicThermo>(name);
+}
+
+
+
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class Thermo>

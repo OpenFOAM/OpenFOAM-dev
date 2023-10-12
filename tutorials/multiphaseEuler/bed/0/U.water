@@ -21,13 +21,22 @@ boundaryField
 {
     top
     {
-        type                pressureInletOutletVelocity;
-        phi                 phi.water;
-        value               $internalField;
+        type            pressureInletOutletVelocity;
+        phi             phi.water;
+        value           $internalField;
     }
     walls
     {
         type            noSlip;
+    }
+}
+
+sources
+{
+    massSource
+    {
+        type            uniformInletOutlet;
+        uniformInletValue (0 0 0);
     }
 }
 

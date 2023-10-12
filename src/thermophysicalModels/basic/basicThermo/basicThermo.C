@@ -32,7 +32,7 @@ License
 #include "mixedEnergyCalculatedTemperatureFvPatchScalarField.H"
 #include "fixedJumpFvPatchFields.H"
 #include "energyJumpFvPatchScalarField.H"
-
+#include "energyFvScalarFieldSource.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -74,42 +74,6 @@ Foam::volScalarField& Foam::basicThermo::lookupOrConstruct
     }
 
     return mesh.objectRegistry::lookupObjectRef<volScalarField>(name);
-}
-
-
-const Foam::basicThermo& Foam::basicThermo::lookupThermo
-(
-    const fvPatchScalarField& pf
-)
-{
-    if (pf.db().foundObject<basicThermo>(physicalProperties::typeName))
-    {
-        return pf.db().lookupObject<basicThermo>(physicalProperties::typeName);
-    }
-    else
-    {
-        HashTable<const basicThermo*> thermos =
-            pf.db().lookupClass<basicThermo>();
-
-        for
-        (
-            HashTable<const basicThermo*>::iterator iter = thermos.begin();
-            iter != thermos.end();
-            ++iter
-        )
-        {
-            if
-            (
-                &(iter()->he().internalField())
-             == &(pf.internalField())
-            )
-            {
-                return *iter();
-            }
-        }
-    }
-
-    return pf.db().lookupObject<basicThermo>(physicalProperties::typeName);
 }
 
 
@@ -255,6 +219,20 @@ Foam::wordList Foam::basicThermo::heBoundaryTypes()
     }
 
     return hbt;
+}
+
+
+Foam::HashTable<Foam::word> Foam::basicThermo::heSourcesTypes()
+{
+    const HashTable<word> tst = T().sources().types();
+
+    HashTable<word> hst;
+    forAllConstIter(typename HashTable<word>, tst, iter)
+    {
+        hst.set(iter.key(), energyFvScalarFieldSource::typeName);
+    }
+
+    return hst;
 }
 
 

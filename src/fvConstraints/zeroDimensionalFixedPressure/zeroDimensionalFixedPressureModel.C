@@ -81,8 +81,9 @@ void Foam::fv::zeroDimensionalFixedPressureModel::addSupType
 ) const
 {
     FatalErrorInFunction
-        << "Cannot add a fixed pressure source of field " << field.name()
-        << " because this field's equation is not in mass-conservative form"
+        << "Cannot add a fixed pressure source for field " << field.name()
+        << " to equation for " << eqn.psi().name() << " because this field's "
+        << "equation was not recognised as being in mass-conservative form"
         << exit(FatalError);
 }
 

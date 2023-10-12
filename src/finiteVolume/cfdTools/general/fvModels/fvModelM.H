@@ -23,15 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#define DEFINE_FV_MODEL_ADD_SUP(Type, nullArg)                                 \
-    virtual void addSup(fvMatrix<Type>& eqn) const;
-
-#define IMPLEMENT_FV_MODEL_ADD_SUP(Type, modelType)                            \
-    void Foam::modelType::addSup(fvMatrix<Type>& eqn) const                    \
-    {                                                                          \
-        addSupType(eqn);                                                       \
-    }
-
 #define DEFINE_FV_MODEL_ADD_FIELD_SUP(Type, nullArg)                           \
     virtual void addSup                                                        \
     (                                                                          \

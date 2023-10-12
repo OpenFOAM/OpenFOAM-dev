@@ -18,25 +18,21 @@ massSource
 {
     type            massSource;
 
-    points          ((0.075 0.925 0.05));
+    phase           water;
+
+    points
+    (
+        (0.075 0.925 0.05)
+    );
 
     massFlowRate
     {
-        type square;
-        amplitude 0.5;
-        frequency 0.5;
-        level 0.5;
-        markSpace 0.3333;
-    }
-
-    phase           water;
-    rho             rho.water;
-
-    fieldValues
-    {
-        U.water         (0 0 0);
+        type            square;
+        amplitude       0.5;
+        frequency       0.5;
+        level           0.5;
+        markSpace       0.3333;
     }
 }
-
 
 // ************************************************************************* //

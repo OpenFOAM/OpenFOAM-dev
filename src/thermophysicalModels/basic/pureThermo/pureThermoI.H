@@ -54,4 +54,20 @@ inline Foam::nil Foam::pureThermo::patchFaceComposition
 }
 
 
+inline Foam::nil Foam::pureThermo::Yslicer(const fvSource&) const
+{
+    return nil();
+}
+
+
+inline Foam::nil Foam::pureThermo::sourceCellComposition
+(
+    const nil,
+    const label i
+) const
+{
+    return nil();
+}
+
+
 // ************************************************************************* //

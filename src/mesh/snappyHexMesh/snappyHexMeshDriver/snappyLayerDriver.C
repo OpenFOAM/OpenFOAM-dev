@@ -28,6 +28,7 @@ Description
 
 #include "snappyLayerDriver.H"
 #include "fvMesh.H"
+#include "volFields.H"
 #include "Time.H"
 #include "meshRefinement.H"
 #include "removePoints.H"

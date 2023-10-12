@@ -262,6 +262,13 @@ public:
                 const label patchi
             ) const;
 
+            //- Enthalpy/Internal energy for source [J/kg]
+            virtual tmp<scalarField> he
+            (
+                const scalarField& T,
+                const fvSource& source
+            ) const;
+
             //- Sensible enthalpy [J/kg]
             virtual tmp<volScalarField> hs() const;
 

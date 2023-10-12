@@ -292,7 +292,8 @@ Foam::fvFieldReconstructor::reconstructVolField
             completeMesh_,
             procFields[0].dimensions(),
             internalField,
-            patchFields
+            patchFields,
+            procFields[0].sources().table()
         )
     );
 }

@@ -55,6 +55,17 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::readFields
 
     boundaryField_.readField(*this, dict.subDict("boundaryField"));
 
+    // Don't use subOrEmptyDict here, or line numbers will be lost from any IO
+    // error messages. Use an actual sub-dict reference here if possible.
+    if (dict.found("sources"))
+    {
+        sources_.readField(*this, dict.subDict("sources"));
+    }
+    else
+    {
+        sources_.readField(*this, dictionary(dict, dictionary()));
+    }
+
     if (dict.found("referenceLevel"))
     {
         Type fieldAverage(pTraits<Type>(dict.lookup("referenceLevel")));
@@ -191,7 +202,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(mesh.boundary(), *this, patchFieldType)
+    boundaryField_(mesh.boundary(), *this, patchFieldType),
+    sources_()
 {
     if (debug)
     {
@@ -209,14 +221,16 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const Mesh& mesh,
     const dimensionSet& ds,
     const wordList& patchFieldTypes,
-    const wordList& actualPatchTypes
+    const wordList& actualPatchTypes,
+    const HashTable<word>& fieldSourceTypes
 )
 :
     Internal(io, mesh, ds, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(mesh.boundary(), *this, patchFieldTypes, actualPatchTypes)
+    boundaryField_(mesh.boundary(), *this, patchFieldTypes, actualPatchTypes),
+    sources_(*this, fieldSourceTypes)
 {
     if (debug)
     {
@@ -240,7 +254,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(mesh.boundary(), *this, patchFieldType)
+    boundaryField_(mesh.boundary(), *this, patchFieldType),
+    sources_()
 {
     if (debug)
     {
@@ -260,14 +275,16 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const Mesh& mesh,
     const dimensioned<Type>& dt,
     const wordList& patchFieldTypes,
-    const wordList& actualPatchTypes
+    const wordList& actualPatchTypes,
+    const HashTable<word>& fieldSourceTypes
 )
 :
     Internal(io, mesh, dt, false),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(mesh.boundary(), *this, patchFieldTypes, actualPatchTypes)
+    boundaryField_(mesh.boundary(), *this, patchFieldTypes, actualPatchTypes),
+    sources_(*this, fieldSourceTypes)
 {
     if (debug)
     {
@@ -285,14 +302,16 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 (
     const IOobject& io,
     const Internal& diField,
-    const PtrList<PatchField<Type>>& ptfl
+    const PtrList<PatchField<Type>>& ptfl,
+    const HashPtrTable<Source>& stft
 )
 :
     Internal(io, diField),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(this->mesh().boundary(), *this, ptfl)
+    boundaryField_(this->mesh().boundary(), *this, ptfl),
+    sources_(*this, stft)
 {
     if (debug)
     {
@@ -311,14 +330,16 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const Mesh& mesh,
     const dimensionSet& ds,
     const Field<Type>& iField,
-    const PtrList<PatchField<Type>>& ptfl
+    const PtrList<PatchField<Type>>& ptfl,
+    const HashPtrTable<Source>& stft
 )
 :
     Internal(io, mesh, ds, iField),
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(mesh.boundary(), *this, ptfl)
+    boundaryField_(mesh.boundary(), *this, ptfl),
+    sources_(*this, stft)
 {
     if (debug)
     {
@@ -341,7 +362,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(mesh.boundary())
+    boundaryField_(mesh.boundary()),
+    sources_()
 {
     readFields();
 
@@ -377,7 +399,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(this->time().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(mesh.boundary())
+    boundaryField_(mesh.boundary()),
+    sources_()
 {
     readFields(dict);
 
@@ -410,7 +433,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(*this, gf.boundaryField_)
+    boundaryField_(*this, gf.boundaryField_),
+    sources_(*this, gf.sources_)
 {
     if (debug)
     {
@@ -440,7 +464,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(*this, gf.boundaryField_)
+    boundaryField_(*this, gf.boundaryField_),
+    sources_(*this, gf.sources_)
 {
     if (debug)
     {
@@ -472,7 +497,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(tgf().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(*this, tgf().boundaryField_)
+    boundaryField_(*this, tgf().boundaryField_),
+    sources_(*this, tgf().sources_)
 {
     if (debug)
     {
@@ -497,7 +523,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(*this, gf.boundaryField_)
+    boundaryField_(*this, gf.boundaryField_),
+    sources_(*this, gf.sources_)
 {
     if (debug)
     {
@@ -533,7 +560,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(tgf().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(*this, tgf().boundaryField_)
+    boundaryField_(*this, tgf().boundaryField_),
+    sources_(*this, tgf().sources_)
 {
     if (debug)
     {
@@ -559,7 +587,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(*this, gf.boundaryField_)
+    boundaryField_(*this, gf.boundaryField_),
+    sources_(*this, gf.sources_)
 {
     if (debug)
     {
@@ -595,7 +624,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(tgf().timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(*this, tgf().boundaryField_)
+    boundaryField_(*this, tgf().boundaryField_),
+    sources_(*this, tgf().sources_)
 {
     if (debug)
     {
@@ -620,7 +650,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(this->mesh().boundary(), *this, patchFieldType)
+    boundaryField_(this->mesh().boundary(), *this, patchFieldType),
+    sources_(*this, gf.sources_)
 {
     if (debug)
     {
@@ -648,8 +679,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const IOobject& io,
     const GeometricField<Type, PatchField, GeoMesh>& gf,
     const wordList& patchFieldTypes,
-    const wordList& actualPatchTypes
-
+    const wordList& actualPatchTypes,
+    const HashTable<word>& fieldSourceTypes
 )
 :
     Internal(io, gf),
@@ -662,7 +693,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
         *this,
         patchFieldTypes,
         actualPatchTypes
-    )
+    ),
+    sources_(*this, fieldSourceTypes)
 {
     if (debug)
     {
@@ -690,7 +722,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const IOobject& io,
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf,
     const wordList& patchFieldTypes,
-    const wordList& actualPatchTypes
+    const wordList& actualPatchTypes,
+    const HashTable<word>& fieldSourceTypes
 )
 :
     Internal
@@ -708,7 +741,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
         *this,
         patchFieldTypes,
         actualPatchTypes
-    )
+    ),
+    sources_(*this, fieldSourceTypes)
 {
     if (debug)
     {
@@ -766,7 +800,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
 (
     const word& name,
     const Internal& diField,
-    const PtrList<PatchField<Type>>& ptfl
+    const PtrList<PatchField<Type>>& ptfl,
+    const HashPtrTable<Source>& stft
 )
 {
     const bool cacheTmp = diField.mesh().thisDb().cacheTemporaryObject(name);
@@ -785,7 +820,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 cacheTmp
             ),
             diField,
-            ptfl
+            ptfl,
+            stft
         ),
         cacheTmp
     );
@@ -869,7 +905,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
     const Mesh& mesh,
     const dimensioned<Type>& dt,
     const wordList& patchFieldTypes,
-    const wordList& actualPatchTypes
+    const wordList& actualPatchTypes,
+    const HashTable<word>& fieldSourceTypes
 )
 {
     const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
@@ -890,7 +927,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
             mesh,
             dt,
             patchFieldTypes,
-            actualPatchTypes
+            actualPatchTypes,
+            fieldSourceTypes
         ),
         cacheTmp
     );
@@ -968,7 +1006,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
     const word& newName,
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf,
     const wordList& patchFieldTypes,
-    const wordList& actualPatchTypes
+    const wordList& actualPatchTypes,
+    const HashTable<word>& fieldSourceTypes
 )
 {
     const bool cacheTmp = tgf().db().cacheTemporaryObject(newName);
@@ -989,7 +1028,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
             ),
             tgf,
             patchFieldTypes,
-            actualPatchTypes
+            actualPatchTypes,
+            fieldSourceTypes
         ),
         cacheTmp
     );
@@ -1297,6 +1337,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::reset
 
     Internal::reset(gf);
     boundaryField_.reset(gf.boundaryField());
+    sources_.reset(gf.sources());
 
     tgf.clear();
 }
@@ -1784,6 +1825,12 @@ Foam::Ostream& Foam::operator<<
     gf().writeData(os, "internalField");
     os  << nl;
     gf.boundaryField().writeEntry("boundaryField", os);
+
+    if (!gf.sources_.empty())
+    {
+        os  << nl;
+        gf.sources().writeEntry("sources", os);
+    }
 
     // Check state of IOstream
     os.check

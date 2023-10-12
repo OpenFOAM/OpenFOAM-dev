@@ -73,6 +73,20 @@ public:
             elementi_(elementi)
         {}
 
+        //- Construct from a list of fields and an element index
+        inline FieldListSlice
+        (
+            const UPtrList<Field<Type>>& fields,
+            const label elementi
+        )
+        :
+            FieldListSlice
+            (
+                reinterpret_cast<const UPtrList<const Field<Type>>&>(fields),
+                elementi
+            )
+        {}
+
 
     // Member Functions
 

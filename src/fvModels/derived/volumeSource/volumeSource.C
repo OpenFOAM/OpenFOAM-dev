@@ -44,20 +44,16 @@ namespace fv
 
 void Foam::fv::volumeSource::readCoeffs()
 {
-    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
-
     alphaName_ =
-        phaseName_ == word::null
+        phaseName() == word::null
       ? word::null
       : coeffs().lookupOrDefault<word>
         (
             "alpha",
-            IOobject::groupName("alpha", phaseName_)
+            IOobject::groupName("alpha", phaseName())
         );
 
-    readSet();
-
-    readFieldValues();
+    setPtr_->read(coeffs());
 
     volumetricFlowRate_.reset
     (
@@ -66,145 +62,121 @@ void Foam::fv::volumeSource::readCoeffs()
 }
 
 
-Foam::scalar Foam::fv::volumeSource::volumetricFlowRate() const
-{
-    return volumetricFlowRate_->value(mesh().time().userTimeValue());
-}
-
-
-template<class Type>
-void Foam::fv::volumeSource::addSupType(fvMatrix<Type>& eqn) const
-{
-    FatalErrorInFunction
-        << "Continuity sources for non-scalar types are not supported"
-        << exit(FatalError);
-}
-
-
-void Foam::fv::volumeSource::addSupType(fvMatrix<scalar>& eqn) const
-{
-    const labelUList cells = set_.cells();
-
-    const scalar volumetricFlowRate = this->volumetricFlowRate();
-
-    // Continuity equation. Add the volumetric flow rate.
-    forAll(cells, i)
-    {
-        eqn.source()[cells[i]] -=
-            mesh().V()[cells[i]]/set_.V()*volumetricFlowRate;
-    }
-}
-
-
 template<class Type>
 void Foam::fv::volumeSource::addSupType
 (
-    const dimensionedScalar& oneOrRho,
     const VolField<Type>& field,
     fvMatrix<Type>& eqn
 ) const
 {
-    const labelUList cells = set_.cells();
+    DebugInFunction
+        << "field=" << field.name()
+        << ", eqnField=" << eqn.psi().name() << endl;
 
-    const scalar flowRate = this->volumetricFlowRate()*oneOrRho.value();
-
-    // Property equation. If the source is positive, introduce the value
-    // specified by the user. If negative, then sink the current internal value
-    // using an implicit term.
-    if (flowRate > 0)
+    // Single-phase property equation
+    if (phaseName() == word::null && field.group() == word::null)
     {
-        const Type value =
-            fieldValues_[field.name()]->template value<Type>
-            (
-                mesh().time().userTimeValue()
-            );
-
-        forAll(cells, i)
-        {
-            eqn.source()[cells[i]] -=
-                mesh().V()[cells[i]]/set_.V()*flowRate*value;
-        }
+        fvTotalSource::addSupType(field, eqn);
     }
+    // Multiphase volume-weighted mixture property equation (e.g., a turbulence
+    // equation if running standard incompressible transport modelling in the
+    // incompressibleVoF solver)
+    else if (phaseName() != word::null && field.group() == word::null)
+    {
+        fvTotalSource::addSupType(field, eqn);
+    }
+    // Not recognised. Fail.
     else
     {
-        forAll(cells, i)
-        {
-            eqn.diag()[cells[i]] +=
-                mesh().V()[cells[i]]/set_.V()*flowRate;
-        }
+        const volScalarField& null = NullObjectRef<volScalarField>();
+        addSupType(null, null, field, eqn);
     }
 }
 
 
-template<class Type>
 void Foam::fv::volumeSource::addSupType
 (
-    const VolField<Type>& field,
-    fvMatrix<Type>& eqn
-) const
-{
-    // Property equation
-    addSupType(dimensionedScalar(dimless, scalar(1)), field, eqn);
-}
-
-
-void Foam::fv::volumeSource::addSupType
-(
-    const volScalarField& field,
+    const volScalarField& alphaOrField,
     fvMatrix<scalar>& eqn
 ) const
 {
-    // Multiphase continuity equation. Same source as single-phase case.
-    if (field.name() == alphaName_)
-    {
-        addSupType(eqn);
-        return;
-    }
+    DebugInFunction
+        << "alphaOrField=" << alphaOrField.name()
+        << ", eqnField=" << eqn.psi().name() << endl;
 
-    // Property equation
-    addSupType<scalar>(field, eqn);
+    // Multiphase continuity equation
+    if (phaseName() != word::null && alphaOrField.name() == alphaName_)
+    {
+        fvTotalSource::addSource(eqn);
+    }
+    // Try the general type method
+    else
+    {
+        addSupType<scalar>(alphaOrField, eqn);
+    }
 }
 
 
 template<class Type>
 void Foam::fv::volumeSource::addSupType
 (
-    const volScalarField& rho,
+    const volScalarField& alphaOrRho,
     const VolField<Type>& field,
     fvMatrix<Type>& eqn
 ) const
 {
-    // Multiphase property equation (e.g., turbulence equation if running
+    DebugInFunction
+        << "alphaOrRho=" << alphaOrRho.name()
+        << ", field=" << field.name()
+        << ", eqnField=" << eqn.psi().name() << endl;
+
+    // Multiphase property equation (e.g., a turbulence equation if running
     // two-phase transport modelling in the incompressibleVoF solver)
-    if (rho.name() == alphaName_)
+    if (phaseName() != word::null && alphaOrRho.name() == alphaName_)
     {
-        addSupType(dimensionedScalar(dimless, scalar(1)), field, eqn);
-        return;
+        fvTotalSource::addSupType(field, eqn);
     }
-
-    // Mixture property equation (e.g., the momentum equation in the
-    // incompressibleVoF solver)...
-
-    // We need to know the density of the phase of which this is a source in
-    // order to create the relevant term. There is no solver-agnostic
-    // interface, at present, that lets us do this. So, read the density from
-    // the physical properties file. This is clunky, but it should work in all
-    // circumstances. This is what the clouds fvModel does,
-    const dimensionedScalar rhoi
+    // Multiphase mass-weighted mixture property equation (e.g., the momentum
+    // equation in the incompressibleVoF solver)
+    else if
     (
-        "rho",
-        dimDensity,
-        mesh().lookupObject<IOdictionary>
-        (
-            IOobject::groupName
-            (
-                physicalProperties::typeName,
-                phaseName_
-            )
-        )
-    );
+        phaseName() != word::null
+     && alphaOrRho.group() == word::null
+     && alphaOrRho.dimensions() == dimDensity
+     && field.group() == word::null
+    )
+    {
+        // First we construct the volumetric source...
+        fvMatrix<Type> volEqn(eqn.psi(), eqn.dimensions()/dimDensity);
+        fvTotalSource::addSupType(field, volEqn);
 
-    addSupType(rhoi, field, eqn);
+        // Then, to apply it to the mixture equation, we need to multiply by
+        // the density of the phase of which this is a source. There is no
+        // solver-agnostic interface, at present, that lets us obtain this
+        // density. So, we read it from the physical properties file. This is
+        // clunky, but it should work in all circumstances. This is what the
+        // clouds fvModel does,
+        const dimensionedScalar rhoi
+        (
+            "rho",
+            dimDensity,
+            mesh().lookupObject<IOdictionary>
+            (
+                IOobject::groupName
+                (
+                    physicalProperties::typeName,
+                    phaseName()
+                )
+            )
+        );
+        eqn += rhoi*volEqn;
+    }
+    // Not recognised. Fail.
+    else
+    {
+        const volScalarField& null = NullObjectRef<volScalarField>();
+        addSupType(null, alphaOrRho, field, eqn);
+    }
 }
 
 
@@ -217,33 +189,17 @@ void Foam::fv::volumeSource::addSupType
     fvMatrix<Type>& eqn
 ) const
 {
+    DebugInFunction
+        << "alpha=" << (isNull(alpha) ? word::null : alpha.name())
+        << ", rho=" << (isNull(rho) ? word::null : rho.name())
+        << ", field=" << field.name()
+        << ", eqnField=" << eqn.psi().name() << endl;
+
     FatalErrorInFunction
         << "Cannot add a volume source for field " << field.name()
-        << " because this field's equation is not in volume-conservative form"
+        << " to equation for " << eqn.psi().name() << " because this field's "
+        << "equation was not recognised as being in volume-conservative form"
         << exit(FatalError);
-}
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void Foam::fv::volumeSource::readSet()
-{
-    set_.read(coeffs());
-}
-
-
-void Foam::fv::volumeSource::readFieldValues()
-{
-    fieldValues_.clear();
-    const dictionary& fieldCoeffs = coeffs().subDict("fieldValues");
-    forAllConstIter(dictionary, fieldCoeffs, iter)
-    {
-        fieldValues_.set
-        (
-            iter().keyword(),
-            new unknownTypeFunction1(iter().keyword(), fieldCoeffs)
-        );
-    }
 }
 
 
@@ -257,10 +213,9 @@ Foam::fv::volumeSource::volumeSource
     const dictionary& dict
 )
 :
-    fvModel(name, modelType, mesh, dict),
-    phaseName_(),
-    set_(fvCellSet(mesh)),
-    fieldValues_(),
+    fvTotalSource(name, modelType, mesh, dict),
+    alphaName_(),
+    setPtr_(new fvCellSet(mesh)),
     volumetricFlowRate_()
 {
     readCoeffs();
@@ -269,55 +224,49 @@ Foam::fv::volumeSource::volumeSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::volumeSource::addsSupToField(const word& fieldName) const
+Foam::labelUList Foam::fv::volumeSource::cells() const
 {
-    const bool isMixture = IOobject::group(fieldName) == word::null;
-    const bool isThisPhase = IOobject::group(fieldName) == phaseName_;
-
-    if
-    (
-        (isMixture || isThisPhase)
-     && volumetricFlowRate() > 0
-     && !(fieldName == alphaName_)
-     && !fieldValues_.found(fieldName)
-    )
-    {
-        WarningInFunction
-            << "No value supplied for field " << fieldName << " in "
-            << type() << " fvModel " << name() << endl;
-
-        return false;
-    }
-
-    return isMixture || isThisPhase;
+    return setPtr_->cells();
 }
 
 
-Foam::wordList Foam::fv::volumeSource::addSupFields() const
+Foam::label Foam::fv::volumeSource::nCells() const
 {
-    return fieldValues_.toc();
+    return setPtr_->nCells();
 }
 
 
-FOR_ALL_FIELD_TYPES
-(
-    IMPLEMENT_FV_MODEL_ADD_SUP,
-    fv::volumeSource
-)
+Foam::scalar Foam::fv::volumeSource::V() const
+{
+    return setPtr_->V();
+}
 
 
-FOR_ALL_FIELD_TYPES
-(
-    IMPLEMENT_FV_MODEL_ADD_FIELD_SUP,
-    fv::volumeSource
-)
+Foam::dimensionedScalar Foam::fv::volumeSource::S() const
+{
+    return
+        dimensionedScalar
+        (
+            dimVolume/dimTime,
+            volumetricFlowRate_->value(mesh().time().userTimeValue())
+        );
+}
 
 
-FOR_ALL_FIELD_TYPES
-(
-    IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP,
-    fv::volumeSource
-)
+void Foam::fv::volumeSource::addSup(fvMatrix<scalar>& eqn) const
+{
+    DebugInFunction
+        << "eqnField=" << eqn.psi().name() << endl;
+
+    // Single-phase continuity equation
+    fvTotalSource::addSource(eqn);
+}
+
+
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_FIELD_SUP, fv::volumeSource)
+
+
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP, fv::volumeSource)
 
 
 FOR_ALL_FIELD_TYPES
@@ -329,32 +278,32 @@ FOR_ALL_FIELD_TYPES
 
 bool Foam::fv::volumeSource::movePoints()
 {
-    set_.movePoints();
+    setPtr_->movePoints();
     return true;
 }
 
 
 void Foam::fv::volumeSource::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    setPtr_->topoChange(map);
 }
 
 
 void Foam::fv::volumeSource::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    setPtr_->mapMesh(map);
 }
 
 
 void Foam::fv::volumeSource::distribute(const polyDistributionMap& map)
 {
-    set_.distribute(map);
+    setPtr_->distribute(map);
 }
 
 
 bool Foam::fv::volumeSource::read(const dictionary& dict)
 {
-    if (fvModel::read(dict))
+    if (fvTotalSource::read(dict))
     {
         readCoeffs();
         return true;

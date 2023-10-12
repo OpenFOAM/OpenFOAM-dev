@@ -78,6 +78,12 @@ public:
             const label patchi,
             const label facei
         ) const;
+
+        //- Get the slicer for the given source
+        inline nil Yslicer(const fvSource&) const;
+
+        //- Get the composition of a source cell
+        inline nil sourceCellComposition(const nil, const label i) const;
 };
 
 

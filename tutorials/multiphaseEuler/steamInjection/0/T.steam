@@ -40,4 +40,13 @@ boundaryField
     }
 }
 
+sources
+{
+    massSource
+    {
+        type            uniformFixedEnergyTemperature;
+        uniformHe       3700000;
+    }
+}
+
 // ************************************************************************* //

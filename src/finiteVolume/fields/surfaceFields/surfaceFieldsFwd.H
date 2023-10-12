@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,11 +48,17 @@ class surfaceMesh;
 template<class Type>
 class fvsPatchField;
 
+template<class Type, class GeoMesh>
+class NoFieldSource;
+
 template<class Type, template<class> class PatchField, class GeoMesh>
 class GeometricField;
 
 template<class Type>
 using SurfaceField = GeometricField<Type, fvsPatchField, surfaceMesh>;
+
+template<class Type>
+using fvsFieldSource = NoFieldSource<Type, surfaceMesh>;
 
 typedef SurfaceField<label> surfaceLabelField;
 typedef SurfaceField<scalar> surfaceScalarField;

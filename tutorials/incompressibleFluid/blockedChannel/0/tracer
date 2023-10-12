@@ -39,5 +39,14 @@ boundaryField
     }
 }
 
+sources
+{
+    volumeSource
+    {
+        type            uniformFixedValue;
+        uniformValue    1;
+    }
+}
+
 
 // ************************************************************************* //

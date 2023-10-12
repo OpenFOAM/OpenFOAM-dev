@@ -20,19 +20,9 @@ internalField   uniform 0.1;
 
 boundaryField
 {
-    leftWall
-    {
-        type            kqRWallFunction;
-        value           $internalField;
-    }
+    #includeEtc "caseDicts/setConstraintTypes"
 
-    rightWall
-    {
-        type            kqRWallFunction;
-        value           $internalField;
-    }
-
-    lowerWall
+    wall
     {
         type            kqRWallFunction;
         value           $internalField;
@@ -43,11 +33,6 @@ boundaryField
         type            inletOutlet;
         inletValue      $internalField;
         value           $internalField;
-    }
-
-    defaultFaces
-    {
-        type            empty;
     }
 }
 
