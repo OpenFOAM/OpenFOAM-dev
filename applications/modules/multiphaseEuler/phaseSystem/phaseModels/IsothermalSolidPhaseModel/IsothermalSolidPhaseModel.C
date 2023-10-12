@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "IsothermalPhaseModel.H"
+#include "IsothermalSolidPhaseModel.H"
 #include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-Foam::IsothermalPhaseModel<BasePhaseModel>::IsothermalPhaseModel
+Foam::IsothermalSolidPhaseModel<BasePhaseModel>::IsothermalSolidPhaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
@@ -44,35 +44,21 @@ Foam::IsothermalPhaseModel<BasePhaseModel>::IsothermalPhaseModel
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-Foam::IsothermalPhaseModel<BasePhaseModel>::~IsothermalPhaseModel()
+Foam::IsothermalSolidPhaseModel<BasePhaseModel>::~IsothermalSolidPhaseModel()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-void Foam::IsothermalPhaseModel<BasePhaseModel>::correctThermo()
+void Foam::IsothermalSolidPhaseModel<BasePhaseModel>::correctThermo()
 {
     BasePhaseModel::correctThermo();
-
-    // Correct the thermo for pressure changes
-    // ensuring the temperature remains constant
-    tmp<volScalarField> TCopy
-    (
-        volScalarField::New
-        (
-            this->thermo().T().name() + ":Copy",
-            this->thermo().T()
-        )
-    );
-    this->thermo_->he() = this->thermo().he(this->fluidThermo().p(), TCopy);
-    this->thermo_->correct();
-    this->thermo_->T() = TCopy;
 }
 
 
 template<class BasePhaseModel>
-bool Foam::IsothermalPhaseModel<BasePhaseModel>::isothermal() const
+bool Foam::IsothermalSolidPhaseModel<BasePhaseModel>::isothermal() const
 {
     return true;
 }
@@ -80,7 +66,10 @@ bool Foam::IsothermalPhaseModel<BasePhaseModel>::isothermal() const
 
 template<class BasePhaseModel>
 Foam::tmp<Foam::scalarField>
-Foam::IsothermalPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
+Foam::IsothermalSolidPhaseModel<BasePhaseModel>::kappaEff
+(
+    const label patchi
+) const
 {
     NotImplemented;
     return this->thermo().kappa().boundaryField()[patchi];
@@ -89,7 +78,7 @@ Foam::IsothermalPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
 
 template<class BasePhaseModel>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::IsothermalPhaseModel<BasePhaseModel>::heEqn()
+Foam::IsothermalSolidPhaseModel<BasePhaseModel>::heEqn()
 {
     FatalErrorInFunction
         << "Cannot construct an energy equation for an isothermal phase"

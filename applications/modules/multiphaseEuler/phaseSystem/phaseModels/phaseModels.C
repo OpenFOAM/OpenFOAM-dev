@@ -37,6 +37,7 @@ License
 #include "SolidThermoPhaseModel.H"
 #include "IsothermalPhaseModel.H"
 #include "AnisothermalPhaseModel.H"
+#include "IsothermalSolidPhaseModel.H"
 #include "SolidThermalPhaseModel.H"
 #include "PurePhaseModel.H"
 #include "MulticomponentPhaseModel.H"
@@ -134,7 +135,7 @@ namespace Foam
     );
 
     typedef
-        IsothermalPhaseModel
+        IsothermalSolidPhaseModel
         <
             PurePhaseModel
             <

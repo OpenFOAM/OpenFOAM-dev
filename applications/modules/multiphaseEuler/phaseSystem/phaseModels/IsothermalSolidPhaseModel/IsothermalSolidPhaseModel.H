@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::IsothermalPhaseModel
+    Foam::IsothermalSolidPhaseModel
 
 Description
-    Class which represents a phase for which the temperature remains
-    constant. Returns an empty energy equation and updates the energy
-    corresponding to pressure changes only when correctThermo is called.
+    Class which represents a solid phase for which the temperature (strictly
+    energy) remains constant. Returns an empty energy equation and does nothing
+    when correctThermo is called.
 
 SourceFiles
-    IsothermalPhaseModel.C
+    IsothermalSolidPhaseModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef IsothermalPhaseModel_H
-#define IsothermalPhaseModel_H
+#ifndef IsothermalSolidPhaseModel_H
+#define IsothermalSolidPhaseModel_H
 
 #include "phaseModel.H"
 
@@ -45,11 +45,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class IsothermalPhaseModel Declaration
+                    Class IsothermalSolidPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseModel>
-class IsothermalPhaseModel
+class IsothermalSolidPhaseModel
 :
     public BasePhaseModel
 {
@@ -57,7 +57,7 @@ public:
 
     // Constructors
 
-        IsothermalPhaseModel
+        IsothermalSolidPhaseModel
         (
             const phaseSystem& fluid,
             const word& phaseName,
@@ -67,7 +67,7 @@ public:
 
 
     //- Destructor
-    virtual ~IsothermalPhaseModel();
+    virtual ~IsothermalSolidPhaseModel();
 
 
     // Member Functions
@@ -93,7 +93,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "IsothermalPhaseModel.C"
+    #include "IsothermalSolidPhaseModel.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
