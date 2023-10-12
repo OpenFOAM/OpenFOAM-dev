@@ -30,6 +30,8 @@ derived/heatSource/heatSource.C
 derived/heatTransfer/heatTransfer.C
 derived/zeroDimensionalMassSource/zeroDimensionalMassSourceBase.C
 derived/zeroDimensionalMassSource/zeroDimensionalMassSource.C
+derived/massTransfer/massTransferBase.C
+derived/massTransfer/coefficientMassTransfer.C
 
 interRegion/interRegionModel/interRegionModel.C
 interRegion/interRegionExplicitPorositySource/interRegionExplicitPorositySource.C

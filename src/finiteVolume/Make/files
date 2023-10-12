@@ -519,6 +519,7 @@ $(fvConstraints)/fvConstraints.C
 $(fvConstraints)/includeFvConstraintEntry/includeFvConstraintEntry.C
 
 $(general)/fvSource/fvSource.C
+$(general)/fvSource/fvSpecificSource.C
 $(general)/fvSource/fvTotalSource.C
 
 cellSources = sets/cellSources
