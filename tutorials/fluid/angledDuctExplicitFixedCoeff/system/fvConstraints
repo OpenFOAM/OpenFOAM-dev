@@ -24,7 +24,7 @@ limitp
 
 fixedTemperature
 {
-    type            fixedTemperatureConstraint;
+    type            fixedTemperature;
 
     cellZone        porosity;
 
@@ -32,10 +32,9 @@ fixedTemperature
     temperature     350;
 }
 
-
 porosityTurbulence
 {
-    type            fixedValueConstraint;
+    type            fixedValue;
 
     cellZone        porosity;
 

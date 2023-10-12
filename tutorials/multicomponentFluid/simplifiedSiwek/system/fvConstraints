@@ -16,7 +16,7 @@ FoamFile
 
 source1
 {
-    type            fixedTemperatureConstraint;
+    type            fixedTemperature;
 
     timeStart       0.1;
     duration        0.4;

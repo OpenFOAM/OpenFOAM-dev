@@ -43,6 +43,14 @@ namespace fv
         fixedValueConstraint,
         dictionary
     );
+    addBackwardCompatibleToRunTimeSelectionTable
+    (
+        fvConstraint,
+        fixedValueConstraint,
+        dictionary,
+        fixedValueConstraint,
+        "fixedValueConstraint"
+    );
 }
 }
 

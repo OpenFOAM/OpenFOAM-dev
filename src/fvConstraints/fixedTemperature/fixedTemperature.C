@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fixedTemperatureConstraint.H"
+#include "fixedTemperature.H"
 #include "fvMesh.H"
 #include "fvMatrices.H"
 #include "basicThermo.H"
@@ -33,33 +33,41 @@ License
 
 namespace Foam
 {
-    namespace fv
-    {
-        defineTypeNameAndDebug(fixedTemperatureConstraint, 0);
-        addToRunTimeSelectionTable
-        (
-            fvConstraint,
-            fixedTemperatureConstraint,
-            dictionary
-        );
-    }
-
-    template<>
-    const char* NamedEnum<fv::fixedTemperatureConstraint::temperatureMode, 2>::
-    names[] =
-    {
-        "uniform",
-        "lookup"
-    };
+namespace fv
+{
+    defineTypeNameAndDebug(fixedTemperature, 0);
+    addToRunTimeSelectionTable
+    (
+        fvConstraint,
+        fixedTemperature,
+        dictionary
+    );
+    addBackwardCompatibleToRunTimeSelectionTable
+    (
+        fvConstraint,
+        fixedTemperature,
+        dictionary,
+        fixedTemperatureConstraint,
+        "fixedTemperatureConstraint"
+    );
+}
 }
 
-const Foam::NamedEnum<Foam::fv::fixedTemperatureConstraint::temperatureMode, 2>
-    Foam::fv::fixedTemperatureConstraint::modeNames_;
+
+namespace Foam
+{
+    template<>
+    const char* NamedEnum<fv::fixedTemperature::temperatureMode, 2>::names[] =
+        {"uniform", "lookup"};
+}
+
+const Foam::NamedEnum<Foam::fv::fixedTemperature::temperatureMode, 2>
+    Foam::fv::fixedTemperature::modeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::fixedTemperatureConstraint::readCoeffs()
+void Foam::fv::fixedTemperature::readCoeffs()
 {
     mode_ = modeNames_.read(coeffs().lookup("mode"));
 
@@ -91,7 +99,7 @@ void Foam::fv::fixedTemperatureConstraint::readCoeffs()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::fixedTemperatureConstraint::fixedTemperatureConstraint
+Foam::fv::fixedTemperature::fixedTemperature
 (
     const word& name,
     const word& modelType,
@@ -112,7 +120,7 @@ Foam::fv::fixedTemperatureConstraint::fixedTemperatureConstraint
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::fixedTemperatureConstraint::constrainedFields() const
+Foam::wordList Foam::fv::fixedTemperature::constrainedFields() const
 {
     const basicThermo& thermo =
         mesh().lookupObject<basicThermo>
@@ -124,7 +132,7 @@ Foam::wordList Foam::fv::fixedTemperatureConstraint::constrainedFields() const
 }
 
 
-bool Foam::fv::fixedTemperatureConstraint::constrain
+bool Foam::fv::fixedTemperature::constrain
 (
     fvMatrix<scalar>& eqn,
     const word& fieldName
@@ -192,38 +200,32 @@ bool Foam::fv::fixedTemperatureConstraint::constrain
 }
 
 
-bool Foam::fv::fixedTemperatureConstraint::movePoints()
+bool Foam::fv::fixedTemperature::movePoints()
 {
     set_.movePoints();
     return true;
 }
 
 
-void Foam::fv::fixedTemperatureConstraint::topoChange
-(
-    const polyTopoChangeMap& map
-)
+void Foam::fv::fixedTemperature::topoChange(const polyTopoChangeMap& map)
 {
     set_.topoChange(map);
 }
 
 
-void Foam::fv::fixedTemperatureConstraint::mapMesh(const polyMeshMap& map)
+void Foam::fv::fixedTemperature::mapMesh(const polyMeshMap& map)
 {
     set_.mapMesh(map);
 }
 
 
-void Foam::fv::fixedTemperatureConstraint::distribute
-(
-    const polyDistributionMap& map
-)
+void Foam::fv::fixedTemperature::distribute(const polyDistributionMap& map)
 {
     set_.distribute(map);
 }
 
 
-bool Foam::fv::fixedTemperatureConstraint::read(const dictionary& dict)
+bool Foam::fv::fixedTemperature::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {

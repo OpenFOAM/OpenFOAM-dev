@@ -1,5 +1,5 @@
 fixedValue/fixedValueConstraint.C
-fixedTemperature/fixedTemperatureConstraint.C
+fixedTemperature/fixedTemperature.C
 limitTemperature/limitTemperature.C
 limitPressure/limitPressure.C
 limitMag/limitMag.C

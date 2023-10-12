@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::fixedTemperatureConstraint
+    Foam::fv::fixedTemperature
 
 Description
     Fixed temperature equation constraint
@@ -31,7 +31,7 @@ Usage
     \verbatim
     fixedTemperature
     {
-        type            fixedTemperatureConstraint;
+        type            fixedTemperature;
 
         select          all;
 
@@ -51,12 +51,12 @@ Usage
         temperature by means of the Function1 type.
 
 SourceFiles
-    fixedTemperatureConstraint.C
+    fixedTemperature.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fixedTemperatureConstraint_H
-#define fixedTemperatureConstraint_H
+#ifndef fixedTemperature_H
+#define fixedTemperature_H
 
 #include "fvConstraint.H"
 #include "fvCellSet.H"
@@ -71,10 +71,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class fixedTemperatureConstraint Declaration
+                 Class fixedTemperature Declaration
 \*---------------------------------------------------------------------------*/
 
-class fixedTemperatureConstraint
+class fixedTemperature
 :
     public fvConstraint
 {
@@ -125,13 +125,13 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("fixedTemperatureConstraint");
+    TypeName("fixedTemperature");
 
 
     // Constructors
 
         //- Construct from components
-        fixedTemperatureConstraint
+        fixedTemperature
         (
             const word& name,
             const word& modelType,
@@ -140,11 +140,11 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        fixedTemperatureConstraint(const fixedTemperatureConstraint&) = delete;
+        fixedTemperature(const fixedTemperature&) = delete;
 
 
     //- Destructor
-    virtual ~fixedTemperatureConstraint()
+    virtual ~fixedTemperature()
     {}
 
 
@@ -179,7 +179,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const fixedTemperatureConstraint&) = delete;
+        void operator=(const fixedTemperature&) = delete;
 };
 
 

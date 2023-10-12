@@ -16,7 +16,7 @@ FoamFile
 
 ignition
 {
-    type            fixedTemperatureConstraint;
+    type            fixedTemperature;
 
     cellSet         ignition;
 

@@ -104,7 +104,7 @@ class fixedValueConstraint
 public:
 
     //- Runtime type information
-    TypeName("fixedValueConstraint");
+    TypeName("fixedValue");
 
 
     // Constructors

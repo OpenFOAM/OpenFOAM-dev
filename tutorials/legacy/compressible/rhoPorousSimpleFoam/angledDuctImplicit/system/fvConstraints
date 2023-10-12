@@ -24,7 +24,7 @@ limitp
 
 source1
 {
-    type            fixedTemperatureConstraint;
+    type            fixedTemperature;
 
     cellZone        porosity;
 
