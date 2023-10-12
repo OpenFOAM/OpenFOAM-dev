@@ -32,9 +32,9 @@ Description
     \verbatim
     porosity
     {
-        type            explicitPorositySource;
+        type            porosityForce;
 
-        explicitPorositySourceCoeffs
+        porosityForceCoeffs
         {
             select          cellZone;
             cellZone        porousBlockage;

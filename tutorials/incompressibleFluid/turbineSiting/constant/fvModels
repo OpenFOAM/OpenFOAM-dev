@@ -16,7 +16,7 @@ FoamFile
 
 disk1
 {
-    type            actuationDiskSource;
+    type            actuationDisk;
 
     cellSet         actuationDisk1;
 
@@ -29,7 +29,7 @@ disk1
 
 disk2
 {
-    type            actuationDiskSource;
+    type            actuationDisk;
 
     cellSet         actuationDisk2;
 

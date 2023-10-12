@@ -1,28 +1,28 @@
 general/codedFvModel/codedFvModel.C
 general/semiImplicitSource/semiImplicitSource.C
 
-derived/actuationDiskSource/actuationDiskSource.C
-derived/effectivenessHeatExchangerSource/effectivenessHeatExchangerSource.C
-derived/explicitPorositySource/explicitPorositySource.C
-derived/radialActuationDiskSource/radialActuationDiskSource.C
-derived/rotorDiskSource/rotorDiskSource.C
-derived/rotorDiskSource/bladeModel/bladeModel.C
-derived/rotorDiskSource/profileModel/profileModel.C
-derived/rotorDiskSource/profileModel/profileModelList.C
-derived/rotorDiskSource/profileModel/lookup/lookupProfile.C
-derived/rotorDiskSource/profileModel/series/seriesProfile.C
-derived/rotorDiskSource/trimModel/trimModel/trimModel.C
-derived/rotorDiskSource/trimModel/trimModel/trimModelNew.C
-derived/rotorDiskSource/trimModel/fixed/fixedTrim.C
-derived/rotorDiskSource/trimModel/targetCoeff/targetCoeffTrim.C
-derived/solidificationMeltingSource/solidificationMeltingSource.C
-derived/sixDoFAccelerationSource/sixDoFAccelerationSource.C
+derived/actuationDisk/actuationDisk.C
+derived/effectivenessHeatExchanger/effectivenessHeatExchanger.C
+derived/porosityForce/porosityForce.C
+derived/radialActuationDisk/radialActuationDisk.C
+derived/rotorDisk/rotorDisk.C
+derived/rotorDisk/bladeModel/bladeModel.C
+derived/rotorDisk/profileModel/profileModel.C
+derived/rotorDisk/profileModel/profileModelList.C
+derived/rotorDisk/profileModel/lookup/lookupProfile.C
+derived/rotorDisk/profileModel/series/seriesProfile.C
+derived/rotorDisk/trimModel/trimModel/trimModel.C
+derived/rotorDisk/trimModel/trimModel/trimModelNew.C
+derived/rotorDisk/trimModel/fixed/fixedTrim.C
+derived/rotorDisk/trimModel/targetCoeff/targetCoeffTrim.C
+derived/solidificationMelting/solidificationMelting.C
+derived/sixDoFAcceleration/sixDoFAcceleration.C
 derived/buoyancyForce/buoyancyForce.C
 derived/buoyancyEnergy/buoyancyEnergy.C
 derived/phaseLimitStabilisation/phaseLimitStabilisation.C
-derived/accelerationSource/accelerationSource.C
-derived/volumeFractionSource/volumeFractionSource.C
-derived/solidEquilibriumEnergySource/solidEquilibriumEnergySource.C
+derived/acceleration/acceleration.C
+derived/volumeBlockage/volumeBlockage.C
+derived/solidThermalEquilibrium/solidThermalEquilibrium.C
 derived/volumeSource/volumeSource.C
 derived/massSource/massSourceBase.C
 derived/massSource/massSource.C
@@ -34,7 +34,7 @@ derived/massTransfer/massTransferBase.C
 derived/massTransfer/coefficientMassTransfer.C
 
 interRegion/interRegionModel/interRegionModel.C
-interRegion/interRegionExplicitPorositySource/interRegionExplicitPorositySource.C
+interRegion/interRegionPorosityForce/interRegionPorosityForce.C
 interRegion/interRegionHeatTransfer/interRegionHeatTransfer.C
 
 derived/heatTransfer/heatTransferAv/heatTransferAv.C

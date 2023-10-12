@@ -27,9 +27,9 @@ clouds
 
 filter1
 {
-    type            explicitPorositySource;
+    type            porosityForce;
 
-    explicitPorositySourceCoeffs
+    porosityForceCoeffs
     {
         cellZone        filter;
 

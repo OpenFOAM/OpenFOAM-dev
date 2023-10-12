@@ -26,7 +26,7 @@ License
 #include "kEpsilonLopesdaCosta.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
-#include "explicitPorositySource.H"
+#include "porosityForce.H"
 #include "bound.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -106,10 +106,10 @@ setPorosityCoefficients()
 
     forAll(fvModels, i)
     {
-        if (isA<fv::explicitPorositySource>(fvModels[i]))
+        if (isA<fv::porosityForce>(fvModels[i]))
         {
-            const fv::explicitPorositySource& eps =
-                refCast<const fv::explicitPorositySource>(fvModels[i]);
+            const fv::porosityForce& eps =
+                refCast<const fv::porosityForce>(fvModels[i]);
 
             if (isA<porosityModels::powerLawLopesdaCosta>(eps.model()))
             {

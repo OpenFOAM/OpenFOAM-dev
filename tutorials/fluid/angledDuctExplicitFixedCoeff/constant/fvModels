@@ -16,9 +16,9 @@ FoamFile
 
 porosity
 {
-    type            explicitPorositySource;
+    type            porosityForce;
 
-    explicitPorositySourceCoeffs
+    porosityForceCoeffs
     {
         cellZone        porosity;
 

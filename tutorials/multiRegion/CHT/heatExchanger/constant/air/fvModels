@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-airToporous
+airToPorous
 {
     type            interRegionHeatTransfer;
 
@@ -26,11 +26,11 @@ airToporous
     semiImplicit    no;
 }
 
-porosityBlockage
+porosity
 {
-    type            interRegionExplicitPorositySource;
+    type            interRegionPorosityForce;
 
-    interRegionExplicitPorositySourceCoeffs
+    interRegionPorosityForceCoeffs
     {
         nbrRegion       porous;
 

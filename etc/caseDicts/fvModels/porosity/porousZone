@@ -13,9 +13,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type           explicitPorositySource;
+type           porosityForce;
 
-explicitPorositySourceCoeffs
+porosityForceCoeffs
 {
     type           DarcyForchheimer;
     select         cellZone;

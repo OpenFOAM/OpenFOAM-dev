@@ -14,9 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-volumeFraction
+volumeBlockage
 {
-    type            volumeFractionSource;
+    type            volumeBlockage;
     volumePhase     volume;
 }
 

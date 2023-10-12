@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-porousToair
+porousToAir
 {
     type            interRegionHeatTransfer;
 

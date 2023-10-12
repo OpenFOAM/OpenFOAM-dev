@@ -14,21 +14,21 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-volumeFraction
+volumeBlockage
 {
-    type            volumeFractionSource;
+    type            volumeBlockage;
     volumePhase     volume;
 }
 
-solidFraction
+solidBlockage
 {
-    type            volumeFractionSource;
+    type            volumeBlockage;
     volumePhase     solid;
 }
 
-solidEquilibriumEnergy
+solidThermalEquilibrium
 {
-    type            solidEquilibriumEnergySource;
+    type            solidThermalEquilibrium;
     solidPhase      solid;
 }
 
