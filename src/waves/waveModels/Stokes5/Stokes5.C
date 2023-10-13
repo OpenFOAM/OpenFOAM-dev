@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,21 +40,15 @@ namespace waveModels
 
 // * * * * * * * * * * Static Protected Member Functions  * * * * * * ** * * //
 
-Foam::scalar Foam::waveModels::Stokes5::celerity
-(
-    const scalar depth,
-    const scalar amplitude,
-    const scalar length,
-    const scalar g
-)
+Foam::scalar Foam::waveModels::Stokes5::celerity(const AiryCoeffs& coeffs)
 {
     static const scalar kdGreat = log(great);
-    const scalar kd = min(max(k(length)*depth, - kdGreat), kdGreat);
-    const scalar ka = k(length)*amplitude;
+    const scalar kd = min(max(coeffs.k()*coeffs.depth, - kdGreat), kdGreat);
+    const scalar ka = coeffs.k()*coeffs.amplitude;
 
-    const scalar S = deep(depth, length) ? 0 : 1/cosh(2*kd);
+    const scalar S = coeffs.deep() ? 0 : 1/cosh(2*kd);
 
-    const scalar C0 = Airy::celerity(depth, amplitude, length, g);
+    const scalar C0 = coeffs.celerity();
     const scalar C4ByC0 =
         1.0/32/pow5(1 - S)
        *(4 + 32*S - 116*sqr(S) - 400*pow3(S) - 71*pow4(S) + 146*pow5(S));
@@ -64,7 +58,7 @@ Foam::scalar Foam::waveModels::Stokes5::celerity
         Info<< "C4 = " << C4ByC0*C0 << endl;
     }
 
-    return Stokes2::celerity(depth, amplitude, length, g) + pow4(ka)*C4ByC0*C0;
+    return Stokes2::celerity(coeffs) + pow4(ka)*C4ByC0*C0;
 }
 
 
@@ -75,10 +69,10 @@ Foam::waveModels::Stokes5::Stokes5
     const dictionary& dict,
     const scalar g,
     const word& modelName,
-    scalar (*modelCelerity)(scalar, scalar, scalar, scalar)
+    scalar (*celerityPtr)(const AiryCoeffs&)
 )
 :
-    Stokes2(dict, g, modelName, modelCelerity)
+    Stokes2(dict, g, modelName, celerityPtr)
 {}
 
 
@@ -90,17 +84,26 @@ Foam::waveModels::Stokes5::~Stokes5()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::scalar Foam::waveModels::Stokes5::celerity() const
+{
+    return celerity(coeffs());
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::waveModels::Stokes5::elevation
 (
     const scalar t,
     const scalarField& x
 ) const
 {
-    static const scalar kdGreat = log(great);
-    const scalar kd = min(max(k()*depth(), - kdGreat), kdGreat);
-    const scalar ka = k()*amplitude(t);
+    const AiryCoeffs coeffs = this->coeffs();
 
-    const scalar S = deep() ? 0 : 1/cosh(2*kd), T = deep() ? 1 : tanh(kd);
+    static const scalar kdGreat = log(great);
+    const scalar kd = min(max(coeffs.k()*depth(), - kdGreat), kdGreat);
+    const scalar ka = coeffs.k()*amplitude(t);
+
+    const scalar S = coeffs.deep() ? 0 : 1/cosh(2*kd);
+    const scalar T = coeffs.deep() ? 1 : tanh(kd);
 
     const scalar B31 =
       - 3.0/8/pow3(1 - S)
@@ -143,11 +146,11 @@ Foam::tmp<Foam::scalarField> Foam::waveModels::Stokes5::elevation
             << "B55 = " << B55 << endl;
     }
 
-    const scalarField phi(angle(t, x));
+    const scalarField phi(coeffs.angle(phase(), t, x));
 
     return
         Stokes2::elevation(t, x)
-      + (1/k())
+      + (1/coeffs.k())
        *(
            pow3(ka)*B31*(cos(phi) - cos(3*phi))
          + pow4(ka)*(B42*cos(2*phi) + B44*cos(4*phi))
@@ -162,12 +165,14 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Stokes5::velocity
     const vector2DField& xz
 ) const
 {
-    static const scalar kdGreat = log(great);
-    const scalar kd = min(max(k()*depth(), - kdGreat), kdGreat);
-    const scalar ka = k()*amplitude(t);
+    const AiryCoeffs coeffs = this->coeffs();
 
-    const scalar S = deep() ? 0 : 1/cosh(2*kd);
-    const scalar SByA11 = deep() ? 0 : S*sinh(kd);
+    static const scalar kdGreat = log(great);
+    const scalar kd = min(max(coeffs.k()*depth(), - kdGreat), kdGreat);
+    const scalar ka = coeffs.k()*amplitude(t);
+
+    const scalar S = coeffs.deep() ? 0 : 1/cosh(2*kd);
+    const scalar SByA11 = coeffs.deep() ? 0 : S*sinh(kd);
 
     const scalar A31ByA11 =
         1.0/8/pow3(1 - S)
@@ -226,15 +231,17 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Stokes5::velocity
             << "A55 = " << A55ByA11*A11 << endl;
     }
 
-    const vector2DField v1(vi(1, t, xz)), v3(vi(3, t, xz));
+    auto v = [&](const label i) { return coeffs.vi(i, phase(), t, xz); };
+
+    const vector2DField v1(v(1)), v3(v(3));
 
     return
         Stokes2::velocity(t, xz)
       + Airy::celerity()
        *(
             pow3(ka)*(A31ByA11*v1 + A33ByA11*v3)
-          + pow4(ka)*(A42ByA11*vi(2, t, xz) + A44ByA11*vi(4, t, xz))
-          + pow5(ka)*(A51ByA11*v1 + A53ByA11*v3 + A55ByA11*vi(5, t, xz))
+          + pow4(ka)*(A42ByA11*v(2) + A44ByA11*v(4))
+          + pow5(ka)*(A51ByA11*v1 + A53ByA11*v3 + A55ByA11*v(5))
         );
 }
 

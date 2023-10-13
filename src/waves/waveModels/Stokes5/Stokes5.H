@@ -35,6 +35,12 @@ Description
         216-234.
     \endverbatim
 
+Usage
+    The parameters of this model are identical to those used by the Airy model
+
+See also:
+    Foam::waveModels::Airy
+
 SourceFiles
     Stokes5.C
 
@@ -65,13 +71,7 @@ protected:
     // Protected Member Functions
 
         //- The wave celerity [m/s]
-        static scalar celerity
-        (
-            const scalar depth,
-            const scalar amplitude,
-            const scalar length,
-            const scalar g
-        );
+        static scalar celerity(const AiryCoeffs&);
 
 
 public:
@@ -88,8 +88,7 @@ public:
             const dictionary& dict,
             const scalar g,
             const word& modelName = Stokes5::typeName,
-            scalar (*modelCelerity)(scalar, scalar, scalar, scalar) =
-                &Stokes5::celerity
+            scalar (*celerityPtr)(const AiryCoeffs&) = &Stokes5::celerity
         );
 
         //- Construct a clone
@@ -106,10 +105,7 @@ public:
     // Member Functions
 
         //- The wave celerity [m/s]
-        virtual scalar celerity() const
-        {
-            return celerity(depth(), amplitude(), length(), g());
-        }
+        virtual scalar celerity() const;
 
         //- Get the wave elevation at a given time and local coordinates. Local
         //  x is aligned with the direction of propagation.

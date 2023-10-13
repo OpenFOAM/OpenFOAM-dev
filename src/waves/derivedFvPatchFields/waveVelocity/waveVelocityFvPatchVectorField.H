@@ -32,8 +32,8 @@ Description
 
 Usage
     \table
-        Property  | Description                            | Req'd? | Default
-        phi       | Name of the flux field                 | no     | phi
+        Property  | Description                            | Required? | Default
+        phi       | Name of the flux field                 | no        | phi
     \endtable
 
     Example of the boundary condition specification:

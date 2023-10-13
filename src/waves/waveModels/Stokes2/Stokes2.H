@@ -36,6 +36,12 @@ Description
 
     See equations 18 and 19.
 
+Usage
+    The parameters of this model are identical to those used by the Airy model
+
+See also
+    Foam::waveModels::Airy
+
 SourceFiles
     Stokes2.C
 
@@ -66,18 +72,12 @@ protected:
     // Protected Member Functions
 
         //- The wave celerity [m/s]
-        static scalar celerity
-        (
-            const scalar depth,
-            const scalar amplitude,
-            const scalar length,
-            const scalar g
-        );
+        static scalar celerity(const AiryCoeffs&);
 
 
 public:
 
-   //- Runtime type information
+    //- Runtime type information
     TypeName("Stokes2");
 
 
@@ -89,8 +89,7 @@ public:
             const dictionary& dict,
             const scalar g,
             const word& modelName = Stokes2::typeName,
-            scalar (*modelCelerity)(scalar, scalar, scalar, scalar) =
-                &Stokes2::celerity
+            scalar (*celerityPtr)(const AiryCoeffs&) = &Stokes2::celerity
         );
 
         //- Construct a clone
@@ -107,10 +106,7 @@ public:
     // Member Functions
 
         //- The wave celerity [m/s]
-        virtual scalar celerity() const
-        {
-            return celerity(depth(), amplitude(), length(), g());
-        }
+        virtual scalar celerity() const;
 
         //- Get the wave elevation at a given time and local coordinates. Local
         //  x is aligned with the direction of propagation.

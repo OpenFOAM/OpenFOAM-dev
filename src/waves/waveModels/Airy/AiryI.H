@@ -23,41 +23,55 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "waveModel.H"
+#include "Airy.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-namespace Foam
+inline Foam::waveModels::AiryCoeffs Foam::waveModels::Airy::coeffs
+(
+    const scalar t
+) const
 {
-    defineTypeNameAndDebug(waveModel, 0);
-    defineRunTimeSelectionTable(waveModel, dictionary);
+    return AiryCoeffs(depth_, amplitude_->value(t), length_, g());
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::waveModel::waveModel(const waveModel& wave)
-:
-    g_(wave.g_)
-{}
-
-
-Foam::waveModel::waveModel(const dictionary& dict, const scalar g)
-:
-    g_(g)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::waveModel::~waveModel()
-{}
+inline Foam::waveModels::AiryCoeffs Foam::waveModels::Airy::coeffs() const
+{
+    return AiryCoeffs(depth_, amplitude(), length_, g());
+}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::waveModel::write(Ostream& os) const
-{}
+inline Foam::scalar Foam::waveModels::Airy::depth() const
+{
+    return depth_;
+}
+
+
+inline Foam::scalar Foam::waveModels::Airy::amplitude(const scalar t) const
+{
+    return amplitude_->value(t);
+}
+
+
+inline Foam::scalar Foam::waveModels::Airy::amplitude() const
+{
+    return amplitude_->value(great);
+}
+
+
+inline Foam::scalar Foam::waveModels::Airy::length() const
+{
+    return length_;
+}
+
+
+inline Foam::scalar Foam::waveModels::Airy::phase() const
+{
+    return phase_;
+}
 
 
 // ************************************************************************* //

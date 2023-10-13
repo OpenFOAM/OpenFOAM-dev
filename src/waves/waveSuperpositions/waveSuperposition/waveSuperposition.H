@@ -28,25 +28,31 @@ Description
     A wrapper around a list of wave models. Superimposes the modelled values of
     elevation and velocity. The New method looks up or constructs an
     instance of this class on demand and returns a reference. Properties are
-    read from a dictionary in constant.
+    read from a waveProperties dictionary in constant.
 
 Usage
     \table
-        Property   | Description                             | Req'd? | Default
-        origin     | origin of the wave coordinate system    | yes    |
-        direction  | direction of the wave coordinate system | yes    |
-        waves      | list of wave models to superimpose      | yes    |
-        UMean      | velocity of the mean flow               | yes    |
-        scale      | scale factor in the direction           | no     | None
-        crossScale | scale factor perpendicular to the direction | no | None
-        heightAboveWave | use the height above the wave as the vertical \\
-        coordinate | no | false
+        Property        | Description                      | Required? | Default
+        origin          | origin of the wave coordinate \\
+                          system                           | yes       |
+        direction       | direction of the wave \\
+                          coordinate system                | yes       |
+        waves           | list of wave models to \\
+                          superimpose                      | yes       |
+        UMean           | velocity of the mean flow        | yes       |
+        scale           | scale factor in the direction    | no        | None
+        crossScale      | scale factor perpendicular to \\
+                          the direction                    | no        | None
+        heightAboveWave | use the height above the wave \\
+                          as the vertical coordinate       | no        | false
     \endtable
 
     Example specification:
     \verbatim
     origin      (0 25 0);
+
     direction   (1 0 0);
+
     waves
     (
         Airy
@@ -64,9 +70,13 @@ Usage
             angle       0;
         }
     );
+
     UMean       (2 0 0);
+
     scale       table ((100 1) (200 0));
+
     crossScale  constant 1;
+
     heightAboveWave no;
     \endverbatim
 

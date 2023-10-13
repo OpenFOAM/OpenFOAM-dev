@@ -32,9 +32,9 @@ Description
 
 Usage
     \table
-        Property  | Description                            | Req'd? | Default
-        phi       | Name of the flux field                 | no     | phi
-        liquid    | Is the alpha field that of the liquid? | no     | true
+        Property  | Description                            | Required? | Default
+        phi       | Name of the flux field                 | no        | phi
+        liquid    | Is the alpha field that of the liquid? | no        | true
     \endtable
 
     Example of the boundary condition specification:

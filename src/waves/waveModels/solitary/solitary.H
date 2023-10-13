@@ -36,6 +36,27 @@ Description
 
     See pages 314-317.
 
+Usage
+    \table
+        Property  | Description               | Required? | Default
+        depth     | The water depth [m]       | no        | great
+        amplitude | Peak amplitude [m]        | yes       |
+        offset    | The positional offset [m] | yes       |
+    \endtable
+
+    Example specification in constant/waveProperties:
+    \verbatim
+    waves
+    (
+        solitary
+        {
+            length      40;
+            amplitude   0.5;
+            offset      0;
+        }
+    );
+    \endverbatim
+
 SourceFiles
     solitary.C
 

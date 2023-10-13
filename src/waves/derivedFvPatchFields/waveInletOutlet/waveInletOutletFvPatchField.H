@@ -32,10 +32,10 @@ Description
 
 Usage
     \table
-        Property        | Description                | Req'd? | Default
-        phi             | Name of the flux field     | no     | phi
-        inletValueAbove | inlet value above the wave | no     | None
-        inletValueBelow | inlet value below the wave | no     | None
+        Property        | Description                | Required? | Default
+        phi             | Name of the flux field     | no        | phi
+        inletValueAbove | inlet value above the wave | no        | None
+        inletValueBelow | inlet value below the wave | no        | None
     \endtable
 
     Example of the boundary condition specification:

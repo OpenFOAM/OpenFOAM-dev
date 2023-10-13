@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,16 +38,15 @@ namespace waveModels
 }
 }
 
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::scalar Foam::waveModels::Airy::length
+Foam::scalar Foam::waveModels::Airy::readLength
 (
     const dictionary& dict,
     const scalar depth,
     const scalar amplitude,
     const scalar g,
-    scalar (*modelCelerity)(scalar, scalar, scalar, scalar)
+    scalar (*celerityPtr)(const AiryCoeffs&)
 )
 {
     const bool haveLength = dict.found("length");
@@ -66,90 +65,24 @@ Foam::scalar Foam::waveModels::Airy::length
     }
     else
     {
-        const scalar period = dict.lookup<scalar>("period");
-
-        scalar length0 = 0;
-        scalar length1 = 1.5*g*sqr(period)/(2*constant::mathematical::pi);
-
-        // Bisect down to round off error to find the wave length
-        for (label i = 0; i < ceil(std::log2(1/small)); ++ i)
-        {
-            const scalar length = (length0 + length1)/2;
-
-            const scalar t = length/modelCelerity(depth, amplitude, length, g);
-
-            (t < period ? length0 : length1) = length;
-        }
-
-        return (length0 + length1)/2;
+        return
+            AiryCoeffs
+            (
+                depth,
+                amplitude,
+                dict.lookup<scalar>("period"),
+                g,
+                celerityPtr
+            ).length;
     }
-}
-
-
-// * * * * * * * * * * Static Protected Member Functions  * * * * * * ** * * //
-
-Foam::scalar Foam::waveModels::Airy::k(const scalar length)
-{
-    return 2*Foam::constant::mathematical::pi/length;
-}
-
-
-bool Foam::waveModels::Airy::deep(const scalar depth, const scalar length)
-{
-    return depth*k(length) > log(great);
-}
-
-
-Foam::scalar Foam::waveModels::Airy::celerity
-(
-    const scalar depth,
-    const scalar amplitude,
-    const scalar length,
-    const scalar g
-)
-{
-    return sqrt(g/k(length)*tanh(k(length)*depth));
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField> Foam::waveModels::Airy::angle
-(
-    const scalar t,
-    const scalarField& x
-) const
+Foam::scalar Foam::waveModels::Airy::celerity(const AiryCoeffs& coeffs)
 {
-    return phase_ + k()*(x - celerity()*t);
-}
-
-
-Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::vi
-(
-    const label i,
-    const scalar t,
-    const vector2DField& xz
-) const
-{
-    const scalarField x(xz.component(0));
-    const scalarField z(xz.component(1));
-
-    const scalarField phi(angle(t, x));
-
-    const scalar kzGreat = log(i*great);
-    const scalarField kz(min(max(k()*z, - kzGreat), kzGreat));
-
-    if (deep())
-    {
-        return i*exp(kz)*zip(cos(i*phi), sin(i*phi));
-    }
-    else
-    {
-        const scalar kd = k()*depth();
-        const scalarField kdz(max(scalar(0), kd + kz));
-
-        return i*zip(cosh(i*kdz)*cos(i*phi), sinh(i*kdz)*sin(i*phi))/sinh(kd);
-    }
+    return coeffs.celerity();
 }
 
 
@@ -170,16 +103,16 @@ Foam::waveModels::Airy::Airy
     const dictionary& dict,
     const scalar g,
     const word& modelName,
-    scalar (*modelCelerity)(scalar, scalar, scalar, scalar)
+    scalar (*celerityPtr)(const AiryCoeffs&)
 )
 :
     waveModel(dict, g),
     depth_(dict.lookupOrDefault<scalar>("depth", great)),
     amplitude_(Function1<scalar>::New("amplitude", dict)),
-    length_(length(dict, depth_, amplitude(), g, modelCelerity)),
+    length_(readLength(dict, depth_, amplitude(), g, celerityPtr)),
     phase_(dict.lookup<scalar>("phase"))
 {
-    const scalar c = modelCelerity(depth(), amplitude(), length(), g);
+    const scalar c = celerityPtr(coeffs());
 
     Info<< waveModel::typeName << ": " << modelName
         << ": period = " << length_/c
@@ -195,13 +128,19 @@ Foam::waveModels::Airy::~Airy()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::scalar Foam::waveModels::Airy::celerity() const
+{
+    return celerity(coeffs());
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::waveModels::Airy::elevation
 (
     const scalar t,
     const scalarField& x
 ) const
 {
-    return amplitude(t)*cos(angle(t, x));
+    return amplitude(t)*cos(coeffs().angle(phase_, t, x));
 }
 
 
@@ -211,9 +150,9 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::velocity
     const vector2DField& xz
 ) const
 {
-    const scalar ka = k()*amplitude(t);
+    const scalar ka = coeffs().k()*amplitude(t);
 
-    return Airy::celerity()*ka*vi(1, t, xz);
+    return Airy::celerity()*ka*coeffs().vi(1, phase_, t, xz);
 }
 
 
@@ -221,7 +160,7 @@ void Foam::waveModels::Airy::write(Ostream& os) const
 {
     waveModel::write(os);
 
-    if (!deep())
+    if (!coeffs().deep())
     {
         writeEntry(os, "depth", depth_);
     }

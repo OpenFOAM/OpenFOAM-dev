@@ -256,7 +256,7 @@ Foam::scalar Foam::waveSuperposition::maxWaveSpeed(const scalar t) const
         maxCelerity = max(waveModels_[wavei].celerity(), maxCelerity);
     }
 
-    return mag(maxCelerity + (direction_& UMean_->value(t)));
+    return mag(maxCelerity + (direction_ & UMean_->value(t)));
 }
 
 

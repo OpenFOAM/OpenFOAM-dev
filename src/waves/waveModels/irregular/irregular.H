@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,53 +22,56 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::waveModels::Airy
+    Foam::waveModels::irregular
 
 Description
-    First-order wave model.
-
-    Reference:
-    \verbatim
-        Stokes, G.G. (1847)
-        On the theory of oscillatory waves.
-        Transactions of the Cambridge Philosophical Society, 8, 441.
-    \endverbatim
-
-    See the leading terms of equations 18 and 19.
+    Irregular wave model. Phase fraction and velocity field are built up from
+    multiple first-order waves, sampled from a selectable wave spectrum.
 
 Usage
     \table
-        Property  | Description            | Required?         | Default
-        depth     | The water depth [m]    | no                | great
-        amplitude | The amplitude [m]      | yes               |
-        length    | The wave length [m]    | if period not set |
-        period    | The wave period [s]    | if length not set |
-        phase     | The phase offset [rad] | yes               |
+        Property  | Description                     | Required? | Default
+        depth     | The water depth [m]             | no        | great
+        spectrum  | The wave spectrum               | yes       |
+        n         | The number of times to sample \\
+                    the spectrum                    | yes       |
+        span      | The fractional range across \\
+                    which to sample the spectrum    | no        | (0.01 0.99)
+        setFormat | The format with which to plot \\
+                    the spectrum                    | no        | none
     \endtable
 
     Example specification in constant/waveProperties:
     \verbatim
     waves
     (
-        Airy
+        irregular
         {
-            length      40;
-            amplitude   0.5;
-            phase       0;
+            spectrum    PiersonMoskowitz;
+
+            PiersonMoskowitzCoeffs
+            {
+                U19_5       15;
+            }
+
+            n           16;
+            span        (0.01 0.99);
         }
     );
     \endverbatim
 
 SourceFiles
-    Airy.C
+    irregular.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Airy_H
-#define Airy_H
+#ifndef irregular_H
+#define irregular_H
 
 #include "waveModel.H"
+#include "waveSpectrum.H"
 #include "AiryCoeffs.H"
+#include "setWriter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,10 +81,10 @@ namespace waveModels
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class Airy Declaration
+                            Class irregular Declaration
 \*---------------------------------------------------------------------------*/
 
-class Airy
+class irregular
 :
     public waveModel
 {
@@ -90,74 +93,62 @@ class Airy
         //- Depth [m]
         const scalar depth_;
 
-        //- Amplitude [m]
-        autoPtr<Function1<scalar>> amplitude_;
+        //- Spectrum
+        autoPtr<waveSpectrum> spectrum_;
 
-        //- Wavelength [m]
-        const scalar length_;
+        //- The number of times to sample the spectrum
+        const label n_;
 
-        //- Phase offset [rad]
-        const scalar phase_;
+        //- The fractional range across which to sample the spectrum
+        const Pair<scalar> span_;
 
+        //- Formatter with which to plot the spectrum
+        autoPtr<setWriter> formatter_;
 
-    // Private Member Functions
+        //- Amplitudes [m]
+        scalarList amplitudes_;
 
-        //- Read and return the wave length from the dictionary. Either reads
-        //  the length directly, or reads the period and depth and calculates
-        //  the length.
-        static scalar readLength
-        (
-            const dictionary& dict,
-            const scalar depth,
-            const scalar amplitude,
-            const scalar g,
-            scalar (*celerityPtr)(const AiryCoeffs&)
-        );
+        //- Wavelengths [m]
+        scalarList lengths_;
+
+        //- Phase offsets [rad]
+        scalarList phases_;
 
 
-protected:
+    // Private Member Function
 
-    // Protected Member Functions
-
-        //- Return the wave coefficients
-        AiryCoeffs coeffs(const scalar t) const;
-
-        //- Return the wave coefficients at steady state
-        AiryCoeffs coeffs() const;
-
-        //- The wave celerity [m/s]
-        static scalar celerity(const AiryCoeffs&);
+        //- Return the i-th wave coefficients
+        AiryCoeffs coeffs(const label i) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("Airy");
+    TypeName("irregular");
 
 
     // Constructors
 
         //- Construct a copy
-        Airy(const Airy& wave);
+        irregular(const irregular& wave);
 
         //- Construct from a dictionary and gravity
-        Airy
+        irregular
         (
             const dictionary& dict,
             const scalar g,
-            const word& modelName = Airy::typeName,
-            scalar (*celerityPtr)(const AiryCoeffs&) = &AiryCoeffs::celerity
+            const word& modelName = irregular::typeName
         );
 
         //- Construct a clone
         virtual autoPtr<waveModel> clone() const
         {
-            return autoPtr<waveModel>(new Airy(*this));
+            return autoPtr<waveModel>(new irregular(*this));
         }
 
 
     //- Destructor
-    virtual ~Airy();
+    virtual ~irregular();
 
 
     // Member Functions
@@ -165,19 +156,10 @@ public:
         // Access
 
             //- Get the depth
-            scalar depth() const;
-
-            //- Get the amplitude
-            scalar amplitude(const scalar t) const;
-
-            //- Get the amplitude at steady state
-            scalar amplitude() const;
-
-            //- Get the length
-            scalar length() const;
-
-            //- Get the phase
-            scalar phase() const;
+            scalar depth() const
+            {
+                return depth_;
+            }
 
 
         //- The wave celerity [m/s]
@@ -209,10 +191,6 @@ public:
 
 } // End namespace waveModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "AiryI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

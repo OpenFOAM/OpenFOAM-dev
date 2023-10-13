@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,21 +40,15 @@ namespace waveModels
 
 // * * * * * * * * * * Static Protected Member Functions  * * * * * * ** * * //
 
-Foam::scalar Foam::waveModels::Stokes2::celerity
-(
-    const scalar depth,
-    const scalar amplitude,
-    const scalar length,
-    const scalar g
-)
+Foam::scalar Foam::waveModels::Stokes2::celerity(const AiryCoeffs& coeffs)
 {
     static const scalar kdGreat = log(great);
-    const scalar kd = min(max(k(length)*depth, - kdGreat), kdGreat);
-    const scalar ka = k(length)*amplitude;
+    const scalar kd = min(max(coeffs.k()*coeffs.depth, - kdGreat), kdGreat);
+    const scalar ka = coeffs.k()*coeffs.amplitude;
 
-    const scalar S = deep(depth, length) ? 0 : 1/cosh(2*kd);
+    const scalar S = coeffs.deep() ? 0 : 1/cosh(2*kd);
 
-    const scalar C0 = Airy::celerity(depth, amplitude, length, g);
+    const scalar C0 = coeffs.celerity();
     const scalar C2ByC0 = (2 + 7*sqr(S))/4/sqr(1 - S);
 
     if (debug)
@@ -62,7 +56,7 @@ Foam::scalar Foam::waveModels::Stokes2::celerity
         Info<< "C2 = " << C2ByC0*C0 << endl;
     }
 
-    return Airy::celerity(depth, amplitude, length, g) + sqr(ka)*C2ByC0*C0;
+    return Airy::celerity(coeffs) + sqr(ka)*C2ByC0*C0;
 }
 
 
@@ -73,10 +67,10 @@ Foam::waveModels::Stokes2::Stokes2
     const dictionary& dict,
     const scalar g,
     const word& modelName,
-    scalar (*modelCelerity)(scalar, scalar, scalar, scalar)
+    scalar (*celerityPtr)(const AiryCoeffs&)
 )
 :
-    Airy(dict, g, modelName, modelCelerity)
+    Airy(dict, g, modelName, celerityPtr)
 {}
 
 
@@ -88,17 +82,25 @@ Foam::waveModels::Stokes2::~Stokes2()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::scalar Foam::waveModels::Stokes2::celerity() const
+{
+    return celerity(coeffs());
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::waveModels::Stokes2::elevation
 (
     const scalar t,
     const scalarField& x
 ) const
 {
-    static const scalar kdGreat = log(great);
-    const scalar kd = min(max(k()*depth(), - kdGreat), kdGreat);
-    const scalar ka = k()*amplitude(t);
+    const AiryCoeffs coeffs = this->coeffs();
 
-    const scalar T = deep() ? 1 : tanh(kd);
+    static const scalar kdGreat = log(great);
+    const scalar kd = min(max(coeffs.k()*depth(), - kdGreat), kdGreat);
+    const scalar ka = coeffs.k()*amplitude(t);
+
+    const scalar T = coeffs.deep() ? 1 : tanh(kd);
 
     const scalar B22 = (3/sqr(T) - 1)/T/4;
 
@@ -109,7 +111,7 @@ Foam::tmp<Foam::scalarField> Foam::waveModels::Stokes2::elevation
 
     return
         Airy::elevation(t, x)
-      + (1/k())*sqr(ka)*B22*cos(2*angle(t, x));
+      + (1/coeffs.k())*sqr(ka)*B22*cos(2*coeffs.angle(phase(), t, x));
 }
 
 
@@ -119,11 +121,13 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Stokes2::velocity
     const vector2DField& xz
 ) const
 {
-    static const scalar kdGreat = log(great);
-    const scalar kd = min(max(k()*depth(), - kdGreat), kdGreat);
-    const scalar ka = k()*amplitude(t);
+    const AiryCoeffs coeffs = this->coeffs();
 
-    const scalar A22ByA11 = deep() ? 0 : 0.375/pow3(sinh(kd));
+    static const scalar kdGreat = log(great);
+    const scalar kd = min(max(coeffs.k()*depth(), - kdGreat), kdGreat);
+    const scalar ka = coeffs.k()*amplitude(t);
+
+    const scalar A22ByA11 = coeffs.deep() ? 0 : 0.375/pow3(sinh(kd));
 
     if (debug)
     {
@@ -133,7 +137,7 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Stokes2::velocity
 
     return
         Airy::velocity(t, xz)
-      + Airy::celerity()*sqr(ka)*A22ByA11*vi(2, t, xz);
+      + Airy::celerity()*sqr(ka)*A22ByA11*coeffs.vi(2, phase(), t, xz);
 }
 
 
