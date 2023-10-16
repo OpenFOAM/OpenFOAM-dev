@@ -600,13 +600,12 @@ void Foam::phaseSystem::correctKinematics()
     {
         phaseModels_[phasei].correctKinematics();
 
-        updateDpdt = updateDpdt || phaseModels_[phasei].thermo().dpdt();
-    }
-
-    // Update the pressure time-derivative if required
-    if (updateDpdt)
-    {
-        dpdt_ = fvc::ddt(phaseModels_.begin()().fluidThermo().p());
+        // Update the pressure time-derivative if required
+        if (!updateDpdt && phaseModels_[phasei].thermo().dpdt())
+        {
+            dpdt_ = fvc::ddt(phaseModels_[phasei].fluidThermo().p());
+            updateDpdt = true;
+        }
     }
 }
 
