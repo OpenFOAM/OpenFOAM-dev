@@ -237,7 +237,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
         }
 
         MRF.makeRelative(phiHbyA);
-        fvc::makeRelative(phiHbyA, phases[0].U());
+        fvc::makeRelative(phiHbyA, movingPhases[0].U());
 
         // Construct pressure "diffusivity"
         surfaceScalarField rAf
