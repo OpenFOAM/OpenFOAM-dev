@@ -111,6 +111,9 @@ public:
 
     // Member Functions
 
+        //- Should the dpdt term be included in the enthalpy equation
+        virtual Switch dpdt() const = 0;
+
         //- Return true if thermal conductivity is isotropic
         virtual bool isotropic() const = 0;
 
@@ -152,6 +155,15 @@ public:
 
     //- Destructor
     virtual ~implementation();
+
+
+    // Member Functions
+
+        //- The dpdt term should not be included in the enthalpy equation
+        virtual Switch dpdt() const
+        {
+            return false;
+        }
 };
 
 
@@ -195,6 +207,15 @@ public:
         :
             composite(dict, mesh, phaseName)
         {}
+
+
+    // Member Functions
+
+        //- The dpdt term should not be included in the enthalpy equation
+        virtual Switch dpdt() const
+        {
+            return false;
+        }
 };
 
 
