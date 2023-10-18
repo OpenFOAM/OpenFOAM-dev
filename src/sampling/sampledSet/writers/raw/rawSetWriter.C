@@ -143,6 +143,8 @@ void Foam::rawSetWriter::write
         os,
         true
     );
+
+    os << nl;
 }
 
 

@@ -132,6 +132,8 @@ void Foam::csvSetWriter::write
         #undef TypeValueSetsParameter
         os
     );
+
+    os << nl;
 }
 
 
