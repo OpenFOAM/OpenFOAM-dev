@@ -646,11 +646,11 @@ bool Foam::meshCheck::checkTopology(const polyMesh& mesh, const bool report)
 {
     label noFailedChecks = 0;
 
-    if (mesh.checkPoints(report)) noFailedChecks++;
-    if (mesh.checkUpperTriangular(report)) noFailedChecks++;
-    if (mesh.checkCellsZipUp(report)) noFailedChecks++;
-    if (mesh.checkFaceVertices(report)) noFailedChecks++;
-    if (mesh.checkFaceFaces(report)) noFailedChecks++;
+    if (checkPoints(mesh, report)) noFailedChecks++;
+    if (checkUpperTriangular(mesh, report)) noFailedChecks++;
+    if (checkCellsZipUp(mesh, report)) noFailedChecks++;
+    if (checkFaceVertices(mesh, report)) noFailedChecks++;
+    if (checkFaceFaces(mesh, report)) noFailedChecks++;
 
     if (noFailedChecks == 0)
     {
@@ -678,12 +678,12 @@ bool Foam::meshCheck::checkGeometry(const polyMesh& mesh, const bool report)
 {
     label noFailedChecks = 0;
 
-    if (mesh.checkClosedBoundary(report)) noFailedChecks++;
-    if (mesh.checkClosedCells(report)) noFailedChecks++;
-    if (mesh.checkFaceAreas(report)) noFailedChecks++;
-    if (mesh.checkCellVolumes(report)) noFailedChecks++;
+    if (checkClosedBoundary(mesh, report)) noFailedChecks++;
+    if (checkClosedCells(mesh, report)) noFailedChecks++;
+    if (checkFaceAreas(mesh, report)) noFailedChecks++;
+    if (checkCellVolumes(mesh, report)) noFailedChecks++;
     if (checkFaceOrthogonality(mesh, report)) noFailedChecks++;
-    if (mesh.checkFacePyramids(report)) noFailedChecks++;
+    if (checkFacePyramids(mesh, report)) noFailedChecks++;
     if (checkFaceSkewness(mesh, report)) noFailedChecks++;
 
     if (noFailedChecks == 0)

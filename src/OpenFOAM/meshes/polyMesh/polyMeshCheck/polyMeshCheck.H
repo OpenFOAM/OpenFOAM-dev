@@ -35,6 +35,7 @@ SourceFiles
 #define polyMeshCheck_H
 
 #include "polyMesh.H"
+#include "primitiveMeshCheck.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

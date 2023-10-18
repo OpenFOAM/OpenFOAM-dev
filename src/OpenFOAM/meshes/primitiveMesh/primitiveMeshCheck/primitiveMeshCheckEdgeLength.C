@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,24 +23,25 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "primitiveMesh.H"
+#include "primitiveMeshCheck.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-bool Foam::primitiveMesh::checkEdgeLength
+bool Foam::meshCheck::checkEdgeLength
 (
+    const primitiveMesh& mesh,
     const bool report,
     const scalar reportLenSqr,
     labelHashSet* setPtr
-) const
+)
 {
-    const pointField& points = this->points();
-    const faceList& faces = this->faces();
+    const pointField& points = mesh.points();
+    const faceList& faces = mesh.faces();
 
     scalar minLenSqr = sqr(great);
     scalar maxLenSqr = -sqr(great);
 
-    labelHashSet smallEdgeSet(nPoints()/100);
+    labelHashSet smallEdgeSet(mesh.nPoints()/100);
 
     forAll(faces, facei)
     {
