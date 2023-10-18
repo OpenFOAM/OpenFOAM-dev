@@ -53,7 +53,7 @@ Description
 #include "polyAddFace.H"
 #include "combineFaces.H"
 #include "removePoints.H"
-#include "polyMesh.H"
+#include "polyMeshCheck.H"
 #include "polyTopoChangeMap.H"
 #include "unitConversion.H"
 #include "motionSmoother.H"
@@ -135,7 +135,7 @@ label mergePatchFaces
         }
         else
         {
-            mesh.checkFacePyramids(false, -small, &errorFaces);
+            meshCheck::checkFacePyramids(mesh, false, -small, &errorFaces);
         }
 
         // Sets where the master is in error

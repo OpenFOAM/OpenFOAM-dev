@@ -25,7 +25,6 @@ License
 
 #include "PatchTools.H"
 #include "checkGeometry.H"
-#include "polyMesh.H"
 #include "polyMeshCheck.H"
 #include "cellSet.H"
 #include "faceSet.H"
@@ -582,15 +581,16 @@ Foam::label Foam::checkGeometry
         }
     }
 
-    if (mesh.checkClosedBoundary(true)) noFailedChecks++;
+    if (meshCheck::checkClosedBoundary(mesh, true)) noFailedChecks++;
 
     {
         cellSet cells(mesh, "nonClosedCells", mesh.nCells()/100+1);
         cellSet aspectCells(mesh, "highAspectRatioCells", mesh.nCells()/100+1);
         if
         (
-            mesh.checkClosedCells
+            meshCheck::checkClosedCells
             (
+                mesh,
                 true,
                 &cells,
                 &aspectCells,
@@ -633,7 +633,7 @@ Foam::label Foam::checkGeometry
 
     {
         faceSet faces(mesh, "zeroAreaFaces", mesh.nFaces()/100+1);
-        if (mesh.checkFaceAreas(true, &faces))
+        if (meshCheck::checkFaceAreas(mesh, true, &faces))
         {
             noFailedChecks++;
 
@@ -655,7 +655,7 @@ Foam::label Foam::checkGeometry
 
     {
         cellSet cells(mesh, "zeroVolumeCells", mesh.nCells()/100+1);
-        if (mesh.checkCellVolumes(true, &cells))
+        if (meshCheck::checkCellVolumes(mesh, true, &cells))
         {
             noFailedChecks++;
 
@@ -699,7 +699,7 @@ Foam::label Foam::checkGeometry
 
     {
         faceSet faces(mesh, "wrongOrientedFaces", mesh.nFaces()/100 + 1);
-        if (mesh.checkFacePyramids(true, -small, &faces))
+        if (meshCheck::checkFacePyramids(mesh, true, -small, &faces))
         {
             noFailedChecks++;
 
@@ -803,7 +803,7 @@ Foam::label Foam::checkGeometry
     {
         // Note use of nPoints since don't want edge construction.
         pointSet points(mesh, "shortEdges", mesh.nPoints()/1000 + 1);
-        if (mesh.checkEdgeLength(true, minDistSqr, &points))
+        if (meshCheck::checkEdgeLength(mesh, true, minDistSqr, &points))
         {
             // noFailedChecks++;
 
@@ -825,7 +825,7 @@ Foam::label Foam::checkGeometry
 
         label nEdgeClose = returnReduce(points.size(), sumOp<label>());
 
-        if (mesh.checkPointNearness(false, minDistSqr, &points))
+        if (meshCheck::checkPointNearness(mesh, false, minDistSqr, &points))
         {
             // noFailedChecks++;
 
@@ -850,7 +850,7 @@ Foam::label Foam::checkGeometry
     if (allGeometry)
     {
         faceSet faces(mesh, "concaveFaces", mesh.nFaces()/100 + 1);
-        if (mesh.checkFaceAngles(true, 10, &faces))
+        if (meshCheck::checkFaceAngles(mesh, true, 10, &faces))
         {
             // noFailedChecks++;
 
@@ -874,7 +874,7 @@ Foam::label Foam::checkGeometry
     if (allGeometry)
     {
         faceSet faces(mesh, "warpedFaces", mesh.nFaces()/100 + 1);
-        if (mesh.checkFaceFlatness(true, 0.8, &faces))
+        if (meshCheck::checkFaceFlatness(mesh, true, 0.8, &faces))
         {
             // noFailedChecks++;
 
@@ -917,7 +917,7 @@ Foam::label Foam::checkGeometry
     if (allGeometry)
     {
         cellSet cells(mesh, "concaveCells", mesh.nCells()/100);
-        if (mesh.checkConcaveCells(true, &cells))
+        if (meshCheck::checkConcaveCells(mesh, true, &cells))
         {
             noFailedChecks++;
 
