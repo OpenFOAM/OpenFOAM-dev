@@ -206,7 +206,6 @@ int main(int argc, char *argv[])
                 (
                     mesh,
                     allTopology,
-                    allGeometry,
                     surfWriter,
                     setWriter
                 );

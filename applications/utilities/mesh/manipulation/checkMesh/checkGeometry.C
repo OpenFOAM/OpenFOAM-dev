@@ -523,6 +523,39 @@ Foam::label Foam::checkGeometry
     Info<< "    Overall domain bounding box "
         << globalBb.min() << " " << globalBb.max() << endl;
 
+    if (allGeometry)
+    {
+        Info<< "    Patch bounding boxes" << endl;
+
+        const polyBoundaryMesh& patches = mesh.boundaryMesh();
+
+        forAll(patches, patchi)
+        {
+            const polyPatch& pp = patches[patchi];
+
+            if (!isA<processorPolyPatch>(pp))
+            {
+                Info<< "        " << setw(20) << pp.name();
+
+                const pointField& pts = pp.points();
+                const labelList& mp = pp.meshPoints();
+
+                if (returnReduce(mp.size(), sumOp<label>()) > 0)
+                {
+                    boundBox bb(point::max, point::min);
+                    forAll(mp, i)
+                    {
+                        bb.min() = min(bb.min(), pts[mp[i]]);
+                        bb.max() = max(bb.max(), pts[mp[i]]);
+                    }
+                    reduce(bb.min(), minOp<vector>());
+                    reduce(bb.max(), maxOp<vector>());
+                    Info<< ' ' << bb;
+                }
+            }
+            Info<< endl;
+        }
+    }
 
     // Min length
     scalar minDistSqr = magSqr(1e-6 * globalBb.span());

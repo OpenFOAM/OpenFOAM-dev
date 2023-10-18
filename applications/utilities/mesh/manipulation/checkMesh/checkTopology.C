@@ -42,7 +42,6 @@ Foam::label Foam::checkTopology
 (
     const polyMesh& mesh,
     const bool allTopology,
-    const bool allGeometry,
     const autoPtr<surfaceWriter>& surfWriter,
     const autoPtr<Foam::setWriter>& setWriter
 )
@@ -499,10 +498,6 @@ Foam::label Foam::checkTopology
         {
             Info<< setw(34) << "Surface topology";
         }
-        if (allGeometry)
-        {
-            Info<< " Bounding box";
-        }
         Info<< endl;
 
         forAll(patches, patchi)
@@ -553,25 +548,6 @@ Foam::label Foam::checkTopology
                             Info<< setw(34)
                                 << "multiply connected (shared edge)";
                         }
-                    }
-                }
-
-                if (allGeometry)
-                {
-                    const pointField& pts = pp.points();
-                    const labelList& mp = pp.meshPoints();
-
-                    if (returnReduce(mp.size(), sumOp<label>()) > 0)
-                    {
-                        boundBox bb(point::max, point::min);
-                        forAll(mp, i)
-                        {
-                            bb.min() = min(bb.min(), pts[mp[i]]);
-                            bb.max() = max(bb.max(), pts[mp[i]]);
-                        }
-                        reduce(bb.min(), minOp<vector>());
-                        reduce(bb.max(), maxOp<vector>());
-                        Info<< ' ' << bb;
                     }
                 }
                 Info<< endl;
