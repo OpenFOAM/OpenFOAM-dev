@@ -31,6 +31,15 @@ License
 #include "EdgeMap.H"
 #include "primitiveMeshTools.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+Foam::scalar Foam::meshCheck::closedThreshold  = 1.0e-6;
+Foam::scalar Foam::meshCheck::aspectThreshold  = 1000;
+Foam::scalar Foam::meshCheck::nonOrthThreshold = 70;    // deg
+Foam::scalar Foam::meshCheck::skewThreshold    = 4;
+Foam::scalar Foam::meshCheck::planarCosAngle   = 1.0e-6;
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::primitiveMesh::checkClosedBoundary
@@ -63,7 +72,7 @@ bool Foam::primitiveMesh::checkClosedBoundary
 
     vector openness = sumClosed/(sumMagClosedBoundary + vSmall);
 
-    if (cmptMax(cmptMag(openness)) > polyMeshCheck::closedThreshold)
+    if (cmptMax(cmptMag(openness)) > meshCheck::closedThreshold)
     {
         if (debug || report)
         {
@@ -156,7 +165,7 @@ bool Foam::primitiveMesh::checkClosedCells
     // Check the sums
     forAll(openness, celli)
     {
-        if (openness[celli] > polyMeshCheck::closedThreshold)
+        if (openness[celli] > meshCheck::closedThreshold)
         {
             if (setPtr)
             {
@@ -166,7 +175,7 @@ bool Foam::primitiveMesh::checkClosedCells
             nOpen++;
         }
 
-        if (aspectRatio[celli] > polyMeshCheck::aspectThreshold)
+        if (aspectRatio[celli] > meshCheck::aspectThreshold)
         {
             if (aspectSetPtr)
             {
@@ -674,7 +683,7 @@ bool Foam::primitiveMesh::checkConcaveCells
 
                     pC /= max(mag(pC), vSmall);
 
-                    if ((pC & fN) > -polyMeshCheck::planarCosAngle)
+                    if ((pC & fN) > -meshCheck::planarCosAngle)
                     {
                         // Concave or planar face
 

@@ -67,7 +67,7 @@ bool Foam::functionObjects::checkMesh::execute()
 {
     if (mesh_.changing())
     {
-        return polyMeshCheck::checkMesh(mesh_, true);
+        return meshCheck::checkMesh(mesh_, true);
     }
     else
     {

@@ -120,7 +120,7 @@ void Foam::attachPolyTopoChanger::attach(const bool removeEmptyPatches)
             << "Finished attaching mesh" << endl;
     }
 
-    polyMeshCheck::checkMesh(mesh_);
+    meshCheck::checkMesh(mesh_);
 }
 
 

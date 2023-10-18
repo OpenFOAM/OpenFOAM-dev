@@ -22,10 +22,9 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Namespace
-    Foam::polyMeshCheck
+    Foam::meshCheck
 
 Description
-
 
 SourceFiles
     polyMeshCheck.C
@@ -43,10 +42,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Namespace polyMeshCheck Declaration
+                        Namespace meshCheck Declaration
 \*---------------------------------------------------------------------------*/
 
-namespace polyMeshCheck
+namespace meshCheck
 {
     //- Check non-orthogonality
     bool checkFaceOrthogonality

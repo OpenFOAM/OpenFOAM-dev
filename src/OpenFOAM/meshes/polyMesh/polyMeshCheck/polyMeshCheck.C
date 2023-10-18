@@ -28,17 +28,9 @@ License
 #include "unitConversion.H"
 #include "syncTools.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-Foam::scalar Foam::polyMeshCheck::closedThreshold  = 1.0e-6;
-Foam::scalar Foam::polyMeshCheck::aspectThreshold  = 1000;
-Foam::scalar Foam::polyMeshCheck::nonOrthThreshold = 70;    // deg
-Foam::scalar Foam::polyMeshCheck::skewThreshold    = 4;
-Foam::scalar Foam::polyMeshCheck::planarCosAngle   = 1.0e-6;
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::polyMeshCheck::checkFaceOrthogonality
+bool Foam::meshCheck::checkFaceOrthogonality
 (
     const polyMesh& mesh,
     const bool report,
@@ -65,7 +57,7 @@ bool Foam::polyMeshCheck::checkFaceOrthogonality
 
     // Severe nonorthogonality threshold
     const scalar severeNonorthogonalityThreshold =
-        ::cos(degToRad(polyMeshCheck::nonOrthThreshold));
+        ::cos(degToRad(meshCheck::nonOrthThreshold));
 
 
     scalar minDDotS = great;
@@ -134,7 +126,7 @@ bool Foam::polyMeshCheck::checkFaceOrthogonality
         if (severeNonOrth > 0)
         {
             Info<< "   *Number of severely non-orthogonal (> "
-                << polyMeshCheck::nonOrthThreshold << " degrees) faces: "
+                << meshCheck::nonOrthThreshold << " degrees) faces: "
                 << severeNonOrth << "." << endl;
         }
     }
@@ -161,7 +153,7 @@ bool Foam::polyMeshCheck::checkFaceOrthogonality
 }
 
 
-bool Foam::polyMeshCheck::checkFaceSkewness
+bool Foam::meshCheck::checkFaceSkewness
 (
     const polyMesh& mesh,
     const bool report,
@@ -201,7 +193,7 @@ bool Foam::polyMeshCheck::checkFaceSkewness
     {
         // Check if the skewness vector is greater than the PN vector.
         // This does not cause trouble but is a good indication of a poor mesh.
-        if (skew[facei] > polyMeshCheck::skewThreshold)
+        if (skew[facei] > meshCheck::skewThreshold)
         {
             if (setPtr)
             {
@@ -242,7 +234,7 @@ bool Foam::polyMeshCheck::checkFaceSkewness
 }
 
 
-bool Foam::polyMeshCheck::checkEdgeAlignment
+bool Foam::meshCheck::checkEdgeAlignment
 (
     const polyMesh& mesh,
     const bool report,
@@ -380,7 +372,7 @@ bool Foam::polyMeshCheck::checkEdgeAlignment
 }
 
 
-bool Foam::polyMeshCheck::checkCellDeterminant
+bool Foam::meshCheck::checkCellDeterminant
 (
     const polyMesh& mesh,
     const bool report,
@@ -464,7 +456,7 @@ bool Foam::polyMeshCheck::checkCellDeterminant
 }
 
 
-bool Foam::polyMeshCheck::checkFaceWeight
+bool Foam::meshCheck::checkFaceWeight
 (
     const polyMesh& mesh,
     const bool report,
@@ -561,7 +553,7 @@ bool Foam::polyMeshCheck::checkFaceWeight
 }
 
 
-bool Foam::polyMeshCheck::checkVolRatio
+bool Foam::meshCheck::checkVolRatio
 (
     const polyMesh& mesh,
     const bool report,
@@ -650,7 +642,7 @@ bool Foam::polyMeshCheck::checkVolRatio
 }
 
 
-bool Foam::polyMeshCheck::checkTopology(const polyMesh& mesh, const bool report)
+bool Foam::meshCheck::checkTopology(const polyMesh& mesh, const bool report)
 {
     label noFailedChecks = 0;
 
@@ -682,7 +674,7 @@ bool Foam::polyMeshCheck::checkTopology(const polyMesh& mesh, const bool report)
 }
 
 
-bool Foam::polyMeshCheck::checkGeometry(const polyMesh& mesh, const bool report)
+bool Foam::meshCheck::checkGeometry(const polyMesh& mesh, const bool report)
 {
     label noFailedChecks = 0;
 
@@ -716,7 +708,7 @@ bool Foam::polyMeshCheck::checkGeometry(const polyMesh& mesh, const bool report)
 }
 
 
-bool Foam::polyMeshCheck::checkMesh(const polyMesh& mesh, const bool report)
+bool Foam::meshCheck::checkMesh(const polyMesh& mesh, const bool report)
 {
     const label noFailedChecks =
         checkTopology(mesh, report)

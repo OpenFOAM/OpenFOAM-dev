@@ -550,7 +550,7 @@ Foam::label Foam::checkGeometry
             )
          || (
                 validDirs == solDirs
-             && polyMeshCheck::checkEdgeAlignment
+             && meshCheck::checkEdgeAlignment
                 (
                     mesh,
                     true,
@@ -677,7 +677,7 @@ Foam::label Foam::checkGeometry
 
     {
         faceSet faces(mesh, "nonOrthoFaces", mesh.nFaces()/100+1);
-        if (polyMeshCheck::checkFaceOrthogonality(mesh, true, &faces))
+        if (meshCheck::checkFaceOrthogonality(mesh, true, &faces))
         {
             noFailedChecks++;
         }
@@ -722,7 +722,7 @@ Foam::label Foam::checkGeometry
 
     {
         faceSet faces(mesh, "skewFaces", mesh.nFaces()/100+1);
-        if (polyMeshCheck::checkFaceSkewness(mesh, true, &faces))
+        if (meshCheck::checkFaceSkewness(mesh, true, &faces))
         {
             noFailedChecks++;
 
@@ -897,7 +897,7 @@ Foam::label Foam::checkGeometry
     if (allGeometry)
     {
         cellSet cells(mesh, "underdeterminedCells", mesh.nCells()/100);
-        if (polyMeshCheck::checkCellDeterminant(mesh, true, &cells))
+        if (meshCheck::checkCellDeterminant(mesh, true, &cells))
         {
             noFailedChecks++;
 
@@ -937,7 +937,7 @@ Foam::label Foam::checkGeometry
     if (allGeometry)
     {
         faceSet faces(mesh, "lowWeightFaces", mesh.nFaces()/100);
-        if (polyMeshCheck::checkFaceWeight(mesh, true, 0.05, &faces))
+        if (meshCheck::checkFaceWeight(mesh, true, 0.05, &faces))
         {
             noFailedChecks++;
 
@@ -958,7 +958,7 @@ Foam::label Foam::checkGeometry
     if (allGeometry)
     {
         faceSet faces(mesh, "lowVolRatioFaces", mesh.nFaces()/100);
-        if (polyMeshCheck::checkVolRatio(mesh, true, 0.01, &faces))
+        if (meshCheck::checkVolRatio(mesh, true, 0.01, &faces))
         {
             noFailedChecks++;
 

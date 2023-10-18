@@ -740,7 +740,7 @@ public:
 };
 
 
-namespace polyMeshCheck
+namespace meshCheck
 {
     //- Data to control mesh checking
 
