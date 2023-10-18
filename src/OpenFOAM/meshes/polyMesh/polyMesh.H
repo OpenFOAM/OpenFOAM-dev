@@ -620,53 +620,6 @@ public:
             void removeFiles() const;
 
 
-        // Geometric checks. Selectively override primitiveMesh functionality.
-
-            //- Check non-orthogonality
-            virtual bool checkFaceOrthogonality
-            (
-                const bool report = false,
-                labelHashSet* setPtr = nullptr
-            ) const;
-
-            //- Check face skewness
-            virtual bool checkFaceSkewness
-            (
-                const bool report = false,
-                labelHashSet* setPtr = nullptr
-            ) const;
-
-            //- Check edge alignment for 1D/2D cases
-            virtual bool checkEdgeAlignment
-            (
-                const bool report,
-                const Vector<label>& directions,
-                labelHashSet* setPtr
-            ) const;
-
-            virtual bool checkCellDeterminant
-            (
-                const bool report,
-                labelHashSet* setPtr
-            ) const;
-
-            //- Check for face weights
-            virtual bool checkFaceWeight
-            (
-                const bool report,
-                const scalar minWeight = 0.05,
-                labelHashSet* setPtr = nullptr
-            ) const;
-
-            //- Check for neighbouring cell volumes
-            virtual bool checkVolRatio
-            (
-                const bool report,
-                const scalar minRatio = 0.01,
-                labelHashSet* setPtr = nullptr
-            ) const;
-
-
         // Position search functions
 
             //- Find the cell, tetFacei and tetPti for point p

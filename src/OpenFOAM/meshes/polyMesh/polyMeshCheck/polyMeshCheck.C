@@ -38,25 +38,26 @@ Foam::scalar Foam::polyMeshCheck::planarCosAngle   = 1.0e-6;
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::polyMesh::checkFaceOrthogonality
+bool Foam::polyMeshCheck::checkFaceOrthogonality
 (
+    const polyMesh& mesh,
     const bool report,
     labelHashSet* setPtr
-) const
+)
 {
-    if (debug)
+    if (mesh.debug)
     {
         InfoInFunction << "Checking mesh non-orthogonality" << endl;
     }
 
-    const vectorField& fAreas = faceAreas();
-    const vectorField& cellCtrs = cellCentres();
+    const vectorField& fAreas = mesh.faceAreas();
+    const vectorField& cellCtrs = mesh.cellCentres();
 
     // Calculate orthogonality for all internal and coupled boundary faces
     // (1 for uncoupled boundary faces)
     tmp<scalarField> tortho = polyMeshTools::faceOrthogonality
     (
-        *this,
+        mesh,
         fAreas,
         cellCtrs
     );
@@ -75,7 +76,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
 
 
     // Statistics only for internal and masters of coupled faces
-    PackedBoolList isMasterFace(syncTools::getInternalOrMasterFaces(*this));
+    PackedBoolList isMasterFace(syncTools::getInternalOrMasterFaces(mesh));
 
     forAll(ortho, facei)
     {
@@ -116,11 +117,11 @@ bool Foam::polyMesh::checkFaceOrthogonality
     reduce(severeNonOrth, sumOp<label>());
     reduce(errorNonOrth, sumOp<label>());
 
-    if (debug || report)
+    if (report)
     {
         if (nSummed > 0)
         {
-            if (debug || report)
+            if (report)
             {
                 Info<< "    Mesh non-orthogonality Max: "
                     << radToDeg(::acos(min(1.0, max(-1.0, minDDotS))))
@@ -140,7 +141,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
 
     if (errorNonOrth > 0)
     {
-        if (debug || report)
+        if (report)
         {
             Info<< " ***Number of non-orthogonality errors: "
                 << errorNonOrth << "." << endl;
@@ -150,7 +151,7 @@ bool Foam::polyMesh::checkFaceOrthogonality
     }
     else
     {
-        if (debug || report)
+        if (report)
         {
             Info<< "    Non-orthogonality check OK." << endl;
         }
@@ -160,28 +161,29 @@ bool Foam::polyMesh::checkFaceOrthogonality
 }
 
 
-bool Foam::polyMesh::checkFaceSkewness
+bool Foam::polyMeshCheck::checkFaceSkewness
 (
+    const polyMesh& mesh,
     const bool report,
     labelHashSet* setPtr
-) const
+)
 {
-    if (debug)
+    if (mesh.debug)
     {
         InfoInFunction << "Checking face skewness" << endl;
     }
 
-    const pointField& points = this->points();
-    const vectorField& fCtrs = faceCentres();
-    const vectorField& fAreas = faceAreas();
-    const vectorField& cellCtrs = cellCentres();
+    const pointField& points = mesh.points();
+    const vectorField& fCtrs = mesh.faceCentres();
+    const vectorField& fAreas = mesh.faceAreas();
+    const vectorField& cellCtrs = mesh.cellCentres();
 
     // Warn if the skew correction vector is more than skewWarning times
     // larger than the face area vector
 
     tmp<scalarField> tskew = polyMeshTools::faceSkewness
     (
-        *this,
+        mesh,
         points,
         fCtrs,
         fAreas,
@@ -193,7 +195,7 @@ bool Foam::polyMesh::checkFaceSkewness
     label nWarnSkew = 0;
 
     // Statistics only for all faces except slave coupled faces
-    PackedBoolList isMasterFace(syncTools::getMasterFaces(*this));
+    PackedBoolList isMasterFace(syncTools::getMasterFaces(mesh));
 
     forAll(skew, facei)
     {
@@ -218,7 +220,7 @@ bool Foam::polyMesh::checkFaceSkewness
 
     if (nWarnSkew > 0)
     {
-        if (debug || report)
+        if (report)
         {
             Info<< " ***Max skewness = " << maxSkew
                 << ", " << nWarnSkew << " highly skew faces detected"
@@ -230,7 +232,7 @@ bool Foam::polyMesh::checkFaceSkewness
     }
     else
     {
-        if (debug || report)
+        if (report)
         {
             Info<< "    Max skewness = " << maxSkew << " OK." << endl;
         }
@@ -240,12 +242,13 @@ bool Foam::polyMesh::checkFaceSkewness
 }
 
 
-bool Foam::polyMesh::checkEdgeAlignment
+bool Foam::polyMeshCheck::checkEdgeAlignment
 (
+    const polyMesh& mesh,
     const bool report,
     const Vector<label>& directions,
     labelHashSet* setPtr
-) const
+)
 {
     // Check 1D/2Dness of edges. Gets passed the non-empty directions and
     // checks all edges in the mesh whether they:
@@ -254,12 +257,12 @@ bool Foam::polyMesh::checkEdgeAlignment
     // Empty direction info is passed in as a vector of labels (synchronised)
     // which are 1 if the direction is non-empty, 0 if it is.
 
-    if (debug)
+    if (mesh.debug)
     {
         InfoInFunction << "Checking edge alignment" << endl;
     }
 
-    const pointField& p = points();
+    const pointField& p = mesh.points();
 
     label nDirs = 0;
     for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
@@ -282,7 +285,7 @@ bool Foam::polyMesh::checkEdgeAlignment
     }
 
 
-    const faceList& fcs = faces();
+    const faceList& fcs = mesh.faces();
 
     EdgeMap<label> edgesInError;
 
@@ -347,7 +350,7 @@ bool Foam::polyMesh::checkEdgeAlignment
 
     if (nErrorEdges > 0)
     {
-        if (debug || report)
+        if (report)
         {
             Info<< " ***Number of edges not aligned with or perpendicular to "
                 << "non-empty directions: " << nErrorEdges << endl;
@@ -367,7 +370,7 @@ bool Foam::polyMesh::checkEdgeAlignment
     }
     else
     {
-        if (debug || report)
+        if (report)
         {
             Info<< "    All edges aligned with or perpendicular to "
                 << "non-empty directions." << endl;
@@ -377,28 +380,29 @@ bool Foam::polyMesh::checkEdgeAlignment
 }
 
 
-bool Foam::polyMesh::checkCellDeterminant
+bool Foam::polyMeshCheck::checkCellDeterminant
 (
+    const polyMesh& mesh,
     const bool report,
     labelHashSet* setPtr
-) const
+)
 {
-    const vectorField& faceAreas = this->faceAreas();
-    const Vector<label>& meshD = geometricD();
+    const vectorField& faceAreas = mesh.faceAreas();
+    const Vector<label>& meshD = mesh.geometricD();
 
     const scalar warnDet = 1e-3;
 
-    if (debug)
+    if (mesh.debug)
     {
         InfoInFunction << "Checking for under-determined cells" << endl;
     }
 
     tmp<scalarField> tcellDeterminant = primitiveMeshTools::cellDeterminant
     (
-        *this,
+        mesh,
         meshD,
         faceAreas,
-        syncTools::getInternalOrCoupledFaces(*this)
+        syncTools::getInternalOrCoupledFaces(mesh)
     );
     scalarField& cellDeterminant = tcellDeterminant.ref();
 
@@ -425,7 +429,7 @@ bool Foam::polyMesh::checkCellDeterminant
     reduce(sumDet, sumOp<scalar>());
     label nSummed = returnReduce(cellDeterminant.size(), sumOp<label>());
 
-    if (debug || report)
+    if (report)
     {
         if (nSummed > 0)
         {
@@ -437,7 +441,7 @@ bool Foam::polyMesh::checkCellDeterminant
 
     if (nErrorCells > 0)
     {
-        if (debug || report)
+        if (report)
         {
             Info<< " ***Cells with small determinant (< "
                 << warnDet << ") found, number of cells: "
@@ -448,7 +452,7 @@ bool Foam::polyMesh::checkCellDeterminant
     }
     else
     {
-        if (debug || report)
+        if (report)
         {
             Info<< "    Cell determinant check OK." << endl;
         }
@@ -460,25 +464,26 @@ bool Foam::polyMesh::checkCellDeterminant
 }
 
 
-bool Foam::polyMesh::checkFaceWeight
+bool Foam::polyMeshCheck::checkFaceWeight
 (
+    const polyMesh& mesh,
     const bool report,
     const scalar minWeight,
     labelHashSet* setPtr
-) const
+)
 {
-    if (debug)
+    if (mesh.debug)
     {
         InfoInFunction << "Checking for low face interpolation weights" << endl;
     }
 
-    const vectorField& fCtrs = faceCentres();
-    const vectorField& fAreas = faceAreas();
-    const vectorField& cellCtrs = this->cellCentres();
+    const vectorField& fCtrs = mesh.faceCentres();
+    const vectorField& fAreas = mesh.faceAreas();
+    const vectorField& cellCtrs = mesh.cellCentres();
 
     tmp<scalarField> tfaceWght = polyMeshTools::faceWeights
     (
-        *this,
+        mesh,
         fCtrs,
         fAreas,
         cellCtrs
@@ -492,7 +497,7 @@ bool Foam::polyMesh::checkFaceWeight
     label nSummed = 0;
 
     // Statistics only for internal and masters of coupled faces
-    PackedBoolList isMasterFace(syncTools::getInternalOrMasterFaces(*this));
+    PackedBoolList isMasterFace(syncTools::getInternalOrMasterFaces(mesh));
 
     forAll(faceWght, facei)
     {
@@ -521,7 +526,7 @@ bool Foam::polyMesh::checkFaceWeight
     reduce(sumDet, sumOp<scalar>());
     reduce(nSummed, sumOp<label>());
 
-    if (debug || report)
+    if (report)
     {
         if (nSummed > 0)
         {
@@ -533,7 +538,7 @@ bool Foam::polyMesh::checkFaceWeight
 
     if (nErrorFaces > 0)
     {
-        if (debug || report)
+        if (report)
         {
             Info<< " ***Faces with small interpolation weight (< " << minWeight
                 << ") found, number of faces: "
@@ -544,7 +549,7 @@ bool Foam::polyMesh::checkFaceWeight
     }
     else
     {
-        if (debug || report)
+        if (report)
         {
             Info<< "    Face interpolation weight check OK." << endl;
         }
@@ -556,21 +561,22 @@ bool Foam::polyMesh::checkFaceWeight
 }
 
 
-bool Foam::polyMesh::checkVolRatio
+bool Foam::polyMeshCheck::checkVolRatio
 (
+    const polyMesh& mesh,
     const bool report,
     const scalar minRatio,
     labelHashSet* setPtr
-) const
+)
 {
-    if (debug)
+    if (mesh.debug)
     {
         InfoInFunction << "Checking for volume ratio < " << minRatio << endl;
     }
 
-    const scalarField& cellVols = cellVolumes();
+    const scalarField& cellVols = mesh.cellVolumes();
 
-    tmp<scalarField> tvolRatio = polyMeshTools::volRatio(*this, cellVols);
+    tmp<scalarField> tvolRatio = polyMeshTools::volRatio(mesh, cellVols);
     scalarField& volRatio = tvolRatio.ref();
 
 
@@ -580,7 +586,7 @@ bool Foam::polyMesh::checkVolRatio
     label nSummed = 0;
 
     // Statistics only for internal and masters of coupled faces
-    PackedBoolList isMasterFace(syncTools::getInternalOrMasterFaces(*this));
+    PackedBoolList isMasterFace(syncTools::getInternalOrMasterFaces(mesh));
 
     forAll(volRatio, facei)
     {
@@ -609,7 +615,7 @@ bool Foam::polyMesh::checkVolRatio
     reduce(sumDet, sumOp<scalar>());
     reduce(nSummed, sumOp<label>());
 
-    if (debug || report)
+    if (report)
     {
         if (nSummed > 0)
         {
@@ -621,7 +627,7 @@ bool Foam::polyMesh::checkVolRatio
 
     if (nErrorFaces > 0)
     {
-        if (debug || report)
+        if (report)
         {
             Info<< " ***Faces with small volume ratio (< " << minRatio
                 << ") found, number of faces: "
@@ -632,7 +638,7 @@ bool Foam::polyMesh::checkVolRatio
     }
     else
     {
-        if (debug || report)
+        if (report)
         {
             Info<< "    Face volume ratio check OK." << endl;
         }
@@ -642,7 +648,6 @@ bool Foam::polyMesh::checkVolRatio
 
     return false;
 }
-
 
 
 bool Foam::polyMeshCheck::checkTopology(const polyMesh& mesh, const bool report)
@@ -685,9 +690,9 @@ bool Foam::polyMeshCheck::checkGeometry(const polyMesh& mesh, const bool report)
     if (mesh.checkClosedCells(report)) noFailedChecks++;
     if (mesh.checkFaceAreas(report)) noFailedChecks++;
     if (mesh.checkCellVolumes(report)) noFailedChecks++;
-    if (mesh.checkFaceOrthogonality(report)) noFailedChecks++;
+    if (checkFaceOrthogonality(mesh, report)) noFailedChecks++;
     if (mesh.checkFacePyramids(report)) noFailedChecks++;
-    if (mesh.checkFaceSkewness(report)) noFailedChecks++;
+    if (checkFaceSkewness(mesh, report)) noFailedChecks++;
 
     if (noFailedChecks == 0)
     {
