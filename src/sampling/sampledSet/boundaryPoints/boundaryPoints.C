@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 #include "treeBoundBox.H"
 #include "treeDataFace.H"
 #include "Time.H"
-#include "meshTools.H"
+#include "OBJstream.H"
 #include "RemoteData.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -135,19 +135,20 @@ void Foam::sampledSets::boundaryPoints::calcSamples
     // Dump connecting lines from the sampling points to the hit locations
     if (debug && Pstream::master())
     {
-        OFstream str(mesh().time().path() / name() + "_nearest.obj");
-
-        label verti = 0;
+        OBJstream str(mesh().time().path()/(name() + "_nearest.obj"));
 
         forAll(nearest, sampleI)
         {
             if (nearest[sampleI].proci != -1)
             {
-                meshTools::writeOBJ(str, points_[sampleI]);
-                verti++;
-                meshTools::writeOBJ(str, nearest[sampleI].data.second());
-                verti++;
-                str << "l " << verti - 1 << ' ' << verti << nl;
+                str.write
+                (
+                    linePointRef
+                    (
+                        points_[sampleI],
+                        nearest[sampleI].data.second()
+                    )
+                );
             }
         }
     }

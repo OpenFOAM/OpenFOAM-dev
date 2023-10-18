@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "meshSearch.H"
 #include "treeDataCell.H"
 #include "treeDataFace.H"
-#include "meshTools.H"
+#include "OBJstream.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -433,10 +433,11 @@ bool Foam::sampledSurfaces::triSurfaceMesh::update
     if (debug)
     {
         this->clearOut();
-        OFstream str(mesh().time().path()/"surfaceToMesh.obj");
+
+        OBJstream str(mesh().time().path()/"surfaceToMesh.obj");
+
         Info<< "Dumping correspondence from local surface (points or faces)"
             << " to mesh (cells or faces) to " << str.name() << endl;
-        label vertI = 0;
 
         if (sampledSurface::interpolate())
         {
@@ -444,34 +445,34 @@ bool Foam::sampledSurfaces::triSurfaceMesh::update
             {
                 forAll(samplePoints_, pointi)
                 {
-                    meshTools::writeOBJ(str, points()[pointi]);
-                    vertI++;
+                    const label celli = sampleElements_[pointi];
 
-                    meshTools::writeOBJ(str, samplePoints_[pointi]);
-                    vertI++;
-
-                    label celli = sampleElements_[pointi];
-                    meshTools::writeOBJ(str, mesh().cellCentres()[celli]);
-                    vertI++;
-                    str << "l " << vertI-2 << ' ' << vertI-1 << ' ' << vertI
-                        << nl;
+                    str.write
+                    (
+                        triPointRef
+                        (
+                            points()[pointi],
+                            samplePoints_[pointi],
+                            mesh().cellCentres()[celli]
+                        )
+                    );
                 }
             }
             else
             {
                 forAll(samplePoints_, pointi)
                 {
-                    meshTools::writeOBJ(str, points()[pointi]);
-                    vertI++;
+                    const label facei = sampleElements_[pointi];
 
-                    meshTools::writeOBJ(str, samplePoints_[pointi]);
-                    vertI++;
-
-                    label facei = sampleElements_[pointi];
-                    meshTools::writeOBJ(str, mesh().faceCentres()[facei]);
-                    vertI++;
-                    str << "l " << vertI-2 << ' ' << vertI-1 << ' ' << vertI
-                        << nl;
+                    str.write
+                    (
+                        triPointRef
+                        (
+                            points()[pointi],
+                            samplePoints_[pointi],
+                            mesh().faceCentres()[facei]
+                        )
+                    );
                 }
             }
         }
@@ -481,33 +482,39 @@ bool Foam::sampledSurfaces::triSurfaceMesh::update
             {
                 forAll(sampleElements_, triI)
                 {
-                    meshTools::writeOBJ(str, faceCentres()[triI]);
-                    vertI++;
+                    const label celli = sampleElements_[triI];
 
-                    label celli = sampleElements_[triI];
-                    meshTools::writeOBJ(str, mesh().cellCentres()[celli]);
-                    vertI++;
-                    str << "l " << vertI-1 << ' ' << vertI << nl;
+                    str.write
+                    (
+                        linePointRef
+                        (
+                            faceCentres()[triI],
+                            mesh().cellCentres()[celli]
+                        )
+                    );
                 }
             }
             else
             {
                 forAll(sampleElements_, triI)
                 {
-                    meshTools::writeOBJ(str, faceCentres()[triI]);
-                    vertI++;
+                    const label facei = sampleElements_[triI];
 
-                    label facei = sampleElements_[triI];
-                    meshTools::writeOBJ(str, mesh().faceCentres()[facei]);
-                    vertI++;
-                    str << "l " << vertI-1 << ' ' << vertI << nl;
+                    str.write
+                    (
+                        linePointRef
+                        (
+                            faceCentres()[triI],
+                            mesh().faceCentres()[facei]
+                        )
+                    );
                 }
             }
         }
     }
 
-
     needsUpdate_ = false;
+
     return true;
 }
 
