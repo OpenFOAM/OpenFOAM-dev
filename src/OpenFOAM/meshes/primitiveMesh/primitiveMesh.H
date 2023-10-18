@@ -388,9 +388,6 @@ public:
                 //- Return old points for mesh motion
                 virtual const pointField& oldPoints() const = 0;
 
-                //- Return old cell centres for mesh motion
-                virtual const pointField& oldCellCentres() const = 0;
-
 
             // Derived mesh data
 
