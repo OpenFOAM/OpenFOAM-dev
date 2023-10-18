@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Namespace
-    Foam::primitiveMeshTools
+    Foam::meshTools
 
 Description
-    Collection of static functions operating on primitiveMesh (mainly checks).
+    Collection of functions operating on primitiveMesh (mainly checks).
 
 SourceFiles
     primitiveMeshTools.C
@@ -43,15 +43,13 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Namespace primitiveMeshTools Declaration
+                   Namespace meshTools Declaration
 \*---------------------------------------------------------------------------*/
 
-class primitiveMeshTools
+namespace meshTools
 {
-public:
-
     //- Generate non-orthogonality field (internal faces only)
-    static tmp<scalarField> faceOrthogonality
+    tmp<scalarField> faceOrthogonality
     (
         const primitiveMesh& mesh,
         const vectorField& fAreas,
@@ -59,7 +57,7 @@ public:
     );
 
     //- Generate face pyramid volume fields
-    static void facePyramidVolume
+    void facePyramidVolume
     (
         const primitiveMesh& mesh,
         const pointField& points,
@@ -69,7 +67,7 @@ public:
     );
 
     //- Generate skewness field
-    static tmp<scalarField> faceSkewness
+    tmp<scalarField> faceSkewness
     (
         const primitiveMesh& mesh,
         const pointField& points,
@@ -79,7 +77,7 @@ public:
     );
 
     //- Generate cell openness and cell aspect ratio field
-    static void cellClosedness
+    void cellClosedness
     (
         const primitiveMesh& mesh,
         const Vector<label>& meshD,
@@ -91,7 +89,7 @@ public:
 
     //- Generate face concavity field. Returns per face the (sin of the)
     //  most concave angle between two consecutive edges
-    static tmp<scalarField> faceConcavity
+    tmp<scalarField> faceConcavity
     (
         const scalar maxSin,
         const primitiveMesh& mesh,
@@ -102,7 +100,7 @@ public:
     //- Generate face flatness field. Compares the individual triangles'
     //  normals against the face average normal. Between 0 (fully warped)
     //  and 1 (fully flat)
-    static tmp<scalarField> faceFlatness
+    tmp<scalarField> faceFlatness
     (
         const primitiveMesh& mesh,
         const pointField& p,
@@ -112,7 +110,7 @@ public:
 
     //- Generate edge alignment field. Is per face the minimum aligned edge
     //  (does not use edge addressing)
-    static tmp<scalarField> edgeAlignment
+    tmp<scalarField> edgeAlignment
     (
         const primitiveMesh& mesh,
         const Vector<label>& directions,
@@ -120,7 +118,7 @@ public:
     );
 
     //- Generate cell determinant field
-    static tmp<scalarField> cellDeterminant
+    tmp<scalarField> cellDeterminant
     (
         const primitiveMesh& mesh,
         const Vector<label>& directions,
@@ -132,7 +130,7 @@ public:
     // Helpers: single face check
 
         //- Skewness of single face
-        static scalar faceSkewness
+        scalar faceSkewness
         (
             const primitiveMesh& mesh,
             const pointField& p,
@@ -145,7 +143,7 @@ public:
         );
 
         //- Skewness of single boundary face
-        static scalar boundaryFaceSkewness
+        scalar boundaryFaceSkewness
         (
             const primitiveMesh& mesh,
             const pointField& p,
@@ -157,7 +155,7 @@ public:
         );
 
         //- Orthogonality of single face
-        static scalar faceOrthogonality
+        scalar faceOrthogonality
         (
             const point& ownCc,
             const point& neiCc,

@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Namespace
-    Foam::polyMeshTools
+    Foam::meshTools
 
 Description
-    Collection of static functions operating on polyMesh (mainly checks) so
+    Collection of functions operating on polyMesh (mainly checks) so
     that need access to patch information.
 
 SourceFiles
@@ -44,19 +44,14 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Namespace polyMeshTools Declaration
+                      Namespace meshTools Declaration
 \*---------------------------------------------------------------------------*/
 
-class polyMeshTools
-:
-    public primitiveMeshTools
+namespace meshTools
 {
-
-public:
-
     //- Generate orthogonality field. (1 for fully orthogonal, < 1 for
     //  non-orthogonal)
-    static tmp<scalarField> faceOrthogonality
+    tmp<scalarField> faceOrthogonality
     (
         const polyMesh& mesh,
         const vectorField& fAreas,
@@ -64,7 +59,7 @@ public:
     );
 
     //- Generate skewness field
-    static tmp<scalarField> faceSkewness
+    tmp<scalarField> faceSkewness
     (
         const polyMesh& mesh,
         const pointField& points,
@@ -74,7 +69,7 @@ public:
     );
 
     //- Generate interpolation factors field
-    static tmp<scalarField> faceWeights
+    tmp<scalarField> faceWeights
     (
         const polyMesh& mesh,
         const vectorField& fCtrs,
@@ -83,7 +78,7 @@ public:
     );
 
     //- Generate volume ratio field
-    static tmp<scalarField> volRatio
+    tmp<scalarField> volRatio
     (
         const polyMesh& mesh,
         const scalarField& vol

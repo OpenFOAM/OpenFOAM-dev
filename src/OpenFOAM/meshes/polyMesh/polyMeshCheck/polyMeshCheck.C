@@ -47,7 +47,7 @@ bool Foam::meshCheck::checkFaceOrthogonality
 
     // Calculate orthogonality for all internal and coupled boundary faces
     // (1 for uncoupled boundary faces)
-    tmp<scalarField> tortho = polyMeshTools::faceOrthogonality
+    tmp<scalarField> tortho = meshTools::faceOrthogonality
     (
         mesh,
         fAreas,
@@ -173,7 +173,7 @@ bool Foam::meshCheck::checkFaceSkewness
     // Warn if the skew correction vector is more than skewWarning times
     // larger than the face area vector
 
-    tmp<scalarField> tskew = polyMeshTools::faceSkewness
+    tmp<scalarField> tskew = meshTools::faceSkewness
     (
         mesh,
         points,
@@ -389,7 +389,7 @@ bool Foam::meshCheck::checkCellDeterminant
         InfoInFunction << "Checking for under-determined cells" << endl;
     }
 
-    tmp<scalarField> tcellDeterminant = primitiveMeshTools::cellDeterminant
+    tmp<scalarField> tcellDeterminant = meshTools::cellDeterminant
     (
         mesh,
         meshD,
@@ -473,7 +473,7 @@ bool Foam::meshCheck::checkFaceWeight
     const vectorField& fAreas = mesh.faceAreas();
     const vectorField& cellCtrs = mesh.cellCentres();
 
-    tmp<scalarField> tfaceWght = polyMeshTools::faceWeights
+    tmp<scalarField> tfaceWght = meshTools::faceWeights
     (
         mesh,
         fCtrs,
@@ -568,7 +568,7 @@ bool Foam::meshCheck::checkVolRatio
 
     const scalarField& cellVols = mesh.cellVolumes();
 
-    tmp<scalarField> tvolRatio = polyMeshTools::volRatio(mesh, cellVols);
+    tmp<scalarField> tvolRatio = meshTools::volRatio(mesh, cellVols);
     scalarField& volRatio = tvolRatio.ref();
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceOrthogonality
+Foam::tmp<Foam::scalarField> Foam::meshTools::faceOrthogonality
 (
     const polyMesh& mesh,
     const vectorField& areas,
@@ -48,7 +48,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceOrthogonality
     // Internal faces
     forAll(nei, facei)
     {
-        ortho[facei] = primitiveMeshTools::faceOrthogonality
+        ortho[facei] = meshTools::faceOrthogonality
         (
             cc[own[facei]],
             cc[nei[facei]],
@@ -72,7 +72,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceOrthogonality
                 label facei = pp.start() + i;
                 label bFacei = facei - mesh.nInternalFaces();
 
-                ortho[facei] = primitiveMeshTools::faceOrthogonality
+                ortho[facei] = meshTools::faceOrthogonality
                 (
                     cc[own[facei]],
                     neighbourCc[bFacei],
@@ -86,7 +86,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceOrthogonality
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceSkewness
+Foam::tmp<Foam::scalarField> Foam::meshTools::faceSkewness
 (
     const polyMesh& mesh,
     const pointField& p,
@@ -104,7 +104,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceSkewness
 
     forAll(nei, facei)
     {
-        skew[facei] = primitiveMeshTools::faceSkewness
+        skew[facei] = meshTools::faceSkewness
         (
             mesh,
             p,
@@ -134,7 +134,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceSkewness
                 label facei = pp.start() + i;
                 label bFacei = facei - mesh.nInternalFaces();
 
-                skew[facei] = primitiveMeshTools::faceSkewness
+                skew[facei] = meshTools::faceSkewness
                 (
                     mesh,
                     p,
@@ -153,7 +153,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceSkewness
             {
                 label facei = pp.start() + i;
 
-                skew[facei] = primitiveMeshTools::boundaryFaceSkewness
+                skew[facei] = meshTools::boundaryFaceSkewness
                 (
                     mesh,
                     p,
@@ -171,7 +171,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceSkewness
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceWeights
+Foam::tmp<Foam::scalarField> Foam::meshTools::faceWeights
 (
     const polyMesh& mesh,
     const vectorField& fCtrs,
@@ -229,7 +229,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceWeights
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::polyMeshTools::volRatio
+Foam::tmp<Foam::scalarField> Foam::meshTools::volRatio
 (
     const polyMesh& mesh,
     const scalarField& vol

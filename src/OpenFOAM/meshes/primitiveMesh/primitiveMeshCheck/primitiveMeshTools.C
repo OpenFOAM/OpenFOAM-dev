@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::scalar Foam::primitiveMeshTools::faceSkewness
+Foam::scalar Foam::meshTools::faceSkewness
 (
     const primitiveMesh& mesh,
     const pointField& p,
@@ -65,7 +65,7 @@ Foam::scalar Foam::primitiveMeshTools::faceSkewness
 }
 
 
-Foam::scalar Foam::primitiveMeshTools::boundaryFaceSkewness
+Foam::scalar Foam::meshTools::boundaryFaceSkewness
 (
     const primitiveMesh& mesh,
     const pointField& p,
@@ -104,7 +104,7 @@ Foam::scalar Foam::primitiveMeshTools::boundaryFaceSkewness
 }
 
 
-Foam::scalar Foam::primitiveMeshTools::faceOrthogonality
+Foam::scalar Foam::meshTools::faceOrthogonality
 (
     const point& ownCc,
     const point& neiCc,
@@ -119,7 +119,7 @@ Foam::scalar Foam::primitiveMeshTools::faceOrthogonality
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceOrthogonality
+Foam::tmp<Foam::scalarField> Foam::meshTools::faceOrthogonality
 (
     const primitiveMesh& mesh,
     const vectorField& areas,
@@ -147,7 +147,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceOrthogonality
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceSkewness
+Foam::tmp<Foam::scalarField> Foam::meshTools::faceSkewness
 (
     const primitiveMesh& mesh,
     const pointField& p,
@@ -198,7 +198,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceSkewness
 }
 
 
-void Foam::primitiveMeshTools::facePyramidVolume
+void Foam::meshTools::facePyramidVolume
 (
     const primitiveMesh& mesh,
     const pointField& points,
@@ -237,7 +237,7 @@ void Foam::primitiveMeshTools::facePyramidVolume
 }
 
 
-void Foam::primitiveMeshTools::cellClosedness
+void Foam::meshTools::cellClosedness
 (
     const primitiveMesh& mesh,
     const Vector<label>& meshD,
@@ -331,7 +331,7 @@ void Foam::primitiveMeshTools::cellClosedness
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
+Foam::tmp<Foam::scalarField> Foam::meshTools::faceConcavity
 (
     const scalar maxSin,
     const primitiveMesh& mesh,
@@ -401,7 +401,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceFlatness
+Foam::tmp<Foam::scalarField> Foam::meshTools::faceFlatness
 (
     const primitiveMesh& mesh,
     const pointField& p,
@@ -450,7 +450,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceFlatness
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::cellDeterminant
+Foam::tmp<Foam::scalarField> Foam::meshTools::cellDeterminant
 (
     const primitiveMesh& mesh,
     const Vector<label>& meshD,

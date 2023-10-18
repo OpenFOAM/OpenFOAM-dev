@@ -819,7 +819,7 @@ bool Foam::dynamicMeshCheck::checkFaceSkewness
 
         if (mesh.isInternalFace(facei))
         {
-            scalar skewness = primitiveMeshTools::faceSkewness
+            scalar skewness = meshTools::faceSkewness
             (
                 mesh,
                 points,
@@ -854,7 +854,7 @@ bool Foam::dynamicMeshCheck::checkFaceSkewness
         }
         else if (patches[patches.whichPatch(facei)].coupled())
         {
-            scalar skewness = primitiveMeshTools::faceSkewness
+            scalar skewness = meshTools::faceSkewness
             (
                 mesh,
                 points,
@@ -889,7 +889,7 @@ bool Foam::dynamicMeshCheck::checkFaceSkewness
         }
         else
         {
-            scalar skewness = primitiveMeshTools::boundaryFaceSkewness
+            scalar skewness = meshTools::boundaryFaceSkewness
             (
                 mesh,
                 points,
@@ -932,7 +932,7 @@ bool Foam::dynamicMeshCheck::checkFaceSkewness
         const point& ownCc = cellCentres[own[face0]];
         const point& neiCc = cellCentres[own[face1]];
 
-        scalar skewness = primitiveMeshTools::faceSkewness
+        scalar skewness = meshTools::faceSkewness
         (
             mesh,
             points,

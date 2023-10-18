@@ -147,7 +147,7 @@ bool Foam::primitiveMesh::checkClosedCells
 
     scalarField openness;
     scalarField aspectRatio;
-    primitiveMeshTools::cellClosedness
+    meshTools::cellClosedness
     (
         *this,
         meshD,
@@ -369,7 +369,7 @@ bool Foam::primitiveMesh::checkFacePyramids
 
     scalarField ownPyrVol;
     scalarField neiPyrVol;
-    primitiveMeshTools::facePyramidVolume
+    meshTools::facePyramidVolume
     (
         *this,
         points,
@@ -455,7 +455,7 @@ bool Foam::primitiveMesh::checkFaceAngles
     const pointField& points = this->points();
     const vectorField& faceAreas = this->faceAreas();
 
-    tmp<scalarField> tfaceAngles = primitiveMeshTools::faceConcavity
+    tmp<scalarField> tfaceAngles = meshTools::faceConcavity
     (
         maxSin,
         *this,
@@ -535,7 +535,7 @@ bool Foam::primitiveMesh::checkFaceFlatness
     const vectorField& faceAreas = this->faceAreas();
     const faceList& fcs = faces();
 
-    tmp<scalarField> tfaceFlatness = primitiveMeshTools::faceFlatness
+    tmp<scalarField> tfaceFlatness = meshTools::faceFlatness
     (
         *this,
         points,
