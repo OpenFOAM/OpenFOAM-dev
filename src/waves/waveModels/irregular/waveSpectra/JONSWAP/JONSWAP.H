@@ -51,6 +51,7 @@ Usage
                    surface [m/s]                           | yes       |
         F        | The fetch (distance from the lee \\
                    shore) [m]                              | yes       |
+        gamma    | Peaked-ness parameter                   | no        | 3.3
     \endtable
 
     Example specification:
@@ -99,6 +100,9 @@ class JONSWAP
 
         //- Fetch (distance from the lee shore) [m]
         const scalar F_;
+
+        //- Peaked-ness parameter
+        const scalar gamma_;
 
 
 public:

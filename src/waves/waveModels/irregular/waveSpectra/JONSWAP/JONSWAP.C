@@ -50,7 +50,8 @@ Foam::waveSpectra::JONSWAP::JONSWAP
 :
     waveSpectrum(spectrum),
     U10_(spectrum.U10_),
-    F_(spectrum.F_)
+    F_(spectrum.F_),
+    gamma_(spectrum.gamma_)
 {}
 
 
@@ -62,7 +63,8 @@ Foam::waveSpectra::JONSWAP::JONSWAP
 :
     waveSpectrum(dict, g),
     U10_(dict.lookup<scalar>("U10")),
-    F_(dict.lookup<scalar>("F"))
+    F_(dict.lookup<scalar>("F")),
+    gamma_(dict.lookupOrDefault<scalar>("gamma", 3.3))
 {}
 
 
@@ -82,10 +84,9 @@ Foam::tmp<Foam::scalarField> Foam::waveSpectra::JONSWAP::S
     const scalar alpha = 0.076*pow(sqr(U10_)/(F_*g()), 0.22);
     const scalarField w(twoPi*f);
     const scalar wp = 22*pow(sqr(g())/(U10_*F_), 1.0/3.0);
-    const scalar gamma = 3.3;
     const scalarField sigma(0.07 + 0.02*pos(w - wp));
     const scalarField r(exp(- sqr(w - wp)/(2*sqr(sigma)*sqr(wp))));
-    return twoPi*alpha*sqr(g())/pow5(w)*exp(- 1.2*pow4(wp/w))*pow(gamma, r);
+    return twoPi*alpha*sqr(g())/pow5(w)*exp(- 1.2*pow4(wp/w))*pow(gamma_, r);
 }
 
 
@@ -103,6 +104,7 @@ void Foam::waveSpectra::JONSWAP::write(Ostream& os) const
 
     writeEntry(os, "U10", U10_);
     writeEntry(os, "F", F_);
+    writeEntryIfDifferent(os, "gamma", 3.3, gamma_);
 }
 
 
