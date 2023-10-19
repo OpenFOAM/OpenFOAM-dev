@@ -38,7 +38,7 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::label Foam::checkTopology
+Foam::label Foam::meshCheck::checkTopology
 (
     const polyMesh& mesh,
     const bool allTopology,
@@ -131,7 +131,7 @@ Foam::label Foam::checkTopology
             cells.write();
             if (surfWriter.valid())
             {
-                mergeAndWrite(surfWriter(), cells);
+                meshTools::mergeAndWrite(surfWriter(), cells);
             }
 
         }
@@ -156,7 +156,7 @@ Foam::label Foam::checkTopology
             points.write();
             if (setWriter.valid())
             {
-                mergeAndWrite(setWriter, points);
+                meshTools::mergeAndWrite(setWriter, points);
             }
         }
     }
@@ -178,7 +178,7 @@ Foam::label Foam::checkTopology
             faces.write();
             if (surfWriter.valid())
             {
-                mergeAndWrite(surfWriter(), faces);
+                meshTools::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -198,7 +198,7 @@ Foam::label Foam::checkTopology
             faces.write();
             if (surfWriter.valid())
             {
-                mergeAndWrite(surfWriter(), faces);
+                meshTools::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -219,7 +219,7 @@ Foam::label Foam::checkTopology
             cells.write();
             if (surfWriter.valid())
             {
-                mergeAndWrite(surfWriter(), cells);
+                meshTools::mergeAndWrite(surfWriter(), cells);
             }
 
         }
@@ -243,7 +243,7 @@ Foam::label Foam::checkTopology
             faces.write();
             if (surfWriter.valid())
             {
-                mergeAndWrite(surfWriter(), faces);
+                meshTools::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -298,7 +298,7 @@ Foam::label Foam::checkTopology
             oneCells.write();
             if (surfWriter.valid())
             {
-                mergeAndWrite(surfWriter(), oneCells);
+                meshTools::mergeAndWrite(surfWriter(), oneCells);
             }
         }
 
@@ -314,7 +314,7 @@ Foam::label Foam::checkTopology
             twoCells.write();
             if (surfWriter.valid())
             {
-                mergeAndWrite(surfWriter(), twoCells);
+                meshTools::mergeAndWrite(surfWriter(), twoCells);
             }
         }
     }
@@ -459,7 +459,7 @@ Foam::label Foam::checkTopology
                 points.write();
                 if (setWriter.valid())
                 {
-                    mergeAndWrite(setWriter, points);
+                    meshTools::mergeAndWrite(setWriter, points);
                 }
             }
         }

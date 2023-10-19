@@ -196,13 +196,13 @@ int main(int argc, char *argv[])
             // Reconstruct globalMeshData
             mesh.globalData();
 
-            printMeshStats(mesh, allTopology);
+            meshTools::printMeshStats(mesh, allTopology);
 
             label nFailedChecks = 0;
 
             if (!noTopology)
             {
-                nFailedChecks += checkTopology
+                nFailedChecks += meshCheck::checkTopology
                 (
                     mesh,
                     allTopology,
@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
                 );
             }
 
-            nFailedChecks += checkGeometry
+            nFailedChecks += meshCheck::checkGeometry
             (
                 mesh,
                 allGeometry,
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
         {
             Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
-            label nFailedChecks = checkGeometry
+            label nFailedChecks = meshCheck::checkGeometry
             (
                 mesh,
                 allGeometry,

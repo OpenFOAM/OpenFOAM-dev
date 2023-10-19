@@ -27,6 +27,14 @@ sampledSet/faceSetSampledSet/faceSetSampledSet.C
 setWriters = sampledSet/writers
 
 $(setWriters)/setWriter.C
+
+$(setWriters)/ensight/file/ensightFile.C
+$(setWriters)/ensight/file/ensightGeoFile.C
+$(setWriters)/ensight/part/ensightPart.C
+$(setWriters)/ensight/part/ensightPartIO.C
+$(setWriters)/ensight/part/ensightPartCells.C
+$(setWriters)/ensight/part/ensightPartFaces.C
+$(setWriters)/ensight/part/ensightParts.C
 $(setWriters)/ensight/ensightSetWriter.C
 $(setWriters)/raw/rawSetWriter.C
 $(setWriters)/vtk/vtkSetWriter.C

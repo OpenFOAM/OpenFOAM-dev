@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,14 @@ Description
     Tools for checking the mesh
 
 SourceFiles
-    checkTopology.C
+    checkTools.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef checkTopology_H
-#define checkTopology_H
+#ifndef checkTools_H
+#define checkTools_H
 
-#include "label.H"
-#include "autoPtr.H"
+#include "indirectPrimitivePatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -42,14 +41,41 @@ namespace Foam
     class polyMesh;
     class surfaceWriter;
     class setWriter;
+    class pointSet;
+    class faceSet;
+    class cellSet;
 
-    label checkTopology
+namespace meshTools
+{
+    //- Output directory for sets and surfaces
+    fileName checkMeshOutputDir(const polyMesh& mesh);
+
+    //- Print mesh statistics
+    void printMeshStats(const polyMesh& mesh, const bool allTopology);
+
+    //- Generate merged surface on master and write. Needs input patch
+    //  to be of mesh faces.
+    void mergeAndWrite
     (
         const polyMesh& mesh,
-        const bool allTopology,
-        const autoPtr<surfaceWriter>& surfWriter,
-        const autoPtr<Foam::setWriter>& setWriter
+        const surfaceWriter& setWriter,
+        const word& name,
+        const indirectPrimitivePatch setPatch,
+        const fileName& outputDir
     );
+
+    //- Write representation of (assembled) faceSet to surface file in
+    //  postProcessing/ directory
+    void mergeAndWrite(const surfaceWriter&, const faceSet&);
+
+    //- Write representation of (assembled) cellSet to surface file in
+    //  postProcessing/ directory
+    void mergeAndWrite(const surfaceWriter&, const cellSet&);
+
+    //- Write representation of (assembled) pointSet to 'set' file in
+    //  postProcessing/ directory
+    void mergeAndWrite(const setWriter&, const pointSet&);
+}
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

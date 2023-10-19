@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,56 +26,47 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "ensightPart.H"
+#include "ensightParts.H"
 
-// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::ensightPart::writeField
+void Foam::ensightParts::writeField
 (
     ensightFile& os,
-    const Field<Type>& field,
-    const bool perNode
+    const VolField<Type>& field
 ) const
 {
-    if (this->size() && field.size())
+    // find offset to patch parts (ie, the first face data)
+    label patchOffset = 0;
+    forAll(partsList_, partI)
     {
-        writeHeader(os);
-
-        if (perNode)
+        if (partsList_[partI].isFaceData())
         {
-            os.writeKeyword("coordinates");
-            for
-            (
-                direction cmpt=0;
-                cmpt < pTraits<Type>::nComponents;
-                ++cmpt
-            )
-            {
-                writeFieldList(os, field.component(cmpt), labelUList::null());
-            }
+            patchOffset = partI;
+            break;
         }
-        else
+    }
+
+    forAll(partsList_, partI)
+    {
+        label patchi = partI - patchOffset;
+
+        if (partsList_[partI].isCellData())
         {
-            forAll(elementTypes(), elemI)
-            {
-                const labelUList& idList = elemLists_[elemI];
-
-                if (idList.size())
-                {
-                    os.writeKeyword(elementTypes()[elemI]);
-
-                    for
-                    (
-                        direction cmpt=0;
-                        cmpt < pTraits<Type>::nComponents;
-                        ++cmpt
-                    )
-                    {
-                        writeFieldList(os, field.component(cmpt), idList);
-                    }
-                }
-            }
+            partsList_[partI].writeField
+            (
+                os,
+                field
+            );
+        }
+        else if (patchi < field.boundaryField().size())
+        {
+            partsList_[partI].writeField
+            (
+                os,
+                field.boundaryField()[patchi]
+            );
         }
     }
 }

@@ -1,6 +1,3 @@
-checkTools.C
-checkTopology.C
-checkGeometry.C
 checkMeshQuality.C
 checkMesh.C
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,54 +21,41 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Template to write generalised field components
-
 \*---------------------------------------------------------------------------*/
 
-#include "ensightParts.H"
+#include "ensightGeoFile.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::ensightParts::writeField
+Foam::ensightGeoFile::ensightGeoFile
 (
-    ensightFile& os,
-    const VolField<Type>& field
-) const
+    const fileName& filePath,
+    IOstream::streamFormat format
+)
+:
+    ensightFile(filePath, format)
 {
-    // find offset to patch parts (ie, the first face data)
-    label patchOffset = 0;
-    forAll(partsList_, partI)
-    {
-        if (partsList_[partI].isFaceData())
-        {
-            patchOffset = partI;
-            break;
-        }
-    }
+    writeBinaryHeader();
+    write("Ensight Geometry File");  newline();
+    write("=====================");  newline();
+    write("node id assign");         newline();
+    write("element id assign");      newline();
+}
 
-    forAll(partsList_, partI)
-    {
-        label patchi = partI - patchOffset;
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-        if (partsList_[partI].isCellData())
-        {
-            partsList_[partI].writeField
-            (
-                os,
-                field
-            );
-        }
-        else if (patchi < field.boundaryField().size())
-        {
-            partsList_[partI].writeField
-            (
-                os,
-                field.boundaryField()[patchi]
-            );
-        }
-    }
+Foam::ensightGeoFile::~ensightGeoFile()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::ensightGeoFile::writeKeyword(const string& key)
+{
+    write(key);
+    newline();
+
+    return *this;
 }
 
 

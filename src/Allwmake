@@ -40,14 +40,16 @@ wmake $targetType lagrangian/basic
 
 generic/Allwmake $targetType $*
 
+wmake $targetType sampling
+wmake $targetType meshCheck
+
 wmake $targetType mesh/extrudeModel
 wmake $targetType dynamicMesh
 
+wmake $targetType conversion
+
 # Compile scotchDecomp, metisDecomp etc.
 parallel/Allwmake $targetType $*
-
-wmake $targetType conversion
-wmake $targetType sampling
 
 wmake $targetType fvMeshStitchers
 wmake $targetType fvMeshMovers

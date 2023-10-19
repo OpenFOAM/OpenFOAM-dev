@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::ensightPartCells
+    Foam::ensightPartFaces
 
 Description
-    An implementation of ensightPart to hold volume mesh cells.
+    An implementation of ensightPart to hold volume mesh faces.
 
 SourceFiles
-    ensightPartCells.C
+    ensightPartFaces.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ensightPartCells_H
-#define ensightPartCells_H
+#ifndef ensightPartFaces_H
+#define ensightPartFaces_H
 
 #include "ensightPart.H"
-#include "typeInfo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,27 +43,17 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class ensightPartCells Declaration
+                      Class ensightPartFaces Declaration
 \*---------------------------------------------------------------------------*/
 
-class ensightPartCells
+class ensightPartFaces
 :
     public ensightPart
 {
     // Private Member Functions
 
-        //- Classify the cell types, set elemLists.
-        void classify
-        (
-            const polyMesh&,
-            const labelUList& idLabels = labelUList::null()
-        );
-
         //- Track points used
         virtual localPoints calcLocalPoints() const;
-
-        //- Track the points used
-        // virtual void makeLocalPointMap();
 
         //- Element connectivity
         virtual void writeConnectivity
@@ -81,74 +70,89 @@ protected:
         //- Addressable ensight element types
         enum elemType
         {
-            tetra4Elements,
-            pyramid5Elements,
-            penta6Elements,
-            hexa8Elements,
-            nfacedElements
+            tria3Elements,
+            quad4Elements,
+            nsidedElements
         };
 
 
     // Static Data Members
-
-        static const polyMesh* const polyMeshNullPtr_;
 
         static const List<word> elemTypes_;
 
 
     // Protected data
 
-        //- Mesh referenced
-        const polyMesh& mesh_;
+        //- Faces referenced
+        const faceList& faces_;
+
+        //- Can skip local point renumbering when points are contiguous
+        const bool contiguousPoints_;
+
+
+    // Protected Member Functions
+
+        //- Classify the face shapes, set elemLists.
+        void classify(const faceList&);
+
+        //- Helper: write connectivity
+        void writeConnectivity
+        (
+            ensightGeoFile&,
+            const word& key,
+            const faceList&,
+            const labelUList& idList,
+            const labelUList& pointMap
+        ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("ensightCells");
+    TypeName("ensightFaces");
 
     // Constructors
 
         //- Construct empty part with number and description
-        ensightPartCells(label partNumber, const string& partDescription);
+        ensightPartFaces(label partNumber, const string& partDescription);
 
-        //- Construct from polyMesh without zones
-        ensightPartCells(label partNumber, const polyMesh&);
-
-        //- Construct from polyMesh and list of (non-zoned) cells
-        ensightPartCells
+        //- Construct part with number, description, points and faces
+        //  Can skip local point renumbering when points are contiguous
+        ensightPartFaces
         (
             label partNumber,
-            const polyMesh&,
-            const labelUList&
+            const string& partDescription,
+            const pointField&,
+            const faceList&,
+            const bool contiguousPoints = false
         );
 
-        //- Construct from polyMesh and cellZone
-        ensightPartCells
+        //- Construct from polyMesh and polyPatch
+        ensightPartFaces
         (
             label partNumber,
             const polyMesh&,
-            const cellZone&
+            const polyPatch&
         );
 
         //- Copy constructor
-        ensightPartCells(const ensightPartCells&);
+        ensightPartFaces(const ensightPartFaces&);
 
         //- Reconstruct part characteristics (eg, element types) from Istream
         //  A part reconstructed in this manner can be used when writing fields,
         //  but cannot be used to write a new geometry
         //  \sa Foam::ensightPart::reconstruct
-        ensightPartCells(Istream&);
+        ensightPartFaces(Istream&);
 
         //- Reconstruct part characteristics on freestore from Istream
-        static autoPtr<ensightPartCells> New(Istream& is)
+        static autoPtr<ensightPartFaces> New(Istream& is)
         {
-            return autoPtr<ensightPartCells>(new ensightPartCells(is));
+            return autoPtr<ensightPartFaces>(new ensightPartFaces(is));
         }
 
 
     //- Destructor
-    virtual ~ensightPartCells();
+    virtual ~ensightPartFaces();
 
 
     // Member Functions
@@ -166,7 +170,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const ensightPartCells&) = delete;
+        void operator=(const ensightPartFaces&) = delete;
 };
 
 

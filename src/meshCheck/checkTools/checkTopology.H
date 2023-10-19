@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,53 +22,37 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Routines for checking mesh geometry
+    Tools for checking the mesh
 
 SourceFiles
-    checkGeometry.C
+    checkTopology.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef checkGeometry_H
-#define checkGeometry_H
+#ifndef checkTopology_H
+#define checkTopology_H
 
 #include "label.H"
-#include "HashSet.H"
-#include "labelVector.H"
-#include "setWriter.H"
+#include "autoPtr.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
     class polyMesh;
-    class wedgePolyPatch;
     class surfaceWriter;
+    class setWriter;
 
-    //- Find wedge with opposite orientation. Note: does not actually check
-    //  that it is opposite, only that it has opposite normal and same axis.
-    label findOppositeWedge(const polyMesh&, const wedgePolyPatch&);
-
-    //- Check wedge orientation
-    bool checkWedges
-    (
-        const polyMesh&,
-        const bool report,
-        const Vector<label>&,
-        labelHashSet*
-    );
-
-    //- Check 0th vertex on coupled faces
-    bool checkCoupledPoints(const polyMesh&, const bool report, labelHashSet*);
-
-    //- Check the geometry
-    label checkGeometry
+namespace meshCheck
+{
+    label checkTopology
     (
         const polyMesh& mesh,
-        const bool allGeometry,
-        const autoPtr<surfaceWriter>&,
-        const autoPtr<setWriter>&
+        const bool allTopology,
+        const autoPtr<surfaceWriter>& surfWriter,
+        const autoPtr<Foam::setWriter>& setWriter
     );
+}
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

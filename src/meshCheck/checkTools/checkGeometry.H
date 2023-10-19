@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,60 +22,56 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Tools for checking the mesh
+    Routines for checking mesh geometry
 
 SourceFiles
-    checkTools.C
+    checkGeometry.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef checkTools_H
-#define checkTools_H
+#ifndef checkGeometry_H
+#define checkGeometry_H
 
-#include "scalar.H"
-#include "indirectPrimitivePatch.H"
+#include "label.H"
+#include "HashSet.H"
+#include "labelVector.H"
+#include "setWriter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
     class polyMesh;
+    class wedgePolyPatch;
     class surfaceWriter;
-    class setWriter;
-    class pointSet;
-    class faceSet;
-    class cellSet;
-    class fileName;
-    class polyMesh;
 
-    //- Output directory for sets and surfaces
-    fileName checkMeshOutputDir(const polyMesh& mesh);
+namespace meshCheck
+{
+    //- Find wedge with opposite orientation. Note: does not actually check
+    //  that it is opposite, only that it has opposite normal and same axis.
+    label findOppositeWedge(const polyMesh&, const wedgePolyPatch&);
 
-    //- Print mesh statistics
-    void printMeshStats(const polyMesh& mesh, const bool allTopology);
-
-    //- Generate merged surface on master and write. Needs input patch
-    //  to be of mesh faces.
-    void mergeAndWrite
+    //- Check wedge orientation
+    bool checkWedges
     (
-        const polyMesh& mesh,
-        const surfaceWriter& setWriter,
-        const word& name,
-        const indirectPrimitivePatch setPatch,
-        const fileName& outputDir
+        const polyMesh&,
+        const bool report,
+        const Vector<label>&,
+        labelHashSet*
     );
 
-    //- Write representation of (assembled) faceSet to surface file in
-    //  postProcessing/ directory
-    void mergeAndWrite(const surfaceWriter&, const faceSet&);
+    //- Check 0th vertex on coupled faces
+    bool checkCoupledPoints(const polyMesh&, const bool report, labelHashSet*);
 
-    //- Write representation of (assembled) cellSet to surface file in
-    //  postProcessing/ directory
-    void mergeAndWrite(const surfaceWriter&, const cellSet&);
-
-    //- Write representation of (assembled) pointSet to 'set' file in
-    //  postProcessing/ directory
-    void mergeAndWrite(const setWriter&, const pointSet&);
+    //- Check the geometry
+    label checkGeometry
+    (
+        const polyMesh& mesh,
+        const bool allGeometry,
+        const autoPtr<surfaceWriter>&,
+        const autoPtr<setWriter>&
+    );
+}
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

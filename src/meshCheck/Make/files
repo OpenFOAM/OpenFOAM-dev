@@ -1,0 +1,5 @@
+checkTools/checkTools.C
+checkTools/checkTopology.C
+checkTools/checkGeometry.C
+
+LIB = $(FOAM_LIBBIN)/libmeshCheck

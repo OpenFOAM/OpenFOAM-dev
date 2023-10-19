@@ -46,7 +46,11 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::printMeshStats(const polyMesh& mesh, const bool allTopology)
+void Foam::meshTools::printMeshStats
+(
+    const polyMesh& mesh,
+    const bool allTopology
+)
 {
     Info<< "Mesh stats" << nl
         << "    points:           "
@@ -205,7 +209,7 @@ void Foam::printMeshStats(const polyMesh& mesh, const bool allTopology)
 }
 
 
-void Foam::mergeAndWrite
+void Foam::meshTools::mergeAndWrite
 (
     const polyMesh& mesh,
     const surfaceWriter& writer,
@@ -257,7 +261,7 @@ void Foam::mergeAndWrite
 }
 
 
-Foam::fileName Foam::checkMeshOutputDir(const polyMesh& mesh)
+Foam::fileName Foam::meshTools::checkMeshOutputDir(const polyMesh& mesh)
 {
     return
         mesh.time().globalPath()
@@ -272,7 +276,7 @@ Foam::fileName Foam::checkMeshOutputDir(const polyMesh& mesh)
 }
 
 
-void Foam::mergeAndWrite
+void Foam::meshTools::mergeAndWrite
 (
     const surfaceWriter& writer,
     const faceSet& set
@@ -290,7 +294,7 @@ void Foam::mergeAndWrite
 }
 
 
-void Foam::mergeAndWrite
+void Foam::meshTools::mergeAndWrite
 (
     const surfaceWriter& writer,
     const cellSet& set
@@ -377,7 +381,7 @@ void Foam::mergeAndWrite
 }
 
 
-void Foam::mergeAndWrite
+void Foam::meshTools::mergeAndWrite
 (
     const setWriter& writer,
     const pointSet& set

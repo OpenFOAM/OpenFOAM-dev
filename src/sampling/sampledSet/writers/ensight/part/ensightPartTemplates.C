@@ -21,49 +21,63 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Description
+    Template to write generalised field components
+
 \*---------------------------------------------------------------------------*/
 
-#include "checkMeshQuality.H"
-#include "polyMesh.H"
-#include "cellSet.H"
-#include "faceSet.H"
-#include "motionSmoother.H"
-#include "surfaceWriter.H"
-#include "checkTools.H"
+#include "ensightPart.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::checkMeshQuality
+template<class Type>
+void Foam::ensightPart::writeField
 (
-    const polyMesh& mesh,
-    const dictionary& dict,
-    const autoPtr<surfaceWriter>& writer
-)
+    ensightFile& os,
+    const Field<Type>& field,
+    const bool perNode
+) const
 {
-    label noFailedChecks = 0;
-
+    if (this->size() && field.size())
     {
-        faceSet faces(mesh, "meshQualityFaces", mesh.nFaces()/100+1);
-        motionSmoother::checkMesh(false, mesh, dict, faces);
+        writeHeader(os);
 
-        label nFaces = returnReduce(faces.size(), sumOp<label>());
-
-        if (nFaces > 0)
+        if (perNode)
         {
-            noFailedChecks++;
-
-            Info<< "  <<Writing " << nFaces
-                << " faces in error to set " << faces.name() << endl;
-            faces.instance() = mesh.pointsInstance();
-            faces.write();
-            if (writer.valid())
+            os.writeKeyword("coordinates");
+            for
+            (
+                direction cmpt=0;
+                cmpt < pTraits<Type>::nComponents;
+                ++cmpt
+            )
             {
-                meshTools::mergeAndWrite(writer(), faces);
+                writeFieldList(os, field.component(cmpt), labelUList::null());
+            }
+        }
+        else
+        {
+            forAll(elementTypes(), elemI)
+            {
+                const labelUList& idList = elemLists_[elemI];
+
+                if (idList.size())
+                {
+                    os.writeKeyword(elementTypes()[elemI]);
+
+                    for
+                    (
+                        direction cmpt=0;
+                        cmpt < pTraits<Type>::nComponents;
+                        ++cmpt
+                    )
+                    {
+                        writeFieldList(os, field.component(cmpt), idList);
+                    }
+                }
             }
         }
     }
-
-    return noFailedChecks;
 }
 
 
