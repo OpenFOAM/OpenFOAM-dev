@@ -42,8 +42,6 @@ $(efm)/extendedFeatureEdgeMesh.C
 cellClassification/cellClassification.C
 cellClassification/cellInfo.C
 
-cellQuality/cellQuality.C
-
 patchDist/patchDistWave/patchDistWave.C
 
 cellFeatures/cellFeatures.C
