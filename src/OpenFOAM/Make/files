@@ -531,10 +531,6 @@ $(polyMesh)/polyMeshInitMesh.C
 $(polyMesh)/polyMeshClear.C
 $(polyMesh)/polyMeshUpdate.C
 
-polyMeshCheck = $(polyMesh)/polyMeshCheck
-$(polyMeshCheck)/polyMeshCheck.C
-$(polyMeshCheck)/polyMeshTools.C
-
 primitiveMesh = meshes/primitiveMesh
 $(primitiveMesh)/primitiveMesh.C
 $(primitiveMesh)/primitiveMeshCellCells.C
@@ -552,12 +548,6 @@ $(primitiveMesh)/primitiveMeshPointFaces.C
 $(primitiveMesh)/primitiveMeshPointPoints.C
 $(primitiveMesh)/primitiveMeshCellPoints.C
 $(primitiveMesh)/primitiveMeshCalcCellShapes.C
-
-primitiveMeshCheck = $(primitiveMesh)/primitiveMeshCheck
-$(primitiveMeshCheck)/primitiveMeshCheck.C
-$(primitiveMeshCheck)/primitiveMeshCheckPointNearness.C
-$(primitiveMeshCheck)/primitiveMeshCheckEdgeLength.C
-$(primitiveMeshCheck)/primitiveMeshTools.C
 
 primitivePatch = $(primitiveMesh)/primitivePatch
 $(primitivePatch)/patchZones.C

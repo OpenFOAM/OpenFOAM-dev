@@ -1,5 +1,7 @@
 EXE_INC = \
-    -I$(LIB_SRC)/finiteVolume/lnInclude
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshCheck/lnInclude
 
 LIB_LIBS = \
-    -lfiniteVolume
+    -lfiniteVolume \
+    -lmeshCheck

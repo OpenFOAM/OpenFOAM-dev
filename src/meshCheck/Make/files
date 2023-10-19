@@ -1,3 +1,11 @@
+polyMeshCheck/polyMeshCheck.C
+polyMeshCheck/polyMeshTools.C
+
+primitiveMeshCheck/primitiveMeshCheck.C
+primitiveMeshCheck/primitiveMeshCheckPointNearness.C
+primitiveMeshCheck/primitiveMeshCheckEdgeLength.C
+primitiveMeshCheck/primitiveMeshTools.C
+
 checkTools/checkTools.C
 checkTools/checkTopology.C
 checkTools/checkGeometry.C
