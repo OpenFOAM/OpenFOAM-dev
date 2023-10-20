@@ -41,7 +41,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace dynamicMeshCheck
+namespace meshCheck
 {
 
 //- Check face non-orthogonality
@@ -204,7 +204,7 @@ bool checkCellDeterminant
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace dynamicMeshCheck
+} // End namespace meshCheck
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

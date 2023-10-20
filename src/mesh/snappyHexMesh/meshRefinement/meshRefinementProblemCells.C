@@ -1178,7 +1178,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             // const scalar minV(motionDict.lookup<scalar>("minVol", true));
             // if (minV > -great)
             //{
-            //    dynamicMeshCheck::checkFacePyramids
+            //    meshCheck::checkFacePyramids
             //    (
             //        false,
             //        minV,
@@ -1207,7 +1207,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             scalar minArea(motionDict.lookup<scalar>("minArea"));
             if (minArea > -small)
             {
-                dynamicMeshCheck::checkFaceArea
+                meshCheck::checkFaceArea
                 (
                     false,
                     minArea,
@@ -1234,7 +1234,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             scalar minDet(motionDict.lookup<scalar>("minDeterminant"));
             if (minDet > -1)
             {
-                dynamicMeshCheck::checkCellDeterminant
+                meshCheck::checkCellDeterminant
                 (
                     false,
                     minDet,

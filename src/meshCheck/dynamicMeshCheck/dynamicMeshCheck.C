@@ -35,7 +35,7 @@ License
 
 namespace Foam
 {
-namespace dynamicMeshCheck
+namespace meshCheck
 {
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -136,7 +136,7 @@ bool checkFaceTet
         {
             if (report)
             {
-                Pout<< "bool dynamicMeshCheck::checkFaceTets("
+                Pout<< "bool meshCheck::checkFaceTets("
                     << "const bool, const scalar, const pointField&"
                     << ", const pointField&"
                     << ", const labelList&, labelHashSet*) : "
@@ -186,12 +186,12 @@ labelList getAffectedCells
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace dynamicMeshCheck
+} // End namespace meshCheck
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-bool Foam::dynamicMeshCheck::checkFaceDotProduct
+bool Foam::meshCheck::checkFaceDotProduct
 (
     const bool report,
     const scalar orthWarn,
@@ -373,7 +373,7 @@ bool Foam::dynamicMeshCheck::checkFaceDotProduct
 }
 
 
-bool Foam::dynamicMeshCheck::checkFacePyramids
+bool Foam::meshCheck::checkFacePyramids
 (
     const bool report,
     const scalar minPyrVol,
@@ -408,7 +408,7 @@ bool Foam::dynamicMeshCheck::checkFacePyramids
         {
             if (report)
             {
-                Pout<< "bool dynamicMeshCheck::checkFacePyramids("
+                Pout<< "bool meshCheck::checkFacePyramids("
                     << "const bool, const scalar, const pointField&"
                     << ", const labelList&, labelHashSet*): "
                     << "face " << facei << " points the wrong way. " << endl
@@ -439,7 +439,7 @@ bool Foam::dynamicMeshCheck::checkFacePyramids
             {
                 if (report)
                 {
-                    Pout<< "bool dynamicMeshCheck::checkFacePyramids("
+                    Pout<< "bool meshCheck::checkFacePyramids("
                         << "const bool, const scalar, const pointField&"
                         << ", const labelList&, labelHashSet*): "
                         << "face " << facei << " points the wrong way. " << endl
@@ -479,7 +479,7 @@ bool Foam::dynamicMeshCheck::checkFacePyramids
         {
             if (report)
             {
-                Pout<< "bool dynamicMeshCheck::checkFacePyramids("
+                Pout<< "bool meshCheck::checkFacePyramids("
                     << "const bool, const scalar, const pointField&"
                     << ", const labelList&, labelHashSet*): "
                     << "face " << face0 << " points the wrong way. " << endl
@@ -508,7 +508,7 @@ bool Foam::dynamicMeshCheck::checkFacePyramids
         {
             if (report)
             {
-                Pout<< "bool dynamicMeshCheck::checkFacePyramids("
+                Pout<< "bool meshCheck::checkFacePyramids("
                     << "const bool, const scalar, const pointField&"
                     << ", const labelList&, labelHashSet*): "
                     << "face " << face0 << " points the wrong way. " << endl
@@ -554,7 +554,7 @@ bool Foam::dynamicMeshCheck::checkFacePyramids
 }
 
 
-bool Foam::dynamicMeshCheck::checkFaceTets
+bool Foam::meshCheck::checkFaceTets
 (
     const bool report,
     const scalar minTetQuality,
@@ -783,7 +783,7 @@ bool Foam::dynamicMeshCheck::checkFaceTets
 }
 
 
-bool Foam::dynamicMeshCheck::checkFaceSkewness
+bool Foam::meshCheck::checkFaceSkewness
 (
     const bool report,
     const scalar internalSkew,
@@ -996,7 +996,7 @@ bool Foam::dynamicMeshCheck::checkFaceSkewness
 }
 
 
-bool Foam::dynamicMeshCheck::checkFaceWeights
+bool Foam::meshCheck::checkFaceWeights
 (
     const bool report,
     const scalar warnWeight,
@@ -1151,7 +1151,7 @@ bool Foam::dynamicMeshCheck::checkFaceWeights
 }
 
 
-bool Foam::dynamicMeshCheck::checkVolRatio
+bool Foam::meshCheck::checkVolRatio
 (
     const bool report,
     const scalar warnRatio,
@@ -1289,7 +1289,7 @@ bool Foam::dynamicMeshCheck::checkVolRatio
 }
 
 
-bool Foam::dynamicMeshCheck::checkFaceAngles
+bool Foam::meshCheck::checkFaceAngles
 (
     const bool report,
     const scalar maxDeg,
@@ -1420,7 +1420,7 @@ bool Foam::dynamicMeshCheck::checkFaceAngles
 }
 
 
-bool Foam::dynamicMeshCheck::checkFaceTwist
+bool Foam::meshCheck::checkFaceTwist
 (
     const bool report,
     const scalar minTwist,
@@ -1604,7 +1604,7 @@ bool Foam::dynamicMeshCheck::checkFaceTwist
 }
 
 
-bool Foam::dynamicMeshCheck::checkTriangleTwist
+bool Foam::meshCheck::checkTriangleTwist
 (
     const bool report,
     const scalar minTwist,
@@ -1754,7 +1754,7 @@ bool Foam::dynamicMeshCheck::checkTriangleTwist
 }
 
 
-bool Foam::dynamicMeshCheck::checkFaceFlatness
+bool Foam::meshCheck::checkFaceFlatness
 (
     const bool report,
     const scalar minFlatness,
@@ -1852,7 +1852,7 @@ bool Foam::dynamicMeshCheck::checkFaceFlatness
 }
 
 
-bool Foam::dynamicMeshCheck::checkFaceArea
+bool Foam::meshCheck::checkFaceArea
 (
     const bool report,
     const scalar minArea,
@@ -1913,7 +1913,7 @@ bool Foam::dynamicMeshCheck::checkFaceArea
 }
 
 
-bool Foam::dynamicMeshCheck::checkCellDeterminant
+bool Foam::meshCheck::checkCellDeterminant
 (
     const bool report,
     const scalar warnDet,

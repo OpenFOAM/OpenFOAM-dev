@@ -93,7 +93,6 @@ motionSmoother/motionSmoother.C
 motionSmoother/motionSmootherAlgo.C
 motionSmoother/motionSmootherAlgoCheck.C
 motionSmoother/motionSmootherData.C
-motionSmoother/dynamicMeshCheck/dynamicMeshCheck.C
 motionSmoother/badQualityToCell/badQualityToCell.C
 motionSmoother/badQualityToFace/badQualityToFace.C
 

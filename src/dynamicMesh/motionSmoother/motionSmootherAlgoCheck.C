@@ -109,7 +109,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (maxNonOrtho < 180.0-small)
     {
-        dynamicMeshCheck::checkFaceDotProduct
+        meshCheck::checkFaceDotProduct
         (
             report,
             maxNonOrtho,
@@ -135,7 +135,7 @@ bool Foam::motionSmootherAlgo::checkMesh
     {
         const scalar refVol = pow3(mesh.bounds().minDim());
 
-        dynamicMeshCheck::checkFacePyramids
+        meshCheck::checkFacePyramids
         (
             report,
             minVol*refVol,
@@ -158,7 +158,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minTetQuality > -great)
     {
-        dynamicMeshCheck::checkFaceTets
+        meshCheck::checkFaceTets
         (
             report,
             minTetQuality,
@@ -182,7 +182,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (maxConcave < 180.0-small)
     {
-        dynamicMeshCheck::checkFaceAngles
+        meshCheck::checkFaceAngles
         (
             report,
             maxConcave,
@@ -205,7 +205,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (maxIntSkew > 0 || maxBounSkew > 0)
     {
-        dynamicMeshCheck::checkFaceSkewness
+        meshCheck::checkFaceSkewness
         (
             report,
             maxIntSkew,
@@ -232,7 +232,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minWeight >= 0 && minWeight < 1)
     {
-        dynamicMeshCheck::checkFaceWeights
+        meshCheck::checkFaceWeights
         (
             report,
             minWeight,
@@ -257,7 +257,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minVolRatio >= 0)
     {
-        dynamicMeshCheck::checkVolRatio
+        meshCheck::checkVolRatio
         (
             report,
             minVolRatio,
@@ -282,7 +282,7 @@ bool Foam::motionSmootherAlgo::checkMesh
     {
         // Pout<< "Checking face twist: dot product of face normal "
         //    << "with face triangle normals" << endl;
-        dynamicMeshCheck::checkFaceTwist
+        meshCheck::checkFaceTwist
         (
             report,
             minTwist,
@@ -307,7 +307,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minFaceFlatness > -small)
     {
-        dynamicMeshCheck::checkFaceFlatness
+        meshCheck::checkFaceFlatness
         (
             report,
             minFaceFlatness,
@@ -331,7 +331,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minDet > -1)
     {
-        dynamicMeshCheck::checkCellDeterminant
+        meshCheck::checkCellDeterminant
         (
             report,
             minDet,
