@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "checkTools.H"
+#include "mergeAndWrite.H"
 #include "polyMesh.H"
 #include "globalMeshData.H"
 #include "hexMatcher.H"
@@ -46,7 +46,7 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::meshTools::printMeshStats
+void Foam::meshCheck::printMeshStats
 (
     const polyMesh& mesh,
     const bool allTopology
@@ -209,7 +209,7 @@ void Foam::meshTools::printMeshStats
 }
 
 
-void Foam::meshTools::mergeAndWrite
+void Foam::meshCheck::mergeAndWrite
 (
     const polyMesh& mesh,
     const surfaceWriter& writer,
@@ -261,7 +261,7 @@ void Foam::meshTools::mergeAndWrite
 }
 
 
-Foam::fileName Foam::meshTools::checkMeshOutputDir(const polyMesh& mesh)
+Foam::fileName Foam::meshCheck::checkMeshOutputDir(const polyMesh& mesh)
 {
     return
         mesh.time().globalPath()
@@ -276,7 +276,7 @@ Foam::fileName Foam::meshTools::checkMeshOutputDir(const polyMesh& mesh)
 }
 
 
-void Foam::meshTools::mergeAndWrite
+void Foam::meshCheck::mergeAndWrite
 (
     const surfaceWriter& writer,
     const faceSet& set
@@ -294,7 +294,7 @@ void Foam::meshTools::mergeAndWrite
 }
 
 
-void Foam::meshTools::mergeAndWrite
+void Foam::meshCheck::mergeAndWrite
 (
     const surfaceWriter& writer,
     const cellSet& set
@@ -381,7 +381,7 @@ void Foam::meshTools::mergeAndWrite
 }
 
 
-void Foam::meshTools::mergeAndWrite
+void Foam::meshCheck::mergeAndWrite
 (
     const setWriter& writer,
     const pointSet& set

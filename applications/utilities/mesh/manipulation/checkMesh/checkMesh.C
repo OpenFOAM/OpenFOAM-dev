@@ -61,9 +61,7 @@ Usage
 #include "vtkSetWriter.H"
 #include "IOdictionary.H"
 
-#include "checkTools.H"
-#include "checkTopology.H"
-#include "checkGeometry.H"
+#include "meshCheck.H"
 #include "checkMeshQuality.H"
 
 using namespace Foam;
@@ -196,7 +194,7 @@ int main(int argc, char *argv[])
             // Reconstruct globalMeshData
             mesh.globalData();
 
-            meshTools::printMeshStats(mesh, allTopology);
+            meshCheck::printMeshStats(mesh, allTopology);
 
             label nFailedChecks = 0;
 

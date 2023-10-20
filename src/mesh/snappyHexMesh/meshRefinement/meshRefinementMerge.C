@@ -29,7 +29,7 @@ License
 #include "removePoints.H"
 #include "faceSet.H"
 #include "Time.H"
-#include "dynamicMeshCheck.H"
+#include "meshCheck.H"
 #include "syncTools.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

@@ -23,12 +23,260 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "primitiveMeshCheck.H"
 #include "polyMeshCheck.H"
-#include "polyMeshTools.H"
 #include "unitConversion.H"
 #include "syncTools.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::scalarField> Foam::meshCheck::faceOrthogonality
+(
+    const polyMesh& mesh,
+    const vectorField& areas,
+    const vectorField& cc
+)
+{
+    const labelList& own = mesh.faceOwner();
+    const labelList& nei = mesh.faceNeighbour();
+    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+    tmp<scalarField> tortho(new scalarField(mesh.nFaces(), 1.0));
+    scalarField& ortho = tortho.ref();
+
+    // Internal faces
+    forAll(nei, facei)
+    {
+        ortho[facei] = meshCheck::faceOrthogonality
+        (
+            cc[own[facei]],
+            cc[nei[facei]],
+            areas[facei]
+        );
+    }
+
+
+    // Coupled faces
+
+    pointField neighbourCc;
+    syncTools::swapBoundaryCellPositions(mesh, cc, neighbourCc);
+
+    forAll(pbm, patchi)
+    {
+        const polyPatch& pp = pbm[patchi];
+        if (pp.coupled())
+        {
+            forAll(pp, i)
+            {
+                label facei = pp.start() + i;
+                label bFacei = facei - mesh.nInternalFaces();
+
+                ortho[facei] = meshCheck::faceOrthogonality
+                (
+                    cc[own[facei]],
+                    neighbourCc[bFacei],
+                    areas[facei]
+                );
+            }
+        }
+    }
+
+    return tortho;
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::meshCheck::faceSkewness
+(
+    const polyMesh& mesh,
+    const pointField& p,
+    const vectorField& fCtrs,
+    const vectorField& fAreas,
+    const vectorField& cellCtrs
+)
+{
+    const labelList& own = mesh.faceOwner();
+    const labelList& nei = mesh.faceNeighbour();
+    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+    tmp<scalarField> tskew(new scalarField(mesh.nFaces()));
+    scalarField& skew = tskew.ref();
+
+    forAll(nei, facei)
+    {
+        skew[facei] = meshCheck::faceSkewness
+        (
+            mesh,
+            p,
+            fCtrs,
+            fAreas,
+
+            facei,
+            cellCtrs[own[facei]],
+            cellCtrs[nei[facei]]
+        );
+    }
+
+
+    // Boundary faces: consider them to have only skewness error.
+    // (i.e. treat as if mirror cell on other side)
+
+    pointField neighbourCc;
+    syncTools::swapBoundaryCellPositions(mesh, cellCtrs, neighbourCc);
+
+    forAll(pbm, patchi)
+    {
+        const polyPatch& pp = pbm[patchi];
+        if (pp.coupled())
+        {
+            forAll(pp, i)
+            {
+                label facei = pp.start() + i;
+                label bFacei = facei - mesh.nInternalFaces();
+
+                skew[facei] = meshCheck::faceSkewness
+                (
+                    mesh,
+                    p,
+                    fCtrs,
+                    fAreas,
+
+                    facei,
+                    cellCtrs[own[facei]],
+                    neighbourCc[bFacei]
+                );
+            }
+        }
+        else
+        {
+            forAll(pp, i)
+            {
+                label facei = pp.start() + i;
+
+                skew[facei] = meshCheck::boundaryFaceSkewness
+                (
+                    mesh,
+                    p,
+                    fCtrs,
+                    fAreas,
+
+                    facei,
+                    cellCtrs[own[facei]]
+                );
+            }
+        }
+    }
+
+    return tskew;
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::meshCheck::faceWeights
+(
+    const polyMesh& mesh,
+    const vectorField& fCtrs,
+    const vectorField& fAreas,
+    const vectorField& cellCtrs
+)
+{
+    const labelList& own = mesh.faceOwner();
+    const labelList& nei = mesh.faceNeighbour();
+    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+    tmp<scalarField> tweight(new scalarField(mesh.nFaces(), 1.0));
+    scalarField& weight = tweight.ref();
+
+    // Internal faces
+    forAll(nei, facei)
+    {
+        const point& fc = fCtrs[facei];
+        const vector& fa = fAreas[facei];
+
+        scalar dOwn = mag(fa & (fc-cellCtrs[own[facei]]));
+        scalar dNei = mag(fa & (cellCtrs[nei[facei]]-fc));
+
+        weight[facei] = min(dNei,dOwn)/(dNei+dOwn+vSmall);
+    }
+
+
+    // Coupled faces
+
+    pointField neiCc;
+    syncTools::swapBoundaryCellPositions(mesh, cellCtrs, neiCc);
+
+    forAll(pbm, patchi)
+    {
+        const polyPatch& pp = pbm[patchi];
+        if (pp.coupled())
+        {
+            forAll(pp, i)
+            {
+                label facei = pp.start() + i;
+                label bFacei = facei - mesh.nInternalFaces();
+
+                const point& fc = fCtrs[facei];
+                const vector& fa = fAreas[facei];
+
+                scalar dOwn = mag(fa & (fc-cellCtrs[own[facei]]));
+                scalar dNei = mag(fa & (neiCc[bFacei]-fc));
+
+                weight[facei] = min(dNei,dOwn)/(dNei+dOwn+vSmall);
+            }
+        }
+    }
+
+    return tweight;
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::meshCheck::volRatio
+(
+    const polyMesh& mesh,
+    const scalarField& vol
+)
+{
+    const labelList& own = mesh.faceOwner();
+    const labelList& nei = mesh.faceNeighbour();
+    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+    tmp<scalarField> tratio(new scalarField(mesh.nFaces(), 1.0));
+    scalarField& ratio = tratio.ref();
+
+    // Internal faces
+    forAll(nei, facei)
+    {
+        scalar volOwn = vol[own[facei]];
+        scalar volNei = vol[nei[facei]];
+
+        ratio[facei] = min(volOwn,volNei)/(max(volOwn, volNei)+vSmall);
+    }
+
+
+    // Coupled faces
+
+    scalarField neiVol;
+    syncTools::swapBoundaryCellList(mesh, vol, neiVol);
+
+    forAll(pbm, patchi)
+    {
+        const polyPatch& pp = pbm[patchi];
+        if (pp.coupled())
+        {
+            forAll(pp, i)
+            {
+                label facei = pp.start() + i;
+                label bFacei = facei - mesh.nInternalFaces();
+
+                scalar volOwn = vol[own[facei]];
+                scalar volNei = neiVol[bFacei];
+
+                ratio[facei] = min(volOwn,volNei)/(max(volOwn, volNei)+vSmall);
+            }
+        }
+    }
+
+    return tratio;
+}
+
 
 bool Foam::meshCheck::checkFaceOrthogonality
 (
@@ -47,7 +295,7 @@ bool Foam::meshCheck::checkFaceOrthogonality
 
     // Calculate orthogonality for all internal and coupled boundary faces
     // (1 for uncoupled boundary faces)
-    tmp<scalarField> tortho = meshTools::faceOrthogonality
+    tmp<scalarField> tortho = meshCheck::faceOrthogonality
     (
         mesh,
         fAreas,
@@ -173,7 +421,7 @@ bool Foam::meshCheck::checkFaceSkewness
     // Warn if the skew correction vector is more than skewWarning times
     // larger than the face area vector
 
-    tmp<scalarField> tskew = meshTools::faceSkewness
+    tmp<scalarField> tskew = meshCheck::faceSkewness
     (
         mesh,
         points,
@@ -389,7 +637,7 @@ bool Foam::meshCheck::checkCellDeterminant
         InfoInFunction << "Checking for under-determined cells" << endl;
     }
 
-    tmp<scalarField> tcellDeterminant = meshTools::cellDeterminant
+    tmp<scalarField> tcellDeterminant = meshCheck::cellDeterminant
     (
         mesh,
         meshD,
@@ -473,7 +721,7 @@ bool Foam::meshCheck::checkFaceWeight
     const vectorField& fAreas = mesh.faceAreas();
     const vectorField& cellCtrs = mesh.cellCentres();
 
-    tmp<scalarField> tfaceWght = meshTools::faceWeights
+    tmp<scalarField> tfaceWght = meshCheck::faceWeights
     (
         mesh,
         fCtrs,
@@ -568,7 +816,7 @@ bool Foam::meshCheck::checkVolRatio
 
     const scalarField& cellVols = mesh.cellVolumes();
 
-    tmp<scalarField> tvolRatio = meshTools::volRatio(mesh, cellVols);
+    tmp<scalarField> tvolRatio = meshCheck::volRatio(mesh, cellVols);
     scalarField& volRatio = tvolRatio.ref();
 
 

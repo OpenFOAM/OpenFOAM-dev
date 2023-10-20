@@ -28,7 +28,7 @@ Description
 
 #include "snappySnapDriver.H"
 #include "motionSmoother.H"
-#include "dynamicMeshCheck.H"
+#include "meshCheck.H"
 #include "polyTopoChange.H"
 #include "syncTools.H"
 #include "fvMesh.H"

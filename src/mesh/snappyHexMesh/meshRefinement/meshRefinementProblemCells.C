@@ -33,7 +33,7 @@ License
 #include "indirectPrimitivePatch.H"
 #include "cellSet.H"
 #include "searchableSurfaces.H"
-#include "dynamicMeshCheck.H"
+#include "meshCheck.H"
 #include "IOmanip.H"
 #include "unitConversion.H"
 #include "snappySnapDriver.H"

@@ -25,12 +25,12 @@ Description
     Tools for checking the mesh
 
 SourceFiles
-    checkTools.C
+    mergeAndWrite.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef checkTools_H
-#define checkTools_H
+#ifndef mergeAndWrite_H
+#define mergeAndWrite_H
 
 #include "indirectPrimitivePatch.H"
 
@@ -45,7 +45,7 @@ namespace Foam
     class faceSet;
     class cellSet;
 
-namespace meshTools
+namespace meshCheck
 {
     //- Output directory for sets and surfaces
     fileName checkMeshOutputDir(const polyMesh& mesh);

@@ -25,7 +25,7 @@ License
 
 #include "badQualityToFace.H"
 #include "polyMesh.H"
-#include "dynamicMeshCheck.H"
+#include "meshCheck.H"
 #include "faceSet.H"
 #include "addToRunTimeSelectionTable.H"
 

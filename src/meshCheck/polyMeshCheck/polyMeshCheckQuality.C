@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "dynamicMeshCheck.H"
+#include "primitiveMeshCheck.H"
+#include "polyMeshCheck.H"
 #include "polyMeshTetDecomposition.H"
 #include "pyramidPointFaceRef.H"
 #include "tetPointRef.H"
 #include "syncTools.H"
 #include "unitConversion.H"
-#include "primitiveMeshTools.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -819,7 +819,7 @@ bool Foam::meshCheck::checkFaceSkewness
 
         if (mesh.isInternalFace(facei))
         {
-            scalar skewness = meshTools::faceSkewness
+            scalar skewness = meshCheck::faceSkewness
             (
                 mesh,
                 points,
@@ -854,7 +854,7 @@ bool Foam::meshCheck::checkFaceSkewness
         }
         else if (patches[patches.whichPatch(facei)].coupled())
         {
-            scalar skewness = meshTools::faceSkewness
+            scalar skewness = meshCheck::faceSkewness
             (
                 mesh,
                 points,
@@ -889,7 +889,7 @@ bool Foam::meshCheck::checkFaceSkewness
         }
         else
         {
-            scalar skewness = meshTools::boundaryFaceSkewness
+            scalar skewness = meshCheck::boundaryFaceSkewness
             (
                 mesh,
                 points,
@@ -932,7 +932,7 @@ bool Foam::meshCheck::checkFaceSkewness
         const point& ownCc = cellCentres[own[face0]];
         const point& neiCc = cellCentres[own[face1]];
 
-        scalar skewness = meshTools::faceSkewness
+        scalar skewness = meshCheck::faceSkewness
         (
             mesh,
             points,

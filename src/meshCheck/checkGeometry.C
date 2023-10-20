@@ -23,8 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "meshCheck.H"
 #include "PatchTools.H"
-#include "checkGeometry.H"
 #include "polyMeshCheck.H"
 #include "cellSet.H"
 #include "faceSet.H"
@@ -39,7 +39,7 @@ License
 #include "writeFile.H"
 #include "nonConformalCyclicPolyPatch.H"
 
-#include "checkTools.H"
+#include "mergeAndWrite.H"
 #include "Time.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -608,7 +608,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 nonAlignedPoints.write();
                 if (setWriter.valid())
                 {
-                    meshTools::mergeAndWrite(setWriter, nonAlignedPoints);
+                    meshCheck::mergeAndWrite(setWriter, nonAlignedPoints);
                 }
             }
         }
@@ -643,7 +643,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 cells.write();
                 if (surfWriter.valid())
                 {
-                    meshTools::mergeAndWrite(surfWriter(), cells);
+                    meshCheck::mergeAndWrite(surfWriter(), cells);
                 }
             }
         }
@@ -659,7 +659,7 @@ Foam::label Foam::meshCheck::checkGeometry
             aspectCells.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), aspectCells);
+                meshCheck::mergeAndWrite(surfWriter(), aspectCells);
             }
         }
     }
@@ -680,7 +680,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 faces.write();
                 if (surfWriter.valid())
                 {
-                    meshTools::mergeAndWrite(surfWriter(), faces);
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -702,7 +702,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 cells.write();
                 if (surfWriter.valid())
                 {
-                    meshTools::mergeAndWrite(surfWriter(), cells);
+                    meshCheck::mergeAndWrite(surfWriter(), cells);
                 }
             }
         }
@@ -725,7 +725,7 @@ Foam::label Foam::meshCheck::checkGeometry
             faces.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), faces);
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -747,7 +747,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 faces.write();
                 if (surfWriter.valid())
                 {
-                    meshTools::mergeAndWrite(surfWriter(), faces);
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -769,7 +769,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 faces.write();
                 if (surfWriter.valid())
                 {
-                    meshTools::mergeAndWrite(surfWriter(), faces);
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -793,7 +793,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 faces.write();
                 if (surfWriter.valid())
                 {
-                    meshTools::mergeAndWrite(surfWriter(), faces);
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -826,7 +826,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 faces.write();
                 if (surfWriter.valid())
                 {
-                    meshTools::mergeAndWrite(surfWriter(), faces);
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -851,7 +851,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 points.write();
                 if (setWriter.valid())
                 {
-                    meshTools::mergeAndWrite(setWriter, points);
+                    meshCheck::mergeAndWrite(setWriter, points);
                 }
             }
         }
@@ -874,7 +874,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 nearPoints.write();
                 if (setWriter.valid())
                 {
-                    meshTools::mergeAndWrite(setWriter, nearPoints);
+                    meshCheck::mergeAndWrite(setWriter, nearPoints);
                 }
             }
         }
@@ -898,7 +898,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 faces.write();
                 if (surfWriter.valid())
                 {
-                    meshTools::mergeAndWrite(surfWriter(), faces);
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -921,7 +921,7 @@ Foam::label Foam::meshCheck::checkGeometry
                 faces.write();
                 if (surfWriter.valid())
                 {
-                    meshTools::mergeAndWrite(surfWriter(), faces);
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -942,7 +942,7 @@ Foam::label Foam::meshCheck::checkGeometry
             cells.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), cells);
+                meshCheck::mergeAndWrite(surfWriter(), cells);
             }
         }
     }
@@ -962,7 +962,7 @@ Foam::label Foam::meshCheck::checkGeometry
             cells.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), cells);
+                meshCheck::mergeAndWrite(surfWriter(), cells);
             }
         }
     }
@@ -983,7 +983,7 @@ Foam::label Foam::meshCheck::checkGeometry
             faces.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), faces);
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -1004,7 +1004,7 @@ Foam::label Foam::meshCheck::checkGeometry
             faces.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), faces);
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }

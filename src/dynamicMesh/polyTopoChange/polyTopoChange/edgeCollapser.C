@@ -31,7 +31,7 @@ License
 #include "PointEdgeWave.H"
 #include "globalIndex.H"
 #include "removePoints.H"
-#include "dynamicMeshCheck.H"
+#include "meshCheck.H"
 #include "OFstream.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //

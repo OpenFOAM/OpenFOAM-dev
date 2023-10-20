@@ -25,7 +25,7 @@ License
 
 #include "checkMesh.H"
 #include "fvMesh.H"
-#include "polyMeshCheck.H"
+#include "meshCheck.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

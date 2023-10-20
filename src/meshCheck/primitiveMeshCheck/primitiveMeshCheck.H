@@ -130,6 +130,120 @@ namespace meshCheck
 
     // Geometric checks
 
+        //- Generate non-orthogonality field (internal faces only)
+        tmp<scalarField> faceOrthogonality
+        (
+            const primitiveMesh& mesh,
+            const vectorField& fAreas,
+            const vectorField& cellCtrs
+        );
+
+        //- Generate face pyramid volume fields
+        void facePyramidVolume
+        (
+            const primitiveMesh& mesh,
+            const pointField& points,
+            const vectorField& cellCtrs,
+            scalarField& ownPyrVol,
+            scalarField& neiPyrVol
+        );
+
+        //- Generate skewness field
+        tmp<scalarField> faceSkewness
+        (
+            const primitiveMesh& mesh,
+            const pointField& points,
+            const vectorField& fCtrs,
+            const vectorField& fAreas,
+            const vectorField& cellCtrs
+        );
+
+        //- Generate cell openness and cell aspect ratio field
+        void cellClosedness
+        (
+            const primitiveMesh& mesh,
+            const Vector<label>& meshD,
+            const vectorField& areas,
+            const scalarField& vols,
+            scalarField& openness,
+            scalarField& aratio
+        );
+
+        //- Generate face concavity field. Returns per face the (sin of the)
+        //  most concave angle between two consecutive edges
+        tmp<scalarField> faceConcavity
+        (
+            const scalar maxSin,
+            const primitiveMesh& mesh,
+            const pointField& p,
+            const vectorField& faceAreas
+        );
+
+        //- Generate face flatness field. Compares the individual triangles'
+        //  normals against the face average normal. Between 0 (fully warped)
+        //  and 1 (fully flat)
+        tmp<scalarField> faceFlatness
+        (
+            const primitiveMesh& mesh,
+            const pointField& p,
+            const vectorField& fCtrs,
+            const vectorField& faceAreas
+        );
+
+        //- Generate edge alignment field. Is per face the minimum aligned edge
+        //  (does not use edge addressing)
+        tmp<scalarField> edgeAlignment
+        (
+            const primitiveMesh& mesh,
+            const Vector<label>& directions,
+            const pointField& p
+        );
+
+        //- Generate cell determinant field
+        tmp<scalarField> cellDeterminant
+        (
+            const primitiveMesh& mesh,
+            const Vector<label>& directions,
+            const vectorField& faceAreas,
+            const PackedBoolList& internalOrCoupledFace
+        );
+
+
+        // Helpers: single face check
+
+            //- Skewness of single face
+            scalar faceSkewness
+            (
+                const primitiveMesh& mesh,
+                const pointField& p,
+                const vectorField& fCtrs,
+                const vectorField& fAreas,
+
+                const label facei,
+                const point& ownCc,
+                const point& neiCc
+            );
+
+            //- Skewness of single boundary face
+            scalar boundaryFaceSkewness
+            (
+                const primitiveMesh& mesh,
+                const pointField& p,
+                const vectorField& fCtrs,
+                const vectorField& fAreas,
+
+                const label facei,
+                const point& ownCc
+            );
+
+            //- Orthogonality of single face
+            scalar faceOrthogonality
+            (
+                const point& ownCc,
+                const point& neiCc,
+                const vector& s
+            );
+
         //- Check boundary for closedness
         bool checkClosedBoundary
         (

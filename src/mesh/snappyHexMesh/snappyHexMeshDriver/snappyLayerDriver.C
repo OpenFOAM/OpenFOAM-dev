@@ -33,7 +33,7 @@ Description
 #include "meshRefinement.H"
 #include "removePoints.H"
 #include "pointFields.H"
-#include "dynamicMeshCheck.H"
+#include "meshCheck.H"
 #include "unitConversion.H"
 #include "pointSet.H"
 #include "faceSet.H"

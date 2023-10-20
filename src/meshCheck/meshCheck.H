@@ -22,20 +22,24 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Routines for checking mesh geometry
+    Functions for checking mesh topology and geometry
 
 SourceFiles
+    checkTopology.C
     checkGeometry.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef checkGeometry_H
-#define checkGeometry_H
+#ifndef meshCheck_H
+#define meshCheck_H
 
 #include "label.H"
 #include "HashSet.H"
 #include "labelVector.H"
-#include "setWriter.H"
+#include "labelPair.H"
+#include "primitiveMeshCheck.H"
+#include "polyMeshCheck.H"
+#include "mergeAndWrite.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,6 +67,15 @@ namespace meshCheck
     //- Check 0th vertex on coupled faces
     bool checkCoupledPoints(const polyMesh&, const bool report, labelHashSet*);
 
+    //- Check the topology
+    label checkTopology
+    (
+        const polyMesh& mesh,
+        const bool allTopology,
+        const autoPtr<surfaceWriter>& surfWriter,
+        const autoPtr<Foam::setWriter>& setWriter
+    );
+
     //- Check the geometry
     label checkGeometry
     (
@@ -70,6 +83,42 @@ namespace meshCheck
         const bool allGeometry,
         const autoPtr<surfaceWriter>&,
         const autoPtr<setWriter>&
+    );
+
+    //- Check mesh with mesh settings in dict. Collects incorrect faces
+    //  in set. Returns true if one or more faces in error.
+    //  Parallel ok.
+    bool checkMesh
+    (
+        const bool report,
+        const polyMesh& mesh,
+        const dictionary& dict,
+        labelHashSet& wrongFaces
+    );
+
+    //- Check (subset of mesh) with mesh settings in dict.
+    //  Collects incorrect faces in set. Returns true if one
+    //  or more faces in error. Parallel ok.
+    bool checkMesh
+    (
+        const bool report,
+        const polyMesh& mesh,
+        const dictionary& dict,
+        const labelList& checkFaces,
+        labelHashSet& wrongFaces
+    );
+
+    //- Check (subset of mesh including baffles) with mesh settings
+    //  in dict. Collects incorrect faces in set. Returns true if one
+    //  or more faces in error. Parallel ok.
+    bool checkMesh
+    (
+        const bool report,
+        const polyMesh& mesh,
+        const dictionary& dict,
+        const labelList& checkFaces,
+        const List<labelPair>& baffles,
+        labelHashSet& wrongFaces
     );
 }
 }

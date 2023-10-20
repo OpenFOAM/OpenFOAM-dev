@@ -31,7 +31,7 @@ License
 #include "pointConstraints.H"
 #include "syncTools.H"
 #include "meshTools.H"
-#include "dynamicMeshCheck.H"
+#include "meshCheck.H"
 #include "OFstream.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

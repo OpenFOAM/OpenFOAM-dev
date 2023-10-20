@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "checkTopology.H"
+#include "meshCheck.H"
 #include "polyMeshCheck.H"
 #include "Time.H"
 #include "regionSplit.H"
@@ -34,7 +34,7 @@ License
 #include "emptyPolyPatch.H"
 #include "processorPolyPatch.H"
 #include "surfaceWriter.H"
-#include "checkTools.H"
+#include "mergeAndWrite.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -131,7 +131,7 @@ Foam::label Foam::meshCheck::checkTopology
             cells.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), cells);
+                meshCheck::mergeAndWrite(surfWriter(), cells);
             }
 
         }
@@ -156,7 +156,7 @@ Foam::label Foam::meshCheck::checkTopology
             points.write();
             if (setWriter.valid())
             {
-                meshTools::mergeAndWrite(setWriter, points);
+                meshCheck::mergeAndWrite(setWriter, points);
             }
         }
     }
@@ -178,7 +178,7 @@ Foam::label Foam::meshCheck::checkTopology
             faces.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), faces);
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -198,7 +198,7 @@ Foam::label Foam::meshCheck::checkTopology
             faces.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), faces);
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -219,7 +219,7 @@ Foam::label Foam::meshCheck::checkTopology
             cells.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), cells);
+                meshCheck::mergeAndWrite(surfWriter(), cells);
             }
 
         }
@@ -243,7 +243,7 @@ Foam::label Foam::meshCheck::checkTopology
             faces.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), faces);
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -298,7 +298,7 @@ Foam::label Foam::meshCheck::checkTopology
             oneCells.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), oneCells);
+                meshCheck::mergeAndWrite(surfWriter(), oneCells);
             }
         }
 
@@ -314,7 +314,7 @@ Foam::label Foam::meshCheck::checkTopology
             twoCells.write();
             if (surfWriter.valid())
             {
-                meshTools::mergeAndWrite(surfWriter(), twoCells);
+                meshCheck::mergeAndWrite(surfWriter(), twoCells);
             }
         }
     }
@@ -459,7 +459,7 @@ Foam::label Foam::meshCheck::checkTopology
                 points.write();
                 if (setWriter.valid())
                 {
-                    meshTools::mergeAndWrite(setWriter, points);
+                    meshCheck::mergeAndWrite(setWriter, points);
                 }
             }
         }

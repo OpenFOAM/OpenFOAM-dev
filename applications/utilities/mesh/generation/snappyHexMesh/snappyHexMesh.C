@@ -47,7 +47,7 @@ Description
 #include "snapParameters.H"
 #include "layerParameters.H"
 #include "faceSet.H"
-#include "dynamicMeshCheck.H"
+#include "meshCheck.H"
 #include "polyTopoChange.H"
 #include "cellModeller.H"
 #include "uindirectPrimitivePatch.H"

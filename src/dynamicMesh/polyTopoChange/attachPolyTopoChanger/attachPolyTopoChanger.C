@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "attachPolyTopoChanger.H"
-#include "polyMeshCheck.H"
+#include "meshCheck.H"
 #include "polyTopoChange.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

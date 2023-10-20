@@ -27,9 +27,8 @@ License
 #include "polyMesh.H"
 #include "cellSet.H"
 #include "faceSet.H"
-#include "dynamicMeshCheck.H"
+#include "meshCheck.H"
 #include "surfaceWriter.H"
-#include "checkTools.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,7 +57,7 @@ Foam::label Foam::checkMeshQuality
             faces.write();
             if (writer.valid())
             {
-                meshTools::mergeAndWrite(writer(), faces);
+                meshCheck::mergeAndWrite(writer(), faces);
             }
         }
     }

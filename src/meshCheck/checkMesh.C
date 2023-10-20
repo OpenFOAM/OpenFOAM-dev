@@ -23,7 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "dynamicMeshCheck.H"
+#include "meshCheck.H"
+#include "polyMeshCheck.H"
 #include "IOmanip.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -48,6 +49,7 @@ bool Foam::meshCheck::checkMesh
         wrongFaces
     );
 }
+
 
 bool Foam::meshCheck::checkMesh
 (
