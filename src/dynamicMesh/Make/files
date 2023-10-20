@@ -91,7 +91,6 @@ fvMeshSubset/fvMeshSubset.C
 
 motionSmoother/motionSmoother.C
 motionSmoother/motionSmootherAlgo.C
-motionSmoother/motionSmootherAlgoCheck.C
 motionSmoother/motionSmootherData.C
 motionSmoother/badQualityToCell/badQualityToCell.C
 motionSmoother/badQualityToFace/badQualityToFace.C

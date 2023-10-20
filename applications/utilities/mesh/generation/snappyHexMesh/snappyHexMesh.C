@@ -47,7 +47,7 @@ Description
 #include "snapParameters.H"
 #include "layerParameters.H"
 #include "faceSet.H"
-#include "motionSmoother.H"
+#include "dynamicMeshCheck.H"
 #include "polyTopoChange.H"
 #include "cellModeller.H"
 #include "uindirectPrimitivePatch.H"
@@ -1314,7 +1314,7 @@ int main(int argc, char *argv[])
         // Check final mesh
         Info<< "Checking final mesh ..." << endl;
         faceSet wrongFaces(mesh, "wrongFaces", mesh.nFaces()/100);
-        motionSmoother::checkMesh(false, mesh, motionDict, wrongFaces);
+        meshCheck::checkMesh(false, mesh, motionDict, wrongFaces);
         const label nErrors = returnReduce
         (
             wrongFaces.size(),

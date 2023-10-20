@@ -23,13 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "motionSmootherAlgo.H"
 #include "dynamicMeshCheck.H"
 #include "IOmanip.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::motionSmootherAlgo::checkMesh
+bool Foam::meshCheck::checkMesh
 (
     const bool report,
     const polyMesh& mesh,
@@ -50,7 +49,7 @@ bool Foam::motionSmootherAlgo::checkMesh
     );
 }
 
-bool Foam::motionSmootherAlgo::checkMesh
+bool Foam::meshCheck::checkMesh
 (
     const bool report,
     const polyMesh& mesh,
@@ -356,7 +355,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 }
 
 
-bool Foam::motionSmootherAlgo::checkMesh
+bool Foam::meshCheck::checkMesh
 (
     const bool report,
     const polyMesh& mesh,

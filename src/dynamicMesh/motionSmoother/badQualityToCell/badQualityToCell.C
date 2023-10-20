@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,9 @@ License
 
 #include "badQualityToCell.H"
 #include "polyMesh.H"
-#include "motionSmoother.H"
-#include "addToRunTimeSelectionTable.H"
+#include "dynamicMeshCheck.H"
 #include "faceSet.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -43,7 +43,7 @@ namespace Foam
 void Foam::badQualityToCell::combine(topoSet& set, const bool add) const
 {
     faceSet faces(mesh_, "meshQualityFaces", mesh_.nFaces()/100+1);
-    motionSmoother::checkMesh(false, mesh_, dict_, faces);
+    meshCheck::checkMesh(false, mesh_, dict_, faces);
     faces.sync(mesh_);
 
     forAllConstIter(faceSet, faces, iter)

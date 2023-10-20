@@ -28,6 +28,7 @@ Description
 
 #include "snappySnapDriver.H"
 #include "motionSmoother.H"
+#include "dynamicMeshCheck.H"
 #include "polyTopoChange.H"
 #include "syncTools.H"
 #include "fvMesh.H"
@@ -2407,7 +2408,7 @@ void Foam::snappySnapDriver::doSnap
         // Check initial mesh
         Info<< "Checking initial mesh ..." << endl;
         labelHashSet wrongFaces(mesh.nFaces()/100);
-        motionSmoother::checkMesh(false, mesh, motionDict, wrongFaces);
+        meshCheck::checkMesh(false, mesh, motionDict, wrongFaces);
         const label nInitErrors = returnReduce
         (
             wrongFaces.size(),

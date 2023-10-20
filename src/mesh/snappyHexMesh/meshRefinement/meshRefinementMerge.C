@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 #include "removePoints.H"
 #include "faceSet.H"
 #include "Time.H"
-#include "motionSmoother.H"
+#include "dynamicMeshCheck.H"
 #include "syncTools.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -396,7 +396,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
                 "errorFaces",
                 mesh_.nFaces()-mesh_.nInternalFaces()
             );
-            bool hasErrors = motionSmoother::checkMesh
+            bool hasErrors = meshCheck::checkMesh
             (
                 false,  // report
                 mesh_,
@@ -847,7 +847,7 @@ Foam::label Foam::meshRefinement::mergeEdgesUndo
                 "errorFaces",
                 mesh_.nFaces()-mesh_.nInternalFaces()
             );
-            bool hasErrors = motionSmoother::checkMesh
+            bool hasErrors = meshCheck::checkMesh
             (
                 false,  // report
                 mesh_,

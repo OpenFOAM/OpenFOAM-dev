@@ -7,6 +7,7 @@ polyMeshCheck/polyMeshCheck.C
 polyMeshCheck/polyMeshTools.C
 
 dynamicMeshCheck/dynamicMeshCheck.C
+dynamicMeshCheck/motionSmootherAlgoCheck.C
 
 checkTools/checkTools.C
 checkTools/checkTopology.C

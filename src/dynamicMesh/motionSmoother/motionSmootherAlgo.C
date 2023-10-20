@@ -31,6 +31,7 @@ License
 #include "pointConstraints.H"
 #include "syncTools.H"
 #include "meshTools.H"
+#include "dynamicMeshCheck.H"
 #include "OFstream.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -899,7 +900,15 @@ bool Foam::motionSmootherAlgo::scaleMesh
 
     // Check. Returns parallel number of incorrect faces.
     faceSet wrongFaces(mesh_, "wrongFaces", mesh_.nFaces()/100+100);
-    checkMesh(false, mesh_, meshQualityDict, checkFaces, baffles, wrongFaces);
+    meshCheck::checkMesh
+    (
+        false,
+        mesh_,
+        meshQualityDict,
+        checkFaces,
+        baffles,
+        wrongFaces
+    );
 
     if (returnReduce(wrongFaces.size(), sumOp<label>()) <= nAllowableErrors)
     {

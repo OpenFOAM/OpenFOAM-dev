@@ -1096,7 +1096,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
         // Check initial mesh
         Info<< "Checking initial mesh ..." << endl;
         labelHashSet wrongFaces(mesh_.nFaces()/100);
-        motionSmoother::checkMesh(false, mesh_, motionDict, wrongFaces);
+        meshCheck::checkMesh(false, mesh_, motionDict, wrongFaces);
         const label nInitErrors = returnReduce
         (
             wrongFaces.size(),
@@ -1167,7 +1167,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
     {
         faceSet wrongFaces(mesh_, "wrongFaces", 100);
         {
-            // motionSmoother::checkMesh(false, mesh_, motionDict, wrongFaces);
+            // meshCheck::checkMesh(false, mesh_, motionDict, wrongFaces);
 
             // Just check the errors from squashing
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

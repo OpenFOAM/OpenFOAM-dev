@@ -202,6 +202,43 @@ bool checkCellDeterminant
     labelHashSet* setPtr
 );
 
+//- Check mesh with mesh settings in dict. Collects incorrect faces
+//  in set. Returns true if one or more faces in error.
+//  Parallel ok.
+bool checkMesh
+(
+    const bool report,
+    const polyMesh& mesh,
+    const dictionary& dict,
+    labelHashSet& wrongFaces
+);
+
+//- Check (subset of mesh) with mesh settings in dict.
+//  Collects incorrect faces in set. Returns true if one
+//  or more faces in error. Parallel ok.
+bool checkMesh
+(
+    const bool report,
+    const polyMesh& mesh,
+    const dictionary& dict,
+    const labelList& checkFaces,
+    labelHashSet& wrongFaces
+);
+
+//- Check (subset of mesh including baffles) with mesh settings
+//  in dict. Collects incorrect faces in set. Returns true if one
+//  or more faces in error. Parallel ok.
+bool checkMesh
+(
+    const bool report,
+    const polyMesh& mesh,
+    const dictionary& dict,
+    const labelList& checkFaces,
+    const List<labelPair>& baffles,
+    labelHashSet& wrongFaces
+);
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace meshCheck

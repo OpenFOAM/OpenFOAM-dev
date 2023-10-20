@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,14 +31,14 @@ License
 #include "PointEdgeWave.H"
 #include "globalIndex.H"
 #include "removePoints.H"
-#include "motionSmoother.H"
+#include "dynamicMeshCheck.H"
 #include "OFstream.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
 namespace Foam
 {
-defineTypeNameAndDebug(edgeCollapser, 0);
+    defineTypeNameAndDebug(edgeCollapser, 0);
 }
 
 
@@ -65,7 +65,7 @@ Foam::HashSet<Foam::label> Foam::edgeCollapser::checkBadFaces
 
     Info<< endl;
 
-    motionSmoother::checkMesh
+    meshCheck::checkMesh
     (
         false,
         mesh,

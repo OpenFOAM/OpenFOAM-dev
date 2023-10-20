@@ -2,6 +2,7 @@ EXE_INC = \
     -I$(LIB_SRC)/parallel/decompose/decompositionMethods/lnInclude \
     -I$(LIB_SRC)/mesh/snappyHexMesh/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/meshCheck/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/triSurface/lnInclude \
     -I$(LIB_SRC)/surfMesh/lnInclude \
@@ -14,6 +15,7 @@ EXE_LIBS = \
     -ldecompositionMethods \
     -L$(FOAM_LIBBIN)/dummy -lscotchDecomp -lptscotchDecomp \
     -lmeshTools \
+    -lmeshCheck \
     -lsurfMesh \
     -lfileFormats \
     -ldynamicMesh \
