@@ -31,12 +31,6 @@ License
 #include "SortableList.H"
 #include "EdgeMap.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-Foam::scalar Foam::meshCheck::closedThreshold  = 1.0e-6;
-Foam::scalar Foam::meshCheck::aspectThreshold  = 1000;
-Foam::scalar Foam::meshCheck::planarCosAngle   = 1.0e-6;
-
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -562,6 +556,7 @@ Foam::tmp<Foam::scalarField> Foam::meshCheck::cellDeterminant
 bool Foam::meshCheck::checkClosedBoundary
 (
     const primitiveMesh& mesh,
+    const scalar closedThreshold,
     const bool report
 )
 {
@@ -590,7 +585,7 @@ bool Foam::meshCheck::checkClosedBoundary
 
     vector openness = sumClosed/(sumMagClosedBoundary + vSmall);
 
-    if (cmptMax(cmptMag(openness)) > meshCheck::closedThreshold)
+    if (cmptMax(cmptMag(openness)) > closedThreshold)
     {
         if (report)
         {
@@ -617,6 +612,8 @@ bool Foam::meshCheck::checkClosedBoundary
 bool Foam::meshCheck::checkClosedCells
 (
     const primitiveMesh& mesh,
+    const scalar closedThreshold,
+    const scalar aspectThreshold,
     const bool report,
     labelHashSet* setPtr,
     labelHashSet* aspectSetPtr,
@@ -684,7 +681,7 @@ bool Foam::meshCheck::checkClosedCells
     // Check the sums
     forAll(openness, celli)
     {
-        if (openness[celli] > meshCheck::closedThreshold)
+        if (openness[celli] > closedThreshold)
         {
             if (setPtr)
             {
@@ -694,7 +691,7 @@ bool Foam::meshCheck::checkClosedCells
             nOpen++;
         }
 
-        if (aspectRatio[celli] > meshCheck::aspectThreshold)
+        if (aspectRatio[celli] > aspectThreshold)
         {
             if (aspectSetPtr)
             {
@@ -1143,6 +1140,7 @@ bool Foam::meshCheck::checkFaceFlatness
 bool Foam::meshCheck::checkConcaveCells
 (
     const primitiveMesh& mesh,
+    const scalar planarCosAngle,
     const bool report,
     labelHashSet* setPtr
 )
@@ -1208,7 +1206,7 @@ bool Foam::meshCheck::checkConcaveCells
 
                     pC /= max(mag(pC), vSmall);
 
-                    if ((pC & fN) > -meshCheck::planarCosAngle)
+                    if ((pC & fN) > -planarCosAngle)
                     {
                         // Concave or planar face
 

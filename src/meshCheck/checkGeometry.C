@@ -515,6 +515,10 @@ Foam::label Foam::meshCheck::checkGeometry
     const autoPtr<Foam::setWriter>& setWriter
 )
 {
+    const scalar closedThreshold = 1.0e-6;
+    const scalar aspectThreshold = 1000;
+    const scalar planarCosAngle = 1.0e-6;
+
     label noFailedChecks = 0;
 
     Info<< "\nChecking geometry..." << endl;
@@ -626,6 +630,8 @@ Foam::label Foam::meshCheck::checkGeometry
             meshCheck::checkClosedCells
             (
                 mesh,
+                closedThreshold,
+                aspectThreshold,
                 true,
                 &cells,
                 &aspectCells,
@@ -970,7 +976,7 @@ Foam::label Foam::meshCheck::checkGeometry
     if (allGeometry)
     {
         cellSet cells(mesh, "concaveCells", mesh.nCells()/100);
-        if (meshCheck::checkConcaveCells(mesh, true, &cells))
+        if (meshCheck::checkConcaveCells(mesh, true, planarCosAngle, &cells))
         {
             noFailedChecks++;
 

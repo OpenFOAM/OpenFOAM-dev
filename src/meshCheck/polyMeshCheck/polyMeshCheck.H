@@ -292,17 +292,6 @@ namespace meshCheck
         const labelList& checkFaces,
         labelHashSet* setPtr
     );
-
-    //- Check mesh topology for correctness.
-    //  Returns false for no error.
-    bool checkTopology(const polyMesh& mesh, const bool report = false);
-
-    //- Check mesh geometry (& implicitly topology) for correctness.
-    //  Returns false for no error.
-    bool checkGeometry(const polyMesh& mesh, const bool report = false);
-
-    //- Check mesh for correctness. Returns false for no error.
-    bool checkMesh(const polyMesh& mesh, const bool report = false);
 }
 
 

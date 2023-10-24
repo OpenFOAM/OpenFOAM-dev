@@ -47,25 +47,6 @@ namespace Foam
 
 namespace meshCheck
 {
-    // Data to control mesh checking
-
-        //- Cell closedness warning threshold
-        //  set as the fraction of un-closed area to closed area
-        extern scalar closedThreshold;
-
-        //- Aspect ratio warning threshold
-        extern scalar aspectThreshold;
-
-        //- Non-orthogonality warning threshold in deg
-        extern scalar nonOrthThreshold;
-
-        //- Skewness warning threshold
-        extern scalar skewThreshold;
-
-        //- Threshold where faces are considered coplanar
-        extern scalar planarCosAngle;
-
-
     // Topological checks
 
         //- Check face ordering
@@ -248,6 +229,7 @@ namespace meshCheck
         bool checkClosedBoundary
         (
             const primitiveMesh& mesh,
+            const scalar closedThreshold,
             const bool report = false
         );
 
@@ -255,6 +237,8 @@ namespace meshCheck
         bool checkClosedCells
         (
             const primitiveMesh& mesh,
+            const scalar closedThreshold,
+            const scalar aspectThreshold,
             const bool report = false,
             labelHashSet* setPtr = nullptr,
             labelHashSet* highAspectSetPtr = nullptr,
@@ -329,6 +313,7 @@ namespace meshCheck
         bool checkConcaveCells
         (
             const primitiveMesh& mesh,
+            const scalar planarCosAngle,
             const bool report = false,
             labelHashSet* setPtr = nullptr
         );
