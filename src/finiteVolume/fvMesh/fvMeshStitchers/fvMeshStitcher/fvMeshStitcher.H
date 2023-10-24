@@ -178,6 +178,15 @@ private:
 
         // Field Mapping
 
+            //- Return the boundary field reference for the given field,
+            //  without updating the time index, storing old time fields,
+            //  etc...
+            template<class GeoField>
+            static typename GeoField::Boundary& boundaryFieldRefNoUpdate
+            (
+                GeoField& fld
+            );
+
             //- Resize the patch fields of a given type and class to match the
             //  mesh
             template<class Type, template<class> class GeoField>

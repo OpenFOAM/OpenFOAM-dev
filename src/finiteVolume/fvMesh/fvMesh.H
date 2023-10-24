@@ -228,9 +228,6 @@ private:
             //- Clear addressing
             void clearAddressing(const bool isMeshUpdate = false);
 
-            //- Preserve old volume(s)
-            void storeOldVol(const scalarField&);
-
             //- Store old times fields for all fields of a given type and class
             template<class Type, template<class> class GeoField>
             void storeOldTimeFields();

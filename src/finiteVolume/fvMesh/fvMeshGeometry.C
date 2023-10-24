@@ -266,7 +266,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V() const
 
 const Foam::volScalarField::Internal& Foam::fvMesh::V0() const
 {
-    if (!V0Ptr_)
+    if (!V0Ptr_ || Foam::isNull(V0Ptr_))
     {
         FatalErrorInFunction
             << "Vc0 is not available"
@@ -281,32 +281,19 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
 {
     if (!V00Ptr_)
     {
-        if (debug)
-        {
-            InfoInFunction << "Constructing from V0" << endl;
-        }
+        V00Ptr_ = NullObjectPtr<DimensionedField<scalar, volMesh>>();
+    }
 
-        V00Ptr_ = new DimensionedField<scalar, volMesh>
-        (
-            IOobject
-            (
-                "Vc00",
-                time().name(),
-                *this,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                true
-            ),
-            V0()
-        );
+    if (Foam::isNull(V00Ptr_))
+    {
+        return V0();
     }
 
     return *V00Ptr_;
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
-Foam::fvMesh::Vsc() const
+Foam::tmp<Foam::volScalarField::Internal> Foam::fvMesh::Vsc() const
 {
     if (moving() && time().subCycling())
     {
@@ -334,8 +321,7 @@ Foam::fvMesh::Vsc() const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
-Foam::fvMesh::Vsc0() const
+Foam::tmp<Foam::volScalarField::Internal> Foam::fvMesh::Vsc0() const
 {
     if (moving() && time().subCycling())
     {

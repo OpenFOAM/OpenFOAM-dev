@@ -1138,17 +1138,20 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::storeOldTime() const
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::label Foam::GeometricField<Type, PatchField, GeoMesh>::nOldTimes() const
+Foam::label Foam::GeometricField<Type, PatchField, GeoMesh>::nOldTimes
+(
+    const bool includeNull
+) const
 {
     if (field0Ptr_)
     {
         if (isNull(field0Ptr_))
         {
-            return 1;
+            return includeNull;
         }
         else
         {
-            return field0Ptr_->nOldTimes() + 1;
+            return field0Ptr_->nOldTimes(includeNull) + 1;
         }
     }
     else
@@ -1309,9 +1312,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::nullOldestTimeFound()
         }
         else
         {
-            deleteDemandDrivenData(field0Ptr_);
-            field0Ptr_ =
-                NullObjectPtr<GeometricField<Type, PatchField, GeoMesh>>();
+            nullDemandDrivenData(field0Ptr_);
         }
     }
 }

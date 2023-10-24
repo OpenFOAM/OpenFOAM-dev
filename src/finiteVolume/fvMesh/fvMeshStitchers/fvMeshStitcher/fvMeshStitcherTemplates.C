@@ -38,7 +38,18 @@ Description
 #include "processorFvPatch.H"
 #include "surfaceToVolVelocity.H"
 
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class GeoField>
+typename GeoField::Boundary& Foam::fvMeshStitcher::boundaryFieldRefNoUpdate
+(
+    GeoField& fld
+)
+{
+    return const_cast<typename GeoField::Boundary&>(fld.boundaryField());
+}
+
 
 template<class Type, template<class> class GeoField>
 void Foam::fvMeshStitcher::resizePatchFields()
@@ -49,7 +60,7 @@ void Foam::fvMeshStitcher::resizePatchFields()
         forAll(mesh_.boundary(), patchi)
         {
             typename GeoField<Type>::Patch& pf =
-                fields[i].boundaryFieldRef()[patchi];
+                boundaryFieldRefNoUpdate(fields[i])[patchi];
 
             if (isA<nonConformalFvPatch>(pf.patch()))
             {
@@ -93,14 +104,14 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
             )
         );
 
-        for (label ti=0; ti<=field.nOldTimes(); ti++)
+        for (label ti=0; ti<=field.nOldTimes(false); ti++)
         {
             SurfaceField<Type>& field0 = field.oldTime(ti);
 
-            nccFieldPtr->oldTime(ti).boundaryFieldRef() =
+            boundaryFieldRefNoUpdate(nccFieldPtr->oldTime(ti)) =
                 conformalNccBoundaryField<Type>(field0.boundaryField());
 
-            field0.boundaryFieldRef() =
+            boundaryFieldRefNoUpdate(field0) =
                 conformalOrigBoundaryField<Type>(field0.boundaryField());
         }
 
@@ -137,18 +148,18 @@ void Foam::fvMeshStitcher::postNonConformSurfaceFields()
             const SurfaceField<Type>& nccField =
                 mesh_.lookupObject<SurfaceField<Type>>(nccFieldName);
 
-            for (label ti=0; ti<=field.nOldTimes(); ti++)
+            for (label ti=0; ti<=field.nOldTimes(false); ti++)
             {
                 SurfaceField<Type>& field0 = field.oldTime(ti);
 
-                field0.boundaryFieldRef() =
+                boundaryFieldRefNoUpdate(field0) =
                     nonConformalBoundaryField<Type>
                     (
                         nccField.oldTime(ti).boundaryField(),
                         field0.boundaryField()
                     );
 
-                field0.boundaryFieldRef() =
+                boundaryFieldRefNoUpdate(field0) =
                     synchronisedBoundaryField<Type>(field0.boundaryField());
             }
         }
@@ -217,7 +228,7 @@ void Foam::fvMeshStitcher::evaluateVolFields()
         forAll(mesh_.boundary(), patchi)
         {
             typename VolField<Type>::Patch& pf =
-                fields[i].boundaryFieldRef()[patchi];
+                boundaryFieldRefNoUpdate(fields[i])[patchi];
 
             if (isA<nonConformalFvPatch>(pf.patch()))
             {
@@ -237,7 +248,7 @@ void Foam::fvMeshStitcher::evaluateVolFields()
         forAll(mesh_.boundary(), patchi)
         {
             typename VolField<Type>::Patch& pf =
-                fields[i].boundaryFieldRef()[patchi];
+                boundaryFieldRefNoUpdate(fields[i])[patchi];
 
             if (isA<nonConformalFvPatch>(pf.patch()))
             {
@@ -275,7 +286,7 @@ inline void Foam::fvMeshStitcher::postNonConformSurfaceVelocities()
                 {
                     if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
                     {
-                        Uf.boundaryFieldRef()[patchi] ==
+                        boundaryFieldRefNoUpdate(Uf)[patchi] ==
                             U.boundaryField()[patchi];
                     }
                 }
@@ -315,12 +326,12 @@ void Foam::fvMeshStitcher::resizeFieldPatchFields
     GeoField& field
 )
 {
-    for (label ti=0; ti<=field.nOldTimes(); ti++)
+    for (label ti=0; ti<=field.nOldTimes(false); ti++)
     {
         resizeBoundaryFieldPatchFields
         (
             polyFacesBf,
-            field.oldTime(ti).boundaryFieldRef()
+            boundaryFieldRefNoUpdate(field.oldTime(ti))
         );
     }
 }

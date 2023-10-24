@@ -105,10 +105,12 @@ template<class GeoField>
 typename CrankNicolsonDdtScheme<Type>::template DDt0Field<GeoField>&
 CrankNicolsonDdtScheme<Type>::ddt0_
 (
-    const word& name,
+    const word& unTypedName,
     const dimensionSet& dims
 )
 {
+    const word name = typedName(unTypedName);
+
     if (!mesh().objectRegistry::template foundObject<GeoField>(name))
     {
         const Time& runTime = mesh().time();
@@ -1492,11 +1494,8 @@ tmp<surfaceScalarField> CrankNicolsonDdtScheme<Type>::meshPhi
     const VolField<Type>& vf
 )
 {
-    DDt0Field<surfaceScalarField>& meshPhi0 = ddt0_<surfaceScalarField>
-    (
-        "meshPhiCN_0",
-        dimVolume
-    );
+    DDt0Field<surfaceScalarField>& meshPhi0 =
+        ddt0_<surfaceScalarField>("meshPhi0", dimVolume);
 
     if (evaluate(meshPhi0))
     {
@@ -1519,11 +1518,8 @@ tmp<scalarField> CrankNicolsonDdtScheme<Type>::meshPhi
     const label patchi
 )
 {
-    DDt0Field<surfaceScalarField>& meshPhi0 = ddt0_<surfaceScalarField>
-    (
-        "meshPhiCN_0",
-        dimVolume
-    );
+    DDt0Field<surfaceScalarField>& meshPhi0 =
+        ddt0_<surfaceScalarField>("meshPhi0", dimVolume);
 
     if (evaluate(meshPhi0))
     {

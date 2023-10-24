@@ -1218,6 +1218,10 @@ bool Foam::fvMeshStitcher::disconnect
     if (mesh_.moving())
     {
         surfaceScalarField phi(mesh_.phi());
+        for (label i = 1; i < mesh_.phi().nOldTimes(false); ++ i)
+        {
+            phi.oldTime(i) == mesh_.phi().oldTime(i);
+        }
         conformCorrectMeshPhi(phi);
         mesh_.conform(phi);
     }
@@ -1239,16 +1243,18 @@ bool Foam::fvMeshStitcher::disconnect
         Info<< indent << "Cell min/avg/max openness = "
             << gMin(o) << '/' << gAverage(o) << '/' << gMax(o) << endl;
 
-        for (label i = 0; mesh_.moving() && i <= mesh_.phi().nOldTimes(); ++ i)
+        if (mesh_.moving())
         {
-            const volScalarField::Internal vce(volumeConservationError(i));
-            Info<< indent << "Cell min/avg/max ";
-            for (label j = 0; j < i; ++ j) Info<< "old-";
-            Info<< (i ? "time " : "") << "volume conservation error = "
-                << gMin(vce) << '/' << gAverage(vce) << '/' << gMax(vce)
-                << endl;
+            for (label i = 0; i <= mesh_.phi().nOldTimes(false); ++ i)
+            {
+                const volScalarField::Internal vce(volumeConservationError(i));
+                Info<< indent << "Cell min/avg/max ";
+                for (label j = 0; j < i; ++ j) Info<< "old-";
+                Info<< (i ? "time " : "") << "volume conservation error = "
+                    << gMin(vce) << '/' << gAverage(vce) << '/' << gMax(vce)
+                    << endl;
+            }
         }
-
     }
 
     if (coupled && geometric)
@@ -1372,6 +1378,10 @@ bool Foam::fvMeshStitcher::connect
     if (mesh_.moving())
     {
         surfaceScalarField phi(mesh_.phi());
+        for (label i = 1; i < mesh_.phi().nOldTimes(false); ++ i)
+        {
+            phi.oldTime(i) == mesh_.phi().oldTime(i);
+        }
         unconformCorrectMeshPhi(polyFacesBf, Sf, Cf, phi);
         mesh_.unconform(polyFacesBf, Sf, Cf, phi);
     }
@@ -1411,14 +1421,17 @@ bool Foam::fvMeshStitcher::connect
         Info<< indent << "Cell min/avg/max openness = "
             << gMin(o) << '/' << gAverage(o) << '/' << gMax(o) << endl;
 
-        for (label i = 0; mesh_.moving() && i <= mesh_.phi().nOldTimes(); ++ i)
+        if (mesh_.moving())
         {
-            const volScalarField::Internal vce(volumeConservationError(i));
-            Info<< indent << "Cell min/avg/max ";
-            for (label j = 0; j < i; ++ j) Info<< "old-";
-            Info<< (i ? "time " : "") << "volume conservation error = "
-                << gMin(vce) << '/' << gAverage(vce) << '/' << gMax(vce)
-                << endl;
+            for (label i = 0; i <= mesh_.phi().nOldTimes(false); ++ i)
+            {
+                const volScalarField::Internal vce(volumeConservationError(i));
+                Info<< indent << "Cell min/avg/max ";
+                for (label j = 0; j < i; ++ j) Info<< "old-";
+                Info<< (i ? "time " : "") << "volume conservation error = "
+                    << gMin(vce) << '/' << gAverage(vce) << '/' << gMax(vce)
+                    << endl;
+            }
         }
 
         if (mesh_.moving())

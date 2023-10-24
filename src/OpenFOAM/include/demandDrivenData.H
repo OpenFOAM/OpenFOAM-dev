@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,8 @@ Description
 #ifndef demandDrivenData_H
 #define demandDrivenData_H
 
+#include "nullObject.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -36,14 +38,25 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class DataPtr>
-inline void deleteDemandDrivenData(DataPtr& dataPtr)
+template<class DataType>
+inline void deleteDemandDrivenData(DataType*& dataPtr)
 {
-    if (dataPtr)
+    if (dataPtr && notNull(dataPtr))
     {
         delete dataPtr;
-        dataPtr = 0;
     }
+    dataPtr = 0;
+}
+
+
+template<class DataType>
+inline void nullDemandDrivenData(DataType*& dataPtr)
+{
+    if (dataPtr && notNull(dataPtr))
+    {
+        delete dataPtr;
+    }
+    dataPtr = NullObjectPtr<DataType>();
 }
 
 

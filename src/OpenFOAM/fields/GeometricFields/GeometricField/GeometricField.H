@@ -436,7 +436,7 @@ public:
         void storeOldTimes() const;
 
         //- Return the number of old time fields stored
-        label nOldTimes() const;
+        label nOldTimes(const bool includeNull=true) const;
 
         //- Return old time field
         const GeometricField<Type, PatchField, GeoMesh>& oldTime() const;

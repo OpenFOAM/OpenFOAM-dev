@@ -203,70 +203,6 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
 }
 
 
-void Foam::fvMesh::storeOldVol(const scalarField& V)
-{
-    if (curTimeIndex_ < time().timeIndex())
-    {
-        if (debug)
-        {
-            Pout<< FUNCTION_NAME
-                << " Storing old time volumes since from time " << curTimeIndex_
-                << " and time now " << time().timeIndex()
-                << " V:" << V.size()
-                << endl;
-        }
-
-        if (V00Ptr_ && V0Ptr_)
-        {
-            // Copy V0 into V00 storage
-            *V00Ptr_ = *V0Ptr_;
-        }
-
-        if (V0Ptr_)
-        {
-            // Copy V into V0 storage
-            V0Ptr_->scalarField::operator=(V);
-        }
-        else
-        {
-            // Allocate V0 storage, fill with V
-            V0Ptr_ = new DimensionedField<scalar, volMesh>
-            (
-                IOobject
-                (
-                    "Vc0",
-                    time().name(),
-                    *this,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    true
-                ),
-                *this,
-                dimVolume
-            );
-            scalarField& V0 = *V0Ptr_;
-            // Note: V0 now sized with current mesh, not with (potentially
-            //       different size) V.
-            V0.setSize(V.size());
-            V0 = V;
-        }
-
-        if (debug)
-        {
-            Pout<< FUNCTION_NAME
-                << " Stored old time volumes V0:" << V0Ptr_->size()
-                << endl;
-            if (V00Ptr_)
-            {
-                Pout<< FUNCTION_NAME
-                    << " Stored oldold time volumes V00:" << V00Ptr_->size()
-                    << endl;
-            }
-        }
-    }
-}
-
-
 void Foam::fvMesh::storeOldTimeFields()
 {
     storeOldTimeFields<PointField>();
@@ -386,7 +322,6 @@ Foam::fvMesh::fvMesh
         mover_.set(fvMeshMover::New(*this).ptr());
 
         // Check the existence of the cell volumes and read if present
-        // and set the storage of V00
         if (fileHandler().isFile(time().timePath()/"Vc0"))
         {
             V0Ptr_ = new DimensionedField<scalar, volMesh>
@@ -402,8 +337,6 @@ Foam::fvMesh::fvMesh
                 ),
                 *this
             );
-
-            V00();
         }
 
         // Check the existence of the mesh fluxes and read if present
@@ -672,12 +605,14 @@ bool Foam::fvMesh::update()
 
     if (!conformal()) stitcher_->disconnect(true, true);
 
-    const bool hasV00 = V00Ptr_;
-    deleteDemandDrivenData(V00Ptr_);
-
-    if (!hasV00)
+    // Remove the oldest cell volume field
+    if (V00Ptr_)
     {
-        deleteDemandDrivenData(V0Ptr_);
+        nullDemandDrivenData(V00Ptr_);
+    }
+    else
+    {
+        nullDemandDrivenData(V0Ptr_);
     }
 
     // Set topoChanged_ false before any mesh change
@@ -686,12 +621,6 @@ bool Foam::fvMesh::update()
     topoChanged_ = updated;
 
     updated = distributor_->update() || updated;
-
-    if (hasV00)
-    {
-        // If V00 had been set reset to the mapped V0 prior to mesh-motion
-        V00();
-    }
 
     return updated;
 }
@@ -1149,20 +1078,63 @@ void Foam::fvMesh::setPoints(const pointField& p)
 
 Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 {
-    // Set moving_ true
-    // Note: once set it remains true for the rest of the run
+    // Set the mesh to be moving. This remains true for the rest of the run.
     moving_ = true;
 
-    // Store old time volumes if the time has been incremented
-    // This will update V0, V00
+    // Create old-time volumes, if necessary, at the start of a new timestep
     if (curTimeIndex_ < time().timeIndex())
     {
-        storeOldVol(V());
+        if (V00Ptr_ && notNull(V00Ptr_))
+        {
+            FatalErrorInFunction
+                << "Old-old volumes should not be maintained across mesh "
+                << "changes" << exit(FatalError);
+        }
+
+        // If old-old-volumes are necessary then copy them from the old-volumes
+        if (Foam::isNull(V00Ptr_))
+        {
+            V00Ptr_ = new DimensionedField<scalar, volMesh>
+            (
+                IOobject
+                (
+                    "Vc00",
+                    time().name(),
+                    *this,
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE,
+                    true
+                ),
+                V0()
+            );
+        }
+
+        // Copy old-volumes from the volumes
+        if (!V0Ptr_ || Foam::isNull(V0Ptr_))
+        {
+            V0Ptr_ = new DimensionedField<scalar, volMesh>
+            (
+                IOobject
+                (
+                    "Vc0",
+                    time().name(),
+                    *this,
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE,
+                    true
+                ),
+                V()
+            );
+        }
+        else
+        {
+            V0Ptr_->scalarField::operator=(V());
+        }
     }
 
+    // Create mesh motion flux, if necessary
     if (!phiPtr_)
     {
-        // Create mesh motion flux
         phiPtr_ = new surfaceScalarField
         (
             IOobject
@@ -1180,11 +1152,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
     }
     else
     {
-        // Store old time mesh motion fluxes if the time has been incremented
-        if (!topoChanging() && phiPtr_->timeIndex() != time().timeIndex())
-        {
-            phiPtr_->oldTime();
-        }
+        phiPtr_->storeOldTimes();
     }
 
     surfaceScalarField& phi = *phiPtr_;
@@ -1219,7 +1187,6 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
     // should use the local geometric properties.
     updateGeomNotOldVol();
 
-
     // Update other local data
     boundary_.movePoints();
     surfaceInterpolation::movePoints();
@@ -1238,81 +1205,16 @@ void Foam::fvMesh::topoChange(const polyTopoChangeMap& map)
     // Update polyMesh. This needs to keep volume existent!
     polyMesh::topoChange(map);
 
-    if (VPtr_)
-    {
-        // Cache old time volumes if they exist and the time has been
-        // incremented
-        if (V0Ptr_ && !V0Ptr_->registered())
-        {
-            storeOldVol(map.oldCellVolumes());
-        }
-
-        // Few checks
-        if (VPtr_ && (VPtr_->size() != map.nOldCells()))
-        {
-            FatalErrorInFunction
-                << "Vc:" << V().size()
-                << " not equal to the number of old cells "
-                << map.nOldCells()
-                << exit(FatalError);
-        }
-
-        if (V0Ptr_ && (V0Ptr_->size() != map.nOldCells()))
-        {
-            FatalErrorInFunction
-                << "Vc0:" << V0Ptr_->size()
-                << " not equal to the number of old cells "
-                << map.nOldCells()
-                << exit(FatalError);
-        }
-    }
-
     // Clear the sliced fields
     clearGeomNotOldVol();
 
-    // Map the old volume. Just map to new cell labels.
-    if (V0Ptr_ && !V0Ptr_->registered())
+    // Check that we're not trying to maintain old-time mesh geometry
+    if (V0Ptr_ && Foam::notNull(V0Ptr_))
     {
-        const labelList& cellMap = map.cellMap();
-
-        scalarField& V0 = *V0Ptr_;
-
-        scalarField savedV0(V0);
-        V0.setSize(nCells());
-
-        forAll(V0, i)
-        {
-            if (cellMap[i] > -1)
-            {
-                V0[i] = savedV0[cellMap[i]];
-            }
-            else
-            {
-                V0[i] = 0.0;
-            }
-        }
-
-        // Inject volume of merged cells
-        label nMerged = 0;
-        forAll(map.reverseCellMap(), oldCelli)
-        {
-            label index = map.reverseCellMap()[oldCelli];
-
-            if (index < -1)
-            {
-                label celli = -index-2;
-
-                V0[celli] += savedV0[oldCelli];
-
-                nMerged++;
-            }
-        }
-
-        if (debug)
-        {
-            Info<< "Mapping old time volume V0. Merged "
-                << nMerged << " out of " << nCells() << " cells" << endl;
-        }
+        FatalErrorInFunction
+            << "It is not possible to use mesh motion, topology change, and "
+            << "second order time schemes simultaneously"
+            << exit(FatalError);
     }
 
     // Map all fields

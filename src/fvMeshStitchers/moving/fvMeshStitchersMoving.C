@@ -110,7 +110,6 @@ layerAndWeight min(const layerAndWeight& a, const layerAndWeight& b)
     return a.layer < b.layer ? a : b;
 }
 
-
 }
 
 
@@ -148,7 +147,7 @@ void Foam::fvMeshStitchers::moving::conformCorrectMeshPhi
             const labelList nccOrigPatchFace =
                 ncFvp.polyFaces() - origFvp.start();
 
-            for (label i = 0; i <= phi.nOldTimes(); ++ i)
+            for (label i = 0; i <= phi.nOldTimes(false); ++ i)
             {
                 phi.oldTime(i).boundaryFieldRef()[origPatchi] +=
                     fieldRMapSum
@@ -860,8 +859,8 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
 
     // Synchronise the mesh fluxes on both sides of coupled patches. Store
     // the change made to the mesh flux as an error.
-    PtrList<surfaceScalarField::Boundary> phiErrorbs(phi.nOldTimes() + 1);
-    for (label i = 0; i <= phi.nOldTimes(); ++ i)
+    PtrList<surfaceScalarField::Boundary> phiErrorbs(phi.nOldTimes(false) + 1);
+    for (label i = 0; i <= phi.nOldTimes(false); ++ i)
     {
         tmp<surfaceScalarField::Boundary> tphib =
             synchronisedBoundaryField<scalar>(phi.oldTime(i).boundaryField());
@@ -904,7 +903,7 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
                 const label errorPatchFacei0 = 2*origPatchFacei;
                 const label errorPatchFacei1 = 2*origPatchFacei + 1;
 
-                for (label i = 0; i <= phi.nOldTimes(); ++ i)
+                for (label i = 0; i <= phi.nOldTimes(false); ++ i)
                 {
                     fvsPatchField<scalar>& phip =
                         phi.oldTime(i).boundaryFieldRef()[errorPatchi];
@@ -1064,7 +1063,7 @@ void Foam::fvMeshStitchers::moving::unconformCorrectMeshPhi
 
     // Set mesh fluxes on the original and cyclic faces as a proportion of
     // the area taken from the old original faces
-    for (label i = 0; i <= phi.nOldTimes(); ++ i)
+    for (label i = 0; i <= phi.nOldTimes(false); ++ i)
     {
         phi.oldTime(i).boundaryFieldRef() =
             nonConformalBoundaryField<scalar>
