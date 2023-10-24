@@ -42,7 +42,7 @@ namespace meshCheck
 
 scalar checkNonOrtho
 (
-    const polyMesh& mesh,
+    const primitiveMesh& mesh,
     const bool report,
     const scalar severeNonorthogonalityThreshold,
     const label facei,
@@ -109,7 +109,7 @@ scalar checkNonOrtho
 
 bool checkFaceTet
 (
-    const polyMesh& mesh,
+    const primitiveMesh& mesh,
     const bool report,
     const scalar minTetQuality,
     const pointField& p,
@@ -161,7 +161,7 @@ bool checkFaceTet
 
 labelList getAffectedCells
 (
-    const polyMesh& mesh,
+    const primitiveMesh& mesh,
     const labelList& changedFaces
 )
 {
@@ -183,6 +183,7 @@ labelList getAffectedCells
     }
     return affectedCells.toc();
 }
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -1443,52 +1444,7 @@ bool Foam::meshCheck::checkFaceTwist
 
     const faceList& fcs = mesh.faces();
 
-
     label nWarped = 0;
-
-//    forAll(checkFaces, i)
-//    {
-//        label facei = checkFaces[i];
-//
-//        const face& f = fcs[facei];
-//
-//        scalar magArea = mag(faceAreas[facei]);
-//
-//        if (f.size() > 3 && magArea > vSmall)
-//        {
-//            const vector nf = faceAreas[facei] / magArea;
-//
-//            const point& fc = faceCentres[facei];
-//
-//            forAll(f, fpI)
-//            {
-//                vector triArea
-//                (
-//                    triPointRef
-//                    (
-//                        p[f[fpI]],
-//                        p[f.nextLabel(fpI)],
-//                        fc
-//                    ).area()
-//                );
-//
-//                scalar magTri = mag(triArea);
-//
-//                if (magTri > vSmall && ((nf & triArea/magTri) < minTwist))
-//                {
-//                    nWarped++;
-//
-//                    if (setPtr)
-//                    {
-//                        setPtr->insert(facei);
-//                    }
-//
-//                    break;
-//                }
-//            }
-//        }
-//    }
-
 
     const labelList& own = mesh.faceOwner();
     const labelList& nei = mesh.faceNeighbour();

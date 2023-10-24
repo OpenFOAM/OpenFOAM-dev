@@ -26,6 +26,8 @@ License
 #include "checkMesh.H"
 #include "fvMesh.H"
 #include "meshCheck.H"
+#include "vtkSetWriter.H"
+#include "vtkSurfaceWriter.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -63,11 +65,99 @@ Foam::functionObjects::checkMesh::~checkMesh()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::functionObjects::checkMesh::read(const dictionary& dict)
+{
+    noTopology_ =  dict.lookupOrDefault("noTopology", false);
+    allGeometry_ = dict.lookupOrDefault("allGeometry", false);
+    allTopology_ = dict.lookupOrDefault("allTopology", false);
+
+    writeSurfaces_ = dict.lookupOrDefault("writeSurfaces", false);
+    if (writeSurfaces_)
+    {
+        surfaceFormat_ = dict.lookupOrDefault<word>
+        (
+            "surfaceFormat",
+            vtkSurfaceWriter::typeName
+        );
+    }
+
+    writeSets_ = dict.lookupOrDefault("writeSets", false);
+    if (writeSets_)
+    {
+        setFormat_ = dict.lookupOrDefault<word>
+        (
+            "setFormat",
+            vtkSetWriter::typeName
+        );
+    }
+
+    nonOrthThreshold_ = dict.lookupOrDefault("nonOrthThreshold", 70.0);
+    skewThreshold_ = dict.lookupOrDefault("skewThreshold", 4.0);
+
+    return functionObject::read(dict);
+}
+
+
 bool Foam::functionObjects::checkMesh::execute()
 {
     if (mesh_.changing())
     {
-        return meshCheck::checkMesh(mesh_, true);
+        autoPtr<surfaceWriter> surfWriter;
+        if (writeSurfaces_)
+        {
+            surfWriter = surfaceWriter::New
+            (
+                surfaceFormat_,
+                mesh_.time().writeFormat(),
+                mesh_.time().writeCompression()
+            );
+        }
+
+        autoPtr<setWriter> setWriter;
+        if (writeSets_)
+        {
+            setWriter = setWriter::New
+            (
+                setFormat_,
+                mesh_.time().writeFormat(),
+                mesh_.time().writeCompression()
+            );
+        }
+
+        label nFailedChecks = 0;
+
+        if (!noTopology_)
+        {
+            nFailedChecks += meshCheck::checkTopology
+            (
+                mesh_,
+                allTopology_,
+                surfWriter,
+                setWriter
+            );
+        }
+
+        nFailedChecks += meshCheck::checkGeometry
+        (
+            mesh_,
+            allGeometry_,
+            nonOrthThreshold_,
+            skewThreshold_,
+            surfWriter,
+            setWriter
+        );
+
+        if (nFailedChecks == 0)
+        {
+            Info<< "\n    Mesh OK.\n" << endl;
+        }
+        else
+        {
+            Info<< "\n    Failed " << nFailedChecks << " mesh checks.\n"
+                << endl;
+        }
+
+        return nFailedChecks == 0;
     }
     else
     {

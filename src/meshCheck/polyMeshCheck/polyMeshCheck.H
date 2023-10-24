@@ -87,6 +87,7 @@ namespace meshCheck
     bool checkFaceOrthogonality
     (
         const polyMesh& mesh,
+        const scalar nonOrthThreshold,
         const bool report = false,
         labelHashSet* setPtr = nullptr
     );
@@ -95,6 +96,7 @@ namespace meshCheck
     bool checkFaceSkewness
     (
         const polyMesh& mesh,
+        const scalar skewThreshold,
         const bool report = false,
         labelHashSet* setPtr = nullptr
     );

@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "attachPolyTopoChanger.H"
-#include "meshCheck.H"
+#include "polyMesh.H"
 #include "polyTopoChange.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -119,8 +119,6 @@ void Foam::attachPolyTopoChanger::attach(const bool removeEmptyPatches)
         Pout<< "void attachPolyTopoChanger::attach(): "
             << "Finished attaching mesh" << endl;
     }
-
-    meshCheck::checkMesh(mesh_);
 }
 
 

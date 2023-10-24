@@ -30,6 +30,21 @@ Description
 
     Useful to check the correctness of changing and morphing meshes.
 
+Usage
+    \table
+        Property      | Description               | Required     | Default value
+        type          | type name: checkMesh      | yes          |
+        noTopology    | Skip checking the mesh topology | no     | false
+        allTopology   | Check all addressing      | no           | false
+        allGeometry   | Check all geometry        | no           | false
+        writeSurfaces | Reconstruct and write problem faces | no | false
+        surfaceFormat | Format for problem faceSets | no         | vtk
+        writeSets     | Reconstruct and write problem points | no | false
+        setFormat     | Format used to write the problem pointSets | no | vtk
+        nonOrthThreshold | Threshold for non-orthogonality errors | no | 70 deg
+        skewThreshold | Threshold for reporting skewness errors | no | 4
+    \endtable
+
     Example of checkMesh specification:
     \verbatim
     checkMesh
@@ -39,11 +54,22 @@ Description
 
         executeControl  timeStep;
         executeInterval 10;
+
+        allGeometry     true;
+        allTopology     true;
+
+        writeSurfaces   true;
+        surfaceFormat   vtk;
+
+        writeSets       true;
+        setFormat       vtk;
     }
     \endverbatim
+
     or using the standard configuration file:
+
     \verbatim
-    #includeFunc checkMesh(executeInterval=10)
+    #includeFunc checkMesh(executeInterval=10, allGeometry=true)
     \endverbatim
 
 SourceFiles
@@ -73,6 +99,20 @@ class checkMesh
 {
     // Private Data
 
+        bool noTopology_;
+        bool allGeometry_;
+        bool allTopology_;
+
+        bool writeSurfaces_;
+        word surfaceFormat_;
+
+        bool writeSets_;
+        word setFormat_;
+
+        scalar nonOrthThreshold_;
+        scalar skewThreshold_;
+
+
 public:
 
     //- Runtime type information
@@ -95,6 +135,9 @@ public:
 
 
     // Member Functions
+
+        //- Read the checkMesh controls
+        virtual bool read(const dictionary&);
 
         //- Return the list of fields required
         virtual wordList fields() const

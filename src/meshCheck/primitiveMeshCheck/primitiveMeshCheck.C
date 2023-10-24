@@ -35,8 +35,6 @@ License
 
 Foam::scalar Foam::meshCheck::closedThreshold  = 1.0e-6;
 Foam::scalar Foam::meshCheck::aspectThreshold  = 1000;
-Foam::scalar Foam::meshCheck::nonOrthThreshold = 70;    // deg
-Foam::scalar Foam::meshCheck::skewThreshold    = 4;
 Foam::scalar Foam::meshCheck::planarCosAngle   = 1.0e-6;
 
 

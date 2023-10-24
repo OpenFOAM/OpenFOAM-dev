@@ -509,6 +509,8 @@ Foam::label Foam::meshCheck::checkGeometry
 (
     const polyMesh& mesh,
     const bool allGeometry,
+    const scalar nonOrthThreshold,
+    const scalar skewThreshold,
     const autoPtr<surfaceWriter>& surfWriter,
     const autoPtr<Foam::setWriter>& setWriter
 )
@@ -710,7 +712,16 @@ Foam::label Foam::meshCheck::checkGeometry
 
     {
         faceSet faces(mesh, "nonOrthoFaces", mesh.nFaces()/100+1);
-        if (meshCheck::checkFaceOrthogonality(mesh, true, &faces))
+        if
+        (
+            meshCheck::checkFaceOrthogonality
+            (
+                mesh,
+                nonOrthThreshold,
+                true,
+                &faces
+            )
+        )
         {
             noFailedChecks++;
         }
@@ -755,7 +766,16 @@ Foam::label Foam::meshCheck::checkGeometry
 
     {
         faceSet faces(mesh, "skewFaces", mesh.nFaces()/100+1);
-        if (meshCheck::checkFaceSkewness(mesh, true, &faces))
+        if
+        (
+            meshCheck::checkFaceSkewness
+            (
+                mesh,
+                skewThreshold,
+                true,
+                &faces
+            )
+        )
         {
             noFailedChecks++;
 

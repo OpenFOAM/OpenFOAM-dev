@@ -81,6 +81,8 @@ namespace meshCheck
     (
         const polyMesh& mesh,
         const bool allGeometry,
+        const scalar nonOrthThreshold,
+        const scalar skewThreshold,
         const autoPtr<surfaceWriter>&,
         const autoPtr<setWriter>&
     );

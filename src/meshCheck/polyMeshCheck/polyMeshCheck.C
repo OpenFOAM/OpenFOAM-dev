@@ -281,6 +281,7 @@ Foam::tmp<Foam::scalarField> Foam::meshCheck::volRatio
 bool Foam::meshCheck::checkFaceOrthogonality
 (
     const polyMesh& mesh,
+    const scalar nonOrthThreshold,
     const bool report,
     labelHashSet* setPtr
 )
@@ -305,7 +306,7 @@ bool Foam::meshCheck::checkFaceOrthogonality
 
     // Severe nonorthogonality threshold
     const scalar severeNonorthogonalityThreshold =
-        ::cos(degToRad(meshCheck::nonOrthThreshold));
+        ::cos(degToRad(nonOrthThreshold));
 
 
     scalar minDDotS = great;
@@ -374,7 +375,7 @@ bool Foam::meshCheck::checkFaceOrthogonality
         if (severeNonOrth > 0)
         {
             Info<< "   *Number of severely non-orthogonal (> "
-                << meshCheck::nonOrthThreshold << " degrees) faces: "
+                << nonOrthThreshold << " degrees) faces: "
                 << severeNonOrth << "." << endl;
         }
     }
@@ -404,6 +405,7 @@ bool Foam::meshCheck::checkFaceOrthogonality
 bool Foam::meshCheck::checkFaceSkewness
 (
     const polyMesh& mesh,
+    const scalar skewThreshold,
     const bool report,
     labelHashSet* setPtr
 )
@@ -441,7 +443,7 @@ bool Foam::meshCheck::checkFaceSkewness
     {
         // Check if the skewness vector is greater than the PN vector.
         // This does not cause trouble but is a good indication of a poor mesh.
-        if (skew[facei] > meshCheck::skewThreshold)
+        if (skew[facei] > skewThreshold)
         {
             if (setPtr)
             {
