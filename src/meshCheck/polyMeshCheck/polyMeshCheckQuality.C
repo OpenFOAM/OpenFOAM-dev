@@ -1911,8 +1911,8 @@ bool Foam::meshCheck::checkCellDeterminant
             areaSum += faceAreas[facei]*(faceAreas[facei]/(magArea + vSmall));
         }
 
-        const scalar scaledDet =
-            det(areaSum/(magAreaSum + vSmall))/0.037037037037037;
+        // Scalad by 1/(cube root(1/3)) = 27
+        const scalar scaledDet = 27*det(areaSum/(magAreaSum + vSmall));
 
         minDet = min(minDet, scaledDet);
         sumDet += scaledDet;
