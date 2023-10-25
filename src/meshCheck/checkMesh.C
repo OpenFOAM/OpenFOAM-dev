@@ -24,32 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "meshCheck.H"
-#include "polyMeshCheck.H"
 #include "IOmanip.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::meshCheck::checkMesh
-(
-    const bool report,
-    const polyMesh& mesh,
-    const dictionary& dict,
-    const labelList& checkFaces,
-    labelHashSet& wrongFaces
-)
-{
-    List<labelPair> emptyBaffles;
-    return checkMesh
-    (
-        report,
-        mesh,
-        dict,
-        checkFaces,
-        emptyBaffles,
-        wrongFaces
-    );
-}
-
 
 bool Foam::meshCheck::checkMesh
 (
@@ -97,20 +74,23 @@ bool Foam::meshCheck::checkMesh
     (
         dict.lookup<scalar>("minTwist", true)
     );
-    scalar minFaceFlatness = -1.0;
-    dict.readIfPresent("minFaceFlatness", minFaceFlatness, true);
+    const scalar minFaceFlatness
+    (
+        dict.lookupOrDefault("minFaceFlatness", -1.0, true)
+    );
     const scalar minDet
     (
         dict.lookup<scalar>("minDeterminant", true)
     );
+
+    // Counter for bad faces
     label nWrongFaces = 0;
 
     Info<< "Checking faces in error :" << endl;
-    // Pout.setf(ios_base::left);
 
     if (maxNonOrtho < 180.0-small)
     {
-        meshCheck::checkFaceDotProduct
+        meshCheck::checkFaceOrthogonality
         (
             report,
             maxNonOrtho,
@@ -122,12 +102,13 @@ bool Foam::meshCheck::checkMesh
             &wrongFaces
         );
 
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
+        const label nNewWrongFaces =
+            returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    non-orthogonality > "
             << setw(3) << maxNonOrtho
             << " degrees                        : "
-            << nNewWrongFaces-nWrongFaces << endl;
+            << nNewWrongFaces - nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
     }
@@ -148,11 +129,12 @@ bool Foam::meshCheck::checkMesh
             &wrongFaces
         );
 
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
+        const label nNewWrongFaces =
+            returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    faces with face pyramid volume < "
             << setw(5) << minVol << "                 : "
-            << nNewWrongFaces-nWrongFaces << endl;
+            << nNewWrongFaces - nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
     }
@@ -172,11 +154,12 @@ bool Foam::meshCheck::checkMesh
             &wrongFaces
         );
 
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
+        const label nNewWrongFaces =
+            returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    faces with face-decomposition tet quality < "
             << setw(5) << minTetQuality << "      : "
-            << nNewWrongFaces-nWrongFaces << endl;
+            << nNewWrongFaces - nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
     }
@@ -194,12 +177,13 @@ bool Foam::meshCheck::checkMesh
             &wrongFaces
         );
 
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
+        const label nNewWrongFaces =
+            returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    faces with concavity > "
             << setw(3) << maxConcave
             << " degrees                     : "
-            << nNewWrongFaces-nWrongFaces << endl;
+            << nNewWrongFaces - nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
     }
@@ -221,12 +205,13 @@ bool Foam::meshCheck::checkMesh
             &wrongFaces
         );
 
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
+        const label nNewWrongFaces =
+            returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    faces with skewness > "
             << setw(3) << maxIntSkew
             << " (internal) or " << setw(3) << maxBounSkew
-            << " (boundary) : " << nNewWrongFaces-nWrongFaces << endl;
+            << " (boundary) : " << nNewWrongFaces - nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
     }
@@ -246,12 +231,13 @@ bool Foam::meshCheck::checkMesh
             &wrongFaces
         );
 
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
+        const label nNewWrongFaces =
+            returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    faces with interpolation weights (0..1)  < "
             << setw(5) << minWeight
             << "       : "
-            << nNewWrongFaces-nWrongFaces << endl;
+            << nNewWrongFaces - nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
     }
@@ -269,20 +255,19 @@ bool Foam::meshCheck::checkMesh
             &wrongFaces
         );
 
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
+        const label nNewWrongFaces =
+            returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    faces with volume ratio of neighbour cells < "
             << setw(5) << minVolRatio
             << "     : "
-            << nNewWrongFaces-nWrongFaces << endl;
+            << nNewWrongFaces - nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
     }
 
     if (minTwist > -1)
     {
-        // Pout<< "Checking face twist: dot product of face normal "
-        //    << "with face triangle normals" << endl;
         meshCheck::checkFaceTwist
         (
             report,
@@ -296,12 +281,13 @@ bool Foam::meshCheck::checkMesh
             &wrongFaces
         );
 
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
+        const label nNewWrongFaces =
+            returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    faces with face twist < "
             << setw(5) << minTwist
             << "                          : "
-            << nNewWrongFaces-nWrongFaces << endl;
+            << nNewWrongFaces - nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
     }
@@ -320,12 +306,13 @@ bool Foam::meshCheck::checkMesh
             &wrongFaces
         );
 
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
+        const label nNewWrongFaces =
+            returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    faces with flatness < "
             << setw(5) << minFaceFlatness
             << "                      : "
-            << nNewWrongFaces-nWrongFaces << endl;
+            << nNewWrongFaces - nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
     }
@@ -342,18 +329,40 @@ bool Foam::meshCheck::checkMesh
             &wrongFaces
         );
 
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
+        const label nNewWrongFaces =
+            returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    faces on cells with determinant < "
             << setw(5) << minDet << "                : "
-            << nNewWrongFaces-nWrongFaces << endl;
+            << nNewWrongFaces - nWrongFaces << endl;
 
         nWrongFaces = nNewWrongFaces;
     }
 
-    // Pout.setf(ios_base::right);
-
     return nWrongFaces > 0;
+}
+
+
+bool Foam::meshCheck::checkMesh
+(
+    const bool report,
+    const polyMesh& mesh,
+    const dictionary& dict,
+    const labelList& checkFaces,
+    labelHashSet& wrongFaces
+)
+{
+    const List<labelPair> emptyBaffles;
+
+    return checkMesh
+    (
+        report,
+        mesh,
+        dict,
+        checkFaces,
+        emptyBaffles,
+        wrongFaces
+    );
 }
 
 

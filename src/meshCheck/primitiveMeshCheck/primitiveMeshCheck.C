@@ -26,11 +26,8 @@ License
 #include "primitiveMeshCheck.H"
 #include "pyramidPointFaceRef.H"
 #include "PackedBoolList.H"
-#include "ListOps.H"
 #include "unitConversion.H"
 #include "SortableList.H"
-#include "EdgeMap.H"
-
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -46,14 +43,14 @@ Foam::scalar Foam::meshCheck::faceSkewness
     const point& neiCc
 )
 {
-    vector Cpf = fCtrs[facei] - ownCc;
-    vector d = neiCc - ownCc;
+    const vector Cpf = fCtrs[facei] - ownCc;
+    const vector d = neiCc - ownCc;
 
     // Skewness vector
-    vector sv =
+    const vector sv =
         Cpf
       - ((fAreas[facei] & Cpf)/((fAreas[facei] & d) + rootVSmall))*d;
-    vector svHat = sv/(mag(sv) + rootVSmall);
+    const vector svHat = sv/(mag(sv) + rootVSmall);
 
     // Normalisation distance calculated as the approximate distance
     // from the face centre to the edge of the face in the direction
@@ -81,18 +78,18 @@ Foam::scalar Foam::meshCheck::boundaryFaceSkewness
     const point& ownCc
 )
 {
-    vector Cpf = fCtrs[facei] - ownCc;
+    const vector Cpf = fCtrs[facei] - ownCc;
 
     vector normal = fAreas[facei];
     normal /= mag(normal) + rootVSmall;
-    vector d = normal*(normal & Cpf);
+    const vector d = normal*(normal & Cpf);
 
 
     // Skewness vector
-    vector sv =
+    const vector sv =
         Cpf
       - ((fAreas[facei] & Cpf)/((fAreas[facei] & d) + rootVSmall))*d;
-    vector svHat = sv/(mag(sv) + rootVSmall);
+    const vector svHat = sv/(mag(sv) + rootVSmall);
 
     // Normalisation distance calculated as the approximate distance
     // from the face centre to the edge of the face in the direction
@@ -116,8 +113,7 @@ Foam::scalar Foam::meshCheck::faceOrthogonality
     const vector& s
 )
 {
-    vector d = neiCc - ownCc;
-
+    const vector d = neiCc - ownCc;
     return (d & s)/(mag(d)*mag(s) + rootVSmall);
 }
 
@@ -367,17 +363,17 @@ Foam::tmp<Foam::scalarField> Foam::meshCheck::faceConcavity
         forAll(f, fp0)
         {
             // Get vertex after fp
-            label fp1 = f.fcIndex(fp0);
+            const label fp1 = f.fcIndex(fp0);
 
             // Normalised vector between two consecutive points
             vector e10(p[f[fp1]] - p[f[fp0]]);
-            scalar magE10 = mag(e10);
+            const scalar magE10 = mag(e10);
             e10 /= magE10 + rootVSmall;
 
             if (magEPrev > small && magE10 > small)
             {
                 vector edgeNormal = ePrev ^ e10;
-                scalar magEdgeNormal = mag(edgeNormal);
+                const scalar magEdgeNormal = mag(edgeNormal);
 
                 if (magEdgeNormal < maxSin)
                 {
@@ -443,7 +439,7 @@ Foam::tmp<Foam::scalarField> Foam::meshCheck::faceFlatness
                 const point& nextPoint = p[f.nextLabel(fp)];
 
                 // Triangle around fc.
-                vector n = 0.5*((nextPoint - thisPoint)^(fc - thisPoint));
+                const vector n = 0.5*((nextPoint - thisPoint)^(fc - thisPoint));
                 sumA += mag(n);
             }
 
@@ -1170,12 +1166,11 @@ bool Foam::meshCheck::checkConcaveCells
                 break;
             }
 
-            label fI = cFaces[i];
+            const label fI = cFaces[i];
 
             const point& fC = fCentres[fI];
 
             vector fN = fAreas[fI];
-
             fN /= max(mag(fN), vSmall);
 
             // Flip normal if required so that it is always pointing out of
@@ -1192,7 +1187,7 @@ bool Foam::meshCheck::checkConcaveCells
             {
                 if (j != i)
                 {
-                    label fJ = cFaces[j];
+                    const label fJ = cFaces[j];
 
                     const point& pt = fCentres[fJ];
 
@@ -1203,7 +1198,6 @@ bool Foam::meshCheck::checkConcaveCells
                     // product will be positive.
 
                     vector pC = (pt - fC);
-
                     pC /= max(mag(pC), vSmall);
 
                     if ((pC & fN) > -planarCosAngle)
@@ -1267,13 +1261,12 @@ bool Foam::meshCheck::checkUpperTriangular
     // Check whether internal faces are ordered in the upper triangular order
     const labelList& own = mesh.faceOwner();
     const labelList& nei = mesh.faceNeighbour();
-
     const cellList& c = mesh.cells();
-
-    label internal = mesh.nInternalFaces();
+    const label internal = mesh.nInternalFaces();
 
     // Has error occurred?
     bool error = false;
+
     // Have multiple faces been detected?
     label nMultipleCells = false;
 
@@ -1348,8 +1341,8 @@ bool Foam::meshCheck::checkUpperTriangular
 
         for (label i = 1; i < nbr.size(); i++)
         {
-            label thisCell = nbr[i];
-            label thisFace = curFaces[nbr.indices()[i]];
+            const label thisCell = nbr[i];
+            const label thisFace = curFaces[nbr.indices()[i]];
 
             if (thisCell == labelMax)
             {
@@ -1443,7 +1436,7 @@ bool Foam::meshCheck::checkCellsZipUp
 
         forAll(curFaces, facei)
         {
-            edgeList curFaceEdges = f[curFaces[facei]].edges();
+            const edgeList curFaceEdges = f[curFaces[facei]].edges();
 
             forAll(curFaceEdges, faceEdgeI)
             {
@@ -1551,7 +1544,7 @@ bool Foam::meshCheck::checkFaceVertices
 
         forAll(curFace, fp)
         {
-            bool inserted = facePoints.insert(curFace[fp]);
+            const bool inserted = facePoints.insert(curFace[fp]);
 
             if (!inserted)
             {
@@ -1675,8 +1668,8 @@ bool Foam::meshCheck::checkDuplicateFaces
 
     forAllConstIter(Map<label>, nCommonPoints, iter)
     {
-        label nbFacei = iter.key();
-        label nCommon = iter();
+        const label nbFacei = iter.key();
+        const label nCommon = iter();
 
         const face& curFace = mesh.faces()[facei];
         const face& nbFace = mesh.faces()[nbFacei];
@@ -1716,8 +1709,8 @@ bool Foam::meshCheck::checkCommonOrder
 
     forAllConstIter(Map<label>, nCommonPoints, iter)
     {
-        label nbFacei = iter.key();
-        label nCommon = iter();
+        const label nbFacei = iter.key();
+        const label nCommon = iter();
 
         const face& curFace = mesh.faces()[facei];
         const face& nbFace = mesh.faces()[nbFacei];
@@ -1746,12 +1739,12 @@ bool Foam::meshCheck::checkCommonOrder
 
 
                     // Vertices before and after on curFace
-                    label fpPlus1 = curFace.fcIndex(fp);
-                    label fpMin1  = curFace.rcIndex(fp);
+                    const label fpPlus1 = curFace.fcIndex(fp);
+                    const label fpMin1  = curFace.rcIndex(fp);
 
                     // Vertices before and after on nbFace
-                    label nbPlus1 = nbFace.fcIndex(nb);
-                    label nbMin1  = nbFace.rcIndex(nb);
+                    const label nbPlus1 = nbFace.fcIndex(nb);
+                    const label nbMin1  = nbFace.rcIndex(nb);
 
                     // Find order of walking by comparing next points on both
                     // faces.
@@ -1895,13 +1888,12 @@ bool Foam::meshCheck::checkFaceFaces
 
         forAll(curFace, fp)
         {
-            label pointi = curFace[fp];
-
+            const label pointi = curFace[fp];
             const labelList& nbs = pf[pointi];
 
             forAll(nbs, nbI)
             {
-                label nbFacei = nbs[nbI];
+                const label nbFacei = nbs[nbI];
 
                 if (facei < nbFacei)
                 {

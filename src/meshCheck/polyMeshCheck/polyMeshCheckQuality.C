@@ -23,7 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "primitiveMeshCheck.H"
 #include "polyMeshCheck.H"
 #include "polyMeshTetDecomposition.H"
 #include "pyramidPointFaceRef.H"
@@ -54,7 +53,7 @@ scalar checkNonOrtho
     labelHashSet* setPtr
 )
 {
-    scalar dDotS = (d & s)/(mag(d)*mag(s) + vSmall);
+    const scalar dDotS = (d & s)/(mag(d)*mag(s) + vSmall);
 
     if (dDotS < severeNonorthogonalityThreshold)
     {
@@ -103,6 +102,7 @@ scalar checkNonOrtho
             setPtr->insert(facei);
         }
     }
+
     return dDotS;
 }
 
@@ -124,7 +124,7 @@ bool checkFaceTet
 
     forAll(f, fp)
     {
-        scalar tetQual = tetPointRef
+        const scalar tetQual = tetPointRef
         (
             p[f[fp]],
             p[f.nextLabel(fp)],
@@ -152,9 +152,11 @@ bool checkFaceTet
             {
                 setPtr->insert(facei);
             }
+
             return true;
         }
     }
+
     return false;
 }
 
@@ -172,7 +174,7 @@ labelList getAffectedCells
 
     forAll(changedFaces, i)
     {
-        label facei = changedFaces[i];
+        const label facei = changedFaces[i];
 
         affectedCells.insert(own[facei]);
 
@@ -181,6 +183,7 @@ labelList getAffectedCells
             affectedCells.insert(nei[facei]);
         }
     }
+
     return affectedCells.toc();
 }
 
@@ -192,7 +195,7 @@ labelList getAffectedCells
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-bool Foam::meshCheck::checkFaceDotProduct
+bool Foam::meshCheck::checkFaceOrthogonality
 (
     const bool report,
     const scalar orthWarn,
@@ -235,13 +238,13 @@ bool Foam::meshCheck::checkFaceDotProduct
 
     forAll(checkFaces, i)
     {
-        label facei = checkFaces[i];
+        const label facei = checkFaces[i];
 
         const point& ownCc = cellCentres[own[facei]];
 
         if (mesh.isInternalFace(facei))
         {
-            scalar dDotS = checkNonOrtho
+            const scalar dDotS = checkNonOrtho
             (
                 mesh,
                 report,
@@ -265,11 +268,11 @@ bool Foam::meshCheck::checkFaceDotProduct
         }
         else
         {
-            label patchi = patches.whichPatch(facei);
+            const label patchi = patches.whichPatch(facei);
 
             if (patches[patchi].coupled())
             {
-                scalar dDotS = checkNonOrtho
+                const scalar dDotS = checkNonOrtho
                 (
                     mesh,
                     report,
@@ -296,12 +299,12 @@ bool Foam::meshCheck::checkFaceDotProduct
 
     forAll(baffles, i)
     {
-        label face0 = baffles[i].first();
-        label face1 = baffles[i].second();
+        const label face0 = baffles[i].first();
+        const label face1 = baffles[i].second();
 
         const point& ownCc = cellCentres[own[face0]];
 
-        scalar dDotS = checkNonOrtho
+        const scalar dDotS = checkNonOrtho
         (
             mesh,
             report,
@@ -396,10 +399,10 @@ bool Foam::meshCheck::checkFacePyramids
 
     forAll(checkFaces, i)
     {
-        label facei = checkFaces[i];
+        const label facei = checkFaces[i];
 
         // Create the owner pyramid - it will have negative volume
-        scalar pyrVol = pyramidPointFaceRef
+        const scalar pyrVol = pyramidPointFaceRef
         (
             f[facei],
             cellCentres[own[facei]]
@@ -433,7 +436,7 @@ bool Foam::meshCheck::checkFacePyramids
         if (mesh.isInternalFace(facei))
         {
             // Create the neighbour pyramid - it will have positive volume
-            scalar pyrVol =
+            const scalar pyrVol =
                 pyramidPointFaceRef(f[facei], cellCentres[nei[facei]]).mag(p);
 
             if (pyrVol < minPyrVol)
@@ -464,13 +467,13 @@ bool Foam::meshCheck::checkFacePyramids
 
     forAll(baffles, i)
     {
-        label face0 = baffles[i].first();
-        label face1 = baffles[i].second();
+        const label face0 = baffles[i].first();
+        const label face1 = baffles[i].second();
 
         const point& ownCc = cellCentres[own[face0]];
 
        // Create the owner pyramid - it will have negative volume
-        scalar pyrVolOwn = pyramidPointFaceRef
+        const scalar pyrVolOwn = pyramidPointFaceRef
         (
             f[face0],
             ownCc
@@ -502,7 +505,7 @@ bool Foam::meshCheck::checkFacePyramids
         }
 
         // Create the neighbour pyramid - it will have positive volume
-        scalar pyrVolNbr =
+        const scalar pyrVolNbr =
             pyramidPointFaceRef(f[face0], cellCentres[own[face1]]).mag(p);
 
         if (pyrVolNbr < minPyrVol)
@@ -588,7 +591,7 @@ bool Foam::meshCheck::checkFaceTets
 
     forAll(checkFaces, i)
     {
-        label facei = checkFaces[i];
+        const label facei = checkFaces[i];
 
         // Create the owner pyramid - note: exchange cell and face centre
         // to get positive volume.
@@ -650,7 +653,7 @@ bool Foam::meshCheck::checkFaceTets
         }
         else
         {
-            label patchi = patches.whichPatch(facei);
+            const label patchi = patches.whichPatch(facei);
 
             if (patches[patchi].coupled())
             {
@@ -700,8 +703,8 @@ bool Foam::meshCheck::checkFaceTets
 
     forAll(baffles, i)
     {
-        label face0 = baffles[i].first();
-        label face1 = baffles[i].second();
+        const label face0 = baffles[i].first();
+        const label face1 = baffles[i].second();
 
         bool tetError = checkFaceTet
         (
@@ -816,11 +819,11 @@ bool Foam::meshCheck::checkFaceSkewness
 
     forAll(checkFaces, i)
     {
-        label facei = checkFaces[i];
+        const label facei = checkFaces[i];
 
         if (mesh.isInternalFace(facei))
         {
-            scalar skewness = meshCheck::faceSkewness
+            const scalar skewness = meshCheck::faceSkewness
             (
                 mesh,
                 points,
@@ -855,7 +858,7 @@ bool Foam::meshCheck::checkFaceSkewness
         }
         else if (patches[patches.whichPatch(facei)].coupled())
         {
-            scalar skewness = meshCheck::faceSkewness
+            const scalar skewness = meshCheck::faceSkewness
             (
                 mesh,
                 points,
@@ -890,7 +893,7 @@ bool Foam::meshCheck::checkFaceSkewness
         }
         else
         {
-            scalar skewness = meshCheck::boundaryFaceSkewness
+            const scalar skewness = meshCheck::boundaryFaceSkewness
             (
                 mesh,
                 points,
@@ -927,13 +930,13 @@ bool Foam::meshCheck::checkFaceSkewness
 
     forAll(baffles, i)
     {
-        label face0 = baffles[i].first();
-        label face1 = baffles[i].second();
+        const label face0 = baffles[i].first();
+        const label face1 = baffles[i].second();
 
         const point& ownCc = cellCentres[own[face0]];
         const point& neiCc = cellCentres[own[face1]];
 
-        scalar skewness = meshCheck::faceSkewness
+        const scalar skewness = meshCheck::faceSkewness
         (
             mesh,
             points,
@@ -1032,17 +1035,17 @@ bool Foam::meshCheck::checkFaceWeights
 
     forAll(checkFaces, i)
     {
-        label facei = checkFaces[i];
+        const label facei = checkFaces[i];
 
         const point& fc = faceCentres[facei];
         const vector& fa = faceAreas[facei];
 
-        scalar dOwn = mag(fa & (fc-cellCentres[own[facei]]));
+        const scalar dOwn = mag(fa & (fc-cellCentres[own[facei]]));
 
         if (mesh.isInternalFace(facei))
         {
-            scalar dNei = mag(fa & (cellCentres[nei[facei]]-fc));
-            scalar weight = min(dNei,dOwn)/(dNei+dOwn+vSmall);
+            const scalar dNei = mag(fa & (cellCentres[nei[facei]]-fc));
+            const scalar weight = min(dNei, dOwn)/(dNei + dOwn + vSmall);
 
             if (weight < warnWeight)
             {
@@ -1064,12 +1067,13 @@ bool Foam::meshCheck::checkFaceWeights
         }
         else
         {
-            label patchi = patches.whichPatch(facei);
+            const label patchi = patches.whichPatch(facei);
 
             if (patches[patchi].coupled())
             {
-                scalar dNei = mag(fa & (neiCc[facei-mesh.nInternalFaces()]-fc));
-                scalar weight = min(dNei,dOwn)/(dNei+dOwn+vSmall);
+                const scalar dNei =
+                    mag(fa & (neiCc[facei-mesh.nInternalFaces()]-fc));
+                const scalar weight = min(dNei, dOwn)/(dNei + dOwn + vSmall);
 
                 if (weight < warnWeight)
                 {
@@ -1094,16 +1098,16 @@ bool Foam::meshCheck::checkFaceWeights
 
     forAll(baffles, i)
     {
-        label face0 = baffles[i].first();
-        label face1 = baffles[i].second();
+        const label face0 = baffles[i].first();
+        const label face1 = baffles[i].second();
 
         const point& ownCc = cellCentres[own[face0]];
         const point& fc = faceCentres[face0];
         const vector& fa = faceAreas[face0];
 
-        scalar dOwn = mag(fa & (fc-ownCc));
-        scalar dNei = mag(fa & (cellCentres[own[face1]]-fc));
-        scalar weight = min(dNei,dOwn)/(dNei+dOwn+vSmall);
+        const scalar dOwn = mag(fa & (fc-ownCc));
+        const scalar dNei = mag(fa & (cellCentres[own[face1]]-fc));
+        const scalar weight = min(dNei, dOwn)/(dNei + dOwn + vSmall);
 
         if (weight < warnWeight)
         {
@@ -1185,9 +1189,9 @@ bool Foam::meshCheck::checkVolRatio
 
     forAll(checkFaces, i)
     {
-        label facei = checkFaces[i];
+        const label facei = checkFaces[i];
 
-        scalar ownVol = mag(cellVolumes[own[facei]]);
+        const scalar ownVol = mag(cellVolumes[own[facei]]);
 
         scalar neiVol = -great;
 
@@ -1197,7 +1201,7 @@ bool Foam::meshCheck::checkVolRatio
         }
         else
         {
-            label patchi = patches.whichPatch(facei);
+            const label patchi = patches.whichPatch(facei);
 
             if (patches[patchi].coupled())
             {
@@ -1207,7 +1211,8 @@ bool Foam::meshCheck::checkVolRatio
 
         if (neiVol >= 0)
         {
-            scalar ratio = min(ownVol, neiVol) / (max(ownVol, neiVol) + vSmall);
+            const scalar ratio =
+                min(ownVol, neiVol)/(max(ownVol, neiVol) + vSmall);
 
             if (ratio < warnRatio)
             {
@@ -1231,16 +1236,17 @@ bool Foam::meshCheck::checkVolRatio
 
     forAll(baffles, i)
     {
-        label face0 = baffles[i].first();
-        label face1 = baffles[i].second();
+        const label face0 = baffles[i].first();
+        const label face1 = baffles[i].second();
 
-        scalar ownVol = mag(cellVolumes[own[face0]]);
+        const scalar ownVol = mag(cellVolumes[own[face0]]);
 
-        scalar neiVol = mag(cellVolumes[own[face1]]);
+        const scalar neiVol = mag(cellVolumes[own[face1]]);
 
         if (neiVol >= 0)
         {
-            scalar ratio = min(ownVol, neiVol) / (max(ownVol, neiVol) + vSmall);
+            const scalar ratio =
+                min(ownVol, neiVol)/(max(ownVol, neiVol) + vSmall);
 
             if (ratio < warnRatio)
             {
@@ -1320,7 +1326,7 @@ bool Foam::meshCheck::checkFaceAngles
 
     forAll(checkFaces, i)
     {
-        label facei = checkFaces[i];
+        const label facei = checkFaces[i];
 
         const face& f = fcs[facei];
 
@@ -1335,17 +1341,17 @@ bool Foam::meshCheck::checkFaceAngles
         forAll(f, fp0)
         {
             // Get vertex after fp
-            label fp1 = f.fcIndex(fp0);
+            const label fp1 = f.fcIndex(fp0);
 
             // Normalised vector between two consecutive points
             vector e10(p[f[fp1]] - p[f[fp0]]);
-            scalar magE10 = mag(e10);
+            const scalar magE10 = mag(e10);
             e10 /= magE10 + vSmall;
 
             if (magEPrev > small && magE10 > small)
             {
                 vector edgeNormal = ePrev ^ e10;
-                scalar magEdgeNormal = mag(edgeNormal);
+                const scalar magEdgeNormal = mag(edgeNormal);
 
                 if (magEdgeNormal < maxSin)
                 {
@@ -1387,7 +1393,7 @@ bool Foam::meshCheck::checkFaceAngles
     {
         if (maxEdgeSin > small)
         {
-            scalar maxConcaveDegr =
+            const scalar maxConcaveDegr =
                 radToDeg(Foam::asin(Foam::min(1.0, maxEdgeSin)));
 
             Info<< "There are " << nConcave
@@ -1461,7 +1467,7 @@ bool Foam::meshCheck::checkFaceTwist
 
     forAll(checkFaces, i)
     {
-        label facei = checkFaces[i];
+        const label facei = checkFaces[i];
 
         const face& f = fcs[facei];
 
@@ -1503,7 +1509,7 @@ bool Foam::meshCheck::checkFaceTwist
                         ).area()
                     );
 
-                    scalar magTri = mag(triArea);
+                    const scalar magTri = mag(triArea);
 
                     if (magTri > vSmall && ((nf & triArea/magTri) < minTwist))
                     {
@@ -1585,7 +1591,7 @@ bool Foam::meshCheck::checkTriangleTwist
 
     forAll(checkFaces, i)
     {
-        label facei = checkFaces[i];
+        const label facei = checkFaces[i];
 
         const face& f = fcs[facei];
 
@@ -1606,7 +1612,7 @@ bool Foam::meshCheck::checkTriangleTwist
                     fc
                 ).area();
 
-                scalar magTri = mag(prevN);
+                const scalar magTri = mag(prevN);
 
                 if (magTri > vSmall)
                 {
@@ -1633,7 +1639,7 @@ bool Foam::meshCheck::checkTriangleTwist
                             fc
                         ).area()
                     );
-                    scalar magTri = mag(triN);
+                    const scalar magTri = mag(triN);
 
                     if (magTri > vSmall)
                     {
@@ -1735,7 +1741,7 @@ bool Foam::meshCheck::checkFaceFlatness
 
     forAll(checkFaces, i)
     {
-        label facei = checkFaces[i];
+        const label facei = checkFaces[i];
 
         const face& f = fcs[facei];
 
@@ -1822,7 +1828,7 @@ bool Foam::meshCheck::checkFaceArea
 
     forAll(checkFaces, i)
     {
-        label facei = checkFaces[i];
+        const label facei = checkFaces[i];
 
         if (mag(faceAreas[facei]) < minArea)
         {
@@ -1897,15 +1903,16 @@ bool Foam::meshCheck::checkCellDeterminant
 
         forAll(cFaces, cFacei)
         {
-            label facei = cFaces[cFacei];
+            const label facei = cFaces[cFacei];
 
-            scalar magArea = mag(faceAreas[facei]);
+            const scalar magArea = mag(faceAreas[facei]);
 
             magAreaSum += magArea;
-            areaSum += faceAreas[facei]*(faceAreas[facei]/(magArea+vSmall));
+            areaSum += faceAreas[facei]*(faceAreas[facei]/(magArea + vSmall));
         }
 
-        scalar scaledDet = det(areaSum/(magAreaSum+vSmall))/0.037037037037037;
+        const scalar scaledDet =
+            det(areaSum/(magAreaSum + vSmall))/0.037037037037037;
 
         minDet = min(minDet, scaledDet);
         sumDet += scaledDet;
@@ -1918,7 +1925,7 @@ bool Foam::meshCheck::checkCellDeterminant
                 // Insert all faces of the cell.
                 forAll(cFaces, cFacei)
                 {
-                    label facei = cFaces[cFacei];
+                    const label facei = cFaces[cFacei];
                     setPtr->insert(facei);
                 }
             }

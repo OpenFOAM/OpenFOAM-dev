@@ -27,27 +27,24 @@ Description
 SourceFiles
     checkTopology.C
     checkGeometry.C
+    checkMesh.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef meshCheck_H
 #define meshCheck_H
 
-#include "label.H"
-#include "HashSet.H"
-#include "labelVector.H"
-#include "labelPair.H"
 #include "primitiveMeshCheck.H"
 #include "polyMeshCheck.H"
+#include "wedgePolyPatch.H"
 #include "mergeAndWrite.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    class polyMesh;
-    class wedgePolyPatch;
-    class surfaceWriter;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace meshCheck
 {
@@ -73,7 +70,7 @@ namespace meshCheck
         const polyMesh& mesh,
         const bool allTopology,
         const autoPtr<surfaceWriter>& surfWriter,
-        const autoPtr<Foam::setWriter>& setWriter
+        const autoPtr<setWriter>& setWriter
     );
 
     //- Check the geometry
@@ -87,32 +84,9 @@ namespace meshCheck
         const autoPtr<setWriter>&
     );
 
-    //- Check mesh with mesh settings in dict. Collects incorrect faces
-    //  in set. Returns true if one or more faces in error.
-    //  Parallel ok.
-    bool checkMesh
-    (
-        const bool report,
-        const polyMesh& mesh,
-        const dictionary& dict,
-        labelHashSet& wrongFaces
-    );
-
-    //- Check (subset of mesh) with mesh settings in dict.
-    //  Collects incorrect faces in set. Returns true if one
-    //  or more faces in error. Parallel ok.
-    bool checkMesh
-    (
-        const bool report,
-        const polyMesh& mesh,
-        const dictionary& dict,
-        const labelList& checkFaces,
-        labelHashSet& wrongFaces
-    );
-
-    //- Check (subset of mesh including baffles) with mesh settings
-    //  in dict. Collects incorrect faces in set. Returns true if one
-    //  or more faces in error. Parallel ok.
+    //- Check (subset of mesh including baffles) with mesh settings in dict.
+    //  Collects incorrect faces in set.
+    //  Returns true if one or more faces in error.
     bool checkMesh
     (
         const bool report,
@@ -122,8 +96,35 @@ namespace meshCheck
         const List<labelPair>& baffles,
         labelHashSet& wrongFaces
     );
+
+    //- Check (subset of mesh) with mesh settings in dict.
+    //  Collects incorrect faces in set.
+    //  Returns true if one or more faces in error.
+    bool checkMesh
+    (
+        const bool report,
+        const polyMesh& mesh,
+        const dictionary& dict,
+        const labelList& checkFaces,
+        labelHashSet& wrongFaces
+    );
+
+    //- Check mesh with mesh settings in dict.
+    //  Collects incorrect faces in set.
+    //  Returns true if one or more faces in error.
+    bool checkMesh
+    (
+        const bool report,
+        const polyMesh& mesh,
+        const dictionary& dict,
+        labelHashSet& wrongFaces
+    );
 }
-}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

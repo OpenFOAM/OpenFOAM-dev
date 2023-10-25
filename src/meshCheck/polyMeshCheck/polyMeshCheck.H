@@ -83,7 +83,7 @@ namespace meshCheck
         const scalarField& vol
     );
 
-    //- Check non-orthogonality
+    //- Check face orthogonality
     bool checkFaceOrthogonality
     (
         const polyMesh& mesh,
@@ -135,8 +135,8 @@ namespace meshCheck
         labelHashSet* setPtr = nullptr
     );
 
-    //- Check face non-orthogonality
-    bool checkFaceDotProduct
+    //- Check face orthogonality
+    bool checkFaceOrthogonality
     (
         const bool report,
         const scalar orthWarn,
@@ -229,8 +229,8 @@ namespace meshCheck
         labelHashSet* setPtr
     );
 
-    // Check the difference between normals of individual face-triangles (from
-    // face-centre decomposition) and the cell-cell centre vector
+    //- Check the difference between normals of individual face-triangles (from
+    //  face-centre decomposition) and the cell-cell centre vector
     bool checkFaceTwist
     (
         const bool report,

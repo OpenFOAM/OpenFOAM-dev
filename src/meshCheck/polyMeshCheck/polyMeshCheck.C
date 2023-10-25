@@ -130,8 +130,8 @@ Foam::tmp<Foam::scalarField> Foam::meshCheck::faceSkewness
         {
             forAll(pp, i)
             {
-                label facei = pp.start() + i;
-                label bFacei = facei - mesh.nInternalFaces();
+                const label facei = pp.start() + i;
+                const label bFacei = facei - mesh.nInternalFaces();
 
                 skew[facei] = meshCheck::faceSkewness
                 (
@@ -150,7 +150,7 @@ Foam::tmp<Foam::scalarField> Foam::meshCheck::faceSkewness
         {
             forAll(pp, i)
             {
-                label facei = pp.start() + i;
+                const label facei = pp.start() + i;
 
                 skew[facei] = meshCheck::boundaryFaceSkewness
                 (
@@ -191,8 +191,8 @@ Foam::tmp<Foam::scalarField> Foam::meshCheck::faceWeights
         const point& fc = fCtrs[facei];
         const vector& fa = fAreas[facei];
 
-        scalar dOwn = mag(fa & (fc-cellCtrs[own[facei]]));
-        scalar dNei = mag(fa & (cellCtrs[nei[facei]]-fc));
+        const scalar dOwn = mag(fa & (fc-cellCtrs[own[facei]]));
+        const scalar dNei = mag(fa & (cellCtrs[nei[facei]]-fc));
 
         weight[facei] = min(dNei,dOwn)/(dNei+dOwn+vSmall);
     }
@@ -210,14 +210,14 @@ Foam::tmp<Foam::scalarField> Foam::meshCheck::faceWeights
         {
             forAll(pp, i)
             {
-                label facei = pp.start() + i;
-                label bFacei = facei - mesh.nInternalFaces();
+                const label facei = pp.start() + i;
+                const label bFacei = facei - mesh.nInternalFaces();
 
                 const point& fc = fCtrs[facei];
                 const vector& fa = fAreas[facei];
 
-                scalar dOwn = mag(fa & (fc-cellCtrs[own[facei]]));
-                scalar dNei = mag(fa & (neiCc[bFacei]-fc));
+                const scalar dOwn = mag(fa & (fc-cellCtrs[own[facei]]));
+                const scalar dNei = mag(fa & (neiCc[bFacei]-fc));
 
                 weight[facei] = min(dNei,dOwn)/(dNei+dOwn+vSmall);
             }
@@ -244,8 +244,8 @@ Foam::tmp<Foam::scalarField> Foam::meshCheck::volRatio
     // Internal faces
     forAll(nei, facei)
     {
-        scalar volOwn = vol[own[facei]];
-        scalar volNei = vol[nei[facei]];
+        const scalar volOwn = vol[own[facei]];
+        const scalar volNei = vol[nei[facei]];
 
         ratio[facei] = min(volOwn,volNei)/(max(volOwn, volNei)+vSmall);
     }
@@ -263,11 +263,11 @@ Foam::tmp<Foam::scalarField> Foam::meshCheck::volRatio
         {
             forAll(pp, i)
             {
-                label facei = pp.start() + i;
-                label bFacei = facei - mesh.nInternalFaces();
+                const label facei = pp.start() + i;
+                const label bFacei = facei - mesh.nInternalFaces();
 
-                scalar volOwn = vol[own[facei]];
-                scalar volNei = neiVol[bFacei];
+                const scalar volOwn = vol[own[facei]];
+                const scalar volNei = neiVol[bFacei];
 
                 ratio[facei] = min(volOwn,volNei)/(max(volOwn, volNei)+vSmall);
             }
@@ -437,7 +437,7 @@ bool Foam::meshCheck::checkFaceSkewness
     label nWarnSkew = 0;
 
     // Statistics only for all faces except slave coupled faces
-    PackedBoolList isMasterFace(syncTools::getMasterFaces(mesh));
+    const PackedBoolList isMasterFace(syncTools::getMasterFaces(mesh));
 
     forAll(skew, facei)
     {
@@ -537,12 +537,13 @@ bool Foam::meshCheck::checkEdgeAlignment
 
         forAll(f, fp)
         {
-            label p0 = f[fp];
-            label p1 = f.nextLabel(fp);
+            const label p0 = f[fp];
+            const label p1 = f.nextLabel(fp);
+
             if (p0 < p1)
             {
                 vector d(p[p1]-p[p0]);
-                scalar magD = mag(d);
+                const scalar magD = mag(d);
 
                 if (magD > rootVSmall)
                 {

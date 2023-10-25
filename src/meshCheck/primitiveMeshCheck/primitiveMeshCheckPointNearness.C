@@ -59,29 +59,12 @@ bool Foam::meshCheck::checkPointNearness
 
             if (magSqr(points[pti] - points[prevPtI]) < reportDistSqr)
             {
-                //// Check if unconnected.
-                // const labelList& pEdges = pointEdges()[pti];
-                //
-                // bool connected = false;
-                //
-                // forAll(pEdges, pEdgei)
-                //{
-                //    if (edges()[pEdges[pEdgei]].otherVertex(prevPtI) != -1)
-                //    {
-                //        connected = true;
-                //        break;
-                //    }
-                //}
-                //
-                // if (!connected)
-                {
-                    nClose++;
+                nClose++;
 
-                    if (setPtr)
-                    {
-                        setPtr->insert(pti);
-                        setPtr->insert(prevPtI);
-                    }
+                if (setPtr)
+                {
+                    setPtr->insert(pti);
+                    setPtr->insert(prevPtI);
                 }
             }
         }
