@@ -104,7 +104,7 @@ void Foam::waveSpectra::JONSWAP::write(Ostream& os) const
 
     writeEntry(os, "U10", U10_);
     writeEntry(os, "F", F_);
-    writeEntryIfDifferent(os, "gamma", 3.3, gamma_);
+    writeEntryIfDifferent(os, "gamma", scalar(3.3), gamma_);
 }
 
 
