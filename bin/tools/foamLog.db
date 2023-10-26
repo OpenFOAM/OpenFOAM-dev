@@ -16,37 +16,40 @@
 #------------------------------------------------------------------------------
 
 #- String to recognise new iteration by (usually same as 'Time')
-Separator/^[ \t]*Time = /Time = 
+Separator/^[ \t]*Time = /Time =
 
 #- Time value:
-Time/^[ \t]*Time = /Time = 
+Time/^[ \t]*Time = /Time =
+
+#- deltaT value:
+deltaT/^[ \t]*deltaT = /deltaT =
 
 #- Continuity errors:
-contLocal/time step continuity errors :/sum local = 
-contGlobal/time step continuity errors :/ global = 
-contCumulative/time step continuity errors :/cumulative = 
+contLocal/time step continuity errors :/sum local =
+contGlobal/time step continuity errors :/ global =
+contCumulative/time step continuity errors :/cumulative =
 
 #- Special for combustion code:
-minFu/min\(fu\) = /min(fu) = 
-minFt/min\(ft\) = /min(ft) = 
+minFu/min\(fu\) = /min(fu) =
+minFt/min\(ft\) = /min(ft) =
 
 #- Timing:
-executionTime/ExecutionTime = /ExecutionTime = 
+executionTime/ExecutionTime = /ExecutionTime =
 clockTime/ClockTime = /ClockTime =
 
 #- Courant no:
-CourantMax/Courant Number /max: 
-CourantMean/Courant Number /mean: 
+CourantMax/Courant Number /max:
+CourantMean/Courant Number /mean:
 
 #- K bounding
-kMin/bounding k,/min: 
-kMax/bounding k,/max: 
-kAvg/bounding k,/average: 
+kMin/bounding k,/min:
+kMax/bounding k,/max:
+kAvg/bounding k,/average:
 
 #- epsilon bounding
-epsMin/bounding epsilon,/min: 
-epsMax/bounding epsilon,/max: 
-epsAvg/bounding epsilon,/average: 
+epsMin/bounding epsilon,/min:
+epsMax/bounding epsilon,/max:
+epsAvg/bounding epsilon,/average:
 
 #- gamma bounding
 alpha1Min/Min\(alpha1\) =/Min(alpha1) =
