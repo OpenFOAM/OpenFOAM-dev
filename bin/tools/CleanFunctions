@@ -59,6 +59,7 @@ cleanCase()
     rm -rf postProcessing
     rm -rf jobInfo TDAC constant/tetDualMesh
     rm -rf VTK sequencedVTK
+    rm -rf logs
 
     find . -name "*.orig" -type f -exec sh -c 'rm -f ${0%.*} ${0%.*}.gz' {} \;
 }
