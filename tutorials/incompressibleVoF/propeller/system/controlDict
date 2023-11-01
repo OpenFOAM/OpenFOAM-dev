@@ -51,4 +51,10 @@ adjustTimeStep  yes;
 maxCo           2;
 maxAlphaCo      1;
 
+functions
+{
+    #includeFunc patchSurface(patch="propeller.*")
+    #includeFunc isoSurface(isoField=alpha.water, isoValue=0.5, writeEmpty=true)
+}
+
 // ************************************************************************* //
