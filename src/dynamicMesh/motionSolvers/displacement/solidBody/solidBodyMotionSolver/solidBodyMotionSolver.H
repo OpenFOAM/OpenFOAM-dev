@@ -38,6 +38,7 @@ SourceFiles
 
 #include "points0MotionSolver.H"
 #include "solidBodyMotionFunction.H"
+#include "polyCellSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,14 +58,20 @@ class solidBodyMotionSolver
         //- The motion control function
         autoPtr<solidBodyMotionFunction> SBMFPtr_;
 
-        //- Points to move when cell zone is supplied
-        labelList pointIDs_;
+        //- The name of the cell zone to restrict motion to
+        polyCellSet set_;
 
-        //- Flag to indicate whether all cells should move
-        bool moveAllCells_;
+        //- Points to move when cell zone is supplied
+        labelList setPointIDs_;
 
         //- Cache the current transform for topoChange
         mutable septernion transform_;
+
+
+    // Private Member Functions
+
+        //- Re-calculate the set point ID-s from the set, following mesh change
+        void updateSetPointIDs();
 
 
 public:
@@ -106,8 +113,14 @@ public:
         virtual void solve()
         {}
 
-        //-  Update local data for topology changes
+        //- Update local data for topology changes
         virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const polyDistributionMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
 
     // Member Operators

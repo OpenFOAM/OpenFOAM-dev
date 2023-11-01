@@ -420,6 +420,12 @@ public:
             const fvBoundaryMesh& boundary() const;
 
             //- Return reference to polyMesh
+            const polyMesh& mesh() const
+            {
+                return *this;
+            }
+
+            //- Return reference to polyMesh
             const polyMesh& operator()() const
             {
                 return *this;

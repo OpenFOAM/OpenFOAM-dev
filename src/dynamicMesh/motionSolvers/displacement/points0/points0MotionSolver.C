@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "points0MotionSolver.H"
+#include "polyDistributionMap.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -161,6 +162,19 @@ void Foam::points0MotionSolver::topoChange(const polyTopoChangeMap& map)
 void Foam::points0MotionSolver::mapMesh(const polyMeshMap& map)
 {
     points0_.primitiveFieldRef() = mesh().points();
+
+    // The processor boundaries may have changed, so we need to update the
+    // boundary field. There is no data in this field, so we don't need to map
+    // anything. We can just reset it to a freshly created calculated field.
+    points0_.boundaryFieldRef().reset
+    (
+        pointVectorField::Boundary
+        (
+            points0_.mesh().boundary(),
+            points0_.internalField(),
+            calculatedPointPatchVectorField::typeName
+        )
+    );
 }
 
 
@@ -168,14 +182,26 @@ void Foam::points0MotionSolver::distribute
 (
     const polyDistributionMap& map
 )
-{}
+{
+    map.distributePointData(points0_.primitiveFieldRef());
+
+    // See above
+    points0_.boundaryFieldRef().reset
+    (
+        pointVectorField::Boundary
+        (
+            points0_.mesh().boundary(),
+            points0_.internalField(),
+            calculatedPointPatchVectorField::typeName
+        )
+    );
+}
 
 
 bool Foam::points0MotionSolver::write() const
 {
-    if (mesh().topoChanged())
+    if (points0_.writeOpt() == IOobject::AUTO_WRITE)
     {
-        points0_.instance() = mesh().time().name();
         points0_.write();
     }
 

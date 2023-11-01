@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,46 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::solidBodyMotionSolver::updateSetPointIDs()
+{
+    if (set_.selectionType() == polyCellSet::selectionTypes::all)
+    {
+        setPointIDs_.clear();
+        return;
+    }
+
+    boolList pointInSet(mesh().nPoints(), false);
+
+    forAll(set_.cells(), setCelli)
+    {
+        const cell& c = mesh().cells()[set_.cells()[setCelli]];
+        forAll(c, cfi)
+        {
+            const face& f = mesh().faces()[c[cfi]];
+            forAll(f, fpi)
+            {
+                pointInSet[f[fpi]] = true;
+            }
+        }
+    }
+
+    syncTools::syncPointList(mesh(), pointInSet, orEqOp<bool>(), false);
+
+    setPointIDs_.resize(count(pointInSet, true));
+
+    label setPointi = 0;
+    forAll(pointInSet, pointi)
+    {
+        if (pointInSet[pointi])
+        {
+            setPointIDs_[setPointi ++] = pointi;
+        }
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::solidBodyMotionSolver::solidBodyMotionSolver
@@ -55,51 +95,16 @@ Foam::solidBodyMotionSolver::solidBodyMotionSolver
 :
     points0MotionSolver(name, mesh, dict, typeName),
     SBMFPtr_(solidBodyMotionFunction::New(coeffDict(), mesh.time())),
-    pointIDs_(),
-    moveAllCells_(false),
+    set_(mesh, dict),
+    setPointIDs_(),
     transform_(SBMFPtr_().transformation())
 {
-    const labelList cellIDs(polyCellSet(mesh, dict).cells());
-
-    moveAllCells_ =
-        returnReduce(cellIDs.size() == mesh.nCells(), andOp<bool>());
-
-    if (moveAllCells_)
+    if (set_.selectionType() == polyCellSet::selectionTypes::all)
     {
         Info<< "Applying solid body motion to entire mesh" << endl;
     }
-    else
-    {
-        // collect point IDs of points in cell zone
 
-        boolList movePts(mesh.nPoints(), false);
-
-        forAll(cellIDs, i)
-        {
-            const cell& c = mesh.cells()[cellIDs[i]];
-            forAll(c, j)
-            {
-                const face& f = mesh.faces()[c[j]];
-                forAll(f, k)
-                {
-                    movePts[f[k]] = true;
-                }
-            }
-        }
-
-        syncTools::syncPointList(mesh, movePts, orEqOp<bool>(), false);
-
-        DynamicList<label> ptIDs(mesh.nPoints());
-        forAll(movePts, i)
-        {
-            if (movePts[i])
-            {
-                ptIDs.append(i);
-            }
-        }
-
-        pointIDs_.transfer(ptIDs);
-    }
+    updateSetPointIDs();
 }
 
 
@@ -115,7 +120,7 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
 {
     transform_ = SBMFPtr_().transformation();
 
-    if (moveAllCells_)
+    if (set_.selectionType() == polyCellSet::selectionTypes::all)
     {
         return transformPoints(transform_, points0_);
     }
@@ -124,10 +129,10 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
         tmp<pointField> ttransformedPts(new pointField(mesh().points()));
         pointField& transformedPts = ttransformedPts.ref();
 
-        UIndirectList<point>(transformedPts, pointIDs_) = transformPoints
+        UIndirectList<point>(transformedPts, setPointIDs_) = transformPoints
         (
             transform_,
-            pointField(points0_, pointIDs_)
+            pointField(points0_, setPointIDs_)
         );
 
         return ttransformedPts;
@@ -137,6 +142,16 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
 
 void Foam::solidBodyMotionSolver::topoChange(const polyTopoChangeMap& map)
 {
+    set_.topoChange(map);
+    updateSetPointIDs();
+
+    boolList pointInSet
+    (
+        mesh().nPoints(),
+        set_.selectionType() == polyCellSet::selectionTypes::all
+    );
+    UIndirectList<bool>(pointInSet, setPointIDs_) = true;
+
     // pointMesh already updates pointFields
 
     // Get the new points either from the map or the mesh
@@ -151,34 +166,53 @@ void Foam::solidBodyMotionSolver::topoChange(const polyTopoChangeMap& map)
 
     forAll(newPoints0, pointi)
     {
-        label oldPointi = map.pointMap()[pointi];
+        const label oldPointi = map.pointMap()[pointi];
 
-        if (oldPointi >= 0)
-        {
-            const label masterPointi = map.reversePointMap()[oldPointi];
-
-            if (masterPointi == pointi)
-            {
-                newPoints0[pointi] = points0_[oldPointi];
-            }
-            else
-            {
-                newPoints0[pointi] =
-                    transform_.invTransformPoint(points[pointi]);
-            }
-        }
-        else
+        if (oldPointi < 0)
         {
             FatalErrorInFunction
                 << "Cannot determine co-ordinates of introduced vertices."
                 << " New vertex " << pointi << " at co-ordinate "
                 << points[pointi] << exit(FatalError);
         }
+
+        if (map.reversePointMap()[oldPointi] == pointi)
+        {
+            newPoints0[pointi] = points0_[oldPointi];
+        }
+        else
+        {
+            newPoints0[pointi] =
+                pointInSet[pointi]
+              ? transform_.invTransformPoint(points[pointi])
+              : points[pointi];
+        }
     }
 
     twoDCorrectPoints(newPoints0);
 
+    // Move into base class storage and mark as to-be-written
     points0_.transfer(newPoints0);
+    points0_.writeOpt() = IOobject::AUTO_WRITE;
+    points0_.instance() = mesh().time().name();
+}
+
+
+void Foam::solidBodyMotionSolver::distribute(const polyDistributionMap& map)
+{
+    points0MotionSolver::distribute(map);
+
+    set_.distribute(map);
+    updateSetPointIDs();
+}
+
+
+void Foam::solidBodyMotionSolver::mapMesh(const polyMeshMap& map)
+{
+    points0MotionSolver::mapMesh(map);
+
+    set_.mapMesh(map);
+    updateSetPointIDs();
 }
 
 

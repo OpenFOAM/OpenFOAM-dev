@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,12 +25,12 @@ License
 
 #include "rigidBodyMeshMotionSolver.H"
 #include "polyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "pointPatchDist.H"
 #include "pointConstraints.H"
 #include "timeIOdictionary.H"
 #include "uniformDimensionedFields.H"
 #include "forces.H"
-#include "transformField.H"
 #include "OneConstant.H"
 #include "mathematicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
@@ -240,14 +240,20 @@ void Foam::rigidBodyMeshMotionSolver::solve()
         {
             const label bodyID = bodyMeshes_[bi].bodyID_;
 
-            dictionary forcesDict;
-            forcesDict.add("type", functionObjects::forces::typeName);
-            forcesDict.add("patches", bodyMeshes_[bi].patches_);
-            forcesDict.add("rhoInf", rhoInf_);
-            forcesDict.add("rho", rhoName_);
-            forcesDict.add("CofR", vector::zero);
+            functionObjects::forces f
+            (
+                functionObjects::forces::typeName,
+                t,
+                dictionary
+                (
+                    "type", functionObjects::forces::typeName,
+                    "patches", bodyMeshes_[bi].patches_,
+                    "rhoInf", rhoInf_,
+                    "rho", rhoName_,
+                    "CofR", vector::zero
+                )
+            );
 
-            functionObjects::forces f("forces", t, forcesDict);
             f.calcForcesMoment();
 
             fx[bodyID] = ramp*spatialVector(f.momentEff(), f.forceEff());
@@ -344,14 +350,14 @@ bool Foam::rigidBodyMeshMotionSolver::write() const
     state().write(dict);
 
     return
-        dict.regIOobject::writeObject
+        motionSolver::write()
+     && dict.regIOobject::writeObject
         (
             IOstream::ASCII,
             IOstream::currentVersion,
             mesh().time().writeCompression(),
             true
-        )
-     && motionSolver::write();
+        );
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -216,15 +216,19 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
     }
     else
     {
-        dictionary forcesDict;
-
-        forcesDict.add("type", functionObjects::forces::typeName);
-        forcesDict.add("patches", patches_);
-        forcesDict.add("rhoInf", rhoInf_);
-        forcesDict.add("rho", rhoName_);
-        forcesDict.add("CofR", centreOfRotation());
-
-        functionObjects::forces f("forces", t, forcesDict);
+        functionObjects::forces f
+        (
+            functionObjects::forces::typeName,
+            t,
+            dictionary
+            (
+                "type", functionObjects::forces::typeName,
+                "patches", patches_,
+                "rhoInf", rhoInf_,
+                "rho", rhoName_,
+                "CofR", centreOfRotation()
+            )
+        );
 
         f.calcForcesMoment();
 

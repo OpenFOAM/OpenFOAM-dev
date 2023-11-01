@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -328,14 +328,20 @@ void Foam::rigidBodyMeshMotion::solve()
         {
             const label bodyID = bodyMeshes_[bi].bodyID_;
 
-            dictionary forcesDict;
-            forcesDict.add("type", functionObjects::forces::typeName);
-            forcesDict.add("patches", bodyMeshes_[bi].patches_);
-            forcesDict.add("rhoInf", rhoInf_);
-            forcesDict.add("rho", rhoName_);
-            forcesDict.add("CofR", vector::zero);
+            functionObjects::forces f
+            (
+                functionObjects::forces::typeName,
+                t,
+                dictionary
+                (
+                    "type", functionObjects::forces::typeName,
+                    "patches", bodyMeshes_[bi].patches_,
+                    "rhoInf", rhoInf_,
+                    "rho", rhoName_,
+                    "CofR", vector::zero
+                )
+            );
 
-            functionObjects::forces f("forces", t, forcesDict);
             f.calcForcesMoment();
 
             fx[bodyID] = ramp*spatialVector(f.momentEff(), f.forceEff());
@@ -364,29 +370,29 @@ void Foam::rigidBodyMeshMotion::solve()
     // Update the displacements
     if (bodyMeshes_.size() == 1)
     {
-        const septernion transform0(this->transform0(bodyMeshes_[0].bodyID_));
+        const label bodyID = bodyMeshes_[0].bodyID_;
+        const septernion transform0(this->transform0(bodyID));
         const scalarField& weight = bodyMeshes_[0].weight_;
 
         forAll(points0, pointi)
         {
-            // Move non-stationary points
-            if (weight[pointi] > small)
+            // Don't move where weight ~= 0
+            if (weight[pointi] <= small)
+            {}
+            // Use solid-body motion where weight ~= 1
+            else if (weight[pointi] > 1 - small)
             {
-                // Use solid-body motion where weight = 1
-                if (weight[pointi] > 1 - small)
-                {
-                    pointDisplacement[pointi] =
-                        transform0.transformPoint(points0[pointi])
-                      - points0[pointi];
-                }
-                // Slerp septernion interpolation
-                else
-                {
-                    pointDisplacement[pointi] =
-                        slerp(septernion::I, transform0, weight[pointi])
-                       .transformPoint(points0[pointi])
-                      - points0[pointi];
-                }
+                pointDisplacement[pointi] =
+                    transform0.transformPoint(points0[pointi])
+                  - points0[pointi];
+            }
+            // Slerp septernion interpolation
+            else
+            {
+                pointDisplacement[pointi] =
+                    slerp(septernion::I, transform0, weight[pointi])
+                   .transformPoint(points0[pointi])
+                  - points0[pointi];
             }
         }
     }
@@ -425,7 +431,19 @@ void Foam::rigidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
     );
 
     const pointMesh& pMesh = pointMesh::New(mesh());
-    pointField points0(mesh().points());
+
+    pointField newPoints0(mesh().points());
+
+    forAll(newPoints0, pointi)
+    {
+        if (map.pointMap()[pointi] < 0)
+        {
+            FatalErrorInFunction
+                << "Cannot determine co-ordinates of introduced vertices."
+                << " New vertex " << pointi << " at co-ordinate "
+                << points[pointi] << exit(FatalError);
+        }
+    }
 
     // Iterate to update the transformation of the new points to the
     // corresponding points0, required because the body-point weights are
@@ -439,96 +457,92 @@ void Foam::rigidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
             (
                 pMesh,
                 bodyMeshes_[bi].patchSet_,
-                points0
+                newPoints0
             );
 
             pointScalarField& weight = bodyMeshes_[bi].weight_;
 
-            forAll(points0, pointi)
+            forAll(newPoints0, pointi)
             {
                 const label oldPointi = map.pointMap()[pointi];
 
-                if (oldPointi >= 0)
+                if (map.reversePointMap()[oldPointi] != pointi)
                 {
-                    if (map.reversePointMap()[oldPointi] != pointi)
-                    {
-                        weight[pointi] = bodyMeshes_[bi].weight(pDist[pointi]);
-                    }
-                }
-                else
-                {
-                    FatalErrorInFunction
-                        << "Cannot determine co-ordinates "
-                           "of introduced vertices."
-                        << " New vertex " << pointi << " at co-ordinate "
-                        << points[pointi] << exit(FatalError);
+                    weight[pointi] = bodyMeshes_[bi].weight(pDist[pointi]);
                 }
             }
 
             pointConstraints::New(pMesh).constrain(weight);
         }
 
-        forAll(points0, pointi)
+        // Set directly mapped points
+        forAll(newPoints0, pointi)
         {
             const label oldPointi = map.pointMap()[pointi];
 
-            if (oldPointi >= 0)
+            if (map.reversePointMap()[oldPointi] == pointi)
             {
-                if (map.reversePointMap()[oldPointi] == pointi)
+                newPoints0[pointi] = points0_[oldPointi];
+            }
+        }
+
+        // Interpolate indirectly mapped points
+        if (bodyMeshes_.size() == 1)
+        {
+            const label bodyID = bodyMeshes_[0].bodyID_;
+            const septernion transform0(this->transform0(bodyID));
+            const scalarField& weight = bodyMeshes_[0].weight_;
+
+            forAll(newPoints0, pointi)
+            {
+                const label oldPointi = map.pointMap()[pointi];
+
+                if (map.reversePointMap()[oldPointi] != pointi)
                 {
-                    // points0[pointi] = points0_[oldPointi];
-                    points0[pointi] = points0_[pointi];
-                }
-                else
-                {
-                    if (bodyMeshes_.size() == 1)
+                    // Don't move where weight ~= 0
+                    if (weight[pointi] <= small)
                     {
-                        // Use solid-body motion where weight = 1
-                        if (bodyMeshes_[0].weight_[pointi] > 1 - small)
-                        {
-                            points0[pointi] =
-                                transform0(bodyMeshes_[0].bodyID_).inv()
-                               .transformPoint(points[pointi]);
-                        }
-                        // Slerp septernion interpolation
-                        else
-                        {
-                            points0[pointi] =
-                                slerp
-                                (
-                                    septernion::I,
-                                    septernion
-                                    (
-                                        transform0(bodyMeshes_[0].bodyID_)
-                                    ),
-                                    bodyMeshes_[0].weight_[pointi]
-                                ).invTransformPoint(points[pointi]);
-                        }
+                        newPoints0[pointi] = points[pointi];
                     }
+                    // Use solid-body motion where weight ~= 1
+                    else if (weight[pointi] > 1 - small)
+                    {
+                        newPoints0[pointi] =
+                            transform0.invTransformPoint(points[pointi]);
+                    }
+                    // Slerp septernion interpolation
                     else
                     {
-                        const List<septernion> transforms0(this->transforms0());
-                        List<scalar> w(transforms0.size());
-
-                        forAll(points0, pointi)
-                        {
-                            points0[pointi] =
-                                average(transforms0, weights(pointi, w))
-                               .invTransformPoint(points0[pointi]);
-                        }
+                        newPoints0[pointi] =
+                            slerp(septernion::I, transform0, weight[pointi])
+                           .invTransformPoint(points[pointi]);
                     }
+                }
+            }
+        }
+        else
+        {
+            const List<septernion> transforms0(this->transforms0());
+            List<scalar> w(transforms0.size());
+
+            forAll(newPoints0, pointi)
+            {
+                const label oldPointi = map.pointMap()[pointi];
+
+                if (map.reversePointMap()[oldPointi] != pointi)
+                {
+                    newPoints0[pointi] =
+                        average(transforms0, weights(pointi, w))
+                       .invTransformPoint(newPoints0[pointi]);
                 }
             }
         }
     }
 
-    points0_.transfer(points0);
-
-    // points0 changed - set to write and check-in to database
-    points0_.rename("points0");
+    // Move into base class storage and mark as to-be-written
+    points0_.primitiveFieldRef() = newPoints0;
     points0_.writeOpt() = IOobject::AUTO_WRITE;
     points0_.instance() = mesh().time().name();
-    points0_.checkIn();
 }
 
 
@@ -551,14 +565,14 @@ bool Foam::rigidBodyMeshMotion::write() const
     state().write(dict);
 
     return
-        dict.regIOobject::writeObject
+        displacementMotionSolver::write()
+     && dict.regIOobject::writeObject
         (
             IOstream::ASCII,
             IOstream::currentVersion,
             mesh().time().writeCompression(),
             true
-        )
-     && displacementMotionSolver::write();
+        );
 }
 
 
