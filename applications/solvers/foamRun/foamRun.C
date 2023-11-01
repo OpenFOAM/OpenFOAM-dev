@@ -123,6 +123,9 @@ int main(int argc, char *argv[])
 
     while (pimple.run(runTime))
     {
+        // Update PIMPLE outer-loop parameters if changed
+        pimple.read();
+
         solver.preSolve();
 
         // Adjust the time-step according to the solver maxDeltaT

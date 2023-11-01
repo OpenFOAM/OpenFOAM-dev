@@ -77,14 +77,6 @@ class pimpleSingleRegionControl
     pimpleNoLoopControl& pimple_;
 
 
-protected:
-
-    // Protected Member Functions
-
-        //- Read controls
-        virtual bool read();
-
-
 public:
 
     // Static Data Members
@@ -107,6 +99,10 @@ public:
 
 
     // Member Functions
+
+        //- Read controls
+        virtual bool read();
+
 
         // Evolution
 

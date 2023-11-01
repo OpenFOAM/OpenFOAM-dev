@@ -33,14 +33,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-bool Foam::pimpleSingleRegionControl::read()
-{
-    return pimple_.read() && pimpleLoop::read();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::pimpleSingleRegionControl::pimpleSingleRegionControl
@@ -89,6 +81,12 @@ Foam::pimpleSingleRegionControl::~pimpleSingleRegionControl()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+bool Foam::pimpleSingleRegionControl::read()
+{
+    return pimple_.read() && pimpleLoop::read();
+}
+
 
 bool Foam::pimpleSingleRegionControl::loop()
 {
