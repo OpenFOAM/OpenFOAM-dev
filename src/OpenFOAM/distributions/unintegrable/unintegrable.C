@@ -235,6 +235,7 @@ const Foam::scalarField& Foam::distributions::unintegrable::x() const
     return x;
 }
 
+
 const Foam::scalarField& Foam::distributions::unintegrable::PDF() const
 {
     if (PDFPtr_.valid()) return PDFPtr_();
