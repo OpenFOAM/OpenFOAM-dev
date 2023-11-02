@@ -37,7 +37,7 @@ linearDirection: linear extrusion in specified direction
 wedge:           single-layer, wedge extrusion with wedge type (axisymmetric)
 sector:          sector extrusion about specified axis
 linearRadial:    linear extrusion in radial direction
-radial:          linear extrusion in radial direction with multiple radii
+sphericalRadial: spherical radial extrusion with radii function
 */
 
 thickness        0.5; // used by plane extrusion
@@ -73,7 +73,7 @@ linearRadialCoeffs
     Rsurface     0.1;
 }
 
-radialCoeffs
+sphericalRadialCoeffs
 {
     R            table ((0 0.01) (3 0.03) (10 0.1));
 }

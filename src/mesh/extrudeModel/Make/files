@@ -4,7 +4,8 @@ linearNormal/linearNormal.C
 planeExtrusion/planeExtrusion.C
 linearDirection/linearDirection.C
 linearRadial/linearRadial.C
-radial/radial.C
+sphericalRadial/sphericalRadial.C
+cylindricalRadial/cylindricalRadial.C
 sigmaRadial/sigmaRadial.C
 sector/sector.C
 cyclicSector/cyclicSector.C

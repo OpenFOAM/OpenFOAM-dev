@@ -47,7 +47,7 @@ extrudeModel    linearNormal;
 // extrudeModel   linearDirection;
 // extrudeModel   wedge;
 // extrudeModel   linearRadial;
-// extrudeModel   radial;
+// extrudeModel   sphericalRadial;
 // extrudeModel   sigmaRadial;
 
 nLayers         10;
@@ -79,7 +79,7 @@ linearRadialCoeffs
     Rsurface        0.01;
 }
 
-radialCoeffs
+sphericalRadialCoeffs
 {
     // Radii specified through interpolation table
     R               table ((0 0.01)(3 0.03)(10 0.1));

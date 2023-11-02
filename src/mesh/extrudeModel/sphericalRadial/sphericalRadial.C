@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "radial.H"
+#include "sphericalRadial.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -35,14 +35,14 @@ namespace extrudeModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(radial, 0);
+defineTypeNameAndDebug(sphericalRadial, 0);
 
-addToRunTimeSelectionTable(extrudeModel, radial, dictionary);
+addToRunTimeSelectionTable(extrudeModel, sphericalRadial, dictionary);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-radial::radial(const dictionary& dict)
+sphericalRadial::sphericalRadial(const dictionary& dict)
 :
     extrudeModel(typeName, dict),
     R_(Function1<scalar>::New("R", coeffDict_))
@@ -51,27 +51,29 @@ radial::radial(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-radial::~radial()
+sphericalRadial::~sphericalRadial()
 {}
 
 
 // * * * * * * * * * * * * * * * * Operators * * * * * * * * * * * * * * * * //
 
-point radial::operator()
+point sphericalRadial::operator()
 (
     const point& surfacePoint,
     const vector& surfaceNormal,
     const label layer
 ) const
 {
-    // radius of the surface
-    scalar rs = mag(surfacePoint);
-    vector rsHat = surfacePoint/rs;
+    // Radius of the surface
+    const scalar rs = mag(surfacePoint);
 
-    scalar r = R_->value(layer);
+    // Radial direction of surfacePoint
+    const vector rsHat = surfacePoint/rs;
 
-Pout<< "** for layer " << layer << " r:" << r << endl;
+    // Radius of layer
+    const scalar r = R_->value(layer);
 
+    // Return new point
     return r*rsHat;
 }
 

@@ -57,7 +57,7 @@ extrudeModel        wedge;
 //extrudeModel        linearRadial;
 
 //- Extrudes into sphere around (0 0 0) with specified radii
-//extrudeModel        radial;
+//extrudeModel        sphericalRadial;
 
 //- Extrudes into sphere with grading according to pressure (atmospherics)
 //extrudeModel        sigmaRadial;
@@ -91,7 +91,7 @@ linearRadialCoeffs
     Rsurface        0.01;
 }
 
-radialCoeffs
+sphericalRadialCoeffs
 {
     // Radii specified through interpolation table
     R               table ((0 0.01)(3 0.03)(10 0.1));
