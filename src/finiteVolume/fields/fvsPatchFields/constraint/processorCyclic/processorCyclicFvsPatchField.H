@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,6 +121,20 @@ public:
             return tmp<fvsPatchField<Type>>
             (
                 new processorCyclicFvsPatchField<Type>(*this, iF)
+            );
+        }
+
+        //- Construct and return a clone onto a new patch
+        //  setting internal field reference
+        virtual tmp<fvsPatchField<Type>> clone
+        (
+            const fvPatch& patch,
+            const DimensionedField<Type, surfaceMesh>& iF
+        ) const
+        {
+            return tmp<fvsPatchField<Type>>
+            (
+                new processorCyclicFvsPatchField<Type>(patch, iF, *this)
             );
         }
 

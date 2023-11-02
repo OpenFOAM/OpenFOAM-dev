@@ -1,0 +1,315 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+xIn -0.8;
+xOut 1.5;
+yBed -0.5;
+yAtm 1;
+
+RNcc 0.3;
+l0Ncc #calc "$<scalar>{RNcc}/sqrt(scalar(2))";
+l1Ncc #calc "$<scalar>{RNcc}/sqrt(scalar(3))";
+
+lNcc 0.2;
+lCube 0.1;
+
+zFar 1;
+
+geometry
+{
+    ncc
+    {
+        type searchableSphere;
+        centre (0 0 0);
+        radius $RNcc;
+    }
+}
+
+vertices
+(
+    // Stationary
+    name s000 ($xIn $yBed 0)              name s001 ($xIn $yBed $l1Ncc)             name s002 ($xIn $yBed $zFar)
+    name s010 ($xIn #neg $l0Ncc 0)        name s011 ($xIn #neg $l1Ncc $l1Ncc)       name s012 ($xIn #neg $l1Ncc $zFar)
+    name s020 ($xIn $l0Ncc 0)             name s021 ($xIn $l1Ncc $l1Ncc)            name s022 ($xIn $l1Ncc $zFar)
+    name s030 ($xIn $yAtm 0)              name s031 ($xIn $yAtm $l1Ncc)             name s032 ($xIn $yAtm $zFar)
+
+    name s100 (#neg $l0Ncc $yBed 0)       name s101 (#neg $l1Ncc $yBed $l1Ncc)       name s102 (#neg $l1Ncc $yBed $zFar)
+    name s110 (#neg $l0Ncc #neg $l0Ncc 0) name s111 (#neg $l1Ncc #neg $l1Ncc $l1Ncc) name s112 (#neg $l1Ncc #neg $l1Ncc $zFar)
+    name s120 (#neg $l0Ncc $l0Ncc 0)      name s121 (#neg $l1Ncc $l1Ncc $l1Ncc)      name s122 (#neg $l1Ncc $l1Ncc $zFar)
+    name s130 (#neg $l0Ncc $yAtm 0)       name s131 (#neg $l1Ncc $yAtm $l1Ncc)       name s132 (#neg $l1Ncc $yAtm $zFar)
+
+    name s200 ($l0Ncc $yBed 0)            name s201 ($l1Ncc $yBed $l1Ncc)            name s202 ($l1Ncc $yBed $zFar)
+    name s220 ($l0Ncc $l0Ncc 0)           name s221 ($l1Ncc $l1Ncc $l1Ncc)           name s222 ($l1Ncc $l1Ncc $zFar)
+    name s230 ($l0Ncc $yAtm 0)            name s231 ($l1Ncc $yAtm $l1Ncc)            name s232 ($l1Ncc $yAtm $zFar)
+    name s210 ($l0Ncc #neg $l0Ncc 0)      name s211 ($l1Ncc #neg $l1Ncc $l1Ncc)      name s212 ($l1Ncc #neg $l1Ncc $zFar)
+
+    name s300 ($xOut $yBed 0)             name s301 ($xOut $yBed $l1Ncc)             name s302 ($xOut $yBed $zFar)
+    name s310 ($xOut #neg $l0Ncc 0)       name s311 ($xOut #neg $l1Ncc $l1Ncc)       name s312 ($xOut #neg $l1Ncc $zFar)
+    name s320 ($xOut $l0Ncc 0)            name s321 ($xOut $l1Ncc $l1Ncc)            name s322 ($xOut $l1Ncc $zFar)
+    name s330 ($xOut $yAtm 0)             name s331 ($xOut $yAtm $l1Ncc)             name s332 ($xOut $yAtm $zFar)
+
+    // Rotating
+    name r000 (#neg $l0Ncc #neg $l0Ncc 0) name r001 (#neg $l1Ncc #neg $l1Ncc $l1Ncc)
+    name r010 (#neg $l0Ncc $l0Ncc 0)      name r011 (#neg $l1Ncc $l1Ncc $l1Ncc)
+    name r100 ($l0Ncc #neg $l0Ncc 0)      name r101 ($l1Ncc #neg $l1Ncc $l1Ncc)
+    name r110 ($l0Ncc $l0Ncc 0)           name r111 ($l1Ncc $l1Ncc $l1Ncc)
+
+    name c000 (#neg $lCube #neg $lCube 0) name c001 (#neg $lCube #neg $lCube $lCube)
+    name c010 (#neg $lCube $lCube 0)      name c011 (#neg $lCube $lCube $lCube)
+    name c100 ($lCube #neg $lCube 0)      name c101 ($lCube #neg $lCube $lCube)
+    name c110 ($lCube $lCube 0)           name c111 ($lCube $lCube $lCube)
+);
+
+nIn   7; fIn  0.4;
+nOut 12; fOut 5.0;
+nBed  5; fBed 0.6;
+nAtm  7; fAtm 4.0;
+nFar 12; fFar 2.0;
+
+nHalfNcc 4;
+nNcc #calc "2*$<label>nHalfNcc";
+
+nHalfSphere 8;
+nSphere #calc "2*$<label>nHalfSphere";
+
+blocks
+(
+    // Stationary
+    hex (s000 s100 s110 s010 s001 s101 s111 s011) stationary ($nIn $nBed $nHalfNcc) simpleGrading ($fIn $fBed 1)
+    hex (s100 s200 s210 s110 s101 s201 s211 s111) stationary ($nNcc $nBed $nHalfNcc) simpleGrading (1 $fBed 1)
+    hex (s200 s300 s310 s210 s201 s301 s311 s211) stationary ($nOut $nBed $nHalfNcc) simpleGrading ($fOut $fBed 1)
+
+    hex (s010 s110 s120 s020 s011 s111 s121 s021) stationary ($nIn $nNcc $nHalfNcc) simpleGrading ($fIn 1 1)
+    hex (s210 s310 s320 s220 s211 s311 s321 s221) stationary ($nOut $nNcc $nHalfNcc) simpleGrading ($fOut 1 1)
+
+    hex (s020 s120 s130 s030 s021 s121 s131 s031) stationary ($nIn $nAtm $nHalfNcc) simpleGrading ($fIn $fAtm 1)
+    hex (s120 s220 s230 s130 s121 s221 s231 s131) stationary ($nNcc $nAtm $nHalfNcc) simpleGrading (1 $fAtm 1)
+    hex (s220 s320 s330 s230 s221 s321 s331 s231) stationary ($nOut $nAtm $nHalfNcc) simpleGrading ($fOut $fAtm 1)
+
+    hex (s001 s101 s111 s011 s002 s102 s112 s012) stationary ($nIn $nBed $nFar) simpleGrading ($fIn $fBed $fFar)
+    hex (s101 s201 s211 s111 s102 s202 s212 s112) stationary ($nNcc $nBed $nFar) simpleGrading (1 $fBed $fFar)
+    hex (s201 s301 s311 s211 s202 s302 s312 s212) stationary ($nOut $nBed $nFar) simpleGrading ($fOut $fBed $fFar)
+
+    hex (s011 s111 s121 s021 s012 s112 s122 s022) stationary ($nIn $nNcc $nFar) simpleGrading ($fIn 1 $fFar)
+    hex (s111 s211 s221 s121 s112 s212 s222 s122) stationary ($nNcc $nNcc $nFar) simpleGrading (1 1 $fFar)
+    hex (s211 s311 s321 s221 s212 s312 s322 s222) stationary ($nOut $nNcc $nFar) simpleGrading ($fOut 1 $fFar)
+
+    hex (s021 s121 s131 s031 s022 s122 s132 s032) stationary ($nIn $nAtm $nFar) simpleGrading ($fIn $fAtm $fFar)
+    hex (s121 s221 s231 s131 s122 s222 s232 s132) stationary ($nNcc $nAtm $nFar) simpleGrading (1 $fAtm $fFar)
+    hex (s221 s321 s331 s231 s222 s322 s332 s232) stationary ($nOut $nAtm $nFar) simpleGrading ($fOut $fAtm $fFar)
+
+    // Rotating
+    hex (r000 r100 c100 c000 r001 r101 c101 c001) rotating ($nSphere $nHalfSphere $nHalfSphere) simpleGrading (1 1 1)
+    hex (r100 r110 c110 c100 r101 r111 c111 c101) rotating ($nSphere $nHalfSphere $nHalfSphere) simpleGrading (1 1 1)
+    hex (r110 r010 c010 c110 r111 r011 c011 c111) rotating ($nSphere $nHalfSphere $nHalfSphere) simpleGrading (1 1 1)
+    hex (r010 r000 c000 c010 r011 r001 c001 c011) rotating ($nSphere $nHalfSphere $nHalfSphere) simpleGrading (1 1 1)
+
+    hex (c001 c101 c111 c011 r001 r101 r111 r011) rotating ($nSphere $nSphere $nHalfSphere) simpleGrading (1 1 1)
+);
+
+theta #calc "radToDeg(atan(1/sqrt(scalar(2))))";
+Theta #calc "2*$<scalar>theta";
+
+edges
+(
+    // Stationary
+    arc s110 s210 90 (0 0 1)
+    arc s210 s220 90 (0 0 1)
+    arc s220 s120 90 (0 0 1)
+    arc s120 s110 90 (0 0 1)
+
+    arc s111 s211 $Theta (0 1 1)
+    arc s211 s221 $Theta (-1 0 1)
+    arc s221 s121 $Theta (0 -1 1)
+    arc s121 s111 $Theta (1 0 1)
+
+    arc s110 s111 $theta (-1 1 0)
+    arc s210 s211 $theta (-1 -1 0)
+    arc s220 s221 $theta (1 -1 0)
+    arc s120 s121 $theta (1 1 0)
+
+    // Rotating
+    arc r000 r100 90 (0 0 1)
+    arc r100 r110 90 (0 0 1)
+    arc r110 r010 90 (0 0 1)
+    arc r010 r000 90 (0 0 1)
+
+    arc r001 r101 $Theta (0 1 1)
+    arc r101 r111 $Theta (-1 0 1)
+    arc r111 r011 $Theta (0 -1 1)
+    arc r011 r001 $Theta (1 0 1)
+
+    arc r000 r001 $theta (-1 1 0)
+    arc r100 r101 $theta (-1 -1 0)
+    arc r110 r111 $theta (1 -1 0)
+    arc r010 r011 $theta (1 1 0)
+);
+
+faces
+(
+    // Stationary
+    project (s110 s111 s211 s210) ncc
+    project (s210 s211 s221 s220) ncc
+    project (s220 s221 s121 s120) ncc
+    project (s120 s121 s111 s110) ncc
+    project (s111 s211 s121 s221) ncc
+
+    // Rotating
+    project (r000 r001 r101 r100) ncc
+    project (r100 r101 r111 r110) ncc
+    project (r110 r111 r011 r010) ncc
+    project (r010 r011 r001 r000) ncc
+    project (r001 r101 r111 r011) ncc
+);
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (s000 s010 s011 s001)
+            (s010 s020 s021 s011)
+            (s020 s030 s031 s021)
+            (s001 s011 s012 s002)
+            (s011 s021 s022 s012)
+            (s021 s031 s032 s022)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (s300 s310 s311 s301)
+            (s310 s320 s321 s311)
+            (s320 s330 s331 s321)
+            (s301 s311 s312 s302)
+            (s311 s321 s322 s312)
+            (s321 s331 s332 s322)
+        );
+    }
+    bed
+    {
+        type wall;
+        faces
+        (
+            (s000 s100 s101 s001)
+            (s100 s200 s201 s101)
+            (s200 s300 s301 s201)
+            (s001 s101 s102 s002)
+            (s101 s201 s202 s102)
+            (s201 s301 s302 s202)
+        );
+    }
+    atmosphere
+    {
+        type patch;
+        faces
+        (
+            (s130 s030 s031 s131)
+            (s230 s130 s131 s231)
+            (s330 s230 s231 s331)
+            (s131 s031 s032 s132)
+            (s231 s131 s132 s232)
+            (s331 s231 s232 s332)
+        );
+    }
+    mid
+    {
+        type symmetryPlane;
+        faces
+        (
+            // Stationary
+            (s000 s100 s110 s010)
+            (s100 s200 s210 s110)
+            (s200 s300 s310 s210)
+            (s010 s110 s120 s020)
+            (s210 s310 s320 s220)
+            (s020 s120 s130 s030)
+            (s120 s220 s230 s130)
+            (s220 s320 s330 s230)
+
+            // Rotating
+            (r000 r100 c100 c000)
+            (r100 r110 c110 c100)
+            (r110 r010 c010 c110)
+            (r010 r000 c000 c010)
+        );
+    }
+    far
+    {
+        type symmetryPlane;
+        faces
+        (
+            (s002 s102 s112 s012)
+            (s102 s202 s212 s112)
+            (s202 s302 s312 s212)
+            (s012 s112 s122 s022)
+            (s112 s212 s222 s122)
+            (s212 s312 s322 s222)
+            (s022 s122 s132 s032)
+            (s122 s222 s232 s132)
+            (s222 s322 s332 s232)
+        );
+    }
+    nonCoupleStationary
+    {
+        type wall;
+        faces
+        (
+            (s110 s111 s211 s210)
+            (s210 s211 s221 s220)
+            (s220 s221 s121 s120)
+            (s120 s121 s111 s110)
+            (s111 s211 s121 s221)
+        );
+    }
+    nonCoupleRotating
+    {
+        type wall;
+        faces
+        (
+            (r000 r001 r101 r100)
+            (r100 r101 r111 r110)
+            (r110 r111 r011 r010)
+            (r010 r011 r001 r000)
+            (r001 r101 r111 r011)
+        );
+    }
+    cube
+    {
+        type wall;
+        faces
+        (
+            (c100 c000 c001 c101)
+            (c110 c100 c101 c111)
+            (c010 c110 c111 c011)
+            (c000 c010 c011 c001)
+            (c001 c101 c111 c011)
+        );
+    }
+    internal
+    {
+        type internal;
+        faces
+        ();
+    }
+);
+
+// ************************************************************************* //

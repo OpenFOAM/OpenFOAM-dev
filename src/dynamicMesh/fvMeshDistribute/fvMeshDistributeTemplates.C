@@ -220,6 +220,9 @@ void Foam::fvMeshDistribute::correctCoupledPatchFields()
 {
     UPtrList<GeoField> fields(mesh_.fields<GeoField>());
 
+    // Ensure the deltaCoeffs are available for constraint patch evaluation
+    mesh_.deltaCoeffs();
+
     forAll(fields, i)
     {
         GeoField& field = fields[i];

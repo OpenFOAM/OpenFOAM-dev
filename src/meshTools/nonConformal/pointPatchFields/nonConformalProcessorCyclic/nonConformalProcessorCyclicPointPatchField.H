@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef nonConformalProcessorCyclicPointPatchField_H
 #define nonConformalProcessorCyclicPointPatchField_H
 
-#include "pointPatchField.H"
+#include "coupledPointPatchField.H"
 #include "nonConformalProcessorCyclicPointPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -44,14 +44,20 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class nonConformalProcessorCyclicPointPatchField Declaration
+          Class nonConformalProcessorCyclicPointPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
 class nonConformalProcessorCyclicPointPatchField
 :
-    public pointPatchField<Type>
+    public coupledPointPatchField<Type>
 {
+    // Private Data
+
+        //- Local reference to processor patch
+        const nonConformalProcessorCyclicPointPatch& procPatch_;
+
+
 public:
 
     //- Runtime type information
@@ -85,16 +91,14 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct as copy setting nonConformalProcessorCyclic field
-        //  reference
+        //- Construct as copy setting internal field reference
         nonConformalProcessorCyclicPointPatchField
         (
             const nonConformalProcessorCyclicPointPatchField<Type>&,
             const DimensionedField<Type, pointMesh>&
         );
 
-        //- Construct and return a clone setting nonConformalProcessorCyclic
-        //  field reference
+        //- Construct and return a clone setting internal field reference
         virtual autoPtr<pointPatchField<Type>> clone
         (
             const DimensionedField<Type, pointMesh>& iF
@@ -109,6 +113,28 @@ public:
                 )
             );
         }
+
+        //- Construct and return a clone onto a new patch
+        //  setting internal field reference
+        virtual autoPtr<pointPatchField<Type>> clone
+        (
+            const pointPatch& patch,
+            const DimensionedField<Type, pointMesh>& iF
+        ) const
+        {
+            return autoPtr<pointPatchField<Type>>
+            (
+                new nonConformalProcessorCyclicPointPatchField<Type>
+                (
+                    patch,
+                    iF
+                )
+            );
+        }
+
+
+    //- Destructor
+    virtual ~nonConformalProcessorCyclicPointPatchField();
 };
 
 

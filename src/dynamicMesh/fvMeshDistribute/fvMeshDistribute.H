@@ -280,6 +280,9 @@ class fvMeshDistribute
                 List<Map<label>>& procPatchID
             );
 
+            //- Add non-conformal processor cyclic patches. Changes the mesh.
+            void addNccProcPatches();
+
             //- Get boundary faces to be repatched. Is -1 or new patchID
             static labelList getBoundaryPatch
             (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,8 +37,7 @@ Foam::processorCyclicPointPatchField<Type>::processorCyclicPointPatchField
 )
 :
     coupledPointPatchField<Type>(p, iF),
-    procPatch_(refCast<const processorCyclicPointPatch>(p)),
-    receiveBuf_(0)
+    procPatch_(refCast<const processorCyclicPointPatch>(p))
 {}
 
 
@@ -51,8 +50,7 @@ Foam::processorCyclicPointPatchField<Type>::processorCyclicPointPatchField
 )
 :
     coupledPointPatchField<Type>(p, iF, dict),
-    procPatch_(refCast<const processorCyclicPointPatch>(p)),
-    receiveBuf_(0)
+    procPatch_(refCast<const processorCyclicPointPatch>(p))
 {}
 
 
@@ -66,8 +64,7 @@ Foam::processorCyclicPointPatchField<Type>::processorCyclicPointPatchField
 )
 :
     coupledPointPatchField<Type>(ptf, p, iF, mapper),
-    procPatch_(refCast<const processorCyclicPointPatch>(ptf.patch())),
-    receiveBuf_(0)
+    procPatch_(refCast<const processorCyclicPointPatch>(ptf.patch()))
 {}
 
 
@@ -79,8 +76,7 @@ Foam::processorCyclicPointPatchField<Type>::processorCyclicPointPatchField
 )
 :
     coupledPointPatchField<Type>(ptf, iF),
-    procPatch_(refCast<const processorCyclicPointPatch>(ptf.patch())),
-    receiveBuf_(0)
+    procPatch_(refCast<const processorCyclicPointPatch>(ptf.patch()))
 {}
 
 

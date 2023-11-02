@@ -338,6 +338,7 @@ int main(int argc, char *argv[])
             );
         }
     };
+
     appendErrorPatches(true);
     appendErrorPatches(false);
 
@@ -400,8 +401,8 @@ int main(int argc, char *argv[])
                         if
                         (
                             (
-                                (first && proci < Pstream::myProcNo())
-                             || (!first && proci > Pstream::myProcNo())
+                                (first && proci > Pstream::myProcNo())
+                             || (!first && proci < Pstream::myProcNo())
                             )
                          && procHasPatchB[proci]
                         )

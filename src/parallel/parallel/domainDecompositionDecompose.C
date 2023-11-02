@@ -175,8 +175,7 @@ Foam::labelList Foam::domainDecomposition::distributeCells()
 }
 
 
-template<class BinaryOp>
-inline void Foam::domainDecomposition::processInterCyclics
+void Foam::domainDecomposition::processInterCyclics
 (
     const labelList& cellProc,
     const polyBoundaryMesh& patches,
@@ -185,7 +184,7 @@ inline void Foam::domainDecomposition::processInterCyclics
     List<labelListList>& subPatchIDs,
     List<labelListList>& subPatchStarts,
     bool owner,
-    BinaryOp bop
+    bool first
 ) const
 {
     // Processor boundaries from split cyclics
@@ -216,7 +215,11 @@ inline void Foam::domainDecomposition::processInterCyclics
                     const label nbrProc =
                         cellProc[nbrOrigPatchFaceCells[nbrOrigFacei]];
 
-                    if (bop(ownerProc, nbrProc))
+                    if
+                    (
+                        (first && ownerProc < nbrProc)
+                     || (!first && ownerProc > nbrProc)
+                    )
                     {
                         addInterProcFace
                         (
@@ -249,7 +252,11 @@ inline void Foam::domainDecomposition::processInterCyclics
                 const label ownerProc = cellProc[patchFaceCells[facei]];
                 const label nbrProc = cellProc[nbrPatchFaceCells[facei]];
 
-                if (bop(ownerProc, nbrProc))
+                if
+                (
+                    (first && ownerProc < nbrProc)
+                 || (!first && ownerProc > nbrProc)
+                )
                 {
                     addInterProcFace
                     (
@@ -449,7 +456,7 @@ void Foam::domainDecomposition::decompose()
         subPatchIDs,
         subPatchStarts,
         true,
-        lessOp<label>()
+        true
     );
 
     processInterCyclics
@@ -461,7 +468,7 @@ void Foam::domainDecomposition::decompose()
         subPatchIDs,
         subPatchStarts,
         false,
-        lessOp<label>()
+        true
     );
 
     processInterCyclics
@@ -473,7 +480,7 @@ void Foam::domainDecomposition::decompose()
         subPatchIDs,
         subPatchStarts,
         false,
-        greaterOp<label>()
+        false
     );
 
     processInterCyclics
@@ -485,7 +492,7 @@ void Foam::domainDecomposition::decompose()
         subPatchIDs,
         subPatchStarts,
         true,
-        greaterOp<label>()
+        false
     );
 
     // Sort inter-proc patch by neighbour

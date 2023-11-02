@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,6 +56,7 @@ class processorPointPatchField
 
         //- Local reference to processor patch
         const processorPointPatch& procPatch_;
+
 
 public:
 
@@ -112,7 +113,8 @@ public:
             );
         }
 
-        //- Construct and return a clone setting internal field reference
+        //- Construct and return a clone onto a new patch
+        //  setting internal field reference
         virtual autoPtr<pointPatchField<Type>> clone
         (
             const pointPatch& patch,

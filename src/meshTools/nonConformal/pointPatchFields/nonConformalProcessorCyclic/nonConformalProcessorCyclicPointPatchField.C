@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,8 @@ nonConformalProcessorCyclicPointPatchField
     const DimensionedField<Type, pointMesh>& iF
 )
 :
-    pointPatchField<Type>(p, iF)
+    coupledPointPatchField<Type>(p, iF),
+    procPatch_(refCast<const nonConformalProcessorCyclicPointPatch>(p))
 {}
 
 
@@ -48,18 +49,9 @@ nonConformalProcessorCyclicPointPatchField
     const dictionary& dict
 )
 :
-    pointPatchField<Type>(p, iF, dict)
+    coupledPointPatchField<Type>(p, iF, dict),
+    procPatch_(refCast<const nonConformalProcessorCyclicPointPatch>(p))
 {
-    if (!isType<nonConformalProcessorCyclicPointPatch>(p))
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "patch " << this->patch().index() << " not "
-            << nonConformalProcessorCyclicPointPatch::typeName << " type. "
-            << "Patch type = " << p.type()
-            << exit(FatalIOError);
-    }
 }
 
 
@@ -73,18 +65,12 @@ nonConformalProcessorCyclicPointPatchField
     const pointPatchFieldMapper& mapper
 )
 :
-    pointPatchField<Type>(ptf, p, iF, mapper)
-{
-    if (!isType<nonConformalProcessorCyclicPointPatch>(this->patch()))
-    {
-        FatalErrorInFunction
-            << "Field type does not correspond to patch type for patch "
-            << this->patch().index() << "." << endl
-            << "Field type: " << typeName << endl
-            << "Patch type: " << this->patch().type()
-            << exit(FatalError);
-    }
-}
+    coupledPointPatchField<Type>(ptf, p, iF, mapper),
+    procPatch_
+    (
+        refCast<const nonConformalProcessorCyclicPointPatch>(ptf.patch())
+    )
+{}
 
 
 template<class Type>
@@ -95,7 +81,19 @@ nonConformalProcessorCyclicPointPatchField
     const DimensionedField<Type, pointMesh>& iF
 )
 :
-    pointPatchField<Type>(ptf, iF)
+    coupledPointPatchField<Type>(ptf, iF),
+    procPatch_
+    (
+        refCast<const nonConformalProcessorCyclicPointPatch>(ptf.patch())
+    )
+{}
+
+
+// * * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::nonConformalProcessorCyclicPointPatchField<Type>::
+~nonConformalProcessorCyclicPointPatchField()
 {}
 
 

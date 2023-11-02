@@ -26,6 +26,7 @@ License
 #include "fvMeshDistribute.H"
 #include "fvMeshAdder.H"
 #include "processorCyclicFvPatchField.H"
+#include "nonConformalProcessorCyclicFvPatchField.H"
 #include "polyTopoChange.H"
 #include "removeCells.H"
 #include "polyModifyFace.H"
@@ -1366,8 +1367,8 @@ void Foam::fvMeshDistribute::addProcPatches
                 }
                 else
                 {
-                    const coupledPolyPatch& pcPatch
-                        = refCast<const coupledPolyPatch>
+                    const coupledPolyPatch& pcPatch =
+                          refCast<const coupledPolyPatch>
                           (
                               mesh_.boundaryMesh()[referPatchID[bFacei]]
                           );
@@ -1397,6 +1398,85 @@ void Foam::fvMeshDistribute::addProcPatches
                 }
             }
         }
+    }
+}
+
+
+void Foam::fvMeshDistribute::addNccProcPatches()
+{
+    forAll(mesh_.boundaryMesh(), nccPatchi)
+    {
+        const polyPatch& pp = mesh_.boundaryMesh()[nccPatchi];
+
+        if (!isA<nonConformalCyclicPolyPatch>(pp)) continue;
+
+        const nonConformalCyclicPolyPatch& nccPp =
+            refCast<const nonConformalCyclicPolyPatch>(pp);
+        const polyPatch& origPp = nccPp.origPatch();
+
+        const nonConformalCyclicPolyPatch& nbrNccPp = nccPp.nbrPatch();
+        const polyPatch& nbrOrigPp = nbrNccPp.origPatch();
+
+        if (!nccPp.owner()) continue;
+
+        boolList procHasOrig(Pstream::nProcs(), false);
+        procHasOrig[Pstream::myProcNo()] = !origPp.empty();
+        Pstream::gatherList(procHasOrig);
+        Pstream::scatterList(procHasOrig);
+
+        boolList procHasNbrOrig(Pstream::nProcs(), false);
+        procHasNbrOrig[Pstream::myProcNo()] = !nbrOrigPp.empty();
+        Pstream::gatherList(procHasNbrOrig);
+        Pstream::scatterList(procHasNbrOrig);
+
+        auto add = [&](const bool owner, const bool first)
+        {
+            const boolList& procHasPatchA =
+                owner ? procHasOrig : procHasNbrOrig;
+            const boolList& procHasPatchB =
+                owner ? procHasNbrOrig : procHasOrig;
+
+            if (procHasPatchA[Pstream::myProcNo()])
+            {
+                forAll(procHasPatchB, proci)
+                {
+                    if
+                    (
+                        (
+                            (first && proci > Pstream::myProcNo())
+                         || (!first && proci < Pstream::myProcNo())
+                        )
+                     && procHasPatchB[proci]
+                    )
+                    {
+                        fvMeshTools::addPatch
+                        (
+                            mesh_,
+                            nonConformalProcessorCyclicPolyPatch
+                            (
+                                0,
+                                mesh_.nFaces(),
+                                mesh_.boundaryMesh().size(),
+                                mesh_.boundaryMesh(),
+                                Pstream::myProcNo(),
+                                proci,
+                                owner ? nccPp.name() : nbrNccPp.name(),
+                                owner ? origPp.name() : nbrOrigPp.name()
+                            ),
+                            dictionary(),   // optional per field patchField
+                            nonConformalProcessorCyclicFvPatchField<scalar>::
+                                typeName,
+                            false           // not parallel sync
+                        );
+                    }
+                }
+            }
+        };
+
+        add(true, true);
+        add(false, true);
+        add(false, false);
+        add(true, false);
     }
 }
 
@@ -2009,7 +2089,6 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
         inplaceReorder(bFaceMap, sourceNbrPatch);
         inplaceReorder(bFaceMap, sourceNewNbrProc);
     }
-
 
 
     // Print a bit.
@@ -2999,6 +3078,11 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
     // we also need to adapt our constructMaps.
     repatch(newPatchID, constructFaceMap);
 
+    // Add any nonConformalProcessorCyclic patches. These are empty at the
+    // moment, as the mesh should not be stitched when distributing. So, we
+    // don't need to do any re-patching like with the processor patches.
+    addNccProcPatches();
+
     // Correct coupled patch fields
     correctCoupledPatchFields<volScalarField>();
     correctCoupledPatchFields<volVectorField>();
@@ -3007,6 +3091,7 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
     correctCoupledPatchFields<volTensorField>();
 
     mesh_.setInstance(mesh_.time().name());
+
 
     // Print a bit
     if (debug)
