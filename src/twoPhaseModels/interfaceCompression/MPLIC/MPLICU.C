@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,13 +47,13 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLICU::interpolate
 {
     tmp<surfaceScalarField> tvff(upwind<scalar>(mesh(), phi_).interpolate(vf));
 
-    scalarField spicedTvff
+    scalarField splicedTvff
     (
         slicedSurfaceScalarField
         (
             IOobject
             (
-                "spicedTvff",
+                "splicedTvff",
                 mesh().time().name(),
                 mesh()
             ),
@@ -62,7 +62,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLICU::interpolate
         ).splice()
     );
 
-    return surfaceAlpha(vf, phi_, spicedTvff, false, 1e-6);
+    return surfaceAlpha(vf, phi_, splicedTvff, false, 1e-6);
 }
 
 // ************************************************************************* //

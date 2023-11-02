@@ -118,7 +118,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::surfaceAlpha
     }
 
     // Flatten down phi flux field
-    const scalarField slicedPhi
+    const scalarField splicedPhi
     (
         slicedSurfaceScalarField
         (
@@ -164,7 +164,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::surfaceAlpha
                 setCellAlphaf
                 (
                     celli,
-                    slicedPhi,
+                    splicedPhi,
                     alphaf,
                     correctedFaces,
                     cutCell.alphaf(),
@@ -195,7 +195,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::surfaceAlpha
     }
 
     // Convert the alphaPhi spliced field into a surfaceScalarField
-    tmp<surfaceScalarField> tslicedAlpha
+    tmp<surfaceScalarField> tsplicedAlpha
     (
         surfaceScalarField::New
         (
@@ -216,18 +216,18 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::surfaceAlpha
             fvsPatchField<scalar>::calculatedType()
         )
     );
-    surfaceScalarField& slicedAlpha = tslicedAlpha.ref();
+    surfaceScalarField& splicedAlpha = tsplicedAlpha.ref();
 
     forAll(mesh.boundary(), patchi)
     {
         if (alpha.boundaryField()[patchi].fixesValue())
         {
-            slicedAlpha.boundaryFieldRef()[patchi] =
+            splicedAlpha.boundaryFieldRef()[patchi] =
                 alpha.boundaryField()[patchi];
         }
     }
 
-    return tslicedAlpha;
+    return tsplicedAlpha;
 }
 
 
@@ -240,13 +240,13 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::interpolate
 {
     tmp<surfaceScalarField> tvff(upwind<scalar>(mesh(), phi_).interpolate(vf));
 
-    scalarField slicedTvff
+    scalarField splicedTvff
     (
         slicedSurfaceScalarField
         (
             IOobject
             (
-                "slicedTvff",
+                "splicedTvff",
                 mesh().time().name(),
                 mesh()
             ),
@@ -255,7 +255,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::interpolate
         ).splice()
     );
 
-    return surfaceAlpha(vf, phi_, slicedTvff, true, 1e-6);
+    return surfaceAlpha(vf, phi_, splicedTvff, true, 1e-6);
 }
 
 
