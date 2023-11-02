@@ -142,7 +142,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve
     }
 
     // Set the time blending factor, 1 for Euler
-    scalar cnCoeff = 1.0/(1.0 + ocCoeff);
+    const scalar cnCoeff = 1.0/(1.0 + ocCoeff);
 
     tmp<surfaceScalarField> phiCN(phi);
 
@@ -232,13 +232,23 @@ void Foam::solvers::twoPhaseSolver::alphaSolve
 
     for (int aCorr=0; aCorr<nAlphaCorr; aCorr++)
     {
+        tmp<volScalarField> talpha1CN(alpha1);
+
+        if (ocCoeff > 0)
+        {
+            // Preserve the BCs of alpha1 in alpha1CN for interpolation
+            talpha1CN = alpha1.clone();
+            talpha1CN.ref() ==
+                (cnCoeff*alpha1 + (1.0 - cnCoeff)*alpha1.oldTime())();
+        }
+
         // Split operator
         tmp<surfaceScalarField> talphaPhi1Un
         (
             alphaPhi
             (
                 phiCN(),
-                (cnCoeff*alpha1 + (1.0 - cnCoeff)*alpha1.oldTime())(),
+                talpha1CN(),
                 alphaControls
             )
         );
