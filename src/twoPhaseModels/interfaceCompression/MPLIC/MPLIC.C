@@ -118,7 +118,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::surfaceAlpha
     }
 
     // Flatten down phi flux field
-    const scalarField spicedPhi
+    const scalarField slicedPhi
     (
         slicedSurfaceScalarField
         (
@@ -164,7 +164,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::surfaceAlpha
                 setCellAlphaf
                 (
                     celli,
-                    spicedPhi,
+                    slicedPhi,
                     alphaf,
                     correctedFaces,
                     cutCell.alphaf(),
@@ -240,13 +240,13 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::interpolate
 {
     tmp<surfaceScalarField> tvff(upwind<scalar>(mesh(), phi_).interpolate(vf));
 
-    scalarField spicedTvff
+    scalarField slicedTvff
     (
         slicedSurfaceScalarField
         (
             IOobject
             (
-                "spicedTvff",
+                "slicedTvff",
                 mesh().time().name(),
                 mesh()
             ),
@@ -255,7 +255,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MPLIC::interpolate
         ).splice()
     );
 
-    return surfaceAlpha(vf, phi_, spicedTvff, true, 1e-6);
+    return surfaceAlpha(vf, phi_, slicedTvff, true, 1e-6);
 }
 
 
