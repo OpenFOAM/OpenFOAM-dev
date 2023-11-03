@@ -1429,7 +1429,7 @@ bool Foam::fvMeshStitcher::connect
     if (mesh_.moving())
     {
         surfaceScalarField phi(mesh_.phi());
-        for (label i = 1; i < mesh_.phi().nOldTimes(false); ++ i)
+        for (label i = 1; i <= mesh_.phi().nOldTimes(false); ++ i)
         {
             phi.oldTime(i) == mesh_.phi().oldTime(i);
         }
