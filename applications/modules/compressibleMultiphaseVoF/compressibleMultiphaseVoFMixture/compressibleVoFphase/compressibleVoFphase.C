@@ -47,11 +47,11 @@ Foam::compressibleVoFphase::compressibleVoFphase
         mesh,
         dimensionedScalar(dimless, 0)
     ),
-    dgdt_
+    vDot_
     (
         IOobject
         (
-            IOobject::groupName("dgdt", name),
+            IOobject::groupName("vDot", name),
             mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,

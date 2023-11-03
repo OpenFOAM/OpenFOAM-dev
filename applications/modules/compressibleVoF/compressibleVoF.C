@@ -58,11 +58,11 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
 
     p(mixture_.p()),
 
-    dgdt
+    vDot
     (
         IOobject
         (
-            "dgdt",
+            "vDot",
             runTime.name(),
             mesh,
             IOobject::READ_IF_PRESENT,

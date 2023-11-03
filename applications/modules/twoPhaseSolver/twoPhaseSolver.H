@@ -128,7 +128,8 @@ protected:
         virtual void alphaSuSp
         (
             tmp<volScalarField::Internal>& Su,
-            tmp<volScalarField::Internal>& Sp
+            tmp<volScalarField::Internal>& Sp,
+            const dictionary& alphaControls
         ) = 0;
 
         //- Correct the interface properties following mesh-change

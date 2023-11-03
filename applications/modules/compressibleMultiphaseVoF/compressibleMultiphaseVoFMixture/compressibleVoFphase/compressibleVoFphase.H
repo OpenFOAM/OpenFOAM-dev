@@ -67,7 +67,7 @@ class compressibleVoFphase
         volScalarField Alpha_;
 
         //- Phase compressibility contribution
-        volScalarField::Internal dgdt_;
+        volScalarField::Internal vDot_;
 
 
 public:
@@ -140,15 +140,15 @@ public:
         }
 
         //- Return const-access to phase divergence
-        const volScalarField::Internal& dgdt() const
+        const volScalarField::Internal& vDot() const
         {
-            return dgdt_;
+            return vDot_;
         }
 
         //- Return access to phase divergence
-        volScalarField::Internal& dgdt()
+        volScalarField::Internal& vDot()
         {
-            return dgdt_;
+            return vDot_;
         }
 
         void correct

@@ -135,7 +135,7 @@ void Foam::solvers::compressibleMultiphaseVoF::alphaSolve
                 mesh
             ),
             mesh,
-            dimensionedScalar(alpha.dgdt().dimensions(), 0)
+            dimensionedScalar(alpha.vDot().dimensions(), 0)
         );
 
         volScalarField::Internal Su
@@ -152,18 +152,18 @@ void Foam::solvers::compressibleMultiphaseVoF::alphaSolve
         );
 
         {
-            const scalarField& dgdt = alpha.dgdt();
+            const scalarField& vDot = alpha.vDot();
 
-            forAll(dgdt, celli)
+            forAll(vDot, celli)
             {
-                if (dgdt[celli] < 0.0 && alpha[celli] > 0.0)
+                if (vDot[celli] < 0.0 && alpha[celli] > 0.0)
                 {
-                    Sp[celli] += dgdt[celli]*alpha[celli];
-                    Su[celli] -= dgdt[celli]*alpha[celli];
+                    Sp[celli] += vDot[celli]*alpha[celli];
+                    Su[celli] -= vDot[celli]*alpha[celli];
                 }
-                else if (dgdt[celli] > 0.0 && alpha[celli] < 1.0)
+                else if (vDot[celli] > 0.0 && alpha[celli] < 1.0)
                 {
-                    Sp[celli] -= dgdt[celli]*(1.0 - alpha[celli]);
+                    Sp[celli] -= vDot[celli]*(1.0 - alpha[celli]);
                 }
             }
         }
@@ -175,18 +175,18 @@ void Foam::solvers::compressibleMultiphaseVoF::alphaSolve
 
             if (&alpha2 == &alpha) continue;
 
-            const scalarField& dgdt2 = alpha2.dgdt();
+            const scalarField& vDot2 = alpha2.vDot();
 
-            forAll(dgdt2, celli)
+            forAll(vDot2, celli)
             {
-                if (dgdt2[celli] > 0.0 && alpha2[celli] < 1.0)
+                if (vDot2[celli] > 0.0 && alpha2[celli] < 1.0)
                 {
-                    Sp[celli] -= dgdt2[celli]*(1.0 - alpha2[celli]);
-                    Su[celli] += dgdt2[celli]*alpha[celli];
+                    Sp[celli] -= vDot2[celli]*(1.0 - alpha2[celli]);
+                    Su[celli] += vDot2[celli]*alpha[celli];
                 }
-                else if (dgdt2[celli] < 0.0 && alpha2[celli] > 0.0)
+                else if (vDot2[celli] < 0.0 && alpha2[celli] > 0.0)
                 {
-                    Sp[celli] += dgdt2[celli]*alpha2[celli];
+                    Sp[celli] += vDot2[celli]*alpha2[celli];
                 }
             }
         }

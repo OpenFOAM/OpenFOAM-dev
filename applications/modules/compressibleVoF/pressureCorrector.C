@@ -185,7 +185,7 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
 
             if (pimple.finalNonOrthogonalIter())
             {
-                dgdt =
+                vDot =
                 (
                     alpha1*(p_rghEqnComp2 & p_rgh)
                   - alpha2*(p_rghEqnComp1 & p_rgh)

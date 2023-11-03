@@ -49,7 +49,8 @@ Foam::solvers::incompressibleDriftFlux::alphaPhi
 void Foam::solvers::incompressibleDriftFlux::alphaSuSp
 (
     tmp<volScalarField::Internal>& tSu,
-    tmp<volScalarField::Internal>& tSp
+    tmp<volScalarField::Internal>& tSp,
+    const dictionary& alphaControls
 )
 {
     if (!divergent()) return;

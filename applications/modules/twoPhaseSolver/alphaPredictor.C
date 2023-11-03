@@ -171,7 +171,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve
     tmp<volScalarField::Internal> Su;
     tmp<volScalarField::Internal> Sp;
 
-    alphaSuSp(Su, Sp);
+    alphaSuSp(Su, Sp, alphaControls);
 
     if (MULESCorr)
     {

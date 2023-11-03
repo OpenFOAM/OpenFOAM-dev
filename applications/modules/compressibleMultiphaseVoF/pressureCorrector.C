@@ -140,7 +140,7 @@ void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
                 {
                     compressibleVoFphase& phase = phases[phasei];
 
-                    phase.dgdt() =
+                    phase.vDot() =
                         pos0(phase)
                        *(p_rghEqnComps[phasei] & p_rgh)/phase.thermo().rho();
                 }

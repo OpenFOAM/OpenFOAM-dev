@@ -31,10 +31,16 @@ License
 void Foam::solvers::compressibleVoF::alphaSuSp
 (
     tmp<volScalarField::Internal>& tSu,
-    tmp<volScalarField::Internal>& tSp
+    tmp<volScalarField::Internal>& tSp,
+    const dictionary& alphaControls
 )
 {
-    const dimensionedScalar Szero(dgdt.dimensions(), 0);
+    const scalar vDotResidualAlpha
+    (
+        alphaControls.lookupOrDefault("vDotResidualAlpha", 1e-4)
+    );
+
+    const dimensionedScalar Szero(vDot.dimensions(), 0);
 
     tSp = volScalarField::Internal::New("Sp", mesh, Szero);
     tSu = volScalarField::Internal::New("Su", mesh, Szero);
@@ -66,16 +72,18 @@ void Foam::solvers::compressibleVoF::alphaSuSp
         Sp += alpha1ByRho2*alphaRho2Sup.Sp();
     }
 
-    forAll(dgdt, celli)
+    forAll(vDot, celli)
     {
-        if (dgdt[celli] > 0.0)
+        if (vDot[celli] > 0.0)
         {
-            Sp[celli] -= dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
-            Su[celli] += dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
+            Sp[celli] -=
+                vDot[celli]/max(1.0 - alpha1[celli], vDotResidualAlpha);
+            Su[celli] +=
+                vDot[celli]/max(1.0 - alpha1[celli], vDotResidualAlpha);
         }
-        else if (dgdt[celli] < 0.0)
+        else if (vDot[celli] < 0.0)
         {
-            Sp[celli] += dgdt[celli]/max(alpha1[celli], 1e-4);
+            Sp[celli] += vDot[celli]/max(alpha1[celli], vDotResidualAlpha);
         }
     }
 }

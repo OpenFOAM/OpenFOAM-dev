@@ -31,7 +31,8 @@ License
 void Foam::solvers::incompressibleVoF::alphaSuSp
 (
     tmp<volScalarField::Internal>& tSu,
-    tmp<volScalarField::Internal>& tSp
+    tmp<volScalarField::Internal>& tSp,
+    const dictionary& alphaControls
 )
 {
     if (!divergent()) return;

@@ -64,6 +64,11 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
         alphaControls.lookupOrDefault<Switch>("meanFluxReference", false)
     );
 
+    const scalar vDotResidualAlpha
+    (
+        alphaControls.lookupOrDefault("vDotResidualAlpha", 1e-4)
+    );
+
     // Optional reference phase which is not solved for
     // but obtained from the sum of the other phases
     phaseModel* referencePhasePtr = nullptr;
@@ -172,11 +177,11 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
             if (dilatation)
             {
                 // Construct the dilatation rate source term
-                volScalarField::Internal dgdt
+                volScalarField::Internal vDot
                 (
                     volScalarField::Internal::New
                     (
-                        "dgdt",
+                        "vDot",
                         mesh_,
                         dimensionedScalar(dimless/dimTime, 0)
                     )
@@ -191,12 +196,12 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
                     {
                         if (!phase.stationary() && phase.divU().valid())
                         {
-                            dgdt += alpha2()*phase.divU()()();
+                            vDot += alpha2()*phase.divU()()();
                         }
 
                         if (!phase2.stationary() && phase2.divU().valid())
                         {
-                            dgdt -= alpha()*phase2.divU()()();
+                            vDot -= alpha()*phase2.divU()()();
                         }
                     }
                 }
@@ -204,16 +209,22 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
                 volScalarField::Internal& Sp = Sps[phasei];
                 volScalarField::Internal& Su = Sus[phasei];
 
-                forAll(dgdt, celli)
+                forAll(vDot, celli)
                 {
-                    if (dgdt[celli] > 0)
+                    if (vDot[celli] > 0)
                     {
-                        Sp[celli] -= dgdt[celli]/max(1 - alpha[celli], 1e-4);
-                        Su[celli] += dgdt[celli]/max(1 - alpha[celli], 1e-4);
+                        Sp[celli] -=
+                            vDot[celli]
+                           /max(1 - alpha[celli], vDotResidualAlpha);
+                        Su[celli] +=
+                            vDot[celli]
+                           /max(1 - alpha[celli], vDotResidualAlpha);
                     }
-                    else if (dgdt[celli] < 0)
+                    else if (vDot[celli] < 0)
                     {
-                        Sp[celli] += dgdt[celli]/max(alpha[celli], 1e-4);
+                        Sp[celli] +=
+                            vDot[celli]
+                           /max(alpha[celli], vDotResidualAlpha);
                     }
                 }
             }
