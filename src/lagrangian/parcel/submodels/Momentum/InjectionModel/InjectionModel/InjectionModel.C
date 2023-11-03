@@ -281,7 +281,7 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
     // Found it. Construct the barycentric coordinates.
     if (proci == Pstream::myProcNo())
     {
-        label nLocateBoundaryHits;
+        label nLocateBoundaryHits = 0;
         particle p(this->owner().mesh(), pos, celli, nLocateBoundaryHits);
 
         if (nLocateBoundaryHits != 0)
