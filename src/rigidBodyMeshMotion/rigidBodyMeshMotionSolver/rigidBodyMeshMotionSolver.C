@@ -26,7 +26,7 @@ License
 #include "rigidBodyMeshMotionSolver.H"
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
-#include "pointPatchDist.H"
+#include "pointDist.H"
 #include "pointConstraints.H"
 #include "timeIOdictionary.H"
 #include "uniformDimensionedFields.H"

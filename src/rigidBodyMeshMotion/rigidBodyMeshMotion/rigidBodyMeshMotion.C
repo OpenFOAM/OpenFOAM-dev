@@ -26,7 +26,7 @@ License
 #include "rigidBodyMeshMotion.H"
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
-#include "pointPatchDist.H"
+#include "pointDist.H"
 #include "pointConstraints.H"
 #include "timeIOdictionary.H"
 #include "uniformDimensionedFields.H"
@@ -223,7 +223,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
     // Calculate scaling factor everywhere for each meshed body
     forAll(bodyMeshes_, bi)
     {
-        const pointPatchDist pDist(pMesh, bodyMeshes_[bi].patchSet_, points0());
+        const pointDist pDist(pMesh, bodyMeshes_[bi].patchSet_, points0());
 
         bodyMeshes_[bi].weight_.primitiveFieldRef() =
             bodyMeshes_[bi].weight(pDist.primitiveField());
@@ -453,7 +453,7 @@ void Foam::rigidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
         // Calculate scaling factor everywhere for each meshed body
         forAll(bodyMeshes_, bi)
         {
-            const pointPatchDist pDist
+            const pointDist pDist
             (
                 pMesh,
                 bodyMeshes_[bi].patchSet_,

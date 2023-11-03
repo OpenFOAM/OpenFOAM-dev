@@ -128,8 +128,8 @@ createShellMesh/createShellMesh.C
 polyMeshFilter/polyMeshFilterSettings.C
 polyMeshFilter/polyMeshFilter.C
 
-pointPatchDist/externalPointEdgePoint.C
-pointPatchDist/pointPatchDist.C
+pointDist/externalPointEdgePoint.C
+pointDist/pointDist.C
 
 pointInterpolator/dynamicMeshPointInterpolator.C
 

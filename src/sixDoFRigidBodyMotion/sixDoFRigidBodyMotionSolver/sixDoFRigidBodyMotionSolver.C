@@ -25,7 +25,7 @@ License
 
 #include "sixDoFRigidBodyMotionSolver.H"
 #include "polyMesh.H"
-#include "pointPatchDist.H"
+#include "pointDist.H"
 #include "pointConstraints.H"
 #include "timeIOdictionary.H"
 #include "uniformDimensionedFields.H"
@@ -117,7 +117,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
     {
         const pointMesh& pMesh = pointMesh::New(mesh);
 
-        pointPatchDist pDist(pMesh, patchSet_, points0());
+        pointDist pDist(pMesh, patchSet_, points0());
 
         // Scaling: 1 up to di then linear down to 0 at do away from patches
         scale_.primitiveFieldRef() =

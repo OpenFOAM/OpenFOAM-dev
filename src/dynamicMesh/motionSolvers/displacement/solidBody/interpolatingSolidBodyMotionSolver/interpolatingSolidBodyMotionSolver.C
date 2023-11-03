@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "interpolatingSolidBodyMotionSolver.H"
 #include "addToRunTimeSelectionTable.H"
-#include "pointPatchDist.H"
+#include "pointDist.H"
 #include "pointConstraints.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,7 +49,7 @@ void Foam::interpolatingSolidBodyMotionSolver::calcScale()
 {
     const pointMesh& pMesh = pointMesh::New(mesh());
 
-    pointPatchDist pDist(pMesh, patchSet_, points0());
+    pointDist pDist(pMesh, patchSet_, points0());
 
     // Scaling: 1 up to di then linear down to 0 at do away from patches
     scale_.primitiveFieldRef() =
