@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,13 +39,25 @@ const Foam::volVectorField& Foam::surfaceToVolVelocity
 
     const word UfName(Uf.member());
 
-    if (UfName.back() != 'f')
+    // Find where the old-time suffixes end
+    string::size_type i = UfName.size();
+    while (i > 0 && UfName(i - 2, 2) == "_0") i -= 2;
+
+    // Split into current name and old-time suffix
+    const word UfCurName = UfName(i);
+    const word Uf_0 = UfName(i, UfName.size());
+
+    if (UfCurName.back() != 'f')
     {
         return volVectorField::null();
     }
 
     const word Uname =
-        IOobject::groupName(UfName(UfName.size() - 1), Uf.group());
+        IOobject::groupName
+        (
+            UfCurName(UfCurName.size() - 1) + Uf_0,
+            Uf.group()
+        );
 
     if (!Uf.mesh().foundObject<volVectorField>(Uname))
     {
