@@ -62,7 +62,7 @@ class pointDist
         const labelHashSet patchIDs_;
 
         //- Sets of internal points for which the distance is 0
-        const UPtrList<labelList> internalPoints_;
+        const UPtrList<const labelList> internalPoints_;
 
         //- Number of unset points
         label nUnset_;
@@ -87,7 +87,7 @@ public:
         (
             const pointMesh& pMesh,
             const labelHashSet& patchIDs,
-            const UPtrList<labelList>& internalPoints,
+            const UPtrList<const labelList>& internalPoints,
             const pointField& points
         );
 

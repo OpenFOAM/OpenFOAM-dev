@@ -60,7 +60,7 @@ Foam::pointDist::pointDist
 (
     const pointMesh& pMesh,
     const labelHashSet& patchIDs,
-    const UPtrList<labelList>& internalPoints,
+    const UPtrList<const labelList>& internalPoints,
     const pointField& points
 )
 :
@@ -186,6 +186,17 @@ void Foam::pointDist::correct()
         else
         {
             nUnset_++;
+        }
+    }
+
+    forAll(internalPoints_, i)
+    {
+        const labelList& internalPointsi = internalPoints_[i];
+
+        forAll(internalPointsi, j)
+        {
+            const label meshPointi = internalPointsi[j];
+            psf[meshPointi] = 0;
         }
     }
 }
