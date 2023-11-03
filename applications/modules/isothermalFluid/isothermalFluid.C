@@ -314,9 +314,9 @@ void Foam::solvers::isothermalFluid::preSolve()
     {
         rhoU = new volVectorField("rhoU", rho*U);
 
-        if (rhoUf().nOldTimes() > 1)
+        for (label i = 1; i <= rhoUf().nOldTimes(false); ++ i)
         {
-            rhoU0 = new volVectorField("rhoU_0", rho.oldTime()*U.oldTime());
+            rhoU().oldTime(i) == rho.oldTime(i)*U.oldTime(i);
         }
     }
 
