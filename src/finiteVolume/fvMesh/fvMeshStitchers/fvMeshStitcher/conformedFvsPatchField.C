@@ -95,6 +95,7 @@ void Foam::conformedFvsPatchField<Type>::conform
             )
         );
 
+        pF() == origBf[origPatchi];
         pF->origFieldPtr_() == origBf[origPatchi];
         pF->ncFieldPtr_() == ncBf[origPatchi];
 
@@ -116,7 +117,7 @@ void Foam::conformedFvsPatchField<Type>::unconform
     const labelList origPatchIDs =
         nonConformalBoundary::New(iF.mesh()).allOrigPatchIDs();
 
-    // Extract the conformalalised orig and non-conformal boundary fields from
+    // Extract the conformed orig and non-conformal boundary fields from
     // the stored conformed patch fields
     PtrList<fvsPatchField<Type>> origPFs(fvbm.size());
     PtrList<fvsPatchField<Type>> ncPFs(fvbm.size());
@@ -126,6 +127,14 @@ void Foam::conformedFvsPatchField<Type>::unconform
 
         conformedFvsPatchField<Type>& cpF =
             refCast<conformedFvsPatchField<Type>>(bF[origPatchi]);
+
+        // If the mesh has topo-changed then maintained surface fields should
+        // have been mapped or re-interpolated. So, copy the value from the
+        // base field into the original field.
+        if (iF.mesh().topoChanged())
+        {
+            cpF.origFieldPtr_() = bF[origPatchi];
+        }
 
         origPFs.set(origPatchi, cpF.origFieldPtr_.ptr());
         ncPFs.set(origPatchi, cpF.ncFieldPtr_.ptr());
@@ -149,14 +158,24 @@ void Foam::conformedFvsPatchField<Type>::unconform
     typename SurfaceField<Type>::Boundary origBf(fvbm, iF, origPFs);
     typename SurfaceField<Type>::Boundary ncBf(fvbm, iF, ncPFs);
 
-    // Combine the conformed boundary fields to create the non-conformal
-    // boundary field
-    typename SurfaceField<Type>::Boundary result
-    (
-        iF,
-        fvMeshStitcherTools::unconformedBoundaryField(ncBf, origBf)
-    );
-    bF.transfer(result);
+    // If the mesh has topo-changed then just use the original parts and leave
+    // the non-conformal parts unset
+    if (iF.mesh().topoChanged())
+    {
+        typename SurfaceField<Type>::Boundary result(fvbm, iF, origPFs);
+        bF.transfer(result);
+    }
+    // If the mesh has not topo-changed, then combine the conformed boundary
+    // fields to create the non-conformal boundary field
+    else
+    {
+        typename SurfaceField<Type>::Boundary result
+        (
+            iF,
+            fvMeshStitcherTools::unconformedBoundaryField(ncBf, origBf)
+        );
+        bF.transfer(result);
+    }
 }
 
 
@@ -183,7 +202,7 @@ Foam::conformedFvsPatchField<Type>::conformedFvsPatchField
     const dictionary& dict
 )
 :
-    fvsPatchField<Type>(p, iF, dict, false),
+    fvsPatchField<Type>(p, iF, dict),
     origFieldPtr_
     (
         fvsPatchField<Type>::New(p, iF, dict.subDict("origField")).ptr()
@@ -204,7 +223,7 @@ Foam::conformedFvsPatchField<Type>::conformedFvsPatchField
     const fvPatchFieldMapper& mapper
 )
 :
-    fvsPatchField<Type>(ptf, p, iF, mapper, false),
+    fvsPatchField<Type>(ptf, p, iF, mapper),
     origFieldPtr_
     (
         fvsPatchField<Type>::New(ptf.origFieldPtr_(), p, iF, mapper).ptr()
@@ -244,6 +263,8 @@ void Foam::conformedFvsPatchField<Type>::map
     const fvPatchFieldMapper& mapper
 )
 {
+    fvsPatchField<Type>::map(ptf, mapper);
+
     if (isA<conformedFvsPatchField<Type>>(ptf))
     {
         const conformedFvsPatchField<Type>& cptf =
@@ -263,6 +284,8 @@ void Foam::conformedFvsPatchField<Type>::map
 template<class Type>
 void Foam::conformedFvsPatchField<Type>::reset(const fvsPatchField<Type>& ptf)
 {
+    fvsPatchField<Type>::reset(ptf);
+
     if (isA<conformedFvsPatchField<Type>>(ptf))
     {
         const conformedFvsPatchField<Type>& cptf =
@@ -283,6 +306,7 @@ template<class Type>
 void Foam::conformedFvsPatchField<Type>::write(Ostream& os) const
 {
     fvsPatchField<Type>::write(os);
+    writeEntry(os, "value", *this);
 
     writeKeyword(os, "origField") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
