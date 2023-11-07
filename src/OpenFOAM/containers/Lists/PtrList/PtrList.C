@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,6 +166,30 @@ void Foam::PtrList<T>::setSize(const label newSize)
         {
             this->ptrs_[i] = nullptr;
         }
+    }
+}
+
+
+template<class T>
+void Foam::PtrList<T>::shrink()
+{
+    label j = 0;
+    forAll(*this, i)
+    {
+        if (this->ptrs_[i])
+        {
+            if (j != i)
+            {
+                this->ptrs_[j] = this->ptrs_[i];
+            }
+
+            j++;
+        }
+    }
+
+    if (j != this->size())
+    {
+        setSize(j);
     }
 }
 

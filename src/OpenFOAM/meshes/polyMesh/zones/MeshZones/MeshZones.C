@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "entry.H"
 #include "demandDrivenData.H"
 #include "stringListOps.H"
+#include "labelPair.H"
 #include "Pstream.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -47,9 +48,9 @@ void Foam::MeshZones<ZoneType, MeshType>::calcZoneMap() const
         // Count number of objects in all zones
         label nObjects = 0;
 
-        forAll(*this, zoneI)
+        forAll(*this, zi)
         {
-            nObjects += this->operator[](zoneI).size();
+            nObjects += this->operator[](zi).size();
         }
 
         zoneMapPtr_ = new Map<label>(2*nObjects);
@@ -57,13 +58,13 @@ void Foam::MeshZones<ZoneType, MeshType>::calcZoneMap() const
 
         // Fill in objects of all zones into the map.  The key is the global
         // object index and the result is the zone index
-        forAll(*this, zoneI)
+        forAll(*this, zi)
         {
-            const labelList& zoneObjects = this->operator[](zoneI);
+            const labelList& zoneObjects = this->operator[](zi);
 
             forAll(zoneObjects, objI)
             {
-                zm.insert(zoneObjects[objI], zoneI);
+                zm.insert(zoneObjects[objI], zi);
             }
         }
     }
@@ -96,16 +97,16 @@ bool Foam::MeshZones<ZoneType, MeshType>::read()
         PtrList<entry> patchEntries(is);
         zones.setSize(patchEntries.size());
 
-        forAll(zones, zoneI)
+        forAll(zones, zi)
         {
             zones.set
             (
-                zoneI,
+                zi,
                 ZoneType::New
                 (
-                    patchEntries[zoneI].keyword(),
-                    patchEntries[zoneI].dict(),
-                    zoneI,
+                    patchEntries[zi].keyword(),
+                    patchEntries[zi].dict(),
+                    zi,
                     *this
                 )
             );
@@ -184,9 +185,9 @@ Foam::MeshZones<ZoneType, MeshType>::MeshZones
         // Nothing read. Use supplied zones
         PtrList<ZoneType>& zones = *this;
         zones.setSize(mpz.size());
-        forAll(zones, zoneI)
+        forAll(zones, zi)
         {
-            zones.set(zoneI, mpz[zoneI].clone(*this).ptr());
+            zones.set(zi, mpz[zi].clone(*this).ptr());
         }
     }
 }
@@ -243,9 +244,9 @@ Foam::wordList Foam::MeshZones<ZoneType, MeshType>::types() const
 
     wordList lst(zones.size());
 
-    forAll(zones, zoneI)
+    forAll(zones, zi)
     {
-        lst[zoneI] = zones[zoneI].type();
+        lst[zi] = zones[zi].type();
     }
 
     return lst;
@@ -259,9 +260,9 @@ Foam::wordList Foam::MeshZones<ZoneType, MeshType>::names() const
 
     wordList lst(zones.size());
 
-    forAll(zones, zoneI)
+    forAll(zones, zi)
     {
-        lst[zoneI] = zones[zoneI].name();
+        lst[zi] = zones[zi].name();
     }
 
     return lst;
@@ -344,11 +345,11 @@ Foam::label Foam::MeshZones<ZoneType, MeshType>::findZoneID
 {
     const PtrList<ZoneType>& zones = *this;
 
-    forAll(zones, zoneI)
+    forAll(zones, zi)
     {
-        if (zones[zoneI].name() == zoneName)
+        if (zones[zi].name() == zoneName)
         {
-            return zoneI;
+            return zi;
         }
     }
 
@@ -390,9 +391,9 @@ void Foam::MeshZones<ZoneType, MeshType>::clearAddressing()
 
     PtrList<ZoneType>& zones = *this;
 
-    forAll(zones, zoneI)
+    forAll(zones, zi)
     {
-        zones[zoneI].clearAddressing();
+        zones[zi].clearAddressing();
     }
 }
 
@@ -415,9 +416,9 @@ bool Foam::MeshZones<ZoneType, MeshType>::checkDefinition
 
     const PtrList<ZoneType>& zones = *this;
 
-    forAll(zones, zoneI)
+    forAll(zones, zi)
     {
-        inError |= zones[zoneI].checkDefinition(report);
+        inError |= zones[zi].checkDefinition(report);
     }
     return inError;
 }
@@ -478,16 +479,16 @@ bool Foam::MeshZones<ZoneType, MeshType>::checkParallelSync
     // Check contents
     if (!hasError)
     {
-        forAll(zones, zoneI)
+        forAll(zones, zi)
         {
-            if (zones[zoneI].checkParallelSync(false))
+            if (zones[zi].checkParallelSync(false))
             {
                 hasError = true;
 
                 if (debug || (report && Pstream::master()))
                 {
-                    Info<< " ***Zone " << zones[zoneI].name()
-                        << " of type " << zones[zoneI].type()
+                    Info<< " ***Zone " << zones[zi].name()
+                        << " of type " << zones[zi].type()
                         << " is not correctly synchronised"
                         << " across coupled boundaries."
                         << " (coupled faces are either not both"
@@ -506,10 +507,56 @@ void Foam::MeshZones<ZoneType, MeshType>::movePoints(const pointField& p)
 {
     PtrList<ZoneType>& zones = *this;
 
-    forAll(zones, zoneI)
+    forAll(zones, zi)
     {
-        zones[zoneI].movePoints(p);
+        zones[zi].movePoints(p);
     }
+}
+
+
+template<class ZoneType, class MeshType>
+void Foam::MeshZones<ZoneType, MeshType>::swap(MeshZones& otherZones)
+{
+    clearAddressing();
+    otherZones.clearAddressing();
+
+    PtrList<ZoneType>& zones = *this;
+
+    DynamicList<label> toOtherZone;
+
+    forAll(zones, zi)
+    {
+        const label ozi = otherZones.findZoneID(zones[zi].name());
+
+        if (ozi < 0)
+        {
+            toOtherZone.append(zi);
+        }
+    }
+
+    forAll(otherZones, ozi)
+    {
+        const label zi = findZoneID(otherZones[ozi].name());
+
+        if (zi < 0)
+        {
+            zones.append(otherZones[ozi].clone(*this));
+            otherZones.set(ozi, nullptr);
+        }
+        else
+        {
+            zones[zi].swap(otherZones[ozi]);
+        }
+    }
+
+    forAll(toOtherZone, i)
+    {
+        otherZones.append(zones[toOtherZone[i]].clone(otherZones));
+        zones.set(toOtherZone[i], nullptr);
+    }
+
+    zones.shrink();
+    otherZones.shrink();
 }
 
 
@@ -529,9 +576,9 @@ const ZoneType& Foam::MeshZones<ZoneType, MeshType>::operator[]
     const word& zoneName
 ) const
 {
-    const label zoneI = findZoneID(zoneName);
+    const label zi = findZoneID(zoneName);
 
-    if (zoneI < 0)
+    if (zi < 0)
     {
         FatalErrorInFunction
             << "Zone named " << zoneName << " not found." << nl
@@ -539,7 +586,7 @@ const ZoneType& Foam::MeshZones<ZoneType, MeshType>::operator[]
             << abort(FatalError);
     }
 
-    return operator[](zoneI);
+    return operator[](zi);
 }
 
 
@@ -549,9 +596,9 @@ ZoneType& Foam::MeshZones<ZoneType, MeshType>::operator[]
     const word& zoneName
 )
 {
-    const label zoneI = findZoneID(zoneName);
+    const label zi = findZoneID(zoneName);
 
-    if (zoneI < 0)
+    if (zi < 0)
     {
         FatalErrorInFunction
             << "Zone named " << zoneName << " not found." << nl
@@ -559,7 +606,7 @@ ZoneType& Foam::MeshZones<ZoneType, MeshType>::operator[]
             << abort(FatalError);
     }
 
-    return operator[](zoneI);
+    return operator[](zi);
 }
 
 
@@ -574,9 +621,9 @@ Foam::Ostream& Foam::operator<<
 {
     os  << zones.size() << nl << token::BEGIN_LIST;
 
-    forAll(zones, zoneI)
+    forAll(zones, zi)
     {
-        zones[zoneI].writeDict(os);
+        zones[zi].writeDict(os);
     }
 
     os  << token::END_LIST;

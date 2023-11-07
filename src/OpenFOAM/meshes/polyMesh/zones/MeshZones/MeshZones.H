@@ -171,6 +171,10 @@ public:
         //- Correct zones after moving points
         void movePoints(const pointField&);
 
+        //- Swap zones
+        //  For run-time mesh replacement and mesh to mesh mapping
+        void swap(MeshZones&);
+
         //- writeData member function required by regIOobject
         bool writeData(Ostream&) const;
 

@@ -917,73 +917,16 @@ void Foam::polyMesh::swap(polyMesh& otherMesh)
     {
         pointMesh::New(*this).reset();
     }
+
     if (otherMesh.foundObject<pointMesh>(pointMesh::typeName))
     {
         pointMesh::New(*this).reset();
     }
 
-    // Update point zones
-    if (pointZones_.size() == otherMesh.pointZones_.size())
-    {
-        pointZones_.clearAddressing();
-        otherMesh.pointZones_.clearAddressing();
-
-        forAll(pointZones_, i)
-        {
-            pointZones_[i].swap(otherMesh.pointZones_[i]);
-        }
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Number of pointZones in other mesh = "
-            << otherMesh.pointZones_.size()
-            << " is not the same as in the mesh = "
-            << pointZones_.size()
-            << exit(FatalError);
-    }
-
-    // Update face zones
-    if (faceZones_.size() == otherMesh.faceZones_.size())
-    {
-        faceZones_.clearAddressing();
-        otherMesh.faceZones_.clearAddressing();
-
-        forAll(faceZones_, i)
-        {
-            faceZones_[i].swap(otherMesh.faceZones_[i]);
-        }
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Number of faceZones in other mesh = "
-            << otherMesh.faceZones_.size()
-            << " is not the same as in the mesh = "
-            << faceZones_.size()
-            << exit(FatalError);
-    }
-
-    // Update cell zones
-    if (cellZones_.size() == otherMesh.cellZones_.size())
-    {
-        cellZones_.clearAddressing();
-        otherMesh.cellZones_.clearAddressing();
-
-        forAll(cellZones_, i)
-        {
-            cellZones_[i].swap(otherMesh.cellZones_[i]);
-        }
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Number of cellZones in other mesh = "
-            << otherMesh.cellZones_.size()
-            << " is not the same as in the mesh = "
-            << cellZones_.size()
-            << exit(FatalError);
-    }
+    // Swap zones
+    pointZones_.swap(otherMesh.pointZones_);
+    faceZones_.swap(otherMesh.faceZones_);
+    cellZones_.swap(otherMesh.cellZones_);
 }
 
 
