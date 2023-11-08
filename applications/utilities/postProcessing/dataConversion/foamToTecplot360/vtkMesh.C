@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,11 +54,11 @@ Foam::vtkMesh::vtkMesh
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::polyMesh::readUpdateState Foam::vtkMesh::readUpdate()
+Foam::fvMesh::readUpdateState Foam::vtkMesh::readUpdate()
 {
-    polyMesh::readUpdateState meshState = baseMesh_.readUpdate();
+    fvMesh::readUpdateState meshState = baseMesh_.readUpdate();
 
-    if (meshState != polyMesh::UNCHANGED)
+    if (meshState != fvMesh::UNCHANGED)
     {
         // Note: since fvMeshSubset has no movePoints() functionality
         // reconstruct the subset even if only movement.

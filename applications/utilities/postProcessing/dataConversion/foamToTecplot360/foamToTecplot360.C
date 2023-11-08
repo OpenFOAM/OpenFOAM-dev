@@ -321,7 +321,7 @@ int main(int argc, char *argv[])
 
         // Check for new polyMesh/ and update mesh, fvMeshSubset and cell
         // decomposition.
-        polyMesh::readUpdateState meshState = vMesh.readUpdate();
+        fvMesh::readUpdateState meshState = vMesh.readUpdate();
 
         const fvMesh& mesh = vMesh.mesh();
 
@@ -576,7 +576,7 @@ int main(int argc, char *argv[])
         INTEGER4 strandID = 1;
 
 
-        if (meshState != polyMesh::UNCHANGED)
+        if (meshState != fvMesh::UNCHANGED)
         {
             if (doWriteInternal)
             {

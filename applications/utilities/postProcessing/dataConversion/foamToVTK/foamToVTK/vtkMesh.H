@@ -148,7 +148,7 @@ public:
         // Edit
 
             //- Read mesh
-            polyMesh::readUpdateState readUpdate();
+            fvMesh::readUpdateState readUpdate();
 
 
             //- Map volume field (does in fact do very little interpolation;

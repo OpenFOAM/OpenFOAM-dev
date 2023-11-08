@@ -733,7 +733,7 @@ void Foam::fvMesh::swap(fvMesh& otherMesh)
 }
 
 
-Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate
+Foam::fvMesh::readUpdateState Foam::fvMesh::readUpdate
 (
     const stitchType stitch
 )
@@ -805,19 +805,24 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate
         stitcher_->connect(false, stitch == stitchType::geometric, true);
     }
 
-    // If the mesh has been re-stitched with different geometry, then the
-    // finite-volume topology has changed
-    if
-    (
-        stitcher_.valid()
-     && stitcher_->stitches()
-     && state == polyMesh::POINTS_MOVED
-    )
+    // Return the corresponding fvMesh read update state
+    switch(state)
     {
-        state = polyMesh::TOPO_CHANGE;
+        case polyMesh::UNCHANGED:
+            return UNCHANGED;
+        case polyMesh::POINTS_MOVED:
+            return
+                stitcher_.valid()
+             && stitcher_->stitches()
+             && stitch != stitchType::none
+             && state != polyMesh::UNCHANGED
+              ? STITCHED
+              : POINTS_MOVED;
+        case polyMesh::TOPO_CHANGE:
+            return TOPO_CHANGE;
+        case polyMesh::TOPO_PATCH_CHANGE:
+            return TOPO_PATCH_CHANGE;
     }
-
-    return state;
 }
 
 

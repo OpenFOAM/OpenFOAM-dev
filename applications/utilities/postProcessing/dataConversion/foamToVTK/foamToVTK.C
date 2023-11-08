@@ -495,15 +495,11 @@ int main(int argc, char *argv[])
 
         // Check for new polyMesh/ and update mesh, fvMeshSubset and cell
         // decomposition.
-        polyMesh::readUpdateState meshState = vMesh.readUpdate();
+        fvMesh::readUpdateState meshState = vMesh.readUpdate();
 
         const fvMesh& mesh = vMesh.mesh();
 
-        if
-        (
-            meshState == polyMesh::TOPO_CHANGE
-         || meshState == polyMesh::TOPO_PATCH_CHANGE
-        )
+        if (meshState >= fvMesh::TOPO_CHANGE)
         {
             Info<< "    Read new mesh" << nl << endl;
         }

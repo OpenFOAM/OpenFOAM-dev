@@ -104,6 +104,18 @@ public:
 
     // Public data types
 
+        //- Enumeration defining the state of the mesh after a read update.
+        //  Used for post-processing applications, where the mesh
+        //  needs to update based on the files written in time directories.
+        enum readUpdateState
+        {
+            UNCHANGED,
+            POINTS_MOVED,
+            STITCHED,
+            TOPO_CHANGE,
+            TOPO_PATCH_CHANGE
+        };
+
         //- Extent to which to stitch on read and readUpdate. By default, a
         //  full geometric stitch is performed. A non-geometric stitch can be
         //  done as an optimisation in situations when finite volume geometry

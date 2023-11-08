@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
         // Update the mesh if changed
-        if (mesh.readUpdate() == polyMesh::TOPO_PATCH_CHANGE)
+        if (mesh.readUpdate() == fvMesh::TOPO_PATCH_CHANGE)
         {
             Info<< "Detected changed patches. Recreating patch group table."
                 << endl;

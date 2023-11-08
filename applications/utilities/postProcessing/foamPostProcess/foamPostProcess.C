@@ -300,7 +300,7 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.userTimeName() << endl;
 
-        if (mesh.readUpdate() != polyMesh::UNCHANGED)
+        if (mesh.readUpdate() != fvMesh::UNCHANGED)
         {
             // Update functionObjectList if mesh changes
             functionsPtr = functionObjectList::New
