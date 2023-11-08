@@ -44,7 +44,7 @@ Foam::cutPolyIsoSurface::cutPolyIsoSurface
     const polyMesh& mesh,
     const scalarField& pAlphas,
     const scalar isoAlpha,
-    const labelList& zoneIDs
+    const word& cellZoneName
 )
 :
     points_(),
@@ -89,14 +89,13 @@ Foam::cutPolyIsoSurface::cutPolyIsoSurface
 
         nCutCells += !cellCuts[celli].empty();
     };
-    if (!isNull<labelList>(zoneIDs))
+
+    if (cellZoneName != word::null)
     {
-        forAll(zoneIDs, i)
+        const labelList& zoneCells = mesh.cellZones()[cellZoneName];
+        forAll(zoneCells, zoneCelli)
         {
-            forAll(mesh.cellZones()[zoneIDs[i]], zoneCelli)
-            {
-                cutCell(mesh.cellZones()[zoneIDs[i]][zoneCelli]);
-            }
+            cutCell(zoneCells[zoneCelli]);
         }
     }
     else

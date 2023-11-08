@@ -81,7 +81,7 @@ public:
             const polyMesh& mesh,
             const scalarField& pAlphas,
             const scalar isoAlpha,
-            const labelList& zoneIDs = NullObjectRef<labelList>()
+            const word& cellZoneName = word::null
         );
 
         //- Construct by combining a list of iso-surfaces

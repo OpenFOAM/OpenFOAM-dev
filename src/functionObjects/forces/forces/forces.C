@@ -991,21 +991,14 @@ void Foam::functionObjects::forces::calcForcesMoment()
 
             const vectorField fPTot(pm.force(U, rho, mu));
 
-            const labelList& cellZoneIDs = pm.cellZoneIDs();
+            const cellZone& cZone = mesh_.cellZones()[pm.zoneName()];
+            const vectorField d(mesh_.C(), cZone);
+            const vectorField fP(fPTot, cZone);
+            const vectorField Md(d - coordSys_.origin());
 
-            forAll(cellZoneIDs, i)
-            {
-                const label zoneI = cellZoneIDs[i];
-                const cellZone& cZone = mesh_.cellZones()[zoneI];
+            const vectorField fDummy(Md.size(), Zero);
 
-                const vectorField d(mesh_.C(), cZone);
-                const vectorField fP(fPTot, cZone);
-                const vectorField Md(d - coordSys_.origin());
-
-                const vectorField fDummy(Md.size(), Zero);
-
-                applyBins(Md, fDummy, fDummy, fP, d);
-            }
+            applyBins(Md, fDummy, fDummy, fP, d);
         }
     }
 

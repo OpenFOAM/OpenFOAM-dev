@@ -38,18 +38,16 @@ void Foam::porosityModels::powerLawLopesdaCosta::apply
 {
     const scalar C1m1b2 = (C1_ - 1.0)/2.0;
 
-    forAll(cellZoneIDs_, zonei)
+    const labelList& cells =
+        mesh_.cellZones()[powerLawLopesdaCostaZone::zoneName_];
+
+    forAll(cells, i)
     {
-        const labelList& cells = mesh_.cellZones()[cellZoneIDs_[zonei]];
+        const label celli = cells[i];
 
-        forAll(cells, i)
-        {
-            const label celli = cells[i];
-
-            Udiag[celli] +=
-                V[celli]*rho[celli]
-               *Cd_*Av_[i]*pow(magSqr(U[celli]), C1m1b2);
-        }
+        Udiag[celli] +=
+            V[celli]*rho[celli]
+           *Cd_*Av_[i]*pow(magSqr(U[celli]), C1m1b2);
     }
 }
 
@@ -64,22 +62,20 @@ void Foam::porosityModels::powerLawLopesdaCosta::apply
 {
     const scalar C1m1b2 = (C1_ - 1.0)/2.0;
 
-    forAll(cellZoneIDs_, zonei)
+    const labelList& cells =
+        mesh_.cellZones()[powerLawLopesdaCostaZone::zoneName_];
+
+    forAll(cells, i)
     {
-        const labelList& cells = mesh_.cellZones()[cellZoneIDs_[zonei]];
+        const label celli = cells[i];
 
-        forAll(cells, i)
-        {
-            const label celli = cells[i];
-
-            AU[celli] =
-                AU[celli]
-              + I
-               *(
-                   0.5*rho[celli]*Cd_*Av_[i]
-                  *pow(magSqr(U[celli]), C1m1b2)
-                );
-        }
+        AU[celli] =
+            AU[celli]
+          + I
+           *(
+               0.5*rho[celli]*Cd_*Av_[i]
+              *pow(magSqr(U[celli]), C1m1b2)
+            );
     }
 }
 

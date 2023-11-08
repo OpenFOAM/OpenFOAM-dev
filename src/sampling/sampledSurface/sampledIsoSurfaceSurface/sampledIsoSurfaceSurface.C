@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,12 +45,11 @@ Foam::sampledSurfaces::sampledIsoSurfaceSurface::sampledIsoSurfaceSurface
 )
 :
     sampledSurface(name, mesh, dict),
-    zoneName_(dict.lookupOrDefault("zone", wordRe::null)),
-    zoneIDs_(mesh.cellZones().findIndices(zoneName_)),
+    zoneName_(dict.lookupOrDefault("zone", word::null)),
     isoSurfPtr_(nullptr),
     isoSurfTimeIndex_(-1)
 {
-    if (zoneName_ != wordRe::null && zoneIDs_.empty())
+    if (zoneName_ != word::null && !mesh.cellZones().found(zoneName_))
     {
         WarningInFunction
             << "Cell zone " << zoneName_

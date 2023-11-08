@@ -79,10 +79,10 @@ class DarcyForchheimer
         dimensionedVector fXYZ_;
 
         //- Darcy coefficient - converted from dXYZ [1/m^2]
-        List<tensorField> D_;
+        tensorField D_;
 
         //- Forchheimer coefficient - converted from fXYZ [1/m]
-        List<tensorField> F_;
+        tensorField F_;
 
         //- Name of density field
         word rhoName_;

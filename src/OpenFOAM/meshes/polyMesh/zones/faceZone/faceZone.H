@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -287,6 +287,9 @@ public:
         //- Check whether all procs have faces synchronised. Return
         //  true if in error.
         virtual bool checkParallelSync(const bool report = false) const;
+
+        //- Swap two faceZones
+        virtual void swap(faceZone&);
 
         //- Correct patch after moving points
         virtual void movePoints(const pointField&);

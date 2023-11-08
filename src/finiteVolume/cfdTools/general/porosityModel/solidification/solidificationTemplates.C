@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,21 +38,18 @@ void Foam::porosityModels::solidification::apply
     const volVectorField& U
 ) const
 {
+    const labelList& cells = mesh_.cellZones()[zoneName_];
+
     const volScalarField& T = mesh_.lookupObject<volScalarField>
     (
         IOobject::groupName(TName_, U.group())
     );
 
-    forAll(cellZoneIDs_, zoneI)
+    forAll(cells, i)
     {
-        const labelList& cells = mesh_.cellZones()[cellZoneIDs_[zoneI]];
-
-        forAll(cells, i)
-        {
-            const label celli = cells[i];
-            Udiag[celli] +=
-                V[celli]*alpha[celli]*rho[celli]*D_->value(T[celli]);
-        }
+        const label celli = cells[i];
+        Udiag[celli] +=
+            V[celli]*alpha[celli]*rho[celli]*D_->value(T[celli]);
     }
 }
 
@@ -66,21 +63,18 @@ void Foam::porosityModels::solidification::apply
     const volVectorField& U
 ) const
 {
+    const labelList& cells = mesh_.cellZones()[zoneName_];
+
     const volScalarField& T = mesh_.lookupObject<volScalarField>
     (
         IOobject::groupName(TName_, U.group())
     );
 
-    forAll(cellZoneIDs_, zoneI)
+    forAll(cells, i)
     {
-        const labelList& cells = mesh_.cellZones()[cellZoneIDs_[zoneI]];
-
-        forAll(cells, i)
-        {
-            const label celli = cells[i];
-            AU[celli] +=
-                tensor::I*alpha[celli]*rho[celli]*D_->value(T[celli]);
-        }
+        const label celli = cells[i];
+        AU[celli] +=
+            tensor::I*alpha[celli]*rho[celli]*D_->value(T[celli]);
     }
 }
 

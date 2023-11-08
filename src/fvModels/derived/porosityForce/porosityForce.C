@@ -24,9 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "porosityForce.H"
-#include "fvMesh.H"
-#include "fvMatrices.H"
 #include "porosityModel.H"
+#include "fvMatrices.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -51,6 +50,20 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+void Foam::fv::porosityForce::reset()
+{
+    porosityPtr_.reset
+    (
+        porosityModel::New
+        (
+            name(),
+            mesh(),
+            coeffs()
+        ).ptr()
+    );
+}
+
+
 void Foam::fv::porosityForce::readCoeffs()
 {
     if (coeffs().found("UNames"))
@@ -62,18 +75,8 @@ void Foam::fv::porosityForce::readCoeffs()
         UNames_ = wordList(1, coeffs().lookupOrDefault<word>("U", "U"));
     }
 
-    porosityPtr_.reset
-    (
-        porosityModel::New
-        (
-            name(),
-            mesh(),
-            coeffs(),
-            set_.cellSetName()
-        ).ptr()
-    );
+    reset();
 }
-
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -87,7 +90,6 @@ Foam::fv::porosityForce::porosityForce
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
     UNames_(),
     porosityPtr_(nullptr)
 {
@@ -144,20 +146,20 @@ void Foam::fv::porosityForce::addSup
 
 bool Foam::fv::porosityForce::movePoints()
 {
-    set_.movePoints();
+    // Currently there is no mechanism to update the porous media orientation
     return true;
 }
 
 
 void Foam::fv::porosityForce::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    reset();
 }
 
 
 void Foam::fv::porosityForce::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    reset();
 }
 
 
@@ -166,7 +168,7 @@ void Foam::fv::porosityForce::distribute
     const polyDistributionMap& map
 )
 {
-    set_.distribute(map);
+    reset();
 }
 
 
@@ -174,7 +176,6 @@ bool Foam::fv::porosityForce::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
         readCoeffs();
         return true;
     }

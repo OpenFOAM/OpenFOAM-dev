@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -306,127 +306,68 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         geometricD_ = Zero;
         solutionD_ = Zero;
 
-        // Zones
-        meshPointZones newPointZones
-        (
-            IOobject
+        // pointZones
+        {
+            meshPointZones newPointZones
             (
-                "pointZones",
-                facesInst,
-                meshSubDir,
-                *this,
-                IOobject::READ_IF_PRESENT,
-                IOobject::NO_WRITE,
-                false
-            ),
-            *this
-        );
-
-        label oldSize = pointZones_.size();
-
-        if (newPointZones.size() <= pointZones_.size())
-        {
-            pointZones_.setSize(newPointZones.size());
-        }
-
-        // Reset existing ones
-        forAll(pointZones_, czI)
-        {
-            pointZones_[czI] = newPointZones[czI];
-        }
-
-        // Extend with extra ones
-        pointZones_.setSize(newPointZones.size());
-
-        for (label czI = oldSize; czI < newPointZones.size(); czI++)
-        {
-            pointZones_.set(czI, newPointZones[czI].clone(pointZones_));
-        }
-
-        pointZones_.instance() = facesInst;
-
-
-        meshFaceZones newFaceZones
-        (
-            IOobject
-            (
-                "faceZones",
-                facesInst,
-                meshSubDir,
-                *this,
-                IOobject::READ_IF_PRESENT,
-                IOobject::NO_WRITE,
-                false
-            ),
-            *this
-        );
-
-        oldSize = faceZones_.size();
-
-        if (newFaceZones.size() <= faceZones_.size())
-        {
-            faceZones_.setSize(newFaceZones.size());
-        }
-
-        // Reset existing ones
-        forAll(faceZones_, fzI)
-        {
-            faceZones_[fzI].resetAddressing
-            (
-                newFaceZones[fzI],
-                newFaceZones[fzI].flipMap()
+                IOobject
+                (
+                    "pointZones",
+                    facesInst,
+                    meshSubDir,
+                    *this,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::NO_WRITE,
+                    false
+                ),
+                *this
             );
+
+            pointZones_.swap(newPointZones);
+            pointZones_.instance() = facesInst;
         }
 
-        // Extend with extra ones
-        faceZones_.setSize(newFaceZones.size());
-
-        for (label fzI = oldSize; fzI < newFaceZones.size(); fzI++)
+        // faceZones
         {
-            faceZones_.set(fzI, newFaceZones[fzI].clone(faceZones_));
-        }
-
-        faceZones_.instance() = facesInst;
-
-
-        meshCellZones newCellZones
-        (
-            IOobject
+            meshFaceZones newFaceZones
             (
-                "cellZones",
-                facesInst,
-                meshSubDir,
-                *this,
-                IOobject::READ_IF_PRESENT,
-                IOobject::NO_WRITE,
-                false
-            ),
-            *this
-        );
+                IOobject
+                (
+                    "faceZones",
+                    facesInst,
+                    meshSubDir,
+                    *this,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::NO_WRITE,
+                    false
+                ),
+                *this
+            );
 
-        oldSize = cellZones_.size();
-
-        if (newCellZones.size() <= cellZones_.size())
-        {
-            cellZones_.setSize(newCellZones.size());
+            faceZones_.swap(newFaceZones);
+            faceZones_.instance() = facesInst;
         }
 
-        // Reset existing ones
-        forAll(cellZones_, czI)
+        // cellZones
         {
-            cellZones_[czI] = newCellZones[czI];
+            meshCellZones newCellZones
+            (
+                IOobject
+                (
+                    "cellZones",
+                    facesInst,
+                    meshSubDir,
+                    *this,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::NO_WRITE,
+                    false
+                ),
+                *this
+            );
+
+            cellZones_.swap(newCellZones);
+            cellZones_.instance() = facesInst;
         }
-
-        // Extend with extra ones
-        cellZones_.setSize(newCellZones.size());
-
-        for (label czI = oldSize; czI < newCellZones.size(); czI++)
-        {
-            cellZones_.set(czI, newCellZones[czI].clone(cellZones_));
-        }
-
-        cellZones_.instance() = facesInst;
-
 
         // Re-read tet base points
         tetBasePtIsPtr_ = readTetBasePtIs();

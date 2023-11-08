@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::zoneToFace
 
 Description
-    A topoSetSource to select faces based on faceZone.
+    A topoSetSource to select faces from a faceZone.
 
 SourceFiles
     zoneToFace.C
@@ -51,11 +51,9 @@ class zoneToFace
 :
     public topoSetSource
 {
-
     // Private Data
 
-
-        //- Name/regular expression of cellZone
+        //- Name/regular expression of faceZone
         wordRe zoneName_;
 
 
@@ -102,7 +100,6 @@ public:
             const topoSetSource::setAction action,
             topoSet&
         ) const;
-
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,8 +54,6 @@ Foam::porosityModels::DarcyForchheimer::DarcyForchheimer
     porosityModel(name, modelType, mesh, dict, cellZoneName),
     dXYZ_("d", dimless/sqr(dimLength), coeffs_),
     fXYZ_("f", dimless/dimLength, coeffs_),
-    D_(cellZoneIDs_.size()),
-    F_(cellZoneIDs_.size()),
     rhoName_(coeffs_.lookupOrDefault<word>("rho", "rho")),
     muName_(coeffs_.lookupOrDefault<word>("mu", "mu")),
     nuName_(coeffs_.lookupOrDefault<word>("nu", "nu"))
@@ -79,58 +77,52 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
 {
     if (coordSys_.R().uniform())
     {
-        forAll(cellZoneIDs_, zoneI)
-        {
-            D_[zoneI].setSize(1);
-            F_[zoneI].setSize(1);
+        D_.setSize(1);
+        F_.setSize(1);
 
-            D_[zoneI][0] = Zero;
-            D_[zoneI][0].xx() = dXYZ_.value().x();
-            D_[zoneI][0].yy() = dXYZ_.value().y();
-            D_[zoneI][0].zz() = dXYZ_.value().z();
+        D_[0] = Zero;
+        D_[0].xx() = dXYZ_.value().x();
+        D_[0].yy() = dXYZ_.value().y();
+        D_[0].zz() = dXYZ_.value().z();
 
-            D_[zoneI][0] = coordSys_.R().transform(Zero, D_[zoneI][0]);
+        D_[0] = coordSys_.R().transform(Zero, D_[0]);
 
-            // leading 0.5 is from 1/2*rho
-            F_[zoneI][0] = Zero;
-            F_[zoneI][0].xx() = 0.5*fXYZ_.value().x();
-            F_[zoneI][0].yy() = 0.5*fXYZ_.value().y();
-            F_[zoneI][0].zz() = 0.5*fXYZ_.value().z();
+        // leading 0.5 is from 1/2*rho
+        F_[0] = Zero;
+        F_[0].xx() = 0.5*fXYZ_.value().x();
+        F_[0].yy() = 0.5*fXYZ_.value().y();
+        F_[0].zz() = 0.5*fXYZ_.value().z();
 
-            F_[zoneI][0] = coordSys_.R().transform(Zero, F_[zoneI][0]);
-        }
+        F_[0] = coordSys_.R().transform(Zero, F_[0]);
     }
     else
     {
-        forAll(cellZoneIDs_, zoneI)
+        const labelList& cells = mesh_.cellZones()[zoneName_];
+
+        D_.setSize(cells.size());
+        F_.setSize(cells.size());
+
+        forAll(cells, i)
         {
-            const labelList& cells = mesh_.cellZones()[cellZoneIDs_[zoneI]];
+            D_[i] = Zero;
+            D_[i].xx() = dXYZ_.value().x();
+            D_[i].yy() = dXYZ_.value().y();
+            D_[i].zz() = dXYZ_.value().z();
 
-            D_[zoneI].setSize(cells.size());
-            F_[zoneI].setSize(cells.size());
-
-            forAll(cells, i)
-            {
-                D_[zoneI][i] = Zero;
-                D_[zoneI][i].xx() = dXYZ_.value().x();
-                D_[zoneI][i].yy() = dXYZ_.value().y();
-                D_[zoneI][i].zz() = dXYZ_.value().z();
-
-                // leading 0.5 is from 1/2*rho
-                F_[zoneI][i] = Zero;
-                F_[zoneI][i].xx() = 0.5*fXYZ_.value().x();
-                F_[zoneI][i].yy() = 0.5*fXYZ_.value().y();
-                F_[zoneI][i].zz() = 0.5*fXYZ_.value().z();
-            }
-
-            const coordinateRotation& R = coordSys_.R
-            (
-                UIndirectList<vector>(mesh_.C(), cells)()
-            );
-
-            D_[zoneI] = R.transform(D_[zoneI]);
-            F_[zoneI] = R.transform(F_[zoneI]);
+            // leading 0.5 is from 1/2*rho
+            F_[i] = Zero;
+            F_[i].xx() = 0.5*fXYZ_.value().x();
+            F_[i].yy() = 0.5*fXYZ_.value().y();
+            F_[i].zz() = 0.5*fXYZ_.value().z();
         }
+
+        const coordinateRotation& R = coordSys_.R
+        (
+            UIndirectList<vector>(mesh_.C(), cells)()
+        );
+
+        D_ = R.transform(D_);
+        F_ = R.transform(F_);
     }
 
     if (debug && (mesh_.time().writeTime() || mesh_.time().timeIndex() == 0))
@@ -162,8 +154,8 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
             dimensionedTensor(fXYZ_.dimensions(), Zero)
         );
 
-        UIndirectList<tensor>(Dout, mesh_.cellZones()[cellZoneIDs_[0]]) = D_[0];
-        UIndirectList<tensor>(Fout, mesh_.cellZones()[cellZoneIDs_[0]]) = F_[0];
+        UIndirectList<tensor>(Dout, mesh_.cellZones()[zoneName_]) = D_;
+        UIndirectList<tensor>(Fout, mesh_.cellZones()[zoneName_]) = F_;
 
         Dout.write();
         Fout.write();

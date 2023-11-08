@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -518,6 +518,13 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
 }
 
 
+void Foam::faceZone::swap(faceZone& fz)
+{
+    zone::swap(fz);
+    flipMap_.swap(fz.flipMap_);
+}
+
+
 void Foam::faceZone::movePoints(const pointField& p)
 {
     if (patchPtr_)
@@ -525,6 +532,7 @@ void Foam::faceZone::movePoints(const pointField& p)
         patchPtr_->clearGeom();
     }
 }
+
 
 void Foam::faceZone::write(Ostream& os) const
 {

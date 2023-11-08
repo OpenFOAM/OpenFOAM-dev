@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,11 +57,8 @@ private:
 
     // Private Data
 
-        //- If restricted to zones, name of this zone or a regular expression
-        const wordRe zoneName_;
-
-        //- If restricted to zones, the indices of the zones
-        const labelList zoneIDs_;
+        //- Optional name of the cellZone
+        const word zoneName_;
 
         //- Constructed iso surface
         mutable autoPtr<cutPolyIsoSurface> isoSurfPtr_;
@@ -91,10 +88,10 @@ protected:
 
     // Protected Member Functions
 
-        //- Access the zone indices
-        inline const labelList& zoneIDs() const
+        //- Access the zoneName
+        inline const word& zoneName() const
         {
-            return zoneIDs_.empty() ? NullObjectRef<labelList>() : zoneIDs_;
+            return zoneName_;
         }
 
         //- Access the time index

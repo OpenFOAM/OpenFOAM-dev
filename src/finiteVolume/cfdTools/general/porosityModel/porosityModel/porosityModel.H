@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,11 +81,8 @@ protected:
         //- Model coefficients dictionary
         dictionary coeffs_;
 
-        //- Name(s) of cell-zone
-        wordRe zoneName_;
-
-        //- Cell zone IDs
-        labelList cellZoneIDs_;
+        //- Name of cellZone
+        word zoneName_;
 
         //- Local co-ordinate system
         coordinateSystem coordSys_;
@@ -205,8 +202,8 @@ public:
         //- Return const access to the porosity model name
         inline const word& name() const;
 
-        //- Return const access to the cell zone IDs
-        inline const labelList& cellZoneIDs() const;
+        //- Return const access to the cell zone name
+        inline const word& zoneName() const;
 
         //- Return dictionary used for model construction
         const dictionary& dict() const;

@@ -258,33 +258,15 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
     }
 
     // Create the normalised height field
-    scalarField zNorm(zBottom/(zBottom + zTop));
+    const scalarField zNorm(zBottom/(zBottom + zTop));
 
     // Create the porosity surface area per unit volume zone field
     Av_ = AvFunc->value(zNorm);
 
     // Create the porous region cellZone and add to the mesh cellZones
-
-    meshCellZones& cellZones = const_cast<meshCellZones&>(mesh.cellZones());
-
-    label zoneID = cellZones.findZoneID(zoneName_);
-
-    if (zoneID == -1)
+    if (!mesh.cellZones().found(zoneName_))
     {
-        zoneID = cellZones.size();
-        cellZones.setSize(zoneID + 1);
-
-        cellZones.set
-        (
-            zoneID,
-            new cellZone
-            (
-                zoneName_,
-                porousCells,
-                zoneID,
-                cellZones
-            )
-        );
+        mesh.cellZones().append(zoneName_, porousCells);
     }
     else
     {

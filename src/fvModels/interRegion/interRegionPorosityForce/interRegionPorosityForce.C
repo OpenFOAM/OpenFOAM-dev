@@ -88,17 +88,8 @@ Foam::fv::interRegionPorosityForce::interRegionPorosityForce
 
     const word zoneName(name + ":porous");
 
-    const meshCellZones& cellZones = mesh.cellZones();
-    label zoneID = cellZones.findZoneID(zoneName);
-
-    if (zoneID == -1)
+    if (!mesh.cellZones().found(zoneName))
     {
-        meshCellZones& cz = const_cast<meshCellZones&>(cellZones);
-
-        zoneID = cz.size();
-
-        cz.setSize(zoneID + 1);
-
         // Scan the porous region filter for all cells containing porosity
         labelList porousCells(mesh.nCells());
 
@@ -112,19 +103,7 @@ Foam::fv::interRegionPorosityForce::interRegionPorosityForce
         }
         porousCells.setSize(i);
 
-        cz.set
-        (
-            zoneID,
-            new cellZone
-            (
-                zoneName,
-                porousCells,
-                zoneID,
-                cellZones
-            )
-        );
-
-        cz.clearAddressing();
+        mesh.cellZones().append(zoneName, porousCells);
     }
     else
     {

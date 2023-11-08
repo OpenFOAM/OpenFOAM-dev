@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,10 +69,10 @@ class fixedCoeff
         dimensionedVector betaXYZ_;
 
         //- Model alpha coefficient - converted from alphaXYZ [1/s]
-        List<tensorField> alpha_;
+        tensorField alpha_;
 
         //- Model beta coefficient - converted from betaXYZ [1/m]
-        List<tensorField> beta_;
+        tensorField beta_;
 
 
     // Private Member Functions

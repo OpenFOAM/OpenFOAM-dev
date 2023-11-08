@@ -143,17 +143,30 @@ public:
         //- Return a list of zone names
         wordList names() const;
 
-        //- Return zone indices for all matches
-        labelList findIndices(const wordRe&) const;
+        //- Return true if the given zoneName is present
+        bool found(const word& zoneName) const;
 
         //- Return zone index for the first match, return -1 if not found
         label findIndex(const wordRe&) const;
+
+        //- Return zone indices for all matches
+        labelList findIndices(const wordRe&) const;
 
         //- Find zone index given a name
         label findZoneID(const word& zoneName) const;
 
         //- Mark cells that match the zone specification
         PackedBoolList findMatching(const wordRe&) const;
+
+        using PtrList<ZoneType>::append;
+
+        //- Append a zone
+        //  Temporary function pending the rewrite of zones
+        void append
+        (
+            const word& zoneName,
+            const labelList& cells
+        ) const;
 
         //- Clear addressing
         void clearAddressing();

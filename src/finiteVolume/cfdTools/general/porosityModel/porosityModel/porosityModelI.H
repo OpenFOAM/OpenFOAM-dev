@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,9 @@ inline const Foam::dictionary& Foam::porosityModel::dict() const
 }
 
 
-inline const Foam::labelList& Foam::porosityModel::cellZoneIDs() const
+inline const Foam::word& Foam::porosityModel::zoneName() const
 {
-    return cellZoneIDs_;
+    return zoneName_;
 }
 
 

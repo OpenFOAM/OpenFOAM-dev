@@ -66,7 +66,6 @@ SourceFiles
 #define porosityForce_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,7 +77,6 @@ class porosityModel;
 namespace fv
 {
 
-
 /*---------------------------------------------------------------------------*\
                    Class porosityForce Declaration
 \*---------------------------------------------------------------------------*/
@@ -89,9 +87,6 @@ class porosityForce
 {
     // Private data
 
-        //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
-
         //- Names of the velocity fields
         wordList UNames_;
 
@@ -100,6 +95,10 @@ class porosityForce
 
 
     // Private Member Functions
+
+        //- Reset the porosity model
+        //  during construction, re-reading and mesh-change
+        void reset();
 
         //- Non-virtual read
         void readCoeffs();

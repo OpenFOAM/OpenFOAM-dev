@@ -47,20 +47,14 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::setPorosityCoefficient
 {
     if (pm.dict().found(C.name()))
     {
-        const labelList& cellZoneIDs = pm.cellZoneIDs();
-
         const scalar Cpm = pm.dict().lookup<scalar>(C.name());
 
-        forAll(cellZoneIDs, zonei)
-        {
-            const labelList& cells =
-                this->mesh_.cellZones()[cellZoneIDs[zonei]];
+        const labelList& cells = this->mesh_.cellZones()[pm.zoneName()];
 
-            forAll(cells, i)
-            {
-                const label celli = cells[i];
-                C[celli] = Cpm;
-            }
+        forAll(cells, i)
+        {
+            const label celli = cells[i];
+            C[celli] = Cpm;
         }
     }
 }
@@ -75,21 +69,16 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::setCdAv
 {
     if (pm.dict().found(C.name()))
     {
-        const labelList& cellZoneIDs = pm.cellZoneIDs();
         const scalarField& Av = pm.Av();
 
         const scalar Cpm = pm.dict().lookup<scalar>(C.name());
 
-        forAll(cellZoneIDs, zonei)
-        {
-            const labelList& cells =
-                this->mesh_.cellZones()[cellZoneIDs[zonei]];
+        const labelList& cells = this->mesh_.cellZones()[pm.zoneName()];
 
-            forAll(cells, i)
-            {
-                const label celli = cells[i];
-                C[celli] = Cpm*Av[celli];
-            }
+        forAll(cells, i)
+        {
+            const label celli = cells[i];
+            C[celli] = Cpm*Av[celli];
         }
     }
 }

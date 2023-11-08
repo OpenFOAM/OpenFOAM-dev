@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,25 +36,19 @@ void Foam::porosityModels::DarcyForchheimer::apply
     const vectorField& U
 ) const
 {
-    forAll(cellZoneIDs_, zoneI)
+    const labelList& cells = mesh_.cellZones()[zoneName_];
+
+    forAll(cells, i)
     {
-        const tensorField& dZones = D_[zoneI];
-        const tensorField& fZones = F_[zoneI];
+        const label celli = cells[i];
+        const label j = this->fieldIndex(i);
+        const tensor Cd =
+            mu[celli]*D_[j] + (rho[celli]*mag(U[celli]))*F_[j];
 
-        const labelList& cells = mesh_.cellZones()[cellZoneIDs_[zoneI]];
+        const scalar isoCd = tr(Cd);
 
-        forAll(cells, i)
-        {
-            const label celli = cells[i];
-            const label j = this->fieldIndex(i);
-            const tensor Cd =
-                mu[celli]*dZones[j] + (rho[celli]*mag(U[celli]))*fZones[j];
-
-            const scalar isoCd = tr(Cd);
-
-            Udiag[celli] += V[celli]*isoCd;
-            Usource[celli] -= V[celli]*((Cd - I*isoCd) & U[celli]);
-        }
+        Udiag[celli] += V[celli]*isoCd;
+        Usource[celli] -= V[celli]*((Cd - I*isoCd) & U[celli]);
     }
 }
 
@@ -68,22 +62,16 @@ void Foam::porosityModels::DarcyForchheimer::apply
     const vectorField& U
 ) const
 {
-    forAll(cellZoneIDs_, zoneI)
+    const labelList& cells = mesh_.cellZones()[zoneName_];
+
+    forAll(cells, i)
     {
-        const tensorField& dZones = D_[zoneI];
-        const tensorField& fZones = F_[zoneI];
+        const label celli = cells[i];
+        const label j = this->fieldIndex(i);
+        const tensor D = D_[j];
+        const tensor F = F_[j];
 
-        const labelList& cells = mesh_.cellZones()[cellZoneIDs_[zoneI]];
-
-        forAll(cells, i)
-        {
-            const label celli = cells[i];
-            const label j = this->fieldIndex(i);
-            const tensor D = dZones[j];
-            const tensor F = fZones[j];
-
-            AU[celli] += mu[celli]*D + (rho[celli]*mag(U[celli]))*F;
-        }
+        AU[celli] += mu[celli]*D + (rho[celli]*mag(U[celli]))*F;
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,20 +34,17 @@ void Foam::porosityModels::powerLaw::apply
     const vectorField& U
 ) const
 {
+    const labelList& cells = mesh_.cellZones()[zoneName_];
+
     const scalar C0 = C0_;
     const scalar C1m1b2 = (C1_ - 1.0)/2.0;
 
-    forAll(cellZoneIDs_, zoneI)
+    forAll(cells, i)
     {
-        const labelList& cells = mesh_.cellZones()[cellZoneIDs_[zoneI]];
+        const label celli = cells[i];
 
-        forAll(cells, i)
-        {
-            const label celli = cells[i];
-
-            Udiag[celli] +=
-                V[celli]*rho[celli]*C0*pow(magSqr(U[celli]), C1m1b2);
-        }
+        Udiag[celli] +=
+            V[celli]*rho[celli]*C0*pow(magSqr(U[celli]), C1m1b2);
     }
 }
 
@@ -60,20 +57,17 @@ void Foam::porosityModels::powerLaw::apply
     const vectorField& U
 ) const
 {
+    const labelList& cells = mesh_.cellZones()[zoneName_];
+
     const scalar C0 = C0_;
     const scalar C1m1b2 = (C1_ - 1.0)/2.0;
 
-    forAll(cellZoneIDs_, zoneI)
+    forAll(cells, i)
     {
-        const labelList& cells = mesh_.cellZones()[cellZoneIDs_[zoneI]];
+        const label celli = cells[i];
 
-        forAll(cells, i)
-        {
-            const label celli = cells[i];
-
-            AU[celli] =
-                AU[celli] + I*(rho[celli]*C0*pow(magSqr(U[celli]), C1m1b2));
-        }
+        AU[celli] =
+            AU[celli] + I*(rho[celli]*C0*pow(magSqr(U[celli]), C1m1b2));
     }
 }
 

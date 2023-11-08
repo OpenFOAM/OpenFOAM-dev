@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,23 +100,17 @@ Foam::porosityModel::porosityModel
     mesh_(mesh),
     dict_(dict),
     coeffs_(dict.optionalSubDict(modelType + "Coeffs")),
-    zoneName_(cellZoneName),
-    cellZoneIDs_(),
+    zoneName_
+    (
+        cellZoneName != word::null
+      ? cellZoneName
+      : dict_.lookup<word>("cellZone")
+    ),
     coordSys_(coordinateSystem::New(mesh, coeffs_))
 {
-    if (zoneName_ == word::null)
-    {
-        dict_.lookup("cellZone") >> zoneName_;
-    }
-
-    cellZoneIDs_ = mesh_.cellZones().findIndices(zoneName_);
-
     Info<< "    creating porous zone: " << zoneName_ << endl;
 
-    bool foundZone = !cellZoneIDs_.empty();
-    reduce(foundZone, orOp<bool>());
-
-    if (!foundZone && Pstream::master())
+    if (mesh_.cellZones().findIndex(zoneName_) == -1)
     {
         FatalErrorInFunction
             << "cannot find porous cellZone " << zoneName_
@@ -155,11 +149,7 @@ Foam::tmp<Foam::vectorField> Foam::porosityModel::porosityModel::force
     const_cast<porosityModel&>(*this).transformModelData();
 
     tmp<vectorField> tforce(new vectorField(U.size(), Zero));
-
-    if (!cellZoneIDs_.empty())
-    {
-        this->calcForce(U, rho, mu, tforce.ref());
-    }
+    this->calcForce(U, rho, mu, tforce.ref());
 
     return tforce;
 }
@@ -167,11 +157,6 @@ Foam::tmp<Foam::vectorField> Foam::porosityModel::porosityModel::force
 
 void Foam::porosityModel::addResistance(fvVectorMatrix& UEqn)
 {
-    if (cellZoneIDs_.empty())
-    {
-        return;
-    }
-
     transformModelData();
     this->correct(UEqn);
 }
@@ -184,19 +169,14 @@ void Foam::porosityModel::addResistance
     bool correctAUprocBC
 )
 {
-    if (cellZoneIDs_.empty())
-    {
-        return;
-    }
-
     transformModelData();
     this->correct(UEqn, AU);
 
     if (correctAUprocBC)
     {
-        // Correct the boundary conditions of the tensorial diagonal to ensure
-        // processor boundaries are correctly handled when AU^-1 is interpolated
-        // for the pressure equation.
+        // Correct the boundary conditions of the tensorial diagonal to
+        // ensure processor boundaries are correctly handled when AU^-1 is
+        // interpolated for the pressure equation.
         AU.correctBoundaryConditions();
     }
 }
@@ -213,7 +193,6 @@ bool Foam::porosityModel::read(const dictionary& dict)
     coeffs_ = dict.optionalSubDict(type() + "Coeffs");
 
     dict.lookup("cellZone") >> zoneName_;
-    cellZoneIDs_ = mesh_.cellZones().findIndices(zoneName_);
 
     return true;
 }

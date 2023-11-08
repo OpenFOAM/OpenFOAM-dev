@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ Foam::sampledSurfaces::distanceSurface::calcIsoSurf() const
     // Construct an iso-surface at the given distance
     return autoPtr<cutPolyIsoSurface>
     (
-        new cutPolyIsoSurface(mesh(), pointDistance, distance_, zoneIDs())
+        new cutPolyIsoSurface(mesh(), pointDistance, distance_, zoneName())
     );
 }
 

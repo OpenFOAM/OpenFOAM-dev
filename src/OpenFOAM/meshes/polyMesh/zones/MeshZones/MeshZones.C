@@ -270,35 +270,24 @@ Foam::wordList Foam::MeshZones<ZoneType, MeshType>::names() const
 
 
 template<class ZoneType, class MeshType>
-Foam::labelList Foam::MeshZones<ZoneType, MeshType>::findIndices
+bool Foam::MeshZones<ZoneType, MeshType>::found
 (
-    const wordRe& key
+    const word& zoneName
 ) const
 {
-    labelList indices;
-
-    if (!key.empty())
+    if (zoneName != word::null)
     {
-        if (key.isPattern())
+        forAll(*this, i)
         {
-            indices = findStrings(key, this->names());
-        }
-        else
-        {
-            indices.setSize(this->size());
-            label nFound = 0;
-            forAll(*this, i)
+            if (zoneName == operator[](i).name())
             {
-                if (key == operator[](i).name())
-                {
-                    indices[nFound++] = i;
-                }
+                return true;
             }
-            indices.setSize(nFound);
         }
     }
 
-    return indices;
+    // Not found
+    return false;
 }
 
 
@@ -334,6 +323,39 @@ Foam::label Foam::MeshZones<ZoneType, MeshType>::findIndex
 
     // not found
     return -1;
+}
+
+
+template<class ZoneType, class MeshType>
+Foam::labelList Foam::MeshZones<ZoneType, MeshType>::findIndices
+(
+    const wordRe& key
+) const
+{
+    labelList indices;
+
+    if (!key.empty())
+    {
+        if (key.isPattern())
+        {
+            indices = findStrings(key, this->names());
+        }
+        else
+        {
+            indices.setSize(this->size());
+            label nFound = 0;
+            forAll(*this, i)
+            {
+                if (key == operator[](i).name())
+                {
+                    indices[nFound++] = i;
+                }
+            }
+            indices.setSize(nFound);
+        }
+    }
+
+    return indices;
 }
 
 
@@ -381,6 +403,33 @@ Foam::PackedBoolList Foam::MeshZones<ZoneType, MeshType>::findMatching
     }
 
     return lst;
+}
+
+
+template<class ZoneType, class MeshType>
+void Foam::MeshZones<ZoneType, MeshType>::append
+(
+    const word& zoneName,
+    const labelList& cells
+) const
+{
+    MeshZones<ZoneType, MeshType>& zones =
+        const_cast<MeshZones<ZoneType, MeshType>&>(*this);
+
+    const label zoneID = zones.size();
+    zones.setSize(zoneID + 1);
+
+    zones.set
+    (
+        zoneID,
+        new ZoneType
+        (
+            zoneName,
+            cells,
+            zoneID,
+            *this
+        )
+    );
 }
 
 
