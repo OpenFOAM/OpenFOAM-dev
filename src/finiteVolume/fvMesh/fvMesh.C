@@ -806,16 +806,15 @@ Foam::fvMesh::readUpdateState Foam::fvMesh::readUpdate
     }
 
     // Return the corresponding fvMesh read update state
-    switch(state)
+    switch (state)
     {
         case polyMesh::UNCHANGED:
             return UNCHANGED;
         case polyMesh::POINTS_MOVED:
             return
                 stitcher_.valid()
-             && stitcher_->stitches()
              && stitch != stitchType::none
-             && state != polyMesh::UNCHANGED
+             && stitcher_->stitches()
               ? STITCHED
               : POINTS_MOVED;
         case polyMesh::TOPO_CHANGE:
@@ -823,6 +822,8 @@ Foam::fvMesh::readUpdateState Foam::fvMesh::readUpdate
         case polyMesh::TOPO_PATCH_CHANGE:
             return TOPO_PATCH_CHANGE;
     }
+
+    return UNCHANGED;
 }
 
 

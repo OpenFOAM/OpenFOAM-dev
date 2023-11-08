@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
 
 
         // Check for new mesh
-        if (mesh.readUpdate() != polyMesh::UNCHANGED)
+        if (mesh.readUpdate() != fvMesh::UNCHANGED)
         {
             Info<< "Detected changed mesh. Recreating singleCell mesh." << endl;
             scMesh.clear(); // remove any registered objects
