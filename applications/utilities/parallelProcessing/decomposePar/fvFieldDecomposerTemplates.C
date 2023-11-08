@@ -252,44 +252,50 @@ Foam::fvFieldDecomposer::decomposeVolField
                     refCast<const processorCyclicFvPatch>(procPatch)
                    .referPatch().nbrPatchID();
 
+                // Use `fvPatchField<Type>::New` rather than
+                // `new processorCyclicFvPatchField<Type>` so that derivations
+                // (such as non-conformal processor cyclics) are constructed
                 bf.set
                 (
                     procPatchi,
-                    new processorCyclicFvPatchField<Type>
+                    fvPatchField<Type>::New
                     (
+                        procPatch.type(),
                         procPatch,
-                        vf(),
-                        mapCellToFace
-                        (
-                            labelUList(),
-                            completeMesh_.lduAddr().patchAddr
-                            (
-                                nbrCompletePatchi
-                            ),
-                            field.primitiveField(),
-                            faceProcAddressingBf_[proci][procPatchi]
-                        )
+                        vf()
                     )
                 );
+
+                bf[procPatchi] =
+                    mapCellToFace
+                    (
+                        labelUList(),
+                        completeMesh_.lduAddr().patchAddr(nbrCompletePatchi),
+                        field.primitiveField(),
+                        faceProcAddressingBf_[proci][procPatchi]
+                    );
             }
             else if (isA<processorFvPatch>(procPatch))
             {
                 bf.set
                 (
                     procPatchi,
-                    new processorFvPatchField<Type>
+                    fvPatchField<Type>::New
                     (
+                        procPatch.type(),
                         procPatch,
-                        vf(),
-                        mapCellToFace
-                        (
-                            completeMesh_.owner(),
-                            completeMesh_.neighbour(),
-                            field.primitiveField(),
-                            faceProcAddressingBf_[proci][procPatchi]
-                        )
+                        vf()
                     )
                 );
+
+                bf[procPatchi] =
+                    mapCellToFace
+                    (
+                        completeMesh_.owner(),
+                        completeMesh_.neighbour(),
+                        field.primitiveField(),
+                        faceProcAddressingBf_[proci][procPatchi]
+                    );
             }
             else
             {
