@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "genericPointPatchField.H"
-#include "pointPatchFieldMapper.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -141,7 +141,7 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
     const genericPointPatchField<Type>& ptf,
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     genericFieldBase(ptf),
@@ -186,7 +186,7 @@ template<class Type>
 void Foam::genericPointPatchField<Type>::map
 (
     const pointPatchField<Type>& ptf,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     const genericPointPatchField<Type>& dptf =

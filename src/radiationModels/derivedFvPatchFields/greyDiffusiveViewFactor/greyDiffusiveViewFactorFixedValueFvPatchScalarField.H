@@ -106,7 +106,7 @@ public:
             const greyDiffusiveViewFactorFixedValueFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
-            const fvPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
@@ -153,11 +153,7 @@ public:
         // Mapping functions
 
             //- Map the given fvPatchField onto this fvPatchField
-            virtual void map
-            (
-                const fvPatchScalarField&,
-                const fvPatchFieldMapper&
-            );
+            virtual void map(const fvPatchScalarField&, const fieldMapper&);
 
             //- Reset the fvPatchField to the given fvPatchField
             //  Used for mesh to mesh mapping

@@ -72,7 +72,7 @@ rotatingPressureInletOutletVelocityFvPatchVectorField
     const rotatingPressureInletOutletVelocityFvPatchVectorField& pvf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     pressureInletOutletVelocityFvPatchVectorField(pvf, p, iF, mapper),

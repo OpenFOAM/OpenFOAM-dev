@@ -38,8 +38,6 @@ SourceFiles
 
 #include "pointMesh.H"
 #include "pointFields.H"
-#include "pointPatchFieldMapper.H"
-#include "setSizePointPatchFieldMapper.H"
 #include "IOobjectList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -21,60 +21,25 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::identityFvPatchFieldMapper
+Typedef
+    Foam::pointPatchFieldMapper
 
 Description
-    identity fvPatchFieldMapper
+    Backwards compatibility definition for the removal of pointPatchFieldMapper
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef identityFvPatchFieldMapper_H
-#define identityFvPatchFieldMapper_H
-
-#include "fvPatchFieldMapper.H"
-#include "identityFieldMapper.H"
+#ifndef pointPatchFieldMapperFwd_H
+#define pointPatchFieldMapperFwd_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+    class fieldMapper;
 
-/*---------------------------------------------------------------------------*\
-                  Class identityFvPatchFieldMapper Declaration
-\*---------------------------------------------------------------------------*/
-
-class identityFvPatchFieldMapper
-:
-    public fvPatchFieldMapper,
-    public identityFieldMapper
-{
-public:
-
-    // Constructors
-
-        //- Construct
-        identityFvPatchFieldMapper()
-        {}
-
-
-    //- Destructor
-    virtual ~identityFvPatchFieldMapper()
-    {}
-
-
-    // Member Functions
-
-        virtual bool hasUnmapped() const
-        {
-            return false;
-        }
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
+    typedef fieldMapper pointPatchFieldMapper;
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

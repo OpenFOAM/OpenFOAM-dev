@@ -140,7 +140,7 @@ public:
             const codedFixedValuePointPatchField<Type>&,
             const pointPatch&,
             const DimensionedField<Type, pointMesh>&,
-            const pointPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference

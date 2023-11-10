@@ -25,7 +25,7 @@ License
 
 #include "nutURoughWallFunctionFvPatchScalarField.H"
 #include "momentumTransportModel.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -227,7 +227,7 @@ nutURoughWallFunctionFvPatchScalarField::nutURoughWallFunctionFvPatchScalarField
     const nutURoughWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     nutUWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
@@ -253,7 +253,7 @@ nutURoughWallFunctionFvPatchScalarField::nutURoughWallFunctionFvPatchScalarField
 void nutURoughWallFunctionFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     nutUWallFunctionFvPatchScalarField::map(ptf, mapper);

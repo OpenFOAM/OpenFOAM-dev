@@ -25,7 +25,7 @@ License
 
 #include "smoluchowskiJumpTFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "basicThermo.H"
 #include "mathematicalConstants.H"
@@ -85,7 +85,7 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
     const smoluchowskiJumpTFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchScalarField(ptf, p, iF, mapper),
@@ -117,7 +117,7 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
 void Foam::smoluchowskiJumpTFvPatchScalarField::map
 (
     const fvPatchField<scalar>& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     mixedFvPatchField<scalar>::map(ptf, mapper);

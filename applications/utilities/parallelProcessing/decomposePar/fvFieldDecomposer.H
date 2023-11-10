@@ -40,7 +40,7 @@ SourceFiles
 #include "IOobjectList.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "directFvPatchFieldMapper.H"
+#include "directFieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,7 +63,7 @@ public:
         class patchFieldDecomposer
         :
             public labelList,
-            public directFvPatchFieldMapper
+            public directFieldMapper
         {
         public:
 

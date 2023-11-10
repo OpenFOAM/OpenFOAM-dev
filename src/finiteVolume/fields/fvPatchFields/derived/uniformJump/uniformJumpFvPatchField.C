@@ -63,7 +63,7 @@ Foam::uniformJumpFvPatchField<Type>::uniformJumpFvPatchField
     const uniformJumpFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedJumpFvPatchField<Type>(ptf, p, iF, mapper),

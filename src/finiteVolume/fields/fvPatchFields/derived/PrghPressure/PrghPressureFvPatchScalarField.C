@@ -25,7 +25,7 @@ License
 
 #include "PrghPressureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "uniformDimensionedFields.H"
 
@@ -52,7 +52,7 @@ PrghPressureFvPatchScalarField
     const PrghPressureFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     PressureFvPatchScalarField(ptf, p, iF, mapper),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ SourceFiles
 
 #include "fvMesh.H"
 #include "HashTable.H"
-#include "fvPatchMapper.H"
+#include "generalFieldMapper.H"
 #include "scalarList.H"
 #include "className.H"
 
@@ -179,7 +179,7 @@ public:
     //- Patch-field interpolation class
     class patchFieldInterpolator
     :
-        public generalFvPatchFieldMapper
+        public generalFieldMapper
     {
         const labelList& directAddressing_;
 

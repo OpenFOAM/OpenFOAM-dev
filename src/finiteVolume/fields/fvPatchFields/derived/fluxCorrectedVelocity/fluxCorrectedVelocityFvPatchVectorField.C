@@ -25,7 +25,7 @@ License
 
 #include "fluxCorrectedVelocityFvPatchVectorField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
@@ -53,7 +53,7 @@ fluxCorrectedVelocityFvPatchVectorField
     const fluxCorrectedVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     zeroGradientFvPatchVectorField(ptf, p, iF, mapper),

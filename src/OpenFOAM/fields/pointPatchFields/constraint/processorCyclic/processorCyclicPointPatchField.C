@@ -60,7 +60,7 @@ Foam::processorCyclicPointPatchField<Type>::processorCyclicPointPatchField
     const processorCyclicPointPatchField<Type>& ptf,
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     coupledPointPatchField<Type>(ptf, p, iF, mapper),

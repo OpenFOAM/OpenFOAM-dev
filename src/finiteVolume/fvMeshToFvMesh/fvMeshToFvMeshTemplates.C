@@ -24,9 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvMeshToFvMesh.H"
-#include "directFvPatchFieldMapper.H"
-#include "identityFvPatchFieldMapper.H"
-#include "patchToPatchFvPatchFieldMapper.H"
+#include "directFieldMapper.H"
+#include "identityFieldMapper.H"
+#include "patchToPatchLeftOverFieldMapper.H"
+#include "patchToPatchNormalisedFieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -139,7 +140,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
                     srcFld.boundaryField()[srcPatchi],
                     tgtMesh.boundary()[tgtPatchi],
                     DimensionedField<Type, volMesh>::null(),
-                    directFvPatchFieldMapper
+                    directFieldMapper
                     (
                         labelList(tgtMesh.boundary()[tgtPatchi].size(), -1)
                     )
@@ -195,7 +196,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         tgtBfld[tgtPatchi].map
         (
             srcFld.boundaryField()[srcPatchi],
-            patchToPatchNormalisedFvPatchFieldMapper
+            patchToPatchNormalisedFieldMapper
             (
                 patchInterpolation(i),
                 tgtPatchStabilisation(i)
@@ -248,12 +249,12 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         tgtBfld[tgtPatchi].map
         (
             leftOverTgtFld.boundaryField()[tgtPatchi],
-            identityFvPatchFieldMapper()
+            identityFieldMapper()
         );
         tgtBfld[tgtPatchi].map
         (
             srcFld.boundaryField()[srcPatchi],
-            patchToPatchLeftOverFvPatchFieldMapper(patchInterpolation(i))
+            patchToPatchLeftOverFieldMapper(patchInterpolation(i))
         );
     }
 
@@ -337,7 +338,7 @@ Foam::fvMeshToFvMesh::srcToTgt
                     srcBfld[srcPatchi],
                     tgtMesh.boundary()[tgtPatchi],
                     DimensionedField<Type, surfaceMesh>::null(),
-                    patchToPatchNormalisedFvPatchFieldMapper
+                    patchToPatchNormalisedFieldMapper
                     (
                         patchInterpolation(i),
                         tgtPatchStabilisation(i)

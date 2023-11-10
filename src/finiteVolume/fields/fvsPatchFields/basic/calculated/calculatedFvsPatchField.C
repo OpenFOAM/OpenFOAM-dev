@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "calculatedFvsPatchField.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,7 +66,7 @@ Foam::calculatedFvsPatchField<Type>::calculatedFvsPatchField
     const calculatedFvsPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fvsPatchField<Type>(ptf, p, iF, mapper)

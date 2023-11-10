@@ -83,7 +83,7 @@ public:
             const symmetryPlaneFvsPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, surfaceMesh>&,
-            const fvPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference

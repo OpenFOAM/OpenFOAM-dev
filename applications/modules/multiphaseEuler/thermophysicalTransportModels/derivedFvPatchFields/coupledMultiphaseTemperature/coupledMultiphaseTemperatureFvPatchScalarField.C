@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coupledMultiphaseTemperatureFvPatchScalarField.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "phaseSystem.H"
 #include "compressibleMomentumTransportModel.H"
 #include "phaseCompressibleMomentumTransportModel.H"
@@ -190,7 +190,7 @@ coupledMultiphaseTemperatureFvPatchScalarField
     const coupledMultiphaseTemperatureFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     coupledTemperatureFvPatchScalarField(psf, p, iF, mapper)

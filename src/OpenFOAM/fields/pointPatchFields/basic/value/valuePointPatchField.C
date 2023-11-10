@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "valuePointPatchField.H"
-#include "pointPatchFieldMapper.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -96,7 +96,7 @@ Foam::valuePointPatchField<Type>::valuePointPatchField
     const valuePointPatchField<Type>& ptf,
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     pointPatchField<Type>(ptf, p, iF, mapper),
@@ -122,7 +122,7 @@ template<class Type>
 void Foam::valuePointPatchField<Type>::map
 (
     const pointPatchField<Type>& ptf,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     const valuePointPatchField<Type>& vptf =

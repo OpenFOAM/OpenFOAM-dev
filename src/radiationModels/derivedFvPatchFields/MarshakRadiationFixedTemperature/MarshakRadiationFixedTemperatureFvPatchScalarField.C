@@ -25,7 +25,7 @@ License
 
 #include "MarshakRadiationFixedTemperatureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "radiationModel.H"
 #include "physicoChemicalConstants.H"
@@ -62,7 +62,7 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
     const MarshakRadiationFixedTemperatureFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchScalarField(ptf, p, iF, mapper),
@@ -100,7 +100,7 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
 void Foam::MarshakRadiationFixedTemperatureFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     mixedFvPatchScalarField::map(ptf, mapper);

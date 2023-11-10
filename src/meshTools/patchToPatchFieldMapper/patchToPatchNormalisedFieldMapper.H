@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,17 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::pointPatchFieldMapperPatchRef
+    Foam::patchToPatchNormalisedFieldMapper
 
 Description
-    Foam::pointPatchFieldMapperPatchRef
+    Patch-to-patch fieldMapper which fills values for non-overlapping parts of
+    the target patch by normalisation (for partly non-overlapping faces), or by
+    referencing values from the nearest overlapping part (for completely
+    non-overlapping faces).
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef pointPatchFieldMapperPatchRef_H
-#define pointPatchFieldMapperPatchRef_H
+#ifndef patchToPatchNormalisedFieldMapper_H
+#define patchToPatchNormalisedFieldMapper_H
 
-#include "pointPatchFieldMapper.H"
+#include "patchToPatchFieldMapper.H"
+#include "patchToPatchStabilisation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,58 +44,64 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                Class pointPatchFieldMapperPatchRef Declaration
+           Class patchToPatchNormalisedFieldMapper Declaration
 \*---------------------------------------------------------------------------*/
 
-class pointPatchFieldMapperPatchRef
+class patchToPatchNormalisedFieldMapper
 :
-    public generalPointPatchFieldMapper
+    public patchToPatchFieldMapper
 {
     // Private Data
 
-        const pointPatch& sourcePatch_;
-        const pointPatch& targetPatch_;
+        //- Patch stabilisation engine
+        const patchToPatchStabilisation& pS_;
+
+
+    // Private Member Functions
+
+        //- Map from one field to another
+        template<class Type>
+        void map(Field<Type>& f, const Field<Type>& mapF) const;
+
+        //- Map a field and return the result as tmp
+        template<class Type>
+        tmp<Field<Type>> map(const Field<Type>& mapF) const;
 
 
 public:
 
     // Constructors
 
-        //- Construct from components
-        pointPatchFieldMapperPatchRef
+        //- Construct given a patch-to-patch interpolation and stabilisation
+        patchToPatchNormalisedFieldMapper
         (
-            const pointPatch& source,
-            const pointPatch& target
+            const patchToPatch& pToP,
+            const patchToPatchStabilisation& pS
         )
         :
-            sourcePatch_(source),
-            targetPatch_(target)
+            patchToPatchFieldMapper(pToP),
+            pS_(pS)
         {}
 
-        //- Disallow default bitwise copy construction
-        pointPatchFieldMapperPatchRef
-        (
-            const pointPatchFieldMapperPatchRef&
-        ) = delete;
+
+    //- Destructor
+    virtual ~patchToPatchNormalisedFieldMapper()
+    {}
 
 
     // Member Functions
 
-        const pointPatch& sourcePatch() const
+        //- Return whether or not all faces receive a mapped value
+        virtual bool hasUnmapped() const
         {
-            return sourcePatch_;
-        }
-
-        const pointPatch& targetPatch() const
-        {
-            return targetPatch_;
+            return false;
         }
 
 
     // Member Operators
 
-        //- Disallow default bitwise assignment
-        void operator=(const pointPatchFieldMapperPatchRef&) = delete;
+        //- Map a field
+        FOR_ALL_FIELD_TYPES(DEFINE_FIELD_MAPPER_OPERATOR, );
 };
 
 

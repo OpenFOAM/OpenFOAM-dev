@@ -25,7 +25,7 @@ License
 
 #include "codedFixedValuePointPatchFieldTemplate.H"
 #include "addToRunTimeSelectionTable.H"
-#include "pointPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "pointFields.H"
 #include "unitConversion.H"
 //{{{ begin codeInclude
@@ -106,7 +106,7 @@ ${typeName}FixedValuePointPatch${FieldType}
     const ${typeName}FixedValuePointPatch${FieldType}& ptf,
     const pointPatch& p,
     const DimensionedField<${TemplateType}, pointMesh>& iF,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValuePointPatchField<${TemplateType}>(ptf, p, iF, mapper)

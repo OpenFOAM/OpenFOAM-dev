@@ -50,7 +50,7 @@ hydrostaticDisplacementFvPatchVectorField
     const hydrostaticDisplacementFvPatchVectorField& tdpvf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     tractionDisplacementFvPatchVectorField(tdpvf, p, iF, mapper),

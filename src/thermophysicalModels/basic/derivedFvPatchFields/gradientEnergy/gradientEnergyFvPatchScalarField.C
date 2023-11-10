@@ -27,7 +27,7 @@ License
 #include "gradientEnergyFvPatchScalarField.H"
 #include "gradientEnergyCalculatedTemperatureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "basicThermo.H"
 
@@ -62,7 +62,7 @@ gradientEnergyFvPatchScalarField
     const gradientEnergyFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedGradientFvPatchScalarField(ptf, p, iF, mapper)

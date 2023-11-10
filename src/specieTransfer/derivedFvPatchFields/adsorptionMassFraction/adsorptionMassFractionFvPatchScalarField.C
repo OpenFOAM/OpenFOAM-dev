@@ -50,7 +50,7 @@ adsorptionMassFractionFvPatchScalarField
     const adsorptionMassFractionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     specieTransferMassFractionFvPatchScalarField(ptf, p, iF, mapper)

@@ -44,6 +44,7 @@ SourceFiles
 
 #include "pointPatch.H"
 #include "DimensionedField.H"
+#include "pointPatchFieldMapperFwd.H"
 #include "fieldTypes.H"
 #include "autoPtr.H"
 
@@ -56,7 +57,7 @@ namespace Foam
 
 class objectRegistry;
 class dictionary;
-class pointPatchFieldMapper;
+class fieldMapper;
 class pointMesh;
 
 // Forward declaration of friend functions and operators
@@ -128,7 +129,7 @@ public:
                 const pointPatchField<Type>& ptf,
                 const pointPatch& p,
                 const DimensionedField<Type, pointMesh>& iF,
-                const pointPatchFieldMapper& m
+                const fieldMapper& m
             ),
             (dynamic_cast<const pointPatchFieldType&>(ptf), p, iF, m)
         );
@@ -170,7 +171,7 @@ public:
             const pointPatchField<Type>&,
             const pointPatch&,
             const DimensionedField<Type, pointMesh>&,
-            const pointPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
@@ -239,7 +240,7 @@ public:
             const pointPatchField<Type>&,
             const pointPatch&,
             const DimensionedField<Type, pointMesh>&,
-            const pointPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Return a pointer to a new patchField created on freestore
@@ -399,11 +400,7 @@ public:
         // Mapping functions
 
             //- Map the given pointPatchField onto this pointPatchField
-            virtual void map
-            (
-                const pointPatchField<Type>&,
-                const pointPatchFieldMapper&
-            )
+            virtual void map(const pointPatchField<Type>&, const fieldMapper&)
             {}
 
             //- Reset the pointPatchField to the given pointPatchField

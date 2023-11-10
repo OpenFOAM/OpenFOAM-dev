@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "contactAngleFvPatchScalarField.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volMesh.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -86,7 +86,7 @@ Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
     const contactAngleFvPatchScalarField& acpsf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedGradientFvPatchScalarField(acpsf, p, iF, mapper),

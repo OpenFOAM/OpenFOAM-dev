@@ -158,7 +158,7 @@ Foam::fanPressureJumpFvPatchScalarField::fanPressureJumpFvPatchScalarField
     const fanPressureJumpFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedJumpFvPatchScalarField(ptf, p, iF, mapper),

@@ -106,7 +106,7 @@ timeVaryingMappedFixedValuePointPatchField
     const timeVaryingMappedFixedValuePointPatchField<Type>& ptf,
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValuePointPatchField<Type>(ptf, p, iF, mapper),
@@ -157,7 +157,7 @@ template<class Type>
 void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::map
 (
     const pointPatchField<Type>& ptf,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     fixedValuePointPatchField<Type>::map(ptf, mapper);

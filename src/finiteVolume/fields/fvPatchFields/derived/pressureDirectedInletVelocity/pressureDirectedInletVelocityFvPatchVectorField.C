@@ -25,7 +25,7 @@ License
 
 #include "pressureDirectedInletVelocityFvPatchVectorField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
@@ -53,7 +53,7 @@ pressureDirectedInletVelocityFvPatchVectorField
     const pressureDirectedInletVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
@@ -82,7 +82,7 @@ pressureDirectedInletVelocityFvPatchVectorField
 void Foam::pressureDirectedInletVelocityFvPatchVectorField::map
 (
     const fvPatchVectorField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     fixedValueFvPatchVectorField::map(ptf, mapper);

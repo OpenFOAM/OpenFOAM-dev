@@ -26,7 +26,7 @@ License
 #include "coupledTemperatureFvPatchScalarField.H"
 #include "thermophysicalTransportModel.H"
 #include "volFields.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "mappedPatchBase.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -211,7 +211,7 @@ coupledTemperatureFvPatchScalarField
     const coupledTemperatureFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchScalarField(psf, p, iF, mapper),

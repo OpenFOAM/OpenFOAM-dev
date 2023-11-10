@@ -25,7 +25,7 @@ License
 
 #include "codedFixedValueFvPatchFieldTemplate.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "unitConversion.H"
@@ -107,7 +107,7 @@ ${typeName}FixedValueFvPatch${FieldType}
     const ${typeName}FixedValueFvPatch${FieldType}& ptf,
     const fvPatch& p,
     const DimensionedField<${TemplateType}, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchField<${TemplateType}>(ptf, p, iF, mapper)

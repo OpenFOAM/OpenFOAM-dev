@@ -66,7 +66,7 @@ filmSurfaceVelocityFvPatchVectorField
     const filmSurfaceVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchField<vector>(ptf, p, iF, mapper),

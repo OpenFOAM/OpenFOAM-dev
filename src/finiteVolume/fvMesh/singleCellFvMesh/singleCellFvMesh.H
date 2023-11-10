@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ SourceFiles
 #ifndef singleCellFvMesh_H
 #define singleCellFvMesh_H
 
-#include "fvPatchFieldMapper.H"
+#include "generalFieldMapper.H"
 #include "fvMesh.H"
 #include "labelListIOList.H"
 
@@ -83,7 +83,7 @@ public:
         //- Patch field mapper class for agglomerated meshes
         class agglomPatchFieldMapper
         :
-            public generalFvPatchFieldMapper
+            public generalFieldMapper
         {
             // Private Data
 

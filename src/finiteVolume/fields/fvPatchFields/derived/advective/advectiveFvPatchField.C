@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "advectiveFvPatchField.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "EulerDdtScheme.H"
 #include "CrankNicolsonDdtScheme.H"
@@ -89,7 +89,7 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
     const advectiveFvPatchField& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchField<Type>(ptf, p, iF, mapper),

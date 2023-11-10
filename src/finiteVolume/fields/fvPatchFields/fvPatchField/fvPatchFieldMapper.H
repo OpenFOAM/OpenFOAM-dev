@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,68 +21,13 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::fvPatchFieldMapper
-
-Description
-    Foam::fvPatchFieldMapper
-
 \*---------------------------------------------------------------------------*/
 
 #ifndef fvPatchFieldMapper_H
 #define fvPatchFieldMapper_H
 
-#include "generalFieldMapper.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
-/*---------------------------------------------------------------------------*\
-                     Class fvPatchFieldMapper Declaration
-\*---------------------------------------------------------------------------*/
-
-class fvPatchFieldMapper
-:
-    virtual public fieldMapper
-{
-
-public:
-
-    // Constructors
-
-        //- Null constructor
-        fvPatchFieldMapper()
-        {}
-};
-
-
-/*---------------------------------------------------------------------------*\
-                  Class generalFvPatchFieldMapper Declaration
-\*---------------------------------------------------------------------------*/
-
-class generalFvPatchFieldMapper
-:
-    public fvPatchFieldMapper,
-    public generalFieldMapper
-{
-
-public:
-
-    // Constructors
-
-        //- Null constructor
-        generalFvPatchFieldMapper()
-        {}
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "fieldMapper.H"
+#include "fvPatchFieldMapperFwd.H"
 
 #endif
 

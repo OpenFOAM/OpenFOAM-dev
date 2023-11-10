@@ -70,7 +70,7 @@ oscillatingVelocityPointPatchVectorField
     const oscillatingVelocityPointPatchVectorField& ptf,
     const pointPatch& p,
     const DimensionedField<vector, pointMesh>& iF,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValuePointPatchField<vector>(ptf, p, iF, mapper),
@@ -99,7 +99,7 @@ oscillatingVelocityPointPatchVectorField
 void oscillatingVelocityPointPatchVectorField::map
 (
     const pointPatchField<vector>& ptf,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     const oscillatingVelocityPointPatchVectorField& oVptf =

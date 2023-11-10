@@ -46,6 +46,7 @@ SourceFiles
 
 #include "fvPatch.H"
 #include "DimensionedField.H"
+#include "fvPatchFieldMapperFwd.H"
 #include "fileNameList.H"
 #include "fieldTypes.H"
 
@@ -58,7 +59,7 @@ namespace Foam
 
 class objectRegistry;
 class dictionary;
-class fvPatchFieldMapper;
+class fieldMapper;
 class volMesh;
 
 
@@ -142,7 +143,7 @@ public:
                 const fvPatchField<Type>& ptf,
                 const fvPatch& p,
                 const DimensionedField<Type, volMesh>& iF,
-                const fvPatchFieldMapper& m
+                const fieldMapper& m
             ),
             (dynamic_cast<const fvPatchFieldType&>(ptf), p, iF, m)
         );
@@ -193,7 +194,7 @@ public:
             const fvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&,
+            const fieldMapper&,
             const bool mappingRequired=true
         );
 
@@ -269,7 +270,7 @@ public:
             const fvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Return a pointer to a new patchField created on freestore
@@ -386,11 +387,7 @@ public:
         // Mapping functions
 
             //- Map the given fvPatchField onto this fvPatchField
-            virtual void map
-            (
-                const fvPatchField<Type>&,
-                const fvPatchFieldMapper&
-            );
+            virtual void map(const fvPatchField<Type>&, const fieldMapper&);
 
             //- Reset the fvPatchField to the given fvPatchField
             //  Used for mesh to mesh mapping

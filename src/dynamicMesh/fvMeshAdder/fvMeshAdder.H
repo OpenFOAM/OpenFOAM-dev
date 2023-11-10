@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ SourceFiles
 #include "volFieldsFwd.H"
 #include "fvPatchFieldsFwd.H"
 #include "fvsPatchFieldsFwd.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "DimensionedField.H"
 #include "pointFieldsFwd.H"
 

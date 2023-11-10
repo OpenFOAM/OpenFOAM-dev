@@ -25,7 +25,7 @@ License
 
 #include "rotatingTotalPressureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
@@ -52,7 +52,7 @@ rotatingTotalPressureFvPatchScalarField
     const rotatingTotalPressureFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     totalPressureFvPatchScalarField(psf, p, iF, mapper),

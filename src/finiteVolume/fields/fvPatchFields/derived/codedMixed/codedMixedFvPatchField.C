@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "codedMixedFvPatchField.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
@@ -124,7 +124,7 @@ Foam::codedMixedFvPatchField<Type>::codedMixedFvPatchField
     const codedMixedFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchField<Type>(ptf, p, iF, mapper),

@@ -75,7 +75,7 @@ public:
             const ${typeName}FixedValuePointPatch${FieldType}&,
             const pointPatch&,
             const DimensionedField<${TemplateType}, pointMesh>&,
-            const pointPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference

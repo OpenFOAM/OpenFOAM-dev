@@ -26,7 +26,7 @@ License
 #include "IOobject.H"
 #include "dictionary.H"
 #include "fvMesh.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -97,7 +97,7 @@ Foam::fvsPatchField<Type>::fvsPatchField
     const fvsPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
-    const fvPatchFieldMapper& mapper,
+    const fieldMapper& mapper,
     const bool mappingRequired
 )
 :
@@ -150,7 +150,7 @@ template<class Type>
 void Foam::fvsPatchField<Type>::map
 (
     const fvsPatchField<Type>& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     mapper(*this, ptf);

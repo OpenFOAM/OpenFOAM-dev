@@ -115,7 +115,7 @@ public:
             const conformedFvsPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, surfaceMesh>&,
-            const fvPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
@@ -149,11 +149,7 @@ public:
         // Mapping functions
 
             //- Map the given fvsPatchField onto this fvsPatchField
-            virtual void map
-            (
-                const fvsPatchField<Type>&,
-                const fvPatchFieldMapper&
-            );
+            virtual void map(const fvsPatchField<Type>&, const fieldMapper&);
 
             //- Reset the fvsPatchField to the given fvsPatchField
             //  Used for mesh to mesh mapping

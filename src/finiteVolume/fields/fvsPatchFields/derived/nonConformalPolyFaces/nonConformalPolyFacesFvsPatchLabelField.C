@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nonConformalPolyFacesFvsPatchLabelField.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -63,7 +63,7 @@ nonConformalPolyFacesFvsPatchLabelField
     const nonConformalPolyFacesFvsPatchLabelField& ptf,
     const fvPatch& p,
     const DimensionedField<label, surfaceMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fvsPatchLabelField(ptf, p, iF, mapper)

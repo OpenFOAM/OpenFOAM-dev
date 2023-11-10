@@ -25,7 +25,7 @@ License
 
 #include "turbulentMixingLengthFrequencyInletFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "surfaceFields.H"
 #include "volFields.H"
 #include "momentumTransportModel.H"
@@ -65,7 +65,7 @@ turbulentMixingLengthFrequencyInletFvPatchScalarField
     const turbulentMixingLengthFrequencyInletFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     inletOutletFvPatchScalarField(ptf, p, iF, mapper),

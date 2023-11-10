@@ -64,7 +64,7 @@ solidBodyMotionDisplacementPointPatchVectorField
     const solidBodyMotionDisplacementPointPatchVectorField& ptf,
     const pointPatch& p,
     const DimensionedField<vector, pointMesh>& iF,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValuePointPatchVectorField(ptf, p, iF, mapper),

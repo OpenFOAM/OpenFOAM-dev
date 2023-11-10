@@ -153,7 +153,7 @@ externalTemperatureFvPatchScalarField
     const externalTemperatureFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchScalarField(ptf, p, iF, mapper),
@@ -209,7 +209,7 @@ externalTemperatureFvPatchScalarField
 void Foam::externalTemperatureFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     mixedFvPatchScalarField::map(ptf, mapper);

@@ -131,7 +131,7 @@ Foam::atmBoundaryLayer::atmBoundaryLayer
 Foam::atmBoundaryLayer::atmBoundaryLayer
 (
     const atmBoundaryLayer& abl,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     flowDir_(abl.flowDir_),
@@ -173,7 +173,7 @@ Foam::atmBoundaryLayer::atmBoundaryLayer(const atmBoundaryLayer& abl)
 void Foam::atmBoundaryLayer::map
 (
     const atmBoundaryLayer& blptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     mapper(z0_, blptf.z0_);

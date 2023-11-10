@@ -69,7 +69,7 @@ freestreamPressureFvPatchScalarField
     const freestreamPressureFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchScalarField(psf, p, iF, mapper),

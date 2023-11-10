@@ -220,7 +220,7 @@ public:
             void map
             (
                 const timeVaryingMappedFvPatchField<Type>&,
-                const fvPatchFieldMapper&
+                const fieldMapper&
             );
 
             //- Reset the fvPatchField to the given fvPatchField

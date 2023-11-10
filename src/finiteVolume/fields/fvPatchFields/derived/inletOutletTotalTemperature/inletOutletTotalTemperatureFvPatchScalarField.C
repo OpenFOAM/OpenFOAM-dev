@@ -25,7 +25,7 @@ License
 
 #include "inletOutletTotalTemperatureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
@@ -71,7 +71,7 @@ inletOutletTotalTemperatureFvPatchScalarField
     const inletOutletTotalTemperatureFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     inletOutletFvPatchScalarField(ptf, p, iF, mapper),
@@ -102,7 +102,7 @@ inletOutletTotalTemperatureFvPatchScalarField
 void Foam::inletOutletTotalTemperatureFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     inletOutletFvPatchScalarField::map(ptf, mapper);

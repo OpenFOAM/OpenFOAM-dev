@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,38 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "directFieldMapper.H"
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+void Foam::directFieldMapper::map
+(
+    Field<Type>& f,
+    const Field<Type>& mapF
+) const
+{
+    if (notNull(addressing_) && addressing_.size())
+    {
+        f.map(mapF, addressing_);
+    }
+    else
+    {
+        f.setSize(0);
+    }
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::directFieldMapper::map
+(
+    const Field<Type>& mapF
+) const
+{
+    tmp<Field<Type>> tf(new Field<Type>(addressing_.size()));
+    map(tf.ref(), mapF);
+    return tf;
+}
+
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 

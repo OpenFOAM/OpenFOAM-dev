@@ -25,7 +25,7 @@ License
 
 #include "waveTransmissiveFvPatchField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "EulerDdtScheme.H"
 #include "CrankNicolsonDdtScheme.H"
@@ -53,7 +53,7 @@ Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
     const waveTransmissiveFvPatchField& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     advectiveFvPatchField<Type>(ptf, p, iF, mapper),

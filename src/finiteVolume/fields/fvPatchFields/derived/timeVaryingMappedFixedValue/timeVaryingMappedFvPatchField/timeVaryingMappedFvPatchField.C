@@ -386,7 +386,7 @@ template<class Type>
 void Foam::timeVaryingMappedFvPatchField<Type>::map
 (
     const timeVaryingMappedFvPatchField<Type>& tiptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     mapper(startSampledValues_, tiptf.startSampledValues_);

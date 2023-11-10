@@ -111,7 +111,7 @@ multiphaseExternalTemperatureFvPatchScalarField
     const multiphaseExternalTemperatureFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     externalTemperatureFvPatchScalarField(psf, p, iF, mapper)

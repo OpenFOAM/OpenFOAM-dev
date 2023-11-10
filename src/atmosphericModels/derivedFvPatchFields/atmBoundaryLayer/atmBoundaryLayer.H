@@ -217,7 +217,7 @@ public:
         atmBoundaryLayer
         (
             const atmBoundaryLayer&,
-            const fvPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Copy constructor
@@ -250,7 +250,7 @@ public:
         // Mapping functions
 
             //- Map the given atmBoundaryLayer onto this atmBoundaryLayer
-            void map(const atmBoundaryLayer&, const fvPatchFieldMapper&);
+            void map(const atmBoundaryLayer&, const fieldMapper&);
 
             //- Reset the atmBoundaryLayer to the given atmBoundaryLayer
             //  Used for mesh to mesh mapping

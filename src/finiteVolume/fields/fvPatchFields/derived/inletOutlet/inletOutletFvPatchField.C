@@ -80,7 +80,7 @@ Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
     const inletOutletFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchField<Type>(ptf, p, iF, mapper),

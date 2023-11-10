@@ -29,8 +29,8 @@ License
 #include "ListOps.H"
 #include "ListListOps.H"
 #include "nonConformalFvPatch.H"
-#include "fvPatchFieldMapper.H"
-#include "setSizeFvPatchFieldMapper.H"
+#include "fieldMapper.H"
+#include "setSizeFieldMapper.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -246,7 +246,7 @@ void Foam::PatchCollisionDensity<CloudType>::preEvolve()
 
             if (isA<nonConformalFvPatch>(fvp))
             {
-                const setSizeFvPatchFieldMapper mapper(fvp.size());
+                const setSizeFieldMapper mapper(fvp.size());
 
                 numberCollisionDensity_[patchi].map
                 (

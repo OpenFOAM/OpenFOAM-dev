@@ -46,7 +46,7 @@ Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
     const mappedFilmPressureFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     zeroGradientFvPatchField<scalar>(ptf, p, iF, mapper)

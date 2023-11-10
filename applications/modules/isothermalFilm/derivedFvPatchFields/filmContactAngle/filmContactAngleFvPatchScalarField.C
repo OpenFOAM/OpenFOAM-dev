@@ -45,7 +45,7 @@ Foam::filmContactAngleFvPatchScalarField::filmContactAngleFvPatchScalarField
     const filmContactAngleFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     zeroGradientFvPatchScalarField(psf, p, iF, mapper),

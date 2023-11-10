@@ -45,13 +45,15 @@ namespace Foam
 
 class identityFieldMapper
 :
-    virtual public fieldMapper
+    public fieldMapper
 {
     // Private Member Functions
 
+        //- Map a field in-place
         template<class Type>
         void map(Field<Type>& f, const Field<Type>& mapF) const;
 
+        //- Map a field and return the result
         template<class Type>
         tmp<Field<Type>> map(const Field<Type>& f) const;
 
@@ -72,8 +74,7 @@ public:
 
     // Member Functions
 
-        //- Are there unmapped values? I.e. do all size() elements get
-        //  get value
+        //- Are there unmapped values? Do all elements get get a value?
         virtual bool hasUnmapped() const
         {
             return false;
@@ -93,12 +94,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "identityFieldMapperTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -80,7 +80,7 @@ activePressureForceBaffleVelocityFvPatchVectorField
     const activePressureForceBaffleVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
@@ -131,7 +131,7 @@ activePressureForceBaffleVelocityFvPatchVectorField
 void Foam::activePressureForceBaffleVelocityFvPatchVectorField::map
 (
     const fvPatchVectorField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     fixedValueFvPatchVectorField::map(ptf, mapper);

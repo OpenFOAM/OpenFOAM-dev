@@ -58,7 +58,7 @@ Foam::fvFieldDecomposer::patchFieldDecomposer::patchFieldDecomposer
 )
 :
     labelList(mag(addressing) - 1),
-    directFvPatchFieldMapper(static_cast<const labelList&>(*this))
+    directFieldMapper(static_cast<const labelList&>(*this))
 {}
 
 

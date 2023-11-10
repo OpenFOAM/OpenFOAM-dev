@@ -90,7 +90,7 @@ mappedInternalValueFvPatchField
     const mappedInternalValueFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
@@ -135,7 +135,7 @@ template<class Type>
 void Foam::mappedInternalValueFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     fixedValueFvPatchField<Type>::map(ptf, mapper);

@@ -29,9 +29,8 @@ Description
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "conformedFvsPatchField.H"
-#include "fvPatchFieldMapper.H"
 #include "fvMeshStitcher.H"
-#include "setSizeFvPatchFieldMapper.H"
+#include "setSizeFieldMapper.H"
 #include "nonConformalBoundary.H"
 #include "nonConformalCyclicFvPatch.H"
 #include "nonConformalProcessorCyclicFvPatch.H"
@@ -55,7 +54,7 @@ void Foam::fvMeshStitcher::resizePatchFields()
 
             if (isA<nonConformalFvPatch>(pf.patch()))
             {
-                pf.map(pf, setSizeFvPatchFieldMapper(pf.patch().size()));
+                pf.map(pf, setSizeFieldMapper(pf.patch().size()));
             }
         }
     }

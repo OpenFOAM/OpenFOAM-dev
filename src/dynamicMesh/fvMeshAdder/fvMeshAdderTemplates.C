@@ -26,10 +26,8 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "pointFields.H"
-#include "directFvPatchFieldMapper.H"
-#include "directPointPatchFieldMapper.H"
-#include "reverseFvPatchFieldMapper.H"
-#include "reversePointPatchFieldMapper.H"
+#include "directFieldMapper.H"
+#include "reverseFieldMapper.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -143,9 +141,6 @@ void Foam::fvMeshAdder::MapVolField
                     )
                 );
 
-                directFvPatchFieldMapper patchMapper(newToOld);
-
-
                 // Create new patchField with same type as existing one.
                 // Note:
                 // - boundaryField already in new order so access with newPatchi
@@ -161,7 +156,7 @@ void Foam::fvMeshAdder::MapVolField
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new fvPatch
                         fld(), // new internal field
-                        patchMapper                     // mapper (new to old)
+                        directFieldMapper(newToOld)     // mapper (new to old)
                     )
                 );
             }
@@ -205,8 +200,6 @@ void Foam::fvMeshAdder::MapVolField
                         )
                     );
 
-                    directFvPatchFieldMapper patchMapper(newToAdded);
-
                     bfld.set
                     (
                         newPatchi,
@@ -215,7 +208,7 @@ void Foam::fvMeshAdder::MapVolField
                             fldToAdd.boundaryField()[patchi], // added field
                             mesh.boundary()[newPatchi],       // new fvPatch
                             fld(),   // new int. field
-                            patchMapper                       // mapper
+                            directFieldMapper(newToAdded)     // mapper
                         )
                     );
                 }
@@ -241,7 +234,7 @@ void Foam::fvMeshAdder::MapVolField
                     bfld[newPatchi].map
                     (
                         fldToAdd.boundaryField()[patchi],
-                        reverseFvPatchFieldMapper(addedToNew)
+                        reverseFieldMapper(addedToNew)
                     );
                 }
             }
@@ -439,8 +432,6 @@ void Foam::fvMeshAdder::MapSurfaceField
                     )
                 );
 
-                directFvPatchFieldMapper patchMapper(newToOld);
-
                 // Create new patchField with same type as existing one.
                 // Note:
                 // - boundaryField already in new order so access with newPatchi
@@ -456,7 +447,7 @@ void Foam::fvMeshAdder::MapSurfaceField
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new fvPatch
                         fld(), // new internal field
-                        patchMapper                     // mapper (new to old)
+                        directFieldMapper(newToOld)     // mapper (new to old)
                     )
                 );
             }
@@ -500,8 +491,6 @@ void Foam::fvMeshAdder::MapSurfaceField
                         )
                     );
 
-                    directFvPatchFieldMapper patchMapper(newToAdded);
-
                     bfld.set
                     (
                         newPatchi,
@@ -510,7 +499,7 @@ void Foam::fvMeshAdder::MapSurfaceField
                             fldToAdd.boundaryField()[patchi],// added field
                             mesh.boundary()[newPatchi],      // new fvPatch
                             fld(),  // new int. field
-                            patchMapper                      // mapper
+                            directFieldMapper(newToAdded)    // mapper
                         )
                     );
                 }
@@ -536,7 +525,7 @@ void Foam::fvMeshAdder::MapSurfaceField
                     bfld[newPatchi].map
                     (
                         fldToAdd.boundaryField()[patchi],
-                        reverseFvPatchFieldMapper(addedToNew)
+                        reverseFieldMapper(addedToNew)
                     );
                 }
             }
@@ -730,8 +719,6 @@ void Foam::fvMeshAdder::MapPointField
                     }
                 }
 
-                directPointPatchFieldMapper patchMapper(newToOld);
-
                 // Create new patchField with same type as existing one.
                 // Note:
                 // - boundaryField already in new order so access with newPatchi
@@ -747,7 +734,7 @@ void Foam::fvMeshAdder::MapPointField
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new pointPatch
                         fld(),                          // new internal field
-                        patchMapper                     // mapper (new to old)
+                        directFieldMapper(newToOld)     // mapper (new to old)
                     )
                 );
             }
@@ -803,8 +790,6 @@ void Foam::fvMeshAdder::MapPointField
                         }
                     }
 
-                    directPointPatchFieldMapper patchMapper(newToAdded);
-
                     bfld.set
                     (
                         newPatchi,
@@ -813,7 +798,7 @@ void Foam::fvMeshAdder::MapPointField
                             fldToAdd.boundaryField()[patchi],// added field
                             mesh.boundary()[newPatchi],      // new pointPatch
                             fld(),                           // new int. field
-                            patchMapper                      // mapper
+                            directFieldMapper(newToAdded)    // mapper
                         )
                     );
                 }
@@ -838,7 +823,7 @@ void Foam::fvMeshAdder::MapPointField
                     bfld[newPatchi].map
                     (
                         fldToAdd.boundaryField()[patchi],
-                        reversePointPatchFieldMapper(oldToNew)
+                        reverseFieldMapper(oldToNew)
                     );
                 }
             }

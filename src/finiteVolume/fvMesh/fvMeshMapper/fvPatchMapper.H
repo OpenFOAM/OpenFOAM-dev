@@ -35,7 +35,7 @@ SourceFiles
 #ifndef fvPatchMapper_H
 #define fvPatchMapper_H
 
-#include "fvPatchFieldMapper.H"
+#include "generalFieldMapper.H"
 #include "faceMapper.H"
 #include "fvPatch.H"
 #include "primitiveFields.H"
@@ -55,7 +55,7 @@ class polyTopoChangeMap;
 
 class fvPatchMapper
 :
-    public generalFvPatchFieldMapper
+    public generalFieldMapper
 {
     // Private Data
 

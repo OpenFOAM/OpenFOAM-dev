@@ -25,7 +25,7 @@ License
 
 #include "CONSTRUCT.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
@@ -84,7 +84,7 @@ CONSTRUCT
     const CLASS& ptf,
     const fvPatch& p,
     const DimensionedField<TYPE, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     PARENT(ptf, p, iF, mapper),
@@ -123,7 +123,7 @@ template<class Type>
 void Foam::CLASS::map
 (
     const FVPATCHF& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     PARENT::map(ptf, mapper);

@@ -26,7 +26,7 @@ License
 #include "radiationCoupledBase.H"
 #include "volFields.H"
 #include "mappedPatchBase.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "radiationModel.H"
 #include "opaqueSolid.H"
 #include "absorptionEmissionModel.H"
@@ -76,7 +76,7 @@ Foam::radiationCoupledBase::radiationCoupledBase
     const fvPatch& patch,
     const word& calculationType,
     const scalarField& emissivity,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     patch_(patch),
@@ -180,7 +180,7 @@ Foam::tmp<Foam::scalarField> Foam::radiationCoupledBase::emissivity() const
 void Foam::radiationCoupledBase::map
 (
     const fvPatchScalarField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     const radiationCoupledBase& mrptf =

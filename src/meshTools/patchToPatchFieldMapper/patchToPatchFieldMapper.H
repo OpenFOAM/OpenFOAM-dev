@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::directFvPatchFieldMapper
+    Foam::patchToPatchFieldMapper
 
 Description
-    direct fvPatchFieldMapper
+    Base class for fieldMappers which uses a patchToPatch object to map from
+    another patch. The source patch may be differently decomposed and/or
+    geometrically and topologically different from the target. Derived into
+    versions which handle unmapped regions differently.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef directFvPatchFieldMapper_H
-#define directFvPatchFieldMapper_H
+#ifndef patchToPatchFieldMapper_H
+#define patchToPatchFieldMapper_H
 
-#include "fvPatchFieldMapper.H"
-#include "directFieldMapper.H"
+#include "fieldMapper.H"
+#include "patchToPatch.H"
+#include "ListOps.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -41,62 +45,65 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class directFvPatchFieldMapper Declaration
+                  Class patchToPatchFieldMapper Declaration
 \*---------------------------------------------------------------------------*/
 
-class directFvPatchFieldMapper
+class patchToPatchFieldMapper
 :
-    public fvPatchFieldMapper,
-    public directFieldMapper
+    public fieldMapper
 {
-    // Private Data
+protected:
 
-        //- Addressing from new back to old
-        const labelUList& addressing_;
+    // Protected Data
 
-        //- Does map contain any unmapped values
-        bool hasUnmapped_;
+        //- Patch-to-patch interpolation engine
+        const patchToPatch& pToP_;
 
 
 public:
 
     // Constructors
 
-        //- Construct given addressing
-        directFvPatchFieldMapper(const labelUList& addressing)
+        //- Construct given a patch-to-patch interpolation
+        patchToPatchFieldMapper(const patchToPatch& pToP)
         :
-            addressing_(addressing),
-            hasUnmapped_(false)
-        {
-            if (addressing_.size() && min(addressing_) < 0)
-            {
-                hasUnmapped_ = true;
-            }
-        }
+            fieldMapper(),
+            pToP_(pToP)
+        {}
 
 
     //- Destructor
-    virtual ~directFvPatchFieldMapper()
+    virtual ~patchToPatchFieldMapper()
     {}
 
 
-    // Member Functions
+    // Member Operators
 
-        virtual bool hasUnmapped() const
-        {
-            return hasUnmapped_;
-        }
+        //- Map a label field (not implemented)
+        DEFINE_FIELD_MAPPER_OPERATOR(label, );
 
-        virtual const labelUList& addressing() const
-        {
-            return addressing_;
-        }
+        //- Inherit the base call operator
+        using fieldMapper::operator();
+
+        //- Map a temporary field
+        template<class Type>
+        void operator()(Field<Type>& f, const tmp<Field<Type>>& tmapF) const;
+
+        //- Map a temporary field
+        template<class Type>
+        tmp<Field<Type>> operator()(const tmp<Field<Type>>& tmapF) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "patchToPatchFieldMapperTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

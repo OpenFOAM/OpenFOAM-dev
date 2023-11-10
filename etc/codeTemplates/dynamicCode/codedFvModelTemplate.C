@@ -25,7 +25,6 @@ License
 
 #include "codedFvModelTemplate.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "unitConversion.H"

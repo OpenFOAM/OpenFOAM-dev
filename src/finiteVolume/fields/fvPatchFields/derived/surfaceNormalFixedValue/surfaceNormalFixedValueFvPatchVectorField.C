@@ -26,7 +26,7 @@ License
 #include "surfaceNormalFixedValueFvPatchVectorField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -51,7 +51,7 @@ surfaceNormalFixedValueFvPatchVectorField
     const surfaceNormalFixedValueFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchVectorField(p, iF),
@@ -83,7 +83,7 @@ surfaceNormalFixedValueFvPatchVectorField
 void Foam::surfaceNormalFixedValueFvPatchVectorField::map
 (
     const fvPatchVectorField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     fixedValueFvPatchVectorField::map(ptf, mapper);

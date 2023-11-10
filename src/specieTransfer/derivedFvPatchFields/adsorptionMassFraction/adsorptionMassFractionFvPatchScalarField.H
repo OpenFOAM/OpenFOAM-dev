@@ -122,7 +122,7 @@ public:
             const adsorptionMassFractionFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
-            const fvPatchFieldMapper&
+            const fieldMapper&
         );
 
 

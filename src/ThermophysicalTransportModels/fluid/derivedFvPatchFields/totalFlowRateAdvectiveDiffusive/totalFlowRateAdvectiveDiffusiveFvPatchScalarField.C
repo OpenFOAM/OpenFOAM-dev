@@ -67,7 +67,7 @@ totalFlowRateAdvectiveDiffusiveFvPatchScalarField
     const totalFlowRateAdvectiveDiffusiveFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchField<scalar>(ptf, p, iF, mapper),
@@ -96,7 +96,7 @@ totalFlowRateAdvectiveDiffusiveFvPatchScalarField
 void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     mixedFvPatchField<scalar>::map(ptf, mapper);

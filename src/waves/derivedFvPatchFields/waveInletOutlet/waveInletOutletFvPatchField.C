@@ -25,7 +25,7 @@ License
 
 #include "waveInletOutletFvPatchField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "levelSet.H"
 #include "volFields.H"
 #include "surfaceFields.H"
@@ -67,7 +67,7 @@ Foam::waveInletOutletFvPatchField<Type>::waveInletOutletFvPatchField
     const waveInletOutletFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchField<Type>(ptf, p, iF, mapper),

@@ -72,7 +72,7 @@ gradientEnergyCalculatedTemperatureFvPatchScalarField
     const gradientEnergyCalculatedTemperatureFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     calculatedFvPatchScalarField(ptf, p, iF, mapper),
@@ -97,7 +97,7 @@ gradientEnergyCalculatedTemperatureFvPatchScalarField
 void Foam::gradientEnergyCalculatedTemperatureFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     calculatedFvPatchScalarField::map(ptf, mapper);

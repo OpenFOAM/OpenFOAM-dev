@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,8 +28,7 @@ License
 #include "internalFvsPatchField.H"
 #include "internalPointPatchField.H"
 #include "internalFvPatchFields.H"
-#include "directFvPatchFieldMapper.H"
-#include "directPointPatchFieldMapper.H"
+#include "directFieldMapper.H"
 #include "flipOp.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -144,7 +143,7 @@ Foam::fvMeshSubset::interpolate
                     vf.boundaryField()[patchMap[patchi]],
                     subPatch,
                     resF(),
-                    directFvPatchFieldMapper(directAddressing)
+                    directFieldMapper(directAddressing)
                 )
             );
         }
@@ -287,7 +286,7 @@ Foam::fvMeshSubset::interpolate
                     sf.boundaryField()[patchMap[patchi]],
                     subPatch,
                     resF(),
-                    directFvPatchFieldMapper(directAddressing)
+                    directFieldMapper(directAddressing)
                 )
             );
         }
@@ -476,7 +475,7 @@ Foam::fvMeshSubset::interpolate
                     pf.boundaryField()[patchMap[patchi]],
                     subPatch,
                     resF(),
-                    directPointPatchFieldMapper(directAddressing)
+                    directFieldMapper(directAddressing)
                 )
             );
         }

@@ -204,7 +204,7 @@ flowRateInletVelocityFvPatchVectorField
     const flowRateInletVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
@@ -250,7 +250,7 @@ flowRateInletVelocityFvPatchVectorField
 void Foam::flowRateInletVelocityFvPatchVectorField::map
 (
     const fvPatchVectorField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     fixedValueFvPatchVectorField::map(ptf, mapper);

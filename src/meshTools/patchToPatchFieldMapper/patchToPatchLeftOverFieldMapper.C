@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,25 +23,43 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "setSizeFieldMapper.H"
+#include "patchToPatchLeftOverFieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::setSizeFieldMapper::map(Field<Type>& f, const Field<Type>&) const
+void Foam::patchToPatchLeftOverFieldMapper::map
+(
+    Field<Type>& f,
+    const Field<Type>& mapF
+) const
 {
-    f.setSize(size_);
+    f = pToP_.srcToTgt(mapF, f);
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::setSizeFieldMapper::map
+Foam::tmp<Foam::Field<Type>>
+Foam::patchToPatchLeftOverFieldMapper::map
 (
-    const Field<Type>&
+    const Field<Type>& mapF
 ) const
 {
-    return tmp<Field<Type>>(new Field<Type>(size_));
+    FatalErrorInFunction
+        << "Not a valid operation for this mapper, which should only be "
+        << "used for modifying an existing, valid, field"
+        << exit(FatalError);
+    return tmp<Field<Type>>(nullptr);
 }
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FIELD_MAPPER_OPERATOR,
+    patchToPatchLeftOverFieldMapper
+)
 
 
 // ************************************************************************* //

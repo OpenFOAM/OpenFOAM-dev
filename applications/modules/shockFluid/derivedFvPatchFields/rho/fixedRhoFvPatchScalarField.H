@@ -111,7 +111,7 @@ public:
             const fixedRhoFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
-            const fvPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Copy constructor setting internal field reference

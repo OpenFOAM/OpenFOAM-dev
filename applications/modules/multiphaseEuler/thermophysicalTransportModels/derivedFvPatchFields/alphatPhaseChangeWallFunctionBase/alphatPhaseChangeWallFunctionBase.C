@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "alphatPhaseChangeWallFunctionBase.H"
-#include "fvPatchFieldMapper.H"
 #include "volFields.H"
 #include "phaseInterface.H"
 #include "phaseSystem.H"

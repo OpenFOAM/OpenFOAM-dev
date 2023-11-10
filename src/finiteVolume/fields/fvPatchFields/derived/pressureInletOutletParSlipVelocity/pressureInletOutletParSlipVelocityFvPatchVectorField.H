@@ -107,7 +107,7 @@ public:
             const pressureInletOutletParSlipVelocityFvPatchVectorField&,
             const fvPatch&,
             const DimensionedField<vector, volMesh>&,
-            const fvPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Construct from patch, internal field and dictionary

@@ -71,7 +71,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
     const fanPressureFvPatchScalarField& pfopsf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     totalPressureFvPatchScalarField(pfopsf, p, iF, mapper),

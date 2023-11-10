@@ -45,13 +45,24 @@ namespace Foam
 
 class reverseFieldMapper
 :
-    virtual public fieldMapper
+    public fieldMapper
 {
+    // Private Data
+
+        //- Addressing from new back to old
+        const labelUList& addressing_;
+
+        //- Does map contain any unmapped values
+        bool hasUnmapped_;
+
+
     // Private Member Functions
 
+        //- Map a field in-place
         template<class Type>
         void map(Field<Type>& f, const Field<Type>& mapF) const;
 
+        //- Map a field and return the result
         template<class Type>
         tmp<Field<Type>> map(const Field<Type>& f) const;
 
@@ -60,9 +71,17 @@ public:
 
     // Constructors
 
-        //- Null constructor
-        reverseFieldMapper()
-        {}
+        //- Construct given addressing
+        reverseFieldMapper(const labelUList& addressing)
+        :
+            addressing_(addressing),
+            hasUnmapped_(false)
+        {
+            if (addressing_.size() && min(addressing_) < 0)
+            {
+                hasUnmapped_ = true;
+            }
+        }
 
 
     //- Destructor
@@ -72,12 +91,11 @@ public:
 
     // Member Functions
 
-        //- Are there unmapped values? I.e. do all size() elements get
-        //  get value
-        virtual bool hasUnmapped() const = 0;
-
-        //- Access to the reverse map addressing
-        virtual const labelUList& addressing() const = 0;
+        //- Are there unmapped values? Do all elements get get a value?
+        virtual bool hasUnmapped() const
+        {
+            return hasUnmapped_;
+        }
 
 
     // Member Operators
@@ -93,12 +111,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "reverseFieldMapperTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -76,7 +76,7 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
     const fixedProfileFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchField<Type>(p, iF), // Don't map

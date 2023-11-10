@@ -25,7 +25,7 @@ License
 
 #include "nutWallFunctionFvPatchScalarField.H"
 #include "momentumTransportModel.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "wallFvPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -87,7 +87,7 @@ Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
     const nutWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),

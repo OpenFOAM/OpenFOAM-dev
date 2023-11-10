@@ -25,7 +25,7 @@ License
 
 #include "fixedPressureCompressibleDensityFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "surfaceFields.H"
 #include "volFields.H"
 
@@ -50,7 +50,7 @@ fixedPressureCompressibleDensityFvPatchScalarField
     const fixedPressureCompressibleDensityFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),

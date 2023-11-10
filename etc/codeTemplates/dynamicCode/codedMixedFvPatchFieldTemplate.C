@@ -25,7 +25,7 @@ License
 
 #include "codedMixedFvPatchFieldTemplate.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "unitConversion.H"
@@ -107,7 +107,7 @@ ${typeName}MixedValueFvPatch${FieldType}
     const ${typeName}MixedValueFvPatch${FieldType}& ptf,
     const fvPatch& p,
     const DimensionedField<${TemplateType}, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchField<${TemplateType}>(ptf, p, iF, mapper)

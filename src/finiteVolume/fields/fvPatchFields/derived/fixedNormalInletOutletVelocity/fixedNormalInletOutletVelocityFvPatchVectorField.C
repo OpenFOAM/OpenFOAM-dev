@@ -60,7 +60,7 @@ fixedNormalInletOutletVelocityFvPatchVectorField
     const fixedNormalInletOutletVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     directionMixedFvPatchVectorField(ptf, p, iF, mapper),
@@ -92,7 +92,7 @@ fixedNormalInletOutletVelocityFvPatchVectorField
 void Foam::fixedNormalInletOutletVelocityFvPatchVectorField::map
 (
     const fvPatchVectorField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     directionMixedFvPatchVectorField::map(ptf, mapper);

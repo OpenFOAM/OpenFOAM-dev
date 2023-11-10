@@ -25,7 +25,7 @@ License
 
 #include "wideBandDiffusiveRadiationMixedFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 
 #include "fvDOM.H"
@@ -79,7 +79,7 @@ wideBandDiffusiveRadiationMixedFvPatchScalarField
     const wideBandDiffusiveRadiationMixedFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchScalarField(ptf, p, iF, mapper),
@@ -117,7 +117,7 @@ wideBandDiffusiveRadiationMixedFvPatchScalarField
 void Foam::wideBandDiffusiveRadiationMixedFvPatchScalarField::map
 (
     const fvPatchScalarField& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     mixedFvPatchScalarField::map(ptf, mapper);

@@ -36,7 +36,6 @@ SourceFiles
 #define pointPatchMapper_H
 
 #include "pointMapper.H"
-#include "pointPatchFieldMapper.H"
 #include "pointPatch.H"
 #include "primitiveFields.H"
 
@@ -55,7 +54,7 @@ class polyTopoChangeMap;
 
 class pointPatchMapper
 :
-    public generalPointPatchFieldMapper
+    public generalFieldMapper
 {
     // Private Data
 

@@ -87,7 +87,7 @@ public:
             const processorCyclicPointPatchField<Type>&,
             const pointPatch&,
             const DimensionedField<Type, pointMesh>&,
-            const pointPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Construct as copy setting internal field reference

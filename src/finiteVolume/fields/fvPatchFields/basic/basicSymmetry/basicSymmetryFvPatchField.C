@@ -59,7 +59,7 @@ Foam::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
     const basicSymmetryFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     transformFvPatchField<Type>(ptf, p, iF, mapper)

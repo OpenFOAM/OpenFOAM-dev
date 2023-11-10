@@ -35,8 +35,7 @@ License
 #include "MeshToMeshMapGeometricFields.H"
 #include "polyMeshMap.H"
 #include "processorPolyPatch.H"
-#include "setSizeFvPatchFieldMapper.H"
-#include "setSizePointPatchFieldMapper.H"
+#include "setSizeFieldMapper.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -275,14 +274,14 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         // Set all the surfaceFields in the objectRegistry to NaN
         #define NaNSurfaceFieldType(Type, nullArg)                             \
             NaNGeometricFields                                                 \
-            <Type, fvsPatchField, surfaceMesh, setSizeFvPatchFieldMapper>      \
+            <Type, fvsPatchField, surfaceMesh>                                 \
             (mesh(), mapper);
         FOR_ALL_FIELD_TYPES(NaNSurfaceFieldType);
 
         // Set all the pointFields in the objectRegistry to NaN
         #define NaNPointFieldType(Type, nullArg)                               \
             NaNGeometricFields                                                 \
-            <Type, pointPatchField, pointMesh, setSizePointPatchFieldMapper>   \
+            <Type, pointPatchField, pointMesh>                                 \
             (mesh(), mapper);
         FOR_ALL_FIELD_TYPES(NaNPointFieldType);
 

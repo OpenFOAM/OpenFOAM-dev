@@ -25,7 +25,7 @@ License
 
 #include "atmBoundaryLayerInletVelocityFvPatchVectorField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
@@ -70,7 +70,7 @@ atmBoundaryLayerInletVelocityFvPatchVectorField
     const atmBoundaryLayerInletVelocityFvPatchVectorField& pvf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     inletOutletFvPatchVectorField(pvf, p, iF, mapper),
@@ -95,7 +95,7 @@ atmBoundaryLayerInletVelocityFvPatchVectorField
 void atmBoundaryLayerInletVelocityFvPatchVectorField::map
 (
     const fvPatchVectorField& pvf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     inletOutletFvPatchVectorField::map(pvf, mapper);

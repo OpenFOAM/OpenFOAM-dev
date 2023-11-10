@@ -46,7 +46,7 @@ Foam::kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
     const kqRWallFunctionFvPatchField& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     zeroGradientFvPatchField<Type>(ptf, p, iF, mapper)

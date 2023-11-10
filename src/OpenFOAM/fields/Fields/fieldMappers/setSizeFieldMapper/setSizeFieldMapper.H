@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,19 +45,21 @@ namespace Foam
 
 class setSizeFieldMapper
 :
-    virtual public fieldMapper
+    public fieldMapper
 {
-    // Private member data
+    // Private Data
 
         //- The size the mapper will set the fields to have
-        label size_;
+        const label size_;
 
 
     // Private Member Functions
 
+        //- Map a field in-place
         template<class Type>
         void map(Field<Type>& f, const Field<Type>&) const;
 
+        //- Map a field and return the result
         template<class Type>
         tmp<Field<Type>> map(const Field<Type>&) const;
 
@@ -67,7 +69,10 @@ public:
     // Constructors
 
         //- Construct given size
-        setSizeFieldMapper(const label size);
+        setSizeFieldMapper(const label size)
+        :
+            size_(size)
+        {}
 
 
     //- Destructor
@@ -97,12 +102,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "setSizeFieldMapperTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

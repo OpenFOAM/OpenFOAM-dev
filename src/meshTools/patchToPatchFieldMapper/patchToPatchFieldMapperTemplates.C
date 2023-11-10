@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,57 +21,35 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::setSizePointPatchFieldMapper
-
-Description
-    Set size pointPatchFieldMapper
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef setSizePointPatchFieldMapper_H
-#define setSizePointPatchFieldMapper_H
+#include "patchToPatchFieldMapper.H"
 
-#include "pointPatchFieldMapper.H"
-#include "setSizeFieldMapper.H"
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+template<class Type>
+void Foam::patchToPatchFieldMapper::operator()
+(
+    Field<Type>& f,
+    const tmp<Field<Type>>& tmapF
+) const
 {
+    operator()(f, tmapF());
+    tmapF.clear();
+}
 
-/*---------------------------------------------------------------------------*\
-                  Class setSizePointPatchFieldMapper Declaration
-\*---------------------------------------------------------------------------*/
 
-class setSizePointPatchFieldMapper
-:
-    public pointPatchFieldMapper,
-    public setSizeFieldMapper
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::patchToPatchFieldMapper::operator()
+(
+    const tmp<Field<Type>>& tmapF
+) const
 {
-public:
+    tmp<Foam::Field<Type>> tf(operator()(tmapF()));
+    tmapF.clear();
+    return tf;
+}
 
-    // Constructors
-
-        //- Construct
-        setSizePointPatchFieldMapper(const label size)
-        :
-            setSizeFieldMapper(size)
-        {}
-
-
-    //- Destructor
-    virtual ~setSizePointPatchFieldMapper()
-    {}
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

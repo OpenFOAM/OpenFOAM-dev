@@ -59,7 +59,7 @@ externalCoupledTemperatureMixedFvPatchScalarField
     const externalCoupledTemperatureMixedFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     externalCoupledMixedFvPatchField<scalar>(ptf, p, iF, mapper)

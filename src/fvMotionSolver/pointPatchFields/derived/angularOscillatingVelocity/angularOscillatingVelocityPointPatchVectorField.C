@@ -73,7 +73,7 @@ angularOscillatingVelocityPointPatchVectorField
     const angularOscillatingVelocityPointPatchVectorField& ptf,
     const pointPatch& p,
     const DimensionedField<vector, pointMesh>& iF,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValuePointPatchField<vector>(ptf, p, iF, mapper),
@@ -108,7 +108,7 @@ angularOscillatingVelocityPointPatchVectorField
 void angularOscillatingVelocityPointPatchVectorField::map
 (
     const pointPatchField<vector>& ptf,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     const angularOscillatingVelocityPointPatchVectorField& aOVptf =

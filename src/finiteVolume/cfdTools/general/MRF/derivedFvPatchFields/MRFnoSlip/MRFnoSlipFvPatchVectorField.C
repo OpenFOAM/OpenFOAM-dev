@@ -58,7 +58,7 @@ Foam::MRFnoSlipFvPatchVectorField::MRFnoSlipFvPatchVectorField
     const MRFnoSlipFvPatchVectorField& pvf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchVectorField(pvf, p, iF, mapper),

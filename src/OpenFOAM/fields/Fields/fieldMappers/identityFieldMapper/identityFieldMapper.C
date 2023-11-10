@@ -25,6 +25,29 @@ License
 
 #include "identityFieldMapper.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+void Foam::identityFieldMapper::map
+(
+    Field<Type>& f,
+    const Field<Type>& mapF
+) const
+{
+    f = mapF;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::identityFieldMapper::map
+(
+    const Field<Type>& mapF
+) const
+{
+    return mapF;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, identityFieldMapper)

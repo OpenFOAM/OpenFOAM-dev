@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "polyFacesFvsPatchLabelField.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -67,7 +67,7 @@ Foam::polyFacesFvsPatchLabelField::polyFacesFvsPatchLabelField
     const polyFacesFvsPatchLabelField& ptf,
     const fvPatch& p,
     const DimensionedField<label, surfaceMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fvsPatchLabelField(ptf, p, iF, mapper, false)

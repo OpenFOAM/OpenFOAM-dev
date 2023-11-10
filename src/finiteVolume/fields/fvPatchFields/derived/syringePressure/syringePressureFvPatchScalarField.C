@@ -26,7 +26,7 @@ License
 #include "syringePressureFvPatchScalarField.H"
 #include "volMesh.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -63,7 +63,7 @@ Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
     const syringePressureFvPatchScalarField& sppsf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchScalarField(sppsf, p, iF, mapper),

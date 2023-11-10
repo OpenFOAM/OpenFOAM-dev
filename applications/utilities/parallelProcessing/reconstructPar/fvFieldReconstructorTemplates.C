@@ -31,7 +31,8 @@ License
 #include "emptyFvPatchField.H"
 #include "emptyFvsPatchField.H"
 #include "processorCyclicFvPatch.H"
-#include "reverseFvPatchFieldMapper.H"
+#include "reverseFieldMapper.H"
+#include "setSizeFieldMapper.H"
 #include "stringOps.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -213,7 +214,7 @@ Foam::fvFieldReconstructor::reconstructVolField
                             procField.boundaryField()[procPatchi],
                             completeMesh_.boundary()[completePatchi],
                             DimensionedField<Type, volMesh>::null(),
-                            setSizeFvPatchFieldMapper
+                            setSizeFieldMapper
                             (
                                 completeMesh_.boundary()[completePatchi].size()
                             )
@@ -224,7 +225,7 @@ Foam::fvFieldReconstructor::reconstructVolField
                 patchFields[completePatchi].map
                 (
                     procField.boundaryField()[procPatchi],
-                    reverseFvPatchFieldMapper
+                    reverseFieldMapper
                     (
                         faceProcAddressingBf_[proci][procPatchi] - 1
                     )
@@ -266,7 +267,7 @@ Foam::fvFieldReconstructor::reconstructVolField
                 patchFields[completePatchi].map
                 (
                     procField.boundaryField()[procPatchi],
-                    reverseFvPatchFieldMapper
+                    reverseFieldMapper
                     (
                         faceProcAddressingBf_[proci][procPatchi] - 1
                     )
@@ -373,7 +374,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
                             procField.boundaryField()[procPatchi],
                             completeMesh_.boundary()[completePatchi],
                             DimensionedField<Type, surfaceMesh>::null(),
-                            setSizeFvPatchFieldMapper
+                            setSizeFieldMapper
                             (
                                 completeMesh_.boundary()[completePatchi].size()
                             )
@@ -384,7 +385,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
                 patchFields[completePatchi].map
                 (
                     procField.boundaryField()[procPatchi],
-                    reverseFvPatchFieldMapper
+                    reverseFieldMapper
                     (
                         faceProcAddressingBf_[proci][procPatchi] - 1
                     )
@@ -409,7 +410,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
                 patchFields[completePatchi].map
                 (
                     procField.boundaryField()[procPatchi],
-                    reverseFvPatchFieldMapper
+                    reverseFieldMapper
                     (
                         faceProcAddressingBf_[proci][procPatchi] - 1
                     )

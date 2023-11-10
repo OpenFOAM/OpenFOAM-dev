@@ -25,7 +25,7 @@ License
 
 #include "gradientUnburntEnthalpyFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "psiuMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -59,7 +59,7 @@ gradientUnburntEnthalpyFvPatchScalarField
     const gradientUnburntEnthalpyFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedGradientFvPatchScalarField(ptf, p, iF, mapper)

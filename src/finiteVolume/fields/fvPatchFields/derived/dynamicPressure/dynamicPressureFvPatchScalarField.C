@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dynamicPressureFvPatchScalarField.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
@@ -142,7 +142,7 @@ Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
     const dynamicPressureFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchScalarField(psf, p, iF, mapper),
@@ -172,7 +172,7 @@ Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
 void Foam::dynamicPressureFvPatchScalarField::map
 (
     const fvPatchScalarField& psf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     fixedValueFvPatchScalarField::map(psf, mapper);

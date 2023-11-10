@@ -48,7 +48,7 @@ pressureInletUniformVelocityFvPatchVectorField
     const pressureInletUniformVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     pressureInletVelocityFvPatchVectorField(ptf, p, iF, mapper)

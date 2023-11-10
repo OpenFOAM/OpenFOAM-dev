@@ -83,7 +83,7 @@ public:
             const nonConformalErrorFvsPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, surfaceMesh>&,
-            const fvPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Disallow copy without setting nonConformalError field reference

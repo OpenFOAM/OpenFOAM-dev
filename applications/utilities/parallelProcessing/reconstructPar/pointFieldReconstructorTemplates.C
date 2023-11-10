@@ -25,7 +25,8 @@ License
 
 #include "pointFieldReconstructor.H"
 #include "fvMesh.H"
-#include "reversePointPatchFieldMapper.H"
+#include "reverseFieldMapper.H"
+#include "setSizeFieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -123,7 +124,7 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
                             procField.boundaryField()[patchi],
                             completeMesh_.boundary()[curBPatch],
                             DimensionedField<Type, pointMesh>::null(),
-                            setSizePointPatchFieldMapper
+                            setSizeFieldMapper
                             (
                                 completeMesh_.boundary()[curBPatch].size()
                             )
@@ -134,7 +135,7 @@ Foam::pointFieldReconstructor::reconstructField(const IOobject& fieldIoObject)
                 patchFields[curBPatch].map
                 (
                     procField.boundaryField()[patchi],
-                    reversePointPatchFieldMapper
+                    reverseFieldMapper
                     (
                         patchPointAddressing_[proci][patchi]
                     )

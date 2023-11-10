@@ -35,11 +35,7 @@ Foam::pointFieldDecomposer::patchFieldDecomposer::patchFieldDecomposer
     const labelList& directAddr
 )
 :
-    pointPatchFieldMapperPatchRef
-    (
-        completeMeshPatch,
-        procMeshPatch
-    ),
+    generalFieldMapper(),
     directAddressing_(procMeshPatch.size(), -1),
     hasUnmapped_(false)
 {

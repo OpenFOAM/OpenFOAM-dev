@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "semiPermeableBaffleMassFractionFvPatchScalarField.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "fluidThermophysicalTransportModel.H"
@@ -60,7 +60,7 @@ semiPermeableBaffleMassFractionFvPatchScalarField
     const semiPermeableBaffleMassFractionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     specieTransferMassFractionFvPatchScalarField(ptf, p, iF, mapper)

@@ -38,7 +38,7 @@ SourceFiles
 
 #include "pointMesh.H"
 #include "pointFields.H"
-#include "pointPatchFieldMapperPatchRef.H"
+#include "generalFieldMapper.H"
 #include "IOobjectList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -61,14 +61,16 @@ public:
         //- Point patch field decomposer class
         class patchFieldDecomposer
         :
-            public pointPatchFieldMapperPatchRef
+            public generalFieldMapper
         {
             // Private Data
 
+                //- ...
                 labelList directAddressing_;
 
-                //- Does map contain any unmapped values
+                //- Does map contain any unmapped values?
                 bool hasUnmapped_;
+
 
         public:
 

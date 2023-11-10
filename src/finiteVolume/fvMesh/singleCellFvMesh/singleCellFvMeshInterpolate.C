@@ -25,7 +25,7 @@ License
 
 #include "singleCellFvMesh.H"
 #include "calculatedFvPatchFields.H"
-#include "directFvPatchFieldMapper.H"
+#include "directFieldMapper.H"
 #include "Time.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -135,7 +135,7 @@ tmp<VolField<Type>> singleCellFvMesh::interpolate
                     vf.boundaryField()[patchi],
                     boundary()[patchi],
                     resF(),
-                    directFvPatchFieldMapper(map)
+                    directFieldMapper(map)
                 )
             );
         }

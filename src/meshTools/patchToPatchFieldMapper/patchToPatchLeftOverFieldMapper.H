@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::directPointPatchFieldMapper
+    Foam::patchToPatchLeftOverFieldMapper
 
 Description
-    direct pointPatchFieldMapper
+    Patch-to-patch fieldMapper which retains values in the target field for
+    parts of the patch that do not overlap the source. This process needs an
+    input target field as well as a source field, so it can only map a field
+    in-place.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef directPointPatchFieldMapper_H
-#define directPointPatchFieldMapper_H
+#ifndef patchToPatchLeftOverFieldMapper_H
+#define patchToPatchLeftOverFieldMapper_H
 
-#include "pointPatchFieldMapper.H"
-#include "directFieldMapper.H"
+#include "patchToPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -41,56 +43,54 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class directPointPatchFieldMapper Declaration
+            Class patchToPatchLeftOverFieldMapper Declaration
 \*---------------------------------------------------------------------------*/
 
-class directPointPatchFieldMapper
+class patchToPatchLeftOverFieldMapper
 :
-    public pointPatchFieldMapper,
-    public directFieldMapper
+    public patchToPatchFieldMapper
 {
-    // Private Data
+    // Private Member Functions
 
-        //- Addressing from new back to old
-        const labelUList& addressing_;
+        //- Map from one field to another
+        template<class Type>
+        void map(Field<Type>& f, const Field<Type>& mapF) const;
 
-        //- Does map contain any unmapped values
-        bool hasUnmapped_;
+        //- Map a field and return the result as tmp
+        template<class Type>
+        tmp<Field<Type>> map(const Field<Type>& mapF) const;
 
 
 public:
 
     // Constructors
 
-        //- Construct given addressing
-        directPointPatchFieldMapper(const labelUList& addressing)
-        :
-            addressing_(addressing),
-            hasUnmapped_(false)
-        {
-            if (addressing_.size() && min(addressing_) < 0)
-            {
-                hasUnmapped_ = true;
-            }
-        }
+        //- Inherit base class constructor
+        using patchToPatchFieldMapper::patchToPatchFieldMapper;
 
 
     //- Destructor
-    virtual ~directPointPatchFieldMapper()
+    virtual ~patchToPatchLeftOverFieldMapper()
     {}
 
 
     // Member Functions
 
-        bool hasUnmapped() const
+        //- Return whether or not all faces receive a mapped value
+        virtual bool hasUnmapped() const
         {
-            return hasUnmapped_;
+            FatalErrorInFunction
+                << "Not a valid query for this mapper, which should only be "
+                << "used for modifying an existing, valid, field"
+                << exit(FatalError);
+            return false;
         }
 
-        const labelUList& addressing() const
-        {
-            return addressing_;
-        }
+
+    // Member Operators
+
+        //- Map a field
+        FOR_ALL_FIELD_TYPES(DEFINE_FIELD_MAPPER_OPERATOR, );
 };
 
 

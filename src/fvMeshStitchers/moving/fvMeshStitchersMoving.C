@@ -1074,7 +1074,7 @@ void Foam::fvMeshStitchers::moving::unconformCorrectMeshPhi
                 phi0Bf[ncPatchi].map
                 (
                     phi0Bf[ncPatchi],
-                    setSizeFvPatchFieldMapper(polyFacesBf[ncPatchi].size())
+                    setSizeFieldMapper(polyFacesBf[ncPatchi].size())
                 );
             }
         }

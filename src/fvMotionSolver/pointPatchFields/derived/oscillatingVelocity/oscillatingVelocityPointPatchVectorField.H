@@ -35,6 +35,7 @@ SourceFiles
 #ifndef oscillatingVelocityPointPatchVectorField_H
 #define oscillatingVelocityPointPatchVectorField_H
 
+#include "pointPatchFields.H"
 #include "fixedValuePointPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -82,7 +83,7 @@ public:
             const oscillatingVelocityPointPatchVectorField&,
             const pointPatch&,
             const DimensionedField<vector, pointMesh>&,
-            const pointPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Construct as copy setting internal field reference
@@ -114,11 +115,7 @@ public:
         // Mapping functions
 
             //- Map the given pointPatchField onto this pointPatchField
-            virtual void map
-            (
-                const pointPatchField<vector>&,
-                const pointPatchFieldMapper&
-            );
+            virtual void map(const pointPatchVectorField&, const fieldMapper&);
 
             //- Reset the pointPatchField to the given pointPatchField
             //  Used for mesh to mesh mapping

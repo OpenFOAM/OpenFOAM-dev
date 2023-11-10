@@ -75,7 +75,7 @@ Foam::fixedJumpFvPatchField<Type>::fixedJumpFvPatchField
     const fixedJumpFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     jumpCyclicFvPatchField<Type>(ptf, p, iF, mapper),
@@ -118,7 +118,7 @@ template<class Type>
 void Foam::fixedJumpFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     jumpCyclicFvPatchField<Type>::map(ptf, mapper);

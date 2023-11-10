@@ -65,7 +65,7 @@ Foam::directionMixedFvPatchField<Type>::directionMixedFvPatchField
     const directionMixedFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     transformFvPatchField<Type>(ptf, p, iF, mapper),
@@ -95,7 +95,7 @@ template<class Type>
 void Foam::directionMixedFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     transformFvPatchField<Type>::map(ptf, mapper);

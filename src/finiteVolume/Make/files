@@ -125,7 +125,6 @@ $(fvMeshStitchers)/fvMeshStitcher/fvMeshStitcher.C
 $(fvMeshStitchers)/fvMeshStitcher/fvMeshStitcherNew.C
 $(fvMeshStitchers)/fvMeshStitcher/fvMeshStitcherTools.C
 $(fvMeshStitchers)/fvMeshStitcher/conformedFvsPatchFields.C
-#$(fvMeshStitchers)/fvMeshStitcher/conformalisingFvPatchFieldMapper.C
 $(fvMeshStitchers)/stationary/fvMeshStitchersStationary.C
 
 functionObjects/fvMeshFunctionObject/fvMeshFunctionObject.C
@@ -535,6 +534,5 @@ solver/solver.C
 solver/solverNew.C
 
 fvMeshToFvMesh/fvMeshToFvMesh.C
-fvMeshToFvMesh/patchToPatchFvPatchFieldMapper.C
 
 LIB = $(FOAM_LIBBIN)/libfiniteVolume

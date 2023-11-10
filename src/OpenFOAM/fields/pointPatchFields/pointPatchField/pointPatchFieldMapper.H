@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,69 +21,13 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::pointPatchFieldMapper
-
-Description
-    Foam::pointPatchFieldMapper
-
 \*---------------------------------------------------------------------------*/
 
 #ifndef pointPatchFieldMapper_H
 #define pointPatchFieldMapper_H
 
-#include "primitiveFields.H"
-#include "generalFieldMapper.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
-/*---------------------------------------------------------------------------*\
-                    Class pointPatchFieldMapper Declaration
-\*---------------------------------------------------------------------------*/
-
-class pointPatchFieldMapper
-:
-    virtual public fieldMapper
-{
-
-public:
-
-    // Constructors
-
-        //- Null constructor
-        pointPatchFieldMapper()
-        {}
-};
-
-
-/*---------------------------------------------------------------------------*\
-                Class generalPointPatchFieldMapper Declaration
-\*---------------------------------------------------------------------------*/
-
-class generalPointPatchFieldMapper
-:
-    public pointPatchFieldMapper,
-    public generalFieldMapper
-{
-
-public:
-
-    // Constructors
-
-        //- Null constructor
-        generalPointPatchFieldMapper()
-        {}
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "fieldMapper.H"
+#include "pointPatchFieldMapperFwd.H"
 
 #endif
 

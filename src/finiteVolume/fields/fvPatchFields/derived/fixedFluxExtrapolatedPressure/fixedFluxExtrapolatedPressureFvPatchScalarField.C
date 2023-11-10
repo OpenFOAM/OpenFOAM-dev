@@ -46,7 +46,7 @@ fixedFluxExtrapolatedPressureFvPatchScalarField
     const fixedFluxExtrapolatedPressureFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedFluxPressureFvPatchScalarField(ptf, p, iF, mapper)

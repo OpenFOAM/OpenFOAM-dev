@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "internalFvsPatchField.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "surfaceMesh.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -68,7 +68,7 @@ Foam::internalFvsPatchField<Type>::internalFvsPatchField
     const internalFvsPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fvsPatchField<Type>(ptf, p, iF, mapper)

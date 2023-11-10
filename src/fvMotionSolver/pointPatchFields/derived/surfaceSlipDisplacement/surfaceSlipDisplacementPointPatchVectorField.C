@@ -326,7 +326,7 @@ surfaceSlipDisplacementPointPatchVectorField
     const surfaceSlipDisplacementPointPatchVectorField& ppf,
     const pointPatch& p,
     const DimensionedField<vector, pointMesh>& iF,
-    const pointPatchFieldMapper&
+    const fieldMapper&
 )
 :
     pointPatchVectorField(p, iF),

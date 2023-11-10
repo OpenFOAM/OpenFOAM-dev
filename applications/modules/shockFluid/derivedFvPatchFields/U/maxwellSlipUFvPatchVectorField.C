@@ -26,7 +26,7 @@ License
 #include "maxwellSlipUFvPatchVectorField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "mathematicalConstants.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "fvcGrad.H"
 
@@ -90,7 +90,7 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
     const maxwellSlipUFvPatchVectorField& mspvf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFixedValueSlipFvPatchVectorField(mspvf, p, iF, mapper),
@@ -128,7 +128,7 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
 void Foam::maxwellSlipUFvPatchVectorField::map
 (
     const fvPatchVectorField& pvf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     mixedFixedValueSlipFvPatchVectorField::map(pvf, mapper);

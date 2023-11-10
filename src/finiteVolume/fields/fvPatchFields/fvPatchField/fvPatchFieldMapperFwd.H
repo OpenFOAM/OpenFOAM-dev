@@ -21,54 +21,25 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::setSizeFvPatchFieldMapper
+Typedef
+    Foam::fvPatchFieldMapper
 
 Description
-    Set size fvPatchFieldMapper
+    Backwards compatibility definition for the removal of fvPatchFieldMapper
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef setSizeFvPatchFieldMapper_H
-#define setSizeFvPatchFieldMapper_H
-
-#include "fvPatchFieldMapper.H"
-#include "setSizeFieldMapper.H"
+#ifndef fvPatchFieldMapperFwd_H
+#define fvPatchFieldMapperFwd_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+    class fieldMapper;
 
-/*---------------------------------------------------------------------------*\
-                  Class setSizeFvPatchFieldMapper Declaration
-\*---------------------------------------------------------------------------*/
-
-class setSizeFvPatchFieldMapper
-:
-    public fvPatchFieldMapper,
-    public setSizeFieldMapper
-{
-public:
-
-    // Constructors
-
-        //- Construct
-        setSizeFvPatchFieldMapper(const label size)
-        :
-            setSizeFieldMapper(size)
-        {}
-
-
-    //- Destructor
-    virtual ~setSizeFvPatchFieldMapper()
-    {}
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
+    typedef fieldMapper fvPatchFieldMapper;
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

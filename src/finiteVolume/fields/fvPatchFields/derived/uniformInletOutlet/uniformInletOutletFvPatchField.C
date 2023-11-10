@@ -66,7 +66,7 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
     const uniformInletOutletFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchField<Type>(ptf, p, iF, mapper, false), // Don't map
@@ -144,7 +144,7 @@ template<class Type>
 void Foam::uniformInletOutletFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     mixedFvPatchField<Type>::map(ptf, mapper);

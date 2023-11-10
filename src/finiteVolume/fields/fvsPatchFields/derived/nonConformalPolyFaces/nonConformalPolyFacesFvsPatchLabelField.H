@@ -77,7 +77,7 @@ public:
             const nonConformalPolyFacesFvsPatchLabelField&,
             const fvPatch&,
             const DimensionedField<label, surfaceMesh>&,
-            const fvPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference

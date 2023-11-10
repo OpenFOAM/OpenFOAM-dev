@@ -57,7 +57,7 @@ Foam::fixedValueFvPatchField<Type>::fixedValueFvPatchField
     const fixedValueFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper,
+    const fieldMapper& mapper,
     const bool mappingRequired
 )
 :

@@ -25,7 +25,7 @@ License
 
 #include "atmBoundaryLayerInletKFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
@@ -70,7 +70,7 @@ atmBoundaryLayerInletKFvPatchScalarField
     const atmBoundaryLayerInletKFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     inletOutletFvPatchScalarField(psf, p, iF, mapper),
@@ -95,7 +95,7 @@ atmBoundaryLayerInletKFvPatchScalarField
 void atmBoundaryLayerInletKFvPatchScalarField::map
 (
     const fvPatchScalarField& psf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     inletOutletFvPatchScalarField::map(psf, mapper);

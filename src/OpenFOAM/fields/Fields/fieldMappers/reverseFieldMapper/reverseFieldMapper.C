@@ -25,6 +25,33 @@ License
 
 #include "reverseFieldMapper.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+void Foam::reverseFieldMapper::map
+(
+    Field<Type>& f,
+    const Field<Type>& mapF
+) const
+{
+    if (notNull(addressing_) && addressing_.size())
+    {
+        f.rmap(mapF, addressing_);
+    }
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::reverseFieldMapper::map
+(
+    const Field<Type>& mapF
+) const
+{
+    NotImplemented;
+    return tmp<Field<Type>>(nullptr);
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, reverseFieldMapper)

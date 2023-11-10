@@ -42,7 +42,7 @@ SourceFiles
 #include "scalarField.H"
 #include "NamedEnum.H"
 #include "fvPatch.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,20 +57,23 @@ class radiationCoupledBase
 {
 public:
 
-    //- Type of supplied emissivity
-    enum emissivityMethodType
-    {
-        SOLIDRADIATION,
-        LOOKUP
-    };
+    // Public Types
+
+        //- Emissivity methods
+        enum emissivityMethodType
+        {
+            SOLIDRADIATION,
+            LOOKUP
+        };
+
+        //- Names of emissivity methods
+        static const NamedEnum<emissivityMethodType, 2>
+            emissivityMethodTypeNames_;
 
 
 private:
 
     // Private Data
-
-        static const NamedEnum<emissivityMethodType, 2>
-            emissivityMethodTypeNames_;
 
         //- Underlying patch
         const fvPatch& patch_;
@@ -83,8 +86,7 @@ protected:
         //- How to get emissivity
         const emissivityMethodType method_;
 
-        //- Emissivity
-        // Cached locally when is read from dictionary (lookup mode)
+        //- Emissivity. Cached locally when looked up.
         scalarField emissivity_;
 
 
@@ -110,7 +112,7 @@ public:
             const fvPatch& patch,
             const word& calculationMethod,
             const scalarField& emissivity,
-            const fvPatchFieldMapper& mapper
+            const fieldMapper& mapper
         );
 
         //- Construct from patch and dictionary
@@ -122,7 +124,7 @@ public:
 
 
     //- Destructor
-        virtual ~radiationCoupledBase();
+    virtual ~radiationCoupledBase();
 
 
     // Member Functions
@@ -135,7 +137,6 @@ public:
                 return emissivityMethodTypeNames_[method_];
             }
 
-
             //- Calculate corresponding emissivity field
             tmp<scalarField> emissivity() const;
 
@@ -143,11 +144,7 @@ public:
         // Mapping functions
 
             //- Map the given fvPatchField onto this fvPatchField
-            virtual void map
-            (
-                const fvPatchScalarField&,
-                const fvPatchFieldMapper&
-            );
+            virtual void map(const fvPatchScalarField&, const fieldMapper&);
 
             //- Reset the fvPatchField to the given fvPatchField
             //  Used for mesh to mesh mapping

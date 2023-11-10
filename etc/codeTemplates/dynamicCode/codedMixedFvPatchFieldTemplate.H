@@ -75,7 +75,7 @@ public:
             const ${typeName}MixedValueFvPatch${FieldType}&,
             const fvPatch&,
             const DimensionedField<${TemplateType}, volMesh>&,
-            const fvPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference

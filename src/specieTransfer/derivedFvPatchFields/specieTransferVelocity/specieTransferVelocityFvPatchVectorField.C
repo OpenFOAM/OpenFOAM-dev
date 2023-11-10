@@ -52,7 +52,7 @@ specieTransferVelocityFvPatchVectorField
     const specieTransferVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueInletOutletFvPatchField<vector>(ptf, p, iF, mapper),

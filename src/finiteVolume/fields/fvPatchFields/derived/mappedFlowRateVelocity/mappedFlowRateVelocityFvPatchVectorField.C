@@ -26,7 +26,7 @@ License
 #include "mappedFlowRateVelocityFvPatchVectorField.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "mappedPatchBase.H"
 #include "surfaceFields.H"
 
@@ -61,7 +61,7 @@ mappedFlowRateVelocityFvPatchVectorField
     const mappedFlowRateVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchField<vector>(ptf, p, iF, mapper),

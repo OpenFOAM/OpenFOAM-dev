@@ -25,7 +25,7 @@ License
 
 #include "codedFixedValuePointPatchField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "pointPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "pointFields.H"
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
@@ -109,7 +109,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
     const codedFixedValuePointPatchField<Type>& ptf,
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValuePointPatchField<Type>(ptf, p, iF, mapper),

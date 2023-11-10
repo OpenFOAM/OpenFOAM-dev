@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "genericFvPatchField.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -264,7 +264,7 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
     const genericFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     genericFieldBase(ptf),
@@ -309,7 +309,7 @@ template<class Type>
 void Foam::genericFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     calculatedFvPatchField<Type>::map(ptf, mapper);

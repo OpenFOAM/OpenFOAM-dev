@@ -98,7 +98,7 @@ public:
             const uniformInterpolatedDisplacementPointPatchVectorField&,
             const pointPatch&,
             const DimensionedField<vector, pointMesh>&,
-            const pointPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Construct as copy setting internal field reference

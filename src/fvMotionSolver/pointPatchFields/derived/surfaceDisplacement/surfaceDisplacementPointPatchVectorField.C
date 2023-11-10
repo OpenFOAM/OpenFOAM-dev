@@ -337,7 +337,7 @@ surfaceDisplacementPointPatchVectorField
     const surfaceDisplacementPointPatchVectorField& ppf,
     const pointPatch& p,
     const DimensionedField<vector, pointMesh>& iF,
-    const pointPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValuePointPatchVectorField(ppf, p, iF, mapper),

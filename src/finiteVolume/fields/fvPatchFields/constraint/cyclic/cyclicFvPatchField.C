@@ -75,7 +75,7 @@ Foam::cyclicFvPatchField<Type>::cyclicFvPatchField
     const cyclicFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     coupledFvPatchField<Type>(ptf, p, iF, mapper),

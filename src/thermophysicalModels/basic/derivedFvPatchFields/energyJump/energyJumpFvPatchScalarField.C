@@ -58,7 +58,7 @@ Foam::energyJumpFvPatchScalarField::energyJumpFvPatchScalarField
     const energyJumpFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedJumpFvPatchField<scalar>(ptf, p, iF, mapper)

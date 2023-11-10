@@ -220,7 +220,7 @@ Foam::conformedFvsPatchField<Type>::conformedFvsPatchField
     const conformedFvsPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fvsPatchField<Type>(ptf, p, iF, mapper),
@@ -260,7 +260,7 @@ template<class Type>
 void Foam::conformedFvsPatchField<Type>::map
 (
     const fvsPatchField<Type>& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     fvsPatchField<Type>::map(ptf, mapper);

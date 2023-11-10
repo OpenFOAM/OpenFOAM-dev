@@ -215,6 +215,10 @@ patchToPatch/rays/raysPatchToPatch.C
 
 patchToPatch/patchToPatchStabilisation/patchToPatchStabilisation.C
 
+patchToPatchFieldMapper/patchToPatchFieldMapper.C
+patchToPatchFieldMapper/patchToPatchLeftOverFieldMapper.C
+patchToPatchFieldMapper/patchToPatchNormalisedFieldMapper.C
+
 cellsToCells/cellsToCells/cellsToCells.C
 cellsToCells/cellsToCells/cellsToCellsParallelOps.C
 cellsToCells/matching/matchingCellsToCells.C

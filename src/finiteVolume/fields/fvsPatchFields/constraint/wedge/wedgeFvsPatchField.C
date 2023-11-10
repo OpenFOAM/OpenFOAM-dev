@@ -66,7 +66,7 @@ Foam::wedgeFvsPatchField<Type>::wedgeFvsPatchField
     const wedgeFvsPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, surfaceMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fvsPatchField<Type>(ptf, p, iF, mapper)

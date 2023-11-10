@@ -75,7 +75,7 @@ Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
     const fixedGradientFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper,
+    const fieldMapper& mapper,
     const bool mappingRequired
 )
 :
@@ -107,7 +107,7 @@ template<class Type>
 void Foam::fixedGradientFvPatchField<Type>::map
 (
     const fvPatchField<Type>& ptf,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 {
     fvPatchField<Type>::map(ptf, mapper);

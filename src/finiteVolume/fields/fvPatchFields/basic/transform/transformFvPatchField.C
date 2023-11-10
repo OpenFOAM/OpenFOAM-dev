@@ -58,7 +58,7 @@ Foam::transformFvPatchField<Type>::transformFvPatchField
     const transformFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fvPatchField<Type>(ptf, p, iF, mapper)

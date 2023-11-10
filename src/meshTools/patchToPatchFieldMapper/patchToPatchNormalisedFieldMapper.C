@@ -23,63 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "patchToPatchFvPatchFieldMapper.H"
+#include "patchToPatchNormalisedFieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::patchToPatchFvPatchFieldMapper::operator()
-(
-    Field<Type>& f,
-    const tmp<Field<Type>>& tmapF
-) const
-{
-    operator()(f, tmapF());
-    tmapF.clear();
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::patchToPatchFvPatchFieldMapper::operator()
-(
-    const tmp<Field<Type>>& tmapF
-) const
-{
-    tmp<Foam::Field<Type>> tf(operator()(tmapF()));
-    tmapF.clear();
-    return tf;
-}
-
-
-template<class Type>
-void Foam::patchToPatchLeftOverFvPatchFieldMapper::map
-(
-    Field<Type>& f,
-    const Field<Type>& mapF
-) const
-{
-    f = pToP_.srcToTgt(mapF, f);
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::patchToPatchLeftOverFvPatchFieldMapper::map
-(
-    const Field<Type>& mapF
-) const
-{
-    FatalErrorInFunction
-        << "Not a valid operation for this mapper, which should only be "
-        << "used for modifying an existing, valid, field"
-        << exit(FatalError);
-    return tmp<Field<Type>>(nullptr);
-}
-
-
-template<class Type>
-void Foam::patchToPatchNormalisedFvPatchFieldMapper::map
+void Foam::patchToPatchNormalisedFieldMapper::map
 (
     Field<Type>& f,
     const Field<Type>& mapF
@@ -93,7 +42,7 @@ void Foam::patchToPatchNormalisedFvPatchFieldMapper::map
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::patchToPatchNormalisedFvPatchFieldMapper::map
+Foam::patchToPatchNormalisedFieldMapper::map
 (
     const Field<Type>& mapF
 ) const
@@ -102,6 +51,15 @@ Foam::patchToPatchNormalisedFvPatchFieldMapper::map
     map(tf.ref(), mapF);
     return tf;
 }
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_FIELD_MAPPER_OPERATOR,
+    patchToPatchNormalisedFieldMapper
+)
 
 
 // ************************************************************************* //

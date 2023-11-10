@@ -123,7 +123,7 @@ public:
             const timeVaryingMappedFixedValuePointPatchField<Type>&,
             const pointPatch&,
             const DimensionedField<Type, pointMesh>&,
-            const pointPatchFieldMapper&
+            const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
@@ -163,11 +163,7 @@ public:
         // Mapping functions
 
             //- Map the given pointPatchField onto this pointPatchField
-            virtual void map
-            (
-                const pointPatchField<Type>&,
-                const pointPatchFieldMapper&
-            );
+            virtual void map(const pointPatchField<Type>&, const fieldMapper&);
 
             //- Reset the pointPatchField to the given pointPatchField
             //  Used for mesh to mesh mapping

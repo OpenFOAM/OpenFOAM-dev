@@ -36,8 +36,7 @@ Description
 
 #include "polyMesh.H"
 #include "fvMeshToFvMesh.H"
-#include "fvPatchFieldMapper.H"
-#include "pointPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "setSizeFieldMapper.H"
 #include "processorPolyPatch.H"
 
@@ -104,13 +103,7 @@ void MeshToMeshMapVolInternalFields
 }
 
 
-template
-<
-    class Type,
-    template<class> class PatchField,
-    class GeoMesh,
-    class SetSizePatchFieldMapper
->
+template<class Type, template<class> class PatchField, class GeoMesh>
 void NaNGeometricFields
 (
     const fvMesh& mesh,
@@ -166,7 +159,7 @@ void NaNGeometricFields
             else
             {
                 typename GField::Patch& pf = field.boundaryFieldRef()[patchi];
-                pf.map(pf, SetSizePatchFieldMapper(pf.patch().size()));
+                pf.map(pf, setSizeFieldMapper(pf.patch().size()));
             }
 
             field.boundaryFieldRef()[patchi] == NaN;

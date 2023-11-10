@@ -61,7 +61,7 @@ Foam::freestreamVelocityFvPatchVectorField::freestreamVelocityFvPatchVectorField
     const freestreamVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     mixedFvPatchVectorField(ptf, p, iF, mapper)

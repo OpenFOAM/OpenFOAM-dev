@@ -25,7 +25,7 @@ License
 
 #include "codedFixedValueFvPatchField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
+#include "fieldMapper.H"
 #include "volFields.H"
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
@@ -124,7 +124,7 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
     const codedFixedValueFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fieldMapper& mapper
 )
 :
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),

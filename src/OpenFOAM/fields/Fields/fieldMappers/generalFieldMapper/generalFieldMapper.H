@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,13 +45,15 @@ namespace Foam
 
 class generalFieldMapper
 :
-    virtual public fieldMapper
+    public fieldMapper
 {
     // Private Member Functions
 
+        //- Map a field in-place
         template<class Type>
         void map(Field<Type>& f, const Field<Type>& mapF) const;
 
+        //- Map a field and return the result
         template<class Type>
         tmp<Field<Type>> map(const Field<Type>& f) const;
 
@@ -72,16 +74,19 @@ public:
 
     // Member Functions
 
+        //- Is the mapper direct?
         virtual bool direct() const = 0;
 
-        //- Are there unmapped values? I.e. do all size() elements get
-        //  get value
+        //- Are there unmapped values? Do all elements get get a value?
         virtual bool hasUnmapped() const = 0;
 
+        //- Access the direct addressing
         virtual const labelUList& directAddressing() const;
 
+        //- Access the general addressing
         virtual const labelListList& addressing() const;
 
+        //- Access the general weights
         virtual const scalarListList& weights() const;
 
 
@@ -98,12 +103,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "generalFieldMapperTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
