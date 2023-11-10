@@ -125,40 +125,42 @@ class coupledTemperatureFvPatchScalarField
 
 protected:
 
-    //- Get the patch kappa, kappa*Tc/delta and kappa/delta and also the
-    //  heat-flux obtained from the sum heat-flux provided
-    virtual void getThis
-    (
-        tmp<scalarField>& kappa,
-        tmp<scalarField>& sumKappaTByDelta,
-        tmp<scalarField>& sumKappaByDelta,
-        scalarField& qTot,
-        tmp<scalarField>& qByKappa
-    ) const;
+    // Protected Member Functions
 
-    //- Get the neighbour patch kappa*Tc/delta and kappa/delta
-    //  and the heat-flux correction
-    virtual void getNbr
-    (
-        tmp<scalarField>& sumKappaTByDeltaNbr,
-        tmp<scalarField>& sumKappaByDeltaNbr,
-        tmp<scalarField>& qNbr
-    ) const;
+        //- Get the patch kappa, kappa*Tc/delta and kappa/delta and also the
+        //  heat-flux obtained from the sum heat-flux provided
+        virtual void getThis
+        (
+            tmp<scalarField>& kappa,
+            tmp<scalarField>& sumKappaTByDelta,
+            tmp<scalarField>& sumKappaByDelta,
+            scalarField& qTot,
+            tmp<scalarField>& qByKappa
+        ) const;
 
-    //- Get the neighbour patch wall temperature and heat-flux
-    //  when wall thermal resistance is specified
-    virtual void getNbr
-    (
-        tmp<scalarField>& TwNbr,
-        tmp<scalarField>& qNbr
-    ) const;
+        //- Get the neighbour patch kappa*Tc/delta and kappa/delta
+        //  and the heat-flux correction
+        virtual void getNbr
+        (
+            tmp<scalarField>& sumKappaTByDeltaNbr,
+            tmp<scalarField>& sumKappaByDeltaNbr,
+            tmp<scalarField>& qNbr
+        ) const;
 
-    //- Add field to result which may have not been previously set
-    void add
-    (
-        tmp<scalarField>& result,
-        const tmp<scalarField>& field
-    ) const;
+        //- Get the neighbour patch wall temperature and heat-flux
+        //  when wall thermal resistance is specified
+        virtual void getNbr
+        (
+            tmp<scalarField>& TwNbr,
+            tmp<scalarField>& qNbr
+        ) const;
+
+        //- Add field to result which may have not been previously set
+        void add
+        (
+            tmp<scalarField>& result,
+            const tmp<scalarField>& field
+        ) const;
 
 
 public:
@@ -214,11 +216,26 @@ public:
 
     // Member Functions
 
-        //- Update the coefficients associated with the patch field
-        virtual void updateCoeffs();
+        // Mapping functions
 
-        //- Write
-        virtual void write(Ostream&) const;
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchScalarField&, const fieldMapper&);
+
+            //- Reset the fvPatchField to the given fvPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const fvPatchScalarField&);
+
+
+        // Evaluation functions
+
+            //- Update the coefficients associated with the patch field
+            virtual void updateCoeffs();
+
+
+        // I-O
+
+            //- Write
+            virtual void write(Ostream&) const;
 };
 
 

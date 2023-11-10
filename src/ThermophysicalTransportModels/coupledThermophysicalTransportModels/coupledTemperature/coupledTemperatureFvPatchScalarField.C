@@ -220,12 +220,7 @@ coupledTemperatureFvPatchScalarField
     qrName_(psf.qrName_),
     thicknessLayers_(psf.thicknessLayers_),
     kappaLayers_(psf.kappaLayers_),
-    qs_
-    (
-        psf.qs_.valid()
-      ? mapper(psf.qs_()).ptr()
-      : nullptr
-    ),
+    qs_(psf.qs_.valid() ? mapper(psf.qs_()).ptr() : nullptr),
     Qs_(psf.Qs_),
     wallKappaByDelta_(psf.wallKappaByDelta_)
 {}
@@ -251,6 +246,41 @@ coupledTemperatureFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::coupledTemperatureFvPatchScalarField::map
+(
+    const fvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    mixedFvPatchScalarField::map(ptf, mapper);
+
+    const coupledTemperatureFvPatchScalarField& tiptf =
+        refCast<const coupledTemperatureFvPatchScalarField>(ptf);
+
+    if (tiptf.qs_.valid())
+    {
+        mapper(qs_(), tiptf.qs_());
+    }
+}
+
+
+void Foam::coupledTemperatureFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    mixedFvPatchScalarField::reset(ptf);
+
+    const coupledTemperatureFvPatchScalarField& tiptf =
+        refCast<const coupledTemperatureFvPatchScalarField>(ptf);
+
+    if (tiptf.qs_.valid())
+    {
+        qs_().reset(tiptf.qs_());
+    }
+}
+
 
 void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
 {
