@@ -333,107 +333,115 @@ Foam::label Foam::meshCheck::checkTopology
             Info<< "   *Number of regions: " << rs.nRegions() << endl;
 
             Info<< "    The mesh has multiple regions which are not connected "
-                   "by any face." << endl
-                << "  <<Writing region information to "
-                << mesh.time().name()/"cellToRegion"
-                << endl;
+                "by any face." << endl;
 
-            labelIOList ctr
-            (
-                IOobject
-                (
-                    "cellToRegion",
-                    mesh.time().name(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                rs
-            );
-            ctr.write();
-
-
-            // Points in multiple regions
-            pointSet points
-            (
-                mesh,
-                "multiRegionPoints",
-                mesh.nPoints()/1000
-            );
-
-            // Is region disconnected
-            boolList regionDisconnected(rs.nRegions(), true);
             if (allTopology)
             {
-                // -1   : not assigned
-                // -2   : multiple regions
-                // >= 0 : single region
-                labelList pointToRegion(mesh.nPoints(), -1);
+                Info<< "  <<Writing region information to "
+                    << mesh.time().name()/"cellToRegion"
+                    << endl;
 
-                for
+                labelIOList ctr
                 (
-                    label faceI = mesh.nInternalFaces();
-                    faceI < mesh.nFaces();
-                    faceI++
-                )
-                {
-                    label regionI = rs[mesh.faceOwner()[faceI]];
-                    const face& f = mesh.faces()[faceI];
-                    forAll(f, fp)
-                    {
-                        label& pRegion = pointToRegion[f[fp]];
-                        if (pRegion == -1)
-                        {
-                            pRegion = regionI;
-                        }
-                        else if (pRegion == -2)
-                        {
-                            // Already marked
-                            regionDisconnected[regionI] = false;
-                        }
-                        else if (pRegion != regionI)
-                        {
-                            // Multiple regions
-                            regionDisconnected[regionI] = false;
-                            regionDisconnected[pRegion] = false;
-                            pRegion = -2;
-                            points.insert(f[fp]);
-                        }
-                    }
-                }
-
-                Pstream::listCombineGather(regionDisconnected, andEqOp<bool>());
-                Pstream::listCombineScatter(regionDisconnected);
-            }
-
-
-
-            // write cellSet for each region
-            PtrList<cellSet> cellRegions(rs.nRegions());
-            for (label i = 0; i < rs.nRegions(); i++)
-            {
-                cellRegions.set
-                (
-                    i,
-                    new cellSet
+                    IOobject
                     (
+                        "cellToRegion",
+                        mesh.time().name(),
                         mesh,
-                        "region" + Foam::name(i),
-                        mesh.nCells()/100
-                    )
+                        IOobject::NO_READ,
+                        IOobject::NO_WRITE
+                    ),
+                    rs
                 );
+                ctr.write();
             }
 
-            forAll(rs, i)
-            {
-                cellRegions[rs[i]].insert(i);
-            }
 
-            for (label i = 0; i < rs.nRegions(); i++)
+            // Write region sets for allTopology
+            if (allTopology)
             {
-                Info<< "  <<Writing region " << i;
+                // Points in multiple regions
+                pointSet points
+                (
+                    mesh,
+                    "multiRegionPoints",
+                    mesh.nPoints()/1000
+                );
+
+                // Is region disconnected
+                boolList regionDisconnected(rs.nRegions(), true);
                 if (allTopology)
                 {
+                    // -1   : not assigned
+                    // -2   : multiple regions
+                    // >= 0 : single region
+                    labelList pointToRegion(mesh.nPoints(), -1);
+
+                    for
+                    (
+                        label faceI = mesh.nInternalFaces();
+                        faceI < mesh.nFaces();
+                        faceI++
+                    )
+                    {
+                        label regionI = rs[mesh.faceOwner()[faceI]];
+                        const face& f = mesh.faces()[faceI];
+                        forAll(f, fp)
+                        {
+                            label& pRegion = pointToRegion[f[fp]];
+                            if (pRegion == -1)
+                            {
+                                pRegion = regionI;
+                            }
+                            else if (pRegion == -2)
+                            {
+                                // Already marked
+                                regionDisconnected[regionI] = false;
+                            }
+                            else if (pRegion != regionI)
+                            {
+                                // Multiple regions
+                                regionDisconnected[regionI] = false;
+                                regionDisconnected[pRegion] = false;
+                                pRegion = -2;
+                                points.insert(f[fp]);
+                            }
+                        }
+                    }
+
+                    Pstream::listCombineGather
+                    (
+                        regionDisconnected,
+                        andEqOp<bool>()
+                    );
+                    Pstream::listCombineScatter(regionDisconnected);
+                }
+
+                // write cellSet for each region
+                PtrList<cellSet> cellRegions(rs.nRegions());
+                for (label i = 0; i < rs.nRegions(); i++)
+                {
+                    cellRegions.set
+                    (
+                        i,
+                        new cellSet
+                        (
+                            mesh,
+                            "region" + Foam::name(i),
+                            mesh.nCells()/100
+                        )
+                    );
+                }
+
+                forAll(rs, i)
+                {
+                    cellRegions[rs[i]].insert(i);
+                }
+
+                for (label i = 0; i < rs.nRegions(); i++)
+                {
+                    Info<< "  <<Writing region " << i;
+
                     if (regionDisconnected[i])
                     {
                         Info<< " (fully disconnected)";
@@ -442,24 +450,29 @@ Foam::label Foam::meshCheck::checkTopology
                     {
                         Info<< " (point connected)";
                     }
+
+                    Info<< " with "
+                        << returnReduce(cellRegions[i].size(), sumOp<scalar>())
+                        << " cells to cellSet " << cellRegions[i].name()
+                        << endl;
+
+                    cellRegions[i].instance() = mesh.pointsInstance();
+                    cellRegions[i].write();
                 }
-                Info<< " with "
-                    << returnReduce(cellRegions[i].size(), sumOp<scalar>())
-                    << " cells to cellSet " << cellRegions[i].name() << endl;
 
-                cellRegions[i].write();
-            }
-
-            label nPoints = returnReduce(points.size(), sumOp<label>());
-            if (nPoints)
-            {
-                Info<< "  <<Writing " << nPoints
-                    << " points that are in multiple regions to set "
-                    << points.name() << endl;
-                points.write();
-                if (setWriter.valid())
+                label nPoints = returnReduce(points.size(), sumOp<label>());
+                if (nPoints)
                 {
-                    meshCheck::mergeAndWrite(setWriter, points);
+                    Info<< "  <<Writing " << nPoints
+                        << " points that are in multiple regions to set "
+                        << points.name() << endl;
+
+                    points.instance() = mesh.pointsInstance();
+                    points.write();
+                    if (setWriter.valid())
+                    {
+                        meshCheck::mergeAndWrite(setWriter, points);
+                    }
                 }
             }
         }
