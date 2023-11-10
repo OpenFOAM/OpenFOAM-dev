@@ -128,6 +128,9 @@ public:
             //- Clear the UPtrList, i.e. set size to zero
             void clear();
 
+            //- Append an element at the end of the list
+            inline void append(T*);
+
             //- Transfer the contents of the argument UPtrList into this
             //  UPtrList and annul the argument list
             void transfer(UPtrList<T>&);
