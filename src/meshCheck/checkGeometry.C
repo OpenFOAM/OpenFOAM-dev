@@ -976,7 +976,7 @@ Foam::label Foam::meshCheck::checkGeometry
     if (allGeometry)
     {
         cellSet cells(mesh, "concaveCells", mesh.nCells()/100);
-        if (meshCheck::checkConcaveCells(mesh, true, planarCosAngle, &cells))
+        if (meshCheck::checkConcaveCells(mesh, planarCosAngle, true, &cells))
         {
             noFailedChecks++;
 
