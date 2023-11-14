@@ -23,12 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "directFieldMapper.H"
+#include "forwardFieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::directFieldMapper::map
+void Foam::forwardFieldMapper::map
 (
     Field<Type>& f,
     const Field<Type>& mapF
@@ -46,7 +46,7 @@ void Foam::directFieldMapper::map
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::directFieldMapper::map
+Foam::tmp<Foam::Field<Type>> Foam::forwardFieldMapper::map
 (
     const Field<Type>& mapF
 ) const
@@ -59,10 +59,10 @@ Foam::tmp<Foam::Field<Type>> Foam::directFieldMapper::map
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, directFieldMapper)
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, forwardFieldMapper)
 
 
-IMPLEMENT_FIELD_MAPPER_OPERATOR(label, directFieldMapper)
+IMPLEMENT_FIELD_MAPPER_OPERATOR(label, forwardFieldMapper)
 
 
 // ************************************************************************* //

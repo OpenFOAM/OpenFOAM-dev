@@ -26,7 +26,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "pointFields.H"
-#include "directFieldMapper.H"
+#include "forwardFieldMapper.H"
 #include "reverseFieldMapper.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -156,7 +156,7 @@ void Foam::fvMeshAdder::MapVolField
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new fvPatch
                         fld(), // new internal field
-                        directFieldMapper(newToOld)     // mapper (new to old)
+                        forwardFieldMapper(newToOld)    // mapper (new to old)
                     )
                 );
             }
@@ -208,7 +208,7 @@ void Foam::fvMeshAdder::MapVolField
                             fldToAdd.boundaryField()[patchi], // added field
                             mesh.boundary()[newPatchi],       // new fvPatch
                             fld(),   // new int. field
-                            directFieldMapper(newToAdded)     // mapper
+                            forwardFieldMapper(newToAdded)    // mapper
                         )
                     );
                 }
@@ -447,7 +447,7 @@ void Foam::fvMeshAdder::MapSurfaceField
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new fvPatch
                         fld(), // new internal field
-                        directFieldMapper(newToOld)     // mapper (new to old)
+                        forwardFieldMapper(newToOld)    // mapper (new to old)
                     )
                 );
             }
@@ -499,7 +499,7 @@ void Foam::fvMeshAdder::MapSurfaceField
                             fldToAdd.boundaryField()[patchi],// added field
                             mesh.boundary()[newPatchi],      // new fvPatch
                             fld(),  // new int. field
-                            directFieldMapper(newToAdded)    // mapper
+                            forwardFieldMapper(newToAdded)   // mapper
                         )
                     );
                 }
@@ -734,7 +734,7 @@ void Foam::fvMeshAdder::MapPointField
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new pointPatch
                         fld(),                          // new internal field
-                        directFieldMapper(newToOld)     // mapper (new to old)
+                        forwardFieldMapper(newToOld)    // mapper (new to old)
                     )
                 );
             }
@@ -798,7 +798,7 @@ void Foam::fvMeshAdder::MapPointField
                             fldToAdd.boundaryField()[patchi],// added field
                             mesh.boundary()[newPatchi],      // new pointPatch
                             fld(),                           // new int. field
-                            directFieldMapper(newToAdded)    // mapper
+                            forwardFieldMapper(newToAdded)   // mapper
                         )
                     );
                 }

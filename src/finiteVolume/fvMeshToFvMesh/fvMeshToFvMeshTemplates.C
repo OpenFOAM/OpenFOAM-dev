@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvMeshToFvMesh.H"
-#include "directFieldMapper.H"
+#include "setSizeFieldMapper.H"
 #include "identityFieldMapper.H"
 #include "patchToPatchLeftOverFieldMapper.H"
 #include "patchToPatchNormalisedFieldMapper.H"
@@ -140,10 +140,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
                     srcFld.boundaryField()[srcPatchi],
                     tgtMesh.boundary()[tgtPatchi],
                     DimensionedField<Type, volMesh>::null(),
-                    directFieldMapper
-                    (
-                        labelList(tgtMesh.boundary()[tgtPatchi].size(), -1)
-                    )
+                    setSizeFieldMapper(tgtMesh.boundary()[tgtPatchi].size())
                 )
             );
         }

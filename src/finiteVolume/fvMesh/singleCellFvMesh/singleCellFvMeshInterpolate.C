@@ -25,7 +25,7 @@ License
 
 #include "singleCellFvMesh.H"
 #include "calculatedFvPatchFields.H"
-#include "directFieldMapper.H"
+#include "identityFieldMapper.H"
 #include "Time.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -125,8 +125,6 @@ tmp<VolField<Type>> singleCellFvMesh::interpolate
     {
         forAll(vf.boundaryField(), patchi)
         {
-            labelList map(identityMap(vf.boundaryField()[patchi].size()));
-
             bf.set
             (
                 patchi,
@@ -135,7 +133,7 @@ tmp<VolField<Type>> singleCellFvMesh::interpolate
                     vf.boundaryField()[patchi],
                     boundary()[patchi],
                     resF(),
-                    directFieldMapper(map)
+                    identityFieldMapper()
                 )
             );
         }

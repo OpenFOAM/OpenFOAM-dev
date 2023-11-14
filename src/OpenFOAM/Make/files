@@ -627,7 +627,7 @@ fields/UniformGeometricFields/uniformGeometricFields.C
 
 Fields = fields/Fields
 
-$(Fields)/fieldMappers/directFieldMapper/directFieldMapper.C
+$(Fields)/fieldMappers/forwardFieldMapper/forwardFieldMapper.C
 $(Fields)/fieldMappers/identityFieldMapper/identityFieldMapper.C
 $(Fields)/fieldMappers/generalFieldMapper/generalFieldMapper.C
 $(Fields)/fieldMappers/reverseFieldMapper/reverseFieldMapper.C

@@ -26,49 +26,57 @@ License
 #include "pointFieldDecomposer.H"
 #include "fvMesh.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::pointFieldDecomposer::patchFieldDecomposer::patchFieldDecomposer
+Foam::labelList Foam::pointFieldDecomposer::patchFieldDecomposer::addressing
 (
-    const pointPatch& completeMeshPatch,
-    const pointPatch& procMeshPatch,
-    const labelList& directAddr
+    const pointPatch& completePatch,
+    const pointPatch& procPatch,
+    const labelList& pointProcAddressing
 )
-:
-    generalFieldMapper(),
-    directAddressing_(procMeshPatch.size(), -1),
-    hasUnmapped_(false)
 {
-    // Create the inverse-addressing of the patch point labels.
-    labelList pointMap(completeMeshPatch.boundaryMesh().mesh().size(), -1);
+    const labelList& completePatchPoints = completePatch.meshPoints();
+    const labelList& procPatchPoints = procPatch.meshPoints();
 
-    const labelList& completeMeshPatchPoints = completeMeshPatch.meshPoints();
-
-    forAll(completeMeshPatchPoints, pointi)
+    // Create a map from complete mesh point index to complete patch point index
+    labelList map(completePatch.boundaryMesh().mesh().size(), -1);
+    forAll(completePatchPoints, pointi)
     {
-        pointMap[completeMeshPatchPoints[pointi]] = pointi;
+        map[completePatchPoints[pointi]] = pointi;
     }
 
-    // Use the inverse point addressing to create the addressing table for this
-    // patch
-    const labelList& procMeshPatchPoints = procMeshPatch.meshPoints();
-
-    forAll(procMeshPatchPoints, pointi)
+    // Determine the complete patch point for every proc patch point, going via
+    // the complete mesh point index and using the above map
+    labelList result(procPatch.size(), -1);
+    forAll(procPatchPoints, pointi)
     {
-        directAddressing_[pointi] =
-            pointMap[directAddr[procMeshPatchPoints[pointi]]];
+        result[pointi] = map[pointProcAddressing[procPatchPoints[pointi]]];
     }
 
     // Check that all the patch point addresses are set
-    if (directAddressing_.size() && min(directAddressing_) < 0)
+    if (result.size() && min(result) < 0)
     {
-        hasUnmapped_ = true;
-
         FatalErrorInFunction
             << "Incomplete patch point addressing"
             << abort(FatalError);
     }
+
+    return result;
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::pointFieldDecomposer::patchFieldDecomposer::patchFieldDecomposer
+(
+    const pointPatch& completePatch,
+    const pointPatch& procPatch,
+    const labelList& pointProcAddressing
+)
+:
+    labelList(addressing(completePatch, procPatch, pointProcAddressing)),
+    forwardFieldMapper(static_cast<const labelList&>(*this))
+{}
 
 
 Foam::pointFieldDecomposer::pointFieldDecomposer

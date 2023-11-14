@@ -28,7 +28,7 @@ License
 #include "internalFvsPatchField.H"
 #include "internalPointPatchField.H"
 #include "internalFvPatchFields.H"
-#include "directFieldMapper.H"
+#include "forwardFieldMapper.H"
 #include "flipOp.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -143,7 +143,7 @@ Foam::fvMeshSubset::interpolate
                     vf.boundaryField()[patchMap[patchi]],
                     subPatch,
                     resF(),
-                    directFieldMapper(directAddressing)
+                    forwardFieldMapper(directAddressing)
                 )
             );
         }
@@ -286,7 +286,7 @@ Foam::fvMeshSubset::interpolate
                     sf.boundaryField()[patchMap[patchi]],
                     subPatch,
                     resF(),
-                    directFieldMapper(directAddressing)
+                    forwardFieldMapper(directAddressing)
                 )
             );
         }
@@ -475,7 +475,7 @@ Foam::fvMeshSubset::interpolate
                     pf.boundaryField()[patchMap[patchi]],
                     subPatch,
                     resF(),
-                    directFieldMapper(directAddressing)
+                    forwardFieldMapper(directAddressing)
                 )
             );
         }
