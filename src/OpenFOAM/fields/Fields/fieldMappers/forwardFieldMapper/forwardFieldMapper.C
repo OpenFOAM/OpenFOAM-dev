@@ -51,9 +51,16 @@ Foam::tmp<Foam::Field<Type>> Foam::forwardFieldMapper::map
     const Field<Type>& mapF
 ) const
 {
-    tmp<Field<Type>> tf(new Field<Type>(addressing_.size()));
-    map(tf.ref(), mapF);
-    return tf;
+    if (notNull(addressing_) && addressing_.size())
+    {
+        tmp<Field<Type>> tf(new Field<Type>(addressing_.size()));
+        map(tf.ref(), mapF);
+        return tf;
+    }
+    else
+    {
+        return tmp<Field<Type>>(new Field<Type>(0));
+    }
 }
 
 

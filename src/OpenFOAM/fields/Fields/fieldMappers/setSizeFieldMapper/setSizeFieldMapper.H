@@ -25,7 +25,7 @@ Class
     Foam::setSizeFieldMapper
 
 Description
-    Field sizing mapper which sets the field size and does not map values.
+    Mapper which sets the field size. It does not actually map values.
 
 \*---------------------------------------------------------------------------*/
 

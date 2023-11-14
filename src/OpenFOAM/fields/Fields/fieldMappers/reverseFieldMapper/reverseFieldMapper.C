@@ -34,10 +34,7 @@ void Foam::reverseFieldMapper::map
     const Field<Type>& mapF
 ) const
 {
-    if (notNull(addressing_) && addressing_.size())
-    {
-        f.rmap(mapF, addressing_);
-    }
+    f.rmap(mapF, addressing_);
 }
 
 
@@ -47,11 +44,9 @@ Foam::tmp<Foam::Field<Type>> Foam::reverseFieldMapper::map
     const Field<Type>& mapF
 ) const
 {
-    FatalErrorInFunction
-        << "Not a valid operation for this mapper. This mapper should only be "
-        << "used to modify an existing field in-place."
-        << exit(FatalError);
-    return tmp<Field<Type>>(nullptr);
+    tmp<Field<Type>> tf(new Field<Type>(max(addressing_) + 1));
+    map(tf.ref(), mapF);
+    return tf;
 }
 
 
