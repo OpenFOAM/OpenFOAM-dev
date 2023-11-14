@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,22 +111,10 @@ public:
 
     // Member Functions
 
-        //- Return size of field before mapping
-        virtual label sizeBeforeMapping() const
-        {
-            return faceMap_.internalSizeBeforeMapping();
-        }
-
         //- Is the mapping direct
         virtual bool direct() const
         {
             return faceMap_.direct();
-        }
-
-        //- Has unmapped elements
-        virtual bool hasUnmapped() const
-        {
-            return insertedObjects();
         }
 
         //- Return direct addressing
@@ -137,6 +125,12 @@ public:
 
         //- Return interpolation weights
         virtual const scalarListList& weights() const;
+
+        //- Return size of field before mapping
+        virtual label sizeBeforeMapping() const
+        {
+            return faceMap_.internalSizeBeforeMapping();
+        }
 
         //- Are there any inserted faces
         virtual bool insertedObjects() const

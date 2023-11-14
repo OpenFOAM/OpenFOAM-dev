@@ -71,8 +71,6 @@ class fvPatchMapper
 
     // Demand-driven private data
 
-        mutable bool hasUnmapped_;
-
         //- Direct addressing (only one for of addressing is used)
         mutable labelList* directAddrPtr_;
 
@@ -114,20 +112,15 @@ public:
     // Member Functions
 
         //- Return size of field before mapping
-        virtual label sizeBeforeMapping() const
+        label sizeBeforeMapping() const
         {
             return sizeBeforeMapping_;
         }
 
-        //- Is the mapping direct
+        //- Is the mapping direct?
         virtual bool direct() const
         {
             return faceMap_.direct();
-        }
-
-        virtual bool hasUnmapped() const
-        {
-            return hasUnmapped_;
         }
 
         //- Return direct addressing

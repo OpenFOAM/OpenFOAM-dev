@@ -77,9 +77,6 @@ public:
         //- Is the mapper direct?
         virtual bool direct() const = 0;
 
-        //- Are there unmapped values? Do all elements get get a value?
-        virtual bool hasUnmapped() const = 0;
-
         //- Access the direct addressing
         virtual const labelUList& directAddressing() const;
 

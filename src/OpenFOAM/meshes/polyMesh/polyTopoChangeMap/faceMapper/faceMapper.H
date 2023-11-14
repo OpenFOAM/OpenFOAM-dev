@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,8 +98,6 @@ class faceMapper
 
 public:
 
-    // Static Data Members
-
     // Constructors
 
         //- Construct from polyTopoChangeMap
@@ -115,21 +113,10 @@ public:
 
     // Member Functions
 
-        //- Return size of field before mapping
-        virtual label sizeBeforeMapping() const;
-
-        //- Return number of internal faces before mapping
-        virtual label internalSizeBeforeMapping() const;
-
         //- Is the mapping direct
         virtual bool direct() const
         {
             return direct_;
-        }
-
-        virtual bool hasUnmapped() const
-        {
-            return insertedObjects();
         }
 
         //- Return direct addressing
@@ -141,17 +128,11 @@ public:
         //- Return interpolation weights
         virtual const scalarListList& weights() const;
 
-        //- Return flux flip map
-        virtual const labelHashSet& flipFaceFlux() const;
+        //- Return size of field before mapping
+        virtual label sizeBeforeMapping() const;
 
-        //- Return number of old internalFaces
-        virtual label nOldInternalFaces() const;
-
-        //- Return old patch starts
-        virtual const labelList& oldPatchStarts() const;
-
-        //- Return old patch sizes
-        virtual const labelList& oldPatchSizes() const;
+        //- Return number of internal faces before mapping
+        label internalSizeBeforeMapping() const;
 
         //- Are there any inserted faces
         virtual bool insertedObjects() const
@@ -161,6 +142,18 @@ public:
 
         //- Return list of inserted faces
         virtual const labelList& insertedObjectLabels() const;
+
+        //- Return flux flip map
+        const labelHashSet& flipFaceFlux() const;
+
+        //- Return number of old internalFaces
+        label nOldInternalFaces() const;
+
+        //- Return old patch starts
+        const labelList& oldPatchStarts() const;
+
+        //- Return old patch sizes
+        const labelList& oldPatchSizes() const;
 
 
     // Member Operators

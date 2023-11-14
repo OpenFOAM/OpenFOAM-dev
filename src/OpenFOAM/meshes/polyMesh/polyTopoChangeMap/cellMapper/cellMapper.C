@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -373,12 +373,6 @@ Foam::cellMapper::~cellMapper()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::cellMapper::sizeBeforeMapping() const
-{
-    return mpm_.nOldCells();
-}
-
-
 const Foam::labelUList& Foam::cellMapper::directAddressing() const
 {
     if (!direct())
@@ -438,6 +432,12 @@ const Foam::scalarListList& Foam::cellMapper::weights() const
     }
 
     return *weightsPtr_;
+}
+
+
+Foam::label Foam::cellMapper::sizeBeforeMapping() const
+{
+    return mpm_.nOldCells();
 }
 
 

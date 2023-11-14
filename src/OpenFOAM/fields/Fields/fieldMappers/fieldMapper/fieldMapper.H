@@ -61,12 +61,6 @@ public:
     {}
 
 
-    // Member Functions
-
-        //- Are there unmapped values? Do all elements get get a value?
-        virtual bool hasUnmapped() const = 0;
-
-
     // Member Operators
 
         //- Map a field

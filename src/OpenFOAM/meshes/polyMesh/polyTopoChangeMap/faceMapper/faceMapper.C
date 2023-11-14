@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -281,18 +281,6 @@ Foam::faceMapper::~faceMapper()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::faceMapper::sizeBeforeMapping() const
-{
-    return mpm_.nOldFaces();
-}
-
-
-Foam::label Foam::faceMapper::internalSizeBeforeMapping() const
-{
-    return mpm_.nOldInternalFaces();
-}
-
-
 const Foam::labelUList& Foam::faceMapper::directAddressing() const
 {
     if (!direct())
@@ -352,6 +340,18 @@ const Foam::scalarListList& Foam::faceMapper::weights() const
     }
 
     return *weightsPtr_;
+}
+
+
+Foam::label Foam::faceMapper::sizeBeforeMapping() const
+{
+    return mpm_.nOldFaces();
+}
+
+
+Foam::label Foam::faceMapper::internalSizeBeforeMapping() const
+{
+    return mpm_.nOldInternalFaces();
 }
 
 

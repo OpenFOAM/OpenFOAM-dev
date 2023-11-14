@@ -39,15 +39,14 @@ void Foam::patchToPatchLeftOverFieldMapper::map
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::patchToPatchLeftOverFieldMapper::map
+Foam::tmp<Foam::Field<Type>> Foam::patchToPatchLeftOverFieldMapper::map
 (
     const Field<Type>& mapF
 ) const
 {
     FatalErrorInFunction
-        << "Not a valid operation for this mapper, which should only be "
-        << "used for modifying an existing, valid, field"
+        << "Not a valid operation for this mapper. This mapper should only be "
+        << "used to modify an existing, valid, field in-place."
         << exit(FatalError);
     return tmp<Field<Type>>(nullptr);
 }

@@ -52,9 +52,6 @@ class reverseFieldMapper
         //- Addressing from new back to old
         const labelUList& addressing_;
 
-        //- Does map contain any unmapped values
-        bool hasUnmapped_;
-
 
     // Private Member Functions
 
@@ -74,28 +71,13 @@ public:
         //- Construct given addressing
         reverseFieldMapper(const labelUList& addressing)
         :
-            addressing_(addressing),
-            hasUnmapped_(false)
-        {
-            if (addressing_.size() && min(addressing_) < 0)
-            {
-                hasUnmapped_ = true;
-            }
-        }
+            addressing_(addressing)
+        {}
 
 
     //- Destructor
     virtual ~reverseFieldMapper()
     {}
-
-
-    // Member Functions
-
-        //- Are there unmapped values? Do all elements get get a value?
-        virtual bool hasUnmapped() const
-        {
-            return hasUnmapped_;
-        }
 
 
     // Member Operators

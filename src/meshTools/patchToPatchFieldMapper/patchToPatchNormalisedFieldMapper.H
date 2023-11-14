@@ -89,15 +89,6 @@ public:
     {}
 
 
-    // Member Functions
-
-        //- Return whether or not all faces receive a mapped value
-        virtual bool hasUnmapped() const
-        {
-            return false;
-        }
-
-
     // Member Operators
 
         //- Map a field

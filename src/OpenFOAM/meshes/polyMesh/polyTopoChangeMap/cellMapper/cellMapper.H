@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,18 +114,10 @@ public:
 
     // Member Functions
 
-        //- Return size before mapping
-        virtual label sizeBeforeMapping() const;
-
         //- Is the mapping direct
         virtual bool direct() const
         {
             return direct_;
-        }
-
-        virtual bool hasUnmapped() const
-        {
-            return insertedObjects();
         }
 
         //- Return direct addressing
@@ -137,6 +129,9 @@ public:
         //- Return interpolation weights
         virtual const scalarListList& weights() const;
 
+        //- Return size before mapping
+        virtual label sizeBeforeMapping() const;
+
         //- Are there any inserted cells
         virtual bool insertedObjects() const
         {
@@ -144,7 +139,7 @@ public:
         }
 
         //- Return list of inserted cells
-        const virtual labelList& insertedObjectLabels() const;
+        virtual const labelList& insertedObjectLabels() const;
 
 
     // Member Operators

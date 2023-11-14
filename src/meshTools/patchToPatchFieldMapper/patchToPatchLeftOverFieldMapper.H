@@ -74,19 +74,6 @@ public:
     {}
 
 
-    // Member Functions
-
-        //- Return whether or not all faces receive a mapped value
-        virtual bool hasUnmapped() const
-        {
-            FatalErrorInFunction
-                << "Not a valid query for this mapper, which should only be "
-                << "used for modifying an existing, valid, field"
-                << exit(FatalError);
-            return false;
-        }
-
-
     // Member Operators
 
         //- Map a field

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,6 @@ void Foam::fvPatchMapper::calcAddressing() const
     const label oldPatchEnd =
         oldPatchStart + faceMap_.oldPatchSizes()[patch_.index()];
 
-    hasUnmapped_ = false;
-
     // Assemble the maps: slice to patch
     if (direct())
     {
@@ -84,7 +82,6 @@ void Foam::fvPatchMapper::calcAddressing() const
             {
                 // addr[facei] = 0;
                 addr[facei] = -1;
-                hasUnmapped_ = true;
             }
         }
 
@@ -164,10 +161,6 @@ void Foam::fvPatchMapper::calcAddressing() const
                 {
                     newWeights /= sum(newWeights);
                 }
-                else
-                {
-                    hasUnmapped_ = true;
-                }
 
                 // Reset addressing and weights
                 curAddr = newAddr;
@@ -197,7 +190,6 @@ void Foam::fvPatchMapper::clearOut()
     deleteDemandDrivenData(directAddrPtr_);
     deleteDemandDrivenData(interpolationAddrPtr_);
     deleteDemandDrivenData(weightsPtr_);
-    hasUnmapped_ = false;
 }
 
 
@@ -212,7 +204,6 @@ Foam::fvPatchMapper::fvPatchMapper
     patch_(patch),
     faceMap_(faceMap),
     sizeBeforeMapping_(faceMap.oldPatchSizes()[patch_.index()]),
-    hasUnmapped_(false),
     directAddrPtr_(nullptr),
     interpolationAddrPtr_(nullptr),
     weightsPtr_(nullptr)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -221,12 +221,6 @@ Foam::pointMapper::~pointMapper()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::pointMapper::sizeBeforeMapping() const
-{
-    return map_.nOldPoints();
-}
-
-
 const Foam::labelUList& Foam::pointMapper::directAddressing() const
 {
     if (!direct())
@@ -289,6 +283,12 @@ const Foam::scalarListList& Foam::pointMapper::weights() const
 }
 
 
+Foam::label Foam::pointMapper::sizeBeforeMapping() const
+{
+    return map_.nOldPoints();
+}
+
+
 const Foam::labelList& Foam::pointMapper::insertedObjectLabels() const
 {
     if (!insertedPointLabelsPtr_)
@@ -306,15 +306,6 @@ const Foam::labelList& Foam::pointMapper::insertedObjectLabels() const
 
     return *insertedPointLabelsPtr_;
 }
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-
-// * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
-
-
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

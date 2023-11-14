@@ -41,8 +41,7 @@ void Foam::patchToPatchNormalisedFieldMapper::map
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::patchToPatchNormalisedFieldMapper::map
+Foam::tmp<Foam::Field<Type>> Foam::patchToPatchNormalisedFieldMapper::map
 (
     const Field<Type>& mapF
 ) const

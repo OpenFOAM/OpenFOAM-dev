@@ -47,7 +47,10 @@ Foam::tmp<Foam::Field<Type>> Foam::reverseFieldMapper::map
     const Field<Type>& mapF
 ) const
 {
-    NotImplemented;
+    FatalErrorInFunction
+        << "Not a valid operation for this mapper. This mapper should only be "
+        << "used to modify an existing field in-place."
+        << exit(FatalError);
     return tmp<Field<Type>>(nullptr);
 }
 

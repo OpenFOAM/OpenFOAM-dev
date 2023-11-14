@@ -40,8 +40,7 @@ void Foam::patchToPatchFieldMapper::operator()
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::patchToPatchFieldMapper::operator()
+Foam::tmp<Foam::Field<Type>> Foam::patchToPatchFieldMapper::operator()
 (
     const tmp<Field<Type>>& tmapF
 ) const

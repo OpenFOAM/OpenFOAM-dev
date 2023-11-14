@@ -80,15 +80,6 @@ public:
     {}
 
 
-    // Member Functions
-
-        //- All values are unmapped
-        virtual bool hasUnmapped() const
-        {
-            return true;
-        }
-
-
     // Member Operators
 
         //- Map a field
