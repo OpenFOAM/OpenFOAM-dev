@@ -196,7 +196,7 @@ Foam::fv::zeroDimensionalMassSourceBase::zeroDimensionalMassSourceBase
 
 Foam::labelUList Foam::fv::zeroDimensionalMassSourceBase::cells() const
 {
-    static labelList zero(1, 0);
+    static labelList zero(1, Zero);
     return labelUList(zero);
 }
 
