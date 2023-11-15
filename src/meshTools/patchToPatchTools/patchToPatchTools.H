@@ -137,10 +137,6 @@ void rDistributeTgtAddressing
     List<DynamicList<label>>& tgtLocalSrcFaces
 );
 
-//- Return a primitive with all components set to NaN
-template<class Type>
-static Type NaN();
-
 //- Interpolate with normalisation
 template<class Type, class LabelList, class ScalarList>
 static tmp<Field<Type>> interpolate

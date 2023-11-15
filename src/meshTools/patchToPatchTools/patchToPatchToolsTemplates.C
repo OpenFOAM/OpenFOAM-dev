@@ -82,20 +82,6 @@ void Foam::patchToPatchTools::rDistributeListList
 }
 
 
-template<class Type>
-Type Foam::patchToPatchTools::NaN()
-{
-    Type result;
-
-    for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
-    {
-        setComponent(result, cmpt) = Foam::NaN;
-    }
-
-    return result;
-}
-
-
 template<class Type, class LabelList, class ScalarList>
 Foam::tmp<Foam::Field<Type>> Foam::patchToPatchTools::interpolate
 (
@@ -116,7 +102,10 @@ Foam::tmp<Foam::Field<Type>> Foam::patchToPatchTools::interpolate
         otherMapPtr.valid() ? tLocalOtherFld() : otherFld;
 
     // Allocate the result
-    tmp<Field<Type>> tFld(new Field<Type>(localOtherFaces.size(), NaN<Type>()));
+    tmp<Field<Type>> tFld
+    (
+        new Field<Type>(localOtherFaces.size(), pTraits<Type>::nan)
+    );
     Field<Type>& fld = tFld.ref();
 
     // Compute the result as a weighted sum
@@ -163,7 +152,10 @@ Foam::tmp<Foam::Field<Type>> Foam::patchToPatchTools::interpolate
         otherMapPtr.valid() ? tLocalOtherFld() : otherFld;
 
     // Allocate the result
-    tmp<Field<Type>> tFld(new Field<Type>(localOtherFaces.size(), NaN<Type>()));
+    tmp<Field<Type>> tFld
+    (
+        new Field<Type>(localOtherFaces.size(), pTraits<Type>::nan)
+    );
     Field<Type>& fld = tFld.ref();
 
     // Compute the result as a weighted sum

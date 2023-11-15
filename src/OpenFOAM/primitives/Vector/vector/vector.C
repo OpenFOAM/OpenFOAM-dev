@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,9 @@ const Foam::vector Foam::vector::vsType::rootMax(vector::uniform(rootVGreat));
 
 template<>
 const Foam::vector Foam::vector::vsType::rootMin(vector::uniform(-rootVGreat));
+
+template<>
+const Foam::vector Foam::vector::vsType::nan(vector::uniform(NaN));
 
 
 // ************************************************************************* //

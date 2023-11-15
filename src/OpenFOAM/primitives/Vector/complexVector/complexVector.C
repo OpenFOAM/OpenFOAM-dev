@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,6 +73,12 @@ template<>
 const Foam::complexVector Foam::complexVector::vsType::rootMin
 (
     complexVector::uniform(complex(-rootVGreat, -rootVGreat))
+);
+
+template<>
+const Foam::complexVector Foam::complexVector::vsType::nan
+(
+    complexVector::uniform(complex(NaN, NaN))
 );
 
 

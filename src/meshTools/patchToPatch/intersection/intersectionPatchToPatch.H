@@ -75,7 +75,7 @@ public:
             part()
             :
                 area(Zero),
-                centre(patchToPatchTools::NaN<point>())
+                centre(pTraits<point>::nan)
             {}
 
             //- Default construct

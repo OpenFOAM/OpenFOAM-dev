@@ -71,6 +71,12 @@ const Foam::Vector<Foam::vector> Foam::triad::vsType::rootMin
     triad::uniform(vector::uniform(-rootVGreat))
 );
 
+template<>
+const Foam::Vector<Foam::vector> Foam::triad::vsType::nan
+(
+    triad::uniform(vector::uniform(NaN))
+);
+
 const Foam::triad Foam::triad::I
 (
     vector(1, 0, 0),

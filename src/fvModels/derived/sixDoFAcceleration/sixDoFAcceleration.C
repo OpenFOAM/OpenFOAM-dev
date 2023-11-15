@@ -85,6 +85,9 @@ const avType avType::vsType::rootMin
     avType::uniform(vector::uniform(-rootVGreat))
 );
 
+template<>
+const avType avType::vsType::nan(avType::uniform(vector::uniform(NaN)));
+
 namespace Foam
 {
     makeFunction1s(avType, nullArg);

@@ -76,6 +76,7 @@ public:
         static const Scalar min;
         static const Scalar rootMax;
         static const Scalar rootMin;
+        static const Scalar nan;
 
 
     // Constructors

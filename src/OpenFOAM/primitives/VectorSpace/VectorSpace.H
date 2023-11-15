@@ -122,6 +122,7 @@ public:
         static const Form min;
         static const Form rootMax;
         static const Form rootMin;
+        static const Form nan;
 
 
     // Sub-Block Classes

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,6 +89,7 @@ inline bool readScalar(const char* buf, longDoubleScalar& s)
 #define ScalarVSmall longDoubleScalarVSmall
 #define ScalarRootVGreat longDoubleScalarRootVGreat
 #define ScalarRootVSmall longDoubleScalarRootVSmall
+#define ScalarNaN longDoubleScalarNaN
 #define readScalar readLongDoubleScalar
 
 inline Scalar mag(const Scalar s)
@@ -163,6 +164,7 @@ inline Scalar yn(const int n, const Scalar s)
 #undef ScalarVSmall
 #undef ScalarRootVGreat
 #undef ScalarRootVSmall
+#undef ScalarNaN
 #undef readScalar
 #undef transFunc
 

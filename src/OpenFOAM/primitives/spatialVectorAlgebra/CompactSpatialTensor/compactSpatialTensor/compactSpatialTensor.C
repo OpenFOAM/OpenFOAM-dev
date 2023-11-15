@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,6 +78,12 @@ template<>
 const Foam::compactSpatialTensor Foam::compactSpatialTensor::vsType::rootMin
 (
     compactSpatialTensor::uniform(-rootVGreat)
+);
+
+template<>
+const Foam::compactSpatialTensor Foam::compactSpatialTensor::vsType::nan
+(
+    compactSpatialTensor::uniform(NaN)
 );
 
 

@@ -86,6 +86,9 @@ const trvType trvType::vsType::rootMin
     trvType::uniform(vector::uniform(-rootVGreat))
 );
 
+template<>
+const trvType trvType::vsType::nan(trvType::uniform(vector::uniform(NaN)));
+
 namespace Foam
 {
     makeFunction1s(trvType, nullArg);

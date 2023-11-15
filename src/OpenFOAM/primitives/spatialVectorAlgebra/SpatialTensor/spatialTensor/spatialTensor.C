@@ -79,6 +79,12 @@ const Foam::spatialTensor Foam::spatialTensor::vsType::rootMin
 );
 
 template<>
+const Foam::spatialTensor Foam::spatialTensor::vsType::nan
+(
+    spatialTensor::uniform(NaN)
+);
+
+template<>
 const Foam::spatialTensor Foam::spatialTensor::I
 (
     Foam::spatialTensor::identityMap()

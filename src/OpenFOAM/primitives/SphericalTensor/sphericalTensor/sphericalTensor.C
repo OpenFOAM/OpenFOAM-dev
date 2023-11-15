@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,6 +67,12 @@ template<>
 const Foam::sphericalTensor Foam::sphericalTensor::vsType::rootMin
 (
     sphericalTensor::uniform(-rootVGreat)
+);
+
+template<>
+const Foam::sphericalTensor Foam::sphericalTensor::vsType::nan
+(
+    sphericalTensor::uniform(NaN)
 );
 
 template<>

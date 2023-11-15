@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,8 +96,6 @@ public:
         static const uint32_t one;
         static const uint32_t min;
         static const uint32_t max;
-        static const uint32_t rootMax;
-        static const uint32_t rootMin;
 
 
     // Constructors
