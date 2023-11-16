@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,20 +98,23 @@ public:
 
         // Access
 
+            //- Inherit the cyclic patch method
+            using cyclicFvPatch::patch;
+
             //- Poly patch
             const nonConformalCyclicPolyPatch& nonConformalCyclicPatch() const;
 
-            //- Neighbour patch
-            const nonConformalCyclicFvPatch& nbrPatch() const;
-
-            //- ...
+            //- Inherit the cyclic owner method
             using cyclicFvPatch::owner;
 
-            //- ...
+            //- Inherit the cyclic neighbour method
             using cyclicFvPatch::neighbour;
 
-            //- ...
+            //- Inherit the cyclic transform method
             using cyclicFvPatch::transform;
+
+            //- Neighbour patch
+            const nonConformalCyclicFvPatch& nbrPatch() const;
 
             //- Is this patch coupled? Returns true. For NCC patches the poly
             //  mesh is considered non-coupled whilst the finite volume mesh is

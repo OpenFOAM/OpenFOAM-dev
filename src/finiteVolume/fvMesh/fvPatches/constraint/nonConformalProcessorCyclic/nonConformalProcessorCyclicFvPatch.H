@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,17 +97,20 @@ public:
 
         // Access
 
+            //- Inherit the processor cyclic patch method
+            using processorCyclicFvPatch::patch;
+
             //- Poly patch
             const nonConformalProcessorCyclicPolyPatch&
                 nonConformalProcessorCyclicPatch() const;
 
-            //- ...
+            //- Inherit the processor cyclic owner method
             using processorCyclicFvPatch::owner;
 
-            //- ...
+            //- Inherit the processor cyclic neighbour method
             using processorCyclicFvPatch::neighbour;
 
-            //- ...
+            //- Inherit the processor cyclic transform method
             using processorCyclicFvPatch::transform;
 
             //- Is this patch coupled? Returns true. For NCC patches the poly

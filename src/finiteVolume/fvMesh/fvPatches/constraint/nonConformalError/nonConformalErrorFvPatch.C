@@ -47,7 +47,11 @@ Foam::nonConformalErrorFvPatch::nonConformalErrorFvPatch
 )
 :
     fvPatch(patch, bm),
-    nonConformalFvPatch(static_cast<const fvPatch&>(*this))
+    nonConformalFvPatch(static_cast<const fvPatch&>(*this)),
+    nonConformalErrorPolyPatch_
+    (
+        refCast<const nonConformalErrorPolyPatch>(patch)
+    )
 {}
 
 
@@ -58,6 +62,13 @@ Foam::nonConformalErrorFvPatch::~nonConformalErrorFvPatch()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::nonConformalErrorPolyPatch&
+Foam::nonConformalErrorFvPatch::nonConformalErrorPatch() const
+{
+    return nonConformalErrorPolyPatch_;
+}
+
 
 const Foam::labelList& Foam::nonConformalErrorFvPatch::polyFaces() const
 {

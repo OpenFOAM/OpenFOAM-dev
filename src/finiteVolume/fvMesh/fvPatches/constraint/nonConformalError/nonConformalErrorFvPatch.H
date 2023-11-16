@@ -60,6 +60,12 @@ class nonConformalErrorFvPatch
     public fvPatch,
     public nonConformalFvPatch
 {
+    // Private Data
+
+        //- Reference to the polyPatch
+        const nonConformalErrorPolyPatch& nonConformalErrorPolyPatch_;
+
+
 public:
 
     //- Runtime type information
@@ -83,6 +89,12 @@ public:
     // Member Functions
 
         // Access
+
+            //- Inherit fvPatch patch method
+            using fvPatch::patch;
+
+            //- Poly patch
+            const nonConformalErrorPolyPatch& nonConformalErrorPatch() const;
 
             //- Return face face-poly-faces
             const labelList& polyFaces() const;
