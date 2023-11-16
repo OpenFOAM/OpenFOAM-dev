@@ -26,18 +26,11 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "volFields.H"
-#include "surfaceFields.H"
-#include "conformedFvsPatchField.H"
 #include "fvMeshStitcher.H"
+#include "conformedFvsPatchField.H"
 #include "setSizeFieldMapper.H"
-#include "nonConformalBoundary.H"
-#include "nonConformalCyclicFvPatch.H"
-#include "nonConformalProcessorCyclicFvPatch.H"
-#include "nonConformalErrorFvPatch.H"
-#include "processorFvPatch.H"
-#include "surfaceToVolVelocity.H"
-
+#include "surfaceFields.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -76,9 +69,6 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
 {
     UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
 
-    const labelList origPatchIDs =
-        nonConformalBoundary::New(mesh_).allOrigPatchIDs();
-
     forAll(fields, i)
     {
         SurfaceField<Type>& field = fields[i];
@@ -99,9 +89,6 @@ void Foam::fvMeshStitcher::postNonConformSurfaceFields()
 {
     UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
 
-    const labelList origPatchIDs =
-        nonConformalBoundary::New(mesh_).allOrigPatchIDs();
-
     forAll(fields, i)
     {
         SurfaceField<Type>& field = fields[i];
@@ -121,6 +108,7 @@ template<class Type>
 void Foam::fvMeshStitcher::evaluateVolFields()
 {
     UPtrList<VolField<Type>> fields(mesh_.fields<VolField<Type>>());
+
     forAll(fields, i)
     {
         const label nReq = Pstream::nRequests();

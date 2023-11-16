@@ -26,12 +26,16 @@ License
 #include "fvMeshStitcher.H"
 #include "globalIndex.H"
 #include "fvcSurfaceIntegrate.H"
-#include "fvMeshToFvMesh.H"
 #include "meshObjects.H"
+#include "nonConformalBoundary.H"
+#include "nonConformalCyclicFvPatch.H"
+#include "nonConformalProcessorCyclicFvPatch.H"
+#include "nonConformalErrorFvPatch.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
 #include "polyDistributionMap.H"
 #include "syncTools.H"
+#include "surfaceInterpolate.H"
 #include "surfaceToVolVelocity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -1120,15 +1124,16 @@ void Foam::fvMeshStitcher::postNonConformSurfaceVelocities()
 
         const volVectorField& U = surfaceToVolVelocity(Uf);
 
-        if (!isNull(U))
+        if (isNull(U)) continue;
+
+        const surfaceVectorField UfInterpolated(fvc::interpolate(U));
+
+        forAll(Uf.boundaryField(), patchi)
         {
-            forAll(Uf.boundaryField(), patchi)
+            if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
             {
-                if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
-                {
-                    boundaryFieldRefNoUpdate(Uf)[patchi] ==
-                        U.boundaryField()[patchi];
-                }
+                boundaryFieldRefNoUpdate(Uf)[patchi] ==
+                    UfInterpolated.boundaryField()[patchi];
             }
         }
     }

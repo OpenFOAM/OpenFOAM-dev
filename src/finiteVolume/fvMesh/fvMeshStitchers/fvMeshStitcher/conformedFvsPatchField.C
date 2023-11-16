@@ -155,26 +155,30 @@ void Foam::conformedFvsPatchField<Type>::unconform
             )
         );
     }
-    typename SurfaceField<Type>::Boundary origBf(fvbm, iF, origPFs);
-    typename SurfaceField<Type>::Boundary ncBf(fvbm, iF, ncPFs);
 
     // If the mesh has topo-changed then just use the original parts and leave
     // the non-conformal parts unset
     if (iF.mesh().topoChanged())
     {
-        typename SurfaceField<Type>::Boundary result(fvbm, iF, origPFs);
-        bF.transfer(result);
+        bF.transfer(origPFs);
     }
     // If the mesh has not topo-changed, then combine the conformed boundary
     // fields to create the non-conformal boundary field
     else
     {
-        typename SurfaceField<Type>::Boundary result
+        typename SurfaceField<Type>::Boundary origAndNcBf
         (
             iF,
-            fvMeshStitcherTools::unconformedBoundaryField(ncBf, origBf)
+            fvMeshStitcherTools::unconformedBoundaryField
+            (
+                typename SurfaceField<Type>::Boundary(fvbm, iF, ncPFs),
+                typename SurfaceField<Type>::Boundary(fvbm, iF, origPFs)
+            )
         );
-        bF.transfer(result);
+
+        bF.transfer(origAndNcBf);
+
+        bF = fvMeshStitcherTools::synchronisedBoundaryField(bF);
     }
 }
 
