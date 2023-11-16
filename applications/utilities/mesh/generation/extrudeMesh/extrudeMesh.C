@@ -217,22 +217,6 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTimeExtruded.H"
 
-    // Get optional regionName
-    word regionName;
-    word regionDir;
-    if (args.optionReadIfPresent("region", regionName))
-    {
-        regionDir = regionName;
-        Info<< "Create mesh " << regionName << " for time = "
-            << runTimeExtruded.name() << nl << endl;
-    }
-    else
-    {
-        regionName = fvMesh::defaultRegion;
-        Info<< "Create mesh for time = "
-            << runTimeExtruded.name() << nl << endl;
-    }
-
     const dictionary dict(systemDict("extrudeMeshDict", args, runTimeExtruded));
 
     // Point generator
@@ -318,7 +302,7 @@ int main(int argc, char *argv[])
             sourceCaseDir
         );
 
-        #include "createMeshNoChangers.H"
+        #include "createNamedMesh.H"
 
         const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
