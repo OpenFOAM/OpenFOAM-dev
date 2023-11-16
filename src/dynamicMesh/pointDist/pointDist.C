@@ -60,7 +60,7 @@ Foam::pointDist::pointDist
 (
     const pointMesh& pMesh,
     const labelHashSet& patchIDs,
-    const UPtrList<const labelList>& internalPoints,
+    const labelHashSet& zoneIDs,
     const pointField& points
 )
 :
@@ -77,7 +77,7 @@ Foam::pointDist::pointDist
     ),
     points_(points),
     patchIDs_(patchIDs),
-    internalPoints_(internalPoints),
+    zoneIDs_(zoneIDs),
     nUnset_(0)
 {
     correct();
@@ -104,9 +104,10 @@ void Foam::pointDist::correct()
         nPatchPoints += pbm[patchi].meshPoints().size();
     }
 
-    forAll(internalPoints_, i)
+    forAllConstIter(labelHashSet, zoneIDs_, iter)
     {
-        nPatchPoints += internalPoints_[i].size();
+        const label zonei = iter.key();
+        nPatchPoints += mesh()().pointZones()[zonei].size();
     }
 
     externalPointEdgePoint::trackingData td(points_);
@@ -135,14 +136,15 @@ void Foam::pointDist::correct()
         }
     }
 
-    // Add the internal points to the patchPointsInfo
-    forAll(internalPoints_, i)
+    // Add the zone points to the patchPointsInfo
+    forAllConstIter(labelHashSet, zoneIDs_, iter)
     {
-        const labelList& internalPointsi = internalPoints_[i];
+        const label zonei = iter.key();
+        const labelList& zonePoints = mesh()().pointZones()[zonei];
 
-        forAll(internalPointsi, j)
+        forAll(zonePoints, j)
         {
-            const label meshPointi = internalPointsi[j];
+            const label meshPointi = zonePoints[j];
             patchPoints[nPatchPoints] = meshPointi;
             patchPointsInfo[nPatchPoints] = externalPointEdgePoint
             (
@@ -189,13 +191,14 @@ void Foam::pointDist::correct()
         }
     }
 
-    forAll(internalPoints_, i)
+    forAllConstIter(labelHashSet, zoneIDs_, iter)
     {
-        const labelList& internalPointsi = internalPoints_[i];
+        const label zonei = iter.key();
+        const labelList& zonePoints = mesh()().pointZones()[zonei];
 
-        forAll(internalPointsi, j)
+        forAll(zonePoints, j)
         {
-            const label meshPointi = internalPointsi[j];
+            const label meshPointi = zonePoints[j];
             psf[meshPointi] = 0;
         }
     }

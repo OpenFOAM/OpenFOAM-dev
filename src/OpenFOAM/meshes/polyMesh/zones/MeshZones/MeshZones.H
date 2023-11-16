@@ -160,7 +160,7 @@ public:
 
         using PtrList<ZoneType>::append;
 
-        //- Append a zone
+        //- Append or update a zone
         //  Temporary function pending the rewrite of zones
         void append
         (

@@ -25,7 +25,7 @@ Class
     Foam::pointDist
 
 Description
-    Calculates the distance to the specified sets of patch and internal points
+    Calculates the distance to the specified sets of patch and pointZone points
     or for all points
 
 SourceFiles
@@ -61,8 +61,8 @@ class pointDist
         //- Set of patch IDs
         const labelHashSet patchIDs_;
 
-        //- Sets of internal points for which the distance is 0
-        const UPtrList<const labelList> internalPoints_;
+        //- Set of pointZone IDs for which the distance is 0
+        const labelHashSet zoneIDs_;
 
         //- Number of unset points
         label nUnset_;
@@ -81,13 +81,13 @@ public:
         );
 
         //- Construct from mesh, set of patches,
-        //  sets of internal points for which the distance is 0
+        //  set of pointZones for which the distance is 0
         //  and points
         pointDist
         (
             const pointMesh& pMesh,
             const labelHashSet& patchIDs,
-            const UPtrList<const labelList>& internalPoints,
+            const labelHashSet& zoneIDs,
             const pointField& points
         );
 

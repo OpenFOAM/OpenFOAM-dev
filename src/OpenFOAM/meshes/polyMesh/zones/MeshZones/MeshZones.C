@@ -416,20 +416,27 @@ void Foam::MeshZones<ZoneType, MeshType>::append
     MeshZones<ZoneType, MeshType>& zones =
         const_cast<MeshZones<ZoneType, MeshType>&>(*this);
 
-    const label zoneID = zones.size();
-    zones.setSize(zoneID + 1);
+    if (found(zoneName))
+    {
+        zones[zoneName] = cells;
+    }
+    else
+    {
+        const label zoneID = zones.size();
+        zones.setSize(zoneID + 1);
 
-    zones.set
-    (
-        zoneID,
-        new ZoneType
+        zones.set
         (
-            zoneName,
-            cells,
             zoneID,
-            *this
-        )
-    );
+            new ZoneType
+            (
+                zoneName,
+                cells,
+                zoneID,
+                *this
+            )
+        );
+    }
 }
 
 

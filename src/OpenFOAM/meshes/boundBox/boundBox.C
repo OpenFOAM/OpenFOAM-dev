@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,19 +30,8 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 const Foam::scalar Foam::boundBox::great(vGreat);
-
-const Foam::boundBox Foam::boundBox::greatBox
-(
-    point(-vGreat, -vGreat, -vGreat),
-    point(vGreat, vGreat, vGreat)
-);
-
-
-const Foam::boundBox Foam::boundBox::invertedBox
-(
-    point(vGreat, vGreat, vGreat),
-    point(-vGreat, -vGreat, -vGreat)
-);
+const Foam::boundBox Foam::boundBox::greatBox(vector::min, vector::max);
+const Foam::boundBox Foam::boundBox::invertedBox(vector::max, vector::min);
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -57,8 +46,8 @@ void Foam::boundBox::calculate(const UList<point>& points, const bool doReduce)
         if (doReduce && Pstream::parRun())
         {
             // Use values that get overwritten by reduce minOp, maxOp below
-            min_ = point(vGreat, vGreat, vGreat);
-            max_ = point(-vGreat, -vGreat, -vGreat);
+            min_ = vector::max;
+            max_ = vector::min;
         }
     }
     else
@@ -119,8 +108,8 @@ Foam::boundBox::boundBox
         if (doReduce && Pstream::parRun())
         {
             // Use values that get overwritten by reduce minOp, maxOp below
-            min_ = point(vGreat, vGreat, vGreat);
-            max_ = point(-vGreat, -vGreat, -vGreat);
+            min_ = vector::max;
+            max_ = vector::min;
         }
     }
     else
