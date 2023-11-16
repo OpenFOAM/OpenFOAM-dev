@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::Residuals<Type>::Residuals(const polyMesh& mesh)
     DemandDrivenMeshObject
     <
         polyMesh,
-        GeometricMeshObject,
+        UpdateableMeshObject,
         Residuals<Type>
     >(mesh),
     prevTimeIndex_(-1)
@@ -49,7 +49,7 @@ Foam::List<Foam::word> Foam::Residuals<Type>::fieldNames(const polyMesh& mesh)
     return DemandDrivenMeshObject
     <
         polyMesh,
-        GeometricMeshObject,
+        UpdateableMeshObject,
         Residuals<Type>
     >::New
     (
@@ -64,7 +64,7 @@ bool Foam::Residuals<Type>::found(const polyMesh& mesh, const word& fieldName)
     return DemandDrivenMeshObject
     <
         polyMesh,
-        GeometricMeshObject,
+        UpdateableMeshObject,
         Residuals<Type>
         >::New
     (
@@ -84,7 +84,7 @@ Foam::Residuals<Type>::field
     return DemandDrivenMeshObject
     <
         polyMesh,
-        GeometricMeshObject,
+        UpdateableMeshObject,
         Residuals<Type>
     >::New
     (
@@ -105,7 +105,7 @@ void Foam::Residuals<Type>::append
         DemandDrivenMeshObject
         <
             polyMesh,
-            GeometricMeshObject,
+            UpdateableMeshObject,
             Residuals<Type>
         >::New
         (
@@ -140,6 +140,28 @@ void Foam::Residuals<Type>::append
         );
     }
 }
+
+
+template<class Type>
+bool Foam::Residuals<Type>::movePoints()
+{
+    return true;
+}
+
+
+template<class Type>
+void Foam::Residuals<Type>::distribute(const polyDistributionMap&)
+{}
+
+
+template<class Type>
+void Foam::Residuals<Type>::topoChange(const polyTopoChangeMap&)
+{}
+
+
+template<class Type>
+void Foam::Residuals<Type>::mapMesh(const polyMeshMap&)
+{}
 
 
 // ************************************************************************* //

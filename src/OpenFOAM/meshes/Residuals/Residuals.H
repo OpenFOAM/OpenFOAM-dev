@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class Residuals
     public DemandDrivenMeshObject
     <
         polyMesh,
-        GeometricMeshObject,
+        UpdateableMeshObject,
         Residuals<Type>
     >,
     public HashTable<DynamicList<SolverPerformance<Type>>>
@@ -71,7 +71,7 @@ protected:
     friend class DemandDrivenMeshObject
     <
         polyMesh,
-        GeometricMeshObject,
+        UpdateableMeshObject,
         Residuals<Type>
     >;
 
@@ -117,6 +117,18 @@ public:
             const SolverPerformance<Type>&
         );
 
+        //- Update for mesh motion
+        virtual bool movePoints();
+
+        //- Redistribute or update using the given distribution map
+        virtual void distribute(const polyDistributionMap& map);
+
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap& map);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap& map);
+
 
     // Member Operators
 
@@ -134,7 +146,6 @@ public:
 #ifdef NoRepository
     #include "Residuals.C"
 #endif
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
