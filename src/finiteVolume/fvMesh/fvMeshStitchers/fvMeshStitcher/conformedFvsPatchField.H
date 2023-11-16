@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class conformedFvsPatch Declaration
+                   Class conformedFvsPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
