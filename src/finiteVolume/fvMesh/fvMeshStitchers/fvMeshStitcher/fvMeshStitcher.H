@@ -78,68 +78,6 @@ private:
         //- Non-const fvMesh reference to allow update
         fvMesh& mesh_;
 
-        //- Cache of the surface boundary fields with non-conformal parts
-        //  averaged/summed (as appropriate) into the corresponding conformal
-        //  faces. Maintained between disconnect and connect so that
-        //  non-conformal fields can be reconstructed again at the new time.
-        class
-        :
-            #define PrivateTypeTable(Type, nullArg) \
-                private HashPtrTable<SurfaceFieldBoundary<Type>>,
-            FOR_ALL_FIELD_TYPES(PrivateTypeTable)
-            #undef PrivateTypeTable
-            private nil
-        {
-        private:
-
-            template<class Type>
-            using Base = HashPtrTable<SurfaceFieldBoundary<Type>>;
-
-
-        public:
-
-            template<class Type>
-            const HashPtrTable<SurfaceFieldBoundary<Type>>& table() const
-            {
-                return *this;
-            }
-
-            template<class Type>
-            HashPtrTable<SurfaceFieldBoundary<Type>>& table()
-            {
-                return *this;
-            }
-
-            template<class Type>
-            bool insert
-            (
-                const word& name,
-                SurfaceFieldBoundary<Type>* fieldPtr
-            )
-            {
-                return Base<Type>::insert(name, fieldPtr);
-            }
-
-            template<class Type>
-            bool found(const word& name) const
-            {
-                return Base<Type>::found(name);
-            }
-
-            template<class Type>
-            tmp<SurfaceFieldBoundary<Type>> remove(const word& name)
-            {
-                typename Base<Type>::iterator iter = Base<Type>::find(name);
-
-                return
-                    tmp<SurfaceFieldBoundary<Type>>
-                    (
-                        Base<Type>::remove(iter)
-                    );
-            }
-
-        } conformalNccBoundaryFields_;
-
 
     // Private Member Functions
 
@@ -252,14 +190,14 @@ private:
             //- As above, for all types
             void preConformSurfaceFields();
 
-            //- Post-non-conform surface fields of a given type by looking up
+            //- Post-unconform surface fields of a given type by looking up
             //  NCC and original parts of non-conformal couplings and combining
             //  them into a single non-conformal boundary field
             template<class Type>
-            void postNonConformSurfaceFields();
+            void postUnconformSurfaceFields();
 
             //- As above, for all types
-            void postNonConformSurfaceFields();
+            void postUnconformSurfaceFields();
 
             //- Evaluate all non-conformal vol patch fields of a given type
             template<class Type>
@@ -268,8 +206,8 @@ private:
             //- As above, for all types
             void evaluateVolFields();
 
-            //- Special post-non-conform for surface velocities
-            void postNonConformSurfaceVelocities();
+            //- Special post-unconform for surface velocities
+            void postUnconformSurfaceVelocities();
 
 
 protected:

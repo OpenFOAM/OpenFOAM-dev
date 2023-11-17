@@ -85,7 +85,7 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
 
 
 template<class Type>
-void Foam::fvMeshStitcher::postNonConformSurfaceFields()
+void Foam::fvMeshStitcher::postUnconformSurfaceFields()
 {
     UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
 

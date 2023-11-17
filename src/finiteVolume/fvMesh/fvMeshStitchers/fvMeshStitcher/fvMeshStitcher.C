@@ -1096,12 +1096,12 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
 }
 
 
-void Foam::fvMeshStitcher::postNonConformSurfaceFields()
+void Foam::fvMeshStitcher::postUnconformSurfaceFields()
 {
-    #define PostNonConformSurfaceFields(Type, nullArg) \
-        postNonConformSurfaceFields<Type>();
-    FOR_ALL_FIELD_TYPES(PostNonConformSurfaceFields);
-    #undef PostNonConformSurfaceFields
+    #define PostUnconformSurfaceFields(Type, nullArg) \
+        postUnconformSurfaceFields<Type>();
+    FOR_ALL_FIELD_TYPES(PostUnconformSurfaceFields);
+    #undef PostUnconformSurfaceFields
 }
 
 
@@ -1114,7 +1114,7 @@ void Foam::fvMeshStitcher::evaluateVolFields()
 }
 
 
-void Foam::fvMeshStitcher::postNonConformSurfaceVelocities()
+void Foam::fvMeshStitcher::postUnconformSurfaceVelocities()
 {
     UPtrList<surfaceVectorField> Ufs(mesh_.fields<surfaceVectorField>());
 
@@ -1452,11 +1452,11 @@ bool Foam::fvMeshStitcher::connect
 
     if (changing)
     {
-        // Post-non-conform surface fields. This reconstructs the original and
+        // Post-unconform surface fields. This reconstructs the original and
         // cyclic parts of the interface fields from separate original and
         // cyclic parts. The original part was store in the same field, whilst
         // the cyclic part was separately registered.
-        postNonConformSurfaceFields();
+        postUnconformSurfaceFields();
 
         // Volume fields are assumed to be intensive. So, the value on a face
         // which has changed in size can be retained without modification. New
@@ -1464,8 +1464,8 @@ bool Foam::fvMeshStitcher::connect
         // nonConformalCoupled patch fields.
         evaluateVolFields();
 
-        // Do special post-non-conformation for surface velocities.
-        postNonConformSurfaceVelocities();
+        // Do special post-unconform for surface velocities.
+        postUnconformSurfaceVelocities();
     }
 
     // Prevent hangs caused by processor cyclic patches using mesh geometry
