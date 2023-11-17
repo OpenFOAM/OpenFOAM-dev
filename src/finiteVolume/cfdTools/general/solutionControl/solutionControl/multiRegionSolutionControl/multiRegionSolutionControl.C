@@ -50,7 +50,7 @@ Foam::multiRegionSolutionControl::multiRegionSolutionControl
     const word& algorithmName
 )
 :
-    solutionControl(time, time, algorithmName),
+    solutionControl(time, algorithmName),
     solution_(time)
 {}
 

@@ -54,7 +54,6 @@ SourceFiles
 #include "surfaceInterpolation.H"
 #include "fvSchemes.H"
 #include "fvSolution.H"
-#include "data.H"
 #include "DimensionedField.H"
 #include "SlicedDimensionedField.H"
 #include "volFieldsFwd.H"
@@ -97,8 +96,7 @@ class fvMesh
 :
     public polyMesh,
     public lduMesh,
-    public surfaceInterpolation,
-    public data
+    public surfaceInterpolation
 {
 public:
 

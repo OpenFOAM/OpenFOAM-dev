@@ -276,7 +276,6 @@ Foam::fvMesh::fvMesh
 :
     polyMesh(io),
     surfaceInterpolation(*this),
-    data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
     stitcher_(fvMeshStitcher::New(*this, changers).ptr()),
     topoChanger_(nullptr),
@@ -386,7 +385,6 @@ Foam::fvMesh::fvMesh
         syncPar
     ),
     surfaceInterpolation(*this),
-    data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
     stitcher_(nullptr),
     topoChanger_(nullptr),
@@ -440,7 +438,6 @@ Foam::fvMesh::fvMesh
         syncPar
     ),
     surfaceInterpolation(*this),
-    data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this, boundaryMesh()),
     stitcher_(nullptr),
     topoChanger_(nullptr),
@@ -492,7 +489,6 @@ Foam::fvMesh::fvMesh
         syncPar
     ),
     surfaceInterpolation(*this),
-    data(static_cast<const objectRegistry&>(*this)),
     boundary_(*this),
     stitcher_(nullptr),
     topoChanger_(nullptr),
@@ -530,7 +526,6 @@ Foam::fvMesh::fvMesh(fvMesh&& mesh)
 :
     polyMesh(Foam::move(mesh)),
     surfaceInterpolation(Foam::move(mesh)),
-    data(static_cast<const objectRegistry&>(*this)),
     boundary_(Foam::move(mesh.boundary_)),
     stitcher_(Foam::move(mesh.stitcher_)),
     topoChanger_(Foam::move(mesh.topoChanger_)),

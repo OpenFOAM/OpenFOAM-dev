@@ -55,14 +55,17 @@ protected:
 
     // Protected data
 
-        //- Reference to the time
-        const Time& time_;
+        //- Reference to the objectRegistry
+        const objectRegistry& registry_;
 
         //- Name of the algorithm
         const word algorithmName_;
 
         //- Whitespace the same length as the algorithm name
         const string algorithmSpaceStr_;
+
+        //- Flag set true during the final iteration
+        mutable bool finalIter_;
 
 
     // Protected Member Functions
@@ -91,7 +94,6 @@ public:
         solutionControl
         (
             const objectRegistry& registry,
-            const Time& time,
             const word& algorithmName
         );
 
@@ -102,19 +104,17 @@ public:
 
     // Member Functions
 
-        // Access
+        //- Return the name of the algorithm
+        inline const word& algorithmName() const;
 
-            //- Return the time
-            inline const Time& time() const;
+        //- Return some whitespace the same length as the algorithm name
+        inline const char* algorithmSpace() const;
 
-            //- Return the name of the algorithm
-            inline const word& algorithmName() const;
+        //- Return the dictionary
+        virtual const dictionary& dict() const = 0;
 
-            //- Return some whitespace the same length as the algorithm name
-            inline const char* algorithmSpace() const;
-
-            //- Return the dictionary
-            virtual const dictionary& dict() const = 0;
+        //- Lookup solutionControl from the objectRegistry and return finalIter
+        static bool finalIteration(const objectRegistry& registry);
 };
 
 

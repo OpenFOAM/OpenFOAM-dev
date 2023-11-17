@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,32 +23,24 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "data.H"
-#include "Time.H"
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// inline const Foam::Time& Foam::solutionControl::time() const
+// {
+//     return registry_.time();
+// }
 
-namespace Foam
+
+inline const Foam::word& Foam::solutionControl::algorithmName() const
 {
-    defineTypeNameAndDebug(data, 0);
+    return algorithmName_;
 }
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::data::data(const objectRegistry& obr)
-:
-    IOdictionary
-    (
-        IOobject
-        (
-            "data",
-            obr.time().system(),
-            obr,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        )
-    )
-{}
+inline const char* Foam::solutionControl::algorithmSpace() const
+{
+    return algorithmSpaceStr_.c_str();
+}
 
 
 // ************************************************************************* //

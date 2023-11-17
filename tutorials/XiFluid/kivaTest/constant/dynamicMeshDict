@@ -16,15 +16,35 @@ FoamFile
 
 mover
 {
-    type            layeredEngine;
 
-    libs            ("libfvMeshMovers.so");
+    type                multiValveEngine;
+    libs                ("libmultiValveEngine.so");
 
-    conRodLength    0.147;
-    bore            0.092;
-    stroke          0.08423;
-    clearance       0.00115;
-    pistonLayers    0;
+    slidingPatches      (liner);
+
+    piston
+    {
+        patches             (piston);
+        linerPatches        (liner);
+        axis                (0 0 1);
+
+        motion
+        {
+            type            crankConnectingRodMotion;
+
+            conRodLength    0.147;
+            stroke          0.08423;
+        }
+
+        // Select all cells
+        select              all;
+
+        cacheInterval       10000;
+        freezePistonBowl    no;
+        freezeCylinderHead  yes;
+
+        cosineScaling       no;
+    }
 }
 
 

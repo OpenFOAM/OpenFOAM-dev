@@ -708,8 +708,8 @@ algorithms/indexedOctree/volumeType.C
 algorithms/dynamicIndexedOctree/dynamicIndexedOctreeName.C
 algorithms/dynamicIndexedOctree/dynamicTreeDataPoint.C
 algorithms/polygonTriangulate/polygonTriangulate.C
+algorithms/solutionControl/solutionControl.C
 
-meshes/data/data.C
 meshes/Residuals/residuals.C
 
 distributions/distribution/distribution.C

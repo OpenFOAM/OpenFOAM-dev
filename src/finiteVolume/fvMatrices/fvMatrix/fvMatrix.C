@@ -579,8 +579,7 @@ Foam::scalar Foam::fvMatrix<Type>::relaxationFactor() const
 {
     if
     (
-        psi_.mesh().data::template lookupOrDefault<bool>
-        ("finalIteration", false)
+        solutionControl::finalIteration(psi_.mesh())
      && psi_.mesh().solution().relaxEquation(psi_.name() + "Final")
     )
     {

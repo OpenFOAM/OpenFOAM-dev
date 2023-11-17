@@ -53,7 +53,6 @@ bool Foam::solutionControl::writeData(Ostream&) const
 Foam::solutionControl::solutionControl
 (
     const objectRegistry& registry,
-    const Time& time,
     const word& algorithmName
 )
 :
@@ -62,13 +61,13 @@ Foam::solutionControl::solutionControl
         IOobject
         (
             typeName,
-            time.name(),
+            registry.time().name(),
             registry,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         )
     ),
-    time_(time),
+    registry_(registry),
     algorithmName_(algorithmName),
     algorithmSpaceStr_(algorithmName.size(), ' ')
 {}
@@ -78,6 +77,21 @@ Foam::solutionControl::solutionControl
 
 Foam::solutionControl::~solutionControl()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::solutionControl::finalIteration(const objectRegistry& registry)
+{
+    if (registry.foundType<solutionControl>())
+    {
+        return registry.lookupType<solutionControl>().finalIter_;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 
 // ************************************************************************* //

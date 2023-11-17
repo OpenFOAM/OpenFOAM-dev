@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -287,8 +287,7 @@ Foam::fvMatrix<Type>::solver()
             psi_.select
             (
                 !psi_.mesh().schemes().steady()
-             && psi_.mesh().data::template lookupOrDefault<bool>
-                ("finalIteration", false)
+             && solutionControl::finalIteration(psi_.mesh())
             )
         )
     );
@@ -305,8 +304,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::fvSolver::solve()
             fvMat_.psi_.select
             (
                 !fvMat_.psi_.mesh().schemes().steady()
-             && fvMat_.psi_.mesh().data::template lookupOrDefault<bool>
-                ("finalIteration", false)
+             && solutionControl::finalIteration(fvMat_.psi_.mesh())
             )
         )
     );
@@ -321,8 +319,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve(const word& name)
         psi_.mesh().solution().solverDict
         (
             !psi_.mesh().schemes().steady()
-         && psi_.mesh().data::template lookupOrDefault<bool>
-            ("finalIteration", false)
+         && solutionControl::finalIteration(psi_.mesh())
           ? word(name + "Final")
           : name
         )
@@ -340,11 +337,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve()
             psi_.select
             (
                 !psi_.mesh().schemes().steady()
-             && psi_.mesh().data::template lookupOrDefault<bool>
-                (
-                    "finalIteration",
-                    false
-                )
+             && solutionControl::finalIteration(psi_.mesh())
             )
         )
     );

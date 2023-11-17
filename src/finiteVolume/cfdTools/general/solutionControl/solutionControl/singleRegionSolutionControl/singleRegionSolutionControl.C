@@ -53,7 +53,6 @@ Foam::singleRegionSolutionControl::singleRegionSolutionControl
     solutionControl
     (
         mesh,
-        mesh.time(),
         (
            !mesh.solution().dict().found(algorithmName)
          && mesh.schemes().steady()
@@ -85,12 +84,7 @@ void Foam::singleRegionSolutionControl::updateFinal
     const bool finalIter
 ) const
 {
-    mesh_.data::remove("finalIteration");
-
-    if (finalIter)
-    {
-        mesh_.data::add("finalIteration", true);
-    }
+    finalIter_ = finalIter;
 }
 
 

@@ -28,7 +28,7 @@ License
 #include "demandDrivenData.H"
 #include "dictionary.H"
 #include "localIOdictionary.H"
-#include "data.H"
+#include "solutionControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -1390,11 +1390,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::relaxationFactor() const
 {
     if
     (
-        this->mesh().data::template lookupOrDefault<bool>
-        (
-            "finalIteration",
-            false
-        )
+        solutionControl::finalIteration(this->mesh())
      && this->mesh().solution().relaxField(this->name() + "Final")
     )
     {

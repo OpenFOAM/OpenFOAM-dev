@@ -470,7 +470,6 @@ $(general)/surfaceToVolVelocity/surfaceToVolVelocity.C
 $(general)/buoyancy/buoyancy.C
 
 solutionControl = $(general)/solutionControl
-$(solutionControl)/solutionControl/solutionControl/solutionControl.C
 $(solutionControl)/solutionControl/singleRegionSolutionControl/singleRegionSolutionControl.C
 $(solutionControl)/solutionControl/multiRegionSolutionControl/multiRegionSolutionControl.C
 $(solutionControl)/solutionControl/nonOrthogonalSolutionControl/nonOrthogonalSolutionControl.C
