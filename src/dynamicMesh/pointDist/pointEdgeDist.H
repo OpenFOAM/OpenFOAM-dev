@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::externalPointEdgePoint
+    Foam::pointEdgeDist
 
 Description
     Holds information regarding nearest wall point. Used in PointEdgeWave.
@@ -30,13 +30,13 @@ Description
     To be used in wall distance calculation.
 
 SourceFiles
-    externalPointEdgePointI.H
-    externalPointEdgePoint.C
+    pointEdgeDistI.H
+    pointEdgeDist.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef externalPointEdgePoint_H
-#define externalPointEdgePoint_H
+#ifndef pointEdgeDist_H
+#define pointEdgeDist_H
 
 #include "pointField.H"
 
@@ -53,17 +53,17 @@ class transformer;
 
 // Forward declaration of friend functions and operators
 
-class externalPointEdgePoint;
+class pointEdgeDist;
 
-Istream& operator>>(Istream&, externalPointEdgePoint&);
-Ostream& operator<<(Ostream&, const externalPointEdgePoint&);
+Istream& operator>>(Istream&, pointEdgeDist&);
+Ostream& operator<<(Ostream&, const pointEdgeDist&);
 
 
 /*---------------------------------------------------------------------------*\
-                   Class externalPointEdgePoint Declaration
+                   Class pointEdgeDist Declaration
 \*---------------------------------------------------------------------------*/
 
-class externalPointEdgePoint
+class pointEdgeDist
 {
     // Private Data
 
@@ -74,54 +74,46 @@ class externalPointEdgePoint
         scalar distSqr_;
 
 
+public:
+
+    //- Class used to pass data into container
+    class data
+    {
+    public:
+        const pointField& points;
+
+        data(const pointField& p)
+        :
+            points(p)
+        {}
+    };
+
+
+private:
+
     // Private Member Functions
 
         //- Evaluate distance to point. Update distSqr, origin from whomever
         //  is nearer pt. Return true if w2 is closer to point,
         //  false otherwise.
-        template<class TrackingData>
         inline bool update
         (
             const point&,
-            const externalPointEdgePoint& w2,
+            const pointEdgeDist& w2,
             const scalar tol,
-            TrackingData& td
-        );
-
-        //- Combine current with w2. Update distSqr, origin if w2 has smaller
-        //  quantities and returns true.
-        template<class TrackingData>
-        inline bool update
-        (
-            const externalPointEdgePoint& w2,
-            const scalar tol,
-            TrackingData& td
+            data& td
         );
 
 
 public:
 
-    //- Class used to pass data into container
-    class trackingData
-    {
-    public:
-        const pointField& points_;
-
-        trackingData(const pointField& points)
-        :
-            points_(points)
-        {}
-    };
-
-
-
     // Constructors
 
         //- Construct null
-        inline externalPointEdgePoint();
+        inline pointEdgeDist();
 
         //- Construct from origin, distance
-        inline externalPointEdgePoint(const point&, const scalar);
+        inline pointEdgeDist(const point&, const scalar);
 
 
     // Member Functions
@@ -137,100 +129,75 @@ public:
 
             //- Check whether origin has been changed at all or
             //  still contains original (invalid) value.
-            template<class TrackingData>
-            inline bool valid(TrackingData& td) const;
-
-            //- Check for identical geometrical data. Used for cyclics checking.
-            template<class TrackingData>
-            inline bool sameGeometry
-            (
-                const externalPointEdgePoint&,
-                const scalar tol,
-                TrackingData& td
-            ) const;
+            inline bool valid(data& td) const;
 
             //- Transform across an interface
-            template<class TrackingData>
             inline void transform
             (
                 const polyPatch& patch,
                 const label patchFacei,
                 const transformer& transform,
-                TrackingData& td
+                data& td
             );
 
             //- Influence of edge on point
-            template<class TrackingData>
             inline bool updatePoint
             (
                 const polyMesh& mesh,
                 const label pointi,
-                const label edgeI,
-                const externalPointEdgePoint& edgeInfo,
+                const label edgei,
+                const pointEdgeDist& edgeinfo,
                 const scalar tol,
-                TrackingData& td
+                data& td
             );
 
             //- Influence of different value on same point.
             //  Merge new and old info.
-            template<class TrackingData>
             inline bool updatePoint
             (
                 const polyMesh& mesh,
                 const label pointi,
-                const externalPointEdgePoint& newPointInfo,
+                const pointEdgeDist& newPointInfo,
                 const scalar tol,
-                TrackingData& td
-            );
-
-            //- Influence of different value on same point.
-            //  No information about current position whatsoever.
-            template<class TrackingData>
-            inline bool updatePoint
-            (
-                const externalPointEdgePoint& newPointInfo,
-                const scalar tol,
-                TrackingData& td
+                data& td
             );
 
             //- Influence of point on edge.
-            template<class TrackingData>
             inline bool updateEdge
             (
                 const polyMesh& mesh,
-                const label edgeI,
+                const label edgei,
                 const label pointi,
-                const externalPointEdgePoint& pointInfo,
+                const pointEdgeDist& pointInfo,
                 const scalar tol,
-                TrackingData& td
+                data& td
             );
 
-            //- Equivalent to operator== with TrackingData
-            template<class TrackingData>
+            //- Equivalent to operator== with data
             inline bool equal
             (
-                const externalPointEdgePoint&,
-                TrackingData& td
+                const pointEdgeDist&,
+                data& td
             ) const;
 
 
     // Member Operators
 
         // Needed for List IO
-        inline bool operator==(const externalPointEdgePoint&) const;
-        inline bool operator!=(const externalPointEdgePoint&) const;
+        inline bool operator==(const pointEdgeDist&) const;
+        inline bool operator!=(const pointEdgeDist&) const;
 
 
     // IOstream Operators
 
-        friend Ostream& operator<<(Ostream&, const externalPointEdgePoint&);
-        friend Istream& operator>>(Istream&, externalPointEdgePoint&);
+        friend Ostream& operator<<(Ostream&, const pointEdgeDist&);
+        friend Istream& operator>>(Istream&, pointEdgeDist&);
 };
 
 
-//- Data associated with externalPointEdgePoint type are contiguous
+//- Data associated with pointEdgeDist type are contiguous
 template<>
-inline bool contiguous<externalPointEdgePoint>()
+inline bool contiguous<pointEdgeDist>()
 {
     return true;
 }
@@ -242,7 +209,7 @@ inline bool contiguous<externalPointEdgePoint>()
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "externalPointEdgePointI.H"
+#include "pointEdgeDistI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

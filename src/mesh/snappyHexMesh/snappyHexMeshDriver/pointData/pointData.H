@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,16 +132,6 @@ public:
                 TrackingData& td
             );
 
-            //- Influence of different value on same point.
-            //  No information about current position whatsoever.
-            template<class TrackingData>
-            inline bool updatePoint
-            (
-                const pointData& newPointInfo,
-                const scalar tol,
-                TrackingData& td
-            );
-
             //- Influence of point on edge.
             template<class TrackingData>
             inline bool updateEdge
@@ -153,6 +143,7 @@ public:
                 const scalar tol,
                 TrackingData& td
             );
+
 
     // Member Operators
 

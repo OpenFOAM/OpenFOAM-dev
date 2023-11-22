@@ -92,16 +92,6 @@ class pointEdgePoint
             TrackingData& td
         );
 
-        //- Combine current with w2. Update distSqr, origin if w2 has smaller
-        //  quantities and returns true.
-        template<class TrackingData>
-        inline bool update
-        (
-            const pointEdgePoint& w2,
-            const scalar tol,
-            TrackingData& td
-        );
-
 
 public:
 
@@ -129,15 +119,6 @@ public:
             //  still contains original (invalid) value.
             template<class TrackingData>
             inline bool valid(TrackingData& td) const;
-
-            //- Check for identical geometrical data. Used for cyclics checking.
-            template<class TrackingData>
-            inline bool sameGeometry
-            (
-                const pointEdgePoint&,
-                const scalar tol,
-                TrackingData& td
-            ) const;
 
             //- Transform across an interface
             template<class TrackingData>
@@ -168,16 +149,6 @@ public:
             (
                 const polyMesh& mesh,
                 const label pointi,
-                const pointEdgePoint& newPointInfo,
-                const scalar tol,
-                TrackingData& td
-            );
-
-            //- Influence of different value on same point.
-            //  No information about current position whatsoever.
-            template<class TrackingData>
-            inline bool updatePoint
-            (
                 const pointEdgePoint& newPointInfo,
                 const scalar tol,
                 TrackingData& td

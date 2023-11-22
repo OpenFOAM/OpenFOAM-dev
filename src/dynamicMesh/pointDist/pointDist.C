@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pointDist.H"
-#include "externalPointEdgePoint.H"
+#include "pointEdgeDist.H"
 #include "pointMesh.H"
 #include "PointEdgeWave.H"
 
@@ -110,10 +110,10 @@ void Foam::pointDist::correct()
         nPatchPoints += mesh()().pointZones()[zonei].size();
     }
 
-    externalPointEdgePoint::trackingData td(points_);
+    pointEdgeDist::data pointEdgeData(points_);
 
     // Set initial changed points to all the patch points(if patch present)
-    List<externalPointEdgePoint> patchPointsInfo(nPatchPoints);
+    List<pointEdgeDist> patchPointsInfo(nPatchPoints);
     labelList patchPoints(nPatchPoints);
     nPatchPoints = 0;
 
@@ -127,9 +127,9 @@ void Foam::pointDist::correct()
         {
             const label meshPointi = mp[ppi];
             patchPoints[nPatchPoints] = meshPointi;
-            patchPointsInfo[nPatchPoints] = externalPointEdgePoint
+            patchPointsInfo[nPatchPoints] = pointEdgeDist
             (
-                td.points_[meshPointi],
+                pointEdgeData.points[meshPointi],
                 0
             );
             nPatchPoints++;
@@ -146,9 +146,9 @@ void Foam::pointDist::correct()
         {
             const label meshPointi = zonePoints[j];
             patchPoints[nPatchPoints] = meshPointi;
-            patchPointsInfo[nPatchPoints] = externalPointEdgePoint
+            patchPointsInfo[nPatchPoints] = pointEdgeDist
             (
-                td.points_[meshPointi],
+                pointEdgeData.points[meshPointi],
                 0
             );
             nPatchPoints++;
@@ -156,15 +156,15 @@ void Foam::pointDist::correct()
     }
 
     // Current info on points
-    List<externalPointEdgePoint> allPointInfo(mesh()().nPoints());
+    List<pointEdgeDist> allPointInfo(mesh()().nPoints());
 
     // Current info on edges
-    List<externalPointEdgePoint> allEdgeInfo(mesh()().nEdges());
+    List<pointEdgeDist> allEdgeInfo(mesh()().nEdges());
 
     PointEdgeWave
     <
-        externalPointEdgePoint,
-        externalPointEdgePoint::trackingData
+        pointEdgeDist,
+        pointEdgeDist::data
     > patchCalc
     (
         mesh()(),
@@ -174,14 +174,14 @@ void Foam::pointDist::correct()
         allPointInfo,
         allEdgeInfo,
         mesh().globalData().nTotalPoints(), // max iterations
-        td
+        pointEdgeData
     );
 
     pointScalarField& psf = *this;
 
     forAll(allPointInfo, pointi)
     {
-        if (allPointInfo[pointi].valid(td))
+        if (allPointInfo[pointi].valid(pointEdgeData))
         {
             psf[pointi] = sqrt(allPointInfo[pointi].distSqr());
         }

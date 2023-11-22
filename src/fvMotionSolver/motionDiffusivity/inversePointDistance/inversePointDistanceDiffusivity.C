@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "inversePointDistanceDiffusivity.H"
 #include "surfaceFields.H"
 #include "HashSet.H"
-#include "pointEdgePoint.H"
+#include "pointEdgeDist.H"
 #include "PointEdgeWave.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -100,15 +100,14 @@ Foam::inversePointDistanceDiffusivity::operator()() const
     }
 
     // Distance to wall on points and edges.
-    List<pointEdgePoint> pointWallDist(mesh().nPoints());
-    List<pointEdgePoint> edgeWallDist(mesh().nEdges());
+    List<pointEdgeDist> pointWallDist(mesh().nPoints());
+    List<pointEdgeDist> edgeWallDist(mesh().nEdges());
 
-    int dummyTrackData = 0;
-
+    pointEdgeDist::data pointEdgeData(mesh().points());
 
     {
         // Seeds
-        List<pointEdgePoint> seedInfo(nPatchEdges);
+        List<pointEdgeDist> seedInfo(nPatchEdges);
         labelList seedPoints(nPatchEdges);
 
         nPatchEdges = 0;
@@ -123,13 +122,13 @@ Foam::inversePointDistanceDiffusivity::operator()() const
             {
                 const label pointi = meshPoints[i];
 
-                if (!pointWallDist[pointi].valid(dummyTrackData))
+                if (!pointWallDist[pointi].valid(pointEdgeData))
                 {
                     // Not yet seeded
-                    seedInfo[nPatchEdges] = pointEdgePoint
+                    seedInfo[nPatchEdges] = pointEdgeDist
                     (
                         mesh().points()[pointi],
-                        0.0
+                        0
                     );
                     seedPoints[nPatchEdges] = pointi;
                     pointWallDist[pointi] = seedInfo[nPatchEdges];
@@ -142,7 +141,11 @@ Foam::inversePointDistanceDiffusivity::operator()() const
         seedPoints.setSize(nPatchEdges);
 
         // Do calculations
-        PointEdgeWave<pointEdgePoint> waveInfo
+        PointEdgeWave
+        <
+            pointEdgeDist,
+            pointEdgeDist::data
+        > waveInfo
         (
             mesh(),
             seedPoints,
@@ -151,7 +154,7 @@ Foam::inversePointDistanceDiffusivity::operator()() const
             pointWallDist,
             edgeWallDist,
             mesh().globalData().nTotalPoints(),// max iterations
-            dummyTrackData
+            pointEdgeData
         );
     }
 

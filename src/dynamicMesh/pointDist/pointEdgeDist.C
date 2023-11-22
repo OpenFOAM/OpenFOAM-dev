@@ -23,14 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "externalPointEdgePoint.H"
+#include "pointEdgeDist.H"
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
 Foam::Ostream& Foam::operator<<
 (
     Foam::Ostream& os,
-    const Foam::externalPointEdgePoint& wDist
+    const Foam::pointEdgeDist& wDist
 )
 {
     return os << wDist.origin() << wDist.distSqr();
@@ -40,7 +40,7 @@ Foam::Ostream& Foam::operator<<
 Foam::Istream& Foam::operator>>
 (
     Foam::Istream& is,
-    Foam::externalPointEdgePoint& wDist
+    Foam::pointEdgeDist& wDist
 )
 {
     return is >> wDist.origin_ >> wDist.distSqr_;

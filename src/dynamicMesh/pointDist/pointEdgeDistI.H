@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,13 +28,12 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class TrackingData>
-inline bool Foam::pointEdgePoint::update
+inline bool Foam::pointEdgeDist::update
 (
     const point& pt,
-    const pointEdgePoint& w2,
+    const pointEdgeDist& w2,
     const scalar tol,
-    TrackingData& td
+    data& td
 )
 {
     scalar dist2 = magSqr(pt - w2.origin());
@@ -74,14 +73,14 @@ inline bool Foam::pointEdgePoint::update
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-inline Foam::pointEdgePoint::pointEdgePoint()
+inline Foam::pointEdgeDist::pointEdgeDist()
 :
     origin_(point::max),
     distSqr_(great)
 {}
 
 
-inline Foam::pointEdgePoint::pointEdgePoint
+inline Foam::pointEdgeDist::pointEdgeDist
 (
     const point& origin,
     const scalar distSqr
@@ -94,92 +93,82 @@ inline Foam::pointEdgePoint::pointEdgePoint
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::point& Foam::pointEdgePoint::origin() const
+inline const Foam::point& Foam::pointEdgeDist::origin() const
 {
     return origin_;
 }
 
 
-inline Foam::scalar Foam::pointEdgePoint::distSqr() const
+inline Foam::scalar Foam::pointEdgeDist::distSqr() const
 {
     return distSqr_;
 }
 
 
-template<class TrackingData>
-inline bool Foam::pointEdgePoint::valid(TrackingData& td) const
+inline bool Foam::pointEdgeDist::valid(data& td) const
 {
     return origin_ != point::max;
 }
 
 
-template<class TrackingData>
-inline void Foam::pointEdgePoint::transform
+inline void Foam::pointEdgeDist::transform
 (
     const polyPatch& patch,
     const label patchFacei,
     const transformer& transform,
-    TrackingData& td
+    data& td
 )
 {
-    // Note that distSqr_ is not affected by crossing an interface
     origin_ = transform.transformPosition(origin_);
 }
 
 
-// Update this with information from connected edge
-template<class TrackingData>
-inline bool Foam::pointEdgePoint::updatePoint
+inline bool Foam::pointEdgeDist::updatePoint
 (
     const polyMesh& mesh,
     const label pointi,
-    const label edgeI,
-    const pointEdgePoint& edgeInfo,
+    const label edgei,
+    const pointEdgeDist& edgeInfo,
     const scalar tol,
-    TrackingData& td
+    data& td
 )
 {
-    return update(mesh.points()[pointi], edgeInfo, tol, td);
+    return update(td.points[pointi], edgeInfo, tol, td);
 }
 
 
-// Update this with new information on same point
-template<class TrackingData>
-inline bool Foam::pointEdgePoint::updatePoint
+inline bool Foam::pointEdgeDist::updatePoint
 (
     const polyMesh& mesh,
     const label pointi,
-    const pointEdgePoint& newPointInfo,
+    const pointEdgeDist& newPointInfo,
     const scalar tol,
-    TrackingData& td
+    data& td
 )
 {
-    return update(mesh.points()[pointi], newPointInfo, tol, td);
+    return update(td.points[pointi], newPointInfo, tol, td);
 }
 
 
-// Update this with information from connected point
-template<class TrackingData>
-inline bool Foam::pointEdgePoint::updateEdge
+inline bool Foam::pointEdgeDist::updateEdge
 (
     const polyMesh& mesh,
-    const label edgeI,
+    const label edgei,
     const label pointi,
-    const pointEdgePoint& pointInfo,
+    const pointEdgeDist& pointInfo,
     const scalar tol,
-    TrackingData& td
+    data& td
 )
 {
-    const edge& e = mesh.edges()[edgeI];
-    return update(e.centre(mesh.points()), pointInfo, tol, td);
+    const edge& e = mesh.edges()[edgei];
+    return update(e.centre(td.points), pointInfo, tol, td);
 }
 
 
-template<class TrackingData>
-inline bool Foam::pointEdgePoint::equal
+inline bool Foam::pointEdgeDist::equal
 (
-    const pointEdgePoint& rhs,
-    TrackingData& td
+    const pointEdgeDist& rhs,
+    data& td
 ) const
 {
     return operator==(rhs);
@@ -188,39 +177,23 @@ inline bool Foam::pointEdgePoint::equal
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline bool Foam::pointEdgePoint::operator==(const Foam::pointEdgePoint& rhs)
+inline bool Foam::pointEdgeDist::operator==
+(
+    const Foam::pointEdgeDist& rhs
+)
 const
 {
     return (origin() == rhs.origin()) && (distSqr() == rhs.distSqr());
 }
 
 
-inline bool Foam::pointEdgePoint::operator!=(const Foam::pointEdgePoint& rhs)
+inline bool Foam::pointEdgeDist::operator!=
+(
+    const Foam::pointEdgeDist& rhs
+)
 const
 {
     return !(*this == rhs);
-}
-
-
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
-
-inline Foam::Ostream& Foam::operator<<
-(
-    Foam::Ostream& os,
-    const Foam::pointEdgePoint& wDist
-)
-{
-    return os << wDist.origin() << token::SPACE << wDist.distSqr();
-}
-
-
-inline Foam::Istream& Foam::operator>>
-(
-    Foam::Istream& is,
-    Foam::pointEdgePoint& wDist
-)
-{
-    return is >> wDist.origin_ >> wDist.distSqr_;
 }
 
 
