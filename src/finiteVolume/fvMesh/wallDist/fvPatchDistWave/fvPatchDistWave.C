@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,20 +49,22 @@ Foam::List<Foam::labelPair> Foam::fvPatchDistWave::getChangedPatchAndFaces
         const label patchi = iter.key();
         const fvPatch& patch = mesh.boundary()[patchi];
 
-        if (isA<nonConformalFvPatch>(patch))
-        {
-            FatalErrorInFunction
-                << "Cannot initialise a patch distance wave from a "
-                << "non-conformal patch" << exit(FatalError);
-        }
+        const bool conformal = !isA<nonConformalFvPatch>(patch);
 
         forAll(patch, patchFacei)
         {
-            const scalar faceFraction =
-                patch.magSf()[patchFacei]
-               /patch.patch().magFaceAreas()[patchFacei];
+            // If this patch is conformal then discard faces which have been
+            // covered up by non-conformal faces to within the minFaceFraction
+            // tolerance
+            if (conformal)
+            {
+                const label polyFacei = mesh.polyFacesBf()[patchi][patchFacei];
 
-            if (faceFraction < minFaceFraction) continue;
+                const scalar faceFraction =
+                    patch.magSf()[patchFacei]/mesh.magFaceAreas()[polyFacei];
+
+                if (faceFraction < minFaceFraction) continue;
+            }
 
             changedPatchAndFaces[changedFacei] = labelPair(patchi, patchFacei);
             changedFacei++;

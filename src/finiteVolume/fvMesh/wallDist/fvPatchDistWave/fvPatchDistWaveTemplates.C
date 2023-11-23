@@ -94,11 +94,14 @@ Foam::label Foam::fvPatchDistWave::wave
         const label patchFacei =
             changedPatchAndFaces[changedFacei].second();
 
+        const label polyFacei =
+            mesh.polyFacesBf()[patchi][patchFacei];
+
         changedFacesInfo[changedFacei] =
             FvWallInfoType
             (
                 data.boundaryField()[patchi][patchFacei] ...,
-                mesh.boundaryMesh()[patchi][patchFacei],
+                mesh.faces()[polyFacei],
                 mesh.points(),
                 mesh.Cf().boundaryField()[patchi][patchFacei],
                 scalar(0)
