@@ -42,6 +42,7 @@ SourceFiles
 #include "processorRunTimes.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "regionName.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -358,6 +359,16 @@ public:
         //- Write the decomposed meshes and associated data
         void writeProcs(const bool doSets) const;
 };
+
+
+template<>
+inline const word& regionName<domainDecomposition>
+(
+    const domainDecomposition& region
+)
+{
+    return regionName(region.regionName());
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -40,6 +40,7 @@ SourceFiles
 #include "pimpleNoLoopControl.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
+#include "regionName.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -200,6 +201,13 @@ public:
         //- Disallow default bitwise assignment
         void operator=(const solver&) = delete;
 };
+
+
+template<>
+inline const word& regionName(const solver& region)
+{
+    return regionName(region.mesh);
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

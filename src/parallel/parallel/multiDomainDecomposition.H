@@ -36,7 +36,7 @@ SourceFiles
 #define multiDomainDecomposition_H
 
 #include "domainDecomposition.H"
-#include "multiRegionPrefixer.H"
+#include "MultiRegionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,15 +49,22 @@ namespace Foam
 
 class multiDomainDecomposition
 :
-    private multiRegionPrefixer
+    public MultiRegionList<domainDecomposition>
 {
     // Private Data
 
         //- Run times
         const processorRunTimes& runTimes_;
 
-        //- The region complete and processor meshes
-        PtrList<domainDecomposition> regionMeshes_;
+
+    // Private Member Functions
+
+        //- Initialise and return the list of regions
+        static Foam::PtrList<domainDecomposition> init
+        (
+            const processorRunTimes& runTimes,
+            const wordList& regionNames
+        );
 
 
 public:
@@ -81,36 +88,6 @@ public:
 
 
     // Member Functions
-
-        //- Access the meshes for a region
-        inline RegionConstRef<domainDecomposition> meshes
-        (
-            const label regioni
-        ) const
-        {
-            return
-                RegionConstRef<domainDecomposition>
-                (
-                    *this,
-                    regioni,
-                    regionMeshes_[regioni]
-                );
-        }
-
-        //- Access the meshes for a region
-        inline RegionRef<domainDecomposition> meshes
-        (
-            const label regioni
-        )
-        {
-            return
-                RegionRef<domainDecomposition>
-                (
-                    *this,
-                    regioni,
-                    regionMeshes_[regioni]
-                );
-        }
 
         //- Return the number of processors in the decomposition
         inline label nProcs() const

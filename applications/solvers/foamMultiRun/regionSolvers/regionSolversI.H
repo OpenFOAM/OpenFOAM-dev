@@ -129,7 +129,7 @@ inline Foam::regionSolvers::iterator Foam::regionSolvers::end()
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline  Foam::regionSolvers::operator PtrList<solver>&()
+inline Foam::regionSolvers::operator PtrList<solver>&()
 {
     return solvers_;
 }

@@ -33,6 +33,29 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+Foam::PtrList<Foam::domainDecomposition> Foam::multiDomainDecomposition::init
+(
+    const processorRunTimes& runTimes,
+    const wordList& regionNames
+)
+{
+    Foam::PtrList<domainDecomposition> result(regionNames.size());
+
+    forAll(result, regioni)
+    {
+        result.set
+        (
+            regioni,
+            new domainDecomposition(runTimes, regionNames[regioni])
+        );
+    }
+
+    return result;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::multiDomainDecomposition::multiDomainDecomposition
@@ -41,19 +64,9 @@ Foam::multiDomainDecomposition::multiDomainDecomposition
     const wordList& regionNames
 )
 :
-    multiRegionPrefixer(false, regionNames),
-    runTimes_(runTimes),
-    regionMeshes_(regionNames.size())
-{
-    forAll(regionMeshes_, regioni)
-    {
-        regionMeshes_.set
-        (
-            regioni,
-            new domainDecomposition(runTimes, regionNames[regioni])
-        );
-    }
-}
+    MultiRegionList<domainDecomposition>(init(runTimes, regionNames)),
+    runTimes_(runTimes)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -68,13 +81,13 @@ bool Foam::multiDomainDecomposition::readDecompose(const bool doSets)
 {
     bool result = false;
 
-    forAll(regionMeshes_, regioni)
+    forAll(*this, regioni)
     {
-        if (meshes(regioni)().readDecompose(doSets))
+        if (this->operator[](regioni)().readDecompose(doSets))
         {
             result = true;
 
-            if (regioni != regionMeshes_.size() - 1)
+            if (regioni != size() - 1)
             {
                 Info<< endl;
             }
@@ -89,13 +102,13 @@ bool Foam::multiDomainDecomposition::readReconstruct(const bool doSets)
 {
     bool result = false;
 
-    forAll(regionMeshes_, regioni)
+    forAll(*this, regioni)
     {
-        if (meshes(regioni)().readReconstruct(doSets))
+        if (this->operator[](regioni)().readReconstruct(doSets))
         {
             result = true;
 
-            if (regioni != regionMeshes_.size() - 1)
+            if (regioni != size() - 1)
             {
                 Info<< endl;
             }
@@ -111,16 +124,12 @@ Foam::multiDomainDecomposition::readUpdateDecompose()
 {
     fvMesh::readUpdateState result = fvMesh::UNCHANGED;
 
-    forAll(regionMeshes_, regioni)
+    forAll(*this, regioni)
     {
         const fvMesh::readUpdateState regionResult =
-            meshes(regioni)().readUpdateDecompose();
+            this->operator[](regioni)().readUpdateDecompose();
 
-        if
-        (
-            regioni != regionMeshes_.size() - 1
-         && regionResult >= fvMesh::TOPO_CHANGE
-        )
+        if (regioni != size() - 1 && regionResult >= fvMesh::TOPO_CHANGE)
         {
             Info<< endl;
         }
@@ -137,16 +146,12 @@ Foam::multiDomainDecomposition::readUpdateReconstruct()
 {
     fvMesh::readUpdateState result = fvMesh::UNCHANGED;
 
-    forAll(regionMeshes_, regioni)
+    forAll(*this, regioni)
     {
         const fvMesh::readUpdateState regionResult =
-            meshes(regioni)().readUpdateReconstruct();
+            this->operator[](regioni)().readUpdateReconstruct();
 
-        if
-        (
-            regioni != regionMeshes_.size() - 1
-         && regionResult >= fvMesh::TOPO_CHANGE
-        )
+        if (regioni != size() - 1 && regionResult >= fvMesh::TOPO_CHANGE)
         {
             Info<< endl;
         }
@@ -160,18 +165,18 @@ Foam::multiDomainDecomposition::readUpdateReconstruct()
 
 void Foam::multiDomainDecomposition::writeComplete(const bool doSets) const
 {
-    forAll(regionMeshes_, regioni)
+    forAll(*this, regioni)
     {
-        meshes(regioni)().writeComplete(doSets);
+        this->operator[](regioni)().writeComplete(doSets);
     }
 }
 
 
 void Foam::multiDomainDecomposition::writeProcs(const bool doSets) const
 {
-    forAll(regionMeshes_, regioni)
+    forAll(*this, regioni)
     {
-        meshes(regioni)().writeProcs(doSets);
+        this->operator[](regioni)().writeProcs(doSets);
     }
 }
 

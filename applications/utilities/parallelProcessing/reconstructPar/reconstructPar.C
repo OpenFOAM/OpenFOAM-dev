@@ -322,7 +322,7 @@ int main(int argc, char *argv[])
         {
             forAll(regionNames, regioni)
             {
-                writeDecomposition(regionMeshes.meshes(regioni)());
+                writeDecomposition(regionMeshes[regioni]());
                 Info<< endl;
                 fileHandler().flush();
             }
@@ -351,7 +351,7 @@ int main(int argc, char *argv[])
         {
             if (writeCellProc && stat >= fvMesh::TOPO_CHANGE)
             {
-                writeDecomposition(regionMeshes.meshes(regioni)());
+                writeDecomposition(regionMeshes[regioni]());
                 Info<< endl;
                 fileHandler().flush();
             }
@@ -368,8 +368,8 @@ int main(int argc, char *argv[])
 
             // Prefixed scope
             {
-                const RegionConstRef<domainDecomposition> meshes =
-                    regionMeshes.meshes(regioni);
+                const RegionRef<domainDecomposition> meshes =
+                    regionMeshes[regioni];
 
                 // Search for objects at this time
                 IOobjectList objects
@@ -586,8 +586,8 @@ int main(int argc, char *argv[])
             {
                 // Prefixed scope
                 {
-                    const RegionConstRef<domainDecomposition> meshes =
-                        regionMeshes.meshes(regioni);
+                    const RegionRef<domainDecomposition> meshes =
+                        regionMeshes[regioni];
 
                     Info<< "Collecting uniform files" << endl;
 
