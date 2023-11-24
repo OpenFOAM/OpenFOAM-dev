@@ -23,8 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "coefficientMassTransfer.H"
+#include "coefficientPhaseChange.H"
 #include "fvcGrad.H"
+#include "multicomponentThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -33,14 +34,14 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(coefficientMassTransfer, 0);
-    addToRunTimeSelectionTable(fvModel, coefficientMassTransfer, dictionary);
+    defineTypeNameAndDebug(coefficientPhaseChange, 0);
+    addToRunTimeSelectionTable(fvModel, coefficientPhaseChange, dictionary);
 }
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::coefficientMassTransfer::readCoeffs()
+void Foam::fv::coefficientPhaseChange::readCoeffs()
 {
     C_.read(coeffs());
 }
@@ -48,7 +49,7 @@ void Foam::fv::coefficientMassTransfer::readCoeffs()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::coefficientMassTransfer::coefficientMassTransfer
+Foam::fv::coefficientPhaseChange::coefficientPhaseChange
 (
     const word& name,
     const word& modelType,
@@ -56,7 +57,14 @@ Foam::fv::coefficientMassTransfer::coefficientMassTransfer
     const dictionary& dict
 )
 :
-    massTransferBase(name, modelType, mesh, dict),
+    singleComponentPhaseChangeBase
+    (
+        name,
+        modelType,
+        mesh,
+        dict,
+        Pair<bool>(false, false)
+    ),
     C_("C", dimMass/dimArea/dimTime, NaN)
 {
     readCoeffs();
@@ -66,50 +74,24 @@ Foam::fv::coefficientMassTransfer::coefficientMassTransfer
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::fv::coefficientMassTransfer::mDot() const
+Foam::fv::coefficientPhaseChange::mDot() const
 {
     const volScalarField& alpha1 =
         mesh().lookupObject<volScalarField>(alphaNames().first());
 
-    return C_*alpha1()*mag(fvc::grad(alpha1))()();
+    tmp<volScalarField::Internal> tmDot =
+        C_*alpha1()*mag(fvc::grad(alpha1))()();
+
+    if (specieis().first() != -1)
+    {
+        tmDot.ref() *= specieThermos().first().Y()[specieis().first()];
+    }
+
+    return tmDot;
 }
 
 
-void Foam::fv::coefficientMassTransfer::addSup
-(
-    const volScalarField& alpha,
-    fvMatrix<scalar>& eqn
-) const
-{
-    const label i = index(alphaNames(), eqn.psi().name());
-
-    if (i != -1)
-    {
-        const volScalarField& alpha1 =
-            mesh().lookupObject<volScalarField>(alphaNames().first());
-
-        const volScalarField::Internal SByAlpha1
-        (
-            C_*mag(fvc::grad(alpha1)()())/rho(i)
-        );
-
-        if (i == 0)
-        {
-            eqn -= fvm::Sp(SByAlpha1, eqn.psi());
-        }
-        else
-        {
-            eqn += SByAlpha1*alpha1 - correction(fvm::Sp(SByAlpha1, eqn.psi()));
-        }
-    }
-    else
-    {
-        massTransferBase::addSup(alpha, eqn);
-    }
-}
-
-
-void Foam::fv::coefficientMassTransfer::addSup
+void Foam::fv::coefficientPhaseChange::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -123,27 +105,55 @@ void Foam::fv::coefficientMassTransfer::addSup
         const volScalarField& alpha1 =
             mesh().lookupObject<volScalarField>(alphaNames().first());
 
-        const volScalarField::Internal SByAlpha1(C_*mag(fvc::grad(alpha1)));
+        volScalarField::Internal mDotByAlpha1(C_*mag(fvc::grad(alpha1)));
+
+        if (specieis().first() != -1)
+        {
+            mDotByAlpha1 *= specieThermos().first().Y()[specieis().first()];
+        }
 
         if (i == 0)
         {
-            eqn -= fvm::Sp(SByAlpha1, eqn.psi());
+            eqn -= fvm::Sp(mDotByAlpha1, eqn.psi());
         }
         else
         {
-            eqn += SByAlpha1*alpha1 - correction(fvm::Sp(SByAlpha1, eqn.psi()));
+            eqn +=
+                mDotByAlpha1*alpha1
+              - correction(fvm::Sp(mDotByAlpha1, eqn.psi()));
         }
     }
     else
     {
-        massTransferBase::addSup(alpha, rho, eqn);
+        phaseChangeBase::addSup(alpha, rho, eqn);
     }
 }
 
 
-bool Foam::fv::coefficientMassTransfer::read(const dictionary& dict)
+void Foam::fv::coefficientPhaseChange::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const volScalarField& Yi,
+    fvMatrix<scalar>& eqn
+) const
 {
-    if (massTransferBase::read(dict))
+    const label i = index(alphaNames(), eqn.psi().name());
+
+    if (i == 0 && specieis().first() != -1 && Yi.member() == specie())
+    {
+        eqn -= fvm::Sp(C_*alpha()*mag(fvc::grad(alpha))()(), Yi);
+    }
+    else
+    {
+        singleComponentPhaseChangeBase::addSup(alpha, rho, Yi, eqn);
+    }
+}
+
+
+bool Foam::fv::coefficientPhaseChange::read(const dictionary& dict)
+{
+    if (singleComponentPhaseChangeBase::read(dict))
     {
         readCoeffs();
         return true;
