@@ -64,7 +64,7 @@ void Foam::fv::massTransferBase::addSupType
     // Volume-weighted mixture property equation
     if (field.group() == word::null)
     {
-        eqn -= fvm::SuSp((1/rho(0) - 1/rho(1))*mDotByV(), eqn.psi());
+        eqn -= fvm::SuSp((1/rho(0) - 1/rho(1))*mDot(), eqn.psi());
     }
     // Not recognised. Fail.
     else

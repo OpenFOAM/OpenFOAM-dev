@@ -201,7 +201,7 @@ bool Foam::fv::massTransferBase::addsSupToField(const word& fieldName) const
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::fv::massTransferBase::S(const word& fieldName) const
 {
-    return sign(phaseNames(), IOobject::group(fieldName))*mDotByV();
+    return sign(phaseNames(), IOobject::group(fieldName))*mDot();
 }
 
 

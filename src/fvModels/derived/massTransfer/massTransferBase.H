@@ -181,7 +181,7 @@ public:
         // Sources
 
             //- Return the mass transfer rate
-            virtual tmp<DimensionedField<scalar, volMesh>> mDotByV() const = 0;
+            virtual tmp<DimensionedField<scalar, volMesh>> mDot() const = 0;
 
             //- Return the source value
             virtual tmp<DimensionedField<scalar, volMesh>> S

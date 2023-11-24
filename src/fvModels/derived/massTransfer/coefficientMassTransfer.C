@@ -66,7 +66,7 @@ Foam::fv::coefficientMassTransfer::coefficientMassTransfer
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::fv::coefficientMassTransfer::mDotByV() const
+Foam::fv::coefficientMassTransfer::mDot() const
 {
     const volScalarField& alpha1 =
         mesh().lookupObject<volScalarField>(alphaNames().first());

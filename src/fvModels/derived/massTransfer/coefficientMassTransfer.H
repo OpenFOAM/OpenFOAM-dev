@@ -115,7 +115,7 @@ public:
         // Sources
 
             //- Return the mass transfer rate
-            virtual tmp<DimensionedField<scalar, volMesh>> mDotByV() const;
+            virtual tmp<DimensionedField<scalar, volMesh>> mDot() const;
 
             //- Override the incompressible continuity equation to add
             //  linearisation w.r.t alpha
