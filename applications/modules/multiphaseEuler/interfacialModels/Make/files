@@ -44,6 +44,7 @@ heatTransferModels/Gunn/Gunn.C
 heatTransferModels/sphericalHeatTransfer/sphericalHeatTransfer.C
 heatTransferModels/nonSphericalHeatTransfer/nonSphericalHeatTransfer.C
 heatTransferModels/timeScaleFilteredHeatTransfer/timeScaleFilteredHeatTransfer.C
+heatTransferModels/Prandtl/Prandtl.C
 
 virtualMassModels/virtualMassModel/virtualMassModel.C
 virtualMassModels/virtualMassModel/virtualMassModelNew.C
