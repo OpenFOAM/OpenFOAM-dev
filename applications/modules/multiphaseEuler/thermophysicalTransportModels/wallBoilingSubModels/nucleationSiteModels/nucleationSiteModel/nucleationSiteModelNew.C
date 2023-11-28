@@ -44,7 +44,7 @@ Foam::wallBoilingModels::nucleationSiteModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown nucleationSiteModelType type "
+            << "Unknown nucleationSiteModel type "
             << nucleationSiteModelType << endl << endl
             << "Valid nucleationSiteModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

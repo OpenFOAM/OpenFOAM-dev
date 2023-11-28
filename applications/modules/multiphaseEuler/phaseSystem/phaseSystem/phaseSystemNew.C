@@ -57,7 +57,7 @@ Foam::autoPtr<Foam::phaseSystem> Foam::phaseSystem::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown phaseSystemType type "
+            << "Unknown phaseSystem type "
             << phaseSystemType << endl << endl
             << "Valid phaseSystem types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

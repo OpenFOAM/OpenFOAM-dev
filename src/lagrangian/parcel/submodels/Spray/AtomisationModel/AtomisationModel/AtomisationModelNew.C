@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,21 +35,21 @@ Foam::AtomisationModel<CloudType>::New
     CloudType& owner
 )
 {
-    word AtomisationModelType(dict.lookup("atomisationModel"));
+    const word atomisationModelType(dict.lookup("atomisationModel"));
 
-    Info<< "Selecting AtomisationModel " << AtomisationModelType << endl;
+    Info<< "Selecting atomisation model " << atomisationModelType << endl;
 
     typename dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(AtomisationModelType);
+        dictionaryConstructorTablePtr_->find(atomisationModelType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown AtomisationModelType type "
-            << AtomisationModelType
-            << ", constructor not in hash table" << nl << nl
-            << "    Valid AtomisationModel types are:" << nl
-            << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);
+            << "Unknown atomisation model type "
+            << atomisationModelType << nl << nl
+            << "Valid atomisation model types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
 
     return autoPtr<AtomisationModel<CloudType>>(cstrIter()(dict, owner));

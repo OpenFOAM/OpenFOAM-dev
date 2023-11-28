@@ -47,7 +47,7 @@ Foam::autoPtr<Foam::phaseTransferModel> Foam::phaseTransferModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown phaseTransferModelType type "
+            << "Unknown phaseTransferModel type "
             << phaseTransferModelType << endl << endl
             << "Valid phaseTransferModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

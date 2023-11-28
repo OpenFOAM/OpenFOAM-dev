@@ -52,7 +52,7 @@ Foam::interfaceSurfaceTensionModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown interfaceSurfaceTensionModelType type "
+            << "Unknown interfaceSurfaceTensionModel type "
             << interfaceSurfaceTensionModelType << endl << endl
             << "Valid interfaceSurfaceTensionModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

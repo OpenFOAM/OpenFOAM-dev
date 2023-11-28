@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,21 +35,21 @@ Foam::PairModel<CloudType>::New
     CloudType& owner
 )
 {
-    word PairModelType(dict.lookup("pairModel"));
+    const word pairModelType(dict.lookup("pairModel"));
 
-    Info<< "Selecting pair model " << PairModelType << endl;
+    Info<< "Selecting pair model " << pairModelType << endl;
 
     typename dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(PairModelType);
+        dictionaryConstructorTablePtr_->find(pairModelType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
             << "Unknown pair model type "
-            << PairModelType
-            << ", constructor not in hash table" << nl << nl
-            << "    Valid pair model types are:" << nl
-            << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);
+            << pairModelType << nl << nl
+            << "Valid pair model types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
 
     return autoPtr<PairModel<CloudType>>(cstrIter()(dict, owner));

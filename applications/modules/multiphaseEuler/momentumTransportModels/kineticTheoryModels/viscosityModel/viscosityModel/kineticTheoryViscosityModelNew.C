@@ -43,13 +43,12 @@ Foam::kineticTheoryModels::viscosityModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalError
-            << "viscosityModel::New(const dictionary&) : " << endl
-            << "    unknown granularViscosityModel type "
-            << viscosityModelType
-            << ", constructor not in hash table" << endl << endl
-            << "    Valid granularViscosityModel types are :" << endl;
-        Info<< dictionaryConstructorTablePtr_->sortedToc() << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown granularViscosityModel type "
+            << viscosityModelType << endl << endl
+            << "Valid granularViscosityModel types are :" << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
 
     return autoPtr<viscosityModel>(cstrIter()(dict));

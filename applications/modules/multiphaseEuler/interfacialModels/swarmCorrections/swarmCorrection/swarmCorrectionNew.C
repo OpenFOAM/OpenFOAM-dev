@@ -46,7 +46,7 @@ Foam::swarmCorrection::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown swarmCorrectionType type "
+            << "Unknown swarmCorrection type "
             << swarmCorrectionType << endl << endl
             << "Valid swarmCorrection types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

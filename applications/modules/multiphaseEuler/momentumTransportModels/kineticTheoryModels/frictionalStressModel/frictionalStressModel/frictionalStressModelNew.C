@@ -43,14 +43,12 @@ Foam::kineticTheoryModels::frictionalStressModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalError
-            << "frictionalStressModel::New(const dictionary&) : " << endl
-            << "    unknown frictionalStressModelType type "
-            << frictionalStressModelType
-            << ", constructor not in hash table" << endl << endl
-            << "    Valid frictionalStressModelType types are :" << endl;
-        Info<< dictionaryConstructorTablePtr_->sortedToc()
-            << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown frictionalStressModel type "
+            << frictionalStressModelType << endl << endl
+            << "Valid frictionalStressModel types are :" << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
 
     return autoPtr<frictionalStressModel>(cstrIter()(dict));

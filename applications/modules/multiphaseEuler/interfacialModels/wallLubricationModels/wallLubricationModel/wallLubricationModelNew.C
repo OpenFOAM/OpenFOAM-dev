@@ -51,7 +51,7 @@ Foam::autoPtr<Foam::wallLubricationModel> Foam::wallLubricationModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown wallLubricationModelType type "
+            << "Unknown wallLubricationModel type "
             << wallLubricationModelType << endl << endl
             << "Valid wallLubricationModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

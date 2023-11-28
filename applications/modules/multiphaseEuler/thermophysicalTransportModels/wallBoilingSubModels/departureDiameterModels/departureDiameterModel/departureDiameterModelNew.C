@@ -44,7 +44,7 @@ Foam::wallBoilingModels::departureDiameterModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown departureDiameterModelType type "
+            << "Unknown departureDiameterModel type "
             << departureDiameterModelType << endl << endl
             << "Valid departureDiameterModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

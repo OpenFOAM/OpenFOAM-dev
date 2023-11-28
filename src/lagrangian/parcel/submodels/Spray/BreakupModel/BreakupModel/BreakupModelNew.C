@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,21 +35,21 @@ Foam::BreakupModel<CloudType>::New
     CloudType& owner
 )
 {
-    word BreakupModelType(dict.lookup("breakupModel"));
+    const word breakupModelType(dict.lookup("breakupModel"));
 
-    Info<< "Selecting BreakupModel " << BreakupModelType << endl;
+    Info<< "Selecting breakup model " << breakupModelType << endl;
 
     typename dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(BreakupModelType);
+        dictionaryConstructorTablePtr_->find(breakupModelType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown BreakupModelType type "
-            << BreakupModelType
-            << ", constructor not in hash table" << nl << nl
-            << "    Valid BreakupModel types are:" << nl
-            << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);
+            << "Unknown breakup model type "
+            << breakupModelType << nl << nl
+            << "Valid breakup model types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
 
     return autoPtr<BreakupModel<CloudType>>(cstrIter()(dict, owner));

@@ -46,7 +46,7 @@ Foam::autoPtr<Foam::contactAngleModel> Foam::contactAngleModel::New
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
             FatalErrorInFunction
-                << "Unknown contactAngleModelType type "
+                << "Unknown contactAngleModel type "
                 << contactAngleModelType << endl << endl
                 << "Valid contactAngleModel types are : " << endl
                 << dictionaryConstructorTablePtr_->sortedToc()

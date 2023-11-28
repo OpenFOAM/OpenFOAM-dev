@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::autoPtr<Foam::sixDoFSolver> Foam::sixDoFSolver::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown sixDoFSolverType type "
+            << "Unknown sixDoFSolver type "
             << sixDoFSolverType << endl << endl
             << "Valid sixDoFSolver types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

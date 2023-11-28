@@ -45,7 +45,7 @@ Foam::autoPtr<Foam::blendingMethod> Foam::blendingMethod::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown blendingMethodType type "
+            << "Unknown blendingMethod type "
             << blendingMethodType << endl << endl
             << "Valid blendingMethod types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

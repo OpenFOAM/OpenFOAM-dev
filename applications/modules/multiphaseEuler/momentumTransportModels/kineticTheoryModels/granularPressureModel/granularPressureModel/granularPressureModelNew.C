@@ -43,14 +43,12 @@ Foam::kineticTheoryModels::granularPressureModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalError
-            << "granularPressureModel::New(const dictionary&) : " << endl
-            << "    unknown granularPressureModelType type "
-            << granularPressureModelType
-            << ", constructor not in hash table" << endl << endl
-            << "    Valid granularPressureModelType types are :" << endl;
-        Info<< dictionaryConstructorTablePtr_->sortedToc()
-            << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown granularPressureModel type "
+            << granularPressureModelType << endl << endl
+            << "Valid granularPressureModel types are :" << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
 
     return autoPtr<granularPressureModel>(cstrIter()(dict));

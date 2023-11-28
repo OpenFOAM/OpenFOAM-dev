@@ -49,7 +49,7 @@ Foam::autoPtr<Foam::liftModel> Foam::liftModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown liftModelType type "
+            << "Unknown liftModel type "
             << liftModelType << endl << endl
             << "Valid liftModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

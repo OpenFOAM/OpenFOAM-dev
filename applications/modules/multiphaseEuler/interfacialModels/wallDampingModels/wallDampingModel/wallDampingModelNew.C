@@ -44,7 +44,7 @@ Foam::autoPtr<Foam::wallDampingModel> Foam::wallDampingModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown wallDampingModelType type "
+            << "Unknown wallDampingModel type "
             << wallDampingModelType << endl << endl
             << "Valid wallDampingModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

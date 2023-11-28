@@ -43,14 +43,12 @@ Foam::kineticTheoryModels::radialModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalError
-            << "radialModel::New(const dictionary&) : " << endl
-            << "    unknown radialModelType type "
-            << radialModelType
-            << ", constructor not in hash table" << endl << endl
-            << "    Valid radialModelType types are :" << endl;
-        Info<< dictionaryConstructorTablePtr_->sortedToc()
-            << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown radialModel type "
+            << radialModelType << endl << endl
+            << "Valid radialModel types are :" << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
 
     return autoPtr<radialModel>(cstrIter()(dict));

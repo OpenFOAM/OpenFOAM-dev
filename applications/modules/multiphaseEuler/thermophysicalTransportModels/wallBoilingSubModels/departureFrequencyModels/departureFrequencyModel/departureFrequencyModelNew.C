@@ -44,7 +44,7 @@ Foam::wallBoilingModels::departureFrequencyModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown departureFrequencyModelType type "
+            << "Unknown departureFrequencyModel type "
             << departureFrequencyModelType << endl << endl
             << "Valid departureFrequencyModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

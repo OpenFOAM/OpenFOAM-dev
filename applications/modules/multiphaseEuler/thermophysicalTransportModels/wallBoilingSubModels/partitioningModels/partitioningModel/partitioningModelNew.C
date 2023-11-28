@@ -44,7 +44,7 @@ Foam::wallBoilingModels::partitioningModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown partitioningModelType type "
+            << "Unknown partitioningModel type "
             << partitioningModelType << endl << endl
             << "Valid partitioningModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

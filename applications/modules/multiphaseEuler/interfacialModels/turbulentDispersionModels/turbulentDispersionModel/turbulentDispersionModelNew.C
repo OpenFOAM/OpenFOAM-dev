@@ -52,7 +52,7 @@ Foam::turbulentDispersionModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown turbulentDispersionModelType type "
+            << "Unknown turbulentDispersionModel type "
             << turbulentDispersionModelType << endl << endl
             << "Valid turbulentDispersionModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

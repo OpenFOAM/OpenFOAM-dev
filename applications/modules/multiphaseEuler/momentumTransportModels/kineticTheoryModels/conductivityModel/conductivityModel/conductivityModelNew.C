@@ -43,13 +43,12 @@ Foam::kineticTheoryModels::conductivityModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalError
-            << "conductivityModel::New(const dictionary&) : " << endl
-            << "    unknown granularConductivityModel type "
-            << conductivityModelType
-            << ", constructor not in hash table" << endl << endl
-            << "    Valid granularConductivityModel types are :" << endl;
-        Info<< dictionaryConstructorTablePtr_->sortedToc() << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown granularConductivityModel type "
+            << conductivityModelType << endl << endl
+            << "Valid granularConductivityModel types are :" << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
 
     return autoPtr<conductivityModel>(cstrIter()(dict));

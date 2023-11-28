@@ -63,7 +63,7 @@ Foam::diameterModels::shapeModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown shapeModelType type "
+            << "Unknown shapeModel type "
             << shapeModelType << endl << endl
             << "Valid shapeModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()

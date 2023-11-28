@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,7 @@ Foam::ParticleForce<CloudType>::New
 )
 {
     word forceType = name;
+
     typename dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(forceType);
 
@@ -53,9 +54,8 @@ Foam::ParticleForce<CloudType>::New
     {
         FatalErrorInFunction
             << "Unknown particle force type "
-            << forceType
-            << ", constructor not in hash table" << nl << nl
-            << "    Valid particle force types are:" << nl
+            << forceType << nl << nl
+            << "Valid particle force types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }

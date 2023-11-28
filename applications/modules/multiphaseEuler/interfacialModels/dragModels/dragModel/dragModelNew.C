@@ -50,7 +50,7 @@ Foam::autoPtr<Foam::dragModel> Foam::dragModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown dragModelType type "
+            << "Unknown dragModel type "
             << dragModelType << endl << endl
             << "Valid dragModel types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
