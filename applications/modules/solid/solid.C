@@ -174,13 +174,13 @@ void Foam::solvers::solid::preSolve()
 {
     fvModels().preUpdateMesh();
 
-    // Update the mesh for topology change, mesh to mesh mapping
-    mesh_.update();
-
     if (transient())
     {
         correctDiNum();
     }
+
+    // Update the mesh for topology change, mesh to mesh mapping
+    mesh_.update();
 }
 
 
