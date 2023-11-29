@@ -51,7 +51,8 @@ Foam::functionObjects::checkMesh::checkMesh
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
+    fvMeshFunctionObject(name, runTime, dict),
+    stopAt_(Time::stopAtControl::endTime)
 {
     read(dict);
 }
@@ -93,6 +94,15 @@ bool Foam::functionObjects::checkMesh::read(const dictionary& dict)
 
     nonOrthThreshold_ = dict.lookupOrDefault("nonOrthThreshold", 70.0);
     skewThreshold_ = dict.lookupOrDefault("skewThreshold", 4.0);
+
+    stopAt_ = Time::stopAtControlNames
+    [
+        dict.lookupOrDefault<word>
+        (
+            "stopAt",
+            Time::stopAtControlNames[Time::stopAtControl::endTime]
+        )
+    ];
 
     return functionObject::read(dict);
 }
@@ -153,8 +163,17 @@ bool Foam::functionObjects::checkMesh::execute()
         }
         else
         {
-            Info<< "\n    Failed " << nFailedChecks << " mesh checks.\n"
-                << endl;
+            Info<< "\n    Failed " << nFailedChecks << " mesh checks.\n";
+
+            if (stopAt_ != Time::stopAtControl::endTime)
+            {
+                Info<< "    Stopping at " << Time::stopAtControlNames[stopAt_]
+                    << endl;
+
+                time_.stopAt(stopAt_);
+            }
+
+            Info<< endl;
         }
 
         return nFailedChecks == 0;

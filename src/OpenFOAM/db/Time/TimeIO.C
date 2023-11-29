@@ -45,7 +45,7 @@ void Foam::Time::readDict()
 
     if (controlDict_.found("writeControl"))
     {
-        writeControl_ = writeControlNames_.read
+        writeControl_ = writeControlNames.read
         (
             controlDict_.lookup("writeControl")
         );
@@ -126,7 +126,7 @@ void Foam::Time::readDict()
     // if nothing is specified, the endTime is zero
     if (controlDict_.found("stopAt"))
     {
-        stopAt_ = stopAtControlNames_.read(controlDict_.lookup("stopAt"));
+        stopAt_ = stopAtControlNames.read(controlDict_.lookup("stopAt"));
 
         if (stopAt_ == stopAtControl::endTime)
         {

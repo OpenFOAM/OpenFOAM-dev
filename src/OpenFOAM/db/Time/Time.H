@@ -113,6 +113,10 @@ public:
             scientific = ios_base::scientific
         };
 
+        static const NamedEnum<stopAtControl, 4> stopAtControlNames;
+
+        static const NamedEnum<writeControl, 5> writeControlNames;
+
 
 protected:
 
@@ -126,10 +130,8 @@ protected:
         //- Optional user-time, defaults to realTime in s
         autoPtr<userTimes::userTime> userTime_;
 
-        static const NamedEnum<stopAtControl, 4> stopAtControlNames_;
         mutable stopAtControl stopAt_;
 
-        static const NamedEnum<writeControl, 5> writeControlNames_;
         writeControl writeControl_;
 
         scalar writeInterval_;

@@ -62,10 +62,10 @@ namespace Foam
 }
 
 const Foam::NamedEnum<Foam::Time::stopAtControl, 4>
-    Foam::Time::stopAtControlNames_;
+    Foam::Time::stopAtControlNames;
 
 const Foam::NamedEnum<Foam::Time::writeControl, 5>
-    Foam::Time::writeControlNames_;
+    Foam::Time::writeControlNames;
 
 Foam::Time::format Foam::Time::format_(Foam::Time::format::general);
 

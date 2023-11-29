@@ -43,7 +43,14 @@ Usage
         setFormat     | Format used to write the problem pointSets | no | vtk
         nonOrthThreshold | Threshold for non-orthogonality errors | no | 70 deg
         skewThreshold | Threshold for reporting skewness errors | no | 4
+        stopAt        | Stops the run if any mesh checks fail   | no | endTime
     \endtable
+
+    The optional \c stopAt option may be set to
+    - endTime     : Continue running on error
+    - noWriteNow  : Stops the run on error without write
+    - writeNow    : Stops the run on error and writes fields
+    - nextWrite   : Stops the run at the next write time on error
 
     Example of checkMesh specification:
     \verbatim
@@ -63,6 +70,8 @@ Usage
 
         writeSets       true;
         setFormat       vtk;
+
+        stopAt          writeNow;
     }
     \endverbatim
 
@@ -81,6 +90,7 @@ SourceFiles
 #define functionObjects_checkMesh_H
 
 #include "fvMeshFunctionObject.H"
+#include "Time.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -111,6 +121,8 @@ class checkMesh
 
         scalar nonOrthThreshold_;
         scalar skewThreshold_;
+
+        Time::stopAtControl stopAt_;
 
 
 public:
