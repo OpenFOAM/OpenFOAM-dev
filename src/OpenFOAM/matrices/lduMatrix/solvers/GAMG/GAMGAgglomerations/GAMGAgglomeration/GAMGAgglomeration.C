@@ -234,7 +234,7 @@ Foam::GAMGAgglomeration::GAMGAgglomeration
     DemandDrivenMeshObject
     <
         lduMesh,
-        GeometricMeshObject,
+        DeletableMeshObject,
         GAMGAgglomeration
     >(mesh),
 

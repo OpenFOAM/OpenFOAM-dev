@@ -85,14 +85,14 @@ void Foam::fvMesh::clearGeomNotOldVol()
     meshObjects::clearUpto
     <
         fvMesh,
-        GeometricMeshObject,
+        DeletableMeshObject,
         MoveableMeshObject
     >(*this);
 
     meshObjects::clearUpto
     <
         lduMesh,
-        GeometricMeshObject,
+        DeletableMeshObject,
         MoveableMeshObject
     >(*this);
 

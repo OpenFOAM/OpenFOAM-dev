@@ -100,7 +100,7 @@ class coordinateSystems
     public DemandDrivenMeshObject
     <
         objectRegistry,
-        GeometricMeshObject,
+        DeletableMeshObject,
         coordinateSystems
     >,
     public PtrDictionary<coordinateSystem>
@@ -110,7 +110,7 @@ protected:
     friend class DemandDrivenMeshObject
     <
         objectRegistry,
-        GeometricMeshObject,
+        DeletableMeshObject,
         coordinateSystems
     >;
 
@@ -134,7 +134,7 @@ public:
         using DemandDrivenMeshObject
         <
             objectRegistry,
-            GeometricMeshObject,
+            DeletableMeshObject,
             coordinateSystems
         >::New;
 
@@ -178,7 +178,7 @@ struct typeGlobal
     DemandDrivenMeshObject
     <
         objectRegistry,
-        GeometricMeshObject,
+        DeletableMeshObject,
         coordinateSystems::coordinateSystems
     >
 >

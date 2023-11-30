@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ Description
     MeshObject types:
 
     - TopologicalMeshObject: mesh object to be deleted on topology change
-    - GeometricMeshObject: mesh object to be deleted on geometry change
+    - DeletableMeshObject: mesh object to be deleted on geometry change
     - MoveableMeshObject: mesh object to be updated in movePoints
     - UpdateableMeshObject: mesh object to be updated in topoChange or
         movePoints
@@ -78,17 +78,17 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                     Class GeometricMeshObject Declaration
+                     Class DeletableMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Mesh>
-class GeometricMeshObject
+class DeletableMeshObject
 :
     public TopologicalMeshObject<Mesh>
 {
 public:
 
-    GeometricMeshObject(regIOobject& io, const Mesh& mesh)
+    DeletableMeshObject(regIOobject& io, const Mesh& mesh)
     :
         TopologicalMeshObject<Mesh>(io, mesh)
     {}
@@ -102,13 +102,13 @@ public:
 template<class Mesh>
 class MoveableMeshObject
 :
-    public GeometricMeshObject<Mesh>
+    public DeletableMeshObject<Mesh>
 {
 public:
 
     MoveableMeshObject(regIOobject& io, const Mesh& mesh)
     :
-        GeometricMeshObject<Mesh>(io, mesh)
+        DeletableMeshObject<Mesh>(io, mesh)
     {}
 
     //- Update for mesh motion

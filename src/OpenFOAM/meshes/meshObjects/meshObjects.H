@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
     their allocation to the mesh database and the mesh-modifier event-loop.
 
     MeshObject is templated on the type of mesh it is allocated to, the type of
-    the mesh object (TopologicalMeshObject, GeometricMeshObject,
+    the mesh object (TopologicalMeshObject, DeletableMeshObject,
     MoveableMeshObject, DistributeableMeshObject, UpdateableMeshObject) and the
     type of the actual object it is created for example:
 
@@ -49,7 +49,7 @@ Description
     MeshObject types:
 
     - TopologicalMeshObject: mesh object to be deleted on topology change
-    - GeometricMeshObject: mesh object to be deleted on geometry change
+    - DeletableMeshObject: mesh object to be deleted on geometry change
     - MoveableMeshObject: mesh object to be updated in movePoints
     - UpdateableMeshObject: mesh object to be updated in topoChange or
         movePoints

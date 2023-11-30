@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,9 +55,9 @@ void Foam::meshObjects::Delete(regIOobject& io)
 template<class Mesh>
 void Foam::meshObjects::movePoints(objectRegistry& obr)
 {
-    HashTable<GeometricMeshObject<Mesh>*> meshObjects
+    HashTable<DeletableMeshObject<Mesh>*> meshObjects
     (
-        obr.lookupClass<GeometricMeshObject<Mesh>>()
+        obr.lookupClass<DeletableMeshObject<Mesh>>()
     );
 
     if (meshObjects::debug)
@@ -69,7 +69,7 @@ void Foam::meshObjects::movePoints(objectRegistry& obr)
 
     forAllIter
     (
-        typename HashTable<GeometricMeshObject<Mesh>*>,
+        typename HashTable<DeletableMeshObject<Mesh>*>,
         meshObjects,
         iter
     )
@@ -97,9 +97,9 @@ void Foam::meshObjects::distribute
     const polyDistributionMap& map
 )
 {
-    HashTable<GeometricMeshObject<Mesh>*> meshObjects
+    HashTable<DeletableMeshObject<Mesh>*> meshObjects
     (
-        obr.lookupClass<GeometricMeshObject<Mesh>>()
+        obr.lookupClass<DeletableMeshObject<Mesh>>()
     );
 
     if (meshObjects::debug)
@@ -112,7 +112,7 @@ void Foam::meshObjects::distribute
 
     forAllIter
     (
-        typename HashTable<GeometricMeshObject<Mesh>*>,
+        typename HashTable<DeletableMeshObject<Mesh>*>,
         meshObjects,
         iter
     )
@@ -141,9 +141,9 @@ void Foam::meshObjects::topoChange
     const polyTopoChangeMap& map
 )
 {
-    HashTable<GeometricMeshObject<Mesh>*> meshObjects
+    HashTable<DeletableMeshObject<Mesh>*> meshObjects
     (
-        obr.lookupClass<GeometricMeshObject<Mesh>>()
+        obr.lookupClass<DeletableMeshObject<Mesh>>()
     );
 
     if (meshObjects::debug)
@@ -155,7 +155,7 @@ void Foam::meshObjects::topoChange
 
     forAllIter
     (
-        typename HashTable<GeometricMeshObject<Mesh>*>,
+        typename HashTable<DeletableMeshObject<Mesh>*>,
         meshObjects,
         iter
     )
@@ -183,9 +183,9 @@ void Foam::meshObjects::mapMesh
     const polyMeshMap& map
 )
 {
-    HashTable<GeometricMeshObject<Mesh>*> meshObjects
+    HashTable<DeletableMeshObject<Mesh>*> meshObjects
     (
-        obr.lookupClass<GeometricMeshObject<Mesh>>()
+        obr.lookupClass<DeletableMeshObject<Mesh>>()
     );
 
     if (meshObjects::debug)
@@ -197,7 +197,7 @@ void Foam::meshObjects::mapMesh
 
     forAllIter
     (
-        typename HashTable<GeometricMeshObject<Mesh>*>,
+        typename HashTable<DeletableMeshObject<Mesh>*>,
         meshObjects,
         iter
     )
@@ -221,9 +221,9 @@ void Foam::meshObjects::mapMesh
 template<class Mesh>
 void Foam::meshObjects::addPatch(objectRegistry& obr, const label patchi)
 {
-    HashTable<GeometricMeshObject<Mesh>*> meshObjects
+    HashTable<DeletableMeshObject<Mesh>*> meshObjects
     (
-        obr.lookupClass<GeometricMeshObject<Mesh>>()
+        obr.lookupClass<DeletableMeshObject<Mesh>>()
     );
 
     if (meshObjects::debug)
@@ -235,7 +235,7 @@ void Foam::meshObjects::addPatch(objectRegistry& obr, const label patchi)
 
     forAllIter
     (
-        typename HashTable<GeometricMeshObject<Mesh>*>,
+        typename HashTable<DeletableMeshObject<Mesh>*>,
         meshObjects,
         iter
     )
@@ -264,9 +264,9 @@ void Foam::meshObjects::reorderPatches
     const bool validBoundary
 )
 {
-    HashTable<GeometricMeshObject<Mesh>*> meshObjects
+    HashTable<DeletableMeshObject<Mesh>*> meshObjects
     (
-        obr.lookupClass<GeometricMeshObject<Mesh>>()
+        obr.lookupClass<DeletableMeshObject<Mesh>>()
     );
 
     if (meshObjects::debug)
@@ -278,7 +278,7 @@ void Foam::meshObjects::reorderPatches
 
     forAllIter
     (
-        typename HashTable<GeometricMeshObject<Mesh>*>,
+        typename HashTable<DeletableMeshObject<Mesh>*>,
         meshObjects,
         iter
     )

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Foam::meshSearchMeshObject::meshSearchMeshObject(const polyMesh& mesh)
     DemandDrivenMeshObject
     <
         polyMesh,
-        GeometricMeshObject,
+        DeletableMeshObject,
         meshSearchMeshObject
     >(mesh),
     meshSearch(mesh)

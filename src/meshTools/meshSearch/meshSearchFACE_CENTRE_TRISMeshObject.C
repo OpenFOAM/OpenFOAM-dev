@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ meshSearchFACE_CENTRE_TRISMeshObject
     DemandDrivenMeshObject
     <
         polyMesh,
-        GeometricMeshObject,
+        DeletableMeshObject,
         meshSearchFACE_CENTRE_TRISMeshObject
     >(mesh),
     meshSearch(mesh, polyMesh::FACE_CENTRE_TRIS)
