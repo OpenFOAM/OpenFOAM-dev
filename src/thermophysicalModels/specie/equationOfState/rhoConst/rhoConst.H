@@ -144,22 +144,22 @@ public:
             inline scalar rho(scalar p, scalar T) const;
 
             //- Return enthalpy contribution [J/kg]
-            inline scalar H(const scalar p, const scalar T) const;
+            inline scalar h(const scalar p, const scalar T) const;
 
             //- Return Cp contribution [J/(kg K]
             inline scalar Cp(scalar p, scalar T) const;
 
             //- Return internal energy contribution [J/kg]
-            inline scalar E(const scalar p, const scalar T) const;
+            inline scalar e(const scalar p, const scalar T) const;
 
             //- Return Cv contribution [J/(kg K]
             inline scalar Cv(scalar p, scalar T) const;
 
             //- Return entropy contribution to the integral of Cp/T [J/kg/K]
-            inline scalar Sp(const scalar p, const scalar T) const;
+            inline scalar sp(const scalar p, const scalar T) const;
 
             //- Return entropy contribution to the integral of Cv/T [J/kg/K]
-            inline scalar Sv(const scalar p, const scalar T) const;
+            inline scalar sv(const scalar p, const scalar T) const;
 
             //- Return compressibility [s^2/m^2]
             inline scalar psi(scalar p, scalar T) const;

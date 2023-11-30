@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
 
         Info<< "products " << (1/products.Y())*products << ';' << endl;
 
-        scalar Tad = products.THa(reactants.Ha(P, T0), P, 1000.0);
+        scalar Tad = products.Tha(reactants.ha(P, T0), P, 1000.0);
         Info<< "Tad = " << Tad << nl << endl;
     }
 

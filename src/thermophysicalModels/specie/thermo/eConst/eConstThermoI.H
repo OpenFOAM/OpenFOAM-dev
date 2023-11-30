@@ -30,16 +30,16 @@ inline Foam::eConstThermo<EquationOfState>::eConstThermo
 (
     const EquationOfState& st,
     const scalar Cv,
-    const scalar Hf,
+    const scalar hf,
     const scalar Tref,
-    const scalar Esref
+    const scalar esRef
 )
 :
     EquationOfState(st),
     Cv_(Cv),
-    Hf_(Hf),
+    hf_(hf),
     Tref_(Tref),
-    Esref_(Esref)
+    esRef_(esRef)
 {}
 
 
@@ -52,9 +52,9 @@ inline Foam::eConstThermo<EquationOfState>::eConstThermo
 :
     EquationOfState(name, ct),
     Cv_(ct.Cv_),
-    Hf_(ct.Hf_),
+    hf_(ct.hf_),
     Tref_(ct.Tref_),
-    Esref_(ct.Esref_)
+    esRef_(ct.esRef_)
 {}
 
 
@@ -93,54 +93,54 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::Cv
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::Es
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::es
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Cv_*(T - Tref_) + Esref_ + EquationOfState::E(p, T);
+    return Cv_*(T - Tref_) + esRef_ + EquationOfState::e(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::Ea
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::ea
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Es(p, T) + Hf();
+    return es(p, T) + hf();
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::Hf() const
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::hf() const
 {
-    return Hf_;
+    return hf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::S
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::s
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Cp(p, T)*log(T/Tstd) + EquationOfState::Sv(p, T);
+    return Cp(p, T)*log(T/Tstd) + EquationOfState::sv(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::Gstd
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::gStd
 (
     const scalar T
 ) const
 {
     return
-        Cv_*(T - Tref_) + Esref_ + Hf() + Pstd/EquationOfState::rho(Pstd, T)
-      - S(Pstd, T)*T;
+        Cv_*(T - Tref_) + esRef_ + hf() + Pstd/EquationOfState::rho(Pstd, T)
+      - s(Pstd, T)*T;
 }
 
 
@@ -188,8 +188,8 @@ inline void Foam::eConstThermo<EquationOfState>::operator+=
         const scalar Y2 = ct.Y()/this->Y();
 
         Cv_ = Y1*Cv_ + Y2*ct.Cv_;
-        Hf_ = Y1*Hf_ + Y2*ct.Hf_;
-        Esref_ = Y1*Esref_ + Y2*ct.Esref_;
+        hf_ = Y1*hf_ + Y2*ct.hf_;
+        esRef_ = Y1*esRef_ + Y2*ct.esRef_;
     }
 }
 
@@ -215,9 +215,9 @@ inline Foam::eConstThermo<EquationOfState> Foam::operator+
         (
             eofs,
             ct1.Cv_,
-            ct1.Hf_,
+            ct1.hf_,
             ct1.Tref_,
-            ct1.Esref_
+            ct1.esRef_
         );
     }
     else
@@ -241,11 +241,11 @@ inline Foam::eConstThermo<EquationOfState> Foam::operator+
             eofs,
             ct1.Y()/eofs.Y()*ct1.Cv_
           + ct2.Y()/eofs.Y()*ct2.Cv_,
-            ct1.Y()/eofs.Y()*ct1.Hf_
-          + ct2.Y()/eofs.Y()*ct2.Hf_,
+            ct1.Y()/eofs.Y()*ct1.hf_
+          + ct2.Y()/eofs.Y()*ct2.hf_,
             ct1.Tref_,
-            ct1.Y()/eofs.Y()*ct1.Esref_
-          + ct2.Y()/eofs.Y()*ct2.Esref_
+            ct1.Y()/eofs.Y()*ct1.esRef_
+          + ct2.Y()/eofs.Y()*ct2.esRef_
         );
     }
 }
@@ -262,9 +262,9 @@ inline Foam::eConstThermo<EquationOfState> Foam::operator*
     (
         s*static_cast<const EquationOfState&>(ct),
         ct.Cv_,
-        ct.Hf_,
+        ct.hf_,
         ct.Tref_,
-        ct.Esref_
+        ct.esRef_
     );
 }
 
@@ -301,11 +301,11 @@ inline Foam::eConstThermo<EquationOfState> Foam::operator==
         eofs,
         ct2.Y()/eofs.Y()*ct2.Cv_
       - ct1.Y()/eofs.Y()*ct1.Cv_,
-        ct2.Y()/eofs.Y()*ct2.Hf_
-      - ct1.Y()/eofs.Y()*ct1.Hf_,
+        ct2.Y()/eofs.Y()*ct2.hf_
+      - ct1.Y()/eofs.Y()*ct1.hf_,
         ct1.Tref_,
-        ct2.Y()/eofs.Y()*ct2.Esref_
-      - ct1.Y()/eofs.Y()*ct1.Esref_
+        ct2.Y()/eofs.Y()*ct2.esRef_
+      - ct1.Y()/eofs.Y()*ct1.esRef_
     );
 }
 

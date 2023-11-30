@@ -99,7 +99,7 @@ void Foam::CloudFilmTransfer<CloudType>::absorbInteraction
         facei,
         mass,                           // mass
         mass*Urel,                      // momentum
-        mass*liq.Hs(pc, p.T())          // energy
+        mass*liq.hs(pc, p.T())          // energy
     );
 
     this->nParcelsTransferred()++;

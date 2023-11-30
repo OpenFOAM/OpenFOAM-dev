@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ class N2
         Function2s::APIdiffCoef D_;
 
         //- Liquid heat of formation [J/kg]
-        scalar Hf_;
+        scalar hf_;
 
 
 public:
@@ -137,13 +137,13 @@ public:
         inline scalar Cp(scalar p, scalar T) const;
 
         //- Liquid sensible enthalpy [J/kg]
-        inline scalar Hs(scalar p, scalar T) const;
+        inline scalar hs(scalar p, scalar T) const;
 
         //- Liquid heat of formation [J/kg]
-        inline scalar Hf() const;
+        inline scalar hf() const;
 
         //- Liquid absolute enthalpy [J/kg]
-        inline scalar Ha(scalar p, scalar T) const;
+        inline scalar ha(scalar p, scalar T) const;
 
         //- Ideal gas heat capacity [J/kg/K]
         inline scalar Cpg(scalar p, scalar T) const;

@@ -224,12 +224,12 @@ Foam::scalar Foam::COxidationMurphyShaddix<CloudType>::calculate
     // Add to particle mass transfer
     dMassSolid[CsLocalId_] += dOmega*WC_;
 
-    const scalar HsC = thermo.solids().properties()[CsLocalId_].Hs(T);
+    const scalar hsC = thermo.solids().properties()[CsLocalId_].hs(T);
 
     // carrier sensible enthalpy exchange handled via change in mass
 
     // Heat of reaction [J]
-    return dOmega*(WC_*HsC - (WC_ + WO2_)*HcCO2_);
+    return dOmega*(WC_*hsC - (WC_ + WO2_)*HcCO2_);
 }
 
 

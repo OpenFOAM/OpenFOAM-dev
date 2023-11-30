@@ -181,18 +181,18 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::Cp
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::janafThermo<EquationOfState>::Hs
+inline Foam::scalar Foam::janafThermo<EquationOfState>::hs
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Ha(p, T) - Hf();
+    return ha(p, T) - hf();
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::janafThermo<EquationOfState>::Ha
+inline Foam::scalar Foam::janafThermo<EquationOfState>::ha
 (
     const scalar p,
     const scalar T
@@ -203,12 +203,12 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::Ha
     (
         ((((a[4]/5.0*T + a[3]/4.0)*T + a[2]/3.0)*T + a[1]/2.0)*T + a[0])*T
       + a[5]
-    ) + EquationOfState::H(p, T);
+    ) + EquationOfState::h(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::janafThermo<EquationOfState>::Hf() const
+inline Foam::scalar Foam::janafThermo<EquationOfState>::hf() const
 {
     const coeffArray& a = lowCpCoeffs_;
     return
@@ -222,7 +222,7 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::Hf() const
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::janafThermo<EquationOfState>::S
+inline Foam::scalar Foam::janafThermo<EquationOfState>::s
 (
     const scalar p,
     const scalar T
@@ -233,12 +233,12 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::S
     (
         (((a[4]/4.0*T + a[3]/3.0)*T + a[2]/2.0)*T + a[1])*T + a[0]*log(T)
       + a[6]
-    ) + EquationOfState::Sp(p, T);
+    ) + EquationOfState::sp(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::janafThermo<EquationOfState>::Gstd
+inline Foam::scalar Foam::janafThermo<EquationOfState>::gStd
 (
     const scalar T
 ) const

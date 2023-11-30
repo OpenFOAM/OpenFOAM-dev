@@ -37,9 +37,19 @@ Foam::eConstThermo<EquationOfState>::eConstThermo
 :
     EquationOfState(name, dict),
     Cv_(dict.subDict("thermodynamics").lookup<scalar>("Cv")),
-    Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
+    hf_
+    (
+        dict
+       .subDict("thermodynamics")
+       .lookupBackwardsCompatible<scalar>({"hf", "Hf"})
+    ),
     Tref_(dict.subDict("thermodynamics").lookupOrDefault<scalar>("Tref", Tstd)),
-    Esref_(dict.subDict("thermodynamics").lookupOrDefault<scalar>("Esref", 0))
+    esRef_
+    (
+        dict
+       .subDict("thermodynamics")
+       .lookupOrDefaultBackwardsCompatible<scalar>({"esRef", "Esref"}, 0)
+    )
 {}
 
 
@@ -52,14 +62,14 @@ void Foam::eConstThermo<EquationOfState>::write(Ostream& os) const
 
     dictionary dict("thermodynamics");
     dict.add("Cv", Cv_);
-    dict.add("Hf", Hf_);
+    dict.add("hf", hf_);
     if (Tref_ != Tstd)
     {
         dict.add("Tref", Tref_);
     }
-    if (Esref_ != 0)
+    if (esRef_ != 0)
     {
-        dict.add("Esref", Esref_);
+        dict.add("esRef", esRef_);
     }
     os  << indent << dict.dictName() << dict;
 }

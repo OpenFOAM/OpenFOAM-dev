@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ Foam::C9H20::C9H20()
     kappag_("kappag", -0.065771, 0.27198, -3482.3, -1580300.0),
     sigma_("sigma", 594.60, 0.054975, 1.2897, 0.0, 0.0, 0.0),
     D_("D", 147.18, 20.1, 128.258, 28.0), // note: Same as nHeptane
-    Hf_(h_.value(Tstd))
+    hf_(h_.value(Tstd))
 {}
 
 
@@ -140,7 +140,7 @@ Foam::C9H20::C9H20
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffusivity),
-    Hf_(h_.value(Tstd))
+    hf_(h_.value(Tstd))
 {}
 
 

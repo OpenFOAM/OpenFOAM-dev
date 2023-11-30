@@ -113,33 +113,33 @@ Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::Cp
 
 template<class ThermophysicalProperties>
 inline Foam::scalar
-Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::Hs
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::hs
 (
     scalar p,
     scalar T
 ) const
 {
-    return propertiesPtr_->Hs(p, T);
+    return propertiesPtr_->hs(p, T);
 }
 
 
 template<class ThermophysicalProperties>
 inline Foam::scalar
-Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::Hf() const
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::hf() const
 {
-    return propertiesPtr_->Hf();
+    return propertiesPtr_->hf();
 }
 
 
 template<class ThermophysicalProperties>
 inline Foam::scalar
-Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::Ha
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::ha
 (
     scalar p,
     scalar T
 ) const
 {
-    return propertiesPtr_->Ha(p, T);
+    return propertiesPtr_->ha(p, T);
 }
 
 
@@ -157,37 +157,37 @@ Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::Cv
 
 template<class ThermophysicalProperties>
 inline Foam::scalar
-Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::Es
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::es
 (
     scalar p,
     scalar T
 ) const
 {
-    return propertiesPtr_->Es(p, T);
+    return propertiesPtr_->es(p, T);
 }
 
 
 template<class ThermophysicalProperties>
 inline Foam::scalar
-Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::Ea
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::ea
 (
     scalar p,
     scalar T
 ) const
 {
-    return propertiesPtr_->Ea(p, T);
+    return propertiesPtr_->ea(p, T);
 }
 
 
 template<class ThermophysicalProperties>
 inline Foam::scalar
-Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::S
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::s
 (
     scalar p,
     scalar T
 ) const
 {
-    return propertiesPtr_->S(p, T);
+    return propertiesPtr_->s(p, T);
 }
 
 

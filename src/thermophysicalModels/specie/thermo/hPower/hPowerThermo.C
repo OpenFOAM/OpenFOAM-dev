@@ -39,7 +39,12 @@ Foam::hPowerThermo<EquationOfState>::hPowerThermo
     c0_(dict.subDict("thermodynamics").lookup<scalar>("C0")),
     n0_(dict.subDict("thermodynamics").lookup<scalar>("n0")),
     Tref_(dict.subDict("thermodynamics").lookup<scalar>("Tref")),
-    Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf"))
+    hf_
+    (
+        dict
+       .subDict("thermodynamics")
+       .lookupBackwardsCompatible<scalar>({"hf", "Hf"})
+    )
 {}
 
 

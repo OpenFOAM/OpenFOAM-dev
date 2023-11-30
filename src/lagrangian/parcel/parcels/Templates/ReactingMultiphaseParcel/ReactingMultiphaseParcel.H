@@ -158,7 +158,7 @@ private:
 
         //- Return the mixture effective sensible enthalpy
         template<class TrackCloudType>
-        scalar HsEff
+        scalar hsEff
         (
             TrackCloudType& cloud,
             trackingData& td,

@@ -76,7 +76,7 @@ inline Foam::scalar Foam::icoTabulated<Specie>::rho
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::H
+inline Foam::scalar Foam::icoTabulated<Specie>::h
 (
     scalar p,
     scalar T
@@ -98,7 +98,7 @@ inline Foam::scalar Foam::icoTabulated<Specie>::Cp
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::E
+inline Foam::scalar Foam::icoTabulated<Specie>::e
 (
     scalar p,
     scalar T
@@ -120,7 +120,7 @@ inline Foam::scalar Foam::icoTabulated<Specie>::Cv
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::Sp
+inline Foam::scalar Foam::icoTabulated<Specie>::sp
 (
     scalar p,
     scalar T
@@ -131,7 +131,7 @@ inline Foam::scalar Foam::icoTabulated<Specie>::Sp
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::Sv
+inline Foam::scalar Foam::icoTabulated<Specie>::sv
 (
     scalar p,
     scalar T

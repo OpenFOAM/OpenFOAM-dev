@@ -57,7 +57,7 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate()
             transportMixture =
             this->transportMixture(composition, thermoMixture);
 
-        TCells[celli] = thermoMixture.THE
+        TCells[celli] = thermoMixture.The
         (
             hCells[celli],
             pCells[celli],
@@ -72,7 +72,7 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate()
         kappaCells[celli] =
             transportMixture.kappa(pCells[celli], TCells[celli]);
 
-        TuCells[celli] = this->reactants(composition).THE
+        TuCells[celli] = this->reactants(composition).The
         (
             heuCells[celli],
             pCells[celli],
@@ -137,7 +137,7 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate()
                     transportMixture =
                     this->transportMixture(composition, thermoMixture);
 
-                phe[facei] = thermoMixture.HE(pp[facei], pT[facei]);
+                phe[facei] = thermoMixture.he(pp[facei], pT[facei]);
 
                 pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
@@ -160,7 +160,7 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate()
                     transportMixture =
                     this->transportMixture(composition, thermoMixture);
 
-                pT[facei] = thermoMixture.THE(phe[facei], pp[facei], pT[facei]);
+                pT[facei] = thermoMixture.The(phe[facei], pp[facei], pT[facei]);
 
                 pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
@@ -170,7 +170,7 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate()
 
                 pTu[facei] =
                     this->reactants(composition)
-                   .THE(pheu[facei], pp[facei], pTu[facei]);
+                   .The(pheu[facei], pp[facei], pTu[facei]);
             }
         }
     }
@@ -214,7 +214,7 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::PsiuMulticomponentThermo
             BaseThermo::mixtureType::thermoType::heName() + 'u',
             dimEnergy/dimMass,
             &BaseThermo::mixtureType::reactants,
-            &BaseThermo::mixtureType::thermoMixtureType::HE,
+            &BaseThermo::mixtureType::thermoMixtureType::he,
             this->p_,
             this->Tu_
         ),
@@ -269,7 +269,7 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::heu
     return this->cellSetProperty
     (
         &BaseThermo::mixtureType::reactants,
-        &BaseThermo::mixtureType::thermoMixtureType::HE,
+        &BaseThermo::mixtureType::thermoMixtureType::he,
         cells,
         UIndirectList<scalar>(this->p_, cells),
         Tu
@@ -288,7 +288,7 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::heu
     return this->patchFieldProperty
     (
         &BaseThermo::mixtureType::reactants,
-        &BaseThermo::mixtureType::thermoMixtureType::HE,
+        &BaseThermo::mixtureType::thermoMixtureType::he,
         patchi,
         this->p_.boundaryField()[patchi],
         Tu
@@ -305,7 +305,7 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::Tb() const
         "Tb",
         dimTemperature,
         &BaseThermo::mixtureType::products,
-        &BaseThermo::mixtureType::thermoMixtureType::THE,
+        &BaseThermo::mixtureType::thermoMixtureType::The,
         this->he_,
         this->p_,
         this->T_

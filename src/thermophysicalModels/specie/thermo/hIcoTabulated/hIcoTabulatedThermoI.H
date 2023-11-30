@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,8 +35,8 @@ inline Foam::hIcoTabulatedThermo<EquationOfState>::hIcoTabulatedThermo
 )
 :
     EquationOfState(name, pt),
-    Hf_(pt.Hf_),
-    Sf_(pt.Sf_),
+    hf_(pt.hf_),
+    sf_(pt.sf_),
     Cp_(pt.Cp_)
 {}
 
@@ -65,53 +65,53 @@ inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Cp
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Hs
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::hs
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Cp_.intfdT(T) + EquationOfState::H(p, T);
+    return Cp_.intfdT(T) + EquationOfState::h(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Ha
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::ha
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Hs(p, T) + Hf_;
+    return hs(p, T) + hf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Hf()
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::hf()
 const
 {
-    return Hf_;
+    return hf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::S
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::s
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Cp_.intfByTdT(T) + EquationOfState::Sp(p, T) + Sf_;
+    return Cp_.intfByTdT(T) + EquationOfState::sp(p, T) + sf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Gstd
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::gStd
 (
     const scalar T
 ) const
 {
-    return Cp_.intfdT(T) + Hf_ - (Cp_.intfByTdT(T) + Sf_)*T;
+    return Cp_.intfdT(T) + hf_ - (Cp_.intfByTdT(T) + sf_)*T;
 }
 
 

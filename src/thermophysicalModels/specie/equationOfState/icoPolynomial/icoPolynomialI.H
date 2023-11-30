@@ -76,7 +76,7 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::rho
 
 
 template<class Specie, int PolySize>
-inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::H
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::h
 (
     scalar p,
     scalar T
@@ -98,7 +98,7 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Cp
 
 
 template<class Specie, int PolySize>
-inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::E
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::e
 (
     scalar p,
     scalar T
@@ -120,7 +120,7 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Cv
 
 
 template<class Specie, int PolySize>
-inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Sp
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::sp
 (
     scalar p,
     scalar T
@@ -131,7 +131,7 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Sp
 
 
 template<class Specie, int PolySize>
-inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Sv
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::sv
 (
     scalar p,
     scalar T

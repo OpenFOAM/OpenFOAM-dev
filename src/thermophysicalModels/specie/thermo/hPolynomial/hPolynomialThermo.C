@@ -36,8 +36,18 @@ Foam::hPolynomialThermo<EquationOfState, PolySize>::hPolynomialThermo
 )
 :
     EquationOfState(name, dict),
-    Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
-    Sf_(dict.subDict("thermodynamics").lookup<scalar>("Sf")),
+    hf_
+    (
+        dict
+       .subDict("thermodynamics")
+       .lookupBackwardsCompatible<scalar>({"hf", "Hf"})
+    ),
+    sf_
+    (
+        dict
+       .subDict("thermodynamics")
+       .lookupBackwardsCompatible<scalar>({"sf", "Sf"})
+    ),
     CpCoeffs_
     (
         dict.subDict("thermodynamics").lookup
@@ -52,10 +62,10 @@ Foam::hPolynomialThermo<EquationOfState, PolySize>::hPolynomialThermo
     sCoeffs_ = CpCoeffs_.integralMinus1();
 
     // Offset h poly so that it is relative to the enthalpy at Tstd
-    hCoeffs_[0] += Hf_ - hCoeffs_.value(Tstd);
+    hCoeffs_[0] += hf_ - hCoeffs_.value(Tstd);
 
     // Offset s poly so that it is relative to the entropy at Tstd
-    sCoeffs_[0] += Sf_ - sCoeffs_.value(Tstd);
+    sCoeffs_[0] += sf_ - sCoeffs_.value(Tstd);
 }
 
 
@@ -70,8 +80,8 @@ void Foam::hPolynomialThermo<EquationOfState, PolySize>::write
     EquationOfState::write(os);
 
     dictionary dict("thermodynamics");
-    dict.add("Hf", Hf_);
-    dict.add("Sf", Sf_);
+    dict.add("hf", hf_);
+    dict.add("sf", sf_);
     dict.add
     (
         word("CpCoeffs<" + Foam::name(PolySize) + '>'),

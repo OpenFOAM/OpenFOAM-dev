@@ -29,14 +29,7 @@ codeInclude
     {
         tmp<volScalarField> ea(const rhoFluidThermo& thermo)
         {
-            tmp<volScalarField> tEa = thermo.he() + thermo.hc();
-
-            if (thermo.he().name() == thermo.phasePropertyName("h"))
-            {
-                tEa.ref() -= thermo.p()/thermo.rho();
-            }
-
-            return tEa;
+            return thermo.ha() - thermo.p()/thermo.rho();
         }
     }
 #};

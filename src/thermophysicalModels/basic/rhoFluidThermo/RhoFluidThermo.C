@@ -54,7 +54,7 @@ void Foam::RhoFluidThermo<BaseThermo>::calculate()
             transportMixture =
             this->transportMixture(composition, thermoMixture);
 
-        TCells[celli] = thermoMixture.THE
+        TCells[celli] = thermoMixture.The
         (
             hCells[celli],
             pCells[celli],
@@ -124,7 +124,7 @@ void Foam::RhoFluidThermo<BaseThermo>::calculate()
                     transportMixture =
                     this->transportMixture(composition, thermoMixture);
 
-                phe[facei] = thermoMixture.HE(pp[facei], pT[facei]);
+                phe[facei] = thermoMixture.he(pp[facei], pT[facei]);
 
                 pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
@@ -149,7 +149,7 @@ void Foam::RhoFluidThermo<BaseThermo>::calculate()
                     transportMixture =
                     this->transportMixture(composition, thermoMixture);
 
-                pT[facei] = thermoMixture.THE(phe[facei], pp[facei], pT[facei]);
+                pT[facei] = thermoMixture.The(phe[facei], pp[facei], pT[facei]);
 
                 pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
                 pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);

@@ -36,7 +36,7 @@ Usage
         c0           | Reference heat capacity at constant pressure [J/kg/K]
         n0           | Exponent of the power function
         Tref         | Reference temperature [K]
-        Hf           | Heat of formation [J/kg]
+        hf           | Heat of formation [J/kg]
     \endtable
 
     Example specification of hPowerThermo:
@@ -46,7 +46,7 @@ Usage
         c0          230;
         Tref        470;
         n0          3;
-        Hf          0;
+        hf          0;
     }
     \endverbatim
 
@@ -115,7 +115,7 @@ class hPowerThermo
         scalar c0_;
         scalar n0_;
         scalar Tref_;
-        scalar Hf_;
+        scalar hf_;
 
 
     // Private Member Functions
@@ -135,7 +135,7 @@ public:
             const scalar c0,
             const scalar n0,
             const scalar Tref,
-            const scalar Hf
+            const scalar hf
         );
 
         //- Construct from name and dictionary
@@ -170,19 +170,19 @@ public:
             inline scalar Cp(const scalar p, const scalar T) const;
 
             //- Absolute enthalpy [J/kg]
-            inline scalar Ha(const scalar p, const scalar T) const;
+            inline scalar ha(const scalar p, const scalar T) const;
 
             //- Sensible enthalpy [J/kg]
-            inline scalar Hs(const scalar p, const scalar T) const;
+            inline scalar hs(const scalar p, const scalar T) const;
 
             //- Enthalpy of formation [J/kg]
-            inline scalar Hf() const;
+            inline scalar hf() const;
 
             //- Entropy [J/kg/K]
-            inline scalar S(const scalar p, const scalar T) const;
+            inline scalar s(const scalar p, const scalar T) const;
 
             //- Gibbs free energy of the mixture in the standard state [J/kg]
-            inline scalar Gstd(const scalar T) const;
+            inline scalar gStd(const scalar T) const;
 
             #include "HtoEthermo.H"
 

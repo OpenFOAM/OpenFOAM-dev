@@ -79,7 +79,7 @@ Foam::liquid::liquid(const dictionary& dict)
     kappag_(New("kappag", dict)),
     sigma_(New("sigma", dict)),
     D_(New("D", dict)),
-    Hf_(h_->value(Tstd))
+    hf_(h_->value(Tstd))
 {}
 
 
@@ -99,7 +99,7 @@ Foam::liquid::liquid(const liquid& lm)
     kappag_(lm.kappag_, false),
     sigma_(lm.sigma_, false),
     D_(lm.D_, false),
-    Hf_(lm.Hf_)
+    hf_(lm.hf_)
 {}
 
 

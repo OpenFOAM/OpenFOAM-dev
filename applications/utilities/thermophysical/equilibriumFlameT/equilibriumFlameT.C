@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
 
 
             scalar equilibriumFlameTemperatureNew =
-                products.THa(reactants.Ha(P, T0), P, adiabaticFlameTemperature);
+                products.Tha(reactants.ha(P, T0), P, adiabaticFlameTemperature);
 
             if (j==0)
             {

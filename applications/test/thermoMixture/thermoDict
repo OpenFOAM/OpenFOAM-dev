@@ -11,12 +11,6 @@ specie1
       Cv 1;
       Hf 0;
    }
-
-   transport
-   {
-      mu 1;
-      Pr 1;
-   }
 }
 
 specie2
@@ -31,11 +25,5 @@ specie2
       Cp 2;
       Cv 2;
       Hf 0;
-   }
-
-   transport
-   {
-      mu 1;
-      Pr 1;
    }
 }

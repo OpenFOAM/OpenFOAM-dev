@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -227,26 +227,26 @@ public:
         // Fundamental thermodynamic properties
 
             //- Liquid heat of formation [J/kg]
-            virtual scalar Hf() const = 0;
+            virtual scalar hf() const = 0;
 
             //- Liquid sensible enthalpy [J/kg]
             //  currently pressure effects are neglected
-            virtual scalar Hs(scalar p, scalar T) const = 0;
+            virtual scalar hs(scalar p, scalar T) const = 0;
 
             //- Liquid absolute enthalpy [J/kg]
             //  currently pressure effects are neglected
-            virtual scalar Ha(scalar p, scalar T) const = 0;
+            virtual scalar ha(scalar p, scalar T) const = 0;
 
             //- Sensible internal energy [J/kg]
             //  currently pressure effects are neglected
-            inline scalar Es(scalar p, const scalar T) const;
+            inline scalar es(scalar p, const scalar T) const;
 
             //- Absolute internal energy [J/kg]
             //  currently pressure effects are neglected
-            inline scalar Ea(scalar p, scalar T) const;
+            inline scalar ea(scalar p, scalar T) const;
 
             //- Liquid entropy [J/kg/K]
-            scalar S(const scalar p, const scalar T) const;
+            scalar s(const scalar p, const scalar T) const;
 
 
         // Physical properties

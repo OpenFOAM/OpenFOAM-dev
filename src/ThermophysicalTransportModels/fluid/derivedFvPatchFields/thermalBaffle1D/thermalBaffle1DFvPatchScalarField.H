@@ -60,7 +60,7 @@ Usage
         }
         thermodynamics
         {
-            Hf              0;
+            hf              0;
             Cv              10;
         }
         equationOfState

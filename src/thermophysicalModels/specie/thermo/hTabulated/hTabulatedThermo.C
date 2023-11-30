@@ -36,9 +36,25 @@ Foam::hTabulatedThermo<EquationOfState>::hTabulatedThermo
 )
 :
     EquationOfState(name, dict),
-    Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
-    Sf_(dict.subDict("thermodynamics").lookup<scalar>("Sf")),
-    Hs_("Hs", dict.subDict("thermodynamics").subDict("Hs")),
+    hf_
+    (
+        dict
+       .subDict("thermodynamics")
+       .lookupBackwardsCompatible<scalar>({"hf", "Hf"})
+    ),
+    sf_
+    (
+        dict
+       .subDict("thermodynamics")
+       .lookupBackwardsCompatible<scalar>({"sf", "Sf"})
+    ),
+    hs_
+    (
+        "hs",
+        dict
+       .subDict("thermodynamics")
+       .subDictBackwardsCompatible({"hs", "Hs"})
+    ),
     Cp_("Cp", dict.subDict("thermodynamics").subDict("Cp")),
     Cv_("Cv", dict.subDict("thermodynamics").subDict("Cv"))
 {}
@@ -55,12 +71,12 @@ void Foam::hTabulatedThermo<EquationOfState>::write
     EquationOfState::write(os);
 
     dictionary dict("thermodynamics");
-    dict.add("Hf", Hf_);
-    dict.add("Sf", Sf_);
+    dict.add("hf", hf_);
+    dict.add("sf", sf_);
 
-    dictionary HsDict("Hs");
-    HsDict.add("values", Hs_.values());
-    dict.add("Hs", HsDict);
+    dictionary hsDict("hs");
+    hsDict.add("values", hs_.values());
+    dict.add("hs", hsDict);
 
     dictionary CpDict("Cp");
     CpDict.add("values", Cp_.values());

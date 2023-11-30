@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ Foam::CH4N2O::CH4N2O()
     kappag_("kappag", 6.977e-05, 1.1243, 844.9, -148850.0),
     sigma_("sigma", 705.0, 1.0, 0.0, 0.0, 0.0, 0.0), // note: set to constant
     D_("D", 147.18, 20.1, 60.056, 28.0), // note: Same as nHeptane
-    Hf_(h_.value(Tstd))
+    hf_(h_.value(Tstd))
 {}
 
 
@@ -130,7 +130,7 @@ Foam::CH4N2O::CH4N2O
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffusivity),
-    Hf_(h_.value(Tstd))
+    hf_(h_.value(Tstd))
 {}
 
 

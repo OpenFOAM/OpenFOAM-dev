@@ -175,15 +175,15 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
     const scalarField XcMix(calcXc(p.cell()));
 
     // carrier thermo properties
-    scalar Hsc = 0.0;
-    scalar Hc = 0.0;
+    scalar hsc = 0.0;
+    scalar hc = 0.0;
     scalar Cpc = 0.0;
     scalar kappac = 0.0;
     forAll(this->owner().composition().carrier().Y(), i)
     {
         scalar Yc = this->owner().composition().carrier().Y()[i][p.cell()];
-        Hc += Yc*this->owner().composition().carrier().hai(i, pc, Tc);
-        Hsc += Yc*this->owner().composition().carrier().hai(i, ps, Ts);
+        hc += Yc*this->owner().composition().carrier().hai(i, pc, Tc);
+        hsc += Yc*this->owner().composition().carrier().hai(i, ps, Ts);
         Cpc += Yc*this->owner().composition().carrier().Cpi(i, ps, Ts);
         kappac += Yc*this->owner().composition().carrier().kappai(i, ps, Ts);
     }
@@ -252,7 +252,7 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
 
                 // model constants
                 // NOTE: using Sherwood number instead of Nusselt number
-                const scalar A = (Hc - Hsc)/hv;
+                const scalar A = (hc - hsc)/hv;
                 const scalar B = pi*kappac/Cpc*d*Sh;
 
                 scalar G = 0.0;
@@ -328,7 +328,7 @@ Foam::scalar Foam::LiquidEvaporationBoil<CloudType>::dh
         {
             scalar hc =
                 this->owner().composition().carrier().hai(idc, p, TDash);
-            scalar hp = liquids_.properties()[idl].Ha(p, TDash);
+            scalar hp = liquids_.properties()[idl].ha(p, TDash);
 
             dh = hc - hp;
             break;

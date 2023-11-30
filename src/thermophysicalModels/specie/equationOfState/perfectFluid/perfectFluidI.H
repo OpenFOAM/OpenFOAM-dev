@@ -79,7 +79,7 @@ inline Foam::scalar Foam::perfectFluid<Specie>::rho(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectFluid<Specie>::H(scalar p, scalar T) const
+inline Foam::scalar Foam::perfectFluid<Specie>::h(scalar p, scalar T) const
 {
     return p/rho(p, T) - Pstd/rho(Pstd, T);
 }
@@ -95,7 +95,7 @@ inline Foam::scalar Foam::perfectFluid<Specie>::Cp(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectFluid<Specie>::E(scalar p, scalar T) const
+inline Foam::scalar Foam::perfectFluid<Specie>::e(scalar p, scalar T) const
 {
     return 0;
 }
@@ -109,14 +109,14 @@ inline Foam::scalar Foam::perfectFluid<Specie>::Cv(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectFluid<Specie>::Sp(scalar p, scalar T) const
+inline Foam::scalar Foam::perfectFluid<Specie>::sp(scalar p, scalar T) const
 {
     return -this->R()*log(p/Pstd);
 }
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectFluid<Specie>::Sv(scalar p, scalar T) const
+inline Foam::scalar Foam::perfectFluid<Specie>::sv(scalar p, scalar T) const
 {
     NotImplemented;
     return 0;

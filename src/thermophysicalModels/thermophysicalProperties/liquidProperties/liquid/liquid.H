@@ -69,7 +69,7 @@ class liquid
         autoPtr<Function1<scalar>> D_;
 
         //- Liquid heat of formation [J/kg]
-        scalar Hf_;
+        scalar hf_;
 
 
     // Private Member Functions
@@ -119,13 +119,13 @@ public:
         inline scalar Cp(scalar p, scalar T) const;
 
         //- Liquid sensible enthalpy [J/kg]
-        inline scalar Hs(scalar p, scalar T) const;
+        inline scalar hs(scalar p, scalar T) const;
 
         //- Liquid heat of formation [J/kg]
-        inline scalar Hf() const;
+        inline scalar hf() const;
 
         //- Liquid absolute enthalpy [J/kg]
-        inline scalar Ha(scalar p, scalar T) const;
+        inline scalar ha(scalar p, scalar T) const;
 
         //- Ideal gas heat capacity [J/kg/K]
         inline scalar Cpg(scalar p, scalar T) const;

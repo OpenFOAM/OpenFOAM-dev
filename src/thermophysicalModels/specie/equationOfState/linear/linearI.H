@@ -72,7 +72,7 @@ inline Foam::scalar Foam::linear<Specie>::rho(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::linear<Specie>::H(scalar p, scalar T) const
+inline Foam::scalar Foam::linear<Specie>::h(scalar p, scalar T) const
 {
     return log(rho(p, T))/psi_;
 }
@@ -86,7 +86,7 @@ inline Foam::scalar Foam::linear<Specie>::Cp(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::linear<Specie>::E(scalar p, scalar T) const
+inline Foam::scalar Foam::linear<Specie>::e(scalar p, scalar T) const
 {
     const scalar rho = this->rho(p, T);
 
@@ -102,14 +102,14 @@ inline Foam::scalar Foam::linear<Specie>::Cv(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::linear<Specie>::Sp(scalar p, scalar T) const
+inline Foam::scalar Foam::linear<Specie>::sp(scalar p, scalar T) const
 {
     return -log((rho0_ + psi_*p)/(rho0_ + psi_*Pstd))/(T*psi_);
 }
 
 
 template<class Specie>
-inline Foam::scalar Foam::linear<Specie>::Sv(scalar p, scalar T) const
+inline Foam::scalar Foam::linear<Specie>::sv(scalar p, scalar T) const
 {
     NotImplemented;
     return 0;

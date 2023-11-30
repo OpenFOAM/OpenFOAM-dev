@@ -36,8 +36,18 @@ Foam::ePolynomialThermo<EquationOfState, PolySize>::ePolynomialThermo
 )
 :
     EquationOfState(name, dict),
-    Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
-    Sf_(dict.subDict("thermodynamics").lookup<scalar>("Sf")),
+    hf_
+    (
+        dict
+       .subDict("thermodynamics")
+       .lookupBackwardsCompatible<scalar>({"hf", "Hf"})
+    ),
+    sf_
+    (
+        dict
+       .subDict("thermodynamics")
+       .lookupBackwardsCompatible<scalar>({"sf", "Sf"})
+    ),
     CvCoeffs_
     (
         dict.subDict("thermodynamics").lookup
@@ -70,8 +80,8 @@ void Foam::ePolynomialThermo<EquationOfState, PolySize>::write
     EquationOfState::write(os);
 
     dictionary dict("thermodynamics");
-    dict.add("Hf", Hf_);
-    dict.add("Sf", Sf_);
+    dict.add("hf", hf_);
+    dict.add("sf", sf_);
     dict.add
     (
         word("CvCoeffs<" + Foam::name(PolySize) + '>'),

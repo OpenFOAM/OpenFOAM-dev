@@ -122,13 +122,13 @@ public:
                 scalar Cv(const scalar p, const scalar T) const;
 
                 // Sensible enthalpy [J/kg]
-                scalar Hs(const scalar p, const scalar T) const;
+                scalar hs(const scalar p, const scalar T) const;
 
                 // Absolute enthalpy [J/kg]
-                scalar Ha(const scalar p, const scalar T) const;
+                scalar ha(const scalar p, const scalar T) const;
 
                 // Enthalpy of formation [J/kg]
-                scalar Hf() const;
+                scalar hf() const;
 
 
             // Mass specific derived properties
@@ -140,14 +140,14 @@ public:
                 scalar gamma(const scalar p, const scalar T) const;
 
                 //- Enthalpy/Internal energy [J/kg]
-                scalar HE(const scalar p, const scalar T) const;
+                scalar he(const scalar p, const scalar T) const;
 
 
             // Energy->temperature  inversion functions
 
                 //- Temperature from enthalpy or internal energy
                 //  given an initial temperature T0
-                scalar THE
+                scalar The
                 (
                     const scalar he,
                     const scalar p,

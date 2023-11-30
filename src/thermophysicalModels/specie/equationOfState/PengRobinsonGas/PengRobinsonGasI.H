@@ -90,7 +90,7 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::rho
 
 
 template<class Specie>
-inline Foam::scalar Foam::PengRobinsonGas<Specie>::H(scalar p, scalar T) const
+inline Foam::scalar Foam::PengRobinsonGas<Specie>::h(scalar p, scalar T) const
 {
     const scalar Pr = p/Pc_;
     const scalar Tr = T/Tc_;
@@ -143,7 +143,7 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::Cp(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::PengRobinsonGas<Specie>::E(scalar p, scalar T) const
+inline Foam::scalar Foam::PengRobinsonGas<Specie>::e(scalar p, scalar T) const
 {
     const scalar Pr = p/Pc_;
     const scalar Tr = T/Tc_;
@@ -187,7 +187,7 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::Cv(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::PengRobinsonGas<Specie>::Sp
+inline Foam::scalar Foam::PengRobinsonGas<Specie>::sp
 (
     scalar p,
     scalar T
@@ -214,7 +214,7 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::Sp
 
 
 template<class Specie>
-inline Foam::scalar Foam::PengRobinsonGas<Specie>::Sv
+inline Foam::scalar Foam::PengRobinsonGas<Specie>::sv
 (
     scalar p,
     scalar T

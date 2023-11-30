@@ -67,7 +67,7 @@ Foam::scalar Foam::ReactingMultiphaseParcel<ParcelType>::CpEff
 
 template<class ParcelType>
 template<class TrackCloudType>
-Foam::scalar Foam::ReactingMultiphaseParcel<ParcelType>::HsEff
+Foam::scalar Foam::ReactingMultiphaseParcel<ParcelType>::hsEff
 (
     TrackCloudType& cloud,
     trackingData& td,
@@ -79,9 +79,9 @@ Foam::scalar Foam::ReactingMultiphaseParcel<ParcelType>::HsEff
 ) const
 {
     return
-        this->Y_[GAS]*cloud.composition().Hs(idG, YGas_, p, T)
-      + this->Y_[LIQ]*cloud.composition().Hs(idL, YLiquid_, p, T)
-      + this->Y_[SLD]*cloud.composition().Hs(idS, YSolid_, p, T);
+        this->Y_[GAS]*cloud.composition().hs(idG, YGas_, p, T)
+      + this->Y_[LIQ]*cloud.composition().hs(idL, YLiquid_, p, T)
+      + this->Y_[SLD]*cloud.composition().hs(idS, YSolid_, p, T);
 }
 
 
@@ -378,7 +378,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
             cloud.UTransRef()[this->cell()] += dm*U0;
 
             cloud.hsTransRef()[this->cell()] +=
-                dm*HsEff(cloud, td, pc, T0, idG, idL, idS);
+                dm*hsEff(cloud, td, pc, T0, idG, idL, idS);
 
             cloud.phaseChange().addToPhaseChangeMass(np0*mass1);
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,19 +47,19 @@ inline Foam::scalar Foam::MB::Cp(scalar p, scalar T) const
 }
 
 
-inline Foam::scalar Foam::MB::Hs(scalar p, scalar T) const
+inline Foam::scalar Foam::MB::hs(scalar p, scalar T) const
 {
-    return Ha(p, T) - Hf();
+    return ha(p, T) - hf();
 }
 
 
-inline Foam::scalar Foam::MB::Hf() const
+inline Foam::scalar Foam::MB::hf() const
 {
-    return Hf_;
+    return hf_;
 }
 
 
-inline Foam::scalar Foam::MB::Ha(scalar p, scalar T) const
+inline Foam::scalar Foam::MB::ha(scalar p, scalar T) const
 {
     return h_.value(T);
 }

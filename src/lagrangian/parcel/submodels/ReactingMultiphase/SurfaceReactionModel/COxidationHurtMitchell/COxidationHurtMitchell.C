@@ -195,8 +195,8 @@ Foam::scalar Foam::COxidationHurtMitchell<CloudType>::calculate
     // note: carrier sensible enthalpy exchange handled via change in mass
     if (heatOfReaction_ < 0)
     {
-        const scalar HsC = thermo.solids().properties()[CsLocalId_].Hs(T);
-        return dOmega*(WC_*HsC - (WC_ + Sb_*WO2_)*HcCO2_);
+        const scalar hsC = thermo.solids().properties()[CsLocalId_].hs(T);
+        return dOmega*(WC_*hsC - (WC_ + Sb_*WO2_)*HcCO2_);
     }
     else
     {

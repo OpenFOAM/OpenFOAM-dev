@@ -166,12 +166,12 @@ Foam::scalar Foam::COxidationKineticDiffusionLimitedRate<CloudType>::calculate
     dMassSRCarrier[O2GlobalId_] -= dmO2;
     dMassSRCarrier[CO2GlobalId_] += dmCO2;
 
-    const scalar HsC = thermo.solids().properties()[CsLocalId_].Hs(T);
+    const scalar hsC = thermo.solids().properties()[CsLocalId_].hs(T);
 
     // carrier sensible enthalpy exchange handled via change in mass
 
     // Heat of reaction [J]
-    return dmC*HsC - dmCO2*HcCO2_;
+    return dmC*hsC - dmCO2*HcCO2_;
 }
 
 

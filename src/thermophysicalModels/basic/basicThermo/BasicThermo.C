@@ -255,7 +255,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::BasicThermo
             "he",
             dimEnergy/dimMass,
             &MixtureType::thermoMixture,
-            &MixtureType::thermoMixtureType::HE,
+            &MixtureType::thermoMixtureType::he,
             this->p_,
             this->T_
         ),
@@ -359,7 +359,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::he
         "he",
         dimEnergy/dimMass,
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::HE,
+        &MixtureType::thermoMixtureType::he,
         p,
         T
     );
@@ -377,7 +377,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::he
     return cellSetProperty
     (
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::HE,
+        &MixtureType::thermoMixtureType::he,
         cells,
         cellSetScalarList(this->p_, cells),
         T
@@ -396,7 +396,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::he
     return patchFieldProperty
     (
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::HE,
+        &MixtureType::thermoMixtureType::he,
         patchi,
         this->p_.boundaryField()[patchi],
         T
@@ -415,7 +415,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::he
     return fieldSourceProperty
     (
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::HE,
+        &MixtureType::thermoMixtureType::he,
         source,
         cellSetScalarList(this->p_, source.cells()),
         T
@@ -432,7 +432,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::hs() const
         "hs",
         dimEnergy/dimMass,
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::Hs,
+        &MixtureType::thermoMixtureType::hs,
         this->p_,
         this->T_
     );
@@ -452,7 +452,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::hs
         "hs",
         dimEnergy/dimMass,
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::Hs,
+        &MixtureType::thermoMixtureType::hs,
         p,
         T
     );
@@ -470,7 +470,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::hs
     return cellSetProperty
     (
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::Hs,
+        &MixtureType::thermoMixtureType::hs,
         cells,
         cellSetScalarList(this->p_, cells),
         T
@@ -489,7 +489,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::hs
     return patchFieldProperty
     (
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::Hs,
+        &MixtureType::thermoMixtureType::hs,
         patchi,
         this->p_.boundaryField()[patchi],
         T
@@ -506,7 +506,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::ha() const
         "ha",
         dimEnergy/dimMass,
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::Ha,
+        &MixtureType::thermoMixtureType::ha,
         this->p_,
         this->T_
     );
@@ -526,7 +526,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::ha
         "ha",
         dimEnergy/dimMass,
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::Ha,
+        &MixtureType::thermoMixtureType::ha,
         p,
         T
     );
@@ -544,7 +544,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::ha
     return cellSetProperty
     (
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::Ha,
+        &MixtureType::thermoMixtureType::ha,
         cells,
         cellSetScalarList(this->p_, cells),
         T
@@ -563,24 +563,10 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::ha
     return patchFieldProperty
     (
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::Ha,
+        &MixtureType::thermoMixtureType::ha,
         patchi,
         this->p_.boundaryField()[patchi],
         T
-    );
-}
-
-
-template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::volScalarField>
-Foam::BasicThermo<MixtureType, BasicThermoType>::hc() const
-{
-    return volScalarFieldProperty
-    (
-        "hc",
-        dimEnergy/dimMass,
-        &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::Hf
     );
 }
 
@@ -644,7 +630,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::Cpv
 
 template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::BasicThermo<MixtureType, BasicThermoType>::THE
+Foam::BasicThermo<MixtureType, BasicThermoType>::The
 (
     const volScalarField& h,
     const volScalarField& p,
@@ -656,7 +642,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::THE
         "T",
         dimTemperature,
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::THE,
+        &MixtureType::thermoMixtureType::The,
         h,
         p,
         T0
@@ -666,7 +652,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::THE
 
 template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::scalarField>
-Foam::BasicThermo<MixtureType, BasicThermoType>::THE
+Foam::BasicThermo<MixtureType, BasicThermoType>::The
 (
     const scalarField& h,
     const scalarField& T0,
@@ -676,7 +662,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::THE
     return cellSetProperty
     (
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::THE,
+        &MixtureType::thermoMixtureType::The,
         cells,
         h,
         cellSetScalarList(this->p_, cells),
@@ -687,7 +673,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::THE
 
 template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::scalarField>
-Foam::BasicThermo<MixtureType, BasicThermoType>::THE
+Foam::BasicThermo<MixtureType, BasicThermoType>::The
 (
     const scalarField& h,
     const scalarField& T0,
@@ -697,7 +683,7 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::THE
     return patchFieldProperty
     (
         &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::THE,
+        &MixtureType::thermoMixtureType::The,
         patchi,
         h,
         this->p_.boundaryField()[patchi],

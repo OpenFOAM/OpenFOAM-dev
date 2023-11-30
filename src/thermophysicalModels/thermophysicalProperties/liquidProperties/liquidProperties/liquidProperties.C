@@ -92,7 +92,7 @@ const Foam::word& Foam::liquidProperties::name() const
 }
 
 
-Foam::scalar Foam::liquidProperties::S(scalar p, scalar T) const
+Foam::scalar Foam::liquidProperties::s(scalar p, scalar T) const
 {
     NotImplemented;
     return 0;

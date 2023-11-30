@@ -315,9 +315,6 @@ public:
                 const labelList& cells
             ) const;
 
-            //- Enthalpy of formation [J/kg]
-            virtual tmp<volScalarField> hc() const;
-
             //- Heat capacity at constant pressure for patch [J/kg/K]
             virtual tmp<scalarField> Cp
             (
@@ -343,7 +340,7 @@ public:
         // Temperature-energy inversion functions
 
             //- Temperature from enthalpy/internal energy
-            virtual tmp<volScalarField> THE
+            virtual tmp<volScalarField> The
             (
                 const volScalarField& h,
                 const volScalarField& p,
@@ -351,7 +348,7 @@ public:
             ) const;
 
             //- Temperature from enthalpy/internal energy for cell-set
-            virtual tmp<scalarField> THE
+            virtual tmp<scalarField> The
             (
                 const scalarField& he,
                 const scalarField& T0,      // starting temperature
@@ -359,7 +356,7 @@ public:
             ) const;
 
             //- Temperature from enthalpy/internal energy for patch
-            virtual tmp<scalarField> THE
+            virtual tmp<scalarField> The
             (
                 const scalarField& he,
                 const scalarField& T0,      // starting temperature

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,7 @@ Class
     Foam::functionObjects::totalEnthalpy
 
 Description
-    Calculates and writes the total enthalpy (ha + K) as the volScalarField
-    'Ha'.
+    Calculates and writes the total enthalpy (ha + K) as the volScalarField Ha
 
 See also
     Foam::functionObjects::fvMeshFunctionObject

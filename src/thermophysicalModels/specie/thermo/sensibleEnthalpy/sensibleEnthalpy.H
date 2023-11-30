@@ -87,19 +87,19 @@ public:
             }
 
             // Sensible enthalpy [J/kg]
-            scalar HE
+            scalar he
             (
                 const Thermo& thermo,
                 const scalar p,
                 const scalar T
             ) const
             {
-                return thermo.Hs(p, T);
+                return thermo.hs(p, T);
             }
 
             //- Temperature from sensible enthalpy
             //  given an initial temperature T0
-            scalar THE
+            scalar The
             (
                 const Thermo& thermo,
                 const scalar h,

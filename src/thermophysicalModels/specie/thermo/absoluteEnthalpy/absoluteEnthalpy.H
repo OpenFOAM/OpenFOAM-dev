@@ -87,19 +87,19 @@ public:
             }
 
             // Absolute enthalpy [J/kg]
-            scalar HE
+            scalar he
             (
                 const Thermo& thermo,
                 const scalar p,
                 const scalar T
             ) const
             {
-                return thermo.Ha(p, T);
+                return thermo.ha(p, T);
             }
 
             //- Temperature from absolute enthalpy
             //  given an initial temperature T0
-            scalar THE
+            scalar The
             (
                 const Thermo& thermo,
                 const scalar h,
@@ -107,7 +107,7 @@ public:
                 const scalar T0
             ) const
             {
-                return thermo.THa(h, p, T0);
+                return thermo.Tha(h, p, T0);
             }
 };
 

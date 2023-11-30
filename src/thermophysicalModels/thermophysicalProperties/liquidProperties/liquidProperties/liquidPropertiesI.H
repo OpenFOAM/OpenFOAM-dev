@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,15 +109,15 @@ inline Foam::scalar Foam::liquidProperties::CpMCv(scalar p, scalar T) const
 }
 
 
-inline Foam::scalar Foam::liquidProperties::Es(scalar p, const scalar T) const
+inline Foam::scalar Foam::liquidProperties::es(scalar p, const scalar T) const
 {
-    return Hs(p, T);
+    return hs(p, T);
 }
 
 
-inline Foam::scalar Foam::liquidProperties::Ea(scalar p, const scalar T) const
+inline Foam::scalar Foam::liquidProperties::ea(scalar p, const scalar T) const
 {
-    return Ha(p, T);
+    return ha(p, T);
 }
 
 

@@ -214,7 +214,7 @@ void Foam::chemistryModel<ThermoType>::derivatives
     scalar& dTdt = dYTpdt[nSpecie_];
     for (label i=0; i<nSpecie_; i++)
     {
-        dTdt -= dYTpdt[i]*specieThermos_[sToc(i)].Ha(p, T);
+        dTdt -= dYTpdt[i]*specieThermos_[sToc(i)].ha(p, T);
     }
     dTdt /= CpM;
 
@@ -390,12 +390,12 @@ void Foam::chemistryModel<ThermoType>::jacobian
     }
 
     // dT/dt
-    scalarField& Ha = YTpWork_[4];
+    scalarField& ha = YTpWork_[4];
     scalar& dTdt = dYTpdt[nSpecie_];
     for (label i=0; i<nSpecie_; i++)
     {
-        Ha[sToc(i)] = specieThermos_[sToc(i)].Ha(p, T);
-        dTdt -= dYTpdt[i]*Ha[sToc(i)];
+        ha[sToc(i)] = specieThermos_[sToc(i)].ha(p, T);
+        dTdt -= dYTpdt[i]*ha[sToc(i)];
     }
     dTdt /= CpM;
 
@@ -411,7 +411,7 @@ void Foam::chemistryModel<ThermoType>::jacobian
         for (label j=0; j<nSpecie_; j++)
         {
             const scalar ddYjdtdYi = J(j, i);
-            ddTdtdYi -= ddYjdtdYi*Ha[sToc(j)];
+            ddTdtdYi -= ddYjdtdYi*ha[sToc(j)];
         }
         ddTdtdYi -= Cp[sToc(i)]*dTdt;
         ddTdtdYi /= CpM;
@@ -424,7 +424,7 @@ void Foam::chemistryModel<ThermoType>::jacobian
     {
         const scalar dYidt = dYTpdt[i];
         const scalar ddYidtdT = J(i, nSpecie_);
-        ddTdtdT -= dYidt*Cp[sToc(i)] + ddYidtdT*Ha[sToc(i)];
+        ddTdtdT -= dYidt*Cp[sToc(i)] + ddYidtdT*ha[sToc(i)];
     }
     ddTdtdT -= dTdt*dCpMdT;
     ddTdtdT /= CpM;
@@ -931,7 +931,7 @@ Foam::chemistryModel<ThermoType>::Qdot() const
     {
         forAll(Qdot, celli)
         {
-            const scalar hi = specieThermos_[i].Hf();
+            const scalar hi = specieThermos_[i].hf();
             Qdot[celli] -= hi*RR_[i][celli];
         }
     }

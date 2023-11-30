@@ -32,8 +32,8 @@ Usage
 
     \table
         Property     | Description
-        Hf           | Heat of formation
-        Sf           | Standard entropy
+        hf           | Heat of formation
+        sf           | Standard entropy
         Cp           | Specific heat at constant pressure vs temperature table
     \endtable
 
@@ -41,8 +41,8 @@ Usage
     \verbatim
     thermodynamics
     {
-        Hf              0;
-        Sf              0;
+        hf              0;
+        sf              0;
         Cp
         {
             values
@@ -105,10 +105,10 @@ class hIcoTabulatedThermo
     // Private Data
 
         //- Heat of formation
-        scalar Hf_;
+        scalar hf_;
 
         //- Standard entropy
-        scalar Sf_;
+        scalar sf_;
 
         //- Specific heat at constant pressure table [J/kg/K]
         integratedNonUniformTable Cp_;
@@ -143,19 +143,19 @@ public:
             inline scalar Cp(const scalar p, const scalar T) const;
 
             //- Absolute enthalpy [J/kg]
-            inline scalar Ha(const scalar p, const scalar T) const;
+            inline scalar ha(const scalar p, const scalar T) const;
 
             //- Sensible enthalpy [J/kg]
-            inline scalar Hs(const scalar p, const scalar T) const;
+            inline scalar hs(const scalar p, const scalar T) const;
 
             //- Enthalpy of formation [J/kg]
-            inline scalar Hf() const;
+            inline scalar hf() const;
 
             //- Entropy [J/kg/K]
-            inline scalar S(const scalar p, const scalar T) const;
+            inline scalar s(const scalar p, const scalar T) const;
 
             //- Gibbs free energy of the mixture in the standard state [J/kg]
-            inline scalar Gstd(const scalar T) const;
+            inline scalar gStd(const scalar T) const;
 
             #include "HtoEthermo.H"
 

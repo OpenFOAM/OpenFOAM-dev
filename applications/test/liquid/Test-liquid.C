@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
     OFstream plotFile(liquidName + ".dat");
 
-    plotFile << "# p T rho Cp Hs Ha pv hl Cpg mu mug kappa kappag sigma" << nl;
+    plotFile << "# p T rho Cp hs ha pv hl Cpg mu mug kappa kappag sigma" << nl;
 
     for (label pi = 0; pi < nP; ++ pi)
     {
@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
                 << T << ' '
                 << liquidPtr->rho(p, T) << ' '
                 << liquidPtr->Cp(p, T) << ' '
-                << liquidPtr->Hs(p, T) << ' '
-                << liquidPtr->Ha(p, T) << ' '
+                << liquidPtr->hs(p, T) << ' '
+                << liquidPtr->ha(p, T) << ' '
                 << liquidPtr->pv(p, T) << ' '
                 << liquidPtr->hl(p, T) << ' '
                 << liquidPtr->Cpg(p, T) << ' '

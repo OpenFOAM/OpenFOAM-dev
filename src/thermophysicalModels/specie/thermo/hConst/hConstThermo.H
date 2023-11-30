@@ -29,7 +29,7 @@ Description
     at constant pressure:
 
     \verbatim
-        h = Cp*(T - Tref) + Hsref
+        h = Cp*(T - Tref) + hsRef
     \endverbatim
 
 Usage
@@ -37,8 +37,8 @@ Usage
         Property     | Description
         Cp           | Constant Heat capacity at constant pressure [J/kg/K]
         Tref         | Reference temperature [K] (defaults to Tstd)
-        Hsref        | Reference sensible enthalpy [J/kg] (defaults to 0)
-        Hf           | Heat of formation [J/kg]
+        hsRef        | Reference sensible enthalpy [J/kg] (defaults to 0)
+        hf           | Heat of formation [J/kg]
     \endtable
 
     Example specification of hConstThermo for air:
@@ -46,7 +46,7 @@ Usage
     thermodynamics
     {
         Cp          1007;
-        Hf          0;
+        hf          0;
     }
     \endverbatim
 
@@ -112,13 +112,13 @@ class hConstThermo
         scalar Cp_;
 
         //- Heat of formation [J/kg]
-        scalar Hf_;
+        scalar hf_;
 
         //- Reference temperature around which to linearise [K]
         scalar Tref_;
 
         //- Reference sensible enthalpy around which to linearise [J/kg]
-        scalar Hsref_;
+        scalar hsRef_;
 
 
 public:
@@ -130,9 +130,9 @@ public:
         (
             const EquationOfState& st,
             const scalar Cp,
-            const scalar Hf,
+            const scalar hf,
             const scalar Tref,
-            const scalar Hsref
+            const scalar hsRef
         );
 
         //- Construct from name and dictionary
@@ -163,19 +163,19 @@ public:
             inline scalar Cp(const scalar p, const scalar T) const;
 
             //- Absolute enthalpy [J/kg]
-            inline scalar Ha(const scalar p, const scalar T) const;
+            inline scalar ha(const scalar p, const scalar T) const;
 
             //- Sensible enthalpy [J/kg]
-            inline scalar Hs(const scalar p, const scalar T) const;
+            inline scalar hs(const scalar p, const scalar T) const;
 
             //- Enthalpy of formation [J/kg]
-            inline scalar Hf() const;
+            inline scalar hf() const;
 
             //- Entropy [J/kg/K]
-            inline scalar S(const scalar p, const scalar T) const;
+            inline scalar s(const scalar p, const scalar T) const;
 
             //- Gibbs free energy of the mixture in the standard state [J/kg]
-            inline scalar Gstd(const scalar T) const;
+            inline scalar gStd(const scalar T) const;
 
             #include "HtoEthermo.H"
 

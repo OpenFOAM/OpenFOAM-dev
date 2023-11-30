@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
     }
 
     Info<< "Adiabatic flame temperature of mixture " << rMix.name() << " = "
-         << products.THa(reactants.Ha(p, T0), p, 1000.0) << " K" << endl;
+         << products.Tha(reactants.ha(p, T0), p, 1000.0) << " K" << endl;
 
     return 0;
 }

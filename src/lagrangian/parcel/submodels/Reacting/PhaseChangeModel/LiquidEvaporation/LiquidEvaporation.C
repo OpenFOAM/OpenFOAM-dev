@@ -244,7 +244,7 @@ Foam::scalar Foam::LiquidEvaporation<CloudType>::dh
         case (parent::etEnthalpyDifference):
         {
             scalar hc = this->owner().composition().carrier().hai(idc, p, T);
-            scalar hp = liquids_.properties()[idl].Ha(p, T);
+            scalar hp = liquids_.properties()[idl].ha(p, T);
 
             dh = hc - hp;
             break;

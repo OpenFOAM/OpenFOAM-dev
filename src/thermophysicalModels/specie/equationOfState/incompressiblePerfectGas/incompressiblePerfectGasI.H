@@ -77,7 +77,7 @@ inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::rho
 
 
 template<class Specie>
-inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::H
+inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::h
 (
     scalar p,
     scalar T
@@ -99,7 +99,7 @@ inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::Cp
 
 
 template<class Specie>
-inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::E
+inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::e
 (
     scalar p,
     scalar T
@@ -121,7 +121,7 @@ inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::Cv
 
 
 template<class Specie>
-inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::Sp
+inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::sp
 (
     scalar p,
     scalar T
@@ -132,7 +132,7 @@ inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::Sp
 
 
 template<class Specie>
-inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::Sv
+inline Foam::scalar Foam::incompressiblePerfectGas<Specie>::sv
 (
     scalar p,
     scalar T

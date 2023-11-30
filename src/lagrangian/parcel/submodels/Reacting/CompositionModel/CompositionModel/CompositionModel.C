@@ -308,7 +308,7 @@ Foam::scalarField Foam::CompositionModel<CloudType>::X
 
 
 template<class CloudType>
-Foam::scalar Foam::CompositionModel<CloudType>::H
+Foam::scalar Foam::CompositionModel<CloudType>::ha
 (
     const label phasei,
     const scalarField& Y,
@@ -333,7 +333,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::H
         {
             forAll(Y, i)
             {
-                HMixture += Y[i]*thermo_.liquids().properties()[i].Ha(p, T);
+                HMixture += Y[i]*thermo_.liquids().properties()[i].ha(p, T);
             }
             break;
         }
@@ -341,7 +341,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::H
         {
             forAll(Y, i)
             {
-                HMixture += Y[i]*thermo_.solids().properties()[i].Ha(T);
+                HMixture += Y[i]*thermo_.solids().properties()[i].ha(T);
             }
             break;
         }
@@ -357,7 +357,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::H
 
 
 template<class CloudType>
-Foam::scalar Foam::CompositionModel<CloudType>::Hs
+Foam::scalar Foam::CompositionModel<CloudType>::hs
 (
     const label phasei,
     const scalarField& Y,
@@ -366,7 +366,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hs
 ) const
 {
     const phaseProperties& props = phaseProps_[phasei];
-    scalar HsMixture = 0.0;
+    scalar hsMixture = 0.0;
     switch (props.phase())
     {
         case phaseProperties::GAS:
@@ -374,7 +374,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hs
             forAll(Y, i)
             {
                 label cid = props.carrierId(i);
-                HsMixture += Y[i]*carrierMcThermoPtr_->hsi(cid, p, T);
+                hsMixture += Y[i]*carrierMcThermoPtr_->hsi(cid, p, T);
             }
             break;
         }
@@ -382,8 +382,8 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hs
         {
             forAll(Y, i)
             {
-                HsMixture +=
-                    Y[i]*(thermo_.liquids().properties()[i].Hs(p, T));
+                hsMixture +=
+                    Y[i]*(thermo_.liquids().properties()[i].hs(p, T));
             }
             break;
         }
@@ -391,7 +391,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hs
         {
             forAll(Y, i)
             {
-                HsMixture += Y[i]*thermo_.solids().properties()[i].Hs(T);
+                hsMixture += Y[i]*thermo_.solids().properties()[i].hs(T);
             }
             break;
         }
@@ -403,57 +403,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hs
         }
     }
 
-    return HsMixture;
-}
-
-
-template<class CloudType>
-Foam::scalar Foam::CompositionModel<CloudType>::Hc
-(
-    const label phasei,
-    const scalarField& Y,
-    const scalar p,
-    const scalar T
-) const
-{
-    const phaseProperties& props = phaseProps_[phasei];
-    scalar HcMixture = 0.0;
-    switch (props.phase())
-    {
-        case phaseProperties::GAS:
-        {
-            forAll(Y, i)
-            {
-                label cid = props.carrierId(i);
-                HcMixture += Y[i]*carrierMcThermoPtr_->hfi(cid);
-            }
-            break;
-        }
-        case phaseProperties::LIQUID:
-        {
-            forAll(Y, i)
-            {
-                HcMixture += Y[i]*thermo_.liquids().properties()[i].Hf();
-            }
-            break;
-        }
-        case phaseProperties::SOLID:
-        {
-            forAll(Y, i)
-            {
-                HcMixture += Y[i]*thermo_.solids().properties()[i].Hf();
-            }
-            break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unknown phase enumeration"
-                << abort(FatalError);
-        }
-    }
-
-    return HcMixture;
+    return hsMixture;
 }
 
 

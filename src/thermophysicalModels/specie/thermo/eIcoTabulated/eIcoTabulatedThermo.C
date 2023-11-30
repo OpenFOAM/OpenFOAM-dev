@@ -36,8 +36,18 @@ Foam::eIcoTabulatedThermo<EquationOfState>::eIcoTabulatedThermo
 )
 :
     EquationOfState(name, dict),
-    Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
-    Sf_(dict.subDict("thermodynamics").lookup<scalar>("Sf")),
+    hf_
+    (
+        dict
+       .subDict("thermodynamics")
+       .lookupBackwardsCompatible<scalar>({"hf", "Hf"})
+    ),
+    sf_
+    (
+        dict
+       .subDict("thermodynamics")
+       .lookupBackwardsCompatible<scalar>({"sf", "Sf"})
+    ),
     Cv_("Cv", dict.subDict("thermodynamics").subDict("Cv"))
 {}
 
@@ -53,8 +63,8 @@ void Foam::eIcoTabulatedThermo<EquationOfState>::write
     EquationOfState::write(os);
 
     dictionary dict("thermodynamics");
-    dict.add("Hf", Hf_);
-    dict.add("Sf", Sf_);
+    dict.add("hf", hf_);
+    dict.add("sf", sf_);
     dict.add("Cv", Cv_.values());
     os  << indent << dict.dictName() << dict;
 }

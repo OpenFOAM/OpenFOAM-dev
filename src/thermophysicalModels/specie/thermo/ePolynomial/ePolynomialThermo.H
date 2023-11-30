@@ -41,8 +41,8 @@ Description
 Usage
     \table
         Property     | Description
-        Hf           | Heat of formation
-        Sf           | Standard entropy
+        hf           | Heat of formation
+        sf           | Standard entropy
         CvCoeffs<8>  | Specific heat at constant volume polynomial coeffs
     \endtable
 
@@ -50,8 +50,8 @@ Usage
     \verbatim
     thermodynamics
     {
-        Hf              0;
-        Sf              0;
+        hf              0;
+        sf              0;
         CvCoeffs<8>     (1000 -0.05 0.003 0 0 0 0 0);
     }
     \endverbatim
@@ -126,10 +126,10 @@ class ePolynomialThermo
     // Private Data
 
         //- Heat of formation
-        scalar Hf_;
+        scalar hf_;
 
         //- Standard entropy
-        scalar Sf_;
+        scalar sf_;
 
         //- Specific heat at constant volume polynomial coeffs [J/kg/K/K^i]
         Polynomial<PolySize> CvCoeffs_;
@@ -149,8 +149,8 @@ class ePolynomialThermo
         inline ePolynomialThermo
         (
             const EquationOfState& pt,
-            const scalar Hf,
-            const scalar Sf,
+            const scalar hf,
+            const scalar sf,
             const Polynomial<PolySize>& CvCoeffs,
             const typename Polynomial<PolySize>::intPolyType& eCoeffs,
             const Polynomial<PolySize>& sCoeffs
@@ -186,19 +186,19 @@ public:
             inline scalar Cv(const scalar p, const scalar T) const;
 
             //- Sensible internal energy [J/kg]
-            inline scalar Es(const scalar p, const scalar T) const;
+            inline scalar es(const scalar p, const scalar T) const;
 
             //- Absolute internal energy [J/kg]
-            inline scalar Ea(const scalar p, const scalar T) const;
+            inline scalar ea(const scalar p, const scalar T) const;
 
             //- Enthalpy of formation [J/kg]
-            inline scalar Hf() const;
+            inline scalar hf() const;
 
             //- Entropy [J/kg/K]
-            inline scalar S(const scalar p, const scalar T) const;
+            inline scalar s(const scalar p, const scalar T) const;
 
             //- Gibbs free energy of the mixture in the standard state [J/kg]
-            inline scalar Gstd(const scalar T) const;
+            inline scalar gStd(const scalar T) const;
 
             #include "EtoHthermo.H"
 

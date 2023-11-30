@@ -31,8 +31,8 @@ Description
 Usage
     \table
         Property     | Description
-        Hf           | Heat of formation
-        Sf           | Standard entropy
+        hf           | Heat of formation
+        sf           | Standard entropy
         Cv           | Specific heat at constant volume vs temperature table
     \endtable
 
@@ -40,8 +40,8 @@ Usage
     \verbatim
     thermodynamics
     {
-        Hf              0;
-        Sf              0;
+        hf              0;
+        sf              0;
         Cv
         {
             values
@@ -104,10 +104,10 @@ class eIcoTabulatedThermo
     // Private Data
 
         //- Heat of formation
-        scalar Hf_;
+        scalar hf_;
 
         //- Standard entropy
-        scalar Sf_;
+        scalar sf_;
 
         //- Specific heat at constant volume table [J/kg/K]
         integratedNonUniformTable Cv_;
@@ -142,19 +142,19 @@ public:
             inline scalar Cv(const scalar p, const scalar T) const;
 
             //- Sensible internal energy [J/kg]
-            inline scalar Es(const scalar p, const scalar T) const;
+            inline scalar es(const scalar p, const scalar T) const;
 
             //- Absolute internal energy [J/kg]
-            inline scalar Ea(const scalar p, const scalar T) const;
+            inline scalar ea(const scalar p, const scalar T) const;
 
             //- Enthalpy of formation [J/kg]
-            inline scalar Hf() const;
+            inline scalar hf() const;
 
             //- Entropy [J/kg/K]
-            inline scalar S(const scalar p, const scalar T) const;
+            inline scalar s(const scalar p, const scalar T) const;
 
             //- Gibbs free energy of the mixture in the standard state [J/kg]
-            inline scalar Gstd(const scalar T) const;
+            inline scalar gStd(const scalar T) const;
 
             #include "EtoHthermo.H"
 

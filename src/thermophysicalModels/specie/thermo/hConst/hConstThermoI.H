@@ -30,16 +30,16 @@ inline Foam::hConstThermo<EquationOfState>::hConstThermo
 (
     const EquationOfState& st,
     const scalar Cp,
-    const scalar Hf,
+    const scalar hf,
     const scalar Tref,
     const scalar Href
 )
 :
     EquationOfState(st),
     Cp_(Cp),
-    Hf_(Hf),
+    hf_(hf),
     Tref_(Tref),
-    Hsref_(Href)
+    hsRef_(Href)
 {}
 
 
@@ -52,9 +52,9 @@ inline Foam::hConstThermo<EquationOfState>::hConstThermo
 :
     EquationOfState(name, ct),
     Cp_(ct.Cp_),
-    Hf_(ct.Hf_),
+    hf_(ct.hf_),
     Tref_(ct.Tref_),
-    Hsref_(ct.Hsref_)
+    hsRef_(ct.hsRef_)
 {}
 
 
@@ -93,52 +93,52 @@ inline Foam::scalar Foam::hConstThermo<EquationOfState>::Cp
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hConstThermo<EquationOfState>::Hs
+inline Foam::scalar Foam::hConstThermo<EquationOfState>::hs
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Cp_*(T - Tref_) + Hsref_ + EquationOfState::H(p, T);
+    return Cp_*(T - Tref_) + hsRef_ + EquationOfState::h(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hConstThermo<EquationOfState>::Ha
+inline Foam::scalar Foam::hConstThermo<EquationOfState>::ha
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Hs(p, T) + Hf();
+    return hs(p, T) + hf();
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hConstThermo<EquationOfState>::Hf() const
+inline Foam::scalar Foam::hConstThermo<EquationOfState>::hf() const
 {
-    return Hf_;
+    return hf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hConstThermo<EquationOfState>::S
+inline Foam::scalar Foam::hConstThermo<EquationOfState>::s
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Cp_*log(T/Tstd) + EquationOfState::Sp(p, T);
+    return Cp_*log(T/Tstd) + EquationOfState::sp(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hConstThermo<EquationOfState>::Gstd
+inline Foam::scalar Foam::hConstThermo<EquationOfState>::gStd
 (
     const scalar T
 ) const
 {
-    return Cp_*(T - Tref_) + Hsref_ + Hf() - Cp_*T*log(T/Tstd);
+    return Cp_*(T - Tref_) + hsRef_ + hf() - Cp_*T*log(T/Tstd);
 }
 
 
@@ -185,8 +185,8 @@ inline void Foam::hConstThermo<EquationOfState>::operator+=
         const scalar Y2 = ct.Y()/this->Y();
 
         Cp_ = Y1*Cp_ + Y2*ct.Cp_;
-        Hf_ = Y1*Hf_ + Y2*ct.Hf_;
-        Hsref_ = Y1*Hsref_ + Y2*ct.Hsref_;
+        hf_ = Y1*hf_ + Y2*ct.hf_;
+        hsRef_ = Y1*hsRef_ + Y2*ct.hsRef_;
     }
 }
 
@@ -212,9 +212,9 @@ inline Foam::hConstThermo<EquationOfState> Foam::operator+
         (
             eofs,
             ct1.Cp_,
-            ct1.Hf_,
+            ct1.hf_,
             ct1.Tref_,
-            ct1.Hsref_
+            ct1.hsRef_
         );
     }
     else
@@ -238,11 +238,11 @@ inline Foam::hConstThermo<EquationOfState> Foam::operator+
             eofs,
             ct1.Y()/eofs.Y()*ct1.Cp_
           + ct2.Y()/eofs.Y()*ct2.Cp_,
-            ct1.Y()/eofs.Y()*ct1.Hf_
-          + ct2.Y()/eofs.Y()*ct2.Hf_,
+            ct1.Y()/eofs.Y()*ct1.hf_
+          + ct2.Y()/eofs.Y()*ct2.hf_,
             ct1.Tref_,
-            ct1.Y()/eofs.Y()*ct1.Hsref_
-          + ct2.Y()/eofs.Y()*ct2.Hsref_
+            ct1.Y()/eofs.Y()*ct1.hsRef_
+          + ct2.Y()/eofs.Y()*ct2.hsRef_
         );
     }
 }
@@ -259,9 +259,9 @@ inline Foam::hConstThermo<EquationOfState> Foam::operator*
     (
         s*static_cast<const EquationOfState&>(ct),
         ct.Cp_,
-        ct.Hf_,
+        ct.hf_,
         ct.Tref_,
-        ct.Hsref_
+        ct.hsRef_
     );
 }
 
@@ -298,11 +298,11 @@ inline Foam::hConstThermo<EquationOfState> Foam::operator==
         eofs,
         ct2.Y()/eofs.Y()*ct2.Cp_
       - ct1.Y()/eofs.Y()*ct1.Cp_,
-        ct2.Y()/eofs.Y()*ct2.Hf_
-      - ct1.Y()/eofs.Y()*ct1.Hf_,
+        ct2.Y()/eofs.Y()*ct2.hf_
+      - ct1.Y()/eofs.Y()*ct1.hf_,
         ct1.Tref_,
-        ct2.Y()/eofs.Y()*ct2.Hsref_
-      - ct1.Y()/eofs.Y()*ct1.Hsref_
+        ct2.Y()/eofs.Y()*ct2.hsRef_
+      - ct1.Y()/eofs.Y()*ct1.hsRef_
     );
 }
 

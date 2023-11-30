@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,8 +35,8 @@ inline Foam::eIcoTabulatedThermo<EquationOfState>::eIcoTabulatedThermo
 )
 :
     EquationOfState(name, pt),
-    Hf_(pt.Hf_),
-    Sf_(pt.Sf_),
+    hf_(pt.hf_),
+    sf_(pt.sf_),
     Cv_(pt.Cv_)
 {}
 
@@ -65,37 +65,37 @@ inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::Cv
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::Es
+inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::es
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Cv_.intfdT(T) + EquationOfState::E(p, T);
+    return Cv_.intfdT(T) + EquationOfState::e(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::Ea
+inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::ea
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Es(p, T) + Hf_;
+    return es(p, T) + hf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::Hf()
+inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::hf()
 const
 {
-    return Hf_;
+    return hf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::S
+inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::s
 (
     const scalar p,
     const scalar T
@@ -107,7 +107,7 @@ inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::S
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::Gstd
+inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::gStd
 (
     const scalar T
 ) const

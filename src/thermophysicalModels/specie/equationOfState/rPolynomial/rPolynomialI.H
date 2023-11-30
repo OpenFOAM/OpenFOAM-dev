@@ -69,7 +69,7 @@ inline Foam::scalar Foam::rPolynomial<Specie>::rho(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::rPolynomial<Specie>::H(scalar p, scalar T) const
+inline Foam::scalar Foam::rPolynomial<Specie>::h(scalar p, scalar T) const
 {
     return 0;
 }
@@ -83,7 +83,7 @@ inline Foam::scalar Foam::rPolynomial<Specie>::Cp(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::rPolynomial<Specie>::E(scalar p, scalar T) const
+inline Foam::scalar Foam::rPolynomial<Specie>::e(scalar p, scalar T) const
 {
     return 0;
 }
@@ -97,14 +97,14 @@ inline Foam::scalar Foam::rPolynomial<Specie>::Cv(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::rPolynomial<Specie>::Sp(scalar p, scalar T) const
+inline Foam::scalar Foam::rPolynomial<Specie>::sp(scalar p, scalar T) const
 {
     return 0;
 }
 
 
 template<class Specie>
-inline Foam::scalar Foam::rPolynomial<Specie>::Sv(scalar p, scalar T) const
+inline Foam::scalar Foam::rPolynomial<Specie>::sv(scalar p, scalar T) const
 {
     NotImplemented
     return 0;

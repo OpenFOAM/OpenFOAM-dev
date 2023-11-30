@@ -85,7 +85,7 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::rho
 
 
 template<class Specie>
-inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::H
+inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::h
 (
     scalar p,
     scalar T
@@ -108,7 +108,7 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::Cp
 
 
 template<class Specie>
-inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::E
+inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::e
 (
     scalar p,
     scalar T
@@ -131,7 +131,7 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::Cv
 
 
 template<class Specie>
-inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::Sp
+inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::sp
 (
     scalar p,
     scalar T
@@ -145,7 +145,7 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::Sp
 
 
 template<class Specie>
-inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::Sv
+inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::sv
 (
     scalar p,
     scalar T

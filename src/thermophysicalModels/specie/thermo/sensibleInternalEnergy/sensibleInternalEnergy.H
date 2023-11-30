@@ -88,19 +88,19 @@ public:
             }
 
             //- Sensible internal energy [J/kg]
-            scalar HE
+            scalar he
             (
                 const Thermo& thermo,
                 const scalar p,
                 const scalar T
             ) const
             {
-                return thermo.Es(p, T);
+                return thermo.es(p, T);
             }
 
             //- Temperature from sensible internal energy
             //  given an initial temperature T0
-            scalar THE
+            scalar The
             (
                 const Thermo& thermo,
                 const scalar e,
@@ -108,7 +108,7 @@ public:
                 const scalar T0
             ) const
             {
-                return thermo.TEs(e, p, T0);
+                return thermo.Tes(e, p, T0);
             }
 };
 

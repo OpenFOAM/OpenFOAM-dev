@@ -145,16 +145,16 @@ public:
             virtual scalar Cp(const scalar p, const scalar T) const = 0;
 
             //- Sensible enthalpy [J/kg]
-            virtual scalar Hs(const scalar p, const scalar T) const = 0;
+            virtual scalar hs(const scalar p, const scalar T) const = 0;
 
             //- Enthalpy of formation [J/kg]
-            virtual scalar Hf() const = 0;
+            virtual scalar hf() const = 0;
 
             //- Absolute enthalpy [J/kg]
-            virtual scalar Ha(const scalar p, const scalar T) const = 0;
+            virtual scalar ha(const scalar p, const scalar T) const = 0;
 
             // Entropy [J/kg/K]
-            virtual scalar S(const scalar p, const scalar T) const = 0;
+            virtual scalar s(const scalar p, const scalar T) const = 0;
 
 
         // Physical properties

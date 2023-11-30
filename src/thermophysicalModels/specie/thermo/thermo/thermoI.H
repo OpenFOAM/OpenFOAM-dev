@@ -87,97 +87,9 @@ Foam::species::thermo<Thermo, Type>::gamma(const scalar p, const scalar T) const
 
 template<class Thermo, template<class> class Type>
 inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::HE(const scalar p, const scalar T) const
-{
-    return Type<thermo<Thermo, Type>>::HE(*this, p, T);
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::G(const scalar p, const scalar T) const
-{
-    return this->Ha(p, T) - T*this->S(p, T);
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::A(const scalar p, const scalar T) const
-{
-    return this->Ea(p, T) - T*this->S(p, T);
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::cp(const scalar p, const scalar T) const
-{
-    return this->Cp(p, T)*this->W();
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::ha(const scalar p, const scalar T) const
-{
-    return this->Ha(p, T)*this->W();
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::hs(const scalar p, const scalar T) const
-{
-    return this->Hs(p, T)*this->W();
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::hc() const
-{
-    return this->Hf()*this->W();
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::s(const scalar p, const scalar T) const
-{
-    return this->S(p, T)*this->W();
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
 Foam::species::thermo<Thermo, Type>::he(const scalar p, const scalar T) const
 {
-    return this->HE(p, T)*this->W();
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::cv(const scalar p, const scalar T) const
-{
-    return this->Cv(p, T)*this->W();
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::es(const scalar p, const scalar T) const
-{
-    return this->Es(p, T)*this->W();
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::ea(const scalar p, const scalar T) const
-{
-    return this->Ea(p, T)*this->W();
+    return Type<thermo<Thermo, Type>>::he(*this, p, T);
 }
 
 
@@ -185,7 +97,7 @@ template<class Thermo, template<class> class Type>
 inline Foam::scalar
 Foam::species::thermo<Thermo, Type>::g(const scalar p, const scalar T) const
 {
-    return this->G(p, T)*this->W();
+    return this->ha(p, T) - T*this->s(p, T);
 }
 
 
@@ -193,7 +105,7 @@ template<class Thermo, template<class> class Type>
 inline Foam::scalar
 Foam::species::thermo<Thermo, Type>::a(const scalar p, const scalar T) const
 {
-    return this->A(p, T)*this->W();
+    return this->ea(p, T) - T*this->s(p, T);
 }
 
 
@@ -201,7 +113,7 @@ template<class Thermo, template<class> class Type>
 inline Foam::scalar
 Foam::species::thermo<Thermo, Type>::K(const scalar p, const scalar T) const
 {
-    scalar arg = -this->Y()*this->Gstd(T)/(RR*T);
+    scalar arg = -this->Y()*this->gStd(T)/(RR*T);
 
     if (arg < 600)
     {
@@ -358,14 +270,14 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::T
 
 
 template<class Thermo, template<class> class Type>
-inline Foam::scalar Foam::species::thermo<Thermo, Type>::THE
+inline Foam::scalar Foam::species::thermo<Thermo, Type>::The
 (
     const scalar he,
     const scalar p,
     const scalar T0
 ) const
 {
-    return Type<thermo<Thermo, Type>>::THE(*this, he, p, T0);
+    return Type<thermo<Thermo, Type>>::The(*this, he, p, T0);
 }
 
 
@@ -383,7 +295,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::THs
         hs,
         p,
         T0,
-        &thermo<Thermo, Type>::Hs,
+        &thermo<Thermo, Type>::hs,
         &thermo<Thermo, Type>::Cp,
         &thermo<Thermo, Type>::limit
     );
@@ -391,7 +303,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::THs
 
 
 template<class Thermo, template<class> class Type>
-inline Foam::scalar Foam::species::thermo<Thermo, Type>::THa
+inline Foam::scalar Foam::species::thermo<Thermo, Type>::Tha
 (
     const scalar ha,
     const scalar p,
@@ -404,7 +316,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::THa
         ha,
         p,
         T0,
-        &thermo<Thermo, Type>::Ha,
+        &thermo<Thermo, Type>::ha,
         &thermo<Thermo, Type>::Cp,
         &thermo<Thermo, Type>::limit
     );
@@ -412,7 +324,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::THa
 
 
 template<class Thermo, template<class> class Type>
-inline Foam::scalar Foam::species::thermo<Thermo, Type>::TEs
+inline Foam::scalar Foam::species::thermo<Thermo, Type>::Tes
 (
     const scalar es,
     const scalar p,
@@ -425,7 +337,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::TEs
         es,
         p,
         T0,
-        &thermo<Thermo, Type>::Es,
+        &thermo<Thermo, Type>::es,
         &thermo<Thermo, Type>::Cv,
         &thermo<Thermo, Type>::limit
     );
@@ -433,7 +345,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::TEs
 
 
 template<class Thermo, template<class> class Type>
-inline Foam::scalar Foam::species::thermo<Thermo, Type>::TEa
+inline Foam::scalar Foam::species::thermo<Thermo, Type>::Tea
 (
     const scalar ea,
     const scalar p,
@@ -446,7 +358,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::TEa
         ea,
         p,
         T0,
-        &thermo<Thermo, Type>::Ea,
+        &thermo<Thermo, Type>::ea,
         &thermo<Thermo, Type>::Cv,
         &thermo<Thermo, Type>::limit
     );
@@ -462,7 +374,7 @@ Foam::species::thermo<Thermo, Type>::dKcdTbyKc
 ) const
 {
     const scalar dKcdTbyKc =
-        (this->S(Pstd, T) + this->Gstd(T)/T)*this->Y()/(RR*T);
+        (this->s(Pstd, T) + this->gStd(T)/T)*this->Y()/(RR*T);
 
     const scalar nm = this->Y()/this->W();
     if (equal(nm, small))
@@ -473,14 +385,6 @@ Foam::species::thermo<Thermo, Type>::dKcdTbyKc
     {
         return dKcdTbyKc - nm/T;
     }
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::dcpdT(const scalar p, const scalar T) const
-{
-    return this->dCpdT(p, T)*this->W();;
 }
 
 

@@ -257,13 +257,6 @@ Foam::tmp<Foam::scalarField> Foam::constSolidThermo::ha
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::hc() const
-{
-    NotImplemented;
-    return tmp<volScalarField>(nullptr);
-}
-
-
 Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cp
 (
     const scalarField& T,
@@ -294,7 +287,7 @@ Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cpv
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::THE
+Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::The
 (
     const volScalarField& h,
     const volScalarField& p,
@@ -306,7 +299,7 @@ Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::THE
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::constSolidThermo::THE
+Foam::tmp<Foam::scalarField> Foam::constSolidThermo::The
 (
     const scalarField& he,
     const scalarField& T0,
@@ -318,7 +311,7 @@ Foam::tmp<Foam::scalarField> Foam::constSolidThermo::THE
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::constSolidThermo::THE
+Foam::tmp<Foam::scalarField> Foam::constSolidThermo::The
 (
     const scalarField& he,
     const scalarField& T0,

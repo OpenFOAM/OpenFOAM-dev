@@ -7,20 +7,20 @@ inline scalar Cv
     return Cp(p, T) - EquationOfState::CpMCv(p, T);
 }
 
-inline scalar Es
+inline scalar es
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Hs(p, T) - p/EquationOfState::rho(p, T);
+    return hs(p, T) - p/EquationOfState::rho(p, T);
 }
 
-inline scalar Ea
+inline scalar ea
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Ha(p, T) - p/EquationOfState::rho(p, T);
+    return ha(p, T) - p/EquationOfState::rho(p, T);
 }

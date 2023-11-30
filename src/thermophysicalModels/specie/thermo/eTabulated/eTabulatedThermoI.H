@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,9 @@ inline Foam::eTabulatedThermo<EquationOfState>::eTabulatedThermo
 )
 :
     EquationOfState(name, pt),
-    Hf_(pt.Hf_),
-    Sf_(pt.Sf_),
-    Es_(pt.Es_),
+    hf_(pt.hf_),
+    sf_(pt.sf_),
+    es_(pt.es_),
     Cp_(pt.Cp_),
     Cv_(pt.Cv_)
 {}
@@ -78,59 +78,59 @@ inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::Cv
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::Es
+inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::es
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Es_.value(p, T);
+    return es_.value(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::Ea
+inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::ea
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Es(p, T) + Hf_;
+    return es(p, T) + hf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::Hs
+inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::hs
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Es(p, T) + p/EquationOfState::rho(p, T);
+    return es(p, T) + p/EquationOfState::rho(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::Ha
+inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::ha
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Ea(p, T) + p/EquationOfState::rho(p, T);
+    return ea(p, T) + p/EquationOfState::rho(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::Hf()
+inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::hf()
 const
 {
-    return Hf_;
+    return hf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::S
+inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::s
 (
     const scalar p,
     const scalar T
@@ -142,7 +142,7 @@ inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::S
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::Gstd
+inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::gStd
 (
     const scalar T
 ) const

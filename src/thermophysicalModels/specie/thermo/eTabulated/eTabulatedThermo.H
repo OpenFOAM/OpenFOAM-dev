@@ -32,9 +32,9 @@ Usage
 
     \table
         Property    | Description
-        Hf          | Heat of formation
-        Sf          | Standard entropy
-        Es          | Sensible internal energy vs pressure and temperature table
+        hf          | Heat of formation
+        sf          | Standard entropy
+        es          | Sensible internal energy vs pressure and temperature table
         Cv          | Specific heat capacity vs pressure and temperature table
     \endtable
 
@@ -42,10 +42,10 @@ Usage
     \verbatim
     thermodynamics
     {
-        Hf              0;
-        Sf              0;
+        hf              0;
+        sf              0;
 
-        Es
+        es
         {
             pLow    1e4;
             pHigh   5e5;
@@ -135,13 +135,13 @@ class eTabulatedThermo
     // Private Data
 
         //- Heat of formation
-        scalar Hf_;
+        scalar hf_;
 
         //- Standard entropy
-        scalar Sf_;
+        scalar sf_;
 
         //- Sensible internal energy table [J/kg]
-        table2D Es_;
+        table2D es_;
 
         //- Specific heat at constant pressure table [J/kg/K]
         table2D Cp_;
@@ -182,25 +182,25 @@ public:
             inline scalar Cv(const scalar p, const scalar T) const;
 
             //- Sensible internal energy [J/kg]
-            inline scalar Es(const scalar p, const scalar T) const;
+            inline scalar es(const scalar p, const scalar T) const;
 
             //- Absolute internal energy [J/kg]
-            inline scalar Ea(const scalar p, const scalar T) const;
+            inline scalar ea(const scalar p, const scalar T) const;
 
             //- Sensible enthalpy [J/kg]
-            inline scalar Hs(const scalar p, const scalar T) const;
+            inline scalar hs(const scalar p, const scalar T) const;
 
             //- Absolute enthalpy [J/kg]
-            inline scalar Ha(const scalar p, const scalar T) const;
+            inline scalar ha(const scalar p, const scalar T) const;
 
             //- Enthalpy of formation [J/kg]
-            inline scalar Hf() const;
+            inline scalar hf() const;
 
             //- Entropy [J/kg/K]
-            inline scalar S(const scalar p, const scalar T) const;
+            inline scalar s(const scalar p, const scalar T) const;
 
             //- Gibbs free energy of the mixture in the standard state [J/kg]
-            inline scalar Gstd(const scalar T) const;
+            inline scalar gStd(const scalar T) const;
 
 
         // Derivative term used for Jacobian

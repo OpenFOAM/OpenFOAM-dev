@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ Foam::nC3H8O::nC3H8O()
     kappag_("kappag", -613.84, 0.7927, -1157400000.0, 0.0),
     sigma_("sigma", 0.04533, -6.88e-05, -1.6e-08, 0.0, 0.0, 0.0),
     D_("D", 4.75e-10, 1.75, 0.0, 0.0, 0.0), // note: same as iC3H8O,
-    Hf_(h_.value(Tstd))
+    hf_(h_.value(Tstd))
 {}
 
 
@@ -140,7 +140,7 @@ Foam::nC3H8O::nC3H8O
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffusivity),
-    Hf_(h_.value(Tstd))
+    hf_(h_.value(Tstd))
 {}
 
 
