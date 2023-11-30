@@ -43,7 +43,7 @@ const Foam::HashSet<Foam::word> Foam::pointMesh::geometryFields;
 
 Foam::pointMesh::pointMesh(const polyMesh& pMesh)
 :
-    DemandDrivenMeshObject<polyMesh, PatchMeshObject, pointMesh>(pMesh),
+    DemandDrivenMeshObject<polyMesh, RepatchableMeshObject, pointMesh>(pMesh),
     GeoMesh<polyMesh>(pMesh),
     boundary_(*this, pMesh.boundaryMesh())
 {

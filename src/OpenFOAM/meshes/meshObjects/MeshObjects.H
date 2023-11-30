@@ -27,11 +27,19 @@ Class
 Description
     MeshObject types:
 
-    - DeletableMeshObject: mesh object to be deleted on mesh change
-    - MoveableMeshObject: mesh object to be updated in movePoints
-    - UpdateableMeshObject: mesh object to be updated in topoChange or
-        movePoints
-    - PatchMeshObject: mesh object to be additionally updated patch changes
+    - DeletableMeshObject:
+        mesh object to be deleted after any mesh change
+    - MoveableMeshObject:
+        mesh object to be updated after mesh motion otherwise deleted
+    - DistributeableMeshObject
+        mesh object to be updated after mesh redistribution or motion
+        otherwise deleted
+    - UpdateableMeshObject:
+        mesh object to be updated after mesh topology change,
+        mesh-to-mesh mapping, redistribution or motion otherwise deleted
+    - RepatchableMeshObject:
+        mesh object to be updated on patch or topology change,
+        mesh-to-mesh mapping, redistribution or motion otherwise deleted
 
 \*---------------------------------------------------------------------------*/
 
@@ -143,17 +151,17 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                       Class PatchMeshObject Declaration
+                       Class RepatchableMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Mesh>
-class PatchMeshObject
+class RepatchableMeshObject
 :
     public UpdateableMeshObject<Mesh>
 {
 public:
 
-    PatchMeshObject(regIOobject& io, const Mesh& mesh)
+    RepatchableMeshObject(regIOobject& io, const Mesh& mesh)
     :
         UpdateableMeshObject<Mesh>(io, mesh)
     {}

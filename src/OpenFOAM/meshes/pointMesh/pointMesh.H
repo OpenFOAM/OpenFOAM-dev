@@ -49,7 +49,7 @@ namespace Foam
 
 class pointMesh
 :
-    public DemandDrivenMeshObject<polyMesh, PatchMeshObject, pointMesh>,
+    public DemandDrivenMeshObject<polyMesh, RepatchableMeshObject, pointMesh>,
     public GeoMesh<polyMesh>
 {
     // Permanent data
@@ -60,7 +60,12 @@ class pointMesh
 
 protected:
 
-    friend class DemandDrivenMeshObject<polyMesh, PatchMeshObject, pointMesh>;
+    friend class DemandDrivenMeshObject
+    <
+        polyMesh,
+        RepatchableMeshObject,
+        pointMesh
+    >;
 
     // Protected Constructors
 

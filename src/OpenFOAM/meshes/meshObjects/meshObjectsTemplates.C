@@ -240,13 +240,14 @@ void Foam::meshObjects::addPatch(objectRegistry& obr, const label patchi)
         iter
     )
     {
-        if (isA<PatchMeshObject<Mesh>>(*iter()))
+        if (isA<RepatchableMeshObject<Mesh>>(*iter()))
         {
             if (meshObjects::debug)
             {
                 Pout<< "    Adding patch to " << iter()->io_.name() << endl;
             }
-            dynamic_cast<PatchMeshObject<Mesh>*>(iter())->addPatch(patchi);
+            dynamic_cast<RepatchableMeshObject<Mesh>*>(iter())
+                ->addPatch(patchi);
         }
         else
         {
@@ -283,13 +284,13 @@ void Foam::meshObjects::reorderPatches
         iter
     )
     {
-        if (isA<PatchMeshObject<Mesh>>(*iter()))
+        if (isA<RepatchableMeshObject<Mesh>>(*iter()))
         {
             if (meshObjects::debug)
             {
                 Pout<< "    Adding patch to " << iter()->io_.name() << endl;
             }
-            dynamic_cast<PatchMeshObject<Mesh>*>(iter())->reorderPatches
+            dynamic_cast<RepatchableMeshObject<Mesh>*>(iter())->reorderPatches
             (
                 newToOld,
                 validBoundary

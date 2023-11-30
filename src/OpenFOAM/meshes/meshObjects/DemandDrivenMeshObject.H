@@ -54,11 +54,19 @@ Description
 
     MeshObject types:
 
-    - DeletableMeshObject: mesh object to be deleted on mesh change
-    - MoveableMeshObject: mesh object to be updated in movePoints
-    - UpdateableMeshObject: mesh object to be updated in topoChange or
-        movePoints
-    - PatchMeshObject: mesh object to be additionally updated patch changes
+    - DeletableMeshObject:
+        mesh object to be deleted after any mesh change
+    - MoveableMeshObject:
+        mesh object to be updated after mesh motion otherwise deleted
+    - DistributeableMeshObject
+        mesh object to be updated after mesh redistribution or motion
+        otherwise deleted
+    - UpdateableMeshObject:
+        mesh object to be updated after mesh topology change,
+        mesh-to-mesh mapping, redistribution or motion otherwise deleted
+    - RepatchableMeshObject:
+        mesh object to be updated on patch or topology change,
+        mesh-to-mesh mapping, redistribution or motion otherwise deleted
 
     DemandDrivenMeshObject should always be constructed and accessed via the New
     methods provided so that they are held and maintained by the objectRegistry.
