@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,13 +41,33 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
-void Foam::volPointInterpolation::makeWeights()
+Foam::volPointInterpolation::volPointInterpolation(const fvMesh& vm)
+:
+    DemandDrivenMeshObject
+    <
+        fvMesh,
+        DeletableMeshObject,
+        volPointInterpolation
+    >(vm),
+    pointWeights_(mesh().points().size()),
+    boundary_
+    (
+        SubList<face>
+        (
+            mesh().faces(),
+            mesh().nFaces() - mesh().nInternalFaces(),
+            mesh().nInternalFaces()
+        ),
+        mesh().points()
+    ),
+    boundaryPointWeights_(boundary_.meshPoints().size()),
+    boundaryPointNbrWeights_(boundary_.meshPoints().size())
 {
     if (debug)
     {
-        Pout<< "volPointInterpolation::makeWeights() : "
+        Pout<< "volPointInterpolation::volPointInterpolation(const fvMesh&) : "
             << "constructing weighting factors"
             << endl;
     }
@@ -56,30 +76,6 @@ void Foam::volPointInterpolation::makeWeights()
     const labelListList& pointCells = mesh().pointCells();
     const polyBoundaryMesh& pbm = mesh().boundaryMesh();
     const fvBoundaryMesh& fvbm = mesh().boundary();
-
-    // Update addressing over all boundary faces
-    boundaryPtr_.reset
-    (
-        new primitivePatch
-        (
-            SubList<face>
-            (
-                mesh().faces(),
-                mesh().nFaces() - mesh().nInternalFaces(),
-                mesh().nInternalFaces()
-            ),
-            mesh().points()
-        )
-    );
-    const primitivePatch& boundary = boundaryPtr_();
-
-    // Allocate storage for weighting factors
-    pointWeights_.clear();
-    pointWeights_.setSize(points.size());
-    boundaryPointWeights_.clear();
-    boundaryPointWeights_.setSize(boundary.meshPoints().size());
-    boundaryPointNbrWeights_.clear();
-    boundaryPointNbrWeights_.setSize(boundary.meshPoints().size());
 
     // Cache calls to patch coupled flags
     boolList isCoupledPolyPatch(pbm.size(), false);
@@ -93,11 +89,11 @@ void Foam::volPointInterpolation::makeWeights()
     // Determine the factor to which a point has its values set by adjacent
     // boundary faces, rather than connected cells
     scalarList pointBoundaryFactor(mesh().nPoints(), Zero);
-    forAll(boundary.meshPoints(), bPointi)
+    forAll(boundary_.meshPoints(), bPointi)
     {
-        const label pointi = boundary.meshPoints()[bPointi];
+        const label pointi = boundary_.meshPoints()[bPointi];
 
-        const labelList& pFaces = boundary.pointFaces()[bPointi];
+        const labelList& pFaces = boundary_.pointFaces()[bPointi];
 
         forAll(pFaces, pPointFacei)
         {
@@ -180,11 +176,11 @@ void Foam::volPointInterpolation::makeWeights()
 
     // Calculate inverse distanced between boundary face centres and points and
     // store in the boundary weighting factor arrays
-    forAll(boundary.meshPoints(), bPointi)
+    forAll(boundary_.meshPoints(), bPointi)
     {
-        const label pointi = boundary.meshPoints()[bPointi];
+        const label pointi = boundary_.meshPoints()[bPointi];
 
-        const labelList& pFaces = boundary.pointFaces()[bPointi];
+        const labelList& pFaces = boundary_.pointFaces()[bPointi];
 
         boundaryPointWeights_[bPointi].resize(pFaces.size());
         boundaryPointNbrWeights_[bPointi].resize(pFaces.size());
@@ -273,9 +269,9 @@ void Foam::volPointInterpolation::makeWeights()
     }
 
     // Add the boundary weights
-    forAll(boundary.meshPoints(), bPointi)
+    forAll(boundary_.meshPoints(), bPointi)
     {
-        const label pointi = boundary.meshPoints()[bPointi];
+        const label pointi = boundary_.meshPoints()[bPointi];
         forAll(boundaryPointWeights_[bPointi], i)
         {
             forAll(boundaryPointWeights_[bPointi][i], j)
@@ -305,9 +301,9 @@ void Foam::volPointInterpolation::makeWeights()
     }
 
     // Normalise boundary weights
-    forAll(boundary.meshPoints(), bPointi)
+    forAll(boundary_.meshPoints(), bPointi)
     {
-        const label pointi = boundary.meshPoints()[bPointi];
+        const label pointi = boundary_.meshPoints()[bPointi];
         forAll(boundaryPointWeights_[bPointi], i)
         {
             forAll(boundaryPointWeights_[bPointi][i], j)
@@ -320,21 +316,6 @@ void Foam::volPointInterpolation::makeWeights()
 }
 
 
-// * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
-
-Foam::volPointInterpolation::volPointInterpolation(const fvMesh& vm)
-:
-    DemandDrivenMeshObject
-    <
-        fvMesh,
-        UpdateableMeshObject,
-        volPointInterpolation
-    >(vm)
-{
-    makeWeights();
-}
-
-
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
 Foam::volPointInterpolation::~volPointInterpolation()
@@ -342,32 +323,6 @@ Foam::volPointInterpolation::~volPointInterpolation()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::volPointInterpolation::movePoints()
-{
-    makeWeights();
-
-    return true;
-}
-
-
-void Foam::volPointInterpolation::topoChange(const polyTopoChangeMap&)
-{
-    makeWeights();
-}
-
-
-void Foam::volPointInterpolation::mapMesh(const polyMeshMap&)
-{
-    makeWeights();
-}
-
-
-void Foam::volPointInterpolation::distribute(const polyDistributionMap&)
-{
-    makeWeights();
-}
-
 
 void Foam::volPointInterpolation::interpolateDisplacement
 (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,8 +55,6 @@ void Foam::volPointInterpolation::interpolateUnconstrained
     const polyBoundaryMesh& pbm = mesh().boundaryMesh();
     const fvBoundaryMesh& fvbm = mesh().boundary();
 
-    const primitivePatch& boundary = boundaryPtr_();
-
     // Cache calls to patch coupled flags
     boolList isCoupledPolyPatch(pbm.size(), false);
     boolList isCoupledFvPatch(fvbm.size(), false);
@@ -89,9 +87,9 @@ void Foam::volPointInterpolation::interpolateUnconstrained
     // Interpolate from the boundary faces
     forAll(boundaryPointWeights_, bPointi)
     {
-        const label pointi = boundary.meshPoints()[bPointi];
+        const label pointi = boundary_.meshPoints()[bPointi];
 
-        const labelList& pFaces = boundary.pointFaces()[bPointi];
+        const labelList& pFaces = boundary_.pointFaces()[bPointi];
 
         forAll(boundaryPointWeights_[bPointi], bPointFacei)
         {

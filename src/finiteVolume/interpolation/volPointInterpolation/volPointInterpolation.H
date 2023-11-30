@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ class volPointInterpolation
     public DemandDrivenMeshObject
     <
         fvMesh,
-        UpdateableMeshObject,
+        DeletableMeshObject,
         volPointInterpolation
     >
 {
@@ -66,7 +66,7 @@ class volPointInterpolation
         scalarListList pointWeights_;
 
         //- Boundary addressing
-        autoPtr<primitivePatch> boundaryPtr_;
+        primitivePatch boundary_;
 
         //- Per boundary point the weights per pointFaces.
         List<scalarListList> boundaryPointWeights_;
@@ -75,18 +75,12 @@ class volPointInterpolation
         List<scalarListList> boundaryPointNbrWeights_;
 
 
-    // Private Member Functions
-
-        //- Construct all point weighting factors
-        void makeWeights();
-
-
 protected:
 
     friend class DemandDrivenMeshObject
     <
         fvMesh,
-        UpdateableMeshObject,
+        DeletableMeshObject,
         volPointInterpolation
     >;
 
@@ -113,21 +107,6 @@ public:
 
 
     // Member Functions
-
-        //- Correct weighting factors for moving mesh.
-        virtual bool movePoints();
-
-        //- Update mesh topology using the morph engine
-        virtual void topoChange(const polyTopoChangeMap&);
-
-        //- Update from another mesh using the given map
-        virtual void mapMesh(const polyMeshMap&);
-
-        //- Redistribute or update using the given distribution map
-        virtual void distribute(const polyDistributionMap&);
-
-
-    // Interpolation functions
 
         //- Interpolate volField using inverse distance weighting
         //  returning pointField
