@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ class upwindCFCCellToFaceStencilObject
     public DemandDrivenMeshObject
     <
         fvMesh,
-        TopologicalMeshObject,
+        MoveableMeshObject,
         upwindCFCCellToFaceStencilObject
     >,
     public extendedUpwindCellToFaceStencil
@@ -62,7 +62,7 @@ protected:
     friend class DemandDrivenMeshObject
     <
         fvMesh,
-        TopologicalMeshObject,
+        MoveableMeshObject,
         upwindCFCCellToFaceStencilObject
     >;
 
@@ -79,7 +79,7 @@ protected:
             DemandDrivenMeshObject
             <
                 fvMesh,
-                TopologicalMeshObject,
+                MoveableMeshObject,
                 upwindCFCCellToFaceStencilObject
             >(mesh),
             extendedUpwindCellToFaceStencil
@@ -105,6 +105,12 @@ public:
     //- Destructor
     virtual ~upwindCFCCellToFaceStencilObject()
     {}
+
+    //- Update for mesh motion
+    virtual bool movePoints()
+    {
+        return true;
+    }
 };
 
 

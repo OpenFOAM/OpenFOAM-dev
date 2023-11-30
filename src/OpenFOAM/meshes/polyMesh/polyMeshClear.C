@@ -89,7 +89,7 @@ void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
         meshObjects::clearUpto
         <
             pointMesh,
-            TopologicalMeshObject,
+            DeletableMeshObject,
             UpdateableMeshObject
         >
         (
@@ -98,7 +98,7 @@ void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
         meshObjects::clearUpto
         <
             polyMesh,
-            TopologicalMeshObject,
+            DeletableMeshObject,
             UpdateableMeshObject
         >
         (
@@ -107,8 +107,8 @@ void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
     }
     else
     {
-        meshObjects::clear<pointMesh, TopologicalMeshObject>(*this);
-        meshObjects::clear<polyMesh, TopologicalMeshObject>(*this);
+        meshObjects::clear<pointMesh, DeletableMeshObject>(*this);
+        meshObjects::clear<polyMesh, DeletableMeshObject>(*this);
     }
 
     primitiveMesh::clearAddressing();

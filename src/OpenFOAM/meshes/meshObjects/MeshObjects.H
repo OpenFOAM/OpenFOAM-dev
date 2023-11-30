@@ -22,13 +22,12 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::TopologicalMeshObject
+    Foam::DeletableMeshObject
 
 Description
     MeshObject types:
 
-    - TopologicalMeshObject: mesh object to be deleted on topology change
-    - DeletableMeshObject: mesh object to be deleted on geometry change
+    - DeletableMeshObject: mesh object to be deleted on mesh change
     - MoveableMeshObject: mesh object to be updated in movePoints
     - UpdateableMeshObject: mesh object to be updated in topoChange or
         movePoints
@@ -53,11 +52,11 @@ class polyDistributionMap;
 class meshObjects;
 
 /*---------------------------------------------------------------------------*\
-                    Class TopologicalMeshObject Declaration
+                    Class DeletableMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Mesh>
-class TopologicalMeshObject
+class DeletableMeshObject
 {
     //- Reference to the regIOobject of the base-class
     regIOobject& io_;
@@ -67,31 +66,13 @@ class TopologicalMeshObject
 
 public:
 
-    TopologicalMeshObject(regIOobject& io, const Mesh& mesh)
+    DeletableMeshObject(regIOobject& io, const Mesh& mesh)
     :
         io_(io)
     {}
 
     //- Virtual destructor to make class polymorphic
-    virtual ~TopologicalMeshObject() = default;
-};
-
-
-/*---------------------------------------------------------------------------*\
-                     Class DeletableMeshObject Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class Mesh>
-class DeletableMeshObject
-:
-    public TopologicalMeshObject<Mesh>
-{
-public:
-
-    DeletableMeshObject(regIOobject& io, const Mesh& mesh)
-    :
-        TopologicalMeshObject<Mesh>(io, mesh)
-    {}
+    virtual ~DeletableMeshObject() = default;
 };
 
 

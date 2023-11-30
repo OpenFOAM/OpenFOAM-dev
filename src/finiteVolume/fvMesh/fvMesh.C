@@ -171,7 +171,7 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
         meshObjects::clearUpto
         <
             fvMesh,
-            TopologicalMeshObject,
+            DeletableMeshObject,
             UpdateableMeshObject
         >
         (
@@ -180,7 +180,7 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
         meshObjects::clearUpto
         <
             lduMesh,
-            TopologicalMeshObject,
+            DeletableMeshObject,
             UpdateableMeshObject
         >
         (
@@ -189,8 +189,8 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
     }
     else
     {
-        meshObjects::clear<fvMesh, TopologicalMeshObject>(*this);
-        meshObjects::clear<lduMesh, TopologicalMeshObject>(*this);
+        meshObjects::clear<fvMesh, DeletableMeshObject>(*this);
+        meshObjects::clear<lduMesh, DeletableMeshObject>(*this);
     }
 
     deleteDemandDrivenData(lduPtr_);

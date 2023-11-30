@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ class centredCECCellToCellStencilObject
     public DemandDrivenMeshObject
     <
         fvMesh,
-        TopologicalMeshObject,
+        MoveableMeshObject,
         centredCECCellToCellStencilObject
     >,
     public extendedCentredCellToCellStencil
@@ -62,7 +62,7 @@ protected:
     friend class DemandDrivenMeshObject
     <
         fvMesh,
-        TopologicalMeshObject,
+        MoveableMeshObject,
         centredCECCellToCellStencilObject
     >;
 
@@ -77,7 +77,7 @@ protected:
             DemandDrivenMeshObject
             <
                 fvMesh,
-                TopologicalMeshObject,
+                MoveableMeshObject,
                 centredCECCellToCellStencilObject
             >(mesh),
             extendedCentredCellToCellStencil(CECCellToCellStencil(mesh))
@@ -91,6 +91,12 @@ public:
     //- Destructor
     virtual ~centredCECCellToCellStencilObject()
     {}
+
+    //- Update for mesh motion
+    virtual bool movePoints()
+    {
+        return true;
+    }
 };
 
 

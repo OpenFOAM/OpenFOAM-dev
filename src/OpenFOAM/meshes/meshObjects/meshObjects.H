@@ -29,9 +29,9 @@ Description
     their allocation to the mesh database and the mesh-modifier event-loop.
 
     MeshObject is templated on the type of mesh it is allocated to, the type of
-    the mesh object (TopologicalMeshObject, DeletableMeshObject,
-    MoveableMeshObject, DistributeableMeshObject, UpdateableMeshObject) and the
-    type of the actual object it is created for example:
+    the mesh object (DeletableMeshObject, MoveableMeshObject,
+    DistributeableMeshObject, UpdateableMeshObject) and the type of the actual
+    object it is created for example:
 
     \verbatim
     class leastSquaresVectors
@@ -48,8 +48,7 @@ Description
 
     MeshObject types:
 
-    - TopologicalMeshObject: mesh object to be deleted on topology change
-    - DeletableMeshObject: mesh object to be deleted on geometry change
+    - DeletableMeshObject: mesh object to be deleted on mesh change
     - MoveableMeshObject: mesh object to be updated in movePoints
     - UpdateableMeshObject: mesh object to be updated in topoChange or
         movePoints

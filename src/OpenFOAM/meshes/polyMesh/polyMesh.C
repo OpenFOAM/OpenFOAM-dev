@@ -1194,7 +1194,7 @@ void Foam::polyMesh::reorderPatches
     meshObjects::clearUpto
     <
         polyMesh,
-        TopologicalMeshObject,
+        DeletableMeshObject,
         PatchMeshObject
     >
     (
@@ -1203,7 +1203,7 @@ void Foam::polyMesh::reorderPatches
     meshObjects::clearUpto
     <
         pointMesh,
-        TopologicalMeshObject,
+        DeletableMeshObject,
         PatchMeshObject
     >
     (
@@ -1260,7 +1260,7 @@ void Foam::polyMesh::addPatch
     meshObjects::clearUpto
     <
         polyMesh,
-        TopologicalMeshObject,
+        DeletableMeshObject,
         PatchMeshObject
     >
     (
@@ -1269,7 +1269,7 @@ void Foam::polyMesh::addPatch
     meshObjects::clearUpto
     <
         pointMesh,
-        TopologicalMeshObject,
+        DeletableMeshObject,
         PatchMeshObject
     >
     (
