@@ -90,7 +90,7 @@ void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
         <
             pointMesh,
             DeletableMeshObject,
-            UpdateableMeshObject
+            TopoChangeableMeshObject
         >
         (
             *this
@@ -99,7 +99,7 @@ void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
         <
             polyMesh,
             DeletableMeshObject,
-            UpdateableMeshObject
+            TopoChangeableMeshObject
         >
         (
             *this

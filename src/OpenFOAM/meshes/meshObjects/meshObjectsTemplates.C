@@ -117,7 +117,7 @@ void Foam::meshObjects::distribute
         iter
     )
     {
-        if (isA<UpdateableMeshObject<Mesh>>(*iter()))
+        if (isA<TopoChangeableMeshObject<Mesh>>(*iter()))
         {
             if (meshObjects::debug)
             {
@@ -160,13 +160,14 @@ void Foam::meshObjects::topoChange
         iter
     )
     {
-        if (isA<UpdateableMeshObject<Mesh>>(*iter()))
+        if (isA<TopoChangeableMeshObject<Mesh>>(*iter()))
         {
             if (meshObjects::debug)
             {
                 Pout<< "    Updating " << iter()->io_.name() << endl;
             }
-            dynamic_cast<UpdateableMeshObject<Mesh>*>(iter())->topoChange(map);
+            dynamic_cast<TopoChangeableMeshObject<Mesh>*>(iter())
+                ->topoChange(map);
         }
         else
         {
@@ -202,13 +203,13 @@ void Foam::meshObjects::mapMesh
         iter
     )
     {
-        if (isA<UpdateableMeshObject<Mesh>>(*iter()))
+        if (isA<TopoChangeableMeshObject<Mesh>>(*iter()))
         {
             if (meshObjects::debug)
             {
                 Pout<< "    Updating " << iter()->io_.name() << endl;
             }
-            dynamic_cast<UpdateableMeshObject<Mesh>*>(iter())->mapMesh(map);
+            dynamic_cast<TopoChangeableMeshObject<Mesh>*>(iter())->mapMesh(map);
         }
         else
         {

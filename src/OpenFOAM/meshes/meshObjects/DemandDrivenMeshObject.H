@@ -31,8 +31,8 @@ Description
 
     DemandDrivenMeshObject is templated on the type of mesh it is allocated to,
     the type of the mesh object (DeletableMeshObject, MoveableMeshObject,
-    DistributeableMeshObject, UpdateableMeshObject) and the type of the actual
-    object it is created for example:
+    DistributeableMeshObject, TopoChangeableMeshObject) and the type of the
+    actual object it is created for example:
 
     \verbatim
     class leastSquaresVectors
@@ -61,7 +61,7 @@ Description
     - DistributeableMeshObject
         mesh object to be updated after mesh redistribution or motion
         otherwise deleted
-    - UpdateableMeshObject:
+    - TopoChangeableMeshObject:
         mesh object to be updated after mesh topology change,
         mesh-to-mesh mapping, redistribution or motion otherwise deleted
     - RepatchableMeshObject:

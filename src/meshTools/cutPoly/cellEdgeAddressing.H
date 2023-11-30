@@ -156,7 +156,7 @@ class cellEdgeAddressingList
     public DemandDrivenMeshObject
     <
         polyMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         cellEdgeAddressingList
     >
 {
@@ -171,7 +171,7 @@ protected:
     friend class DemandDrivenMeshObject
     <
         polyMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         cellEdgeAddressingList
     >;
 

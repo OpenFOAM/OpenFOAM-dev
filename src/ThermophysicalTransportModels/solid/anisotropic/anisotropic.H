@@ -118,7 +118,7 @@ template<class SolidThermophysicalTransportModel>
 class anisotropic
 :
     public SolidThermophysicalTransportModel,
-    public UpdateableMeshObject<fvMesh>
+    public TopoChangeableMeshObject<fvMesh>
 {
     // Private member data
 

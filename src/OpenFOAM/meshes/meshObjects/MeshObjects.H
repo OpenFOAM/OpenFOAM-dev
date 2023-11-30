@@ -34,7 +34,7 @@ Description
     - DistributeableMeshObject
         mesh object to be updated after mesh redistribution or motion
         otherwise deleted
-    - UpdateableMeshObject:
+    - TopoChangeableMeshObject:
         mesh object to be updated after mesh topology change,
         mesh-to-mesh mapping, redistribution or motion otherwise deleted
     - RepatchableMeshObject:
@@ -127,17 +127,17 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                    Class UpdateableMeshObject Declaration
+                    Class TopoChangeableMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Mesh>
-class UpdateableMeshObject
+class TopoChangeableMeshObject
 :
     public DistributeableMeshObject<Mesh>
 {
 public:
 
-    UpdateableMeshObject(regIOobject& io, const Mesh& mesh)
+    TopoChangeableMeshObject(regIOobject& io, const Mesh& mesh)
     :
         DistributeableMeshObject<Mesh>(io, mesh)
     {}
@@ -157,13 +157,13 @@ public:
 template<class Mesh>
 class RepatchableMeshObject
 :
-    public UpdateableMeshObject<Mesh>
+    public TopoChangeableMeshObject<Mesh>
 {
 public:
 
     RepatchableMeshObject(regIOobject& io, const Mesh& mesh)
     :
-        UpdateableMeshObject<Mesh>(io, mesh)
+        TopoChangeableMeshObject<Mesh>(io, mesh)
     {}
 
     //- Reordered/removed trailing patches. If validBoundary call is parallel

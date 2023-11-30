@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ namespace Foam
 
 class wallDist
 :
-    public DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, wallDist>
+    public DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, wallDist>
 {
     // Private Data
 
@@ -102,7 +102,7 @@ protected:
     friend class DemandDrivenMeshObject
     <
         fvMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         wallDist
     >;
 

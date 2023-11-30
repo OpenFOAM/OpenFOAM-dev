@@ -104,7 +104,7 @@ anisotropic<SolidThermophysicalTransportModel>::anisotropic
 )
 :
     SolidThermophysicalTransportModel(typeName, alpha, thermo),
-    UpdateableMeshObject(*this, thermo.mesh()),
+    TopoChangeableMeshObject(*this, thermo.mesh()),
     coordinateSystem_(coordinateSystem::New(thermo.mesh(), this->coeffDict())),
     boundaryAligned_
     (

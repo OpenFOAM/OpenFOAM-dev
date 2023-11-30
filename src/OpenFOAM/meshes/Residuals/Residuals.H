@@ -55,7 +55,7 @@ class Residuals
     public DemandDrivenMeshObject
     <
         polyMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         Residuals<Type>
     >,
     public HashTable<DynamicList<SolverPerformance<Type>>>
@@ -71,7 +71,7 @@ protected:
     friend class DemandDrivenMeshObject
     <
         polyMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         Residuals<Type>
     >;
 

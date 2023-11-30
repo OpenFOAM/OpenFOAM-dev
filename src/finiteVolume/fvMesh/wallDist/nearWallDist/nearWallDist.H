@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,12 @@ class fvMesh;
 
 class nearWallDist
 :
-    public DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, nearWallDist>
+    public DemandDrivenMeshObject
+    <
+        fvMesh,
+        TopoChangeableMeshObject,
+        nearWallDist
+    >
 {
     // Private Data
 
@@ -74,7 +79,7 @@ protected:
     friend class DemandDrivenMeshObject
     <
         fvMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         nearWallDist
     >;
 

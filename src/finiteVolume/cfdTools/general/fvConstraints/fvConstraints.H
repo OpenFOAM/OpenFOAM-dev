@@ -57,7 +57,12 @@ Ostream& operator<<(Ostream& os, const fvConstraints& constraints);
 
 class fvConstraints
 :
-    public DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, fvConstraints>,
+    public DemandDrivenMeshObject
+    <
+        fvMesh,
+        TopoChangeableMeshObject,
+        fvConstraints
+    >,
     public dictionary,
     public PtrListDictionary<fvConstraint>
 {
@@ -97,7 +102,7 @@ public:
         using DemandDrivenMeshObject
         <
             fvMesh,
-            UpdateableMeshObject,
+            TopoChangeableMeshObject,
             fvConstraints
         >::New;
 

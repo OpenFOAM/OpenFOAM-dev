@@ -145,7 +145,7 @@ Foam::fvModels::fvModels
     const fvMesh& mesh
 )
 :
-    DemandDrivenMeshObject<fvMesh, Foam::UpdateableMeshObject, fvModels>
+    DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, fvModels>
     (
         mesh,
         createIOobject(mesh)

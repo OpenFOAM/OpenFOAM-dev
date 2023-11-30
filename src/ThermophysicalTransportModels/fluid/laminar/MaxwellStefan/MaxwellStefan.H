@@ -73,7 +73,7 @@ template<class BasicThermophysicalTransportModel>
 class MaxwellStefan
 :
     public BasicThermophysicalTransportModel,
-    public UpdateableMeshObject<fvMesh>
+    public TopoChangeableMeshObject<fvMesh>
 {
     // Private data
 

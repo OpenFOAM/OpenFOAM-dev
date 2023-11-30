@@ -204,7 +204,7 @@ Foam::cellEdgeAddressingList::cellEdgeAddressingList(const polyMesh& mesh)
     DemandDrivenMeshObject
     <
         polyMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         cellEdgeAddressingList
     >(mesh),
     list_(mesh.nCells())

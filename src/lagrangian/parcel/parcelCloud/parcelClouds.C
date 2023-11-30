@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,10 @@ Foam::parcelClouds::parcelClouds
     const dimensionedVector& g
 )
 :
-    DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, parcelClouds>(mesh),
+    DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, parcelClouds>
+    (
+        mesh
+    ),
     parcelCloudList(rho, U, mu, g)
 {}
 
@@ -50,7 +53,10 @@ Foam::parcelClouds::parcelClouds
     const fluidThermo& carrierThermo
 )
 :
-    DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, parcelClouds>(mesh),
+    DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, parcelClouds>
+    (
+        mesh
+    ),
     parcelCloudList(rho, U, g, carrierThermo)
 {}
 

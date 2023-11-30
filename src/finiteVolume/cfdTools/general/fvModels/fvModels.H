@@ -60,7 +60,7 @@ Ostream& operator<<(Ostream& os, const fvModels& models);
 
 class fvModels
 :
-    public DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, fvModels>,
+    public DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, fvModels>,
     public dictionary,
     public PtrListDictionary<fvModel>
 {
@@ -94,7 +94,12 @@ class fvModels
 
 protected:
 
-    friend class DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, fvModels>;
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        TopoChangeableMeshObject,
+        fvModels
+    >;
 
     // Protected Constructors
 
@@ -117,7 +122,7 @@ public:
         using DemandDrivenMeshObject
         <
             fvMesh,
-            UpdateableMeshObject,
+            TopoChangeableMeshObject,
             fvModels
         >::New;
 

@@ -58,7 +58,7 @@ template<class BasicThermophysicalTransportModel>
 class Fickian
 :
     public BasicThermophysicalTransportModel,
-    public UpdateableMeshObject<fvMesh>
+    public TopoChangeableMeshObject<fvMesh>
 {
     // Private data
 

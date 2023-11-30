@@ -34,7 +34,7 @@ Foam::Residuals<Type>::Residuals(const polyMesh& mesh)
     DemandDrivenMeshObject
     <
         polyMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         Residuals<Type>
     >(mesh),
     prevTimeIndex_(-1)
@@ -49,7 +49,7 @@ Foam::List<Foam::word> Foam::Residuals<Type>::fieldNames(const polyMesh& mesh)
     return DemandDrivenMeshObject
     <
         polyMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         Residuals<Type>
     >::New
     (
@@ -64,7 +64,7 @@ bool Foam::Residuals<Type>::found(const polyMesh& mesh, const word& fieldName)
     return DemandDrivenMeshObject
     <
         polyMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         Residuals<Type>
         >::New
     (
@@ -84,7 +84,7 @@ Foam::Residuals<Type>::field
     return DemandDrivenMeshObject
     <
         polyMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         Residuals<Type>
     >::New
     (
@@ -105,7 +105,7 @@ void Foam::Residuals<Type>::append
         DemandDrivenMeshObject
         <
             polyMesh,
-            UpdateableMeshObject,
+            TopoChangeableMeshObject,
             Residuals<Type>
         >::New
         (

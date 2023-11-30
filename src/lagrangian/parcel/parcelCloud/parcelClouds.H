@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,12 @@ namespace Foam
 
 class parcelClouds
 :
-    public DemandDrivenMeshObject<fvMesh, UpdateableMeshObject, parcelClouds>,
+    public DemandDrivenMeshObject
+    <
+        fvMesh,
+        TopoChangeableMeshObject,
+        parcelClouds
+    >,
     public parcelCloudList
 {
 protected:
@@ -64,7 +69,7 @@ protected:
     friend class DemandDrivenMeshObject
     <
         fvMesh,
-        UpdateableMeshObject,
+        TopoChangeableMeshObject,
         parcelClouds
     >;
 
@@ -102,7 +107,7 @@ public:
         using DemandDrivenMeshObject
         <
             fvMesh,
-            UpdateableMeshObject,
+            TopoChangeableMeshObject,
             parcelClouds
         >::New;
 

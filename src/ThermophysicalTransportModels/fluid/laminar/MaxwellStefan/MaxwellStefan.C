@@ -357,7 +357,7 @@ MaxwellStefan<BasicThermophysicalTransportModel>::MaxwellStefan
         thermo
     ),
 
-    UpdateableMeshObject(*this, thermo.mesh()),
+    TopoChangeableMeshObject(*this, thermo.mesh()),
 
     DFuncs_(this->thermo().species().size()),
 

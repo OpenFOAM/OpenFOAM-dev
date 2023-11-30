@@ -172,7 +172,7 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
         <
             fvMesh,
             DeletableMeshObject,
-            UpdateableMeshObject
+            TopoChangeableMeshObject
         >
         (
             *this
@@ -181,7 +181,7 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
         <
             lduMesh,
             DeletableMeshObject,
-            UpdateableMeshObject
+            TopoChangeableMeshObject
         >
         (
             *this
