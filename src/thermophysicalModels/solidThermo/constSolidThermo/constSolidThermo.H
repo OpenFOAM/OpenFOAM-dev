@@ -206,14 +206,23 @@ public:
         }
 
 
-        // Access to thermophysical state variables
+        // Molecular properties
+
+            //- Molecular weight [kg/kmol]
+            virtual tmp<volScalarField> W() const;
+
+            //- Molecular weight for patch [kg/kmol]
+            virtual tmp<scalarField> W(const label patchi) const;
+
+
+        // Thermodynamic state
+
+            //- Enthalpy/Internal energy [J/kg]
+            virtual const volScalarField& he() const;
 
             //- Enthalpy/Internal energy [J/kg]
             //  Non-const access allowed for transport equations
             virtual volScalarField& he();
-
-            //- Enthalpy/Internal energy [J/kg]
-            virtual const volScalarField& he() const;
 
             //- Heat capacity at constant pressure [J/kg/K]
             virtual const volScalarField& Cp() const;
@@ -225,20 +234,7 @@ public:
             virtual const volScalarField& Cpv() const;
 
 
-        // Access to transport state variables
-
-            //- Return true as the thermal conductivity is isotropic
-            virtual bool isotropic() const
-            {
-                return true;
-            }
-
-            //- Anisotropic thermal conductivity [W/m/K]
-            //  Not implemented
-            virtual const volVectorField& Kappa() const;
-
-
-        // Fields derived from thermodynamic state variables
+        // Derived thermodynamic properties
 
             //- Enthalpy/Internal energy
             //  for given pressure and temperature [J/kg]
@@ -322,6 +318,30 @@ public:
             //- Enthalpy of formation [J/kg]
             virtual tmp<volScalarField> hc() const;
 
+            //- Heat capacity at constant pressure for patch [J/kg/K]
+            virtual tmp<scalarField> Cp
+            (
+                const scalarField& T,
+                const label patchi
+            ) const;
+
+            //- Heat capacity at constant volume for patch [J/kg/K]
+            virtual tmp<scalarField> Cv
+            (
+                const scalarField& T,
+                const label patchi
+            ) const;
+
+            //- Heat capacity at constant pressure/volume for patch [J/kg/K]
+            virtual tmp<scalarField> Cpv
+            (
+                const scalarField& T,
+                const label patchi
+            ) const;
+
+
+        // Temperature-energy inversion functions
+
             //- Temperature from enthalpy/internal energy
             virtual tmp<volScalarField> THE
             (
@@ -346,26 +366,18 @@ public:
                 const label patchi
             ) const;
 
-            //- Heat capacity at constant pressure for patch [J/kg/K]
-            virtual tmp<scalarField> Cp
-            (
-                const scalarField& T,
-                const label patchi
-            ) const;
 
-            //- Heat capacity at constant volume for patch [J/kg/K]
-            virtual tmp<scalarField> Cv
-            (
-                const scalarField& T,
-                const label patchi
-            ) const;
+        // Transport state
 
-            //- Heat capacity at constant pressure/volume for patch [J/kg/K]
-            virtual tmp<scalarField> Cpv
-            (
-                const scalarField& T,
-                const label patchi
-            ) const;
+            //- Return true as the thermal conductivity is isotropic
+            virtual bool isotropic() const
+            {
+                return true;
+            }
+
+            //- Anisotropic thermal conductivity [W/m/K]
+            //  Not implemented
+            virtual const volVectorField& Kappa() const;
 
 
         //- Update properties

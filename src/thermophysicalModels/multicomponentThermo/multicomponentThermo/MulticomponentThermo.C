@@ -138,16 +138,6 @@ Foam::scalar Foam::MulticomponentThermo<BaseThermo>::Wi
 
 
 template<class BaseThermo>
-Foam::scalar Foam::MulticomponentThermo<BaseThermo>::hfi
-(
-    const label speciei
-) const
-{
-    return this->specieThermo(speciei).Hf();
-}
-
-
-template<class BaseThermo>
 Foam::scalar Foam::MulticomponentThermo<BaseThermo>::rhoi
 (
     const label speciei,
@@ -363,6 +353,16 @@ Foam::MulticomponentThermo<BaseThermo>::hai
         p,
         T
     );
+}
+
+
+template<class BaseThermo>
+Foam::scalar Foam::MulticomponentThermo<BaseThermo>::hfi
+(
+    const label speciei
+) const
+{
+    return this->specieThermo(speciei).Hf();
 }
 
 

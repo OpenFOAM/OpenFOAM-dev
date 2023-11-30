@@ -94,16 +94,13 @@ public:
 
     // Member Functions
 
-        // Specie properties
+        // Specie molecular properties
 
             //- Molecular weight [kg/kmol]
             virtual scalar Wi(const label speciei) const;
 
-            //- Enthalpy of formation [J/kg]
-            virtual scalar hfi(const label speciei) const;
 
-
-        // Specie thermo properties
+        // Specie thermodynamic properties
 
             //- Density [kg/m^3]
             virtual scalar rhoi
@@ -208,6 +205,9 @@ public:
                 const volScalarField& p,
                 const volScalarField& T
             ) const;
+
+            //- Enthalpy of formation [J/kg]
+            virtual scalar hfi(const label speciei) const;
 
 
         // Specie transport properties

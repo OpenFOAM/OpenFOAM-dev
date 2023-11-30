@@ -129,7 +129,7 @@ public:
             void normaliseY();
 
 
-        // Specie properties
+        // Specie molecular properties
 
             //- Molecular weight [kg/kmol]
             virtual scalar Wi(const label speciei) const = 0;
@@ -138,7 +138,7 @@ public:
             virtual scalar hfi(const label speciei) const = 0;
 
 
-        // Specie thermo properties
+        // Specie thermodynamic properties
 
             //- Density [kg/m^3]
             virtual scalar rhoi

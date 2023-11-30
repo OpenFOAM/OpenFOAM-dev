@@ -92,9 +92,23 @@ Foam::constSolidThermo::~constSolidThermo()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::volScalarField& Foam::constSolidThermo::Cpv() const
+Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::W() const
 {
-    return Cv_;
+    NotImplemented;
+    return tmp<volScalarField>(nullptr);
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::constSolidThermo::W(const label patchi) const
+{
+    NotImplemented;
+    return tmp<scalarField>(nullptr);
+}
+
+
+const Foam::volScalarField& Foam::constSolidThermo::he() const
+{
+    return e_;
 }
 
 
@@ -104,9 +118,21 @@ Foam::volScalarField& Foam::constSolidThermo::he()
 }
 
 
-const Foam::volScalarField& Foam::constSolidThermo::he() const
+const Foam::volScalarField& Foam::constSolidThermo::Cp() const
 {
-    return e_;
+    return Cv_;
+}
+
+
+const Foam::volScalarField& Foam::constSolidThermo::Cv() const
+{
+    return Cv_;
+}
+
+
+const Foam::volScalarField& Foam::constSolidThermo::Cpv() const
+{
+    return Cv_;
 }
 
 
@@ -238,6 +264,36 @@ Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::hc() const
 }
 
 
+Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cp
+(
+    const scalarField& T,
+    const label patchi
+) const
+{
+    return Cv_.boundaryField()[patchi];
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cv
+(
+    const scalarField& T,
+    const label patchi
+) const
+{
+    return Cv_.boundaryField()[patchi];
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cpv
+(
+    const scalarField& T,
+    const label patchi
+) const
+{
+    return Cv_.boundaryField()[patchi];
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::constSolidThermo::THE
 (
     const volScalarField& h,
@@ -271,48 +327,6 @@ Foam::tmp<Foam::scalarField> Foam::constSolidThermo::THE
 {
     NotImplemented;
     return tmp<scalarField>(nullptr);
-}
-
-
-const Foam::volScalarField& Foam::constSolidThermo::Cp() const
-{
-    return Cv_;
-}
-
-
-const Foam::volScalarField& Foam::constSolidThermo::Cv() const
-{
-    return Cv_;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cp
-(
-    const scalarField& T,
-    const label patchi
-) const
-{
-    return Cv_.boundaryField()[patchi];
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cv
-(
-    const scalarField& T,
-    const label patchi
-) const
-{
-    return Cv_.boundaryField()[patchi];
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::constSolidThermo::Cpv
-(
-    const scalarField& T,
-    const label patchi
-) const
-{
-    return Cv_.boundaryField()[patchi];
 }
 
 

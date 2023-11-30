@@ -56,8 +56,7 @@ Foam::rhoFluidThermo::~rhoFluidThermo()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::rhoFluidThermo::renameRho()
+Foam::tmp<Foam::volScalarField> Foam::rhoFluidThermo::renameRho()
 {
     rho().rename(phasePropertyName(Foam::typedName<rhoFluidThermo>("rho")));
     return rho();

@@ -161,6 +161,18 @@ Foam::psiuMulticomponentThermo::implementation::~implementation()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::volScalarField> Foam::psiuMulticomponentThermo::rhou() const
+{
+    return p()*psiu();
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::psiuMulticomponentThermo::rhob() const
+{
+    return p()*psib();
+}
+
+
 const Foam::speciesTable&
 Foam::psiuMulticomponentThermo::implementation::species() const
 {

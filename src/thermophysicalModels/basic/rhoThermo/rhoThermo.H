@@ -67,7 +67,7 @@ public:
 
     // Member Functions
 
-        // Fields derived from thermodynamic state variables
+        // Derived thermodynamic properties
 
             //- Density [kg/m^3]
             virtual tmp<volScalarField> rho() const = 0;
@@ -113,7 +113,7 @@ public:
 
     // Member Functions
 
-        // Fields derived from thermodynamic state variables
+        // Derived thermodynamic properties
 
             //- Density [kg/m^3]
             virtual tmp<volScalarField> rho() const;

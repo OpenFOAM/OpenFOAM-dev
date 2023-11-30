@@ -319,6 +319,7 @@ void Foam::basicThermo::validate
     }
 }
 
+
 void Foam::basicThermo::validate
 (
     const string& app,
@@ -340,6 +341,22 @@ void Foam::basicThermo::validate
             << ", thermodynamics package provides " << he().name()
             << exit(FatalError);
     }
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::basicThermo::gamma() const
+{
+    return volScalarField::New(phasePropertyName("gamma"), Cp()/Cv());
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::basicThermo::gamma
+(
+    const scalarField& T,
+    const label patchi
+) const
+{
+    return Cp(T, patchi)/Cv(T, patchi);
 }
 
 

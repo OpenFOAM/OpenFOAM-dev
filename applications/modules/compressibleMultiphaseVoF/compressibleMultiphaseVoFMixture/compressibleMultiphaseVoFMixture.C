@@ -103,14 +103,14 @@ Foam::tmp<Foam::scalarField> Foam::compressibleMultiphaseVoFMixture::nu
     scalarField mu
     (
         phases_[0].Alpha().boundaryField()[patchi]
-       *phases_[0].thermo().mu(patchi)
+       *phases_[0].thermo().mu().boundaryField()[patchi]
     );
 
     for (label phasei=1; phasei<phases_.size(); phasei++)
     {
         mu +=
             phases_[phasei].Alpha().boundaryField()[patchi]
-           *phases_[phasei].thermo().mu(patchi);
+           *phases_[phasei].thermo().mu().boundaryField()[patchi];
     }
 
     return mu/rho_.boundaryField()[patchi];

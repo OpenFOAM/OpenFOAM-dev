@@ -107,7 +107,7 @@ public:
 
     // Member Functions
 
-        // Fields derived from thermodynamic state variables
+        // Derived Thermodynamic Properties
 
             //- Rename and return the thermodynamic density field [kg/m^3]
             //  This is used by solvers which create a separate continuity rho

@@ -103,7 +103,7 @@ public:
         }
 
 
-        // Access to thermophysical state variables
+        // Mechanical state
 
             //- Youngs modulus [Pa]
             virtual const volScalarField& E() const;

@@ -91,13 +91,12 @@ public:
         virtual void correct();
 
 
-        // Access to thermodynamic state variables.
+        // Thermodynamic state
 
-            //- Unburnt gas enthalpy [J/kg]
-            //  Non-const access allowed for transport equations
-            virtual volScalarField& heu()
+            //- Unburnt gas temperature [K]
+            virtual const volScalarField& Tu() const
             {
-                return heu_;
+                return Tu_;
             }
 
             //- Unburnt gas enthalpy [J/kg]
@@ -106,14 +105,15 @@ public:
                 return heu_;
             }
 
-            //- Unburnt gas temperature [K]
-            virtual const volScalarField& Tu() const
+            //- Unburnt gas enthalpy [J/kg]
+            //  Non-const access allowed for transport equations
+            virtual volScalarField& heu()
             {
-                return Tu_;
+                return heu_;
             }
 
 
-        // Fields derived from thermodynamic state variables
+        // Derived thermodynamic properties
 
             //- Unburnt gas enthalpy for cell-set [J/kg]
             virtual tmp<scalarField> heu
@@ -129,7 +129,6 @@ public:
                 const label patchi
             ) const;
 
-
             //- Burnt gas temperature [K]
             virtual tmp<volScalarField> Tb() const;
 
@@ -140,7 +139,7 @@ public:
             virtual tmp<volScalarField> psib() const;
 
 
-        // Access to transport variables
+        // Derived transport properties
 
             //- Dynamic viscosity of unburnt gas [kg/m/s]
             virtual tmp<volScalarField> muu() const;

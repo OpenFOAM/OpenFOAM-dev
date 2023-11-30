@@ -197,8 +197,8 @@ Foam::tmp<Foam::scalarField> Foam::compressibleTwoPhaseVoFMixture::nu
 {
     return
     (
-        alpha1().boundaryField()[patchi]*thermo1_->mu(patchi)
-      + alpha2().boundaryField()[patchi]*thermo2_->mu(patchi)
+        alpha1().boundaryField()[patchi]*thermo1_->mu().boundaryField()[patchi]
+      + alpha2().boundaryField()[patchi]*thermo2_->mu().boundaryField()[patchi]
     )/rho_.boundaryField()[patchi];
 }
 

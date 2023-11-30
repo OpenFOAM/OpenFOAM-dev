@@ -136,7 +136,7 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::mu
     const label patchi
 ) const
 {
-    return thermo_->mu(patchi);
+    return thermo_->mu().boundaryField()[patchi];
 }
 
 

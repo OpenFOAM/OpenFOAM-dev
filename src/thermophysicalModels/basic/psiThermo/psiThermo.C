@@ -71,14 +71,14 @@ Foam::psiThermo::implementation::~implementation()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::psiThermo::correctRho(const Foam::volScalarField& deltaRho)
-{}
-
-
 Foam::tmp<Foam::volScalarField> Foam::psiThermo::renameRho()
 {
     return rho();
 }
+
+
+void Foam::psiThermo::correctRho(const Foam::volScalarField& deltaRho)
+{}
 
 
 Foam::tmp<Foam::volScalarField> Foam::psiThermo::implementation::rho() const

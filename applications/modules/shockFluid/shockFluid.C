@@ -144,7 +144,7 @@ Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
 
     inviscid
     (
-        max(thermo_.mu()().primitiveField()) > 0
+        max(thermo_.mu().primitiveField()) > 0
       ? false
       : true
     ),

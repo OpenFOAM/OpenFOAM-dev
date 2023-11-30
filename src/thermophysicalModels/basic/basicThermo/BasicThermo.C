@@ -302,6 +302,36 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::~BasicThermo()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class MixtureType, class BasicThermoType>
+Foam::tmp<Foam::volScalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::W() const
+{
+    return volScalarFieldProperty
+    (
+        "W",
+        dimMass/dimMoles,
+        &MixtureType::thermoMixture,
+        &MixtureType::thermoMixtureType::W
+    );
+}
+
+
+template<class MixtureType, class BasicThermoType>
+Foam::tmp<Foam::scalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::W
+(
+    const label patchi
+) const
+{
+    return patchFieldProperty
+    (
+        &MixtureType::thermoMixture,
+        &MixtureType::thermoMixtureType::W,
+        patchi
+    );
+}
+
+
+template<class MixtureType, class BasicThermoType>
 const Foam::volScalarField&
 Foam::BasicThermo<MixtureType, BasicThermoType>::Cpv() const
 {
@@ -595,33 +625,6 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::Cv
 
 template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::scalarField>
-Foam::BasicThermo<MixtureType, BasicThermoType>::gamma
-(
-    const scalarField& T,
-    const label patchi
-) const
-{
-    return patchFieldProperty
-    (
-        &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::gamma,
-        patchi,
-        this->p_.boundaryField()[patchi],
-        T
-    );
-}
-
-
-template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::volScalarField>
-Foam::BasicThermo<MixtureType, BasicThermoType>::gamma() const
-{
-    return volScalarField::New("gamma", Cp_/Cv_);
-}
-
-
-template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField>
 Foam::BasicThermo<MixtureType, BasicThermoType>::Cpv
 (
     const scalarField& T,
@@ -699,36 +702,6 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::THE
         h,
         this->p_.boundaryField()[patchi],
         T0
-    );
-}
-
-
-template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::volScalarField>
-Foam::BasicThermo<MixtureType, BasicThermoType>::W() const
-{
-    return volScalarFieldProperty
-    (
-        "W",
-        dimMass/dimMoles,
-        &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::W
-    );
-}
-
-
-template<class MixtureType, class BasicThermoType>
-Foam::tmp<Foam::scalarField>
-Foam::BasicThermo<MixtureType, BasicThermoType>::W
-(
-    const label patchi
-) const
-{
-    return patchFieldProperty
-    (
-        &MixtureType::thermoMixture,
-        &MixtureType::thermoMixtureType::W,
-        patchi
     );
 }
 

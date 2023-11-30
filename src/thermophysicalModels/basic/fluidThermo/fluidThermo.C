@@ -108,17 +108,17 @@ Foam::tmp<Foam::volScalarField> Foam::fluidThermo::nu() const
 Foam::tmp<Foam::scalarField>
 Foam::fluidThermo::nu(const label patchi) const
 {
-    return mu(patchi)/rho(patchi);
+    return mu().boundaryField()[patchi]/rho(patchi);
 }
 
 
-Foam::volScalarField& Foam::fluidThermo::implementation::p()
+const Foam::volScalarField& Foam::fluidThermo::implementation::p() const
 {
     return p_;
 }
 
 
-const Foam::volScalarField& Foam::fluidThermo::implementation::p() const
+Foam::volScalarField& Foam::fluidThermo::implementation::p()
 {
     return p_;
 }
@@ -130,18 +130,9 @@ const Foam::volScalarField& Foam::fluidThermo::implementation::psi() const
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::fluidThermo::implementation::mu() const
+const Foam::volScalarField& Foam::fluidThermo::implementation::mu() const
 {
     return mu_;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::fluidThermo::implementation::mu
-(
-    const label patchi
-) const
-{
-    return mu_.boundaryField()[patchi];
 }
 
 

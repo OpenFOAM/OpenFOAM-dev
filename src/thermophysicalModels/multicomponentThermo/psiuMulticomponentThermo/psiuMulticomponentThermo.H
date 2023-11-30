@@ -147,17 +147,20 @@ public:
             inline const volScalarField& Y(const word& specieName) const;
 
 
-        // Access to thermodynamic state variables.
+        // Thermodynamic state
+
+            //- Unburnt gas temperature [K]
+            virtual const volScalarField& Tu() const = 0;
+
+            //- Unburnt gas enthalpy [J/kg]
+            virtual const volScalarField& heu() const = 0;
 
             //- Unburnt gas enthalpy [J/kg]
             //  Non-const access allowed for transport equations
             virtual volScalarField& heu() = 0;
 
-            //- Unburnt gas enthalpy [J/kg]
-            virtual const volScalarField& heu() const = 0;
 
-
-        // Fields derived from thermodynamic state variables
+        // Derived thermodynamic properties
 
             //- Unburnt gas enthalpy for cell-set [J/kg]
             virtual tmp<scalarField> heu
@@ -173,29 +176,23 @@ public:
                 const label patchi
             ) const = 0;
 
-            //- Unburnt gas temperature [K]
-            virtual const volScalarField& Tu() const = 0;
-
             //- Burnt gas temperature [K]
             virtual tmp<volScalarField> Tb() const = 0;
-
-            //- Unburnt gas density [kg/m^3]
-            virtual tmp<volScalarField> rhou() const
-            {
-                return p()*psiu();
-            }
-
-            //- Burnt gas density [kg/m^3]
-            virtual tmp<volScalarField> rhob() const
-            {
-                return p()*psib();
-            }
 
             //- Unburnt gas compressibility [s^2/m^2]
             virtual tmp<volScalarField> psiu() const = 0;
 
             //- Burnt gas compressibility [s^2/m^2]
             virtual tmp<volScalarField> psib() const = 0;
+
+            //- Unburnt gas density [kg/m^3]
+            tmp<volScalarField> rhou() const;
+
+            //- Burnt gas density [kg/m^3]
+            tmp<volScalarField> rhob() const;
+
+
+        // Derived transport properties
 
             //- Dynamic viscosity of unburnt gas [kg/m/s]
             virtual tmp<volScalarField> muu() const = 0;

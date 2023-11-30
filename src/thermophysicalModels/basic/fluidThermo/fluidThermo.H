@@ -95,60 +95,44 @@ public:
 
     // Member Functions
 
-        // Access to thermodynamic state variables
+        // Thermodynamic state
+
+            //- Pressure [Pa]
+            virtual const volScalarField& p() const = 0;
 
             //- Pressure [Pa]
             //  Non-const access allowed for transport equations
             virtual volScalarField& p() = 0;
 
-            //- Pressure [Pa]
-            virtual const volScalarField& p() const = 0;
-
-            //- Add the given density correction to the density field.
-            //  Used to update the density field following pressure solution
-            virtual void correctRho(const volScalarField& deltaRho) = 0;
-
             //- Compressibility [s^2/m^2]
             virtual const volScalarField& psi() const = 0;
 
 
-        // Fields derived from thermodynamic state variables
+        // Derived thermodynamic properties
 
             //- Rename the thermodynamic density field if stored and return
             //  This is used by solvers which create a separate continuity rho
             //  [kg/m^3]
             virtual tmp<volScalarField> renameRho() = 0;
 
-            //- Gamma = Cp/Cv []
-            virtual tmp<volScalarField> gamma() const = 0;
-
-            //- Gamma = Cp/Cv for patch []
-            virtual tmp<scalarField> gamma
-            (
-                const scalarField& T,
-                const label patchi
-            ) const = 0;
-
-            //- Molecular weight [kg/kmol]
-            virtual tmp<volScalarField> W() const = 0;
-
-            //- Molecular weight for patch [kg/kmol]
-            virtual tmp<scalarField> W(const label patchi) const = 0;
+            //- Add the given density correction to the density field.
+            //  Used to update the density field following pressure solution
+            virtual void correctRho(const volScalarField& deltaRho) = 0;
 
 
-        // Access to transport state variables
+        // Transport state
 
             //- Dynamic viscosity of mixture [kg/m/s]
-            virtual tmp<volScalarField> mu() const = 0;
+            virtual const volScalarField& mu() const = 0;
 
-            //- Dynamic viscosity of mixture for patch [kg/m/s]
-            virtual tmp<scalarField> mu(const label patchi) const = 0;
+
+        // Derived transport properties
 
             //- Kinematic viscosity of mixture [m^2/s]
-            virtual tmp<volScalarField> nu() const;
+            tmp<volScalarField> nu() const;
 
             //- Kinematic viscosity of mixture for patch [m^2/s]
-            virtual tmp<scalarField> nu(const label patchi) const;
+            tmp<scalarField> nu(const label patchi) const;
 };
 
 
@@ -193,26 +177,23 @@ public:
 
     // Member Functions
 
-        // Access to thermodynamic state variables
+        // Thermodynamic state
+
+            //- Pressure [Pa]
+            virtual const volScalarField& p() const;
 
             //- Pressure [Pa]
             //  Non-const access allowed for transport equations
             virtual volScalarField& p();
 
-            //- Pressure [Pa]
-            virtual const volScalarField& p() const;
-
             //- Compressibility [s^2/m^2]
             virtual const volScalarField& psi() const;
 
 
-        // Access to transport state variables
+        // Transport state
 
             //- Dynamic viscosity of mixture [kg/m/s]
-            virtual tmp<volScalarField> mu() const;
-
-            //- Dynamic viscosity of mixture for patch [kg/m/s]
-            virtual tmp<scalarField> mu(const label patchi) const;
+            virtual const volScalarField& mu() const;
 
 
     // Member Operators
