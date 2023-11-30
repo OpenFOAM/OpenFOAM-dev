@@ -43,33 +43,44 @@ namespace fv
 
 void Foam::fv::massTransferBase::readCoeffs()
 {
-    phaseNames_ = coeffs().lookup<Pair<word>>("phases");
-
-    alphaNames_ =
-        coeffs().lookupOrDefault<Pair<word>>
-        (
-            "alphas",
-            Pair<word>
-            (
-                IOobject::groupName("alpha", phaseNames_.first()),
-                IOobject::groupName("alpha", phaseNames_.second())
-            )
-        );
-
-    rhoNames_ =
-        coeffs().lookupOrDefault<Pair<word>>
-        (
-            "rhos",
-            Pair<word>
-            (
-                IOobject::groupName("rho", phaseNames_.first()),
-                IOobject::groupName("rho", phaseNames_.second())
-            )
-        );
+    if
+    (
+        phaseNames_ != lookupPhaseNames()
+     || alphaNames_ != lookupPhaseFieldNames("alpha")
+     || rhoNames_ != lookupPhaseFieldNames("rho")
+    )
+    {
+        FatalIOErrorInFunction(coeffs())
+            << "Cannot change the phases of a " << typeName << " model "
+            << "at run time" << exit(FatalIOError);
+    }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+const Foam::Pair<Foam::word>
+Foam::fv::massTransferBase::lookupPhaseNames() const
+{
+    return coeffs().lookup<Pair<word>>("phases");
+}
+
+
+const Foam::Pair<Foam::word>
+Foam::fv::massTransferBase::lookupPhaseFieldNames(const word& name) const
+{
+    return
+        coeffs().lookupOrDefault<Pair<word>>
+        (
+            name + "s",
+            Pair<word>
+            (
+                IOobject::groupName(name, phaseNames_.first()),
+                IOobject::groupName(name, phaseNames_.second())
+            )
+        );
+}
+
 
 Foam::tmp<Foam::volScalarField::Internal> Foam::fv::massTransferBase::rho
 (
@@ -177,9 +188,9 @@ Foam::fv::massTransferBase::massTransferBase
 )
 :
     fvSpecificSource(name, modelType, mesh, dict),
-    phaseNames_(word::null, word::null),
-    alphaNames_(word::null, word::null),
-    rhoNames_(word::null, word::null)
+    phaseNames_(lookupPhaseNames()),
+    alphaNames_(lookupPhaseFieldNames("alpha")),
+    rhoNames_(lookupPhaseFieldNames("rho"))
 {
     readCoeffs();
 }

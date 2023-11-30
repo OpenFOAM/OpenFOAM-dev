@@ -59,13 +59,13 @@ private:
     // Private Data
 
         //- Names of the phases
-        Pair<word> phaseNames_;
+        const Pair<word> phaseNames_;
 
         //- Names of the volume fraction fields
-        Pair<word> alphaNames_;
+        const Pair<word> alphaNames_;
 
         //- Names of the density fields
-        Pair<word> rhoNames_;
+        const Pair<word> rhoNames_;
 
 
     // Private Member Functions
@@ -77,6 +77,12 @@ private:
 protected:
 
     // Protected Member Functions
+
+        //- Lookup the phase names
+        const Pair<word> lookupPhaseNames() const;
+
+        //- Lookup the phase field names
+        const Pair<word> lookupPhaseFieldNames(const word& name) const;
 
         //- Get the index of the name in the given pair, or -1
         static inline label index(const Pair<word>& names, const word& name);
