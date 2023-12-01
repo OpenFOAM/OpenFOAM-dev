@@ -44,8 +44,6 @@ SourceFiles
 namespace Foam
 {
 
-class fvMesh;
-
 /*---------------------------------------------------------------------------*\
                         Class nearWallDist Declaration
 \*---------------------------------------------------------------------------*/
@@ -55,7 +53,7 @@ class nearWallDist
     public DemandDrivenMeshObject
     <
         fvMesh,
-        TopoChangeableMeshObject,
+        DeletableMeshObject,
         nearWallDist
     >
 {
@@ -65,21 +63,12 @@ class nearWallDist
         volScalarField::Boundary y_;
 
 
-    // Private Member Functions
-
-        //- Re-size y_ following a change to the boundary mesh
-        void resize();
-
-        //- Re-calculate y_
-        void correct();
-
-
 protected:
 
     friend class DemandDrivenMeshObject
     <
         fvMesh,
-        TopoChangeableMeshObject,
+        DeletableMeshObject,
         nearWallDist
     >;
 
@@ -112,18 +101,6 @@ public:
         {
             return y_;
         }
-
-        //- Update the y-field when the mesh moves
-        virtual bool movePoints();
-
-        //- Update the y-field when the mesh changes
-        virtual void topoChange(const polyTopoChangeMap&);
-
-        //- Update from another mesh using the given map
-        virtual void mapMesh(const polyMeshMap&);
-
-        //- Redistribute or update using the given distribution map
-        virtual void distribute(const polyDistributionMap&);
 
 
     // Member Operators

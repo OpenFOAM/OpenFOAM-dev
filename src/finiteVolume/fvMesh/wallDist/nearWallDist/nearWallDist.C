@@ -35,52 +35,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::nearWallDist::resize()
-{
-    y_.setSize(mesh().boundary().size());
-
-    forAll(y_, patchi)
-    {
-        y_.set
-        (
-            patchi,
-            fvPatchField<scalar>::New
-            (
-                calculatedFvPatchScalarField::typeName,
-                mesh().boundary()[patchi],
-                volScalarField::Internal::null()
-            )
-        );
-    }
-}
-
-
-void Foam::nearWallDist::correct()
-{
-    volScalarField yVf(volScalarField::New("y", mesh(), dimLength));
-
-    fvPatchDistWave::correct
-    (
-        mesh(),
-        mesh().boundaryMesh().findPatchIDs<wallPolyPatch>(),
-        -vGreat,
-        2,
-        yVf
-    );
-
-    forAll(y_, patchi)
-    {
-        const labelUList& faceCells = mesh().boundary()[patchi].faceCells();
-        forAll(y_[patchi], patchFacei)
-        {
-            y_[patchi][patchFacei] = yVf[faceCells[patchFacei]];
-        }
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::nearWallDist::nearWallDist(const Foam::fvMesh& mesh)
@@ -88,7 +42,7 @@ Foam::nearWallDist::nearWallDist(const Foam::fvMesh& mesh)
     DemandDrivenMeshObject
     <
         fvMesh,
-        TopoChangeableMeshObject,
+        DeletableMeshObject,
         nearWallDist
     >(mesh),
     y_
@@ -98,7 +52,25 @@ Foam::nearWallDist::nearWallDist(const Foam::fvMesh& mesh)
         calculatedFvPatchScalarField::typeName
     )
 {
-    correct();
+    volScalarField yVf(volScalarField::New("y", mesh, dimLength));
+
+    fvPatchDistWave::correct
+    (
+        mesh,
+        mesh.boundaryMesh().findPatchIDs<wallPolyPatch>(),
+        -vGreat,
+        2,
+        yVf
+    );
+
+    forAll(y_, patchi)
+    {
+        const labelUList& faceCells = mesh.boundary()[patchi].faceCells();
+        forAll(y_[patchi], patchFacei)
+        {
+            y_[patchi][patchFacei] = yVf[faceCells[patchFacei]];
+        }
+    }
 }
 
 
@@ -106,38 +78,6 @@ Foam::nearWallDist::nearWallDist(const Foam::fvMesh& mesh)
 
 Foam::nearWallDist::~nearWallDist()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::nearWallDist::movePoints()
-{
-    resize();
-
-    correct();
-    return true;
-}
-
-
-void Foam::nearWallDist::topoChange(const polyTopoChangeMap& map)
-{
-    resize();
-    correct();
-}
-
-
-void Foam::nearWallDist::mapMesh(const polyMeshMap& map)
-{
-    resize();
-    correct();
-}
-
-
-void Foam::nearWallDist::distribute(const polyDistributionMap& map)
-{
-    resize();
-    correct();
-}
 
 
 // ************************************************************************* //
