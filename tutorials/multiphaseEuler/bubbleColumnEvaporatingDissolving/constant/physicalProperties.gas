@@ -41,7 +41,7 @@ defaultSpecie air;
     }
     thermodynamics
     {
-        Hf          0;
+        hf          0;
         Cv          724.8;
     }
     transport
@@ -59,7 +59,7 @@ water
     }
     thermodynamics
     {
-        Hf          -1.3435e+07;
+        hf          -1.3435e+07;
         Cv          1396.3;
     }
     transport

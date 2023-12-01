@@ -36,10 +36,10 @@ mixture
 
     thermodynamics
     {
-        Hf          0;
+        hf          0;
         Cp          2078.4;
         Tref        372.76;
-        Hsref       2675500;
+        hsRef       2675500;
     }
 
     transport

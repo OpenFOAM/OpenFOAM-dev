@@ -41,7 +41,7 @@ TiO2
     }
     thermodynamics
     {
-        Hf          -1.18307e+07;
+        hf          -1.18307e+07;
         Cp          684.246;
     }
     transport

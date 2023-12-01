@@ -41,7 +41,7 @@ solids
         rho             2010;
         Cp              710;
         kappa           0.04;
-        Hf              0;
+        hf              0;
         emissivity      1.0;
     }
 

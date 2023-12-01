@@ -35,7 +35,7 @@ mixture
     {
         Cv          712;
         Cp          1005;
-        Hf          0;
+        hf          0;
     }
     transport
     {

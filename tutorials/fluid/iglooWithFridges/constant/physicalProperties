@@ -40,7 +40,7 @@ mixture
     thermodynamics
     {
         Cv              712;
-        Hf              0;
+        hf              0;
     }
     transport
     {

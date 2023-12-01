@@ -42,7 +42,7 @@ water
     thermodynamics
     {
         Cp          4195;
-        Hf          0;
+        hf          0;
     }
     transport
     {
@@ -64,7 +64,7 @@ sludge
     thermodynamics
     {
         Cp          4195;
-        Hf          0;
+        hf          0;
     }
     transport
     {

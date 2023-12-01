@@ -37,12 +37,12 @@ mixture
     }
     thermodynamics
     {
-        Hf          -1.58643e+07;
+        hf          -1.58643e+07;
         Cv          4195;
         Cp          4195;
         Tref        372.76;
-        Hsref       312508;
-        Esref       312410;
+        hsRef       312508;
+        esRef       312410;
     }
     transport
     {

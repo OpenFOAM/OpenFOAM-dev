@@ -38,7 +38,7 @@ mixture
     thermodynamics
     {
         Cv          2240;
-        Hf          0;
+        hf          0;
     }
     transport
     {

@@ -43,7 +43,7 @@ mixture
     }
     thermodynamics
     {
-        Hf              0;
+        hf              0;
         Cv              900;
     }
 }

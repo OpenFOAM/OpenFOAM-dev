@@ -38,7 +38,7 @@ mixture
     thermodynamics
     {
         Cv          4150;       // [J/kg/K]
-        Hf          0;
+        hf          0;
     }
     transport
     {
