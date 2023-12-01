@@ -58,7 +58,7 @@ addToRunTimeSelectionTable
 
 tmp<volScalarField> LienCubicKE::fMu() const
 {
-    const volScalarField yStar(sqrt(k_)*y_/nu());
+    const volScalarField yStar(sqrt(k_)*y()/nu());
 
     return
         (scalar(1) - exp(-Anu_*yStar))
@@ -76,10 +76,10 @@ tmp<volScalarField> LienCubicKE::f2() const
 
 tmp<volScalarField> LienCubicKE::E(const volScalarField& f2) const
 {
-    const volScalarField yStar(sqrt(k_)*y_/nu());
+    const volScalarField yStar(sqrt(k_)*y()/nu());
     const volScalarField le
     (
-        kappa_*y_/(scalar(1) + (2*kappa_/(pow(Cmu_, 0.75))/(yStar + small)))
+        kappa_*y()/(scalar(1) + (2*kappa_/(pow(Cmu_, 0.75))/(yStar + small)))
     );
 
     return
@@ -331,9 +331,7 @@ LienCubicKE::LienCubicKE
             IOobject::AUTO_WRITE
         ),
         mesh_
-    ),
-
-    y_(wallDist::New(mesh_).y())
+    )
 {
     bound(k_, kMin_);
     bound(epsilon_, epsilonMin_);

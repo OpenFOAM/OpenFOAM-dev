@@ -244,7 +244,7 @@ struct alphatWallBoilingWallFunctionFvPatchScalarField::boilingLiquidProperties
         (
             pow025(nutw.Cmu())
            *sqrt(ttm.momentumTransport().k()().boundaryField()[patchi()])
-           *ttm.momentumTransport().y()[patchi()]
+           *ttm.momentumTransport().yb()[patchi()]
            /nuw
         ),
         P

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,7 +160,7 @@ void kOmegaSSTSato<BasicMomentumTransportModel>::correctNut
 {
     volScalarField yPlus
     (
-        pow(this->betaStar_, 0.25)*this->y_*sqrt(this->k_)/this->nu()
+        pow(this->betaStar_, 0.25)*this->y()*sqrt(this->k_)/this->nu()
     );
 
     this->nut_ =

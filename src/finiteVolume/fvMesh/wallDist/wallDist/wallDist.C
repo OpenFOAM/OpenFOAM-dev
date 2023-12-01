@@ -67,7 +67,7 @@ void Foam::wallDist::constructn() const
 
 Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
 :
-    DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, wallDist>(mesh),
+    DemandDrivenMeshObject<fvMesh, DeletableMeshObject, wallDist>(mesh),
     patchIDs_(mesh.boundaryMesh().findPatchIDs<wallPolyPatch>()),
     patchTypeName_(patchTypeName),
     pdm_
@@ -101,9 +101,12 @@ Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
     if (nRequired_)
     {
         constructn();
+        pdm_->correct(y_, n_());
     }
-
-    movePoints();
+    else
+    {
+        pdm_->correct(y_);
+    }
 }
 
 
@@ -114,7 +117,7 @@ Foam::wallDist::wallDist
     const word& patchTypeName
 )
 :
-    DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, wallDist>(mesh),
+    DemandDrivenMeshObject<fvMesh, DeletableMeshObject, wallDist>(mesh),
     patchIDs_(patchIDs),
     patchTypeName_(patchTypeName),
     pdm_
@@ -148,9 +151,12 @@ Foam::wallDist::wallDist
     if (nRequired_)
     {
         constructn();
+        pdm_->correct(y_, n_());
     }
-
-    movePoints();
+    else
+    {
+        pdm_->correct(y_);
+    }
 }
 
 
@@ -177,46 +183,6 @@ const Foam::volVectorField& Foam::wallDist::n() const
     }
 
     return n_();
-}
-
-
-bool Foam::wallDist::movePoints()
-{
-    if (pdm_->movePoints())
-    {
-        if (nRequired_)
-        {
-            return pdm_->correct(y_, n_());
-        }
-        else
-        {
-            return pdm_->correct(y_);
-        }
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
-void Foam::wallDist::topoChange(const polyTopoChangeMap& map)
-{
-    pdm_->topoChange(map);
-    movePoints();
-}
-
-
-void Foam::wallDist::mapMesh(const polyMeshMap& map)
-{
-    pdm_->mapMesh(map);
-    movePoints();
-}
-
-
-void Foam::wallDist::distribute(const polyDistributionMap& map)
-{
-    // The y and n fields are registered and distributed automatically
 }
 
 

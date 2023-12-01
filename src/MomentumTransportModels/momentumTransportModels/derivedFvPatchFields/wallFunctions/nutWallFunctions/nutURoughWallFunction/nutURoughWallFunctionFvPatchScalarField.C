@@ -43,7 +43,7 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::nut() const
     const momentumTransportModel& turbModel =
         db().lookupType<momentumTransportModel>(internalField().group());
 
-    const scalarField& y = turbModel.y()[patchi];
+    const scalarField& y = turbModel.yb()[patchi];
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
@@ -84,7 +84,7 @@ tmp<scalarField> nutURoughWallFunctionFvPatchScalarField::yPlus
     const momentumTransportModel& turbModel =
         db().lookupType<momentumTransportModel>(internalField().group());
 
-    const scalarField& y = turbModel.y()[patchi];
+    const scalarField& y = turbModel.yb()[patchi];
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 

@@ -64,7 +64,7 @@ tmp<volScalarField> LamBremhorstKE::Rt() const
 
 tmp<volScalarField> LamBremhorstKE::fMu(const volScalarField& Rt) const
 {
-    tmp<volScalarField> Ry(sqrt(k_)*y_/nu());
+    tmp<volScalarField> Ry(sqrt(k_)*y()/nu());
     return sqr(scalar(1) - exp(-0.0165*Ry))*(scalar(1) + 20.5/(Rt + small));
 }
 
@@ -181,9 +181,7 @@ LamBremhorstKE::LamBremhorstKE
             IOobject::AUTO_WRITE
         ),
         mesh_
-    ),
-
-    y_(wallDist::New(mesh_).y())
+    )
 {
     bound(k_, kMin_);
     bound(epsilon_, epsilonMin_);

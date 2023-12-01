@@ -55,10 +55,10 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST::F1
         (
             max
             (
-                (scalar(1)/betaStar_)*sqrt(k_)/(omega_*y_),
-                scalar(500)*this->nu()/(sqr(y_)*omega_)
+                (scalar(1)/betaStar_)*sqrt(k_)/(omega_*this->y()),
+                scalar(500)*this->nu()/(sqr(this->y())*omega_)
             ),
-            (4*alphaOmega2_)*k_/(CDkOmegaPlus*sqr(y_))
+            (4*alphaOmega2_)*k_/(CDkOmegaPlus*sqr(this->y()))
         ),
         scalar(10)
     );
@@ -75,8 +75,8 @@ F2() const
     (
         max
         (
-            (scalar(2)/betaStar_)*sqrt(k_)/(omega_*y_),
-            scalar(500)*this->nu()/(sqr(y_)*omega_)
+            (scalar(2)/betaStar_)*sqrt(k_)/(omega_*this->y()),
+            scalar(500)*this->nu()/(sqr(this->y())*omega_)
         ),
         scalar(100)
     );
@@ -91,7 +91,7 @@ F3() const
 {
     tmp<volScalarField> arg3 = min
     (
-        150*this->nu()/(omega_*sqr(y_)),
+        150*this->nu()/(omega_*sqr(this->y())),
         scalar(10)
     );
 
@@ -353,8 +353,6 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST
             false
         )
     ),
-
-    y_(wallDist::New(this->mesh_).y()),
 
     k_
     (

@@ -537,8 +537,7 @@ kkLOmega::kkLOmega
             mesh_
         ),
         kt_*omega_ + D(kl_) + D(kt_)
-    ),
-    y_(wallDist::New(mesh_).y())
+    )
 {
     bound(kt_, kMin_);
     bound(kl_, kMin_);
@@ -612,9 +611,11 @@ void kkLOmega::correct()
         return;
     }
 
+    volScalarField y(this->y());
+
     const volScalarField lambdaT(sqrt(kt_)/(omega_ + omegaMin_));
 
-    const volScalarField lambdaEff(min(Clambda_*y_, lambdaT));
+    const volScalarField lambdaEff(min(Clambda_*y, lambdaT));
 
     const volScalarField fw
     (
@@ -644,7 +645,7 @@ void kkLOmega::correct()
     const volScalarField Pkt(this->GName(), nuts*S2);
 
     const volScalarField ktL(kt_ - ktS);
-    const volScalarField ReOmega(sqr(y_)*Omega/nu());
+    const volScalarField ReOmega(sqr(y)*Omega/nu());
 
     const volScalarField nutl
     (
@@ -674,7 +675,7 @@ void kkLOmega::correct()
        /(fw + fwMin)
     );
 
-    const volScalarField fNatCrit(1 - exp(-Cnc_*sqrt(kl_)*y_/nu()));
+    const volScalarField fNatCrit(1 - exp(-Cnc_*sqrt(kl_)*y/nu()));
 
     // Natural source term divided by kl_
     const volScalarField Rnat
@@ -701,7 +702,7 @@ void kkLOmega::correct()
       - fvm::Sp(Cw2_*sqr(fw)*omega_, omega_)
       + (
             Cw3_*fOmega(lambdaEff, lambdaT)*alphaTEff*sqr(fw)*sqrt(kt_)
-        )()()/pow3(y_())
+        )()()/pow3(y())
     );
 
     omegaEqn.ref().relax();

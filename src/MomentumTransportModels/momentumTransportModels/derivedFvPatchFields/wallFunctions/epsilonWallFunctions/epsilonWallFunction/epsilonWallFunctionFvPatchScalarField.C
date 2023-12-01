@@ -149,7 +149,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::calculateTurbulenceFields
     // Ask for the wall distance in advance. Some processes may not have any
     // corner weights, so we cannot allow functions inside the if statements
     // below to trigger the wall distance calculation.
-    turbModel.y();
+    turbModel.yb();
 
     // Accumulate all of the G and epsilon contributions
     forAll(cornerWeights_, patchi)
@@ -191,7 +191,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::calculate
     const nutWallFunctionFvPatchScalarField& nutw =
         nutWallFunctionFvPatchScalarField::nutw(turbModel, patchi);
 
-    const scalarField& y = turbModel.y()[patchi];
+    const scalarField& y = turbModel.yb()[patchi];
 
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();

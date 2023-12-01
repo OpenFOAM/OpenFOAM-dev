@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,7 +175,7 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::dTilda
     return volScalarField::Internal::New
     (
         typedName("dTilda"),
-        min(CDES_*this->delta()(), y_)
+        min(CDES_*this->delta()(), this->y())
     );
 }
 
@@ -191,7 +191,7 @@ void SpalartAllmarasDES<BasicMomentumTransportModel>::cacheLESRegion
         volScalarField::Internal::New
         (
             typedName("LESRegion"),
-            neg(dTilda - y_())
+            neg(dTilda - this->y()())
         );
     }
 }
@@ -344,9 +344,7 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::SpalartAllmarasDES
             IOobject::AUTO_WRITE
         ),
         this->mesh_
-    ),
-
-    y_(wallDist::New(this->mesh_).y())
+    )
 {
     if (type == typeName)
     {

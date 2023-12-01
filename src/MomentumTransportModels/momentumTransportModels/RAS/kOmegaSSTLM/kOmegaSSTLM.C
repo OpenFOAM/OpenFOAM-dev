@@ -40,7 +40,7 @@ tmp<volScalarField> kOmegaSSTLM<BasicMomentumTransportModel>::F1
     const volScalarField& CDkOmega
 ) const
 {
-    const volScalarField Ry(this->y_*sqrt(this->k_)/this->nu());
+    const volScalarField Ry(this->y()*sqrt(this->k_)/this->nu());
     const volScalarField F3(exp(-pow(Ry/120.0, 8)));
 
     return max(kOmegaSST<BasicMomentumTransportModel>::F1(CDkOmega), F3);
@@ -80,7 +80,7 @@ tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Fthetat
 ) const
 {
     const volScalarField::Internal& omega = this->omega_();
-    const volScalarField::Internal& y = this->y_();
+    const volScalarField::Internal& y = this->y()();
 
     const volScalarField::Internal delta(375*Omega*nu*ReThetat_()*y/sqr(Us));
     const volScalarField::Internal ReOmega(sqr(y)*omega/nu);
@@ -156,7 +156,7 @@ tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Flength
     volScalarField::Internal& Flength = tFlength.ref();
 
     const volScalarField::Internal& omega = this->omega_();
-    const volScalarField::Internal& y = this->y_();
+    const volScalarField::Internal& y = this->y()();
 
     forAll(ReThetat_, celli)
     {
@@ -496,7 +496,7 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
     const volScalarField& omega = this->omega_;
     const tmp<volScalarField> tnu = this->nu();
     const volScalarField::Internal& nu = tnu()();
-    const volScalarField::Internal& y = this->y_();
+    const volScalarField::Internal& y = this->y()();
     const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
     const Foam::fvConstraints& fvConstraints
     (

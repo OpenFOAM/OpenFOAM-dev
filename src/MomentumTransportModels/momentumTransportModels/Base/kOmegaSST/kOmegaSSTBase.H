@@ -143,11 +143,6 @@ protected:
 
         // Fields
 
-            //- Wall distance
-            //  Note: different to wall distance in parent RASModel
-            //  which is for near-wall cells only
-            const volScalarField& y_;
-
             volScalarField k_;
             volScalarField omega_;
 

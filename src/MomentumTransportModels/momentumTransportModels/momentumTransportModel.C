@@ -27,6 +27,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "wallFvPatch.H"
+#include "wallDist.H"
 #include "nearWallDist.H"
 #include "fvcFlux.H"
 #include "fvmDiv.H"
@@ -120,7 +121,13 @@ Foam::tmp<Foam::surfaceScalarField> Foam::momentumTransportModel::phi() const
 }
 
 
-const Foam::volScalarField::Boundary& Foam::momentumTransportModel::y() const
+const Foam::volScalarField& Foam::momentumTransportModel::y() const
+{
+    return wallDist::New(mesh_).y();
+}
+
+
+const Foam::volScalarField::Boundary& Foam::momentumTransportModel::yb() const
 {
     return nearWallDist::New(mesh_).y();
 }

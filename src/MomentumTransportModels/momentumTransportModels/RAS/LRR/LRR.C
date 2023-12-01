@@ -365,8 +365,8 @@ void LRR<BasicMomentumTransportModel>::correct()
     // Optionally add wall-refection term
     if (wallReflection_)
     {
-        const volVectorField& n_(wallDist::New(this->mesh_).n());
-        const volScalarField& y_(wallDist::New(this->mesh_).y());
+        const volVectorField& n(wallDist::New(this->mesh_).n());
+        const volScalarField& y(wallDist::New(this->mesh_).y());
 
         const volSymmTensorField reflect
         (
@@ -374,8 +374,8 @@ void LRR<BasicMomentumTransportModel>::correct()
         );
 
         REqn.ref() +=
-            ((3*pow(Cmu_, 0.75)/kappa_)*(alpha*rho*sqrt(k_)/y_))
-           *dev(symm((n_ & reflect)*n_));
+            ((3*pow(Cmu_, 0.75)/kappa_)*(alpha*rho*sqrt(k_)/y))
+           *dev(symm((n & reflect)*n));
     }
 
     REqn.ref().relax();

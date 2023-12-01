@@ -66,7 +66,7 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::calcUTau
     const momentumTransportModel& turbModel =
         db().lookupType<momentumTransportModel>(internalField().group());
 
-    const scalarField& y = turbModel.y()[patchi];
+    const scalarField& y = turbModel.yb()[patchi];
 
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magUp(mag(Uw.patchInternalField() - Uw));
@@ -164,7 +164,7 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::yPlus() const
     const momentumTransportModel& turbModel =
         db().lookupType<momentumTransportModel>(internalField().group());
 
-    const scalarField& y = turbModel.y()[patchi];
+    const scalarField& y = turbModel.yb()[patchi];
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();

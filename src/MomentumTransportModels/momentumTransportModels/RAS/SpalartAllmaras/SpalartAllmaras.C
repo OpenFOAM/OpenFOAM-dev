@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ SpalartAllmaras<BasicMomentumTransportModel>::Stilda
             max
             (
                 Omega
-              + fv2(chi, fv1)*nuTilda_/sqr(kappa_*y_),
+              + fv2(chi, fv1)*nuTilda_/sqr(kappa_*this->y()()),
                 Cs_*Omega
             )
         )
@@ -118,7 +118,7 @@ tmp<volScalarField::Internal> SpalartAllmaras<BasicMomentumTransportModel>::fw
                    Stilda,
                    dimensionedScalar(Stilda.dimensions(), small)
                )
-              *sqr(kappa_*y_)
+              *sqr(kappa_*this->y()())
             ),
             scalar(10.0)
         )
@@ -264,9 +264,7 @@ SpalartAllmaras<BasicMomentumTransportModel>::SpalartAllmaras
             IOobject::AUTO_WRITE
         ),
         this->mesh_
-    ),
-
-    y_(wallDist::New(this->mesh_).y())
+    )
 {
     if (type == typeName)
     {
@@ -395,7 +393,11 @@ void SpalartAllmaras<BasicMomentumTransportModel>::correct()
       - Cb2_/sigmaNut_*alpha*rho*magSqr(fvc::grad(nuTilda_))
      ==
         Cb1_*alpha()*rho()*Stilda*nuTilda_()
-      - fvm::Sp(Cw1_*alpha()*rho()*fw(Stilda)*nuTilda_()/sqr(y_), nuTilda_)
+      - fvm::Sp
+        (
+            Cw1_*alpha()*rho()*fw(Stilda)*nuTilda_()/sqr(this->y()()),
+            nuTilda_
+        )
       + fvModels.source(alpha, rho, nuTilda_)
     );
 

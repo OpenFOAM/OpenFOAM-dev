@@ -68,7 +68,7 @@ namespace Foam
 
 class wallDist
 :
-    public DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, wallDist>
+    public DemandDrivenMeshObject<fvMesh, DeletableMeshObject, wallDist>
 {
     // Private Data
 
@@ -102,7 +102,7 @@ protected:
     friend class DemandDrivenMeshObject
     <
         fvMesh,
-        TopoChangeableMeshObject,
+        DeletableMeshObject,
         wallDist
     >;
 
@@ -156,18 +156,6 @@ public:
 
         //- Return reference to cached normal-to-wall field
         const volVectorField& n() const;
-
-        //- Update the y-field when the mesh moves
-        virtual bool movePoints();
-
-        //- Update the y-field when the mesh changes
-        virtual void topoChange(const polyTopoChangeMap&);
-
-        //- Update from another mesh using the given map
-        virtual void mapMesh(const polyMeshMap&);
-
-        //- Redistribute or update using the given distribution map
-        virtual void distribute(const polyDistributionMap&);
 
 
     // Member Operators

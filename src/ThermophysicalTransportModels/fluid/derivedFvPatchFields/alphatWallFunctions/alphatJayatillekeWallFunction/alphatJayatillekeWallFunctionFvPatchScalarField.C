@@ -153,7 +153,7 @@ tmp<scalarField> alphatJayatillekeWallFunctionFvPatchScalarField::alphat
 
     const scalar Cmu25 = pow025(nutw.Cmu());
 
-    const scalarField& y = turbModel.y()[patchi];
+    const scalarField& y = turbModel.yb()[patchi];
 
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();

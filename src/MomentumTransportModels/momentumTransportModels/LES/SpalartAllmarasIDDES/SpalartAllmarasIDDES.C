@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::IDDESalpha() const
     return volScalarField::Internal::New
     (
         typedName("alpha"),
-        max(0.25 - this->y_()/IDDESDelta_.hmax(), scalar(-5))
+        max(0.25 - this->y()()/IDDESDelta_.hmax(), scalar(-5))
     );
 }
 
@@ -95,7 +95,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::rd
                (
                    magGradU,
                    dimensionedScalar(magGradU.dimensions(), small)
-               )*sqr(this->kappa_*this->y_())
+               )*sqr(this->kappa_*this->y()())
             ),
             scalar(10)
         )
@@ -205,7 +205,7 @@ SpalartAllmarasIDDES<BasicMomentumTransportModel>::dTilda
         max
         (
             dimensionedScalar(dimLength, small),
-            fHyb*(1 + fRestore*Psi)*this->y_
+            fHyb*(1 + fRestore*Psi)*this->y()
           + (1 - fHyb)*this->CDES_*Psi*this->delta()
         )
     );
