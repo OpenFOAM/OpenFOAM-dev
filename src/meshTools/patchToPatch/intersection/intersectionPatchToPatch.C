@@ -904,7 +904,7 @@ Foam::patchToPatches::intersection::srcWeights() const
         forAll(srcCouples_[srcFacei], i)
         {
             result[srcFacei][i] *=
-                min(max(srcCoverage_[srcFacei], small), 1)/aSum;
+                min(max(srcCoverage_[srcFacei], small), scalar(1))/aSum;
         }
     }
 
@@ -936,7 +936,7 @@ Foam::patchToPatches::intersection::tgtWeights() const
         forAll(tgtCouples_[tgtFacei], i)
         {
             result[tgtFacei][i] *=
-                min(max(tgtCoverage_[tgtFacei], small), 1)/aSum;
+                min(max(tgtCoverage_[tgtFacei], small), scalar(1))/aSum;
         }
     }
 
