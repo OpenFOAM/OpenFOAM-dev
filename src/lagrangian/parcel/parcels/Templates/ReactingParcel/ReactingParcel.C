@@ -133,7 +133,7 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
             const label cid = composition.localToCarrierId(idPhase, i);
 
             const scalar Cp = composition.carrier().Cpi(cid, td.pc(), Tsdash);
-            const scalar W = composition.carrier().Wi(cid);
+            const scalar W = composition.carrier().WiValue(cid);
             const scalar Ni = dMassPC[i]/(this->areaS(d)*dt*W);
 
             const scalar Dab =
@@ -304,7 +304,7 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
 
     forAll(Xinf, i)
     {
-        Xinf[i] = carrierThermo.Y(i)[this->cell()]/carrierThermo.Wi(i);
+        Xinf[i] = carrierThermo.Y(i)[this->cell()]/carrierThermo.WiValue(i);
     }
     Xinf /= sum(Xinf);
 
@@ -326,7 +326,7 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
         const scalar Csi = Cs[i] + Xsff*Xinf[i]*CsTot;
 
         Xs[i] = (2.0*Csi + Xinf[i]*CsTot)/3.0;
-        Ys[i] = Xs[i]*carrierThermo.Wi(i);
+        Ys[i] = Xs[i]*carrierThermo.WiValue(i);
     }
     Xs /= sum(Xs);
     Ys /= sum(Ys);
@@ -341,7 +341,7 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
 
     forAll(Ys, i)
     {
-        const scalar W = carrierThermo.Wi(i);
+        const scalar W = carrierThermo.WiValue(i);
         const scalar sqrtW = sqrt(W);
         const scalar cbrtW = cbrt(W);
 

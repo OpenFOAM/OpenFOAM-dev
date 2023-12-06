@@ -48,14 +48,7 @@ namespace interfaceCompositionModels
 Foam::tmp<Foam::volScalarField>
 Foam::interfaceCompositionModels::saturated::wRatioByP() const
 {
-    const dimensionedScalar Wi
-    (
-        "W",
-        dimMass/dimMoles,
-        thermo().Wi(saturatedIndex_)
-    );
-
-    return Wi/thermo().W()/thermo().p();
+    return thermo().Wi(saturatedIndex_)/thermo().W()/thermo().p();
 }
 
 

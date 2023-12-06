@@ -116,14 +116,7 @@ bool Foam::functionObjects::moleFractions::execute()
     // Calculate the mole fractions
     forAll(Y, i)
     {
-        const dimensionedScalar Wi
-        (
-            "Wi",
-            dimMass/dimMoles,
-            thermo.Wi(i)
-        );
-
-        X_[i] = Y[i]*W/Wi;
+        X_[i] = Y[i]*W/thermo.Wi(i);
     }
 
     return true;

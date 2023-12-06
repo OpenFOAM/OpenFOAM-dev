@@ -145,7 +145,7 @@ bool Foam::functionObjects::massFractions::execute()
 
     // Construct lists of specie molar mass, fields of specie mass, and a field
     // of total mass
-    List<dimensionedScalar> W(Y.size());
+    PtrList<dimensionedScalar> W(Y.size());
     PtrList<volScalarField> m(Y.size());
     volScalarField mTotal
     (
@@ -156,8 +156,7 @@ bool Foam::functionObjects::massFractions::execute()
     bool fromMoleFractions = false, fromMoles = false;
     forAll(Y, i)
     {
-        W[i].dimensions().reset(dimMass/dimMoles);
-        W[i].value() = thermo.Wi(i);
+        W.set(i, new dimensionedScalar(thermo.Wi(i)));
 
         typeIOobject<volScalarField> YIo
         (

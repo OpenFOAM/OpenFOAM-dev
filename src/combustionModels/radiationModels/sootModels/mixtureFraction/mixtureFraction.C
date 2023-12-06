@@ -106,7 +106,7 @@ Foam::radiationModels::sootModels::mixtureFraction::mixtureFraction
         const label speciei = singleReaction.rhs()[i].index;
         const scalar stoichCoeff = singleReaction.rhs()[i].stoichCoeff;
         Xi[i] = mag(stoichCoeff)/totalMol;
-        Wm += Xi[i]*combustion.thermo().Wi(speciei);
+        Wm += Xi[i]*combustion.thermo().WiValue(speciei);
     }
 
     scalarList Yprod0(combustion.thermo().species().size(), 0.0);
@@ -114,7 +114,7 @@ Foam::radiationModels::sootModels::mixtureFraction::mixtureFraction
     forAll(singleReaction.rhs(), i)
     {
         const label speciei = singleReaction.rhs()[i].index;
-        Yprod0[speciei] = combustion.thermo().Wi(speciei)/Wm*Xi[i];
+        Yprod0[speciei] = combustion.thermo().WiValue(speciei)/Wm*Xi[i];
     }
 
     const scalar XSoot = nuSoot_/totalMol;

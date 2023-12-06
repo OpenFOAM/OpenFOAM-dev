@@ -128,12 +128,28 @@ Foam::MulticomponentThermo<BaseThermo>::~MulticomponentThermo()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-Foam::scalar Foam::MulticomponentThermo<BaseThermo>::Wi
+Foam::scalar Foam::MulticomponentThermo<BaseThermo>::WiValue
 (
     const label speciei
 ) const
 {
     return this->specieThermo(speciei).W();
+}
+
+
+template<class BaseThermo>
+Foam::dimensionedScalar Foam::MulticomponentThermo<BaseThermo>::Wi
+(
+    const label speciei
+) const
+{
+    return
+        dimensionedScalar
+        (
+            "W",
+            dimMass/dimMoles,
+            this->specieThermo(speciei).W()
+        );
 }
 
 
@@ -357,7 +373,23 @@ Foam::MulticomponentThermo<BaseThermo>::hai
 
 
 template<class BaseThermo>
-Foam::scalar Foam::MulticomponentThermo<BaseThermo>::hfi
+Foam::dimensionedScalar Foam::MulticomponentThermo<BaseThermo>::hfi
+(
+    const label speciei
+) const
+{
+    return
+        dimensionedScalar
+        (
+            "hf",
+            dimEnergy/dimMass,
+            this->specieThermo(speciei).hf()
+        );
+}
+
+
+template<class BaseThermo>
+Foam::scalar Foam::MulticomponentThermo<BaseThermo>::hfiValue
 (
     const label speciei
 ) const

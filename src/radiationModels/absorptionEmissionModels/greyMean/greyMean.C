@@ -221,11 +221,13 @@ Foam::radiationModels::absorptionEmissionModels::greyMean::aCont
                 scalar invWt = 0.0;
                 forAll(mcThermo.Y(), s)
                 {
-                    invWt += mcThermo.Y(s)[celli]/mcThermo.Wi(s);
+                    invWt += mcThermo.Y(s)[celli]/mcThermo.WiValue(s);
                 }
 
-                label index = mcThermo.species()[iter.key()];
-                scalar Xk = mcThermo.Y(index)[celli]/(mcThermo.Wi(index)*invWt);
+                const label index = mcThermo.species()[iter.key()];
+
+                const scalar Xk =
+                    mcThermo.Y(index)[celli]/(mcThermo.WiValue(index)*invWt);
 
                 Xipi = Xk*paToAtm(p[celli]);
             }

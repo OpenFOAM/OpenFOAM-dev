@@ -599,7 +599,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
         {
             const label id = composition.localToCarrierId(GAS, i);
             const scalar Cp = composition.carrier().Cpi(id, td.pc(), Ts);
-            const scalar W = composition.carrier().Wi(id);
+            const scalar W = composition.carrier().WiValue(id);
             const scalar Ni = dMassDV[i]/(this->areaS(d)*dt*W);
 
             // Dab calc'd using API vapour mass diffusivity function

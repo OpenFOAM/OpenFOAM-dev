@@ -78,12 +78,7 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
                     sumXbyD +=
                         Y[j]
                        /(
-                           dimensionedScalar
-                           (
-                               "Wj",
-                               Wm.dimensions(),
-                               this->thermo().Wi(j)
-                           )
+                           this->thermo().Wi(j)
                           *(
                                i < j
                              ? evaluate(DFuncs_[i][j], dimViscosity, p, T)
@@ -96,16 +91,8 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
             Dm_.set
             (
                 i,
-                (
-                    1/Wm
-                  - Y[i]
-                   /dimensionedScalar
-                    (
-                        "Wi",
-                        Wm.dimensions(),
-                        this->thermo().Wi(i)
-                    )
-                )/max(sumXbyD, dimensionedScalar(sumXbyD.dimensions(), small))
+                (1/Wm - Y[i]/this->thermo().Wi(i))
+               /max(sumXbyD, dimensionedScalar(sumXbyD.dimensions(), small))
             );
         }
     }

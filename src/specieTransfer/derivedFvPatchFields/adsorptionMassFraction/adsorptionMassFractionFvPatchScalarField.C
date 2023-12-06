@@ -101,7 +101,7 @@ Foam::adsorptionMassFractionFvPatchScalarField::calcPhiYp() const
     if (property_ != massFraction)
     {
         const fluidMulticomponentThermo& thermo = this->thermo(db());
-        Wi = thermo.Wi(thermo.species()[YName]);
+        Wi = thermo.Wi(thermo.species()[YName]).value();
     }
 
     // Get the mixture molecular weights, if needed

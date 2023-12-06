@@ -384,7 +384,7 @@ MaxwellStefan<BasicThermophysicalTransportModel>::MaxwellStefan
     // Set the molecular weights of the species
     forAll(W, i)
     {
-        W[i] = this->thermo().Wi(i);
+        W[i] = this->thermo().Wi(i).value();
     }
 }
 

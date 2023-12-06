@@ -32,7 +32,7 @@ License
 
 void Foam::combustionModels::singleStepCombustion::calculateqFuel()
 {
-    const scalar Wu = thermo_.Wi(fuelIndex_);
+    const scalar Wu = thermo_.WiValue(fuelIndex_);
 
     forAll(reaction_.lhs(), i)
     {
@@ -40,7 +40,7 @@ void Foam::combustionModels::singleStepCombustion::calculateqFuel()
         const scalar stoichCoeff = reaction_.lhs()[i].stoichCoeff;
         specieStoichCoeffs_[speciei] = -stoichCoeff;
         qFuel_.value() +=
-            thermo_.hfi(speciei)*thermo_.Wi(speciei)*stoichCoeff/Wu;
+            thermo_.hfiValue(speciei)*thermo_.WiValue(speciei)*stoichCoeff/Wu;
     }
 
     forAll(reaction_.rhs(), i)
@@ -49,7 +49,7 @@ void Foam::combustionModels::singleStepCombustion::calculateqFuel()
         const scalar stoichCoeff = reaction_.rhs()[i].stoichCoeff;
         specieStoichCoeffs_[speciei] = stoichCoeff;
         qFuel_.value() -=
-            thermo_.hfi(speciei)*thermo_.Wi(speciei)*stoichCoeff/Wu;
+            thermo_.hfiValue(speciei)*thermo_.WiValue(speciei)*stoichCoeff/Wu;
         specieProd_[speciei] = -1;
     }
 
@@ -60,16 +60,16 @@ void Foam::combustionModels::singleStepCombustion::calculateqFuel()
 void Foam::combustionModels::singleStepCombustion::massAndAirStoichRatios()
 {
     const label O2Index = thermo_.species()["O2"];
-    const scalar Wu = thermo_.Wi(fuelIndex_);
+    const scalar Wu = thermo_.WiValue(fuelIndex_);
 
     stoicRatio_ =
         (
-            thermo_.Wi(thermo_.defaultSpecie())
+            thermo_.WiValue(thermo_.defaultSpecie())
            *specieStoichCoeffs_[thermo_.defaultSpecie()]
-          + thermo_.Wi(O2Index)*mag(specieStoichCoeffs_[O2Index])
+          + thermo_.WiValue(O2Index)*mag(specieStoichCoeffs_[O2Index])
         )/(Wu*mag(specieStoichCoeffs_[fuelIndex_]));
 
-    s_ = thermo_.Wi(O2Index)*mag(specieStoichCoeffs_[O2Index])
+    s_ = thermo_.WiValue(O2Index)*mag(specieStoichCoeffs_[O2Index])
         /(Wu*mag(specieStoichCoeffs_[fuelIndex_]));
 
     Info << "stoichiometric air-fuel ratio: " << stoicRatio_.value() << endl;
@@ -93,13 +93,13 @@ void Foam::combustionModels::singleStepCombustion::calculateMaxProducts()
     {
         const label speciei = reaction_.rhs()[i].index;
         Xi[i] = mag(specieStoichCoeffs_[speciei])/totalMol;
-        Wm += Xi[i]*thermo_.Wi(speciei);
+        Wm += Xi[i]*thermo_.WiValue(speciei);
     }
 
     forAll(reaction_.rhs(), i)
     {
         const label speciei = reaction_.rhs()[i].index;
-        Yprod0_[speciei] =  thermo_.Wi(speciei)/Wm*Xi[i];
+        Yprod0_[speciei] =  thermo_.WiValue(speciei)/Wm*Xi[i];
     }
 
     Info << "Maximum products mass concentrations: " << nl;
@@ -115,8 +115,8 @@ void Foam::combustionModels::singleStepCombustion::calculateMaxProducts()
     forAll(specieStoichCoeffs_, i)
     {
         specieStoichCoeffs_[i] =
-            specieStoichCoeffs_[i]*thermo_.Wi(i)
-           /(thermo_.Wi(fuelIndex_)*mag(specieStoichCoeffs_[fuelIndex_]));
+            specieStoichCoeffs_[i]*thermo_.WiValue(i)
+           /(thermo_.WiValue(fuelIndex_)*mag(specieStoichCoeffs_[fuelIndex_]));
     }
 }
 

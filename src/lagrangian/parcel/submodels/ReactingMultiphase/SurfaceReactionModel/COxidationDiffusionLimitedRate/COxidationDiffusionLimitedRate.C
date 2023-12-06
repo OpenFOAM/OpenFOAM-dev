@@ -52,11 +52,11 @@ Foam::COxidationDiffusionLimitedRate<CloudType>::COxidationDiffusionLimitedRate
     CsLocalId_ = owner.composition().localId(idSolid, "C");
 
     // Set local copies of thermo properties
-    WO2_ = owner.composition().carrier().Wi(O2GlobalId_);
-    const scalar WCO2 = owner.composition().carrier().Wi(CO2GlobalId_);
+    WO2_ = owner.composition().carrier().WiValue(O2GlobalId_);
+    const scalar WCO2 = owner.composition().carrier().WiValue(CO2GlobalId_);
     WC_ = WCO2 - WO2_;
 
-    HcCO2_ = owner.composition().carrier().hfi(CO2GlobalId_);
+    HcCO2_ = owner.composition().carrier().hfiValue(CO2GlobalId_);
 
     if (Sb_ < 0)
     {

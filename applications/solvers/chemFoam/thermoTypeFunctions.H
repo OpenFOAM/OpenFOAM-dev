@@ -32,7 +32,7 @@ scalarList W(const fluidMulticomponentThermo& thermo)
 
     forAll(W, i)
     {
-        W[i] = thermo.Wi(i);
+        W[i] = thermo.Wi(i).value();
     }
 
     return W;

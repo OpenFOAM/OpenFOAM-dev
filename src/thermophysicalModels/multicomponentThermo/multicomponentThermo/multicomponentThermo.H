@@ -132,10 +132,10 @@ public:
         // Specie molecular properties
 
             //- Molecular weight [kg/kmol]
-            virtual scalar Wi(const label speciei) const = 0;
+            virtual scalar WiValue(const label speciei) const = 0;
 
-            //- Enthalpy of formation [J/kg]
-            virtual scalar hfi(const label speciei) const = 0;
+            //- Molecular weight [kg/kmol]
+            virtual dimensionedScalar Wi(const label speciei) const = 0;
 
 
         // Specie thermodynamic properties
@@ -243,6 +243,12 @@ public:
                 const volScalarField& p,
                 const volScalarField& T
             ) const = 0;
+
+            //- Enthalpy of formation [J/kg]
+            virtual scalar hfiValue(const label speciei) const = 0;
+
+            //- Enthalpy of formation [J/kg]
+            virtual dimensionedScalar hfi(const label speciei) const = 0;
 
 
         // Specie transport properties

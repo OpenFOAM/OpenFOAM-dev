@@ -43,7 +43,7 @@ Foam::tmp<Foam::scalarField> Foam::LiquidEvaporationBoil<CloudType>::calcXc
     {
         Xc[i] =
             this->owner().composition().carrier().Y()[i][celli]
-           /this->owner().composition().carrier().Wi(i);
+           /this->owner().composition().carrier().WiValue(i);
     }
 
     return Xc/sum(Xc);

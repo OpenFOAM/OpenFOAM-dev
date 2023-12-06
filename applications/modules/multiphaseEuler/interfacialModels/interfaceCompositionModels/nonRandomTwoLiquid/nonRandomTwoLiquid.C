@@ -171,26 +171,12 @@ void Foam::interfaceCompositionModels::nonRandomTwoLiquid::update
 
     const volScalarField X1
     (
-        thermo().Y(species1Index_)
-       *W
-       /dimensionedScalar
-        (
-            "W",
-            dimMass/dimMoles,
-            thermo().Wi(species1Index_)
-        )
+        thermo().Y(species1Index_)*W/thermo().Wi(species1Index_)
     );
 
     const volScalarField X2
     (
-        thermo().Y(species2Index_)
-       *W
-       /dimensionedScalar
-        (
-            "W",
-            dimMass/dimMoles,
-            thermo().Wi(species2Index_)
-        )
+        thermo().Y(species2Index_)*W/thermo().Wi(species2Index_)
     );
 
     const volScalarField alpha12(alpha12_ + Tf*beta12_);
