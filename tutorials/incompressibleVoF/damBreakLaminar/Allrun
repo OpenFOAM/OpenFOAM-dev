@@ -9,10 +9,6 @@ isTest "$@" && path=.. || path=$FOAM_TUTORIALS/incompressibleVoF
 cp -rn $path/damBreak/0 $path/damBreak/constant $path/damBreak/system .
 rm -f 0/alpha.water
 
-# Increase the number of limiter iterations
-runApplication foamDictionary system/fvSolution \
-    -entry solvers/"alpha.water.*"/nLimiterIter -set 5
-
 # Run
 runApplication blockMesh
 runApplication setFields

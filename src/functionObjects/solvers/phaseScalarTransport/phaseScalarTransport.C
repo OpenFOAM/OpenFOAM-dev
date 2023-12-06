@@ -90,7 +90,7 @@ Foam::volScalarField& Foam::functionObjects::phaseScalarTransport::Phi()
             (
                 IOobject
                 (
-                    "Phi" + s_.name(),
+                    typedName(IOobject::groupName("Phi", phaseName_)),
                     time_.name(),
                     mesh_,
                     IOobject::READ_IF_PRESENT,
@@ -112,15 +112,10 @@ Foam::volScalarField& Foam::functionObjects::phaseScalarTransport::Phi()
 Foam::tmp<Foam::surfaceScalarField>
 Foam::functionObjects::phaseScalarTransport::alphaPhi()
 {
-    // If alphaPhi exists then return it
-    if (mesh_.foundObject<surfaceScalarField>(alphaPhiName_))
+    if (!solveAlphaPhi_)
     {
         return mesh_.lookupObject<surfaceScalarField>(alphaPhiName_);
     }
-
-    // Otherwise generate it ...
-    Info<< type() << ": " << surfaceScalarField::typeName << " "
-        << alphaPhiName_ << " was not found, so generating it" << endl;
 
     const volScalarField& alpha =
         mesh_.lookupObject<volScalarField>(alphaName_);
@@ -288,8 +283,6 @@ Foam::functionObjects::phaseScalarTransport::phaseScalarTransport
     fvMeshFunctionObject(name, runTime, dict),
     fieldName_(dict.lookup("field")),
     phaseName_(IOobject::group(fieldName_)),
-    nCorr_(0),
-    residualAlpha_(rootSmall),
     s_
     (
         IOobject
@@ -330,18 +323,20 @@ bool Foam::functionObjects::phaseScalarTransport::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
+    solveAlphaPhi_ = dict.lookupOrDefault<bool>("solveAlphaPhi", false);
+
     alphaName_ =
         dict.lookupOrDefault<word>
         (
             "alpha",
             IOobject::groupName("alpha", phaseName_)
         );
+    const word defaultAlphaPhiName =
+        IOobject::groupName("alphaPhi", phaseName_);
     alphaPhiName_ =
-        dict.lookupOrDefault<word>
-        (
-            "alphaPhi",
-            IOobject::groupName("alphaPhi", phaseName_)
-        );
+        solveAlphaPhi_
+      ? typedName(defaultAlphaPhiName)
+      : dict.lookupOrDefault<word>("alphaPhi", defaultAlphaPhiName);
     phiName_ = dict.lookupOrDefault<word>("phi", "phi");
     rhoName_ =
         dict.lookupOrDefault<word>
@@ -356,8 +351,8 @@ bool Foam::functionObjects::phaseScalarTransport::read(const dictionary& dict)
     alphaD_ = dict.lookupOrDefault<scalar>("alphaD", 1);
     alphaDt_ = dict.lookupOrDefault<scalar>("alphaDt", 1);
 
-    dict.readIfPresent("nCorr", nCorr_);
-    dict.readIfPresent("residualAlpha", residualAlpha_);
+    nCorr_ = dict.lookupOrDefault<label>("nCorr", 0);
+    residualAlpha_ = dict.lookupOrDefault<scalar>("residualAlpha", rootSmall);
     writeAlphaField_ = dict.lookupOrDefault<bool>("writeAlphaField", true);
 
     return true;

@@ -7,14 +7,33 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format          ascii;
-    class           dictionary;
-    location        "constant";
-    object          momentumTransport;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      tracer.air;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-simulationType  laminar;
+dimensions      [];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    wall
+    {
+        type            zeroGradient;
+    }
+
+    atmosphere
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+}
 
 
 // ************************************************************************* //

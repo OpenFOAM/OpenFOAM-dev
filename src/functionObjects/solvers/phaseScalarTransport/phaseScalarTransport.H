@@ -37,27 +37,25 @@ Description
     detailed below. Note that the phase-name will be determined by stripping
     the extension from the supplied field name.
 
-    If \c alphaPhi is specified and found in the database then it will be used
-    to transport the field. This is the likely mode of operation if this
-    function is used with Euler-Euler solvers, in which \c alphaPhi -like
-    fluxes are available. If \c alphaPhi is not found, then a pressure-like
-    equation will be solved in order to construct it so that it exactly matches
-    the time-derivative of the phase volume or mass. This is likely to be
-    necessary in volume-of-fluid solvers where \c alphaPhi is not part of the
-    solution procedure. The pressure field name will be required in this case.
+    If the solver does not provide an \c alphaPhi flux, or that flux is for
+    some reason unreliable, then the \c solveAlphaPhi switch can be used to
+    make this function solve a pressure-like equation from which \c alphaPhi is
+    recovered.
 
 Usage
     \table
-        Property        | Description                        | Req'd? | Default
-        alpha           | Name of the volume-fraction field  | no\\
+        Property        | Description                       | Req'd? | Default
+        alpha           | Name of the volume-fraction field | no\\
                         | alpha.<phase-name>
-        alphaPhi        | Name of the phase-flux field       | no\\
+        alphaPhi        | Name of the phase-flux field      | no\\
                         | alphaPhi.<phase-name>
-        p               | Name of the pressure field         | no     | p
+        solveAlphaPhi   | Solve for the alphaPhi flux, rather than looking it\\
+                          up                                | no     | false
+        p               | Name of the pressure field        | no     | p
         residualAlpha   | Small volume fraction used to stabilise the solution\\
-                        | no | rootSmall
+                                                            | no     | rootSmall
         writeAlphaField | Also write out alpha multiplied by the field\\
-                        | no | true
+                                                            |        no | true
     \endtable
 
     Example specification for incompressibleVoF:
@@ -68,7 +66,6 @@ Usage
         libs            ("libsolverFunctionObjects.so");
 
         field           s.water;
-        p               p_rgh;
     }
     \endverbatim
 
@@ -122,6 +119,9 @@ class phaseScalarTransport
 
         //- Name of the phase in which to solve
         const word phaseName_;
+
+        //- Solve for the alphaPhi flux, rather than looking it up (optional)
+        bool solveAlphaPhi_;
 
         //- Name of phase volume-fraction field (optional)
         word alphaName_;
