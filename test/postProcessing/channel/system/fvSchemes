@@ -38,7 +38,7 @@ divSchemes
     div(phi,K)      Gauss linear;
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 
-    div(alphaPhi.dummy,h) Gauss upwind;
+    div(phaseScalarTransport:alphaPhi.dummy,h) Gauss upwind;
 }
 
 laplacianSchemes

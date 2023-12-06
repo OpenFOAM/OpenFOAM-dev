@@ -319,7 +319,14 @@ solversFunctions
 {
     #includeFunc scalarTransport(s, schemesField=h)
 
-    #includeFunc phaseScalarTransport(s.dummy, schemesField=h, p=p_rgh, rho=rho)
+    #includeFunc phaseScalarTransport
+    (
+        s.dummy,
+        solveAlphaPhi=yes,
+        p=p_rgh,
+        rho=rho,
+        schemesField=h
+    )
 
     // Not possible to test here as not compatible with compressible solvers
     //#includeFunc particles
