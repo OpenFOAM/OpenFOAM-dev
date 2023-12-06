@@ -95,6 +95,9 @@ protected:
         // Phase-1 volumetric flux
         surfaceScalarField alphaPhi1;
 
+        // Phase-2 volumetric flux
+        surfaceScalarField alphaPhi2;
+
 
     // Cached temporary fields
 

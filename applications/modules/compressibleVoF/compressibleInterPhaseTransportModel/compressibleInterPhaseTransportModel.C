@@ -35,6 +35,7 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
     const surfaceScalarField& phi,
     const surfaceScalarField& rhoPhi,
     const surfaceScalarField& alphaPhi1,
+    const surfaceScalarField& alphaPhi2,
     const surfaceScalarField& alphaRhoPhi1,
     const surfaceScalarField& alphaRhoPhi2,
     const compressibleTwoPhaseVoFMixture& mixture
@@ -44,6 +45,7 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
     mixture_(mixture),
     phi_(phi),
     alphaPhi1_(alphaPhi1),
+    alphaPhi2_(alphaPhi2),
     alphaRhoPhi1_(alphaRhoPhi1),
     alphaRhoPhi2_(alphaRhoPhi2)
 {

@@ -193,7 +193,9 @@ void Foam::solvers::incompressibleDriftFlux::prePredictor()
         alpha1Eqn.solve(alpha1.name() + "Diffusion");
 
         alphaPhi1 += alpha1Eqn.flux();
-        alpha2 = 1.0 - alpha1;
+
+        alpha2 = scalar(1) - alpha1;
+        alphaPhi2 = phi - alphaPhi1;
 
         Info<< "Phase-1 volume fraction = "
             << alpha1.weightedAverage(mesh.Vsc()).value()
@@ -207,8 +209,8 @@ void Foam::solvers::incompressibleDriftFlux::prePredictor()
     const dimensionedScalar& rho1 = mixture.rho1();
     const dimensionedScalar& rho2 = mixture.rho2();
 
-    // Calculate the mass-flux from the accumulated alphaPhi1
-    rhoPhi = (alphaPhi1*(rho1 - rho2) + phi*rho2);
+    // Calculate the mass-flux
+    rhoPhi = alphaPhi1*rho1 + alphaPhi2*rho2;
 
     relativeVelocity->correct();
 

@@ -81,6 +81,7 @@ Foam::solvers::incompressibleVoF::incompressibleVoF(fvMesh& mesh)
         U,
         phi,
         alphaPhi1,
+        alphaPhi2,
         mixture
     )
 {
@@ -134,8 +135,8 @@ void Foam::solvers::incompressibleVoF::prePredictor()
     const dimensionedScalar& rho1 = mixture.rho1();
     const dimensionedScalar& rho2 = mixture.rho2();
 
-    // Calculate the mass-flux from the accumulated alphaPhi1
-    rhoPhi = (alphaPhi1*(rho1 - rho2) + phi*rho2);
+    // Calculate the mass-flux
+    rhoPhi = alphaPhi1*rho1 + alphaPhi2*rho2;
 
     if (pimple.predictTransport())
     {

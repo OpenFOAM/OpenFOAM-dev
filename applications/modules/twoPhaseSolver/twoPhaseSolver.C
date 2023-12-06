@@ -74,6 +74,16 @@ Foam::solvers::twoPhaseSolver::twoPhaseSolver
             IOobject::AUTO_WRITE
         ),
         phi*fvc::interpolate(alpha1)
+    ),
+    alphaPhi2
+    (
+        IOobject
+        (
+            IOobject::groupName("alphaPhi", alpha2.group()),
+            runTime.name(),
+            mesh
+        ),
+        phi - alphaPhi1
     )
 {
     mesh.schemes().setFluxRequired(alpha1.name());

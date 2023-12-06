@@ -225,7 +225,8 @@ void Foam::solvers::twoPhaseSolver::alphaSolve
         // Cache the upwind-flux
         talphaPhi1Corr0 = talphaPhi1UD;
 
-        alpha2 = 1.0 - alpha1;
+        alpha2 = scalar(1) - alpha1;
+        alphaPhi2 = phi - alphaPhi1;
 
         correctInterface();
     }
@@ -328,7 +329,8 @@ void Foam::solvers::twoPhaseSolver::alphaSolve
             }
         }
 
-        alpha2 = 1.0 - alpha1;
+        alpha2 = scalar(1) - alpha1;
+        alphaPhi2 = phi - alphaPhi1;
 
         // Correct only the mixture interface for the interface compression flux
         correctInterface();
@@ -363,6 +365,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve
             // Calculate the end-of-time-step alpha flux
             alphaPhi1 =
                 (alphaPhi1 - (1.0 - cnCoeff)*alphaPhi1.oldTime())/cnCoeff;
+            alphaPhi2 = phi - alphaPhi1;
         }
     }
 
@@ -420,6 +423,7 @@ void Foam::solvers::twoPhaseSolver::alphaPredictor()
         }
 
         alphaPhi1 = talphaPhi1();
+        alphaPhi2 = phi - talphaPhi1();
     }
     else
     {

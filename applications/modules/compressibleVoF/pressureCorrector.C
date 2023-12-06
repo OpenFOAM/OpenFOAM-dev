@@ -54,8 +54,6 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
 
     const surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU()));
 
-    const surfaceScalarField alphaPhi2("alphaPhi2", phi - alphaPhi1);
-
     while (pimple.correct())
     {
         const volVectorField HbyA(constrainHbyA(rAU()*UEqn.H(), U, p_rgh));

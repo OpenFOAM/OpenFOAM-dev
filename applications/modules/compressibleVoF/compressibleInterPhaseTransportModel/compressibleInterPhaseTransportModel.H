@@ -72,13 +72,16 @@ class compressibleInterPhaseTransportModel
         //- Mixture volumetric flux
         const surfaceScalarField& phi_;
 
-        //- Phase volumetric flux
+        //- Phase-1 volumetric flux
         const surfaceScalarField& alphaPhi1_;
 
-        //- Phase-1 mass-flux (constructed for two-phase transport)
+        //- Phase-2 volumetric flux
+        const surfaceScalarField& alphaPhi2_;
+
+        //- Phase-1 mass flux
         const surfaceScalarField& alphaRhoPhi1_;
 
-        //- Phase-2 mass-flux (constructed for two-phase transport)
+        //- Phase-2 mass flux
         const surfaceScalarField& alphaRhoPhi2_;
 
         //- Mixture transport model (constructed for mixture transport)
@@ -105,6 +108,7 @@ public:
             const surfaceScalarField& phi,
             const surfaceScalarField& rhoPhi,
             const surfaceScalarField& alphaPhi1,
+            const surfaceScalarField& alphaPhi2,
             const surfaceScalarField& alphaRhoPhi1,
             const surfaceScalarField& alphaRhoPhi2,
             const compressibleTwoPhaseVoFMixture& mixture

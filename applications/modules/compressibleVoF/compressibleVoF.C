@@ -88,7 +88,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
     alphaRhoPhi2
     (
         IOobject::groupName("alphaRhoPhi", alpha2.group()),
-        fvc::interpolate(mixture_.thermo2().rho())*(phi - alphaPhi1)
+        fvc::interpolate(mixture_.thermo2().rho())*alphaPhi2
     ),
 
     K("K", 0.5*magSqr(U)),
@@ -100,6 +100,7 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
         phi,
         rhoPhi,
         alphaPhi1,
+        alphaPhi2,
         alphaRhoPhi1,
         alphaRhoPhi2,
         mixture_
@@ -144,7 +145,7 @@ void Foam::solvers::compressibleVoF::prePredictor()
     const volScalarField& rho2 = mixture_.thermo2().rho();
 
     alphaRhoPhi1 = fvc::interpolate(rho1)*alphaPhi1;
-    alphaRhoPhi2 = fvc::interpolate(rho2)*(phi - alphaPhi1);
+    alphaRhoPhi2 = fvc::interpolate(rho2)*alphaPhi2;
 
     rhoPhi = alphaRhoPhi1 + alphaRhoPhi2;
 

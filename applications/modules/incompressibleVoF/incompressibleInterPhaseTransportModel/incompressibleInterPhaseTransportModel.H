@@ -69,11 +69,11 @@ class incompressibleInterPhaseTransportModel
         //- Mixture volumetric flux
         const surfaceScalarField& phi_;
 
-        //- Phase volumetric flux
+        //- Phase-1 volumetric flux
         const surfaceScalarField& alphaPhi1_;
 
-        //- Phase-2 mass-flux (constructed from alphaPhi1_ and phi_)
-        tmp<surfaceScalarField> alphaPhi2_;
+        //- Phase-2 volumetric flux
+        const surfaceScalarField& alphaPhi2_;
 
         //- Mixture transport model (constructed for mixture transport)
         autoPtr<incompressible::momentumTransportModel> turbulence_;
@@ -95,6 +95,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& phi,
             const surfaceScalarField& alphaPhi1,
+            const surfaceScalarField& alphaPhi2,
             const incompressibleTwoPhaseVoFMixture& mixture
         );
 
@@ -113,10 +114,6 @@ public:
             const volScalarField& rho,
             volVectorField& U
         ) const;
-
-        //- Correct the phase mass-fluxes
-        // (required for the two-phase transport option)
-        void correctPhasePhi();
 
         //- Predict the phase or mixture transport models
         void predict();

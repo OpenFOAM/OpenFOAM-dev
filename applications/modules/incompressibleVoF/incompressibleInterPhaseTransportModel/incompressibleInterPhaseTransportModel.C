@@ -34,13 +34,15 @@ incompressibleInterPhaseTransportModel
     const volVectorField& U,
     const surfaceScalarField& phi,
     const surfaceScalarField& alphaPhi1,
+    const surfaceScalarField& alphaPhi2,
     const incompressibleTwoPhaseVoFMixture& mixture
 )
 :
     twoPhaseTransport_(false),
     mixture_(mixture),
     phi_(phi),
-    alphaPhi1_(alphaPhi1)
+    alphaPhi1_(alphaPhi1),
+    alphaPhi2_(alphaPhi2)
 {
     {
         IOdictionary momentumTransport
@@ -71,15 +73,6 @@ incompressibleInterPhaseTransportModel
         const volScalarField& alpha1(mixture_.alpha1());
         const volScalarField& alpha2(mixture_.alpha2());
 
-        alphaPhi2_ =
-        (
-            new surfaceScalarField
-            (
-                IOobject::groupName("alphaPhi", alpha2.group()),
-                (phi_ - alphaPhi1_)
-            )
-        );
-
         turbulence1_ =
         (
             phaseIncompressible::momentumTransportModel::New
@@ -98,7 +91,7 @@ incompressibleInterPhaseTransportModel
             (
                 alpha2,
                 U,
-                alphaPhi2_(),
+                alphaPhi2_,
                 phi,
                 mixture.nuModel2()
             )
@@ -136,15 +129,6 @@ Foam::incompressibleInterPhaseTransportModel::divDevTau
     else
     {
         return turbulence_->divDevTau(rho, U);
-    }
-}
-
-
-void Foam::incompressibleInterPhaseTransportModel::correctPhasePhi()
-{
-    if (twoPhaseTransport_)
-    {
-        alphaPhi2_.ref() = (phi_ - alphaPhi1_);
     }
 }
 
