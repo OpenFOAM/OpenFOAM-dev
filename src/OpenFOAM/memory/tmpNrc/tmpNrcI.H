@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,6 +62,19 @@ inline Foam::tmpNrc<T>::tmpNrc(const tmpNrc<T>& t)
                 << "Attempted copy of a deallocated " << typeName()
                 << abort(FatalError);
         }
+    }
+}
+
+
+template<class T>
+inline Foam::tmpNrc<T>::tmpNrc(const tmpNrc<T>&& t)
+:
+    type_(t.type_),
+    ptr_(t.ptr_)
+{
+    if (isTmp())
+    {
+        t.ptr_ = 0;
     }
 }
 
@@ -297,6 +310,21 @@ inline void Foam::tmpNrc<T>::operator=(const tmpNrc<T>& t)
             << "Attempted assignment to a const reference to an object"
             << " of type " << typeid(T).name()
             << abort(FatalError);
+    }
+}
+
+
+template<class T>
+inline void Foam::tmpNrc<T>::operator=(const tmpNrc<T>&& t)
+{
+    clear();
+
+    type_ = t.type_;
+    ptr_ = t.ptr_;
+
+    if (isTmp())
+    {
+        t.ptr_ = 0;
     }
 }
 
