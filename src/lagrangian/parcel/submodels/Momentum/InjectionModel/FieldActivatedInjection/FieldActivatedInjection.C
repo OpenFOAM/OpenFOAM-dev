@@ -231,6 +231,7 @@ void Foam::FieldActivatedInjection<CloudType>::setProperties
     const label parceli,
     const label,
     const scalar,
+    typename CloudType::parcelType::trackingData& td,
     typename CloudType::parcelType& parcel
 )
 {

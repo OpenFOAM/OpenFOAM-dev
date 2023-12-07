@@ -26,6 +26,56 @@ License
 #include "PatchInjection.H"
 #include "distribution.H"
 
+// * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
+
+template<class CloudType>
+void Foam::PatchInjection<CloudType>::preInject
+(
+    typename CloudType::parcelType::trackingData& td
+)
+{
+    InjectionModel<CloudType>::preInject(td);
+
+    if (U0Name_ == word::null)
+    {
+        U0InterpPtr_.clear();
+    }
+    else if (U0Name_ == this->owner().U().name())
+    {
+        U0InterpPtr_ = tmpNrc<interpolation<vector>>(td.UInterp());
+    }
+    else
+    {
+        U0InterpPtr_ =
+            tmpNrc<interpolation<vector>>
+            (
+                interpolation<vector>::New
+                (
+                    this->owner().solution().interpolationSchemes(),
+                    this->owner().mesh().template lookupObject<volVectorField>
+                    (
+                        U0Name_
+                    )
+                ).ptr()
+            );
+    }
+}
+
+
+template<class CloudType>
+void Foam::PatchInjection<CloudType>::postInject
+(
+    const label parcelsAdded,
+    const scalar massAdded,
+    typename CloudType::parcelType::trackingData& td
+)
+{
+    InjectionModel<CloudType>::postInject(parcelsAdded, massAdded, td);
+
+    U0InterpPtr_.clear();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CloudType>
@@ -41,7 +91,9 @@ Foam::PatchInjection<CloudType>::PatchInjection
     duration_(this->readDuration(dict, owner)),
     massFlowRate_(this->readMassFlowRate(dict, owner, duration_)),
     parcelsPerSecond_(this->readParcelsPerSecond(dict, owner)),
-    U0_(this->coeffDict().lookup("U0")),
+    U0_(vector::uniform(NaN)),
+    U0Name_(word::null),
+    U0InterpPtr_(nullptr),
     sizeDistribution_
     (
         distribution::New
@@ -51,7 +103,21 @@ Foam::PatchInjection<CloudType>::PatchInjection
             this->sizeSampleQ()
         )
     )
-{}
+{
+    ITstream& is = this->coeffDict().lookup("U0");
+
+    token t(is);
+    is.putBack(t);
+
+    if (t.isWord())
+    {
+        U0Name_ = word(is);
+    }
+    else
+    {
+        U0_ = vector(is);
+    }
+}
 
 
 template<class CloudType>
@@ -66,6 +132,8 @@ Foam::PatchInjection<CloudType>::PatchInjection
     massFlowRate_(im.massFlowRate_, false),
     parcelsPerSecond_(im.parcelsPerSecond_, false),
     U0_(im.U0_),
+    U0Name_(word::null),
+    U0InterpPtr_(nullptr),
     sizeDistribution_(im.sizeDistribution_, false)
 {}
 
@@ -178,11 +246,19 @@ void Foam::PatchInjection<CloudType>::setProperties
     const label,
     const label,
     const scalar,
+    typename CloudType::parcelType::trackingData& td,
     typename CloudType::parcelType& parcel
 )
 {
     // set particle velocity
-    parcel.U() = U0_;
+    parcel.U() =
+        U0InterpPtr_.valid()
+      ? U0InterpPtr_().interpolate
+        (
+            parcel.coordinates(),
+            parcel.currentTetIndices(td.mesh)
+        )
+      : U0_;
 
     // set particle diameter
     parcel.d() = sizeDistribution_->sample();

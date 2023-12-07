@@ -47,8 +47,9 @@ SourceFiles
 #define PatchInjection_H
 
 #include "InjectionModel.H"
-#include "Function1.H"
 #include "patchInjectionBase.H"
+#include "Function1.H"
+#include "interpolation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,11 +79,40 @@ class PatchInjection
         //- Number of parcels to introduce per second [1/s]
         autoPtr<Function1<scalar>> parcelsPerSecond_;
 
-        //- Initial parcel velocity [m/s]
-        const vector U0_;
+        //- Fixed initial parcel velocity [m/s]
+        vector U0_;
+
+        //- Name of the field from which to interpolate the initial parcel
+        //  velocity
+        word U0Name_;
+
+        //- Initial parcel interpolation engine. Invalid if using a fixed
+        //  parcel velocity. Contains a null reference if using the carrier
+        //  velocity (as the track data interpolation can be used). Contains an
+        //  actual interpolation engine if using a different velocity.
+        tmpNrc<interpolation<vector>> U0InterpPtr_;
 
         //- Parcel size distribution model
         const autoPtr<distribution> sizeDistribution_;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Pre injection hook
+        virtual void preInject
+        (
+            typename CloudType::parcelType::trackingData& td
+        );
+
+        //- Post injection hook
+        virtual void postInject
+        (
+            const label parcelsAdded,
+            const scalar massAdded,
+            typename CloudType::parcelType::trackingData& td
+        );
 
 
 public:
@@ -159,6 +189,7 @@ public:
                 const label parcelI,
                 const label nParcels,
                 const scalar time,
+                typename CloudType::parcelType::trackingData& td,
                 typename CloudType::parcelType& parcel
             );
 

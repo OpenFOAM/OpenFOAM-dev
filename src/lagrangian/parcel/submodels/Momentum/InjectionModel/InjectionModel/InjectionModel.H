@@ -178,11 +178,18 @@ protected:
             const scalar mass
         ) const;
 
-        //- Post injection checks
-        void postInjectCheck
+        //- Pre injection hook
+        virtual void preInject
+        (
+            typename parcelType::trackingData& td
+        );
+
+        //- Post injection hook
+        virtual void postInject
         (
             const label parcelsAdded,
-            const scalar massAdded
+            const scalar massAdded,
+            typename parcelType::trackingData& td
         );
 
 
@@ -336,6 +343,7 @@ public:
                 const label parcelI,
                 const label nParcels,
                 const scalar time,
+                typename parcelType::trackingData& td,
                 parcelType& parcel
             ) = 0;
 

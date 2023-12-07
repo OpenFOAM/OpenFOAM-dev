@@ -405,6 +405,7 @@ void Foam::ConeInjection<CloudType>::setProperties
     const label parcelI,
     const label,
     const scalar time,
+    typename CloudType::parcelType::trackingData& td,
     typename CloudType::parcelType& parcel
 )
 {

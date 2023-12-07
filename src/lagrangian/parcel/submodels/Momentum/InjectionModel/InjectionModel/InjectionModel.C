@@ -441,10 +441,19 @@ void Foam::InjectionModel<CloudType>::setNumberOfParticles
 
 
 template<class CloudType>
-void Foam::InjectionModel<CloudType>::postInjectCheck
+void Foam::InjectionModel<CloudType>::preInject
+(
+    typename parcelType::trackingData& td
+)
+{}
+
+
+template<class CloudType>
+void Foam::InjectionModel<CloudType>::postInject
 (
     const label nParcelsAdded,
-    const scalar massAdded
+    const scalar massAdded,
+    typename parcelType::trackingData& td
 )
 {
     const label allNParcelsAdded = returnReduce(nParcelsAdded, sumOp<label>());
@@ -604,6 +613,8 @@ void Foam::InjectionModel<CloudType>::inject
 
     const scalar time = this->owner().db().time().value();
 
+    preInject(td);
+
     // Reset counters
     label nParcelsAdded = 0;
     scalar massAdded = 0;
@@ -722,7 +733,7 @@ void Foam::InjectionModel<CloudType>::inject
                 cloud.setParcelThermoProperties(p);
 
                 // Assign new parcel properties in injection model
-                setProperties(parceli, nParcels, timeInj, p);
+                setProperties(parceli, nParcels, timeInj, td, p);
 
                 // Check/set new parcel injection properties
                 cloud.checkParcelProperties(p, index());
@@ -765,7 +776,7 @@ void Foam::InjectionModel<CloudType>::inject
         }
     }
 
-    postInjectCheck(nParcelsAdded, massAdded);
+    postInject(nParcelsAdded, massAdded, td);
 }
 
 
@@ -778,6 +789,8 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
 )
 {
     const polyMesh& mesh = this->owner().mesh();
+
+    preInject(td);
 
     // Reset counters
     label nParcelsAdded = 0;
@@ -834,7 +847,7 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
                 cloud.setParcelThermoProperties(p);
 
                 // Assign new parcel properties in injection model
-                setProperties(parceli, nParcels, 0, p);
+                setProperties(parceli, nParcels, 0, td, p);
 
                 // Check/set new parcel injection properties
                 cloud.checkParcelProperties(p, index());
@@ -871,7 +884,7 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
         }
     }
 
-    postInjectCheck(nParcelsAdded, massAdded);
+    postInject(nParcelsAdded, massAdded, td);
 }
 
 

@@ -200,6 +200,7 @@ void Foam::MomentumLookupTableInjection<CloudType>::setProperties
     const label parcelI,
     const label nParcels,
     const scalar,
+    typename CloudType::parcelType::trackingData& td,
     typename CloudType::parcelType& parcel
 )
 {
