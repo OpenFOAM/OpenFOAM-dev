@@ -109,7 +109,7 @@ Foam::mappedExtrudedPatchBase::patchFaceAreas() const
                 if
                 (
                     faceInfo1[facei].valid(wave1.data())
-                 && faceInfo1[facei].faceLayer() != 0
+                 && faceInfo1[facei].faceLayer() == nIterations1
                 )
                 {
                     initialFaces2[initialFace2i] = facei;
