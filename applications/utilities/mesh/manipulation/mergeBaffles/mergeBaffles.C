@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    mergeOrSplitBaffles
+    mergeBaffles
 
 Description
     Detects faces that share points (baffles) and merge them into internal
