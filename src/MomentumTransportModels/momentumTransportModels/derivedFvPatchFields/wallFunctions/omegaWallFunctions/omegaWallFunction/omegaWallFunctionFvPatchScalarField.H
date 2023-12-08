@@ -86,7 +86,7 @@ protected:
     // Protected data
 
         //- Tolerance used in weighted calculations
-        static scalar tolerance_;
+        static scalar tol_;
 
         //- beta1 coefficient
         scalar beta1_;

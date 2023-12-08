@@ -221,6 +221,11 @@ public:
             //  to coupled-cell-centre vector is returned
             virtual tmp<vectorField> delta() const;
 
+            //- Return the fraction of the poly-face that each fv-face in this
+            //  patch covers. Will be equal to one, unless the mesh is
+            //  non-conformal.
+            tmp<scalarField> polyFaceFraction() const;
+
 
         // Access functions for demand driven data
 

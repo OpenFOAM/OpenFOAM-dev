@@ -86,7 +86,7 @@ protected:
     // Protected data
 
         //- Tolerance used in weighted calculations
-        static scalar tolerance_;
+        static scalar tol_;
 
         //- Local copy of turbulence G field
         scalarField G_;

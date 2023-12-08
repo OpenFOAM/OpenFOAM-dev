@@ -36,7 +36,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-scalar omegaWallFunctionFvPatchScalarField::tolerance_ = 1e-1;
+scalar omegaWallFunctionFvPatchScalarField::tol_ = 1e-1;
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -402,12 +402,10 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
             internalField()
         );
 
-    scalarField weights(patch().magSf()/patch().patch().magFaceAreas());
-    forAll(weights, facei)
-    {
-        scalar& w = weights[facei];
-        w = w <= tolerance_ ? 0 : (w - tolerance_)/(1 - tolerance_);
-    }
+    const scalarField weights
+    (
+        max((patch().polyFaceFraction() - tol_)/(1 - tol_), scalar(0))
+    );
 
     forAll(weights, facei)
     {
@@ -434,20 +432,11 @@ void omegaWallFunctionFvPatchScalarField::manipulateMatrix
         return;
     }
 
-    const scalarField& omega0 = this->omega();
-
-    scalarField weights(patch().magSf()/patch().patch().magFaceAreas());
-    forAll(weights, facei)
-    {
-        scalar& w = weights[facei];
-        w = w <= tolerance_ ? 0 : (w - tolerance_)/(1 - tolerance_);
-    }
-
     matrix.setValues
     (
         patch().faceCells(),
-        UIndirectList<scalar>(omega0, patch().faceCells()),
-        weights
+        UIndirectList<scalar>(this->omega(), patch().faceCells()),
+        max((patch().polyFaceFraction() - tol_)/(1 - tol_), scalar(0))
     );
 
     fvPatchField<scalar>::manipulateMatrix(matrix);

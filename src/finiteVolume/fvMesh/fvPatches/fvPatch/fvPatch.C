@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,6 +150,20 @@ Foam::tmp<Foam::vectorField> Foam::fvPatch::delta() const
     // Use patch-normal delta for all non-coupled BCs
     const vectorField nHat(nf());
     return nHat*(nHat & (Cf() - Cn()));
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::fvPatch::polyFaceFraction() const
+{
+    return
+        boundaryMesh().mesh().conformal()
+      ? tmp<scalarField>(new scalarField(size(), scalar(1)))
+      : magSf()
+       /scalarField
+        (
+            boundaryMesh().mesh().magFaceAreas(),
+            boundaryMesh().mesh().polyFacesBf()[patch().index()]
+        );
 }
 
 

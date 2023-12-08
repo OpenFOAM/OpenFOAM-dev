@@ -31,7 +31,7 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-Foam::scalar Foam::epsilonWallFunctionFvPatchScalarField::tolerance_ = 1e-1;
+Foam::scalar Foam::epsilonWallFunctionFvPatchScalarField::tol_ = 1e-1;
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -361,12 +361,10 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs()
             internalField()
         );
 
-    scalarField weights(patch().magSf()/patch().patch().magFaceAreas());
-    forAll(weights, facei)
-    {
-        scalar& w = weights[facei];
-        w = w <= tolerance_ ? 0 : (w - tolerance_)/(1 - tolerance_);
-    }
+    const scalarField weights
+    (
+        max((patch().polyFaceFraction() - tol_)/(1 - tol_), scalar(0))
+    );
 
     forAll(weights, facei)
     {
@@ -393,20 +391,11 @@ void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrix
         return;
     }
 
-    const scalarField& epsilon0 = this->epsilon();
-
-    scalarField weights(patch().magSf()/patch().patch().magFaceAreas());
-    forAll(weights, facei)
-    {
-        scalar& w = weights[facei];
-        w = w <= tolerance_ ? 0 : (w - tolerance_)/(1 - tolerance_);
-    }
-
     matrix.setValues
     (
         patch().faceCells(),
-        UIndirectList<scalar>(epsilon0, patch().faceCells()),
-        weights
+        UIndirectList<scalar>(this->epsilon(), patch().faceCells()),
+        max((patch().polyFaceFraction() - tol_)/(1 - tol_), scalar(0))
     );
 
     fvPatchField<scalar>::manipulateMatrix(matrix);
