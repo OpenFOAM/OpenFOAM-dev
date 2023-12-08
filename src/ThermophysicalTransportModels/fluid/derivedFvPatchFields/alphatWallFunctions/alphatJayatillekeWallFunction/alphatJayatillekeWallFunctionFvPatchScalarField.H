@@ -79,17 +79,19 @@ class alphatJayatillekeWallFunctionFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
+    // Private Static Data
+
+        //- Solution tolerance
+        static const scalar tolerance_;
+
+        //- Maximum number of solution iterations
+        static const label maxIters_;
+
+
     // Private Data
 
         //- Turbulent Prandtl number
         scalar Prt_;
-
-
-        // Solution parameters
-
-            static scalar maxExp_;
-            static scalar tolerance_;
-            static label maxIters_;
 
 
 public:

@@ -34,11 +34,10 @@ namespace Foam
 namespace compressible
 {
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
 
-scalar alphatJayatillekeWallFunctionFvPatchScalarField::maxExp_ = 50.0;
-scalar alphatJayatillekeWallFunctionFvPatchScalarField::tolerance_ = 0.01;
-label alphatJayatillekeWallFunctionFvPatchScalarField::maxIters_ = 10;
+const scalar alphatJayatillekeWallFunctionFvPatchScalarField::tolerance_ = 0.01;
+const label alphatJayatillekeWallFunctionFvPatchScalarField::maxIters_ = 10;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
