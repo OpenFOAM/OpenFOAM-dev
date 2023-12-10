@@ -37,7 +37,7 @@
 #     time-loop also controlled by entries in controlDict and the maxDeltaT()
 #     returned by the sub-solver.  See:
 #
-#         tutorials/modules/incompressibleFluid/pitzDailyScalarTransport
+#         tutorials/incompressibleFluid/pitzDailyScalarTransport
 #
 #------------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ the functions entry in the controlDict and executed in a time-loop also
 controlled by entries in controlDict and the maxDeltaT() returned by the
 sub-solver.  See:
 
-    tutorials/modules/incompressibleFluid/pitzDailyScalarTransport
+    tutorials/incompressibleFluid/pitzDailyScalarTransport
 
 EOF
 

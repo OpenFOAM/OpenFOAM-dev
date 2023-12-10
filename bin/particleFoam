@@ -35,8 +35,8 @@
 #     physical fields needed by fvModel functionObject in which the clouds
 #     fvModel is selected to evolve the Lagrangian particles.  See:
 #
-#         tutorials/modules/incompressibleFluid/hopperParticles
-#         tutorials/modules/incompressibleFluid/mixerVesselHorizontal2DParticles
+#         tutorials/incompressibleFluid/hopperParticles
+#         tutorials/incompressibleFluid/mixerVesselHorizontal2DParticles
 #
 #------------------------------------------------------------------------------
 
@@ -52,8 +52,8 @@ present the solver entry in the controlDict is instantiated to provide the
 physical fields needed by fvModel functionObject in which the clouds fvModel is
 selected to evolve the Lagrangian particles.  See:
 
-    tutorials/modules/incompressibleFluid/hopperParticles
-    tutorials/modules/incompressibleFluid/mixerVesselHorizontal2DParticles
+    tutorials/incompressibleFluid/hopperParticles
+    tutorials/incompressibleFluid/mixerVesselHorizontal2DParticles
 
 EOF
 

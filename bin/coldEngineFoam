@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -42,7 +42,7 @@ To run a coldEngineFoam case with
     foamRun -solver fluid
 
 add a mover entry in constant/dynamicMeshDict
-e.g. from the tutorials/modules/fluid/RAS/kivaTest case:
+e.g. from the tutorials/fluid/RAS/kivaTest case:
 
 mover
 {

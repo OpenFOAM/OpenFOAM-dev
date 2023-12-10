@@ -40,7 +40,7 @@ compressibleVoF solver module executed by the foamRun application:
     foamRun -solver compressibleVoF
 
 The cavitatingFoam cases must be upgraded before running the compressibleVoF
-solver module, for example the tutorials/modules/compressibleVoF/throttle case
+solver module, for example the tutorials/compressibleVoF/throttle case
 has been converted from the tutorials/multiphase/cavitatingFoam/RAS/throttle
 case.
 
