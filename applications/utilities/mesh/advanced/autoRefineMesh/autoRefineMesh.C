@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,6 @@ Description
 #include "cellToCell.H"
 #include "surfaceSets.H"
 #include "polyTopoChange.H"
-#include "polyTopoChanger.H"
 #include "polyTopoChangeMap.H"
 #include "labelIOList.H"
 #include "emptyPolyPatch.H"

@@ -34,9 +34,6 @@ Description
 #include "addToRunTimeSelectionTable.H"
 #include "polyTopoChangeMap.H"
 #include "matchPoints.H"
-#include "polyModifyFace.H"
-#include "polyRemovePoint.H"
-#include "polyRemoveFace.H"
 #include "indirectPrimitivePatch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -53,7 +50,6 @@ namespace Foam
 }
 
 
-// Tolerance used as fraction of minimum edge length.
 const Foam::scalar Foam::perfectInterface::tol_ = 1e-3;
 
 
@@ -79,7 +75,6 @@ Foam::pointField Foam::perfectInterface::calcFaceCentres
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::perfectInterface::perfectInterface
 (
     const word& name,
@@ -97,7 +92,6 @@ Foam::perfectInterface::perfectInterface
 {}
 
 
-// Construct from dictionary
 Foam::perfectInterface::perfectInterface
 (
     const word& name,
@@ -329,20 +323,16 @@ void Foam::perfectInterface::setRefinement
             zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
         }
 
-        ref.setAction
+        ref.modifyFace
         (
-            polyModifyFace
-            (
-                newFace,                    // modified face
-                facei,                      // label of face being modified
-                mesh.faceOwner()[facei],    // owner
-                nbr,                        // neighbour
-                false,                      // face flip
-                patchi,                     // patch for face
-                false,                      // remove from zone
-                zoneID,                     // zone for face
-                zoneFlip                    // face flip in zone
-            )
+            newFace,                    // modified face
+            facei,                      // label of face being modified
+            mesh.faceOwner()[facei],    // owner
+            nbr,                        // neighbour
+            false,                      // face flip
+            patchi,                     // patch for face
+            zoneID,                     // zone for face
+            zoneFlip                    // face flip in zone
         );
     }
 
@@ -354,7 +344,7 @@ void Foam::perfectInterface::setRefinement
 
         if (meshPointi != renumberPoints[meshPointi])
         {
-            ref.setAction(polyRemovePoint(meshPointi));
+            ref.removePoint(meshPointi, -1);
         }
     }
 
@@ -363,7 +353,7 @@ void Foam::perfectInterface::setRefinement
     forAll(pp1, i)
     {
         label facei = pp1.addressing()[i];
-        ref.setAction(polyRemoveFace(facei));
+        ref.removeFace(facei, -1);
     }
 
 
@@ -394,38 +384,30 @@ void Foam::perfectInterface::setRefinement
 
         if (own < nbr)
         {
-            ref.setAction
+            ref.modifyFace
             (
-                polyModifyFace
-                (
-                    newFace,                // modified face
-                    facei,                  // label of face being modified
-                    own,                    // owner
-                    nbr,                    // neighbour
-                    false,                  // face flip
-                    -1,                     // patch for face
-                    false,                  // remove from zone
-                    faceZoneID_.index(),    // zone for face
-                    mfFlip[i]               // face flip in zone
-                )
+                newFace,                // modified face
+                facei,                  // label of face being modified
+                own,                    // owner
+                nbr,                    // neighbour
+                false,                  // face flip
+                -1,                     // patch for face
+                faceZoneID_.index(),    // zone for face
+                mfFlip[i]               // face flip in zone
             );
         }
         else
         {
-            ref.setAction
+            ref.modifyFace
             (
-                polyModifyFace
-                (
-                    newFace.reverseFace(),  // modified face
-                    facei,                  // label of face being modified
-                    nbr,                    // owner
-                    own,                    // neighbour
-                    true,                   // face flip
-                    -1,                     // patch for face
-                    false,                  // remove from zone
-                    faceZoneID_.index(),    // zone for face
-                    !mfFlip[i]              // face flip in zone
-                )
+                newFace.reverseFace(),  // modified face
+                facei,                  // label of face being modified
+                nbr,                    // owner
+                own,                    // neighbour
+                true,                   // face flip
+                -1,                     // patch for face
+                faceZoneID_.index(),    // zone for face
+                !mfFlip[i]              // face flip in zone
             );
         }
     }
@@ -525,15 +507,6 @@ void Foam::perfectInterface::writeDict(Ostream& os) const
 
         << token::END_BLOCK << endl;
 }
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-
-// * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
-
-
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

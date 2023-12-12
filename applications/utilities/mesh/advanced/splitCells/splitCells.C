@@ -44,7 +44,6 @@ Description
 #include "argList.H"
 #include "Time.H"
 #include "polyTopoChange.H"
-#include "polyTopoChanger.H"
 #include "polyTopoChangeMap.H"
 #include "polyMesh.H"
 #include "cellCuts.H"
