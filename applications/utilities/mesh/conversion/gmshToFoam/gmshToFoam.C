@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Description
 #include "polyMesh.H"
 #include "IFstream.H"
 #include "cellModeller.H"
-#include "repatchPolyTopoChanger.H"
+#include "repatcher.H"
 #include "cellSet.H"
 #include "faceSet.H"
 
@@ -926,7 +926,7 @@ int main(int argc, char *argv[])
         boundaryPatchPhysicalTypes
     );
 
-    repatchPolyTopoChanger repatcher(mesh);
+    repatcher repatcher(mesh);
 
     // Now use the patchFaces to patch up the outside faces of the mesh.
 

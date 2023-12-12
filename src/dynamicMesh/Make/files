@@ -1,14 +1,42 @@
-attachDetach/attachDetach.C
-attachDetach/attachInterface.C
-attachDetach/detachInterface.C
-attachDetach/attachDetachPointMatchMap.C
+polyTopoChange/topoAction/topoActions.C
 
-layerAdditionRemoval/layerAdditionRemoval.C
-layerAdditionRemoval/setLayerPairing.C
-layerAdditionRemoval/addCellLayer.C
-layerAdditionRemoval/removeCellLayer.C
+polyTopoChange/polyTopoChange.C
+polyTopoChange/addPatchCellLayer.C
+polyTopoChange/pointEdgeCollapse/pointEdgeCollapse.C
+polyTopoChange/edgeCollapser.C
+polyTopoChange/faceCollapser.C
+polyTopoChange/removeCells.C
+polyTopoChange/removeFaces.C
+polyTopoChange/refinementData.C
+polyTopoChange/refinementDistanceData.C
+polyTopoChange/removePoints.C
+polyTopoChange/combineFaces.C
+polyTopoChange/duplicatePoints.C
+polyTopoChange/tetDecomposer.C
 
-enrichedPatch = slidingInterface/enrichedPatch
+hexRef8 = polyTopoChange/hexRef8
+$(hexRef8)/hexRef8.C
+$(hexRef8)/hexRef8Data.C
+$(hexRef8)/refinementHistory.C
+
+polyTopoChanger/polyTopoChanger/polyTopoChanger.C
+polyTopoChanger/attachPolyTopoChanger/attachPolyTopoChanger.C
+
+polyMeshModifier = polyTopoChanger/polyMeshModifier
+$(polyMeshModifier)/polyMeshModifier.C
+$(polyMeshModifier)/polyMeshModifierNew.C
+
+polyTopoChanger/attachDetach/attachDetach.C
+polyTopoChanger/attachDetach/attachInterface.C
+polyTopoChanger/attachDetach/detachInterface.C
+polyTopoChanger/attachDetach/attachDetachPointMatchMap.C
+
+polyTopoChanger/layerAdditionRemoval/layerAdditionRemoval.C
+polyTopoChanger/layerAdditionRemoval/setLayerPairing.C
+polyTopoChanger/layerAdditionRemoval/addCellLayer.C
+polyTopoChanger/layerAdditionRemoval/removeCellLayer.C
+
+enrichedPatch = polyTopoChanger/slidingInterface/enrichedPatch
 $(enrichedPatch)/enrichedPatch.C
 $(enrichedPatch)/enrichedPatchPointMap.C
 $(enrichedPatch)/enrichedPatchFaces.C
@@ -16,42 +44,14 @@ $(enrichedPatch)/enrichedPatchPointPoints.C
 $(enrichedPatch)/enrichedPatchCutFaces.C
 $(enrichedPatch)/enrichedPatchMasterPoints.C
 
+polyTopoChanger/slidingInterface/slidingInterface.C
+polyTopoChanger/slidingInterface/slidingInterfaceProjectPoints.C
+polyTopoChanger/slidingInterface/coupleSlidingInterface.C
+polyTopoChanger/slidingInterface/slidingInterfaceAttachedAddressing.C
+polyTopoChanger/slidingInterface/slidingInterfaceClearCouple.C
+polyTopoChanger/slidingInterface/decoupleSlidingInterface.C
 
-polyMeshModifier = polyTopoChange/polyMeshModifier
-$(polyMeshModifier)/polyMeshModifier.C
-$(polyMeshModifier)/polyMeshModifierNew.C
-
-polyTopoChange/polyTopoChange/topoAction/topoActions.C
-polyTopoChange/polyTopoChanger/polyTopoChanger.C
-polyTopoChange/polyTopoChange/polyTopoChange.C
-polyTopoChange/polyTopoChange/addPatchCellLayer.C
-polyTopoChange/polyTopoChange/pointEdgeCollapse/pointEdgeCollapse.C
-polyTopoChange/polyTopoChange/edgeCollapser.C
-polyTopoChange/polyTopoChange/faceCollapser.C
-polyTopoChange/polyTopoChange/removeCells.C
-polyTopoChange/polyTopoChange/removeFaces.C
-polyTopoChange/polyTopoChange/refinementData.C
-polyTopoChange/polyTopoChange/refinementDistanceData.C
-polyTopoChange/polyTopoChange/removePoints.C
-polyTopoChange/polyTopoChange/combineFaces.C
-polyTopoChange/polyTopoChange/duplicatePoints.C
-polyTopoChange/polyTopoChange/tetDecomposer.C
-
-
-hexRef8 = polyTopoChange/polyTopoChange/hexRef8
-
-$(hexRef8)/hexRef8.C
-$(hexRef8)/hexRef8Data.C
-$(hexRef8)/refinementHistory.C
-
-slidingInterface/slidingInterface.C
-slidingInterface/slidingInterfaceProjectPoints.C
-slidingInterface/coupleSlidingInterface.C
-slidingInterface/slidingInterfaceAttachedAddressing.C
-slidingInterface/slidingInterfaceClearCouple.C
-slidingInterface/decoupleSlidingInterface.C
-
-perfectInterface/perfectInterface.C
+polyTopoChanger/perfectInterface/perfectInterface.C
 
 repatchMesh/repatchMesh.C
 repatchMesh/repatchPatch.C
@@ -77,8 +77,7 @@ meshCut/refineCell/refineCell.C
 meshCut/wallLayerCells/wallLayerCells.C
 meshCut/wallLayerCells/wallNormalInfo/wallNormalInfo.C
 
-polyTopoChange/attachPolyTopoChanger/attachPolyTopoChanger.C
-polyTopoChange/repatchPolyTopoChanger/repatchPolyTopoChanger.C
+repatcher/repatcher.C
 
 fvMeshAdder/fvMeshAdder.C
 fvMeshDistribute/fvMeshDistribute.C
