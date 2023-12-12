@@ -29,7 +29,6 @@ License
 #include "nonConformalProcessorCyclicFvPatchField.H"
 #include "polyTopoChange.H"
 #include "removeCells.H"
-#include "polyModifyFace.H"
 #include "polyDistributionMap.H"
 #include "syncTools.H"
 #include "CompactListList.H"
@@ -551,20 +550,16 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
                 zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
             }
 
-            meshMod.setAction
+            meshMod.modifyFace
             (
-                polyModifyFace
-                (
-                    mesh_.faces()[facei],       // modified face
-                    facei,                      // label of face
-                    mesh_.faceOwner()[facei],   // owner
-                    -1,                         // neighbour
-                    false,                      // face flip
-                    newPatchID[bFacei],         // patch for face
-                    false,                      // remove from zone
-                    zoneID,                     // zone for face
-                    zoneFlip                    // face flip in zone
-                )
+                mesh_.faces()[facei],       // modified face
+                facei,                      // label of face
+                mesh_.faceOwner()[facei],   // owner
+                -1,                         // neighbour
+                false,                      // face flip
+                newPatchID[bFacei],         // patch for face
+                zoneID,                     // zone for face
+                zoneFlip                    // face flip in zone
             );
         }
     }
@@ -757,20 +752,16 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::mergeSharedPoints
                     zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
                 }
 
-                meshMod.setAction
+                meshMod.modifyFace
                 (
-                    polyModifyFace
-                    (
-                        newF,                       // modified face
-                        facei,                      // label of face
-                        mesh_.faceOwner()[facei],   // owner
-                        nei,                        // neighbour
-                        false,                      // face flip
-                        patchID,                    // patch for face
-                        false,                      // remove from zone
-                        zoneID,                     // zone for face
-                        zoneFlip                    // face flip in zone
-                    )
+                    newF,                       // modified face
+                    facei,                      // label of face
+                    mesh_.faceOwner()[facei],   // owner
+                    nei,                        // neighbour
+                    false,                      // face flip
+                    patchID,                    // patch for face
+                    zoneID,                     // zone for face
+                    zoneFlip                    // face flip in zone
                 );
             }
         }
