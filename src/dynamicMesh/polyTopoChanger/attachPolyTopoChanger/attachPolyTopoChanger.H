@@ -65,9 +65,6 @@ public:
 
     // Constructors
 
-        //- Read constructor from IOobject and a polyMesh
-        attachPolyTopoChanger(const IOobject& io, polyMesh&);
-
         //- Read constructor for given polyMesh
         explicit attachPolyTopoChanger(polyMesh&);
 

@@ -31,16 +31,6 @@ License
 
 Foam::attachPolyTopoChanger::attachPolyTopoChanger
 (
-    const IOobject& io,
-    polyMesh& mesh
-)
-:
-    polyTopoChanger(io, mesh)
-{}
-
-
-Foam::attachPolyTopoChanger::attachPolyTopoChanger
-(
     polyMesh& mesh
 )
 :

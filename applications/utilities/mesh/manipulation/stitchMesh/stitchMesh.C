@@ -455,8 +455,6 @@ int main(int argc, char *argv[])
     if (overwrite)
     {
         mesh.setInstance(oldInstance);
-        stitcher.instance() = oldInstance;
-        stitcher.writeOpt() = IOobject::NO_WRITE;
     }
     Info<< nl << "Writing polyMesh to time " << runTime.name() << endl;
 

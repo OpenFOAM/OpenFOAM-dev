@@ -25,7 +25,7 @@ Class
     Foam::polyTopoChanger
 
 Description
-    List of mesh modifiers defining the mesh dynamics.
+    List of mesh modifiers
 
 SourceFiles
     polyTopoChanger.C
@@ -35,9 +35,8 @@ SourceFiles
 #ifndef polyTopoChanger_H
 #define polyTopoChanger_H
 
-#include "regIOobject.H"
-#include "PtrList.H"
 #include "polyMeshModifier.H"
+#include "PtrList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,33 +50,33 @@ class polyTopoChangeMap;
 class polyBoundaryMesh;
 
 
-// Forward declaration of friend functions and operators
-
-class polyTopoChanger;
-
-Ostream& operator<<(Ostream&, const polyTopoChanger&);
-
-
 /*---------------------------------------------------------------------------*\
                        Class polyTopoChanger Declaration
 \*---------------------------------------------------------------------------*/
 
 class polyTopoChanger
 :
-    public PtrList<polyMeshModifier>,
-    public regIOobject
+    public PtrList<polyMeshModifier>
 {
-    // Private Member Functions
+    // Private member functions
 
-        void readModifiers();
+        //- Is topology change required
+        bool changeTopology() const;
+
+        //- Return topology change request
+        autoPtr<polyTopoChange> topoChangeRequest() const;
+
+        //- Force recalculation of locally stored data on topological change
+        void update(const polyTopoChangeMap& m);
 
 
 protected:
 
-    // Protected data
+    // Protected member data
 
         //- Reference to mesh
         polyMesh& mesh_;
+
 
 public:
 
@@ -86,9 +85,6 @@ public:
 
 
     // Constructors
-
-        //- Read constructor given IOobject and a polyMesh
-        polyTopoChanger(const IOobject&, polyMesh&);
 
         //- Read constructor for given polyMesh
         explicit polyTopoChanger(polyMesh&);
@@ -110,21 +106,6 @@ public:
             return mesh_;
         }
 
-        //- Return a list of patch types
-        wordList types() const;
-
-        //- Return a list of patch names
-        wordList names() const;
-
-        //- Is topology change required
-        bool changeTopology() const;
-
-        //- Return topology change request
-        autoPtr<polyTopoChange> topoChangeRequest() const;
-
-        //- Modify point motion
-        void modifyMotionPoints(pointField&) const;
-
         autoPtr<polyTopoChangeMap> changeMesh
         (
             const bool inflate,
@@ -133,32 +114,11 @@ public:
             const bool orderPoints = false
         );
 
-        //- Force recalculation of locally stored data on topological change
-        void update(const polyTopoChangeMap& m);
-
-        //- Add given set of topology modifiers to the topoChanger
-        void addTopologyModifiers(const List<polyMeshModifier*>& tm);
-
-        //- Find modifier given a name
-        label findModifierID(const word& modName) const;
-
-
-        //- writeData member function required by regIOobject
-        bool writeData(Ostream&) const;
-
 
     // Member Operators
 
         //- Disallow default bitwise assignment
         void operator=(const polyTopoChanger&) = delete;
-
-        bool operator!=(const polyTopoChanger&) const;
-        bool operator==(const polyTopoChanger&) const;
-
-
-    // Ostream operator
-
-        friend Ostream& operator<<(Ostream&, const polyTopoChanger&);
 };
 
 

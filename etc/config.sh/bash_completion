@@ -161,31 +161,6 @@ _applyBoundaryLayer_ ()
 }
 complete -o filenames -o nospace -F _applyBoundaryLayer_ applyBoundaryLayer
 
-_attachMesh_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -overwrite -srcDoc"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -libs)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _attachMesh_ attachMesh
-
 _autoPatch_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"

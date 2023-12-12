@@ -38,123 +38,11 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-void Foam::polyTopoChanger::readModifiers()
-{
-    if
-    (
-        readOpt() == IOobject::MUST_READ
-     || readOpt() == IOobject::MUST_READ_IF_MODIFIED
-     || (readOpt() == IOobject::READ_IF_PRESENT && headerOk())
-    )
-    {
-        if (readOpt() == IOobject::MUST_READ_IF_MODIFIED)
-        {
-            WarningInFunction
-                << "Specified IOobject::MUST_READ_IF_MODIFIED but class"
-                << " does not support automatic re-reading."
-                << endl;
-        }
-
-
-        PtrList<polyMeshModifier>& modifiers = *this;
-
-        // Read modifiers
-        Istream& is = readStream(typeName);
-
-        PtrList<entry> patchEntries(is);
-        modifiers.setSize(patchEntries.size());
-
-        forAll(modifiers, modifierI)
-        {
-            modifiers.set
-            (
-                modifierI,
-                polyMeshModifier::New
-                (
-                    patchEntries[modifierI].keyword(),
-                    patchEntries[modifierI].dict(),
-                    modifierI,
-                    *this
-                )
-            );
-        }
-
-        // Check state of IOstream
-        is.check("polyTopoChanger::readModifiers()");
-
-        close();
-    }
-}
-
-
-Foam::polyTopoChanger::polyTopoChanger
-(
-    const IOobject& io,
-    polyMesh& mesh
-)
-:
-    PtrList<polyMeshModifier>(),
-    regIOobject(io),
-    mesh_(mesh)
-{
-    readModifiers();
-}
-
-
 Foam::polyTopoChanger::polyTopoChanger(polyMesh& mesh)
 :
     PtrList<polyMeshModifier>(),
-    regIOobject
-    (
-        IOobject
-        (
-            "meshModifiers",
-            mesh.time().findInstance
-            (
-                mesh.meshDir(),
-                "meshModifiers",
-                IOobject::READ_IF_PRESENT
-            ),
-            mesh.meshSubDir,
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::NO_WRITE
-        )
-    ),
     mesh_(mesh)
-{
-    readModifiers();
-}
-
-
-Foam::wordList Foam::polyTopoChanger::types() const
-{
-    const PtrList<polyMeshModifier>& modifiers = *this;
-
-    wordList t(modifiers.size());
-
-    forAll(modifiers, modifierI)
-    {
-        t[modifierI] = modifiers[modifierI].type();
-    }
-
-    return t;
-}
-
-
-Foam::wordList Foam::polyTopoChanger::names() const
-{
-    const PtrList<polyMeshModifier>& modifiers = *this;
-
-    wordList t(modifiers.size());
-
-    forAll(modifiers, modifierI)
-    {
-        t[modifierI] = modifiers[modifierI].name();
-    }
-
-    return t;
-}
+{}
 
 
 bool Foam::polyTopoChanger::changeTopology() const
@@ -223,20 +111,6 @@ Foam::polyTopoChanger::topoChangeRequest() const
 }
 
 
-void Foam::polyTopoChanger::modifyMotionPoints(pointField& p) const
-{
-    const PtrList<polyMeshModifier>& topoChanges = *this;
-
-    forAll(topoChanges, morphI)
-    {
-        if (topoChanges[morphI].active())
-        {
-            topoChanges[morphI].modifyMotionPoints(p);
-        }
-    }
-}
-
-
 void Foam::polyTopoChanger::update(const polyTopoChangeMap& m)
 {
     // Go through all mesh modifiers and accumulate the morphing information
@@ -246,12 +120,6 @@ void Foam::polyTopoChanger::update(const polyTopoChangeMap& m)
     {
         topoChanges[morphI].topoChange(m);
     }
-
-    // Force the mesh modifiers to auto-write.  This allows us to
-    // preserve the current state of modifiers corresponding with
-    // the mesh.
-    writeOpt() = IOobject::AUTO_WRITE;
-    instance() = mesh_.time().name();
 }
 
 
@@ -284,94 +152,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChanger::changeMesh
     {
         return autoPtr<polyTopoChangeMap>(nullptr);
     }
-}
-
-
-void Foam::polyTopoChanger::addTopologyModifiers
-(
-    const List<polyMeshModifier*>& tm
-)
-{
-    setSize(tm.size());
-
-    // Copy the patch pointers
-    forAll(tm, tmI)
-    {
-        if (tm[tmI]->topoChanger() != *this)
-        {
-            FatalErrorInFunction
-                << "Mesh modifier created with different mesh reference."
-                << abort(FatalError);
-        }
-        set(tmI, tm[tmI]);
-    }
-
-    writeOpt() = IOobject::AUTO_WRITE;
-}
-
-
-Foam::label Foam::polyTopoChanger::findModifierID
-(
-    const word& modName
-) const
-{
-    const PtrList<polyMeshModifier>& topoChanges = *this;
-
-    forAll(topoChanges, morphI)
-    {
-        if (topoChanges[morphI].name() == modName)
-        {
-            return morphI;
-        }
-    }
-
-    // Modifier not found
-    if (debug)
-    {
-        WarningInFunction
-            << "List of available modifier names: " << names() << endl;
-    }
-
-    // Not found, return -1
-    return -1;
-}
-
-
-bool Foam::polyTopoChanger::writeData(Ostream& os) const
-{
-    os << *this;
-    return os.good();
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-bool Foam::polyTopoChanger::operator!=(const polyTopoChanger& me) const
-{
-    return &me != this;
-}
-
-
-bool Foam::polyTopoChanger::operator==(const polyTopoChanger& me) const
-{
-    return &me == this;
-}
-
-
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const polyTopoChanger& mme)
-{
-    os  << mme.size() << nl << token::BEGIN_LIST;
-
-    forAll(mme, mmeI)
-    {
-        mme[mmeI].writeDict(os);
-    }
-
-    os  << token::END_LIST;
-
-    return os;
 }
 
 
