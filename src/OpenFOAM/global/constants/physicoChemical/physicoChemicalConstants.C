@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,28 +41,13 @@ const char* const physicoChemical::group = "physicoChemical";
 
 // Note: cannot use dimless etc. as they may not have been constructed yet
 
-const Foam::dimensionedScalar physicoChemical::R
-(
-    dimensionedConstant
-    (
-        physicoChemical::group,
-        "R",
-        physicoChemical::NA*physicoChemical::k
-    )
-);
-
-
-// Note: the 1e3 converts from /mol to /kmol for consistency with the
-// SI choice of kg rather than g for mass.
-// This is not appropriate for USCS and will be changed to an entry in
-// the DimensionedConstants dictionary in etc/controlDict
 const Foam::dimensionedScalar physicoChemical::RR
 (
     dimensionedConstant
     (
         physicoChemical::group,
         "RR",
-        1000*physicoChemical::R
+        physicoChemical::NA*physicoChemical::k
     )
 );
 

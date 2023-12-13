@@ -29,7 +29,7 @@ mixture
     specie
     {
         nMoles      1;
-        molWeight   28.9;       // [g/mol]
+        molWeight   28.9;       // [kg/kmol]
     }
     thermodynamics
     {

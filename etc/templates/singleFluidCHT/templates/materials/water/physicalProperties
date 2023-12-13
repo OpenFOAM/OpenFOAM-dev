@@ -29,7 +29,7 @@ mixture
     specie
     {
         nMoles      1;
-        molWeight   18.0;       // [g/mol]
+        molWeight   18.0;       // [kg/kmol]
     }
     equationOfState
     {

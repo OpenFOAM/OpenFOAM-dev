@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,11 +108,7 @@ const Foam::dimensionedScalar physicoChemical::NA
     (
         physicoChemical::group,
         "NA",
-        dimensionedScalar
-        (
-            dimensionSet(0, 0, 0, 0, -1), // dimless/dimMoles,
-            6.0221417930e+23
-        )
+        dimensionSet(0, 0, 0, 0, -1)
     )
 );
 

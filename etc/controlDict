@@ -120,6 +120,7 @@ DimensionedConstants
         physicoChemical
         {
             mu      [1 0 0 0 0 0 0]     1.66054e-27;
+            NA      [0 0 0 0 -1 0 0]    6.02214e+26;
             k       [1 2 -2 -1 0 0 0]   1.38065e-23;
         }
 
@@ -156,6 +157,7 @@ DimensionedConstants
         physicoChemical
         {
             mu      [1 0 0 0 0 0 0]     3.66083e-27;
+            NA      [0 0 0 0 -1 0 0]    6.02214e+26;
             k       [1 2 -2 -1 0 0 0]   1.82012e-22;
         }
 
@@ -182,7 +184,7 @@ DimensionSets
         m           [0 1 0 0 0 0 0]     1;
         s           [0 0 1 0 0 0 0]     1;
         K           [0 0 0 1 0 0 0]     1;
-        mol         [0 0 0 0 1 0 0]     1;
+        kmol        [0 0 0 0 1 0 0]     1;
         A           [0 0 0 0 0 1 0]     1;
         Cd          [0 0 0 0 0 0 1]     1;
 
@@ -204,11 +206,13 @@ DimensionSets
         // UniformDimensionedField. Not supported in DimensionedField or
         // GeometricField.
         g           [kg]                1e-3;
+        um          [m]                 1e-6;
         mm          [m]                 1e-3;
         cm          [m]                 1e-2;
         km          [m]                 1e3;
         us          [s]                 1e-6;
         ms          [s]                 1e-3;
+        mol         [kmol]              1e-3;
     }
 
     USCSCoeffs
@@ -218,7 +222,7 @@ DimensionSets
         ft          [0 1 0 0 0 0 0]     1;
         s           [0 0 1 0 0 0 0]     1;
         R           [0 0 0 1 0 0 0]     1;
-        mol         [0 0 0 0 1 0 0]     1;
+        kmol        [0 0 0 0 1 0 0]     1;
         A           [0 0 0 0 0 1 0]     1;
         Cd          [0 0 0 0 0 0 1]     1;
     }
