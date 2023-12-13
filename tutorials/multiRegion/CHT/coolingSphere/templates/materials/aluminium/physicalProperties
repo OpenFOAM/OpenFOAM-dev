@@ -29,7 +29,7 @@ mixture
     specie
     {
         nMoles      1;
-        molWeight   27; // [g/mol]
+        molWeight   27; // [kg/kmol]
     }
 
     transport

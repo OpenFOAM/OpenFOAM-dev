@@ -8,7 +8,7 @@
             invW += Y[i][0]/W[i];
         }
 
-        Rspecific[0] = 1000.0*constant::physicoChemical::R.value()*invW;
+        Rspecific[0] = constant::physicoChemical::RR.value()*invW;
 
         p[0] = rho0*Rspecific[0]*thermo.T()[0];
         rho[0] = rho0;
