@@ -23,7 +23,26 @@ solvers
         relTol          0.1;
     }
 
-    "(U|k|omega|epsilon|e|h)"
+    pFinal
+    {
+        $p;
+        relTol         0;
+    }
+
+    Phi
+    {
+        $p;
+    }
+
+    "(rho|U|k|omega|epsilon|e|h)"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-6;
+        relTol          0.1;
+    }
+
+    "(rho|U|k|omega|epsilon|e|h)Final"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
@@ -32,18 +51,27 @@ solvers
     }
 }
 
-SIMPLE
+// timeScheme = steadyState for a steady-state simulation; otherwise transient
+timeScheme $fvSchemes!ddtSchemes/default;
+
+PIMPLE
 {
+#ifeq $timeScheme steadyState
+    nNonOrthogonalCorrectors 0;
     residualControl
     {
         p               1e-4;
         U               1e-4;
         "(k|omega|epsilon|e|h)" 1e-4;
     }
-
-    nNonOrthogonalCorrectors 0;
+#else
+    nOuterCorrectors 1;
+    nCorrectors     2;
+    nNonOrthogonalCorrectors 1;
+#endif
 }
 
+#ifeq $timeScheme steadyState
 relaxationFactors
 {
     fields
@@ -58,5 +86,15 @@ relaxationFactors
         "(k|epsilon|omega)" 0.7;
     }
 }
+#else
+relaxationFactors
+{
+    // Transient relaxation factors
+    equations
+    {
+        ".*"  1;
+    }
+}
+#endif
 
 // ************************************************************************* //

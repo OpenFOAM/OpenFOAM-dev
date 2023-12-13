@@ -49,27 +49,27 @@ solvers
     }
 }
 
+// timeScheme = steadyState for a steady-state simulation; otherwise transient
+timeScheme $fvSchemes!ddtSchemes/default;
+
 PIMPLE
 {
-    nOuterCorrectors 1;
-    nCorrectors     2;
-    nNonOrthogonalCorrectors 1;
-    pRefCell        0;
-    pRefValue       0;
-}
-
-SIMPLE
-{
+#ifeq $timeScheme steadyState
+    nNonOrthogonalCorrectors 0;
     residualControl
     {
         p               1e-4;
         U               1e-4;
         "(k|omega|epsilon)" 1e-4;
     }
-    nNonOrthogonalCorrectors 0;
+#else
+    nOuterCorrectors 1;
+    nCorrectors     2;
+    nNonOrthogonalCorrectors 1;
+#endif
+
     pRefCell        0;
     pRefValue       0;
-
 }
 
 potentialFlow
@@ -77,17 +77,29 @@ potentialFlow
     nNonOrthogonalCorrectors 10;
 }
 
+#ifeq $timeScheme steadyState
 relaxationFactors
 {
+    // Steady-state relaxation factors
     fields
     {
-        p               0.3;
+        p     0.3;
     }
     equations
     {
-        U               0.7;
+        U     0.7;
         "(k|omega|epsilon)" 0.7;
     }
 }
+#else
+relaxationFactors
+{
+    // Transient relaxation factors
+    equations
+    {
+        ".*"  1;
+    }
+}
+#endif
 
 // ************************************************************************* //
