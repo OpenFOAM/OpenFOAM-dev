@@ -33,14 +33,19 @@ divSchemes
 {
     default         none;
 
-    // For transient, remove "bounded"
+    // For steady-state, use the bounded form of advection schemes
+#ifeq $!ddtSchemes/default steadyState
     div(phi,U)      bounded Gauss linearUpwind limited;
-
-    // For transient, remove "bounded"
     turbulence      bounded Gauss limitedLinear 1;
+#else
+    div(phi,U)      Gauss linearUpwind limited;
+    turbulence      Gauss limitedLinear 1;
+#endif
+
     div(phi,k)      $turbulence;
     div(phi,omega)  $turbulence;
     div(phi,epsilon) $turbulence;
+
     div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 

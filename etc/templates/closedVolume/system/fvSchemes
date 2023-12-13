@@ -27,25 +27,30 @@ gradSchemes
     grad(U)         $limited;
     grad(k)         $limited;
     grad(omega)     $limited;
+    grad(epsilon)   $limited;
 }
 
 divSchemes
 {
-    default             none;
+    default         none;
 
-    // For transient, remove "bounded"
-    div(phi,U)          bounded Gauss linearUpwind limited;
+    // For steady-state, use the bounded form of advection schemes
+#ifeq $!ddtSchemes/default steadyState
+    div(phi,U)      bounded Gauss linearUpwind limited;
+    turbulence      bounded Gauss limitedLinear 1;
+#else
+    div(phi,U)      Gauss linearUpwind limited;
+    turbulence      Gauss limitedLinear 1;
+#endif
 
-    // For transient, remove "bounded"
-    turbulence          bounded Gauss limitedLinear 1;
-    div(phi,k)          $turbulence;
-    div(phi,omega)      $turbulence;
-    div(phi,epsilon)    $turbulence;
+    div(phi,k)      $turbulence;
+    div(phi,omega)  $turbulence;
+    div(phi,epsilon) $turbulence;
 
-    div(phi,e)          $turbulence;
+    div(phi,e)      $turbulence;
 
-    div(phi,K)          bounded Gauss linear;
-    div(phi,(p|rho))    bounded Gauss linear;
+    div(phi,K)      bounded Gauss linear;
+    div(phi,(p|rho)) bounded Gauss linear;
 
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
