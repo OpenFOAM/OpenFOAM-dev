@@ -51,35 +51,35 @@ Usage
       - \par -listLibs
         List libraries as they are loaded
 
-      - \par switches,
+      - \par -switches,
         List all available debug, info and optimisation switches
 
-      - \par all,
+      - \par -all,
         List the contents of all the run-time selection tables
 
-      - \par tables
+      - \par -tables
         List the run-time selection table names (this is the default action)
 
-      - \par table \<name\>
+      - \par -table \<name\>
         List the contents of the specified table or the list sub-tables
 
-      - \par search \<name\> or \"\<regular expression\>\"
+      - \par -search \<name\> or \"\<regular expression\>\"
         Search for and list the tables containing the given name
         or all matches to the given regular expression
 
-      - \par scalarBCs,
+      - \par -scalarBCs,
         List scalar field boundary conditions (fvPatchField<scalar>)
 
-      - \par vectorBCs,
+      - \par -vectorBCs,
         List vector field boundary conditions (fvPatchField<vector>)
 
-      - \par functionObjects,
+      - \par -functionObjects,
         List functionObjects
 
-      - \par fvModels,
+      - \par -fvModels,
         List fvModels
 
-      - \par fvConstraints,
+      - \par -fvConstraints,
         List fvConstraints
 
     Example usage:
