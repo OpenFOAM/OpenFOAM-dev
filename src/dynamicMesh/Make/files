@@ -4,7 +4,6 @@ polyTopoChange/polyTopoChange.C
 polyTopoChange/addPatchCellLayer.C
 polyTopoChange/pointEdgeCollapse/pointEdgeCollapse.C
 polyTopoChange/edgeCollapser.C
-polyTopoChange/faceCollapser.C
 polyTopoChange/removeCells.C
 polyTopoChange/removeFaces.C
 polyTopoChange/refinementData.C
@@ -12,7 +11,6 @@ polyTopoChange/refinementDistanceData.C
 polyTopoChange/removePoints.C
 polyTopoChange/combineFaces.C
 polyTopoChange/duplicatePoints.C
-polyTopoChange/tetDecomposer.C
 
 hexRef8 = polyTopoChange/hexRef8
 $(hexRef8)/hexRef8.C
@@ -30,11 +28,6 @@ polyTopoChanger/attachDetach/attachDetach.C
 polyTopoChanger/attachDetach/attachInterface.C
 polyTopoChanger/attachDetach/detachInterface.C
 polyTopoChanger/attachDetach/attachDetachPointMatchMap.C
-
-polyTopoChanger/layerAdditionRemoval/layerAdditionRemoval.C
-polyTopoChanger/layerAdditionRemoval/setLayerPairing.C
-polyTopoChanger/layerAdditionRemoval/addCellLayer.C
-polyTopoChanger/layerAdditionRemoval/removeCellLayer.C
 
 enrichedPatch = polyTopoChanger/slidingInterface/enrichedPatch
 $(enrichedPatch)/enrichedPatch.C
