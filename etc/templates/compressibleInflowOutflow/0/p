@@ -28,7 +28,8 @@ boundaryField
 
     outlet
     {
-        type            fixedValue;
+        type            totalPressure;
+        p0              uniform $pOut;
         value           uniform $pOut;
     }
 
