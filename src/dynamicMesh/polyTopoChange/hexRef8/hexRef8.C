@@ -28,10 +28,6 @@ License
 #include "polyMesh.H"
 #include "polyTopoChange.H"
 #include "meshTools.H"
-#include "polyAddFace.H"
-#include "polyAddPoint.H"
-#include "polyAddCell.H"
-#include "polyModifyFace.H"
 #include "syncTools.H"
 #include "faceSet.H"
 #include "cellSet.H"
@@ -140,41 +136,35 @@ Foam::label Foam::hexRef8::addFace
     if ((nei == -1) || (own < nei))
     {
         // Ordering ok.
-        newFacei = meshMod.setAction
+        newFacei = meshMod.addFace
         (
-            polyAddFace
-            (
-                newFace,                    // face
-                own,                        // owner
-                nei,                        // neighbour
-                -1,                         // master point
-                -1,                         // master edge
-                facei,                      // master face for addition
-                false,                      // flux flip
-                patchID,                    // patch for face
-                zoneID,                     // zone for face
-                zoneFlip                    // face zone flip
-            )
+            newFace,                    // face
+            own,                        // owner
+            nei,                        // neighbour
+            -1,                         // master point
+            -1,                         // master edge
+            facei,                      // master face for addition
+            false,                      // flux flip
+            patchID,                    // patch for face
+            zoneID,                     // zone for face
+            zoneFlip                    // face zone flip
         );
     }
     else
     {
         // Reverse owner/neighbour
-        newFacei = meshMod.setAction
+        newFacei = meshMod.addFace
         (
-            polyAddFace
-            (
-                newFace.reverseFace(),      // face
-                nei,                        // owner
-                own,                        // neighbour
-                -1,                         // master point
-                -1,                         // master edge
-                facei,                      // master face for addition
-                false,                      // flux flip
-                patchID,                    // patch for face
-                zoneID,                     // zone for face
-                zoneFlip                    // face zone flip
-            )
+            newFace.reverseFace(),      // face
+            nei,                        // owner
+            own,                        // neighbour
+            -1,                         // master point
+            -1,                         // master edge
+            facei,                      // master face for addition
+            false,                      // flux flip
+            patchID,                    // patch for face
+            zoneID,                     // zone for face
+            zoneFlip                    // face zone flip
         );
     }
     return newFacei;
@@ -193,21 +183,18 @@ Foam::label Foam::hexRef8::addInternalFace
 {
     if (mesh_.isInternalFace(meshFacei))
     {
-        return meshMod.setAction
+        return meshMod.addFace
         (
-            polyAddFace
-            (
-                newFace,                    // face
-                own,                        // owner
-                nei,                        // neighbour
-                -1,                         // master point
-                -1,                         // master edge
-                meshFacei,                  // master face for addition
-                false,                      // flux flip
-                -1,                         // patch for face
-                -1,                         // zone for face
-                false                       // face zone flip
-            )
+            newFace,                    // face
+            own,                        // owner
+            nei,                        // neighbour
+            -1,                         // master point
+            -1,                         // master edge
+            meshFacei,                  // master face for addition
+            false,                      // flux flip
+            -1,                         // patch for face
+            -1,                         // zone for face
+            false                       // face zone flip
         );
     }
     else
@@ -221,21 +208,18 @@ Foam::label Foam::hexRef8::addInternalFace
 
         // For now create out of nothing
 
-        return meshMod.setAction
+        return meshMod.addFace
         (
-            polyAddFace
-            (
-                newFace,                    // face
-                own,                        // owner
-                nei,                        // neighbour
-                -1,                         // master point
-                -1,                         // master edge
-                -1,                         // master face for addition
-                false,                      // flux flip
-                -1,                         // patch for face
-                -1,                         // zone for face
-                false                       // face zone flip
-            )
+            newFace,                    // face
+            own,                        // owner
+            nei,                        // neighbour
+            -1,                         // master point
+            -1,                         // master edge
+            -1,                         // master face for addition
+            false,                      // flux flip
+            -1,                         // patch for face
+            -1,                         // zone for face
+            false                       // face zone flip
         );
 
 
@@ -256,22 +240,19 @@ Foam::label Foam::hexRef8::addInternalFace
         //    }
         //}
         //
-        // return meshMod.setAction
-        //(
-        //    polyAddFace
-        //    (
-        //        newFace,                    // face
-        //        own,                        // owner
-        //        nei,                        // neighbour
-        //        masterPointi,               // master point
-        //        -1,                         // master edge
-        //        -1,                         // master face for addition
-        //        false,                      // flux flip
-        //        -1,                         // patch for face
-        //        -1,                         // zone for face
-        //        false                       // face zone flip
-        //    )
-        //);
+        // return meshMod.addFace
+        // (
+        //     newFace,                    // face
+        //     own,                        // owner
+        //     nei,                        // neighbour
+        //     masterPointi,               // master point
+        //     -1,                         // master edge
+        //     -1,                         // master face for addition
+        //     false,                      // flux flip
+        //     -1,                         // patch for face
+        //     -1,                         // zone for face
+        //     false                       // face zone flip
+        // );
     }
 }
 
@@ -301,38 +282,30 @@ void Foam::hexRef8::modFace
     {
         if ((nei == -1) || (own < nei))
         {
-            meshMod.setAction
+            meshMod.modifyFace
             (
-                polyModifyFace
-                (
-                    newFace,            // modified face
-                    facei,              // label of face being modified
-                    own,                // owner
-                    nei,                // neighbour
-                    false,              // face flip
-                    patchID,            // patch for face
-                    false,              // remove from zone
-                    zoneID,             // zone for face
-                    zoneFlip            // face flip in zone
-                )
+                newFace,            // modified face
+                facei,              // label of face being modified
+                own,                // owner
+                nei,                // neighbour
+                false,              // face flip
+                patchID,            // patch for face
+                zoneID,             // zone for face
+                zoneFlip            // face flip in zone
             );
         }
         else
         {
-            meshMod.setAction
+            meshMod.modifyFace
             (
-                polyModifyFace
-                (
-                    newFace.reverseFace(),  // modified face
-                    facei,                  // label of face being modified
-                    nei,                    // owner
-                    own,                    // neighbour
-                    false,                  // face flip
-                    patchID,                // patch for face
-                    false,                  // remove from zone
-                    zoneID,                 // zone for face
-                    zoneFlip                // face flip in zone
-                )
+                newFace.reverseFace(),  // modified face
+                facei,                  // label of face being modified
+                nei,                    // owner
+                own,                    // neighbour
+                false,                  // face flip
+                patchID,                // patch for face
+                zoneID,                 // zone for face
+                zoneFlip                // face flip in zone
             );
         }
     }
@@ -3245,15 +3218,12 @@ Foam::labelListList Foam::hexRef8::setRefinement
 
         label anchorPointi = mesh_.faces()[mesh_.cells()[celli][0]][0];
 
-        cellMidPoint[celli] = meshMod.setAction
+        cellMidPoint[celli] = meshMod.addPoint
         (
-            polyAddPoint
-            (
-                mesh_.cellCentres()[celli],     // point
-                anchorPointi,                   // master point
-                -1,                             // zone for point
-                true                            // supports a cell
-            )
+            mesh_.cellCentres()[celli],     // point
+            anchorPointi,                   // master point
+            -1,                             // zone for point
+            true                            // supports a cell
         );
 
         newPointLevel(cellMidPoint[celli]) = cellLevel_[celli]+1;
@@ -3371,15 +3341,12 @@ Foam::labelListList Foam::hexRef8::setRefinement
 
                 const edge& e = mesh_.edges()[edgeI];
 
-                edgeMidPoint[edgeI] = meshMod.setAction
+                edgeMidPoint[edgeI] = meshMod.addPoint
                 (
-                    polyAddPoint
-                    (
-                        edgeMids[edgeI],            // point
-                        e[0],                       // master point
-                        -1,                         // zone for point
-                        true                        // supports a cell
-                    )
+                    edgeMids[edgeI],            // point
+                    e[0],                       // master point
+                    -1,                         // zone for point
+                    true                        // supports a cell
                 );
 
                 newPointLevel(edgeMidPoint[edgeI]) =
@@ -3556,19 +3523,16 @@ Foam::labelListList Foam::hexRef8::setRefinement
 
                 const face& f = mesh_.faces()[facei];
 
-                faceMidPoint[facei] = meshMod.setAction
+                faceMidPoint[facei] = meshMod.addPoint
                 (
-                    polyAddPoint
                     (
-                        (
-                            facei < mesh_.nInternalFaces()
-                          ? mesh_.faceCentres()[facei]
-                          : bFaceMids[facei-mesh_.nInternalFaces()]
-                        ),                          // point
-                        f[0],                       // master point
-                        -1,                         // zone for point
-                        true                        // supports a cell
-                    )
+                        facei < mesh_.nInternalFaces()
+                        ? mesh_.faceCentres()[facei]
+                        : bFaceMids[facei-mesh_.nInternalFaces()]
+                    ),                          // point
+                    f[0],                       // master point
+                    -1,                         // zone for point
+                    true                        // supports a cell
                 );
 
                 // Determine the level of the corner points and midpoint will
@@ -3721,16 +3685,13 @@ Foam::labelListList Foam::hexRef8::setRefinement
 
             for (label i = 1; i < 8; i++)
             {
-                cAdded[i] = meshMod.setAction
+                cAdded[i] = meshMod.addCell
                 (
-                    polyAddCell
-                    (
-                        -1,                                 // master point
-                        -1,                                 // master edge
-                        -1,                                 // master face
-                        celli,                              // master cell
-                        mesh_.cellZones().whichZone(celli)  // zone for cell
-                    )
+                    -1,                                 // master point
+                    -1,                                 // master edge
+                    -1,                                 // master face
+                    celli,                              // master cell
+                    mesh_.cellZones().whichZone(celli)  // zone for cell
                 );
 
                 newCellLevel(cAdded[i]) = cellLevel_[celli]+1;

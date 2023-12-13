@@ -40,8 +40,6 @@ Description
 #include "argList.H"
 #include "Time.H"
 #include "polyTopoChange.H"
-#include "polyModifyFace.H"
-#include "polyAddFace.H"
 #include "ReadFields.H"
 #include "volFields.H"
 #include "surfaceFields.H"
@@ -148,20 +146,16 @@ void modifyOrAddFace
     if (!modifiedFace[facei])
     {
         // First usage of face. Modify.
-        meshMod.setAction
+        meshMod.modifyFace
         (
-            polyModifyFace
-            (
-                f,                          // modified face
-                facei,                      // label of face
-                own,                        // owner
-                -1,                         // neighbour
-                flipFaceFlux,               // face flip
-                newPatchi,                  // patch for face
-                false,                      // remove from zone
-                zoneID,                     // zone for face
-                zoneFlip                    // face flip in zone
-            )
+            f,                          // modified face
+            facei,                      // label of face
+            own,                        // owner
+            -1,                         // neighbour
+            flipFaceFlux,               // face flip
+            newPatchi,                  // patch for face
+            zoneID,                     // zone for face
+            zoneFlip                    // face flip in zone
         );
 
         modifiedFace[facei] = 1;
@@ -169,21 +163,18 @@ void modifyOrAddFace
     else
     {
         // Second usage of face. Add.
-        meshMod.setAction
+        meshMod.addFace
         (
-            polyAddFace
-            (
-                f,                          // modified face
-                own,                        // owner
-                -1,                         // neighbour
-                -1,                         // master point
-                -1,                         // master edge
-                facei,                      // master face
-                flipFaceFlux,               // face flip
-                newPatchi,                  // patch for face
-                zoneID,                     // zone for face
-                zoneFlip                    // face flip in zone
-            )
+            f,                          // modified face
+            own,                        // owner
+            -1,                         // neighbour
+            -1,                         // master point
+            -1,                         // master edge
+            facei,                      // master face
+            flipFaceFlux,               // face flip
+            newPatchi,                  // patch for face
+            zoneID,                     // zone for face
+            zoneFlip                    // face flip in zone
         );
     }
 }

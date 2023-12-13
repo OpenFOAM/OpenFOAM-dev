@@ -26,10 +26,6 @@ License
 #include "removeCells.H"
 #include "polyMesh.H"
 #include "polyTopoChange.H"
-#include "polyRemoveCell.H"
-#include "polyRemoveFace.H"
-#include "polyModifyFace.H"
-#include "polyRemovePoint.H"
 #include "syncTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -238,7 +234,7 @@ void Foam::removeCells::setRefinement
         // Pout<< "Removing cell " << celli
         //    << " cc:" << mesh_.cellCentres()[celli] << endl;
 
-        meshMod.setAction(polyRemoveCell(celli));
+        meshMod.removeCell(celli, -1);
     }
 
 
@@ -279,7 +275,7 @@ void Foam::removeCells::setRefinement
                 // Pout<< "Removing internal face " << facei
                 //    << " fc:" << mesh_.faceCentres()[facei] << endl;
 
-                meshMod.setAction(polyRemoveFace(facei));
+                meshMod.removeFace(facei, -1);
                 uncount(f, nFacesUsingPoint);
             }
             else
@@ -310,20 +306,16 @@ void Foam::removeCells::setRefinement
                 //    << " fc:" << mesh_.faceCentres()[facei]
                 //    << " into patch " << newPatchID[facei] << endl;
 
-                meshMod.setAction
+                meshMod.modifyFace
                 (
-                    polyModifyFace
-                    (
-                        f.reverseFace(),        // modified face
-                        facei,                  // label of face being modified
-                        nei,                    // owner
-                        -1,                     // neighbour
-                        true,                   // face flip
-                        newPatchID[facei],      // patch for face
-                        false,                  // remove from zone
-                        zoneID,                 // zone for face
-                        zoneFlip                // face flip in zone
-                    )
+                    f.reverseFace(),        // modified face
+                    facei,                  // label of face being modified
+                    nei,                    // owner
+                    -1,                     // neighbour
+                    true,                   // face flip
+                    newPatchID[facei],      // patch for face
+                    zoneID,                 // zone for face
+                    zoneFlip                // face flip in zone
                 );
             }
         }
@@ -352,20 +344,16 @@ void Foam::removeCells::setRefinement
                 zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
             }
 
-            meshMod.setAction
+            meshMod.modifyFace
             (
-                polyModifyFace
-                (
-                    f,                      // modified face
-                    facei,                  // label of face being modified
-                    own,                    // owner
-                    -1,                     // neighbour
-                    false,                  // face flip
-                    newPatchID[facei],      // patch for face
-                    false,                  // remove from zone
-                    zoneID,                 // zone for face
-                    zoneFlip                // face flip in zone
-                )
+                f,                      // modified face
+                facei,                  // label of face being modified
+                own,                    // owner
+                -1,                     // neighbour
+                false,                  // face flip
+                newPatchID[facei],      // patch for face
+                zoneID,                 // zone for face
+                zoneFlip                // face flip in zone
             );
         }
     }
@@ -395,20 +383,16 @@ void Foam::removeCells::setRefinement
                         zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
                     }
 
-                    meshMod.setAction
+                    meshMod.modifyFace
                     (
-                        polyModifyFace
-                        (
-                            faces[facei],           // modified face
-                            facei,                  // label of face
-                            faceOwner[facei],       // owner
-                            -1,                     // neighbour
-                            false,                  // face flip
-                            newPatchID[facei],      // patch for face
-                            false,                  // remove from zone
-                            zoneID,                 // zone for face
-                            zoneFlip                // face flip in zone
-                        )
+                        faces[facei],           // modified face
+                        facei,                  // label of face
+                        faceOwner[facei],       // owner
+                        -1,                     // neighbour
+                        false,                  // face flip
+                        newPatchID[facei],      // patch for face
+                        zoneID,                 // zone for face
+                        zoneFlip                // face flip in zone
                     );
                 }
                 else if (removedCell[faceOwner[facei]])
@@ -418,7 +402,7 @@ void Foam::removeCells::setRefinement
                     //    << " fc:" << mesh_.faceCentres()[facei]
                     //    << endl;
 
-                    meshMod.setAction(polyRemoveFace(facei));
+                    meshMod.removeFace(facei, -1);
                     uncount(faces[facei], nFacesUsingPoint);
                 }
 
@@ -446,7 +430,7 @@ void Foam::removeCells::setRefinement
                     //    << " fc:" << mesh_.faceCentres()[facei]
                     //    << endl;
 
-                    meshMod.setAction(polyRemoveFace(facei));
+                    meshMod.removeFace(facei, -1);
                     uncount(faces[facei], nFacesUsingPoint);
                 }
 
@@ -466,7 +450,7 @@ void Foam::removeCells::setRefinement
             // Pout<< "Removing unused point " << pointi
             //    << " at:" << mesh_.points()[pointi] << endl;
 
-            meshMod.setAction(polyRemovePoint(pointi));
+            meshMod.removePoint(pointi, -1);
         }
         else if (nFacesUsingPoint[pointi] == 1)
         {

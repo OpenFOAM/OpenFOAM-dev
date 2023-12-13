@@ -32,9 +32,6 @@ License
 #include "polyAddFace.H"
 #include "polyModifyFace.H"
 #include "polyRemoveFace.H"
-#include "polyAddCell.H"
-#include "polyModifyCell.H"
-#include "polyRemoveCell.H"
 #include "objectMap.H"
 #include "processorPolyPatch.H"
 #include "fvMesh.H"
@@ -2570,42 +2567,6 @@ Foam::label Foam::polyTopoChange::setAction(const topoAction& action)
         const polyRemoveFace& prf = refCast<const polyRemoveFace>(action);
 
         removeFace(prf.faceID(), prf.mergeFaceID());
-
-        return -1;
-    }
-    else if (isType<polyAddCell>(action))
-    {
-        const polyAddCell& pac = refCast<const polyAddCell>(action);
-
-        return addCell
-        (
-            pac.masterPointID(),
-            pac.masterEdgeID(),
-            pac.masterFaceID(),
-            pac.masterCellID(),
-            pac.zoneID()
-        );
-    }
-    else if (isType<polyModifyCell>(action))
-    {
-        const polyModifyCell& pmc = refCast<const polyModifyCell>(action);
-
-        if (pmc.removeFromZone())
-        {
-            modifyCell(pmc.cellID(), -1);
-        }
-        else
-        {
-            modifyCell(pmc.cellID(), pmc.zoneID());
-        }
-
-        return -1;
-    }
-    else if (isType<polyRemoveCell>(action))
-    {
-        const polyRemoveCell& prc = refCast<const polyRemoveCell>(action);
-
-        removeCell(prc.cellID(), prc.mergeCellID());
 
         return -1;
     }

@@ -37,8 +37,6 @@ Description
 #include "pointSet.H"
 #include "meshTools.H"
 #include "polyTopoChange.H"
-#include "polyRemoveFace.H"
-#include "polyModifyFace.H"
 #include "indirectPrimitivePatch.H"
 #include "processorPolyPatch.H"
 #include "localPointRegion.H"
@@ -118,21 +116,17 @@ void mergeDuplicateBoundaryFaces
                     zoneFlip = fZone.flipMap()[fZone.whichFace(face0)];
                 }
 
-                meshMod.setAction(polyRemoveFace(face1));
-                meshMod.setAction
+                meshMod.removeFace(face1, -1);
+                meshMod.modifyFace
                 (
-                    polyModifyFace
-                    (
-                        faces[face0],           // modified face
-                        face0,                  // label of face being modified
-                        own0,                   // owner
-                        own1,                   // neighbour
-                        false,                  // face flip
-                        -1,                     // patch for face
-                        false,                  // remove from zone
-                        zoneID,                 // zone for face
-                        zoneFlip                // face flip in zone
-                    )
+                    faces[face0],           // modified face
+                    face0,                  // label of face being modified
+                    own0,                   // owner
+                    own1,                   // neighbour
+                    false,                  // face flip
+                    -1,                     // patch for face
+                    zoneID,                 // zone for face
+                    zoneFlip                // face flip in zone
                 );
             }
             else
@@ -147,21 +141,17 @@ void mergeDuplicateBoundaryFaces
                     zoneFlip = fZone.flipMap()[fZone.whichFace(face1)];
                 }
 
-                meshMod.setAction(polyRemoveFace(face0));
-                meshMod.setAction
+                meshMod.removeFace(face0, -1);
+                meshMod.modifyFace
                 (
-                    polyModifyFace
-                    (
-                        faces[face1],           // modified face
-                        face1,                  // label of face being modified
-                        own1,                   // owner
-                        own0,                   // neighbour
-                        false,                  // face flip
-                        -1,                     // patch for face
-                        false,                  // remove from zone
-                        zoneID,                 // zone for face
-                        zoneFlip                // face flip in zone
-                    )
+                    faces[face1],           // modified face
+                    face1,                  // label of face being modified
+                    own1,                   // owner
+                    own0,                   // neighbour
+                    false,                  // face flip
+                    -1,                     // patch for face
+                    zoneID,                 // zone for face
+                    zoneFlip                // face flip in zone
                 );
             }
         }

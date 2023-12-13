@@ -26,8 +26,6 @@ License
 #include "duplicatePoints.H"
 #include "localPointRegion.H"
 #include "polyTopoChange.H"
-#include "polyAddPoint.H"
-#include "polyModifyFace.H"
 #include "polyMesh.H"
 #include "OFstream.H"
 #include "meshTools.H"

@@ -28,9 +28,6 @@ License
 #include "primitiveMesh.H"
 #include "polyTopoChange.H"
 #include "polyTopoChanger.H"
-#include "polyAddPoint.H"
-#include "polyModifyFace.H"
-#include "polyAddFace.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -151,17 +148,13 @@ void Foam::attachDetach::detachInterface
     {
         if (addedPoints[pointi] < 0)
         {
-            addedPoints[pointi] =
-                ref.setAction
-                (
-                    polyAddPoint
-                    (
-                        points[mp[pointi]],        // point
-                        mp[pointi],                // master point
-                        -1,                        // zone ID
-                        true                       // supports a cell
-                    )
-                );
+            addedPoints[pointi] = ref.addPoint
+            (
+                points[mp[pointi]],        // point
+                mp[pointi],                // master point
+                -1,                        // zone ID
+                true                       // supports a cell
+            );
             // Pout<< "Adding point " << addedPoints[pointi]
             //    << " coord1:" << points[mp[pointi]]
             //    << " coord2:" << masterFaceLayer.localPoints()[pointi]
@@ -196,39 +189,32 @@ void Foam::attachDetach::detachInterface
         if (mfFlip[facei])
         {
             // Face needs to be flipped for the master patch
-            ref.setAction
+            ref.modifyFace
             (
-                polyModifyFace
-                (
-                    faces[curFaceID].reverseFace(), // modified face
-                    curFaceID,                   // label of face being modified
-                    nei[curFaceID],                 // owner
-                    -1,                             // neighbour
-                    true,                           // face flip
-                    masterPatchID_.index(),         // patch for face
-                    false,                          // remove from zone
-                    faceZoneID_.index(),            // zone for face
-                    !mfFlip[facei]                  // face flip in zone
-                )
+                faces[curFaceID].reverseFace(), // modified face
+                curFaceID,                   // label of face being modified
+                nei[curFaceID],                 // owner
+                -1,                             // neighbour
+                true,                           // face flip
+                masterPatchID_.index(),         // patch for face
+                faceZoneID_.index(),            // zone for face
+                !mfFlip[facei]                  // face flip in zone
             );
 
             // Add renumbered face into the slave patch
             // label addedFacei =
-            ref.setAction
+            ref.addFace
             (
-                polyAddFace
-                (
-                    newFace,                        // face
-                    own[curFaceID],                 // owner
-                    -1,                             // neighbour
-                    -1,                             // master point
-                    -1,                             // master edge
-                    curFaceID,                      // master face
-                    false,                          // flip flux
-                    slavePatchID_.index(),          // patch to add the face to
-                    -1,                             // zone for face
-                    false                           // zone flip
-                )
+                newFace,                        // face
+                own[curFaceID],                 // owner
+                -1,                             // neighbour
+                -1,                             // master point
+                -1,                             // master edge
+                curFaceID,                      // master face
+                false,                          // flip flux
+                slavePatchID_.index(),          // patch to add the face to
+                -1,                             // zone for face
+                false                           // zone flip
             );
             //{
             //    pointField newPts(ref.points());
@@ -243,39 +229,32 @@ void Foam::attachDetach::detachInterface
         else
         {
             // No flip
-            ref.setAction
+            ref.modifyFace
             (
-                polyModifyFace
-                (
-                    faces[curFaceID],         // modified face
-                    curFaceID,                // label of face being modified
-                    own[curFaceID],           // owner
-                    -1,                       // neighbour
-                    false,                    // face flip
-                    masterPatchID_.index(),   // patch for face
-                    false,                    // remove from zone
-                    faceZoneID_.index(),      // zone for face
-                    mfFlip[facei]             // face flip in zone
-                )
+                faces[curFaceID],         // modified face
+                curFaceID,                // label of face being modified
+                own[curFaceID],           // owner
+                -1,                       // neighbour
+                false,                    // face flip
+                masterPatchID_.index(),   // patch for face
+                faceZoneID_.index(),      // zone for face
+                mfFlip[facei]             // face flip in zone
             );
 
             // Add renumbered face into the slave patch
             // label addedFacei =
-            ref.setAction
+            ref.addFace
             (
-                polyAddFace
-                (
-                    newFace,                        // face
-                    nei[curFaceID],                 // owner
-                    -1,                             // neighbour
-                    -1,                             // master point
-                    -1,                             // master edge
-                    curFaceID,                      // master face
-                    true,                           // flip flux
-                    slavePatchID_.index(),          // patch to add the face to
-                    -1,                             // zone for face
-                    false                           // face flip in zone
-                )
+                newFace,                        // face
+                nei[curFaceID],                 // owner
+                -1,                             // neighbour
+                -1,                             // master point
+                -1,                             // master edge
+                curFaceID,                      // master face
+                true,                           // flip flux
+                slavePatchID_.index(),          // patch to add the face to
+                -1,                             // zone for face
+                false                           // face flip in zone
             );
             //{
             //    pointField newPts(ref.points());
@@ -423,20 +402,16 @@ void Foam::attachDetach::detachInterface
         {
             if (mesh.isInternalFace(curFaceID))
             {
-                ref.setAction
+                ref.modifyFace
                 (
-                    polyModifyFace
-                    (
-                        newFace,                    // face
-                        curFaceID,                  // master face
-                        own[curFaceID],             // owner
-                        nei[curFaceID],             // neighbour
-                        false,                      // flip flux
-                        -1,                         // patch for face
-                        false,                      // remove from zone
-                        -1,                         // zone for face
-                        false                       // face zone flip
-                    )
+                    newFace,                    // face
+                    curFaceID,                  // master face
+                    own[curFaceID],             // owner
+                    nei[curFaceID],             // neighbour
+                    false,                      // flip flux
+                    -1,                         // patch for face
+                    -1,                         // zone for face
+                    false                       // face zone flip
                 );
 
                 // Pout<< "modifying stick-out face. Internal Old face: "
@@ -448,20 +423,16 @@ void Foam::attachDetach::detachInterface
             }
             else
             {
-                ref.setAction
+                ref.modifyFace
                 (
-                    polyModifyFace
-                    (
-                        newFace,                     // face
-                        curFaceID,                   // master face
-                        own[curFaceID],              // owner
-                        -1,                          // neighbour
-                        false,                       // flip flux
-                        mesh.boundaryMesh().whichPatch(curFaceID), // patch
-                        false,                        // remove from zone
-                        -1,                           // zone for face
-                        false                         // face zone flip
-                    )
+                    newFace,                     // face
+                    curFaceID,                   // master face
+                    own[curFaceID],              // owner
+                    -1,                          // neighbour
+                    false,                       // flip flux
+                    mesh.boundaryMesh().whichPatch(curFaceID), // patch
+                    -1,                           // zone for face
+                    false                         // face zone flip
                 );
 
                 // Pout<< "modifying stick-out face. Boundary Old face: "

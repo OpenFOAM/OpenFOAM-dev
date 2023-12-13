@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,10 +29,6 @@ License
 #include "cellCuts.H"
 #include "polyTopoChangeMap.H"
 #include "meshTools.H"
-#include "polyModifyFace.H"
-#include "polyAddPoint.H"
-#include "polyAddFace.H"
-#include "polyAddCell.H"
 #include "syncTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -221,21 +217,18 @@ void Foam::meshCutter::addFace
                 << endl;
         }
 
-        meshMod.setAction
+        meshMod.addFace
         (
-            polyAddFace
-            (
-                newFace,                    // face
-                own,                        // owner
-                nei,                        // neighbour
-                -1,                         // master point
-                -1,                         // master edge
-                facei,                      // master face for addition
-                false,                      // flux flip
-                patchID,                    // patch for face
-                zoneID,                     // zone for face
-                zoneFlip                    // face zone flip
-            )
+            newFace,                    // face
+            own,                        // owner
+            nei,                        // neighbour
+            -1,                         // master point
+            -1,                         // master edge
+            facei,                      // master face for addition
+            false,                      // flux flip
+            patchID,                    // patch for face
+            zoneID,                     // zone for face
+            zoneFlip                    // face zone flip
         );
     }
     else
@@ -252,21 +245,18 @@ void Foam::meshCutter::addFace
                 << endl;
         }
 
-        meshMod.setAction
+        meshMod.addFace
         (
-            polyAddFace
-            (
-                newFace.reverseFace(),      // face
-                nei,                        // owner
-                own,                        // neighbour
-                -1,                         // master point
-                -1,                         // master edge
-                facei,                      // master face for addition
-                false,                      // flux flip
-                patchID,                    // patch for face
-                zoneID,                     // zone for face
-                zoneFlip                    // face zone flip
-            )
+            newFace.reverseFace(),      // face
+            nei,                        // owner
+            own,                        // neighbour
+            -1,                         // master point
+            -1,                         // master edge
+            facei,                      // master face for addition
+            false,                      // flux flip
+            patchID,                    // patch for face
+            zoneID,                     // zone for face
+            zoneFlip                    // face zone flip
         );
     }
 }
@@ -309,38 +299,30 @@ void Foam::meshCutter::modFace
 
         if ((nei == -1) || (own < nei))
         {
-            meshMod.setAction
+            meshMod.modifyFace
             (
-                polyModifyFace
-                (
-                    newFace,            // modified face
-                    facei,              // label of face being modified
-                    own,                // owner
-                    nei,                // neighbour
-                    false,              // face flip
-                    patchID,            // patch for face
-                    false,              // remove from zone
-                    zoneID,             // zone for face
-                    zoneFlip            // face flip in zone
-                )
+                newFace,            // modified face
+                facei,              // label of face being modified
+                own,                // owner
+                nei,                // neighbour
+                false,              // face flip
+                patchID,            // patch for face
+                zoneID,             // zone for face
+                zoneFlip            // face flip in zone
             );
         }
         else
         {
-            meshMod.setAction
+            meshMod.modifyFace
             (
-                polyModifyFace
-                (
-                    newFace.reverseFace(),  // modified face
-                    facei,                  // label of face being modified
-                    nei,                    // owner
-                    own,                    // neighbour
-                    false,                  // face flip
-                    patchID,                // patch for face
-                    false,                  // remove from zone
-                    zoneID,                 // zone for face
-                    zoneFlip                // face flip in zone
-                )
+                newFace.reverseFace(),  // modified face
+                facei,                  // label of face being modified
+                nei,                    // owner
+                own,                    // neighbour
+                false,                  // face flip
+                patchID,                // patch for face
+                zoneID,                 // zone for face
+                zoneFlip                // face flip in zone
             );
         }
     }
@@ -599,17 +581,13 @@ void Foam::meshCutter::setRefinement
 
             point newPt = weight*v1 + (1.0-weight)*v0;
 
-            label addedPointi =
-                meshMod.setAction
-                (
-                    polyAddPoint
-                    (
-                        newPt,              // point
-                        masterPointi,       // master point
-                        -1,                 // zone for point
-                        true                // supports a cell
-                    )
-                );
+            label addedPointi = meshMod.addPoint
+            (
+                newPt,              // point
+                masterPointi,       // master point
+                -1,                 // zone for point
+                true                // supports a cell
+            );
 
             // Store on (hash of) edge.
             addedPoints_.insert(e, addedPointi);
@@ -633,18 +611,14 @@ void Foam::meshCutter::setRefinement
         if (cellLoops[celli].size())
         {
             // Add a cell to the existing cell
-            label addedCelli =
-                meshMod.setAction
-                (
-                    polyAddCell
-                    (
-                        -1,                 // master point
-                        -1,                 // master edge
-                        -1,                 // master face
-                        celli,              // master cell
-                        mesh().cellZones().whichZone(celli) // zone for cell
-                    )
-                );
+            label addedCelli = meshMod.addCell
+            (
+                -1,                 // master point
+                -1,                 // master edge
+                -1,                 // master face
+                celli,              // master cell
+                mesh().cellZones().whichZone(celli) // zone for cell
+            );
 
             addedCells_.insert(celli, addedCelli);
 
@@ -676,22 +650,19 @@ void Foam::meshCutter::setRefinement
             label masterPointi = findInternalFacePoint(anchorPts[celli]);
 
             label addedFacei =
-                meshMod.setAction
-                (
-                    polyAddFace
-                    (
-                        newFace,                // face
-                        celli,                  // owner
-                        addedCells_[celli],     // neighbour
-                        masterPointi,           // master point
-                        -1,                     // master edge
-                        -1,                     // master face for addition
-                        false,                  // flux flip
-                        -1,                     // patch for face
-                        -1,                     // zone for face
-                        false                   // face zone flip
-                    )
-                );
+                meshMod.addFace
+            (
+                newFace,                // face
+                celli,                  // owner
+                addedCells_[celli],     // neighbour
+                masterPointi,           // master point
+                -1,                     // master edge
+                -1,                     // master face for addition
+                false,                  // flux flip
+                -1,                     // patch for face
+                -1,                     // zone for face
+                false                   // face zone flip
+            );
 
             addedFaces_.insert(celli, addedFacei);
 

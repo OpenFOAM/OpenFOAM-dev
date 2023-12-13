@@ -54,8 +54,6 @@ Description
 #include "cellSet.H"
 #include "syncTools.H"
 #include "polyTopoChange.H"
-#include "polyModifyFace.H"
-#include "polyAddFace.H"
 #include "regionSplit.H"
 #include "Tuple2.H"
 #include "cyclicFvPatch.H"
@@ -81,41 +79,34 @@ void modifyOrAddFace
     if (!modifiedFace[facei])
     {
         // First usage of face. Modify.
-        meshMod.setAction
+        meshMod.modifyFace
         (
-            polyModifyFace
-            (
-                f,                          // modified face
-                facei,                      // label of face
-                own,                        // owner
-                -1,                         // neighbour
-                flipFaceFlux,               // face flip
-                newPatchi,                  // patch for face
-                false,                      // remove from zone
-                zoneID,                     // zone for face
-                zoneFlip                    // face flip in zone
-            )
+            f,                          // modified face
+            facei,                      // label of face
+            own,                        // owner
+            -1,                         // neighbour
+            flipFaceFlux,               // face flip
+            newPatchi,                  // patch for face
+            zoneID,                     // zone for face
+            zoneFlip                    // face flip in zone
         );
         modifiedFace[facei] = 1;
     }
     else
     {
         // Second or more usage of face. Add.
-        meshMod.setAction
+        meshMod.addFace
         (
-            polyAddFace
-            (
-                f,                          // modified face
-                own,                        // owner
-                -1,                         // neighbour
-                -1,                         // master point
-                -1,                         // master edge
-                facei,                      // master face
-                flipFaceFlux,               // face flip
-                newPatchi,                  // patch for face
-                zoneID,                     // zone for face
-                zoneFlip                    // face flip in zone
-            )
+            f,                          // modified face
+            own,                        // owner
+            -1,                         // neighbour
+            -1,                         // master point
+            -1,                         // master edge
+            facei,                      // master face
+            flipFaceFlux,               // face flip
+            newPatchi,                  // patch for face
+            zoneID,                     // zone for face
+            zoneFlip                    // face flip in zone
         );
     }
 }
@@ -477,20 +468,16 @@ void createBaffles
                 zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
             }
 
-            meshMod.setAction
+            meshMod.modifyFace
             (
-                polyModifyFace
-                (
-                    f,                          // modified face
-                    facei,                      // label of face
-                    mesh.faceOwner()[facei],    // owner
-                    -1,                         // neighbour
-                    false,                      // face flip
-                    wantedPatch[facei],         // patch for face
-                    false,                      // remove from zone
-                    zoneID,                     // zone for face
-                    zoneFlip                    // face flip in zone
-                )
+                f,                          // modified face
+                facei,                      // label of face
+                mesh.faceOwner()[facei],    // owner
+                -1,                         // neighbour
+                false,                      // face flip
+                wantedPatch[facei],         // patch for face
+                zoneID,                     // zone for face
+                zoneFlip                    // face flip in zone
             );
 
             if (mesh.isInternalFace(facei))
@@ -504,21 +491,18 @@ void createBaffles
                     zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
                 }
 
-                meshMod.setAction
+                meshMod.addFace
                 (
-                    polyAddFace
-                    (
-                        f.reverseFace(),            // modified face
-                        mesh.faceNeighbour()[facei],// owner
-                        -1,                         // neighbour
-                        -1,                         // masterPointID
-                        -1,                         // masterEdgeID
-                        facei,                      // masterFaceID,
-                        false,                      // face flip
-                        wantedPatch[facei],         // patch for face
-                        zoneID,                     // zone for face
-                        zoneFlip                    // face flip in zone
-                    )
+                    f.reverseFace(),            // modified face
+                    mesh.faceNeighbour()[facei],// owner
+                    -1,                         // neighbour
+                    -1,                         // masterPointID
+                    -1,                         // masterEdgeID
+                    facei,                      // masterFaceID,
+                    false,                      // face flip
+                    wantedPatch[facei],         // patch for face
+                    zoneID,                     // zone for face
+                    zoneFlip                    // face flip in zone
                 );
             }
         }

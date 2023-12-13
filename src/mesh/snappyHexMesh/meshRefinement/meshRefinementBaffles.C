@@ -28,10 +28,6 @@ License
 #include "faceSet.H"
 #include "polyTopoChange.H"
 #include "meshTools.H"
-#include "polyModifyFace.H"
-#include "polyModifyCell.H"
-#include "polyAddFace.H"
-#include "polyRemoveFace.H"
 #include "localPointRegion.H"
 #include "duplicatePoints.H"
 #include "regionSplit.H"
@@ -63,20 +59,16 @@ Foam::label Foam::meshRefinement::createBaffle
         zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
     }
 
-    meshMod.setAction
+    meshMod.modifyFace
     (
-        polyModifyFace
-        (
-            f,                          // modified face
-            facei,                      // label of face
-            mesh_.faceOwner()[facei],   // owner
-            -1,                         // neighbour
-            false,                      // face flip
-            ownPatch,                   // patch for face
-            false,                      // remove from zone
-            zoneID,                     // zone for face
-            zoneFlip                    // face flip in zone
-        )
+        f,                          // modified face
+        facei,                      // label of face
+        mesh_.faceOwner()[facei],   // owner
+        -1,                         // neighbour
+        false,                      // face flip
+        ownPatch,                   // patch for face
+        zoneID,                     // zone for face
+        zoneFlip                    // face flip in zone
     );
 
 
@@ -98,21 +90,18 @@ Foam::label Foam::meshRefinement::createBaffle
             reverseFlip = !zoneFlip;
         }
 
-        dupFacei = meshMod.setAction
+        dupFacei = meshMod.addFace
         (
-            polyAddFace
-            (
-                f.reverseFace(),            // modified face
-                mesh_.faceNeighbour()[facei],// owner
-                -1,                         // neighbour
-                -1,                         // masterPointID
-                -1,                         // masterEdgeID
-                facei,                      // masterFaceID,
-                true,                       // face flip
-                nbrPatch,                   // patch for face
-                zoneID,                     // zone for face
-                reverseFlip                 // face flip in zone
-            )
+            f.reverseFace(),            // modified face
+            mesh_.faceNeighbour()[facei],// owner
+            -1,                         // neighbour
+            -1,                         // masterPointID
+            -1,                         // masterEdgeID
+            facei,                      // masterFaceID,
+            true,                       // face flip
+            nbrPatch,                   // patch for face
+            zoneID,                     // zone for face
+            reverseFlip                 // face flip in zone
         );
     }
     return dupFacei;
@@ -860,21 +849,17 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
 
             const label nei = (face1 < 0 ? -1 : own1);
 
-            meshMod.setAction(polyRemoveFace(face1));
-            meshMod.setAction
+            meshMod.removeFace(face1, -1);
+            meshMod.modifyFace
             (
-                polyModifyFace
-                (
-                    faces[face0],           // modified face
-                    face0,                  // label of face being modified
-                    own0,                   // owner
-                    nei,                    // neighbour
-                    false,                  // face flip
-                    -1,                     // patch for face
-                    false,                  // remove from zone
-                    zoneID,                 // zone for face
-                    zoneFlip                // face flip in zone
-                )
+                faces[face0],           // modified face
+                face0,                  // label of face being modified
+                own0,                   // owner
+                nei,                    // neighbour
+                false,                  // face flip
+                -1,                     // patch for face
+                zoneID,                 // zone for face
+                zoneFlip                // face flip in zone
             );
         }
         else
@@ -889,21 +874,17 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
                 zoneFlip = fZone.flipMap()[fZone.whichFace(face1)];
             }
 
-            meshMod.setAction(polyRemoveFace(face0));
-            meshMod.setAction
+            meshMod.removeFace(face0, -1);
+            meshMod.modifyFace
             (
-                polyModifyFace
-                (
-                    faces[face1],           // modified face
-                    face1,                  // label of face being modified
-                    own1,                   // owner
-                    own0,                   // neighbour
-                    false,                  // face flip
-                    -1,                     // patch for face
-                    false,                  // remove from zone
-                    zoneID,                 // zone for face
-                    zoneFlip                // face flip in zone
-                )
+                faces[face1],           // modified face
+                face1,                  // label of face being modified
+                own1,                   // owner
+                own0,                   // neighbour
+                false,                  // face flip
+                -1,                     // patch for face
+                zoneID,                 // zone for face
+                zoneFlip                // face flip in zone
             );
         }
     }
@@ -3242,20 +3223,16 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
                 );
             }
 
-            meshMod.setAction
+            meshMod.modifyFace
             (
-                polyModifyFace
-                (
-                    mesh_.faces()[facei],           // modified face
-                    facei,                          // label of face
-                    faceOwner[facei],               // owner
-                    faceNeighbour[facei],           // neighbour
-                    false,                          // face flip
-                    -1,                             // patch for face
-                    false,                          // remove from zone
-                    faceZoneI,                      // zone for face
-                    flip                            // face flip in zone
-                )
+                mesh_.faces()[facei],           // modified face
+                facei,                          // label of face
+                faceOwner[facei],               // owner
+                faceNeighbour[facei],           // neighbour
+                false,                          // face flip
+                -1,                             // patch for face
+                faceZoneI,                      // zone for face
+                flip                            // face flip in zone
             );
         }
     }
@@ -3293,20 +3270,16 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
                     );
                 }
 
-                meshMod.setAction
+                meshMod.modifyFace
                 (
-                    polyModifyFace
-                    (
-                        mesh_.faces()[facei],           // modified face
-                        facei,                          // label of face
-                        faceOwner[facei],               // owner
-                        -1,                             // neighbour
-                        false,                          // face flip
-                        patchi,                         // patch for face
-                        false,                          // remove from zone
-                        faceZoneI,                      // zone for face
-                        flip                            // face flip in zone
-                    )
+                    mesh_.faces()[facei],           // modified face
+                    facei,                          // label of face
+                    faceOwner[facei],               // owner
+                    -1,                             // neighbour
+                    false,                          // face flip
+                    patchi,                         // patch for face
+                    faceZoneI,                      // zone for face
+                    flip                            // face flip in zone
                 );
             }
             facei++;
@@ -3323,15 +3296,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
 
         if (zonei >= 0)
         {
-            meshMod.setAction
-            (
-                polyModifyCell
-                (
-                    celli,
-                    false,          // removeFromZone
-                    zonei
-                )
-            );
+            meshMod.modifyCell(celli, zonei);
         }
     }
 

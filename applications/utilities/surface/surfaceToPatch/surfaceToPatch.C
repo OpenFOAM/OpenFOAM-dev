@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,20 +136,16 @@ bool repatchFace
                 zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
             }
 
-            meshMod.setAction
+            meshMod.modifyFace
             (
-                polyModifyFace
-                (
-                    mesh.faces()[facei],// modified face
-                    facei,              // label of face being modified
-                    own,                // owner
-                    -1,                 // neighbour
-                    false,              // face flip
-                    patchID,            // patch for face
-                    false,              // remove from zone
-                    zoneID,             // zone for face
-                    zoneFlip            // face flip in zone
-                )
+                mesh.faces()[facei],// modified face
+                facei,              // label of face being modified
+                own,                // owner
+                -1,                 // neighbour
+                false,              // face flip
+                patchID,            // patch for face
+                zoneID,             // zone for face
+                zoneFlip            // face flip in zone
             );
 
             changed = true;

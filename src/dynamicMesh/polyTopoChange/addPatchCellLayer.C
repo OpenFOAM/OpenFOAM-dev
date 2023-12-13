@@ -29,10 +29,6 @@ License
 #include "meshTools.H"
 #include "polyTopoChangeMap.H"
 #include "syncTools.H"
-#include "polyAddPoint.H"
-#include "polyAddFace.H"
-#include "polyModifyFace.H"
-#include "polyAddCell.H"
 #include "globalIndex.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -329,21 +325,18 @@ Foam::label Foam::addPatchCellLayer::addSideFace
         //    << " patch:" << newPatchID
         //    << endl;
 
-        addedFacei = meshMod.setAction
+        addedFacei = meshMod.addFace
         (
-            polyAddFace
-            (
-                newFace,                    // face
-                addedCells[ownFacei][layerOwn],   // owner
-                -1,                         // neighbour
-                -1,                         // master point
-                inflateEdgeI,               // master edge
-                inflateFacei,               // master face
-                false,                      // flux flip
-                newPatchID,                 // patch for face
-                zoneI,                      // zone for face
-                flip                        // face zone flip
-            )
+            newFace,                    // face
+            addedCells[ownFacei][layerOwn],   // owner
+            -1,                         // neighbour
+            -1,                         // master point
+            inflateEdgeI,               // master edge
+            inflateFacei,               // master face
+            false,                      // flux flip
+            newPatchID,                 // patch for face
+            zoneI,                      // zone for face
+            flip                        // face zone flip
         );
     }
     else
@@ -395,21 +388,18 @@ Foam::label Foam::addPatchCellLayer::addSideFace
             layerOwn = layerI;
         }
 
-        addedFacei = meshMod.setAction
+        addedFacei = meshMod.addFace
         (
-            polyAddFace
-            (
-                newFace,                    // face
-                addedCells[ownFacei][layerOwn],   // owner
-                addedCells[nbrFacei][layerNbr],   // neighbour
-                -1,                         // master point
-                inflateEdgeI,               // master edge
-                -1,                         // master face
-                false,                      // flux flip
-                -1,                         // patch for face
-                zoneI,                      // zone for face
-                flip                        // face zone flip
-            )
+            newFace,                    // face
+            addedCells[ownFacei][layerOwn],   // owner
+            addedCells[nbrFacei][layerNbr],   // neighbour
+            -1,                         // master point
+            inflateEdgeI,               // master edge
+            -1,                         // master face
+            false,                      // flux flip
+            -1,                         // patch for face
+            zoneI,                      // zone for face
+            flip                        // face zone flip
         );
 
        // Pout<< "Added internal face:" << newFace
@@ -1091,15 +1081,12 @@ void Foam::addPatchCellLayer::setRefinement
             {
                 label meshPointi = meshPoints[patchPointi];
                 label zoneI = mesh_.pointZones().whichZone(meshPointi);
-                copiedPatchPoints[patchPointi] = meshMod.setAction
+                copiedPatchPoints[patchPointi] = meshMod.addPoint
                 (
-                    polyAddPoint
-                    (
-                        mesh_.points()[meshPointi],         // point
-                        -1,         // master point
-                        zoneI,      // zone for point
-                        true        // supports a cell
-                    )
+                    mesh_.points()[meshPointi],         // point
+                    -1,         // master point
+                    zoneI,      // zone for point
+                    true        // supports a cell
                 );
             }
         }
@@ -1123,15 +1110,12 @@ void Foam::addPatchCellLayer::setRefinement
             {
                 pt += disp;
 
-                label addedVertI = meshMod.setAction
+                label addedVertI = meshMod.addPoint
                 (
-                    polyAddPoint
-                    (
-                        pt,         // point
-                        (addToMesh_ ? meshPointi : -1), // master point
-                        zoneI,      // zone for point
-                        true        // supports a cell
-                    )
+                    pt,         // point
+                    (addToMesh_ ? meshPointi : -1), // master point
+                    zoneI,      // zone for point
+                    true        // supports a cell
                 );
 
                 addedPoints_[patchPointi][i] = addedVertI;
@@ -1165,17 +1149,14 @@ void Foam::addPatchCellLayer::setRefinement
             {
                 // Note: add from cell (owner of patch face) or from face?
                 // for now add from cell so we can map easily.
-                addedCells[patchFacei][i] = meshMod.setAction
+                addedCells[patchFacei][i] = meshMod.addCell
                 (
-                    polyAddCell
-                    (
-                        -1,             // master point
-                        -1,             // master edge
-                        -1,             // master face
-                        (addToMesh_ ? mesh_.faceOwner()[meshFacei] : -1),
-                                        // master
-                        ownZoneI        // zone for cell
-                    )
+                    -1,             // master point
+                    -1,             // master edge
+                    -1,             // master face
+                    (addToMesh_ ? mesh_.faceOwner()[meshFacei] : -1),
+                    // master
+                    ownZoneI        // zone for cell
                 );
             }
         }
@@ -1255,21 +1236,18 @@ void Foam::addPatchCellLayer::setRefinement
                 }
 
 
-                layerFaces_[patchFacei][i+1] = meshMod.setAction
+                layerFaces_[patchFacei][i+1] = meshMod.addFace
                 (
-                    polyAddFace
-                    (
-                        newFace,                    // face
-                        addedCells[patchFacei][i],  // owner
-                        nei,                        // neighbour
-                        -1,                         // master point
-                        -1,                         // master edge
-                        (addToMesh_ ? meshFacei : -1), // master face
-                        false,                      // flux flip
-                        patchi,                     // patch for face
-                        zoneI,                      // zone for face
-                        flip                        // face zone flip
-                    )
+                    newFace,                    // face
+                    addedCells[patchFacei][i],  // owner
+                    nei,                        // neighbour
+                    -1,                         // master point
+                    -1,                         // master edge
+                    (addToMesh_ ? meshFacei : -1), // master face
+                    false,                      // flux flip
+                    patchi,                     // patch for face
+                    zoneI,                      // zone for face
+                    flip                        // face zone flip
                 );
             }
         }
@@ -1289,20 +1267,16 @@ void Foam::addPatchCellLayer::setRefinement
 
                 layerFaces_[patchFacei][0] = meshFacei;
 
-                meshMod.setAction
+                meshMod.modifyFace
                 (
-                    polyModifyFace
-                    (
-                        pp[patchFacei],                 // modified face
-                        meshFacei,                      // label of face
-                        mesh_.faceOwner()[meshFacei],   // owner
-                        addedCells[patchFacei][0],      // neighbour
-                        false,                          // face flip
-                        -1,                             // patch for face
-                        true, // false,                  // remove from zone
-                        -1, // zoneI,                    // zone for face
-                        false                           // face flip in zone
-                    )
+                    pp[patchFacei],                 // modified face
+                    meshFacei,                      // label of face
+                    mesh_.faceOwner()[meshFacei],   // owner
+                    addedCells[patchFacei][0],      // neighbour
+                    false,                          // face flip
+                    -1,                             // patch for face
+                    -1, // zoneI,                    // zone for face
+                    false                           // face flip in zone
                 );
             }
         }
@@ -1331,21 +1305,18 @@ void Foam::addPatchCellLayer::setRefinement
                     f[fp] = copiedPatchPoints[f[fp]];
                 }
 
-                layerFaces_[patchFacei][0] = meshMod.setAction
+                layerFaces_[patchFacei][0] = meshMod.addFace
                 (
-                    polyAddFace
-                    (
-                        f,                          // modified face
-                        addedCells[patchFacei][0],  // owner
-                        -1,                         // neighbour
-                        -1,                         // masterPoint
-                        -1,                         // masterEdge
-                        -1,                         // masterFace
-                        true,                       // face flip
-                        exposedPatchID[patchFacei], // patch for face
-                        zoneI,                      // zone for face
-                        zoneFlip                    // face flip in zone
-                    )
+                    f,                          // modified face
+                    addedCells[patchFacei][0],  // owner
+                    -1,                         // neighbour
+                    -1,                         // masterPoint
+                    -1,                         // masterEdge
+                    -1,                         // masterFace
+                    true,                       // face flip
+                    exposedPatchID[patchFacei], // patch for face
+                    zoneI,                      // zone for face
+                    zoneFlip                    // face flip in zone
                 );
             }
         }

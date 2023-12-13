@@ -28,9 +28,6 @@ License
 #include "PstreamReduceOps.H"
 #include "polyMesh.H"
 #include "polyTopoChange.H"
-#include "polyRemovePoint.H"
-#include "polyAddPoint.H"
-#include "polyModifyFace.H"
 #include "syncTools.H"
 #include "faceSet.H"
 #include "dummyTransform.H"
@@ -108,20 +105,16 @@ void Foam::removePoints::modifyFace
         zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
     }
 
-    meshMod.setAction
+    meshMod.modifyFace
     (
-        polyModifyFace
-        (
-            newFace,        // modified face
-            facei,          // label of face being modified
-            owner,          // owner
-            neighbour,      // neighbour
-            false,          // face flip
-            patchi,         // patch for face
-            false,          // remove from zone
-            zoneID,         // zone for face
-            zoneFlip        // face flip in zone
-        )
+        newFace,        // modified face
+        facei,          // label of face being modified
+        owner,          // owner
+        neighbour,      // neighbour
+        false,          // face flip
+        patchi,         // patch for face
+        zoneID,         // zone for face
+        zoneFlip        // face flip in zone
     );
 }
 
@@ -338,7 +331,7 @@ void Foam::removePoints::setRefinement
                 pointToSaved.insert(pointi, nDeleted);
                 savedPoints_[nDeleted++] = mesh_.points()[pointi];
             }
-            meshMod.setAction(polyRemovePoint(pointi));
+            meshMod.removePoint(pointi, -1);
 
             // Store faces affected
             const labelList& pFaces = mesh_.pointFaces()[pointi];
@@ -796,15 +789,12 @@ void Foam::removePoints::setUnrefinement
                 << abort(FatalError);
         }
 
-        addedPoints[localI] = meshMod.setAction
+        addedPoints[localI] = meshMod.addPoint
         (
-            polyAddPoint
-            (
-                savedPoints_[localI],   // point
-                -1,                     // master point
-                -1,                     // zone for point
-                true                    // supports a cell
-            )
+            savedPoints_[localI],   // point
+            -1,                     // master point
+            -1,                     // zone for point
+            true                    // supports a cell
         );
 
         // Mark the restored points so they are not restored again.

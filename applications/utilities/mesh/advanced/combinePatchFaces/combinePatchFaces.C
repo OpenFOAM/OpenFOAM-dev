@@ -49,8 +49,6 @@ Description
 #include "argList.H"
 #include "Time.H"
 #include "polyTopoChange.H"
-#include "polyModifyFace.H"
-#include "polyAddFace.H"
 #include "combineFaces.H"
 #include "removePoints.H"
 #include "meshCheck.H"
@@ -218,20 +216,16 @@ label mergePatchFaces
                     << " to vertices " << setFaceVerts[0] << endl;
 
                 // Modify the master face.
-                meshMod.setAction
+                meshMod.modifyFace
                 (
-                    polyModifyFace
-                    (
-                        setFaceVerts[0],                // original face
-                        newMasterI,                     // label of face
-                        own,                            // owner
-                        -1,                             // neighbour
-                        false,                          // face flip
-                        patchID,                        // patch for face
-                        false,                          // remove from zone
-                        zoneID,                         // zone for face
-                        zoneFlip                        // face flip in zone
-                    )
+                    setFaceVerts[0],                // original face
+                    newMasterI,                     // label of face
+                    own,                            // owner
+                    -1,                             // neighbour
+                    false,                          // face flip
+                    patchID,                        // patch for face
+                    zoneID,                         // zone for face
+                    zoneFlip                        // face flip in zone
                 );
 
 
@@ -241,21 +235,18 @@ label mergePatchFaces
                     Pout<< "Restoring removed face " << setFaces[i]
                         << " with vertices " << setFaceVerts[i] << endl;
 
-                    meshMod.setAction
+                    meshMod.addFace
                     (
-                        polyAddFace
-                        (
-                            setFaceVerts[i],        // vertices
-                            own,                    // owner,
-                            -1,                     // neighbour,
-                            -1,                     // masterPointID,
-                            -1,                     // masterEdgeID,
-                            newMasterI,             // masterFaceID,
-                            false,                  // flipFaceFlux,
-                            patchID,                // patchID,
-                            zoneID,                 // zoneID,
-                            zoneFlip                // zoneFlip
-                        )
+                        setFaceVerts[i],        // vertices
+                        own,                    // owner,
+                        -1,                     // neighbour,
+                        -1,                     // masterPointID,
+                        -1,                     // masterEdgeID,
+                        newMasterI,             // masterFaceID,
+                        false,                  // flipFaceFlux,
+                        patchID,                // patchID,
+                        zoneID,                 // zoneID,
+                        zoneFlip                // zoneFlip
                     );
                 }
             }

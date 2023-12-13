@@ -46,7 +46,6 @@ Description
 #include "meshTools.H"
 #include "faceSet.H"
 #include "polyTopoChange.H"
-#include "polyModifyFace.H"
 #include "wordReList.H"
 #include "systemDict.H"
 
@@ -73,20 +72,16 @@ void changePatchID
         zoneFlip = fZone.flipMap()[fZone.whichFace(faceID)];
     }
 
-    meshMod.setAction
+    meshMod.modifyFace
     (
-        polyModifyFace
-        (
-            mesh.faces()[faceID],               // face
-            faceID,                             // face ID
-            mesh.faceOwner()[faceID],           // owner
-            -1,                                 // neighbour
-            false,                              // flip flux
-            patchID,                            // patch ID
-            false,                              // remove from zone
-            zoneID,                             // zone ID
-            zoneFlip                            // zone flip
-        )
+        mesh.faces()[faceID],               // face
+        faceID,                             // face ID
+        mesh.faceOwner()[faceID],           // owner
+        -1,                                 // neighbour
+        false,                              // flip flux
+        patchID,                            // patch ID
+        zoneID,                             // zone ID
+        zoneFlip                            // zone flip
     );
 }
 

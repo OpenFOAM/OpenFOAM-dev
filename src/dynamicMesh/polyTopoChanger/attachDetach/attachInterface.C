@@ -28,9 +28,6 @@ License
 #include "primitiveMesh.H"
 #include "polyTopoChange.H"
 #include "polyTopoChanger.H"
-#include "polyRemovePoint.H"
-#include "polyRemoveFace.H"
-#include "polyModifyFace.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -87,7 +84,7 @@ void Foam::attachDetach::attachInterface
         //    << " currently at:" << ref.points()[removedPoints[pointi]]
         //    << endl;
 
-        ref.setAction(polyRemovePoint(removedPoints[pointi]));
+        ref.removePoint(removedPoints[pointi], -1);
     }
 
 // Pout<< "Points to be mapped: " << removedPoints << endl;
@@ -103,7 +100,7 @@ void Foam::attachDetach::attachInterface
         //            ref.faces()[i + slavePatchStart]
         //        )
         //    << endl;
-        ref.setAction(polyRemoveFace(i + slavePatchStart));
+        ref.removeFace(i + slavePatchStart, -1);
     }
 
     // Modify the faces from the master patch
@@ -118,39 +115,31 @@ void Foam::attachDetach::attachInterface
         // turning.  Modify it to become internal
         if (masterFaceCells[facei] < slaveFaceCells[facei])
         {
-            ref.setAction
+            ref.modifyFace
             (
-                polyModifyFace
-                (
-                    faces[masterPatchStart + facei], // modified face
-                    masterPatchStart + facei,    // label of face being modified
-                    masterFaceCells[facei],          // owner
-                    slaveFaceCells[facei],           // neighbour
-                    false,                           // face flip
-                    -1,                              // patch for face
-                    false,                           // remove from zone
-                    faceZoneID_.index(),             // zone for face
-                    mfFlip[facei]                    // face flip in zone
-                )
+                faces[masterPatchStart + facei], // modified face
+                masterPatchStart + facei,    // label of face being modified
+                masterFaceCells[facei],          // owner
+                slaveFaceCells[facei],           // neighbour
+                false,                           // face flip
+                -1,                              // patch for face
+                faceZoneID_.index(),             // zone for face
+                mfFlip[facei]                    // face flip in zone
             );
         }
         else
         {
             // Flip required
-            ref.setAction
+            ref.modifyFace
             (
-                polyModifyFace
-                (
-                    faces[masterPatchStart + facei].reverseFace(), // mod face
-                    masterPatchStart + facei,    // label of face being modified
-                    slaveFaceCells[facei],        // owner
-                    masterFaceCells[facei],       // neighbour
-                    true,                         // face flip
-                    -1,                           // patch for face
-                    false,                        // remove from zone
-                    faceZoneID_.index(),          // zone for face
-                    !mfFlip[facei]                // face flip in zone
-                )
+                faces[masterPatchStart + facei].reverseFace(), // mod face
+                masterPatchStart + facei,    // label of face being modified
+                slaveFaceCells[facei],        // owner
+                masterFaceCells[facei],       // neighbour
+                true,                         // face flip
+                -1,                           // patch for face
+                faceZoneID_.index(),          // zone for face
+                !mfFlip[facei]                // face flip in zone
             );
         }
     }
@@ -236,20 +225,16 @@ void Foam::attachDetach::attachInterface
 
 
         // Modify the face
-        ref.setAction
+        ref.modifyFace
         (
-            polyModifyFace
-            (
-                newFace,                // modified face
-                curFaceID,              // label of face being modified
-                own[curFaceID],         // owner
-                neiCell,                // neighbour
-                false,                  // face flip
-                patchID,                // patch for face
-                false,                  // remove from zone
-                modifiedFaceZone,       // zone for face
-                modifiedFaceZoneFlip    // face flip in zone
-            )
+            newFace,                // modified face
+            curFaceID,              // label of face being modified
+            own[curFaceID],         // owner
+            neiCell,                // neighbour
+            false,                  // face flip
+            patchID,                // patch for face
+            modifiedFaceZone,       // zone for face
+            modifiedFaceZoneFlip    // face flip in zone
         );
     }
 

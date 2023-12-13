@@ -26,13 +26,10 @@ License
 #include "topoAction.H"
 #include "polyAddPoint.H"
 #include "polyAddFace.H"
-#include "polyAddCell.H"
 #include "polyModifyPoint.H"
 #include "polyModifyFace.H"
-#include "polyModifyCell.H"
 #include "polyRemovePoint.H"
 #include "polyRemoveFace.H"
-#include "polyRemoveCell.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -47,10 +44,6 @@ namespace Foam
     defineTypeNameAndDebug(polyAddFace, 0);
     defineTypeNameAndDebug(polyModifyFace, 0);
     defineTypeNameAndDebug(polyRemoveFace, 0);
-
-    defineTypeNameAndDebug(polyAddCell, 0);
-    defineTypeNameAndDebug(polyModifyCell, 0);
-    defineTypeNameAndDebug(polyRemoveCell, 0);
 }
 
 

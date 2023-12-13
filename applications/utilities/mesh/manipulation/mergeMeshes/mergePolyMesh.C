@@ -26,9 +26,6 @@ License
 #include "mergePolyMesh.H"
 #include "Time.H"
 #include "polyTopoChangeMap.H"
-#include "polyAddPoint.H"
-#include "polyAddCell.H"
-#include "polyAddFace.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -217,17 +214,13 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
             zoneID = pointZoneIndices[zoneID];
         }
 
-        renumberPoints[pointi] =
-            meshMod_.setAction
-            (
-                polyAddPoint
-                (
-                    p[pointi],            // Point to add
-                    -1,                   // Master point (straight addition)
-                    zoneID,               // Zone for point
-                    pointi < m.nPoints()  // Is in cell?
-                )
-            );
+        renumberPoints[pointi] = meshMod_.addPoint
+        (
+            p[pointi],            // Point to add
+            -1,                   // Master point (straight addition)
+            zoneID,               // Zone for point
+            pointi < m.nPoints()  // Is in cell?
+        );
     }
 
     // Add cells
@@ -254,18 +247,14 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
             zoneID = cellZoneIndices[zoneID];
         }
 
-        renumberCells[celli] =
-            meshMod_.setAction
-            (
-                polyAddCell
-                (
-                    -1,                   // Master point
-                    -1,                   // Master edge
-                    -1,                   // Master face
-                    -1,                   // Master cell
-                    zoneID                // Zone for cell
-                )
-            );
+        renumberCells[celli] = meshMod_.addCell
+        (
+            -1,                   // Master point
+            -1,                   // Master edge
+            -1,                   // Master face
+            -1,                   // Master cell
+            zoneID                // Zone for cell
+        );
     }
 
     // Add faces
@@ -359,23 +348,19 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
             newZone = faceZoneIndices[newZone];
         }
 
-        renumberFaces[facei] =
-            meshMod_.setAction
-            (
-                polyAddFace
-                (
-                    newFace,
-                    newOwn,
-                    newNei,
-                    -1,
-                    -1,
-                    -1,
-                    false,
-                    newPatch,
-                    newZone,
-                    newZoneFlip
-                )
-            );
+        renumberFaces[facei] = meshMod_.addFace
+        (
+            newFace,
+            newOwn,
+            newNei,
+            -1,
+            -1,
+            -1,
+            false,
+            newPatch,
+            newZone,
+            newZoneFlip
+        );
     }
 }
 

@@ -26,11 +26,6 @@ License
 #include "combineFaces.H"
 #include "polyMesh.H"
 #include "polyTopoChange.H"
-#include "polyRemoveFace.H"
-#include "polyAddFace.H"
-#include "polyModifyFace.H"
-#include "polyRemovePoint.H"
-#include "polyAddPoint.H"
 #include "syncTools.H"
 #include "meshTools.H"
 
@@ -662,20 +657,16 @@ void Foam::combineFaces::setRefinement
 
         label patchi = mesh_.boundaryMesh().whichPatch(masterFacei);
 
-        meshMod.setAction
+        meshMod.modifyFace
         (
-            polyModifyFace
-            (
-                outsideFace,                    // modified face
-                masterFacei,                    // label of face being modified
-                mesh_.faceOwner()[masterFacei], // owner
-                -1,                             // neighbour
-                false,                          // face flip
-                patchi,                         // patch for face
-                false,                          // remove from zone
-                zoneID,                         // zone for face
-                zoneFlip                        // face flip in zone
-            )
+            outsideFace,                    // modified face
+            masterFacei,                    // label of face being modified
+            mesh_.faceOwner()[masterFacei], // owner
+            -1,                             // neighbour
+            false,                          // face flip
+            patchi,                         // patch for face
+            zoneID,                         // zone for face
+            zoneFlip                        // face flip in zone
         );
 
 
@@ -684,7 +675,7 @@ void Foam::combineFaces::setRefinement
 
         for (label i = 1; i < setFaces.size(); i++)
         {
-            meshMod.setAction(polyRemoveFace(setFaces[i]));
+            meshMod.removeFace(setFaces[i], -1);
         }
 
 
@@ -725,7 +716,7 @@ void Foam::combineFaces::setRefinement
         {
             if (nPointFaces[pointi] == 0)
             {
-                meshMod.setAction(polyRemovePoint(pointi));
+                meshMod.removePoint(pointi, -1);
             }
         }
     }
@@ -751,7 +742,7 @@ void Foam::combineFaces::setRefinement
         {
             if (nPointFaces[pointi] == 0)
             {
-                meshMod.setAction(polyRemovePoint(pointi));
+                meshMod.removePoint(pointi, -1);
 
                 savedPointLabels_[n] = pointi;
                 savedPoints_[n] = mesh_.points()[pointi];
@@ -909,15 +900,12 @@ void Foam::combineFaces::setUnrefinement
                     if (addedPoints[localI] == -1)
                     {
                         // First occurrence of saved point. Reintroduce point
-                        addedPoints[localI] = meshMod.setAction
+                        addedPoints[localI] = meshMod.addPoint
                         (
-                            polyAddPoint
-                            (
-                                savedPoints_[localI],   // point
-                                -1,                     // master point
-                                -1,                     // zone for point
-                                true                    // supports a cell
-                            )
+                            savedPoints_[localI],   // point
+                            -1,                     // master point
+                            -1,                     // zone for point
+                            true                    // supports a cell
                         );
                         restoredPoints.insert
                         (
@@ -957,20 +945,16 @@ void Foam::combineFaces::setUnrefinement
         //    << " to vertices " << faces[0] << endl;
 
         // Modify the master face.
-        meshMod.setAction
+        meshMod.modifyFace
         (
-            polyModifyFace
-            (
-                faces[0],                       // original face
-                masterFacei,                    // label of face
-                own,                            // owner
-                -1,                             // neighbour
-                false,                          // face flip
-                patchi,                         // patch for face
-                false,                          // remove from zone
-                zoneID,                         // zone for face
-                zoneFlip                        // face flip in zone
-            )
+            faces[0],                       // original face
+            masterFacei,                    // label of face
+            own,                            // owner
+            -1,                             // neighbour
+            false,                          // face flip
+            patchi,                         // patch for face
+            zoneID,                         // zone for face
+            zoneFlip                        // face flip in zone
         );
         restoredFaces.insert(masterFacei, masterFacei);
 
@@ -980,21 +964,18 @@ void Foam::combineFaces::setUnrefinement
             // Pout<< "Restoring removed face with vertices " << faces[i]
             //    << endl;
 
-            label facei = meshMod.setAction
+            label facei = meshMod.addFace
             (
-                polyAddFace
-                (
-                    faces[i],        // vertices
-                    own,                    // owner,
-                    -1,                     // neighbour,
-                    -1,                     // masterPointID,
-                    -1,                     // masterEdgeID,
-                    masterFacei,             // masterFaceID,
-                    false,                  // flipFaceFlux,
-                    patchi,                 // patchID,
-                    zoneID,                 // zoneID,
-                    zoneFlip                // zoneFlip
-                )
+                faces[i],        // vertices
+                own,                    // owner,
+                -1,                     // neighbour,
+                -1,                     // masterPointID,
+                -1,                     // masterEdgeID,
+                masterFacei,             // masterFaceID,
+                false,                  // flipFaceFlux,
+                patchi,                 // patchID,
+                zoneID,                 // zoneID,
+                zoneFlip                // zoneFlip
             );
             restoredFaces.insert(facei, masterFacei);
         }
