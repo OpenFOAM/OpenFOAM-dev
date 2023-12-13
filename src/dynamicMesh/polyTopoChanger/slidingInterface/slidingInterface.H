@@ -54,8 +54,8 @@ SourceFiles
 
 #include "polyMeshModifier.H"
 #include "primitiveFacePatch.H"
-#include "polyPatchID.H"
-#include "ZoneIDs.H"
+#include "polyPatchDynamicID.H"
+#include "ZoneDynamicIDs.H"
 #include "intersection.H"
 #include "Pair.H"
 #include "objectHit.H"
@@ -92,22 +92,22 @@ private:
     // Private Data
 
         //- Master face zone ID
-        faceZoneID masterFaceZoneID_;
+        faceZoneDynamicID masterFaceZoneID_;
 
         //- Slave face zone ID
-        faceZoneID slaveFaceZoneID_;
+        faceZoneDynamicID slaveFaceZoneID_;
 
         //- Cut point zone ID
-        pointZoneID cutPointZoneID_;
+        pointZoneDynamicID cutPointZoneID_;
 
         //- Cut face zone ID
-        faceZoneID cutFaceZoneID_;
+        faceZoneDynamicID cutFaceZoneID_;
 
         //- Master patch ID
-        polyPatchID masterPatchID_;
+        polyPatchDynamicID masterPatchID_;
 
         //- Slave patch ID
-        polyPatchID slavePatchID_;
+        polyPatchDynamicID slavePatchID_;
 
         //- Type of match
         const typeOfMatch matchType_;
@@ -343,10 +343,10 @@ public:
     // Member Functions
 
         //- Return master face zone ID
-        const faceZoneID& masterFaceZoneID() const;
+        const faceZoneDynamicID& masterFaceZoneID() const;
 
         //- Return slave face zone ID
-        const faceZoneID& slaveFaceZoneID() const;
+        const faceZoneDynamicID& slaveFaceZoneID() const;
 
         //- Return true if attached
         bool attached() const

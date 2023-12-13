@@ -45,8 +45,8 @@ SourceFiles
 #define attachDetach_H
 
 #include "polyMeshModifier.H"
-#include "polyPatchID.H"
-#include "ZoneIDs.H"
+#include "polyPatchDynamicID.H"
+#include "ZoneDynamicIDs.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,13 +75,13 @@ class attachDetach
     // Private Data
 
         //- Master face zone ID
-        faceZoneID faceZoneID_;
+        faceZoneDynamicID faceZoneID_;
 
         //- Master patch ID.  Holds faces with original orientation
-        polyPatchID masterPatchID_;
+        polyPatchDynamicID masterPatchID_;
 
         //- Slave patch ID.  Holds mirrored faces
-        polyPatchID slavePatchID_;
+        polyPatchDynamicID slavePatchID_;
 
         //- List of trigger times
         scalarField triggerTimes_;
@@ -175,13 +175,13 @@ public:
     // Member Functions
 
         //- Return master patch ID
-        const polyPatchID& masterPatchID() const
+        const polyPatchDynamicID& masterPatchID() const
         {
             return masterPatchID_;
         }
 
         //- Return slave patch ID
-        const polyPatchID& slavePatchID() const
+        const polyPatchDynamicID& slavePatchID() const
         {
             return slavePatchID_;
         }

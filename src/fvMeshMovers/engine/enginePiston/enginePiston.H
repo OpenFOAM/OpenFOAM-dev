@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ SourceFiles
 #define enginePiston_H
 
 #include "fvMeshMoversEngine.H"
-#include "polyPatchID.H"
+#include "polyPatchDynamicID.H"
 #include "coordinateSystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,7 +56,7 @@ class enginePiston
         const fvMeshMovers::engine& meshMover_;
 
         //- Piston patch
-        polyPatchID patchID_;
+        polyPatchDynamicID patchID_;
 
         //- Coordinate system
         autoPtr<coordinateSystem> csPtr_;
@@ -106,7 +106,7 @@ public:
         }
 
         //- Return ID of piston patch
-        const polyPatchID& patchID() const
+        const polyPatchDynamicID& patchID() const
         {
             return patchID_;
         }

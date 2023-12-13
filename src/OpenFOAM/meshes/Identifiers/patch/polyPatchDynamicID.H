@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,29 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ZoneIDs_H
-#define ZoneIDs_H
+#ifndef polyPatchDynamicID_H
+#define polyPatchDynamicID_H
 
 #include "DynamicID.H"
-
-#include "meshCellZonesFwd.H"
-#include "meshFaceZonesFwd.H"
-#include "meshPointZonesFwd.H"
+#include "polyBoundaryMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-    //- Foam::cellZoneID
-    typedef DynamicID<meshCellZones> cellZoneID;
-
-    //- Foam::faceZoneID
-    typedef DynamicID<meshFaceZones> faceZoneID;
-
-    //- Foam::pointZoneID
-    typedef DynamicID<meshPointZones> pointZoneID;
-
+    //- Foam::polyPatchDynamicID
+    typedef DynamicID<polyBoundaryMesh> polyPatchDynamicID;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

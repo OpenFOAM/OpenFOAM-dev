@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 
 #include "fvMeshMoversEngine.H"
 #include "coordinateSystem.H"
-#include "polyPatchID.H"
+#include "polyPatchDynamicID.H"
 #include "Table.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -66,25 +66,25 @@ class engineValve
         // Patch and zone names
 
             //- Valve bottom patch
-            polyPatchID bottomPatch_;
+            polyPatchDynamicID bottomPatch_;
 
             //- Valve poppet patch
-            polyPatchID poppetPatch_;
+            polyPatchDynamicID poppetPatch_;
 
             //- Valve stem patch
-            polyPatchID stemPatch_;
+            polyPatchDynamicID stemPatch_;
 
             //- Valve curtain manifold patch
-            polyPatchID curtainInPortPatch_;
+            polyPatchDynamicID curtainInPortPatch_;
 
             //- Valve curtain cylinder patch
-            polyPatchID curtainInCylinderPatch_;
+            polyPatchDynamicID curtainInCylinderPatch_;
 
             //- Valve detach in cylinder patch
-            polyPatchID detachInCylinderPatch_;
+            polyPatchDynamicID detachInCylinderPatch_;
 
             //- Valve detach in port patch
-            polyPatchID detachInPortPatch_;
+            polyPatchDynamicID detachInPortPatch_;
 
             //- Faces to detach
             labelList detachFaces_;
@@ -200,44 +200,44 @@ public:
         // Valve patches
 
             //- Return ID of bottom patch
-            const polyPatchID& bottomPatchID() const
+            const polyPatchDynamicID& bottomPatchID() const
             {
                 return bottomPatch_;
             }
 
             //- Return ID of poppet patch
-            const polyPatchID& poppetPatchID() const
+            const polyPatchDynamicID& poppetPatchID() const
             {
                 return poppetPatch_;
             }
 
             //- Return ID of stem patch
-            const polyPatchID& stemPatchID() const
+            const polyPatchDynamicID& stemPatchID() const
             {
                 return stemPatch_;
             }
 
             //- Return ID of curtain in cylinder patch
-            const polyPatchID& curtainInCylinderPatchID() const
+            const polyPatchDynamicID& curtainInCylinderPatchID() const
             {
                 return curtainInCylinderPatch_;
             }
 
             //- Return ID of curtain in port patch
-            const polyPatchID& curtainInPortPatchID() const
+            const polyPatchDynamicID& curtainInPortPatchID() const
             {
                 return curtainInPortPatch_;
             }
 
 
             //- Return ID of detach in cylinder patch
-            const polyPatchID& detachInCylinderPatchID() const
+            const polyPatchDynamicID& detachInCylinderPatchID() const
             {
                 return detachInCylinderPatch_;
             }
 
             //- Return ID of detach in port patch
-            const polyPatchID& detachInPortPatchID() const
+            const polyPatchDynamicID& detachInPortPatchID() const
             {
                 return detachInPortPatch_;
             }

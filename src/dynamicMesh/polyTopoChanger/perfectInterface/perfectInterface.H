@@ -37,8 +37,8 @@ SourceFiles
 #define perfectInterface_H
 
 #include "polyMeshModifier.H"
-#include "polyPatchID.H"
-#include "ZoneIDs.H"
+#include "polyPatchDynamicID.H"
+#include "ZoneDynamicIDs.H"
 #include "indirectPrimitivePatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -60,13 +60,13 @@ class perfectInterface
     // Private Data
 
         //- Master face zone ID
-        faceZoneID faceZoneID_;
+        faceZoneDynamicID faceZoneID_;
 
         //- Master patch ID
-        polyPatchID masterPatchID_;
+        polyPatchDynamicID masterPatchID_;
 
         //- Slave patch ID
-        polyPatchID slavePatchID_;
+        polyPatchDynamicID slavePatchID_;
 
         //- Tolerance used for distance comparison
         //  (fraction of minimum edge length)

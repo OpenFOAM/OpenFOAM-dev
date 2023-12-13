@@ -324,13 +324,13 @@ void Foam::slidingInterface::clearAddressing() const
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::faceZoneID& Foam::slidingInterface::masterFaceZoneID() const
+const Foam::faceZoneDynamicID& Foam::slidingInterface::masterFaceZoneID() const
 {
     return masterFaceZoneID_;
 }
 
 
-const Foam::faceZoneID& Foam::slidingInterface::slaveFaceZoneID() const
+const Foam::faceZoneDynamicID& Foam::slidingInterface::slaveFaceZoneID() const
 {
     return slaveFaceZoneID_;
 }
