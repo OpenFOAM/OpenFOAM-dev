@@ -30,10 +30,8 @@ Description
 #include "perfectInterface.H"
 #include "polyMesh.H"
 #include "polyTopoChange.H"
-#include "addToRunTimeSelectionTable.H"
-#include "polyTopoChangeMap.H"
 #include "matchPoints.H"
-#include "indirectPrimitivePatch.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -41,7 +39,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(perfectInterface, 0);
 }
-
 
 const Foam::scalar Foam::perfectInterface::tol_ = 1e-3;
 
@@ -78,9 +75,9 @@ Foam::perfectInterface::perfectInterface
 )
 :
     polyMeshModifier(name, mesh),
-    faceZoneID_(faceZoneName, mesh.faceZones()),
-    masterPatchID_(masterPatchName, mesh.boundaryMesh()),
-    slavePatchID_(slavePatchName, mesh.boundaryMesh())
+    faceZoneID_(mesh.faceZones().findIndex(faceZoneName)),
+    masterPatchID_(mesh.boundaryMesh().findIndex(masterPatchName)),
+    slavePatchID_(mesh.boundaryMesh().findIndex(slavePatchName))
 {}
 
 
@@ -146,7 +143,7 @@ void Foam::perfectInterface::setRefinement
     {
         labelList from1To0Points(pts1.size());
 
-        bool matchOk = matchPoints
+        const bool matchOk = matchPoints
         (
             pts1,
             pts0,
@@ -174,7 +171,7 @@ void Foam::perfectInterface::setRefinement
 
     labelList from0To1Faces(pp1.size());
 
-    bool matchOk = matchPoints
+    const bool matchOk = matchPoints
     (
         calcFaceCentres(pp0),
         calcFaceCentres(pp1),
@@ -201,7 +198,7 @@ void Foam::perfectInterface::setRefinement
     labelHashSet affectedFaces(2*pp1.size());
     forAll(meshPts1, i)
     {
-        label meshPointi = meshPts1[i];
+        const label meshPointi = meshPts1[i];
 
         if (meshPointi != renumberPoints[meshPointi])
         {
@@ -223,7 +220,7 @@ void Foam::perfectInterface::setRefinement
     // never be sure what the user is doing.
     forAll(pp0, i)
     {
-        label facei = pp0.addressing()[i];
+        const label facei = pp0.addressing()[i];
 
         if (affectedFaces.erase(facei))
         {
@@ -261,14 +258,13 @@ void Foam::perfectInterface::setRefinement
             patchi = patches.whichPatch(facei);
         }
 
-        label zoneID = mesh.faceZones().whichZone(facei);
+        const label zoneID = mesh.faceZones().whichZone(facei);
 
         bool zoneFlip = false;
 
         if (zoneID >= 0)
         {
             const faceZone& fZone = mesh.faceZones()[zoneID];
-
             zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
         }
 
@@ -289,7 +285,7 @@ void Foam::perfectInterface::setRefinement
     // 3. Remove patch1 points
     forAll(meshPts1, i)
     {
-        label meshPointi = meshPts1[i];
+        const label meshPointi = meshPts1[i];
 
         if (meshPointi != renumberPoints[meshPointi])
         {
@@ -301,7 +297,7 @@ void Foam::perfectInterface::setRefinement
     // 4. Remove patch1 faces
     forAll(pp1, i)
     {
-        label facei = pp1.addressing()[i];
+        const label facei = pp1.addressing()[i];
         ref.removeFace(facei, -1);
     }
 
@@ -310,12 +306,11 @@ void Foam::perfectInterface::setRefinement
     // comment above about patch1 and patch0 never sharing points) and
     // becoming internal.
     const boolList& mfFlip =
-        mesh.faceZones()[faceZoneID_.index()].flipMap();
+        mesh.faceZones()[faceZoneID_].flipMap();
 
     forAll(pp0, i)
     {
-        label facei = pp0.addressing()[i];
-
+        const label facei = pp0.addressing()[i];
         const face& f = mesh.faces()[facei];
 
         face newFace(f.size());
@@ -325,11 +320,9 @@ void Foam::perfectInterface::setRefinement
             newFace[fp] = renumberPoints[f[fp]];
         }
 
-        label own = mesh.faceOwner()[facei];
-
-        label pp1Facei = pp1.addressing()[from0To1Faces[i]];
-
-        label nbr = mesh.faceOwner()[pp1Facei];
+        const label own = mesh.faceOwner()[facei];
+        const label pp1Facei = pp1.addressing()[from0To1Faces[i]];
+        const label nbr = mesh.faceOwner()[pp1Facei];
 
         if (own < nbr)
         {
@@ -341,7 +334,7 @@ void Foam::perfectInterface::setRefinement
                 nbr,                    // neighbour
                 false,                  // face flip
                 -1,                     // patch for face
-                faceZoneID_.index(),    // zone for face
+                faceZoneID_,            // zone for face
                 mfFlip[i]               // face flip in zone
             );
         }
@@ -355,7 +348,7 @@ void Foam::perfectInterface::setRefinement
                 own,                    // neighbour
                 true,                   // face flip
                 -1,                     // patch for face
-                faceZoneID_.index(),    // zone for face
+                faceZoneID_,            // zone for face
                 !mfFlip[i]              // face flip in zone
             );
         }
@@ -374,54 +367,27 @@ void Foam::perfectInterface::setRefinement(polyTopoChange& ref) const
             << " faceZoneID_:" << faceZoneID_ << endl;
     }
 
-    if
-    (
-        masterPatchID_.active()
-     && slavePatchID_.active()
-     && faceZoneID_.active()
-    )
-    {
-        const polyMesh& mesh = this->mesh();
-
-        const polyBoundaryMesh& patches = mesh.boundaryMesh();
-        const polyPatch& patch0 = patches[masterPatchID_.index()];
-        const polyPatch& patch1 = patches[slavePatchID_.index()];
-
-
-        labelList pp0Labels(identityMap(patch0.size())+patch0.start());
-        indirectPrimitivePatch pp0
-        (
-            IndirectList<face>(mesh.faces(), pp0Labels),
-            mesh.points()
-        );
-
-        labelList pp1Labels(identityMap(patch1.size())+patch1.start());
-        indirectPrimitivePatch pp1
-        (
-            IndirectList<face>(mesh.faces(), pp1Labels),
-            mesh.points()
-        );
-
-        setRefinement(pp0, pp1, ref);
-    }
-}
-
-
-void Foam::perfectInterface::modifyMotionPoints(pointField& motionPoints) const
-{
-    // Update only my points. Nothing to be done here as points already
-    // shared by now.
-}
-
-
-void Foam::perfectInterface::topoChange(const polyTopoChangeMap& map)
-{
-    // Mesh has changed topologically.  Update local topological data
     const polyMesh& mesh = this->mesh();
 
-    faceZoneID_.update(mesh.faceZones());
-    masterPatchID_.update(mesh.boundaryMesh());
-    slavePatchID_.update(mesh.boundaryMesh());
+    const polyBoundaryMesh& patches = mesh.boundaryMesh();
+    const polyPatch& patch0 = patches[masterPatchID_];
+    const polyPatch& patch1 = patches[slavePatchID_];
+
+    labelList pp0Labels(identityMap(patch0.size())+patch0.start());
+    indirectPrimitivePatch pp0
+    (
+        IndirectList<face>(mesh.faces(), pp0Labels),
+        mesh.points()
+    );
+
+    labelList pp1Labels(identityMap(patch1.size())+patch1.start());
+    indirectPrimitivePatch pp1
+    (
+        IndirectList<face>(mesh.faces(), pp1Labels),
+        mesh.points()
+    );
+
+    setRefinement(pp0, pp1, ref);
 }
 
 

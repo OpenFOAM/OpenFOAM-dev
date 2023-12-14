@@ -37,17 +37,12 @@ SourceFiles
 #define perfectInterface_H
 
 #include "polyMeshModifier.H"
-#include "polyPatchDynamicID.H"
-#include "ZoneDynamicIDs.H"
 #include "indirectPrimitivePatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class Time;
 
 /*---------------------------------------------------------------------------*\
                       Class perfectInterface Declaration
@@ -60,13 +55,13 @@ class perfectInterface
     // Private Data
 
         //- Master face zone ID
-        faceZoneDynamicID faceZoneID_;
+        label faceZoneID_;
 
         //- Master patch ID
-        polyPatchDynamicID masterPatchID_;
+        label masterPatchID_;
 
         //- Slave patch ID
-        polyPatchDynamicID slavePatchID_;
+        label slavePatchID_;
 
         //- Tolerance used for distance comparison
         //  (fraction of minimum edge length)
@@ -125,10 +120,12 @@ public:
         ) const;
 
         //- Modify motion points to comply with the topological change
-        virtual void modifyMotionPoints(pointField& motionPoints) const;
+        virtual void modifyMotionPoints(pointField& motionPoints) const
+        {}
 
         //- Force recalculation of locally stored data on topological change
-        virtual void topoChange(const polyTopoChangeMap&);
+        virtual void topoChange(const polyTopoChangeMap&)
+        {}
 
 
     // Member Operators
