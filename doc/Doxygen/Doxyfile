@@ -812,7 +812,7 @@ RECURSIVE              = YES
 
 EXCLUDE                = \
     $(WM_PROJECT_DIR)/src/mesh/blockMesh/blockMesh/blockMesh.C \
-    $(WM_PROJECT_DIR)/src/dynamicMesh/polyTopoChange/polyTopoChange/removeFaces.C \
+    $(WM_PROJECT_DIR)/src/polyTopoChange/polyTopoChange/removeFaces.C \
     $(WM_PROJECT_DIR)/src/meshTools/sets/topoSets/topoSet.C \
     $(WM_PROJECT_DIR)/src/conversion/polyDualMesh/polyDualMesh.C
 

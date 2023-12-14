@@ -1,13 +1,13 @@
 EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/surfMesh/lnInclude \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/polyTopoChange/lnInclude \
     -Iextrude2DMesh/lnInclude \
     -I$(LIB_SRC)/mesh/extrudeModel/lnInclude
 
 EXE_LIBS = \
     -lsurfMesh \
-    -ldynamicMesh \
+    -lpolyTopoChange \
     -lextrude2DMesh \
     -lgenericPatches \
     -lextrudeModel

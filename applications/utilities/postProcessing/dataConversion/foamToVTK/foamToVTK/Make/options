@@ -1,12 +1,12 @@
 EXE_INC = \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/polyTopoChange/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude
 
 LIB_LIBS = \
-    -ldynamicMesh \
+    -lpolyTopoChange \
     -llagrangian \
     -lgenericFvFields \
     -lfileFormats

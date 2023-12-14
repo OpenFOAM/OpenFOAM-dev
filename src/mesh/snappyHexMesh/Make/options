@@ -1,6 +1,6 @@
 EXE_INC = \
     -I$(LIB_SRC)/parallel/decompose/decompositionMethods/lnInclude \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/polyTopoChange/lnInclude \
     -I$(LIB_SRC)/motionSolvers/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
@@ -11,7 +11,7 @@ EXE_INC = \
     -I$(LIB_SRC)/triSurface/lnInclude
 
 LIB_LIBS = \
-    -ldynamicMesh \
+    -lpolyTopoChange \
     -lmotionSolvers \
     -lfiniteVolume \
     -llagrangian \

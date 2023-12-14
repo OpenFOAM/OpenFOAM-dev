@@ -14,7 +14,7 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // For complete details on what this dictionary file should provide, see
-//   $FOAM_SRC/src/dynamicMesh/slidingInterface/slidingInterface.C
+//   $FOAM_SRC/src/polyTopoChange/slidingInterface/slidingInterface.C
 //   method: Foam::slidingInterface::setTolerances
 
 //- Point merge tolerance

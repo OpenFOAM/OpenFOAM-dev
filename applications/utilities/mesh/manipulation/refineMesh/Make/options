@@ -1,8 +1,8 @@
 EXE_INC = \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/polyTopoChange/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
-    -ldynamicMesh \
+    -lpolyTopoChange \
     -lgenericPatches \
     -lmeshTools

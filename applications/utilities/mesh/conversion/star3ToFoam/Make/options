@@ -1,5 +1,5 @@
 EXE_INC = \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/polyTopoChange/lnInclude \
     -I$(LIB_SRC)/conversion/lnInclude
 
 # EXE_INC += -DDEBUG_MERGE
@@ -10,6 +10,6 @@ EXE_INC = \
 # EXE_INC += -DDEBUG_COUPLE_PROJECTION
 
 EXE_LIBS = \
-    -ldynamicMesh \
+    -lpolyTopoChange \
     -lgenericPatches \
     -lconversion

@@ -46,7 +46,7 @@ wmake $targetType meshCheck
 wmake $targetType motionSolvers
 
 wmake $targetType mesh/extrudeModel
-wmake $targetType dynamicMesh
+wmake $targetType polyTopoChange
 
 wmake $targetType conversion
 
