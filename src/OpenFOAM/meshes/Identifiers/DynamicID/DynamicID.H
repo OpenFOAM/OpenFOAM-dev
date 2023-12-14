@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,19 +25,17 @@ Class
     Foam::DynamicID
 
 Description
-    A class that holds the data needed to identify things (zones, patches)
-    in a dynamic mesh.
+    A class that holds the data needed to identify patches and zones.
 
-    The thing is identified by name.
-    Its indices are updated if the mesh has changed.
+    The object is identified by name and the index is updated if the mesh has
+    changed.
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef DynamicID_H
 #define DynamicID_H
 
-#include "wordRe.H"
-#include "labelList.H"
+#include "word.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,11 +57,11 @@ class DynamicID
 {
     // Private Data
 
-        //- Zone name
-        wordRe key_;
+        //- Object name
+        word name_;
 
-        //- Zone indices
-        labelList indices_;
+        //- Object index
+        label index_;
 
 
 public:
@@ -71,21 +69,18 @@ public:
     // Constructors
 
         //- Construct from name
-        DynamicID(const wordRe& key, const ObjectType& obj)
+        DynamicID(const word& name, const ObjectType& obj)
         :
-            key_(key),
-            indices_(obj.findIndices(key_))
+            name_(name),
+            index_(obj.findIndex(name_))
         {}
 
         //- Construct from Istream
         DynamicID(Istream& is, const ObjectType& obj)
         :
-            key_(is),
-            indices_(obj.findIndices(key_))
+            name_(is),
+            index_(obj.findIndex(name_))
         {}
-
-
-    // Destructor - default
 
 
     // Member Functions
@@ -93,27 +88,21 @@ public:
         // Access
 
             //- Return name
-            const wordRe& name() const
+            const word& name() const
             {
-                return key_;
-            }
-
-            //- Return indices of matching zones
-            const labelList& indices() const
-            {
-                return indices_;
+                return name_;
             }
 
             //- Return index of first matching zone
             label index() const
             {
-                return indices_.empty() ? -1 : indices_[0];
+                return index_;
             }
 
             //- Has the zone been found
             bool active() const
             {
-                return !indices_.empty();
+                return index_ != -1;
             }
 
 
@@ -122,14 +111,17 @@ public:
             //- Update
             void update(const ObjectType& obj)
             {
-                indices_ = obj.findIndices(key_);
+                index_ = obj.findIndex(name_);
             }
 
 
     // IOstream Operators
 
         friend Ostream& operator<< <ObjectType>
-        (Ostream&, const DynamicID<ObjectType>&);
+        (
+            Ostream&,
+            const DynamicID<ObjectType>&
+        );
 };
 
 
