@@ -54,7 +54,6 @@ Description
 #include "meshCheck.H"
 #include "polyTopoChangeMap.H"
 #include "unitConversion.H"
-#include "motionSmoother.H"
 
 using namespace Foam;
 

@@ -22,6 +22,12 @@ refinementSurfaces/refinementSurfaces.C
 refinementRegions/refinementRegions.C
 trackedParticle/trackedParticle.C
 
+motionSmoother/motionSmoother.C
+motionSmoother/motionSmootherAlgo.C
+motionSmoother/motionSmootherData.C
+motionSmoother/badQualityToCell/badQualityToCell.C
+motionSmoother/badQualityToFace/badQualityToFace.C
+
 externalDisplacementMeshMover/displacementMeshMoverMotionSolver.C
 externalDisplacementMeshMover/externalDisplacementMeshMover.C
 externalDisplacementMeshMover/medialAxisMeshMover.C

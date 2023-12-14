@@ -272,4 +272,7 @@ nonConformal/pointPatchFields/nonConformalProcessorCyclic/nonConformalProcessorC
 
 nonConformal/boundary/nonConformalBoundary.C
 
+pointDist/pointEdgeDist.C
+pointDist/pointDist.C
+
 LIB = $(FOAM_LIBBIN)/libmeshTools

@@ -73,48 +73,9 @@ fvMeshTools/fvMeshTools.C
 
 fvMeshSubset/fvMeshSubset.C
 
-motionSmoother/motionSmoother.C
-motionSmoother/motionSmootherAlgo.C
-motionSmoother/motionSmootherData.C
-motionSmoother/badQualityToCell/badQualityToCell.C
-motionSmoother/badQualityToFace/badQualityToFace.C
-
-motionSolvers/motionSolver/motionSolver.C
-motionSolvers/displacement/points0/points0MotionSolver.C
-motionSolvers/displacement/displacement/displacementMotionSolver.C
-motionSolvers/displacement/layeredSolver/displacementLayeredMotionMotionSolver.C
-motionSolvers/displacement/layeredSolver/pointEdgeStructuredWalk.C
-motionSolvers/displacement/linearSolver/displacementLinearMotionMotionSolver.C
-motionSolvers/componentDisplacement/componentDisplacementMotionSolver.C
-motionSolvers/velocity/velocityMotionSolver.C
-motionSolvers/componentVelocity/componentVelocityMotionSolver.C
-motionSolvers/displacement/solidBody/solidBodyMotionSolver/solidBodyMotionSolver.C
-motionSolvers/displacement/solidBody/multiSolidBodyMotionSolver/multiSolidBodyMotionSolver.C
-motionSolvers/displacement/solidBody/interpolatingSolidBodyMotionSolver/interpolatingSolidBodyMotionSolver.C
-motionSolvers/motionSolverList/motionSolverList.C
-
-solidBodyMotionFunctions = motionSolvers/displacement/solidBody/solidBodyMotionFunctions
-$(solidBodyMotionFunctions)/solidBodyMotionFunction/solidBodyMotionFunction.C
-$(solidBodyMotionFunctions)/solidBodyMotionFunction/solidBodyMotionFunctionNew.C
-$(solidBodyMotionFunctions)/SDA/SDA.C
-$(solidBodyMotionFunctions)/sixDoFMotion/sixDoFMotion.C
-$(solidBodyMotionFunctions)/linearMotion/linearMotion.C
-$(solidBodyMotionFunctions)/rotatingMotion/rotatingMotion.C
-$(solidBodyMotionFunctions)/axisRotationMotion/axisRotationMotion.C
-$(solidBodyMotionFunctions)/multiMotion/multiMotion.C
-$(solidBodyMotionFunctions)/oscillatingLinearMotion/oscillatingLinearMotion.C
-$(solidBodyMotionFunctions)/oscillatingRotatingMotion/oscillatingRotatingMotion.C
-
-motionSolvers/displacement/solidBody/pointPatchFields/derived/solidBodyMotionDisplacement/solidBodyMotionDisplacementPointPatchVectorField.C
-
 createShellMesh/createShellMesh.C
 
 polyMeshFilter/polyMeshFilterSettings.C
 polyMeshFilter/polyMeshFilter.C
-
-pointDist/pointEdgeDist.C
-pointDist/pointDist.C
-
-pointInterpolator/dynamicMeshPointInterpolator.C
 
 LIB = $(FOAM_LIBBIN)/libdynamicMesh

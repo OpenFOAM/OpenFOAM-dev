@@ -43,6 +43,8 @@ generic/Allwmake $targetType $*
 wmake $targetType sampling
 wmake $targetType meshCheck
 
+wmake $targetType motionSolvers
+
 wmake $targetType mesh/extrudeModel
 wmake $targetType dynamicMesh
 
