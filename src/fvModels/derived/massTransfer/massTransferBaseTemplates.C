@@ -123,7 +123,7 @@ void Foam::fv::massTransferBase::addSupType
         {
             fvMatrix<Type> rhoEqn(eqn.psi(), dimDensity*eqn.dimensions());
 
-            fvSpecificSource::addSup(alphaOrRho, field, rhoEqn);
+            fvSpecificSource::addSupType(alphaOrRho, field, rhoEqn);
 
             eqn += rhoEqn/rho(i);
         }
@@ -197,7 +197,7 @@ void Foam::fv::massTransferBase::addSupType
         // require a field source specification.
         else
         {
-            fvSpecificSource::addSup(alpha, rho, field, eqn);
+            fvSpecificSource::addSupType(alpha, rho, field, eqn);
         }
     }
     // Not recognised. Fail.

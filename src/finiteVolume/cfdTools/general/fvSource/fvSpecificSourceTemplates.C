@@ -63,7 +63,7 @@ void Foam::fvSpecificSource::addSupType
             );
 
         // Apply the source
-        eqn += tS()*sourceCoeff + fvm::Sp(tS()*internalCoeff, eqn().psi());
+        eqn += tS()*sourceCoeff + fvm::Sp(tS()*internalCoeff, eqn.psi());
     }
     else
     {
