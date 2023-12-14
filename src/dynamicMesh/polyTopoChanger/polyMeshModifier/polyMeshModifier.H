@@ -35,15 +35,8 @@ SourceFiles
 #ifndef polyMeshModifier_H
 #define polyMeshModifier_H
 
-#include "label.H"
-#include "word.H"
-#include "Switch.H"
 #include "typeInfo.H"
-#include "runTimeSelectionTables.H"
-#include "autoPtr.H"
-#include "pointField.H"
-#include "faceList.H"
-#include "cellList.H"
+#include "pointFieldFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,16 +44,9 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class polyTopoChanger;
+class polyMesh;
 class polyTopoChange;
 class polyTopoChangeMap;
-
-
-// Forward declaration of friend functions and operators
-
-class polyMeshModifier;
-
-Ostream& operator<<(Ostream&, const polyMeshModifier&);
 
 
 /*---------------------------------------------------------------------------*\
@@ -74,14 +60,8 @@ class polyMeshModifier
         //- Name of modifier
         word name_;
 
-        //- Index of modifier
-        label index_;
-
-        //- Reference to morph engine
-        const polyTopoChanger& topoChanger_;
-
-        //- Activation switch
-        mutable Switch active_;
+        //- Reference to mesh
+        const polyMesh& mesh_;
 
 
 public:
@@ -92,48 +72,17 @@ public:
         TypeName("meshModifier");
 
 
-    // Declare run-time constructor selection tables
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            polyMeshModifier,
-            dictionary,
-            (
-                const word& name,
-                const dictionary& dict,
-                const label index,
-                const polyTopoChanger& mme
-            ),
-            (name, dict, index, mme)
-        );
-
-
     // Constructors
 
         //- Construct from components
         polyMeshModifier
         (
             const word& name,
-            const label index,
-            const polyTopoChanger& mme,
-            const bool act
+            const polyMesh& mme
         );
 
         //- Disallow default bitwise copy construction
         polyMeshModifier(const polyMeshModifier&) = delete;
-
-
-    // Selectors
-
-        //- Select constructed from dictionary
-        static autoPtr<polyMeshModifier> New
-        (
-            const word& name,
-            const dictionary& dict,
-            const label index,
-            const polyTopoChanger& mme
-        );
 
 
     //- Destructor
@@ -148,14 +97,8 @@ public:
             return name_;
         }
 
-        //- Return the index of this modifier
-        label index() const
-        {
-            return index_;
-        }
-
-        //- Return reference to morph engine
-        const polyTopoChanger& topoChanger() const;
+        //- Return reference to mesh
+        const polyMesh& mesh() const;
 
         //- Check for topology change
         virtual bool changeTopology() const = 0;
@@ -170,42 +113,10 @@ public:
         virtual void topoChange(const polyTopoChangeMap&) = 0;
 
 
-        // Activation and deactivation
-
-            const Switch& active() const
-            {
-                return active_;
-            }
-
-            //- Activate mesh modifier
-            void enable() const
-            {
-                active_ = true;
-            }
-
-            //- Activate mesh modifier
-            void disable() const
-            {
-                active_ = false;
-            }
-
-
-        //- Write
-        virtual void write(Ostream&) const = 0;
-
-        //- Write dictionary
-        virtual void writeDict(Ostream&) const = 0;
-
-
     // Member Operators
 
         //- Disallow default bitwise assignment
         void operator=(const polyMeshModifier&) = delete;
-
-
-    // Ostream Operator
-
-        friend Ostream& operator<<(Ostream&, const polyMeshModifier&);
 };
 
 

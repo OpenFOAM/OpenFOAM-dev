@@ -32,7 +32,6 @@ License
 #include "pointHit.H"
 #include "triPointRef.H"
 #include "plane.H"
-#include "polyTopoChanger.H"
 #include "polyAddPoint.H"
 #include "polyRemovePoint.H"
 #include "polyAddFace.H"
@@ -74,7 +73,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             << "Coupling sliding interface " << name() << endl;
     }
 
-    const polyMesh& mesh = topoChanger().mesh();
+    const polyMesh& mesh = this->mesh();
 
     const pointField& points = mesh.points();
     const faceList& faces = mesh.faces();

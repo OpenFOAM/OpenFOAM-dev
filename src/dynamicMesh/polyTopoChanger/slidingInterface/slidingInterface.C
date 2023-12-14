@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "slidingInterface.H"
-#include "polyTopoChanger.H"
 #include "polyMesh.H"
 #include "polyTopoChange.H"
 #include "addToRunTimeSelectionTable.H"
@@ -39,12 +38,6 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(slidingInterface, 0);
-    addToRunTimeSelectionTable
-    (
-        polyMeshModifier,
-        slidingInterface,
-        dictionary
-    );
 
     template<>
     const char* Foam::NamedEnum
@@ -67,7 +60,7 @@ Foam::slidingInterface::typeOfMatchNames_;
 
 void Foam::slidingInterface::checkDefinition()
 {
-    const polyMesh& mesh = topoChanger().mesh();
+    const polyMesh& mesh = this->mesh();
 
     if
     (
@@ -116,13 +109,10 @@ void Foam::slidingInterface::clearOut() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-
-// Construct from components
 Foam::slidingInterface::slidingInterface
 (
     const word& name,
-    const label index,
-    const polyTopoChanger& mme,
+    const polyMesh& mesh,
     const word& masterFaceZoneName,
     const word& slaveFaceZoneName,
     const word& cutPointZoneName,
@@ -134,36 +124,36 @@ Foam::slidingInterface::slidingInterface
     const intersection::algorithm algo
 )
 :
-    polyMeshModifier(name, index, mme, true),
+    polyMeshModifier(name, mesh),
     masterFaceZoneID_
     (
         masterFaceZoneName,
-        mme.mesh().faceZones()
+        mesh.faceZones()
     ),
     slaveFaceZoneID_
     (
         slaveFaceZoneName,
-        mme.mesh().faceZones()
+        mesh.faceZones()
     ),
     cutPointZoneID_
     (
         cutPointZoneName,
-        mme.mesh().pointZones()
+        mesh.pointZones()
     ),
     cutFaceZoneID_
     (
         cutFaceZoneName,
-        mme.mesh().faceZones()
+        mesh.faceZones()
     ),
     masterPatchID_
     (
         masterPatchName,
-        mme.mesh().boundaryMesh()
+        mesh.boundaryMesh()
     ),
     slavePatchID_
     (
         slavePatchName,
-        mme.mesh().boundaryMesh()
+        mesh.boundaryMesh()
     ),
     matchType_(tom),
     coupleDecouple_(coupleDecouple),
@@ -200,105 +190,6 @@ Foam::slidingInterface::slidingInterface
             << "Creation of a sliding interface from components "
             << "in attached state not supported."
             << abort(FatalError);
-    }
-    else
-    {
-        calcAttachedAddressing();
-    }
-}
-
-
-// Construct from components
-Foam::slidingInterface::slidingInterface
-(
-    const word& name,
-    const dictionary& dict,
-    const label index,
-    const polyTopoChanger& mme
-)
-:
-    polyMeshModifier(name, index, mme, Switch(dict.lookup("active"))),
-    masterFaceZoneID_
-    (
-        dict.lookup("masterFaceZoneName"),
-        mme.mesh().faceZones()
-    ),
-    slaveFaceZoneID_
-    (
-        dict.lookup("slaveFaceZoneName"),
-        mme.mesh().faceZones()
-    ),
-    cutPointZoneID_
-    (
-        dict.lookup("cutPointZoneName"),
-        mme.mesh().pointZones()
-    ),
-    cutFaceZoneID_
-    (
-        dict.lookup("cutFaceZoneName"),
-        mme.mesh().faceZones()
-    ),
-    masterPatchID_
-    (
-        dict.lookup("masterPatchName"),
-        mme.mesh().boundaryMesh()
-    ),
-    slavePatchID_
-    (
-        dict.lookup("slavePatchName"),
-        mme.mesh().boundaryMesh()
-    ),
-    matchType_(typeOfMatchNames_.read((dict.lookup("typeOfMatch")))),
-    coupleDecouple_(dict.lookup("coupleDecouple")),
-    attached_(dict.lookup("attached")),
-    projectionAlgo_
-    (
-        intersection::algorithmNames_.read(dict.lookup("projection"))
-    ),
-    trigger_(false),
-    cutFaceMasterPtr_(nullptr),
-    cutFaceSlavePtr_(nullptr),
-    masterFaceCellsPtr_(nullptr),
-    slaveFaceCellsPtr_(nullptr),
-    masterStickOutFacesPtr_(nullptr),
-    slaveStickOutFacesPtr_(nullptr),
-    retiredPointMapPtr_(nullptr),
-    cutPointEdgePairMapPtr_(nullptr),
-    slavePointPointHitsPtr_(nullptr),
-    slavePointEdgeHitsPtr_(nullptr),
-    slavePointFaceHitsPtr_(nullptr),
-    masterPointEdgeHitsPtr_(nullptr),
-    projectedSlavePointsPtr_(nullptr)
-{
-    // Optionally default tolerances from dictionary
-    setTolerances(dict);
-
-    checkDefinition();
-
-    // If the interface is attached, the master and slave face zone addressing
-    // needs to be read in; otherwise it will be created
-    if (attached_)
-    {
-        if (debug)
-        {
-            Pout<< "slidingInterface::slidingInterface(...) "
-                << " for object " << name << " : "
-                << "Interface attached.  Reading master and slave face zones "
-                << "and retired point lookup." << endl;
-        }
-
-        // The face zone addressing is written out in the definition dictionary
-        masterFaceCellsPtr_ = new labelList(dict.lookup("masterFaceCells"));
-        slaveFaceCellsPtr_ = new labelList(dict.lookup("slaveFaceCells"));
-
-        masterStickOutFacesPtr_ =
-            new labelList(dict.lookup("masterStickOutFaces"));
-        slaveStickOutFacesPtr_ =
-            new labelList(dict.lookup("slaveStickOutFaces"));
-
-        retiredPointMapPtr_ = new Map<label>(dict.lookup("retiredPointMap"));
-        cutPointEdgePairMapPtr_ =
-            new Map<Pair<edge>>(dict.lookup("cutPointEdgePairMap"));
     }
     else
     {
@@ -362,7 +253,7 @@ bool Foam::slidingInterface::changeTopology() const
     if
     (
         attached_
-     && !topoChanger().mesh().changing()
+     && !mesh().changing()
     )
     {
         // If the mesh is not moving or morphing and the interface is
@@ -419,7 +310,7 @@ void Foam::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
             << "Adjusting motion points." << endl;
     }
 
-    const polyMesh& mesh = topoChanger().mesh();
+    const polyMesh& mesh = this->mesh();
 
     // Get point from the cut zone
     const labelList& cutPoints = mesh.pointZones()[cutPointZoneID_.index()];
@@ -653,7 +544,7 @@ void Foam::slidingInterface::topoChange(const polyTopoChangeMap& m)
     }
 
     // Mesh has changed topologically.  Update local topological data
-    const polyMesh& mesh = topoChanger().mesh();
+    const polyMesh& mesh = this->mesh();
 
     masterFaceZoneID_.update(mesh.faceZones());
     slaveFaceZoneID_.update(mesh.faceZones());
@@ -740,83 +631,6 @@ void Foam::slidingInterface::setTolerances(const dictionary&dict, bool report)
             << "edgeCoPlanarTol          : " << edgeCoPlanarTol_ << nl
             << "edgeEndCutoffTol         : " << edgeEndCutoffTol_ << endl;
     }
-}
-
-
-void Foam::slidingInterface::write(Ostream& os) const
-{
-    os  << nl << type() << nl
-        << name()<< nl
-        << masterFaceZoneID_.name() << nl
-        << slaveFaceZoneID_.name() << nl
-        << cutPointZoneID_.name() << nl
-        << cutFaceZoneID_.name() << nl
-        << masterPatchID_.name() << nl
-        << slavePatchID_.name() << nl
-        << typeOfMatchNames_[matchType_] << nl
-        << coupleDecouple_ << nl
-        << attached_ << endl;
-}
-
-
-// To write out all those tolerances
-#define WRITE_NON_DEFAULT(name) \
-    if ( name ## _ != name ## Default_ )\
-    { \
-        os << "    " #name " " <<  name ## _ << token::END_STATEMENT << nl; \
-    }
-
-
-void Foam::slidingInterface::writeDict(Ostream& os) const
-{
-    os  << nl << name() << nl << token::BEGIN_BLOCK << nl
-        << "    type " << type() << token::END_STATEMENT << nl
-        << "    masterFaceZoneName " << masterFaceZoneID_.name()
-        << token::END_STATEMENT << nl
-        << "    slaveFaceZoneName " << slaveFaceZoneID_.name()
-        << token::END_STATEMENT << nl
-        << "    cutPointZoneName " << cutPointZoneID_.name()
-        << token::END_STATEMENT << nl
-        << "    cutFaceZoneName " << cutFaceZoneID_.name()
-        << token::END_STATEMENT << nl
-        << "    masterPatchName " << masterPatchID_.name()
-        << token::END_STATEMENT << nl
-        << "    slavePatchName " << slavePatchID_.name()
-        << token::END_STATEMENT << nl
-        << "    typeOfMatch " << typeOfMatchNames_[matchType_]
-        << token::END_STATEMENT << nl
-        << "    coupleDecouple " << coupleDecouple_
-        << token::END_STATEMENT << nl
-        << "    projection " << intersection::algorithmNames_[projectionAlgo_]
-        << token::END_STATEMENT << nl
-        << "    attached " << attached_
-        << token::END_STATEMENT << nl
-        << "    active " << active()
-        << token::END_STATEMENT << nl;
-
-    if (attached_)
-    {
-        writeEntry(os, "masterFaceCells", *masterFaceCellsPtr_);
-        writeEntry(os, "slaveFaceCells", *slaveFaceCellsPtr_);
-        writeEntry(os, "masterStickOutFaces", *masterStickOutFacesPtr_);
-        writeEntry(os, "slaveStickOutFaces", *slaveStickOutFacesPtr_);
-
-         os << "    retiredPointMap " << retiredPointMap()
-            << token::END_STATEMENT << nl
-            << "    cutPointEdgePairMap " << cutPointEdgePairMap()
-            << token::END_STATEMENT << nl;
-    }
-
-    WRITE_NON_DEFAULT(pointMergeTol)
-    WRITE_NON_DEFAULT(edgeMergeTol)
-    WRITE_NON_DEFAULT(nFacesPerSlaveEdge)
-    WRITE_NON_DEFAULT(edgeFaceEscapeLimit)
-    WRITE_NON_DEFAULT(integralAdjTol)
-    WRITE_NON_DEFAULT(edgeMasterCatchFraction)
-    WRITE_NON_DEFAULT(edgeCoPlanarTol)
-    WRITE_NON_DEFAULT(edgeEndCutoffTol)
-
-    os  << token::END_BLOCK << endl;
 }
 
 

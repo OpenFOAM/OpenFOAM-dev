@@ -26,7 +26,6 @@ License
 #include "slidingInterface.H"
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
-#include "polyTopoChanger.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -45,7 +44,7 @@ void Foam::slidingInterface::calcAttachedAddressing() const
         // Clear existing addressing
         clearAttachedAddressing();
 
-        const polyMesh& mesh = topoChanger().mesh();
+        const polyMesh& mesh = this->mesh();
         const labelList& own = mesh.faceOwner();
         const labelList& nei = mesh.faceNeighbour();
         const meshFaceZones& faceZones = mesh.faceZones();

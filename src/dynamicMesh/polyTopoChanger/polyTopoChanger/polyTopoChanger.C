@@ -54,36 +54,24 @@ bool Foam::polyTopoChanger::changeTopology() const
 
     forAll(topoChanges, morphI)
     {
-        if (topoChanges[morphI].active())
+        bool curTriggerChange = topoChanges[morphI].changeTopology();
+
+        if (debug)
         {
-            bool curTriggerChange = topoChanges[morphI].changeTopology();
+            Info<< "Modifier " << morphI << " named "
+                << topoChanges[morphI].name();
 
-            if (debug)
+            if (curTriggerChange)
             {
-                Info<< "Modifier " << morphI << " named "
-                    << topoChanges[morphI].name();
-
-                if (curTriggerChange)
-                {
-                    Info<< " morphing" << endl;
-                }
-                else
-                {
-                    Info<< " unchanged" << endl;
-                }
+                Info<< " morphing" << endl;
             }
-
-            triggerChange = triggerChange || curTriggerChange;
-        }
-        else
-        {
-            if (debug)
+            else
             {
-                Info<< "Modifier " << morphI  << " named "
-                    << topoChanges[morphI].name() << " inactive" << endl;
+                Info<< " unchanged" << endl;
             }
         }
 
+        triggerChange = triggerChange || curTriggerChange;
     }
 
     return triggerChange;
@@ -101,10 +89,7 @@ Foam::polyTopoChanger::topoChangeRequest() const
 
     forAll(topoChanges, morphI)
     {
-        if (topoChanges[morphI].active())
-        {
-            topoChanges[morphI].setRefinement(ref);
-        }
+        topoChanges[morphI].setRefinement(ref);
     }
 
     return autoPtr<polyTopoChange>(refPtr);

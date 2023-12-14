@@ -27,7 +27,6 @@ License
 #include "polyMesh.H"
 #include "primitiveMesh.H"
 #include "polyTopoChange.H"
-#include "polyTopoChanger.H"
 #include "polyModifyFace.H"
 #include "polyModifyPoint.H"
 
@@ -60,7 +59,7 @@ void Foam::slidingInterface::decoupleInterface
     // Clear previous couple
     clearCouple(ref);
 
-    const polyMesh& mesh = topoChanger().mesh();
+    const polyMesh& mesh = this->mesh();
     const faceList& faces = mesh.faces();
     const cellList& cells = mesh.cells();
 

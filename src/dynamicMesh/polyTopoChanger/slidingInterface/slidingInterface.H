@@ -309,8 +309,7 @@ public:
         slidingInterface
         (
             const word& name,
-            const label index,
-            const polyTopoChanger& mme,
+            const polyMesh& mesh,
             const word& masterFaceZoneName,
             const word& slaveFaceZoneName,
             const word& cutPointZoneName,
@@ -321,15 +320,6 @@ public:
             const bool coupleDecouple = false,
             const intersection::algorithm algo =
                 intersection::algorithm::visible
-        );
-
-        //- Construct from dictionary
-        slidingInterface
-        (
-            const word& name,
-            const dictionary& dict,
-            const label index,
-            const polyTopoChanger& mme
         );
 
         //- Disallow default bitwise copy construction
@@ -372,12 +362,6 @@ public:
 
         //- Set the tolerances from the values in a dictionary
         void setTolerances(const dictionary&, bool report=false);
-
-        //- Write
-        virtual void write(Ostream&) const;
-
-        //- Write dictionary
-        virtual void writeDict(Ostream&) const;
 
 
     // Member Operators

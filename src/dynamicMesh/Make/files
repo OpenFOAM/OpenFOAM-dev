@@ -18,16 +18,8 @@ $(hexRef8)/hexRef8Data.C
 $(hexRef8)/refinementHistory.C
 
 polyTopoChanger/polyTopoChanger/polyTopoChanger.C
+polyTopoChanger/polyMeshModifier/polyMeshModifier.C
 polyTopoChanger/attachPolyTopoChanger/attachPolyTopoChanger.C
-
-polyMeshModifier = polyTopoChanger/polyMeshModifier
-$(polyMeshModifier)/polyMeshModifier.C
-$(polyMeshModifier)/polyMeshModifierNew.C
-
-polyTopoChanger/attachDetach/attachDetach.C
-polyTopoChanger/attachDetach/attachInterface.C
-polyTopoChanger/attachDetach/detachInterface.C
-polyTopoChanger/attachDetach/attachDetachPointMatchMap.C
 
 enrichedPatch = polyTopoChanger/slidingInterface/enrichedPatch
 $(enrichedPatch)/enrichedPatch.C

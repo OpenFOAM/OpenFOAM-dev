@@ -28,7 +28,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "perfectInterface.H"
-#include "polyTopoChanger.H"
 #include "polyMesh.H"
 #include "polyTopoChange.H"
 #include "addToRunTimeSelectionTable.H"
@@ -41,12 +40,6 @@ Description
 namespace Foam
 {
     defineTypeNameAndDebug(perfectInterface, 0);
-    addToRunTimeSelectionTable
-    (
-        polyMeshModifier,
-        perfectInterface,
-        dictionary
-    );
 }
 
 
@@ -78,44 +71,16 @@ Foam::pointField Foam::perfectInterface::calcFaceCentres
 Foam::perfectInterface::perfectInterface
 (
     const word& name,
-    const label index,
-    const polyTopoChanger& mme,
+    const polyMesh& mesh,
     const word& faceZoneName,
     const word& masterPatchName,
     const word& slavePatchName
 )
 :
-    polyMeshModifier(name, index, mme, true),
-    faceZoneID_(faceZoneName, mme.mesh().faceZones()),
-    masterPatchID_(masterPatchName, mme.mesh().boundaryMesh()),
-    slavePatchID_(slavePatchName, mme.mesh().boundaryMesh())
-{}
-
-
-Foam::perfectInterface::perfectInterface
-(
-    const word& name,
-    const dictionary& dict,
-    const label index,
-    const polyTopoChanger& mme
-)
-:
-    polyMeshModifier(name, index, mme, readBool(dict.lookup("active"))),
-    faceZoneID_
-    (
-        dict.lookup("faceZoneName"),
-        mme.mesh().faceZones()
-    ),
-    masterPatchID_
-    (
-        dict.lookup("masterPatchName"),
-        mme.mesh().boundaryMesh()
-    ),
-    slavePatchID_
-    (
-        dict.lookup("slavePatchName"),
-        mme.mesh().boundaryMesh()
-    )
+    polyMeshModifier(name, mesh),
+    faceZoneID_(faceZoneName, mesh.faceZones()),
+    masterPatchID_(masterPatchName, mesh.boundaryMesh()),
+    slavePatchID_(slavePatchName, mesh.boundaryMesh())
 {}
 
 
@@ -129,23 +94,7 @@ Foam::perfectInterface::~perfectInterface()
 
 bool Foam::perfectInterface::changeTopology() const
 {
-    // If modifier is inactive, skip change
-    if (!active())
-    {
-        if (debug)
-        {
-            Pout<< "bool perfectInterface::changeTopology() const "
-                << "for object " << name() << " : "
-                << "Inactive" << endl;
-        }
-
-        return false;
-    }
-    else
-    {
-        // I want topo change every time step.
-        return true;
-    }
+    return true;
 }
 
 
@@ -156,7 +105,7 @@ void Foam::perfectInterface::setRefinement
     polyTopoChange& ref
 ) const
 {
-    const polyMesh& mesh = topoChanger().mesh();
+    const polyMesh& mesh = this->mesh();
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
@@ -432,7 +381,7 @@ void Foam::perfectInterface::setRefinement(polyTopoChange& ref) const
      && faceZoneID_.active()
     )
     {
-        const polyMesh& mesh = topoChanger().mesh();
+        const polyMesh& mesh = this->mesh();
 
         const polyBoundaryMesh& patches = mesh.boundaryMesh();
         const polyPatch& patch0 = patches[masterPatchID_.index()];
@@ -468,44 +417,11 @@ void Foam::perfectInterface::modifyMotionPoints(pointField& motionPoints) const
 void Foam::perfectInterface::topoChange(const polyTopoChangeMap& map)
 {
     // Mesh has changed topologically.  Update local topological data
-    const polyMesh& mesh = topoChanger().mesh();
+    const polyMesh& mesh = this->mesh();
 
     faceZoneID_.update(mesh.faceZones());
     masterPatchID_.update(mesh.boundaryMesh());
     slavePatchID_.update(mesh.boundaryMesh());
-}
-
-
-void Foam::perfectInterface::write(Ostream& os) const
-{
-    os  << nl << type() << nl
-        << name()<< nl
-        << faceZoneID_.name() << nl
-        << masterPatchID_.name() << nl
-        << slavePatchID_.name() << endl;
-}
-
-
-void Foam::perfectInterface::writeDict(Ostream& os) const
-{
-    os  << nl << name() << nl << token::BEGIN_BLOCK << nl
-
-        << "    type " << type()
-        << token::END_STATEMENT << nl
-
-        << "    active " << active()
-        << token::END_STATEMENT << nl
-
-        << "    faceZoneName " << faceZoneID_.name()
-        << token::END_STATEMENT << nl
-
-        << "    masterPatchName " << masterPatchID_.name()
-        << token::END_STATEMENT << nl
-
-        << "    slavePatchName " << slavePatchID_.name()
-        << token::END_STATEMENT << nl
-
-        << token::END_BLOCK << endl;
 }
 
 

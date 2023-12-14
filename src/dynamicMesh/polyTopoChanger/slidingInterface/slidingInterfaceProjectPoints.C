@@ -26,7 +26,6 @@ License
 #include "slidingInterface.H"
 #include "polyMesh.H"
 #include "line.H"
-#include "polyTopoChanger.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -87,7 +86,7 @@ bool Foam::slidingInterface::projectPoints() const
     //    on the master and leave the slave point where it started
     //    from and the miss is recorded.
 
-    const polyMesh& mesh = topoChanger().mesh();
+    const polyMesh& mesh = this->mesh();
 
     const primitiveFacePatch& masterPatch =
         mesh.faceZones()[masterFaceZoneID_.index()]();

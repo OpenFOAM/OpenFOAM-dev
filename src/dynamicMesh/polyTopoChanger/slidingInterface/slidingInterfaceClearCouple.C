@@ -26,7 +26,6 @@ License
 #include "slidingInterface.H"
 #include "polyTopoChange.H"
 #include "polyMesh.H"
-#include "polyTopoChanger.H"
 #include "polyRemovePoint.H"
 #include "polyRemoveFace.H"
 
@@ -46,7 +45,7 @@ void Foam::slidingInterface::clearCouple
 
     // Remove all points from the point zone
 
-    const polyMesh& mesh = topoChanger().mesh();
+    const polyMesh& mesh = this->mesh();
 
     const labelList& cutPointZoneLabels =
         mesh.pointZones()[cutPointZoneID_.index()];

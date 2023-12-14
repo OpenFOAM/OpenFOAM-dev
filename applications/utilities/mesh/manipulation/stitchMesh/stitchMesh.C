@@ -358,8 +358,7 @@ int main(int argc, char *argv[])
             new perfectInterface
             (
                 "couple",
-                0,
-                stitcher,
+                mesh,
                 cutZoneName,
                 masterPatchName,
                 slavePatchName
@@ -412,8 +411,7 @@ int main(int argc, char *argv[])
             new slidingInterface
             (
                 "couple",
-                0,
-                stitcher,
+                mesh,
                 mergePatchName + "MasterZone",
                 mergePatchName + "SlaveZone",
                 mergePatchName + "CutPointZone",

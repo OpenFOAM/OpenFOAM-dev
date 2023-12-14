@@ -101,8 +101,7 @@
                     new slidingInterface
                     (
                         "couple" + name(pairI),
-                        pairI,
-                        polyMeshAttacher,
+                        mesh,
                         mergeName + "MasterZone",
                         mergeName + "SlaveZone",
                         mergeName + "CutPointZone",

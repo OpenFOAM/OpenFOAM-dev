@@ -37,7 +37,6 @@ Description
 #include "argList.H"
 #include "Time.H"
 #include "polyTopoChange.H"
-#include "polyTopoChanger.H"
 #include "edgeCollapser.H"
 #include "perfectInterface.H"
 #include "addPatchCellLayer.H"
@@ -883,9 +882,6 @@ int main(int argc, char *argv[])
 
 
 
-        polyTopoChanger stitcher(mesh);
-        stitcher.setSize(1);
-
         const word cutZoneName("originalCutFaceZone");
 
         List<faceZone*> fz
@@ -907,8 +903,7 @@ int main(int argc, char *argv[])
         perfectInterface perfectStitcher
         (
             "couple",
-            0,
-            stitcher,
+            mesh,
             cutZoneName,
             word::null,         // dummy patch name
             word::null          // dummy patch name

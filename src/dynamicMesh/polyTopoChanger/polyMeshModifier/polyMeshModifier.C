@@ -27,8 +27,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "polyMeshModifier.H"
-#include "dictionary.H"
-#include "polyTopoChanger.H"
 #include "polyMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -36,25 +34,18 @@ Description
 namespace Foam
 {
     defineTypeNameAndDebug(polyMeshModifier, 0);
-
-    defineRunTimeSelectionTable(polyMeshModifier, dictionary);
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::polyMeshModifier::polyMeshModifier
 (
     const word& name,
-    const label index,
-    const polyTopoChanger& mme,
-    const bool act
+    const polyMesh& mesh
 )
 :
     name_(name),
-    index_(index),
-    topoChanger_(mme),
-    active_(act)
+    mesh_(mesh)
 {}
 
 
@@ -66,19 +57,9 @@ Foam::polyMeshModifier::~polyMeshModifier()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::polyTopoChanger& Foam::polyMeshModifier::topoChanger() const
+const Foam::polyMesh& Foam::polyMeshModifier::mesh() const
 {
-    return topoChanger_;
-}
-
-
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const polyMeshModifier& pmm)
-{
-    pmm.write(os);
-    os.check("Ostream& operator<<(Ostream& f, const polyMeshModifier& pmm)");
-    return os;
+    return mesh_;
 }
 
 

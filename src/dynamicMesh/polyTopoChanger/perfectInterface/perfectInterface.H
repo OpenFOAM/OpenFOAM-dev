@@ -90,20 +90,10 @@ public:
         perfectInterface
         (
             const word& name,
-            const label index,
-            const polyTopoChanger& mme,
+            const polyMesh& mesh,
             const word& faceZoneName,
             const word& masterPatchName,
             const word& slavePatchName
-        );
-
-        //- Construct from dictionary
-        perfectInterface
-        (
-            const word& name,
-            const dictionary& dict,
-            const label index,
-            const polyTopoChanger& mme
         );
 
         //- Disallow default bitwise copy construction
@@ -139,12 +129,6 @@ public:
 
         //- Force recalculation of locally stored data on topological change
         virtual void topoChange(const polyTopoChangeMap&);
-
-        //- Write
-        virtual void write(Ostream&) const;
-
-        //- Write dictionary
-        virtual void writeDict(Ostream&) const;
 
 
     // Member Operators

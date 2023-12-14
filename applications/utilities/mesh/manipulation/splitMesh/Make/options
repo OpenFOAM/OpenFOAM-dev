@@ -1,8 +1,0 @@
-EXE_INC = \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
-    -I$(LIB_SRC)/meshTools/lnInclude
-
-EXE_LIBS = \
-    -ldynamicMesh \
-    -lgenericPatches \
-    -lmeshTools
