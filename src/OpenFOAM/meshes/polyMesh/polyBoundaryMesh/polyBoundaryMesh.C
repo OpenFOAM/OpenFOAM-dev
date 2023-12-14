@@ -684,37 +684,6 @@ Foam::labelList Foam::polyBoundaryMesh::findIndices
 }
 
 
-Foam::label Foam::polyBoundaryMesh::findIndex(const wordRe& key) const
-{
-    if (!key.empty())
-    {
-        if (key.isPattern())
-        {
-            labelList indices = this->findIndices(key);
-
-            // return first element
-            if (!indices.empty())
-            {
-                return indices[0];
-            }
-        }
-        else
-        {
-            forAll(*this, i)
-            {
-                if (key == operator[](i).name())
-                {
-                    return i;
-                }
-            }
-        }
-    }
-
-    // not found
-    return -1;
-}
-
-
 Foam::label Foam::polyBoundaryMesh::findPatchID(const word& patchName) const
 {
     const polyPatchList& patches = *this;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,7 +170,13 @@ public:
         ) const;
 
         //- Return patch index for the first match, return -1 if not found
-        label findIndex(const wordRe&) const;
+        label findIndex(const wordRe&) const = delete;
+
+        //- Find patch index given a name
+        label findIndex(const word& patchName) const
+        {
+            return findPatchID(patchName);
+        }
 
         //- Find patch index given a name
         label findPatchID(const word& patchName) const;

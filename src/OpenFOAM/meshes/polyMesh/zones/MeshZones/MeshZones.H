@@ -147,12 +147,16 @@ public:
         bool found(const word& zoneName) const;
 
         //- Return zone index for the first match, return -1 if not found
-        label findIndex(const wordRe&) const;
+        //- Find the zone index given the zone name
+        label findIndex(const wordRe&) const = delete;
 
-        //- Return zone indices for all matches
-        labelList findIndices(const wordRe&) const;
+        //- Find the zone index given the zone name
+        label findIndex(const word& zoneName) const
+        {
+            return findZoneID(zoneName);
+        }
 
-        //- Find zone index given a name
+        //- Find the zone index given the zone name
         label findZoneID(const word& zoneName) const;
 
         //- Mark cells that match the zone specification
