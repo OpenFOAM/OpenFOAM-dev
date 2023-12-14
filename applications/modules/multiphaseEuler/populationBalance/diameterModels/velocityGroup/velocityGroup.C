@@ -143,6 +143,7 @@ Foam::diameterModels::velocityGroup::velocityGroup
 :
     diameterModel(diameterProperties, phase),
     popBalName_(diameterProperties.lookup("populationBalance")),
+    popBalPtr_(nullptr),
     sizeGroups_
     (
         diameterProperties.lookup("sizeGroups"),
@@ -173,6 +174,19 @@ Foam::diameterModels::velocityGroup::~velocityGroup()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::diameterModels::populationBalanceModel&
+Foam::diameterModels::velocityGroup::popBal() const
+{
+    if (popBalPtr_ == nullptr)
+    {
+        popBalPtr_ =
+            &phase().mesh().lookupObject<populationBalanceModel>(popBalName_);
+    }
+
+    return *popBalPtr_;
+}
+
 
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::d() const
 {
@@ -207,8 +221,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::Av() const
 
 void Foam::diameterModels::velocityGroup::correct()
 {
-    const populationBalanceModel& popBal =
-        phase().mesh().lookupObject<populationBalanceModel>(popBalName_);
+    const populationBalanceModel& popBal = this->popBal();
 
     if (!popBal.solveOnFinalIterOnly() || popBal.fluid().pimple().finalIter())
     {

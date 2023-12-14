@@ -76,6 +76,7 @@ namespace diameterModels
 
 // Forward declaration of classes
 class sizeGroup;
+class populationBalanceModel;
 
 /*---------------------------------------------------------------------------*\
                         Class velocityGroup Declaration
@@ -89,6 +90,9 @@ class velocityGroup
 
         //- Name of the populationBalance this velocityGroup belongs to
         word popBalName_;
+
+        //- Pointer to the populationBalance this velocityGroup belongs to
+        mutable const populationBalanceModel* popBalPtr_;
 
         //- sizeGroups belonging to this velocityGroup
         PtrList<sizeGroup> sizeGroups_;
@@ -132,6 +136,9 @@ public:
 
         //- Return name of populationBalance this velocityGroup belongs to
         inline const word& popBalName() const;
+
+        //- Return the populationBalance this velocityGroup belongs to
+        const populationBalanceModel& popBal() const;
 
         //- Return sizeGroups belonging to this velocityGroup
         inline const PtrList<sizeGroup>& sizeGroups() const;

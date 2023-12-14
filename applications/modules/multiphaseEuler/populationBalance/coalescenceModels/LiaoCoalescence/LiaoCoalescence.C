@@ -24,10 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LiaoCoalescence.H"
-#include "addToRunTimeSelectionTable.H"
+#include "phaseSystem.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "fvcGrad.H"
 #include "dragModel.H"
-#include "phaseSystem.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

@@ -206,7 +206,6 @@ SourceFiles
 
 #include "sizeGroup.H"
 #include "phaseSystem.H"
-#include "phaseCompressibleMomentumTransportModel.H"
 #include "HashPtrTable.H"
 #include "Pair.H"
 
@@ -214,6 +213,9 @@ SourceFiles
 
 namespace Foam
 {
+
+class phaseCompressibleMomentumTransportModel;
+
 namespace diameterModels
 {
 
@@ -369,6 +371,25 @@ public:
                 }
         };
 
+    // Public Enumerations
+
+        //- Enumeration for specifying how to allocate out of bounds of the
+        //  population balance size-groups.
+        //
+        //  "Clamp" will create an out-of-bounds allocation coefficient of
+        //  exactly one. This partitions unity across all size-space.
+        //
+        //  "Extrapolate" will create an out-of-bounds allocation coefficient
+        //  in proportion to the ratio between the given size and the nearest
+        //  size-group size. This does not partition unity outside the range of
+        //  the size-groups.
+        //
+        enum class etaBoundsHandling
+        {
+            clamp,
+            extrapolate
+        };
+
 
 private:
 
@@ -509,6 +530,16 @@ private:
         //- Return the interval at which the sources are updated
         inline label sourceUpdateInterval() const;
 
+        //- Calculate and return the allocation coefficient
+        template<class EtaType, class VType>
+        EtaType eta
+        (
+            const label i,
+            const etaBoundsHandling ebh,
+            const VType& v
+        ) const;
+
+
 public:
 
     //- Runtime type information
@@ -602,10 +633,19 @@ public:
         inline const volVectorField& U() const;
 
         //- Return allocation coefficient
-        const dimensionedScalar eta
+        dimensionedScalar eta
         (
             const label i,
+            const etaBoundsHandling ebh,
             const dimensionedScalar& v
+        ) const;
+
+        //- Return allocation coefficient
+        tmp<volScalarField::Internal> eta
+        (
+            const label i,
+            const etaBoundsHandling ebh,
+            const volScalarField::Internal& v
         ) const;
 
         //- Return the surface tension coefficient between a given dispersed
@@ -616,7 +656,7 @@ public:
         ) const;
 
         //- Return reference to momentumTransport model of the continuous phase
-        const phaseCompressible::momentumTransportModel&
+        const phaseCompressibleMomentumTransportModel&
             continuousTurbulence() const;
 
         //- Solve the population balance equation

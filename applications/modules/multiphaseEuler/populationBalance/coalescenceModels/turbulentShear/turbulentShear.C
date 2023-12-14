@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "turbulentShear.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

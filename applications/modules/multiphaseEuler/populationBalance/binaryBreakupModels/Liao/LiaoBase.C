@@ -25,6 +25,7 @@ License
 
 #include "LiaoBase.H"
 #include "fvcGrad.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

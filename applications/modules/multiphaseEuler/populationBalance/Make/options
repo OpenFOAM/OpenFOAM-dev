@@ -20,4 +20,5 @@ EXE_INC = \
     -I$(LIB_SRC)/combustionModels/lnInclude
 
 LIB_LIBS = \
-    -lphaseSystem
+    -lphaseSystem \
+    -lmultiphaseEulerInterfacialModels

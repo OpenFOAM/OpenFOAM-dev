@@ -25,6 +25,7 @@ License
 
 #include "populationBalanceModel.H"
 #include "phaseSystem.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "coalescenceModel.H"
 #include "breakupModel.H"
 #include "binaryBreakupModel.H"
@@ -154,7 +155,7 @@ void Foam::diameterModels::populationBalanceModel::birthByCoalescence
 
     for (label i = j; i < sizeGroups().size(); i++)
     {
-        Eta = eta(i, v);
+        Eta = eta(i, etaBoundsHandling::extrapolate, v);
 
         if (Eta.value() == 0) continue;
 
@@ -328,7 +329,7 @@ void Foam::diameterModels::populationBalanceModel::birthByBinaryBreakup
 
     for (label k = 0; k <= j; k++)
     {
-        Eta = eta(k, v);
+        Eta = eta(k, etaBoundsHandling::extrapolate, v);
 
         if (Eta.value() == 0) continue;
 
@@ -629,6 +630,53 @@ bool Foam::diameterModels::populationBalanceModel::updateSources()
     ++ sourceUpdateCounter_;
 
     return result;
+}
+
+
+template<class EtaType, class VType>
+EtaType Foam::diameterModels::populationBalanceModel::eta
+(
+    const label i,
+    const etaBoundsHandling ebh,
+    const VType& v
+) const
+{
+    const label n = sizeGroups().size();
+
+    static const dimensionedScalar rootVSmallV(dimVolume, rootVSmall);
+    static const dimensionedScalar rootVGreatV(dimVolume, rootVGreat);
+    static const dimensionedScalar z(dimless, scalar(0));
+
+    const dimensionedScalar& x0 =
+        i > 0 ? sizeGroups()[i - 1].x() : rootVSmallV;
+
+    const dimensionedScalar& xi = sizeGroups()[i].x();
+
+    switch (ebh)
+    {
+        case etaBoundsHandling::extrapolate:
+        {
+            const dimensionedScalar& x1 =
+                i < n - 1 ? sizeGroups()[i + 1].x() : rootVSmallV;
+
+            return max(min((v - x0)/(xi - x0), (x1 - v)/(x1 - xi)), z);
+        }
+
+        case etaBoundsHandling::clamp:
+        {
+            const dimensionedScalar& x1 =
+                i < n - 1 ? sizeGroups()[i + 1].x() : rootVGreatV;
+
+            const VType vClip
+            (
+                min(max(v, sizeGroups().first().x()), sizeGroups().last().x())
+            );
+
+            return max(min((vClip - x0)/(xi - x0), (x1 - vClip)/(x1 - xi)), z);
+        }
+    }
+
+    return NaN*v/v;
 }
 
 
@@ -1009,43 +1057,26 @@ bool Foam::diameterModels::populationBalanceModel::writeData(Ostream& os) const
 }
 
 
-const Foam::dimensionedScalar
-Foam::diameterModels::populationBalanceModel::eta
+Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::eta
 (
     const label i,
+    const etaBoundsHandling ebh,
     const dimensionedScalar& v
 ) const
 {
-    const dimensionedScalar& x0 = sizeGroups()[0].x();
-    const dimensionedScalar& xi = sizeGroups()[i].x();
-    const dimensionedScalar& xm = sizeGroups().last().x();
-    dimensionedScalar lowerBoundary(x0);
-    dimensionedScalar upperBoundary(xm);
+    return eta<dimensionedScalar>(i, ebh, v);
+}
 
-    if (i != 0) lowerBoundary = sizeGroups()[i-1].x();
 
-    if (i != sizeGroups().size() - 1) upperBoundary = sizeGroups()[i+1].x();
-
-    if ((i == 0 && v < x0) || (i == sizeGroups().size() - 1 && v > xm))
-    {
-        return v/xi;
-    }
-    else if (v < lowerBoundary || v > upperBoundary)
-    {
-        return 0;
-    }
-    else if (v.value() == xi.value())
-    {
-        return 1;
-    }
-    else if (v > xi)
-    {
-        return (upperBoundary - v)/(upperBoundary - xi);
-    }
-    else
-    {
-        return (v - lowerBoundary)/(xi - lowerBoundary);
-    }
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::diameterModels::populationBalanceModel::eta
+(
+    const label i,
+    const etaBoundsHandling ebh,
+    const volScalarField::Internal& v
+) const
+{
+    return eta<tmp<volScalarField::Internal>>(i, ebh, v);
 }
 
 

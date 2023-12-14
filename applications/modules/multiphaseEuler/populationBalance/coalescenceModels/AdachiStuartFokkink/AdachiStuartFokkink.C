@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "AdachiStuartFokkink.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
