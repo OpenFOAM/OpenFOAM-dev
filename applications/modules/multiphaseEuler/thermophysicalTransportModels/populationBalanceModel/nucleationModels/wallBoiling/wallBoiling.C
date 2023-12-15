@@ -120,8 +120,7 @@ void Foam::diameterModels::nucleationModels::wallBoiling::precompute()
 }
 
 
-void
-Foam::diameterModels::nucleationModels::wallBoiling::addToNucleationRate
+void Foam::diameterModels::nucleationModels::wallBoiling::addToNucleationRate
 (
     volScalarField& nucleationRate,
     const label i
@@ -144,35 +143,32 @@ Foam::diameterModels::nucleationModels::wallBoiling::addToNucleationRate
 
     forAll(alphatBf, patchi)
     {
-        if
-        (
-            isA<alphatWallBoilingWallFunction>(alphatBf[patchi])
-        )
+        if (!isA<alphatWallBoilingWallFunction>(alphatBf[patchi])) continue;
+
+        const alphatWallBoilingWallFunction& alphatw =
+            refCast<const alphatWallBoilingWallFunction>(alphatBf[patchi]);
+
+        const scalarField& dmdt = alphatw.dmdtf();
+        const scalarField& dDep = alphatw.dDeparture();
+
+        const labelList& faceCells = alphatw.patch().faceCells();
+
+        dimensionedScalar unitLength("unitLength", dimLength, 1);
+
+        forAll(alphatw, facei)
         {
-            const alphatWallBoilingWallFunction& alphatw =
-                refCast<const alphatWallBoilingWallFunction>(alphatBf[patchi]);
-
-            const scalarField& dmdt = alphatw.dmdtf();
-            const scalarField& dDep = alphatw.dDeparture();
-
-            const labelList& faceCells = alphatw.patch().faceCells();
-
-            dimensionedScalar unitLength("unitLength", dimLength, 1);
-
-            forAll(alphatw, facei)
+            if (dmdt[facei] > small)
             {
-                if (dmdt[facei] > small)
-                {
-                    const label faceCelli = faceCells[facei];
+                const label faceCelli = faceCells[facei];
 
-                    nucleationRate[faceCelli] +=
-                        popBal_.eta
-                        (
-                            i,
-                            fi.x()/pow3(fi.dSph())*pow3(dDep[facei]*unitLength)
-                        ).value()
-                       *dmdt[facei]/rho[faceCelli]/fi.x().value();
-                }
+                nucleationRate[faceCelli] +=
+                    popBal_.eta
+                    (
+                        i,
+                        populationBalanceModel::etaBoundsHandling::extrapolate,
+                        fi.x()/pow3(fi.dSph())*pow3(dDep[facei]*unitLength)
+                    ).value()
+                   *dmdt[facei]/rho[faceCelli]/fi.x().value();
             }
         }
     }

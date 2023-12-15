@@ -32,6 +32,10 @@ derived/zeroDimensionalMassSource/zeroDimensionalMassSourceBase.C
 derived/zeroDimensionalMassSource/zeroDimensionalMassSource.C
 derived/massTransfer/massTransferBase.C
 derived/massTransfer/coefficientMassTransfer.C
+derived/phaseChange/phaseChangeBase.C
+derived/phaseChange/singleComponentPhaseChangeBase.C
+derived/phaseChange/multicomponentPhaseChangeBase.C
+derived/phaseChange/coefficientPhaseChange.C
 
 interRegion/interRegionModel/interRegionModel.C
 interRegion/interRegionPorosityForce/interRegionPorosityForce.C

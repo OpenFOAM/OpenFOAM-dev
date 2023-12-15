@@ -27,6 +27,9 @@ PDRModels/XiGModels/basicXiSubG/basicXiSubG.C
 
 laminarFlameSpeed/SCOPE/SCOPELaminarFlameSpeed.C
 
+derivedFvPatchFields/activeBaffleVelocity/activeBaffleVelocityFvPatchVectorField.C
+derivedFvPatchFields/activePressureForceBaffleVelocity/activePressureForceBaffleVelocityFvPatchVectorField.C
+
 PDRFoam.C
 
 EXE = $(FOAM_APPBIN)/PDRFoam

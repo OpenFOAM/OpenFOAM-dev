@@ -162,7 +162,7 @@ bool Foam::functionObjects::histogram::write()
                 file_.baseTimeDir(),
                 typeName,
                 coordSet(true, fieldName_, xBin),
-                field.name(),
+                "v/vTotal",
                 volFrac
             );
         }

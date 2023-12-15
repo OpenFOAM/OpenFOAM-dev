@@ -166,8 +166,6 @@ $(constraintFvPatchFields)/nonConformalError/nonConformalErrorFvPatchFields.C
 $(constraintFvPatchFields)/nonConformalProcessorCyclic/nonConformalProcessorCyclicFvPatchFields.C
 
 derivedFvPatchFields = $(fvPatchFields)/derived
-$(derivedFvPatchFields)/activeBaffleVelocity/activeBaffleVelocityFvPatchVectorField.C
-$(derivedFvPatchFields)/activePressureForceBaffleVelocity/activePressureForceBaffleVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/advective/advectiveFvPatchFields.C
 $(derivedFvPatchFields)/codedFixedValue/codedFixedValueFvPatchFields.C
 $(derivedFvPatchFields)/codedMixed/codedMixedFvPatchFields.C

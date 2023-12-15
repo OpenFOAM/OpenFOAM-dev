@@ -28,6 +28,7 @@ LIB_LIBS = \
     -lcompressibleTwoPhases \
     -lmultiphaseProperties \
     -lphaseCompressibleMomentumTransportModels \
+    -lphaseFluidThermophysicalTransportModels \
     -lphaseFluidMulticomponentThermophysicalTransportModels \
     -lphaseSolidThermophysicalTransportModels \
     -lcombustionModels

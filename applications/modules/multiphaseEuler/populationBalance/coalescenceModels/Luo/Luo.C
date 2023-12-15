@@ -24,9 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Luo.H"
-#include "addToRunTimeSelectionTable.H"
-#include "dispersedVirtualMassModel.H"
 #include "phaseSystem.H"
+#include "phaseCompressibleMomentumTransportModel.H"
+#include "dispersedVirtualMassModel.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

@@ -24,8 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Liao.H"
-#include "addToRunTimeSelectionTable.H"
 #include "fvcGrad.H"
+#include "phaseCompressibleMomentumTransportModel.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
