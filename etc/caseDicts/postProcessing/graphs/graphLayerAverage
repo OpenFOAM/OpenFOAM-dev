@@ -10,18 +10,22 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-patches         (<patchNames>);  // Patches from which layers extrude
+patches         (<patchNames>);       // Patches from which layers extrude
 
-zones           ();              // Zones from which layers extrude
+zones           ();                   // Zones from which layers extrude
 
-axis            distance;        // The independent variable of the graph. Can
-                                 // be "x", "y", "z", "xyz" (all coordinates
-                                 // written out), or "distance" (from the start
-                                 // point).
+axis            distance;             // The independent variable of the graph.
+                                      // Can be "x", "y", "z", "xyz" (all
+                                      // coordinates written out), or
+                                      // "distance" (from the start point).
 
-symmetric       false;           // Are the layers symmetric about the centre?
+symmetric       false;                // Are the layers symmetric about the
+                                      // centre?
 
-fields          (<fieldsNames>); // Fields to plot
+fields          (<fieldsNames>);      // Fields to average
+
+//weightField   <weightFieldName>;    // Field or fields with which to weight
+//weightFields  (<weightFieldNames>); // the average
 
 #includeEtc "caseDicts/postProcessing/graphs/graphLayerAverage.cfg"
 

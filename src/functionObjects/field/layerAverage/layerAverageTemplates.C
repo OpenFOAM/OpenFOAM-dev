@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "layerAverage.H"
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -35,12 +36,13 @@ T Foam::functionObjects::layerAverage::symmetricCoeff() const
 
 
 template<class T>
-Foam::Field<T> Foam::functionObjects::layerAverage::sum
+Foam::tmp<Foam::Field<T>> Foam::functionObjects::layerAverage::sum
 (
-    const Field<T>& cellField
+    const VolInternalField<T>& cellField
 ) const
 {
-    Field<T> layerField(nLayers_, Zero);
+    tmp<Field<T>> tlayerField(new Field<T>(nLayers_, Zero));
+    Field<T>& layerField = tlayerField.ref();
 
     forAll(cellLayer_, celli)
     {
@@ -53,22 +55,30 @@ Foam::Field<T> Foam::functionObjects::layerAverage::sum
     Pstream::listCombineGather(layerField, plusEqOp<T>());
     Pstream::listCombineScatter(layerField);
 
-    return layerField;
+    return tlayerField;
 }
 
 
 template<class T>
-Foam::Field<T> Foam::functionObjects::layerAverage::average
+Foam::tmp<Foam::Field<T>> Foam::functionObjects::layerAverage::average
 (
-    const Field<T>& cellField
+    const tmp<VolInternalField<scalar>>& cellWeight,
+    const tmp<Field<scalar>>& layerWeight,
+    const VolInternalField<T>& cellField
 ) const
 {
-    // Sum and average
-    Field<T> layerField(sum(cellField)/layerCount_);
+    tmp<Field<T>> tlayerField
+    (
+        cellWeight.valid()
+      ? sum<T>(mesh_.V()*cellWeight*cellField)/layerWeight
+      : sum<T>(mesh_.V()*cellField)/layerVolume_
+    );
 
     // Handle symmetry
     if (symmetric_)
     {
+        Field<T>& layerField = tlayerField.ref();
+
         const T coeff = symmetricCoeff<T>();
 
         for (label i=0; i<nLayers_/2; i++)
@@ -82,7 +92,7 @@ Foam::Field<T> Foam::functionObjects::layerAverage::average
         layerField.setSize(nLayers_/2);
     }
 
-    return layerField;
+    return tlayerField;
 }
 
 

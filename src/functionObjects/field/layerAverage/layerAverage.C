@@ -126,16 +126,44 @@ void Foam::functionObjects::layerAverage::calcLayers()
     }
 
     // Sum number of entries per layer
-    layerCount_ = sum(scalarField(mesh_.nCells(), 1));
+    layerVolume_ = sum<scalar>(mesh_.V());
 
     // Average the cell centres
-    layerCentre_ = sum(mesh_.cellCentres())/layerCount_;
+    layerCentre_ = sum<vector>(mesh_.V()*mesh_.C())/layerVolume_;
 
     // If symmetric, keep only half of the coordinates
     if (symmetric_)
     {
         layerCentre_.setSize(nLayers_/2);
     }
+}
+
+
+Foam::tmp<Foam::VolInternalField<Foam::scalar>>
+Foam::functionObjects::layerAverage::weight() const
+{
+    if (weightFields_.empty())
+    {
+        return tmp<VolInternalField<scalar>>();
+    }
+
+    tmp<VolInternalField<scalar>> tresult =
+        VolInternalField<scalar>::New
+        (
+            "weight",
+            mesh_,
+            dimensionedScalar(dimless, scalar(1))
+        );
+
+    forAll(weightFields_, i)
+    {
+        const VolInternalField<scalar>& weightField =
+            mesh_.lookupObject<VolInternalField<scalar>>(weightFields_[i]);
+
+        tresult.ref() *= weightField;
+    }
+
+    return tresult;
 }
 
 
@@ -245,6 +273,13 @@ bool Foam::functionObjects::layerAverage::read(const dictionary& dict)
 
     fields_ = dict.lookup<wordList>("fields");
 
+    weightFields_ =
+        dict.found("weightFields")
+      ? dict.lookup<wordList>("weightFields")
+      : dict.found("weightField")
+      ? wordList(1, dict.lookup<word>("weightField"))
+      : wordList();
+
     formatter_ = setWriter::New(dict.lookup("setFormat"), dict);
 
     calcLayers();
@@ -255,7 +290,9 @@ bool Foam::functionObjects::layerAverage::read(const dictionary& dict)
 
 Foam::wordList Foam::functionObjects::layerAverage::fields() const
 {
-    return fields_;
+    wordList result(fields_);
+    result.append(weightFields_);
+    return result;
 }
 
 
@@ -267,6 +304,13 @@ bool Foam::functionObjects::layerAverage::execute()
 
 bool Foam::functionObjects::layerAverage::write()
 {
+    // Get the weights
+    tmp<VolInternalField<scalar>> weight(this->weight());
+    tmp<Field<scalar>> layerWeight
+    (
+        weight.valid() ? sum<scalar>(mesh_.V()*weight) : tmp<Field<scalar>>()
+    );
+
     // Create list of available fields
     wordList fieldNames;
     forAll(fields_, fieldi)
@@ -275,7 +319,7 @@ bool Foam::functionObjects::layerAverage::write()
         (
             false
             #define FoundTypeField(Type, nullArg) \
-              || foundObject<VolField<Type>>(fields_[fieldi])
+              || foundObject<VolInternalField<Type>>(fields_[fieldi])
             FOR_ALL_FIELD_TYPES(FoundTypeField)
             #undef FoundTypeField
         )
@@ -295,16 +339,18 @@ bool Foam::functionObjects::layerAverage::write()
     #undef DeclareTypeValueSets
     forAll(fieldNames, fieldi)
     {
+        const word& fieldName = fieldNames[fieldi];
+
         #define CollapseTypeFields(Type, nullArg)                           \
-            if (mesh_.foundObject<VolField<Type>>(fieldNames[fieldi]))      \
+            if (mesh_.foundObject<VolInternalField<Type>>(fieldName))       \
             {                                                               \
-                const VolField<Type>& field =                               \
-                    mesh_.lookupObject<VolField<Type>>(fieldNames[fieldi]); \
+                const VolInternalField<Type>& field =                       \
+                    mesh_.lookupObject<VolInternalField<Type>>(fieldName);  \
                                                                             \
                 Type##ValueSets.set                                         \
                 (                                                           \
                     fieldi,                                                 \
-                    average(field.primitiveField())                         \
+                    average<Type>(weight, layerWeight, field)               \
                 );                                                          \
             }
         FOR_ALL_FIELD_TYPES(CollapseTypeFields);

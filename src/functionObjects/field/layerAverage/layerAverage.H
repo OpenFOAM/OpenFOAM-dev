@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,9 @@ Usage
         axis          | Component of the position to plot against | yes |
         symmetric     | Is the geometry symmetric around the centre layer? \
                                                    | no         | false
-        field         | Fields to average and plot | yes        |
+        fields        | Fields to average and plot | yes        |
+        weightField   | Field with which to weight the average | no | none
+        weightFields  | Fields with which to weight the average | no | ()
     \endtable
 
 SourceFiles
@@ -74,6 +76,7 @@ SourceFiles
 #include "fvMeshFunctionObject.H"
 #include "setWriter.H"
 #include "boolList.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -113,14 +116,17 @@ class layerAverage
         //- Per cell the global layer
         labelList cellLayer_;
 
-        //- Per global layer the number of cells
-        scalarField layerCount_;
+        //- Per global layer the volume
+        scalarField layerVolume_;
 
         //- The average centre of each layer
         pointField layerCentre_;
 
-        //- Fields to sample
+        //- Fields to average
         wordList fields_;
+
+        //- Fields with which to weight the averages
+        wordList weightFields_;
 
         //- Set formatter
         autoPtr<setWriter> formatter_;
@@ -131,17 +137,26 @@ class layerAverage
         //- Create the layer information, the sort map, and the scalar axis
         void calcLayers();
 
+        //- Calculate and return the weight field, or a null pointer if there
+        //  are no weight fields
+        tmp<VolInternalField<scalar>> weight() const;
+
         //- Return the coefficient to multiply onto symmetric values
         template<class T>
         T symmetricCoeff() const;
 
         //- Sum field per layer
         template<class T>
-        Field<T> sum(const Field<T>& cellField) const;
+        tmp<Field<T>> sum(const VolInternalField<T>& cellField) const;
 
         //- Average a field per layer
         template<class T>
-        Field<T> average(const Field<T>& cellField) const;
+        tmp<Field<T>> average
+        (
+            const tmp<VolInternalField<scalar>>& cellWeight,
+            const tmp<Field<scalar>>& layerWeight,
+            const VolInternalField<T>& cellField
+        ) const;
 
 
 public:
