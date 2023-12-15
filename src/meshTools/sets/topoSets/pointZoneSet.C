@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ pointZoneSet::pointZoneSet
     addressing_(0)
 {
     const meshPointZones& pointZones = mesh.pointZones();
-    label zoneID = pointZones.findZoneID(name);
+    label zoneID = pointZones.findIndex(name);
 
     if
     (
@@ -261,7 +261,7 @@ bool pointZoneSet::writeObject
 
     // Modify pointZone
     meshPointZones& pointZones = const_cast<polyMesh&>(mesh_).pointZones();
-    label zoneID = pointZones.findZoneID(name());
+    label zoneID = pointZones.findIndex(name());
 
     if (zoneID == -1)
     {

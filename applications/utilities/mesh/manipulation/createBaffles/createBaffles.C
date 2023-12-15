@@ -413,7 +413,7 @@ int main(int argc, char *argv[])
     {
         const word& name = selectors[selectorI].name();
 
-        if (mesh.faceZones().findZoneID(name) == -1)
+        if (mesh.faceZones().findIndex(name) == -1)
         {
             mesh.faceZones().clearAddressing();
 
@@ -437,7 +437,7 @@ int main(int argc, char *argv[])
     forAll(selectors, selectorI)
     {
         const word& name = selectors[selectorI].name();
-        label zoneID = mesh.faceZones().findZoneID(name);
+        label zoneID = mesh.faceZones().findIndex(name);
 
         selectors[selectorI].select(zoneID, faceToZoneID, faceToFlip);
     }
@@ -455,7 +455,7 @@ int main(int argc, char *argv[])
     forAll(selectors, selectorI)
     {
         const word& name = selectors[selectorI].name();
-        const label zoneID = mesh.faceZones().findZoneID(name);
+        const label zoneID = mesh.faceZones().findIndex(name);
 
         label& n = nFaces[zoneID];
         labelList addr(n);

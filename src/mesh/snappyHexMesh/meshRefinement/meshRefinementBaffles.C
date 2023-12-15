@@ -246,7 +246,7 @@ Foam::Map<Foam::labelPair> Foam::meshRefinement::getZoneBafflePatches
         if (faceZoneName.size())
         {
             // Get zone
-            const label zonei = fZones.findZoneID(faceZoneName);
+            const label zonei = fZones.findIndex(faceZoneName);
             const faceZone& fZone = fZones[zonei];
 
             // Get patch allocated for zone

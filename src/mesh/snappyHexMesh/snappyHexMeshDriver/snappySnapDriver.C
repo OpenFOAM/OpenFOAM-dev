@@ -753,7 +753,7 @@ Foam::labelList Foam::snappySnapDriver::getZoneSurfacePoints
     const word& zoneName
 )
 {
-    label zonei = mesh.faceZones().findZoneID(zoneName);
+    label zonei = mesh.faceZones().findIndex(zoneName);
 
     if (zonei == -1)
     {
@@ -2204,7 +2204,7 @@ void Foam::snappySnapDriver::doSnap
                 )
                 {
                     // Filter out all faces for this zone.
-                    label zonei = fZones.findZoneID(faceZoneName);
+                    label zonei = fZones.findIndex(faceZoneName);
                     const faceZone& fZone = fZones[zonei];
                     forAll(fZone, i)
                     {

@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
         pointSet set(*iter());
         SortableList<label> pointLabels(set.toc());
 
-        label zoneID = mesh.pointZones().findZoneID(set.name());
+        label zoneID = mesh.pointZones().findIndex(set.name());
         if (zoneID == -1)
         {
             Info<< "Adding set " << set.name() << " as a pointZone." << endl;
@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        label zoneID = mesh.faceZones().findZoneID(set.name());
+        label zoneID = mesh.faceZones().findIndex(set.name());
         if (zoneID == -1)
         {
             Info<< "Adding set " << set.name() << " as a faceZone." << endl;
@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
             cellSet set(*iter());
             SortableList<label> cellLabels(set.toc());
 
-            label zoneID = mesh.cellZones().findZoneID(set.name());
+            label zoneID = mesh.cellZones().findIndex(set.name());
             if (zoneID == -1)
             {
                 Info<< "Adding set " << set.name() << " as a cellZone." << endl;

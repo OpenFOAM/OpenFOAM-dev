@@ -217,7 +217,7 @@ void Foam::CellZoneInjection<CloudType>::topoChange()
 {
     // Set/cache the injector cells
     const fvMesh& mesh = this->owner().mesh();
-    const label zoneI = mesh.cellZones().findZoneID(cellZoneName_);
+    const label zoneI = mesh.cellZones().findIndex(cellZoneName_);
 
     if (zoneI < 0)
     {

@@ -34,24 +34,39 @@ bool Foam::bound(volScalarField& vsf, const dimensionedScalar& min)
 
     if (minVsf < min.value())
     {
+        scalarField& isf = vsf.primitiveFieldRef();
+
         Info<< "bounding " << vsf.name()
             << ", min: " << minVsf
             << " max: " << max(vsf).value()
-            << " average: " << gAverage(vsf.primitiveField())
+            << " average: " << gAverage(isf)
             << endl;
 
-        vsf.primitiveFieldRef() = max
+        isf = max
         (
             max
             (
-                vsf.primitiveField(),
+                isf,
                 fvc::average(max(vsf, min))().primitiveField()
-               *pos0(-vsf.primitiveField())
+               *pos0(-isf)
             ),
             min.value()
         );
 
-        vsf.boundaryFieldRef() = max(vsf.boundaryField(), min.value());
+        volScalarField::Boundary& bsf = vsf.boundaryFieldRef();
+        forAll(bsf, patchi)
+        {
+            bsf[patchi] == max
+            (
+                max
+                (
+                    bsf[patchi],
+                    bsf[patchi].patchInternalField()
+                   *pos0(-bsf[patchi])
+                ),
+                min.value()
+            );
+        }
 
         return true;
     }

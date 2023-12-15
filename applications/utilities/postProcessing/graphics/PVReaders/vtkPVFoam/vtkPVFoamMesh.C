@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -268,7 +268,7 @@ void Foam::vtkPVFoam::convertMeshCellZones
     for (int partId = range.start(); partId < range.end(); ++partId)
     {
         const word zoneName = getPartName(partId);
-        const label  zoneId = zMesh.findZoneID(zoneName);
+        const label  zoneId = zMesh.findIndex(zoneName);
 
         if (!partStatus_[partId] || zoneId < 0)
         {
@@ -436,7 +436,7 @@ void Foam::vtkPVFoam::convertMeshFaceZones
     for (int partId = range.start(); partId < range.end(); ++partId)
     {
         const word zoneName = getPartName(partId);
-        const label  zoneId = zMesh.findZoneID(zoneName);
+        const label  zoneId = zMesh.findIndex(zoneName);
 
         if (!partStatus_[partId] || zoneId < 0)
         {
@@ -554,7 +554,7 @@ void Foam::vtkPVFoam::convertMeshPointZones
         for (int partId = range.start(); partId < range.end(); ++partId)
         {
             word zoneName = getPartName(partId);
-            label zoneId = zMesh.findZoneID(zoneName);
+            label zoneId = zMesh.findIndex(zoneName);
 
             if (!partStatus_[partId] || zoneId < 0)
             {

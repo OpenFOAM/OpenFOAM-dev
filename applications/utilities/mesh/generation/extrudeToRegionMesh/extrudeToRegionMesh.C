@@ -1203,7 +1203,7 @@ int main(int argc, char *argv[])
         if (zoneSourceTypes[zonei] != zoneSourceType::zone) continue;
 
         zoneMeshZoneID[zonei] =
-            mesh.faceZones().findZoneID(zoneNames[zonei]);
+            mesh.faceZones().findIndex(zoneNames[zonei]);
 
         if (zoneMeshZoneID[zonei] == -1)
         {
@@ -1216,7 +1216,7 @@ int main(int argc, char *argv[])
         if (!oppositeZoneNames[zonei].empty())
         {
             oppositeZoneMeshZoneID[zonei] =
-                mesh.faceZones().findZoneID(oppositeZoneNames[zonei]);
+                mesh.faceZones().findIndex(oppositeZoneNames[zonei]);
 
             if (oppositeZoneMeshZoneID[zonei] == -1)
             {

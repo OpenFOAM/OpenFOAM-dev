@@ -304,7 +304,7 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
     forAllConstIter(dictionary, patchesDict, patchiter)
     {
         const word& faceZoneName = patchiter().keyword();
-        label zoneI = mesh().faceZones().findZoneID(faceZoneName);
+        label zoneI = mesh().faceZones().findIndex(faceZoneName);
         if (zoneI == -1)
         {
             FatalErrorInFunction
@@ -535,7 +535,7 @@ void Foam::displacementLayeredMotionMotionSolver::solve()
         const word& cellZoneName = regionIter().keyword();
         const dictionary& regionDict = regionIter().dict();
 
-        label zoneI = mesh().cellZones().findZoneID(cellZoneName);
+        label zoneI = mesh().cellZones().findIndex(cellZoneName);
 
         Info<< "solving for zone: " << cellZoneName << endl;
 

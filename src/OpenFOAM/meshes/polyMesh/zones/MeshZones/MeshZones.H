@@ -146,18 +146,8 @@ public:
         //- Return true if the given zoneName is present
         bool found(const word& zoneName) const;
 
-        //- Return zone index for the first match, return -1 if not found
         //- Find the zone index given the zone name
-        label findIndex(const wordRe&) const = delete;
-
-        //- Find the zone index given the zone name
-        label findIndex(const word& zoneName) const
-        {
-            return findZoneID(zoneName);
-        }
-
-        //- Find the zone index given the zone name
-        label findZoneID(const word& zoneName) const;
+        label findIndex(const word& zoneName) const;
 
         //- Mark cells that match the zone specification
         PackedBoolList findMatching(const wordRe&) const;

@@ -97,7 +97,7 @@ void Foam::polyCellSet::setCells()
             Info<< indent
                 << "- selecting cells using cellZone " << cellSetName_ << endl;
 
-            const label zoneID = mesh_.cellZones().findZoneID(cellSetName_);
+            const label zoneID = mesh_.cellZones().findIndex(cellSetName_);
             if (zoneID == -1)
             {
                 FatalErrorInFunction

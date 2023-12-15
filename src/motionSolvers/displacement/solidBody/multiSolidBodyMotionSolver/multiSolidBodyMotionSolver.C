@@ -64,7 +64,7 @@ Foam::multiSolidBodyMotionSolver::multiSolidBodyMotionSolver
     {
         if (iter().isDict())
         {
-            zoneIDs_[zonei] = mesh.cellZones().findZoneID(iter().keyword());
+            zoneIDs_[zonei] = mesh.cellZones().findIndex(iter().keyword());
 
             if (zoneIDs_[zonei] == -1)
             {

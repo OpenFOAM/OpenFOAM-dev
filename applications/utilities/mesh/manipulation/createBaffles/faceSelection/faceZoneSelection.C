@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ void Foam::faceSelections::faceZoneSelection::select
     boolList& faceToFlip
 ) const
 {
-    label readID = mesh_.faceZones().findZoneID(zoneName_);
+    label readID = mesh_.faceZones().findIndex(zoneName_);
 
     if (readID == -1)
     {

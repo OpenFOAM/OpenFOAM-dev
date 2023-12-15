@@ -292,7 +292,7 @@ bool Foam::MeshZones<ZoneType, MeshType>::found
 
 
 template<class ZoneType, class MeshType>
-Foam::label Foam::MeshZones<ZoneType, MeshType>::findZoneID
+Foam::label Foam::MeshZones<ZoneType, MeshType>::findIndex
 (
     const word& zoneName
 ) const
@@ -514,7 +514,7 @@ void Foam::MeshZones<ZoneType, MeshType>::swap(MeshZones& otherZones)
 
     forAll(zones, zi)
     {
-        const label ozi = otherZones.findZoneID(zones[zi].name());
+        const label ozi = otherZones.findIndex(zones[zi].name());
 
         if (ozi < 0)
         {
@@ -524,7 +524,7 @@ void Foam::MeshZones<ZoneType, MeshType>::swap(MeshZones& otherZones)
 
     forAll(otherZones, ozi)
     {
-        const label zi = findZoneID(otherZones[ozi].name());
+        const label zi = findIndex(otherZones[ozi].name());
 
         if (zi < 0)
         {
@@ -564,7 +564,7 @@ const ZoneType& Foam::MeshZones<ZoneType, MeshType>::operator[]
     const word& zoneName
 ) const
 {
-    const label zi = findZoneID(zoneName);
+    const label zi = findIndex(zoneName);
 
     if (zi < 0)
     {
@@ -584,7 +584,7 @@ ZoneType& Foam::MeshZones<ZoneType, MeshType>::operator[]
     const word& zoneName
 )
 {
-    const label zi = findZoneID(zoneName);
+    const label zi = findIndex(zoneName);
 
     if (zi < 0)
     {

@@ -69,7 +69,7 @@ void Foam::fv::effectivenessHeatExchanger::readCoeffs()
 
 void Foam::fv::effectivenessHeatExchanger::setZone()
 {
-    zoneID_ = mesh().faceZones().findZoneID(faceZoneName_);
+    zoneID_ = mesh().faceZones().findIndex(faceZoneName_);
     if (zoneID_ < 0)
     {
         FatalErrorInFunction

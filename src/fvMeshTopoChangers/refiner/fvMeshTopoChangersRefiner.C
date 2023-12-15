@@ -721,7 +721,7 @@ const Foam::cellZone& Foam::fvMeshTopoChangers::refiner::findCellZone
     const word& cellZoneName
 ) const
 {
-    const label cellZoneID = mesh().cellZones().findZoneID(cellZoneName);
+    const label cellZoneID = mesh().cellZones().findIndex(cellZoneName);
 
     bool cellZoneFound = (cellZoneID != -1);
     reduce(cellZoneFound, orOp<bool>());

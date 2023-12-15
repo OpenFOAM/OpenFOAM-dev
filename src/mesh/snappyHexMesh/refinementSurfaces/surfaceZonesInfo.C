@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -350,7 +350,7 @@ Foam::labelList Foam::surfaceZonesInfo::addCellZonesToMesh
 
         if (cellZoneName != word::null)
         {
-            label zonei = cellZones.findZoneID(cellZoneName);
+            label zonei = cellZones.findIndex(cellZoneName);
 
             if (zonei == -1)
             {
@@ -413,7 +413,7 @@ Foam::labelList Foam::surfaceZonesInfo::addFaceZonesToMesh
 
         const word& faceZoneName = surfList[surfi].faceZoneName();
 
-        label zonei = faceZones.findZoneID(faceZoneName);
+        label zonei = faceZones.findIndex(faceZoneName);
 
         if (zonei == -1)
         {

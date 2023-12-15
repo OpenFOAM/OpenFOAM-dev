@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -261,7 +261,7 @@ void Foam::snappySnapDriver::calcNearestFace
         const word& faceZoneName = surfZones[zoneSurfI].faceZoneName();
 
         // Get indices of faces on pp that are also in zone
-        label zonei = mesh.faceZones().findZoneID(faceZoneName);
+        label zonei = mesh.faceZones().findIndex(faceZoneName);
         if (zonei == -1)
         {
             FatalErrorInFunction

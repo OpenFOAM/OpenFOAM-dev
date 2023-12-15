@@ -76,7 +76,7 @@ using namespace Foam;
 
 label addPointZone(const polyMesh& mesh, const word& name)
 {
-    label zoneID = mesh.pointZones().findZoneID(name);
+    label zoneID = mesh.pointZones().findIndex(name);
 
     if (zoneID != -1)
     {
@@ -109,7 +109,7 @@ label addPointZone(const polyMesh& mesh, const word& name)
 
 label addFaceZone(const polyMesh& mesh, const word& name)
 {
-    label zoneID = mesh.faceZones().findZoneID(name);
+    label zoneID = mesh.faceZones().findIndex(name);
 
     if (zoneID != -1)
     {
@@ -142,7 +142,7 @@ label addFaceZone(const polyMesh& mesh, const word& name)
 
 label addCellZone(const polyMesh& mesh, const word& name)
 {
-    label zoneID = mesh.cellZones().findZoneID(name);
+    label zoneID = mesh.cellZones().findIndex(name);
 
     if (zoneID != -1)
     {

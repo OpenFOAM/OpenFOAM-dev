@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ void Foam::vtkPVFoam::convertPointFields
         {
             const word zoneName = getPartName(partId);
             const label datasetNo = partDataset_[partId];
-            const label zoneId = mesh.faceZones().findZoneID(zoneName);
+            const label zoneId = mesh.faceZones().findIndex(zoneName);
 
             if (!partStatus_[partId] || datasetNo < 0 || zoneId < 0)
             {

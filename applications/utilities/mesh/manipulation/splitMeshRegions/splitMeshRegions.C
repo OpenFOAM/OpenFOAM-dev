@@ -1825,7 +1825,7 @@ int main(int argc, char *argv[])
 
                 word zoneName = "region" + Foam::name(regioni);
 
-                zoneI = cellZones.findZoneID(zoneName);
+                zoneI = cellZones.findIndex(zoneName);
 
                 if (zoneI == -1)
                 {

@@ -54,7 +54,7 @@
 
     forAll(magnets, i)
     {
-        label magnetZonei = mesh.faceZones().findZoneID(magnets[i].name());
+        label magnetZonei = mesh.faceZones().findIndex(magnets[i].name());
 
         if (magnetZonei == -1)
         {

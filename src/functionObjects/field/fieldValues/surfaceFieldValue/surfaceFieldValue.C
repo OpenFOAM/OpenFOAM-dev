@@ -103,7 +103,7 @@ const Foam::NamedEnum
 
 void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
 {
-    label zoneId = mesh_.faceZones().findZoneID(selectionName_);
+    label zoneId = mesh_.faceZones().findIndex(selectionName_);
 
     if (zoneId < 0)
     {

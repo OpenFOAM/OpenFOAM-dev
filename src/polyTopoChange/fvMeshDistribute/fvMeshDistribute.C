@@ -1540,7 +1540,7 @@ void Foam::fvMeshDistribute::sendMesh
 
         forAll(pointZoneNames, nameI)
         {
-            label myZoneID = pointZones.findZoneID(pointZoneNames[nameI]);
+            label myZoneID = pointZones.findIndex(pointZoneNames[nameI]);
 
             if (myZoneID != -1)
             {
@@ -1551,7 +1551,7 @@ void Foam::fvMeshDistribute::sendMesh
 
         forAll(pointZoneNames, nameI)
         {
-            label myZoneID = pointZones.findZoneID(pointZoneNames[nameI]);
+            label myZoneID = pointZones.findIndex(pointZoneNames[nameI]);
 
             if (myZoneID != -1)
             {
@@ -1570,7 +1570,7 @@ void Foam::fvMeshDistribute::sendMesh
 
         forAll(faceZoneNames, nameI)
         {
-            label myZoneID = faceZones.findZoneID(faceZoneNames[nameI]);
+            label myZoneID = faceZones.findIndex(faceZoneNames[nameI]);
 
             if (myZoneID != -1)
             {
@@ -1583,7 +1583,7 @@ void Foam::fvMeshDistribute::sendMesh
 
         forAll(faceZoneNames, nameI)
         {
-            label myZoneID = faceZones.findZoneID(faceZoneNames[nameI]);
+            label myZoneID = faceZones.findIndex(faceZoneNames[nameI]);
 
             if (myZoneID != -1)
             {
@@ -1602,7 +1602,7 @@ void Foam::fvMeshDistribute::sendMesh
 
         forAll(cellZoneNames, nameI)
         {
-            label myZoneID = cellZones.findZoneID(cellZoneNames[nameI]);
+            label myZoneID = cellZones.findIndex(cellZoneNames[nameI]);
 
             if (myZoneID != -1)
             {
@@ -1614,7 +1614,7 @@ void Foam::fvMeshDistribute::sendMesh
 
         forAll(cellZoneNames, nameI)
         {
-            label myZoneID = cellZones.findZoneID(cellZoneNames[nameI]);
+            label myZoneID = cellZones.findIndex(cellZoneNames[nameI]);
 
             if (myZoneID != -1)
             {

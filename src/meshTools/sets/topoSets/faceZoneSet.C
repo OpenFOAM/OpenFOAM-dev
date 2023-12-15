@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ faceZoneSet::faceZoneSet
     flipMap_(0)
 {
     const meshFaceZones& faceZones = mesh.faceZones();
-    label zoneID = faceZones.findZoneID(name);
+    label zoneID = faceZones.findIndex(name);
 
     if
     (
@@ -475,7 +475,7 @@ bool faceZoneSet::writeObject
 
     // Modify faceZone
     meshFaceZones& faceZones = const_cast<polyMesh&>(mesh_).faceZones();
-    label zoneID = faceZones.findZoneID(name());
+    label zoneID = faceZones.findIndex(name());
 
     if (zoneID == -1)
     {

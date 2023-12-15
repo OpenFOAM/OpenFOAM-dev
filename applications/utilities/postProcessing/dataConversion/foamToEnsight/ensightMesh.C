@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -305,7 +305,7 @@ void Foam::ensightMesh::correct()
         forAll(faceZoneNamesAll, zoneI)
         {
             const word& zoneName = faceZoneNamesAll[zoneI];
-            const label faceZoneId = mesh_.faceZones().findZoneID(zoneName);
+            const label faceZoneId = mesh_.faceZones().findIndex(zoneName);
 
             const faceZone& fz = mesh_.faceZones()[faceZoneId];
 
@@ -361,7 +361,7 @@ void Foam::ensightMesh::correct()
         {
             const word& zoneName = faceZoneNamesAll[zoneI];
             nFacePrimitives nfp;
-            const label faceZoneId = mesh_.faceZones().findZoneID(zoneName);
+            const label faceZoneId = mesh_.faceZones().findIndex(zoneName);
 
             if (faceZoneNames_.found(zoneName))
             {
@@ -1249,7 +1249,7 @@ void Foam::ensightMesh::write
     {
         const word& faceZoneName = iter.key();
 
-        label faceID = mesh_.faceZones().findZoneID(faceZoneName);
+        label faceID = mesh_.faceZones().findIndex(faceZoneName);
 
         const faceZone& fz = mesh_.faceZones()[faceID];
 

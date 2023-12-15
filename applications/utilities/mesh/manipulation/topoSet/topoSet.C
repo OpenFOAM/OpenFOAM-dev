@@ -65,7 +65,7 @@ void removeZone
     const word& setName
 )
 {
-    label zoneID = zones.findZoneID(setName);
+    label zoneID = zones.findIndex(setName);
 
     if (zoneID != -1)
     {
