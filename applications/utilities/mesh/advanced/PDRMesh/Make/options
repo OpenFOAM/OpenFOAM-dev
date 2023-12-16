@@ -8,7 +8,7 @@ EXE_LIBS = \
     -lcompressibleMomentumTransportModels \
     -lfluidThermophysicalModels \
     -lmeshTools \
-    -lgenericPatches \
+    -lgenericFvFields \
     -lpolyTopoChange \
     -lfiniteVolume \
     -lfvModels
