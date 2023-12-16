@@ -175,7 +175,7 @@ label addCellZone(const polyMesh& mesh, const word& name)
 // Checks whether patch present
 void checkPatch(const polyBoundaryMesh& bMesh, const word& name)
 {
-    const label patchi = bMesh.findPatchID(name);
+    const label patchi = bMesh.findIndex(name);
 
     if (patchi == -1)
     {

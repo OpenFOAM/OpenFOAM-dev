@@ -57,7 +57,7 @@ Foam::nearWallDist::nearWallDist(const Foam::fvMesh& mesh)
     fvPatchDistWave::correct
     (
         mesh,
-        mesh.boundaryMesh().findPatchIDs<wallPolyPatch>(),
+        mesh.boundaryMesh().findIndices<wallPolyPatch>(),
         -vGreat,
         2,
         yVf

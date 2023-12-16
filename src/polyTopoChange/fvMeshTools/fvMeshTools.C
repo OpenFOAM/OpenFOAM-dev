@@ -42,7 +42,7 @@ Foam::label Foam::fvMeshTools::addPatch
     polyBoundaryMesh& polyPatches =
         const_cast<polyBoundaryMesh&>(mesh.boundaryMesh());
 
-    label patchi = polyPatches.findPatchID(patch.name());
+    label patchi = polyPatches.findIndex(patch.name());
     if (patchi != -1)
     {
         // Already there

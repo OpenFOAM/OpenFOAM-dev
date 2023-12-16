@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
     {
         const word patchName = args["patch"];
 
-        patchi = mesh.boundaryMesh().findPatchID(patchName);
+        patchi = mesh.boundaryMesh().findIndex(patchName);
 
         if (patchi == -1)
         {

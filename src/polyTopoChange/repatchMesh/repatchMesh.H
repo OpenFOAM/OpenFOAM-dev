@@ -256,7 +256,7 @@ public:
             label whichPatch(const label facei) const;
 
             //- Get index of patch by name
-            label findPatchID(const word& patchName) const;
+            label findIndex(const word& patchName) const;
 
             //- Add to back of patch list.
             void addPatch(const word& patchName);

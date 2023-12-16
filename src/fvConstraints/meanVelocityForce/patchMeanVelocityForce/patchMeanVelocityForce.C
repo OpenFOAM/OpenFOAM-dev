@@ -52,7 +52,7 @@ void Foam::fv::patchMeanVelocityForce::readCoeffs()
 {
     patch_ = coeffs().lookup<word>("patch");
 
-    if (mesh().boundaryMesh().findPatchID(patch_) < 0)
+    if (mesh().boundaryMesh().findIndex(patch_) < 0)
     {
         FatalErrorInFunction
             << "Cannot find patch " << patch_
@@ -85,7 +85,7 @@ Foam::scalar Foam::fv::patchMeanVelocityForce::magUbarAve
     const volVectorField& U
 ) const
 {
-    const label patchi = mesh().boundaryMesh().findPatchID(patch_);
+    const label patchi = mesh().boundaryMesh().findIndex(patch_);
 
     scalar sumA = sum(mesh().boundary()[patchi].magSf());
     scalar sumAmagU =

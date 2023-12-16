@@ -113,7 +113,7 @@ void Foam::vtkPVFoam::convertPointFields
         {
             const word patchName = getPartName(partId);
             const label datasetNo = partDataset_[partId];
-            const label patchId = patches.findPatchID(patchName);
+            const label patchId = patches.findIndex(patchName);
 
             if (!partStatus_[partId] || datasetNo < 0 || patchId < 0)
             {

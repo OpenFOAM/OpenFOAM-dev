@@ -1124,7 +1124,7 @@ Foam::label Foam::repatchMesh::whichPatch(const label facei) const
 }
 
 
-Foam::label Foam::repatchMesh::findPatchID(const word& patchName) const
+Foam::label Foam::repatchMesh::findIndex(const word& patchName) const
 {
     forAll(patches_, patchi)
     {
@@ -1177,7 +1177,7 @@ void Foam::repatchMesh::addPatch(const word& patchName)
 
 void Foam::repatchMesh::deletePatch(const word& patchName)
 {
-    const label delPatchi = findPatchID(patchName);
+    const label delPatchi = findIndex(patchName);
 
     if (delPatchi == -1)
     {
@@ -1236,7 +1236,7 @@ void Foam::repatchMesh::changePatchType
     const word& patchType
 )
 {
-    const label changeI = findPatchID(patchName);
+    const label changeI = findIndex(patchName);
 
     if (changeI == -1)
     {

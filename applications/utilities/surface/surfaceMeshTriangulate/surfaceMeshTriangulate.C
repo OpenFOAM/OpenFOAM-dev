@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
         labelList faceZoneToCompactZone(bMesh.size(), -1);
         forAllConstIter(HashTable<label>, compactZoneID, iter)
         {
-            label patchi = bMesh.findPatchID(iter.key());
+            label patchi = bMesh.findIndex(iter.key());
             if (patchi != -1)
             {
                 patchToCompactZone[patchi] = iter();

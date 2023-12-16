@@ -528,7 +528,7 @@ int main(int argc, char *argv[])
 
             const word patchName(patchDict.lookup<word>("name"));
 
-            if (bMesh.findPatchID(patchName) == -1)
+            if (bMesh.findIndex(patchName) == -1)
             {
                 Info<< "Adding patch '" << patchName << "' to the mesh" << endl;
 
@@ -626,7 +626,7 @@ int main(int argc, char *argv[])
 
                 const word patchName(patchDict.lookup<word>("name"));
 
-                newPatchIDs[i] = bMesh.findPatchID(patchName);
+                newPatchIDs[i] = bMesh.findIndex(patchName);
             }
 
             const label nModified =
@@ -698,7 +698,7 @@ int main(int argc, char *argv[])
                 fvMeshTools::setPatchFields
                 (
                     mesh,
-                    bMesh.findPatchID(patchName),
+                    bMesh.findIndex(patchName),
                     patchFieldsDict
                 );
             }

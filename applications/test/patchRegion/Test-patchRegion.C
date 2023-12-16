@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
 
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
-    label patchi = pbm.findPatchID(patchName);
+    label patchi = pbm.findIndex(patchName);
     const polyPatch& patch = pbm[patchi];
 
     Info<< "Patch:" << patch.name() << endl;

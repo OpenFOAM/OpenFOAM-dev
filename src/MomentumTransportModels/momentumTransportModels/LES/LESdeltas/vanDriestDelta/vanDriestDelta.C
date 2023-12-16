@@ -90,7 +90,7 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
     fvPatchDistWave::calculateAndCorrect<WallLocationYPlus>
     (
         mesh,
-        mesh.boundaryMesh().findPatchIDs<wallPolyPatch>(),
+        mesh.boundaryMesh().findIndices<wallPolyPatch>(),
         minWallFaceFraction_,
         2, // <-- roughly equivalent to old point-cell corrections
         y,

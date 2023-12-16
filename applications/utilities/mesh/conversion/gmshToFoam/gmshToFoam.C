@@ -1099,7 +1099,7 @@ int main(int argc, char *argv[])
     }
 
     // Remove empty defaultFaces
-    label defaultPatchID = mesh.boundaryMesh().findPatchID(defaultFacesName);
+    label defaultPatchID = mesh.boundaryMesh().findIndex(defaultFacesName);
     if (mesh.boundaryMesh()[defaultPatchID].size() == 0)
     {
         List<polyPatch*> newPatchPtrList((mesh.boundaryMesh().size() - 1));

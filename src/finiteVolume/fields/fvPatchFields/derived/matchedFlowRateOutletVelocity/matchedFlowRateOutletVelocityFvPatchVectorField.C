@@ -170,7 +170,7 @@ void Foam::matchedFlowRateOutletVelocityFvPatchVectorField::updateCoeffs()
 
     // Find corresponding inlet patch
     const label inletPatchID =
-        patch().patch().boundaryMesh().findPatchID(inletPatchName_);
+        patch().patch().boundaryMesh().findIndex(inletPatchName_);
 
     if (inletPatchID < 0)
     {

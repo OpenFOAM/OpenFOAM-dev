@@ -478,7 +478,7 @@ const Foam::polyPatch& Foam::mappedPatchBase::nbrPolyPatch() const
 {
     const polyMesh& nbrMesh = this->nbrMesh();
 
-    const label patchi = nbrMesh.boundaryMesh().findPatchID(nbrPatchName());
+    const label patchi = nbrMesh.boundaryMesh().findIndex(nbrPatchName());
 
     if (patchi == -1)
     {

@@ -60,7 +60,7 @@ Foam::fv::VoFFilmTransfer::VoFFilmTransfer
     fvModel(sourceName, modelType, mesh, dict),
     VoF_(mesh.lookupObject<solvers::compressibleVoF>(solver::typeName)),
     filmPatchName_(dict.lookup("filmPatch")),
-    filmPatchi_(mesh.boundaryMesh().findPatchID(filmPatchName_)),
+    filmPatchi_(mesh.boundaryMesh().findIndex(filmPatchName_)),
     phaseName_(dict.lookup("phase")),
     thermo_
     (

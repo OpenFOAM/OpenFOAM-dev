@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
         {
             patchName = "auto" + name(suffix++);
         }
-        while (rMesh.findPatchID(patchName) != -1);
+        while (rMesh.findIndex(patchName) != -1);
 
         rMesh.addPatch(patchName);
 

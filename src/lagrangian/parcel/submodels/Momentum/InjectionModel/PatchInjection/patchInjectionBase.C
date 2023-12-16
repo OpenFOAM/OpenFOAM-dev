@@ -41,7 +41,7 @@ Foam::patchInjectionBase::patchInjectionBase
 )
 :
     patchName_(patchName),
-    patchId_(mesh.boundaryMesh().findPatchID(patchName_)),
+    patchId_(mesh.boundaryMesh().findIndex(patchName_)),
     sumProcArea_(),
     sumFaceArea_(),
     sumFaceTriArea_()

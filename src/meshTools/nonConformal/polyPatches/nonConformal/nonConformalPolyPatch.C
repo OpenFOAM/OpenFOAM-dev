@@ -153,7 +153,7 @@ Foam::label Foam::nonConformalPolyPatch::origPatchID() const
 {
     if (origPatchID_ == -1)
     {
-        origPatchID_ = patch_.boundaryMesh().findPatchID(origPatchName());
+        origPatchID_ = patch_.boundaryMesh().findIndex(origPatchName());
 
         if (origPatchID_ == -1)
         {

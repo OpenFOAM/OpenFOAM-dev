@@ -133,7 +133,7 @@ using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-label findPatchID(const List<polyPatch*>& newPatches, const word& name)
+label findIndex(const List<polyPatch*>& newPatches, const word& name)
 {
     forAll(newPatches, i)
     {
@@ -155,7 +155,7 @@ label addPatch
     DynamicList<polyPatch*>& newPatches
 )
 {
-    label patchi = findPatchID(newPatches, patchName);
+    label patchi = findIndex(newPatches, patchName);
 
     if (patchi != -1)
     {
@@ -221,7 +221,7 @@ void deleteEmptyPatches(fvMesh& mesh)
     // Add all the non-empty, non-processor patches
     forAll(masterNames, masterI)
     {
-        label patchi = patches.findPatchID(masterNames[masterI]);
+        label patchi = patches.findIndex(masterNames[masterI]);
 
         if (patchi != -1)
         {
@@ -976,7 +976,7 @@ labelList addExtrudeEdgeSidePatches
                 {
                     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-                    const label newPatchi = findPatchID
+                    const label newPatchi = findIndex
                     (
                         newPatches,
                         patches[patches.whichPatch(facei)].name()
@@ -997,7 +997,7 @@ labelList addExtrudeEdgeSidePatches
                 const word name =
                     processorPolyPatch::newName(Pstream::myProcNo(), nbrProci);
 
-                extrudeEdgeSidePatches[edgeI] = findPatchID(newPatches, name);
+                extrudeEdgeSidePatches[edgeI] = findIndex(newPatches, name);
 
                 if (extrudeEdgeSidePatches[edgeI] == -1)
                 {
@@ -1661,7 +1661,7 @@ int main(int argc, char *argv[])
             if (facei != -1)
             {
                 const label newPatchi =
-                    findPatchID
+                    findIndex
                     (
                         regionPatches,
                         mesh.boundaryMesh()

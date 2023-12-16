@@ -545,7 +545,7 @@ int main(int argc, char *argv[])
 
             word patchName(dict.lookup("name"));
 
-            label destPatchi = patches.findPatchID(patchName);
+            label destPatchi = patches.findIndex(patchName);
 
             if (destPatchi == -1)
             {
@@ -620,7 +620,7 @@ int main(int argc, char *argv[])
         const dictionary& dict = patchSources[addedI];
 
         const word patchName(dict.lookup("name"));
-        label destPatchi = patches.findPatchID(patchName);
+        label destPatchi = patches.findIndex(patchName);
 
         if (destPatchi == -1)
         {

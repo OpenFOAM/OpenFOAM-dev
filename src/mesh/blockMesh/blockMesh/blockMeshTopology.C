@@ -568,7 +568,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
         if
         (
             !defaultPatchTypeSet
-         && blockMeshPtr->boundaryMesh().findPatchID(defaultPatchName) != -1
+         && blockMeshPtr->boundaryMesh().findIndex(defaultPatchName) != -1
         )
         {
             defaultPatchError(defaultPatchName, meshDescription);
@@ -616,7 +616,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
         if
         (
             !defaultPatchTypeSet
-         && blockMeshPtr->boundaryMesh().findPatchID(defaultPatchName) != -1
+         && blockMeshPtr->boundaryMesh().findIndex(defaultPatchName) != -1
         )
         {
             defaultPatchError(defaultPatchName, meshDescription);

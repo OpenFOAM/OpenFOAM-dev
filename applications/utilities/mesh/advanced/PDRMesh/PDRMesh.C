@@ -513,7 +513,7 @@ void createBaffles
 // Wrapper around find patch. Also makes sure same patch in parallel.
 label findPatch(const polyBoundaryMesh& patches, const word& patchName)
 {
-    label patchi = patches.findPatchID(patchName);
+    label patchi = patches.findIndex(patchName);
 
     if (patchi == -1)
     {

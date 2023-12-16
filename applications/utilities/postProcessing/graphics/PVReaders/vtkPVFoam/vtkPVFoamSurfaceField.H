@@ -221,7 +221,7 @@ void Foam::vtkPVFoam::convertSurfaceFields
         {
             const word patchName = getPartName(partId);
             const label datasetNo = partDataset_[partId];
-            const label patchId = mesh.boundaryMesh().findPatchID(patchName);
+            const label patchId = mesh.boundaryMesh().findIndex(patchName);
 
             if (!partStatus_[partId] || datasetNo < 0 || patchId < 0)
             {

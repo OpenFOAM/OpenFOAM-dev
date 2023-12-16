@@ -80,9 +80,9 @@ namespace Foam
 static const NamedEnum<ExtrudeMode, 3> ExtrudeModeNames;
 
 
-label findPatchID(const polyBoundaryMesh& patches, const word& name)
+label findIndex(const polyBoundaryMesh& patches, const word& name)
 {
-    const label patchID = patches.findPatchID(name);
+    const label patchID = patches.findIndex(name);
 
     if (patchID == -1)
     {
@@ -102,7 +102,7 @@ labelList patchFaces(const polyBoundaryMesh& patches, const wordList& names)
 
     forAll(names, i)
     {
-        const polyPatch& pp = patches[findPatchID(patches, names[i])];
+        const polyPatch& pp = patches[findIndex(patches, names[i])];
 
         n += pp.size();
     }
@@ -110,7 +110,7 @@ labelList patchFaces(const polyBoundaryMesh& patches, const wordList& names)
     n = 0;
     forAll(names, i)
     {
-        const polyPatch& pp = patches[findPatchID(patches, names[i])];
+        const polyPatch& pp = patches[findIndex(patches, names[i])];
 
         forAll(pp, j)
         {
@@ -172,8 +172,8 @@ void changeFrontBackPatches
 {
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    label frontPatchi = findPatchID(patches, frontPatchName);
-    label backPatchi = findPatchID(patches, backPatchName);
+    label frontPatchi = findIndex(patches, frontPatchName);
+    label backPatchi = findIndex(patches, backPatchName);
 
     DynamicList<polyPatch*> newPatches(patches.size());
 
@@ -498,7 +498,7 @@ int main(int argc, char *argv[])
             exposedPatchID.setSize
             (
                 extrudePatch.size(),
-                findPatchID(patches, backPatchName)
+                findIndex(patches, backPatchName)
             );
         }
 

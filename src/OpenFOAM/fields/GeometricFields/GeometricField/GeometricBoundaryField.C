@@ -58,7 +58,7 @@ void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::readField
     {
         if (iter().isDict() && !iter().keyword().isPattern())
         {
-            label patchi = bmesh_.findPatchID(iter().keyword());
+            label patchi = bmesh_.findIndex(iter().keyword());
 
             if (patchi != -1)
             {

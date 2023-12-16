@@ -46,7 +46,7 @@ using namespace Foam;
 // Adds empty patch if not yet there. Returns patchID.
 label addPatch(polyMesh& mesh, const word& patchName)
 {
-    label patchi = mesh.boundaryMesh().findPatchID(patchName);
+    label patchi = mesh.boundaryMesh().findIndex(patchName);
 
     if (patchi == -1)
     {

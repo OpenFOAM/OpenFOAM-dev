@@ -67,7 +67,7 @@ functions
             Info<< "Reading inlet velocity uInfX\n" << endl;
 
             scalar ULeft = 0.0;
-            label leftI = mesh().boundaryMesh().findPatchID("left");
+            label leftI = mesh().boundaryMesh().findIndex("left");
             const fvPatchVectorField& fvp = U.boundaryField()[leftI];
             if (fvp.size())
             {
@@ -86,7 +86,7 @@ functions
 
 
             scalar magCylinder = 0.0;
-            label cylI = mesh().boundaryMesh().findPatchID("cylinder");
+            label cylI = mesh().boundaryMesh().findIndex("cylinder");
             const fvPatchVectorField& cylFvp = mesh().C().boundaryField()[cylI];
             if (cylFvp.size())
             {

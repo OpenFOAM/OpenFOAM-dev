@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
 
     const polyBoundaryMesh& bm = mesh.boundaryMesh();
 
-    label patchi = bm.findPatchID(patchName_);
+    label patchi = bm.findIndex(patchName_);
 
     if (patchi == -1)
     {

@@ -42,7 +42,7 @@ activeBaffleVelocityFvPatchVectorField
     fixedValueFvPatchVectorField(p, iF, dict, false),
     pName_(dict.lookupOrDefault<word>("p", "p")),
     cyclicPatchName_(dict.lookup("cyclicPatch")),
-    cyclicPatchLabel_(p.patch().boundaryMesh().findPatchID(cyclicPatchName_)),
+    cyclicPatchLabel_(p.patch().boundaryMesh().findIndex(cyclicPatchName_)),
     orientation_(dict.lookup<label>("orientation")),
     initWallSf_(p.Sf()),
     initCyclicSf_(p.boundaryMesh()[cyclicPatchLabel_].Sf()),

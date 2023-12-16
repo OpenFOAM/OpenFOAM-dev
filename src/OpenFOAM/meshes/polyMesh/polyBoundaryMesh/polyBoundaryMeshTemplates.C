@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::labelHashSet Foam::polyBoundaryMesh::findPatchIDs() const
+Foam::labelHashSet Foam::polyBoundaryMesh::findIndices() const
 {
     const polyBoundaryMesh& bm = *this;
 

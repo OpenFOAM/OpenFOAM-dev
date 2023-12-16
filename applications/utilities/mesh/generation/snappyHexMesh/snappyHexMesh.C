@@ -409,7 +409,7 @@ void extractSurface
     labelList patchToCompactZone(bMesh.size(), -1);
     forAllConstIter(HashTable<label>, compactZoneID, iter)
     {
-        label patchi = bMesh.findPatchID(iter.key());
+        label patchi = bMesh.findIndex(iter.key());
         if (patchi != -1)
         {
             patchToCompactZone[patchi] = iter();

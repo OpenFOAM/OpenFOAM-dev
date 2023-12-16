@@ -169,21 +169,12 @@ public:
             const bool usePatchGroups = true
         ) const;
 
-        //- Return patch index for the first match, return -1 if not found
-        label findIndex(const wordRe&) const = delete;
-
         //- Find patch index given a name
-        label findIndex(const word& patchName) const
-        {
-            return findPatchID(patchName);
-        }
-
-        //- Find patch index given a name
-        label findPatchID(const word& patchName) const;
+        label findIndex(const word& patchName) const;
 
         //- Find patch indices for a given polyPatch type
         template<class Type>
-        labelHashSet findPatchIDs() const;
+        labelHashSet findIndices() const;
 
         //- Return patch index for a given face label
         label whichPatch(const label faceIndex) const;

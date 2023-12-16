@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     const scalar h = mesh.bounds().span().y();
     Info<< "Height from centreline to wall = " << h << endl;
 
-    const label centrelineID = mesh.boundary().findPatchID("centreline");
+    const label centrelineID = mesh.boundary().findIndex("centreline");
     const vector patchToCell =
         mesh.boundary()[centrelineID].Cf()[0]
       - mesh.C()[mesh.findNearestCell(location)];

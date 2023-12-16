@@ -81,7 +81,7 @@ Foam::meshToMesh::meshToMesh
             )
             {
                 const label tgtPatchi =
-                    tgtMesh_.boundaryMesh().findPatchID(srcPp.name());
+                    tgtMesh_.boundaryMesh().findIndex(srcPp.name());
 
                 if (tgtPatchi == -1)
                 {
@@ -111,9 +111,9 @@ Foam::meshToMesh::meshToMesh
             const word& srcPatchName = iter();
 
             const label srcPatchi =
-                srcMesh_.boundaryMesh().findPatchID(srcPatchName);
+                srcMesh_.boundaryMesh().findIndex(srcPatchName);
             const label tgtPatchi =
-                tgtMesh_.boundaryMesh().findPatchID(tgtPatchName);
+                tgtMesh_.boundaryMesh().findIndex(tgtPatchName);
 
             if (srcPatchi == -1)
             {

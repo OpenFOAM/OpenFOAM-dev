@@ -77,9 +77,9 @@ Foam::domainDecomposition::determineCoupledFaces
             );
 
             const label masterToAddID =
-                masterPatches.findPatchID(masterToAddName);
+                masterPatches.findIndex(masterToAddName);
             const label addToMasterID =
-                addPatches.findPatchID(addToMasterName);
+                addPatches.findIndex(addToMasterName);
 
             if (masterToAddID != -1 && addToMasterID != -1)
             {
@@ -297,7 +297,7 @@ void Foam::domainDecomposition::reconstruct()
     const polyBoundaryMesh& patches = masterMeshes[0].boundaryMesh();
 
     // Move all faces of processor cyclic patches into the associated cyclics
-    if (!patches.findPatchIDs<processorCyclicPolyPatch>().empty())
+    if (!patches.findIndices<processorCyclicPolyPatch>().empty())
     {
         // Determine what patches are to be combined into each patch
         List<DynamicList<label>> patchPatches

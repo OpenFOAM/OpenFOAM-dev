@@ -174,7 +174,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
 
 void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
 {
-    const label patchId = mesh_.boundaryMesh().findPatchID(selectionName_);
+    const label patchId = mesh_.boundaryMesh().findIndex(selectionName_);
 
     if (patchId < 0)
     {

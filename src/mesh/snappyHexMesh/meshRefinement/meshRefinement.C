@@ -1993,13 +1993,13 @@ Foam::label Foam::meshRefinement::addMeshedPatch
     if (meshedI != -1)
     {
         // Already there. Get corresponding polypatch
-        return pbm.findPatchID(name);
+        return pbm.findIndex(name);
     }
     else
     {
         // Add patch
 
-        label patchi = pbm.findPatchID(name);
+        label patchi = pbm.findIndex(name);
         if (patchi == -1)
         {
             patchi = pbm.size();
@@ -2052,7 +2052,7 @@ Foam::labelList Foam::meshRefinement::meshedPatches() const
     DynamicList<label> patchIDs(meshedPatches_.size());
     forAll(meshedPatches_, i)
     {
-        label patchi = patches.findPatchID(meshedPatches_[i]);
+        label patchi = patches.findIndex(meshedPatches_[i]);
 
         if (patchi == -1)
         {

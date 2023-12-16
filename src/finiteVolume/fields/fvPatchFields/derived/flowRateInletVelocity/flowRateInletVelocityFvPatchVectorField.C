@@ -38,7 +38,7 @@ void Foam::flowRateInletVelocityFvPatchVectorField::setWallDist()
     {
         const labelHashSet otherPatchIDs
         (
-            patch().patch().boundaryMesh().findPatchIDs<wallPolyPatch>()
+            patch().patch().boundaryMesh().findIndices<wallPolyPatch>()
         );
 
         const patchPatchDist pwd(patch().patch(), otherPatchIDs);

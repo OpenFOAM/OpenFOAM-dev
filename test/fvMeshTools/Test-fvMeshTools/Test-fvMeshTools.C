@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
         // Remove the added patch
         if (newPatchName.size())
         {
-            label removei = pbm.findPatchID(newPatchName);
+            label removei = pbm.findIndex(newPatchName);
             if (removei == -1)
             {
                 FatalErrorInFunction << "Problem" << exit(FatalError);

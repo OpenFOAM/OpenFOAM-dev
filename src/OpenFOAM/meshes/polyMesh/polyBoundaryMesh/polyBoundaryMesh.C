@@ -684,7 +684,7 @@ Foam::labelList Foam::polyBoundaryMesh::findIndices
 }
 
 
-Foam::label Foam::polyBoundaryMesh::findPatchID(const word& patchName) const
+Foam::label Foam::polyBoundaryMesh::findIndex(const word& patchName) const
 {
     const polyPatchList& patches = *this;
 
@@ -699,7 +699,7 @@ Foam::label Foam::polyBoundaryMesh::findPatchID(const word& patchName) const
     // Patch not found
     if (debug)
     {
-        Pout<< "label polyBoundaryMesh::findPatchID(const word&) const"
+        Pout<< "label polyBoundaryMesh::findIndex(const word&) const"
             << "Patch named " << patchName << " not found.  "
             << "List of available patch names: " << names() << endl;
     }
@@ -1196,7 +1196,7 @@ const Foam::polyPatch& Foam::polyBoundaryMesh::operator[]
     const word& patchName
 ) const
 {
-    const label patchi = findPatchID(patchName);
+    const label patchi = findIndex(patchName);
 
     if (patchi < 0)
     {
@@ -1215,7 +1215,7 @@ Foam::polyPatch& Foam::polyBoundaryMesh::operator[]
     const word& patchName
 )
 {
-    const label patchi = findPatchID(patchName);
+    const label patchi = findIndex(patchName);
 
     if (patchi < 0)
     {

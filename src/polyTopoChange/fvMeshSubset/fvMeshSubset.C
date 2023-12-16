@@ -510,7 +510,7 @@ void Foam::fvMeshSubset::setCellSubset
     {
         // No explicit patch specified. Put in oldInternalFaces patch.
         // Check if patch with this name already exists.
-        wantedPatchID = oldPatches.findPatchID("oldInternalFaces");
+        wantedPatchID = oldPatches.findIndex("oldInternalFaces");
     }
     else if (wantedPatchID < 0 || wantedPatchID >= oldPatches.size())
     {
@@ -925,7 +925,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
     {
         // No explicit patch specified. Put in oldInternalFaces patch.
         // Check if patch with this name already exists.
-        wantedPatchID = oldPatches.findPatchID("oldInternalFaces");
+        wantedPatchID = oldPatches.findIndex("oldInternalFaces");
     }
     else if (wantedPatchID < 0 || wantedPatchID >= oldPatches.size())
     {
