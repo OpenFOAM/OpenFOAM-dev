@@ -68,11 +68,11 @@ class polyBoundaryMesh
         //- Reference to mesh
         const polyMesh& mesh_;
 
-        mutable autoPtr<labelList> patchIDPtr_;
+        mutable autoPtr<labelList> patchIndicesPtr_;
 
-        mutable autoPtr<labelList> patchFaceIDPtr_;
+        mutable autoPtr<labelList> patchFaceIndicesPtr_;
 
-        mutable autoPtr<HashTable<labelList, word>> groupPatchIDsPtr_;
+        mutable autoPtr<HashTable<labelList, word>> groupPatchIndicesPtr_;
 
         //- Edges of neighbouring patches
         mutable autoPtr<List<labelPairList>> nbrEdgesPtr_;
@@ -179,19 +179,19 @@ public:
         //- Return patch index for a given face label
         label whichPatch(const label faceIndex) const;
 
-        //- Per boundary face label the patch index
-        const labelList& patchID() const;
+        //- Boundary face patch indices
+        const labelList& patchIndices() const;
 
-        //- Per boundary face label the patch face index
-        const labelList& patchFaceID() const;
+        //- Boundary face patch face indices
+        const labelList& patchFaceIndices() const;
 
         //- Per patch group the patch indices
-        const HashTable<labelList, word>& groupPatchIDs() const;
+        const HashTable<labelList, word>& groupPatchIndices() const;
 
         //- Set/add group with patches
-        void setGroup(const word& groupName, const labelList& patchIDs);
+        void setGroup(const word& groupName, const labelList& patchIndices);
 
-        //- Return the set of patch IDs corresponding to the given names
+        //- Return the set of patch indices corresponding to the given names
         //  By default warns if given names are not found. Optionally
         //  matches to patchGroups as well as patchNames
         labelHashSet patchSet
@@ -205,7 +205,7 @@ public:
         //  and any remaining unmatched patches.
         void matchGroups
         (
-            const labelUList& patchIDs,
+            const labelUList& patchIndices,
             wordList& groups,
             labelHashSet& nonGroupPatches
         ) const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -244,7 +244,7 @@ void Foam::vtkPVFoam::updateInfoPatches
     if (meshPtr_)
     {
         const polyBoundaryMesh& patches = meshPtr_->boundaryMesh();
-        const HashTable<labelList, word>& groups = patches.groupPatchIDs();
+        const HashTable<labelList, word>& groups = patches.groupPatchIndices();
         const wordList allPatchNames = patches.names();
 
         // Add patch groups

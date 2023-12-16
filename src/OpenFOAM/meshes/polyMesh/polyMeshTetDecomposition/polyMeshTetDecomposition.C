@@ -227,8 +227,8 @@ Foam::labelList Foam::polyMeshTetDecomposition::findFaceBasePts
         fI++, bFI++
     )
     {
-        label patchi =
-            mesh.boundaryMesh().patchID()[bFI];
+        const label patchi =
+            mesh.boundaryMesh().patchIndices()[bFI];
 
         if (patches[patchi].coupled())
         {
@@ -300,7 +300,7 @@ Foam::labelList Foam::polyMeshTetDecomposition::findFaceBasePts
             continue;
         }
 
-        label patchi = mesh.boundaryMesh().patchID()[bFI];
+        const label patchi = mesh.boundaryMesh().patchIndices()[bFI];
 
         if (patches[patchi].coupled())
         {
@@ -436,7 +436,8 @@ bool Foam::polyMeshTetDecomposition::checkFaceTets
         }
         else
         {
-            label patchi = patches.patchID()[facei - mesh.nInternalFaces()];
+            const label patchi =
+                patches.patchIndices()[facei - mesh.nInternalFaces()];
 
             if (patches[patchi].coupled())
             {

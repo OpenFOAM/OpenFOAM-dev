@@ -98,8 +98,9 @@ Foam::volPointInterpolation::volPointInterpolation(const fvMesh& vm)
         forAll(pFaces, pPointFacei)
         {
             // Poly indices
-            const label patchi = pbm.patchID()[pFaces[pPointFacei]];
-            const label patchFacei = pbm.patchFaceID()[pFaces[pPointFacei]];
+            const label patchi = pbm.patchIndices()[pFaces[pPointFacei]];
+            const label patchFacei =
+                pbm.patchFaceIndices()[pFaces[pPointFacei]];
 
             // FV indices
             const labelUList patches =
@@ -188,8 +189,9 @@ Foam::volPointInterpolation::volPointInterpolation(const fvMesh& vm)
         forAll(pFaces, bPointFacei)
         {
             // Poly indices
-            const label patchi = pbm.patchID()[pFaces[bPointFacei]];
-            const label patchFacei = pbm.patchFaceID()[pFaces[bPointFacei]];
+            const label patchi = pbm.patchIndices()[pFaces[bPointFacei]];
+            const label patchFacei =
+                pbm.patchFaceIndices()[pFaces[bPointFacei]];
 
             // FV indices
             const labelUList patches =

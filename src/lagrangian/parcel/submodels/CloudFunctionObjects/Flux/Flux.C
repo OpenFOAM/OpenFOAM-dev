@@ -66,8 +66,8 @@ void Foam::Flux<CloudType, Derived>::accumulate
 
     const label facei = p.face();
     const label bFacei = isInternal ? -1 : facei - mesh.nInternalFaces();
-    const label patchi = isInternal ? -1 : bMesh.patchID()[bFacei];
-    const label patchFacei = isInternal ? -1 : bMesh.patchFaceID()[bFacei];
+    const label patchi = isInternal ? -1 : bMesh.patchIndices()[bFacei];
+    const label patchFacei = isInternal ? -1 : bMesh.patchFaceIndices()[bFacei];
 
     const bool own = mesh.faceOwner()[facei] == p.cell();
 

@@ -293,7 +293,7 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
                 else
                 {
                     label bFacei = facei - owner.mesh().nInternalFaces();
-                    label patchi = pbm.patchID()[bFacei];
+                    label patchi = pbm.patchIndices()[bFacei];
                     const polyPatch& pp = pbm[patchi];
 
                     if

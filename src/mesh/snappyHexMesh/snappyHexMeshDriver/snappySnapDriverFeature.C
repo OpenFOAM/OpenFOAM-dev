@@ -518,7 +518,7 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
     //  correctly)
     {
         const polyBoundaryMesh& pbm = mesh.boundaryMesh();
-        labelList patchID(pbm.patchID());
+        labelList patchID(pbm.patchIndices());
 
         // Unmark all non-coupled boundary faces
         forAll(pbm, patchi)

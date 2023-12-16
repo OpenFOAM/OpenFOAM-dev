@@ -208,9 +208,9 @@ void Foam::polyBoundaryMesh::clearGeom()
 void Foam::polyBoundaryMesh::clearAddressing()
 {
     nbrEdgesPtr_.clear();
-    patchIDPtr_.clear();
-    patchFaceIDPtr_.clear();
-    groupPatchIDsPtr_.clear();
+    patchIndicesPtr_.clear();
+    patchFaceIndicesPtr_.clear();
+    groupPatchIndicesPtr_.clear();
 
     forAll(*this, patchi)
     {
@@ -403,11 +403,11 @@ Foam::polyBoundaryMesh::nbrEdges() const
 }
 
 
-const Foam::labelList& Foam::polyBoundaryMesh::patchID() const
+const Foam::labelList& Foam::polyBoundaryMesh::patchIndices() const
 {
-    if (!patchIDPtr_.valid())
+    if (!patchIndicesPtr_.valid())
     {
-        patchIDPtr_.reset
+        patchIndicesPtr_.reset
         (
             new labelList
             (
@@ -415,7 +415,7 @@ const Foam::labelList& Foam::polyBoundaryMesh::patchID() const
               - mesh_.nInternalFaces()
             )
         );
-        labelList& patchID = patchIDPtr_();
+        labelList& patchIndices = patchIndicesPtr_();
 
         const polyBoundaryMesh& bm = *this;
 
@@ -424,19 +424,19 @@ const Foam::labelList& Foam::polyBoundaryMesh::patchID() const
             label bFacei = bm[patchi].start() - mesh_.nInternalFaces();
             forAll(bm[patchi], i)
             {
-                patchID[bFacei++] = patchi;
+                patchIndices[bFacei++] = patchi;
             }
         }
     }
-    return patchIDPtr_();
+    return patchIndicesPtr_();
 }
 
 
-const Foam::labelList& Foam::polyBoundaryMesh::patchFaceID() const
+const Foam::labelList& Foam::polyBoundaryMesh::patchFaceIndices() const
 {
-    if (!patchFaceIDPtr_.valid())
+    if (!patchFaceIndicesPtr_.valid())
     {
-        patchFaceIDPtr_.reset
+        patchFaceIndicesPtr_.reset
         (
             new labelList
             (
@@ -444,7 +444,7 @@ const Foam::labelList& Foam::polyBoundaryMesh::patchFaceID() const
               - mesh_.nInternalFaces()
             )
         );
-        labelList& patchFaceID = patchFaceIDPtr_();
+        labelList& patchFaceID = patchFaceIndicesPtr_();
 
         const polyBoundaryMesh& bm = *this;
 
@@ -457,17 +457,17 @@ const Foam::labelList& Foam::polyBoundaryMesh::patchFaceID() const
             }
         }
     }
-    return patchFaceIDPtr_();
+    return patchFaceIndicesPtr_();
 }
 
 
 const Foam::HashTable<Foam::labelList, Foam::word>&
-Foam::polyBoundaryMesh::groupPatchIDs() const
+Foam::polyBoundaryMesh::groupPatchIndices() const
 {
-    if (!groupPatchIDsPtr_.valid())
+    if (!groupPatchIndicesPtr_.valid())
     {
-        groupPatchIDsPtr_.reset(new HashTable<labelList, word>(10));
-        HashTable<labelList, word>& groupPatchIDs = groupPatchIDsPtr_();
+        groupPatchIndicesPtr_.reset(new HashTable<labelList, word>(10));
+        HashTable<labelList, word>& groupPatchIndices = groupPatchIndicesPtr_();
 
         const polyBoundaryMesh& bm = *this;
 
@@ -479,18 +479,21 @@ Foam::polyBoundaryMesh::groupPatchIDs() const
             {
                 const word& name = groups[i];
 
-                HashTable<labelList, word>::iterator iter = groupPatchIDs.find
+                HashTable<labelList, word>::iterator iter
                 (
-                    name
+                    groupPatchIndices.find
+                    (
+                        name
+                    )
                 );
 
-                if (iter != groupPatchIDs.end())
+                if (iter != groupPatchIndices.end())
                 {
                     iter().append(patchi);
                 }
                 else
                 {
-                    groupPatchIDs.insert(name, labelList(1, patchi));
+                    groupPatchIndices.insert(name, labelList(1, patchi));
                 }
             }
         }
@@ -498,7 +501,7 @@ Foam::polyBoundaryMesh::groupPatchIDs() const
         // Remove patch names from patchGroups
         forAll(bm, patchi)
         {
-            if (groupPatchIDs.erase(bm[patchi].name()))
+            if (groupPatchIndices.erase(bm[patchi].name()))
             {
                 WarningInFunction
                     << "Removing patchGroup '" << bm[patchi].name()
@@ -509,26 +512,26 @@ Foam::polyBoundaryMesh::groupPatchIDs() const
         }
     }
 
-    return groupPatchIDsPtr_();
+    return groupPatchIndicesPtr_();
 }
 
 
 void Foam::polyBoundaryMesh::setGroup
 (
     const word& groupName,
-    const labelList& patchIDs
+    const labelList& patchIndices
 )
 {
-    groupPatchIDsPtr_.clear();
+    groupPatchIndicesPtr_.clear();
 
     polyPatchList& patches = *this;
 
     boolList donePatch(patches.size(), false);
 
     // Add to specified patches
-    forAll(patchIDs, i)
+    forAll(patchIndices, i)
     {
-        label patchi = patchIDs[i];
+        label patchi = patchIndices[i];
         polyPatch& pp = patches[patchi];
 
         if (!pp.inGroup(groupName))
@@ -623,21 +626,22 @@ Foam::labelList Foam::polyBoundaryMesh::findIndices
         {
             indices = findStrings(key, this->names());
 
-            if (usePatchGroups && groupPatchIDs().size())
+            if (usePatchGroups && groupPatchIndices().size())
             {
                 labelHashSet indexSet(indices);
 
-                const wordList allGroupNames = groupPatchIDs().toc();
-                labelList groupIDs = findStrings(key, allGroupNames);
-                forAll(groupIDs, i)
+                const wordList allGroupNames = groupPatchIndices().toc();
+                labelList groupIndices = findStrings(key, allGroupNames);
+                forAll(groupIndices, i)
                 {
-                    const word& grpName = allGroupNames[groupIDs[i]];
-                    const labelList& patchIDs = groupPatchIDs()[grpName];
-                    forAll(patchIDs, j)
+                    const word& grpName = allGroupNames[groupIndices[i]];
+                    const labelList& patchIndices =
+                        groupPatchIndices()[grpName];
+                    forAll(patchIndices, j)
                     {
-                        if (indexSet.insert(patchIDs[j]))
+                        if (indexSet.insert(patchIndices[j]))
                         {
-                            indices.append(patchIDs[j]);
+                            indices.append(patchIndices[j]);
                         }
                     }
                 }
@@ -658,21 +662,21 @@ Foam::labelList Foam::polyBoundaryMesh::findIndices
                 }
             }
 
-            if (usePatchGroups && groupPatchIDs().size())
+            if (usePatchGroups && groupPatchIndices().size())
             {
                 const HashTable<labelList, word>::const_iterator iter =
-                    groupPatchIDs().find(key);
+                    groupPatchIndices().find(key);
 
-                if (iter != groupPatchIDs().end())
+                if (iter != groupPatchIndices().end())
                 {
                     labelHashSet indexSet(indices);
 
-                    const labelList& patchIDs = iter();
-                    forAll(patchIDs, j)
+                    const labelList& patchIndices = iter();
+                    forAll(patchIndices, j)
                     {
-                        if (indexSet.insert(patchIDs[j]))
+                        if (indexSet.insert(patchIndices[j]))
                         {
-                            indices.append(patchIDs[j]);
+                            indices.append(patchIndices[j]);
                         }
                     }
                 }
@@ -771,34 +775,35 @@ Foam::labelHashSet Foam::polyBoundaryMesh::patchSet
 
         // Treat the given patch names as wild-cards and search the set
         // of all patch names for matches
-        labelList patchIDs = findStrings(patchName, allPatchNames);
+        labelList patchIndices = findStrings(patchName, allPatchNames);
 
-        forAll(patchIDs, j)
+        forAll(patchIndices, j)
         {
-            ids.insert(patchIDs[j]);
+            ids.insert(patchIndices[j]);
         }
 
-        if (patchIDs.empty())
+        if (patchIndices.empty())
         {
             if (usePatchGroups)
             {
-                const wordList allGroupNames = groupPatchIDs().toc();
+                const wordList allGroupNames = groupPatchIndices().toc();
 
                 // Regard as group name
-                labelList groupIDs = findStrings(patchName, allGroupNames);
+                labelList groupIndices = findStrings(patchName, allGroupNames);
 
-                forAll(groupIDs, i)
+                forAll(groupIndices, i)
                 {
-                    const word& name = allGroupNames[groupIDs[i]];
-                    const labelList& extraPatchIDs = groupPatchIDs()[name];
+                    const word& name = allGroupNames[groupIndices[i]];
+                    const labelList& extraPatchIndices =
+                        groupPatchIndices()[name];
 
-                    forAll(extraPatchIDs, extraI)
+                    forAll(extraPatchIndices, extraI)
                     {
-                        ids.insert(extraPatchIDs[extraI]);
+                        ids.insert(extraPatchIndices[extraI]);
                     }
                 }
 
-                if (groupIDs.empty() && warnNotFound)
+                if (groupIndices.empty() && warnNotFound)
                 {
                     WarningInFunction
                         << "Cannot find any patch or group names matching "
@@ -821,7 +826,7 @@ Foam::labelHashSet Foam::polyBoundaryMesh::patchSet
 
 void Foam::polyBoundaryMesh::matchGroups
 (
-    const labelUList& patchIDs,
+    const labelUList& patchIndices,
     wordList& groups,
     labelHashSet& nonGroupPatches
 ) const
@@ -830,14 +835,16 @@ void Foam::polyBoundaryMesh::matchGroups
     DynamicList<word> matchedGroups(1);
 
     // Current set of unmatched patches
-    nonGroupPatches = labelHashSet(patchIDs);
+    nonGroupPatches = labelHashSet(patchIndices);
 
-    const HashTable<labelList, word>& groupPatchIDs = this->groupPatchIDs();
+    const HashTable<labelList, word>& groupPatchIndices =
+        this->groupPatchIndices();
+
     for
     (
         HashTable<labelList,word>::const_iterator iter =
-            groupPatchIDs.begin();
-        iter != groupPatchIDs.end();
+            groupPatchIndices.begin();
+        iter != groupPatchIndices.end();
         ++iter
     )
     {
@@ -1058,9 +1065,9 @@ void Foam::polyBoundaryMesh::movePoints(const pointField& p)
 void Foam::polyBoundaryMesh::topoChange()
 {
     nbrEdgesPtr_.clear();
-    patchIDPtr_.clear();
-    patchFaceIDPtr_.clear();
-    groupPatchIDsPtr_.clear();
+    patchIndicesPtr_.clear();
+    patchFaceIndicesPtr_.clear();
+    groupPatchIndicesPtr_.clear();
 
     PstreamBuffers pBufs(Pstream::defaultCommsType);
 

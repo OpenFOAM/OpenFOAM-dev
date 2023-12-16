@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,9 +47,9 @@ Foam::label Foam::coupleGroupIdentifier::findOtherPatchID
     }
 
     HashTable<labelList, word>::const_iterator fnd =
-        pbm.groupPatchIDs().find(name());
+        pbm.groupPatchIndices().find(name());
 
-    if (fnd == pbm.groupPatchIDs().end())
+    if (fnd == pbm.groupPatchIndices().end())
     {
         if (&mesh == &thisPatch.boundaryMesh().mesh())
         {

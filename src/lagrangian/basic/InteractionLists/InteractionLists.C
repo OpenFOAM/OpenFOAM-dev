@@ -543,7 +543,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
         const face& f = mesh_.faces()[wallFaceIndex];
 
-        label patchi = mesh_.boundaryMesh().patchID()
+        label patchi = mesh_.boundaryMesh().patchIndices()
         [
             wallFaceIndex - mesh_.nInternalFaces()
         ];
@@ -1016,7 +1016,7 @@ void Foam::InteractionLists<ParticleType>::prepareWallDataToRefer()
             globalTransforms.transformIndex(wfiat)
         );
 
-        label patchi = mesh_.boundaryMesh().patchID()
+        label patchi = mesh_.boundaryMesh().patchIndices()
         [
             wallFaceIndex - mesh_.nInternalFaces()
         ];

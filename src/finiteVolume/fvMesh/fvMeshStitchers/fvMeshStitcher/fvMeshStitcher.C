@@ -632,7 +632,7 @@ void Foam::fvMeshStitcher::applyOwnerOrigBoundaryEdgeParts
 
             const label patchi =
                 mesh_.isInternalFace(facei)
-              ? -1 : pbMesh.patchID()[facei - mesh_.nInternalFaces()];
+              ? -1 : pbMesh.patchIndices()[facei - mesh_.nInternalFaces()];
 
             if (patchi != -1 && patchIsOwnerOrig[patchi])
             {
@@ -684,7 +684,8 @@ void Foam::fvMeshStitcher::applyOwnerOrigBoundaryEdgeParts
 
                     const label patchi =
                         mesh_.isInternalFace(facei)
-                      ? -1 : pbMesh.patchID()[facei - mesh_.nInternalFaces()];
+                      ? -1
+                      : pbMesh.patchIndices()[facei - mesh_.nInternalFaces()];
 
                     if (patchi != -1 && patchIsOwnerOrig[patchi])
                     {
@@ -737,7 +738,8 @@ void Foam::fvMeshStitcher::applyOwnerOrigBoundaryEdgeParts
 
                     const label patchi =
                         mesh_.isInternalFace(facei)
-                      ? -1 : pbMesh.patchID()[facei - mesh_.nInternalFaces()];
+                      ? -1
+                      : pbMesh.patchIndices()[facei - mesh_.nInternalFaces()];
 
                     if (patchi != -1 && patchIsOwnerOrig[patchi])
                     {
