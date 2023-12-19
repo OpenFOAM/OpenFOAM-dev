@@ -26,7 +26,7 @@ boundaryField
 
     atmosphere
     {
-        type            totalPressure;
+        type            entrainmentPressure;
         p0              uniform 0;
         value           uniform 0;
     }
