@@ -23,7 +23,8 @@ boundaryField
 {
     outlet
     {
-        type            fixedValue;
+        type            entrainmentPressure;
+        p0              $internalField;
         value           $internalField;
     }
 
