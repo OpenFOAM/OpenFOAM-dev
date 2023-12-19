@@ -56,6 +56,13 @@ addToRunTimeSelectionTable
 
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
+void qZeta::boundZeta()
+{
+    tmp<volScalarField> tCmuk2(Cmu_*sqr(k_));
+    zeta_ = max(zeta_, Cmu_*pow3(q_)/((2*nutMaxCoeff_)*nu()));
+}
+
+
 tmp<volScalarField> qZeta::fMu() const
 {
     const volScalarField Rt(q_*k_/(2.0*nu()*zeta_));
@@ -158,7 +165,6 @@ qZeta::qZeta
     ),
 
     qMin_("qMin", sqrt(kMin_)),
-    zetaMin_("zetaMin", epsilonMin_/(2*qMin_)),
 
     k_
     (
@@ -210,11 +216,11 @@ qZeta::qZeta
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        max(epsilon_, epsilonMin_)/(2.0*q_),
+        epsilon_/(2.0*q_),
         epsilon_.boundaryField().types()
     )
 {
-    bound(zeta_, zetaMin_);
+    boundZeta();
 
     if (type == typeName)
     {
@@ -236,7 +242,6 @@ bool qZeta::read()
         anisotropic_.readIfPresent("anisotropic", coeffDict());
 
         qMin_.readIfPresent(*this);
-        zetaMin_.readIfPresent(*this);
 
         return true;
     }
@@ -273,7 +278,7 @@ void qZeta::correct()
 
     zetaEqn.ref().relax();
     solve(zetaEqn);
-    bound(zeta_, zetaMin_);
+    boundZeta();
 
 
     // q equation
@@ -289,7 +294,7 @@ void qZeta::correct()
     qEqn.ref().relax();
     solve(qEqn);
     bound(q_, qMin_);
-
+    boundZeta();
 
     // Re-calculate k and epsilon
     k_ = sqr(q_);

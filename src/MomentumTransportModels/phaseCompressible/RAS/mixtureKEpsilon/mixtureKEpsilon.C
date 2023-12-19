@@ -42,6 +42,32 @@ namespace Foam
 namespace RASModels
 {
 
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class BasicMomentumTransportModel>
+void mixtureKEpsilon<BasicMomentumTransportModel>::boundEpsilonm
+(
+    const volScalarField& Cc2
+)
+{
+    epsilonm_() = max
+    (
+        epsilonm_(),
+        Cmu_*sqr(k_)/(this->nutMaxCoeff_*Cc2*this->nu())
+    );
+}
+
+
+template<class BasicMomentumTransportModel>
+void mixtureKEpsilon<BasicMomentumTransportModel>::correctNut()
+{
+    this->nut_ = Cmu_*sqr(k_)/epsilon_;
+    this->nut_.correctBoundaryConditions();
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
@@ -168,7 +194,6 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
     )
 {
     bound(k_, this->kMin_);
-    bound(epsilon_, this->epsilonMin_);
 
     if (type == typeName)
     {
@@ -284,15 +309,6 @@ bool mixtureKEpsilon<BasicMomentumTransportModel>::read()
     {
         return false;
     }
-}
-
-
-template<class BasicMomentumTransportModel>
-void mixtureKEpsilon<BasicMomentumTransportModel>::correctNut()
-{
-    this->nut_ = Cmu_*sqr(k_)/epsilon_;
-    this->nut_.correctBoundaryConditions();
-    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -624,9 +640,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
 
     // Update the mixture k and epsilon boundary conditions
     km == mix(kl, kg);
-    bound(km, this->kMin_);
     epsilonm == mix(epsilonl, epsilong);
-    bound(epsilonm, this->epsilonMin_);
 
     // Dissipation equation
     tmp<fvScalarMatrix> epsEqn
@@ -648,7 +662,9 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     epsEqn.ref().boundaryManipulate(epsilonm.boundaryFieldRef());
     solve(epsEqn);
     fvConstraints.constrain(epsilonm);
-    bound(epsilonm, this->epsilonMin_);
+
+    const volScalarField Cc2(rhom/(alphal*rholEff() + alphag*rhogEff()*Ct2_()));
+    boundEpsilonm(Cc2);
 
     // Turbulent kinetic energy equation
     tmp<fvScalarMatrix> kmEqn
@@ -671,8 +687,8 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     fvConstraints.constrain(km);
     bound(km, this->kMin_);
     km.correctBoundaryConditions();
+    boundEpsilonm(Cc2);
 
-    const volScalarField Cc2(rhom/(alphal*rholEff() + alphag*rhogEff()*Ct2_()));
     kl = Cc2*km;
     kl.correctBoundaryConditions();
     epsilonl = Cc2*epsilonm;

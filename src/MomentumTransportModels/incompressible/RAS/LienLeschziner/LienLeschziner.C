@@ -56,6 +56,14 @@ addToRunTimeSelectionTable
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
+tmp<volScalarField> LienLeschziner::boundEpsilon()
+{
+    tmp<volScalarField> tCmuk2(Cmu_*sqr(k_));
+    epsilon_ = max(epsilon_, tCmuk2()/(nutMaxCoeff_*nu()));
+    return tCmuk2;
+}
+
+
 tmp<volScalarField> LienLeschziner::fMu() const
 {
     const volScalarField yStar(sqrt(k_)*y()/nu());
@@ -90,7 +98,7 @@ tmp<volScalarField> LienLeschziner::E(const volScalarField& f2) const
 
 void LienLeschziner::correctNut()
 {
-    nut_ = Cmu_*fMu()*sqr(k_)/epsilon_;
+    nut_ = fMu()*boundEpsilon()/epsilon_;
     nut_.correctBoundaryConditions();
 }
 
@@ -228,7 +236,7 @@ LienLeschziner::LienLeschziner
     )
 {
     bound(k_, kMin_);
-    bound(epsilon_, epsilonMin_);
+    boundEpsilon();
 
     if (type == typeName)
     {
@@ -299,7 +307,7 @@ void LienLeschziner::correct()
     epsEqn.ref().relax();
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    bound(epsilon_, epsilonMin_);
+    boundEpsilon();
 
 
     // Turbulent kinetic energy equation

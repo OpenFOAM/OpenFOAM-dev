@@ -56,6 +56,14 @@ addToRunTimeSelectionTable
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
+tmp<volScalarField> LamBremhorstKE::boundEpsilon()
+{
+    tmp<volScalarField> tCmuk2(Cmu_*sqr(k_));
+    epsilon_ = max(epsilon_, tCmuk2()/(nutMaxCoeff_*nu()));
+    return tCmuk2;
+}
+
+
 tmp<volScalarField> LamBremhorstKE::Rt() const
 {
     return sqr(k_)/(nu()*epsilon_);
@@ -83,7 +91,7 @@ tmp<volScalarField> LamBremhorstKE::f2(const volScalarField& Rt) const
 
 void LamBremhorstKE::correctNut(const volScalarField& fMu)
 {
-    nut_ = Cmu_*fMu*sqr(k_)/epsilon_;
+    nut_ = fMu*boundEpsilon()/epsilon_;
     nut_.correctBoundaryConditions();
 }
 
@@ -184,7 +192,7 @@ LamBremhorstKE::LamBremhorstKE
     )
 {
     bound(k_, kMin_);
-    bound(epsilon_, epsilonMin_);
+    boundEpsilon();
 
     if (type == typeName)
     {
@@ -246,7 +254,7 @@ void LamBremhorstKE::correct()
     epsEqn.ref().relax();
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    bound(epsilon_, epsilonMin_);
+    boundEpsilon();
 
     // Turbulent kinetic energy equation
     tmp<fvScalarMatrix> kEqn

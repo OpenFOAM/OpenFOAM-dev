@@ -95,7 +95,12 @@ protected:
 
     // Protected Member Functions
 
+        //- Bound epsilon
+        void boundEpsilon();
+
+        //- Correct the eddy-viscosity nut
         virtual void correctNut();
+
         virtual void correctNonlinearStress(const volTensorField& gradU);
 
 

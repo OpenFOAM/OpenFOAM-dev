@@ -100,6 +100,9 @@ protected:
 
    // Protected Member Functions
 
+        //- Bound epsilon
+        void boundEpsilon();
+
         tmp<volScalarField> rCmu
         (
             const volTensorField& gradU,
@@ -107,6 +110,7 @@ protected:
             const volScalarField& magS
         );
 
+        //- Correct the eddy-viscosity nut
         virtual void correctNut
         (
             const volTensorField& gradU,
@@ -114,8 +118,13 @@ protected:
             const volScalarField& magS
         );
 
+        //- Correct the eddy-viscosity nut
         virtual void correctNut();
+
+        //- Source term for the k equation
         virtual tmp<fvScalarMatrix> kSource() const;
+
+        //- Source term for the epsilon equation
         virtual tmp<fvScalarMatrix> epsilonSource() const;
 
 

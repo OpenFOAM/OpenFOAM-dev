@@ -116,7 +116,12 @@ protected:
         tmp<volScalarField> f2() const;
         tmp<volScalarField> E(const volScalarField& f2) const;
 
+        //- Bound epsilon and return Cmu*sqr(k) for nut
+        tmp<volScalarField> boundEpsilon();
+
+        //- Correct the eddy-viscosity nut
         virtual void correctNut();
+
         virtual void correctNonlinearStress(const volTensorField& gradU);
 
 

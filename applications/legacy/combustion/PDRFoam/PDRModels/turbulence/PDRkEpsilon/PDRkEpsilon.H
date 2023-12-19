@@ -86,6 +86,15 @@ class PDRkEpsilon
         dimensionedScalar C4_;
 
 
+    // Protected Member Functions
+
+        //- Bound epsilon and return Cmu*sqr(k) for nut
+        tmp<volScalarField> boundEpsilon();
+
+        //- Correct the eddy-viscosity nut
+        virtual void correctNut();
+
+
 public:
 
     //- Runtime type information

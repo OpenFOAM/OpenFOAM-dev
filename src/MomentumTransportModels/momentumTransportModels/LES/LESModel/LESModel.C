@@ -79,17 +79,6 @@ Foam::LESModel<BasicMomentumTransportModel>::LESModel
         )
     ),
 
-    epsilonMin_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "epsilonMin",
-            LESDict_,
-            kMin_.dimensions()/dimTime,
-            small
-        )
-    ),
-
     omegaMin_
     (
         dimensioned<scalar>::lookupOrAddToDict

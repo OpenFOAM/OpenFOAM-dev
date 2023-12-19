@@ -536,13 +536,12 @@ kkLOmega::kkLOmega
             runTime_.name(),
             mesh_
         ),
-        kt_*omega_ + D(kl_) + D(kt_)
+        kt_*max(omega_, omegaMin_) + D(kl_) + D(kt_)
     )
 {
     bound(kt_, kMin_);
     bound(kl_, kMin_);
     bound(omega_, omegaMin_);
-    bound(epsilon_, epsilonMin_);
 
     if (type == typeName)
     {
@@ -752,11 +751,8 @@ void kkLOmega::correct()
     solve(ktEqn);
     bound(kt_, kMin_);
 
-
     // Update total fluctuation kinetic energy dissipation rate
     epsilon_ = kt_*omega_ + Dl + Dt;
-    bound(epsilon_, epsilonMin_);
-
 
     // Re-calculate turbulent viscosity
     nut_ = nuts + nutl;

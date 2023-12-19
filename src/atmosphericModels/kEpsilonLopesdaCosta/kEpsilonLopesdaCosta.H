@@ -122,6 +122,10 @@ protected:
 
         void setPorosityCoefficients();
 
+        //- Bound epsilon and return Cmu*sqr(k) for nut
+        tmp<volScalarField> boundEpsilon();
+
+        //- Correct the eddy-viscosity nut
         virtual void correctNut();
 
         virtual tmp<fvScalarMatrix> kSource

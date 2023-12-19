@@ -38,6 +38,13 @@ namespace RASModels
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
+void realizableKE<BasicMomentumTransportModel>::boundEpsilon()
+{
+    epsilon_ = max(epsilon_, 0.09*sqr(k_)/(this->nutMaxCoeff_*this->nu()));
+}
+
+
+template<class BasicMomentumTransportModel>
 tmp<volScalarField> realizableKE<BasicMomentumTransportModel>::rCmu
 (
     const volTensorField& gradU,
@@ -78,6 +85,7 @@ void realizableKE<BasicMomentumTransportModel>::correctNut
     const volScalarField& magS
 )
 {
+    boundEpsilon();
     this->nut_ = rCmu(gradU, S2, magS)*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
@@ -213,7 +221,7 @@ realizableKE<BasicMomentumTransportModel>::realizableKE
     )
 {
     bound(k_, this->kMin_);
-    bound(epsilon_, this->epsilonMin_);
+    boundEpsilon();
 
     if (type == typeName)
     {
@@ -316,7 +324,7 @@ void realizableKE<BasicMomentumTransportModel>::correct()
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
     fvConstraints.constrain(epsilon_);
-    bound(epsilon_, this->epsilonMin_);
+    boundEpsilon();
 
 
     // Turbulent kinetic energy equation

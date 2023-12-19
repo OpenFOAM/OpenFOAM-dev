@@ -88,9 +88,6 @@ protected:
         //- Lower limit of q
         dimensionedScalar qMin_;
 
-        //- Lower limit of zeta
-        dimensionedScalar zetaMin_;
-
         // Fields
 
             volScalarField k_;
@@ -104,6 +101,11 @@ protected:
 
         tmp<volScalarField> fMu() const;
         tmp<volScalarField> f2() const;
+
+        //- Bound epsilon and return Cmu*sqr(k) for nut
+        void boundZeta();
+
+        //- Correct the eddy-viscosity nut
         virtual void correctNut();
 
 
@@ -136,30 +138,6 @@ public:
 
         //- Read RASProperties dictionary
         virtual bool read();
-
-        //- Return the lower allowable limit for q (default: small)
-        const dimensionedScalar& qMin() const
-        {
-            return qMin_;
-        }
-
-        //- Return the lower allowable limit for zeta (default: small)
-        const dimensionedScalar& zetaMin() const
-        {
-            return zetaMin_;
-        }
-
-        //- Allow qMin to be changed
-        dimensionedScalar& qMin()
-        {
-            return qMin_;
-        }
-
-        //- Allow zetaMin to be changed
-        dimensionedScalar& zetaMin()
-        {
-            return zetaMin_;
-        }
 
         //- Return the effective diffusivity for q
         tmp<volScalarField> DqEff() const

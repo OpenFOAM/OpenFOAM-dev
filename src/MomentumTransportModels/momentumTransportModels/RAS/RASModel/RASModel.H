@@ -75,11 +75,11 @@ protected:
         //- Lower limit of k
         dimensionedScalar kMin_;
 
-        //- Lower limit of epsilon
-        dimensionedScalar epsilonMin_;
-
         //- Lower limit for omega
         dimensionedScalar omegaMin_;
+
+        //- Upper limit coefficient for nut
+        dimensionedScalar nutMaxCoeff_;
 
         //- Run-time selectable generalised Newtonian viscosity model
         autoPtr<laminarModels::generalisedNewtonianViscosityModel>
@@ -169,12 +169,6 @@ public:
             return kMin_;
         }
 
-        //- Return the lower allowable limit for epsilon (default: small)
-        const dimensionedScalar& epsilonMin() const
-        {
-            return epsilonMin_;
-        }
-
         //- Return the lower allowable limit for omega (default: small)
         const dimensionedScalar& omegaMin() const
         {
@@ -185,12 +179,6 @@ public:
         dimensionedScalar& kMin()
         {
             return kMin_;
-        }
-
-        //- Allow epsilonMin to be changed
-        dimensionedScalar& epsilonMin()
-        {
-            return epsilonMin_;
         }
 
         //- Allow omegaMin to be changed

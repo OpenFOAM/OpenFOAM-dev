@@ -56,6 +56,14 @@ addToRunTimeSelectionTable
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
+tmp<volScalarField> LienCubicKE::boundEpsilon()
+{
+    tmp<volScalarField> tCmuk2(Cmu_*sqr(k_));
+    epsilon_ = max(epsilon_, tCmuk2()/(nutMaxCoeff_*nu()));
+    return tCmuk2;
+}
+
+
 tmp<volScalarField> LienCubicKE::fMu() const
 {
     const volScalarField yStar(sqrt(k_)*y()/nu());
@@ -105,7 +113,7 @@ void LienCubicKE::correctNonlinearStress(const volTensorField& gradU)
     volScalarField Cmu((2.0/3.0)/(Cmu1_ + sBar + Cmu2_*wBar));
     volScalarField fMu(this->fMu());
 
-    nut_ = Cmu*fMu*sqr(k_)/epsilon_;
+    nut_ = fMu*boundEpsilon()/epsilon_;
     nut_.correctBoundaryConditions();
 
     nonlinearStress_ =
@@ -334,7 +342,7 @@ LienCubicKE::LienCubicKE
     )
 {
     bound(k_, kMin_);
-    bound(epsilon_, epsilonMin_);
+    boundEpsilon();
 
     if (type == typeName)
     {
@@ -415,7 +423,7 @@ void LienCubicKE::correct()
     epsEqn.ref().relax();
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    bound(epsilon_, epsilonMin_);
+    boundEpsilon();
 
 
     // Turbulent kinetic energy equation

@@ -55,8 +55,16 @@ tmp<volScalarField> LaunderSharmaKE<BasicMomentumTransportModel>::f2() const
 
 
 template<class BasicMomentumTransportModel>
+void LaunderSharmaKE<BasicMomentumTransportModel>::boundEpsilon()
+{
+    epsilon_ = max(epsilon_, Cmu_*sqr(k_)/(this->nutMaxCoeff_*this->nu()));
+}
+
+
+template<class BasicMomentumTransportModel>
 void LaunderSharmaKE<BasicMomentumTransportModel>::correctNut()
 {
+    boundEpsilon();
     this->nut_ = Cmu_*fMu()*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
@@ -202,7 +210,7 @@ LaunderSharmaKE<BasicMomentumTransportModel>::LaunderSharmaKE
     )
 {
     bound(k_, this->kMin_);
-    bound(epsilon_, this->epsilonMin_);
+    boundEpsilon();
 
     if (type == typeName)
     {
@@ -289,7 +297,7 @@ void LaunderSharmaKE<BasicMomentumTransportModel>::correct()
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
     fvConstraints.constrain(epsilon_);
-    bound(epsilon_, this->epsilonMin_);
+    boundEpsilon();
 
 
     // Turbulent kinetic energy equation

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ buoyantKEpsilon<BasicMomentumTransportModel>::Gcoef() const
 
     return
         (Cg_*this->Cmu_)*this->alpha_*this->k_*(g & fvc::grad(this->rho_))
-       /(this->epsilon_ + this->epsilonMin_);
+       /this->epsilon_;
 }
 
 

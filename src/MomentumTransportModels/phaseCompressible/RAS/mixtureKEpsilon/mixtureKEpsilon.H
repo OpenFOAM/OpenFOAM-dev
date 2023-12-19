@@ -129,6 +129,10 @@ protected:
 
         void initMixtureFields();
 
+        //- Bound epsilonm
+        void boundEpsilonm(const volScalarField& Cc2);
+
+        //- Correct the eddy-viscosity nut
         virtual void correctNut();
 
         tmp<volScalarField> Ct2() const;

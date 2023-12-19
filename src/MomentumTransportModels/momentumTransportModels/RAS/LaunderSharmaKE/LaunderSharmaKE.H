@@ -108,8 +108,16 @@ protected:
         tmp<volScalarField> fMu() const;
         tmp<volScalarField> f2() const;
 
+        //- Bound epsilon
+        void boundEpsilon();
+
+        //- Correct the eddy-viscosity nut
         virtual void correctNut();
+
+        //- Source term for the k equation
         virtual tmp<fvScalarMatrix> kSource() const;
+
+        //- Source term for the epsilon equation
         virtual tmp<fvScalarMatrix> epsilonSource() const;
 
 

@@ -38,9 +38,18 @@ namespace RASModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
+tmp<volScalarField> RNGkEpsilon<BasicMomentumTransportModel>::boundEpsilon()
+{
+    tmp<volScalarField> tCmuk2(Cmu_*sqr(k_));
+    epsilon_ = max(epsilon_, tCmuk2()/(this->nutMaxCoeff_*this->nu()));
+    return tCmuk2;
+}
+
+
+template<class BasicMomentumTransportModel>
 void RNGkEpsilon<BasicMomentumTransportModel>::correctNut()
 {
-    this->nut_ = Cmu_*sqr(k_)/epsilon_;
+    this->nut_ = boundEpsilon()/epsilon_;
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -201,7 +210,7 @@ RNGkEpsilon<BasicMomentumTransportModel>::RNGkEpsilon
     )
 {
     bound(k_, this->kMin_);
-    bound(epsilon_, this->epsilonMin_);
+    boundEpsilon();
 
     if (type == typeName)
     {
@@ -309,7 +318,7 @@ void RNGkEpsilon<BasicMomentumTransportModel>::correct()
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
     fvConstraints.constrain(epsilon_);
-    bound(epsilon_, this->epsilonMin_);
+    boundEpsilon();
 
 
     // Turbulent kinetic energy equation

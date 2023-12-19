@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,17 +79,6 @@ Foam::RASModel<BasicMomentumTransportModel>::RASModel
         )
     ),
 
-    epsilonMin_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "epsilonMin",
-            RASDict_,
-            kMin_.dimensions()/dimTime,
-            small
-        )
-    ),
-
     omegaMin_
     (
         dimensioned<scalar>::lookupOrAddToDict
@@ -98,6 +87,17 @@ Foam::RASModel<BasicMomentumTransportModel>::RASModel
             RASDict_,
             dimless/dimTime,
             small
+        )
+    ),
+
+    nutMaxCoeff_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "nutMaxCoeff",
+            RASDict_,
+            dimless,
+            1e5
         )
     ),
 
@@ -191,7 +191,6 @@ bool Foam::RASModel<BasicMomentumTransportModel>::read()
         coeffDict_ <<= RASDict_.optionalSubDict(type() + "Coeffs");
 
         kMin_.readIfPresent(RASDict_);
-        epsilonMin_.readIfPresent(RASDict_);
         omegaMin_.readIfPresent(RASDict_);
 
         return true;

@@ -38,6 +38,15 @@ namespace RASModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
+tmp<volScalarField> v2f<BasicMomentumTransportModel>::boundEpsilon()
+{
+    tmp<volScalarField> tCmuk2(CmuKEps_*sqr(k_));
+    epsilon_ = max(epsilon_, tCmuk2()/(this->nutMaxCoeff_*this->nu()));
+    return tCmuk2;
+}
+
+
+template<class BasicMomentumTransportModel>
 tmp<volScalarField> v2f<BasicMomentumTransportModel>::Ts() const
 {
     return max(k_/epsilon_, 6.0*sqrt(this->nu()/epsilon_));
@@ -56,7 +65,7 @@ tmp<volScalarField> v2f<BasicMomentumTransportModel>::Ls() const
 template<class BasicMomentumTransportModel>
 void v2f<BasicMomentumTransportModel>::correctNut()
 {
-    this->nut_ = min(CmuKEps_*sqr(k_)/epsilon_, this->Cmu_*v2_*Ts());
+    this->nut_ = min(boundEpsilon()/epsilon_, this->Cmu_*v2_*Ts());
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -231,7 +240,7 @@ v2f<BasicMomentumTransportModel>::v2f
     fMin_(dimensionedScalar(f_.dimensions(), 0))
 {
     bound(k_, this->kMin_);
-    bound(epsilon_, this->epsilonMin_);
+    boundEpsilon();
     bound(v2_, v2Min_);
     bound(f_, fMin_);
 
@@ -335,7 +344,7 @@ void v2f<BasicMomentumTransportModel>::correct()
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
     fvConstraints.constrain(epsilon_);
-    bound(epsilon_, this->epsilonMin_);
+    boundEpsilon();
 
 
     // Turbulent kinetic energy equation

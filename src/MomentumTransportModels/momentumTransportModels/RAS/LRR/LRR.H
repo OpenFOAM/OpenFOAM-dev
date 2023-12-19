@@ -132,7 +132,10 @@ protected:
 
     // Protected Member Functions
 
-        //- Update the eddy-viscosity
+        //- Bound epsilon and return Cmu*sqr(k) for nut
+        tmp<volScalarField> boundEpsilon();
+
+        //- Correct the eddy-viscosity nut
         virtual void correctNut();
 
         //- Source term for the epsilon equation

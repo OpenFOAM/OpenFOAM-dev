@@ -38,9 +38,18 @@ namespace RASModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
+tmp<volScalarField> SSG<BasicMomentumTransportModel>::boundEpsilon()
+{
+    tmp<volScalarField> tCmuk2(Cmu_*sqr(k_));
+    epsilon_ = max(epsilon_, tCmuk2()/(this->nutMaxCoeff_*this->nu()));
+    return tCmuk2;
+}
+
+
+template<class BasicMomentumTransportModel>
 void SSG<BasicMomentumTransportModel>::correctNut()
 {
-    this->nut_ = this->Cmu_*sqr(k_)/epsilon_;
+    this->nut_ = boundEpsilon()/epsilon_;
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
@@ -225,7 +234,7 @@ SSG<BasicMomentumTransportModel>::SSG
         this->printCoeffs(type);
 
         this->boundNormalStress(this->R_);
-        bound(epsilon_, this->epsilonMin_);
+        boundEpsilon();
         k_ = 0.5*tr(this->R_);
     }
 }
@@ -332,7 +341,7 @@ void SSG<BasicMomentumTransportModel>::correct()
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
     fvConstraints.constrain(epsilon_);
-    bound(epsilon_, this->epsilonMin_);
+    boundEpsilon();
 
 
     // Correct the trace of the tensorial production to be consistent

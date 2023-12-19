@@ -57,6 +57,12 @@ addToRunTimeSelectionTable
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
+void ShihQuadraticKE::boundEpsilon()
+{
+    epsilon_ = max(epsilon_, 0.09*sqr(k_)/(this->nutMaxCoeff_*this->nu()));
+}
+
+
 void ShihQuadraticKE::correctNut()
 {
     correctNonlinearStress(fvc::grad(U_));
@@ -73,6 +79,7 @@ void ShihQuadraticKE::correctNonlinearStress(const volTensorField& gradU)
 
     volScalarField Cmu((2.0/3.0)/(Cmu1_ + sBar + Cmu2_*wBar));
 
+    boundEpsilon();
     nut_ = Cmu*sqr(k_)/epsilon_;
     nut_.correctBoundaryConditions();
 
@@ -228,7 +235,7 @@ ShihQuadraticKE::ShihQuadraticKE
     )
 {
     bound(k_, kMin_);
-    bound(epsilon_, epsilonMin_);
+    boundEpsilon();
 
     if (type == typeName)
     {
@@ -299,7 +306,7 @@ void ShihQuadraticKE::correct()
     epsEqn.ref().relax();
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    bound(epsilon_, epsilonMin_);
+    boundEpsilon();
 
 
     // Turbulent kinetic energy equation
