@@ -25,14 +25,18 @@ Class
     Foam::entrainmentPressureFvPatchScalarField
 
 Description
-    This boundary condition provides an entrainment pressure condition. The
-    condition is the same as totalPressure condition except that where the
-    total pressure uses the square of the velocity magnitude, this uses the
-    signed square of the normal velocity. In the incompressible case, that
-    means the formulation is as follows:
+    This is a boundary condition for pressure suitable for boundaries at which
+    the flow direction is uncertain but both inflow and/or outflow can occur.
+    The condition switches based on the direction of flow. For outflow, the
+    patch pressure is simply set to the reference pressure. For inflow, the
+    patch pressure is reduced by the dynamic pressure calculated using the
+    inflow velocity normal to the patch.
+
+    For incompressible flow, with pressure expressed in kinematic units, the
+    pressure with inflow is calculated as:
 
         \f[
-            p_p = p_0 + 0.5 Un |Un|
+            p_p = p_0 - 0.5 |Un|^2
         \f]
         where
         \vartable
@@ -41,9 +45,23 @@ Description
             Un      | patch normal velocity [m/s]
         \endvartable
 
-    This condition is particularly suitable for boundaries on which the flow
-    direction changes frequently and/or when the inlet/outlet direction is not
-    well defined.
+    The condition is similar to the totalPressure condition and includes
+    further calculations of pressure for compressible flow under subsonic,
+    transonic and supersonic regimes.
+
+    Like totalPressure, entrainmentPressure is usually applied in conjunction
+    with the pressureInletOutletVelocity condition for velocity. The
+    entrainmentPressure condition calculates the pressure using a normal
+    velocity, based on the fluxes at the boundary. The totalPressure condition
+    calculates the pressure using the inflow velocity itself.
+
+    With the pressureInletOutletVelocity condition, using the default
+    tangentialVelocity of zero, any inflow velocity is constrained to be
+    normal to the boundary, making the two pressure boundary conditions
+    very similar. The entrainmentPressure condition is, however, more robust
+    because it couples with the flux rather than velocity. The condition
+    performs particularly well at boundaries where the flow direction tends
+    to switch frequently between in and out of the domain.
 
 Usage
     \table
