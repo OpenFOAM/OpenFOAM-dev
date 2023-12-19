@@ -200,6 +200,9 @@ protected:
             return blend(F1, gamma1_, gamma2_);
         }
 
+        //- Bound omega
+        void boundOmega();
+
         virtual void correctNut
         (
             const volScalarField& S2,

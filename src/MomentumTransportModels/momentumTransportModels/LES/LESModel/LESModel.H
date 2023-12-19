@@ -82,8 +82,8 @@ protected:
         //- Lower limit of k
         dimensionedScalar kMin_;
 
-        //- Lower limit for omega
-        dimensionedScalar omegaMin_;
+        //- Upper limit coefficient for nut
+        dimensionedScalar nutMaxCoeff_;
 
         //- Run-time selectable generalised Newtonian viscosity model
         autoPtr<laminarModels::generalisedNewtonianViscosityModel>
@@ -174,18 +174,6 @@ public:
         virtual const dictionary& coeffDict() const
         {
             return coeffDict_;
-        }
-
-        //- Return the lower allowable limit for k (default: small)
-        const dimensionedScalar& kMin() const
-        {
-            return kMin_;
-        }
-
-        //- Allow kMin to be changed
-        dimensionedScalar& kMin()
-        {
-            return kMin_;
         }
 
         //- Access function to filter width

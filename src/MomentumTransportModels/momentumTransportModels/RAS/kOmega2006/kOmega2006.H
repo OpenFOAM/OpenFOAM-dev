@@ -111,8 +111,16 @@ protected:
 
     // Protected Member Functions
 
+        //- Bound omega
+        void boundOmega();
+
+        //- Correct the eddy-viscosity nut
         virtual void correctNut();
+
+        //- Source term for the k equation
         virtual tmp<fvScalarMatrix> kSource() const;
+
+        //- Source term for the omega equation
         virtual tmp<fvScalarMatrix> omegaSource() const;
 
 

@@ -192,6 +192,9 @@ protected:
             dimensionedScalar Sigmak_;
             dimensionedScalar Sigmaw_;
 
+        //- Lower limit for omega
+        dimensionedScalar omegaMin_;
+
 
         // Fields
 

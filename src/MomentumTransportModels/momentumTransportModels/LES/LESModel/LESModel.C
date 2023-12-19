@@ -79,14 +79,14 @@ Foam::LESModel<BasicMomentumTransportModel>::LESModel
         )
     ),
 
-    omegaMin_
+    nutMaxCoeff_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "omegaMin",
+            "nutMaxCoeff",
             LESDict_,
-            dimless/dimTime,
-            small
+            dimless,
+            1e5
         )
     ),
 
@@ -192,6 +192,7 @@ bool Foam::LESModel<BasicMomentumTransportModel>::read()
         delta_().read(LESDict_);
 
         kMin_.readIfPresent(LESDict_);
+        nutMaxCoeff_.readIfPresent(LESDict_);
 
         return true;
     }

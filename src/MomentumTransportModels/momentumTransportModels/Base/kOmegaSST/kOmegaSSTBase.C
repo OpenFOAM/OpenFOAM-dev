@@ -37,8 +37,16 @@ namespace Foam
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
+void
+kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::boundOmega()
+{
+    omega_ = max(omega_, k_/(this->nutMaxCoeff_*this->nu()));
+}
+
+
+template<class MomentumTransportModel, class BasicMomentumTransportModel>
 tmp<volScalarField>
-kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST::F1
+kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F1
 (
     const volScalarField& CDkOmega
 ) const
@@ -68,8 +76,7 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST::F1
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
 tmp<volScalarField>
-kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST::
-F2() const
+kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F2() const
 {
     tmp<volScalarField> arg2 = min
     (
@@ -86,8 +93,7 @@ F2() const
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
 tmp<volScalarField>
-kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST::
-F3() const
+kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F3() const
 {
     tmp<volScalarField> arg3 = min
     (
@@ -100,8 +106,7 @@ F3() const
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
 tmp<volScalarField>
-kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST::
-F23() const
+kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::F23() const
 {
     tmp<volScalarField> f23(F2());
 
@@ -126,8 +131,6 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correctNut
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>
 void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::
@@ -380,7 +383,7 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST
     )
 {
     bound(k_, this->kMin_);
-    bound(omega_, this->omegaMin_);
+    boundOmega();
 }
 
 
@@ -493,7 +496,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
         omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
         solve(omegaEqn);
         fvConstraints.constrain(omega_);
-        bound(omega_, this->omegaMin_);
+        boundOmega();
     }
 
     // Turbulent kinetic energy equation
@@ -515,6 +518,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
     solve(kEqn);
     fvConstraints.constrain(k_);
     bound(k_, this->kMin_);
+    boundOmega();
 
     correctNut(S2, F23);
 }

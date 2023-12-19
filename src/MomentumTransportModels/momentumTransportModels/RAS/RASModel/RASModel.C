@@ -79,17 +79,6 @@ Foam::RASModel<BasicMomentumTransportModel>::RASModel
         )
     ),
 
-    omegaMin_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "omegaMin",
-            RASDict_,
-            dimless/dimTime,
-            small
-        )
-    ),
-
     nutMaxCoeff_
     (
         dimensioned<scalar>::lookupOrAddToDict
@@ -191,7 +180,7 @@ bool Foam::RASModel<BasicMomentumTransportModel>::read()
         coeffDict_ <<= RASDict_.optionalSubDict(type() + "Coeffs");
 
         kMin_.readIfPresent(RASDict_);
-        omegaMin_.readIfPresent(RASDict_);
+        nutMaxCoeff_.readIfPresent(RASDict_);
 
         return true;
     }

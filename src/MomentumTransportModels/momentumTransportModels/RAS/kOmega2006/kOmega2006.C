@@ -35,6 +35,15 @@ namespace Foam
 namespace RASModels
 {
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class BasicMomentumTransportModel>
+void kOmega2006<BasicMomentumTransportModel>::boundOmega()
+{
+    omega_ = max(omega_, k_/(this->nutMaxCoeff_*this->nu()));
+}
+
+
 template<class BasicMomentumTransportModel>
 void kOmega2006<BasicMomentumTransportModel>::correctNut
 (
@@ -238,7 +247,7 @@ kOmega2006<BasicMomentumTransportModel>::kOmega2006
     )
 {
     bound(k_, this->kMin_);
-    bound(omega_, this->omegaMin_);
+    boundOmega();
 
     if (type == typeName)
     {
@@ -328,7 +337,7 @@ void kOmega2006<BasicMomentumTransportModel>::correct()
     omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
     solve(omegaEqn);
     fvConstraints.constrain(omega_);
-    bound(omega_, this->omegaMin_);
+    boundOmega();
 
 
     // Turbulent kinetic energy equation
@@ -350,6 +359,7 @@ void kOmega2006<BasicMomentumTransportModel>::correct()
     solve(kEqn);
     fvConstraints.constrain(k_);
     bound(k_, this->kMin_);
+    boundOmega();
 
     correctNut(gradU);
 }
