@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,15 +158,11 @@ void Foam::surfaceInterpolation::makeWeights() const
     surfaceScalarField& weights = *weights_;
 
     // Set local references to mesh data
-    // (note that we should not use fvMesh sliced fields at this point yet
-    //  since this causes a loop when generating weighting factors in
-    //  coupledFvPatchField evaluation phase)
     const labelUList& owner = mesh_.owner();
     const labelUList& neighbour = mesh_.neighbour();
-
-    const vectorField& Cf = mesh_.faceCentres();
-    const vectorField& C = mesh_.cellCentres();
-    const vectorField& Sf = mesh_.faceAreas();
+    const surfaceVectorField& Sf = mesh_.Sf();
+    const surfaceVectorField& Cf = mesh_.Cf();
+    const volVectorField& C = mesh_.C();
 
     // ... and reference to the internal field of the weighting factors
     scalarField& w = weights.primitiveFieldRef();

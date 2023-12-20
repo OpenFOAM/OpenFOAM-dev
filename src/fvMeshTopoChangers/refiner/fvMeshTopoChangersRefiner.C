@@ -575,10 +575,7 @@ void Foam::fvMeshTopoChangers::refiner::refineUfs
         {
             const surfaceVectorField UfU
             (
-                fvc::interpolate
-                (
-                    mesh().lookupObject<volVectorField>(Uname)
-                )
+                fvc::interpolate(mesh().lookupObject<volVectorField>(Uname))
             );
 
             // Recalculate new internal faces.
