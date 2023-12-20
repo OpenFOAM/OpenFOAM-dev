@@ -144,7 +144,7 @@ Foam::cyclicFvPatchField<Type>::nbrPatchField() const
 
     return refCast<const cyclicFvPatchField<Type>>
     (
-        fld.boundaryField()[this->cyclicPatch().nbrPatchID()]
+        fld.boundaryField()[this->cyclicPatch().nbrPatchIndex()]
     );
 }
 

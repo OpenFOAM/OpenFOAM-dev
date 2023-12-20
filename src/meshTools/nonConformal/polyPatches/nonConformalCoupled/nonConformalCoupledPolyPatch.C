@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ void Foam::nonConformalCoupledPolyPatch::rename(const wordList& newNames)
     nonConformalPolyPatch::rename(newNames);
 
     errorPatchName_ = word::null;
-    errorPatchID_ = -1;
+    errorPatchIndex_ = -1;
 }
 
 
@@ -54,7 +54,7 @@ void Foam::nonConformalCoupledPolyPatch::reorder
     nonConformalPolyPatch::reorder(newToOldIndex);
 
     errorPatchName_ = word::null;
-    errorPatchID_ = -1;
+    errorPatchIndex_ = -1;
 }
 
 
@@ -68,7 +68,7 @@ Foam::nonConformalCoupledPolyPatch::nonConformalCoupledPolyPatch
     nonConformalPolyPatch(patch),
     patch_(refCast<const coupledPolyPatch>(patch)),
     errorPatchName_(word::null),
-    errorPatchID_(-1)
+    errorPatchIndex_(-1)
 {}
 
 
@@ -81,7 +81,7 @@ Foam::nonConformalCoupledPolyPatch::nonConformalCoupledPolyPatch
     nonConformalPolyPatch(patch, origPatchName),
     patch_(refCast<const coupledPolyPatch>(patch)),
     errorPatchName_(word::null),
-    errorPatchID_(-1)
+    errorPatchIndex_(-1)
 {}
 
 
@@ -94,7 +94,7 @@ Foam::nonConformalCoupledPolyPatch::nonConformalCoupledPolyPatch
     nonConformalPolyPatch(patch, dict),
     patch_(refCast<const coupledPolyPatch>(patch)),
     errorPatchName_(word::null),
-    errorPatchID_(-1)
+    errorPatchIndex_(-1)
 {}
 
 
@@ -107,7 +107,7 @@ Foam::nonConformalCoupledPolyPatch::nonConformalCoupledPolyPatch
     nonConformalPolyPatch(patch, nccPatch),
     patch_(refCast<const coupledPolyPatch>(patch)),
     errorPatchName_(word::null),
-    errorPatchID_(-1)
+    errorPatchIndex_(-1)
 {}
 
 
@@ -139,13 +139,13 @@ const Foam::transformer& Foam::nonConformalCoupledPolyPatch::transform() const
 
 const Foam::word& Foam::nonConformalCoupledPolyPatch::errorPatchName() const
 {
-    return patch_.boundaryMesh()[errorPatchID()].name();
+    return patch_.boundaryMesh()[errorPatchIndex()].name();
 }
 
 
-Foam::label Foam::nonConformalCoupledPolyPatch::errorPatchID() const
+Foam::label Foam::nonConformalCoupledPolyPatch::errorPatchIndex() const
 {
-    if (errorPatchID_ == -1)
+    if (errorPatchIndex_ == -1)
     {
         forAll(patch_.boundaryMesh(), patchi)
         {
@@ -154,17 +154,17 @@ Foam::label Foam::nonConformalCoupledPolyPatch::errorPatchID() const
             if
             (
                 isA<nonConformalErrorPolyPatch>(p)
-             && refCast<const nonConformalErrorPolyPatch>(p).origPatchID()
-             == origPatchID()
+             && refCast<const nonConformalErrorPolyPatch>(p).origPatchIndex()
+             == origPatchIndex()
             )
             {
-                errorPatchID_ = patchi;
+                errorPatchIndex_ = patchi;
                 break;
             }
         }
     }
 
-    if (errorPatchID_ == -1)
+    if (errorPatchIndex_ == -1)
     {
         FatalErrorInFunction
             << "No error patch of type "
@@ -173,7 +173,7 @@ Foam::label Foam::nonConformalCoupledPolyPatch::errorPatchID() const
             << exit(FatalError);
     }
 
-    return errorPatchID_;
+    return errorPatchIndex_;
 }
 
 
@@ -183,7 +183,7 @@ Foam::nonConformalCoupledPolyPatch::errorPatch() const
     return
         refCast<const nonConformalErrorPolyPatch>
         (
-            patch_.boundaryMesh()[errorPatchID()]
+            patch_.boundaryMesh()[errorPatchIndex()]
         );
 }
 

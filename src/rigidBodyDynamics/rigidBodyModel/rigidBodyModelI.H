@@ -116,7 +116,7 @@ inline Foam::label Foam::RBD::rigidBodyModel::master(label bodyID) const
 {
     if (bodyID < 0)
     {
-        return mergedBody(bodyID).masterID();
+        return mergedBody(bodyID).masterIndex();
     }
     else
     {
@@ -153,7 +153,7 @@ Foam::RBD::rigidBodyModel::mergedBody(label mergedBodyID) const
 }
 
 
-inline Foam::label Foam::RBD::rigidBodyModel::bodyID(const word& name) const
+inline Foam::label Foam::RBD::rigidBodyModel::bodyIndex(const word& name) const
 {
     return bodyIndices_[name];
 }

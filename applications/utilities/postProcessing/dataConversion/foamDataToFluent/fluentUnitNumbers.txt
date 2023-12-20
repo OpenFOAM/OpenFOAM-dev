@@ -59,7 +59,7 @@ enum {
 
   XF_RF_DATA_MASS_FLUX_M1=47,
   XF_RF_DATA_MASS_FLUX_M2=48,
-  XF_RF_DATA_GRID_FLUX=49,
+  XF_RF_DATA_GRIndex_FLUX=49,
 
   XF_RF_DATA_DO_I=50,
   XF_RF_DATA_DO_RECON_I=51,
@@ -182,7 +182,7 @@ enum {
 
   /* dynamic mesh */
   XF_RF_DATA_VOLUME_M2 = 180 ,
-  XF_RF_DATA_WALL_GRID_VELOCITY = 181 ,
+  XF_RF_DATA_WALL_GRIndex_VELOCITY = 181 ,
 
 
   XF_RF_DATA_SV_T_AUX = 190 ,                /* auxiliary temperature

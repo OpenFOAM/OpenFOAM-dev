@@ -56,7 +56,7 @@ class enginePiston
         const fvMeshMovers::engine& meshMover_;
 
         //- Piston patch
-        polyPatchDynamicID patchID_;
+        polyPatchDynamicID patchIndex_;
 
         //- Coordinate system
         autoPtr<coordinateSystem> csPtr_;
@@ -106,9 +106,9 @@ public:
         }
 
         //- Return ID of piston patch
-        const polyPatchDynamicID& patchID() const
+        const polyPatchDynamicID& patchIndex() const
         {
-            return patchID_;
+            return patchIndex_;
         }
 
         // Piston layering thickness

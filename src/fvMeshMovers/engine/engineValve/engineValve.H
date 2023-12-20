@@ -200,44 +200,44 @@ public:
         // Valve patches
 
             //- Return ID of bottom patch
-            const polyPatchDynamicID& bottomPatchID() const
+            const polyPatchDynamicID& bottomPatchIndex() const
             {
                 return bottomPatch_;
             }
 
             //- Return ID of poppet patch
-            const polyPatchDynamicID& poppetPatchID() const
+            const polyPatchDynamicID& poppetPatchIndex() const
             {
                 return poppetPatch_;
             }
 
             //- Return ID of stem patch
-            const polyPatchDynamicID& stemPatchID() const
+            const polyPatchDynamicID& stemPatchIndex() const
             {
                 return stemPatch_;
             }
 
             //- Return ID of curtain in cylinder patch
-            const polyPatchDynamicID& curtainInCylinderPatchID() const
+            const polyPatchDynamicID& curtainInCylinderPatchIndex() const
             {
                 return curtainInCylinderPatch_;
             }
 
             //- Return ID of curtain in port patch
-            const polyPatchDynamicID& curtainInPortPatchID() const
+            const polyPatchDynamicID& curtainInPortPatchIndex() const
             {
                 return curtainInPortPatch_;
             }
 
 
             //- Return ID of detach in cylinder patch
-            const polyPatchDynamicID& detachInCylinderPatchID() const
+            const polyPatchDynamicID& detachInCylinderPatchIndex() const
             {
                 return detachInCylinderPatch_;
             }
 
             //- Return ID of detach in port patch
-            const polyPatchDynamicID& detachInPortPatchID() const
+            const polyPatchDynamicID& detachInPortPatchIndex() const
             {
                 return detachInPortPatch_;
             }

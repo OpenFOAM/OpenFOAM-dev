@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class subBody
         word masterName_;
 
         //- Master body ID
-        label masterID_;
+        label masterIndex_;
 
         //- Transform with respect to master body
         spatialTransform masterXT_;
@@ -98,7 +98,7 @@ public:
         inline const word& masterName() const;
 
         //- Return the master body Id
-        inline label masterID() const;
+        inline label masterIndex() const;
 
         //- Return the transform with respect to the master body
         inline const spatialTransform& masterXT() const;

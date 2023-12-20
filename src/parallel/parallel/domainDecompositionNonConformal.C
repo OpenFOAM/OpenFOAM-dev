@@ -182,7 +182,7 @@ Foam::domainDecomposition::nonConformalProcFaceAddressingBf() const
                 const processorCyclicFvPatch& pcFvp =
                     refCast<const processorCyclicFvPatch>(fvp);
 
-                refPatchProcPatchTable[pcFvp.referPatchID()].insert
+                refPatchProcPatchTable[pcFvp.referPatchIndex()].insert
                 (
                     labelPair(proci, pcFvp.neighbProcNo()),
                     procPatchi
@@ -224,7 +224,7 @@ Foam::domainDecomposition::nonConformalProcFaceAddressingBf() const
 
             if (!nccFvp.owner()) continue;
 
-            const label nccNbrPatchi = nccFvp.nbrPatchID();
+            const label nccNbrPatchi = nccFvp.nbrPatchIndex();
 
             forAll(polyFacesBf[nccPatchi], nccPatchFacei)
             {
@@ -283,7 +283,7 @@ Foam::domainDecomposition::nonConformalProcFaceAddressingBf() const
 
             if (!nccFvp.owner()) continue;
 
-            const label nccNbrPatchi = nccFvp.nbrPatchID();
+            const label nccNbrPatchi = nccFvp.nbrPatchIndex();
 
             label nccPatchFacei = 0;
             labelPairTable procNccPatchFaceis;
@@ -453,7 +453,7 @@ void Foam::domainDecomposition::unconformComplete()
                 const label completeNccPatchi =
                     isA<processorCyclicFvPatch>(fvp)
                   ? refCast<const processorCyclicFvPatch>(fvp)
-                   .referPatchID()
+                   .referPatchIndex()
                   : procNccPatchi;
 
                 const label size =
@@ -512,7 +512,7 @@ void Foam::domainDecomposition::unconformComplete()
 
                 const label nbrNccPatchi =
                     refCast<const nonConformalCyclicFvPatch>(fvp)
-                   .nbrPatchID();
+                   .nbrPatchIndex();
 
                 checkNonConformalCoupledPatchOrdering
                 (
@@ -583,7 +583,7 @@ void Foam::domainDecomposition::unconformProcs()
                 const label completeNccPatchi =
                     isA<processorCyclicFvPatch>(fvp)
                   ? refCast<const processorCyclicFvPatch>(fvp)
-                   .referPatchID()
+                   .referPatchIndex()
                   : procNccPatchi;
 
                 polyFacesBf[procNccPatchi] =
@@ -639,7 +639,7 @@ void Foam::domainDecomposition::unconformProcs()
                     {
                         nbrProci = proci;
                         nbrNccPatchi =
-                            refCast<const cyclicFvPatch>(fvp).nbrPatchID();
+                            refCast<const cyclicFvPatch>(fvp).nbrPatchIndex();
                     }
                     else if (isA<processorCyclicFvPatch>(fvp))
                     {
@@ -666,8 +666,8 @@ void Foam::domainDecomposition::unconformProcs()
                                 (
                                     nbrPcFvp.neighbProcNo()
                                  == proci
-                                 && nbrPcFvp.referPatchID()
-                                 == pcFvp.referPatch().nbrPatchID()
+                                 && nbrPcFvp.referPatchIndex()
+                                 == pcFvp.referPatch().nbrPatchIndex()
                                 )
                                 {
                                     nbrNccPatchi = nbrNccPatchj;

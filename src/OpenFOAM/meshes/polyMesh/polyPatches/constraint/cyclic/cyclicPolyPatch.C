@@ -127,9 +127,9 @@ void Foam::cyclicPolyPatch::rename(const wordList& newNames)
 void Foam::cyclicPolyPatch::reorder(const labelUList& newToOldIndex)
 {
     polyPatch::reorder(newToOldIndex);
-    if (nbrPatchID_ != -1)
+    if (nbrPatchIndex_ != -1)
     {
-        nbrPatchID_ = findIndex(newToOldIndex, nbrPatchID_);
+        nbrPatchIndex_ = findIndex(newToOldIndex, nbrPatchIndex_);
     }
 }
 
@@ -149,7 +149,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     coupledPolyPatch(name, size, start, index, bm, patchType),
     cyclicTransform(false),
     nbrPatchName_(word::null),
-    nbrPatchID_(-1),
+    nbrPatchIndex_(-1),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr),
     ownToNbrOrderDataPtr_(nullptr),
@@ -173,7 +173,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     coupledPolyPatch(name, size, start, index, bm, patchType),
     cyclicTransform(transform),
     nbrPatchName_(nbrPatchName),
-    nbrPatchID_(-1),
+    nbrPatchIndex_(-1),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr),
     ownToNbrOrderDataPtr_(nullptr),
@@ -196,7 +196,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     cyclicTransform(dict, cyclicTransformDefaultIsNone),
     nbrPatchName_(dict.lookupOrDefault("neighbourPatch", word::null)),
     coupleGroup_(dict),
-    nbrPatchID_(-1),
+    nbrPatchIndex_(-1),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr),
     ownToNbrOrderDataPtr_(nullptr),
@@ -235,7 +235,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     cyclicTransform(pp),
     nbrPatchName_(pp.nbrPatchName_),
     coupleGroup_(pp.coupleGroup_),
-    nbrPatchID_(-1),
+    nbrPatchIndex_(-1),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr),
     ownToNbrOrderDataPtr_(nullptr),
@@ -261,7 +261,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     cyclicTransform(pp),
     nbrPatchName_(neiName),
     coupleGroup_(pp.coupleGroup_),
-    nbrPatchID_(-1),
+    nbrPatchIndex_(-1),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr),
     ownToNbrOrderDataPtr_(nullptr),
@@ -305,13 +305,13 @@ const Foam::word& Foam::cyclicPolyPatch::nbrPatchName() const
 }
 
 
-Foam::label Foam::cyclicPolyPatch::nbrPatchID() const
+Foam::label Foam::cyclicPolyPatch::nbrPatchIndex() const
 {
-    if (nbrPatchID_ == -1)
+    if (nbrPatchIndex_ == -1)
     {
-        nbrPatchID_ = this->boundaryMesh().findIndex(nbrPatchName());
+        nbrPatchIndex_ = this->boundaryMesh().findIndex(nbrPatchName());
 
-        if (nbrPatchID_ == -1)
+        if (nbrPatchIndex_ == -1)
         {
             FatalErrorInFunction
                 << "Illegal neighbourPatch name " << nbrPatchName()
@@ -323,7 +323,7 @@ Foam::label Foam::cyclicPolyPatch::nbrPatchID() const
         // Check that it is a cyclic
         const cyclicPolyPatch& nbrPatch = refCast<const cyclicPolyPatch>
         (
-            this->boundaryMesh()[nbrPatchID_]
+            this->boundaryMesh()[nbrPatchIndex_]
         );
 
         if (nbrPatch.nbrPatchName() != name())
@@ -336,7 +336,7 @@ Foam::label Foam::cyclicPolyPatch::nbrPatchID() const
                 << endl;
         }
     }
-    return nbrPatchID_;
+    return nbrPatchIndex_;
 }
 
 

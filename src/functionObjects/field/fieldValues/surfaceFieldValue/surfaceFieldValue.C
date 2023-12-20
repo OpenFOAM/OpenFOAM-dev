@@ -203,7 +203,8 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
         if
         (
             isA<processorCyclicFvPatch>(fvp)
-         && refCast<const processorCyclicFvPatch>(fvp).referPatchID() == patchId
+         && refCast<const processorCyclicFvPatch>(fvp).referPatchIndex()
+           == patchId
         )
         {
             faceId_.append(identityMap(fvp.size()));

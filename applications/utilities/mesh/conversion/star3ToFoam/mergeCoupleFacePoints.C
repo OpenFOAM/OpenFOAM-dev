@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -308,10 +308,10 @@ void Foam::starMesh::mergeCoupleFacePoints()
             {
                 FatalErrorInFunction
                     << "Error in point merging for cell "
-                    << celli << ". STAR index: " << starCellID_[celli]
+                    << celli << ". STAR index: " << starCellIndex_[celli]
                     << ". " << endl
                     << "Point index: " << curLabels[pointi] << " STAR index "
-                    << starPointID_[curLabels[pointi]] << endl
+                    << starPointIndex_[curLabels[pointi]] << endl
                     << "Please check the geometry for the cell." << endl;
             }
         }
@@ -387,10 +387,10 @@ void Foam::starMesh::mergeCoupleFacePoints()
             {
                 FatalErrorInFunction
                     << "Error in point renumbering for cell "
-                    << celli << ". STAR index: " << starCellID_[celli]
+                    << celli << ". STAR index: " << starCellIndex_[celli]
                     << ". " << endl
                     << "Point index: " << curLabels[pointi] << " STAR index "
-                    << starPointID_[curLabels[pointi]] << " returns invalid "
+                    << starPointIndex_[curLabels[pointi]] << " returns invalid "
                     << "renumbering index: "
                     << renumberPoints[curLabels[pointi]] << "." << endl
                     << "Old cellShape:  " << oldLabels << endl
@@ -403,15 +403,15 @@ void Foam::starMesh::mergeCoupleFacePoints()
 
     Info<< "Renumbering STAR point lookup" << endl;
 
-    labelList oldStarPointID = starPointID_;
+    labelList oldStarPointID = starPointIndex_;
 
-    starPointID_ = -1;
+    starPointIndex_ = -1;
 
-    forAll(starPointID_, pointi)
+    forAll(starPointIndex_, pointi)
     {
         if (renumberPoints[pointi] > -1)
         {
-            starPointID_[renumberPoints[pointi]] = oldStarPointID[pointi];
+            starPointIndex_[renumberPoints[pointi]] = oldStarPointID[pointi];
         }
     }
 

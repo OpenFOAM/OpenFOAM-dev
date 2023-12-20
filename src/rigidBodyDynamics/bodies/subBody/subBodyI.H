@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ inline Foam::RBD::subBody::subBody
 :
     body_(bodyPtr),
     masterName_(masterName),
-    masterID_(masterID),
+    masterIndex_(masterID),
     masterXT_(masterXT)
 {}
 
@@ -66,9 +66,9 @@ inline const Foam::word& Foam::RBD::subBody::masterName() const
 }
 
 
-inline Foam::label Foam::RBD::subBody::masterID() const
+inline Foam::label Foam::RBD::subBody::masterIndex() const
 {
-    return masterID_;
+    return masterIndex_;
 }
 
 

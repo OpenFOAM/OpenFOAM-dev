@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,11 +106,11 @@ void Foam::starMesh::createPolyBoundary()
                                         (
                                             curCellFaces[cellFacei][spI] > -1
                                          && curCellFaces[cellFacei][spI]
-                                                < starPointID_.size()
+                                                < starPointIndex_.size()
                                         )
                                         {
                                             Info<< ","
-                                                << starPointID_
+                                                << starPointIndex_
                                                  [curCellFaces[cellFacei][spI]];
                                         }
                                         else
@@ -140,11 +140,11 @@ void Foam::starMesh::createPolyBoundary()
                                         (
                                             curCellFaces[cellFacei][spI] > -1
                                          && curCellFaces[cellFacei][spI]
-                                                < starPointID_.size()
+                                                < starPointIndex_.size()
                                         )
                                         {
                                             Info<< ","
-                                                << starPointID_
+                                                << starPointIndex_
                                                  [curCellFaces[cellFacei][spI]];
                                         }
                                         else
@@ -189,7 +189,7 @@ void Foam::starMesh::createPolyBoundary()
                 InfoInFunction
                     << "Missing face found in cell " << celli
                     << ".\nType: " << cellShapes_[celli].model().name()
-                    << ". STAR cell number: " << starCellID_[celli]
+                    << ". STAR cell number: " << starCellIndex_[celli]
                     << ". Face: " << missingFace << endl;
 
                 nMissingFaceFound++;
@@ -201,10 +201,10 @@ void Foam::starMesh::createPolyBoundary()
                     if
                     (
                         missingFace[spI] > -1
-                     && missingFace[spI] < starPointID_.size()
+                     && missingFace[spI] < starPointIndex_.size()
                     )
                     {
-                        Info<< "," << starPointID_[missingFace[spI]];
+                        Info<< "," << starPointIndex_[missingFace[spI]];
                     }
                     else
                     {
@@ -265,10 +265,10 @@ void Foam::starMesh::createPolyBoundary()
                 if
                 (
                     problemFace[spI] > -1
-                 && problemFace[spI] < starPointID_.size()
+                 && problemFace[spI] < starPointIndex_.size()
                 )
                 {
-                    Info<< "," << starPointID_[problemFace[spI]];
+                    Info<< "," << starPointIndex_[problemFace[spI]];
                 }
                 else
                 {

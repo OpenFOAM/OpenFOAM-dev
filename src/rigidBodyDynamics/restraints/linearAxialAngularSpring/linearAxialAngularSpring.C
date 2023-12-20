@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,14 +81,14 @@ void Foam::RBD::restraints::linearAxialAngularSpring::restrain
     vector refDir = rotationTensor(vector(1, 0, 0), axis_) & vector(0, 1, 0);
 
     vector oldDir = refQ_ & refDir;
-    vector newDir = model_.X0(bodyID_).E() & refDir;
+    vector newDir = model_.X0(masterBodyIndex_).E() & refDir;
 
     if (mag(oldDir & axis_) > 0.95 || mag(newDir & axis_) > 0.95)
     {
         // Directions close to the axis, changing reference
         refDir = rotationTensor(vector(1, 0, 0), axis_) & vector(0, 0, 1);
         oldDir = refQ_ & refDir;
-        newDir = model_.X0(bodyID_).E() & refDir;
+        newDir = model_.X0(masterBodyIndex_).E() & refDir;
     }
 
     // Removing axis component from oldDir and newDir and normalising
@@ -122,7 +122,7 @@ void Foam::RBD::restraints::linearAxialAngularSpring::restrain
     (
         -(
             stiffness_*theta
-          + damping_*(model_.v(model_.master(bodyID_)).w() & a)
+          + damping_*(model_.v(masterBodyIndex_).w() & a)
          )*a
     );
 
@@ -134,7 +134,9 @@ void Foam::RBD::restraints::linearAxialAngularSpring::restrain
     }
 
     // Accumulate the force for the restrained body
-    fx[bodyIndex_] += model_.X0(bodyID_).T() & spatialVector(moment, Zero);
+    fx[masterBodyIndex_] +=
+        model_.X0(masterBodyIndex_).T()
+      & spatialVector(moment, Zero);
 }
 
 

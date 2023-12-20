@@ -52,13 +52,13 @@ void Foam::slidingInterface::calcAttachedAddressing() const
         // Master side
 
         const primitiveFacePatch& masterPatch =
-            faceZones[masterFaceZoneID_.index()]();
+            faceZones[masterFaceZoneIndex_.index()]();
 
         const labelList& masterPatchFaces =
-            faceZones[masterFaceZoneID_.index()];
+            faceZones[masterFaceZoneIndex_.index()];
 
         const boolList& masterFlip =
-            faceZones[masterFaceZoneID_.index()].flipMap();
+            faceZones[masterFaceZoneIndex_.index()].flipMap();
 
         masterFaceCellsPtr_ = new labelList(masterPatchFaces.size());
         labelList& mfc = *masterFaceCellsPtr_;
@@ -78,13 +78,13 @@ void Foam::slidingInterface::calcAttachedAddressing() const
         // Slave side
 
         const primitiveFacePatch& slavePatch =
-            faceZones[slaveFaceZoneID_.index()]();
+            faceZones[slaveFaceZoneIndex_.index()]();
 
         const labelList& slavePatchFaces =
-            faceZones[slaveFaceZoneID_.index()];
+            faceZones[slaveFaceZoneIndex_.index()];
 
         const boolList& slaveFlip =
-            faceZones[slaveFaceZoneID_.index()].flipMap();
+            faceZones[slaveFaceZoneIndex_.index()].flipMap();
 
         slaveFaceCellsPtr_ = new labelList(slavePatchFaces.size());
         labelList& sfc = *slaveFaceCellsPtr_;
@@ -158,7 +158,7 @@ void Foam::slidingInterface::calcAttachedAddressing() const
                 if
                 (
                     faceZones.whichZone(curFaces[facei])
-                 != masterFaceZoneID_.index()
+                 != masterFaceZoneIndex_.index()
                 )
                 {
                     masterStickOutFaceMap.insert(curFaces[facei]);
@@ -187,7 +187,7 @@ void Foam::slidingInterface::calcAttachedAddressing() const
                 if
                 (
                     faceZones.whichZone(curFaces[facei])
-                 != slaveFaceZoneID_.index()
+                 != slaveFaceZoneIndex_.index()
                 )
                 {
                     slaveStickOutFaceMap.insert(curFaces[facei]);
@@ -203,7 +203,7 @@ void Foam::slidingInterface::calcAttachedAddressing() const
         retiredPointMapPtr_ =
             new Map<label>
             (
-                2*faceZones[slaveFaceZoneID_.index()]().nPoints()
+                2*faceZones[slaveFaceZoneIndex_.index()]().nPoints()
             );
 
         // Ditto for cut point edge map.  This is a rough guess of its size
@@ -211,7 +211,7 @@ void Foam::slidingInterface::calcAttachedAddressing() const
         cutPointEdgePairMapPtr_ =
             new Map<Pair<edge>>
             (
-                faceZones[slaveFaceZoneID_.index()]().nEdges()
+                faceZones[slaveFaceZoneIndex_.index()]().nEdges()
             );
     }
     else
@@ -262,7 +262,7 @@ void Foam::slidingInterface::renumberAttachedAddressing
     labelList& newMfc = *newMfcPtr;
 
     const labelList& mfzRenumber =
-        m.faceZoneFaceMap()[masterFaceZoneID_.index()];
+        m.faceZoneFaceMap()[masterFaceZoneIndex_.index()];
 
     forAll(mfc, facei)
     {
@@ -279,7 +279,7 @@ void Foam::slidingInterface::renumberAttachedAddressing
     labelList& newSfc = *newSfcPtr;
 
     const labelList& sfzRenumber =
-        m.faceZoneFaceMap()[slaveFaceZoneID_.index()];
+        m.faceZoneFaceMap()[slaveFaceZoneIndex_.index()];
 
     forAll(sfc, facei)
     {
@@ -441,7 +441,7 @@ void Foam::slidingInterface::renumberAttachedAddressing
     pointField& newProjectedSlavePoints = *newProjectedSlavePointsPtr;
 
     const labelList& sfzPointRenumber =
-        m.faceZonePointMap()[slaveFaceZoneID_.index()];
+        m.faceZonePointMap()[slaveFaceZoneIndex_.index()];
 
     forAll(newProjectedSlavePoints, pointi)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ class STLASCIILexer
     // Private Data
 
         bool  sorted_;
-        label groupID_;      // current solid group
+        label groupIndex_;      // current solid group
         label lineNo_;
         word  startError_;
 
@@ -133,7 +133,7 @@ STLASCIILexer::STLASCIILexer(istream* is, const label approxNpoints)
 :
     yyFlexLexer(is),
     sorted_(true),
-    groupID_(-1),
+    groupIndex_(-1),
     lineNo_(1),
     points_(approxNpoints),
     facets_(approxNpoints)
@@ -245,17 +245,17 @@ endsolid              {space}("endsolid"|"ENDSOLID")({some_space}{word})*
         HashTable<label>::const_iterator fnd = lookup_.find(name);
         if (fnd != lookup_.end())
         {
-            if (groupID_ != fnd())
+            if (groupIndex_ != fnd())
             {
                 // group appeared out of order
                 sorted_ = false;
             }
-            groupID_ = fnd();
+            groupIndex_ = fnd();
         }
         else
         {
-            groupID_ = sizes_.size();
-            lookup_.insert(name, groupID_);
+            groupIndex_ = sizes_.size();
+            lookup_.insert(name, groupIndex_);
             names_.append(name);
             sizes_.append(0);
         }
@@ -268,17 +268,17 @@ endsolid              {space}("endsolid"|"ENDSOLID")({some_space}{word})*
         HashTable<label>::const_iterator fnd = lookup_.find(name);
         if (fnd != lookup_.end())
         {
-            if (groupID_ != fnd())
+            if (groupIndex_ != fnd())
             {
                 // group appeared out of order
                 sorted_ = false;
             }
-            groupID_ = fnd();
+            groupIndex_ = fnd();
         }
         else
         {
-            groupID_ = sizes_.size();
-            lookup_.insert(name, groupID_);
+            groupIndex_ = sizes_.size();
+            lookup_.insert(name, groupIndex_);
             names_.append(name);
             sizes_.append(0);
         }
@@ -344,8 +344,8 @@ endsolid              {space}("endsolid"|"ENDSOLID")({some_space}{word})*
     }
 
 <readFacet>{endfacet} {
-        facets_.append(groupID_);
-        sizes_[groupID_]++;
+        facets_.append(groupIndex_);
+        sizes_[groupIndex_]++;
         BEGIN(INITIAL);
     }
 

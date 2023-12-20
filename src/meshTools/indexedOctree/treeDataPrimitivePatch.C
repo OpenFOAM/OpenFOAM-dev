@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ findSelfIntersectOp::findSelfIntersectOp
 )
 :
     tree_(tree),
-    edgeID_(edgeID)
+    edgeIndex_(edgeID)
 {}
 
 
@@ -581,7 +581,7 @@ bool Foam::treeDataPrimitivePatch<PatchType>::findSelfIntersectOp::operator()
     point& intersectionPoint
 ) const
 {
-    if (edgeID_ == -1)
+    if (edgeIndex_ == -1)
     {
         FatalErrorInFunction
             << "EdgeID not set. Please set edgeID to the index of"
@@ -593,7 +593,7 @@ bool Foam::treeDataPrimitivePatch<PatchType>::findSelfIntersectOp::operator()
     const PatchType& patch = shape.patch();
 
     const typename PatchType::FaceType& f = patch.localFaces()[index];
-    const edge& e = patch.edges()[edgeID_];
+    const edge& e = patch.edges()[edgeIndex_];
 
     if (findIndex(f, e[0]) == -1 && findIndex(f, e[1]) == -1)
     {

@@ -406,7 +406,7 @@ void Foam::CloudFilmTransfer<CloudType>::splashInteraction
         // Create a new parcel by copying source parcel
         parcelType* pPtr = new parcelType(p);
 
-        pPtr->origId() = pPtr->getNewParticleID();
+        pPtr->origId() = pPtr->getNewParticleIndex();
 
         pPtr->origProc() = Pstream::myProcNo();
 

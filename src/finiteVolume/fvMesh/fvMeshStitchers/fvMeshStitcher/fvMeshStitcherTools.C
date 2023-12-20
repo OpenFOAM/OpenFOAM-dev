@@ -61,7 +61,7 @@ Foam::fvMeshStitcherTools::origNcMagSfb(const fvMesh& mesh)
         const nonConformalFvPatch& ncFvp =
             refCast<const nonConformalFvPatch>(fvp);
 
-        const label origPatchi = ncFvp.origPatchID();
+        const label origPatchi = ncFvp.origPatchIndex();
         const fvPatch& origFvp = ncFvp.origPatch();
 
         result[origPatchi] +=

@@ -326,8 +326,8 @@ void Foam::domainDecomposition::reconstruct()
 
             const label proci = pcpp.myProcNo();
             const label nbrProci = pcpp.neighbProcNo();
-            const label refPatchi = pcpp.referPatchID();
-            const label nbrRefPatchi = pcpp.referPatch().nbrPatchID();
+            const label refPatchi = pcpp.referPatchIndex();
+            const label nbrRefPatchi = pcpp.referPatch().nbrPatchIndex();
 
             FixedList<label, 3> key({proci, nbrProci, refPatchi});
             FixedList<label, 3> nbrKey({nbrProci, proci, nbrRefPatchi});

@@ -103,11 +103,11 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclic
             const nonConformalProcessorCyclicFvPatch& ncpcFvp =
                 refCast<const nonConformalProcessorCyclicFvPatch>(fvp);
 
-            if (ncpcFvp.referPatchID() == nccFvp.index())
+            if (ncpcFvp.referPatchIndex() == nccFvp.index())
             {
                 patchis[ncpcFvp.neighbProcNo()] = patchj;
             }
-            if (ncpcFvp.referPatchID() == nbrNccFvp.index())
+            if (ncpcFvp.referPatchIndex() == nbrNccFvp.index())
             {
                 nbrPatchis[ncpcFvp.neighbProcNo()] = patchj;
             }
@@ -1011,7 +1011,7 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclics
             tOrigFacesNbrBf,
             tOrigSfNbrBf,
             tOrigCfNbrBf,
-            patchEdgeParts[nccFvp.origPatchID()]
+            patchEdgeParts[nccFvp.origPatchIndex()]
         );
     }
 
@@ -1550,7 +1550,7 @@ bool Foam::fvMeshStitcher::connect
                    .index()
                   : isA<nonConformalProcessorCyclicFvPatch>(fvp)
                   ? refCast<const nonConformalProcessorCyclicFvPatch>(fvp)
-                   .referPatchID()
+                   .referPatchIndex()
                   : -1;
 
                 if (nccPatchi != -1)

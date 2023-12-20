@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
     ),
     referPatchName_(referPatchName),
     tag_(-1),
-    referPatchID_(-1)
+    referPatchIndex_(-1)
 {}
 
 
@@ -94,7 +94,7 @@ Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
     ),
     referPatchName_(referPatchName),
     tag_(-1),
-    referPatchID_(-1)
+    referPatchIndex_(-1)
 {}
 
 
@@ -110,7 +110,7 @@ Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
     processorPolyPatch(name, dict, index, bm, patchType),
     referPatchName_(dict.lookup("referPatch")),
     tag_(dict.lookupOrDefault<int>("tag", -1)),
-    referPatchID_(-1)
+    referPatchIndex_(-1)
 {}
 
 
@@ -123,7 +123,7 @@ Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
     processorPolyPatch(pp, bm),
     referPatchName_(pp.referPatchName()),
     tag_(pp.tag()),
-    referPatchID_(-1)
+    referPatchIndex_(-1)
 {}
 
 
@@ -139,7 +139,7 @@ Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
     processorPolyPatch(pp, bm, index, newSize, newStart),
     referPatchName_(pp.referPatchName_),
     tag_(pp.tag()),
-    referPatchID_(-1)
+    referPatchIndex_(-1)
 {}
 
 
@@ -260,7 +260,7 @@ void Foam::processorCyclicPolyPatch::initTopoChange(PstreamBuffers& pBufs)
 
 void Foam::processorCyclicPolyPatch::topoChange(PstreamBuffers& pBufs)
 {
-     referPatchID_ = -1;
+     referPatchIndex_ = -1;
      processorPolyPatch::topoChange(pBufs);
 }
 

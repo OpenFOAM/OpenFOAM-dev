@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ class ParSortableList
                 label index_;
 
                 //- Proc
-                label procID_;
+                label procIndex_;
 
 
         public:
@@ -127,14 +127,14 @@ class ParSortableList
                     return index_;
                 }
 
-                label procID() const
+                label procIndex() const
                 {
-                    return procID_;
+                    return procIndex_;
                 }
 
-                label& procID()
+                label& procIndex()
                 {
-                    return procID_;
+                    return procIndex_;
                 }
         };
 

@@ -89,10 +89,10 @@ bool Foam::slidingInterface::projectPoints() const
     const polyMesh& mesh = this->mesh();
 
     const primitiveFacePatch& masterPatch =
-        mesh.faceZones()[masterFaceZoneID_.index()]();
+        mesh.faceZones()[masterFaceZoneIndex_.index()]();
 
     const primitiveFacePatch& slavePatch =
-        mesh.faceZones()[slaveFaceZoneID_.index()]();
+        mesh.faceZones()[slaveFaceZoneIndex_.index()]();
 
     // Get references to local points, local edges and local faces
     // for master and slave patch

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ class mapSubsetMesh
         const labelList cellMap_;
 
         //- Patch for exposed faces
-        const label exposedPatchID_;
+        const label exposedPatchIndex_;
 
         //- List of the old patch sizes
         labelList oldPatchSizes_;
@@ -142,9 +142,9 @@ public:
             }
 
             //- Patch that exposed faces were put into
-            label exposedPatchID() const
+            label exposedPatchIndex() const
             {
-                return exposedPatchID_;
+                return exposedPatchIndex_;
             }
 
             //- Old point map.

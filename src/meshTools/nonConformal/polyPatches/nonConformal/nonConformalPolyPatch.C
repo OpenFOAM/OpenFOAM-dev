@@ -52,9 +52,9 @@ void Foam::nonConformalPolyPatch::validateSize() const
 
 void Foam::nonConformalPolyPatch::rename(const wordList& newNames)
 {
-    if (origPatchID_ != -1)
+    if (origPatchIndex_ != -1)
     {
-        origPatchName_ = newNames[origPatchID_];
+        origPatchName_ = newNames[origPatchIndex_];
     }
     else
     {
@@ -68,9 +68,9 @@ void Foam::nonConformalPolyPatch::rename(const wordList& newNames)
 
 void Foam::nonConformalPolyPatch::reorder(const labelUList& newToOldIndex)
 {
-    if (origPatchID_ != -1)
+    if (origPatchIndex_ != -1)
     {
-        origPatchID_ = findIndex(newToOldIndex, origPatchID_);
+        origPatchIndex_ = findIndex(newToOldIndex, origPatchIndex_);
     }
 }
 
@@ -81,7 +81,7 @@ Foam::nonConformalPolyPatch::nonConformalPolyPatch(const polyPatch& patch)
 :
     patch_(patch),
     origPatchName_(word::null),
-    origPatchID_(-1)
+    origPatchIndex_(-1)
 {
     validateSize();
 }
@@ -95,7 +95,7 @@ Foam::nonConformalPolyPatch::nonConformalPolyPatch
 :
     patch_(patch),
     origPatchName_(origPatchName),
-    origPatchID_(-1)
+    origPatchIndex_(-1)
 {
     validateSize();
 }
@@ -109,7 +109,7 @@ Foam::nonConformalPolyPatch::nonConformalPolyPatch
 :
     patch_(patch),
     origPatchName_(dict.lookup<word>("originalPatch")),
-    origPatchID_(-1)
+    origPatchIndex_(-1)
 {
     validateSize();
 }
@@ -123,7 +123,7 @@ Foam::nonConformalPolyPatch::nonConformalPolyPatch
 :
     patch_(patch),
     origPatchName_(ncPatch.origPatchName_),
-    origPatchID_(-1)
+    origPatchIndex_(-1)
 {
     validateSize();
 }
@@ -149,13 +149,13 @@ const Foam::word& Foam::nonConformalPolyPatch::origPatchName() const
 }
 
 
-Foam::label Foam::nonConformalPolyPatch::origPatchID() const
+Foam::label Foam::nonConformalPolyPatch::origPatchIndex() const
 {
-    if (origPatchID_ == -1)
+    if (origPatchIndex_ == -1)
     {
-        origPatchID_ = patch_.boundaryMesh().findIndex(origPatchName());
+        origPatchIndex_ = patch_.boundaryMesh().findIndex(origPatchName());
 
-        if (origPatchID_ == -1)
+        if (origPatchIndex_ == -1)
         {
             FatalErrorInFunction
                 << "Illegal neighbourPatch name " << origPatchName()
@@ -164,7 +164,7 @@ Foam::label Foam::nonConformalPolyPatch::origPatchID() const
                 << exit(FatalError);
         }
 
-        const polyPatch& p = patch_.boundaryMesh()[origPatchID_];
+        const polyPatch& p = patch_.boundaryMesh()[origPatchIndex_];
 
         if (isA<nonConformalPolyPatch>(p))
         {
@@ -179,13 +179,13 @@ Foam::label Foam::nonConformalPolyPatch::origPatchID() const
         }
     }
 
-    return origPatchID_;
+    return origPatchIndex_;
 }
 
 
 const Foam::polyPatch& Foam::nonConformalPolyPatch::origPatch() const
 {
-    return patch_.boundaryMesh()[origPatchID()];
+    return patch_.boundaryMesh()[origPatchIndex()];
 }
 
 

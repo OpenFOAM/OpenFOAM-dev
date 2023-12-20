@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ class cyclicPolyPatch
         const coupleGroupIdentifier coupleGroup_;
 
         //- Index of cyclic neighbour patch
-        mutable label nbrPatchID_;
+        mutable label nbrPatchIndex_;
 
         //- List of edges formed from connected points. e[0] is the point on
         //  this patch, e[1] the corresponding point on the cyclic neighbour.
@@ -247,11 +247,11 @@ public:
         const word& nbrPatchName() const;
 
         //- Neighbour patchID
-        virtual label nbrPatchID() const;
+        virtual label nbrPatchIndex() const;
 
         virtual bool owner() const
         {
-            return index() < nbrPatchID();
+            return index() < nbrPatchIndex();
         }
 
         virtual bool neighbour() const
@@ -261,7 +261,7 @@ public:
 
         const cyclicPolyPatch& nbrPatch() const
         {
-            const polyPatch& pp = this->boundaryMesh()[nbrPatchID()];
+            const polyPatch& pp = this->boundaryMesh()[nbrPatchIndex()];
             return refCast<const cyclicPolyPatch>(pp);
         }
 

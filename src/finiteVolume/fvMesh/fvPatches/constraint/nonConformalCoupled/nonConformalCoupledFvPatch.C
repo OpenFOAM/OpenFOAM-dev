@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,9 +134,9 @@ const Foam::word& Foam::nonConformalCoupledFvPatch::errorPatchName() const
 }
 
 
-Foam::label Foam::nonConformalCoupledFvPatch::errorPatchID() const
+Foam::label Foam::nonConformalCoupledFvPatch::errorPatchIndex() const
 {
-    return nonConformalCoupledPolyPatch_.errorPatchID();
+    return nonConformalCoupledPolyPatch_.errorPatchIndex();
 }
 
 
@@ -146,7 +146,7 @@ Foam::nonConformalCoupledFvPatch::errorPatch() const
     return
         refCast<const nonConformalErrorFvPatch>
         (
-            patch_.boundaryMesh()[errorPatchID()]
+            patch_.boundaryMesh()[errorPatchIndex()]
         );
 }
 

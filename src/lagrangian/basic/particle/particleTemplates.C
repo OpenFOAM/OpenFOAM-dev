@@ -371,7 +371,7 @@ bool Foam::particle::hitNonConformalCyclicPatch
     {
         td.sendFromPatch = nccpp.index();
         td.sendToProc = receiveProcFace.proci;
-        td.sendToPatch = nccpp.nbrPatchID();
+        td.sendToPatch = nccpp.nbrPatchIndex();
         td.sendToPatchFace = receiveProcFace.elementi;
         td.sendToPosition = receivePos;
 
@@ -389,7 +389,7 @@ bool Foam::particle::hitNonConformalCyclicPatch
     correctAfterNonConformalCyclicTransfer
     (
         td.mesh,
-        nccpp.nbrPatchID(),
+        nccpp.nbrPatchIndex(),
         td.patchNLocateBoundaryHits
     );
 

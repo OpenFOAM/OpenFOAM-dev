@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,15 +82,15 @@ public:
         }
 
         //- Return the referring patch ID
-        label referPatchID() const
+        label referPatchIndex() const
         {
-            return procPolyPatch_.referPatchID();
+            return procPolyPatch_.referPatchIndex();
         }
 
         //- Return a reference to the referring patch
         const cyclicFvPatch& referPatch() const
         {
-            const fvPatch& fvp = this->boundaryMesh()[referPatchID()];
+            const fvPatch& fvp = this->boundaryMesh()[referPatchIndex()];
             return refCast<const cyclicFvPatch>(fvp);
         }
 

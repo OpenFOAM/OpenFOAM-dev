@@ -62,7 +62,7 @@ private:
         mutable word origPatchName_;
 
         //- Index of the patch from which this patch originates
-        mutable label origPatchID_;
+        mutable label origPatchIndex_;
 
 
     // Private Member Functions
@@ -128,7 +128,7 @@ public:
         const word& origPatchName() const;
 
         //- Original patchID
-        label origPatchID() const;
+        label origPatchIndex() const;
 
         //- Original patch
         const polyPatch& origPatch() const;

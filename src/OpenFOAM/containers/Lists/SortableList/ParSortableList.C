@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ void Foam::ParSortableList<Type>::copyInto
 
         tagVal.value() = values[elemI];
         tagVal.index() = indices[elemI];
-        tagVal.procID() = fromProcNo;
+        tagVal.procIndex() = fromProcNo;
 
         destI++;
     }
@@ -338,7 +338,7 @@ void Foam::ParSortableList<Type>::sort()
     {
         this->operator[](elemI) = combinedValues[elemI].value();
         indices_[elemI] = combinedValues[elemI].index();
-        procs_[elemI] = combinedValues[elemI].procID();
+        procs_[elemI] = combinedValues[elemI].procIndex();
     }
 }
 

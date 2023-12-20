@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,11 +74,11 @@ protected:
         //- Name of the restraint
         word name_;
 
-        //- ID of the body the restraint is applied to
-        label bodyID_;
-
-        //- Index of the body the force is applied to
+        //- Index of the body the restraint is applied to
         label bodyIndex_;
+
+        //- Index of the master body the restraint is applied to
+        label masterBodyIndex_;
 
         //- Restraint model specific coefficient dictionary
         dictionary coeffs_;
@@ -153,9 +153,9 @@ public:
             return name_;
         }
 
-        label bodyID() const
+        label bodyIndex() const
         {
-            return bodyID_;
+            return bodyIndex_;
         }
 
         //- Accumulate the retraint internal joint forces into the tau field and

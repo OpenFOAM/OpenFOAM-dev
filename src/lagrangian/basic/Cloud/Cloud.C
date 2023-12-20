@@ -151,7 +151,7 @@ Foam::labelListList Foam::Cloud<ParticleType>::patchNonConformalCyclicPatches
             const nonConformalCyclicPolyPatch& nccPp =
                 refCast<const nonConformalCyclicPolyPatch>(pbm[patchi]);
 
-            result[nccPp.origPatchID()].append(patchi);
+            result[nccPp.origPatchIndex()].append(patchi);
         }
     }
 

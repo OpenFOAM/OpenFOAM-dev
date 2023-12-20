@@ -55,10 +55,10 @@ class polyAddPoint
         point p_;
 
         //- Master point
-        label masterPointID_;
+        label masterPointIndex_;
 
         //- Point zone ID
-        label zoneID_;
+        label zoneIndex_;
 
         //- Does the point support a cell
         bool inCell_;
@@ -78,8 +78,8 @@ public:
         polyAddPoint()
         :
             p_(Zero),
-            masterPointID_(-1),
-            zoneID_(-1),
+            masterPointIndex_(-1),
+            zoneIndex_(-1),
             inCell_(false)
         {}
 
@@ -93,17 +93,17 @@ public:
         )
         :
             p_(p),
-            masterPointID_(masterPointID),
-            zoneID_(zoneID),
+            masterPointIndex_(masterPointID),
+            zoneIndex_(zoneID),
             inCell_(inCell)
         {
-            if (zoneID_ < 0 && !inCell)
+            if (zoneIndex_ < 0 && !inCell)
             {
                 FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "point: " << p
-                    << " master: " << masterPointID_
-                    << " zone: " << zoneID_
+                    << " master: " << masterPointIndex_
+                    << " zone: " << zoneIndex_
                     << abort(FatalError);
             }
 
@@ -128,27 +128,27 @@ public:
         }
 
         //- Master point label
-        label masterPointID() const
+        label masterPointIndex() const
         {
-            return masterPointID_;
+            return masterPointIndex_;
         }
 
         //- Is the point appended with no master
         bool appended() const
         {
-            return masterPointID_ < 0;
+            return masterPointIndex_ < 0;
         }
 
         //- Does the point belong to a zone?
         bool isInZone() const
         {
-            return zoneID_ >= 0;
+            return zoneIndex_ >= 0;
         }
 
         //- Point zone ID
-        label zoneID() const
+        label zoneIndex() const
         {
-            return zoneID_;
+            return zoneIndex_;
         }
 
         //- Does the point support a cell

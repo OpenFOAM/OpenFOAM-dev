@@ -42,7 +42,9 @@ Foam::label Foam::fvFieldReconstructor::completePatchID
     }
     else if (isA<processorCyclicFvPatch>(procPatch))
     {
-        return refCast<const processorCyclicFvPatch>(procPatch).referPatchID();
+        return
+            refCast<const processorCyclicFvPatch>(procPatch)
+           .referPatchIndex();
     }
     else
     {

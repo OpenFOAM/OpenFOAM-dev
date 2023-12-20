@@ -75,9 +75,9 @@ Foam::perfectInterface::perfectInterface
 )
 :
     polyMeshModifier(name, mesh),
-    faceZoneID_(mesh.faceZones().findIndex(faceZoneName)),
-    masterPatchID_(mesh.boundaryMesh().findIndex(masterPatchName)),
-    slavePatchID_(mesh.boundaryMesh().findIndex(slavePatchName))
+    faceZoneIndex_(mesh.faceZones().findIndex(faceZoneName)),
+    masterPatchIndex_(mesh.boundaryMesh().findIndex(masterPatchName)),
+    slavePatchIndex_(mesh.boundaryMesh().findIndex(slavePatchName))
 {}
 
 
@@ -306,7 +306,7 @@ void Foam::perfectInterface::setRefinement
     // comment above about patch1 and patch0 never sharing points) and
     // becoming internal.
     const boolList& mfFlip =
-        mesh.faceZones()[faceZoneID_].flipMap();
+        mesh.faceZones()[faceZoneIndex_].flipMap();
 
     forAll(pp0, i)
     {
@@ -334,7 +334,7 @@ void Foam::perfectInterface::setRefinement
                 nbr,                    // neighbour
                 false,                  // face flip
                 -1,                     // patch for face
-                faceZoneID_,            // zone for face
+                faceZoneIndex_,            // zone for face
                 mfFlip[i]               // face flip in zone
             );
         }
@@ -348,7 +348,7 @@ void Foam::perfectInterface::setRefinement
                 own,                    // neighbour
                 true,                   // face flip
                 -1,                     // patch for face
-                faceZoneID_,            // zone for face
+                faceZoneIndex_,            // zone for face
                 !mfFlip[i]              // face flip in zone
             );
         }
@@ -362,16 +362,16 @@ void Foam::perfectInterface::setRefinement(polyTopoChange& ref) const
     {
         Pout<< "bool perfectInterface::setRefinement(polyTopoChange&) const : "
             << "for object " << name() << " : "
-            << "masterPatchID_:" << masterPatchID_
-            << " slavePatchID_:" << slavePatchID_
-            << " faceZoneID_:" << faceZoneID_ << endl;
+            << "masterPatchIndex_:" << masterPatchIndex_
+            << " slavePatchIndex_:" << slavePatchIndex_
+            << " faceZoneIndex_:" << faceZoneIndex_ << endl;
     }
 
     const polyMesh& mesh = this->mesh();
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
-    const polyPatch& patch0 = patches[masterPatchID_];
-    const polyPatch& patch1 = patches[slavePatchID_];
+    const polyPatch& patch0 = patches[masterPatchIndex_];
+    const polyPatch& patch1 = patches[slavePatchIndex_];
 
     labelList pp0Labels(identityMap(patch0.size())+patch0.start());
     indirectPrimitivePatch pp0

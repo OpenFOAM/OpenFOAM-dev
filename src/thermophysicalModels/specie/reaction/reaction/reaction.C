@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::label Foam::reaction::nUnNamedReactions(0);
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::label Foam::reaction::getNewReactionID()
+Foam::label Foam::reaction::getNewReactionIndex()
 {
     return nUnNamedReactions++;
 }
@@ -49,7 +49,7 @@ Foam::reaction::reaction
     const List<specieCoeffs>& rhs
 )
 :
-    name_("un-named-reaction-" + Foam::name(getNewReactionID())),
+    name_("un-named-reaction-" + Foam::name(getNewReactionIndex())),
     species_(species),
     lhs_(lhs),
     rhs_(rhs)

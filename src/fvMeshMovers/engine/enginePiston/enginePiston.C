@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Foam::enginePiston::enginePiston
 )
 :
     meshMover_(refCast<const fvMeshMovers::engine>(meshMover)),
-    patchID_(pistonPatchName, meshMover_.mesh().boundaryMesh()),
+    patchIndex_(pistonPatchName, meshMover_.mesh().boundaryMesh()),
     csPtr_(pistonCS),
     minLayer_(minLayer),
     maxLayer_(maxLayer)
@@ -51,7 +51,7 @@ Foam::enginePiston::enginePiston
 )
 :
     meshMover_(refCast<const fvMeshMovers::engine>(meshMover)),
-    patchID_(dict.lookup("patch"), meshMover_.mesh().boundaryMesh()),
+    patchIndex_(dict.lookup("patch"), meshMover_.mesh().boundaryMesh()),
     csPtr_
     (
         coordinateSystem::New
@@ -70,7 +70,7 @@ Foam::enginePiston::enginePiston
 void Foam::enginePiston::writeDict(Ostream& os) const
 {
     os  << nl << token::BEGIN_BLOCK
-        << "patch " << patchID_.name() << token::END_STATEMENT << nl
+        << "patch " << patchIndex_.name() << token::END_STATEMENT << nl
         << "minLayer " << minLayer_ << token::END_STATEMENT << nl
         << "maxLayer " << maxLayer_ << token::END_STATEMENT << nl
         << token::END_BLOCK << endl;

@@ -65,22 +65,22 @@ class polyAddFace
         label neighbour_;
 
         //- Master point ID for faces blown up from points
-        label masterPointID_;
+        label masterPointIndex_;
 
         //- Master edge ID for faces blown up from edges
-        label masterEdgeID_;
+        label masterEdgeIndex_;
 
         //- Master face ID for faces blown up from faces
-        label masterFaceID_;
+        label masterFaceIndex_;
 
         //- Does the face flux need to be flipped
         bool flipFaceFlux_;
 
         //- Boundary patch ID
-        label patchID_;
+        label patchIndex_;
 
         //- Face zone ID
-        label zoneID_;
+        label zoneIndex_;
 
         //- Face zone flip
         bool zoneFlip_;
@@ -102,12 +102,12 @@ public:
             face_(0),
             owner_(-1),
             neighbour_(-1),
-            masterPointID_(-1),
-            masterEdgeID_(-1),
-            masterFaceID_(-1),
+            masterPointIndex_(-1),
+            masterEdgeIndex_(-1),
+            masterFaceIndex_(-1),
             flipFaceFlux_(false),
-            patchID_(-1),
-            zoneID_(-1),
+            patchIndex_(-1),
+            zoneIndex_(-1),
             zoneFlip_(false)
         {}
 
@@ -130,12 +130,12 @@ public:
             face_(f),
             owner_(owner),
             neighbour_(neighbour),
-            masterPointID_(masterPointID),
-            masterEdgeID_(masterEdgeID),
-            masterFaceID_(masterFaceID),
+            masterPointIndex_(masterPointID),
+            masterEdgeIndex_(masterEdgeID),
+            masterFaceIndex_(masterFaceID),
             flipFaceFlux_(flipFaceFlux),
-            patchID_(patchID),
-            zoneID_(zoneID),
+            patchIndex_(patchID),
+            zoneIndex_(zoneID),
             zoneFlip_(zoneFlip)
         {
             if (face_.size() < 3)
@@ -143,10 +143,10 @@ public:
                 FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "Face: " << face_
-                    << " masterPointID:" << masterPointID_
-                    << " masterEdgeID:" << masterEdgeID_
-                    << " masterFaceID:" << masterFaceID_
-                    << " patchID:" << patchID_
+                    << " masterPointID:" << masterPointIndex_
+                    << " masterEdgeID:" << masterEdgeIndex_
+                    << " masterFaceID:" << masterFaceIndex_
+                    << " patchID:" << patchIndex_
                     << " owner:" << owner_
                     << " neighbour:" << neighbour_
                     << abort(FatalError);
@@ -157,10 +157,10 @@ public:
                 FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "Face: " << face_
-                    << " masterPointID:" << masterPointID_
-                    << " masterEdgeID:" << masterEdgeID_
-                    << " masterFaceID:" << masterFaceID_
-                    << " patchID:" << patchID_
+                    << " masterPointID:" << masterPointIndex_
+                    << " masterEdgeID:" << masterEdgeIndex_
+                    << " masterFaceID:" << masterFaceIndex_
+                    << " patchID:" << patchIndex_
                     << " owner:" << owner_
                     << " neighbour:" << neighbour_
                     << abort(FatalError);
@@ -171,10 +171,10 @@ public:
                 FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "Face: " << face_
-                    << " masterPointID:" << masterPointID_
-                    << " masterEdgeID:" << masterEdgeID_
-                    << " masterFaceID:" << masterFaceID_
-                    << " patchID:" << patchID_
+                    << " masterPointID:" << masterPointIndex_
+                    << " masterEdgeID:" << masterEdgeIndex_
+                    << " masterFaceID:" << masterFaceIndex_
+                    << " patchID:" << patchIndex_
                     << " owner:" << owner_
                     << " neighbour:" << neighbour_
                     << abort(FatalError);
@@ -185,10 +185,10 @@ public:
                 FatalErrorInFunction
                     << ".  This is not allowed.\n"
                     << "Face: " << face_
-                    << " masterPointID:" << masterPointID_
-                    << " masterEdgeID:" << masterEdgeID_
-                    << " masterFaceID:" << masterFaceID_
-                    << " patchID:" << patchID_
+                    << " masterPointID:" << masterPointIndex_
+                    << " masterEdgeID:" << masterEdgeIndex_
+                    << " masterFaceID:" << masterFaceIndex_
+                    << " patchID:" << patchIndex_
                     << " owner:" << owner_
                     << " neighbour:" << neighbour_
                     << abort(FatalError);
@@ -200,24 +200,24 @@ public:
                     << "This is not allowed.\n"
                     << "Face: " << face_
                     << "Face: " << face_
-                    << " masterPointID:" << masterPointID_
-                    << " masterEdgeID:" << masterEdgeID_
-                    << " masterFaceID:" << masterFaceID_
-                    << " patchID:" << patchID_
+                    << " masterPointID:" << masterPointIndex_
+                    << " masterEdgeID:" << masterEdgeIndex_
+                    << " masterFaceID:" << masterFaceIndex_
+                    << " patchID:" << patchIndex_
                     << " owner:" << owner_
                     << " neighbour:" << neighbour_
                     << abort(FatalError);
             }
 
-            if (zoneID_ == -1 && zoneFlip)
+            if (zoneIndex_ == -1 && zoneFlip)
             {
                 FatalErrorInFunction
                     << "belong to zone.  This is not allowed.\n"
                     << "Face: " << face_
-                    << " masterPointID:" << masterPointID_
-                    << " masterEdgeID:" << masterEdgeID_
-                    << " masterFaceID:" << masterFaceID_
-                    << " patchID:" << patchID_
+                    << " masterPointID:" << masterPointIndex_
+                    << " masterEdgeID:" << masterEdgeIndex_
+                    << " masterFaceID:" << masterFaceIndex_
+                    << " patchID:" << patchIndex_
                     << " owner:" << owner_
                     << " neighbour:" << neighbour_
                     << abort(FatalError);
@@ -256,19 +256,19 @@ public:
         //- Is the face mastered by a point
         bool isPointMaster() const
         {
-            return masterPointID_ >= 0;
+            return masterPointIndex_ >= 0;
         }
 
         //- Is the face mastered by an edge
         bool isEdgeMaster() const
         {
-            return masterEdgeID_ >= 0;
+            return masterEdgeIndex_ >= 0;
         }
 
         //- Is the face mastered by another face
         bool isFaceMaster() const
         {
-            return masterFaceID_ >= 0;
+            return masterFaceIndex_ >= 0;
         }
 
         //- Is the face appended with no master
@@ -278,21 +278,21 @@ public:
         }
 
         //- Return master point ID
-        label masterPointID() const
+        label masterPointIndex() const
         {
-            return masterPointID_;
+            return masterPointIndex_;
         }
 
         //- Return master edge ID
-        label masterEdgeID() const
+        label masterEdgeIndex() const
         {
-            return masterEdgeID_;
+            return masterEdgeIndex_;
         }
 
         //- Return master face ID
-        label masterFaceID() const
+        label masterFaceIndex() const
         {
-            return masterFaceID_;
+            return masterFaceIndex_;
         }
 
         //- Does the face flux need to be flipped
@@ -304,31 +304,31 @@ public:
         //- Does the face belong to a boundary patch?
         bool isInPatch() const
         {
-            return patchID_ >= 0;
+            return patchIndex_ >= 0;
         }
 
         //- Boundary patch ID
-        label patchID() const
+        label patchIndex() const
         {
-            return patchID_;
+            return patchIndex_;
         }
 
         //- Does the face belong to a zone?
         bool isInZone() const
         {
-            return zoneID_ >= 0;
+            return zoneIndex_ >= 0;
         }
 
         //- Is the face only a zone face (i.e. not belonging to a cell)
         bool onlyInZone() const
         {
-            return zoneID_ >= 0 && owner_ < 0 && neighbour_ < 0;
+            return zoneIndex_ >= 0 && owner_ < 0 && neighbour_ < 0;
         }
 
         //- Face zone ID
-        label zoneID() const
+        label zoneIndex() const
         {
-            return zoneID_;
+            return zoneIndex_;
         }
 
         //- Face zone flip

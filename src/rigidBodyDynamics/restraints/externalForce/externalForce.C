@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ void Foam::RBD::restraints::externalForce::restrain
     }
 
     // Accumulate the force for the restrained body
-    fx[bodyIndex_] += spatialVector(moment, force);
+    fx[masterBodyIndex_] += spatialVector(moment, force);
 }
 
 

@@ -851,7 +851,7 @@ Foam::domainDecomposition::procFaceAddressingBf() const
                 {
                     const label completePatchi =
                         refCast<const processorCyclicFvPatch>(fvp)
-                       .referPatchID();
+                       .referPatchIndex();
 
                     procFaceAddressingBf_[proci][procPatchi] =
                         mag(fvp.patchSlice(procFaceAddressing_[proci]))

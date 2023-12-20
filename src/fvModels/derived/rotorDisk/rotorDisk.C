@@ -122,7 +122,11 @@ void Foam::fv::rotorDisk::checkData()
         case fvCellSet::selectionTypes::all:
         {
             // Set the profile ID for each blade section
-            profiles_.connectBlades(blade_.profileName(), blade_.profileID());
+            profiles_.connectBlades
+            (
+                blade_.profileName(),
+                blade_.profileIndex()
+            );
             switch (inletFlow_)
             {
                 case inletFlowType::fixed:

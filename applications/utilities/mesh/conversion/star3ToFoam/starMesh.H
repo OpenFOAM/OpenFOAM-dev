@@ -103,10 +103,10 @@ class starMesh
         labelList starPointLabelLookup_;
 
         //- STAR point number for a given vertex
-        labelList starPointID_;
+        labelList starPointIndex_;
 
         //- STAR Cell number for a given cell
-        labelList starCellID_;
+        labelList starCellIndex_;
 
         //- Cell labels (STAR cell numbering is not necessarily contiguous)
         labelList starCellLabelLookup_;

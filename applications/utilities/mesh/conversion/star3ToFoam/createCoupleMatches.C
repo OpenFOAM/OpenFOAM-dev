@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ void Foam::starMesh::createCoupleMatches()
         if (coupleI % infoJump == 0)
         {
             Info<< "Doing couple " << coupleI << ". STAR couple ID: "
-                << couples_[coupleI].coupleID() << endl;
+                << couples_[coupleI].coupleIndex() << endl;
         }
 
         // Initialise cell edges for master and slave cells
@@ -96,16 +96,16 @@ void Foam::starMesh::createCoupleMatches()
          {
              Info<< "Couple direction mismatch in the couple match "
                  << coupleI << ". STAR couple ID: "
-                 << couples_[coupleI].coupleID() << endl
+                 << couples_[coupleI].coupleIndex() << endl
                  << "The angle between face normals is "
                  << radToDeg(Foam::acos(faceAreaAngle))
                  << " deg." << endl
                  << "master cell: " << fp.masterCell()
-                 << " STAR number: " << starCellID_[fp.masterCell()]
+                 << " STAR number: " << starCellIndex_[fp.masterCell()]
                  << " type: " << cellShapes_[fp.masterCell()].model().name()
                  << " face: " << fp.masterFace() << endl
                  << "slave cell : " << fp.slaveCell()
-                 << " STAR number: " << starCellID_[fp.slaveCell()]
+                 << " STAR number: " << starCellIndex_[fp.slaveCell()]
                  << " type: " << cellShapes_[fp.slaveCell()].model().name()
                  << " face: " << fp.slaveFace() << endl;
          }
@@ -1103,7 +1103,7 @@ void Foam::starMesh::createCoupleMatches()
                             << endl << "error in face intersection: "
                             << "no edges to consider for closing the loop"
                             << coupleI << ". STAR couple ID: "
-                            << couples_[coupleI].coupleID() << endl
+                            << couples_[coupleI].coupleIndex() << endl
                             << "Cut Master Face: " << newMasterFace << endl
                             << "points: " << newMasterFace.points(points_)
                             << endl
@@ -1225,7 +1225,7 @@ void Foam::starMesh::createCoupleMatches()
                                 << endl << "error in intersected face: "
                                 << "lost thread for intersection of couple "
                                 << coupleI << ". STAR couple ID: "
-                                << couples_[coupleI].coupleID() << endl
+                                << couples_[coupleI].coupleIndex() << endl
                                 << "Cut Master Face: " << newMasterFace << endl
                                 << "points: " << newMasterFace.points(points_)
                                 << endl
@@ -1277,7 +1277,7 @@ void Foam::starMesh::createCoupleMatches()
                                 << "duplicate point in intersected face "
                                 << "for couple no " << coupleI
                                 << ". STAR couple ID: "
-                                << couples_[coupleI].coupleID() << endl
+                                << couples_[coupleI].coupleIndex() << endl
                                 << "Duplicate point label: "
                                 << intersectedFace[checkI] << endl
                                 << "Cut Master Face: " << newMasterFace << endl
@@ -1299,7 +1299,7 @@ void Foam::starMesh::createCoupleMatches()
                     << "void starMesh::createCoupleMatches() : " << endl
                     << "could not find start edge for intersection of couple "
                     << coupleI << ". STAR couple ID: "
-                    << couples_[coupleI].coupleID() << endl
+                    << couples_[coupleI].coupleIndex() << endl
                     << "Cut Master Face: " << newMasterFace << endl
                     << "points: " << newMasterFace.points(points_) << endl
                     << "Cut Slave Face: " << newSlaveFace << endl

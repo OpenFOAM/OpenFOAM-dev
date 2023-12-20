@@ -189,7 +189,7 @@ Foam::chemistryReductionMethods::DAC<ThermoType>::DAC
         );
 
         fuelSpecies_.setSize(fuelSpeciesEntry.size());
-        fuelSpeciesID_.setSize(fuelSpeciesEntry.size());
+        fuelSpeciesIndex_.setSize(fuelSpeciesEntry.size());
         fuelSpeciesProp_.setSize(fuelSpeciesEntry.size());
         scalar Mmtot(0.0);
 
@@ -197,10 +197,10 @@ Foam::chemistryReductionMethods::DAC<ThermoType>::DAC
         {
             fuelSpecies_[i] = fuelSpeciesEntry[i].first();
             fuelSpeciesProp_[i] = fuelSpeciesEntry[i].second();
-            fuelSpeciesID_[i] =
+            fuelSpeciesIndex_[i] =
                 this->chemistry_.thermo().species()[fuelSpecies_[i]];
             scalar curMm =
-                this->chemistry_.specieThermos()[fuelSpeciesID_[i]].W();
+                this->chemistry_.specieThermos()[fuelSpeciesIndex_[i]].W();
             Mmtot += fuelSpeciesProp_[i]/curMm;
         }
 
@@ -211,7 +211,7 @@ Foam::chemistryReductionMethods::DAC<ThermoType>::DAC
         scalar nbO(0.0);
         forAll(fuelSpecies_, i)
         {
-            label curID = fuelSpeciesID_[i];
+            label curID = fuelSpeciesIndex_[i];
             scalar curMm = this->chemistry_.specieThermos()[curID].W();
 
             nbC += fuelSpeciesProp_[i]*Mmtot/curMm*sC_[curID];
@@ -520,11 +520,11 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
             Q.push(HO2Id_);
             this->activeSpecies_[HO2Id_] = true;
             Rvalue[HO2Id_] = 1.0;
-            forAll(fuelSpeciesID_,i)
+            forAll(fuelSpeciesIndex_,i)
             {
-                Q.push(fuelSpeciesID_[i]);
-                this->activeSpecies_[fuelSpeciesID_[i]] = true;
-                Rvalue[fuelSpeciesID_[i]] = 1.0;
+                Q.push(fuelSpeciesIndex_[i]);
+                this->activeSpecies_[fuelSpeciesIndex_[i]] = true;
+                Rvalue[fuelSpeciesIndex_[i]] = 1.0;
             }
 
         }
@@ -541,11 +541,11 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
 
             if (forceFuelInclusion_)
             {
-                forAll(fuelSpeciesID_,i)
+                forAll(fuelSpeciesIndex_,i)
                 {
-                    Q.push(fuelSpeciesID_[i]);
-                    this->activeSpecies_[fuelSpeciesID_[i]] = true;
-                    Rvalue[fuelSpeciesID_[i]] = 1.0;
+                    Q.push(fuelSpeciesIndex_[i]);
+                    this->activeSpecies_[fuelSpeciesIndex_[i]] = true;
+                    Rvalue[fuelSpeciesIndex_[i]] = 1.0;
                 }
             }
         }
@@ -562,11 +562,11 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
             Rvalue[H2OId_] = 1.0;
             if (forceFuelInclusion_)
             {
-                forAll(fuelSpeciesID_,i)
+                forAll(fuelSpeciesIndex_,i)
                 {
-                    Q.push(fuelSpeciesID_[i]);
-                    this->activeSpecies_[fuelSpeciesID_[i]] = true;
-                    Rvalue[fuelSpeciesID_[i]] = 1.0;
+                    Q.push(fuelSpeciesIndex_[i]);
+                    this->activeSpecies_[fuelSpeciesIndex_[i]] = true;
+                    Rvalue[fuelSpeciesIndex_[i]] = 1.0;
                 }
             }
         }

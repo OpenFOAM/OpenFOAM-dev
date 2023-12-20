@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,7 @@ bool Foam::functionObjects::rigidBodyState::write()
 
         forAll(names_, i)
         {
-            const label bodyID = motion.bodyID(names_[i]);
+            const label bodyID = motion.bodyIndex(names_[i]);
 
             const spatialTransform CofR(motion.X0(bodyID));
             const spatialVector vCofR(motion.v(bodyID, Zero));

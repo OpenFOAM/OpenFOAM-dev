@@ -156,9 +156,13 @@ void Foam::starMesh::markBoundaryFaces()
 
                 forAll(curFace, spI)
                 {
-                    if (curFace[spI] > -1 && curFace[spI] < starPointID_.size())
+                    if
+                    (
+                        curFace[spI] > -1
+                     && curFace[spI] < starPointIndex_.size()
+                    )
                     {
-                        Info<< "," << starPointID_[curFace[spI]];
+                        Info<< "," << starPointIndex_[curFace[spI]];
                     }
                     else
                     {

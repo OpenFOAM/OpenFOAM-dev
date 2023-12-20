@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,7 +139,7 @@ bool Foam::functionObjects::rigidBodyPoints::write()
     {
         const RBD::rigidBodyMotion& motion = this->motion();
 
-        const label bodyID = motion.bodyID(body_);
+        const label bodyID = motion.bodyIndex(body_);
 
         forAll(points_, i)
         {

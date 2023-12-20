@@ -62,7 +62,7 @@ class processorCyclicPolyPatch
         mutable int tag_;
 
         //- Index of originating patch
-        mutable label referPatchID_;
+        mutable label referPatchIndex_;
 
 
 protected:
@@ -230,15 +230,15 @@ public:
         );
 
         //- Return the referring patchID
-        label referPatchID() const
+        label referPatchIndex() const
         {
-            if (referPatchID_ == -1)
+            if (referPatchIndex_ == -1)
             {
-                referPatchID_ = this->boundaryMesh().findIndex
+                referPatchIndex_ = this->boundaryMesh().findIndex
                 (
                     referPatchName_
                 );
-                if (referPatchID_ == -1)
+                if (referPatchIndex_ == -1)
                 {
                     FatalErrorInFunction
                         << "Illegal referPatch name " << referPatchName_
@@ -247,13 +247,13 @@ public:
                         << exit(FatalError);
                 }
             }
-            return referPatchID_;
+            return referPatchIndex_;
         }
 
         //- Return a reference to the referring patch
         const cyclicPolyPatch& referPatch() const
         {
-            const polyPatch& pp = this->boundaryMesh()[referPatchID()];
+            const polyPatch& pp = this->boundaryMesh()[referPatchIndex()];
             return refCast<const cyclicPolyPatch>(pp);
         }
 

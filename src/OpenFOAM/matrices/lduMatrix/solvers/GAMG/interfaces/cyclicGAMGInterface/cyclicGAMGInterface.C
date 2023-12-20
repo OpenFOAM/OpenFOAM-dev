@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,9 +94,9 @@ Foam::cyclicGAMGInterface::cyclicGAMGInterface
 )
 :
     GAMGInterface(index, coarseInterfaces),
-    nbrPatchID_
+    nbrPatchIndex_
     (
-        refCast<const cyclicLduInterface>(fineInterface).nbrPatchID()
+        refCast<const cyclicLduInterface>(fineInterface).nbrPatchIndex()
     ),
     owner_(refCast<const cyclicLduInterface>(fineInterface).owner()),
     transform_(refCast<const cyclicLduInterface>(fineInterface).transform())
@@ -171,7 +171,7 @@ Foam::cyclicGAMGInterface::cyclicGAMGInterface
 )
 :
     GAMGInterface(index, coarseInterfaces, is),
-    nbrPatchID_(readLabel(is)),
+    nbrPatchIndex_(readLabel(is)),
     owner_(readBool(is)),
     transform_(is)
 {}
@@ -209,7 +209,7 @@ Foam::tmp<Foam::labelField> Foam::cyclicGAMGInterface::internalFieldTransfer
 void Foam::cyclicGAMGInterface::write(Ostream& os) const
 {
     GAMGInterface::write(os);
-    os  << token::SPACE << nbrPatchID_
+    os  << token::SPACE << nbrPatchIndex_
         << token::SPACE << owner_
         << token::SPACE << transform_;
 }

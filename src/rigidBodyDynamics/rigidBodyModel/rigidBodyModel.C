@@ -135,7 +135,7 @@ Foam::label Foam::RBD::rigidBodyModel::join_
     if (merged(parentID))
     {
         const subBody& sBody = mergedBody(parentID);
-        lambda_.append(sBody.masterID());
+        lambda_.append(sBody.masterIndex());
         XT_.append(XT & sBody.masterXT());
     }
     else
@@ -187,7 +187,7 @@ Foam::RBD::rigidBodyModel::rigidBodyModel(const dictionary& dict)
         {
             merge
             (
-                bodyID(bodyDict.lookup("mergeWith")),
+                bodyIndex(bodyDict.lookup("mergeWith")),
                 bodyDict.lookup("transform"),
                 rigidBody::New(iter().keyword(), bodyDict)
             );
@@ -196,7 +196,7 @@ Foam::RBD::rigidBodyModel::rigidBodyModel(const dictionary& dict)
         {
             join
             (
-                bodyID(bodyDict.lookup("parent")),
+                bodyIndex(bodyDict.lookup("parent")),
                 bodyDict.lookup("transform"),
                 joint::New(*this, bodyDict.subDict("joint")),
                 rigidBody::New(iter().keyword(), bodyDict)
@@ -325,15 +325,15 @@ Foam::label Foam::RBD::rigidBodyModel::merge
     {
         const subBody& sBody = mergedBody(parentID);
 
-        makeComposite(sBody.masterID());
+        makeComposite(sBody.masterIndex());
 
         sBodyPtr.set
         (
             new subBody
             (
                 bodyPtr,
-                bodies_[sBody.masterID()].name(),
-                sBody.masterID(),
+                bodies_[sBody.masterIndex()].name(),
+                sBody.masterIndex(),
                 XT & sBody.masterXT()
             )
         );
@@ -358,7 +358,7 @@ Foam::label Foam::RBD::rigidBodyModel::merge
     mergedBodies_.append(sBodyPtr);
 
     // Merge the sub-body with the parent
-    bodies_[sBody.masterID()].merge(sBody);
+    bodies_[sBody.masterIndex()].merge(sBody);
 
     const label sBodyID = mergedBodyID(mergedBodies_.size() - 1);
     bodyIndices_.insert(sBody.name(), sBodyID);
@@ -375,7 +375,7 @@ Foam::spatialTransform Foam::RBD::rigidBodyModel::X0
     if (merged(bodyId))
     {
         const subBody& mBody = mergedBody(bodyId);
-        return mBody.masterXT() & X0_[mBody.masterID()];
+        return mBody.masterXT() & X0_[mBody.masterIndex()];
     }
     else
     {

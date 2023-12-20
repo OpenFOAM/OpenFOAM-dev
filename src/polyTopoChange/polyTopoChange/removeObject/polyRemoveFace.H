@@ -51,10 +51,10 @@ class polyRemoveFace
     // Private Data
 
         //- Face ID
-        label faceID_;
+        label faceIndex_;
 
         //- Merge faceID or -1
-        label mergeFaceID_;
+        label mergeFaceIndex_;
 
 public:
 
@@ -69,15 +69,15 @@ public:
         //- Construct null.  Used for constructing lists
         polyRemoveFace()
         :
-            faceID_(-1),
-            mergeFaceID_(-1)
+            faceIndex_(-1),
+            mergeFaceIndex_(-1)
         {}
 
         //- Construct from components
         polyRemoveFace(const label faceID, const label mergeFaceID = -1)
         :
-            faceID_(faceID),
-            mergeFaceID_(mergeFaceID)
+            faceIndex_(faceID),
+            mergeFaceIndex_(mergeFaceID)
         {}
 
         //- Construct and return a clone
@@ -93,15 +93,15 @@ public:
     // Member Functions
 
         //- Return face ID
-        label faceID() const
+        label faceIndex() const
         {
-            return faceID_;
+            return faceIndex_;
         }
 
         //- Return merge face ID
-        label mergeFaceID() const
+        label mergeFaceIndex() const
         {
-            return mergeFaceID_;
+            return mergeFaceIndex_;
         }
 };
 

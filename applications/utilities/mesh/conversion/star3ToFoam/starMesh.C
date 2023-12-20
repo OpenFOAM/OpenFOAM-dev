@@ -211,8 +211,8 @@ void Foam::starMesh::clearExtraStorage()
     Info<< "Clearing extra storage" << endl;
 
     starPointLabelLookup_.setSize(0);
-    starPointID_.setSize(0);
-    starCellID_.setSize(0);
+    starPointIndex_.setSize(0);
+    starCellIndex_.setSize(0);
     starCellLabelLookup_.setSize(0);
     starCellPermutation_.setSize(0);
     cellFaces_.setSize(0);
@@ -244,8 +244,8 @@ Foam::starMesh::starMesh
     patchNames_(0),
     patchPhysicalTypes_(0),
     starPointLabelLookup_(0),
-    starPointID_(0),
-    starCellID_(0),
+    starPointIndex_(0),
+    starCellIndex_(0),
     starCellLabelLookup_(0),
     starCellPermutation_(0),
     cellFaces_(0),

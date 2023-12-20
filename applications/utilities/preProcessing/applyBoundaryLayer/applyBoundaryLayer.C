@@ -39,7 +39,6 @@ Description
 #include "viscosityModel.H"
 #include "incompressibleMomentumTransportModels.H"
 #include "wallDist.H"
-#include "bound.H"
 #include "fvcFlux.H"
 
 using namespace Foam;
@@ -190,9 +189,6 @@ int main(int argc, char *argv[])
         if (omegaHeader.headerOk())
         {
             volScalarField omega(omegaHeader, mesh);
-
-            const incompressible::RASModel& rasModel =
-                refCast<const incompressible::RASModel>(turbulence());
 
             omega = (1 - mask)*omega + mask*ce0*sqrt(k)/(Cmu*min(y, ybl));
 

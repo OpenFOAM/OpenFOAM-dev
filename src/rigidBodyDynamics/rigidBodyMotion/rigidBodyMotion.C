@@ -116,7 +116,7 @@ Foam::spatialTransform Foam::RBD::rigidBodyMotion::X00
     if (merged(bodyId))
     {
         const subBody& mBody = mergedBody(bodyId);
-        return mBody.masterXT() & X00_[mBody.masterID()];
+        return mBody.masterXT() & X00_[mBody.masterIndex()];
     }
     else
     {

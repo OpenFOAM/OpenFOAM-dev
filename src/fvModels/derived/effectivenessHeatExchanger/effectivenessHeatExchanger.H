@@ -143,7 +143,7 @@ class effectivenessHeatExchanger
         word faceZoneName_;
 
         //- Id for the face zone
-        label zoneID_;
+        label zoneIndex_;
 
          //- Local list of face IDs
         labelList faceId_;

@@ -56,7 +56,7 @@ class polyModifyFace
         face face_;
 
         //- Master face ID
-        label faceID_;
+        label faceIndex_;
 
         //- Face owner
         label owner_;
@@ -68,13 +68,13 @@ class polyModifyFace
         bool flipFaceFlux_;
 
         //- Boundary patch ID
-        label patchID_;
+        label patchIndex_;
 
         //- Remove from current zone
         bool removeFromZone_;
 
         //- Face zone ID
-        label zoneID_;
+        label zoneIndex_;
 
         //- Face zone flip
         bool zoneFlip_;
@@ -94,13 +94,13 @@ public:
         polyModifyFace()
         :
             face_(0),
-            faceID_(-1),
+            faceIndex_(-1),
             owner_(-1),
             neighbour_(-1),
             flipFaceFlux_(false),
-            patchID_(-1),
+            patchIndex_(-1),
             removeFromZone_(false),
-            zoneID_(-1),
+            zoneIndex_(-1),
             zoneFlip_(false)
         {}
 
@@ -119,13 +119,13 @@ public:
         )
         :
             face_(f),
-            faceID_(faceID),
+            faceIndex_(faceID),
             owner_(owner),
             neighbour_(neighbour),
             flipFaceFlux_(flipFaceFlux),
-            patchID_(patchID),
+            patchIndex_(patchID),
             removeFromZone_(removeFromZone),
-            zoneID_(zoneID),
+            zoneIndex_(zoneID),
             zoneFlip_(zoneFlip)
         {
             if (face_.size() < 3)
@@ -133,7 +133,7 @@ public:
                 FatalErrorInFunction
                     << "Invalid face: less than 3 points. This is not allowed\n"
                     << "Face: " << face_
-                    << " faceID:" << faceID_
+                    << " faceID:" << faceIndex_
                     << " owner:" << owner_
                     << " neighbour:" << neighbour_
                     << abort(FatalError);
@@ -143,7 +143,7 @@ public:
             {
                 FatalErrorInFunction
                     << "This is not allowed.\n"
-                    << " faceID:" << faceID_
+                    << " faceID:" << faceIndex_
                     << " owner:" << owner_
                     << " neighbour:" << neighbour_
                     << abort(FatalError);
@@ -154,30 +154,30 @@ public:
                 FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "Face: " << face_
-                    << " faceID:" << faceID_
+                    << " faceID:" << faceIndex_
                     << " owner:" << owner_
                     << " neighbour:" << neighbour_
                     << abort(FatalError);
             }
 
-            if (neighbour_ >= 0 && patchID_ >= 0)
+            if (neighbour_ >= 0 && patchIndex_ >= 0)
             {
                 FatalErrorInFunction
                     << "This is not allowed.\n"
                     << "Face: " << face_
-                    << " faceID:" << faceID_
+                    << " faceID:" << faceIndex_
                     << " owner:" << owner_
                     << " neighbour:" << neighbour_
-                    << " patchID:" << patchID_
+                    << " patchID:" << patchIndex_
                     << abort(FatalError);
             }
 
-            if (zoneID_ < 0 && zoneFlip )
+            if (zoneIndex_ < 0 && zoneFlip )
             {
                 FatalErrorInFunction
                     << "belong to zone.  This is not allowed.\n"
                     << "Face: " << face_
-                    << " faceID:" << faceID_
+                    << " faceID:" << faceIndex_
                     << " owner:" << owner_
                     << " neighbour:" << neighbour_
                     << abort(FatalError);
@@ -202,9 +202,9 @@ public:
         }
 
         //- Return master face ID
-        label faceID() const
+        label faceIndex() const
         {
-            return faceID_;
+            return faceIndex_;
         }
 
         //- Return owner cell ID
@@ -228,25 +228,25 @@ public:
         //- Does the face belong to a boundary patch?
         bool isInPatch() const
         {
-            return patchID_ >= 0;
+            return patchIndex_ >= 0;
         }
 
         //- Boundary patch ID
-        label patchID() const
+        label patchIndex() const
         {
-            return patchID_;
+            return patchIndex_;
         }
 
         //- Does the face belong to a zone?
         bool isInZone() const
         {
-            return zoneID_ >= 0;
+            return zoneIndex_ >= 0;
         }
 
         //- Is the face only a zone face (i.e. not belonging to a cell)
         bool onlyInZone() const
         {
-            return zoneID_ >= 0 && owner_ < 0 && neighbour_ < 0;
+            return zoneIndex_ >= 0 && owner_ < 0 && neighbour_ < 0;
         }
 
         bool removeFromZone() const
@@ -255,9 +255,9 @@ public:
         }
 
         //- Face zone ID
-        label zoneID() const
+        label zoneIndex() const
         {
-            return zoneID_;
+            return zoneIndex_;
         }
 
         //- Face zone flip

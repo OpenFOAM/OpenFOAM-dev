@@ -41,7 +41,9 @@ Foam::label Foam::fvFieldDecomposer::completePatchID
     }
     else if (isA<processorCyclicFvPatch>(procPatch))
     {
-        return refCast<const processorCyclicFvPatch>(procPatch).referPatchID();
+        return
+            refCast<const processorCyclicFvPatch>(procPatch)
+           .referPatchIndex();
     }
     else
     {

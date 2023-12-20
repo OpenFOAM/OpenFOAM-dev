@@ -390,7 +390,7 @@ Foam::particle::particle
     stepFractionBehind_(0),
     nTracksBehind_(0),
     origProc_(Pstream::myProcNo()),
-    origId_(getNewParticleID())
+    origId_(getNewParticleIndex())
 {}
 
 
@@ -411,7 +411,7 @@ Foam::particle::particle
     stepFractionBehind_(0),
     nTracksBehind_(0),
     origProc_(Pstream::myProcNo()),
-    origId_(getNewParticleID())
+    origId_(getNewParticleIndex())
 {
     if (!locate(mesh, position, celli))
     {

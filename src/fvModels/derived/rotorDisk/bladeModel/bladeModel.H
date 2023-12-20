@@ -73,7 +73,7 @@ protected:
         List<word> profileName_;
 
         //- Corresponding profile ID per section
-        List<label> profileID_;
+        List<label> profileIndex_;
 
         //- Radius [m]
         List<scalar> radius_;
@@ -122,7 +122,7 @@ public:
             const List<word>& profileName() const;
 
             //- Return const access to the profile ID list
-            const List<label>& profileID() const;
+            const List<label>& profileIndex() const;
 
             //- Return const access to the radius list
             const List<scalar>& radius() const;
@@ -137,7 +137,7 @@ public:
         // Edit
 
             //- Return non-const access to the profile ID list
-            List<label>& profileID();
+            List<label>& profileIndex();
 
 
         // Evaluation

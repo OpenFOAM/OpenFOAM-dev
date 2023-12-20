@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ class DAC
         scalar NOxThreshold_;
         wordList fuelSpecies_;
         scalarField fuelSpeciesProp_;
-        List<label> fuelSpeciesID_;
+        List<label> fuelSpeciesIndex_;
         word CO2Name_, COName_, HO2Name_, H2OName_, NOName_;
         Switch forceFuelInclusion_;
 

@@ -145,7 +145,7 @@ void Foam::fvMeshStitchers::moving::conformCorrectMeshPhi
             const nonConformalFvPatch& ncFvp =
                 refCast<const nonConformalFvPatch>(phiBf[nccPatchi].patch());
 
-            const label origPatchi = ncFvp.origPatchID();
+            const label origPatchi = ncFvp.origPatchIndex();
             const fvPatch& origFvp = ncFvp.origPatch();
 
             for (label i = 0; i <= phi.nOldTimes(false); ++ i)
@@ -800,7 +800,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
 
         if (!nccFvp.owner()) continue;
 
-        const label origPatchi = nccFvp.origPatchID();
+        const label origPatchi = nccFvp.origPatchIndex();
         const fvPatch& origFvp = nccFvp.origPatch();
 
         forAll(nccFvp, nccPatchFacei)
@@ -830,7 +830,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
 
         if (!nccFvp.owner()) continue;
 
-        const label origPatchi = nccFvp.origPatchID();
+        const label origPatchi = nccFvp.origPatchIndex();
         const fvPatch& origFvp = nccFvp.origPatch();
 
         forAll(nccFvp, nccPatchFacei)
@@ -895,10 +895,10 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
             const nonConformalCoupledFvPatch& nccFvp =
                 refCast<const nonConformalCoupledFvPatch>(fvp);
 
-            const label origPatchi = nccFvp.origPatchID();
+            const label origPatchi = nccFvp.origPatchIndex();
             const polyPatch& origPp = mesh().boundaryMesh()[origPatchi];
 
-            const label errorPatchi = nccFvp.errorPatchID();
+            const label errorPatchi = nccFvp.errorPatchIndex();
 
             forAll(nccFvp, nccPatchFacei)
             {

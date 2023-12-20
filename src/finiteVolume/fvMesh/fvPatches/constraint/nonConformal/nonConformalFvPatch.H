@@ -98,7 +98,7 @@ public:
             const word& origPatchName() const;
 
             //- Original patch ID
-            label origPatchID() const;
+            label origPatchIndex() const;
 
             //- Original patch
             const fvPatch& origPatch() const;

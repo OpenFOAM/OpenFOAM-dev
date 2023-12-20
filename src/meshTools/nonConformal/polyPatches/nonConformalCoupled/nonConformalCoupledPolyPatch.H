@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ private:
         mutable word errorPatchName_;
 
         //- Index of the error patch associated with this cyclic
-        mutable label errorPatchID_;
+        mutable label errorPatchIndex_;
 
 
 protected:
@@ -137,7 +137,7 @@ public:
         const word& errorPatchName() const;
 
         //- Error patchID
-        label errorPatchID() const;
+        label errorPatchIndex() const;
 
         //- Error patch
         const nonConformalErrorPolyPatch& errorPatch() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,9 +94,9 @@ public:
             }
 
             //- Return neighbour
-            virtual label nbrPatchID() const
+            virtual label nbrPatchIndex() const
             {
-                return cyclicPolyPatch_.nbrPatchID();
+                return cyclicPolyPatch_.nbrPatchIndex();
             }
 
             virtual bool owner() const
@@ -109,7 +109,7 @@ public:
             {
                 return refCast<const cyclicFvPatch>
                 (
-                    this->boundaryMesh()[cyclicPolyPatch_.nbrPatchID()]
+                    this->boundaryMesh()[cyclicPolyPatch_.nbrPatchIndex()]
                 );
             }
 
@@ -123,7 +123,7 @@ public:
             {
                 return refCast<const cyclicFvPatch>
                 (
-                    this->boundaryMesh()[cyclicPolyPatch_.nbrPatchID()]
+                    this->boundaryMesh()[cyclicPolyPatch_.nbrPatchIndex()]
                 );
             }
 

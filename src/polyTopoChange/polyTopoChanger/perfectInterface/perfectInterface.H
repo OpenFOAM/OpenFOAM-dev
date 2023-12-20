@@ -55,13 +55,13 @@ class perfectInterface
     // Private Data
 
         //- Master face zone ID
-        label faceZoneID_;
+        label faceZoneIndex_;
 
         //- Master patch ID
-        label masterPatchID_;
+        label masterPatchIndex_;
 
         //- Slave patch ID
-        label slavePatchID_;
+        label slavePatchIndex_;
 
         //- Tolerance used for distance comparison
         //  (fraction of minimum edge length)

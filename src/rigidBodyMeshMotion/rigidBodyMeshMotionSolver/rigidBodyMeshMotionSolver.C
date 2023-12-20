@@ -61,7 +61,7 @@ Foam::rigidBodyMeshMotionSolver::bodyMesh::bodyMesh
 )
 :
     name_(name),
-    bodyID_(bodyID),
+    bodyIndex_(bodyID),
     patches_(wordReList(dict.lookup("patches"))),
     patchSet_(mesh.boundaryMesh().patchSet(patches_))
 {}
@@ -147,7 +147,7 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
 
         if (bodyDict.found("patches"))
         {
-            const label bodyID = this->bodyID(iter().keyword());
+            const label bodyID = this->bodyIndex(iter().keyword());
 
             if (bodyID == -1)
             {
@@ -238,7 +238,7 @@ void Foam::rigidBodyMeshMotionSolver::solve()
 
         forAll(bodyMeshes_, bi)
         {
-            const label bodyID = bodyMeshes_[bi].bodyID_;
+            const label bodyID = bodyMeshes_[bi].bodyIndex_;
 
             functionObjects::forces f
             (
@@ -272,7 +272,7 @@ void Foam::rigidBodyMeshMotionSolver::solve()
     {
         forAll(bodyMeshes_, bi)
         {
-            status(bodyMeshes_[bi].bodyID_);
+            status(bodyMeshes_[bi].bodyIndex_);
         }
     }
 
@@ -293,7 +293,7 @@ void Foam::rigidBodyMeshMotionSolver::solve()
             (
                 Foam::transformPoints
                 (
-                    transform0(bodyMeshes_[bi].bodyID_),
+                    transform0(bodyMeshes_[bi].bodyIndex_),
                     patchPoints0
                 ) - patchPoints0
             )();

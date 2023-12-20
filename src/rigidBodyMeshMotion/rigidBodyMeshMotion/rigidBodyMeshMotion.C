@@ -59,7 +59,7 @@ Foam::List<Foam::septernion> Foam::rigidBodyMeshMotion::transforms0() const
     forAll(bodyMeshes_, bi)
     {
         // Calculate the septernion equivalent of the transformation
-        transforms0[bi] = septernion(transform0(bodyMeshes_[bi].bodyID_));
+        transforms0[bi] = septernion(transform0(bodyMeshes_[bi].bodyIndex_));
     }
 
     transforms0[bodyMeshes_.size()] = septernion::I;
@@ -112,7 +112,7 @@ Foam::rigidBodyMeshMotion::bodyMesh::bodyMesh
 )
 :
     name_(name),
-    bodyID_(bodyID),
+    bodyIndex_(bodyID),
     patches_(wordReList(dict.lookup("patches"))),
     patchSet_(mesh.boundaryMesh().patchSet(patches_)),
     di_(dict.lookup<scalar>("innerDistance")),
@@ -194,7 +194,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
 
         if (bodyDict.found("patches"))
         {
-            const label bodyID = this->bodyID(iter().keyword());
+            const label bodyID = this->bodyIndex(iter().keyword());
 
             if (bodyID == -1)
             {
@@ -326,7 +326,7 @@ void Foam::rigidBodyMeshMotion::solve()
 
         forAll(bodyMeshes_, bi)
         {
-            const label bodyID = bodyMeshes_[bi].bodyID_;
+            const label bodyID = bodyMeshes_[bi].bodyIndex_;
 
             functionObjects::forces f
             (
@@ -360,7 +360,7 @@ void Foam::rigidBodyMeshMotion::solve()
     {
         forAll(bodyMeshes_, bi)
         {
-            status(bodyMeshes_[bi].bodyID_);
+            status(bodyMeshes_[bi].bodyIndex_);
         }
     }
 
@@ -370,7 +370,7 @@ void Foam::rigidBodyMeshMotion::solve()
     // Update the displacements
     if (bodyMeshes_.size() == 1)
     {
-        const label bodyID = bodyMeshes_[0].bodyID_;
+        const label bodyID = bodyMeshes_[0].bodyIndex_;
         const septernion transform0(this->transform0(bodyID));
         const scalarField& weight = bodyMeshes_[0].weight_;
 
@@ -489,7 +489,7 @@ void Foam::rigidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
         // Interpolate indirectly mapped points
         if (bodyMeshes_.size() == 1)
         {
-            const label bodyID = bodyMeshes_[0].bodyID_;
+            const label bodyID = bodyMeshes_[0].bodyIndex_;
             const septernion transform0(this->transform0(bodyID));
             const scalarField& weight = bodyMeshes_[0].weight_;
 

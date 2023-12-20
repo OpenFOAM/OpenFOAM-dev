@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class cyclicGAMGInterface
     // Private Data
 
         //- Neighbour patch number
-        label nbrPatchID_;
+        label nbrPatchIndex_;
 
         //- Am I owner?
         bool owner_;
@@ -116,9 +116,9 @@ public:
         //- Cyclic interface functions
 
             //- Return neighbour processor number
-            virtual label nbrPatchID() const
+            virtual label nbrPatchIndex() const
             {
-                return nbrPatchID_;
+                return nbrPatchIndex_;
             }
 
             virtual bool owner() const
@@ -130,7 +130,7 @@ public:
             {
                 return dynamic_cast<const cyclicGAMGInterface&>
                 (
-                    coarseInterfaces_[nbrPatchID()]
+                    coarseInterfaces_[nbrPatchIndex()]
                 );
             }
 

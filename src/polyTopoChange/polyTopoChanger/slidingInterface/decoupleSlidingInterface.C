@@ -69,13 +69,13 @@ void Foam::slidingInterface::decoupleInterface
     // Master side
 
     const primitiveFacePatch& masterPatch =
-        mesh.faceZones()[masterFaceZoneID_.index()]();
+        mesh.faceZones()[masterFaceZoneIndex_.index()]();
 
     const labelList& masterPatchAddr =
-        mesh.faceZones()[masterFaceZoneID_.index()];
+        mesh.faceZones()[masterFaceZoneIndex_.index()];
 
     const boolList& masterPatchFlip =
-        mesh.faceZones()[masterFaceZoneID_.index()].flipMap();
+        mesh.faceZones()[masterFaceZoneIndex_.index()].flipMap();
 
     const labelList& masterFc = masterFaceCells();
 
@@ -100,9 +100,9 @@ void Foam::slidingInterface::decoupleInterface
                 masterFc[facei],                 // owner
                 -1,                              // neighbour
                 false,                           // flux flip
-                masterPatchID_.index(),          // patch ID
+                masterPatchIndex_.index(),          // patch ID
                 false,                           // remove from zone
-                masterFaceZoneID_.index(),       // zone ID
+                masterFaceZoneIndex_.index(),       // zone ID
                 false                            // zone flip.  Face corrected
             )
         );
@@ -118,13 +118,13 @@ void Foam::slidingInterface::decoupleInterface
     // Slave side
 
     const primitiveFacePatch& slavePatch =
-        mesh.faceZones()[slaveFaceZoneID_.index()]();
+        mesh.faceZones()[slaveFaceZoneIndex_.index()]();
 
     const labelList& slavePatchAddr =
-        mesh.faceZones()[slaveFaceZoneID_.index()];
+        mesh.faceZones()[slaveFaceZoneIndex_.index()];
 
     const boolList& slavePatchFlip =
-        mesh.faceZones()[slaveFaceZoneID_.index()].flipMap();
+        mesh.faceZones()[slaveFaceZoneIndex_.index()].flipMap();
 
     const labelList& slaveFc = slaveFaceCells();
 
@@ -167,9 +167,9 @@ void Foam::slidingInterface::decoupleInterface
                 slaveFc[facei],                  // owner
                 -1,                              // neighbour
                 false,                           // flux flip
-                slavePatchID_.index(),           // patch ID
+                slavePatchIndex_.index(),           // patch ID
                 false,                           // remove from zone
-                slaveFaceZoneID_.index(),        // zone ID
+                slaveFaceZoneIndex_.index(),        // zone ID
                 false                            // zone flip.  Face corrected
             )
         );
@@ -275,7 +275,7 @@ void Foam::slidingInterface::decoupleInterface
             if
             (
                 mesh.faceZones().whichZone(curFaces[facei])
-             != slaveFaceZoneID_.index()
+             != slaveFaceZoneIndex_.index()
              && !ref.faceRemoved(curFaces[facei])
 
             )
@@ -388,7 +388,7 @@ void Foam::slidingInterface::decoupleInterface
     const pointField& points = mesh.points();
 
     const labelList& slaveMeshPoints =
-        mesh.faceZones()[slaveFaceZoneID_.index()]().meshPoints();
+        mesh.faceZones()[slaveFaceZoneIndex_.index()]().meshPoints();
 
     forAll(slaveMeshPoints, pointi)
     {

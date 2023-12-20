@@ -116,7 +116,7 @@ Foam::cyclicFvsPatchField<Type>::patchNeighbourField
 
     tmp<Field<Type>> tresult
     (
-        new Field<Type>(gf.boundaryField()[cp.nbrPatchID()])
+        new Field<Type>(gf.boundaryField()[cp.nbrPatchIndex()])
     );
 
     cp.transform().transform(tresult.ref(), tresult.ref());

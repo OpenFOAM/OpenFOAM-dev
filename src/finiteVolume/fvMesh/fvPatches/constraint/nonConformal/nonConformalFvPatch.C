@@ -74,15 +74,15 @@ const Foam::word& Foam::nonConformalFvPatch::origPatchName() const
 }
 
 
-Foam::label Foam::nonConformalFvPatch::origPatchID() const
+Foam::label Foam::nonConformalFvPatch::origPatchIndex() const
 {
-    return nonConformalPolyPatch_.origPatchID();
+    return nonConformalPolyPatch_.origPatchIndex();
 }
 
 
 const Foam::fvPatch& Foam::nonConformalFvPatch::origPatch() const
 {
-    return patch_.boundaryMesh()[origPatchID()];
+    return patch_.boundaryMesh()[origPatchIndex()];
 }
 
 

@@ -46,8 +46,8 @@ defineTypeNameAndDebug(fvMeshDistribute, 0);
 class lessProcPatches
 {
     const labelList& nbrProc_;
-    const labelList& referPatchID_;
-    const labelList& referNbrPatchID_;
+    const labelList& referPatchIndex_;
+    const labelList& referNbrPatchIndex_;
 
 public:
 
@@ -59,8 +59,8 @@ public:
     )
     :
         nbrProc_(nbrProc),
-        referPatchID_(referPatchID),
-        referNbrPatchID_(referNbrPatchID)
+        referPatchIndex_(referPatchID),
+        referNbrPatchIndex_(referNbrPatchID)
     {}
 
     bool operator()(const label a, const label b)
@@ -76,11 +76,11 @@ public:
         }
 
         // Non-cyclics go next
-        else if (referPatchID_[a] == -1)
+        else if (referPatchIndex_[a] == -1)
         {
             return true;
         }
-        else if (referPatchID_[b] == -1)
+        else if (referPatchIndex_[b] == -1)
         {
             return false;
         }
@@ -90,11 +90,11 @@ public:
         // the neighbour
         else if (Pstream::myProcNo() < nbrProc_[a])
         {
-            return referPatchID_[a] < referPatchID_[b];
+            return referPatchIndex_[a] < referPatchIndex_[b];
         }
         else
         {
-            return referNbrPatchID_[a] < referNbrPatchID_[b];
+            return referNbrPatchIndex_[a] < referNbrPatchIndex_[b];
         }
     }
 };
@@ -900,10 +900,10 @@ void Foam::fvMeshDistribute::getCouplingData
             {
                 patchi =
                     refCast<const processorCyclicPolyPatch>(pp)
-                   .referPatchID();
+                   .referPatchIndex();
                 nbrPatchi =
                     refCast<const cyclicPolyPatch>(patches[patchi])
-                   .nbrPatchID();
+                   .nbrPatchIndex();
 
             }
 
@@ -926,7 +926,7 @@ void Foam::fvMeshDistribute::getCouplingData
                     sourceFace[bndI] = pp.start()+i;
                     sourceProc[bndI] = Pstream::myProcNo();
                     sourcePatch[bndI] = patchi;
-                    sourceNbrPatch[bndI] = cpp.nbrPatchID();
+                    sourceNbrPatch[bndI] = cpp.nbrPatchIndex();
                     sourceNewNbrProc[bndI] = nbrNewNbrProc[bndI];
                 }
             }
@@ -938,7 +938,7 @@ void Foam::fvMeshDistribute::getCouplingData
                     sourceFace[bndI] = nbrFaces[bndI];
                     sourceProc[bndI] = Pstream::myProcNo();
                     sourcePatch[bndI] = patchi;
-                    sourceNbrPatch[bndI] = cpp.nbrPatchID();
+                    sourceNbrPatch[bndI] = cpp.nbrPatchIndex();
                     sourceNewNbrProc[bndI] = nbrNewNbrProc[bndI];
                 }
             }

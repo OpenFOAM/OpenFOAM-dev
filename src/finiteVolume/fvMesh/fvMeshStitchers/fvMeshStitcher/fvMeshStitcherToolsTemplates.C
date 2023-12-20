@@ -139,7 +139,7 @@ Foam::fvMeshStitcherTools::conformedNcBoundaryField
         const nonConformalFvPatch& ncFvp =
             refCast<const nonConformalFvPatch>(fvbm[ncPatchi]);
 
-        const label origPatchi = ncFvp.origPatchID();
+        const label origPatchi = ncFvp.origPatchIndex();
         const fvPatch& origFvp = ncFvp.origPatch();
 
         const scalarField& ncNcMagSf = ncFvp.patch().magSf();
@@ -278,7 +278,7 @@ Foam::fvMeshStitcherTools::unconformedBoundaryField
         const nonConformalFvPatch& ncFvp =
             refCast<const nonConformalFvPatch>(fvp);
 
-        const label origPatchi = ncFvp.origPatchID();
+        const label origPatchi = ncFvp.origPatchIndex();
         const fvPatch& origFvp = ncFvp.origPatch();
 
         fieldb[ncPatchi] =
@@ -325,7 +325,7 @@ Foam::fvMeshStitcherTools::unconformedBoundaryField
             const nonConformalFvPatch& ncFvp =
                 refCast<const nonConformalFvPatch>(fvp);
 
-            const label origPatchi = ncFvp.origPatchID();
+            const label origPatchi = ncFvp.origPatchIndex();
             const fvPatch& origFvp = ncFvp.origPatch();
 
             const scalarField ncTotalMagSf
@@ -352,7 +352,7 @@ Foam::fvMeshStitcherTools::unconformedBoundaryField
         const nonConformalErrorFvPatch& errorFvp =
             refCast<const nonConformalErrorFvPatch>(fvp);
 
-        const label origPatchi = errorFvp.origPatchID();
+        const label origPatchi = errorFvp.origPatchIndex();
         const fvPatch& origFvp = errorFvp.origPatch();
 
         if (isFluxField)

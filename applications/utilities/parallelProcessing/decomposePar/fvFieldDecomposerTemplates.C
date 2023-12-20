@@ -250,7 +250,7 @@ Foam::fvFieldDecomposer::decomposeVolField
 
                 const label nbrCompletePatchi =
                     refCast<const processorCyclicFvPatch>(procPatch)
-                   .referPatch().nbrPatchID();
+                   .referPatch().nbrPatchIndex();
 
                 // Use `fvPatchField<Type>::New` rather than
                 // `new processorCyclicFvPatchField<Type>` so that derivations

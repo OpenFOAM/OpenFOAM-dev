@@ -69,8 +69,8 @@ void Foam::fv::effectivenessHeatExchanger::readCoeffs()
 
 void Foam::fv::effectivenessHeatExchanger::setZone()
 {
-    zoneID_ = mesh().faceZones().findIndex(faceZoneName_);
-    if (zoneID_ < 0)
+    zoneIndex_ = mesh().faceZones().findIndex(faceZoneName_);
+    if (zoneIndex_ < 0)
     {
         FatalErrorInFunction
             << type() << " " << this->name() << ": "
@@ -79,7 +79,7 @@ void Foam::fv::effectivenessHeatExchanger::setZone()
             << nl << exit(FatalError);
     }
 
-    const faceZone& fZone = mesh().faceZones()[zoneID_];
+    const faceZone& fZone = mesh().faceZones()[zoneIndex_];
 
     faceId_.setSize(fZone.size());
     facePatchId_.setSize(fZone.size());
@@ -188,7 +188,7 @@ Foam::fv::effectivenessHeatExchanger::effectivenessHeatExchanger
     TName_(word::null),
     phiName_(word::null),
     faceZoneName_(word::null),
-    zoneID_(-1),
+    zoneIndex_(-1),
     faceId_(),
     facePatchId_(),
     faceSign_(),

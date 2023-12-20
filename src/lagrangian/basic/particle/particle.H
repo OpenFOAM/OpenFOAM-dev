@@ -383,7 +383,7 @@ public:
         // Access
 
             //- Get unique particle creation id
-            inline label getNewParticleID() const;
+            inline label getNewParticleIndex() const;
 
             //- Return current particle coordinates
             inline const barycentric& coordinates() const;

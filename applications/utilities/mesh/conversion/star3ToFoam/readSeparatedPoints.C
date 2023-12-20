@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,10 @@ void Foam::starMesh::readPoints(const scalar scaleFactor)
     Info<< "Number of points = " << nPoints << endl << endl;
 
     points_.setSize(nPoints);
-    starPointID_.setSize(nPoints);
+    starPointIndex_.setSize(nPoints);
 
     // Reset STAR point ID, just in case
-    starPointID_ = -1;
+    starPointIndex_ = -1;
 
     starPointLabelLookup_.setSize(maxLabel+1);
 
@@ -93,7 +93,7 @@ void Foam::starMesh::readPoints(const scalar scaleFactor)
                 >> points_[p].y()
                 >> points_[p].z();
 
-            starPointID_[p] = pointLabel;
+            starPointIndex_[p] = pointLabel;
             starPointLabelLookup_[pointLabel] = p;
         }
 

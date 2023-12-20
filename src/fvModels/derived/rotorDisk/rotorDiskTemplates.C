@@ -96,8 +96,8 @@ void Foam::fv::rotorDisk::calculate
             AOAmax = max(AOAmax, alphaEff);
 
             // Determine profile data for this radius and angle of attack
-            const label profile1 = blade_.profileID()[i1];
-            const label profile2 = blade_.profileID()[i2];
+            const label profile1 = blade_.profileIndex()[i1];
+            const label profile2 = blade_.profileIndex()[i2];
 
             scalar Cd1 = 0;
             scalar Cl1 = 0;

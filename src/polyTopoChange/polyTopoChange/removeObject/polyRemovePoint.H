@@ -51,10 +51,10 @@ class polyRemovePoint
     // Private Data
 
         //- Point ID
-        label pointID_;
+        label pointIndex_;
 
         //- Merge point ID or -1
-        label mergePointID_;
+        label mergePointIndex_;
 
 
 public:
@@ -70,15 +70,15 @@ public:
         //- Construct null.  Used for constructing lists
         polyRemovePoint()
         :
-            pointID_(-1),
-            mergePointID_(-1)
+            pointIndex_(-1),
+            mergePointIndex_(-1)
         {}
 
         //- Construct from components
         polyRemovePoint(const label pointID, const label mergePointID = -1)
         :
-            pointID_(pointID),
-            mergePointID_(mergePointID)
+            pointIndex_(pointID),
+            mergePointIndex_(mergePointID)
         {}
 
         //- Construct and return a clone
@@ -94,14 +94,14 @@ public:
     // Member Functions
 
         //- Return point ID
-        label pointID() const
+        label pointIndex() const
         {
-            return pointID_;
+            return pointIndex_;
         }
 
-        label mergePointID() const
+        label mergePointIndex() const
         {
-            return mergePointID_;
+            return mergePointIndex_;
         }
 };
 

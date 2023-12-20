@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,8 @@ Foam::RBD::restraint::restraint
 )
 :
     name_(name),
-    bodyID_(model.bodyID(dict.lookup("body"))),
-    bodyIndex_(model.master(bodyID_)),
+    bodyIndex_(model.bodyIndex(dict.lookup("body"))),
+    masterBodyIndex_(model.master(bodyIndex_)),
     coeffs_(dict),
     model_(model)
 {}
@@ -79,7 +79,7 @@ bool Foam::RBD::restraint::read(const dictionary& dict)
 void Foam::RBD::restraint::write(Ostream& os) const
 {
     writeEntry(os, "type", type());
-    writeEntry(os, "body", model_.name(bodyID_));
+    writeEntry(os, "body", model_.name(bodyIndex_));
 }
 
 

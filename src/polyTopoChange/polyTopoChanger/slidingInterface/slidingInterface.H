@@ -92,22 +92,22 @@ private:
     // Private Data
 
         //- Master face zone ID
-        faceZoneDynamicID masterFaceZoneID_;
+        faceZoneDynamicID masterFaceZoneIndex_;
 
         //- Slave face zone ID
-        faceZoneDynamicID slaveFaceZoneID_;
+        faceZoneDynamicID slaveFaceZoneIndex_;
 
         //- Cut point zone ID
-        pointZoneDynamicID cutPointZoneID_;
+        pointZoneDynamicID cutPointZoneIndex_;
 
         //- Cut face zone ID
-        faceZoneDynamicID cutFaceZoneID_;
+        faceZoneDynamicID cutFaceZoneIndex_;
 
         //- Master patch ID
-        polyPatchDynamicID masterPatchID_;
+        polyPatchDynamicID masterPatchIndex_;
 
         //- Slave patch ID
-        polyPatchDynamicID slavePatchID_;
+        polyPatchDynamicID slavePatchIndex_;
 
         //- Type of match
         const typeOfMatch matchType_;
@@ -333,10 +333,10 @@ public:
     // Member Functions
 
         //- Return master face zone ID
-        const faceZoneDynamicID& masterFaceZoneID() const;
+        const faceZoneDynamicID& masterFaceZoneIndex() const;
 
         //- Return slave face zone ID
-        const faceZoneDynamicID& slaveFaceZoneID() const;
+        const faceZoneDynamicID& slaveFaceZoneIndex() const;
 
         //- Return true if attached
         bool attached() const

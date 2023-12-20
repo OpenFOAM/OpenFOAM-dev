@@ -314,7 +314,7 @@ public:
         inline const subBody& mergedBody(label mergedBodyID) const;
 
         //- Return the ID of the body with the given name
-        inline label bodyID(const word& name) const;
+        inline label bodyIndex(const word& name) const;
 
         //- Return the current transform to the global frame for the given body
         spatialTransform X0(const label bodyId) const;

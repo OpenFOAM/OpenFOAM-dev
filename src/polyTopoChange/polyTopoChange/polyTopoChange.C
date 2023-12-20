@@ -2499,8 +2499,8 @@ Foam::label Foam::polyTopoChange::setAction(const topoAction& action)
         return addPoint
         (
             pap.newPoint(),
-            pap.masterPointID(),
-            pap.zoneID(),
+            pap.masterPointIndex(),
+            pap.zoneIndex(),
             pap.inCell()
         );
     }
@@ -2510,9 +2510,9 @@ Foam::label Foam::polyTopoChange::setAction(const topoAction& action)
 
         modifyPoint
         (
-            pmp.pointID(),
+            pmp.pointIndex(),
             pmp.newPoint(),
-            pmp.zoneID(),
+            pmp.zoneIndex(),
             pmp.inCell()
         );
 
@@ -2522,7 +2522,7 @@ Foam::label Foam::polyTopoChange::setAction(const topoAction& action)
     {
         const polyRemovePoint& prp = refCast<const polyRemovePoint>(action);
 
-        removePoint(prp.pointID(), prp.mergePointID());
+        removePoint(prp.pointIndex(), prp.mergePointIndex());
 
         return -1;
     }
@@ -2535,12 +2535,12 @@ Foam::label Foam::polyTopoChange::setAction(const topoAction& action)
             paf.newFace(),
             paf.owner(),
             paf.neighbour(),
-            paf.masterPointID(),
-            paf.masterEdgeID(),
-            paf.masterFaceID(),
+            paf.masterPointIndex(),
+            paf.masterEdgeIndex(),
+            paf.masterFaceIndex(),
             paf.flipFaceFlux(),
-            paf.patchID(),
-            paf.zoneID(),
+            paf.patchIndex(),
+            paf.zoneIndex(),
             paf.zoneFlip()
         );
     }
@@ -2551,12 +2551,12 @@ Foam::label Foam::polyTopoChange::setAction(const topoAction& action)
         modifyFace
         (
             pmf.newFace(),
-            pmf.faceID(),
+            pmf.faceIndex(),
             pmf.owner(),
             pmf.neighbour(),
             pmf.flipFaceFlux(),
-            pmf.patchID(),
-            pmf.zoneID(),
+            pmf.patchIndex(),
+            pmf.zoneIndex(),
             pmf.zoneFlip()
         );
 
@@ -2566,7 +2566,7 @@ Foam::label Foam::polyTopoChange::setAction(const topoAction& action)
     {
         const polyRemoveFace& prf = refCast<const polyRemoveFace>(action);
 
-        removeFace(prf.faceID(), prf.mergeFaceID());
+        removeFace(prf.faceIndex(), prf.mergeFaceIndex());
 
         return -1;
     }

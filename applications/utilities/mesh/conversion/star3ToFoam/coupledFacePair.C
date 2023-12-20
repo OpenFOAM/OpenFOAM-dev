@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,11 +40,11 @@ Foam::coupledFacePair::coupledFacePair
     const label integral
 )
 :
-    coupleID_(coupleNo),
-    masterCellID_(mC),
-    masterFaceID_(mF),
-    slaveCellID_(sC),
-    slaveFaceID_(sF),
+    coupleIndex_(coupleNo),
+    masterCellIndex_(mC),
+    masterFaceIndex_(mF),
+    slaveCellIndex_(sC),
+    slaveFaceIndex_(sF),
     integralMatch_(integral == 1)
 {}
 
@@ -53,10 +53,10 @@ Foam::coupledFacePair::coupledFacePair
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const coupledFacePair& c)
 {
-    os  << "Master cell: " << c.masterCellID_
-        << " face: " << c.masterFaceID_ << endl
-        << "Slave cell: " << c.slaveCellID_
-        << " face: " << c.slaveFaceID_ << endl
+    os  << "Master cell: " << c.masterCellIndex_
+        << " face: " << c.masterFaceIndex_ << endl
+        << "Slave cell: " << c.slaveCellIndex_
+        << " face: " << c.slaveFaceIndex_ << endl
         << "Integral: " << c.integralMatch_ << endl;
 
     return os;

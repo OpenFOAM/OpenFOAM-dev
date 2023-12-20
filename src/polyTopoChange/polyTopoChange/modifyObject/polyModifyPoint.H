@@ -52,7 +52,7 @@ class polyModifyPoint
     // Private Data
 
         //- Point ID
-        label pointID_;
+        label pointIndex_;
 
         //- New point location
         point location_;
@@ -61,7 +61,7 @@ class polyModifyPoint
         bool removeFromZone_;
 
         //- New zone ID
-        label zoneID_;
+        label zoneIndex_;
 
         //- Does the point support a cell
         bool inCell_;
@@ -80,10 +80,10 @@ public:
         //- Construct null.  Used only for list construction
         polyModifyPoint()
         :
-            pointID_(-1),
+            pointIndex_(-1),
             location_(Zero),
             removeFromZone_(false),
-            zoneID_(-1),
+            zoneIndex_(-1),
             inCell_(false)
         {}
 
@@ -97,10 +97,10 @@ public:
             const bool inCell
         )
         :
-            pointID_(pointID),
+            pointIndex_(pointID),
             location_(newP),
             removeFromZone_(removeFromZone),
-            zoneID_(newZoneID),
+            zoneIndex_(newZoneID),
             inCell_(inCell)
         {}
 
@@ -116,9 +116,9 @@ public:
     // Member Functions
 
         //- Point ID
-        label pointID() const
+        label pointIndex() const
         {
-            return pointID_;
+            return pointIndex_;
         }
 
         //- New point location
@@ -130,7 +130,7 @@ public:
         //- Does the point belong to a zone?
         bool isInZone() const
         {
-            return zoneID_ >= 0;
+            return zoneIndex_ >= 0;
         }
 
         //- Should the point be removed from current zone
@@ -140,9 +140,9 @@ public:
         }
 
         //- Point zone ID
-        label zoneID() const
+        label zoneIndex() const
         {
-            return zoneID_;
+            return zoneIndex_;
         }
 
         //- Does the point support a cell

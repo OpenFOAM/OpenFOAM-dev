@@ -64,12 +64,12 @@ void Foam::slidingInterface::checkDefinition()
 
     if
     (
-        !masterFaceZoneID_.active()
-     || !slaveFaceZoneID_.active()
-     || !cutPointZoneID_.active()
-     || !cutFaceZoneID_.active()
-     || !masterPatchID_.active()
-     || !slavePatchID_.active()
+        !masterFaceZoneIndex_.active()
+     || !slaveFaceZoneIndex_.active()
+     || !cutPointZoneIndex_.active()
+     || !cutFaceZoneIndex_.active()
+     || !masterPatchIndex_.active()
+     || !slavePatchIndex_.active()
     )
     {
         FatalErrorInFunction
@@ -81,8 +81,8 @@ void Foam::slidingInterface::checkDefinition()
     // Check the sizes and set up state
     if
     (
-        mesh.faceZones()[masterFaceZoneID_.index()].empty()
-     || mesh.faceZones()[slaveFaceZoneID_.index()].empty()
+        mesh.faceZones()[masterFaceZoneIndex_.index()].empty()
+     || mesh.faceZones()[slaveFaceZoneIndex_.index()].empty()
     )
     {
         FatalErrorInFunction
@@ -93,8 +93,8 @@ void Foam::slidingInterface::checkDefinition()
     if (debug)
     {
         Pout<< "Sliding interface object " << name() << " :" << nl
-            << "    master face zone: " << masterFaceZoneID_.index() << nl
-            << "    slave face zone: " << slaveFaceZoneID_.index() << endl;
+            << "    master face zone: " << masterFaceZoneIndex_.index() << nl
+            << "    slave face zone: " << slaveFaceZoneIndex_.index() << endl;
     }
 }
 
@@ -125,32 +125,32 @@ Foam::slidingInterface::slidingInterface
 )
 :
     polyMeshModifier(name, mesh),
-    masterFaceZoneID_
+    masterFaceZoneIndex_
     (
         masterFaceZoneName,
         mesh.faceZones()
     ),
-    slaveFaceZoneID_
+    slaveFaceZoneIndex_
     (
         slaveFaceZoneName,
         mesh.faceZones()
     ),
-    cutPointZoneID_
+    cutPointZoneIndex_
     (
         cutPointZoneName,
         mesh.pointZones()
     ),
-    cutFaceZoneID_
+    cutFaceZoneIndex_
     (
         cutFaceZoneName,
         mesh.faceZones()
     ),
-    masterPatchID_
+    masterPatchIndex_
     (
         masterPatchName,
         mesh.boundaryMesh()
     ),
-    slavePatchID_
+    slavePatchIndex_
     (
         slavePatchName,
         mesh.boundaryMesh()
@@ -215,15 +215,17 @@ void Foam::slidingInterface::clearAddressing() const
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::faceZoneDynamicID& Foam::slidingInterface::masterFaceZoneID() const
+const Foam::faceZoneDynamicID&
+Foam::slidingInterface::masterFaceZoneIndex() const
 {
-    return masterFaceZoneID_;
+    return masterFaceZoneIndex_;
 }
 
 
-const Foam::faceZoneDynamicID& Foam::slidingInterface::slaveFaceZoneID() const
+const Foam::faceZoneDynamicID&
+Foam::slidingInterface::slaveFaceZoneIndex() const
 {
-    return slaveFaceZoneID_;
+    return slaveFaceZoneIndex_;
 }
 
 
@@ -313,7 +315,7 @@ void Foam::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
     const polyMesh& mesh = this->mesh();
 
     // Get point from the cut zone
-    const labelList& cutPoints = mesh.pointZones()[cutPointZoneID_.index()];
+    const labelList& cutPoints = mesh.pointZones()[cutPointZoneIndex_.index()];
 
     if (cutPoints.size() && !projectedSlavePointsPtr_)
     {
@@ -328,15 +330,15 @@ void Foam::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
         const Map<Pair<edge>>& cpepm = cutPointEdgePairMap();
 
         const Map<label>& slaveZonePointMap =
-            mesh.faceZones()[slaveFaceZoneID_.index()]().meshPointMap();
+            mesh.faceZones()[slaveFaceZoneIndex_.index()]().meshPointMap();
 
         const primitiveFacePatch& masterPatch =
-            mesh.faceZones()[masterFaceZoneID_.index()]();
+            mesh.faceZones()[masterFaceZoneIndex_.index()]();
         const edgeList& masterEdges = masterPatch.edges();
         const pointField& masterLocalPoints = masterPatch.localPoints();
 
         const primitiveFacePatch& slavePatch =
-            mesh.faceZones()[slaveFaceZoneID_.index()]();
+            mesh.faceZones()[slaveFaceZoneIndex_.index()]();
         const edgeList& slaveEdges = slavePatch.edges();
         const pointField& slaveLocalPoints = slavePatch.localPoints();
         const vectorField& slavePointNormals = slavePatch.pointNormals();
@@ -546,13 +548,13 @@ void Foam::slidingInterface::topoChange(const polyTopoChangeMap& m)
     // Mesh has changed topologically.  Update local topological data
     const polyMesh& mesh = this->mesh();
 
-    masterFaceZoneID_.update(mesh.faceZones());
-    slaveFaceZoneID_.update(mesh.faceZones());
-    cutPointZoneID_.update(mesh.pointZones());
-    cutFaceZoneID_.update(mesh.faceZones());
+    masterFaceZoneIndex_.update(mesh.faceZones());
+    slaveFaceZoneIndex_.update(mesh.faceZones());
+    cutPointZoneIndex_.update(mesh.pointZones());
+    cutFaceZoneIndex_.update(mesh.faceZones());
 
-    masterPatchID_.update(mesh.boundaryMesh());
-    slavePatchID_.update(mesh.boundaryMesh());
+    masterPatchIndex_.update(mesh.boundaryMesh());
+    slavePatchIndex_.update(mesh.boundaryMesh());
 
 //MJ:Disabled updating
 //    if (!attached())

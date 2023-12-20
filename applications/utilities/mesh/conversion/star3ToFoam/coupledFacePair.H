@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,19 +58,19 @@ class coupledFacePair
     // Private Data
 
         //- STAR couple ID
-        label coupleID_;
+        label coupleIndex_;
 
         //- Master cell (lower cell label)
-        label masterCellID_;
+        label masterCellIndex_;
 
         //- Master face (lower cell label)
-        label masterFaceID_;
+        label masterFaceIndex_;
 
         //- Slave cell (higher cell label)
-        label slaveCellID_;
+        label slaveCellIndex_;
 
         //- Slave face (higher cell label)
-        label slaveFaceID_;
+        label slaveFaceIndex_;
 
         //- Integral or arbitrary flag
         bool integralMatch_;
@@ -94,33 +94,33 @@ public:
     // Member Functions
 
         //- Return STAR couple ID
-        label coupleID() const
+        label coupleIndex() const
         {
-            return coupleID_;
+            return coupleIndex_;
         }
 
         //- Return master cell
         label masterCell() const
         {
-            return masterCellID_;
+            return masterCellIndex_;
         }
 
         //- Return master face
         label masterFace() const
         {
-            return masterFaceID_;
+            return masterFaceIndex_;
         }
 
         //- Return slave cell
         label slaveCell() const
         {
-            return slaveCellID_;
+            return slaveCellIndex_;
         }
 
         //- Return slave face
         label slaveFace() const
         {
-            return slaveFaceID_;
+            return slaveFaceIndex_;
         }
 
         //- Is this an integral match?

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -251,7 +251,7 @@ void Foam::starMesh::readCells()
     Info<< "Number of cells = " << nCells << endl << endl;
 
     cellShapes_.setSize(nCells);
-    starCellID_.setSize(nCells);
+    starCellIndex_.setSize(nCells);
     starCellPermutation_.setSize(nCells);
 
     // reset permutation to invalid value
@@ -346,7 +346,7 @@ void Foam::starMesh::readCells()
             } while (addOnToCell >= 0);
 
             // Record STAR cell number (used for debugging)
-            starCellID_[celli] = lineLabel;
+            starCellIndex_[celli] = lineLabel;
 
             // insert STAR lookup addressing
             starCellLabelLookup_[lineLabel] = celli;
