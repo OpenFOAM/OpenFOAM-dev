@@ -36,9 +36,10 @@ boundaryField
 
         geometry
         {
-            AcrossRiver.stl
+            AcrossRiver
             {
                 type triSurfaceMesh;
+                file "AcrossRiver.stl";
             }
         };
 
@@ -64,9 +65,10 @@ boundaryField
 //        type            surfaceSlipDisplacement;
 //        geometry
 //        {
-//            hellskull.stl
+//            hellskull
 //            {
 //                type triSurfaceMesh;
+//                file "hellskull.stl";
 //            }
 //        };
 //

@@ -23,7 +23,7 @@ baffles
     {
         type        searchableSurface;
         surface     triSurfaceMesh;
-        name        baffle3D.stl;
+        file        "baffle3D.stl";
 
         owner
         {
