@@ -168,7 +168,7 @@ class externalCoupledMixedFvPatchField
         bool initialised_;
 
         //- List of coupled patch IDs
-        List<label> coupledPatchIDs_;
+        List<label> coupledPatchIndices_;
 
 
     // Private Member Functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ protected:
         const fvMesh& mesh_;
 
         //- Set of patch IDs
-        const labelHashSet patchIDs_;
+        const labelHashSet patchIndices_;
 
 
 public:
@@ -132,9 +132,9 @@ public:
     // Member Functions
 
         //- Return the patchIDs
-        const labelHashSet& patchIDs() const
+        const labelHashSet& patchIndices() const
         {
-            return patchIDs_;
+            return patchIndices_;
         }
 
         //- Update cached geometry when the mesh moves

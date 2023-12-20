@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,9 +43,9 @@ void Foam::patchWriter::write
 
         DynamicList<floatScalar> fField(pTraits<Type>::nComponents*nFaces_);
 
-        forAll(patchIDs_, j)
+        forAll(patchIndices_, j)
         {
-            label patchi = patchIDs_[j];
+            label patchi = patchIndices_[j];
 
             const fvPatchField<Type>& pfld = fld.boundaryField()[patchi];
 
@@ -79,9 +79,9 @@ void Foam::patchWriter::write
 
         DynamicList<floatScalar> fField(pTraits<Type>::nComponents*nPoints_);
 
-        forAll(patchIDs_, j)
+        forAll(patchIndices_, j)
         {
-            label patchi = patchIDs_[j];
+            label patchi = patchIndices_[j];
 
             const pointPatchField<Type>& pfld = fld.boundaryField()[patchi];
 
@@ -108,9 +108,9 @@ void Foam::patchWriter::write
 
         DynamicList<floatScalar> fField(pTraits<Type>::nComponents*nPoints_);
 
-        forAll(patchIDs_, j)
+        forAll(patchIndices_, j)
         {
-            label patchi = patchIDs_[j];
+            label patchi = patchIndices_[j];
 
             const fvPatchField<Type>& pfld = fld.boundaryField()[patchi];
 

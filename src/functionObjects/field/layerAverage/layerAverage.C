@@ -55,18 +55,18 @@ void Foam::functionObjects::layerAverage::calcLayers()
     // Initialise the faces from which the layers extrude
     DynamicList<label> startFaces;
     DynamicList<layerInfo> startFacesInfo;
-    forAll(patchIDs_, i)
+    forAll(patchIndices_, i)
     {
-        const polyPatch& pp = mesh_.boundaryMesh()[patchIDs_[i]];
+        const polyPatch& pp = mesh_.boundaryMesh()[patchIndices_[i]];
         forAll(pp, j)
         {
             startFaces.append(pp.start() + j);
             startFacesInfo.append(layerInfo(0, -1));
         }
     }
-    forAll(zoneIDs_, i)
+    forAll(zoneIndices_, i)
     {
-        const faceZone& fz = mesh_.faceZones()[zoneIDs_[i]];
+        const faceZone& fz = mesh_.faceZones()[zoneIndices_[i]];
         forAll(fz, j)
         {
             startFaces.append(fz[j]);
@@ -240,20 +240,20 @@ bool Foam::functionObjects::layerAverage::read(const dictionary& dict)
 {
     Info<< type() << " " << name() << ":" << nl;
 
-    patchIDs_ =
+    patchIndices_ =
         mesh_.boundaryMesh().patchSet
         (
             dict.lookupOrDefault<wordReList>("patches", wordReList())
         ).toc();
 
-    zoneIDs_ =
+    zoneIndices_ =
         findStrings
         (
             dict.lookupOrDefault<wordReList>("zones", wordReList()),
             mesh_.faceZones().names()
         );
 
-    if (patchIDs_.empty() && zoneIDs_.empty())
+    if (patchIndices_.empty() && zoneIndices_.empty())
     {
         WarningInFunction
             << "No patches or zones specified" << endl;

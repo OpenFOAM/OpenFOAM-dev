@@ -38,7 +38,7 @@ Foam::patchPatchDist::patchPatchDist
 )
 :
     patch_(patch),
-    nbrPatchIDs_(nbrPatchIDs),
+    nbrPatchIndices_(nbrPatchIDs),
     nUnset_(0)
 {
     patchPatchDist::correct();
@@ -57,7 +57,7 @@ void Foam::patchPatchDist::correct()
 {
     // Mark all edge connected to a nbrPatch.
     label nBnd = 0;
-    forAllConstIter(labelHashSet, nbrPatchIDs_, iter)
+    forAllConstIter(labelHashSet, nbrPatchIndices_, iter)
     {
         label nbrPatchi = iter.key();
         const polyPatch& nbrPatch = patch_.boundaryMesh()[nbrPatchi];
@@ -68,7 +68,7 @@ void Foam::patchPatchDist::correct()
     // functionality for these.
     EdgeMap<label> nbrEdges(2*nBnd);
 
-    forAllConstIter(labelHashSet, nbrPatchIDs_, iter)
+    forAllConstIter(labelHashSet, nbrPatchIndices_, iter)
     {
         label nbrPatchi = iter.key();
         const polyPatch& nbrPatch = patch_.boundaryMesh()[nbrPatchi];

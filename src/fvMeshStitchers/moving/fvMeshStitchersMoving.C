@@ -174,8 +174,8 @@ void Foam::fvMeshStitchers::moving::createNonConformalCorrectMeshPhiGeometry
 )
 {
     const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh());
-    const labelList origPatchIDs = ncb.allOrigPatchIDs();
-    const labelList errorPatchIDs = ncb.allErrorPatchIDs();
+    const labelList origPatchIDs = ncb.allOrigPatchIndices();
+    const labelList errorPatchIDs = ncb.allErrorPatchIndices();
 
     forAll(origPatchIDs, i)
     {
@@ -856,8 +856,8 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
 )
 {
     const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh());
-    const labelList origPatchIDs = ncb.allOrigPatchIDs();
-    const labelList errorPatchIDs = ncb.allErrorPatchIDs();
+    const labelList origPatchIDs = ncb.allOrigPatchIndices();
+    const labelList errorPatchIDs = ncb.allErrorPatchIndices();
 
     // Synchronise the mesh fluxes on both sides of coupled patches. Store
     // the change made to the mesh flux as an error.

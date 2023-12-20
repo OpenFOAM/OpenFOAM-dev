@@ -106,7 +106,7 @@ class ParticleErosion
         autoPtr<volScalarField> QPtr_;
 
         //- List of patch indices to post-process
-        labelList patchIDs_;
+        labelList patchIndices_;
 
         //- Plastic flow stress
         scalar p_;

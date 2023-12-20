@@ -153,7 +153,7 @@ class motionSmootherAlgo
 
             //- Indices of fixedValue patches that we're allowed to modify the
             // displacement on.
-            const labelList adaptPatchIDs_;
+            const labelList adaptPatchIndices_;
 
             // Smoothing and checking parameters
             dictionary paramDict_;
@@ -324,7 +324,7 @@ public:
             const indirectPrimitivePatch& patch() const;
 
             //- Patch labels that are being adapted
-            const labelList& adaptPatchIDs() const;
+            const labelList& adaptPatchIndices() const;
 
             const dictionary& paramDict() const;
 

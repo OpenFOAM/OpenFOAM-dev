@@ -46,11 +46,11 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solidBodyMotionSolver::updateSetPointIDs()
+void Foam::solidBodyMotionSolver::updateSetPointIndices()
 {
     if (set_.selectionType() == polyCellSet::selectionTypes::all)
     {
-        setPointIDs_.clear();
+        setPointIndices_.clear();
         return;
     }
 
@@ -71,14 +71,14 @@ void Foam::solidBodyMotionSolver::updateSetPointIDs()
 
     syncTools::syncPointList(mesh(), pointInSet, orEqOp<bool>(), false);
 
-    setPointIDs_.resize(count(pointInSet, true));
+    setPointIndices_.resize(count(pointInSet, true));
 
     label setPointi = 0;
     forAll(pointInSet, pointi)
     {
         if (pointInSet[pointi])
         {
-            setPointIDs_[setPointi ++] = pointi;
+            setPointIndices_[setPointi ++] = pointi;
         }
     }
 }
@@ -96,7 +96,7 @@ Foam::solidBodyMotionSolver::solidBodyMotionSolver
     points0MotionSolver(name, mesh, dict, typeName),
     SBMFPtr_(solidBodyMotionFunction::New(coeffDict(), mesh.time())),
     set_(mesh, dict),
-    setPointIDs_(),
+    setPointIndices_(),
     transform_(SBMFPtr_().transformation())
 {
     if (set_.selectionType() == polyCellSet::selectionTypes::all)
@@ -104,7 +104,7 @@ Foam::solidBodyMotionSolver::solidBodyMotionSolver
         Info<< "Applying solid body motion to entire mesh" << endl;
     }
 
-    updateSetPointIDs();
+    updateSetPointIndices();
 }
 
 
@@ -129,10 +129,10 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
         tmp<pointField> ttransformedPts(new pointField(mesh().points()));
         pointField& transformedPts = ttransformedPts.ref();
 
-        UIndirectList<point>(transformedPts, setPointIDs_) = transformPoints
+        UIndirectList<point>(transformedPts, setPointIndices_) = transformPoints
         (
             transform_,
-            pointField(points0_, setPointIDs_)
+            pointField(points0_, setPointIndices_)
         );
 
         return ttransformedPts;
@@ -143,14 +143,14 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
 void Foam::solidBodyMotionSolver::topoChange(const polyTopoChangeMap& map)
 {
     set_.topoChange(map);
-    updateSetPointIDs();
+    updateSetPointIndices();
 
     boolList pointInSet
     (
         mesh().nPoints(),
         set_.selectionType() == polyCellSet::selectionTypes::all
     );
-    UIndirectList<bool>(pointInSet, setPointIDs_) = true;
+    UIndirectList<bool>(pointInSet, setPointIndices_) = true;
 
     // pointMesh already updates pointFields
 
@@ -203,7 +203,7 @@ void Foam::solidBodyMotionSolver::distribute(const polyDistributionMap& map)
     points0MotionSolver::distribute(map);
 
     set_.distribute(map);
-    updateSetPointIDs();
+    updateSetPointIndices();
 }
 
 
@@ -212,7 +212,7 @@ void Foam::solidBodyMotionSolver::mapMesh(const polyMeshMap& map)
     points0MotionSolver::mapMesh(map);
 
     set_.mapMesh(map);
-    updateSetPointIDs();
+    updateSetPointIndices();
 }
 
 

@@ -249,9 +249,9 @@ void Foam::externalCoupledMixedFvPatchField<Type>::startWait() const
     const typename VolField<Type>::Boundary& bf =
         cvf.boundaryField();
 
-    forAll(coupledPatchIDs_, i)
+    forAll(coupledPatchIndices_, i)
     {
-        label patchi = coupledPatchIDs_[i];
+        label patchi = coupledPatchIndices_[i];
 
         const externalCoupledMixedFvPatchField<Type>& pf =
             refCast<const externalCoupledMixedFvPatchField<Type>>(bf[patchi]);
@@ -414,9 +414,9 @@ void Foam::externalCoupledMixedFvPatchField<Type>::writeData
     const typename VolField<Type>::Boundary& bf =
         cvf.boundaryField();
 
-    forAll(coupledPatchIDs_, i)
+    forAll(coupledPatchIndices_, i)
     {
-        label patchi = coupledPatchIDs_[i];
+        label patchi = coupledPatchIndices_[i];
 
         const externalCoupledMixedFvPatchField<Type>& pf =
             refCast<const externalCoupledMixedFvPatchField<Type>>(bf[patchi]);
@@ -458,7 +458,7 @@ externalCoupledMixedFvPatchField
     master_(true),
     offsets_(),
     initialised_(false),
-    coupledPatchIDs_()
+    coupledPatchIndices_()
 {
     if (dict.found("value"))
     {
@@ -512,7 +512,7 @@ externalCoupledMixedFvPatchField
     master_(ptf.master_),
     offsets_(ptf.offsets_),
     initialised_(ptf.initialised_),
-    coupledPatchIDs_(ptf.coupledPatchIDs_)
+    coupledPatchIndices_(ptf.coupledPatchIndices_)
 {}
 
 
@@ -535,7 +535,7 @@ externalCoupledMixedFvPatchField
     master_(ecmpf.master_),
     offsets_(ecmpf.offsets_),
     initialised_(ecmpf.initialised_),
-    coupledPatchIDs_(ecmpf.coupledPatchIDs_)
+    coupledPatchIndices_(ecmpf.coupledPatchIndices_)
 {}
 
 
@@ -580,7 +580,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::initialise
         }
     }
 
-    coupledPatchIDs_.transfer(coupledPatchIDs);
+    coupledPatchIndices_.transfer(coupledPatchIDs);
 
 
     // initialise by external solver, or just set the master patch
@@ -589,14 +589,14 @@ void Foam::externalCoupledMixedFvPatchField<Type>::initialise
         // remove lock file, signalling external source to execute
 //        removeLockFile();
 
-        forAll(coupledPatchIDs_, i)
+        forAll(coupledPatchIndices_, i)
         {
-            label patchi = coupledPatchIDs_[i];
+            label patchi = coupledPatchIndices_[i];
 
             externalCoupledMixedFvPatchField<Type>& pf =
                 refCast<externalCoupledMixedFvPatchField<Type>>(bf[patchi]);
 
-            pf.setMaster(coupledPatchIDs_);
+            pf.setMaster(coupledPatchIndices_);
         }
 
 
@@ -606,9 +606,9 @@ void Foam::externalCoupledMixedFvPatchField<Type>::initialise
         // read the initial data
         if (master_)
         {
-            forAll(coupledPatchIDs_, i)
+            forAll(coupledPatchIndices_, i)
             {
-                label patchi = coupledPatchIDs_[i];
+                label patchi = coupledPatchIndices_[i];
 
                 externalCoupledMixedFvPatchField<Type>& pf =
                     refCast<externalCoupledMixedFvPatchField<Type>>(bf[patchi]);
@@ -619,7 +619,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::initialise
     }
     else
     {
-        setMaster(coupledPatchIDs_);
+        setMaster(coupledPatchIndices_);
     }
 
     initialised_ = true;

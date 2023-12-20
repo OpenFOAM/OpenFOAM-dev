@@ -127,7 +127,7 @@ Foam::fvMeshStitcherTools::conformedNcBoundaryField
     );
 
     const labelList origPatchIDs =
-        nonConformalBoundary::New(fvbm.mesh()).allOrigPatchIDs();
+        nonConformalBoundary::New(fvbm.mesh()).allOrigPatchIndices();
 
     // Accumulate the non-conformal parts of the field into the original faces
     forAll(fvbm, ncPatchi)
@@ -215,7 +215,7 @@ Foam::fvMeshStitcherTools::conformedOrigBoundaryField
     );
 
     const labelList origPatchIDs =
-        nonConformalBoundary::New(fvbm.mesh()).allOrigPatchIDs();
+        nonConformalBoundary::New(fvbm.mesh()).allOrigPatchIndices();
 
     // Scale or average as appropriate
     forAll(origPatchIDs, i)
@@ -291,7 +291,7 @@ Foam::fvMeshStitcherTools::unconformedBoundaryField
     }
 
     const labelList origPatchIDs =
-        nonConformalBoundary::New(fvbm.mesh()).allOrigPatchIDs();
+        nonConformalBoundary::New(fvbm.mesh()).allOrigPatchIndices();
 
     // If a flux then scale down to the part face area
     if (isFluxField)

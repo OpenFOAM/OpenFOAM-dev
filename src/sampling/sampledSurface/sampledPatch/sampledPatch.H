@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ class patch
         const wordReList patchNames_;
 
         //- Corresponding patchIDs
-        mutable labelList patchIDs_;
+        mutable labelList patchIndices_;
 
         //- Triangulated faces or keep faces as is
         bool triangulate_;
@@ -131,7 +131,7 @@ protected:
             return patchNames_;
         }
 
-        const labelList& patchIDs() const;
+        const labelList& patchIndices() const;
 
         const labelList& patchStart() const
         {

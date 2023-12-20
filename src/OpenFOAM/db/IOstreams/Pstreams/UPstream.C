@@ -262,7 +262,7 @@ Foam::label Foam::UPstream::allocateCommunicator
         index = parentCommunicator_.size();
 
         myProcNo_.append(-1);
-        procIDs_.append(List<int>(0));
+        procIndices_.append(List<int>(0));
         parentCommunicator_.append(-1);
         linearCommunication_.append(List<commsStruct>(0));
         treeCommunication_.append(List<commsStruct>(0));
@@ -280,10 +280,10 @@ Foam::label Foam::UPstream::allocateCommunicator
     myProcNo_[index] = 0;
 
     // Convert from label to int
-    procIDs_[index].setSize(subRanks.size());
-    forAll(procIDs_[index], i)
+    procIndices_[index].setSize(subRanks.size());
+    forAll(procIndices_[index], i)
     {
-        procIDs_[index][i] = subRanks[i];
+        procIndices_[index][i] = subRanks[i];
 
         // Enforce incremental order (so index is rank in next communicator)
         if (i >= 1 && subRanks[i] <= subRanks[i-1])
@@ -297,8 +297,8 @@ Foam::label Foam::UPstream::allocateCommunicator
     }
     parentCommunicator_[index] = parentIndex;
 
-    linearCommunication_[index] = calcLinearComm(procIDs_[index].size());
-    treeCommunication_[index] = calcTreeComm(procIDs_[index].size());
+    linearCommunication_[index] = calcLinearComm(procIndices_[index].size());
+    treeCommunication_[index] = calcTreeComm(procIndices_[index].size());
 
 
     if (doPstream && parRun())
@@ -329,7 +329,7 @@ void Foam::UPstream::freeCommunicator
         freePstreamCommunicator(communicator);
     }
     myProcNo_[communicator] = -1;
-    // procIDs_[communicator].clear();
+    // procIndices_[communicator].clear();
     parentCommunicator_[communicator] = -1;
     linearCommunication_[communicator].clear();
     treeCommunication_[communicator].clear();
@@ -405,7 +405,7 @@ Foam::LIFOStack<Foam::label> Foam::UPstream::freeComms_;
 
 Foam::DynamicList<int> Foam::UPstream::myProcNo_(10);
 
-Foam::DynamicList<Foam::List<int>> Foam::UPstream::procIDs_(10);
+Foam::DynamicList<Foam::List<int>> Foam::UPstream::procIndices_(10);
 
 Foam::DynamicList<Foam::label> Foam::UPstream::parentCommunicator_(10);
 

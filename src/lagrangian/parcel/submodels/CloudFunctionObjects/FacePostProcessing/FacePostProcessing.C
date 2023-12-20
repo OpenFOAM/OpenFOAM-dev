@@ -91,7 +91,7 @@ void Foam::FacePostProcessing<CloudType>::write()
     const scalar alpha = (totalTime_ - timeElapsed)/totalTime_;
     const scalar beta = timeElapsed/totalTime_;
 
-    forAll(faceZoneIDs_, zoneI)
+    forAll(faceZoneIndices_, zoneI)
     {
         massFlowRate_[zoneI] =
             alpha*massFlowRate_[zoneI] + beta*mass_[zoneI]/timeElapsed;
@@ -104,9 +104,9 @@ void Foam::FacePostProcessing<CloudType>::write()
 
     List<scalarField> zoneMassTotal(mass_.size());
     List<scalarField> zoneMassFlowRate(massFlowRate_.size());
-    forAll(faceZoneIDs_, zoneI)
+    forAll(faceZoneIndices_, zoneI)
     {
-        const word& zoneName = mfz[faceZoneIDs_[zoneI]].name();
+        const word& zoneName = mfz[faceZoneIndices_[zoneI]].name();
 
         scalarListList allProcMass(Pstream::nProcs());
         allProcMass[proci] = massTotal_[zoneI];
@@ -146,9 +146,9 @@ void Foam::FacePostProcessing<CloudType>::write()
 
     if (surfaceFormat_ != "none")
     {
-        forAll(faceZoneIDs_, zoneI)
+        forAll(faceZoneIndices_, zoneI)
         {
-            const faceZone& fZone = mfz[faceZoneIDs_[zoneI]];
+            const faceZone& fZone = mfz[faceZoneIndices_[zoneI]];
 
             labelList pointToGlobal;
             labelList uniqueMeshPointLabels;
@@ -217,7 +217,7 @@ void Foam::FacePostProcessing<CloudType>::write()
 
     if (resetOnWrite_)
     {
-        forAll(faceZoneIDs_, zoneI)
+        forAll(faceZoneIndices_, zoneI)
         {
             massFlowRate_[zoneI] = 0.0;
         }
@@ -245,7 +245,7 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
 )
 :
     CloudFunctionObject<CloudType>(dict, owner, modelName, typeName),
-    faceZoneIDs_(),
+    faceZoneIndices_(),
     surfaceFormat_(this->coeffDict().lookup("surfaceFormat")),
     resetOnWrite_(this->coeffDict().lookup("resetOnWrite")),
     totalTime_(0.0),
@@ -313,7 +313,7 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
         }
     }
 
-    faceZoneIDs_.transfer(zoneIDs);
+    faceZoneIndices_.transfer(zoneIDs);
 
     // readProperties(); AND initialise mass... fields
 }
@@ -326,7 +326,7 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
 )
 :
     CloudFunctionObject<CloudType>(pff),
-    faceZoneIDs_(pff.faceZoneIDs_),
+    faceZoneIndices_(pff.faceZoneIndices_),
     surfaceFormat_(pff.surfaceFormat_),
     resetOnWrite_(pff.resetOnWrite_),
     totalTime_(pff.totalTime_),
@@ -359,9 +359,9 @@ void Foam::FacePostProcessing<CloudType>::preFace(const parcelType& p)
     {
         const meshFaceZones& mfz = this->owner().mesh().faceZones();
 
-        forAll(faceZoneIDs_, i)
+        forAll(faceZoneIndices_, i)
         {
-            const faceZone& fz = mfz[faceZoneIDs_[i]];
+            const faceZone& fz = mfz[faceZoneIndices_[i]];
 
             label faceId = -1;
             forAll(fz, j)

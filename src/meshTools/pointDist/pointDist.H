@@ -59,10 +59,10 @@ class pointDist
         const pointField& points_;
 
         //- Set of patch IDs
-        const labelHashSet patchIDs_;
+        const labelHashSet patchIndices_;
 
         //- Set of pointZone IDs for which the distance is 0
-        const labelHashSet zoneIDs_;
+        const labelHashSet zoneIndices_;
 
         //- Number of unset points
         label nUnset_;

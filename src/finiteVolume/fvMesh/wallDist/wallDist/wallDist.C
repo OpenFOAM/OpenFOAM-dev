@@ -48,14 +48,14 @@ void Foam::wallDist::constructn() const
         ),
         mesh(),
         dimensionedVector(dimless, Zero),
-        patchDistMethod::patchTypes<vector>(mesh(), patchIDs_)
+        patchDistMethod::patchTypes<vector>(mesh(), patchIndices_)
     );
 
     const fvPatchList& patches = mesh().boundary();
 
     volVectorField::Boundary& nbf = n_->boundaryFieldRef();
 
-    forAllConstIter(labelHashSet, patchIDs_, iter)
+    forAllConstIter(labelHashSet, patchIndices_, iter)
     {
         label patchi = iter.key();
         nbf[patchi] == patches[patchi].nf();
@@ -68,7 +68,7 @@ void Foam::wallDist::constructn() const
 Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
 :
     DemandDrivenMeshObject<fvMesh, DeletableMeshObject, wallDist>(mesh),
-    patchIDs_(mesh.boundaryMesh().findIndices<wallPolyPatch>()),
+    patchIndices_(mesh.boundaryMesh().findIndices<wallPolyPatch>()),
     patchTypeName_(patchTypeName),
     pdm_
     (
@@ -77,7 +77,7 @@ Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
             static_cast<const fvSchemes&>(mesh)
            .subDict(patchTypeName_ & "Dist"),
             mesh,
-            patchIDs_
+            patchIndices_
         )
     ),
     y_
@@ -90,7 +90,7 @@ Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
         ),
         mesh,
         dimensionedScalar("y" & patchTypeName_, dimLength, small),
-        patchDistMethod::patchTypes<scalar>(mesh, patchIDs_)
+        patchDistMethod::patchTypes<scalar>(mesh, patchIndices_)
     ),
     nRequired_
     (
@@ -118,7 +118,7 @@ Foam::wallDist::wallDist
 )
 :
     DemandDrivenMeshObject<fvMesh, DeletableMeshObject, wallDist>(mesh),
-    patchIDs_(patchIDs),
+    patchIndices_(patchIDs),
     patchTypeName_(patchTypeName),
     pdm_
     (
@@ -127,7 +127,7 @@ Foam::wallDist::wallDist
             static_cast<const fvSchemes&>(mesh)
            .subDict(patchTypeName_ & "Dist"),
             mesh,
-            patchIDs_
+            patchIndices_
         )
     ),
     y_
@@ -140,7 +140,7 @@ Foam::wallDist::wallDist
         ),
         mesh,
         dimensionedScalar("y" & patchTypeName_, dimLength, small),
-        patchDistMethod::patchTypes<scalar>(mesh, patchIDs_)
+        patchDistMethod::patchTypes<scalar>(mesh, patchIndices_)
     ),
     nRequired_
     (

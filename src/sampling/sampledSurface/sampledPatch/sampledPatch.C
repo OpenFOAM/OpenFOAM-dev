@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,17 +78,17 @@ Foam::sampledSurfaces::patch::~patch()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::labelList& Foam::sampledSurfaces::patch::patchIDs() const
+const Foam::labelList& Foam::sampledSurfaces::patch::patchIndices() const
 {
-    if (patchIDs_.empty())
+    if (patchIndices_.empty())
     {
-        patchIDs_ = mesh().boundaryMesh().patchSet
+        patchIndices_ = mesh().boundaryMesh().patchSet
         (
             patchNames_,
             false
         ).sortedToc();
     }
-    return patchIDs_;
+    return patchIndices_;
 }
 
 
@@ -108,7 +108,7 @@ bool Foam::sampledSurfaces::patch::expire()
 
     sampledSurface::clearGeom();
     MeshStorage::clear();
-    patchIDs_.clear();
+    patchIndices_.clear();
     patchIndex_.clear();
     patchFaceLabels_.clear();
     patchStart_.clear();
@@ -126,9 +126,9 @@ bool Foam::sampledSurfaces::patch::update()
     }
 
     label sz = 0;
-    forAll(patchIDs(), i)
+    forAll(patchIndices(), i)
     {
-        label patchi = patchIDs()[i];
+        label patchi = patchIndices()[i];
         const polyPatch& pp = mesh().boundaryMesh()[patchi];
 
         if (isA<emptyPolyPatch>(pp))
@@ -145,14 +145,14 @@ bool Foam::sampledSurfaces::patch::update()
     // patch.
     patchIndex_.setSize(sz);
     patchFaceLabels_.setSize(sz);
-    patchStart_.setSize(patchIDs().size());
+    patchStart_.setSize(patchIndices().size());
     labelList meshFaceLabels(sz);
 
     sz = 0;
 
-    forAll(patchIDs(), i)
+    forAll(patchIndices(), i)
     {
-        label patchi = patchIDs()[i];
+        label patchi = patchIndices()[i];
 
         patchStart_[i] = sz;
 

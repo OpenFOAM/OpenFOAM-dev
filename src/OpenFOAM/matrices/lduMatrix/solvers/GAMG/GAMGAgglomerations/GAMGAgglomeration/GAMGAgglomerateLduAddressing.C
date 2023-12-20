@@ -367,7 +367,7 @@ void Foam::GAMGAgglomeration::procAgglomerateLduAddressing
 
 
     procAgglomMap_.set(levelIndex, new labelList(procAgglomMap));
-    agglomProcIDs_.set(levelIndex, new labelList(procIDs));
+    agglomProcIndices_.set(levelIndex, new labelList(procIDs));
     procCommunicator_[levelIndex] = allMeshComm;
 
     // These could only be set on the master procs but it is

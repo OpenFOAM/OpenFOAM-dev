@@ -606,7 +606,7 @@ void Foam::fvMeshStitcher::applyOwnerOrigBoundaryEdgeParts
     const polyBoundaryMesh& pbMesh = mesh_.boundaryMesh();
 
     const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh_);
-    const labelList ownerOrigPatchIDs = ncb.ownerOrigPatchIDs();
+    const labelList ownerOrigPatchIDs = ncb.ownerOrigPatchIndices();
     const labelList& ownerOrigBoundaryEdgeMeshEdge =
         ncb.ownerOrigBoundaryEdgeMeshEdge();
     const edgeList& ownerOrigBoundaryMeshEdges =
@@ -845,7 +845,7 @@ void Foam::fvMeshStitcher::stabiliseOrigPatchFaces
 ) const
 {
     const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh_);
-    const labelList allOrigPatchIDs = ncb.allOrigPatchIDs();
+    const labelList allOrigPatchIDs = ncb.allOrigPatchIndices();
 
     forAll(allOrigPatchIDs, i)
     {
@@ -899,7 +899,7 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclics
     const polyBoundaryMesh& pbMesh = mesh_.boundaryMesh();
 
     const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh_);
-    const labelList ownerOrigPatchIDs = ncb.ownerOrigPatchIDs();
+    const labelList ownerOrigPatchIDs = ncb.ownerOrigPatchIndices();
 
     // Alias the boundary geometry fields
     surfaceVectorField::Boundary& SfBf = SfSf.boundaryFieldRef();

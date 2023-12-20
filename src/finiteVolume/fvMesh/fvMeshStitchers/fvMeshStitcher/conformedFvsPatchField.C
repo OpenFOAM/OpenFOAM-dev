@@ -60,7 +60,7 @@ void Foam::conformedFvsPatchField<Type>::conform
     const fvBoundaryMesh& fvbm = iF.mesh().boundary();
 
     const labelList origPatchIDs =
-        nonConformalBoundary::New(iF.mesh()).allOrigPatchIDs();
+        nonConformalBoundary::New(iF.mesh()).allOrigPatchIndices();
 
     // Evaluate the conformed orig and non-conformal boundary fields
     const typename SurfaceField<Type>::Boundary origBf
@@ -115,7 +115,7 @@ void Foam::conformedFvsPatchField<Type>::unconform
     const fvBoundaryMesh& fvbm = iF.mesh().boundary();
 
     const labelList origPatchIDs =
-        nonConformalBoundary::New(iF.mesh()).allOrigPatchIDs();
+        nonConformalBoundary::New(iF.mesh()).allOrigPatchIndices();
 
     // Extract the conformed orig and non-conformal boundary fields from
     // the stored conformed patch fields

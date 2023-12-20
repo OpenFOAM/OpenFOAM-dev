@@ -155,7 +155,7 @@ Foam::RBD::rigidBodyModel::mergedBody(label mergedBodyID) const
 
 inline Foam::label Foam::RBD::rigidBodyModel::bodyID(const word& name) const
 {
-    return bodyIDs_[name];
+    return bodyIndices_[name];
 }
 
 

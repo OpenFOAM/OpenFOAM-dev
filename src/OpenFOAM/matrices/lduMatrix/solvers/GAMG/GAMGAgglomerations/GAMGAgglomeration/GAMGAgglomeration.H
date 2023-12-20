@@ -127,7 +127,7 @@ protected:
 
             //- Per level the set of processors to agglomerate. Element 0 is
             //  the 'master' of the cluster.
-            mutable PtrList<labelList> agglomProcIDs_;
+            mutable PtrList<labelList> agglomProcIndices_;
 
             //- Communicator for given level
             mutable labelList procCommunicator_;

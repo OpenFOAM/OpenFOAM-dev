@@ -288,7 +288,7 @@ public:
 
             //- Return list of active patch labels for the valve head
             //  (stem is excluded)
-            labelList movingPatchIDs() const;
+            labelList movingPatchIndices() const;
 
 
         //- Write dictionary

@@ -71,7 +71,7 @@ class meshToMesh
         mutable autoPtr<cellsToCellsStabilisation> tgtCellsStabilisation_;
 
         //- List of corresponding source and target patch indices
-        List<labelPair> patchIDs_;
+        List<labelPair> patchIndices_;
 
         //- List of interpolation engines between source and target patches
         PtrList<patchToPatch> patchInterpolations_;
@@ -101,7 +101,7 @@ protected:
                 tgtCellsStabilisation() const;
 
             //- Return the list of corresponding source and target patch indices
-            inline const List<labelPair>& patchIDs() const;
+            inline const List<labelPair>& patchIndices() const;
 
             //- Return the interpolation engine between a source and a target
             //  patch

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,15 +72,15 @@ Foam::sampledSurfaces::patchInternalField::interpolateField
 ) const
 {
     label sz = 0;
-    forAll(patchIDs(), i)
+    forAll(patchIndices(), i)
     {
-        sz += mesh().boundaryMesh()[patchIDs()[i]].size();
+        sz += mesh().boundaryMesh()[patchIndices()[i]].size();
     }
 
     Field<Type> allPatchVals(sz);
     sz = 0;
 
-    forAll(patchIDs(), i)
+    forAll(patchIndices(), i)
     {
         // Cells on which samples are generated
         const labelList& sampleCells = mappers_[i].cellIndices();
@@ -115,9 +115,9 @@ Foam::sampledSurfaces::patchInternalField::interpolateField
 
     labelList meshFaceLabels(allPatchVals.size());
     sz = 0;
-    forAll(patchIDs(), i)
+    forAll(patchIndices(), i)
     {
-        const polyPatch& pp = mesh().boundaryMesh()[patchIDs()[i]];
+        const polyPatch& pp = mesh().boundaryMesh()[patchIndices()[i]];
         forAll(pp, i)
         {
             meshFaceLabels[sz++] = pp.start()+i;

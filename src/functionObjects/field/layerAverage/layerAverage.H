@@ -96,13 +96,13 @@ class layerAverage
     // Private Data
 
         //- Patches which form the start of the layers
-        labelList patchIDs_;
+        labelList patchIndices_;
 
         //- Zones which form the start of the layers
-        labelList zoneIDs_;
+        labelList zoneIndices_;
 
         //- Zones on which the layers are considered to end
-        labelList endZoneIDs_;
+        labelList endZoneIndices_;
 
         //- Is the case symmetric?
         bool symmetric_;

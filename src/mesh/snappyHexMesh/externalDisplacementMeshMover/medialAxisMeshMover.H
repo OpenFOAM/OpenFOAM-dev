@@ -62,7 +62,7 @@ class medialAxisMeshMover
 {
     // Private Data
 
-        const labelList adaptPatchIDs_;
+        const labelList adaptPatchIndices_;
 
         autoPtr<indirectPrimitivePatch> adaptPatchPtr_;
 

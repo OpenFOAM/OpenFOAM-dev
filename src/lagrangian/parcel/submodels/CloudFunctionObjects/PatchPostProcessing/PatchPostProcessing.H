@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ class PatchPostProcessing
         scalar maxStoredParcels_;
 
         //- List of patch indices to post-process
-        labelList patchIDs_;
+        labelList patchIndices_;
 
         //- List of time for each data record
         List<DynamicList<scalar>> times_;
@@ -123,7 +123,7 @@ public:
             inline label maxStoredParcels() const;
 
             //- Return const mapping from local to global patch ids
-            inline const labelList& patchIDs() const;
+            inline const labelList& patchIndices() const;
 
 
         // Evaluation

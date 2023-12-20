@@ -365,7 +365,7 @@ Foam::motionSmootherAlgo::motionSmootherAlgo
     displacement_(displacement),
     scale_(scale),
     oldPoints_(oldPoints),
-    adaptPatchIDs_(adaptPatchIDs),
+    adaptPatchIndices_(adaptPatchIDs),
     paramDict_(paramDict),
     isInternalPoint_(mesh_.nPoints(), 1)
 {
@@ -399,9 +399,9 @@ const Foam::indirectPrimitivePatch& Foam::motionSmootherAlgo::patch() const
 }
 
 
-const Foam::labelList& Foam::motionSmootherAlgo::adaptPatchIDs() const
+const Foam::labelList& Foam::motionSmootherAlgo::adaptPatchIndices() const
 {
-    return adaptPatchIDs_;
+    return adaptPatchIndices_;
 }
 
 
@@ -488,7 +488,7 @@ void Foam::motionSmootherAlgo::setDisplacementPatchFields
 
 void Foam::motionSmootherAlgo::setDisplacementPatchFields()
 {
-    setDisplacementPatchFields(adaptPatchIDs_, displacement_);
+    setDisplacementPatchFields(adaptPatchIndices_, displacement_);
 }
 
 
@@ -571,7 +571,7 @@ void Foam::motionSmootherAlgo::setDisplacement
 
 void Foam::motionSmootherAlgo::setDisplacement(pointField& patchDisp)
 {
-    setDisplacement(adaptPatchIDs_, pp_, patchDisp, displacement_);
+    setDisplacement(adaptPatchIndices_, pp_, patchDisp, displacement_);
 }
 
 
@@ -581,7 +581,7 @@ void Foam::motionSmootherAlgo::correctBoundaryConditions
     pointVectorField& displacement
 ) const
 {
-    labelHashSet adaptPatchSet(adaptPatchIDs_);
+    labelHashSet adaptPatchSet(adaptPatchIndices_);
 
     const lduSchedule& patchSchedule = mesh_.globalData().patchSchedule();
 
@@ -838,7 +838,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
     const label nAllowableErrors
 )
 {
-    if (!smoothMesh && adaptPatchIDs_.empty())
+    if (!smoothMesh && adaptPatchIndices_.empty())
     {
         FatalErrorInFunction
             << "You specified both no movement on the internal mesh points"
@@ -980,7 +980,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
                 << endl;
         }
 
-        if (adaptPatchIDs_.size())
+        if (adaptPatchIndices_.size())
         {
             // Scale conflicting patch points
             scaleField(pp_.meshPoints(), usedPoints, errorReduction, scale_);
@@ -997,7 +997,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
 
         for (label i = 0; i < nSmoothScale; i++)
         {
-            if (adaptPatchIDs_.size())
+            if (adaptPatchIndices_.size())
             {
                 // Smooth patch values
                 pointScalarField oldScale(scale_);
@@ -1047,9 +1047,9 @@ void Foam::motionSmootherAlgo::topoChange()
     const pointBoundaryMesh& patches = pMesh_.boundary();
 
     // Check whether displacement has fixed value b.c. on adaptPatchID
-    forAll(adaptPatchIDs_, i)
+    forAll(adaptPatchIndices_, i)
     {
-        label patchi = adaptPatchIDs_[i];
+        label patchi = adaptPatchIndices_[i];
 
         if
         (

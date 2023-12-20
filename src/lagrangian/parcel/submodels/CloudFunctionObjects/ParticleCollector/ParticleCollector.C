@@ -321,7 +321,7 @@ void Foam::ParticleCollector<CloudType>::collectParcelPolygon
         // Add to the list of hits
         if (inside)
         {
-            hitFaceIDs_.append(facei);
+            hitFaceIndices_.append(facei);
         }
     }
 }
@@ -377,7 +377,7 @@ void Foam::ParticleCollector<CloudType>::collectParcelConcentricCircles
 
     if (secI != -1)
     {
-        hitFaceIDs_.append(secI);
+        hitFaceIndices_.append(secI);
     }
 }
 
@@ -530,7 +530,7 @@ Foam::ParticleCollector<CloudType>::ParticleCollector
     log_(this->coeffDict().lookup("log")),
     outputFilePtr_(),
     timeOld_(owner.mesh().time().value()),
-    hitFaceIDs_()
+    hitFaceIndices_()
 {
     normal_ /= mag(normal_);
 
@@ -612,7 +612,7 @@ Foam::ParticleCollector<CloudType>::ParticleCollector
     log_(pc.log_),
     outputFilePtr_(),
     timeOld_(0.0),
-    hitFaceIDs_()
+    hitFaceIndices_()
 {}
 
 
@@ -639,7 +639,7 @@ void Foam::ParticleCollector<CloudType>::postMove
         return;
     }
 
-    hitFaceIDs_.clear();
+    hitFaceIndices_.clear();
 
     switch (mode_)
     {
@@ -665,9 +665,9 @@ void Foam::ParticleCollector<CloudType>::postMove
         {}
     }
 
-    forAll(hitFaceIDs_, i)
+    forAll(hitFaceIndices_, i)
     {
-        label facei = hitFaceIDs_[i];
+        label facei = hitFaceIndices_[i];
         scalar m = p.nParticle()*p.mass();
 
         if (negateParcelsOppositeNormal_)

@@ -125,10 +125,10 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
     // Construct target patch fields as copies of source patch fields, but do
     // not map values yet
     PtrList<fvPatchField<Type>> tgtPatchFields(tgtMesh.boundary().size());
-    forAll(patchIDs(), i)
+    forAll(patchIndices(), i)
     {
-        const label srcPatchi = patchIDs()[i].first();
-        const label tgtPatchi = patchIDs()[i].second();
+        const label srcPatchi = patchIndices()[i].first();
+        const label tgtPatchi = patchIndices()[i].second();
 
         if (!tgtPatchFields.set(tgtPatchi))
         {
@@ -185,10 +185,10 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         ttgtFld.ref().boundaryFieldRef();
 
     // Mapped patches
-    forAll(patchIDs(), i)
+    forAll(patchIndices(), i)
     {
-        const label srcPatchi = patchIDs()[i].first();
-        const label tgtPatchi = patchIDs()[i].second();
+        const label srcPatchi = patchIndices()[i].first();
+        const label tgtPatchi = patchIndices()[i].second();
 
         tgtBfld[tgtPatchi].map
         (
@@ -238,10 +238,10 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         ttgtFld.ref().boundaryFieldRef();
 
     // Mapped patches
-    forAll(patchIDs(), i)
+    forAll(patchIndices(), i)
     {
-        const label srcPatchi = patchIDs()[i].first();
-        const label tgtPatchi = patchIDs()[i].second();
+        const label srcPatchi = patchIndices()[i].first();
+        const label tgtPatchi = patchIndices()[i].second();
 
         tgtBfld[tgtPatchi].map
         (
@@ -320,10 +320,10 @@ Foam::fvMeshToFvMesh::srcToTgt
 
     // Map all patch fields
     PtrList<fvsPatchField<Type>> tgtPatchFields(tgtMesh.boundary().size());
-    forAll(patchIDs(), i)
+    forAll(patchIndices(), i)
     {
-        const label srcPatchi = patchIDs()[i].first();
-        const label tgtPatchi = patchIDs()[i].second();
+        const label srcPatchi = patchIndices()[i].first();
+        const label tgtPatchi = patchIndices()[i].second();
 
         if (!tgtPatchFields.set(tgtPatchi))
         {

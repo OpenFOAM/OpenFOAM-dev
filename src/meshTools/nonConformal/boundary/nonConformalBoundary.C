@@ -186,7 +186,7 @@ Foam::nonConformalBoundary::nonConformalBoundary(const polyMesh& mesh)
         MoveableMeshObject,
         nonConformalBoundary
     >(mesh),
-    ownerOrigBoundary_(boundary(ownerOrigPatchIDs())),
+    ownerOrigBoundary_(boundary(ownerOrigPatchIndices())),
     meshPointOwnerOrigBoundaryPointPtr_(nullptr),
     ownerOrigBoundaryPointMeshPointPtr_(nullptr),
     ownerOrigBoundaryEdgeMeshEdgePtr_(nullptr),
@@ -254,28 +254,28 @@ Foam::labelList Foam::nonConformalBoundary::nonConformalNonCoupledPatchIDs
 }
 
 
-Foam::labelList Foam::nonConformalBoundary::allOrigPatchIDs() const
+Foam::labelList Foam::nonConformalBoundary::allOrigPatchIndices() const
 {
     auto method = &nonConformalCoupledPolyPatch::origPatchID;
     return nonConformalNonCoupledPatchIDs(0, method);
 }
 
 
-Foam::labelList Foam::nonConformalBoundary::allErrorPatchIDs() const
+Foam::labelList Foam::nonConformalBoundary::allErrorPatchIndices() const
 {
     auto method = &nonConformalCoupledPolyPatch::errorPatchID;
     return nonConformalNonCoupledPatchIDs(0, method);
 }
 
 
-Foam::labelList Foam::nonConformalBoundary::ownerOrigPatchIDs() const
+Foam::labelList Foam::nonConformalBoundary::ownerOrigPatchIndices() const
 {
     auto method = &nonConformalCoupledPolyPatch::origPatchID;
     return nonConformalNonCoupledPatchIDs(1, method);
 }
 
 
-Foam::labelList Foam::nonConformalBoundary::ownerErrorPatchIDs() const
+Foam::labelList Foam::nonConformalBoundary::ownerErrorPatchIndices() const
 {
     auto method = &nonConformalCoupledPolyPatch::errorPatchID;
     return nonConformalNonCoupledPatchIDs(1, method);
@@ -339,7 +339,7 @@ Foam::nonConformalBoundary::ownerOrigBoundaryEdgeMeshEdge() const
     if (!ownerOrigBoundaryEdgeMeshEdgePtr_.valid())
     {
         // Create boundary of all owner-orig and proc patches
-        labelList ownerOrigAndProcPatchIDs = this->ownerOrigPatchIDs();
+        labelList ownerOrigAndProcPatchIDs = this->ownerOrigPatchIndices();
         forAll(mesh().boundaryMesh(), patchi)
         {
             if (isA<processorPolyPatch>(mesh().boundaryMesh()[patchi]))

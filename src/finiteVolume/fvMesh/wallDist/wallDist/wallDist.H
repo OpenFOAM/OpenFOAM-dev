@@ -73,7 +73,7 @@ class wallDist
     // Private Data
 
         //- Set of patch IDs
-        const labelHashSet patchIDs_;
+        const labelHashSet patchIndices_;
 
         //- Name for the patch set, e.g. "wall"
         const word patchTypeName_;
@@ -143,9 +143,9 @@ public:
     // Member Functions
 
         //- Return the patchIDs
-        const labelHashSet& patchIDs() const
+        const labelHashSet& patchIndices() const
         {
-            return patchIDs_;
+            return patchIndices_;
         }
 
         //- Return reference to cached distance-to-wall field

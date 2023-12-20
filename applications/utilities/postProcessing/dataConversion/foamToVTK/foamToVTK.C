@@ -761,7 +761,7 @@ int main(int argc, char *argv[])
             );
 
             // Write cellID field
-            writer.writeCellIDs();
+            writer.writeCellIndices();
 
             // Write volFields::Internal
             writer.write(visf);
@@ -930,7 +930,7 @@ int main(int argc, char *argv[])
             );
 
             // Write patchID field
-            writer.writePatchIDs();
+            writer.writePatchIndices();
 
             // Write volFields
             writer.write(vsf);
@@ -1003,7 +1003,7 @@ int main(int argc, char *argv[])
                 );
 
                 // Write patchID field
-                writer.writePatchIDs();
+                writer.writePatchIndices();
 
                 // Write volFields
                 writer.write(vsf);

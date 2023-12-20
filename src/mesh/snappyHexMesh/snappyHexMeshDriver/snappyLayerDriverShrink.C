@@ -1111,7 +1111,7 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
         // 2. Seed non-adapt patches
         const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-        labelHashSet adaptPatches(meshMover.adaptPatchIDs());
+        labelHashSet adaptPatches(meshMover.adaptPatchIndices());
 
 
         forAll(patches, patchi)

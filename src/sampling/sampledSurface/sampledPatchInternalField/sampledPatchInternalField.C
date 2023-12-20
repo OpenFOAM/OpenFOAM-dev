@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ Foam::sampledSurfaces::patchInternalField::patchInternalField
 )
 :
     patch(name, mesh, dict),
-    mappers_(patchIDs().size())
+    mappers_(patchIndices().size())
 {
     // Negate the distance so that we sample cells inside the patch
     dictionary mappersDict(dict);
@@ -57,14 +57,14 @@ Foam::sampledSurfaces::patchInternalField::patchInternalField
         mappersDict.set("distance", -mappersDict.lookup<scalar>("distance"));
     }
 
-    forAll(patchIDs(), i)
+    forAll(patchIndices(), i)
     {
         mappers_.set
         (
             i,
             new mappedInternalPatchBase
             (
-                mesh.boundaryMesh()[patchIDs()[i]],
+                mesh.boundaryMesh()[patchIndices()[i]],
                 mappersDict
             )
         );

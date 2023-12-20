@@ -52,7 +52,7 @@ Foam::meshToMesh::meshToMesh
     cellsInterpolation_(),
     srcCellsStabilisation_(),
     tgtCellsStabilisation_(),
-    patchIDs_(),
+    patchIndices_(),
     patchInterpolations_(),
     srcPatchStabilisations_(),
     tgtPatchStabilisations_()
@@ -97,13 +97,13 @@ Foam::meshToMesh::meshToMesh
             }
         }
 
-        patchIDs_.transfer(patchIDs);
+        patchIndices_.transfer(patchIDs);
     }
 
     // If a patch mas was supplied then convert it to pairs of patch indices
     else
     {
-        patchIDs_.setSize(patchMap.size());
+        patchIndices_.setSize(patchMap.size());
         label i = 0;
         forAllConstIter(HashTable<word>, patchMap, iter)
         {
@@ -134,7 +134,7 @@ Foam::meshToMesh::meshToMesh
                     << exit(FatalError);
             }
 
-            patchIDs_[i ++] = labelPair(srcPatchi, tgtPatchi);
+            patchIndices_[i ++] = labelPair(srcPatchi, tgtPatchi);
         }
     }
 
@@ -152,13 +152,13 @@ Foam::meshToMesh::meshToMesh
     Info<< decrIndent;
 
     // Calculate patch addressing and weights
-    patchInterpolations_.setSize(patchIDs_.size());
-    srcPatchStabilisations_.setSize(patchIDs_.size());
-    tgtPatchStabilisations_.setSize(patchIDs_.size());
-    forAll(patchIDs_, i)
+    patchInterpolations_.setSize(patchIndices_.size());
+    srcPatchStabilisations_.setSize(patchIndices_.size());
+    tgtPatchStabilisations_.setSize(patchIndices_.size());
+    forAll(patchIndices_, i)
     {
-        const label srcPatchi = patchIDs_[i].first();
-        const label tgtPatchi = patchIDs_[i].second();
+        const label srcPatchi = patchIndices_[i].first();
+        const label tgtPatchi = patchIndices_[i].second();
 
         const polyPatch& srcPp = srcMesh_.boundaryMesh()[srcPatchi];
         const polyPatch& tgtPp = tgtMesh_.boundaryMesh()[tgtPatchi];
@@ -199,10 +199,10 @@ bool Foam::meshToMesh::consistent() const
     boolList tgtPatchIsMapped(tgtMesh_.boundaryMesh().size(), false);
 
     // Mark anything paired as mapped
-    forAll(patchIDs_, i)
+    forAll(patchIndices_, i)
     {
-        const label srcPatchi = patchIDs_[i].first();
-        const label tgtPatchi = patchIDs_[i].second();
+        const label srcPatchi = patchIndices_[i].first();
+        const label tgtPatchi = patchIndices_[i].second();
 
         srcPatchIsMapped[srcPatchi] = true;
         tgtPatchIsMapped[tgtPatchi] = true;

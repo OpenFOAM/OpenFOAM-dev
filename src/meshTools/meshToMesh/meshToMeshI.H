@@ -67,9 +67,9 @@ Foam::meshToMesh::tgtCellsStabilisation() const
 }
 
 
-inline const Foam::List<Foam::labelPair>& Foam::meshToMesh::patchIDs() const
+inline const Foam::List<Foam::labelPair>& Foam::meshToMesh::patchIndices() const
 {
-    return patchIDs_;
+    return patchIndices_;
 }
 
 
@@ -87,7 +87,7 @@ Foam::meshToMesh::srcPatchStabilisation(const label i) const
 {
     if (!srcPatchStabilisations_.set(i))
     {
-        const label srcPatchi = patchIDs_[i].first();
+        const label srcPatchi = patchIndices_[i].first();
         const polyPatch& srcPp = srcMesh_.boundaryMesh()[srcPatchi];
 
         srcPatchStabilisations_.set(i, new patchToPatchStabilisation());
@@ -107,7 +107,7 @@ Foam::meshToMesh::tgtPatchStabilisation(const label i) const
 {
     if (!tgtPatchStabilisations_.set(i))
     {
-        const label tgtPatchi = patchIDs_[i].first();
+        const label tgtPatchi = patchIndices_[i].first();
         const polyPatch& tgtPp = tgtMesh_.boundaryMesh()[tgtPatchi];
 
         tgtPatchStabilisations_.set(i, new patchToPatchStabilisation());

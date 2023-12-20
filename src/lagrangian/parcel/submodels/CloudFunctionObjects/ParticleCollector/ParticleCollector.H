@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -193,7 +193,7 @@ private:
         scalar timeOld_;
 
         //- Work list to store which faces are hit
-        mutable DynamicList<label> hitFaceIDs_;
+        mutable DynamicList<label> hitFaceIndices_;
 
 
     // Private Member Functions

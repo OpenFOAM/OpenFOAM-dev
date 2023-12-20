@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -199,7 +199,7 @@ private:
         static DynamicList<int> myProcNo_;
 
         //- List of process IDs
-        static DynamicList<List<int>> procIDs_;
+        static DynamicList<List<int>> procIndices_;
 
         //- Parent communicator
         static DynamicList<label> parentCommunicator_;
@@ -411,7 +411,7 @@ public:
         //- Number of processes in parallel run
         static label nProcs(const label communicator = 0)
         {
-            return procIDs_[communicator].size();
+            return procIndices_[communicator].size();
         }
 
         //- Process index of the master
@@ -440,7 +440,7 @@ public:
         //- Process ID of given process index
         static List<int>& procID(label communicator)
         {
-            return procIDs_[communicator];
+            return procIndices_[communicator];
         }
 
         //- Process index of first slave

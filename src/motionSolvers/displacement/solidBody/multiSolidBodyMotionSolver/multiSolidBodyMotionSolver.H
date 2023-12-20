@@ -58,10 +58,10 @@ class multiSolidBodyMotionSolver
         PtrList<solidBodyMotionFunction> SBMFs_;
 
         //- Specified cellZones
-        labelList zoneIDs_;
+        labelList zoneIndices_;
 
         //- Points to move per cellZone
-        labelListList pointIDs_;
+        labelListList pointIndices_;
 
 
 public:

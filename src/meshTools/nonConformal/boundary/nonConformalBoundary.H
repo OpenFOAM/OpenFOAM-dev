@@ -153,16 +153,16 @@ public:
         ) const;
 
         //- Return a list of the orig patch indices
-        labelList allOrigPatchIDs() const;
+        labelList allOrigPatchIndices() const;
 
         //- Return a list of the error patch indices
-        labelList allErrorPatchIDs() const;
+        labelList allErrorPatchIndices() const;
 
         //- Return a list of the owner-orig patch indices
-        labelList ownerOrigPatchIDs() const;
+        labelList ownerOrigPatchIndices() const;
 
         //- Return a list of the owner error patch indices
-        labelList ownerErrorPatchIDs() const;
+        labelList ownerErrorPatchIndices() const;
 
         //- Get a map from owner-orig boundary point to mesh point
         const labelList& ownerOrigBoundaryPointMeshPoint() const;

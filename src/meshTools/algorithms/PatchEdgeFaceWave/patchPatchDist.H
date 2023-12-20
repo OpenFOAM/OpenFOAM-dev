@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class patchPatchDist
         const polyPatch& patch_;
 
         //- Patches to determine the distance to
-        const labelHashSet nbrPatchIDs_;
+        const labelHashSet nbrPatchIndices_;
 
         //- Number of unset faces.
         label nUnset_;

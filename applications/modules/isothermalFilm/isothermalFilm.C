@@ -56,7 +56,7 @@ bool Foam::solvers::isothermalFilm::initFilmMesh()
     // Search for film wall patches
 
     label nWallFaces = 0;
-    DynamicList<label> wallPatchIDs_;
+    DynamicList<label> wallPatchIndices_;
 
     const polyBoundaryMesh& bm = mesh.boundaryMesh();
 
@@ -66,7 +66,7 @@ bool Foam::solvers::isothermalFilm::initFilmMesh()
 
         if (isA<filmWallPolyPatch>(p))
         {
-            wallPatchIDs_.append(patchi);
+            wallPatchIndices_.append(patchi);
             nWallFaces += p.faceCells().size();
         }
     }
@@ -88,7 +88,7 @@ bool Foam::solvers::isothermalFilm::initFilmMesh()
             << exit(FatalError);
     }
 
-    wallPatchIDs.transfer(wallPatchIDs_);
+    wallPatchIDs.transfer(wallPatchIndices_);
 
 
     // Search for film surface patch

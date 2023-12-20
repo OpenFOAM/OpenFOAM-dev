@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,9 +38,9 @@ Foam::label Foam::PatchPostProcessing<CloudType>::applyToPatch
     const label globalPatchi
 ) const
 {
-    forAll(patchIDs_, i)
+    forAll(patchIndices_, i)
     {
-        if (patchIDs_[i] == globalPatchi)
+        if (patchIndices_[i] == globalPatchi)
         {
             return i;
         }
@@ -72,7 +72,8 @@ void Foam::PatchPostProcessing<CloudType>::write()
             // Create directory if it doesn't exist
             mkDir(this->writeTimeDir());
 
-            const word& patchName = mesh.boundaryMesh()[patchIDs_[i]].name();
+            const word& patchName =
+                mesh.boundaryMesh()[patchIndices_[i]].name();
 
             OFstream patchOutFile
             (
@@ -134,7 +135,7 @@ Foam::PatchPostProcessing<CloudType>::PatchPostProcessing
     (
         this->coeffDict().template lookup<scalar>("maxStoredParcels")
     ),
-    patchIDs_(),
+    patchIndices_(),
     times_(),
     patchData_()
 {
@@ -156,20 +157,20 @@ Foam::PatchPostProcessing<CloudType>::PatchPostProcessing
         uniquePatchIDs.insert(patchIDs);
     }
 
-    patchIDs_ = uniquePatchIDs.toc();
+    patchIndices_ = uniquePatchIDs.toc();
 
     if (debug)
     {
-        forAll(patchIDs_, i)
+        forAll(patchIndices_, i)
         {
-            const label patchi = patchIDs_[i];
+            const label patchi = patchIndices_[i];
             const word& patchName = owner.mesh().boundaryMesh()[patchi].name();
             Info<< "Post-process patch " << patchName << endl;
         }
     }
 
-    patchData_.setSize(patchIDs_.size());
-    times_.setSize(patchIDs_.size());
+    patchData_.setSize(patchIndices_.size());
+    times_.setSize(patchIndices_.size());
 }
 
 
@@ -181,7 +182,7 @@ Foam::PatchPostProcessing<CloudType>::PatchPostProcessing
 :
     CloudFunctionObject<CloudType>(ppm),
     maxStoredParcels_(ppm.maxStoredParcels_),
-    patchIDs_(ppm.patchIDs_),
+    patchIndices_(ppm.patchIndices_),
     times_(ppm.times_),
     patchData_(ppm.patchData_)
 {}

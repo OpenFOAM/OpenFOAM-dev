@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,10 @@ Foam::label Foam::PatchPostProcessing<CloudType>::maxStoredParcels() const
 
 
 template<class CloudType>
-const Foam::labelList& Foam::PatchPostProcessing<CloudType>::patchIDs() const
+const Foam::labelList&
+Foam::PatchPostProcessing<CloudType>::patchIndices() const
 {
-    return patchIDs_;
+    return patchIndices_;
 }
 
 

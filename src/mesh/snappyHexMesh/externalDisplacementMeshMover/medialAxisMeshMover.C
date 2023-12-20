@@ -626,7 +626,7 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
         // 2. Seed non-adapt patches
         const polyBoundaryMesh& patches = mesh().boundaryMesh();
 
-        labelHashSet adaptPatches(adaptPatchIDs_);
+        labelHashSet adaptPatches(adaptPatchIndices_);
 
 
         forAll(patches, patchi)
@@ -1526,8 +1526,8 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
 )
 :
     externalDisplacementMeshMover(dict, baffles, pointDisplacement),
-    adaptPatchIDs_(getFixedValueBCs(pointDisplacement)),
-    adaptPatchPtr_(getPatch(mesh(), adaptPatchIDs_)),
+    adaptPatchIndices_(getFixedValueBCs(pointDisplacement)),
+    adaptPatchPtr_(getPatch(mesh(), adaptPatchIndices_)),
     scale_
     (
         IOobject
@@ -1550,7 +1550,7 @@ Foam::medialAxisMeshMover::medialAxisMeshMover
         pointDisplacement,
         scale_,
         oldPoints_,
-        adaptPatchIDs_,
+        adaptPatchIndices_,
         dict
     ),
     dispVec_

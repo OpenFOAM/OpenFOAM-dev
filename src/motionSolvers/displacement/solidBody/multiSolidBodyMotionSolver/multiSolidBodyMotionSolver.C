@@ -55,18 +55,18 @@ Foam::multiSolidBodyMotionSolver::multiSolidBodyMotionSolver
 :
     points0MotionSolver(name, mesh, dict, typeName)
 {
-    zoneIDs_.setSize(coeffDict().size());
+    zoneIndices_.setSize(coeffDict().size());
     SBMFs_.setSize(coeffDict().size());
-    pointIDs_.setSize(coeffDict().size());
+    pointIndices_.setSize(coeffDict().size());
     label zonei = 0;
 
     forAllConstIter(dictionary, coeffDict(), iter)
     {
         if (iter().isDict())
         {
-            zoneIDs_[zonei] = mesh.cellZones().findIndex(iter().keyword());
+            zoneIndices_[zonei] = mesh.cellZones().findIndex(iter().keyword());
 
-            if (zoneIDs_[zonei] == -1)
+            if (zoneIndices_[zonei] == -1)
             {
                 FatalIOErrorInFunction
                 (
@@ -85,7 +85,7 @@ Foam::multiSolidBodyMotionSolver::multiSolidBodyMotionSolver
             );
 
             // Collect points of cell zone.
-            const cellZone& cz = mesh.cellZones()[zoneIDs_[zonei]];
+            const cellZone& cz = mesh.cellZones()[zoneIndices_[zonei]];
 
             boolList movePts(mesh.nPoints(), false);
 
@@ -115,18 +115,19 @@ Foam::multiSolidBodyMotionSolver::multiSolidBodyMotionSolver
                 }
             }
 
-            pointIDs_[zonei].transfer(ptIDs);
+            pointIndices_[zonei].transfer(ptIDs);
 
             Info<< "Applying solid body motion " << SBMFs_[zonei].type()
-                << " to " << pointIDs_[zonei].size() << " points of cellZone "
-                << iter().keyword() << endl;
+                << " to " << pointIndices_[zonei].size()
+                << " points of cellZone " << iter().keyword()
+                << endl;
 
             zonei++;
         }
     }
-    zoneIDs_.setSize(zonei);
+    zoneIndices_.setSize(zonei);
     SBMFs_.setSize(zonei);
-    pointIDs_.setSize(zonei);
+    pointIndices_.setSize(zonei);
 }
 
 
@@ -143,9 +144,9 @@ Foam::tmp<Foam::pointField> Foam::multiSolidBodyMotionSolver::curPoints() const
     tmp<pointField> ttransformedPts(new pointField(mesh().points()));
     pointField& transformedPts = ttransformedPts.ref();
 
-    forAll(zoneIDs_, i)
+    forAll(zoneIndices_, i)
     {
-        const labelList& zonePoints = pointIDs_[i];
+        const labelList& zonePoints = pointIndices_[i];
 
         UIndirectList<point>(transformedPts, zonePoints) = transformPoints
         (

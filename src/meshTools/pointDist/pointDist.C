@@ -49,7 +49,7 @@ Foam::pointDist::pointDist
         dimensionedScalar(dimLength, great)
     ),
     points_(points),
-    patchIDs_(patchIDs),
+    patchIndices_(patchIDs),
     nUnset_(0)
 {
     correct();
@@ -76,8 +76,8 @@ Foam::pointDist::pointDist
         dimensionedScalar(dimLength, great)
     ),
     points_(points),
-    patchIDs_(patchIDs),
-    zoneIDs_(zoneIDs),
+    patchIndices_(patchIDs),
+    zoneIndices_(zoneIDs),
     nUnset_(0)
 {
     correct();
@@ -98,13 +98,13 @@ void Foam::pointDist::correct()
 
     label nPatchPoints = 0;
 
-    forAllConstIter(labelHashSet, patchIDs_, iter)
+    forAllConstIter(labelHashSet, patchIndices_, iter)
     {
         const label patchi = iter.key();
         nPatchPoints += pbm[patchi].meshPoints().size();
     }
 
-    forAllConstIter(labelHashSet, zoneIDs_, iter)
+    forAllConstIter(labelHashSet, zoneIndices_, iter)
     {
         const label zonei = iter.key();
         nPatchPoints += mesh()().pointZones()[zonei].size();
@@ -118,7 +118,7 @@ void Foam::pointDist::correct()
     nPatchPoints = 0;
 
     // Add the patch points to the patchPointsInfo
-    forAllConstIter(labelHashSet, patchIDs_, iter)
+    forAllConstIter(labelHashSet, patchIndices_, iter)
     {
         const label patchi = iter.key();
         const labelList& mp = pbm[patchi].meshPoints();
@@ -137,7 +137,7 @@ void Foam::pointDist::correct()
     }
 
     // Add the zone points to the patchPointsInfo
-    forAllConstIter(labelHashSet, zoneIDs_, iter)
+    forAllConstIter(labelHashSet, zoneIndices_, iter)
     {
         const label zonei = iter.key();
         const labelList& zonePoints = mesh()().pointZones()[zonei];
@@ -191,7 +191,7 @@ void Foam::pointDist::correct()
         }
     }
 
-    forAllConstIter(labelHashSet, zoneIDs_, iter)
+    forAllConstIter(labelHashSet, zoneIndices_, iter)
     {
         const label zonei = iter.key();
         const labelList& zonePoints = mesh()().pointZones()[zonei];

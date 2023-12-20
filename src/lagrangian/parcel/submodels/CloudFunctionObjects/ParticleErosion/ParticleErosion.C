@@ -36,9 +36,9 @@ Foam::label Foam::ParticleErosion<CloudType>::applyToPatch
     const label globalPatchi
 ) const
 {
-    forAll(patchIDs_, i)
+    forAll(patchIndices_, i)
     {
-        if (patchIDs_[i] == globalPatchi)
+        if (patchIndices_[i] == globalPatchi)
         {
             return i;
         }
@@ -75,7 +75,7 @@ Foam::ParticleErosion<CloudType>::ParticleErosion
 :
     CloudFunctionObject<CloudType>(dict, owner, modelName, typeName),
     QPtr_(nullptr),
-    patchIDs_(),
+    patchIndices_(),
     p_(this->coeffDict().template lookup<scalar>("p")),
     psi_(this->coeffDict().template lookupOrDefault<scalar>("psi", 2.0)),
     K_(this->coeffDict().template lookupOrDefault<scalar>("K", 2.0))
@@ -98,7 +98,7 @@ Foam::ParticleErosion<CloudType>::ParticleErosion
         uniquePatchIDs.insert(patchIDs);
     }
 
-    patchIDs_ = uniquePatchIDs.toc();
+    patchIndices_ = uniquePatchIDs.toc();
 
     // Trigger creation of the Q field
     preEvolve();
@@ -113,7 +113,7 @@ Foam::ParticleErosion<CloudType>::ParticleErosion
 :
     CloudFunctionObject<CloudType>(pe),
     QPtr_(nullptr),
-    patchIDs_(pe.patchIDs_),
+    patchIndices_(pe.patchIndices_),
     p_(pe.p_),
     psi_(pe.psi_),
     K_(pe.K_)

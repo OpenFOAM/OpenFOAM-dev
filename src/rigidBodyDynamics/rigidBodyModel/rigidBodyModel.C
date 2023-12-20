@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ void Foam::RBD::rigidBodyModel::initialiseRootBody()
 {
     bodies_.append(new masslessBody("root"));
     lambda_.append(0);
-    bodyIDs_.insert("root", 0);
+    bodyIndices_.insert("root", 0);
     joints_.append(new joints::null(*this));
     XT_.append(spatialTransform());
 
@@ -128,7 +128,7 @@ Foam::label Foam::RBD::rigidBodyModel::join_
     const rigidBody& body = bodyPtr();
     bodies_.append(bodyPtr);
     const label bodyID = nBodies()-1;
-    bodyIDs_.insert(body.name(), bodyID);
+    bodyIndices_.insert(body.name(), bodyID);
 
     // If the parentID refers to a merged body find the parent into which it has
     // been merged and set lambda and XT accordingly
@@ -361,7 +361,7 @@ Foam::label Foam::RBD::rigidBodyModel::merge
     bodies_[sBody.masterID()].merge(sBody);
 
     const label sBodyID = mergedBodyID(mergedBodies_.size() - 1);
-    bodyIDs_.insert(sBody.name(), sBodyID);
+    bodyIndices_.insert(sBody.name(), sBodyID);
 
     return sBodyID;
 }

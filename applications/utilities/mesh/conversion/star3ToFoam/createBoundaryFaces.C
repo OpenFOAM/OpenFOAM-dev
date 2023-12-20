@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,16 +94,16 @@ bool Foam::starMesh::starEqualFace
 void Foam::starMesh::markBoundaryFaces()
 {
     // set size of mark lists for the boundary
-    boundaryCellIDs_.setSize(boundary_.size());
-    boundaryCellFaceIDs_.setSize(boundary_.size());
+    boundaryCellIndices_.setSize(boundary_.size());
+    boundaryCellFaceIndices_.setSize(boundary_.size());
 
     forAll(boundary_, patchi)
     {
         const faceList& patchFaces = boundary_[patchi];
 
         // set size of patch lists
-        labelList& curBoundaryCellIDs = boundaryCellIDs_[patchi];
-        labelList& curBoundaryCellFaceIDs = boundaryCellFaceIDs_[patchi];
+        labelList& curBoundaryCellIDs = boundaryCellIndices_[patchi];
+        labelList& curBoundaryCellFaceIDs = boundaryCellFaceIndices_[patchi];
 
         curBoundaryCellIDs.setSize(patchFaces.size());
         curBoundaryCellFaceIDs.setSize(patchFaces.size());
@@ -183,8 +183,9 @@ void Foam::starMesh::collectBoundaryFaces()
         faceList& patchFaces = boundary_[patchi];
 
         // set size of patch lists
-        const labelList& curBoundaryCellIDs = boundaryCellIDs_[patchi];
-        const labelList& curBoundaryCellFaceIDs = boundaryCellFaceIDs_[patchi];
+        const labelList& curBoundaryCellIDs = boundaryCellIndices_[patchi];
+        const labelList& curBoundaryCellFaceIDs =
+            boundaryCellFaceIndices_[patchi];
 
         forAll(curBoundaryCellIDs, facei)
         {

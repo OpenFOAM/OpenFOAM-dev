@@ -62,7 +62,7 @@ class solidBodyMotionSolver
         polyCellSet set_;
 
         //- Points to move when cell zone is supplied
-        labelList setPointIDs_;
+        labelList setPointIndices_;
 
         //- Cache the current transform for topoChange
         mutable septernion transform_;
@@ -71,7 +71,7 @@ class solidBodyMotionSolver
     // Private Member Functions
 
         //- Re-calculate the set point ID-s from the set, following mesh change
-        void updateSetPointIDs();
+        void updateSetPointIndices();
 
 
 public:

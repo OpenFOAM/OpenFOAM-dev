@@ -80,7 +80,7 @@ bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
         fvPatchDistWave::calculateAndCorrect
         (
             mesh_,
-            patchIDs_,
+            patchIndices_,
             minFaceFraction_,
             nCorrectors_,
             y
@@ -105,7 +105,7 @@ bool Foam::patchDistMethods::meshWave::correct
         fvPatchDistWave::calculateAndCorrect
         (
             mesh_,
-            patchIDs_,
+            patchIndices_,
             minFaceFraction_,
             nCorrectors_,
             y,

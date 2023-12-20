@@ -61,7 +61,7 @@ void Foam::GAMGAgglomeration::compactLevels(const label nCreatedLevels)
     if (processorAgglomerate())
     {
         procAgglomMap_.setSize(nCreatedLevels);
-        agglomProcIDs_.setSize(nCreatedLevels);
+        agglomProcIndices_.setSize(nCreatedLevels);
         procCellOffsets_.setSize(nCreatedLevels);
         procFaceMap_.setSize(nCreatedLevels);
         procBoundaryMap_.setSize(nCreatedLevels);
@@ -274,7 +274,7 @@ Foam::GAMGAgglomeration::GAMGAgglomeration
     if (processorAgglomerate())
     {
         procAgglomMap_.setSize(maxLevels_);
-        agglomProcIDs_.setSize(maxLevels_);
+        agglomProcIndices_.setSize(maxLevels_);
         procCellOffsets_.setSize(maxLevels_);
         procFaceMap_.setSize(maxLevels_);
         procBoundaryMap_.setSize(maxLevels_);
@@ -523,7 +523,7 @@ const Foam::labelList& Foam::GAMGAgglomeration::agglomProcIDs
     const label leveli
 ) const
 {
-    return agglomProcIDs_[leveli];
+    return agglomProcIndices_[leveli];
 }
 
 

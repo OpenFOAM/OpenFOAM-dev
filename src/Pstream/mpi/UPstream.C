@@ -615,11 +615,11 @@ void Foam::UPstream::allocatePstreamCommunicator
         int numProcs;
         MPI_Comm_size(PstreamGlobals::MPICommunicators_[index], &numProcs);
 
-        // procIDs_[index] = identityMap(numProcs);
-        procIDs_[index].setSize(numProcs);
-        forAll(procIDs_[index], i)
+        // procIndices_[index] = identityMap(numProcs);
+        procIndices_[index].setSize(numProcs);
+        forAll(procIndices_[index], i)
         {
-            procIDs_[index][i] = i;
+            procIndices_[index][i] = i;
         }
     }
     else
@@ -628,8 +628,8 @@ void Foam::UPstream::allocatePstreamCommunicator
         MPI_Group_incl
         (
             PstreamGlobals::MPIGroups_[parentIndex],
-            procIDs_[index].size(),
-            procIDs_[index].begin(),
+            procIndices_[index].size(),
+            procIndices_[index].begin(),
            &PstreamGlobals::MPIGroups_[index]
         );
 
@@ -659,7 +659,7 @@ void Foam::UPstream::allocatePstreamCommunicator
                 FatalErrorInFunction
                     << "Problem :"
                     << " when allocating communicator at " << index
-                    << " from ranks " << procIDs_[index]
+                    << " from ranks " << procIndices_[index]
                     << " of parent " << parentIndex
                     << " cannot find my own rank"
                     << Foam::exit(FatalError);

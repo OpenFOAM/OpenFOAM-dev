@@ -43,7 +43,7 @@ Foam::patchDistMethod::patchDistMethod
 )
 :
     mesh_(mesh),
-    patchIDs_(patchIDs)
+    patchIndices_(patchIDs)
 {}
 
 
