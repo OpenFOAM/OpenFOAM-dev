@@ -854,22 +854,35 @@ void Foam::fvMeshStitcher::stabiliseOrigPatchFaces
 
         forAll(origPp, origPatchFacei)
         {
-            part p
-            (
-                SfBf[origPatchi][origPatchFacei],
-                CfBf[origPatchi][origPatchFacei]
-            );
+            const vector& a = origPp.faceAreas()[origPatchFacei];
+            const point& c = origPp.faceCentres()[origPatchFacei];
 
-            const part smallP
-            (
-                small*origPp.faceAreas()[origPatchFacei],
-                origPp.faceCentres()[origPatchFacei]
-            );
+            vector& Sf = SfBf[origPatchi][origPatchFacei];
+            point& Cf = CfBf[origPatchi][origPatchFacei];
 
-            p += smallP;
+            // Determine the direction in which to stabilise. If the fv-face
+            // points in the same direction as the poly-face, then stabilise in
+            // the direction of the poly-face. If it is reversed, then
+            // construct a tangent to both faces, and stabilise in the average
+            // direction to this tangent and the poly-face.
+            vector dSfHat;
+            if ((Sf & a) >= 0)
+            {
+                dSfHat = normalised(a);
+            }
+            else
+            {
+                dSfHat = (Sf & Sf)*a - (Sf & a)*Sf;
+                if ((dSfHat & a) <= 0) dSfHat = perpendicular(a);
+                dSfHat = normalised(normalised(dSfHat) + normalised(a));
+            }
 
-            SfBf[origPatchi][origPatchFacei] = p.area;
-            CfBf[origPatchi][origPatchFacei] = p.centre;
+            part SAndCf(Sf, Cf);
+
+            SAndCf += part(small*mag(a)*dSfHat, c);
+
+            Sf = SAndCf.area;
+            Cf = SAndCf.centre;
         }
     }
 }
