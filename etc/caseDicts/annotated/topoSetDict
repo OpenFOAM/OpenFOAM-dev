@@ -310,7 +310,7 @@ source  searchableSurfaceToFaceZone;
 surface searchableSphere;
 centre  (0.05 0.05 0.005);
 radius  0.025;
-// file    sphere.stl; // Optional file name for triSurfaceMesh
+// file    "sphere.stl"; // Optional file name for triSurfaceMesh
 
 // faceZone from a plane
 source  planeToFaceZone;

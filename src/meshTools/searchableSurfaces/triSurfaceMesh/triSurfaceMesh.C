@@ -52,7 +52,7 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
     if (fName.empty())
     {
         FatalErrorInFunction
-            << "Cannot find triSurfaceMesh starting from "
+            << "Cannot find triSurfaceMesh file starting from "
             << io.objectPath() << exit(FatalError);
     }
 
@@ -102,7 +102,7 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
         if (!exists(fName))
         {
             FatalErrorInFunction
-                << "Cannot find triSurfaceMesh at " << io.path()/dictFName
+                << "Cannot find triSurfaceMesh file " << io.path()/dictFName
                 << exit(FatalError);
         }
     }
@@ -113,7 +113,7 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
         if (!exists(fName))
         {
             FatalErrorInFunction
-                << "Cannot find triSurfaceMesh starting from "
+                << "Cannot find triSurfaceMesh file starting from "
                 << io.objectPath() << exit(FatalError);
         }
     }
@@ -306,20 +306,18 @@ Foam::triSurfaceMesh::triSurfaceMesh
         checkFile(static_cast<const searchableSurface&>(*this), dict, true)
     ),
     triSurfaceRegionSearch(static_cast<const triSurface&>(*this), dict),
+    fName_
+    (
+        relativeFilePath
+        (
+            static_cast<const searchableSurface&>(*this),
+            dict.lookup("file", false, false),
+            true
+        )
+    ),
     minQuality_(-1),
     surfaceClosed_(-1)
 {
-    // Reading from supplied file name instead of objectPath/filePath
-    if (dict.readIfPresent("file", fName_, false, false))
-    {
-        fName_ = relativeFilePath
-        (
-            static_cast<const searchableSurface&>(*this),
-            fName_,
-            true
-        );
-    }
-
     scalar scaleFactor = 0;
 
     // Allow rescaling of the surface points
