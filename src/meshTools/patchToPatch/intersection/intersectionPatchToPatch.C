@@ -394,14 +394,8 @@ bool Foam::patchToPatches::intersection::intersectFaces
 
                     if (tgtFaceEdgei < tgtPatch[tgtFacei].size())
                     {
-                        if (reverse())
-                        {
-                            tgtFaceEdgePart_[tgtFaceEdgei] += ictEdgePart;
-                        }
-                        else
-                        {
-                            tgtFaceEdgePart_[tgtFaceEdgei] -= ictEdgePart;
-                        }
+                        tgtFaceEdgePart_[tgtFaceEdgei] +=
+                            reverse() ? ictEdgePart : -ictEdgePart;
                         ictEdgeSide = -1;
                     }
                     else
@@ -456,7 +450,8 @@ bool Foam::patchToPatches::intersection::intersectFaces
             srcFaceEdgeParts_[srcFacei][srcFaceEdgei] +=
                 srcFaceEdgePart_[srcFaceEdgei];
         }
-        srcErrorParts_[srcFacei] -= sum(tgtFaceEdgePart_);
+        srcErrorParts_[srcFacei] +=
+            reverse() ? sum(tgtFaceEdgePart_) : -sum(tgtFaceEdgePart_);
         srcErrorParts_[srcFacei] += errorPart;
     }
 
