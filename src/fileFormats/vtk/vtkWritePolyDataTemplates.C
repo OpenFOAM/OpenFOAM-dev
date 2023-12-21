@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,10 +60,13 @@ void Foam::vtkWritePolyData::writeFieldTypeValues
                 for (direction cmpt = 0; cmpt < nCmpt; ++ cmpt)
                 {
                     data[i ++] =
-                        component
+                        vtkWriteOps::cast
                         (
-                            fieldTypeValues[fieldi][fieldValuei],
-                            cmpt
+                            component
+                            (
+                                fieldTypeValues[fieldi][fieldValuei],
+                                cmpt
+                            )
                         );
                 }
             }
@@ -109,7 +112,7 @@ void Foam::vtkWritePolyData::write
             const point& p = points[pointi];
             forAll(p, i)
             {
-                coordinates[3*pointi + i] = float(p[i]);
+                coordinates[3*pointi + i] = vtkWriteOps::cast(p[i]);
             }
         }
         vtkWriteOps::write(os, binary, coordinates);

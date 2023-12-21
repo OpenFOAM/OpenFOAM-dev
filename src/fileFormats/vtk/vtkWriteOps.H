@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,6 +58,17 @@ namespace vtkWriteOps
     //- Swap halves of word
     void swapWords(const label nWords, label* words32);
 
+    //- Cast an integer to the corresponding VTK write type. Does nothing.
+    inline label cast(const label& x);
+
+    //- Cast a float to the corresponding VTK write type. Does nothing.
+    inline floatScalar cast(const floatScalar& x);
+
+    //- Cast a scalar to the corresponding VTK write type. Clips to
+    //  pTraits<floatScalar>::max.
+    template<class Scalar>
+    inline floatScalar cast(const Scalar& x);
+
     //- Write header
     void writeHeader
     (
@@ -66,6 +77,7 @@ namespace vtkWriteOps
         const std::string& title
     );
 
+    //- Write cell data header
     void writeCellDataHeader
     (
         std::ostream&,
@@ -73,13 +85,13 @@ namespace vtkWriteOps
         const label nFields
     );
 
+    //- Write point data header
     void writePointDataHeader
     (
         std::ostream&,
         const label nPoints,
         const label nFields
     );
-
 
     //- Write floats ascii or binary.
     //  If binary optionally in-place swaps argument
@@ -96,7 +108,6 @@ namespace vtkWriteOps
     //- Write floats ascii or binary.
     //  If binary optionally in-place swaps argument
     void write(std::ostream&, const bool, DynamicList<label>&);
-
 
     //- Append scalar to given DynamicList
     void insert(const scalar, DynamicList<floatScalar>&);
@@ -147,6 +158,8 @@ namespace vtkWriteOps
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "vtkWriteOpsI.H"
 
 #ifdef NoRepository
     #include "vtkWriteOpsTemplates.C"
