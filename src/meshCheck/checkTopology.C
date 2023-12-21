@@ -125,15 +125,17 @@ Foam::label Foam::meshCheck::checkTopology
                 << " found,  number of cells: " << nCells << endl;
             noFailedChecks++;
 
-            Info<< "  <<Writing " << nCells
-                << " illegal cells to set " << cells.name() << endl;
-            cells.instance() = mesh.pointsInstance();
-            cells.write();
-            if (surfWriter.valid())
+            if (setWriter.valid())
             {
-                meshCheck::mergeAndWrite(surfWriter(), cells);
+                Info<< "  <<Writing " << nCells
+                    << " illegal cells to set " << cells.name() << endl;
+                cells.instance() = mesh.pointsInstance();
+                cells.write();
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), cells);
+                }
             }
-
         }
         else
         {
@@ -148,15 +150,18 @@ Foam::label Foam::meshCheck::checkTopology
         {
             noFailedChecks++;
 
-            label nPoints = returnReduce(points.size(), sumOp<label>());
-
-            Info<< "  <<Writing " << nPoints
-                << " unused points to set " << points.name() << endl;
-            points.instance() = mesh.pointsInstance();
-            points.write();
             if (setWriter.valid())
             {
-                meshCheck::mergeAndWrite(setWriter, points);
+                label nPoints = returnReduce(points.size(), sumOp<label>());
+
+                Info<< "  <<Writing " << nPoints
+                    << " unused points to set " << points.name() << endl;
+                points.instance() = mesh.pointsInstance();
+                points.write();
+                if (setWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(setWriter, points);
+                }
             }
         }
     }
@@ -172,13 +177,16 @@ Foam::label Foam::meshCheck::checkTopology
 
         if (nFaces > 0)
         {
-            Info<< "  <<Writing " << nFaces
-                << " unordered faces to set " << faces.name() << endl;
-            faces.instance() = mesh.pointsInstance();
-            faces.write();
-            if (surfWriter.valid())
+            if (setWriter.valid())
             {
-                meshCheck::mergeAndWrite(surfWriter(), faces);
+                Info<< "  <<Writing " << nFaces
+                    << " unordered faces to set " << faces.name() << endl;
+                faces.instance() = mesh.pointsInstance();
+                faces.write();
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
+                }
             }
         }
     }
@@ -189,16 +197,19 @@ Foam::label Foam::meshCheck::checkTopology
         {
             noFailedChecks++;
 
-            label nFaces = returnReduce(faces.size(), sumOp<label>());
-
-            Info<< "  <<Writing " << nFaces
-                << " faces with out-of-range or duplicate vertices to set "
-                << faces.name() << endl;
-            faces.instance() = mesh.pointsInstance();
-            faces.write();
-            if (surfWriter.valid())
+            if (setWriter.valid())
             {
-                meshCheck::mergeAndWrite(surfWriter(), faces);
+                label nFaces = returnReduce(faces.size(), sumOp<label>());
+
+                Info<< "  <<Writing " << nFaces
+                    << " faces with out-of-range or duplicate vertices to set "
+                    << faces.name() << endl;
+                faces.instance() = mesh.pointsInstance();
+                faces.write();
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
+                }
             }
         }
     }
@@ -210,18 +221,20 @@ Foam::label Foam::meshCheck::checkTopology
         {
             noFailedChecks++;
 
-            label nCells = returnReduce(cells.size(), sumOp<label>());
-
-            Info<< "  <<Writing " << nCells
-                << " cells with over used edges to set " << cells.name()
-                << endl;
-            cells.instance() = mesh.pointsInstance();
-            cells.write();
-            if (surfWriter.valid())
+            if (setWriter.valid())
             {
-                meshCheck::mergeAndWrite(surfWriter(), cells);
-            }
+                label nCells = returnReduce(cells.size(), sumOp<label>());
 
+                Info<< "  <<Writing " << nCells
+                    << " cells with over used edges to set " << cells.name()
+                    << endl;
+                cells.instance() = mesh.pointsInstance();
+                cells.write();
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), cells);
+                }
+            }
         }
     }
 
@@ -236,14 +249,17 @@ Foam::label Foam::meshCheck::checkTopology
         label nFaces = returnReduce(faces.size(), sumOp<label>());
         if (nFaces > 0)
         {
-            Info<< "  <<Writing " << nFaces
-                << " faces with non-standard edge connectivity to set "
-                << faces.name() << endl;
-            faces.instance() = mesh.pointsInstance();
-            faces.write();
-            if (surfWriter.valid())
+            if (setWriter.valid())
             {
-                meshCheck::mergeAndWrite(surfWriter(), faces);
+                Info<< "  <<Writing " << nFaces
+                    << " faces with non-standard edge connectivity to set "
+                    << faces.name() << endl;
+                faces.instance() = mesh.pointsInstance();
+                faces.write();
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
+                }
             }
         }
     }
@@ -290,15 +306,18 @@ Foam::label Foam::meshCheck::checkTopology
 
         if (nOneCells > 0)
         {
-            Info<< "  <<Writing " << nOneCells
-                << " cells with zero or one non-boundary face to set "
-                << oneCells.name()
-                << endl;
-            oneCells.instance() = mesh.pointsInstance();
-            oneCells.write();
-            if (surfWriter.valid())
+            if (setWriter.valid())
             {
-                meshCheck::mergeAndWrite(surfWriter(), oneCells);
+                Info<< "  <<Writing " << nOneCells
+                    << " cells with zero or one non-boundary face to set "
+                    << oneCells.name()
+                    << endl;
+                oneCells.instance() = mesh.pointsInstance();
+                oneCells.write();
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), oneCells);
+                }
             }
         }
 
@@ -306,15 +325,18 @@ Foam::label Foam::meshCheck::checkTopology
 
         if (nTwoCells > 0)
         {
-            Info<< "  <<Writing " << nTwoCells
-                << " cells with two non-boundary faces to set "
-                << twoCells.name()
-                << endl;
-            twoCells.instance() = mesh.pointsInstance();
-            twoCells.write();
-            if (surfWriter.valid())
+            if (setWriter.valid())
             {
-                meshCheck::mergeAndWrite(surfWriter(), twoCells);
+                Info<< "  <<Writing " << nTwoCells
+                    << " cells with two non-boundary faces to set "
+                    << twoCells.name()
+                    << endl;
+                twoCells.instance() = mesh.pointsInstance();
+                twoCells.write();
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), twoCells);
+                }
             }
         }
     }
@@ -335,7 +357,7 @@ Foam::label Foam::meshCheck::checkTopology
             Info<< "    The mesh has multiple regions which are not connected "
                 "by any face." << endl;
 
-            if (allTopology)
+            if (allTopology && setWriter.valid())
             {
                 Info<< "  <<Writing region information to "
                     << mesh.time().name()/"cellToRegion"
@@ -358,7 +380,7 @@ Foam::label Foam::meshCheck::checkTopology
 
 
             // Write region sets for allTopology
-            if (allTopology)
+            if (allTopology && setWriter.valid())
             {
                 // Points in multiple regions
                 pointSet points
@@ -370,52 +392,49 @@ Foam::label Foam::meshCheck::checkTopology
 
                 // Is region disconnected
                 boolList regionDisconnected(rs.nRegions(), true);
-                if (allTopology)
-                {
-                    // -1   : not assigned
-                    // -2   : multiple regions
-                    // >= 0 : single region
-                    labelList pointToRegion(mesh.nPoints(), -1);
+                // -1   : not assigned
+                // -2   : multiple regions
+                // >= 0 : single region
+                labelList pointToRegion(mesh.nPoints(), -1);
 
-                    for
-                    (
-                        label faceI = mesh.nInternalFaces();
-                        faceI < mesh.nFaces();
-                        faceI++
-                    )
+                for
+                (
+                    label faceI = mesh.nInternalFaces();
+                    faceI < mesh.nFaces();
+                    faceI++
+                )
+                {
+                    label regionI = rs[mesh.faceOwner()[faceI]];
+                    const face& f = mesh.faces()[faceI];
+                    forAll(f, fp)
                     {
-                        label regionI = rs[mesh.faceOwner()[faceI]];
-                        const face& f = mesh.faces()[faceI];
-                        forAll(f, fp)
+                        label& pRegion = pointToRegion[f[fp]];
+                        if (pRegion == -1)
                         {
-                            label& pRegion = pointToRegion[f[fp]];
-                            if (pRegion == -1)
-                            {
-                                pRegion = regionI;
-                            }
-                            else if (pRegion == -2)
-                            {
-                                // Already marked
-                                regionDisconnected[regionI] = false;
-                            }
-                            else if (pRegion != regionI)
-                            {
-                                // Multiple regions
-                                regionDisconnected[regionI] = false;
-                                regionDisconnected[pRegion] = false;
-                                pRegion = -2;
-                                points.insert(f[fp]);
-                            }
+                            pRegion = regionI;
+                        }
+                        else if (pRegion == -2)
+                        {
+                            // Already marked
+                            regionDisconnected[regionI] = false;
+                        }
+                        else if (pRegion != regionI)
+                        {
+                            // Multiple regions
+                            regionDisconnected[regionI] = false;
+                            regionDisconnected[pRegion] = false;
+                            pRegion = -2;
+                            points.insert(f[fp]);
                         }
                     }
-
-                    Pstream::listCombineGather
-                    (
-                        regionDisconnected,
-                        andEqOp<bool>()
-                    );
-                    Pstream::listCombineScatter(regionDisconnected);
                 }
+
+                Pstream::listCombineGather
+                (
+                    regionDisconnected,
+                    andEqOp<bool>()
+                );
+                Pstream::listCombineScatter(regionDisconnected);
 
                 // write cellSet for each region
                 PtrList<cellSet> cellRegions(rs.nRegions());
@@ -567,7 +586,7 @@ Foam::label Foam::meshCheck::checkTopology
             }
         }
 
-        if (points.size())
+        if (points.size() && setWriter.valid())
         {
             Info<< "  <<Writing " << returnReduce(points.size(), sumOp<label>())
                 << " conflicting points to set "
