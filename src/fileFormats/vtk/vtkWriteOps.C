@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ void Foam::vtkWriteOps::write
         os.write
         (
             reinterpret_cast<char*>(fField.begin()),
-            fField.size()*sizeof(float)
+            fField.size()*sizeof(floatScalar)
         );
 
         os  << std::endl;
@@ -228,7 +228,7 @@ void Foam::vtkWriteOps::writePointDataHeader
 
 void Foam::vtkWriteOps::insert(const scalar src, DynamicList<floatScalar>& dest)
 {
-    dest.append(float(src));
+    dest.append(cast(src));
 }
 
 
@@ -240,7 +240,7 @@ void Foam::vtkWriteOps::insert
 {
     for (direction cmpt = 0; cmpt < vector::nComponents; ++cmpt)
     {
-        dest.append(float(src[cmpt]));
+        dest.append(cast(src[cmpt]));
     }
 }
 
@@ -253,7 +253,7 @@ void Foam::vtkWriteOps::insert
 {
     for (direction cmpt = 0; cmpt < sphericalTensor::nComponents; ++cmpt)
     {
-        dest.append(float(src[cmpt]));
+        dest.append(cast(src[cmpt]));
     }
 }
 
@@ -264,12 +264,12 @@ void Foam::vtkWriteOps::insert
     DynamicList<floatScalar>& dest
 )
 {
-    dest.append(float(src.xx()));
-    dest.append(float(src.yy()));
-    dest.append(float(src.zz()));
-    dest.append(float(src.xy()));
-    dest.append(float(src.yz()));
-    dest.append(float(src.xz()));
+    dest.append(cast(src.xx()));
+    dest.append(cast(src.yy()));
+    dest.append(cast(src.zz()));
+    dest.append(cast(src.xy()));
+    dest.append(cast(src.yz()));
+    dest.append(cast(src.xz()));
 }
 
 
@@ -281,7 +281,7 @@ void Foam::vtkWriteOps::insert
 {
     for (direction cmpt = 0; cmpt < tensor::nComponents; ++cmpt)
     {
-        dest.append(float(src[cmpt]));
+        dest.append(cast(src[cmpt]));
     }
 }
 
@@ -301,7 +301,7 @@ void Foam::vtkWriteOps::insert
 {
     forAll(map, i)
     {
-        dest.append(float(source[map[i]]));
+        dest.append(cast(source[map[i]]));
     }
 }
 

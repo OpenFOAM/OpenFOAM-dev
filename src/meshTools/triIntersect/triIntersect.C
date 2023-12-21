@@ -641,8 +641,30 @@ void generateGeometryForLocations
         {
             const point& srcP = srcPs[l.srcPointi()];
             const vector& srcN = srcNs[l.srcPointi()];
-            const barycentric2D tgtTs =
+            barycentric2D tgtTs =
                 srcPointTgtTriIntersection(srcP, srcN, tgtPs);
+
+            // Force inside the target triangle
+            if (cmptMin(tgtTs) < 0)
+            {
+                const direction iMin = findMin(tgtTs);
+                const direction iMax = findMax(tgtTs);
+                const direction iMid = 3 - iMin - iMax;
+
+                if (tgtTs[iMid] < 0)
+                {
+                    tgtTs[iMin] = 0;
+                    tgtTs[iMax] = 1;
+                    tgtTs[iMid] = 0;
+                }
+                else
+                {
+                    const scalar t = tgtTs[iMax] + tgtTs[iMid];
+                    tgtTs[iMin] = 0;
+                    tgtTs[iMax] /= t;
+                    tgtTs[iMid] /= t;
+                }
+            }
 
             srcPoints[pointi] = srcP;
             srcPointNormals[pointi] = srcN;
@@ -1251,7 +1273,7 @@ Foam::barycentric2D Foam::triIntersect::srcPointTgtTriIntersection
 
     const scalar maxMagDetAY = mag(detAY[findMax(cmptMag(detAY))]);
 
-    const vector y =
+    vector y =
         maxMagDetAY/vGreat < mag(detA)
       ? detAY/detA
       : detAY/maxMagDetAY*vGreat;
