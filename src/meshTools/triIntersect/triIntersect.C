@@ -1251,10 +1251,32 @@ Foam::barycentric2D Foam::triIntersect::srcPointTgtTriIntersection
 
     const scalar maxMagDetAY = mag(detAY[findMax(cmptMag(detAY))]);
 
-    const vector y =
+    vector y =
         maxMagDetAY/vGreat < mag(detA)
       ? detAY/detA
       : detAY/maxMagDetAY*vGreat;
+
+    // Project into the source triangle
+    if (cmptMin(y) < 0)
+    {
+        const direction iMin = findMin(y);
+        const direction iMax = findMax(y);
+        const direction iMid = 3 - iMin - iMax;
+
+        if (y[iMid] < 0)
+        {
+            y[iMin] = 0;
+            y[iMax] = 1;
+            y[iMid] = 0;
+        }
+        else
+        {
+            const scalar t = y[iMax] + y[iMid];
+            y[iMin] = 0;
+            y[iMax] /= t;
+            y[iMid] /= t;
+        }
+    }
 
     return barycentric2D(y.x(), y.y(), y.z());
 }
