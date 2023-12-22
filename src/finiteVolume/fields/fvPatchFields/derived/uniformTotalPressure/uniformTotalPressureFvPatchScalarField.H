@@ -44,7 +44,7 @@ Usage
     <patchName>
     {
         type            uniformTotalPressure;
-        p0              uniform 1e5;
+        p0              1e5;
     }
     \endverbatim
 
