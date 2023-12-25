@@ -26,12 +26,6 @@ License
 #include "polyTopoChange.H"
 #include "SortableList.H"
 #include "polyMesh.H"
-#include "polyAddPoint.H"
-#include "polyModifyPoint.H"
-#include "polyRemovePoint.H"
-#include "polyAddFace.H"
-#include "polyModifyFace.H"
-#include "polyRemoveFace.H"
 #include "objectMap.H"
 #include "processorPolyPatch.H"
 #include "fvMesh.H"
@@ -2487,98 +2481,6 @@ void Foam::polyTopoChange::setCapacity
     cellFromEdge_.resize(cellFromEdge_.size() + nCells/100);
     cellFromFace_.resize(cellFromFace_.size() + nCells/100);
     cellZone_.setCapacity(nCells);
-}
-
-
-Foam::label Foam::polyTopoChange::setAction(const topoAction& action)
-{
-    if (isType<polyAddPoint>(action))
-    {
-        const polyAddPoint& pap = refCast<const polyAddPoint>(action);
-
-        return addPoint
-        (
-            pap.newPoint(),
-            pap.masterPointIndex(),
-            pap.zoneIndex(),
-            pap.inCell()
-        );
-    }
-    else if (isType<polyModifyPoint>(action))
-    {
-        const polyModifyPoint& pmp = refCast<const polyModifyPoint>(action);
-
-        modifyPoint
-        (
-            pmp.pointIndex(),
-            pmp.newPoint(),
-            pmp.zoneIndex(),
-            pmp.inCell()
-        );
-
-        return -1;
-    }
-    else if (isType<polyRemovePoint>(action))
-    {
-        const polyRemovePoint& prp = refCast<const polyRemovePoint>(action);
-
-        removePoint(prp.pointIndex(), prp.mergePointIndex());
-
-        return -1;
-    }
-    else if (isType<polyAddFace>(action))
-    {
-        const polyAddFace& paf = refCast<const polyAddFace>(action);
-
-        return addFace
-        (
-            paf.newFace(),
-            paf.owner(),
-            paf.neighbour(),
-            paf.masterPointIndex(),
-            paf.masterEdgeIndex(),
-            paf.masterFaceIndex(),
-            paf.flipFaceFlux(),
-            paf.patchIndex(),
-            paf.zoneIndex(),
-            paf.zoneFlip()
-        );
-    }
-    else if (isType<polyModifyFace>(action))
-    {
-        const polyModifyFace& pmf = refCast<const polyModifyFace>(action);
-
-        modifyFace
-        (
-            pmf.newFace(),
-            pmf.faceIndex(),
-            pmf.owner(),
-            pmf.neighbour(),
-            pmf.flipFaceFlux(),
-            pmf.patchIndex(),
-            pmf.zoneIndex(),
-            pmf.zoneFlip()
-        );
-
-        return -1;
-    }
-    else if (isType<polyRemoveFace>(action))
-    {
-        const polyRemoveFace& prf = refCast<const polyRemoveFace>(action);
-
-        removeFace(prf.faceIndex(), prf.mergeFaceIndex());
-
-        return -1;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Unknown type of topoChange: " << action.type()
-            << abort(FatalError);
-
-        // Dummy return to keep compiler happy
-        return -1;
-    }
 }
 
 

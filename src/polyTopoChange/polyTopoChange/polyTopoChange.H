@@ -499,9 +499,6 @@ public:
             //- Move all points. Incompatible with other topology changes.
             void movePoints(const pointField& newPoints);
 
-            //- For compatibility with polyTopoChange: set topological action.
-            label setAction(const topoAction& action);
-
             //- Add point. Return new point label.
             //  Notes:
             //  - masterPointID can be < 0 (appended points)

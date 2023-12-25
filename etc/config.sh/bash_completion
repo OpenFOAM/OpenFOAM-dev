@@ -355,7 +355,7 @@ _checkMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-allGeometry -allTopology -case -constant -doc -fileHandler -help -hostRoots -latestTime -libs -meshQuality -noFunctionObjects -noTopology -noZero -parallel -region -roots -srcDoc -time -writeSets"
+    opts="-allGeometry -allTopology -case -constant -doc -fileHandler -help -hostRoots -latestTime -libs -meshQuality -noFunctionObjects -nonOrthThreshold -noTopology -noZero -parallel -region -roots -setFormat -skewThreshold -srcDoc -surfaceFormat -time -writeSets -writeSurfaces"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -367,7 +367,7 @@ _checkMesh_ ()
             opts="uncollated collated masterUncollated" ; extra="" ;;
         -time)
             opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
-        -hostRoots|-libs|-region|-roots|-writeSets)
+        -hostRoots|-libs|-nonOrthThreshold|-region|-roots|-setFormat|-skewThreshold|-surfaceFormat)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -1989,31 +1989,6 @@ _mixtureAdiabaticFlameT_ ()
 }
 complete -o filenames -o nospace -F _mixtureAdiabaticFlameT_ mixtureAdiabaticFlameT
 
-_modifyMesh_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -overwrite -parallel -roots -srcDoc"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _modifyMesh_ modifyMesh
-
 _mshToFoam_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -2994,31 +2969,6 @@ _splitCells_ ()
 }
 complete -o filenames -o nospace -F _splitCells_ splitCells
 
-_splitMesh_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -overwrite -srcDoc"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -libs)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _splitMesh_ splitMesh
-
 _splitMeshRegions_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -3132,7 +3082,7 @@ _stitchMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -libs -noFields -noFunctionObjects -overwrite -partial -perfect -region -srcDoc -toleranceDict"
+    opts="-case -constant -doc -fields -fileHandler -help -latestTime -libs -noFunctionObjects -noZero -overwrite -region -srcDoc -time -tol"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3140,11 +3090,11 @@ _stitchMesh_ ()
     case "$prev" in
         -case)
             opts="" ; extra="-d" ;;
-        -toleranceDict)
-            opts="" ; extra="-d -f" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -libs|-region)
+        -time)
+            opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
+        -libs|-region|-tol)
             opts="" ; extra="" ;;
        *) ;;
     esac

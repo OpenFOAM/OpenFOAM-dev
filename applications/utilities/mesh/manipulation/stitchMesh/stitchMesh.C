@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,185 +25,55 @@ Application
     stitchMesh
 
 Description
-    'Stitches' a mesh.
+    Utility to stitch or conform pairs of patches,
+    converting the patch faces either into internal faces
+    or conformal faces or another patch.
 
-    Takes a mesh and two patches and merges the faces on the two patches
-    (if geometrically possible) so the faces become internal.
+Usage
+    \b stitchMesh (\<list of patch pairs\>)
 
-    Can do
-    - 'perfect' match: faces and points on patches align exactly. Order might
-    be different though.
-    - 'integral' match: where the surfaces on both patches exactly
-    match but the individual faces not
-    - 'partial' match: where the non-overlapping part of the surface remains
-    in the respective patch.
+    E.g. to stitch patches \c top1 to \c top2 and \c bottom1 to \c bottom2
+        stitchMesh "((top1 top2) (bottom1 bottom2))"
 
-    Note : Is just a front-end to perfectInterface/slidingInterface.
+    Options:
+      - \par -overwrite \n
+        Replace the old mesh with the new one, rather than writing the new one
+        into a separate time directory
 
-    Comparable to running a meshModifier of the form
-    (if masterPatch is called "M" and slavePatch "S"):
+      - \par -region \<name\>
+        Specify an alternative mesh region.
 
-    \verbatim
-    couple
-    {
-        type                    slidingInterface;
-        masterFaceZoneName      MSMasterZone
-        slaveFaceZoneName       MSSlaveZone
-        cutPointZoneName        MSCutPointZone
-        cutFaceZoneName         MSCutFaceZone
-        masterPatchName         M;
-        slavePatchName          S;
-        typeOfMatch             partial or integral
-    }
-    \endverbatim
+      - \par -fields
+        Update vol and point fields
 
+      - \par -tol
+        Merge tolerance relative to local edge length (default 1e-4)
+
+See also
+    Foam::mergePatchPairs
 
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "polyTopoChanger.H"
-#include "polyTopoChangeMap.H"
-#include "slidingInterface.H"
-#include "perfectInterface.H"
+#include "fvMesh.H"
+#include "timeSelector.H"
 #include "ReadFields.H"
 #include "volFields.H"
-#include "surfaceFields.H"
 #include "pointFields.H"
+#include "mergePatchPairs.H"
 
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-label addPointZone(const polyMesh& mesh, const word& name)
-{
-    label zoneID = mesh.pointZones().findIndex(name);
-
-    if (zoneID != -1)
-    {
-        Info<< "Reusing existing pointZone "
-            << mesh.pointZones()[zoneID].name()
-            << " at index " << zoneID << endl;
-    }
-    else
-    {
-        meshPointZones& pointZones = const_cast<polyMesh&>(mesh).pointZones();
-        zoneID = pointZones.size();
-        Info<< "Adding pointZone " << name << " at index " << zoneID << endl;
-
-        pointZones.setSize(zoneID+1);
-        pointZones.set
-        (
-            zoneID,
-            new pointZone
-            (
-                name,
-                labelList(0),
-                zoneID,
-                pointZones
-            )
-        );
-    }
-    return zoneID;
-}
-
-
-label addFaceZone(const polyMesh& mesh, const word& name)
-{
-    label zoneID = mesh.faceZones().findIndex(name);
-
-    if (zoneID != -1)
-    {
-        Info<< "Reusing existing faceZone " << mesh.faceZones()[zoneID].name()
-            << " at index " << zoneID << endl;
-    }
-    else
-    {
-        meshFaceZones& faceZones = const_cast<polyMesh&>(mesh).faceZones();
-        zoneID = faceZones.size();
-        Info<< "Adding faceZone " << name << " at index " << zoneID << endl;
-
-        faceZones.setSize(zoneID+1);
-        faceZones.set
-        (
-            zoneID,
-            new faceZone
-            (
-                name,
-                labelList(0),
-                boolList(),
-                zoneID,
-                faceZones
-            )
-        );
-    }
-    return zoneID;
-}
-
-
-label addCellZone(const polyMesh& mesh, const word& name)
-{
-    label zoneID = mesh.cellZones().findIndex(name);
-
-    if (zoneID != -1)
-    {
-        Info<< "Reusing existing cellZone " << mesh.cellZones()[zoneID].name()
-            << " at index " << zoneID << endl;
-    }
-    else
-    {
-        meshCellZones& cellZones = const_cast<polyMesh&>(mesh).cellZones();
-        zoneID = cellZones.size();
-        Info<< "Adding cellZone " << name << " at index " << zoneID << endl;
-
-        cellZones.setSize(zoneID+1);
-        cellZones.set
-        (
-            zoneID,
-            new cellZone
-            (
-                name,
-                labelList(0),
-                zoneID,
-                cellZones
-            )
-        );
-    }
-    return zoneID;
-}
-
-
-// Checks whether patch present
-void checkPatch(const polyBoundaryMesh& bMesh, const word& name)
-{
-    const label patchi = bMesh.findIndex(name);
-
-    if (patchi == -1)
-    {
-        FatalErrorInFunction
-            << "Cannot find patch " << name << endl
-            << "It should be present and of non-zero size" << endl
-            << "Valid patches are " << bMesh.names()
-            << exit(FatalError);
-    }
-
-    if (bMesh[patchi].empty())
-    {
-        FatalErrorInFunction
-            << "Patch " << name << " is present but zero size"
-            << exit(FatalError);
-    }
-}
-
-
-
 int main(int argc, char *argv[])
 {
+    timeSelector::addOptions(true, false);
+
     argList::addNote
     (
-        "Merge the faces on the specified patches (if geometrically possible)\n"
-        "so the faces become internal.\n"
-        "Integral matching is used when the options -partial and -perfect are "
-        "omitted.\n"
+        "Stitch the faces on the specified patch pairs\n"
+        "converting the overlapping patch faces into internal faces.\n"
     );
 
     argList::noParallel();
@@ -211,276 +81,61 @@ int main(int argc, char *argv[])
     #include "addRegionOption.H"
     argList::addBoolOption
     (
-        "noFields",
-        "do not update fields"
-    );
-
-    argList::validArgs.append("masterPatch");
-    argList::validArgs.append("slavePatch");
-
-    argList::addBoolOption
-    (
-        "partial",
-        "couple partially overlapping patches (optional)"
-    );
-    argList::addBoolOption
-    (
-        "perfect",
-        "couple perfectly aligned patches (optional)"
+        "fields",
+        "update fields"
     );
     argList::addOption
     (
-        "toleranceDict",
-        "file",
-        "dictionary file with tolerances"
+        "tol",
+        "scalar",
+        "merge tolerance relative to local edge length (default 1e-4)"
     );
+
+    argList::validArgs.append("patchPairs");
 
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
+
+    // Select time if specified
+    timeSelector::selectIfPresent(runTime, args);
+
     #include "createNamedMesh.H"
+
+    const scalar snapTol = args.optionLookupOrDefault("tol", 1e-4);
+    const bool overwrite = args.optionFound("overwrite");
+    const bool fields = args.optionFound("fields");
+
+    const List<Pair<word>> patchPairNames((IStringStream(args[1])()));
 
     const word oldInstance = mesh.pointsInstance();
 
-    const word masterPatchName = args[1];
-    const word slavePatchName  = args[2];
-
-    const bool partialCover = args.optionFound("partial");
-    const bool perfectCover = args.optionFound("perfect");
-    const bool overwrite    = args.optionFound("overwrite");
-    const bool fields = !args.optionFound("noFields");
-
-    if (partialCover && perfectCover)
-    {
-        FatalErrorInFunction
-            << "Cannot supply both partial and perfect." << endl
-            << "Use perfect match option if the patches perfectly align"
-            << " (both vertex positions and face centres)" << endl
-            << exit(FatalError);
-    }
-
-
-    const word mergePatchName(masterPatchName + slavePatchName);
-    const word cutZoneName(mergePatchName + "CutFaceZone");
-
-    slidingInterface::typeOfMatch tom = slidingInterface::INTEGRAL;
-
-    if (partialCover)
-    {
-        Info<< "Coupling partially overlapping patches "
-            << masterPatchName << " and " << slavePatchName << nl
-            << "Resulting internal faces will be in faceZone " << cutZoneName
-            << nl
-            << "Any uncovered faces will remain in their patch"
-            << endl;
-
-        tom = slidingInterface::PARTIAL;
-    }
-    else if (perfectCover)
-    {
-        Info<< "Coupling perfectly aligned patches "
-            << masterPatchName << " and " << slavePatchName << nl
-            << "Resulting (internal) faces will be in faceZone " << cutZoneName
-            << nl << nl
-            << "Note: both patches need to align perfectly." << nl
-            << "Both the vertex"
-            << " positions and the face centres need to align to within" << nl
-            << "a tolerance given by the minimum edge length on the patch"
-            << endl;
-    }
-    else
-    {
-        Info<< "Coupling patches " << masterPatchName << " and "
-            << slavePatchName << nl
-            << "Resulting (internal) faces will be in faceZone " << cutZoneName
-            << nl << nl
-            << "Note: the overall area covered by both patches should be"
-            << " identical (\"integral\" interface)." << endl
-            << "If this is not the case use the -partial option" << nl << endl;
-    }
-
-    // set up the tolerances for the sliding mesh
-    dictionary slidingTolerances;
-    if (args.options().found("toleranceDict"))
-    {
-        IOdictionary toleranceFile
-        (
-            IOobject
-            (
-                args.options()["toleranceDict"],
-                runTime.constant(),
-                mesh,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE
-            )
-        );
-        slidingTolerances += toleranceFile;
-    }
-
-    // Check for non-empty master and slave patches
-    checkPatch(mesh.boundaryMesh(), masterPatchName);
-    checkPatch(mesh.boundaryMesh(), slavePatchName);
-
-    // Create and add face zones and mesh modifiers
-
-    // Master patch
-    const polyPatch& masterPatch = mesh.boundaryMesh()[masterPatchName];
-
-    // Make list of masterPatch faces
-    labelList isf(masterPatch.size());
-
-    forAll(isf, i)
-    {
-        isf[i] = masterPatch.start() + i;
-    }
-
-    polyTopoChanger stitcher(mesh);
-    stitcher.setSize(1);
-
-    mesh.pointZones().clearAddressing();
-    mesh.faceZones().clearAddressing();
-    mesh.cellZones().clearAddressing();
-
-    if (perfectCover)
-    {
-        // Add empty zone for resulting internal faces
-        label cutZoneID = addFaceZone(mesh, cutZoneName);
-
-        mesh.faceZones()[cutZoneID].resetAddressing
-        (
-            isf,
-            boolList(masterPatch.size(), false)
-        );
-
-        // Add the perfect interface mesh modifier
-        stitcher.set
-        (
-            0,
-            new perfectInterface
-            (
-                "couple",
-                mesh,
-                cutZoneName,
-                masterPatchName,
-                slavePatchName
-            )
-        );
-    }
-    else
-    {
-        label pointZoneID = addPointZone(mesh, mergePatchName + "CutPointZone");
-        mesh.pointZones()[pointZoneID] = labelList(0);
-
-        label masterZoneID = addFaceZone(mesh, mergePatchName + "MasterZone");
-
-        mesh.faceZones()[masterZoneID].resetAddressing
-        (
-            isf,
-            boolList(masterPatch.size(), false)
-        );
-
-        // Slave patch
-        const polyPatch& slavePatch = mesh.boundaryMesh()[slavePatchName];
-
-        labelList osf(slavePatch.size());
-
-        forAll(osf, i)
-        {
-            osf[i] = slavePatch.start() + i;
-        }
-
-        label slaveZoneID = addFaceZone(mesh, mergePatchName + "SlaveZone");
-        mesh.faceZones()[slaveZoneID].resetAddressing
-        (
-            osf,
-            boolList(slavePatch.size(), false)
-        );
-
-        // Add empty zone for cut faces
-        label cutZoneID = addFaceZone(mesh, cutZoneName);
-        mesh.faceZones()[cutZoneID].resetAddressing
-        (
-            labelList(0),
-            boolList(0, false)
-        );
-
-
-        // Add the sliding interface mesh modifier
-        stitcher.set
-        (
-            0,
-            new slidingInterface
-            (
-                "couple",
-                mesh,
-                mergePatchName + "MasterZone",
-                mergePatchName + "SlaveZone",
-                mergePatchName + "CutPointZone",
-                cutZoneName,
-                masterPatchName,
-                slavePatchName,
-                tom,                    // integral or partial
-                true                    // couple/decouple mode
-            )
-        );
-        static_cast<slidingInterface&>(stitcher[0]).setTolerances
-        (
-            slidingTolerances,
-            true
-        );
-    }
-
-
     // Search for list of objects for this time
-    IOobjectList objects(mesh, runTime.name());
+    IOobjectList objects(mesh, runTime.timeName());
 
     if (fields) Info<< "Reading geometric fields" << nl << endl;
 
     #include "readVolFields.H"
-    // #include "readSurfaceFields.H"
     #include "readPointFields.H"
+
+    Info<< endl;
 
     if (!overwrite)
     {
         runTime++;
     }
 
-    // Execute all polyMeshModifiers
-    autoPtr<polyTopoChangeMap> map = stitcher.changeMesh(true);
-
-    mesh.setPoints(map->preMotionPoints());
+    // Stitch the patch-pairs
+    mergePatchPairs(mesh, patchPairNames, snapTol);
 
     // Write mesh
     if (overwrite)
     {
         mesh.setInstance(oldInstance);
     }
-    Info<< nl << "Writing polyMesh to time " << runTime.name() << endl;
 
-    IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
+    Info<< "Writing mesh to " << mesh.facesInstance() << endl;
 
-    // Bypass runTime write (since only writes at writeTime)
-    if
-    (
-       !runTime.objectRegistry::writeObject
-        (
-            runTime.writeFormat(),
-            IOstream::currentVersion,
-            runTime.writeCompression(),
-            true
-        )
-    )
-    {
-        FatalErrorInFunction
-            << "Failed writing polyMesh."
-            << exit(FatalError);
-    }
-
-    mesh.faceZones().write();
-    mesh.pointZones().write();
-    mesh.cellZones().write();
-
-    // Write fields
-    runTime.write();
+    mesh.write();
 
     Info<< "End\n" << endl;
 

@@ -275,4 +275,9 @@ nonConformal/boundary/nonConformalBoundary.C
 pointDist/pointEdgeDist.C
 pointDist/pointDist.C
 
+patchIntersection/star/star.C
+patchIntersection/patchIntersection.C
+patchIntersection/primitivePatchIntersection.C
+patchIntersection/polyPatchIntersection.C
+
 LIB = $(FOAM_LIBBIN)/libmeshTools

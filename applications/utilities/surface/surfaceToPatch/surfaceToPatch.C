@@ -36,7 +36,6 @@ Description
 #include "polyMesh.H"
 #include "faceSet.H"
 #include "polyTopoChange.H"
-#include "polyModifyFace.H"
 #include "globalMeshData.H"
 
 using namespace Foam;

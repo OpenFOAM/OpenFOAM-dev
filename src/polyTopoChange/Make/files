@@ -1,5 +1,3 @@
-polyTopoChange/topoAction/topoActions.C
-
 polyTopoChange/polyTopoChange.C
 polyTopoChange/addPatchCellLayer.C
 polyTopoChange/pointEdgeCollapse/pointEdgeCollapse.C
@@ -17,26 +15,8 @@ $(hexRef8)/hexRef8.C
 $(hexRef8)/hexRef8Data.C
 $(hexRef8)/refinementHistory.C
 
-polyTopoChanger/polyTopoChanger/polyTopoChanger.C
-polyTopoChanger/polyMeshModifier/polyMeshModifier.C
-polyTopoChanger/attachPolyTopoChanger/attachPolyTopoChanger.C
-
-enrichedPatch = polyTopoChanger/slidingInterface/enrichedPatch
-$(enrichedPatch)/enrichedPatch.C
-$(enrichedPatch)/enrichedPatchPointMap.C
-$(enrichedPatch)/enrichedPatchFaces.C
-$(enrichedPatch)/enrichedPatchPointPoints.C
-$(enrichedPatch)/enrichedPatchCutFaces.C
-$(enrichedPatch)/enrichedPatchMasterPoints.C
-
-polyTopoChanger/slidingInterface/slidingInterface.C
-polyTopoChanger/slidingInterface/slidingInterfaceProjectPoints.C
-polyTopoChanger/slidingInterface/coupleSlidingInterface.C
-polyTopoChanger/slidingInterface/slidingInterfaceAttachedAddressing.C
-polyTopoChanger/slidingInterface/slidingInterfaceClearCouple.C
-polyTopoChanger/slidingInterface/decoupleSlidingInterface.C
-
-polyTopoChanger/perfectInterface/perfectInterface.C
+perfectInterface/perfectInterface.C
+mergePatchPairs/mergePatchPairs.C
 
 repatchMesh/repatchMesh.C
 repatchMesh/repatchPatch.C

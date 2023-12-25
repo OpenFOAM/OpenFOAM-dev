@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,23 +48,15 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
+#include "argList.H"
 #include "Time.H"
-#include "IOdictionary.H"
-#include "IOPtrList.H"
 #include "systemDict.H"
-
 #include "blockMesh.H"
-#include "attachPolyTopoChanger.H"
+#include "mergePatchPairs.H"
 #include "polyTopoChange.H"
 #include "emptyPolyPatch.H"
 #include "cyclicPolyPatch.H"
-
-#include "argList.H"
-#include "OSspecific.H"
 #include "OFstream.H"
-
-#include "Pair.H"
-#include "slidingInterface.H"
 
 using namespace Foam;
 
@@ -236,21 +228,22 @@ int main(int argc, char *argv[])
     // Read in a list of dictionaries for the merge patch pairs
     if (meshDict.found("mergePatchPairs"))
     {
-        List<Pair<word>> mergePatchPairs
+        List<Pair<word>> patchPairNames
         (
             meshDict.lookup("mergePatchPairs")
         );
 
-        #include "mergePatchPairs.H"
+        if (patchPairNames.size())
+        {
+            const word oldInstance = mesh.pointsInstance();
+            mergePatchPairs(mesh, patchPairNames, 1e-4);
+            mesh.setInstance(oldInstance);
+        }
     }
     else
     {
-        Info<< nl << "There are no merge patch pairs edges" << endl;
+        Info<< nl << "No patch pairs to merge" << endl;
     }
-
-
-    // Set any cellZones (note: cell labelling unaffected by above
-    // mergePatchPairs)
 
     label nZones = blocks.numZonedBlocks();
 
