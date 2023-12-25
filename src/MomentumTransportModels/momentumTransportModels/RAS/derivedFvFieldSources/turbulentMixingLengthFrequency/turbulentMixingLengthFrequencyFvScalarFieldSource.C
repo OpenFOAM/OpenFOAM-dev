@@ -82,7 +82,7 @@ Foam::turbulentMixingLengthFrequencyFvScalarFieldSource::sourceValue
 
     const scalar Cmu25 = pow(Cmu, 0.25);
 
-    return ks*sqrt(ks)/(Cmu25*mixingLength_);
+    return sqrt(ks)/(Cmu25*mixingLength_);
 }
 
 
