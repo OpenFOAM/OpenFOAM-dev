@@ -410,8 +410,13 @@ bool Foam::patchToPatches::intersection::intersectFaces
                 else
                 {
                     FatalErrorInFunction
-                        << "Tri-intersection topology not recognised. "
-                        << "This is a bug." << exit(FatalError);
+                        << "The intersection topology " << ictPointLocations_
+                        << " between triangle #" << srcFaceTrii
+                        << " of source face #" << srcFacei
+                        << " and triangle #" << tgtFaceTrii
+                        << " of target face #" << tgtFacei
+                        << " was not recognised. This is a bug."
+                        << exit(FatalError);
                 }
 
                 // Store the projected edge quadrilateral for debugging

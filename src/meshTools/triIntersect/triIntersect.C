@@ -1759,10 +1759,8 @@ void Foam::triIntersect::intersectTris
 
             if (l.isIntersection() || l.isSrcAndTgtPoint())
             {
-                if (!addPointLocations(l, location(), false))
-                {
-                    pointLocations.clear();
-                }
+                haveIntersection =
+                    addPointLocations(l, location(), false);
             }
         }
         else
@@ -1774,7 +1772,13 @@ void Foam::triIntersect::intersectTris
         }
     }
 
-    // Step 6: The above walk was done around the target triangle, but the
+    // Step 6: Make sure no points are generated if the intersection has failed
+    if (!haveIntersection)
+    {
+        pointLocations.clear();
+    }
+
+    // Step 7: The above walk was done around the target triangle, but the
     // result should be ordered in the direction of the source triangle, so the
     // list of locations must be reversed
     inplaceReverseList(pointLocations);
@@ -1784,7 +1788,7 @@ void Foam::triIntersect::intersectTris
         Info<< indent << "pointLocations=" << pointLocations << endl;
     }
 
-    // Step 7: Generate the geometry
+    // Step 8: Generate the geometry
     generateGeometryForLocations
     (
         srcPs,
