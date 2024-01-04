@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -223,7 +223,13 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
     // Calculate scaling factor everywhere for each meshed body
     forAll(bodyMeshes_, bi)
     {
-        const pointDist pDist(pMesh, bodyMeshes_[bi].patchSet_, points0());
+        const pointDist pDist
+        (
+            pMesh,
+            bodyMeshes_[bi].patchSet_,
+            points0(),
+            bodyMeshes_[bi].do_
+        );
 
         bodyMeshes_[bi].weight_.primitiveFieldRef() =
             bodyMeshes_[bi].weight(pDist.primitiveField());
@@ -457,7 +463,8 @@ void Foam::rigidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
             (
                 pMesh,
                 bodyMeshes_[bi].patchSet_,
-                newPoints0
+                newPoints0,
+                bodyMeshes_[bi].do_
             );
 
             pointScalarField& weight = bodyMeshes_[bi].weight_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ inline bool Foam::pointEdgeDist::update
     data& td
 )
 {
-    scalar dist2 = magSqr(pt - w2.origin());
+    const scalar dist2 = magSqr(pt - w2.origin());
 
     if (!valid(td))
     {
@@ -44,7 +44,14 @@ inline bool Foam::pointEdgeDist::update
         distSqr_ = dist2;
         origin_ = w2.origin();
 
-        return true;
+        if (distSqr_ > td.maxDistSqr)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     scalar diff = distSqr_ - dist2;
@@ -66,7 +73,14 @@ inline bool Foam::pointEdgeDist::update
         distSqr_ = dist2;
         origin_ = w2.origin();
 
-        return true;
+        if (distSqr_ > td.maxDistSqr)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 }
 

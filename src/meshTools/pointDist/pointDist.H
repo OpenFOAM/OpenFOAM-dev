@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,8 +64,8 @@ class pointDist
         //- Set of pointZone IDs for which the distance is 0
         const labelHashSet zoneIndices_;
 
-        //- Number of unset points
-        label nUnset_;
+        //- Maximum distance at which the point-edge wave is stopped
+        const scalar maxDist_;
 
 
 public:
@@ -77,7 +77,8 @@ public:
         (
             const pointMesh& pMesh,
             const labelHashSet& patchIDs,
-            const pointField& points
+            const pointField& points,
+            const scalar maxDist = rootVGreat
         );
 
         //- Construct from mesh, set of patches,
@@ -88,7 +89,8 @@ public:
             const pointMesh& pMesh,
             const labelHashSet& patchIDs,
             const labelHashSet& zoneIDs,
-            const pointField& points
+            const pointField& points,
+            const scalar maxDist = rootVGreat
         );
 
         //- Disallow default bitwise copy construction
@@ -104,11 +106,6 @@ public:
         const pointScalarField& y() const
         {
             return *this;
-        }
-
-        label nUnset() const
-        {
-            return nUnset_;
         }
 
         //- Correct for mesh geom/topo changes

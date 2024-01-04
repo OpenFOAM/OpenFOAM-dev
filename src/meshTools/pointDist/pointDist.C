@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,8 @@ Foam::pointDist::pointDist
 (
     const pointMesh& pMesh,
     const labelHashSet& patchIDs,
-    const pointField& points
+    const pointField& points,
+    const scalar maxDist
 )
 :
     pointScalarField
@@ -50,7 +51,7 @@ Foam::pointDist::pointDist
     ),
     points_(points),
     patchIndices_(patchIDs),
-    nUnset_(0)
+    maxDist_(maxDist)
 {
     correct();
 }
@@ -61,7 +62,8 @@ Foam::pointDist::pointDist
     const pointMesh& pMesh,
     const labelHashSet& patchIDs,
     const labelHashSet& zoneIDs,
-    const pointField& points
+    const pointField& points,
+    const scalar maxDist
 )
 :
     pointScalarField
@@ -78,7 +80,7 @@ Foam::pointDist::pointDist
     points_(points),
     patchIndices_(patchIDs),
     zoneIndices_(zoneIDs),
-    nUnset_(0)
+    maxDist_(maxDist)
 {
     correct();
 }
@@ -110,7 +112,7 @@ void Foam::pointDist::correct()
         nPatchPoints += mesh()().pointZones()[zonei].size();
     }
 
-    pointEdgeDist::data pointEdgeData(points_);
+    pointEdgeDist::data pointEdgeData(points_, maxDist_);
 
     // Set initial changed points to all the patch points(if patch present)
     List<pointEdgeDist> patchPointsInfo(nPatchPoints);
@@ -187,7 +189,7 @@ void Foam::pointDist::correct()
         }
         else
         {
-            nUnset_++;
+            psf[pointi] = maxDist_;
         }
     }
 

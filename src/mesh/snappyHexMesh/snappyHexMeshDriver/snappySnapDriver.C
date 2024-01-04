@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -455,42 +455,6 @@ Foam::tmp<Foam::scalarField> Foam::snappySnapDriver::edgePatchDist
     {
         edgeDist[edgei] = Foam::sqrt(allEdgeInfo[edgei].distSqr());
     }
-
-
-    //{
-    //    // For debugging: dump to file
-    //    pointScalarField pointDist
-    //    (
-    //        IOobject
-    //        (
-    //            "pointDist",
-    //            meshRefiner_.name(),
-    //            mesh.DB(),
-    //            IOobject::NO_READ,
-    //            IOobject::AUTO_WRITE
-    //        ),
-    //        pMesh,
-    //        dimensionedScalar(dimless, 0)
-    //    );
-    //
-    //    forAll(allEdgeInfo, edgei)
-    //    {
-    //        scalar d = Foam::sqrt(allEdgeInfo[edgei].distSqr());
-    //
-    //        const edge& e = mesh.edges()[edgei];
-    //
-    //        pointDist[e[0]] += d;
-    //        pointDist[e[1]] += d;
-    //    }
-    //    forAll(pointDist, pointi)
-    //    {
-    //        pointDist[pointi] /= mesh.pointEdges()[pointi].size();
-    //    }
-    //    Info<< "Writing patch distance to " << pointDist.name()
-    //        << " at time " << meshRefiner_.name() << endl;
-    //
-    //    pointDist.write();
-    //}
 
     return tedgeDist;
 }
