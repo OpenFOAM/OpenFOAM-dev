@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,14 +65,7 @@ struct cellEdgeAddressingWorkspace
 
     void resizeAndClear(const label nCellFaces, const label nCellEdges)
     {
-        if (edgeToCei.capacity() < nCellEdges)
-        {
-            edgeToCei.resizeAndClear(nCellEdges*6);
-        }
-        else
-        {
-            edgeToCei.clear();
-        }
+        edgeToCei.resizeAndClear(nCellEdges*6);
 
         cfei0.resize(nCellFaces);
         cfei0 = -1;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#include "List.H"
+#include "DynamicList.H"
 #include "Tuple2.H"
 #include "word.H"
 
@@ -57,7 +57,7 @@ namespace Foam
 template<class Type, class Key=word, class Hash=string::hash>
 class HashList
 :
-    private List<Tuple2<Key, Type>>
+    private DynamicList<Tuple2<Key, Type>>
 {
 public:
 

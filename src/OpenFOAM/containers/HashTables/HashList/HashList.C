@@ -39,7 +39,7 @@ namespace Foam
 template<class Type, class Key, class Hash>
 Foam::HashList<Type, Key, Hash>::HashList(const label size)
 :
-    List<Tuple2<Key, Type>>(size, Tuple2<Key, Type>(nullKey, Type()))
+    DynamicList<Tuple2<Key, Type>>(size, Tuple2<Key, Type>(nullKey, Type()))
 {}
 
 
@@ -48,14 +48,14 @@ Foam::HashList<Type, Key, Hash>::HashList(const label size)
 template<class Type, class Key, class Hash>
 inline Foam::label Foam::HashList<Type, Key, Hash>::capacity() const
 {
-    return List<Tuple2<Key, Type>>::size();
+    return DynamicList<Tuple2<Key, Type>>::size();
 }
 
 
 template<class Type, class Key, class Hash>
 void Foam::HashList<Type, Key, Hash>::clear()
 {
-    List<Tuple2<Key, Type>>::operator=
+    DynamicList<Tuple2<Key, Type>>::operator=
     (
         Tuple2<Key, Type>(nullKey, Type())
     );
@@ -65,7 +65,7 @@ void Foam::HashList<Type, Key, Hash>::clear()
 template<class Type, class Key, class Hash>
 void Foam::HashList<Type, Key, Hash>::resizeAndClear(const label newSize)
 {
-    List<Tuple2<Key, Type>>::resize(newSize);
+    DynamicList<Tuple2<Key, Type>>::resize(newSize);
 
     clear();
 }
@@ -74,7 +74,7 @@ void Foam::HashList<Type, Key, Hash>::resizeAndClear(const label newSize)
 template<class Type, class Key, class Hash>
 bool Foam::HashList<Type, Key, Hash>::insert(const Key& k, const Type& t)
 {
-    List<Tuple2<Key, Type>>& map = *this;
+    DynamicList<Tuple2<Key, Type>>& map = *this;
 
     const label n = map.size();
 
@@ -109,7 +109,7 @@ bool Foam::HashList<Type, Key, Hash>::insert(const Key& k, const Type& t)
 template<class Type, class Key, class Hash>
 const Type& Foam::HashList<Type, Key, Hash>::operator[](const Key& k) const
 {
-    const List<Tuple2<Key, Type>>& map = *this;
+    const DynamicList<Tuple2<Key, Type>>& map = *this;
 
     const label n = map.size();
 
