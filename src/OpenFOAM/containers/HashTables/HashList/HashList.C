@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,11 +65,9 @@ void Foam::HashList<Type, Key, Hash>::clear()
 template<class Type, class Key, class Hash>
 void Foam::HashList<Type, Key, Hash>::resizeAndClear(const label newSize)
 {
-    List<Tuple2<Key, Type>>::resize
-    (
-        newSize,
-        Tuple2<Key, Type>(nullKey, Type())
-    );
+    List<Tuple2<Key, Type>>::resize(newSize);
+
+    clear();
 }
 
 
