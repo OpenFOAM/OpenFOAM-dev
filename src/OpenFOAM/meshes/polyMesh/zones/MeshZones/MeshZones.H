@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,6 +148,9 @@ public:
 
         //- Find the zone index given the zone name
         label findIndex(const word& zoneName) const;
+
+        //- Find and return the zone indices for all matches
+        labelList findIndices(const wordRe&) const;
 
         //- Mark cells that match the zone specification
         PackedBoolList findMatching(const wordRe&) const;
