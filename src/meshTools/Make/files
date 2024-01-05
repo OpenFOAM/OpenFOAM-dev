@@ -129,6 +129,8 @@ $(cellSources)/faceZoneToCell/faceZoneToCell.C
 $(cellSources)/cylinderAnnulusToCell/cylinderAnnulusToCell.C
 $(cellSources)/targetVolumeToCell/targetVolumeToCell.C
 $(cellSources)/patchDistanceToCell/patchDistanceToCell.C
+$(cellSources)/truncatedConeToCell/truncatedConeToCell.C
+$(cellSources)/hemisphereToCell/hemisphereToCell.C
 
 faceSources = sets/faceSources
 $(faceSources)/faceToFace/faceToFace.C
