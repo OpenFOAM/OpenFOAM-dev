@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     This boundary condition provides a turbulence dissipation wall constraint
-    for the Foam::mixtureKEpsilon model.
+    for the mixtureKEpsilon model
 
 SourceFiles
     epsilonmWallFunctionFvPatchScalarField.C
@@ -36,7 +36,7 @@ SourceFiles
 #ifndef epsilonmWallFunctionFvPatchScalarField_H
 #define epsilonmWallFunctionFvPatchScalarField_H
 
-#include "fixedValueFvPatchField.H"
+#include "wallCellWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,12 +49,15 @@ namespace Foam
 
 class epsilonmWallFunctionFvPatchScalarField
 :
-    public fixedValueFvPatchField<scalar>
+    public wallCellWallFunctionFvPatchScalarField
 {
-    // Private member data
+private:
 
-        //- Tolerance used in weighted calculations
-        static scalar tol_;
+    // Private Member Functions
+
+        //- Constrain the matrix such that the wall cells take the value
+        //  specified by the wall function
+        void manipulateMatrixMaster(fvMatrix<scalar>& matrix);
 
 
 public:
@@ -118,6 +121,9 @@ public:
     // Member Functions
 
         // Evaluation functions
+
+            //- Update the coefficients associated with the patch field
+            virtual void updateCoeffs();
 
             //- Manipulate matrix
             virtual void manipulateMatrix(fvMatrix<scalar>& matrix);

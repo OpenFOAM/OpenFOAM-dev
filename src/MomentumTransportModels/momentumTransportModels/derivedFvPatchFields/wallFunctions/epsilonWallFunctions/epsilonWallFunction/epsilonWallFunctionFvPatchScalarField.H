@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ SourceFiles
 #ifndef epsilonWallFunctionFvPatchScalarField_H
 #define epsilonWallFunctionFvPatchScalarField_H
 
-#include "fixedValueFvPatchField.H"
+#include "wallCellWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,70 +79,31 @@ class momentumTransportModel;
 
 class epsilonWallFunctionFvPatchScalarField
 :
-    public fixedValueFvPatchField<scalar>
+    public wallCellWallFunctionFvPatchScalarField
 {
-protected:
+private:
 
-    // Protected data
+    // Private Data
 
-        //- Tolerance used in weighted calculations
-        static scalar tol_;
+        //- Wall cell turbulence generation values. Master patch only.
+        autoPtr<scalarField> wallCellGPtr_;
 
-        //- Local copy of turbulence G field
-        scalarField G_;
-
-        //- Local copy of turbulence epsilon field
-        scalarField epsilon_;
-
-        //- Initialised flag
-        bool initialised_;
-
-        //- Master patch ID
-        label master_;
-
-        //- List of averaging corner weights
-        List<List<scalar>> cornerWeights_;
+        //- Wall cell turbulence dissipation values. Master patch only.
+        autoPtr<scalarField> wallCellEpsilonPtr_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
 
-        //- Set the master patch - master is responsible for updating all
-        //  wall function patches
-        virtual void setMaster();
+        //- Calculate and return G and epsilon
+        Pair<tmp<scalarField>> calculate(const momentumTransportModel&) const;
 
-        //- Create the averaging weights for cells which are bounded by
-        //  multiple wall function faces
-        virtual void createAveragingWeights();
+        //- Calculate the turbulent values in wall cells and apply to the
+        //  turbulence model's fields
+        void updateCoeffsMaster();
 
-        //- Helper function to return non-const access to an epsilon patch
-        virtual epsilonWallFunctionFvPatchScalarField& epsilonPatch
-        (
-            const label patchi
-        );
-
-        //- Main driver to calculate the turbulence fields
-        virtual void calculateTurbulenceFields
-        (
-            const momentumTransportModel& turbModel,
-            scalarField& G0,
-            scalarField& epsilon0
-        );
-
-        //- Calculate the epsilon and G
-        virtual void calculate
-        (
-            const momentumTransportModel& turbModel,
-            const List<scalar>& cornerWeights,
-            const fvPatch& patch,
-            scalarField& G,
-            scalarField& epsilon
-        );
-
-        //- Return non-const access to the master patch ID
-        virtual label& master()
-        {
-            return master_;
-        }
+        //- Constrain the matrix such that the wall cells take the value
+        //  specified by the wall function
+        void manipulateMatrixMaster(fvMatrix<scalar>& matrix);
 
 
 public:
@@ -204,15 +165,6 @@ public:
 
 
     // Member Functions
-
-        // Access
-
-            //- Return non-const access to the master's G field
-            scalarField& G(bool init = false);
-
-            //- Return non-const access to the master's epsilon field
-            scalarField& epsilon(bool init = false);
-
 
         // Evaluation functions
 

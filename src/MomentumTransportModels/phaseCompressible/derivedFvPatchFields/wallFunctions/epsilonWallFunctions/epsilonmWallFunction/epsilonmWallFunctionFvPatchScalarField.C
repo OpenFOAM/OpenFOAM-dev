@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,9 +27,25 @@ License
 #include "fvMatrix.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::scalar Foam::epsilonmWallFunctionFvPatchScalarField::tol_ = 1e-1;
+void Foam::epsilonmWallFunctionFvPatchScalarField::manipulateMatrixMaster
+(
+    fvMatrix<scalar>& matrix
+)
+{
+    if (patch().index() != masterPatchIndex())
+    {
+        return;
+    }
+
+    matrix.setValues
+    (
+        wallCells(),
+        UIndirectList<scalar>(internalField(), wallCells()),
+        wallCellFraction()
+    );
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -42,9 +58,9 @@ epsilonmWallFunctionFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<scalar>(p, iF, dict)
+    wallCellWallFunctionFvPatchScalarField(p, iF, dict, false)
 {
-    // Apply zero-gradient condition on start-up
+    // Apply a zero-gradient condition on start-up
     this->operator==(patchInternalField());
 }
 
@@ -58,7 +74,7 @@ epsilonmWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper)
+    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper, true)
 {}
 
 
@@ -69,11 +85,22 @@ epsilonmWallFunctionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchField<scalar>(ewfpsf, iF)
+    wallCellWallFunctionFvPatchScalarField(ewfpsf, iF)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::epsilonmWallFunctionFvPatchScalarField::updateCoeffs()
+{
+    if (updated())
+    {
+        return;
+    }
+
+    initMaster();
+}
+
 
 void Foam::epsilonmWallFunctionFvPatchScalarField::manipulateMatrix
 (
@@ -85,12 +112,14 @@ void Foam::epsilonmWallFunctionFvPatchScalarField::manipulateMatrix
         return;
     }
 
-    matrix.setValues
-    (
-        patch().faceCells(),
-        UIndirectList<scalar>(internalField(), patch().faceCells()),
-        max((patch().polyFaceFraction() - tol_)/(1 - tol_), scalar(0))
-    );
+    if (masterPatchIndex() == -1)
+    {
+        FatalErrorInFunction
+            << "updateCoeffs must be called before manipulateMatrix"
+            << exit(FatalError);
+    }
+
+    manipulateMatrixMaster(matrix);
 
     fvPatchField<scalar>::manipulateMatrix(matrix);
 }

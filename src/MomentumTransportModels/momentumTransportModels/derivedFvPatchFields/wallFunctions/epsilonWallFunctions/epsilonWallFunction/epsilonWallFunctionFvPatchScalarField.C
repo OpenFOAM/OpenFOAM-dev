@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,209 +29,144 @@ License
 #include "fvMatrix.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::scalar Foam::epsilonWallFunctionFvPatchScalarField::tol_ = 1e-1;
-
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-void Foam::epsilonWallFunctionFvPatchScalarField::setMaster()
-{
-    if (master_ != -1)
-    {
-        return;
-    }
-
-    const volScalarField& epsilon =
-        static_cast<const volScalarField&>(this->internalField());
-
-    const volScalarField::Boundary& bf = epsilon.boundaryField();
-
-    label master = -1;
-    forAll(bf, patchi)
-    {
-        if (isA<epsilonWallFunctionFvPatchScalarField>(bf[patchi]))
-        {
-            epsilonWallFunctionFvPatchScalarField& epf = epsilonPatch(patchi);
-
-            if (master == -1)
-            {
-                master = patchi;
-            }
-
-            epf.master() = master;
-        }
-    }
-}
-
-
-void Foam::epsilonWallFunctionFvPatchScalarField::createAveragingWeights()
-{
-    const volScalarField& epsilon =
-        static_cast<const volScalarField&>(this->internalField());
-
-    const volScalarField::Boundary& bf = epsilon.boundaryField();
-
-    const fvMesh& mesh = epsilon.mesh();
-
-    if (initialised_ && !mesh.changing())
-    {
-        return;
-    }
-
-    volScalarField weights
-    (
-        IOobject
-        (
-            "weights",
-            mesh.time().name(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false // do not register
-        ),
-        mesh,
-        dimensionedScalar(dimless, 0)
-    );
-
-    DynamicList<label> epsilonPatches(bf.size());
-    forAll(bf, patchi)
-    {
-        if (isA<epsilonWallFunctionFvPatchScalarField>(bf[patchi]))
-        {
-            epsilonPatches.append(patchi);
-
-            const labelUList& faceCells = bf[patchi].patch().faceCells();
-            forAll(faceCells, i)
-            {
-                weights[faceCells[i]]++;
-            }
-        }
-    }
-
-    cornerWeights_.setSize(bf.size());
-    forAll(epsilonPatches, i)
-    {
-        label patchi = epsilonPatches[i];
-        const fvPatchScalarField& wf = weights.boundaryField()[patchi];
-        cornerWeights_[patchi] = 1.0/wf.patchInternalField();
-    }
-
-    G_.setSize(internalField().size(), 0.0);
-    epsilon_.setSize(internalField().size(), 0.0);
-
-    initialised_ = true;
-}
-
-
-Foam::epsilonWallFunctionFvPatchScalarField&
-Foam::epsilonWallFunctionFvPatchScalarField::epsilonPatch(const label patchi)
-{
-    const volScalarField& epsilon =
-        static_cast<const volScalarField&>(this->internalField());
-
-    const volScalarField::Boundary& bf = epsilon.boundaryField();
-
-    const epsilonWallFunctionFvPatchScalarField& epf =
-        refCast<const epsilonWallFunctionFvPatchScalarField>(bf[patchi]);
-
-    return const_cast<epsilonWallFunctionFvPatchScalarField&>(epf);
-}
-
-
-void Foam::epsilonWallFunctionFvPatchScalarField::calculateTurbulenceFields
+Foam::Pair<Foam::tmp<Foam::scalarField>>
+Foam::epsilonWallFunctionFvPatchScalarField::calculate
 (
-    const momentumTransportModel& turbModel,
-    scalarField& G0,
-    scalarField& epsilon0
-)
+    const momentumTransportModel& mtm
+) const
 {
-    // Ask for the wall distance in advance. Some processes may not have any
-    // corner weights, so we cannot allow functions inside the if statements
-    // below to trigger the wall distance calculation.
-    turbModel.yb();
-
-    // Accumulate all of the G and epsilon contributions
-    forAll(cornerWeights_, patchi)
-    {
-        if (!cornerWeights_[patchi].empty())
-        {
-            epsilonWallFunctionFvPatchScalarField& epf = epsilonPatch(patchi);
-
-            const List<scalar>& w = cornerWeights_[patchi];
-
-            epf.calculate(turbModel, w, epf.patch(), G0, epsilon0);
-        }
-    }
-
-    // Apply zero-gradient condition for epsilon
-    forAll(cornerWeights_, patchi)
-    {
-        if (!cornerWeights_[patchi].empty())
-        {
-            epsilonWallFunctionFvPatchScalarField& epf = epsilonPatch(patchi);
-
-            epf == scalarField(epsilon0, epf.patch().faceCells());
-        }
-    }
-}
-
-
-void Foam::epsilonWallFunctionFvPatchScalarField::calculate
-(
-    const momentumTransportModel& turbModel,
-    const List<scalar>& cornerWeights,
-    const fvPatch& patch,
-    scalarField& G0,
-    scalarField& epsilon0
-)
-{
-    const label patchi = patch.index();
+    const label patchi = patch().index();
 
     const nutWallFunctionFvPatchScalarField& nutw =
-        nutWallFunctionFvPatchScalarField::nutw(turbModel, patchi);
+        nutWallFunctionFvPatchScalarField::nutw(mtm, patchi);
 
-    const scalarField& y = turbModel.yb()[patchi];
+    const scalarField& y = mtm.yb()[patchi];
 
-    const tmp<scalarField> tnuw = turbModel.nu(patchi);
+    const tmp<scalarField> tnuw = mtm.nu(patchi);
     const scalarField& nuw = tnuw();
 
-    const tmp<volScalarField> tk = turbModel.k();
+    const tmp<volScalarField> tk = mtm.k();
     const volScalarField& k = tk();
 
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
+    const fvPatchVectorField& Uw = mtm.U().boundaryField()[patchi];
 
     const scalarField magGradUw(mag(Uw.snGrad()));
 
     const scalar Cmu25 = pow025(nutw.Cmu());
     const scalar Cmu75 = pow(nutw.Cmu(), 0.75);
 
-    // Set epsilon and G
+    // Initialise the returned field pair
+    Pair<tmp<scalarField>> GandEpsilon
+    (
+        tmp<scalarField>(new scalarField(patch().size())),
+        tmp<scalarField>(new scalarField(patch().size()))
+    );
+    scalarField& G = GandEpsilon.first().ref();
+    scalarField& epsilon  = GandEpsilon.second().ref();
+
+    // Calculate G and epsilon
     forAll(nutw, facei)
     {
-        const label celli = patch.faceCells()[facei];
+        const label celli = patch().faceCells()[facei];
 
         const scalar yPlus = Cmu25*y[facei]*sqrt(k[celli])/nuw[facei];
 
-        const scalar w = cornerWeights[facei];
-
         if (yPlus > nutw.yPlusLam())
         {
-            epsilon0[celli] +=
-                w*Cmu75*pow(k[celli], 1.5)/(nutw.kappa()*y[facei]);
-
-            G0[celli] +=
-                w
-               *(nutw[facei] + nuw[facei])
+            G[facei] =
+                (nutw[facei] + nuw[facei])
                *magGradUw[facei]
                *Cmu25*sqrt(k[celli])
               /(nutw.kappa()*y[facei]);
+
+            epsilon[facei] =
+                Cmu75*k[celli]*sqrt(k[celli])/(nutw.kappa()*y[facei]);
         }
         else
         {
-            epsilon0[celli] += w*2.0*k[celli]*nuw[facei]/sqr(y[facei]);
+            G[facei] = 0;
+
+            epsilon[facei] = 2*k[celli]*nuw[facei]/sqr(y[facei]);
         }
     }
+
+    return GandEpsilon;
+}
+
+
+void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffsMaster()
+{
+    if (patch().index() != masterPatchIndex())
+    {
+        return;
+    }
+
+    // Lookup the momentum transport model
+    const momentumTransportModel& mtm =
+        db().lookupType<momentumTransportModel>(internalField().group());
+
+    // Get mutable references to the turbulence fields
+    VolInternalField<scalar>& G =
+        db().lookupObjectRef<VolInternalField<scalar>>(mtm.GName());
+    volScalarField& epsilon =
+        const_cast<volScalarField&>
+        (
+            static_cast<const volScalarField&>
+            (
+                internalField()
+            )
+        );
+
+    const volScalarField::Boundary& epsilonBf = epsilon.boundaryField();
+
+    // Make all processors build the near wall distances
+    mtm.yb();
+
+    // Evaluate all the wall functions
+    PtrList<scalarField> Gpfs(epsilonBf.size());
+    PtrList<scalarField> epsilonPfs(epsilonBf.size());
+    forAll(epsilonBf, patchi)
+    {
+        if (isA<epsilonWallFunctionFvPatchScalarField>(epsilonBf[patchi]))
+        {
+            const epsilonWallFunctionFvPatchScalarField& epsilonPf =
+                refCast<const epsilonWallFunctionFvPatchScalarField>
+                (epsilonBf[patchi]);
+
+            Pair<tmp<scalarField>> GandEpsilon = epsilonPf.calculate(mtm);
+
+            Gpfs.set(patchi, GandEpsilon.first().ptr());
+            epsilonPfs.set(patchi, GandEpsilon.second().ptr());
+        }
+    }
+
+    // Average the values into the wall-adjacent cells and store
+    wallCellGPtr_.reset(patchFieldsToWallCellField(Gpfs).ptr());
+    wallCellEpsilonPtr_.reset(patchFieldsToWallCellField(epsilonPfs).ptr());
+
+    // Set the fractional proportion of the value in the wall cells
+    UIndirectList<scalar>(G, wallCells()) =
+        (1 - wallCellFraction())*scalarField(G, wallCells())
+      + wallCellFraction()*wallCellGPtr_();
+    UIndirectList<scalar>(epsilon.ref(), wallCells()) =
+        (1 - wallCellFraction())*scalarField(epsilon.ref(), wallCells())
+      + wallCellFraction()*wallCellEpsilonPtr_();
+}
+
+
+void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrixMaster
+(
+    fvMatrix<scalar>& matrix
+)
+{
+    if (patch().index() != masterPatchIndex())
+    {
+        return;
+    }
+
+    matrix.setValues(wallCells(), wallCellEpsilonPtr_(), wallCellFraction());
 }
 
 
@@ -245,15 +180,12 @@ epsilonWallFunctionFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<scalar>(p, iF, dict),
-    G_(),
-    epsilon_(),
-    initialised_(false),
-    master_(-1),
-    cornerWeights_()
+    wallCellWallFunctionFvPatchScalarField(p, iF, dict, false),
+    wallCellGPtr_(nullptr),
+    wallCellEpsilonPtr_(nullptr)
 {
-    // Apply zero-gradient condition on start-up
-    this->operator==(patchInternalField());
+    // Apply a zero-gradient condition on start-up
+    operator==(patchInternalField());
 }
 
 
@@ -266,12 +198,9 @@ epsilonWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),
-    G_(),
-    epsilon_(),
-    initialised_(false),
-    master_(-1),
-    cornerWeights_()
+    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper, true),
+    wallCellGPtr_(nullptr),
+    wallCellEpsilonPtr_(nullptr)
 {}
 
 
@@ -282,51 +211,13 @@ epsilonWallFunctionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchField<scalar>(ewfpsf, iF),
-    G_(),
-    epsilon_(),
-    initialised_(false),
-    master_(-1),
-    cornerWeights_()
+    wallCellWallFunctionFvPatchScalarField(ewfpsf, iF),
+    wallCellGPtr_(nullptr),
+    wallCellEpsilonPtr_(nullptr)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::scalarField& Foam::epsilonWallFunctionFvPatchScalarField::G(bool init)
-{
-    if (patch().index() == master_)
-    {
-        if (init)
-        {
-            G_ = 0.0;
-        }
-
-        return G_;
-    }
-
-    return epsilonPatch(master_).G();
-}
-
-
-Foam::scalarField& Foam::epsilonWallFunctionFvPatchScalarField::epsilon
-(
-    bool init
-)
-{
-    if (patch().index() == master_)
-    {
-        if (init)
-        {
-            epsilon_ = 0.0;
-        }
-
-        return epsilon_;
-    }
-
-    return epsilonPatch(master_).epsilon(init);
-}
-
 
 void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs()
 {
@@ -335,47 +226,11 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const momentumTransportModel& turbModel =
-        db().lookupType<momentumTransportModel>(internalField().group());
+    initMaster();
 
-    setMaster();
+    updateCoeffsMaster();
 
-    if (patch().index() == master_)
-    {
-        createAveragingWeights();
-        calculateTurbulenceFields(turbModel, G(true), epsilon(true));
-    }
-
-    const scalarField& G0 = this->G();
-    const scalarField& epsilon0 = this->epsilon();
-
-    typedef DimensionedField<scalar, volMesh> FieldType;
-    FieldType& G =
-        const_cast<FieldType&>
-        (
-            db().lookupObject<FieldType>(turbModel.GName())
-        );
-    FieldType& epsilon =
-        const_cast<FieldType&>
-        (
-            internalField()
-        );
-
-    const scalarField weights
-    (
-        max((patch().polyFaceFraction() - tol_)/(1 - tol_), scalar(0))
-    );
-
-    forAll(weights, facei)
-    {
-        const scalar w = weights[facei];
-        const label celli = patch().faceCells()[facei];
-
-        G[celli] = (1 - w)*G[celli] + w*G0[celli];
-        epsilon[celli] = (1 - w)*epsilon[celli] + w*epsilon0[celli];
-    }
-
-    this->operator==(scalarField(epsilon, patch().faceCells()));
+    operator==(patchInternalField());
 
     fvPatchField<scalar>::updateCoeffs();
 }
@@ -391,12 +246,14 @@ void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrix
         return;
     }
 
-    matrix.setValues
-    (
-        patch().faceCells(),
-        UIndirectList<scalar>(this->epsilon(), patch().faceCells()),
-        max((patch().polyFaceFraction() - tol_)/(1 - tol_), scalar(0))
-    );
+    if (masterPatchIndex() == -1)
+    {
+        FatalErrorInFunction
+            << "updateCoeffs must be called before manipulateMatrix"
+            << exit(FatalError);
+    }
+
+    manipulateMatrixMaster(matrix);
 
     fvPatchField<scalar>::manipulateMatrix(matrix);
 }

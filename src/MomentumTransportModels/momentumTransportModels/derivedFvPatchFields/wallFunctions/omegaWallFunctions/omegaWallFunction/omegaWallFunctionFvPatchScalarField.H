@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ SourceFiles
 #ifndef omegaWallFunctionFvPatchScalarField_H
 #define omegaWallFunctionFvPatchScalarField_H
 
-#include "fixedValueFvPatchField.H"
+#include "wallCellWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,14 +79,11 @@ class momentumTransportModel;
 
 class omegaWallFunctionFvPatchScalarField
 :
-    public fixedValueFvPatchField<scalar>
+    public wallCellWallFunctionFvPatchScalarField
 {
-protected:
+private:
 
-    // Protected data
-
-        //- Tolerance used in weighted calculations
-        static scalar tol_;
+    // Private Data
 
         //- beta1 coefficient
         scalar beta1_;
@@ -94,63 +91,25 @@ protected:
         //- Blending switch (defaults to false)
         Switch blended_;
 
-        //- Local copy of turbulence G field
-        scalarField G_;
+        //- Wall cell turbulence generation values. Master patch only.
+        autoPtr<scalarField> wallCellGPtr_;
 
-        //- Local copy of turbulence omega field
-        scalarField omega_;
-
-        //- Initialised flag
-        bool initialised_;
-
-        //- Master patch ID
-        label master_;
-
-        //- List of averaging corner weights
-        List<List<scalar>> cornerWeights_;
+        //- Wall cell turbulence frequency values. Master patch only.
+        autoPtr<scalarField> wallCellOmegaPtr_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
 
-        //- Set the master patch - master is responsible for updating all
-        //  wall function patches
-        virtual void setMaster();
+        //- Calculate and return G and omega
+        Pair<tmp<scalarField>> calculate(const momentumTransportModel&) const;
 
-        //- Create the averaging weights for cells which are bounded by
-        //  multiple wall function faces
-        virtual void createAveragingWeights();
+        //- Calculate the turbulent values in wall cells and apply to the
+        //  turbulence model's fields
+        void updateCoeffsMaster();
 
-        //- Helper function to return non-const access to an omega patch
-        virtual omegaWallFunctionFvPatchScalarField& omegaPatch
-        (
-            const label patchi
-        );
-
-        //- Main driver to calculate the turbulence fields
-        virtual void calculateTurbulenceFields
-        (
-            const momentumTransportModel& turbModel,
-            scalarField& G0,
-            scalarField& omega0
-        );
-
-        //- Calculate the omega and G
-        virtual void calculate
-        (
-            const momentumTransportModel& turbModel,
-            const List<scalar>& cornerWeights,
-            const fvPatch& patch,
-            scalarField& G,
-            scalarField& omega
-        );
-
-        //- Return non-const access to the master patch ID
-        virtual label& master()
-        {
-            return master_;
-        }
-
-        typedef DimensionedField<scalar, volMesh> FieldType;
+        //- Constrain the matrix such that the wall cells take the value
+        //  specified by the wall function
+        void manipulateMatrixMaster(fvMatrix<scalar>& matrix);
 
 
 public:
@@ -170,7 +129,7 @@ public:
         );
 
         //- Construct by mapping given
-        // omegaWallFunctionFvPatchScalarField
+        //  omegaWallFunctionFvPatchScalarField
         //  onto a new patch
         omegaWallFunctionFvPatchScalarField
         (
@@ -206,16 +165,12 @@ public:
         }
 
 
+    //- Destructor
+    virtual ~omegaWallFunctionFvPatchScalarField()
+    {}
+
+
     // Member Functions
-
-        // Access
-
-            //- Return non-const access to the master's G field
-            scalarField& G(bool init = false);
-
-            //- Return non-const access to the master's omega field
-            scalarField& omega(bool init = false);
-
 
         // Evaluation functions
 
