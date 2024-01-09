@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Usage
     \verbatim
     <patchName>
     {
-        type            uniformInletOutletValue;
+        type            uniformInletOutlet;
         uniformInletValue 0.1;
     }
     \endverbatim
@@ -47,7 +47,7 @@ Usage
     \verbatim
     <patchName>
     {
-        type            uniformInletOutletValue;
+        type            uniformInletOutlet;
         uniformInletValue
         {
             type            table;
