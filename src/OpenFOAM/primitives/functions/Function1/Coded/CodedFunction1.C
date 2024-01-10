@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,11 +32,14 @@ License
 template<class Type>
 Foam::wordList Foam::Function1s::Coded<Type>::codeKeys() const
 {
-    return
-    {
-        "code",
-        "codeInclude"
-    };
+    return {"code", "codeInclude"};
+}
+
+
+template<class Type>
+Foam::wordList Foam::Function1s::Coded<Type>::codeDictVars() const
+{
+    return {word::null, word::null};
 }
 
 

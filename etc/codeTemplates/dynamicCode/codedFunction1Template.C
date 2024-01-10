@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "codedFunction1Template.H"
+#include "read.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

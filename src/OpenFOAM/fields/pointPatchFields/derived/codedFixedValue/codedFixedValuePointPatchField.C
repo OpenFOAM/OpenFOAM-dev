@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,12 +35,14 @@ License
 template<class Type>
 Foam::wordList Foam::codedFixedValuePointPatchField<Type>::codeKeys() const
 {
-    return
-    {
-        "code",
-        "codeInclude",
-        "localCode"
-    };
+    return {"code", "codeInclude", "localCode"};
+}
+
+
+template<class Type>
+Foam::wordList Foam::codedFixedValuePointPatchField<Type>::codeDictVars() const
+{
+    return {word::null, word::null, word::null};
 }
 
 

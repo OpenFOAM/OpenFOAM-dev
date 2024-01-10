@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,8 @@ void Foam::dynamicCodeContext::addLineDirective
 Foam::dynamicCodeContext::dynamicCodeContext
 (
     const dictionary& dict,
-    const wordList& codeKeys
+    const wordList& codeKeys,
+    const wordList& codeDictVars
 )
 :
     dict_(dict),
@@ -64,7 +65,7 @@ Foam::dynamicCodeContext::dynamicCodeContext
         if (codePtrs[i])
         {
             string s(stringOps::trim(verbatimString(codePtrs[i]->stream())));
-            stringOps::inplaceExpandCodeString(s, dict);
+            stringOps::inplaceExpandCodeString(s, dict, codeDictVars[i]);
             code_.insert(key, s);
         }
         else
@@ -78,7 +79,7 @@ Foam::dynamicCodeContext::dynamicCodeContext
     if (optionsPtr)
     {
         options_ = stringOps::trim(verbatimString(optionsPtr->stream()));
-        stringOps::inplaceExpandCodeString(options_, dict);
+        stringOps::inplaceExpandCodeString(options_, dict, word::null);
     }
 
     // Libs
@@ -86,7 +87,7 @@ Foam::dynamicCodeContext::dynamicCodeContext
     if (libsPtr)
     {
         libs_ = stringOps::trim(verbatimString(libsPtr->stream()));
-        stringOps::inplaceExpandCodeString(libs_, dict);
+        stringOps::inplaceExpandCodeString(libs_, dict, word::null);
     }
 
     // Calculate SHA1 digest from all entries

@@ -27,7 +27,9 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "fieldMapper.H"
 #include "pointFields.H"
+#include "read.H"
 #include "unitConversion.H"
+
 //{{{ begin codeInclude
 ${codeInclude}
 //}}} end codeInclude

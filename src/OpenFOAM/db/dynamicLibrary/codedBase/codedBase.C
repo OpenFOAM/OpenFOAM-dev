@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -322,7 +322,7 @@ void Foam::codedBase::updateLibrary() const
         dict
     );
 
-    dynamicCodeContext context(dict, codeKeys());
+    dynamicCodeContext context(dict, codeKeys(), codeDictVars());
 
     // codeName: name + _<sha1>
     // codeDir : name
