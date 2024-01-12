@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,33 +46,69 @@ Foam::phaseModel::phaseModel
     const label index
 )
 :
+    // volScalarField
+    // (
+    //     referencePhase
+    //   ? volScalarField
+    //     (
+    //         IOobject
+    //         (
+    //             IOobject::groupName("alpha", phaseName),
+    //             fluid.mesh().time().name(),
+    //             fluid.mesh(),
+    //             IOobject::NO_READ,
+    //             IOobject::AUTO_WRITE
+    //         ),
+    //         fluid.mesh(),
+    //         dimensionedScalar(dimless, 0)
+    //     )
+    //   : volScalarField
+    //     (
+    //         IOobject
+    //         (
+    //             IOobject::groupName("alpha", phaseName),
+    //             fluid.mesh().time().name(),
+    //             fluid.mesh(),
+    //             IOobject::MUST_READ,
+    //             IOobject::AUTO_WRITE
+    //         ),
+    //         fluid.mesh()
+    //     )
+    // ),
+    // Replaced by the following because the Clang compiler does not use
+    // std::move to transfer the result of the ternary operator
     volScalarField
     (
-        referencePhase
-      ? volScalarField
+        IOobject
         (
-            IOobject
-            (
-                IOobject::groupName("alpha", phaseName),
-                fluid.mesh().time().name(),
-                fluid.mesh(),
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
+            IOobject::groupName("alpha", phaseName),
+            fluid.mesh().time().name(),
+            fluid.mesh(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        referencePhase
+      ? volScalarField::New
+        (
+            IOobject::groupName("alpha", phaseName),
             fluid.mesh(),
             dimensionedScalar(dimless, 0)
         )
-      : volScalarField
+      : tmp<volScalarField>
         (
-            IOobject
+            new volScalarField
             (
-                IOobject::groupName("alpha", phaseName),
-                fluid.mesh().time().name(),
-                fluid.mesh(),
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
-            ),
-            fluid.mesh()
+                IOobject
+                (
+                    IOobject::groupName("alpha", phaseName),
+                    fluid.mesh().time().name(),
+                    fluid.mesh(),
+                    IOobject::MUST_READ,
+                    IOobject::AUTO_WRITE,
+                    false
+                ),
+                fluid.mesh()
+            )
         )
     ),
 
