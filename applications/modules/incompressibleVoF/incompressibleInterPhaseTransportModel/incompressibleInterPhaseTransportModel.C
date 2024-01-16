@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,8 +80,8 @@ incompressibleInterPhaseTransportModel
                 alpha1,
                 U,
                 alphaPhi1_,
-                phi,
-                mixture.nuModel1()
+                phi_,
+                mixture_.nuModel1()
             )
         );
 
@@ -92,8 +92,8 @@ incompressibleInterPhaseTransportModel
                 alpha2,
                 U,
                 alphaPhi2_,
-                phi,
-                mixture.nuModel2()
+                phi_,
+                mixture_.nuModel2()
             )
         );
     }
@@ -102,8 +102,8 @@ incompressibleInterPhaseTransportModel
         turbulence_ = incompressible::momentumTransportModel::New
         (
             U,
-            phi,
-            mixture
+            phi_,
+            mixture_
         );
 
         turbulence_->validate();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,8 +83,8 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
                 mixture_.thermo1().rho(),
                 U,
                 alphaRhoPhi1_,
-                phi,
-                mixture.thermo1()
+                phi_,
+                mixture_.thermo1()
             )
         );
 
@@ -96,8 +96,8 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
                 mixture_.thermo2().rho(),
                 U,
                 alphaRhoPhi2_,
-                phi,
-                mixture.thermo2()
+                phi_,
+                mixture_.thermo2()
             )
         );
     }
@@ -108,7 +108,7 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
             rho,
             U,
             rhoPhi,
-            mixture
+            mixture_
         );
 
         mixtureMomentumTransport_->validate();

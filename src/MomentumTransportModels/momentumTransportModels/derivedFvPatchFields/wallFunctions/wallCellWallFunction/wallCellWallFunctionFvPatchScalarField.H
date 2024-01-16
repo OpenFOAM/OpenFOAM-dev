@@ -165,6 +165,12 @@ public:
     //- Destructor
     virtual ~wallCellWallFunctionFvPatchScalarField()
     {}
+
+
+    // Member Operators
+
+        //- Inherit assignment operators to prevent warnings
+        using fvPatchField<scalar>::operator=;
 };
 
 
