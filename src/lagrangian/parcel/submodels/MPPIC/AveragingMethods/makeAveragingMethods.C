@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,6 @@ License
 
 #include "Basic.H"
 #include "Dual.H"
-#include "Moment.H"
 
 // Scalar interpolation
 defineNamedTemplateTypeNameAndDebug(Foam::AveragingMethod<Foam::scalar>, 0);
@@ -92,26 +91,6 @@ defineNamedTemplateTypeNameAndDebug
 Foam::AveragingMethod<Foam::vector>::
 adddictionaryConstructorToTable<Foam::AveragingMethods::Dual<Foam::vector>>
     addDualvectorConstructorToTable_;
-
-
-// Moment interpolation
-defineNamedTemplateTypeNameAndDebug
-(
-    Foam::AveragingMethods::Moment<Foam::scalar>,
-    0
-);
-Foam::AveragingMethod<Foam::scalar>::
-adddictionaryConstructorToTable<Foam::AveragingMethods::Moment<Foam::scalar>>
-    addMomentscalarConstructorToTable_;
-
-defineNamedTemplateTypeNameAndDebug
-(
-    Foam::AveragingMethods::Moment<Foam::vector>,
-    0
-);
-Foam::AveragingMethod<Foam::vector>::
-adddictionaryConstructorToTable<Foam::AveragingMethods::Moment<Foam::vector>>
-    addMomentvectorConstructorToTable_;
 
 
 // ************************************************************************* //
