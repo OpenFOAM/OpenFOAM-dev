@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,17 +124,15 @@ int main(int argc, char *argv[])
         runTime++;
     }
 
-    // Stitch the patch-pairs
+    // Stitch all the patch-pairs
     mergePatchPairs(mesh, patchPairNames, snapTol);
 
-    // Write mesh
     if (overwrite)
     {
         mesh.setInstance(oldInstance);
     }
 
     Info<< "Writing mesh to " << mesh.facesInstance() << endl;
-
     mesh.write();
 
     Info<< "End\n" << endl;

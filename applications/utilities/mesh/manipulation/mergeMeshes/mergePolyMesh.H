@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::mergePolyMesh
 
 Description
-    Add a given mesh to the original mesh to create a single new mesh
+    Merge meshes into a single mesh without stitching.
 
 SourceFiles
     mergePolyMesh.C
@@ -48,10 +48,11 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class mergePolyMesh
-:
-    public polyMesh
 {
     // Private Data
+
+        //- The master mesh the other meshes are merged into
+        polyMesh& mesh_;
 
         //- Topological change to accumulated all mesh changes
         polyTopoChange meshMod_;
@@ -89,11 +90,8 @@ public:
 
     // Constructors
 
-        //- Construct from IOobject
-        mergePolyMesh(const IOobject& io);
-
-        //- Disallow default bitwise copy construction
-        mergePolyMesh(const mergePolyMesh&) = delete;
+        //- Construct from polyMesh
+        mergePolyMesh(polyMesh& mesh);
 
 
     //- Destructor
