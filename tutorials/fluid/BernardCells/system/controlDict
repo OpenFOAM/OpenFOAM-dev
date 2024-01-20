@@ -46,10 +46,5 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-functions
-{
-    #includeFunc residuals(p_rgh)
-    #includeFunc streamlinesLine(name=streamlines, start=(0 0.5 0), end=(9 0.5 0), nPoints=24, U)
-}
 
 // ************************************************************************* //

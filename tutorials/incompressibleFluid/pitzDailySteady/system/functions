@@ -1,0 +1,35 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+cacheTemporaryObjects
+(
+    kEpsilon:G
+);
+
+#includeFunc streamlinesLine
+(
+    name=streamlines,
+    start=(-0.0205 0.001 0.00001),
+    end=(-0.0205 0.0251 0.00001),
+    nPoints=10,
+    fields=(p k U)
+)
+
+#includeFunc writeObjects(kEpsilon:G)
+
+#includeFunc strainRate(writeControl=writeTime)
+
+// ************************************************************************* //

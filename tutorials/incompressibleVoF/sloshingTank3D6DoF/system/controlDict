@@ -52,26 +52,6 @@ maxCo           0.5;
 maxAlphaCo      0.5;
 maxDeltaT       1;
 
-functions
-{
-    probes
-    {
-        type            probes;
-        libs            ("libsampling.so");
-        writeControl   timeStep;
-        writeInterval  1;
-        probeLocations
-        (
-            (0 9.95 19.77)
-            (0 -9.95 19.77)
-        );
-        fixedLocations  false;
-        fields
-        (
-            p
-        );
-    }
-}
 
 
 // ************************************************************************* //

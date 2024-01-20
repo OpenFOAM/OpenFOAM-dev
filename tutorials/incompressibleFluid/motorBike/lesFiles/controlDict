@@ -50,26 +50,5 @@ cacheTemporaryObjects
     SpalartAllmarasDDES:LESRegion
 );
 
-functions
-{
-    writeCachedObjects
-    {
-        type        writeObjects;
-
-        libs        ("libutilityFunctionObjects.so");
-
-        writeControl writeTime;
-        writeOption anyWrite;
-
-        objects
-        (
-            SpalartAllmarasDDES:LESRegion
-        );
-    }
-
-    #include "cutPlane"
-    #include "streamlines"
-    #include "forceCoeffs"
-}
 
 // ************************************************************************* //

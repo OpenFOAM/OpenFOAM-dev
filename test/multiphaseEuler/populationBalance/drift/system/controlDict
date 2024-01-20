@@ -52,40 +52,5 @@ maxCo           0.5;
 
 maxDeltaT       1;
 
-functions
-{
-    #includeFunc populationBalanceSizeDistribution
-    (
-        name=numberDensity,
-        populationBalance=bubbles,
-        functionType=numberDensity,
-        coordinateType=volume
-    )
-
-    #includeFunc populationBalanceMoments
-    (
-        populationBalance=bubbles,
-        momentType=integerMoment,
-        coordinateType=volume,
-        order=1
-    )
-
-    #includeFunc populationBalanceMoments
-    (
-        populationBalance=bubbles,
-        momentType=integerMoment,
-        coordinateType=volume,
-        order=0
-    )
-
-    #includeFunc probes
-    (
-        name=probes,
-        points=((0.5 0.5 0.5)),
-        integerMoment0(N,v).bubbles,
-        integerMoment1(N,v).bubbles,
-        writeControl=writeTime
-    )
-}
 
 // ************************************************************************* //

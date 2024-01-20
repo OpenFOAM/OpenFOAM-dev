@@ -54,9 +54,5 @@ maxAlphaCo      1;
 
 maxDeltaT       1;
 
-functions
-{
-    #includeFunc isoSurface(isoField=alpha.water, isoValue=0.5, fields=())
-}
 
 // ************************************************************************* //

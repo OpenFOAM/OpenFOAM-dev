@@ -51,20 +51,5 @@ cacheTemporaryObjects
     kEpsilon:G
 );
 
-functions
-{
-    #includeFunc streamlinesLine
-    (
-        name=streamlines,
-        start=(-0.0205 0.001 0.00001),
-        end=(-0.0205 0.0251 0.00001),
-        nPoints=10,
-        fields=(p k U)
-    )
-
-    #includeFunc writeObjects(kEpsilon:G)
-
-    #includeFunc strainRate(writeControl=writeTime)
-}
 
 // ************************************************************************* //

@@ -1,0 +1,136 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc cellMinMag
+(
+    name=fieldMin,
+    executeAtStart=no,
+    continuityError.gas,
+    continuityError.liquid,
+    log=yes
+)
+
+#includeFunc cellMaxMag
+(
+    name=fieldMax,
+    executeAtStart=no,
+    continuityError.gas,
+    continuityError.liquid,
+    log=yes
+)
+
+#includeFunc writeObjects
+(
+    continuityError.gas,
+    continuityError.liquid
+)
+
+outflow
+{
+    type            surfaceFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           outlet;
+    operation       sum;
+    fields          (alphaRhoPhi.gas alphaRhoPhi.liquid);
+}
+
+inflow
+{
+    type            surfaceFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           inlet;
+    operation       sum;
+    fields          (alphaRhoPhi.gas alphaRhoPhi.liquid);
+}
+
+outletGas
+{
+    type            surfaceFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           outlet;
+    operation       sum;
+    weightField     alphaRhoPhi.gas;
+    fields          (h.gas);
+}
+
+outletLiquid
+{
+    type            surfaceFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           outlet;
+    operation       sum;
+    weightField     alphaRhoPhi.liquid;
+    fields          (e.liquid);
+}
+
+inletGas
+{
+    type            surfaceFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           inlet;
+    operation       sum;
+    weightField     alphaRhoPhi.gas;
+    fields          (h.gas);
+}
+
+inletLiquid
+{
+    type            surfaceFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           inlet;
+    operation       sum;
+    weightField     alphaRhoPhi.liquid;
+    fields          (e.liquid);
+}
+
+contError
+{
+    type            volFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+    log             yes;
+    writeFields     false;
+    select          all;
+    operation       volIntegrate;
+    fields          (continuityError.gas continuityError.liquid);
+}
+
+writeWallheatfluxSolid
+{
+    type            wallHeatFlux;
+    libs            ( "libmultiphaseEulerFoamFunctionObjects.so" );
+    writeControl    writeTime;
+    phase           solid;
+}
+
+// ************************************************************************* //

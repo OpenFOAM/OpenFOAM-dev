@@ -50,9 +50,5 @@ adjustTimeStep  no;
 
 maxCo           0.5;
 
-functions
-{
-    #includeFunc fieldAverage(U, p, prime2Mean = yes)
-}
 
 // ************************************************************************* //

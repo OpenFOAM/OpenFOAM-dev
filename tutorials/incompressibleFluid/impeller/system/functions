@@ -1,0 +1,34 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc patchFlowRate(name=inletFlowRate, patch=inlet)
+#includeFunc patchFlowRate(name=outletFlowRate, patch=outlet)
+
+cartesianToCylindrical
+{
+    type        cylindrical;
+    libs        ("libfieldFunctionObjects.so");
+
+    origin      (0 0 0);
+    axis        (1 0 0);
+
+    field       U;
+
+    writeControl    writeTime;
+    writeInterval   1;
+}
+
+// ************************************************************************* //

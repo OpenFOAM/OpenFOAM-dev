@@ -53,48 +53,6 @@ maxAlphaCo      0.5;
 
 maxDeltaT       1;
 
-functions
-{
-    probes
-    {
-        type            probes;
-        libs            ("libsampling.so");
-        writeControl    writeTime;
-        probeLocations
-        (
-            (0 9.95 19.77)
-            (0 -9.95 19.77)
-        );
-        fixedLocations  false;
-        fields
-        (
-            p
-        );
-    }
-
-    wallPressure
-    {
-        type            surfaces;
-        libs            ("libsampling.so");
-        writeControl    writeTime;
-        surfaceFormat   raw;
-        fields
-        (
-            p
-        );
-        interpolationScheme cellPoint;
-
-        surfaces
-        (
-            walls
-            {
-                type        patch;
-                patches     (walls);
-                triangulate false;
-            }
-        );
-    }
-}
 
 
 // ************************************************************************* //

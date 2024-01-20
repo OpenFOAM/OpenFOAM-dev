@@ -53,10 +53,4 @@ DebugSwitches
     SolverPerformance 0;
 }
 
-functions
-{
-    #includeFunc adjustTimeStepToChemistry
-    #includeFunc probes(name=probe, points=((0 0 0)), T, p)
-}
-
 // ************************************************************************* //

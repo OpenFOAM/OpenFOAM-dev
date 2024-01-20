@@ -57,23 +57,4 @@ maxDi           200;
 
 maxDeltaT       1;
 
-functions
-{
-    #includeFunc patchAverage
-    (
-        name=cylinderT,
-        region=fluid,
-        patch=fluid_to_solid,
-        field=T
-    )
-    #includeFunc patchAverage
-    (
-        name=inletU,
-        region=fluid,
-        patch=inlet,
-        field=U
-    )
-}
-
-
 // ************************************************************************* //

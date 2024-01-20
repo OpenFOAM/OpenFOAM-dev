@@ -50,40 +50,6 @@ adjustTimeStep  yes;
 
 maxCo           0.5;
 
-functions
-{
-    cartesianToCylindrical
-    {
-        type        cylindrical;
-        libs        ("libfieldFunctionObjects.so");
-
-        origin      (0 0 0);
-        axis        (0 0 1);
-
-        field       U;
-
-        writeControl    writeTime;
-        writeInterval   1;
-    }
-
-    #includeFunc fieldAverage(cylindrical(U))
-
-    cylindricalToCartesian
-    {
-        type        cylindrical;
-        libs        ("libfieldFunctionObjects.so");
-
-        origin      (0 0 0);
-        axis        (0 0 1);
-
-        field       cylindrical(U)Mean;
-        toCartesian true;
-        result      UMean;
-
-        writeControl    writeTime;
-        writeInterval   1;
-    }
-}
 
 
 // ************************************************************************* //

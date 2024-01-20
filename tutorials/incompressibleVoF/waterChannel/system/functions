@@ -1,0 +1,49 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+inletFlux
+{
+    type            surfaceFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+    writeControl   timeStep;
+    log             true;
+    // Output field values as well
+    writeFields     false;
+    select          patch;
+    patch           inlet;
+    operation       sum;
+
+    fields
+    (
+        phi
+    );
+
+    weightField     alpha.water;
+}
+
+outletFlux
+{
+    $inletFlux;
+    patch           outlet;
+}
+
+atmosphereFlux
+{
+    $inletFlux;
+    patch           atmosphere;
+}
+
+// ************************************************************************* //

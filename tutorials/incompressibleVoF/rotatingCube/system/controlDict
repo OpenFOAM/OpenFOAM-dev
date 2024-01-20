@@ -51,10 +51,5 @@ adjustTimeStep  yes;
 maxCo           0.5;
 maxAlphaCo      0.5;
 
-functions
-{
-    #includeFunc patchSurface(patch=cube)
-    #includeFunc isoSurface(isoField=alpha.water, isoValue=0.5)
-}
 
 // ************************************************************************* //

@@ -46,11 +46,5 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-functions
-{
-    #include "cutPlane"
-    #include "streamlines"
-    #include "forceCoeffs"
-}
 
 // ************************************************************************* //

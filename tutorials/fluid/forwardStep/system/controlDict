@@ -46,17 +46,6 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-functions
-{
-    libs            ("libfieldFunctionObjects.so");
-
-    Ma
-    {
-        type            MachNo;
-        executeControl  writeTime;
-        writeControl    writeTime;
-    }
-}
 
 
 // ************************************************************************* //

@@ -52,26 +52,5 @@ maxCo           5;
 
 maxDeltaT       1e-03;
 
-functions
-{
-    surfaceFieldValue1
-    {
-        type            surfaceFieldValue;
-        libs            ("libfieldFunctionObjects.so");
-        writeControl    writeTime;
-        log             yes;
-        writeFields     no;
-        select          patch;
-        patch           outlet;
-        operation       average;
-        weightField     phi;
-
-        fields
-        (
-            H2O
-            T
-        );
-    }
-}
 
 // ************************************************************************* //

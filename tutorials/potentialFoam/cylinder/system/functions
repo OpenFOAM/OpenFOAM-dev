@@ -1,0 +1,113 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+error
+{
+    type coded;
+
+    // Load the library containing the 'coded' functionObject
+    libs            ("libutilityFunctionObjects.so");
+
+    codeInclude
+    #{
+        #include "volFields.H"
+    #};
+
+    codeEnd
+    #{
+        // Lookup U
+        Info<< "Looking up field U\n" << endl;
+        const volVectorField& U = mesh().lookupObject<volVectorField>("U");
+
+        Info<< "Reading inlet velocity uInfX\n" << endl;
+
+        scalar ULeft = 0.0;
+        label leftI = mesh().boundaryMesh().findIndex("left");
+        const fvPatchVectorField& fvp = U.boundaryField()[leftI];
+        if (fvp.size())
+        {
+            ULeft = fvp[0].x();
+        }
+        reduce(ULeft, maxOp<scalar>());
+
+        dimensionedScalar uInfX
+        (
+            "uInfx",
+            dimensionSet(0, 1, -1, 0, 0),
+            ULeft
+        );
+
+        Info << "U at inlet = " << uInfX.value() << " m/s" << endl;
+
+        scalar magCylinder = 0.0;
+        label cylI = mesh().boundaryMesh().findIndex("cylinder");
+        const fvPatchVectorField& cylFvp = mesh().C().boundaryField()[cylI];
+        if (cylFvp.size())
+        {
+            magCylinder = mag(cylFvp[0]);
+        }
+        reduce(magCylinder, maxOp<scalar>());
+
+        dimensionedScalar radius
+        (
+            "radius",
+            dimensionSet(0, 1, 0, 0, 0),
+            magCylinder
+        );
+
+        Info << "Cylinder radius = " << radius.value() << " m" << endl;
+
+        volVectorField UA
+        (
+            IOobject
+            (
+                "UA",
+                mesh().time().name(),
+                U.mesh(),
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
+            U
+        );
+
+        Info<< "\nEvaluating analytical solution" << endl;
+
+        const volVectorField& centres = UA.mesh().C();
+        volScalarField magCentres(mag(centres));
+        volScalarField theta(acos((centres & vector(1,0,0))/magCentres));
+
+        volVectorField cs2theta
+        (
+            cos(2*theta)*vector(1,0,0)
+          + sin(2*theta)*vector(0,1,0)
+        );
+
+        UA = uInfX*(dimensionedVector(vector(1,0,0))
+          - pow((radius/magCentres),2)*cs2theta);
+
+        // Force writing of UA (since time has not changed)
+        UA.write();
+
+        volScalarField error("error", mag(U-UA)/mag(UA));
+
+        Info<<"Writing relative error in U to " << error.objectPath()
+            << endl;
+
+        error.write();
+    #};
+}
+
+// ************************************************************************* //

@@ -46,34 +46,5 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-functions
-{
-    #includeFunc fieldAverage(U, p, prime2Mean = yes)
-
-    #includeFunc uniform
-    (
-        fieldType = volScalarField,
-        field = half,
-        dimensions = [],
-        value = 0.5
-    )
-
-    #includeFunc mag(UPrime2Mean)
-
-    #includeFunc multiply(half, mag(UPrime2Mean), result = k)
-
-    #includeFunc graphLayerAverage
-    (
-        name = layerAverage,
-        patches = (bottomWall),
-        axis = y,
-        symmetric = yes,
-        pMean,
-        pPrime2Mean,
-        UMean,
-        UPrime2Mean,
-        k
-    );
-}
 
 // ************************************************************************* //

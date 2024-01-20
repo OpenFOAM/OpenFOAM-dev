@@ -52,27 +52,5 @@ maxCo           5;
 maxAlphaCo      5;
 maxDeltaT       0.002;
 
-functions
-{
-    forces
-    {
-        type            forces;
-        libs            ("libforces.so");
-        patches         (hull);
-        log             on;
-        writeControl    timeStep;
-        writeInterval   1;
-        CofR            (0 0 0);
-    }
-
-    rigidBodyState
-    {
-        type           rigidBodyState;
-        libs           ("librigidBodyState.so");
-        angleUnits     degrees;
-    }
-
-    #includeFunc surfaces
-}
 
 // ************************************************************************* //

@@ -52,34 +52,6 @@ maxCo           10;
 maxAlphaCo      5;
 maxDeltaT       0.01;
 
-functions
-{
-    surfaces
-    {
-        type            surfaces;
-        libs            ("libsampling.so");
-
-        writeControl    adjustableRunTime;
-        writeInterval   0.01;
-
-        surfaceFormat   vtk;
-        writeFormat     binary;
-        fields          (p_rgh U);
-
-        interpolationScheme cellPoint;
-
-        surfaces
-        (
-            interface
-            {
-                type            isoSurface;
-                isoField        alpha.water;
-                isoValue        0.5;
-                interpolate     true;
-            }
-        );
-    }
-}
 
 
 // ************************************************************************* //

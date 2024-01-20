@@ -45,11 +45,5 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-functions
-{
-    #includeFunc residuals(p, sigma)
-    #includeFunc graphCell(name=graph, start=(0 0 0), end=(0 1 0), U)
-    #includeFunc probes(name=probes, points=((0 1 0)), U)
-}
 
 // ************************************************************************* //

@@ -1,0 +1,162 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format          ascii;
+    class           dictionary;
+    location        "system";
+    object          functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+writeWallBoilingProperties
+{
+    type            wallBoilingProperties;
+    libs            ( "libmultiphaseEulerFunctionObjects.so" );
+    writeControl    writeTime;
+    phase           liquid;
+}
+volumeDensity.diameter.bubbles
+{
+    type            populationBalanceSizeDistribution;
+    libs            ( "libmultiphaseEulerFunctionObjects.so" );
+    writeControl    runTime;
+    writeInterval   0.5;
+    setFormat       raw;
+    log             yes;
+    functionType    volumeConcentration;
+    coordinateType  diameter;
+    select          cellZone;
+    cellZone        x349;
+    populationBalance bubbles;
+}
+volumeDensity_bulk.diameter.bubbles
+{
+    type            populationBalanceSizeDistribution;
+    libs            ( "libmultiphaseEulerFunctionObjects.so" );
+    writeControl    runTime;
+    writeInterval   0.5;
+    setFormat       raw;
+    log             yes;
+    functionType    volumeConcentration;
+    coordinateType  diameter;
+    select          cellZone;
+    cellZone        x349_bulk;
+    populationBalance bubbles;
+}
+volumeDensity_wall.diameter.bubbles
+{
+    type            populationBalanceSizeDistribution;
+    libs            ( "libmultiphaseEulerFunctionObjects.so" );
+    writeControl    runTime;
+    writeInterval   0.5;
+    setFormat       raw;
+    log             yes;
+    functionType    volumeConcentration;
+    coordinateType  diameter;
+    select          cellZone;
+    cellZone        x349_wall;
+    populationBalance bubbles;
+}
+outflow
+{
+    type            surfaceFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           outlet;
+    operation       sum;
+    fields          ( alphaRhoPhi.gas alphaRhoPhi.gas2 alphaRhoPhi.liquid );
+}
+inflow
+{
+    type            surfaceFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           inlet;
+    operation       sum;
+    fields          ( alphaRhoPhi.gas alphaRhoPhi.gas2 alphaRhoPhi.liquid );
+}
+outletGas
+{
+    type            surfaceFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           outlet;
+    operation       sum;
+    weightField     alphaRhoPhi.gas;
+    fields          ( h.gas );
+}
+outletGas2
+{
+    type            surfaceFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           outlet;
+    operation       sum;
+    weightField     alphaRhoPhi.gas2;
+    fields          ( h.gas2 );
+}
+outletLiquid
+{
+    type            surfaceFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           outlet;
+    operation       sum;
+    weightField     alphaRhoPhi.liquid;
+    fields          ( h.liquid );
+}
+inletGas
+{
+    type            surfaceFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           inlet;
+    operation       sum;
+    weightField     alphaRhoPhi.gas;
+    fields          ( h.gas );
+}
+inletGas2
+{
+    type            surfaceFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           inlet;
+    operation       sum;
+    weightField     alphaRhoPhi.gas2;
+    fields          ( h.gas2 );
+}
+inletLiquid
+{
+    type            surfaceFieldValue;
+    libs            ( "libfieldFunctionObjects.so" );
+    log             yes;
+    writeFields     false;
+    select          patch;
+    patch           inlet;
+    operation       sum;
+    weightField     alphaRhoPhi.liquid;
+    fields          ( h.liquid );
+}
+#includeFunc writeObjects(d.gas, d.gas2)
+
+// ************************************************************************* //

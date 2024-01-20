@@ -47,27 +47,6 @@ timePrecision   6;
 runTimeModifiable yes;
 
 
-functions
-{
-    surfaceFieldValue1
-    {
-        type            surfaceFieldValue;
-        libs            ("libfieldFunctionObjects.so");
-        enabled         yes;
-        writeControl    writeTime;
-        log             yes;
-        writeFields     no;
-        select          patch;
-        patch           outlet;
-        operation       average;
-        weightField     phi;
-        fields
-        (
-            H2O
-            T
-        );
-    }
-}
 
 
 // ************************************************************************* //

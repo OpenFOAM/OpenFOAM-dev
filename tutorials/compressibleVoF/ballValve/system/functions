@@ -1,0 +1,50 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc cutPlaneSurface
+(
+    point=(0 0 0),
+    normal=(0 0 1),
+    interpolate=no,
+    fields=(alpha.water p_rgh p T U k epsilon)
+)
+
+#includeFunc isoSurface
+(
+    isoField=alpha.water,
+    isoValue=0.5,
+    writeEmpty=yes
+)
+
+#includeFunc patchSurface(patch=".*(Walls|NonCouple)")
+
+cavitationVolume
+{
+    type            volFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+
+    writeControl    timeStep;
+    writeInterval   1;
+    writeFields     false;
+
+    select          all;
+
+    operation       volIntegrate;
+
+    fields          (alpha.vapour);
+}
+
+// ************************************************************************* //

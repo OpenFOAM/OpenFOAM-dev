@@ -50,10 +50,6 @@ maxCo           0.1;
 
 runTimeModifiable yes;
 
-functions
-{
-    #includeFunc Qdot
-}
 
 
 // ************************************************************************* //

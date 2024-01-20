@@ -52,14 +52,5 @@ maxCo           0.5;
 maxAlphaCo      0.5;
 maxDeltaT       1;
 
-functions0
-{
-    rigidBodyState
-    {
-        type           rigidBodyState;
-        libs           ("librigidBodyState.so");
-        angleUnits     degrees;
-    }
-}
 
 // ************************************************************************* //

@@ -1,0 +1,60 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc    residuals(p_rgh, k.water, omega.water)
+#includeFunc    timeStep
+#includeFunc    writeObjects(d.air1)
+#includeFunc    writeObjects(d.air2)
+#includeFunc    phaseForces(phase=water)
+#includeFunc    graphUniform
+(
+    name=graph,
+    start=(0 0 0.89),
+    end=(0.025 0 0.89),
+    nPoints=100,
+    fields=
+    (
+        alpha.air1
+        alpha.air2
+        alpha.bubbles
+        liftForce.water
+        wallLubricationForce.water
+        turbulentDispersionForce.water
+    )
+)
+
+#includeFunc populationBalanceSizeDistribution
+(
+    name=probabilityDensity.injection,
+    populationBalance=bubbles,
+    select=cellZone,
+    cellZone=injection,
+    functionType=volumeDensity,
+    coordinateType=diameter,
+    normalise=yes
+)
+
+#includeFunc populationBalanceSizeDistribution
+(
+    name=probabilityDensity.outlet,
+    populationBalance=bubbles,
+    select=cellZone,
+    cellZone=outlet,
+    functionType=volumeDensity,
+    coordinateType=diameter,
+    normalise=yes
+)
+
+// ************************************************************************* //

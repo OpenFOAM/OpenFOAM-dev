@@ -50,16 +50,6 @@ adjustTimeStep  yes;
 
 maxCo           0.5;
 
-functions
-{
-    #includeFunc patchFlowRate(name=inletFlowRate, patch=inlet)
-    #includeFunc patchFlowRate(name=lowerOutletFlowRate, patch=lowerOutlet)
-    #includeFunc patchFlowRate(name=upperOutletFlowRate, patch=upperOutlet)
-    #includeFunc scalarTransport(s)
-    #includeFunc reconstruct(phi)
-    #includeFunc streamlinesPatch(patch=inlet, nPoints=100, U=reconstruct(phi))
-    #includeFunc wallsSurface
-}
 
 
 // ************************************************************************* //

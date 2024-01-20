@@ -51,54 +51,6 @@ maxCo           0.8;
 
 maxDeltaT       1e-4;
 
-functions
-{
-    #includeFunc yPlus(phase=liquid)
-
-    #includeFunc cellMin
-    (
-        name=min,
-        alpha.liquid,
-        alpha.gas,
-        p,
-        p_rgh,
-        U.liquid,
-        U.gas,
-        T.gas,
-        T.liquid
-    )
-
-    #includeFunc cellMax
-    (
-        name=max,
-        alpha.liquid,
-        alpha.gas,
-        p,
-        p_rgh,
-        U.liquid,
-        U.gas,
-        T.gas,
-        T.liquid
-    )
-
-    #includeFunc graphPatchCutLayerAverage
-    (
-        name=hydrofoilLowerPressure,
-        patch=hydrofoilLower,
-        direction=(0.15 -0.016 0),
-        nPoints=100,
-        p
-    )
-
-    #includeFunc graphPatchCutLayerAverage
-    (
-        name=hydrofoilUpperPressure,
-        patch=hydrofoilUpper,
-        direction=(0.15 -0.016 0),
-        nPoints=100,
-        p
-    )
-}
 
 
 // ************************************************************************* //

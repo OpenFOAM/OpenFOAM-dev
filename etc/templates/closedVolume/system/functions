@@ -9,25 +9,12 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      postProcessingDict;
+    object      functions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-functions
-{
-    turbulenceFields1
-    {
-        type            turbulenceFields;
-        libs            ("libfieldFunctionObjects.so");
-        enabled         true;
-        writeControl    timeStep;
-        writeInterval   1;
+// adjustTimeStep  yes;
 
-        fields
-        (
-            R
-        );
-    }
-}
+// maxCo           1;
 
 // ************************************************************************* //

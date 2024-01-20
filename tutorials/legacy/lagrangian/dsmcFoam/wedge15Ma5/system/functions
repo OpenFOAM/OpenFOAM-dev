@@ -1,0 +1,54 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+fieldAverage1
+{
+    #includeEtc "caseDicts/functions/fields/fieldAverage.cfg"
+
+    fields
+    (
+        rhoN
+        rhoM
+        dsmcRhoN
+        momentum
+        linearKE
+        internalE
+        iDof
+        q
+        fD
+    );
+}
+
+dsmcFields1
+{
+    type            dsmcFields;
+    libs            ("liblagrangianFunctionObjects.so");
+    writeControl    writeTime;
+}
+
+forces1
+{
+    type            forces;
+    libs            ("libforces.so");
+    writeControl    writeTime;
+    patches         (obstacle);
+    directForceDensity true;
+    fDName          fDMean;
+    CofR            (0 0 0);
+    log             on;
+}
+
+// ************************************************************************* //

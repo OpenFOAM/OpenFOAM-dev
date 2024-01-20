@@ -52,19 +52,6 @@ maxCo           25;
 maxAlphaCo      15;
 maxDeltaT       0.01;
 
-functions
-{
-    forces
-    {
-        type            forces;
-        libs            ("libforces.so");
-        patches         (hull);
-        log             on;
-        writeControl    timeStep;
-        writeInterval   1;
-        CofR            (2.929541 0 0.2);
-    }
-}
 
 
 // ************************************************************************* //

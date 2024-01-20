@@ -1,0 +1,62 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc yPlus(phase=liquid)
+
+#includeFunc cellMin
+(
+    name=min,
+    alpha.liquid,
+    alpha.gas,
+    p,
+    p_rgh,
+    U.liquid,
+    U.gas,
+    T.gas,
+    T.liquid
+)
+
+#includeFunc cellMax
+(
+    name=max,
+    alpha.liquid,
+    alpha.gas,
+    p,
+    p_rgh,
+    U.liquid,
+    U.gas,
+    T.gas,
+    T.liquid
+)
+
+#includeFunc graphPatchCutLayerAverage
+(
+    name=hydrofoilLowerPressure,
+    patch=hydrofoilLower,
+    direction=(0.15 -0.016 0),
+    nPoints=100,
+    p
+)
+
+#includeFunc graphPatchCutLayerAverage
+(
+    name=hydrofoilUpperPressure,
+    patch=hydrofoilUpper,
+    direction=(0.15 -0.016 0),
+    nPoints=100,
+    p
+)
+
+// ************************************************************************* //

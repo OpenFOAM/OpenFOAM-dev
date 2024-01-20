@@ -1,0 +1,45 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc graphCell
+(
+    name=graph,
+    start=(0 0 1e-3),
+    end=(0.44 0 1e-3),
+    fields=(TiCl4.vapour O2.vapour Cl2.vapour alpha.particles)
+)
+
+#includeFunc populationBalanceSizeDistribution
+(
+    name=numberDensity,
+    populationBalance=aggregates,
+    select=cellZone,
+    cellZone=outlet,
+    functionType=numberDensity,
+    coordinateType=projectedAreaDiameter,
+    allCoordinates=yes,
+    normalise=yes,
+    logTransform=yes
+)
+
+#includeFunc writeObjects
+(
+    d.particles,
+    phaseTransfer:dmidtf.TiO2.particles_vapour,
+    phaseTransfer:dmidtf.TiO2_s.particles_vapour
+)
+
+// ************************************************************************* //

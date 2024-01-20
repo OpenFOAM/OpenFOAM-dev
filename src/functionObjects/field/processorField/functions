@@ -1,0 +1,31 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+processorField1
+{
+    // Type of functionObject
+    type            processorField;
+
+    // Where to load it from (if not already in solver)
+    libs            ("libfieldFunctionObjects.so");
+
+    // Function object enabled flag
+    enabled         true;
+
+    // When to output the average fields
+    writeControl    writeTime;
+}
+
+// ************************************************************************* //

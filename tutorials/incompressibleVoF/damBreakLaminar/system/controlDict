@@ -53,10 +53,5 @@ maxAlphaCo      1;
 
 maxDeltaT       1;
 
-functions
-{
-    #includeFunc phaseScalarTransport(field=tracer.water)
-    #includeFunc phaseScalarTransport(field=tracer.air, residualAlpha=1e-6)
-}
 
 // ************************************************************************* //

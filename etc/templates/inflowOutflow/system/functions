@@ -9,26 +9,12 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      postProcessingDict;
+    object      functions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-functions
-{
-    processorField1
-    {
-        // Type of functionObject
-        type            processorField;
+// adjustTimeStep  yes;
 
-        // Where to load it from (if not already in solver)
-        libs            ("libfieldFunctionObjects.so");
-
-        // Function object enabled flag
-        enabled         true;
-
-        // When to output the average fields
-        writeControl    writeTime;
-    }
-}
+// maxCo           1;
 
 // ************************************************************************* //

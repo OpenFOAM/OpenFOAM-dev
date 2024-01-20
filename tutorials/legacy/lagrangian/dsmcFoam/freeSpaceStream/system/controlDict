@@ -46,33 +46,5 @@ runTimeModifiable true;
 
 adjustTimeStep  no;
 
-functions
-{
-    fieldAverage1
-    {
-        #includeEtc "caseDicts/functions/fields/fieldAverage.cfg"
-        restartOnOutput   off;
-
-        fields
-        (
-            rhoN
-            rhoM
-            dsmcRhoN
-            momentum
-            linearKE
-            internalE
-            iDof
-            q
-            fD
-        );
-    }
-
-    dsmcFields1
-    {
-        type            dsmcFields;
-        libs            ("liblagrangianFunctionObjects.so");
-        writeControl    writeTime;
-    }
-}
 
 // ************************************************************************* //

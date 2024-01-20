@@ -50,25 +50,5 @@ adjustTimeStep  no;
 
 maxCo           0.5;
 
-functions
-{
-    probes
-    {
-        libs            ("libsampling.so");
-        type            probes;
-        name            probes;
-        writeControl    timeStep;
-        writeInterval   1;
-        fields          (p);
-        probeLocations
-        (
-            ( -0.045  0     0     )
-            ( -0.045  0.020 0     )
-            ( -0.010  0     0     )
-            (  0.0125 0     0     )
-            (  0.0125 0.020 0     )
-        );
-    }
-}
 
 // ************************************************************************* //

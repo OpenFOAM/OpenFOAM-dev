@@ -1,0 +1,23 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc volIntegrate(cloud:alpha)
+#includeFunc patchFlowRate(patch=lowerInlet, cloud:massFlux)
+#includeFunc patchFlowRate(patch=upperInlet, cloud:massFlux)
+#includeFunc faceZoneFlowRate(faceZone=mid, cloud:massFlux)
+#includeFunc patchFlowRate(patch=outlet, cloud:massFlux)
+
+// ************************************************************************* //

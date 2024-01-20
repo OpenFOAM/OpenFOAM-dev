@@ -1,0 +1,25 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc patchFlowRate(name=inletFlowRate, patch=inlet)
+#includeFunc patchFlowRate(name=lowerOutletFlowRate, patch=lowerOutlet)
+#includeFunc patchFlowRate(name=upperOutletFlowRate, patch=upperOutlet)
+#includeFunc scalarTransport(s)
+#includeFunc reconstruct(phi)
+#includeFunc streamlinesPatch(patch=inlet, nPoints=100, U=reconstruct(phi))
+#includeFunc wallsSurface
+
+// ************************************************************************* //

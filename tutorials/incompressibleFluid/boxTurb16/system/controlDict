@@ -48,9 +48,5 @@ runTimeModifiable true;
 
 graphFormat     raw;
 
-functions
-{
-    #includeFunc enstrophy(executeAtStart=no);
-}
 
 // ************************************************************************* //

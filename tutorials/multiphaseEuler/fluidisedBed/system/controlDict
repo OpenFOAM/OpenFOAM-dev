@@ -52,10 +52,6 @@ maxCo           2;
 
 maxDeltaT       0.01;
 
-functions
-{
-    #includeFunc fieldAverage(U.particles, U.air, alpha.particles, p)
-}
 
 
 // ************************************************************************* //

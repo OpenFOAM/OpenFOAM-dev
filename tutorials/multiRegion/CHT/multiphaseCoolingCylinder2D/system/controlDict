@@ -57,24 +57,4 @@ maxDi           200;
 
 maxDeltaT       1;
 
-functions
-{
-    #includeFunc patchAverage
-    (
-        name=cylinderToil,
-        region=fluid,
-        patch=fluid_to_solid,
-        field=T.oil
-    )
-
-    #includeFunc patchAverage
-    (
-        name=cylinderTwater,
-        region=fluid,
-        patch=fluid_to_solid,
-        field=T.water
-    )
-}
-
-
 // ************************************************************************* //

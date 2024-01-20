@@ -52,10 +52,5 @@ maxCo           0.5;
 
 maxDeltaT       1;
 
-functions
-{
-    #includeFunc continuity
-    #includeFunc plot
-}
 
 // ************************************************************************* //

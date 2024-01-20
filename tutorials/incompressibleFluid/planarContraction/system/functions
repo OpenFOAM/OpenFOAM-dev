@@ -1,0 +1,20 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc graphCell(name=lineA, start=(-0.0016 0 0), end=(-0.0016 0.0128 0), U)
+#includeFunc graphCell(name=lineB, start=(-0.0048 0 0), end=(-0.0048 0.0128 0), U)
+#includeFunc graphCell(name=lineC, start=(-0.0032 0 0), end=(-0.0032 0.0128 0), U)
+
+// ************************************************************************* //

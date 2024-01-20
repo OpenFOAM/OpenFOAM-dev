@@ -53,9 +53,5 @@ maxAlphaCo      0.5;
 
 maxDeltaT       1;
 
-functions
-{
-    #includeFunc phaseMap
-}
 
 // ************************************************************************* //

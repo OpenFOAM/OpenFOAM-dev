@@ -1,0 +1,51 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+probes
+{
+    // Where to load it from
+    libs            ("libsampling.so");
+
+    type            probes;
+
+    // Name of the directory for probe data
+    name            probes;
+
+    // Write at same frequency as fields
+    writeControl    writeTime;
+    writeInterval   1;
+
+    // Fields to be probed
+    fields
+    (
+        p U
+    );
+
+    probeLocations
+    (
+        ( 1e-06 0 0.01 )        // at inlet
+        (0.21 -0.20999 0.01)  // at outlet1
+        (0.21 0.20999 0.01)   // at outlet2
+        (0.21 0 0.01)         // at central block
+    );
+}
+
+#includeFunc patchFlowRate(patch=outlet1)
+#includeFunc faceZoneFlowRate(faceZone=fz1)
+#includeFunc patchFlowRate(patch=outlet2)
+#includeFunc faceZoneFlowRate(faceZone=fz2)
+
+// ************************************************************************* //

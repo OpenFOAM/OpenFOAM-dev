@@ -50,41 +50,5 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-functions
-{
-    #includeFunc scalarTransport(T, diffusivity=constant, D = 0.01)
-
-    mixingQualityCheck
-    {
-        type coded;
-
-        // Load the library containing the 'coded' functionObject
-        libs            ("libutilityFunctionObjects.so");
-
-        codeInclude
-        #{
-            #include "volFields.H"
-        #};
-
-        codeExecute
-        #{
-            const volScalarField& T
-            (
-                mesh().lookupObject<volScalarField>("T")
-            );
-
-            const scalar maxT = max(T).value();
-            const scalar meanT = T.weightedAverage(mesh().V()).value();
-
-            const scalar mixingQuality = meanT/maxT;
-            Info << "mixingQuality = " << mixingQuality << endl;
-
-            if (mixingQuality > 0.9)
-            {
-                const_cast<Time&>(mesh().time()).writeAndEnd();
-            }
-        #};
-    }
-}
 
 // ************************************************************************* //

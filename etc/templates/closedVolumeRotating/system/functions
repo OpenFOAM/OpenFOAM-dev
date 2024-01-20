@@ -9,22 +9,12 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      postProcessingDict;
+    object      functions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-functions
-{
-    cloudInfo1
-    {
-        type            cloudInfo;
-        libs            ("liblagrangianFunctionObjects.so");
-        enabled         true;
-        writeControl    timeStep;
-        writeInterval   1;
+// adjustTimeStep  yes;
 
-        clouds          (myCloud1);
-    }
-}
+// maxCo           1;
 
 // ************************************************************************* //

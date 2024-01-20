@@ -1,0 +1,50 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+fieldCoordinateSystemTransform1
+{
+    // Type of functionObject
+    type            fieldCoordinateSystemTransform;
+
+    // Where to load it from (if not already in solver)
+    libs            ("libfieldFunctionObjects.so");
+
+    // Function object enabled flag
+    enabled         true;
+
+    // When to output the average fields
+    writeControl    writeTime;
+
+    // Fields to be transformed - runTime modifiable
+    fields
+    (
+        U
+        UMean
+        UPrime2Mean
+    );
+
+    coordinateSystem
+    {
+        origin  (0 0 0);
+        coordinateRotation
+        {
+            type    axesRotation;
+            e1      (1  0.15  0);
+            e3      (0  0    -1);
+        }
+    }
+}
+
+// ************************************************************************* //

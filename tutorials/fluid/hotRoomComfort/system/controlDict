@@ -46,32 +46,5 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-functions
-{
-    age
-    {
-        libs            ("libfieldFunctionObjects.so");
-        type            age;
-
-        diffusion       on;
-
-        writeControl    writeTime;
-        executeControl  writeTime;
-    }
-
-    comfort
-    {
-        libs            ("libfieldFunctionObjects.so");
-        type            comfort;
-
-        clothing        0.5;
-        metabolicRate   1.2;
-        extWork         0;
-        relHumidity     60;
-
-        writeControl    writeTime;
-        executeControl  writeTime;
-    }
-}
 
 // ************************************************************************* //

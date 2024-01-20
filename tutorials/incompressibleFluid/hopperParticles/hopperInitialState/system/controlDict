@@ -48,13 +48,5 @@ timePrecision   6;
 
 runTimeModifiable yes;
 
-functions
-{
-    clouds
-    {
-        type            fvModel;
-        #includeModel clouds(name=fvModel)
-    }
-}
 
 // ************************************************************************* //

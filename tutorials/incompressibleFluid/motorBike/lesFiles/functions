@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+cacheTemporaryObjects
+(
+    SpalartAllmarasDDES:LESRegion
+);
+
+writeCachedObjects
+{
+    type        writeObjects;
+
+    libs        ("libutilityFunctionObjects.so");
+
+    writeControl writeTime;
+    writeOption anyWrite;
+
+    objects
+    (
+        SpalartAllmarasDDES:LESRegion
+    );
+}
+
+#include "cutPlane"
+#include "streamlines"
+#include "forceCoeffs"
+
+// ************************************************************************* //

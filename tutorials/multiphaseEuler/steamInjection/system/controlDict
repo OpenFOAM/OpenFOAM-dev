@@ -52,11 +52,6 @@ maxCo           0.25;
 
 maxDeltaT       1e-2;
 
-functions
-{
-    #includeFunc cellMin(T.steam,T.water,p)
-    #includeFunc cellMax(T.steam,T.water,p)
-}
 
 
 // ************************************************************************* //

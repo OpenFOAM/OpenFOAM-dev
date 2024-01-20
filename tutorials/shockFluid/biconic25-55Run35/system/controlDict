@@ -48,10 +48,5 @@ runTimeModifiable true;
 
 adjustTimeStep  no;
 
-functions
-{
-    #includeFunc wallHeatFlux
-    #includeFunc sample
-}
 
 // ************************************************************************* //

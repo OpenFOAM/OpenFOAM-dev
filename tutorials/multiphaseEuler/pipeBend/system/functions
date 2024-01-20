@@ -1,0 +1,62 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc writeObjects(d.particles)
+
+#includeFunc populationBalanceSizeDistribution
+(
+    name=probabilityDensity.afterBend_1d,
+    populationBalance=agglomerates,
+    select=cellZone,
+    cellZone=afterBend_1d,
+    functionType=volumeDensity,
+    coordinateType=diameter,
+    normalise=yes
+)
+
+#includeFunc populationBalanceSizeDistribution
+(
+    name=probabilityDensity.afterBend_5d,
+    populationBalance=agglomerates,
+    select=cellZone,
+    cellZone=afterBend_5d,
+    functionType=volumeDensity,
+    coordinateType=diameter,
+    normalise=yes
+)
+
+#includeFunc populationBalanceSizeDistribution
+(
+    name=probabilityDensity.afterBend_9d,
+    populationBalance=agglomerates,
+    select=cellZone,
+    cellZone=afterBend_9d,
+    functionType=volumeDensity,
+    coordinateType=diameter,
+    normalise=yes
+)
+
+#includeFunc populationBalanceSizeDistribution
+(
+    name=probabilityDensity.beforeBend_1d,
+    populationBalance=agglomerates,
+    select=cellZone,
+    cellZone=beforeBend_1d,
+    functionType=volumeDensity,
+    coordinateType=diameter,
+    normalise=yes
+)
+
+// ************************************************************************* //

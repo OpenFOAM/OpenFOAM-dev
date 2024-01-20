@@ -45,10 +45,5 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-functions
-{
-    #includeFunc MachNo
-    #includeFunc residuals
-}
 
 // ************************************************************************* //

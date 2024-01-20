@@ -46,13 +46,5 @@ timePrecision   6;
 
 runTimeModifiable yes;
 
-functions
-{
-    #includeFunc volIntegrate(cloud:alpha)
-    #includeFunc patchFlowRate(patch=lowerInlet, cloud:massFlux)
-    #includeFunc patchFlowRate(patch=upperInlet, cloud:massFlux)
-    #includeFunc faceZoneFlowRate(faceZone=mid, cloud:massFlux)
-    #includeFunc patchFlowRate(patch=outlet, cloud:massFlux)
-}
 
 // ************************************************************************* //

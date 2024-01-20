@@ -52,38 +52,5 @@ maxCo           0.4;
 
 maxDeltaT       1;
 
-functions
-{
-    forces
-    {
-        type            forces;
-        libs            ("libforces.so");
-        writeControl    writeTime;
-        patches         (floatingObject);
-        rho             rhoInf;
-        log             yes;
-        rhoInf          1000;
-        CofR            (0 0 0);
-    }
-
-    poolHeight
-    {
-        type            surfaceFieldValue;
-        libs            ("libfieldFunctionObjects.so");
-        writeControl    timeStep;
-        writeInterval   1;
-        log             yes;
-        writeTotalArea  no;
-        writeFields     no;
-        select          faceZone;
-        faceZone        f0;
-        operation       areaAverage;
-        fields
-        (
-            zeta
-        );
-
-    }
-};
 
 // ************************************************************************* //

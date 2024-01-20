@@ -54,15 +54,5 @@ maxAlphaCo      1;
 
 maxDeltaT       1;
 
-functions
-{
-    interfaceHeight1
-    {
-        type            interfaceHeight;
-        libs            ("libfieldFunctionObjects.so");
-        locations       ((300 0 0) (450 0 0) (600 0 0));
-        alpha           alpha.water;
-    }
-}
 
 // ************************************************************************* //

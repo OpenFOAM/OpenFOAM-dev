@@ -52,25 +52,5 @@ maxCo           0.5;
 
 maxDeltaT       1;
 
-functions
-{
-    #includeFunc populationBalanceSizeDistribution
-    (
-        name=numberDensity,
-        populationBalance=bubbles,
-        functionType=numberDensity,
-        coordinateType=diameter,
-        normalise=yes
-    )
-
-    #includeFunc populationBalanceSizeDistribution
-    (
-        name=volumeDensity,
-        populationBalance=bubbles,
-        functionType=volumeDensity,
-        coordinateType=diameter,
-        normalise=yes
-    )
-}
 
 // ************************************************************************* //

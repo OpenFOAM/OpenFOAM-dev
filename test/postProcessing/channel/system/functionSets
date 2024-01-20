@@ -1,0 +1,397 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+combustionFunctions
+{
+    // Not possible to test here as it needs a case with a combustion model
+    //#includeFunc Qdot
+
+    // Not possible to test here as it needs a XiFoam case
+    //#includeFunc XiReactionRate
+}
+
+controlFunctions
+{
+    #includeFunc stopAtClockTime(stopTime=3600)
+
+    #includeFunc stopAtFile
+
+    #includeFunc time
+
+    #includeFunc writeObjects(kEpsilon:G)
+}
+
+fieldsFunctions
+{
+    #includeFunc age
+
+    #includeFunc components(U)
+
+    #includeFunc CourantNo
+
+    #includeFunc ddt(p)
+
+    #includeFunc div(phi)
+
+    #includeFunc enstrophy
+
+    // !!! Takes a list of fields, not a single field like most others. It has
+    // an inconsistent name convention; i.e., "<fieldName>Mean", rather than
+    // "mean(<fieldName>)". It also does both "mean" and "prime2Mean". Consider
+    // fixing the output field naming and splitting into separate
+    // configurations for the different outputs.
+    #includeFunc fieldAverage(U, k, epsilon)
+
+    #includeFunc flowType
+
+    #includeFunc grad(p)
+
+    #includeFunc Lambda2
+
+    #includeFunc MachNo
+
+    #includeFunc mag(U)
+
+    #includeFunc magSqr(U)
+
+    #includeFunc PecletNo
+
+    // Not possible to test here as it needs a multiphase case
+    //#includeFunc phaseMap
+
+    #includeFunc Q
+
+    #includeFunc randomise(U, magPerturbation=0.1)
+
+    #includeFunc reconstruct(phi)
+
+    #includeFunc scale(age, scale=0.1)
+
+    #includeFunc shearStress
+
+    #includeFunc streamFunction
+
+    #includeFunc surfaceInterpolate(rho, result=rhof)
+
+    #includeFunc totalEnthalpy
+
+    #includeFunc turbulenceFields(nuEff, R, devTau)
+
+    #includeFunc turbulenceIntensity
+
+    #includeFunc vorticity
+
+    #includeFunc wallHeatFlux
+
+    #includeFunc wallHeatTransferCoeff(rho=1.225, Cp=1005, Pr=0.7, Prt=0.9)
+
+    #includeFunc wallShearStress
+
+    #includeFunc writeCellCentres
+
+    #includeFunc writeCellVolumes
+
+    // !!! Only writes the internal parts of vol fields. The name should really
+    // be less general to reflect this; e.g., writeInternalFieldsVTK. However,
+    // a better change would be further library-ise the internals of foamToVTK
+    // and incorporate it into this object so that it writes patches, surface
+    // fields, point fields, lagrangian, etc... Then we could deprecate
+    // foamToVTK in favour of this function.
+    #includeFunc writeVTK(U, p)
+
+    #includeFunc yPlus
+}
+
+fieldsOperationsFunctions
+{
+    // Operation sequence to compute normalised direction of velocity
+    // perturbation from mean
+    #includeFunc subtract(U, UMean, result=u)
+    #includeFunc uniform
+    (
+        fieldType=volScalarField,
+        field=mag(smallU),
+        dimensions=[0 1 -1 0 0 0 0],
+        value=1e-16
+    )
+    #includeFunc add(mag(U), mag(smallU), result=stabilise(mag(U)))
+    #includeFunc divide(u, stabilise(mag(U)), result=uFrac)
+
+    // Operation to compute a tensor by doing an outer vector product
+    #includeFunc multiply(U, u)
+
+    // Operation sequence to compute the log of temperature divided by an
+    // ambient value
+    #includeFunc uniform
+    (
+        fieldType=volScalarField,
+        field=Ta,
+        dimensions=[0 0 0 1 0 0 0],
+        value=297
+    )
+    #includeFunc divide(T, Ta)
+    #includeFunc log(divide(T,Ta))
+}
+
+forcesFunctions
+{
+    #includeFunc forcesIncompressible
+    (
+        patches=(walls),
+        rhoInf=1.225,
+        CofR=(0 0 0),
+        pitchAxis=(0 1 0)
+    )
+
+    #includeFunc forceCoeffsIncompressible
+    (
+        patches=(walls),
+        magUInf=20,
+        lRef=1,
+        Aref=1,
+        CofR=(0 0 0),
+        liftDir=(0 0 1),
+        dragDir=(1 0 0),
+        pitchAxis=(0 1 0)
+    )
+
+    #includeFunc forcesCompressible
+    (
+        patches=(walls),
+        CofR=(0 0 0),
+        pitchAxis=(0 1 0)
+    )
+
+    #includeFunc forceCoeffsCompressible
+    (
+        patches=(walls),
+        magUInf=20,
+        rhoInf=1.225,
+        lRef=1,
+        Aref=1,
+        CofR=(0 0 0),
+        liftDir=(0 0 1),
+        dragDir=(1 0 0),
+        pitchAxis=(0 1 0)
+    )
+
+    // Not possible to test here as it needs a multiphase Euler-Euler case
+    //#includeFunc phaseForces(phase=air)
+}
+
+graphsFunctions
+{
+    #includeFunc graphUniform
+    (
+        start=(-0.5 -0.5 0),
+        end=(0.5 0.5 0),
+        nPoints=100,
+        fields=(p U)
+    )
+
+    #includeFunc graphCell
+    (
+        start=(-0.500001 -0.500001 0),
+        end=(0.500001 0.500001 0),
+        fields=(p U)
+    )
+
+    #includeFunc graphLayerAverage
+    (
+        patches=(inlet),
+        axis=x,
+        fields=(p U)
+    )
+}
+
+lagrangianFunctions
+{
+    // Not possible to test here as it needs a DSMC case
+    //#includeFunc dsmcFields
+}
+
+numericalFunctions
+{
+    #includeFunc residuals(p, U, h, k, epsilon)
+
+    #includeFunc timeStep
+}
+
+pressureFunctions
+{
+    #includeFunc divide(p, rho, result=kinematic(p))
+
+    #includeFunc staticPressureIncompressible(kinematic(p), rhoInf=1.2)
+
+    #includeFunc totalPressureIncompressible(kinematic(p), rhoInf=1.2)
+
+    #includeFunc totalPressureCompressible
+}
+
+probesFunctions
+{
+    #includeFunc probes(points=((-0.2 -0.2 0) (0 0 0) (0.2 0.2 0)), p, U, T)
+
+    #includeFunc internalProbes(points=((-0.2 -0.2 0) (0.2 0.2 0)), p, U, T)
+
+    #includeFunc boundaryProbes
+    (
+        points=((-0.2 -0.2 -0.04) (0.2 0.2 -0.04)),
+        maxDistance=0.02,
+        p,
+        U,
+        T
+    )
+
+    #includeFunc uniform
+    (
+        fieldType=volScalarField,
+        field=alpha.dummy,
+        dimensions=[],
+        value=0.2
+    )
+
+    #includeFunc interfaceHeight
+    (
+        alpha=alpha.dummy,
+        points=((-0.2 -0.2 0) (0.2 0.2 0))
+    )
+}
+
+solversFunctions
+{
+    #includeFunc scalarTransport(s, schemesField=h)
+
+    #includeFunc phaseScalarTransport
+    (
+        s.dummy,
+        solveAlphaPhi=yes,
+        p=p_rgh,
+        rho=rho,
+        schemesField=h
+    )
+
+    // Not possible to test here as not compatible with compressible solvers
+    //#includeFunc particles
+}
+
+streamlinesFunctions
+{
+    #includeFunc streamlinesSphere
+    (
+        centre=(0 0 0),
+        radius=0.1,
+        nPoints=100,
+        p,
+        U,
+        direction=forward
+    )
+
+    #includeFunc streamlinesLine
+    (
+        start=(-0.5 -0.5 -0.05),
+        end=(0.5 0.5 0.05),
+        nPoints=100,
+        p,
+        U,
+        direction=backward
+    )
+
+    #includeFunc streamlinesPatch
+    (
+        patch=inlet,
+        nPoints=100,
+        p,
+        U
+    )
+
+    #includeFunc streamlinesPoints
+    (
+        points=((-0.2 -0.2 0) (0 0 0) (0.2 0.2 0))
+        p,
+        U,
+        direction=forward
+    )
+}
+
+surfaceFunctions
+{
+    #includeFunc cutPlaneSurface(point=(0 0 0), normal=(0 0 1), p, U)
+
+    #includeFunc isoSurface(isoField=nut, isoValue=0.1, p, U)
+
+    #includeFunc patchSurface(patch=walls, p, U)
+}
+
+surfaceFieldValueFunctions
+{
+    #includeFunc patchAverage(patch=inlet, k)
+
+    #includeFunc patchIntegrate(patch=inlet, epsilon)
+
+    #includeFunc patchFlowRate(patch=inlet)
+
+    #includeFunc patchDifference(patch1=inlet, patch2=outlet, p)
+
+    #includeFunc faceZoneAverage(faceZone=f0, U)
+
+    #includeFunc faceZoneFlowRate(faceZone=f0)
+
+    #includeFunc triSurfaceAverage(triSurface=mid.obj, p)
+
+    #includeFunc triSurfaceVolumetricFlowRate(triSurface=mid.obj)
+
+    #includeFunc triSurfaceDifference
+    (
+        name1=nearInlet.obj,
+        name2=nearOutlet.obj,
+        p
+    )
+}
+
+volFieldValueFunctions
+{
+    #includeFunc cellMin(epsilon)
+
+    #includeFunc cellMax(k)
+
+    #includeFunc cellMinMag(U, writeLocation=yes)
+
+    #includeFunc cellMaxMag(U, writeLocation=yes)
+
+    #includeFunc volAverage(p)
+
+    #includeFunc volIntegrate(rho)
+}
+
+$combustionFunctions;
+$controlFunctions;
+$fieldsFunctions;
+$fieldsOperationsFunctions;
+$forcesFunctions;
+$graphsFunctions;
+$lagrangianFunctions;
+$numericalFunctions;
+$pressureFunctions;
+$probesFunctions;
+$solversFunctions;
+$streamlinesFunctions;
+$surfaceFunctions;
+$surfaceFieldValueFunctions;
+$volFieldValueFunctions;
+
+// ************************************************************************* //

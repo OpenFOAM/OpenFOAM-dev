@@ -45,10 +45,5 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-functions
-{
-    #includeFunc scalarTransport(T, alphal=1, alphat=1)
-    #includeFunc time
-}
 
 // ************************************************************************* //
