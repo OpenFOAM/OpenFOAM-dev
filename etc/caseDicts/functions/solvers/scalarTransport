@@ -1,0 +1,29 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Solves a transport equation for a scalar field.
+
+    The name of the scalar field is specified in this file. A field file of
+    this name will also be required, typically in the 0 directory. Scheme and
+    solver settings will also be needed. Alternatively, if there is another
+    field which already has appropriate fvSchemes and fvSolution entries, these
+    settings can be reused by naming the field as the schemesField.
+
+\*---------------------------------------------------------------------------*/
+
+#includeEtc     "caseDicts/functions/solvers/scalarTransport.cfg"
+
+field           <fieldName>;    // Name of the transported scalar
+schemesField    $field;         // Name of the field from which to use schemes
+                                // and solvers settings
+diffusivity     viscosity;
+
+alphal          1;
+alphat          1;
+
+// ************************************************************************* //

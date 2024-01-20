@@ -12,7 +12,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#includeEtc "caseDicts/postProcessing/forces/forceCoeffsIncompressible.cfg"
+#includeEtc "caseDicts/functions/forces/forceCoeffsIncompressible.cfg"
 
 #include    "$FOAM_CASE/0/U"
 

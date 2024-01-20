@@ -1,0 +1,23 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the flow rate through a specified face zone by summing the flux
+    on the faces.  For solvers where the flux is volumetric, the flow rate is
+    volumetric; where flux is mass flux, the flow rate is mass flow rate.
+
+\*---------------------------------------------------------------------------*/
+
+faceZone <faceZoneName>;
+
+fields  (phi);
+
+operation orientedSum;
+
+#includeEtc "caseDicts/functions/surfaceFieldValue/faceZoneValue.cfg"
+
+// ************************************************************************* //

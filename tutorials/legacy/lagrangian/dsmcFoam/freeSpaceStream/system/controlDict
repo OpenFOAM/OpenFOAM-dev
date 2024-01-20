@@ -50,7 +50,7 @@ functions
 {
     fieldAverage1
     {
-        #includeEtc "caseDicts/postProcessing/fields/fieldAverage.cfg"
+        #includeEtc "caseDicts/functions/fields/fieldAverage.cfg"
         restartOnOutput   off;
 
         fields

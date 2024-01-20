@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,333 +26,47 @@ License
 #include "functionObjectList.H"
 #include "argList.H"
 #include "timeControlFunctionObject.H"
-#include "dictionaryEntry.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::functionObject* Foam::functionObjectList::remove
-(
-    const word& key,
-    label& oldIndex
-)
-{
-    functionObject* ptr = 0;
-
-    // Find index of existing functionObject
-    HashTable<label>::iterator fnd = indices_.find(key);
-
-    if (fnd != indices_.end())
-    {
-        oldIndex = fnd();
-
-        // Retrieve the pointer and remove it from the old list
-        ptr = this->set(oldIndex, 0).ptr();
-        indices_.erase(fnd);
-    }
-    else
-    {
-        oldIndex = -1;
-    }
-
-    return ptr;
-}
-
-
-bool Foam::functionObjectList::writeData(Ostream&) const
-{
-    NotImplemented;
-    return false;
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::functionObjectList::functionObjectList
+Foam::typeIOobject<Foam::IOdictionary>
+Foam::functionObjectList::readFunctionsDict
 (
     const Time& t,
     const bool execution
 )
-:
-    regIOobject
-    (
-        IOobject
-        (
-            "functionObjectList",
-            t.system(),
-            t
-        )
-    ),
-    PtrList<functionObject>(),
-    digests_(),
-    indices_(),
-    time_(t),
-    parentDict_(t.controlDict()),
-    execution_(execution),
-    updated_(false)
-{}
-
-
-Foam::functionObjectList::functionObjectList
-(
-    const Time& t,
-    const dictionary& parentDict,
-    const bool execution
-)
-:
-    regIOobject
-    (
-        IOobject
-        (
-            "functionObjectList",
-            t.system(),
-            t
-        )
-    ),
-    PtrList<functionObject>(),
-    digests_(),
-    indices_(),
-    time_(t),
-    parentDict_(parentDict),
-    execution_(execution),
-    updated_(false)
-{}
-
-
-Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
-(
-    const argList& args,
-    const Time& runTime,
-    dictionary& controlDict
-)
 {
-    autoPtr<functionObjectList> functionsPtr;
+    if (execution)
+    {
+        typeIOobject<IOdictionary> functionsDict
+        (
+            "functions",
+            t.system(),
+            t,
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE,
+            true
+        );
 
-    controlDict.add
+        if (functionsDict.headerOk())
+        {
+            return functionsDict;
+        }
+    }
+
+    return typeIOobject<IOdictionary>
     (
-        dictionaryEntry("functions", controlDict, dictionary::null)
+        "functions",
+        t.system(),
+        t,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE,
+        false
     );
-
-    dictionary& functionsDict = controlDict.subDict("functions");
-
-    word region = word::null;
-
-    // Set the region name if specified
-    if (args.optionFound("region"))
-    {
-        region = args["region"];
-    }
-
-    if
-    (
-        args.optionFound("dict")
-     || args.optionFound("func")
-     || args.optionFound("funcs")
-    )
-    {
-        if (args.optionFound("dict"))
-        {
-            controlDict.merge
-            (
-                IOdictionary
-                (
-                    IOobject
-                    (
-                        args["dict"],
-                        runTime,
-                        IOobject::MUST_READ_IF_MODIFIED
-                    )
-                )
-            );
-        }
-
-        if (args.optionFound("func"))
-        {
-            readConfigFile
-            (
-                "function",
-                args["func"],
-                functionsDict,
-                functionEntries::includeFuncEntry::functionObjectDictPath,
-                "system",
-                {"command", args.commandLine()},
-                region
-            );
-        }
-
-        if (args.optionFound("funcs"))
-        {
-            wordList funcs(args.optionLookup("funcs")());
-
-            forAll(funcs, i)
-            {
-                readConfigFile
-                (
-                    "function",
-                    funcs[i],
-                    functionsDict,
-                    functionEntries::includeFuncEntry::functionObjectDictPath,
-                    "system",
-                    {"command", args.commandLine()},
-                    region
-                );
-            }
-        }
-
-        functionsPtr.reset(new functionObjectList(runTime, controlDict));
-    }
-    else
-    {
-        functionsPtr.reset(new functionObjectList(runTime));
-    }
-
-    functionsPtr->read();
-
-    return functionsPtr;
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::functionObjectList::~functionObjectList()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::functionObjectList::clear()
-{
-    PtrList<functionObject>::clear();
-    digests_.clear();
-    indices_.clear();
-    updated_ = false;
-}
-
-
-Foam::label Foam::functionObjectList::findObjectID(const word& name) const
-{
-    forAll(*this, oi)
-    {
-        if (operator[](oi).name() == name)
-        {
-            return oi;
-        }
-    }
-
-    return -1;
-}
-
-
-bool Foam::functionObjectList::start()
-{
-    bool ok = read();
-
-    if (execution_)
-    {
-        forAll(*this, oi)
-        {
-            if (operator[](oi).executeAtStart())
-            {
-                ok = operator[](oi).execute() && ok;
-                ok = operator[](oi).write() && ok;
-            }
-        }
-    }
-
-    return ok;
-}
-
-
-bool Foam::functionObjectList::execute()
-{
-    bool ok = true;
-
-    if (execution_)
-    {
-        if (!updated_)
-        {
-            read();
-        }
-
-        forAll(*this, oi)
-        {
-            ok = operator[](oi).execute() && ok;
-            ok = operator[](oi).write() && ok;
-        }
-    }
-
-    return ok;
-}
-
-
-bool Foam::functionObjectList::end()
-{
-    bool ok = true;
-
-    if (execution_)
-    {
-        if (!updated_)
-        {
-            read();
-        }
-
-        forAll(*this, oi)
-        {
-            ok = operator[](oi).end() && ok;
-        }
-    }
-
-    return ok;
-}
-
-
-Foam::scalar Foam::functionObjectList::timeToNextAction()
-{
-    scalar result = vGreat;
-
-    if (execution_)
-    {
-        if (!updated_)
-        {
-            read();
-        }
-
-        forAll(*this, oi)
-        {
-            result = min(result, operator[](oi).timeToNextAction());
-        }
-    }
-
-    return result;
-}
-
-
-Foam::scalar Foam::functionObjectList::maxDeltaT() const
-{
-    scalar result = vGreat;
-
-    forAll(*this, oi)
-    {
-        result = min(result, operator[](oi).maxDeltaT());
-    }
-
-    return result;
-}
-
-
-bool Foam::functionObjectList::dependenciesModified() const
-{
-    if (&parentDict_ == &time_.controlDict())
-    {
-        return time_.controlDict().modified();
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
-bool Foam::functionObjectList::read()
+bool Foam::functionObjectList::readDict()
 {
     bool ok = true;
     updated_ = execution_;
@@ -363,15 +77,7 @@ bool Foam::functionObjectList::read()
         return true;
     }
 
-    // Update existing and add new functionObjects
-    const entry* entryPtr = parentDict_.lookupEntryPtr
-    (
-        "functions",
-        false,
-        false
-    );
-
-    if (entryPtr)
+    if (IOdictionary::size())
     {
         PtrList<functionObject> newPtrs;
         List<SHA1Digest> newDigs;
@@ -379,14 +85,7 @@ bool Foam::functionObjectList::read()
 
         label nFunc = 0;
 
-        if (!entryPtr->isDict())
-        {
-            FatalIOErrorInFunction(parentDict_)
-                << "'functions' entry is not a dictionary"
-                << exit(FatalIOError);
-        }
-
-        const dictionary& functionsDict = entryPtr->dict();
+        const dictionary& functionsDict = *this;
 
         libs.open
         (
@@ -406,7 +105,7 @@ bool Foam::functionObjectList::read()
             {
                 if (key != "libs")
                 {
-                    IOWarningInFunction(parentDict_)
+                    IOWarningInFunction(*this)
                         << "Entry " << key << " is not a dictionary" << endl;
                 }
 
@@ -496,6 +195,291 @@ bool Foam::functionObjectList::read()
     }
 
     return ok;
+}
+
+
+Foam::functionObject* Foam::functionObjectList::remove
+(
+    const word& key,
+    label& oldIndex
+)
+{
+    functionObject* ptr = 0;
+
+    // Find index of existing functionObject
+    HashTable<label>::iterator fnd = indices_.find(key);
+
+    if (fnd != indices_.end())
+    {
+        oldIndex = fnd();
+
+        // Retrieve the pointer and remove it from the old list
+        ptr = this->PtrList<functionObject>::set(oldIndex, 0).ptr();
+        indices_.erase(fnd);
+    }
+    else
+    {
+        oldIndex = -1;
+    }
+
+    return ptr;
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionObjectList::functionObjectList
+(
+    const Time& t,
+    const bool execution
+)
+:
+    IOdictionary(readFunctionsDict(t, execution)),
+    PtrList<functionObject>(),
+    digests_(),
+    indices_(),
+    time_(t),
+    execution_(execution),
+    updated_(false)
+{
+    if (t.controlDict().found("functions"))
+    {
+        if (!headerOk())
+        {
+            merge(t.controlDict().subDict("functions"));
+        }
+        else
+        {
+            WarningInFunction
+                << "Both " << relativeObjectPath()
+                << " and " << t.controlDict().relativeObjectPath()/"functions"
+                << " found, the latter will be ignored." << endl;
+        }
+    }
+}
+
+
+Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
+(
+    const argList& args,
+    const Time& runTime
+)
+{
+    autoPtr<functionObjectList> functionsPtr(new functionObjectList(runTime));
+    dictionary& functionsDict = *functionsPtr;
+
+    word region = word::null;
+
+    // Set the region name if specified
+    if (args.optionFound("region"))
+    {
+        region = args["region"];
+    }
+
+    if
+    (
+        args.optionFound("dict")
+     || args.optionFound("func")
+     || args.optionFound("funcs")
+    )
+    {
+        // Remove functions specified in the functions dictionary
+        functionsDict.clear();
+
+        if (args.optionFound("dict"))
+        {
+            functionsDict.merge
+            (
+                IOdictionary
+                (
+                    IOobject
+                    (
+                        args["dict"],
+                        runTime,
+                        IOobject::MUST_READ_IF_MODIFIED
+                    )
+                )
+            );
+        }
+
+        if (args.optionFound("func"))
+        {
+            readConfigFile
+            (
+                "function",
+                args["func"],
+                functionsDict,
+                functionEntries::includeFuncEntry::functionObjectDictPath,
+                "system",
+                {"command", args.commandLine()},
+                region
+            );
+        }
+
+        if (args.optionFound("funcs"))
+        {
+            wordList funcs(args.optionLookup("funcs")());
+
+            forAll(funcs, i)
+            {
+                readConfigFile
+                (
+                    "function",
+                    funcs[i],
+                    functionsDict,
+                    functionEntries::includeFuncEntry::functionObjectDictPath,
+                    "system",
+                    {"command", args.commandLine()},
+                    region
+                );
+            }
+        }
+    }
+
+    functionsPtr->readDict();
+
+    return functionsPtr;
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjectList::~functionObjectList()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::functionObjectList::clear()
+{
+    PtrList<functionObject>::clear();
+    digests_.clear();
+    indices_.clear();
+    updated_ = false;
+}
+
+
+Foam::label Foam::functionObjectList::findObjectID(const word& name) const
+{
+    forAll(*this, oi)
+    {
+        if (operator[](oi).name() == name)
+        {
+            return oi;
+        }
+    }
+
+    return -1;
+}
+
+
+bool Foam::functionObjectList::start()
+{
+    bool ok = readDict();
+
+    if (execution_)
+    {
+        forAll(*this, oi)
+        {
+            if (operator[](oi).executeAtStart())
+            {
+                ok = operator[](oi).execute() && ok;
+                ok = operator[](oi).write() && ok;
+            }
+        }
+    }
+
+    return ok;
+}
+
+
+bool Foam::functionObjectList::execute()
+{
+    bool ok = true;
+
+    if (execution_)
+    {
+        if (!updated_)
+        {
+            readDict();
+        }
+
+        forAll(*this, oi)
+        {
+            ok = operator[](oi).execute() && ok;
+            ok = operator[](oi).write() && ok;
+        }
+    }
+
+    return ok;
+}
+
+
+bool Foam::functionObjectList::end()
+{
+    bool ok = true;
+
+    if (execution_)
+    {
+        if (!updated_)
+        {
+            readDict();
+        }
+
+        forAll(*this, oi)
+        {
+            ok = operator[](oi).end() && ok;
+        }
+    }
+
+    return ok;
+}
+
+
+Foam::scalar Foam::functionObjectList::timeToNextAction()
+{
+    scalar result = vGreat;
+
+    if (execution_)
+    {
+        if (!updated_)
+        {
+            readDict();
+        }
+
+        forAll(*this, oi)
+        {
+            result = min(result, operator[](oi).timeToNextAction());
+        }
+    }
+
+    return result;
+}
+
+
+Foam::scalar Foam::functionObjectList::maxDeltaT() const
+{
+    scalar result = vGreat;
+
+    forAll(*this, oi)
+    {
+        result = min(result, operator[](oi).maxDeltaT());
+    }
+
+    return result;
+}
+
+
+bool Foam::functionObjectList::read()
+{
+    if (regIOobject::read())
+    {
+        return readDict();
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

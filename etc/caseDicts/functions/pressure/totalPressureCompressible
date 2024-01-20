@@ -1,0 +1,16 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the total pressure field for a case where the solver is
+    compressible; i.e., pressure has units of kg/m/s^2 (Pa).
+
+\*---------------------------------------------------------------------------*/
+
+#includeEtc "caseDicts/functions/pressure/totalPressureCompressible.cfg"
+
+// ************************************************************************* //

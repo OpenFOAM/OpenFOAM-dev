@@ -46,6 +46,6 @@ points
 
 fields  (age);
 
-#includeEtc "caseDicts/postProcessing/probes/probes.cfg"
+#includeEtc "caseDicts/functions/probes/probes.cfg"
 
 // ************************************************************************* //

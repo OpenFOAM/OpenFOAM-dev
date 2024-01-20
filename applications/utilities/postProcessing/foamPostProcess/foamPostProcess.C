@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -279,19 +279,10 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Externally stored dictionary for functionObjectList
-    // if not constructed from runTime
-    dictionary functionsControlDict("controlDict");
-
     // Construct functionObjectList
     autoPtr<functionObjectList> functionsPtr
     (
-        functionObjectList::New
-        (
-            args,
-            runTime,
-            functionsControlDict
-        )
+        functionObjectList::New(args, runTime)
     );
 
     forAll(timeDirs, timei)
@@ -303,12 +294,7 @@ int main(int argc, char *argv[])
         if (mesh.readUpdate() != fvMesh::UNCHANGED)
         {
             // Update functionObjectList if mesh changes
-            functionsPtr = functionObjectList::New
-            (
-                args,
-                runTime,
-                functionsControlDict
-            );
+            functionsPtr = functionObjectList::New(args, runTime);
         }
 
         FatalIOError.throwExceptions();

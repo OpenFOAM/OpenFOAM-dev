@@ -24,6 +24,6 @@ rhoInf      1.2;
 CofR        (0.2 0 0);
 pitchAxis   (0 1 0);
 
-#includeEtc "caseDicts/postProcessing/forces/forceCoeffs.cfg"
+#includeEtc "caseDicts/functions/forces/forceCoeffs.cfg"
 
 // ************************************************************************* //

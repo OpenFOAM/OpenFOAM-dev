@@ -1,0 +1,24 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes out cut-plane surface files with interpolated field data in VTK
+    format.
+
+\*---------------------------------------------------------------------------*/
+
+point       <point>;
+normal      <normal>;
+
+fields      (<fieldNames>);
+
+interpolate true; // If false, write cell data to the surface triangles.
+                  // If true, write interpolated data at the surface points.
+
+#includeEtc "caseDicts/functions/surface/cutPlaneSurface.cfg"
+
+// ************************************************************************* //

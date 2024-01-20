@@ -1,0 +1,18 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the static pressure field in units of kg/m/s^2 (Pa) from the
+    kinematic pressure by scaling by a specified density.
+
+\*---------------------------------------------------------------------------*/
+
+#includeEtc "caseDicts/functions/pressure/staticPressureIncompressible.cfg"
+
+rhoInf  <rhoInf>; // Density with which to scale the kinematic pressure
+
+// ************************************************************************* //

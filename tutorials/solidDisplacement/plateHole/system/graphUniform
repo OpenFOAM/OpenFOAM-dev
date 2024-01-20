@@ -20,6 +20,6 @@ fields          (sigmaxx);
 
 axis            y;
 
-#includeEtc "caseDicts/postProcessing/graphs/graphUniform.cfg"
+#includeEtc "caseDicts/functions/graphs/graphUniform.cfg"
 
 // ************************************************************************* //

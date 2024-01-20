@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,19 +117,10 @@ if (argList::postProcess(argc, argv))
             #include INCLUDE_FILE(CREATE_FIELDS_3)
             #endif
 
-            // Externally stored dictionary for functionObjectList
-            // if not constructed from runTime
-            dictionary functionsControlDict("controlDict");
-
             // Construct functionObjectList
             autoPtr<functionObjectList> functionsPtr
             (
-                functionObjectList::New
-                (
-                    args,
-                    runTime,
-                    functionsControlDict
-                )
+                functionObjectList::New(args, runTime)
             );
 
             functionsPtr->execute();

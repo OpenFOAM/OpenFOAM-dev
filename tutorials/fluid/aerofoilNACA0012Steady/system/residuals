@@ -12,7 +12,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#includeEtc "caseDicts/postProcessing/numerical/residuals.cfg"
+#includeEtc "caseDicts/functions/numerical/residuals.cfg"
 
 fields (p U e k omega);
 

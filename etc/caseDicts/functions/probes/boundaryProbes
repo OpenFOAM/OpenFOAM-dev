@@ -1,0 +1,23 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes out values of fields at a specified list of points, interpolated to
+    specified boundary patches.
+
+\*---------------------------------------------------------------------------*/
+
+points  (<points>);
+maxDistance <maxDistance>;
+
+patches  (".*");
+
+fields  (<fieldNames>);
+
+#includeEtc "caseDicts/functions/probes/boundaryProbes.cfg"
+
+// ************************************************************************* //

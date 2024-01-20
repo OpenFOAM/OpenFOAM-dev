@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,16 +32,16 @@ Description
     directories allowing for version-specific and version-independent files
     using the following hierarchy:
     - \b user settings:
-      - ~/.OpenFOAM/\<VERSION\>/caseDicts/postProcessing
-      - ~/.OpenFOAM/caseDicts/postProcessing
+      - ~/.OpenFOAM/\<VERSION\>/caseDicts/functions
+      - ~/.OpenFOAM/caseDicts/functions
     - \b group (site) settings (when $WM_PROJECT_SITE is set):
-      - $WM_PROJECT_SITE/\<VERSION\>/etc/caseDicts/postProcessing
-      - $WM_PROJECT_SITE/etc/caseDicts/postProcessing
+      - $WM_PROJECT_SITE/\<VERSION\>/etc/caseDicts/functions
+      - $WM_PROJECT_SITE/etc/caseDicts/functions
     - \b group (site) settings (when $WM_PROJECT_SITE is not set):
-      - $WM_PROJECT_INST_DIR/site/\<VERSION\>/etc/caseDicts/postProcessing
-      - $WM_PROJECT_INST_DIR/site/etc/caseDicts/postProcessing
+      - $WM_PROJECT_INST_DIR/site/\<VERSION\>/etc/caseDicts/functions
+      - $WM_PROJECT_INST_DIR/site/etc/caseDicts/functions
     - \b other (shipped) settings:
-      - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
+      - $WM_PROJECT_DIR/etc/caseDicts/functions
 
     The optional field arguments included in the name are inserted in 'field' or
     'fields' entries in the functionObject dictionary and included in the name

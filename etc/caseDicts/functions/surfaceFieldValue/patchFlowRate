@@ -1,0 +1,23 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the flow rate through a specified patch by summing the flux on
+    patch faces.  For solvers where the flux is volumetric, the flow rate is
+    volumetric; where flux is mass flux, the flow rate is mass flow rate.
+
+\*---------------------------------------------------------------------------*/
+
+patch   <patchName>;
+
+fields  (phi);
+
+operation sum;
+
+#includeEtc "caseDicts/functions/surfaceFieldValue/patchValue.cfg"
+
+// ************************************************************************* //

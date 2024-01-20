@@ -1,0 +1,31 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates lift, drag and moment coefficients by summing forces on
+    specified patches for a case where the solver is compressible; i.e.,
+    pressure has units of kg/m/s^2 (Pa).
+
+\*---------------------------------------------------------------------------*/
+
+#includeEtc "caseDicts/functions/forces/forceCoeffs.cfg"
+
+patches     (<patchNames>); // Names of patches on which to calculate forces
+
+magUInf     <magUInf>;      // Far field velocity magnitude; e.g., 20 m/s
+rhoInf      <rhoInf>;       // Far field density; e.g., 1.225 kg/m^3 for air
+lRef        <lRef>;         // Reference length scale for moment calculations;
+                            // e.g., 1 m
+Aref        <Aref>;         // Reference area; e.g., 1 m^2
+
+CofR        <CofR>;         // Centre of rotation; e.g., (0 0 0)
+
+liftDir     <liftDir>;      // Direction of lift force; e.g., (0 0 1)
+dragDir     <dragDir>;      // Direction of drag force; e.g., (1 0 0)
+pitchAxis   <pitchAxis>;    // Pitch axis; e.g., (0 1 0)
+
+// ************************************************************************* //

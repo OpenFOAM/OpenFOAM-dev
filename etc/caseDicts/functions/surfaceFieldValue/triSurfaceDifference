@@ -1,0 +1,21 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the difference between the average values of fields on two
+    specified triangulated surfaces.
+
+\*---------------------------------------------------------------------------*/
+
+name1   <triSurfaceFileName1>;
+name2   <triSurfaceFileName2>;
+
+fields  (<fieldNames>);
+
+#includeEtc "caseDicts/functions/surfaceFieldValue/triSurfaceDifference.cfg"
+
+// ************************************************************************* //

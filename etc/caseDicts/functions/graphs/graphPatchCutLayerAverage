@@ -1,0 +1,37 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes graphs of patch face values, area-averaged in planes perpendicular
+    to a given direction. It adaptively grades the distribution of graph points
+    to match the resolution of the mesh.
+
+\*---------------------------------------------------------------------------*/
+
+patch           <patchName>; // Patch on which to average values
+
+direction       <direction>; // Direction along which to graph
+
+nPoints         <nPoints>;   // Number of points in the graph
+
+interpolate     no;          // Whether or not to do linear interpolation
+                             // between the plot points. Generates a smoother,
+                             // higher order result. Loses the ability to
+                             // visualise and reason about the layer
+                             // thicknesses.
+
+axis            default;     // The independent variable of the graph. Can be
+                             // "x", "y", "z", "xyz" (all coordinates written
+                             // out), "distance" (plane distance from the
+                             // origin), or "default" (both coordinates and
+                             // distance written out).
+
+fields          (<fieldNames>);
+
+#includeEtc "caseDicts/functions/graphs/graphPatchCutLayerAverage.cfg"
+
+// ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,11 +40,10 @@ SourceFiles
 #ifndef functionObjectList_H
 #define functionObjectList_H
 
-#include "regIOobject.H"
+#include "IOdictionary.H"
 #include "PtrList.H"
 #include "functionObject.H"
 #include "SHA1Digest.H"
-#include "HashSet.H"
 #include "includeFuncEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -63,7 +62,7 @@ class argList;
 
 class functionObjectList
 :
-    public regIOobject,
+    public IOdictionary,
     private PtrList<functionObject>
 {
     // Private Data
@@ -76,11 +75,6 @@ class functionObjectList
 
         const Time& time_;
 
-        //- The parent dictionary containing a "functions" entry
-        //  This entry can either be a list or a dictionary of
-        //  functionObject specifications
-        const dictionary& parentDict_;
-
         //- Switch for the execution of the functionObjects
         bool execution_;
 
@@ -90,13 +84,21 @@ class functionObjectList
 
     // Private Member Functions
 
+        //- Read the function dictionary if present
+        //  otherwise read the optional functions entry in controlDict
+        typeIOobject<IOdictionary> readFunctionsDict
+        (
+            const Time& t,
+            const bool execution
+        );
+
+        //- Read the functions dictionary and set construct the functionObjects
+        virtual bool readDict();
+
         //- Remove and return the function object pointer by name,
         //  and returns the old index via the parameter.
         //  Returns a nullptr (and index -1) if it didn't exist
         functionObject* remove(const word&, label& oldIndex);
-
-        //- Dummy write for regIOobject
-        virtual bool writeData(Ostream&) const;
 
 
 public:
@@ -111,21 +113,6 @@ public:
             const bool execution=true
         );
 
-        //- Construct from Time, a dictionary with "functions" entry
-        //  and the execution setting.
-        //  \param[in]  t - the other Time instance to construct from
-        //  \param[in]  parentDict - the parent dictionary containing
-        //    a "functions" entry, which can either be a list or a dictionary
-        //    of functionObject specifications.
-        //  \param[in]  execution - whether the function objects should execute
-        //    or not. Default: true.
-        functionObjectList
-        (
-            const Time& runTime,
-            const dictionary& parentDict,
-            const bool execution=true
-        );
-
         //- Disallow default bitwise copy construction
         functionObjectList(const functionObjectList&) = delete;
 
@@ -137,8 +124,7 @@ public:
         static autoPtr<functionObjectList> New
         (
             const argList& args,
-            const Time& runTime,
-            dictionary& controlDict
+            const Time& runTime
         );
 
 
@@ -165,9 +151,6 @@ public:
 
         //- Find the ID of a given function object by name
         label findObjectID(const word& name) const;
-
-        //- Return true if the functionObjects dependencies have been modified
-        virtual bool dependenciesModified() const;
 
         //- Read and set the function objects if their data have changed
         virtual bool read();

@@ -1,0 +1,21 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the average values of fields on a faceZone.
+
+\*---------------------------------------------------------------------------*/
+
+faceZone <faceZoneName>;
+
+fields  (<fieldNames>);
+
+operation areaAverage;
+
+#includeEtc "caseDicts/functions/surfaceFieldValue/faceZoneValue.cfg"
+
+// ************************************************************************* //
