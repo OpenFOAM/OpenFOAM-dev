@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
         // Construct the time for the new case without reading the controlDict
         Time runTimeToAdd
         (
-            // Time::controlDictName,
+            Time::controlDictName,
             addCasePath,
             addCaseName,
             false
