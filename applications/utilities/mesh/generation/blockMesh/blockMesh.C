@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,7 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     argList::noParallel();
+    Foam::argList::removeOption("noFunctionObjects");
     #include "addDictOption.H"
     argList::addBoolOption
     (
