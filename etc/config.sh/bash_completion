@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -1144,7 +1144,7 @@ _foamListTimes_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -doc -fileHandler -help -latestTime -libs -noFunctionObjects -noZero -processor -rm -srcDoc -time -withFunctionEntries -withFunctionObjects -withZero"
+    opts="-case -constant -doc -fileHandler -help -latestTime -libs -noFunctionObjects -noZero -processor -rm -srcDoc -time -functionEntries -functionObjects -withZero"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2342,7 +2342,7 @@ _potentialFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -initialiseUBCs -libs -noFunctionObjects -parallel -pName -roots -srcDoc -withFunctionObjects -writep -writePhi"
+    opts="-case -doc -fileHandler -help -hostRoots -initialiseUBCs -libs -parallel -pName -roots -srcDoc -functionObjects -writep -writePhi"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 

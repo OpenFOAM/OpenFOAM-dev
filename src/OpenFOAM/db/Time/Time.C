@@ -391,8 +391,8 @@ Foam::Time::Time
     (
         *this,
         enableFunctionObjects
-      ? argList::validOptions.found("withFunctionObjects")
-        ? args.optionFound("withFunctionObjects")
+      ? argList::validOptions.found("functionObjects")
+        ? args.optionFound("functionObjects")
         : !args.optionFound("noFunctionObjects")
       : false
     )

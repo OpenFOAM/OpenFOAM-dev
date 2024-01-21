@@ -2,6 +2,6 @@ Foam::argList::removeOption("noFunctionObjects");
 
 Foam::argList::addBoolOption
 (
-    "withFunctionObjects",
+    "functionObjects",
     "Execute functionObjects"
 );
