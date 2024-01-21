@@ -29,6 +29,13 @@ c   #calc "$a / $b";
 
 c   #calc "($a)/$b";
 
+// Access to sub-entries using the "/" operator, e.g.
+d
+{
+    b   4.8;
+}
+e   #calc "$a / $d/b";
+
 s   "field";
 fieldName #calc "$<string>s + \"Name\" ";
 
