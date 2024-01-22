@@ -109,54 +109,7 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
                     patternMatch
                 );
 
-                if (!entPtr)
-                {
-                    // Fall back to finding key with '/' so e.g. if keyword is
-                    // a/b/c/d it would try
-                    // a/b, a/b/c, a/b/c/d
-
-                    string::size_type nextSlashPos = keyword.find
-                    (
-                        '/',
-                        slashPos
-                    );
-
-                    while (true)
-                    {
-                        const entry* subEntPtr = lookupEntryPtr
-                        (
-                            keyword.substr(0, nextSlashPos),
-                            false,  // recursive,
-                            patternMatch
-                        );
-
-                        if (nextSlashPos == string::npos)
-                        {
-                            // Parsed the whole word. Return entry or null.
-                            return subEntPtr;
-                        }
-
-                        nextSlashPos++;
-
-                        if (subEntPtr && subEntPtr->isDict())
-                        {
-                            return subEntPtr->dict().lookupScopedSubEntryPtr
-                            (
-                                keyword.substr
-                                (
-                                    nextSlashPos,
-                                    keyword.size() - nextSlashPos
-                                ),
-                                false,
-                                patternMatch
-                            );
-                        }
-
-                        nextSlashPos = keyword.find('/', nextSlashPos);
-                    }
-                }
-
-                if (entPtr->isDict())
+                if (entPtr && entPtr->isDict())
                 {
                     return entPtr->dict().lookupScopedSubEntryPtr
                     (
