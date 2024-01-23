@@ -10,11 +10,11 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      fvConstraints;
+    object      functions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// include packaged fvConstraints using #includeConstraint
-// #includeConstraint
+// include packaged functionObjects using #includeFunc
+// #includeFunc
 
 // ************************************************************************* //
