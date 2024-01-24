@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ tmp<scalarField> alphatJayatillekeWallFunctionFvPatchScalarField::P
     const scalarField& Prat
 )
 {
-    return 9.24*(pow(Prat, 0.75) - 1.0)*(1.0 + 0.28*exp(-0.007*Prat));
+    return 9.24*(pow(Prat, 0.75) - 1)*(1 + 0.28*exp(-0.007*Prat));
 }
 
 
@@ -107,14 +107,14 @@ tmp<scalarField> alphatJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
 
     forAll(ypt, facei)
     {
-        ypt[facei] = 11.0;
+        ypt[facei] = 11;
 
         for (int i=0; i<maxIters_; i++)
         {
             const scalar f =
                 ypt[facei] - (log(E*ypt[facei])/kappa + P[facei])/Prat[facei];
 
-            const scalar df = 1.0 - 1.0/(ypt[facei]*nutw.kappa()*Prat[facei]);
+            const scalar df = 1 - 1/(ypt[facei]*nutw.kappa()*Prat[facei]);
 
             const scalar dypt = - f/df;
 
@@ -172,10 +172,11 @@ tmp<scalarField> alphatJayatillekeWallFunctionFvPatchScalarField::alphat
     const scalarField magGradUw(mag(Uw.snGrad()));
 
     const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
-    const fvPatchScalarField& hew = ttm.thermo().he().boundaryField()[patchi];
+    const scalarField& Cpw(ttm.thermo().Cp().boundaryField()[patchi]);
+    const fvPatchScalarField& Tw = ttm.thermo().T().boundaryField()[patchi];
 
-    // Enthalpy gradient
-    const scalarField gradHew(hew.snGrad());
+    // Temperature gradient
+    const scalarField gradTw(Tw.snGrad());
 
     // Molecular Prandtl number
     const scalarField Pr(rhow*nuw/alphaw);
@@ -204,30 +205,26 @@ tmp<scalarField> alphatJayatillekeWallFunctionFvPatchScalarField::alphat
     forAll(alphatw, facei)
     {
         const label celli = nutw.patch().faceCells()[facei];
-
         const scalar uTau = Cmu25*sqrt(k[celli]);
-
         const scalar yPlus = uTau*y[facei]/nuw[facei];
 
         // Evaluate new effective thermal diffusivity
-        scalar alphaEff = 0.0;
+        scalar alphaEff = 0;
         if (yPlus < yPlusTherm[facei])
         {
-            const scalar A = gradHew[facei]*rhow[facei]*uTau*y[facei];
-
-            const scalar B = gradHew[facei]*Pr[facei]*yPlus;
-
+            const scalar A = Cpw[facei]*gradTw[facei]*rhow[facei]*uTau*y[facei];
+            const scalar B = Cpw[facei]*gradTw[facei]*Pr[facei]*yPlus;
             const scalar C = Pr[facei]*0.5*rhow[facei]*uTau*sqr(magUp[facei]);
 
             alphaEff = (A - C)/(B + sign(B)*rootVSmall);
         }
         else
         {
-            const scalar A = gradHew[facei]*rhow[facei]*uTau*y[facei];
+            const scalar A = Cpw[facei]*gradTw[facei]*rhow[facei]*uTau*y[facei];
 
             const scalar B =
-                gradHew[facei]*Prt
-               *(1.0/nutw.kappa()*log(nutw.E()*yPlus) + P[facei]);
+                Cpw[facei]*gradTw[facei]*Prt
+               *(1/nutw.kappa()*log(nutw.E()*yPlus) + P[facei]);
 
             const scalar magUc =
                 uTau/nutw.kappa()
