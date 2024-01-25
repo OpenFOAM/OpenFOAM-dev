@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -202,7 +202,7 @@ void Foam::fv::VoFSolidificationMelting::correct()
     );
 
     const volScalarField& TVoF = thermo.thermo1().T();
-    const volScalarField CpVoF(thermo.thermo1().Cp());
+    const volScalarField& CpVoF(thermo.thermo1().Cp());
     const volScalarField& alphaVoF = thermo.alpha1();
 
     const labelUList cells = set_.cells();

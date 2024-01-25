@@ -157,12 +157,8 @@ tmp<scalarField> alphatJayatillekeWallFunctionFvPatchScalarField::alphat
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
-    const tmp<scalarField> talphaw
-    (
-        ttm.thermo().kappa().boundaryField()[patchi]
-       /ttm.thermo().Cp().boundaryField()[patchi]
-    );
-    const scalarField& alphaw = talphaw();
+    const scalarField& Cpw(ttm.thermo().Cp().boundaryField()[patchi]);
+    const scalarField alphaw(ttm.thermo().kappa().boundaryField()[patchi]/Cpw);
 
     const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
@@ -172,7 +168,6 @@ tmp<scalarField> alphatJayatillekeWallFunctionFvPatchScalarField::alphat
     const scalarField magGradUw(mag(Uw.snGrad()));
 
     const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
-    const scalarField& Cpw(ttm.thermo().Cp().boundaryField()[patchi]);
     const fvPatchScalarField& Tw = ttm.thermo().T().boundaryField()[patchi];
 
     // Temperature gradient

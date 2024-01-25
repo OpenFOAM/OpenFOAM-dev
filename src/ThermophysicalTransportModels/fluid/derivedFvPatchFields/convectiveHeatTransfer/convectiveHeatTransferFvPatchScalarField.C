@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ void convectiveHeatTransferFvPatchScalarField::updateCoeffs()
     const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
     const vectorField& Uc = turbModel.U();
     const vectorField& Uw = turbModel.U().boundaryField()[patchi];
-    const scalarField Cpw(ttm.thermo().Cp().boundaryField()[patchi]);
+    const scalarField& Cpw(ttm.thermo().Cp().boundaryField()[patchi]);
 
     const scalarField kappaEffw(ttm.kappaEff(patchi));
     const scalarField Pr(rhow*nuw*Cpw/kappaEffw);

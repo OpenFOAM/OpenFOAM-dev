@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -227,11 +227,7 @@ struct alphatWallBoilingWallFunctionFvPatchScalarField::boilingLiquidProperties
         Cpw(liquid.thermo().Cp().boundaryField()[patchi()]),
         tnuw(liquid.fluidThermo().nu(patchi())),
         nuw(tnuw()),
-        kappaByCp
-        (
-            liquid.thermo().kappa().boundaryField()[patchi()]
-           /liquid.thermo().Cp().boundaryField()[patchi()]
-        ),
+        kappaByCp(liquid.thermo().kappa().boundaryField()[patchi()]/Cpw),
         nutw
         (
             nutWallFunctionFvPatchScalarField::nutw

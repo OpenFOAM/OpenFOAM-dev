@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -252,7 +252,7 @@ Foam::ThermoCloud<CloudType>::Sh(const volScalarField& hs) const
     {
         if (this->solution().semiImplicit("h"))
         {
-            const volScalarField Cp(carrierThermo_.Cp());
+            const volScalarField& Cp(carrierThermo_.Cp());
             const volScalarField::Internal
                 Vdt(this->mesh().V()*this->db().time().deltaT());
 
