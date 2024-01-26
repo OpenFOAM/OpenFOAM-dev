@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,19 @@ Foam::fv::singleComponentPhaseChangeBase::singleComponentPhaseChangeBase
     const word& modelType,
     const fvMesh& mesh,
     const dictionary& dict,
-    const Pair<bool> specieThermosRequired
+    const Pair<bool>& fluidThermosRequired,
+    const Pair<bool>& specieThermosRequired
 )
 :
-    phaseChangeBase(name, modelType, mesh, dict, specieThermosRequired),
+    phaseChangeBase
+    (
+        name,
+        modelType,
+        mesh,
+        dict,
+        fluidThermosRequired,
+        specieThermosRequired
+    ),
     specie_
     (
         specieThermos().valid().first() || specieThermos().valid().second()

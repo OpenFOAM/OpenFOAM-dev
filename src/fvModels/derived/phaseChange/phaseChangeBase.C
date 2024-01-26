@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,14 +101,27 @@ Foam::fv::phaseChangeBase::phaseChangeBase
     const word& modelType,
     const fvMesh& mesh,
     const dictionary& dict,
-    const Pair<bool> specieThermosRequired
+    const Pair<bool>& fluidThermosRequired,
+    const Pair<bool>& specieThermosRequired
 )
 :
     massTransferBase(name, modelType, mesh, dict),
     thermos_(mesh, phaseNames()),
+    fluidThermos_(thermos_),
     specieThermos_(thermos_),
     heNames_(thermos_.first().he().name(), thermos_.second().he().name())
 {
+    forAll(fluidThermos_.valid(), i)
+    {
+        if (!fluidThermos_.valid()[i] && fluidThermosRequired[i])
+        {
+            FatalErrorInFunction
+                << "Model " << name << " of type " << modelType
+                << " requires a fluid thermo for phase "
+                << phaseNames()[i] << exit(FatalError);
+        }
+    }
+
     forAll(specieThermos_.valid(), i)
     {
         if (!specieThermos_.valid()[i] && specieThermosRequired[i])

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,7 @@ namespace Foam
 {
 
 class basicThermo;
+class fluidThermo;
 class multicomponentThermo;
 
 namespace fv
@@ -63,6 +64,9 @@ private:
 
         //- The thermo references
         const ThermoRefPair<basicThermo> thermos_;
+
+        //- The fluid thermo references
+        const ThermoRefPair<fluidThermo> fluidThermos_;
 
         //- The specie thermo references
         const ThermoRefPair<multicomponentThermo> specieThermos_;
@@ -106,7 +110,8 @@ public:
             const word& modelType,
             const fvMesh& mesh,
             const dictionary& dict,
-            const Pair<bool> specieThermosRequired
+            const Pair<bool>& fluidThermosRequired,
+            const Pair<bool>& specieThermosRequired
         );
 
 
@@ -116,6 +121,9 @@ public:
 
             //- Return the thermo references
             inline const ThermoRefPair<basicThermo>& thermos() const;
+
+            //- Return the fluid thermo references
+            inline const ThermoRefPair<fluidThermo>& fluidThermos() const;
 
             //- Return the specie thermo references
             inline const ThermoRefPair<multicomponentThermo>&

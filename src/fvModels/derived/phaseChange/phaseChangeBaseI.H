@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,13 @@ inline const Foam::ThermoRefPair<Foam::basicThermo>&
 Foam::fv::phaseChangeBase::thermos() const
 {
     return thermos_;
+}
+
+
+inline const Foam::ThermoRefPair<Foam::fluidThermo>&
+Foam::fv::phaseChangeBase::fluidThermos() const
+{
+    return fluidThermos_;
 }
 
 
