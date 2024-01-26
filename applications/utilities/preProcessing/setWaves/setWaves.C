@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
     const instantList timeDirs = timeSelector::selectIfPresent(runTime, args);
 
-    #include "createNamedMesh.H"
+    #include "createRegionMeshNoChangers.H"
 
     const dictionary setWavesDict(systemDict("setWavesDict", args, mesh));
 

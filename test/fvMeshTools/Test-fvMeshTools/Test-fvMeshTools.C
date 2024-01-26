@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     #include "addRegionOption.H"
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
-    #include "createNamedMesh.H"
+    #include "createRegionMesh.H"
 
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.name());

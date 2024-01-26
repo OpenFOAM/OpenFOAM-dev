@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
     // Select time if specified
     timeSelector::selectIfPresent(runTime, args);
 
-    #include "createNamedMesh.H"
+    #include "createRegionMeshNoChangers.H"
 
     const scalar snapTol = args.optionLookupOrDefault("tol", 1e-4);
     const bool overwrite = args.optionFound("overwrite");

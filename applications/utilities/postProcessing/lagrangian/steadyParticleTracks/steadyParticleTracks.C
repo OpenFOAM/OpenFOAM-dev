@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 
     #include "createTime.H"
     const instantList timeDirs = timeSelector::select0(runTime, args);
-    #include "createNamedMesh.H"
+    #include "createRegionMeshNoChangers.H"
     #include "createFields.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
