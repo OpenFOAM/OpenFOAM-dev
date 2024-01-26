@@ -202,7 +202,6 @@ void Foam::fv::VoFSolidificationMelting::correct()
     );
 
     const volScalarField& TVoF = thermo.thermo1().T();
-    const volScalarField& CpVoF(thermo.thermo1().Cp());
     const volScalarField& alphaVoF = thermo.alpha1();
 
     const labelUList cells = set_.cells();
