@@ -24,7 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nonConformalBoundary.H"
+#include "nonConformalPolyPatch.H"
 #include "nonConformalCoupledPolyPatch.H"
+#include "nonConformalMappedWallPolyPatch.H"
 #include "nonConformalErrorPolyPatch.H"
 #include "syncTools.H"
 
@@ -58,7 +60,7 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::indirectPrimitivePatch
 Foam::nonConformalBoundary::boundary(const labelList& patches) const
@@ -78,6 +80,103 @@ Foam::nonConformalBoundary::boundary(const labelList& patches) const
             mesh().points()
         );
 }
+
+
+template<class Type, class Method>
+struct Foam::nonConformalBoundary::TypeMethod
+{
+    Method method;
+
+    TypeMethod(const Method& method)
+    :
+        method(method)
+    {}
+};
+
+
+template<class Type, class Method>
+Foam::nonConformalBoundary::TypeMethod<Type, Method>
+Foam::nonConformalBoundary::typeMethod(const Method& method)
+{
+    return TypeMethod<Type, Method>(method);
+}
+
+
+template<class ... NcPpTypeMethods>
+Foam::labelList Foam::nonConformalBoundary::nonConformalOtherPatchIndices
+(
+    const label side,
+    NcPpTypeMethods ... typeMethods
+) const
+{
+    const polyBoundaryMesh& pbm = mesh().boundaryMesh();
+
+    labelHashSet origPatchIndexTable;
+    DynamicList<label> nonCoupledPatchIndices(pbm.size());
+
+    nonConformalOtherPatchIndices
+    (
+        origPatchIndexTable,
+        nonCoupledPatchIndices,
+        side,
+        typeMethods ...
+    );
+
+    labelList result;
+    result.transfer(nonCoupledPatchIndices);
+    return result;
+}
+
+
+template<class NcPpType, class NcPpMethod, class ... NcPpTypeMethods>
+void Foam::nonConformalBoundary::nonConformalOtherPatchIndices
+(
+    labelHashSet& origPatchIndexTable,
+    DynamicList<label>& nonCoupledPatchIndices,
+    const label side,
+    const TypeMethod<NcPpType, NcPpMethod>& typeMethod,
+    NcPpTypeMethods ... typesAndMethods
+) const
+{
+    const polyBoundaryMesh& pbm = mesh().boundaryMesh();
+
+    forAll(pbm, nccPatchi)
+    {
+        const polyPatch& pp = pbm[nccPatchi];
+
+        if (isA<NcPpType>(pp))
+        {
+            const NcPpType& ncPp =
+                refCast<const NcPpType>(pbm[nccPatchi]);
+
+            if (side == 1 && !ncPp.owner()) continue;
+
+            if (side == -1 && ncPp.owner()) continue;
+
+            if (origPatchIndexTable.found(ncPp.origPatchIndex())) continue;
+
+            origPatchIndexTable.insert(ncPp.origPatchIndex());
+            nonCoupledPatchIndices.append((ncPp.*typeMethod.method)());
+        }
+    }
+
+    nonConformalOtherPatchIndices
+    (
+        origPatchIndexTable,
+        nonCoupledPatchIndices,
+        side,
+        typesAndMethods ...
+    );
+}
+
+
+void Foam::nonConformalBoundary::nonConformalOtherPatchIndices
+(
+    labelHashSet& origPatchIndexTable,
+    DynamicList<label>& nonCoupledPatchIndices,
+    const label side
+) const
+{}
 
 
 const Foam::labelList&
@@ -217,69 +316,56 @@ bool Foam::nonConformalBoundary::movePoints()
 }
 
 
-Foam::labelList Foam::nonConformalBoundary::nonConformalNonCoupledPatchIDs
-(
-    const label side,
-    label (nonConformalCoupledPolyPatch::*method)() const
-) const
-{
-    const polyBoundaryMesh& pbm = mesh().boundaryMesh();
-
-    labelHashSet origPatchIDTable;
-    DynamicList<label> nonCoupledPatchIDs(pbm.size());
-
-    forAll(pbm, nccPatchi)
-    {
-        const polyPatch& pp = pbm[nccPatchi];
-
-        if (isA<nonConformalCoupledPolyPatch>(pp))
-        {
-            const nonConformalCoupledPolyPatch& nccPp =
-                refCast<const nonConformalCoupledPolyPatch>(pbm[nccPatchi]);
-
-            if (side == 1 && !nccPp.owner()) continue;
-
-            if (side == -1 && !nccPp.neighbour()) continue;
-
-            if (origPatchIDTable.found(nccPp.origPatchIndex())) continue;
-
-            origPatchIDTable.insert(nccPp.origPatchIndex());
-            nonCoupledPatchIDs.append((nccPp.*method)());
-        }
-    }
-
-    labelList result;
-    result.transfer(nonCoupledPatchIDs);
-    return result;
-}
+#define TYPE_METHOD(Type, Method) typeMethod<Type>(&Type::Method)
 
 
 Foam::labelList Foam::nonConformalBoundary::allOrigPatchIndices() const
 {
-    auto method = &nonConformalCoupledPolyPatch::origPatchIndex;
-    return nonConformalNonCoupledPatchIDs(0, method);
+    return
+        nonConformalOtherPatchIndices
+        (
+            0,
+            TYPE_METHOD(nonConformalCoupledPolyPatch, origPatchIndex),
+            TYPE_METHOD(nonConformalMappedWallPolyPatch, origPatchIndex)
+        );
 }
 
 
 Foam::labelList Foam::nonConformalBoundary::allErrorPatchIndices() const
 {
-    auto method = &nonConformalCoupledPolyPatch::errorPatchIndex;
-    return nonConformalNonCoupledPatchIDs(0, method);
+    return
+        nonConformalOtherPatchIndices
+        (
+            0,
+            TYPE_METHOD(nonConformalCoupledPolyPatch, errorPatchIndex)
+        );
 }
 
 
 Foam::labelList Foam::nonConformalBoundary::ownerOrigPatchIndices() const
 {
-    auto method = &nonConformalCoupledPolyPatch::origPatchIndex;
-    return nonConformalNonCoupledPatchIDs(1, method);
+    return
+        nonConformalOtherPatchIndices
+        (
+            1,
+            TYPE_METHOD(nonConformalCoupledPolyPatch, origPatchIndex),
+            TYPE_METHOD(nonConformalMappedWallPolyPatch, origPatchIndex)
+        );
 }
 
 
 Foam::labelList Foam::nonConformalBoundary::ownerErrorPatchIndices() const
 {
-    auto method = &nonConformalCoupledPolyPatch::errorPatchIndex;
-    return nonConformalNonCoupledPatchIDs(1, method);
+    return
+        nonConformalOtherPatchIndices
+        (
+            1,
+            TYPE_METHOD(nonConformalCoupledPolyPatch, errorPatchIndex)
+        );
 }
+
+
+#undef TYPE_METHOD
 
 
 const Foam::labelList&
@@ -339,17 +425,17 @@ Foam::nonConformalBoundary::ownerOrigBoundaryEdgeMeshEdge() const
     if (!ownerOrigBoundaryEdgeMeshEdgePtr_.valid())
     {
         // Create boundary of all owner-orig and proc patches
-        labelList ownerOrigAndProcPatchIDs = this->ownerOrigPatchIndices();
+        labelList ownerOrigAndProcPatchIndices = this->ownerOrigPatchIndices();
         forAll(mesh().boundaryMesh(), patchi)
         {
             if (isA<processorPolyPatch>(mesh().boundaryMesh()[patchi]))
             {
-                ownerOrigAndProcPatchIDs.append(patchi);
+                ownerOrigAndProcPatchIndices.append(patchi);
             }
         }
         const indirectPrimitivePatch ownerOrigAndProcBoundary
         (
-            boundary(ownerOrigAndProcPatchIDs)
+            boundary(ownerOrigAndProcPatchIndices)
         );
 
         // Create the mesh edge mapping for the owner-orig-and-proc boundary

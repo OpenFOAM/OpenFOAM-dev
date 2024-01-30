@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ SourceFiles
 #define mappedExtrudedWallFvPatch_H
 
 #include "wallFvPatch.H"
+#include "mappedFvPatchBase.H"
 #include "mappedExtrudedWallPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,7 +47,8 @@ namespace Foam
 
 class mappedExtrudedWallFvPatch
 :
-    public wallFvPatch
+    public wallFvPatch,
+    public mappedFvPatchBase
 {
 
 public:
@@ -64,7 +66,8 @@ public:
             const fvBoundaryMesh& bm
         )
         :
-            wallFvPatch(patch, bm)
+            wallFvPatch(patch, bm),
+            mappedFvPatchBase(static_cast<const fvPatch&>(*this))
         {}
 };
 

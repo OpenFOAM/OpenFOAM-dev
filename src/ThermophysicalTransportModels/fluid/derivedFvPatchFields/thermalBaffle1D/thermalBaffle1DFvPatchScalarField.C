@@ -27,7 +27,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "thermophysicalTransportModel.H"
-#include "mappedPatchBase.H"
+#include "mappedFvPatchBaseBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,13 +58,13 @@ thermalBaffle1DFvPatchScalarField
     qrRelaxation_(dict.lookupOrDefault<scalar>("qrRelaxation", 1)),
     qrName_(dict.lookupOrDefault<word>("qr", "none"))
 {
-    mappedPatchBase::validateMapForField
+    mappedPatchBaseBase::validateMapForField
     (
         *this,
         iF,
         dict,
-        mappedPatchBase::from::sameRegion
-      & mappedPatchBase::from::differentPatch
+        mappedPatchBaseBase::from::sameRegion
+      & mappedPatchBaseBase::from::differentPatch
     );
 
     fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
@@ -154,8 +154,9 @@ thermalBaffle1DFvPatchScalarField
 template<class solidType>
 bool thermalBaffle1DFvPatchScalarField<solidType>::owner() const
 {
-    const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
-    return patch().patch().index() < mpp.nbrPolyPatch().index();
+    const mappedFvPatchBaseBase& mapper =
+        mappedFvPatchBaseBase::getMap(patch());
+    return patch().index() < mapper.nbrFvPatch().index();
 }
 
 
@@ -163,9 +164,10 @@ template<class solidType>
 const thermalBaffle1DFvPatchScalarField<solidType>&
 thermalBaffle1DFvPatchScalarField<solidType>::nbrField() const
 {
-    const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
-    const polyMesh& nbrMesh = mpp.nbrMesh();
-    const label nbrPatchi = mpp.nbrPolyPatch().index();
+    const mappedFvPatchBaseBase& mapper =
+        mappedFvPatchBaseBase::getMap(patch());
+    const polyMesh& nbrMesh = mapper.nbrMesh();
+    const label nbrPatchi = mapper.nbrFvPatch().index();
     const fvPatch& nbrPatch =
         refCast<const fvMesh>(nbrMesh).boundary()[nbrPatchi];
 
@@ -217,8 +219,9 @@ baffleThickness() const
     }
     else
     {
-        const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
-        return mpp.fromNeighbour(nbrField().baffleThickness());
+        const mappedFvPatchBaseBase& mapper =
+            mappedFvPatchBaseBase::getMap(patch());
+        return mapper.fromNeighbour(nbrField().baffleThickness());
     }
 }
 
@@ -232,8 +235,9 @@ tmp<scalarField> thermalBaffle1DFvPatchScalarField<solidType>::qs() const
     }
     else
     {
-        const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
-        return mpp.fromNeighbour(nbrField().qs());
+        const mappedFvPatchBaseBase& mapper =
+            mappedFvPatchBaseBase::getMap(patch());
+        return mapper.fromNeighbour(nbrField().qs());
     }
 }
 
@@ -290,7 +294,8 @@ void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag + 1;
 
-    const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
+    const mappedFvPatchBaseBase& mapper =
+        mappedFvPatchBaseBase::getMap(patch());
 
     if (baffleActivated_)
     {
@@ -327,7 +332,7 @@ void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
         const scalarField kappaDelta(kappap*patch().deltaCoeffs());
 
         // Neighbour properties
-        const scalarField nbrTp(mpp.fromNeighbour(nbrField()));
+        const scalarField nbrTp(mapper.fromNeighbour(nbrField()));
 
         // Solid properties
         scalarField kappas(patch().size(), 0.0);

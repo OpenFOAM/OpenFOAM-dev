@@ -1,0 +1,45 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+internalFacesOnly true;
+
+#include "blockMeshDict"
+
+baffles
+{
+    nonCouple
+    {
+        type        searchableSurface;
+        surface     searchableCylinder;
+        point1      (0 0 -1);
+        point2      (0 0 1);
+        radius      #calc "$<scalar>convertToMeters*$<scalar>R";
+
+        owner
+        {
+            name        nonCoupleRotating;
+            type        wall;
+        }
+
+        neighbour
+        {
+            name        nonCoupleStationary;
+            type        wall;
+        }
+    }
+}
+
+// ************************************************************************* //

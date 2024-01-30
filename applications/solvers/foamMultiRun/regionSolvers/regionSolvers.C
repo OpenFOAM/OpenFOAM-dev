@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,6 +110,15 @@ Foam::regionSolvers::regionSolvers(const Time& runTime)
 
     string::size_type nRegionNameChars = 0;
 
+    // Load the solver libraries
+    forAll(regionSolverNames, i)
+    {
+        const word& solverName = regionSolverNames[i].second();
+
+        solver::load(solverName);
+    }
+
+    // Construct the region meshes
     forAll(regionSolverNames, i)
     {
         const word& regionName = regionSolverNames[i].first();
@@ -136,13 +145,11 @@ Foam::regionSolvers::regionSolvers(const Time& runTime)
         regions_[i].postConstruct(true, fvMesh::stitchType::geometric);
     }
 
+    // Select the solvers
     forAll(regionSolverNames, i)
     {
         const word& regionName = regionSolverNames[i].first();
         const word& solverName = regionSolverNames[i].second();
-
-        // Load the solver library
-        solver::load(solverName);
 
         solvers_.set(i, solver::New(solverName, regions_[i]));
 

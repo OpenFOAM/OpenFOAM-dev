@@ -25,8 +25,8 @@ License
 
 #include "radiationCoupledBase.H"
 #include "volFields.H"
-#include "mappedPatchBase.H"
 #include "fieldMapper.H"
+#include "mappedFvPatchBaseBase.H"
 #include "radiationModel.H"
 #include "opaqueSolid.H"
 #include "absorptionEmissionModel.H"
@@ -125,11 +125,11 @@ Foam::tmp<Foam::scalarField> Foam::radiationCoupledBase::emissivity() const
     {
         case SOLIDRADIATION:
         {
-            // Get the coupling information from the mappedPatchBase
-            const mappedPatchBase& mpp =
-                mappedPatchBase::getMap(patch_.patch());
-
-            const polyMesh& nbrMesh = mpp.nbrMesh();
+            // Get the mapper and the neighbouring mesh and patch
+            const mappedFvPatchBaseBase& mapper =
+                mappedFvPatchBaseBase::getMap(patch_);
+            const fvMesh& nbrMesh = mapper.nbrMesh();
+            const fvPatch& nbrPatch = mapper.nbrFvPatch();
 
             const radiationModels::opaqueSolid& radiation =
                 nbrMesh.lookupObject<radiationModels::opaqueSolid>
@@ -137,16 +137,11 @@ Foam::tmp<Foam::scalarField> Foam::radiationCoupledBase::emissivity() const
                     "radiationProperties"
                 );
 
-            const fvMesh& nbrFvMesh = refCast<const fvMesh>(nbrMesh);
-
-            const fvPatch& nbrPatch =
-                nbrFvMesh.boundary()[mpp.nbrPolyPatch().index()];
-
             // NOTE: for an opaqueSolid the absorptionEmission model returns the
             // emissivity of the surface rather than the emission coefficient
             // and the input specification MUST correspond to this.
             return
-                mpp.fromNeighbour
+                mapper.fromNeighbour
                 (
                     radiation.absorptionEmission().e()().boundaryField()
                     [

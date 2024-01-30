@@ -59,7 +59,7 @@ void Foam::conformedFvsPatchField<Type>::conform
 
     const fvBoundaryMesh& fvbm = iF.mesh().boundary();
 
-    const labelList origPatchIDs =
+    const labelList origPatchIndices =
         nonConformalBoundary::New(iF.mesh()).allOrigPatchIndices();
 
     // Evaluate the conformed orig and non-conformal boundary fields
@@ -76,9 +76,9 @@ void Foam::conformedFvsPatchField<Type>::conform
 
     // Replace every original patch field with a conformed patch field
     // containing the conformed orig and non-conformal fields
-    forAll(origPatchIDs, i)
+    forAll(origPatchIndices, i)
     {
-        const label origPatchi = origPatchIDs[i];
+        const label origPatchi = origPatchIndices[i];
         const fvPatch& origFvp = fvbm[origPatchi];
 
         autoPtr<conformedFvsPatchField<Type>> pF
@@ -114,16 +114,16 @@ void Foam::conformedFvsPatchField<Type>::unconform
 
     const fvBoundaryMesh& fvbm = iF.mesh().boundary();
 
-    const labelList origPatchIDs =
+    const labelList origPatchIndices =
         nonConformalBoundary::New(iF.mesh()).allOrigPatchIndices();
 
     // Extract the conformed orig and non-conformal boundary fields from
     // the stored conformed patch fields
     PtrList<fvsPatchField<Type>> origPFs(fvbm.size());
     PtrList<fvsPatchField<Type>> ncPFs(fvbm.size());
-    forAll(origPatchIDs, i)
+    forAll(origPatchIndices, i)
     {
-        const label origPatchi = origPatchIDs[i];
+        const label origPatchi = origPatchIndices[i];
 
         conformedFvsPatchField<Type>& cpF =
             refCast<conformedFvsPatchField<Type>>(bF[origPatchi]);

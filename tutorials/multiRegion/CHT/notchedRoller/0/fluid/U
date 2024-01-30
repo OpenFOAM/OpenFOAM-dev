@@ -1,0 +1,69 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volVectorField;
+    location    "0/fluid";
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0.1 0 0);
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    atmosphere
+    {
+        type            pressureInletOutletVelocity;
+        tangentialVelocity $internalField;
+        value           $internalField;
+    }
+
+    inlet
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+
+    outlet
+    {
+        type            pressureInletOutletVelocity;
+        value           $internalField;
+    }
+
+    "nonCouple.*"
+    {
+        type            movingWallSlipVelocity;
+        value           uniform (0 0 0);
+    }
+
+    "fluid_to_.*"
+    {
+        type            movingWallVelocity;
+        value           uniform (0 0 0);
+    }
+
+    fluidSolid_on_nonCoupleRotating
+    {
+        type            movingMappedWallVelocity;
+        value           uniform (0 0 0);
+    }
+
+    fluidRoller_on_nonCoupleStationary
+    {
+        type            movingMappedWallVelocity;
+        value           uniform (0 0 0);
+    }
+}
+
+// ************************************************************************* //

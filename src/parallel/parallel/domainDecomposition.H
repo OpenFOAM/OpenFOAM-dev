@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,7 @@ namespace Foam
 {
 
 class faceCoupleInfo;
+class multiDomainDecomposition;
 
 /*---------------------------------------------------------------------------*\
                      Class domainDecomposition Declaration
@@ -57,7 +58,19 @@ class faceCoupleInfo;
 
 class domainDecomposition
 {
+    // Private Typedefs
+
+        //- Table to map from a labelPair to a label
+        typedef
+            HashTable<label, labelPair, Hash<labelPair>>
+            labelPairLabelTable;
+
+
     // Private Data
+
+        //- Optimisation switch for reconstruction algorithm. See corresponding
+        //  method below.
+        static bool sortReconstructNonConformalCyclicAddressing_;
 
         //- Run times
         const processorRunTimes& runTimes_;
@@ -70,6 +83,9 @@ class domainDecomposition
 
         //- The processor meshes
         PtrList<fvMesh> procMeshes_;
+
+        //- The region meshes
+        const multiDomainDecomposition& regionMeshes_;
 
 
         // Complete mesh to processor mesh addressing
@@ -186,16 +202,101 @@ class domainDecomposition
             //- Are the processor meshes conformal?
             bool procsConformal() const;
 
-            //- ...
+            //- Generate the reverse of proc-face-face addressing. -1 indicates
+            //  a face that is on a (conformal) processor boundary and hence
+            //  has multiple associated proc-face indices.
+            labelList completeFaceAddressing() const;
+
+            //- Generate a map from non-conformal-cyclic patch index and an
+            //  owner-neighbour pair of processor indices to the corresponding
+            //  non-conformal processor-cyclic patch index
+            List<labelPairLabelTable> nonConformalCyclicProcCyclics() const;
+
+            //- Generate the processor offsets for the non-conformal mapped
+            //  wall patches. Optionally extend the lists to nProcs+1 and add
+            //  the total size at the end.
+            PtrList<labelListList>
+                nonConformalMappedWallProcOffsets(const bool appendSize) const;
+
+            //- Decompose the addressing of a non-conformal-cyclic patch.
+            //  Helper for nonConformalProcFaceAddressingBf below.
+            void decomposeNonConformalCyclicAddressing
+            (
+                const label nccPatchi,
+                const List<labelPairLabelTable>& nonConformalCyclicProcCyclics,
+                List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+            ) const;
+
+            //- Decompose the addressing of a non-conformal-mapped-wall patch.
+            //  Helper for nonConformalProcFaceAddressingBf below.
+            void decomposeNonConformalMappedWallAddressing
+            (
+                const label ncmwPatchi,
+                PtrList<labelListList>& nonConformalMappedWallProcOffsets,
+                List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+            ) const;
+
+            //- Decompose the addressing of a non-conformal-error patch.
+            //  Helper for nonConformalProcFaceAddressingBf below.
+            void decomposeNonConformalErrorAddressing
+            (
+                const label ncePatchi,
+                List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+            ) const;
+
+            //- Reconstruct the addressing of a non-conformal-cyclic patch.
+            //  Helper for nonConformalProcFaceAddressingBf below.
+            void reconstructNonConformalCyclicAddressing
+            (
+                const label nccPatchi,
+                const List<labelPairLabelTable>& nonConformalCyclicProcCyclics,
+                List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+            ) const;
+
+            //- Reconstruct the addressing of a non-conformal-cyclic patch.
+            //  Helper for nonConformalProcFaceAddressingBf below.
+            //
+            //  !!! Alternative implementation based on a sort. Has complexity
+            //  nFaces*log2(nFaces), whether as the "standard" function has
+            //  complexity nProcs*nProcs*nFaces. It was thought that this
+            //  version would be better, but testing hasn't found any cases for
+            //  which this is the case. Enabled with an optimisation switch
+            //  with the same name as the method.
+            //
+            void sortReconstructNonConformalCyclicAddressing
+            (
+                const label nccPatchi,
+                const List<labelPairLabelTable>& nonConformalCyclicProcCyclics,
+                List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+            ) const;
+
+            //- Reconstruct the addressing of a non-conformal-mapped-wall patch.
+            //  Helper for nonConformalProcFaceAddressingBf below.
+            void reconstructNonConformalMappedWallAddressing
+            (
+                const label ncmwPatchi,
+                List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+            ) const;
+
+            //- Reconstruct the addressing of a non-conformal-error patch.
+            //  Helper for nonConformalProcFaceAddressingBf below.
+            void reconstructNonConformalErrorAddressing
+            (
+                const label ncePatchi,
+                List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+            ) const;
+
+            //- Generate the procFaceAddressingBf for the non-conformal patches
+            //  only. Helper for procFaceAddressingBf.
             List<List<DynamicList<label>>>
                 nonConformalProcFaceAddressingBf() const;
 
-            // Map the polyFacesBf from the processor to the complete meshes and
-            // unconform the complete mesh
+            //- Map the polyFacesBf from the processor to the complete meshes
+            //  and unconform the complete mesh
             void unconformComplete();
 
-            // Map the polyFacesBf from the complete to the processor meshes and
-            // unconform the processor meshes
+            //- Map the polyFacesBf from the complete to the processor meshes
+            //  and unconform the processor meshes
             void unconformProcs();
 
             //- If the complete mesh is non-conformal and the processor meshes
@@ -215,7 +316,7 @@ class domainDecomposition
         void validateProcs() const;
 
         //- Read the complete mesh
-        void readComplete(const bool stitch = true);
+        void readComplete();
 
         //- Read the processor meshes
         void readProcs();
@@ -264,7 +365,9 @@ public:
         domainDecomposition
         (
             const processorRunTimes& procRunTimes,
-            const word& regionName
+            const word& regionName,
+            const multiDomainDecomposition& regionMeshes =
+                NullObjectRef<multiDomainDecomposition>()
         );
 
 
@@ -309,18 +412,48 @@ public:
         //- Read in the complete mesh. Read the processor meshes if they are
         //  available and up to date relative to the complete mesh, or
         //  decompose if not. Return whether or not decomposition happened.
-        bool readDecompose(const bool doSets);
+        bool readDecompose();
+
+        //- Post-read-construction steps for the meshes after read-decompose
+        void postReadDecompose();
+
+        //- Synchronise non-conformal structure after read-decompose
+        void unconformReadDecompose();
+
+        //- Write following read-decompose
+        void writeReadDecompose(const bool decomposed, const bool doSets);
 
         //- Read in the processor meshes. Read the complete mesh if it is
         //  available and up to date relative to the processor meshes, or
         //  reconstruct if not. Return whether or not reconstruction happened.
-        bool readReconstruct(const bool doSets);
+        bool readReconstruct();
+
+        //- Post-read-construction steps for the meshes after read-reconstruct
+        void postReadReconstruct();
+
+        //- Synchronise non-conformal structure after read-reconstruct
+        void unconformReadReconstruct();
+
+        //- Write following read-reconstruct
+        void writeReadReconstruct(const bool reconstructed, const bool doSets);
 
         //- Read-update for decomposition
         fvMesh::readUpdateState readUpdateDecompose();
 
+        //- Complete read-update-decompose
+        void postReadUpdateDecompose(const fvMesh::readUpdateState stat);
+
+        //- Synchronise non-conformal structure after read-update-decompose
+        void unconformReadUpdateDecompose(const fvMesh::readUpdateState stat);
+
         //- Read-update for reconstruction
         fvMesh::readUpdateState readUpdateReconstruct();
+
+        //- Complete read-update-reconstruct
+        void postReadUpdateReconstruct(const fvMesh::readUpdateState stat);
+
+        //- Synchronise non-conformal structure after read-update-reconstruct
+        void unconformReadUpdateReconstruct(const fvMesh::readUpdateState stat);
 
         //- Return the distribution as an FV field for writing
         inline const labelList& cellProc() const

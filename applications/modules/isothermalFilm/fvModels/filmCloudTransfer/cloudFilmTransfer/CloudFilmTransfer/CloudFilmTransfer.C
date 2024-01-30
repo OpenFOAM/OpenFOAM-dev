@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "CloudFilmTransfer.H"
 #include "filmCloudTransfer.H"
-#include "mappedPatchBase.H"
+#include "mappedFvPatchBaseBase.H"
 #include "ThermoCloud.H"
 #include "meshTools.H"
 #include "mathematicalConstants.H"
@@ -446,24 +446,18 @@ Foam::CloudFilmTransfer<CloudType>::filmTransferPtrs() const
 {
     if (filmTransfers_.empty())
     {
-        const polyBoundaryMesh& patches = this->owner().mesh().boundaryMesh();
+        const fvBoundaryMesh& patches = this->owner().mesh().boundary();
 
         label nFilms = 0;
 
         forAll(patches, patchi)
         {
-            if (isA<mappedPatchBase>(patches[patchi]))
+            if (isA<mappedFvPatchBaseBase>(patches[patchi]))
             {
-                const mappedPatchBase& mpb =
-                    refCast<const mappedPatchBase>(patches[patchi]);
+                const mappedFvPatchBaseBase& mpb =
+                    refCast<const mappedFvPatchBaseBase>(patches[patchi]);
 
-                Foam::fvModels& fvModels
-                (
-                    fvModels::New
-                    (
-                        refCast<const fvMesh>(mpb.nbrMesh())
-                    )
-                );
+                Foam::fvModels& fvModels = fvModels::New(mpb.nbrMesh());
 
                 fv::filmCloudTransfer* filmCloudPtr = nullptr;
 

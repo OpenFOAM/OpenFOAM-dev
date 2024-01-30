@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,21 +25,32 @@ Class
     Foam::mappedPatchBase
 
 Description
-    Engine which provides mapping between two patches
+    Engine and base class for poly patches which provides interpolative mapping
+    between two globally conforming poly patches
 
     Example:
     \verbatim
-        // The name of the region to map from. Optional. Defaults to the same
-        // region as the patch.
-        neighbourRegion region0;
+        // (Settings inherited from mappedPatchBaseBase to identify the
+        // neighbouring region and patch)
+        ...
 
-        // The name of the patch to map from
-        neighbourPatch movingWall;
+        // Patch-to-patch mapping method. How the interpolation addressing and
+        // weights are constructed. Likely to be "matching" if the patches are
+        // conformal, or "intersection" if they are not. Optional. If omitted,
+        // then it will be assumed that the patches are conformal, and an
+        // octree-based method will be used to construct the connections.
+        method matching; // nearest, intersection, inverseDistance
 
-        // Couple group to specify the region and patch to map from. This is an
-        // alternative to specifying neighbourRegion and neighbourPatch
-        // directly, as shown above.
-        coupleGroup baffleGroup;
+        // Tolerance used to check the patches' global conformance (i.e., the
+        // conformance of the patches' entire surfaces, not of each pair of
+        // faces). Optional. Defaults to a small value.
+        matchTol 1e-4;
+
+        // Switch to control whether the mapping is re-calculated after mesh
+        // motion. Optional. Defaults to true, which is the safest option. This
+        // should only be set to false if it is known that the patches do not
+        // move, or that they move consistently.
+        reMapAfterMove true;
     \endverbatim
 
 SourceFiles
@@ -50,44 +61,25 @@ SourceFiles
 #ifndef mappedPatchBase_H
 #define mappedPatchBase_H
 
-#include "pointField.H"
+#include "mappedPatchBaseBase.H"
 #include "patchToPatch.H"
-#include "coupleGroupIdentifier.H"
-#include "cyclicTransform.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class polyPatch;
-class polyMesh;
-class distributionMap;
-
 /*---------------------------------------------------------------------------*\
                        Class mappedPatchBase Declaration
 \*---------------------------------------------------------------------------*/
 
 class mappedPatchBase
+:
+    public mappedPatchBaseBase
 {
 protected:
 
     // Protected data
-
-        //- Patch to map to
-        const polyPatch& patch_;
-
-        //- Couple group for the region/patch to map from
-        const coupleGroupIdentifier coupleGroup_;
-
-        //- Name of the region to map from
-        mutable word nbrRegionName_;
-
-        //- Name of the patch to map from
-        mutable word nbrPatchName_;
-
-        //- The transformation between the patches
-        mutable cyclicTransform transform_;
 
         //- Are we using the tree mapping method, or a patch-to-patch
         //  intersection engine? The former is typically faster on small,
@@ -196,65 +188,10 @@ public:
 
     // Member Functions
 
-        // Access
-
-            //- Name of the region to map from
-            inline const word& nbrRegionName() const;
-
-            //- Is the neighbour region the same as for this patch?
-            inline bool sameRegion() const;
-
-            //- Is the neighbour patch the same as this patch?
-            inline bool samePatch() const;
-
-            //- Is the neighbour patch the same as this patch with no transform?
-            inline bool sameUntransformedPatch() const;
-
-            //- Name of the patch to map from
-            inline const word& nbrPatchName() const;
-
-            //- Get the mesh for the region to map from
-            const polyMesh& nbrMesh() const;
-
-            //- Get the patch to map from
-            const polyPatch& nbrPolyPatch() const;
-
-
         // Casting
 
             //- Cast the given polyPatch to a mappedPatchBase. Handle errors.
             static const mappedPatchBase& getMap(const polyPatch& patch);
-
-            //- Restrict use of the mapper to certain configurations
-            struct from
-            {
-                static const label any = 0;
-                static const label sameRegion = 1;
-                static const label differentRegion = 2;
-                static const label differentPatch = 4;
-            };
-
-            //- Validate that the map exists and is appropriate for the given
-            //  set of permitted configurations
-            template<class PatchFieldType, class FieldType>
-            static void validateMapForField
-            (
-                const PatchFieldType& field,
-                const FieldType& iF,
-                const dictionary& context,
-                const label froms = from::any
-            );
-
-            //- Validate that the map is appropriate for the given
-            //  set of permitted configurations
-            template<class PatchFieldType, class FieldType>
-            void validateForField
-            (
-                const PatchFieldType& field,
-                const FieldType& iF,
-                const dictionary& context,
-                const label froms = from::any
-            ) const;
 
 
         // Edit
@@ -289,10 +226,6 @@ public:
 
 
         // I/O
-
-            //- Return whether or not the given dictionary contains a
-            //  mappedPatchBase specification
-            static bool specified(const dictionary& dict);
 
             //- Write as a dictionary
             virtual void write(Ostream&) const;

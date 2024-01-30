@@ -122,6 +122,9 @@ public:
 
             //- Error patch
             const nonConformalErrorFvPatch& errorPatch() const;
+
+            //- Return the face-poly-faces patch field type
+            virtual word polyFacesType() const;
 };
 
 

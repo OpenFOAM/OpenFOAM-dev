@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,8 +91,14 @@ template<class Region>
 Foam::MultiRegionRefs<Region>::MultiRegionRefs(UPtrList<Region>& regions)
 :
     regions_(regions),
-    previousPrefix_(Sout.prefix())
+    previousPrefix_(Sout.prefix()),
+    indices_()
 {
+    forAll(regions, regioni)
+    {
+        indices_.insert(regionName(regions_[regioni]), regioni);
+    }
+
     if (prefixes())
     {
         Sout.prefix() = string(prefixWidth(), ' ');
@@ -165,6 +171,26 @@ Foam::RegionRef<Region> Foam::MultiRegionRefs<Region>::operator[]
 )
 {
     return RegionRef<Region>(*this, regioni, regions_[regioni]);
+}
+
+
+template<class Region>
+Foam::RegionRef<const Region> Foam::MultiRegionRefs<Region>::operator[]
+(
+    const word& regionName
+) const
+{
+    return operator[](indices_[regionName]);
+}
+
+
+template<class Region>
+Foam::RegionRef<Region> Foam::MultiRegionRefs<Region>::operator[]
+(
+    const word& regionName
+)
+{
+    return operator[](indices_[regionName]);
 }
 
 

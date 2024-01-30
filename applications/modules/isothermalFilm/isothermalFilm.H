@@ -57,7 +57,7 @@ namespace Foam
 
 // Forward declaration of classes
 class surfaceTensionModel;
-class mappedPatchBase;
+class mappedFvPatchBaseBase;
 
 namespace solvers
 {
@@ -324,7 +324,7 @@ public:
         const fvPatch& surfacePatch() const;
 
         //- Return the film surface patch region-region map
-        const mappedPatchBase& surfacePatchMap() const;
+        const mappedFvPatchBaseBase& surfacePatchMap() const;
 
         //- Return the film surface tension coefficient field
         tmp<volScalarField> sigma() const;

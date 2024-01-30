@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,6 @@ License
 #include "fvmLaplacian.H"
 #include "meshPhiCorrectInfo.H"
 #include "meshPhiPreCorrectInfo.H"
-#include "movingWallVelocityFvPatchVectorField.H"
-#include "movingWallSlipVelocityFvPatchVectorField.H"
 #include "nonConformalBoundary.H"
 #include "nonConformalCyclicFvPatch.H"
 #include "nonConformalProcessorCyclicFvPatch.H"
@@ -174,15 +172,15 @@ void Foam::fvMeshStitchers::moving::createNonConformalCorrectMeshPhiGeometry
 )
 {
     const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh());
-    const labelList origPatchIDs = ncb.allOrigPatchIndices();
-    const labelList errorPatchIDs = ncb.allErrorPatchIndices();
+    const labelList origPatchIndices = ncb.allOrigPatchIndices();
+    const labelList errorPatchIndices = ncb.allErrorPatchIndices();
 
-    forAll(origPatchIDs, i)
+    forAll(errorPatchIndices, i)
     {
-        const label origPatchi = origPatchIDs[i];
+        const label origPatchi = origPatchIndices[i];
         const polyPatch& origPp = mesh().boundaryMesh()[origPatchi];
 
-        const label errorPatchi = errorPatchIDs[i];
+        const label errorPatchi = errorPatchIndices[i];
 
         polyFacesBf[errorPatchi] =
             repeat((identityMap(origPp.size()) + origPp.start())());
@@ -856,8 +854,8 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
 )
 {
     const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh());
-    const labelList origPatchIDs = ncb.allOrigPatchIndices();
-    const labelList errorPatchIDs = ncb.allErrorPatchIndices();
+    const labelList origPatchIndices = ncb.allOrigPatchIndices();
+    const labelList errorPatchIndices = ncb.allErrorPatchIndices();
 
     // Synchronise the mesh fluxes on both sides of coupled patches. Store
     // the change made to the mesh flux as an error.
@@ -979,12 +977,12 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
     // Resize the error patch faces so that mesh flux divided by area
     // results in a velocity equal to the mesh velocity of the original
     // patch face
-    forAll(origPatchIDs, i)
+    forAll(errorPatchIndices, i)
     {
-        const label origPatchi = origPatchIDs[i];
+        const label origPatchi = origPatchIndices[i];
         const polyPatch& origPp = mesh().boundaryMesh()[origPatchi];
 
-        const label errorPatchi = errorPatchIDs[i];
+        const label errorPatchi = errorPatchIndices[i];
 
         forAll(origPp, origPatchFacei)
         {
@@ -1004,43 +1002,6 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
                 SfSf.boundaryFieldRef()[errorPatchi];
             Sfp[errorPatchFacei0] += errorSf;
             Sfp[errorPatchFacei1] -= errorSf;
-        }
-    }
-
-    // Wherever we find a movingWall-type boundary condition on an original
-    // patch, override the corresponding error patch condition to
-    // movingWallSlipVelocity
-    UPtrList<volVectorField> fields(mesh().fields<volVectorField>());
-    forAll(fields, i)
-    {
-        volVectorField& field = fields[i];
-
-        typename volVectorField::Boundary& Ub = field.boundaryFieldRef();
-
-        forAll(origPatchIDs, i)
-        {
-            const label origPatchi = origPatchIDs[i];
-
-            typename volVectorField::Patch& origUp = Ub[origPatchi];
-
-            if
-            (
-                isA<movingWallVelocityFvPatchVectorField>(origUp)
-             || isA<movingWallSlipVelocityFvPatchVectorField>(origUp)
-            )
-            {
-                const label errorPatchi = errorPatchIDs[i];
-
-                Ub.set
-                (
-                    errorPatchi,
-                    new movingWallSlipVelocityFvPatchVectorField
-                    (
-                        mesh().boundary()[errorPatchi],
-                        field
-                    )
-                );
-            }
         }
     }
 }

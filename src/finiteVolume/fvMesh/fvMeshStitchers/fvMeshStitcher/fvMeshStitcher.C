@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,11 +26,18 @@ License
 #include "fvMeshStitcher.H"
 #include "globalIndex.H"
 #include "fvcSurfaceIntegrate.H"
+#include "MultiRegionList.H"
 #include "meshObjects.H"
+#include "movingWallVelocityFvPatchVectorField.H"
+#include "movingWallSlipVelocityFvPatchVectorField.H"
 #include "nonConformalBoundary.H"
 #include "nonConformalCyclicFvPatch.H"
 #include "nonConformalProcessorCyclicFvPatch.H"
 #include "nonConformalErrorFvPatch.H"
+#include "nonConformalCyclicFvPatch.H"
+#include "nonConformalMappedWallFvPatch.H"
+#include "nonConformalMappedPolyFacesFvsPatchLabelField.H"
+#include "nonConformalProcessorCyclicFvPatch.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
 #include "polyDistributionMap.H"
@@ -57,6 +64,21 @@ edge meshEdge
     );
 }
 
+
+bool any(const boolList& l)
+{
+    bool result = false;
+    forAll(l, i)
+    {
+        if (l[i])
+        {
+            result = true;
+            break;
+        }
+    }
+    return returnReduce(result, andOp<bool>());
+}
+
 }
 
 
@@ -71,343 +93,611 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fvMeshStitcher::intersectNonConformalCyclic
+void Foam::fvMeshStitcher::regionNames(const fvMesh& mesh, wordHashSet& names)
+{
+    names.insert(mesh.name());
+
+    forAll(mesh.boundary(), patchi)
+    {
+        const fvPatch& fvp = mesh.boundary()[patchi];
+
+        if (!isA<nonConformalMappedWallFvPatch>(fvp)) continue;
+
+        const nonConformalMappedWallFvPatch& ncmwFvp =
+            refCast<const nonConformalMappedWallFvPatch>(fvp);
+
+        if (!names.found(ncmwFvp.nbrRegionName()))
+        {
+            regionNames(ncmwFvp.nbrMesh(), names);
+        }
+    }
+}
+
+
+Foam::wordList Foam::fvMeshStitcher::regionNames() const
+{
+    wordHashSet names;
+    regionNames(mesh_, names);
+    return names.toc();
+}
+
+
+Foam::UPtrList<Foam::fvMesh> Foam::fvMeshStitcher::regionMeshes()
+{
+    const wordList names(regionNames());
+
+    UPtrList<fvMesh> result(names.size());
+    forAll(names, i)
+    {
+        result.set
+        (
+            i,
+            &mesh_.time().lookupObjectRef<fvMesh>(names[i])
+        );
+    }
+
+    return result;
+}
+
+
+Foam::UPtrList<const Foam::fvMesh> Foam::fvMeshStitcher::regionMeshes() const
+{
+    const wordList names(regionNames());
+
+    UPtrList<const fvMesh> result(names.size());
+    forAll(names, i)
+    {
+        result.set
+        (
+            i,
+            &mesh_.time().lookupObject<fvMesh>(names[i])
+        );
+    }
+
+    return result;
+}
+
+
+Foam::IOobject Foam::fvMeshStitcher::polyFacesBfIO(const fvMesh& mesh)
+{
+    return IOobject
+    (
+        "polyFaces",
+        mesh.time().findInstance
+        (
+            mesh.dbDir()/fvMesh::typeName,
+            "polyFaces",
+            IOobject::READ_IF_PRESENT
+        ),
+        fvMesh::typeName,
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::NO_WRITE,
+        false
+    );
+}
+
+
+bool Foam::fvMeshStitcher::loadPolyFacesBf
 (
-    const nonConformalCyclicFvPatch& nccFvp,
+    IOobject& polyFacesBfIO,
+    SurfaceFieldBoundary<label>& polyFacesBf
+)
+{
+    bool loaded = false;
+
+    // If the poly faces are in the region cache then use them and remove them.
+    // This mesh is now available, so we can look it up to access its poly
+    // faces from now on.
+    auto polyFacesBfIOIter = regionPolyFacesBfIOs_.find(mesh_.name());
+    auto polyFacesBfIter = regionPolyFacesBfs_.find(mesh_.name());
+    if (polyFacesBfIOIter != regionPolyFacesBfIOs_.end())
+    {
+        polyFacesBfIO =
+            autoPtr<IOobject>
+            (
+                regionPolyFacesBfIOs_.remove(polyFacesBfIOIter)
+            )();
+
+        polyFacesBf.reset
+        (
+            tmp<SurfaceFieldBoundary<label>>
+            (
+                regionPolyFacesBfs_.remove(polyFacesBfIter)
+            )
+        );
+
+        loaded = true;
+    }
+
+    // If the faces are not in the region cache, then try and read them
+    if (!loaded)
+    {
+        typeIOobject<surfaceLabelField> io
+        (
+            fvMeshStitcher::polyFacesBfIO(mesh_)
+        );
+
+        if (io.headerOk())
+        {
+            polyFacesBfIO = io;
+
+            polyFacesBf.reset
+            (
+                surfaceLabelField(polyFacesBfIO, mesh_).boundaryField()
+            );
+
+            loaded = true;
+        }
+    }
+
+    // If nothing is available then return
+    if (!loaded) return false;
+
+    // If the poly faces are available, then make sure all connected regions'
+    // poly faces have been read and are in the cache
+    forAll(mesh_.boundary(), patchi)
+    {
+        const fvPatch& fvp = mesh_.boundary()[patchi];
+
+        if (!isA<nonConformalMappedWallFvPatch>(fvp)) continue;
+
+        const nonConformalMappedWallFvPatch& ncmwFvp =
+            refCast<const nonConformalMappedWallFvPatch>(fvp);
+
+        if (!ncmwFvp.haveNbr()) continue;
+
+        if (regionPolyFacesBfs_.found(ncmwFvp.nbrMesh().name())) continue;
+
+        IOobject io = fvMeshStitcher::polyFacesBfIO(ncmwFvp.nbrMesh());
+
+        regionPolyFacesBfIOs_.insert
+        (
+            ncmwFvp.nbrMesh().name(),
+            new IOobject(io)
+        );
+
+        regionPolyFacesBfs_.insert
+        (
+            ncmwFvp.nbrMesh().name(),
+            new surfaceLabelField::Boundary
+            (
+                surfaceLabelField::null(),
+                surfaceLabelField(io, ncmwFvp.nbrMesh()).boundaryField()
+            )
+        );
+    }
+
+    return true;
+}
+
+
+const Foam::surfaceLabelField::Boundary& Foam::fvMeshStitcher::getPolyFacesBf
+(
+    const word& regionName
+) const
+{
+    if (regionPolyFacesBfs_.found(regionName))
+    {
+        return *regionPolyFacesBfs_[regionName];
+    }
+    else
+    {
+        return mesh_.time().lookupObject<fvMesh>(regionName).polyFacesBf();
+    }
+}
+
+
+void Foam::fvMeshStitcher::getOrigNbrBfs
+(
+    const SurfaceFieldBoundary<label>& polyFacesBf,
+    const SurfaceFieldBoundary<vector>& SfBf,
+    const SurfaceFieldBoundary<vector>& CfBf,
+    tmp<SurfaceFieldBoundary<label>>& tOrigFacesNbrBf,
+    tmp<SurfaceFieldBoundary<vector>>& tOrigSfNbrBf,
+    tmp<SurfaceFieldBoundary<point>>& tOrigCfNbrBf
+) const
+{
+    // Temporary full-sized surface fields for orig properties
+    surfaceLabelField origFaces
+    (
+        surfaceLabelField::New
+        (
+            "origFaces",
+            mesh_,
+            dimensioned<label>(dimless, -1)
+        )
+    );
+    surfaceVectorField origSf
+    (
+        surfaceVectorField::New
+        (
+            "origSf",
+            mesh_,
+            dimensionedVector("NaN", dimArea, vector::uniform(NaN))
+        )
+    );
+    surfaceVectorField origCf
+    (
+        surfaceVectorField::New
+        (
+            "origCf",
+            mesh_,
+            dimensionedVector("NaN", dimLength, vector::uniform(NaN))
+        )
+    );
+
+    // Communicate orig properties across cyclics and processor cyclics
+    forAll(mesh_.boundary(), patchi)
+    {
+        const fvPatch& fvp = mesh_.boundary()[patchi];
+
+        if (isA<nonConformalCoupledFvPatch>(fvp))
+        {
+            const nonConformalCoupledFvPatch& nccFvp =
+                refCast<const nonConformalCoupledFvPatch>(fvp);
+
+            origFaces.boundaryFieldRef()[patchi] =
+                polyFacesBf[patchi] - nccFvp.origPatch().start();
+        }
+
+        // (set Sf and Cf on all coupled patches, so that transform operations
+        // in boundaryNeighbourField don't trigger a sigFpe)
+        if (isA<coupledFvPatch>(fvp))
+        {
+            origSf.boundaryFieldRef()[patchi] =
+                vectorField(mesh_.faceAreas(), polyFacesBf[patchi]);
+            origCf.boundaryFieldRef()[patchi] =
+                pointField(mesh_.faceCentres(), polyFacesBf[patchi]);
+        }
+    }
+    origFaces.boundaryFieldRef() =
+        origFaces.boundaryField().boundaryNeighbourField();
+    origSf.boundaryFieldRef() =
+        origSf.boundaryField().boundaryNeighbourField();
+    origCf.boundaryFieldRef() =
+        origCf.boundaryField().boundaryNeighbourField();
+
+    // Communicate orig properties across mapped walls
+    forAll(mesh_.boundary(), patchi)
+    {
+        const fvPatch& fvp = mesh_.boundary()[patchi];
+
+        if (!isA<nonConformalMappedWallFvPatch>(fvp)) continue;
+
+        const nonConformalMappedWallFvPatch& ncmwFvp =
+            refCast<const nonConformalMappedWallFvPatch>(fvp);
+
+        if (!ncmwFvp.haveNbr()) continue;
+
+        const fvMesh& nbrMesh = ncmwFvp.nbrMesh();
+        const nonConformalMappedWallFvPatch& nbrPatch = ncmwFvp.nbrPatch();
+
+        const fvsPatchLabelField& nbrPolyFacesPf =
+            getPolyFacesBf(nbrMesh.name())[nbrPatch.index()];
+
+        origFaces.boundaryFieldRef()[patchi] =
+            nonConformalMappedFvPatchBase::map
+            (
+                nbrPolyFacesPf,
+                nbrPolyFacesPf - nbrPatch.origPatch().start(),
+                polyFacesBf[patchi]
+            );
+        origSf.boundaryFieldRef()[patchi] =
+            nonConformalMappedFvPatchBase::map
+            (
+                nbrPolyFacesPf,
+                vectorField(nbrMesh.faceAreas(), nbrPolyFacesPf),
+                polyFacesBf[patchi]
+            );
+        origCf.boundaryFieldRef()[patchi] =
+            nonConformalMappedFvPatchBase::map
+            (
+                nbrPolyFacesPf,
+                vectorField(nbrMesh.faceCentres(), nbrPolyFacesPf),
+                polyFacesBf[patchi]
+            );
+    }
+
+    // Correct transformed face centres. See note in fvMesh::unconform
+    // regarding the transformation of cell centres. The same applies here.
+    forAll(mesh_.boundary(), patchi)
+    {
+        const fvPatch& fvp = mesh_.boundary()[patchi];
+
+        fvsPatchVectorField& Cfp = origCf.boundaryFieldRef()[patchi];
+
+        if (isA<nonConformalCoupledFvPatch>(fvp))
+        {
+            const nonConformalCoupledFvPatch& nccFvp =
+                refCast<const nonConformalCoupledFvPatch>(fvp);
+
+            nccFvp.transform().invTransform(Cfp, Cfp);
+            nccFvp.transform().transformPosition(Cfp, Cfp);
+        }
+
+        if (isA<nonConformalMappedWallFvPatch>(fvp))
+        {
+            const nonConformalMappedWallFvPatch& ncmwFvp =
+                refCast<const nonConformalMappedWallFvPatch>(fvp);
+
+            if (ncmwFvp.haveNbr())
+            {
+                ncmwFvp.transform().invTransform(Cfp, Cfp);
+                ncmwFvp.transform().transformPosition(Cfp, Cfp);
+            }
+        }
+    }
+
+    // Set the tmp boundary fields and discard the unused internal field
+    tOrigFacesNbrBf =
+        new surfaceLabelField::Boundary
+        (
+            surfaceLabelField::null(),
+            origFaces.boundaryField()
+        );
+    tOrigSfNbrBf =
+        new surfaceVectorField::Boundary
+        (
+            surfaceVectorField::null(),
+            origSf.boundaryField()
+        );
+    tOrigCfNbrBf =
+        new surfaceVectorField::Boundary
+        (
+            surfaceVectorField::null(),
+            origCf.boundaryField()
+        );
+}
+
+
+Foam::List<Foam::List<Foam::FixedList<Foam::label, 3>>>
+Foam::fvMeshStitcher::procFacesToIndices
+(
+    const List<List<remote>>& faceOtherProcFaces,
+    const bool owner
+)
+{
+    // Compute interface sizes
+    labelList is(Pstream::nProcs(), 0);
+    forAll(faceOtherProcFaces, facei)
+    {
+        forAll(faceOtherProcFaces[facei], i)
+        {
+            const remote& otherProcFacei = faceOtherProcFaces[facei][i];
+
+            is[otherProcFacei.proci] ++;
+        }
+    }
+
+    // Allocate the indices
+    List<List<FixedList<label, 3>>> indices(Pstream::nProcs());
+    forAll(indices, proci)
+    {
+        indices[proci].resize(is[proci]);
+    }
+
+    // Set the indices
+    is = 0;
+    forAll(faceOtherProcFaces, facei)
+    {
+        forAll(faceOtherProcFaces[facei], i)
+        {
+            const remote& otherProcFacei = faceOtherProcFaces[facei][i];
+
+            FixedList<label, 3>& index =
+                indices[otherProcFacei.proci][is[otherProcFacei.proci] ++];
+
+            index = {facei, otherProcFacei.elementi, i};
+
+            if (!owner) Swap(index[0], index[1]);
+        }
+    }
+
+    // Sort to ensure ordering
+    forAll(indices, proci)
+    {
+        sort(indices[proci]);
+    }
+
+    return indices;
+}
+
+
+void Foam::fvMeshStitcher::matchIndices
+(
+    const surfaceLabelField::Boundary& polyFacesBf,
+    const surfaceLabelField::Boundary& origFacesNbrBf,
+    List<List<FixedList<label, 3>>>& indices,
+    const fvPatch& ncFvp,
+    const polyPatch& origPp,
+    const labelList& patchis,
+    const labelList& patchOffsets,
+    const labelList& patchSizes,
+    const bool owner
+)
+{
+    // Create what the indices should be
+    List<List<FixedList<label, 3>>> indicesRef(indices.size());
+    forAll(indices, proci)
+    {
+        const label patchi = patchis[proci];
+
+        if (patchi != -1)
+        {
+            indicesRef[proci].resize(patchSizes[proci]);
+
+            for (label indexi = 0; indexi < patchSizes[proci]; ++ indexi)
+            {
+                FixedList<label, 3>& indexRef = indicesRef[proci][indexi];
+
+                const label patchFacei = indexi + patchOffsets[proci];
+
+                indexRef =
+                    {
+                        polyFacesBf[patchi][patchFacei] - origPp.start(),
+                        origFacesNbrBf[patchi][patchFacei],
+                        -1
+                    };
+
+                if (!owner) Swap(indexRef[0], indexRef[1]);
+            }
+        }
+    }
+
+    // Populate the indices with the index of the coupling
+    label nCouplesRemoved = 0, nCouplesAdded = 0;
+    forAll(indices, proci)
+    {
+        const label patchi = patchis[proci];
+
+        if (patchi != -1)
+        {
+            label refi = 0, i = 0;
+
+            while
+            (
+                refi < indicesRef[proci].size()
+             && i < indices[proci].size()
+            )
+            {
+                const FixedList<label, 3> index
+                ({
+                    indices[proci][i][0],
+                    indices[proci][i][1],
+                    -1
+                });
+
+                FixedList<label, 3>& indexRef = indicesRef[proci][refi];
+
+                if (index < indexRef)
+                {
+                    nCouplesRemoved ++;
+                    i ++;
+                }
+                else if (index == indexRef)
+                {
+                    indexRef[2] = indices[proci][i][2];
+                    refi ++;
+                    i ++;
+                }
+                else // (index > indexRef)
+                {
+                    nCouplesAdded ++;
+                    refi ++;
+                }
+            }
+
+            nCouplesRemoved += min(indices[proci].size() - i, 0);
+            nCouplesAdded += min(indicesRef[proci].size() - refi, 0);
+        }
+    }
+
+    // Report if changes have been made
+    reduce(nCouplesRemoved, sumOp<label>());
+    reduce(nCouplesAdded, sumOp<label>());
+    if ((nCouplesRemoved || nCouplesAdded) && owner)
+    {
+        Info<< indent << nCouplesRemoved << '/' << nCouplesAdded
+            << " small couplings removed/added to " << ncFvp.name()
+            << endl;
+    }
+
+    // Set the indices to the correct values
+    Swap(indices, indicesRef);
+}
+
+
+void Foam::fvMeshStitcher::createCouplings
+(
     surfaceLabelField::Boundary& polyFacesBf,
     surfaceVectorField::Boundary& SfBf,
     surfaceVectorField::Boundary& CfBf,
-    const tmp<surfaceLabelField::Boundary>& tOrigFacesNbrBf,
     const tmp<surfaceVectorField::Boundary>& tOrigSfNbrBf,
     const tmp<surfaceVectorField::Boundary>& tOrigCfNbrBf,
-    List<part>& origEdgeParts
-) const
+    const List<List<FixedList<label, 3>>>& indices,
+    const List<DynamicList<couple>>& couples,
+    const polyPatch& origPp,
+    const labelList& patchis,
+    const labelList& patchOffsets,
+    const bool owner
+)
 {
-    const nonConformalCyclicFvPatch& nbrNccFvp = nccFvp.nbrPatch();
-
-    // Alias the original poly patches
-    const polyPatch& origPp = nccFvp.origPatch().patch();
-    const polyPatch& nbrOrigPp = nbrNccFvp.origPatch().patch();
-
-    // Get the indices of the non-conformal patches
-    labelList patchis(Pstream::nProcs(), -1);
-    labelList nbrPatchis(Pstream::nProcs(), -1);
-    patchis[Pstream::myProcNo()] = nccFvp.index();
-    nbrPatchis[Pstream::myProcNo()] = nbrNccFvp.index();
-    forAll(mesh_.boundary(), patchj)
+    // Add coupled faces into the non-conformal patches
+    forAll(patchis, proci)
     {
-        const fvPatch& fvp = mesh_.boundary()[patchj];
+        const label patchi = patchis[proci];
+        const label patchOffset = patchOffsets[proci];
 
-        if (isA<nonConformalProcessorCyclicFvPatch>(fvp))
+        if (patchi != -1)
         {
-            const nonConformalProcessorCyclicFvPatch& ncpcFvp =
-                refCast<const nonConformalProcessorCyclicFvPatch>(fvp);
-
-            if (ncpcFvp.referPatchIndex() == nccFvp.index())
+            forAll(indices[proci], indexi)
             {
-                patchis[ncpcFvp.neighbProcNo()] = patchj;
-            }
-            if (ncpcFvp.referPatchIndex() == nbrNccFvp.index())
-            {
-                nbrPatchis[ncpcFvp.neighbProcNo()] = patchj;
-            }
-        }
-    }
+                const label patchFacei = indexi + patchOffset;
 
-    // Get the intersection geometry
-    const patchToPatches::intersection& intersection =
-        nccFvp.nonConformalCyclicPatch().intersection();
+                const label origFacei = indices[proci][indexi][!owner];
+                const label i = indices[proci][indexi][2];
 
-    // Unpack the patchToPatch addressing into lists of indices (fixed lists of
-    // 3 labels; owner face, neighbour face, couple index). These will be used
-    // to create the non-conformal faces, so sort them to make sure the
-    // non-conformal interfaces are ordered.
-    auto procFacesToIndices = []
-    (
-        const List<List<remote>>& faceOtherProcFaces,
-        const bool owner
-    )
-    {
-        // Compute interface sizes
-        labelList is(Pstream::nProcs(), 0);
-        forAll(faceOtherProcFaces, facei)
-        {
-            forAll(faceOtherProcFaces[facei], i)
-            {
-                const remote& otherProcFacei = faceOtherProcFaces[facei][i];
+                polyFacesBf[patchi][patchFacei] = origFacei + origPp.start();
 
-                is[otherProcFacei.proci] ++;
-            }
-        }
-
-        // Allocate the indices
-        List<List<FixedList<label, 3>>> indices(Pstream::nProcs());
-        forAll(indices, proci)
-        {
-            indices[proci].resize(is[proci]);
-        }
-
-        // Set the indices
-        is = 0;
-        forAll(faceOtherProcFaces, facei)
-        {
-            forAll(faceOtherProcFaces[facei], i)
-            {
-                const remote& otherProcFacei = faceOtherProcFaces[facei][i];
-
-                FixedList<label, 3>& index =
-                    indices[otherProcFacei.proci][is[otherProcFacei.proci] ++];
-
-                index = {facei, otherProcFacei.elementi, i};
-
-                if (!owner) Swap(index[0], index[1]);
-            }
-        }
-
-        // Sort to ensure ordering
-        forAll(indices, proci)
-        {
-            sort(indices[proci]);
-        }
-
-        return indices;
-    };
-
-    List<List<FixedList<label, 3>>> indices =
-        procFacesToIndices(intersection.srcTgtProcFaces(), true);
-
-    List<List<FixedList<label, 3>>> nbrIndices =
-        procFacesToIndices(intersection.tgtSrcProcFaces(), false);
-
-    // If addressing has been provided, then modify the indices to match. When
-    // a coupling has to be added, the couple index is set to -1. This
-    // indicates that there is no geometry in the patchToPatch engine for this
-    // coupling, and for a small stabilisation value to be used instead.
-    auto matchIndices = [&polyFacesBf, &tOrigFacesNbrBf]
-    (
-        List<List<FixedList<label, 3>>>& indices,
-        const nonConformalCyclicFvPatch& nccFvp,
-        const polyPatch& origPp,
-        const labelList& patchis,
-        const bool owner
-    )
-    {
-        const surfaceLabelField::Boundary& origFacesNbrBf = tOrigFacesNbrBf();
-
-        // Create what the indices should be
-        List<List<FixedList<label, 3>>> indicesRef(indices.size());
-        forAll(indices, proci)
-        {
-            const label patchi = patchis[proci];
-
-            if (patchi != -1)
-            {
-                indicesRef[proci].resize(polyFacesBf[patchi].size());
-
-                forAll(polyFacesBf[patchi], patchFacei)
+                couple c;
+                if (i != -1)
                 {
-                    FixedList<label, 3>& indexRef =
-                        indicesRef[proci][patchFacei];
-
-                    indexRef =
-                        {
-                            polyFacesBf[patchi][patchFacei] - origPp.start(),
-                            origFacesNbrBf[patchi][patchFacei],
-                            -1
-                        };
-
-                    if (!owner) Swap(indexRef[0], indexRef[1]);
+                    c = couples[origFacei][i];
                 }
-            }
-        }
-
-        // Populate the indices with the index of the coupling
-        label nCouplesRemoved = 0, nCouplesAdded = 0;
-        forAll(indices, proci)
-        {
-            const label patchi = patchis[proci];
-
-            if (patchi != -1)
-            {
-                label patchFacei = 0, i = 0;
-
-                while
-                (
-                    patchFacei < polyFacesBf[patchi].size()
-                 && i < indices[proci].size()
-                )
+                else
                 {
-                    const FixedList<label, 3> index
-                    ({
-                        indices[proci][i][0],
-                        indices[proci][i][1],
-                        -1
-                    });
-
-                    FixedList<label, 3>& indexRef =
-                        indicesRef[proci][patchFacei];
-
-                    if (index < indexRef)
-                    {
-                        nCouplesRemoved ++;
-                        i ++;
-                    }
-                    else if (index == indexRef)
-                    {
-                        indexRef[2] = indices[proci][i][2];
-                        patchFacei ++;
-                        i ++;
-                    }
-                    else // (index > indexRef)
-                    {
-                        nCouplesAdded ++;
-                        patchFacei ++;
-                    }
-                }
-
-                nCouplesRemoved +=
-                    min(indices[proci].size() - i, 0);
-                nCouplesAdded +=
-                    min(polyFacesBf[patchi].size() - patchFacei, 0);
-            }
-        }
-
-        // Report if changes have been made
-        reduce(nCouplesRemoved, sumOp<label>());
-        reduce(nCouplesAdded, sumOp<label>());
-        if ((nCouplesRemoved || nCouplesAdded) && nccFvp.owner())
-        {
-            Info<< indent << nCouplesRemoved << '/' << nCouplesAdded
-                << " small couplings removed/added to " << nccFvp.name()
-                << endl;
-        }
-
-        // Set the indices to the correct values
-        Swap(indices, indicesRef);
-    };
-
-    if (tOrigFacesNbrBf.valid())
-    {
-        matchIndices(indices, nccFvp, origPp, patchis, true);
-        matchIndices(nbrIndices, nbrNccFvp, nbrOrigPp, nbrPatchis, false);
-    }
-
-    // Create couplings by transferring geometry from the original to the
-    // non-conformal patches
-    auto createCouplings =
-    [
-        &polyFacesBf,
-        &tOrigSfNbrBf,
-        &tOrigCfNbrBf,
-        &SfBf,
-        &CfBf
-    ]
-    (
-        const List<List<FixedList<label, 3>>>& indices,
-        const List<DynamicList<couple>>& couples,
-        const nonConformalCyclicFvPatch& nccFvp,
-        const polyPatch& origPp,
-        const labelList& patchis,
-        const bool owner
-    )
-    {
-        forAll(patchis, proci)
-        {
-            const label patchi = patchis[proci];
-            const label patchSize = indices[proci].size();
-
-            if (patchi == -1 && patchSize)
-            {
-                FatalErrorInFunction
-                    << "Intersection generated coupling through "
-                    << nccFvp.name() << " between processes "
-                    << Pstream::myProcNo() << " and " << proci
-                    << " but a corresponding processor interface was not found"
-                    << exit(FatalError);
-            }
-
-            if (patchi != -1)
-            {
-                polyFacesBf[patchi].resize(patchSize);
-                SfBf[patchi].resize(patchSize);
-                CfBf[patchi].resize(patchSize);
-
-                forAll(indices[proci], patchFacei)
-                {
-                    const label origFacei = indices[proci][patchFacei][!owner];
-                    const label i = indices[proci][patchFacei][2];
-
-                    polyFacesBf[patchi][patchFacei] =
-                        origFacei + origPp.start();
-
-                    couple c;
-                    if (i != -1)
-                    {
-                        c = couples[origFacei][i];
-                    }
-                    else
-                    {
-                        c =
-                            couple
-                            (
-                                part
-                                (
-                                    small*origPp.faceAreas()[origFacei],
-                                    origPp.faceCentres()[origFacei]
-                                ),
-                                part
-                                (
-                                    small*tOrigSfNbrBf()[patchi][patchFacei],
-                                    tOrigCfNbrBf()[patchi][patchFacei]
-                                )
-                            );
-                    }
-
-                    if (!owner)
-                    {
-                        c.nbr = c;
-                    }
-
-                    SfBf[patchi][patchFacei] = c.nbr.area;
-                    CfBf[patchi][patchFacei] = c.nbr.centre;
-
-                    if (i != -1)
-                    {
-                        part origP
+                    c =
+                        couple
                         (
-                            SfBf[origPp.index()][origFacei],
-                            CfBf[origPp.index()][origFacei]
+                            part
+                            (
+                                small*origPp.faceAreas()[origFacei],
+                                origPp.faceCentres()[origFacei]
+                            ),
+                            part
+                            (
+                                small*tOrigSfNbrBf()[patchi][patchFacei],
+                                tOrigCfNbrBf()[patchi][patchFacei]
+                            )
                         );
-                        origP -= c;
+                }
 
-                        SfBf[origPp.index()][origFacei] = origP.area;
-                        CfBf[origPp.index()][origFacei] = origP.centre;
-                    }
+                if (!owner)
+                {
+                    c.nbr = c;
+                }
+
+                SfBf[patchi][patchFacei] = c.nbr.area;
+                CfBf[patchi][patchFacei] = c.nbr.centre;
+
+                if (i != -1)
+                {
+                    part origP
+                    (
+                        SfBf[origPp.index()][origFacei],
+                        CfBf[origPp.index()][origFacei]
+                    );
+                    origP -= c;
+
+                    SfBf[origPp.index()][origFacei] = origP.area;
+                    CfBf[origPp.index()][origFacei] = origP.centre;
                 }
             }
         }
-    };
+    }
+}
 
-    createCouplings
-    (
-        indices,
-        intersection.srcCouples(),
-        nccFvp,
-        origPp,
-        patchis,
-        true
-    );
 
-    createCouplings
-    (
-        nbrIndices,
-        intersection.tgtCouples(),
-        nbrNccFvp,
-        nbrOrigPp,
-        nbrPatchis,
-        false
-    );
-
+void Foam::fvMeshStitcher::createErrorAndEdgeParts
+(
+    surfaceVectorField::Boundary& SfBf,
+    surfaceVectorField::Boundary& CfBf,
+    List<part>& origEdgeParts,
+    const patchToPatches::intersection& intersection,
+    const polyPatch& origPp
+)
+{
     // Add error geometry to the original patches
     forAll(intersection.srcErrorParts(), origFacei)
     {
@@ -430,7 +720,244 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclic
 }
 
 
-Foam::List<Foam::patchToPatches::intersection::part>
+void Foam::fvMeshStitcher::intersectNonConformalCyclic
+(
+    const nonConformalCyclicFvPatch& nccFvp,
+    surfaceLabelField::Boundary& polyFacesBf,
+    surfaceVectorField::Boundary& SfBf,
+    surfaceVectorField::Boundary& CfBf,
+    const tmp<surfaceLabelField::Boundary>& tOrigFacesNbrBf,
+    const tmp<surfaceVectorField::Boundary>& tOrigSfNbrBf,
+    const tmp<surfaceVectorField::Boundary>& tOrigCfNbrBf,
+    List<part>& origEdgeParts
+) const
+{
+    // Alias the original poly patches
+    const polyPatch& origPp = nccFvp.origPatch().patch();
+
+    // Get the indices of the related (i.e., cyclic and processorCyclic)
+    // non-conformal patches. Index based on the connected processor.
+    labelList patchis(Pstream::nProcs(), -1);
+    patchis[Pstream::myProcNo()] = nccFvp.index();
+    forAll(mesh_.boundary(), patchj)
+    {
+        const fvPatch& fvp = mesh_.boundary()[patchj];
+
+        if (isA<nonConformalProcessorCyclicFvPatch>(fvp))
+        {
+            const nonConformalProcessorCyclicFvPatch& ncpcFvp =
+                refCast<const nonConformalProcessorCyclicFvPatch>(fvp);
+
+            if (ncpcFvp.referPatchIndex() == nccFvp.index())
+            {
+                patchis[ncpcFvp.neighbProcNo()] = patchj;
+            }
+        }
+    }
+
+    // Get the intersection geometry
+    const patchToPatches::intersection& intersection =
+        nccFvp.owner()
+      ? nccFvp.nonConformalCyclicPatch().intersection()
+      : nccFvp.nbrPatch().nonConformalCyclicPatch().intersection();
+
+    // Unpack the patchToPatch addressing into a list of indices
+    List<List<FixedList<label, 3>>> indices =
+        procFacesToIndices
+        (
+            nccFvp.owner()
+          ? intersection.srcTgtProcFaces()
+          : intersection.tgtSrcProcFaces(),
+            nccFvp.owner()
+        );
+
+    // If addressing has been provided, then modify the indices to match
+    if (tOrigFacesNbrBf.valid())
+    {
+        labelList patchSizes(Pstream::nProcs(), -1);
+        forAll(patchis, proci)
+        {
+            if (patchis[proci] != -1)
+            {
+                patchSizes[proci] = polyFacesBf[patchis[proci]].size();
+            }
+        }
+
+        matchIndices
+        (
+            polyFacesBf,
+            tOrigFacesNbrBf(),
+            indices,
+            nccFvp,
+            origPp,
+            patchis,
+            labelList(Pstream::nProcs(), 0),
+            patchSizes,
+            nccFvp.owner()
+        );
+    }
+
+    // Check the existence of the non-conformal patches to be added into and
+    // resize them as necessary
+    forAll(patchis, proci)
+    {
+        const label patchi = patchis[proci];
+        const label patchSize = indices[proci].size();
+
+        if (patchi == -1 && patchSize)
+        {
+            FatalErrorInFunction
+                << "Intersection generated coupling through "
+                << nccFvp.name() << " between processes "
+                << Pstream::myProcNo() << " and " << proci
+                << " but a corresponding processor interface was not found"
+                << exit(FatalError);
+        }
+
+        if (patchi != -1)
+        {
+            polyFacesBf[patchi].resize(patchSize);
+            SfBf[patchi].resize(patchSize);
+            CfBf[patchi].resize(patchSize);
+        }
+    }
+
+    // Create couplings by transferring geometry from the original to the
+    // non-conformal patches
+    createCouplings
+    (
+        polyFacesBf,
+        SfBf,
+        CfBf,
+        tOrigSfNbrBf,
+        tOrigCfNbrBf,
+        indices,
+        nccFvp.owner() ? intersection.srcCouples() : intersection.tgtCouples(),
+        origPp,
+        patchis,
+        labelList(Pstream::nProcs(), 0),
+        nccFvp.owner()
+    );
+
+    // Add error geometry to the original patches and store the edge parts
+    if (nccFvp.owner())
+    {
+        createErrorAndEdgeParts
+        (
+            SfBf,
+            CfBf,
+            origEdgeParts,
+            intersection,
+            origPp
+        );
+    }
+}
+
+
+void Foam::fvMeshStitcher::intersectNonConformalMappedWall
+(
+    const nonConformalMappedWallFvPatch& ncmwFvp,
+    surfaceLabelField::Boundary& polyFacesBf,
+    surfaceVectorField::Boundary& SfBf,
+    surfaceVectorField::Boundary& CfBf,
+    const tmp<surfaceLabelField::Boundary>& tOrigFacesNbrBf,
+    const tmp<surfaceVectorField::Boundary>& tOrigSfNbrBf,
+    const tmp<surfaceVectorField::Boundary>& tOrigCfNbrBf,
+    List<part>& origEdgeParts
+) const
+{
+    // Alias the original poly patch
+    const polyPatch& origPp = ncmwFvp.origPatch().patch();
+
+    // Get the intersection geometry
+    const patchToPatches::intersection& intersection =
+        ncmwFvp.owner()
+      ? ncmwFvp.nonConformalMappedWallPatch().intersection()
+      : ncmwFvp.nbrPatch().nonConformalMappedWallPatch().intersection();
+
+    // Unpack the patchToPatch addressing into a list of indices
+    List<List<FixedList<label, 3>>> indices =
+        procFacesToIndices
+        (
+            ncmwFvp.owner()
+          ? intersection.srcTgtProcFaces()
+          : intersection.tgtSrcProcFaces(),
+            ncmwFvp.owner()
+        );
+
+    // Obtain the label patch field for the mapped wall poly faces
+    nonConformalMappedPolyFacesFvsPatchLabelField& polyFacesPf =
+        refCast<nonConformalMappedPolyFacesFvsPatchLabelField>
+        (
+            polyFacesBf[ncmwFvp.index()]
+        );
+
+    // If addressing has been provided, then modify the indices to match
+    if (tOrigFacesNbrBf.valid())
+    {
+        matchIndices
+        (
+            polyFacesBf,
+            tOrigFacesNbrBf(),
+            indices,
+            ncmwFvp,
+            origPp,
+            labelList(Pstream::nProcs(), ncmwFvp.index()),
+            polyFacesPf.procOffsets(),
+            polyFacesPf.procSizes(),
+            ncmwFvp.owner()
+        );
+    }
+
+    // Set the processor offsets within the mapped polyFacesBf patch field
+    {
+        label count = 0;
+
+        forAll(indices, proci)
+        {
+            polyFacesPf.procOffsets()[proci] = count;
+
+            count += indices[proci].size();
+        }
+
+        polyFacesPf.resize(count);
+        SfBf[polyFacesPf.patch().index()].resize(count);
+        CfBf[polyFacesPf.patch().index()].resize(count);
+    };
+
+    // Create a coupling by transferring geometry from the original to the
+    // non-conformal patch
+    createCouplings
+    (
+        polyFacesBf,
+        SfBf,
+        CfBf,
+        tOrigSfNbrBf,
+        tOrigCfNbrBf,
+        indices,
+        ncmwFvp.owner() ? intersection.srcCouples() : intersection.tgtCouples(),
+        origPp,
+        labelList(Pstream::nProcs(), ncmwFvp.index()),
+        polyFacesPf.procOffsets(),
+        ncmwFvp.owner()
+    );
+
+    // Add error geometry to the original patch and store the edge parts
+    if (ncmwFvp.owner())
+    {
+        createErrorAndEdgeParts
+        (
+            SfBf,
+            CfBf,
+            origEdgeParts,
+            intersection,
+            origPp
+        );
+    }
+}
+
+
+Foam::List<Foam::fvMeshStitcher::part>
 Foam::fvMeshStitcher::calculateOwnerOrigBoundaryEdgeParts
 (
     const List<List<part>>& patchEdgeParts
@@ -606,14 +1133,14 @@ void Foam::fvMeshStitcher::applyOwnerOrigBoundaryEdgeParts
     const polyBoundaryMesh& pbMesh = mesh_.boundaryMesh();
 
     const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh_);
-    const labelList ownerOrigPatchIDs = ncb.ownerOrigPatchIndices();
+    const labelList ownerOrigPatchIndices = ncb.ownerOrigPatchIndices();
     const labelList& ownerOrigBoundaryEdgeMeshEdge =
         ncb.ownerOrigBoundaryEdgeMeshEdge();
     const edgeList& ownerOrigBoundaryMeshEdges =
         ncb.ownerOrigBoundaryMeshEdges();
 
     boolList patchIsOwnerOrig(pbMesh.size(), false);
-    UIndirectList<bool>(patchIsOwnerOrig, ownerOrigPatchIDs) = true;
+    UIndirectList<bool>(patchIsOwnerOrig, ownerOrigPatchIndices) = true;
 
     // Count the number of original faces attached to each boundary edge
     labelList ownerOrigBoundaryEdgeNOrigFaces
@@ -845,11 +1372,11 @@ void Foam::fvMeshStitcher::stabiliseOrigPatchFaces
 ) const
 {
     const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh_);
-    const labelList allOrigPatchIDs = ncb.allOrigPatchIndices();
+    const labelList allOrigPatchIndices = ncb.allOrigPatchIndices();
 
-    forAll(allOrigPatchIDs, i)
+    forAll(allOrigPatchIndices, i)
     {
-        const label origPatchi = allOrigPatchIDs[i];
+        const label origPatchi = allOrigPatchIndices[i];
         const polyPatch& origPp = mesh_.boundaryMesh()[origPatchi];
 
         forAll(origPp, origPatchFacei)
@@ -888,18 +1415,19 @@ void Foam::fvMeshStitcher::stabiliseOrigPatchFaces
 }
 
 
-void Foam::fvMeshStitcher::intersectNonConformalCyclics
+void Foam::fvMeshStitcher::intersect
 (
     surfaceLabelField::Boundary& polyFacesBf,
     surfaceVectorField& SfSf,
     surfaceVectorField& CfSf,
-    const bool haveTopology
+    const boolList& patchCoupleds,
+    const bool matchTopology
 ) const
 {
     const polyBoundaryMesh& pbMesh = mesh_.boundaryMesh();
 
     const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh_);
-    const labelList ownerOrigPatchIDs = ncb.ownerOrigPatchIndices();
+    const labelList ownerOrigPatchIndices = ncb.ownerOrigPatchIndices();
 
     // Alias the boundary geometry fields
     surfaceVectorField::Boundary& SfBf = SfSf.boundaryFieldRef();
@@ -907,9 +1435,9 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclics
 
     // Create storage for and initialise the edge parts of source patches
     List<List<part>> patchEdgeParts(mesh_.boundary().size());
-    forAll(ownerOrigPatchIDs, i)
+    forAll(ownerOrigPatchIndices, i)
     {
-        const label origPatchi = ownerOrigPatchIDs[i];
+        const label origPatchi = ownerOrigPatchIndices[i];
 
         patchEdgeParts[origPatchi].resize
         (
@@ -924,95 +1452,95 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclics
     tmp<surfaceLabelField::Boundary> tOrigFacesNbrBf;
     tmp<surfaceVectorField::Boundary> tOrigSfNbrBf;
     tmp<surfaceVectorField::Boundary> tOrigCfNbrBf;
-    if (haveTopology)
+    if (matchTopology)
     {
-        surfaceLabelField origFaces
+        getOrigNbrBfs
         (
-            surfaceLabelField::New
-            (
-                "origFaces",
-                mesh_,
-                dimensioned<label>(dimless, -1)
-            )
-        );
-        surfaceVectorField origSf("origSf", mesh_.Sf());
-        surfaceVectorField origCf("origCf", mesh_.Cf());
-
-        forAll(mesh_.boundary(), patchi)
-        {
-            const fvPatch& fvp = mesh_.boundary()[patchi];
-
-            if (!isA<nonConformalFvPatch>(fvp)) continue;
-
-            const nonConformalFvPatch& ncFvp =
-                refCast<const nonConformalFvPatch>(fvp);
-
-            origFaces.boundaryFieldRef()[patchi] =
-                polyFacesBf[patchi] - ncFvp.origPatch().start();
-            origSf.boundaryFieldRef()[patchi] =
-                vectorField(mesh_.faceAreas(), polyFacesBf[patchi]);
-            origCf.boundaryFieldRef()[patchi] =
-                pointField(mesh_.faceCentres(), polyFacesBf[patchi]);
-        }
-
-        tOrigFacesNbrBf =
-            new surfaceLabelField::Boundary
-            (
-                surfaceLabelField::null(),
-                origFaces.boundaryField().boundaryNeighbourField()
-            );
-        tOrigSfNbrBf =
-            new surfaceVectorField::Boundary
-            (
-                surfaceVectorField::null(),
-                origSf.boundaryField().boundaryNeighbourField()
-            );
-        tOrigCfNbrBf =
-            new surfaceVectorField::Boundary
-            (
-                surfaceVectorField::null(),
-                origCf.boundaryField().boundaryNeighbourField()
-            );
-
-        // See note in fvMesh::unconform regarding the transformation
-        // of cell centres. The same applies here.
-        forAll(tOrigCfNbrBf(), patchi)
-        {
-            fvsPatchVectorField& Cfp = tOrigCfNbrBf.ref()[patchi];
-            if (Cfp.patch().coupled())
-            {
-                const transformer& t =
-                    refCast<const coupledFvPatch>(Cfp.patch())
-                   .transform();
-                t.invTransform(Cfp, Cfp);
-                t.transformPosition(Cfp, Cfp);
-            }
-        }
-    }
-
-    // Do the intersections
-    forAll(mesh_.boundary(), patchi)
-    {
-        const fvPatch& fvp = mesh_.boundary()[patchi];
-
-        if (!isA<nonConformalCyclicFvPatch>(fvp)) continue;
-
-        const nonConformalCyclicFvPatch& nccFvp =
-            refCast<const nonConformalCyclicFvPatch>(fvp);
-
-        if (!nccFvp.owner()) continue;
-
-        intersectNonConformalCyclic
-        (
-            nccFvp,
             polyFacesBf,
             SfBf,
             CfBf,
             tOrigFacesNbrBf,
             tOrigSfNbrBf,
-            tOrigCfNbrBf,
-            patchEdgeParts[nccFvp.origPatchIndex()]
+            tOrigCfNbrBf
         );
+    }
+
+    // Create intersection geometry for all the coupled non-conformal patches
+    forAll(mesh_.boundary(), patchi)
+    {
+        if (!patchCoupleds[patchi]) continue;
+
+        const fvPatch& fvp = mesh_.boundary()[patchi];
+
+        if (isA<nonConformalCyclicFvPatch>(fvp))
+        {
+            const nonConformalCyclicFvPatch& nccFvp =
+                refCast<const nonConformalCyclicFvPatch>(fvp);
+
+            intersectNonConformalCyclic
+            (
+                nccFvp,
+                polyFacesBf,
+                SfBf,
+                CfBf,
+                tOrigFacesNbrBf,
+                tOrigSfNbrBf,
+                tOrigCfNbrBf,
+                patchEdgeParts[nccFvp.origPatchIndex()]
+            );
+        }
+        else if (isA<nonConformalProcessorCyclicFvPatch>(fvp))
+        {}
+        else if (isA<nonConformalMappedWallFvPatch>(fvp))
+        {
+            const nonConformalMappedWallFvPatch& ncmwFvp =
+                refCast<const nonConformalMappedWallFvPatch>(fvp);
+
+            intersectNonConformalMappedWall
+            (
+                ncmwFvp,
+                polyFacesBf,
+                SfBf,
+                CfBf,
+                tOrigFacesNbrBf,
+                tOrigSfNbrBf,
+                tOrigCfNbrBf,
+                patchEdgeParts[ncmwFvp.origPatchIndex()]
+            );
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Coupled patch type not recognised"
+                << exit(FatalError);
+        }
+    }
+
+    // Create small stabilisation geometry for all the any non-coupled
+    // non-conformal patches
+    forAll(mesh_.boundary(), patchi)
+    {
+        if (patchCoupleds[patchi]) continue;
+
+        const fvPatch& fvp = mesh_.boundary()[patchi];
+
+        if (!isA<nonConformalFvPatch>(fvp)) continue;
+
+        const polyPatch& origPp =
+            refCast<const nonConformalFvPatch>(fvp).origPatch().patch();
+
+        SfBf[patchi] ==
+            vectorField
+            (
+                small*origPp.faceAreas(),
+                polyFacesBf[patchi] - origPp.start()
+            );
+        CfBf[patchi] ==
+            vectorField
+            (
+                origPp.faceCentres(),
+                polyFacesBf[patchi] - origPp.start()
+            );
     }
 
     // Construct the boundary edge geometry
@@ -1021,9 +1549,9 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclics
 
     // Add the difference between patch edge parts and all boundary
     // edge parts to the adjacent patch faces. This is an error part.
-    forAll(ownerOrigPatchIDs, i)
+    forAll(ownerOrigPatchIndices, i)
     {
-        const label origPatchi = ownerOrigPatchIDs[i];
+        const label origPatchi = ownerOrigPatchIndices[i];
         const polyPatch& origPatch = pbMesh[origPatchi];
 
         const labelList& origPatchEdgeOwnerOrigBoundaryEdges =
@@ -1059,229 +1587,38 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclics
     // Use the boundary edge geometry to correct all edge-connected faces
     applyOwnerOrigBoundaryEdgeParts(SfSf, CfSf, ownerOrigBoundaryEdgeParts);
 
-    // Stabilise
+    // Stabilise the original patch faces
     stabiliseOrigPatchFaces(SfBf, CfBf);
 }
 
 
-template<class NonConformalFvPatch>
-inline void Foam::fvMeshStitcher::createNonConformalStabilisationGeometry
-(
-    const surfaceLabelField::Boundary& polyFacesBf,
-    surfaceVectorField& SfSf,
-    surfaceVectorField& CfSf
-) const
-{
-    // Alias the boundary geometry fields
-    surfaceVectorField::Boundary& SfBf = SfSf.boundaryFieldRef();
-    surfaceVectorField::Boundary& CfBf = CfSf.boundaryFieldRef();
-
-    // Create small stabilisation geometry
-    forAll(mesh_.boundary(), patchi)
-    {
-        const fvPatch& fvp = mesh_.boundary()[patchi];
-
-        if (!isA<NonConformalFvPatch>(fvp)) continue;
-
-        const polyPatch& origPp =
-            refCast<const nonConformalFvPatch>(fvp).origPatch().patch();
-
-        SfBf[patchi] ==
-            vectorField
-            (
-                small*origPp.faceAreas(),
-                polyFacesBf[patchi] - origPp.start()
-            );
-        CfBf[patchi] ==
-            vectorField
-            (
-                origPp.faceCentres(),
-                polyFacesBf[patchi] - origPp.start()
-            );
-    }
-}
-
-
-void Foam::fvMeshStitcher::preConformSurfaceFields()
-{
-    #define PreConformSurfaceFields(Type, nullArg) \
-        preConformSurfaceFields<Type>();
-    FOR_ALL_FIELD_TYPES(PreConformSurfaceFields);
-    #undef PreConformSurfaceFields
-}
-
-
-void Foam::fvMeshStitcher::postUnconformSurfaceFields()
-{
-    #define PostUnconformSurfaceFields(Type, nullArg) \
-        postUnconformSurfaceFields<Type>();
-    FOR_ALL_FIELD_TYPES(PostUnconformSurfaceFields);
-    #undef PostUnconformSurfaceFields
-}
-
-
-void Foam::fvMeshStitcher::evaluateVolFields()
-{
-    #define EvaluateVolFields(Type, nullArg) \
-        evaluateVolFields<Type>();
-    FOR_ALL_FIELD_TYPES(EvaluateVolFields);
-    #undef EvaluateVolFields
-}
-
-
-void Foam::fvMeshStitcher::postUnconformSurfaceVelocities()
-{
-    UPtrList<surfaceVectorField> Ufs(mesh_.fields<surfaceVectorField>());
-
-    forAll(Ufs, i)
-    {
-        surfaceVectorField& Uf = Ufs[i];
-
-        const volVectorField& U = surfaceToVolVelocity(Uf);
-
-        if (isNull(U)) continue;
-
-        const surfaceVectorField UfInterpolated(fvc::interpolate(U));
-
-        forAll(Uf.boundaryField(), patchi)
-        {
-            if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
-            {
-                boundaryFieldRefNoUpdate(Uf)[patchi] ==
-                    UfInterpolated.boundaryField()[patchi];
-            }
-        }
-    }
-}
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-bool Foam::fvMeshStitcher::geometric() const
-{
-    bool result = false;
-
-    forAll(mesh_.boundary(), patchi)
-    {
-        const fvPatch& fvp = mesh_.boundary()[patchi];
-
-        if (!isA<nonConformalFvPatch>(fvp)) continue;
-
-        const fvsPatchScalarField& magSfp =
-            mesh_.magSf().boundaryField()[patchi];
-
-        const polyPatch& origPp =
-            refCast<const nonConformalFvPatch>(fvp).origPatch().patch();
-
-        const scalarField origMagSfp
-        (
-            origPp.magFaceAreas(),
-            mesh_.polyFacesBf()[patchi] - origPp.start()
-        );
-
-        if (max(magSfp/origMagSfp) > rootSmall)
-        {
-            result = true;
-        }
-    }
-
-    reduce(result, orOp<bool>());
-
-    return returnReduce(result, orOp<bool>());
-}
-
-
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
-Foam::fvMeshStitcher::openness() const
-{
-    return
-        mag(fvc::surfaceIntegrate(mesh_.Sf()))()*mesh_.V()
-       /max
-        (
-            mag(fvc::surfaceSum(cmptMag(mesh_.Sf())))(),
-            (small*sqr(cbrt(mesh_.V())))()
-        )();
-}
-
-
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
-Foam::fvMeshStitcher::volumeConservationError(const label n) const
-{
-    if (0 > n || n > 1)
-    {
-        FatalErrorInFunction
-            << "Can only compute volume conservation error for this time, or "
-            << "the previous time" << exit(FatalError);
-    }
-
-    const surfaceScalarField& phi = mesh_.phi().oldTime(n);
-
-    const dimensionedScalar deltaT =
-        n == 0 ? mesh_.time().deltaT() : mesh_.time().deltaT0();
-
-    const volScalarField::Internal& V = n == 0 ? mesh_.V() : mesh_.V0();
-    const volScalarField::Internal& V0 = n == 0 ? mesh_.V0() : mesh_.V00();
-
-    return fvc::surfaceIntegrate(phi*deltaT)() - (V - V0)/mesh_.V();
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::fvMeshStitcher::fvMeshStitcher(fvMesh& mesh)
-:
-    mesh_(mesh)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::fvMeshStitcher::~fvMeshStitcher()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::fvMeshStitcher::stitches() const
-{
-    forAll(mesh_.boundary(), patchi)
-    {
-        if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-
-bool Foam::fvMeshStitcher::disconnect
+bool Foam::fvMeshStitcher::disconnectThis
 (
     const bool changing,
     const bool geometric
 )
 {
-    if (!stitches() || (changing && !mesh_.dynamic()))
+    if (!stitches() || (changing && !dynamic()))
     {
         return false;
     }
 
-    // Is this mesh coupled?
-    const bool coupled = Pstream::parRun() || !mesh_.time().processorCase();
+    // Determine which patches are coupled
+    const boolList patchCoupleds =
+        geometric
+      ? this->patchCoupleds()
+      : boolList(mesh_.boundary().size(), false);
 
-    if (coupled && geometric)
+    if (any(patchCoupleds))
     {
         Info<< indent << typeName << ": Disconnecting" << incrIndent << endl;
     }
 
+    // Map the non-conformal patch field data to the conformal faces in advance
+    // of the non-conformal patches being removed
     if (changing)
     {
-        // Pre-conform surface fields. This splits the original and cyclic
-        // parts of the interface fields into separate boundary fields, with
-        // both sets of values store on the original faces. The original field
-        // overwrites the existing boundary values, whilst the cyclic field is
-        // stored as a separate field for use later.
+        preConformVolFields();
         preConformSurfaceFields();
     }
 
@@ -1308,7 +1645,7 @@ bool Foam::fvMeshStitcher::disconnect
     // Prevent hangs caused by processor cyclic patches using mesh geometry
     mesh_.deltaCoeffs();
 
-    if (coupled && geometric)
+    if (any(patchCoupleds) && geometric)
     {
         const volScalarField::Internal o(openness());
         Info<< indent << "Cell min/avg/max openness = "
@@ -1328,7 +1665,7 @@ bool Foam::fvMeshStitcher::disconnect
         }
     }
 
-    if (coupled && geometric)
+    if (any(patchCoupleds))
     {
         Info<< decrIndent;
     }
@@ -1345,22 +1682,20 @@ bool Foam::fvMeshStitcher::disconnect
 }
 
 
-bool Foam::fvMeshStitcher::connect
+bool Foam::fvMeshStitcher::connectThis
 (
     const bool changing,
     const bool geometric,
     const bool load
 )
 {
-    if (!stitches() || (changing && !mesh_.dynamic()))
+    if (!stitches() || (changing && !dynamic()))
     {
         return false;
     }
 
-    // Is this mesh coupled?
-    const bool coupled = Pstream::parRun() || !mesh_.time().processorCase();
-
     // Create a copy of the conformal poly face addressing
+    IOobject polyFacesBfIO(word::null, mesh_.pointsInstance(), mesh_);
     surfaceLabelField::Boundary polyFacesBf
     (
         surfaceLabelField::null(),
@@ -1368,41 +1703,53 @@ bool Foam::fvMeshStitcher::connect
     );
 
     // If starting up then load topology from disk, if it is available
-    bool haveTopology = false;
-    if (load)
-    {
-        const IOobject polyFacesBfIO(mesh_.polyFacesBfIO(IOobject::MUST_READ));
+    const bool matchTopology =
+        load && loadPolyFacesBf(polyFacesBfIO, polyFacesBf);
 
-        if (fileHandler().isFile(polyFacesBfIO.objectPath(false)))
-        {
-            polyFacesBf.reset
-            (
-                surfaceLabelField(polyFacesBfIO, mesh_).boundaryField()
-            );
-
-            haveTopology = true;
-        }
-    }
+    // Determine which patches are coupled
+    const boolList patchCoupleds =
+        (geometric || !matchTopology)
+      ? this->patchCoupleds()
+      : boolList(mesh_.boundary().size(), false);
 
     // Access all the intersections in advance. Makes the log nicer.
-    if (coupled && (geometric || !haveTopology))
+    forAll(mesh_.boundary(), patchi)
     {
-        forAll(mesh_.boundary(), patchi)
+        if (!patchCoupleds[patchi]) continue;
+
+        const fvPatch& fvp = mesh_.boundary()[patchi];
+
+        if (isA<nonConformalCyclicFvPatch>(fvp))
         {
-            const fvPatch& fvp = mesh_.boundary()[patchi];
-
-            if (!isA<nonConformalCyclicFvPatch>(fvp)) continue;
-
             const nonConformalCyclicFvPatch& nccFvp =
                 refCast<const nonConformalCyclicFvPatch>(fvp);
 
-            if (!nccFvp.owner()) continue;
+            if (nccFvp.owner())
+            {
+                nccFvp.nonConformalCyclicPatch().intersection();
+            }
+        }
+        else if (isA<nonConformalProcessorCyclicFvPatch>(fvp))
+        {}
+        else if (isA<nonConformalMappedWallFvPatch>(fvp))
+        {
+            const nonConformalMappedWallFvPatch& ncmwFvp =
+                refCast<const nonConformalMappedWallFvPatch>(fvp);
 
-            nccFvp.nonConformalCyclicPatch().intersection();
+            const nonConformalMappedWallFvPatch& ownerNcmwFvp =
+                ncmwFvp.owner() ? ncmwFvp : ncmwFvp.nbrPatch();
+
+            ownerNcmwFvp.nonConformalMappedWallPatch().intersection();
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Coupled patch type not recognised"
+                << exit(FatalError);
         }
     }
 
-    if (coupled && (geometric || !haveTopology))
+    if (any(patchCoupleds))
     {
         Info<< indent << typeName << ": Connecting" << incrIndent << endl;
     }
@@ -1412,31 +1759,7 @@ bool Foam::fvMeshStitcher::connect
     surfaceVectorField Cf(mesh_.Cf().cloneUnSliced()());
 
     // Construct non-conformal geometry
-    if (coupled && (geometric || !haveTopology))
-    {
-        // Do the intersection and create the non-conformal cyclic faces
-        intersectNonConformalCyclics(polyFacesBf, Sf, Cf, haveTopology);
-
-        // Create stabilisation geometry on any error faces specified in the
-        // addressing
-        createNonConformalStabilisationGeometry<nonConformalErrorFvPatch>
-        (
-            polyFacesBf,
-            Sf,
-            Cf
-        );
-    }
-    else
-    {
-        // If not coupled, then create stabilisation geometry on all
-        // non-conformal faces specified in the addressing
-        createNonConformalStabilisationGeometry<nonConformalFvPatch>
-        (
-            polyFacesBf,
-            Sf,
-            Cf
-        );
-    }
+    intersect(polyFacesBf, Sf, Cf, patchCoupleds, matchTopology);
 
     // If the mesh is moving then create any additional non-conformal geometry
     // necessary to correct the mesh fluxes
@@ -1461,32 +1784,28 @@ bool Foam::fvMeshStitcher::connect
         mesh_.unconform(polyFacesBf, Sf, Cf);
     }
 
+    // Reset the poly faces instance to that of any loaded topology
+    if (load)
+    {
+        mesh_.setPolyFacesBfInstance(polyFacesBfIO.instance());
+    }
+
     // Resize all the affected patch fields
     resizePatchFields<VolField>();
     resizePatchFields<SurfaceField>();
 
+    // Map the non-conformal patch field data back from the conformal faces and
+    // into the new non-conformal patches
     if (changing)
     {
-        // Post-unconform surface fields. This reconstructs the original and
-        // cyclic parts of the interface fields from separate original and
-        // cyclic parts. The original part was store in the same field, whilst
-        // the cyclic part was separately registered.
+        postUnconformVolFields();
         postUnconformSurfaceFields();
-
-        // Volume fields are assumed to be intensive. So, the value on a face
-        // which has changed in size can be retained without modification. New
-        // faces need values to be set. This is done by evaluating all the
-        // nonConformalCoupled patch fields.
-        evaluateVolFields();
-
-        // Do special post-unconform for surface velocities.
-        postUnconformSurfaceVelocities();
     }
 
     // Prevent hangs caused by processor cyclic patches using mesh geometry
     mesh_.deltaCoeffs();
 
-    if (coupled && geometric)
+    if (any(patchCoupleds) && geometric)
     {
         const volScalarField::Internal o(openness());
         Info<< indent << "Cell min/avg/max openness = "
@@ -1589,7 +1908,7 @@ bool Foam::fvMeshStitcher::connect
         }
     }
 
-    if (coupled && (geometric || !haveTopology))
+    if (any(patchCoupleds))
     {
         Info<< decrIndent;
     }
@@ -1606,6 +1925,345 @@ bool Foam::fvMeshStitcher::connect
 }
 
 
+void Foam::fvMeshStitcher::preConformVolFields()
+{
+    #define PreConformVolFields(Type, nullArg) \
+        preConformVolFields<Type>();
+    FOR_ALL_FIELD_TYPES(PreConformVolFields);
+    #undef PreConformVolFields
+}
+
+
+void Foam::fvMeshStitcher::preConformSurfaceFields()
+{
+    #define PreConformSurfaceFields(Type, nullArg) \
+        preConformSurfaceFields<Type>();
+    FOR_ALL_FIELD_TYPES(PreConformSurfaceFields);
+    #undef PreConformSurfaceFields
+}
+
+
+void Foam::fvMeshStitcher::postUnconformVolFields()
+{
+    #define PostUnconformVolFields(Type, nullArg) \
+        postUnconformVolFields<Type>();
+    FOR_ALL_FIELD_TYPES(PostUnconformVolFields);
+    #undef PostUnconformVolFields
+
+    const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh());
+    const labelList origPatchIndices = ncb.allOrigPatchIndices();
+    const labelList errorPatchIndices = ncb.allErrorPatchIndices();
+
+    // Special handling for velocities. Wherever we find a movingWall-type
+    // boundary condition on an original patch, override the corresponding
+    // error patch condition to movingWallSlipVelocity.
+    UPtrList<volVectorField> Us(mesh().fields<volVectorField>());
+    forAll(Us, i)
+    {
+        volVectorField& U = Us[i];
+
+        forAll(errorPatchIndices, i)
+        {
+            const label errorPatchi = errorPatchIndices[i];
+            const label origPatchi = origPatchIndices[i];
+
+            typename volVectorField::Patch& origUp =
+                boundaryFieldRefNoUpdate(U)[origPatchi];
+
+            if
+            (
+                isA<movingWallVelocityFvPatchVectorField>(origUp)
+             || isA<movingWallSlipVelocityFvPatchVectorField>(origUp)
+            )
+            {
+                boundaryFieldRefNoUpdate(U).set
+                (
+                    errorPatchi,
+                    new movingWallSlipVelocityFvPatchVectorField
+                    (
+                        mesh().boundary()[errorPatchi],
+                        U
+                    )
+                );
+            }
+        }
+    }
+
+    #define PostUnconformEvaluateVolFields(Type, nullArg) \
+        postUnconformEvaluateVolFields<Type>();
+    FOR_ALL_FIELD_TYPES(PostUnconformEvaluateVolFields);
+    #undef PostUnconformEvaluateVolFields
+}
+
+
+void Foam::fvMeshStitcher::postUnconformSurfaceFields()
+{
+    #define PostUnconformSurfaceFields(Type, nullArg) \
+        postUnconformSurfaceFields<Type>();
+    FOR_ALL_FIELD_TYPES(PostUnconformSurfaceFields);
+    #undef PostUnconformSurfaceFields
+
+    // Special handling for velocities. Recompute the surface velocity using an
+    // interpolation of the volume velocity.
+    UPtrList<surfaceVectorField> Ufs(mesh_.fields<surfaceVectorField>());
+    forAll(Ufs, i)
+    {
+        surfaceVectorField& Uf = Ufs[i];
+
+        const volVectorField& U = surfaceToVolVelocity(Uf);
+
+        if (isNull(U)) continue;
+
+        const surfaceVectorField UfInterpolated(fvc::interpolate(U));
+
+        forAll(Uf.boundaryField(), patchi)
+        {
+            if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
+            {
+                boundaryFieldRefNoUpdate(Uf)[patchi] ==
+                    UfInterpolated.boundaryField()[patchi];
+            }
+        }
+    }
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+Foam::boolList Foam::fvMeshStitcher::patchCoupleds() const
+{
+    boolList result(mesh_.boundary().size(), false);
+
+    forAll(mesh_.boundary(), patchi)
+    {
+        const fvPatch& fvp = mesh_.boundary()[patchi];
+
+        // Initially assume all cyclics can be coupled
+        if (isA<nonConformalCyclicFvPatch>(fvp))
+        {
+            result[patchi] = true;
+        }
+
+        // If, however, a processorCyclic is found, and this is not a parallel
+        // run, then the associated cyclic cannot be coupled. This works in a
+        // single loop because the processorCyclic patches are after the
+        // (global) cyclic patches.
+        if (isA<nonConformalProcessorCyclicFvPatch>(fvp))
+        {
+            const nonConformalProcessorCyclicFvPatch& ncpcFvp =
+                refCast<const nonConformalProcessorCyclicFvPatch>(fvp);
+
+            result[patchi] = Pstream::parRun();
+            result[ncpcFvp.referPatchIndex()] = Pstream::parRun();
+        }
+
+        // A mapped wall can be coupled if the neighbour mesh is available and
+        // it is a parallel run, or the pair of walls is confined to a single
+        // process
+        if (isA<nonConformalMappedWallFvPatch>(fvp))
+        {
+            const nonConformalMappedWallFvPatch& ncmwFvp =
+                refCast<const nonConformalMappedWallFvPatch>(fvp);
+
+            result[patchi] =
+                ncmwFvp.haveNbr()
+             && (
+                    Pstream::parRun()
+                 || patchToPatchTools::singleProcess
+                    (
+                        ncmwFvp.patch().size(),
+                        ncmwFvp.nbrPatch().patch().size()
+                    ) != -1
+                );
+        }
+    }
+
+    return result;
+}
+
+
+bool Foam::fvMeshStitcher::geometric() const
+{
+    bool result = false;
+
+    forAll(mesh_.boundary(), patchi)
+    {
+        const fvPatch& fvp = mesh_.boundary()[patchi];
+
+        if (!isA<nonConformalFvPatch>(fvp)) continue;
+
+        const fvsPatchScalarField& magSfp =
+            mesh_.magSf().boundaryField()[patchi];
+
+        const polyPatch& origPp =
+            refCast<const nonConformalFvPatch>(fvp).origPatch().patch();
+
+        const scalarField origMagSfp
+        (
+            origPp.magFaceAreas(),
+            mesh_.polyFacesBf()[patchi] - origPp.start()
+        );
+
+        if (max(magSfp/origMagSfp) > rootSmall)
+        {
+            result = true;
+        }
+    }
+
+    reduce(result, orOp<bool>());
+
+    return returnReduce(result, orOp<bool>());
+}
+
+
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::fvMeshStitcher::openness() const
+{
+    return
+        mag(fvc::surfaceIntegrate(mesh_.Sf()))()*mesh_.V()
+       /max
+        (
+            mag(fvc::surfaceSum(cmptMag(mesh_.Sf())))(),
+            (small*sqr(cbrt(mesh_.V())))()
+        )();
+}
+
+
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::fvMeshStitcher::volumeConservationError(const label n) const
+{
+    if (0 > n || n > 1)
+    {
+        FatalErrorInFunction
+            << "Can only compute volume conservation error for this time, or "
+            << "the previous time" << exit(FatalError);
+    }
+
+    const surfaceScalarField& phi = mesh_.phi().oldTime(n);
+
+    const dimensionedScalar deltaT =
+        n == 0 ? mesh_.time().deltaT() : mesh_.time().deltaT0();
+
+    const volScalarField::Internal& V = n == 0 ? mesh_.V() : mesh_.V0();
+    const volScalarField::Internal& V0 = n == 0 ? mesh_.V0() : mesh_.V00();
+
+    return fvc::surfaceIntegrate(phi*deltaT)() - (V - V0)/mesh_.V();
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::fvMeshStitcher::fvMeshStitcher(fvMesh& mesh)
+:
+    mesh_(mesh),
+    ready_(false),
+    regionPolyFacesBfIOs_(),
+    regionPolyFacesBfs_()
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::fvMeshStitcher::~fvMeshStitcher()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::fvMeshStitcher::stitches() const
+{
+    forAll(mesh_.boundary(), patchi)
+    {
+        if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+bool Foam::fvMeshStitcher::dynamic() const
+{
+    UPtrList<const fvMesh> regionMeshes(this->regionMeshes());
+
+    forAll(regionMeshes, i)
+    {
+        if (regionMeshes[i].dynamic())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+bool Foam::fvMeshStitcher::disconnect
+(
+    const bool changing,
+    const bool geometric
+)
+{
+    // Disconnection can happen independently of the state of connected
+    // regions. So, just disconnect immediately.
+
+    return disconnectThis(changing, geometric);
+}
+
+
+bool Foam::fvMeshStitcher::connect
+(
+    const bool changing,
+    const bool geometric,
+    const bool load
+)
+{
+    if (!changing)
+    {
+        return connectThis(changing, geometric, load);
+    }
+
+    // Connection requires all regions to be available and at a consistent
+    // state. So, we need to wait until they are all ready. So, if some are not
+    // ready, then this function just flips the ready flag for this region. If
+    // they are all ready, then this function stitches all of them.
+
+    ready_ = true;
+
+    // Get all the connected region meshes
+    MultiRegionUList<fvMesh> regionMeshes(this->regionMeshes());
+
+    // If any mesh is not ready, then don't do anything
+    forAll(regionMeshes, i)
+    {
+        if (!regionMeshes[i]().stitcher().ready_)
+        {
+            return false;
+        }
+    }
+
+    // All meshes are ready, so connect all of them up
+    bool result = false;
+    forAll(regionMeshes, i)
+    {
+        if (regionMeshes[i]().stitcher().connectThis(changing, geometric, load))
+        {
+            result = true;
+        }
+    }
+
+    // Set all meshes as not ready, in preparation for the next iteration
+    forAll(regionMeshes, i)
+    {
+        regionMeshes[i]().stitcher().ready_ = false;
+    }
+
+    return result;
+}
+
+
 void Foam::fvMeshStitcher::reconnect(const bool geometric) const
 {
     if (mesh_.conformal() || geometric == this->geometric())
@@ -1613,9 +2271,7 @@ void Foam::fvMeshStitcher::reconnect(const bool geometric) const
         return;
     }
 
-    const bool coupled = Pstream::parRun() || !mesh_.time().processorCase();
-
-    // Create a copy of the conformal poly face addressing
+    // Create a copy of the non-conformal poly face addressing
     surfaceLabelField::Boundary polyFacesBf
     (
         surfaceLabelField::null(),
@@ -1625,36 +2281,18 @@ void Foam::fvMeshStitcher::reconnect(const bool geometric) const
     // Undo all non-conformal changes and clear all geometry and topology
     mesh_.conform();
 
+    // Determine which patches are coupled
+    const boolList patchCoupleds =
+        geometric
+      ? this->patchCoupleds()
+      : boolList(mesh_.boundary().size(), false);
+
     // Create copies of geometry fields to be modified
     surfaceVectorField Sf(mesh_.Sf().cloneUnSliced()());
     surfaceVectorField Cf(mesh_.Cf().cloneUnSliced()());
 
     // Construct non-conformal geometry
-    if (coupled && geometric)
-    {
-        // Do the intersection and create the non-conformal cyclic faces
-        intersectNonConformalCyclics(polyFacesBf, Sf, Cf, true);
-
-        // Create stabilisation geometry on any error faces specified in the
-        // addressing
-        createNonConformalStabilisationGeometry<nonConformalErrorFvPatch>
-        (
-            polyFacesBf,
-            Sf,
-            Cf
-        );
-    }
-    else
-    {
-        // If not coupled, then create stabilisation geometry on all
-        // non-conformal faces specified in the addressing
-        createNonConformalStabilisationGeometry<nonConformalFvPatch>
-        (
-            polyFacesBf,
-            Sf,
-            Cf
-        );
-    }
+    intersect(polyFacesBf, Sf, Cf, patchCoupleds, true);
 
     // Apply changes to the mesh
     mesh_.unconform(polyFacesBf, Sf, Cf);

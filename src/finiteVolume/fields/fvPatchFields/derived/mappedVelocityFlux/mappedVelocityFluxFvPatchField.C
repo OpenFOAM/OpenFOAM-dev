@@ -25,7 +25,7 @@ License
 
 #include "mappedVelocityFluxFvPatchField.H"
 #include "fieldMapper.H"
-#include "mappedPatchBase.H"
+#include "mappedFvPatchBaseBase.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -42,12 +42,12 @@ Foam::mappedVelocityFluxFvPatchField::mappedVelocityFluxFvPatchField
     fixedValueFvPatchVectorField(p, iF, dict),
     phiName_(dict.lookupOrDefault<word>("phi", "phi"))
 {
-    mappedPatchBase::validateMapForField
+    mappedPatchBaseBase::validateMapForField
     (
         *this,
         iF,
         dict,
-        mappedPatchBase::from::differentPatch
+        mappedPatchBaseBase::from::differentPatch
     );
 }
 
@@ -90,12 +90,14 @@ void Foam::mappedVelocityFluxFvPatchField::updateCoeffs()
     int oldTag = UPstream::msgType();
     UPstream::msgType() = oldTag+1;
 
-    const mappedPatchBase& mapper = mappedPatchBase::getMap(patch().patch());
-    const fvMesh& nbrMesh = refCast<const fvMesh>(mapper.nbrMesh());
-    const label nbrPatchi = mapper.nbrPolyPatch().index();
+    // Get the mapper and the neighbouring mesh and patch
+    const mappedFvPatchBaseBase& mapper =
+        mappedFvPatchBaseBase::getMap(patch());
+    const fvMesh& nbrMesh = mapper.nbrMesh();
+    const label nbrPatchi = mapper.nbrFvPatch().index();
 
     const volVectorField& UField =
-        refCast<const volVectorField>(internalField());
+        nbrMesh.lookupObjectRef<volVectorField>(internalField().name());
     surfaceScalarField& phiField =
         nbrMesh.lookupObjectRef<surfaceScalarField>(phiName_);
 

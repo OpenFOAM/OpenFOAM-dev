@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ Foam::PtrList<Foam::domainDecomposition> Foam::multiDomainDecomposition::init
         result.set
         (
             regioni,
-            new domainDecomposition(runTimes, regionNames[regioni])
+            new domainDecomposition(runTimes, regionNames[regioni], *this)
         );
     }
 
@@ -79,13 +79,13 @@ Foam::multiDomainDecomposition::~multiDomainDecomposition()
 
 bool Foam::multiDomainDecomposition::readDecompose(const bool doSets)
 {
-    bool result = false;
+    bool decomposed = false;
 
     forAll(*this, regioni)
     {
-        if (this->operator[](regioni)().readDecompose(doSets))
+        if (this->operator[](regioni)().readDecompose())
         {
-            result = true;
+            decomposed = true;
 
             if (regioni != size() - 1)
             {
@@ -94,19 +94,34 @@ bool Foam::multiDomainDecomposition::readDecompose(const bool doSets)
         }
     }
 
-    return result;
+    forAll(*this, regioni)
+    {
+        this->operator[](regioni)().postReadDecompose();
+    }
+
+    forAll(*this, regioni)
+    {
+        this->operator[](regioni)().unconformReadDecompose();
+    }
+
+    forAll(*this, regioni)
+    {
+        this->operator[](regioni)().writeReadDecompose(decomposed, doSets);
+    }
+
+    return decomposed;
 }
 
 
 bool Foam::multiDomainDecomposition::readReconstruct(const bool doSets)
 {
-    bool result = false;
+    bool reconstructed = false;
 
     forAll(*this, regioni)
     {
-        if (this->operator[](regioni)().readReconstruct(doSets))
+        if (this->operator[](regioni)().readReconstruct())
         {
-            result = true;
+            reconstructed = true;
 
             if (regioni != size() - 1)
             {
@@ -115,51 +130,86 @@ bool Foam::multiDomainDecomposition::readReconstruct(const bool doSets)
         }
     }
 
-    return result;
+    forAll(*this, regioni)
+    {
+        this->operator[](regioni)().postReadReconstruct();
+    }
+
+    forAll(*this, regioni)
+    {
+        this->operator[](regioni)().unconformReadReconstruct();
+    }
+
+    forAll(*this, regioni)
+    {
+        this->operator[](regioni)().writeReadReconstruct(reconstructed, doSets);
+    }
+
+    return reconstructed;
 }
 
 
 Foam::fvMesh::readUpdateState
 Foam::multiDomainDecomposition::readUpdateDecompose()
 {
-    fvMesh::readUpdateState result = fvMesh::UNCHANGED;
+    fvMesh::readUpdateState stat = fvMesh::UNCHANGED;
 
     forAll(*this, regioni)
     {
-        const fvMesh::readUpdateState regionResult =
+        const fvMesh::readUpdateState regionStat =
             this->operator[](regioni)().readUpdateDecompose();
 
-        if (regioni != size() - 1 && regionResult >= fvMesh::TOPO_CHANGE)
+        if (regioni != size() - 1 && regionStat >= fvMesh::TOPO_CHANGE)
         {
             Info<< endl;
         }
 
-        result = result > regionResult ? result : regionResult;
+        stat = stat > regionStat ? stat : regionStat;
     }
 
-    return result;
+    forAll(*this, regioni)
+    {
+        this->operator[](regioni)().postReadUpdateDecompose(stat);
+    }
+
+    forAll(*this, regioni)
+    {
+        this->operator[](regioni)().unconformReadUpdateDecompose(stat);
+    }
+
+    return stat;
 }
 
 
 Foam::fvMesh::readUpdateState
 Foam::multiDomainDecomposition::readUpdateReconstruct()
 {
-    fvMesh::readUpdateState result = fvMesh::UNCHANGED;
+    fvMesh::readUpdateState stat = fvMesh::UNCHANGED;
 
     forAll(*this, regioni)
     {
-        const fvMesh::readUpdateState regionResult =
+        const fvMesh::readUpdateState regionStat =
             this->operator[](regioni)().readUpdateReconstruct();
 
-        if (regioni != size() - 1 && regionResult >= fvMesh::TOPO_CHANGE)
+        if (regioni != size() - 1 && regionStat >= fvMesh::TOPO_CHANGE)
         {
             Info<< endl;
         }
 
-        result = result > regionResult ? result : regionResult;
+        stat = stat > regionStat ? stat : regionStat;
     }
 
-    return result;
+    forAll(*this, regioni)
+    {
+        this->operator[](regioni)().postReadUpdateReconstruct(stat);
+    }
+
+    forAll(*this, regioni)
+    {
+        this->operator[](regioni)().unconformReadUpdateReconstruct(stat);
+    }
+
+    return stat;
 }
 
 

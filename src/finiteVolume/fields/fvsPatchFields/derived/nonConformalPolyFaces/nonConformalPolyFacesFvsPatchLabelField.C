@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,15 @@ nonConformalPolyFacesFvsPatchLabelField
 )
 :
     fvsPatchLabelField(p, iF)
-{}
+{
+    if (p.size())
+    {
+        FatalErrorInFunction
+            << "Default construction of a " << typeName << " field should "
+            << "only occur on a patch with no faces"
+            << exit(FatalError);
+    }
+}
 
 
 Foam::nonConformalPolyFacesFvsPatchLabelField::
@@ -67,7 +75,15 @@ nonConformalPolyFacesFvsPatchLabelField
 )
 :
     fvsPatchLabelField(ptf, p, iF, mapper)
-{}
+{
+    if (p.size())
+    {
+        FatalErrorInFunction
+            << "Mapped construction of a " << typeName << " field should "
+            << "only occur on a patch with no faces"
+            << exit(FatalError);
+    }
+}
 
 
 Foam::nonConformalPolyFacesFvsPatchLabelField::

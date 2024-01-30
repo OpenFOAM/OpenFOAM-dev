@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ SourceFiles
 #define mappedFilmSurfaceFvPatch_H
 
 #include "filmSurfaceFvPatch.H"
+#include "mappedFvPatchBase.H"
 #include "mappedFilmSurfacePolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,7 +47,8 @@ namespace Foam
 
 class mappedFilmSurfaceFvPatch
 :
-    public filmSurfaceFvPatch
+    public filmSurfaceFvPatch,
+    public mappedFvPatchBase
 {
 
 public:
@@ -64,7 +66,8 @@ public:
             const fvBoundaryMesh& bm
         )
         :
-            filmSurfaceFvPatch(patch, bm)
+            filmSurfaceFvPatch(patch, bm),
+            mappedFvPatchBase(static_cast<const fvPatch&>(*this))
         {}
 };
 

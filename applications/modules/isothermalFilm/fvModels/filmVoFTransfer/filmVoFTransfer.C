@@ -25,7 +25,7 @@ License
 
 #include "filmVoFTransfer.H"
 #include "VoFFilmTransfer.H"
-#include "mappedPatchBase.H"
+#include "mappedFvPatchBaseBase.H"
 #include "compressibleVoF.H"
 #include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
@@ -126,7 +126,7 @@ void Foam::fv::filmVoFTransfer::correct()
         )
     );
 
-    const label patchiVoF = film_.surfacePatchMap().nbrPolyPatch().index();
+    const label patchiVoF = film_.surfacePatchMap().nbrFvPatch().index();
 
     const VoFFilmTransfer& VoFFilm(this->VoFFilm(VoF_.fvModels()));
 
@@ -184,7 +184,7 @@ const Foam::fv::VoFFilmTransfer& Foam::fv::filmVoFTransfer::VoFFilm
             if
             (
                 VoFFilm.filmPatchIndex()
-             == film_.surfacePatchMap().nbrPolyPatch().index()
+             == film_.surfacePatchMap().nbrFvPatch().index()
             )
             {
                 VoFFilmPtr = &VoFFilm;
@@ -212,13 +212,8 @@ inline Foam::fv::filmVoFTransfer::VoFToFilmTransferRate
     const dimensionSet& dimProp
 ) const
 {
-    const Foam::fvModels& fvModels
-    (
-        fvModels::New
-        (
-            refCast<const fvMesh>(film_.surfacePatchMap().nbrMesh())
-        )
-    );
+    const Foam::fvModels& fvModels =
+        fvModels::New(film_.surfacePatchMap().nbrMesh());
 
     tmp<VolInternalField<Type>> tSu
     (

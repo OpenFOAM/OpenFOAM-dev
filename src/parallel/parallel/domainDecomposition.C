@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 #include "IOobjectList.H"
 #include "cellSet.H"
 #include "faceSet.H"
+#include "fvMeshStitcher.H"
 #include "pointSet.H"
 #include "hexRef8Data.H"
 #include "cyclicFvPatch.H"
@@ -91,7 +92,7 @@ void Foam::domainDecomposition::validateProcs() const
 }
 
 
-void Foam::domainDecomposition::readComplete(const bool stitch)
+void Foam::domainDecomposition::readComplete()
 {
     completeMesh_.reset
     (
@@ -103,19 +104,10 @@ void Foam::domainDecomposition::readComplete(const bool stitch)
                 runTimes_.completeTime().name(),
                 runTimes_.completeTime(),
                 IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
+                IOobject::NO_WRITE
             ),
             false
         )
-    );
-
-    completeMesh_->init
-    (
-        false,
-        stitch
-      ? fvMesh::stitchType::nonGeometric
-      : fvMesh::stitchType::none
     );
 }
 
@@ -135,17 +127,10 @@ void Foam::domainDecomposition::readProcs()
                     runTimes_.procTimes()[proci].name(),
                     runTimes_.procTimes()[proci],
                     IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    false
+                    IOobject::NO_WRITE
                 ),
                 false
             )
-        );
-
-        procMeshes_[proci].init
-        (
-            false,
-            fvMesh::stitchType::nonGeometric
         );
     }
 }
@@ -239,15 +224,14 @@ Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdate()
 
     // Do read-update on all meshes
     fvMesh::readUpdateState stat =
-        completeMesh_->readUpdate(fvMesh::stitchType::nonGeometric);
+        completeMesh_->readUpdate(fvMesh::stitchType::none);
+
     forAll(runTimes_.procTimes(), proci)
     {
         fvMesh::readUpdateState procStat =
-            procMeshes_[proci].readUpdate(fvMesh::stitchType::nonGeometric);
-        if (procStat > stat)
-        {
-            stat = procStat;
-        }
+            procMeshes_[proci].readUpdate(fvMesh::stitchType::none);
+
+        stat = procStat > stat ? procStat : stat;
     }
 
     return stat;
@@ -426,13 +410,15 @@ void Foam::domainDecomposition::writeCompletePoints(const fileName& inst)
 Foam::domainDecomposition::domainDecomposition
 (
     const processorRunTimes& runTimes,
-    const word& regionName
+    const word& regionName,
+    const multiDomainDecomposition& regionMeshes
 )
 :
     runTimes_(runTimes),
     regionName_(regionName),
     completeMesh_(nullptr),
     procMeshes_(nProcs()),
+    regionMeshes_(regionMeshes),
     cellProc_(),
     procPointAddressing_(nProcs()),
     procFaceAddressing_(nProcs()),
@@ -449,7 +435,7 @@ Foam::domainDecomposition::~domainDecomposition()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::domainDecomposition::readDecompose(const bool doSets)
+bool Foam::domainDecomposition::readDecompose()
 {
     readComplete();
 
@@ -524,25 +510,53 @@ bool Foam::domainDecomposition::readDecompose(const bool doSets)
         decompose();
     }
 
-    if (!completeConformal())
-    {
-        procFaceAddressingBf_.clear();
-        forAll(procMeshes_, proci) procMeshes_[proci].conform();
-        unconform();
-    }
-
-    writeProcs(doSets);
-
-    if (!load)
-    {
-        writeProcPoints(completeMesh().facesInstance());
-    }
-
     return !load;
 }
 
 
-bool Foam::domainDecomposition::readReconstruct(const bool doSets)
+void Foam::domainDecomposition::postReadDecompose()
+{
+    completeMesh_->postConstruct(false, fvMesh::stitchType::nonGeometric);
+
+    forAll(procMeshes_, proci)
+    {
+        procMeshes_[proci].postConstruct(false, fvMesh::stitchType::none);
+    }
+}
+
+
+void Foam::domainDecomposition::unconformReadDecompose()
+{
+    if (!completeConformal())
+    {
+        procFaceAddressingBf_.clear();
+
+        forAll(procMeshes_, proci)
+        {
+            procMeshes_[proci].conform();
+        }
+
+        unconform();
+    }
+}
+
+
+void Foam::domainDecomposition::writeReadDecompose
+(
+    const bool decomposed,
+    const bool doSets
+)
+{
+    writeProcs(doSets);
+
+    if (decomposed)
+    {
+        writeProcPoints(completeMesh().facesInstance());
+    }
+}
+
+
+bool Foam::domainDecomposition::readReconstruct()
 {
     readProcs();
 
@@ -580,7 +594,7 @@ bool Foam::domainDecomposition::readReconstruct(const bool doSets)
             runTimes_.completeTime()
         );
 
-        readComplete(completePointsIo.headerOk());
+        readComplete();
 
         if (addrIo.headerOk())
         {
@@ -643,21 +657,50 @@ bool Foam::domainDecomposition::readReconstruct(const bool doSets)
         reconstruct();
     }
 
+    return !load;
+}
+
+
+void Foam::domainDecomposition::postReadReconstruct()
+{
+    completeMesh_->postConstruct(false, fvMesh::stitchType::none);
+
+    forAll(procMeshes_, proci)
+    {
+        procMeshes_[proci].postConstruct
+        (
+            false,
+            fvMesh::stitchType::nonGeometric
+        );
+    }
+}
+
+
+void Foam::domainDecomposition::unconformReadReconstruct()
+{
     if (!procsConformal())
     {
         procFaceAddressingBf_.clear();
+
         completeMesh_->conform();
+
         unconform();
     }
+}
 
+
+void Foam::domainDecomposition::writeReadReconstruct
+(
+    const bool reconstructed,
+    const bool doSets
+)
+{
     writeComplete(doSets);
 
-    if (!load)
+    if (reconstructed)
     {
         writeCompletePoints(procMeshes()[0].facesInstance());
     }
-
-    return !load;
 }
 
 
@@ -724,19 +767,46 @@ Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdateDecompose()
         }
     }
 
-    // Non-conformal changes
+    return stat;
+}
+
+
+void Foam::domainDecomposition::postReadUpdateDecompose
+(
+    const fvMesh::readUpdateState stat
+)
+{
+    if (stat >= fvMesh::TOPO_CHANGE)
     {
-        // If the mesh has changed in any way, and the complete mesh is
-        // non-conformal, then we need to re-unconform the processor meshes
-        if (stat != fvMesh::UNCHANGED && !completeConformal())
+        forAll(procMeshes_, proci)
         {
-            procFaceAddressingBf_.clear();
-            forAll(procMeshes_, proci) procMeshes_[proci].conform();
-            unconform();
+            procMeshes_[proci].postConstruct(false, fvMesh::stitchType::none);
         }
     }
 
-    return stat;
+    if (completeMesh_->stitcher().stitches() && stat != fvMesh::UNCHANGED)
+    {
+        procFaceAddressingBf_.clear();
+
+        completeMesh_->stitcher().connect(false, false, true);
+    }
+}
+
+
+void Foam::domainDecomposition::unconformReadUpdateDecompose
+(
+    const fvMesh::readUpdateState stat
+)
+{
+    if (completeMesh_->stitcher().stitches() && stat != fvMesh::UNCHANGED)
+    {
+        forAll(procMeshes_, proci)
+        {
+            procMeshes_[proci].conform();
+        }
+
+        unconform();
+    }
 }
 
 
@@ -804,19 +874,43 @@ Foam::fvMesh::readUpdateState Foam::domainDecomposition::readUpdateReconstruct()
         }
     }
 
-    // Non-conformal changes
+    return stat;
+}
+
+
+void Foam::domainDecomposition::postReadUpdateReconstruct
+(
+    const fvMesh::readUpdateState stat
+)
+{
+    if (stat >= fvMesh::TOPO_CHANGE)
     {
-        // If the mesh has changed in any way, and the processor meshes are
-        // non-conformal, then we need to re-unconform the complete mesh
-        if (stat != fvMesh::UNCHANGED && !procsConformal())
-        {
-            procFaceAddressingBf_.clear();
-            completeMesh_->conform();
-            unconform();
-        }
+        completeMesh_->postConstruct(false, fvMesh::stitchType::none);
     }
 
-    return stat;
+    if (completeMesh_->stitcher().stitches() && stat != fvMesh::UNCHANGED)
+    {
+        procFaceAddressingBf_.clear();
+
+        forAll(procMeshes_, proci)
+        {
+            procMeshes_[proci].stitcher().connect(false, false, true);
+        }
+    }
+}
+
+
+void Foam::domainDecomposition::unconformReadUpdateReconstruct
+(
+    const fvMesh::readUpdateState stat
+)
+{
+    if (completeMesh_->stitcher().stitches() && stat != fvMesh::UNCHANGED)
+    {
+        completeMesh_->conform();
+
+        unconform();
+    }
 }
 
 
@@ -938,16 +1032,6 @@ void Foam::domainDecomposition::writeComplete(const bool doSets) const
                 setObjects.lookupClass(pointSet::typeName)
             );
 
-            if
-            (
-                (cellSets.empty() && !cellSetObjects.empty())
-             || (faceSets.empty() && !faceSetObjects.empty())
-             || (pointSets.empty() && !pointSetObjects.empty())
-            )
-            {
-                Info<< "Reconstructing sets" << incrIndent << nl << endl;
-            }
-
             // Read and reconstruct the sets
             forAllConstIter(IOobjectList, cellSetObjects, iter)
             {
@@ -955,8 +1039,6 @@ void Foam::domainDecomposition::writeComplete(const bool doSets) const
 
                 if (!cellSets.found(iter.key()))
                 {
-                    Info<< indent << "cellSet " << iter.key() << endl;
-
                     cellSets.insert
                     (
                         iter.key(),
@@ -984,8 +1066,6 @@ void Foam::domainDecomposition::writeComplete(const bool doSets) const
 
                 if (!faceSets.found(iter.key()))
                 {
-                    Info<< indent << "faceSet " << iter.key() << endl;
-
                     faceSets.insert
                     (
                         iter.key(),
@@ -1013,8 +1093,6 @@ void Foam::domainDecomposition::writeComplete(const bool doSets) const
 
                 if (!pointSets.found(iter.key()))
                 {
-                    Info<< indent << "pointSet " << iter.key() << endl;
-
                     pointSets.insert
                     (
                         iter.key(),
@@ -1050,11 +1128,6 @@ void Foam::domainDecomposition::writeComplete(const bool doSets) const
         forAllConstIter(HashPtrTable<pointSet>, pointSets, iter)
         {
             iter()->write();
-        }
-
-        if (!cellSets.empty() || !faceSets.empty() || !pointSets.empty())
-        {
-            Info<< decrIndent << endl;
         }
     }
 

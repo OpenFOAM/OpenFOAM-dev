@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,6 +152,9 @@ private:
 
         //- Matrix addressing
         mutable fvMeshLduAddressing* lduPtr_;
+
+        //- Face-poly-face IO
+        mutable IOobject* polyFacesBfIOPtr_;
 
         //- Face-poly-face addressing
         mutable GeometricBoundaryField<label, fvsPatchField, surfaceMesh>*
@@ -474,9 +477,6 @@ public:
             //- Return whether the fvMesh is conformal with the polyMesh
             bool conformal() const;
 
-            //- Get the poly faces IO object
-            IOobject polyFacesBfIO(IOobject::readOption r) const;
-
             //- Return face-poly-face addressing
             const GeometricBoundaryField<label, fvsPatchField, surfaceMesh>&
                 polyFacesBf() const;
@@ -591,6 +591,12 @@ public:
 
             //- Move points, returns volumes swept by faces in motion
             virtual tmp<scalarField> movePoints(const pointField&);
+
+            //- Get the current instance for the poly faces boundary field
+            const fileName& polyFacesBfInstance() const;
+
+            //- Set the instance for the poly faces boundary field
+            void setPolyFacesBfInstance(const fileName&);
 
             //- Conform the fvMesh to the polyMesh
             void conform

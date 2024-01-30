@@ -25,26 +25,26 @@ nonConformalCouples
     // Unique name used to generate the name of the coupled patches
     <name>
     {
-        // Name of the two patches between which to create the coupling
-        patches     (<patch1> <patch2>);
+        // Name of the two original patches between which to create the coupling
+        patches         (<patch1> <patch2>);
 
         // Type of the transformation; "none", "rotational", or "translational"
-        transform   <transformType>;
+        transform       <transformType>;
 
         // Additional transformation settings (if any)
         ...
     }
     */
 
-    // Example: Create a non-conformal couple with no transformation
+    // Example: Create a non-conformal cyclic coupling with no transformation
     nonConformalCouple_none
     {
         patches         (nonCouple1 nonCouple2);
         transform       none;
     }
 
-    // Example: Create a non-conformal couple with a 30 degree rotational
-    // transformation
+    // Example: Create a non-conformal cyclic coupling with a 30 degree
+    // rotational transformation
     nonConformalCouple_30deg
     {
         patches         (nonCoupleBehind nonCoupleAhead);
@@ -54,13 +54,21 @@ nonConformalCouples
         rotationAngle   30;
     }
 
-    // Example: Create a non-conformal couple with a 2 metre translational
-    // transformation
+    // Example: Create a non-conformal cyclic coupling with a 2 metre
+    // translational transformation
     nonConformalCouple_2m
     {
         patches         (nonCoupleBack nonCoupleFront);
         transform       translational;
         separation      (0 2 0);
+    }
+
+    // Example: Create a non-conformal mapped-wall coupling between a fluid and
+    // a solid region
+    fluidSolid
+    {
+        regions         (fluid solid);
+        patches         (nonCoupleRotating nonCoupleStationary);
     }
 }
 

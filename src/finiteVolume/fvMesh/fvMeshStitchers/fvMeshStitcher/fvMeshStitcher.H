@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,6 +47,7 @@ namespace Foam
 {
 
 class nonConformalCyclicFvPatch;
+class nonConformalMappedWallFvPatch;
 
 /*---------------------------------------------------------------------------*\
                         Class fvMeshStitcher Declaration
@@ -78,15 +79,141 @@ private:
         //- Non-const fvMesh reference to allow update
         fvMesh& mesh_;
 
+        //- Flag to indicate whether this region is ready to be stitched
+        bool ready_;
+
+        //- Cache of leaded region poly face IO objects
+        HashPtrTable<IOobject> regionPolyFacesBfIOs_;
+
+        //- Cache of loaded region poly face boundary fields
+        HashPtrTable<SurfaceFieldBoundary<label>> regionPolyFacesBfs_;
+
 
     // Private Member Functions
 
+        // Regions
+
+            //- Construct a table of connected region names. Recurses to
+            //  find neighbours-of-neighbours and so on. Includes this region.
+            static void regionNames(const fvMesh& mesh, wordHashSet& names);
+
+            //- Get a list of the connected region names
+            wordList regionNames() const;
+
+            //- Get a list of the connected region meshes
+            UPtrList<const fvMesh> regionMeshes() const;
+
+            //- Get a list of the connected region meshes
+            UPtrList<fvMesh> regionMeshes();
+
+
+        // Topology access
+
+            //- Get the IO for the poly faces boundary field for a given mesh
+            static IOobject polyFacesBfIO(const fvMesh& mesh);
+
+            //- Load the poly faces boundary field for this mesh, and also make
+            //  sure that all neighbouring regions' poly faces boundary fields
+            //  are available either by lookup or in the region cache
+            bool loadPolyFacesBf
+            (
+                IOobject& polyFacesBfIO,
+                SurfaceFieldBoundary<label>& polyFacesBf
+            );
+
+            //- Access the poly faces boundary field for a region
+            const SurfaceFieldBoundary<label>& getPolyFacesBf
+            (
+                const word& regionName
+            ) const;
+
+            //- Get fields of neighbouring original face properties
+            void getOrigNbrBfs
+            (
+                const SurfaceFieldBoundary<label>& polyFacesBf,
+                const SurfaceFieldBoundary<vector>& SfBf,
+                const SurfaceFieldBoundary<vector>& CfBf,
+                tmp<SurfaceFieldBoundary<label>>& tOrigFacesNbrBf,
+                tmp<SurfaceFieldBoundary<vector>>& tOrigSfNbrBf,
+                tmp<SurfaceFieldBoundary<point>>& tOrigCfNbrBf
+            ) const;
+
+
         // Intersection
 
-            //- Perform intersections for the given non-conformal interface
+            //- Unpack the patchToPatch addressing into lists of indices (fixed
+            //  lists of 3 labels; owner face, neighbour face, couple index).
+            //  These will be used to create the non-conformal faces, so sort
+            //  them to make sure the non-conformal interfaces are ordered.
+            static List<List<FixedList<label, 3>>> procFacesToIndices
+            (
+                const List<List<remote>>& faceOtherProcFaces,
+                const bool owner
+            );
+
+            //- If addressing has been provided, then modify the indices to
+            //  match. When a coupling has to be added, the couple index is set
+            //  to -1. This indicates that there is no geometry in the
+            //  patchToPatch engine for this coupling, and for a small
+            //  stabilisation value to be used instead.
+            static void matchIndices
+            (
+                const SurfaceFieldBoundary<label>& polyFacesBf,
+                const SurfaceFieldBoundary<label>& origFacesNbrBf,
+                List<List<FixedList<label, 3>>>& indices,
+                const fvPatch& ncFvp,
+                const polyPatch& origPp,
+                const labelList& patchis,
+                const labelList& patchOffsets,
+                const labelList& patchSizes,
+                const bool owner
+            );
+
+            //- Create couplings by transferring geometry from the original to
+            //  the non-conformal patches
+            static void createCouplings
+            (
+                SurfaceFieldBoundary<label>& polyFacesBf,
+                SurfaceFieldBoundary<vector>& SfBf,
+                SurfaceFieldBoundary<vector>& CfBf,
+                const tmp<SurfaceFieldBoundary<vector>>& tOrigSfNbrBf,
+                const tmp<SurfaceFieldBoundary<vector>>& tOrigCfNbrBf,
+                const List<List<FixedList<label, 3>>>& indices,
+                const List<DynamicList<couple>>& couples,
+                const polyPatch& origPp,
+                const labelList& patchis,
+                const labelList& patchOffsets,
+                const bool owner
+            );
+
+            //- Add error geometry to the original patches and store the edge
+            //  parts
+            static void createErrorAndEdgeParts
+            (
+                SurfaceFieldBoundary<vector>& SfBf,
+                SurfaceFieldBoundary<vector>& CfBf,
+                List<part>& origEdgeParts,
+                const patchToPatches::intersection& intersection,
+                const polyPatch& origPp
+            );
+
+            //- Perform intersections for the given non-conformal cyclic
             void intersectNonConformalCyclic
             (
                 const nonConformalCyclicFvPatch& nccFvp,
+                SurfaceFieldBoundary<label>& polyFacesBf,
+                SurfaceFieldBoundary<vector>& SfBf,
+                SurfaceFieldBoundary<vector>& CfBf,
+                const tmp<SurfaceFieldBoundary<label>>& tOrigFacesNbrBf,
+                const tmp<SurfaceFieldBoundary<vector>>& tOrigSfNbrBf,
+                const tmp<SurfaceFieldBoundary<point>>& tOrigCfNbrBf,
+                List<part>& origEdgeParts
+            ) const;
+
+            //- Perform intersections for the given non-conformal mapped
+            void intersectNonConformalMappedWall
+            (
+                const nonConformalMappedWallFvPatch& ncmwFvp,
                 SurfaceFieldBoundary<label>& polyFacesBf,
                 SurfaceFieldBoundary<vector>& SfBf,
                 SurfaceFieldBoundary<vector>& CfBf,
@@ -121,26 +248,17 @@ private:
                 SurfaceFieldBoundary<vector>& CfBf
             ) const;
 
-            //- Perform intersections for all non-conformal interfaces
-            void intersectNonConformalCyclics
+            //- Perform intersections for all non-conformal interfaces. For
+            //  patches that can be coupled, this creates the intersection
+            //  geometry. For patches that cannot, this just sets small
+            //  stabilisation values for the given topology (if any).
+            void intersect
             (
                 SurfaceFieldBoundary<label>& polyFacesBf,
                 surfaceVectorField& SfSf,
                 surfaceVectorField& CfSf,
-                const bool haveTopology
-            ) const;
-
-            //- Apply the given non-conformal topology (polyFacesBf) to the
-            //  face geometry fields for the given patch type. Just set small
-            //  stabilisation values. Don't actually do any cutting. Used for
-            //  initialisation, or in situations when cutting cannot be done
-            //  (e.g., when post processing a processor case).
-            template<class NonConformalFvPatch>
-            inline void createNonConformalStabilisationGeometry
-            (
-                const SurfaceFieldBoundary<label>& polyFacesBf,
-                surfaceVectorField& SfSf,
-                surfaceVectorField& CfSf
+                const boolList& patchCoupleds,
+                const bool matchTopology
             ) const;
 
 
@@ -170,6 +288,25 @@ private:
             ) = 0;
 
 
+        // Connection
+
+            //- Disconnect the mesh by removing faces from the
+            //  nonConformalCyclics
+            bool disconnectThis
+            (
+                const bool changing,
+                const bool geometric
+            );
+
+            //- Connect the mesh by adding faces into the nonConformalCyclics
+            bool connectThis
+            (
+                const bool changing,
+                const bool geometric,
+                const bool load
+            );
+
+
         // Field Mapping
 
             //- Resize the patch fields of a given type and class to match the
@@ -181,33 +318,51 @@ private:
             template<template<class> class GeoField>
             void resizePatchFields();
 
-            //- Pre-conform surface fields of a given type by separating NCC
-            //  and original parts of non-conformal couplings and storing them
-            //  in the database as separate fields
+            //- Pre-conform the volume fields of a given type. This maps all the
+            //  non-conformal values to the original patch faces so that they
+            //  can be mapped across subsequent mesh changes. See
+            //  conformedFvPatchField::conform for details.
+            template<class Type>
+            void preConformVolFields();
+
+            //- Calls pre-conform volume field functions for all types
+            void preConformVolFields();
+
+            //- Pre-conform surface fields of a given type. This maps all the
+            //  non-conformal values to the original patch faces so that they
+            //  can be mapped across subsequent mesh changes. See
+            //  conformedFvsPatchField::conform for details.
             template<class Type>
             void preConformSurfaceFields();
 
-            //- As above, for all types
+            //- Calls pre-conform surface field functions for all types
             void preConformSurfaceFields();
 
-            //- Post-unconform surface fields of a given type by looking up
-            //  NCC and original parts of non-conformal couplings and combining
-            //  them into a single non-conformal boundary field
+            //- Post-unconform volume fields of a given type. This takes all
+            //  the non-conformal values which were mapped onto the conformal
+            //  faces by the pre-conform call and maps them back into the new
+            //  non-conformal faces. See conformedFvPatchField::unconform for
+            //  details.
             template<class Type>
-            void postUnconformSurfaceFields();
-
-            //- As above, for all types
-            void postUnconformSurfaceFields();
+            void postUnconformVolFields();
 
             //- Evaluate all non-conformal vol patch fields of a given type
             template<class Type>
-            void evaluateVolFields();
+            void postUnconformEvaluateVolFields();
 
-            //- As above, for all types
-            void evaluateVolFields();
+            //- Calls post-unconform volume field functions for all types
+            void postUnconformVolFields();
 
-            //- Special post-unconform for surface velocities
-            void postUnconformSurfaceVelocities();
+            //- Post-unconform surface fields of a given type. This takes all
+            //  the non-conformal values which were mapped onto the conformal
+            //  faces by the pre-conform call and maps them back into the new
+            //  non-conformal faces. See conformedFvsPatchField::unconform for
+            //  details.
+            template<class Type>
+            void postUnconformSurfaceFields();
+
+            //- Calls post-unconform surface field functions for all types
+            void postUnconformSurfaceFields();
 
 
 protected:
@@ -224,6 +379,11 @@ protected:
 
 
         // Checking
+
+            //- Determine which patches are coupled; i.e., for which
+            //  non-conformal patches are the remote or neighbouring meshes
+            //  available
+            boolList patchCoupleds() const;
 
             //- Is the connection "geometric", or has the topology just been
             //  loaded and stabilisation geometry applied?
@@ -287,6 +447,9 @@ public:
 
         //- Does this stitcher do anything?
         bool stitches() const;
+
+        //- Is the set of connected region meshes dynamic?
+        bool dynamic() const;
 
         //- Disconnect the mesh by removing faces from the nonConformalCyclics
         bool disconnect

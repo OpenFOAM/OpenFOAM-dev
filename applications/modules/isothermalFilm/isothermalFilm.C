@@ -26,7 +26,7 @@ License
 #include "isothermalFilm.H"
 #include "filmWallPolyPatch.H"
 #include "filmSurfacePolyPatch.H"
-#include "mappedPatchBase.H"
+#include "mappedFvPatchBaseBase.H"
 #include "zeroGradientFvPatchFields.H"
 #include "alphaOneFvPatchScalarField.H"
 #include "constantSurfaceTension.H"
@@ -436,10 +436,10 @@ const Foam::fvPatch& Foam::solvers::isothermalFilm::surfacePatch() const
 }
 
 
-const Foam::mappedPatchBase&
+const Foam::mappedFvPatchBaseBase&
 Foam::solvers::isothermalFilm::surfacePatchMap() const
 {
-    return refCast<const mappedPatchBase>(surfacePatch().patch());
+    return refCast<const mappedFvPatchBaseBase>(surfacePatch());
 }
 
 

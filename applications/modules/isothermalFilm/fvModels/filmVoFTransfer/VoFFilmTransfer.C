@@ -25,7 +25,7 @@ License
 
 #include "VoFFilmTransfer.H"
 #include "filmVoFTransfer.H"
-#include "mappedPatchBase.H"
+#include "mappedFvPatchBaseBase.H"
 #include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -124,25 +124,22 @@ void Foam::fv::VoFFilmTransfer::correct()
 
     const scalar deltaT = mesh().time().deltaTValue();
 
-    const polyPatch& VoFFilmPatch = mesh().boundaryMesh()[filmPatchi_];
+    const fvPatch& VoFFilmPatch = mesh().boundary()[filmPatchi_];
+
+    const scalarField& deltaCoeffs = VoFFilmPatch.deltaCoeffs();
+
+    const labelList& faceCells = VoFFilmPatch.faceCells();
 
 
     // VoF properties
 
     const scalarField& alpha = alpha_.boundaryField()[filmPatchi_];
 
-    const scalarField& deltaCoeffs =
-        mesh().boundary()[filmPatchi_].deltaCoeffs();
-
-    const labelList& faceCells = mesh().boundary()[filmPatchi_].faceCells();
-
 
     // Film properties
 
-    const mappedPatchBase& VoFFilmPatchMap = refCast<const mappedPatchBase>
-    (
-        VoFFilmPatch
-    );
+    const mappedFvPatchBaseBase& VoFFilmPatchMap =
+        refCast<const mappedFvPatchBaseBase>(VoFFilmPatch);
 
     const solvers::isothermalFilm& film_
     (
@@ -152,7 +149,7 @@ void Foam::fv::VoFFilmTransfer::correct()
         )
     );
 
-    const label filmVoFPatchi = VoFFilmPatchMap.nbrPolyPatch().index();
+    const label filmVoFPatchi = VoFFilmPatchMap.nbrFvPatch().index();
 
     const scalarField delta
     (
@@ -189,18 +186,16 @@ inline Foam::fv::VoFFilmTransfer::filmVoFTransferRate
     const dimensionSet& dimProp
 ) const
 {
-    const mappedPatchBase& VoFFilmPatchMap = refCast<const mappedPatchBase>
-    (
-        mesh().boundaryMesh()[filmPatchi_]
-    );
+    const fvPatch& VoFFilmPatch = mesh().boundary()[filmPatchi_];
 
-    const Foam::fvModels& fvModels
-    (
-        fvModels::New
-        (
-            refCast<const fvMesh>(VoFFilmPatchMap.nbrMesh())
-        )
-    );
+    const labelList& faceCells = VoFFilmPatch.faceCells();
+
+
+    const mappedFvPatchBaseBase& VoFFilmPatchMap =
+        refCast<const mappedFvPatchBaseBase>(VoFFilmPatch);
+
+    const Foam::fvModels& fvModels =
+        fvModels::New(VoFFilmPatchMap.nbrMesh());
 
     const filmVoFTransfer* filmVoFPtr = nullptr;
 
@@ -230,7 +225,7 @@ inline Foam::fv::VoFFilmTransfer::filmVoFTransferRate
         )
     );
 
-    UIndirectList<Type>(tSu.ref(), mesh().boundary()[filmPatchi_].faceCells()) =
+    UIndirectList<Type>(tSu.ref(), faceCells) =
         VoFFilmPatchMap.fromNeighbour
         (
             (filmVoFPtr->*transferRateFunc)()
@@ -374,7 +369,10 @@ inline Foam::tmp<Foam::Field<Type>> Foam::fv::VoFFilmTransfer::TransferRate
     const FieldType& f
 ) const
 {
-    const labelList& faceCells = mesh().boundary()[filmPatchi_].faceCells();
+    const fvPatch& VoFFilmPatch = mesh().boundary()[filmPatchi_];
+
+    const labelList& faceCells = VoFFilmPatch.faceCells();
+
 
     return tmp<Field<Type>>
     (

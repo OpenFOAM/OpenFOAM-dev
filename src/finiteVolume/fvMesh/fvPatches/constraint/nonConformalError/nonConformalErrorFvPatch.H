@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,6 +116,9 @@ public:
             //  error face is arbitrary. So, we use the same as for coupled
             //  patches; the vector between the cell and the face centres.
             virtual tmp<vectorField> delta() const;
+
+            //- Return the face-poly-faces patch field type
+            virtual word polyFacesType() const;
 };
 
 

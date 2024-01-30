@@ -98,6 +98,43 @@ class nonConformalBoundary
         //- Construct a boundary for the given patch set
         indirectPrimitivePatch boundary(const labelList& patches) const;
 
+        //- Simple wrapper for a type and a method
+        template<class Type, class Method>
+        struct TypeMethod;
+
+        //- Helper to construct a type-method
+        template<class Type, class Method>
+        static TypeMethod<Type, Method> typeMethod(const Method& method);
+
+        //- Construct a list of non-conformal non-coupled patch indices
+        template<class ... NcPpTypeMethods>
+        labelList nonConformalOtherPatchIndices
+        (
+            const label side,
+            NcPpTypeMethods ... typeMethods
+        ) const;
+
+        //- Construct a list of non-conformal non-coupled patch indices. Helper
+        //  for the above overload.
+        template<class NcPpType, class NcPpMethod, class ... NcPpTypeMethods>
+        void nonConformalOtherPatchIndices
+        (
+            labelHashSet& origPatchIDTable,
+            DynamicList<label>& nonCoupledPatchIndices,
+            const label side,
+            const TypeMethod<NcPpType, NcPpMethod>& typeMethod,
+            NcPpTypeMethods ... typeMethods
+        ) const;
+
+        //- Construct a list of non-conformal non-coupled patch indices. Helper
+        //  for the above overload.
+        void nonConformalOtherPatchIndices
+        (
+            labelHashSet& origPatchIDTable,
+            DynamicList<label>& nonCoupledPatchIndices,
+            const label side
+        ) const;
+
         //- Get a map from mesh point to owner-orig boundary points. Non
         //  owner-orig boundary points are indicated by the value -1.
         const labelList& meshPointOwnerOrigBoundaryPoint() const;
@@ -144,13 +181,6 @@ public:
 
         //- Update for mesh motion
         virtual bool movePoints();
-
-        //- Return a list of non-conformal non-coupled patch indices
-        labelList nonConformalNonCoupledPatchIDs
-        (
-            const label side,
-            label (nonConformalCoupledPolyPatch::*method)() const
-        ) const;
 
         //- Return a list of the orig patch indices
         labelList allOrigPatchIndices() const;

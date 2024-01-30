@@ -27,6 +27,7 @@ License
 #include "nonConformalErrorFvPatch.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fvMesh.H"
+#include "nonConformalPolyFacesFvsPatchLabelField.H"
 #include "transform.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -148,6 +149,12 @@ Foam::nonConformalCoupledFvPatch::errorPatch() const
         (
             patch_.boundaryMesh()[errorPatchIndex()]
         );
+}
+
+
+Foam::word Foam::nonConformalCoupledFvPatch::polyFacesType() const
+{
+    return nonConformalPolyFacesFvsPatchLabelField::typeName;
 }
 
 

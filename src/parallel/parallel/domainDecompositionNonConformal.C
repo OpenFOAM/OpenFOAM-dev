@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,9 @@ License
 #include "processorCyclicFvPatch.H"
 #include "nonConformalCyclicFvPatch.H"
 #include "nonConformalProcessorCyclicFvPatch.H"
+#include "nonConformalMappedWallFvPatch.H"
 #include "nonConformalErrorFvPatch.H"
+#include "multiDomainDecomposition.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,11 +42,11 @@ void checkNonConformalCoupledPatchOrdering
     const labelPair& procs,
     const fvPatch& fvp,
     const fvPatch& nbrFvp,
-    const labelList& polyFacesPf,
-    const labelList& nbrPolyFacesPf
+    const labelUList& polyFacesPf,
+    const labelUList& nbrPolyFacesPf
 )
 {
-    if (fvp.size() != nbrFvp.size())
+    if (polyFacesPf.size() != nbrPolyFacesPf.size())
     {
         FatalErrorInFunction
             << "Coupled patches " << fvp.name() << " and "
@@ -52,9 +54,9 @@ void checkNonConformalCoupledPatchOrdering
             << exit(FatalError);
     }
 
-    if (fvp.size())
+    if (polyFacesPf.size())
     {
-        for (label i = 1; i < fvp.size(); ++ i)
+        for (label i = 1; i < polyFacesPf.size(); ++ i)
         {
             if
             (
@@ -124,7 +126,263 @@ void checkNonConformalErrorPatchOrdering
 }
 
 
+void checkCompleteMeshOrdering
+(
+    const fvMesh& completeMesh,
+    const multiDomainDecomposition& regionMeshes
+)
+{
+    forAll(completeMesh.boundary(), patchi)
+    {
+        const fvPatch& fvp = completeMesh.boundary()[patchi];
+
+        // Cyclic patches
+        if
+        (
+            isA<nonConformalCyclicFvPatch>(fvp)
+         && refCast<const nonConformalCoupledFvPatch>(fvp).owner()
+        )
+        {
+            const label nccPatchi = patchi;
+            const label nbrNccPatchi =
+                refCast<const nonConformalCyclicFvPatch>(fvp)
+               .nbrPatchIndex();
+
+            checkNonConformalCoupledPatchOrdering
+            (
+                {-labelMax, labelMax},
+                completeMesh.boundary()[nccPatchi],
+                completeMesh.boundary()[nbrNccPatchi],
+                completeMesh.polyFacesBf()[nccPatchi],
+                completeMesh.polyFacesBf()[nbrNccPatchi]
+            );
+        }
+
+        // Mapped patches
+        if
+        (
+            isA<nonConformalMappedWallFvPatch>(fvp)
+         && refCast<const nonConformalMappedWallFvPatch>(fvp).owner()
+        )
+        {
+            const nonConformalMappedWallFvPatch& ncmwFvp =
+                refCast<const nonConformalMappedWallFvPatch>(fvp);
+
+            const domainDecomposition& nbrDecomposition =
+                regionMeshes[ncmwFvp.nbrRegionName()]();
+
+            const fvMesh& nbrCompleteMesh = nbrDecomposition.completeMesh();
+
+            const label ncmwPatchi = patchi;
+            const label nbrNcmwPatchi =
+                nbrCompleteMesh.boundary()[ncmwFvp.nbrPatchName()].index();
+
+            checkNonConformalCoupledPatchOrdering
+            (
+                {-labelMax, labelMax},
+                completeMesh.boundary()[ncmwPatchi],
+                nbrCompleteMesh.boundary()[nbrNcmwPatchi],
+                completeMesh.polyFacesBf()[ncmwPatchi],
+                nbrCompleteMesh.polyFacesBf()[ncmwPatchi]
+            );
+        }
+
+        // Error patches
+        if (isA<nonConformalErrorFvPatch>(fvp))
+        {
+            const label ncePatchi = patchi;
+
+            checkNonConformalErrorPatchOrdering
+            (
+                -labelMax,
+                completeMesh.boundary()[ncePatchi],
+                completeMesh.polyFacesBf()[ncePatchi]
+            );
+        }
+    }
 }
+
+
+void checkProcMeshesOrdering
+(
+    const PtrList<fvMesh>& procMeshes,
+    const multiDomainDecomposition& regionMeshes
+)
+{
+    forAll(procMeshes, proci)
+    {
+        forAll(procMeshes[proci].boundary(), patchi)
+        {
+            const fvPatch& fvp =
+                procMeshes[proci].boundary()[patchi];
+
+            // Cyclic patches
+            if
+            (
+                isA<nonConformalCoupledFvPatch>(fvp)
+             && refCast<const nonConformalCoupledFvPatch>(fvp).owner()
+            )
+            {
+                const label nccPatchi = patchi;
+
+                label nbrProci = -1, nbrNccPatchi = -1;
+                if (isA<cyclicFvPatch>(fvp))
+                {
+                    nbrProci = proci;
+                    nbrNccPatchi =
+                        refCast<const cyclicFvPatch>(fvp).nbrPatchIndex();
+                }
+                else if (isA<processorCyclicFvPatch>(fvp))
+                {
+                    typedef processorCyclicFvPatch PcFvp;
+
+                    const PcFvp& pcFvp = refCast<const PcFvp>(fvp);
+
+                    nbrProci = pcFvp.neighbProcNo();
+
+                    const fvBoundaryMesh& nbrFvPatches =
+                        procMeshes[nbrProci].boundary();
+
+                    forAll(nbrFvPatches, nbrNccPatchj)
+                    {
+                        const fvPatch& nbrFvp =
+                            nbrFvPatches[nbrNccPatchj];
+
+                        if (isA<PcFvp>(nbrFvp))
+                        {
+                            const PcFvp& nbrPcFvp =
+                                refCast<const PcFvp>(nbrFvp);
+
+                            if
+                            (
+                                nbrPcFvp.neighbProcNo()
+                             == proci
+                             && nbrPcFvp.referPatchIndex()
+                             == pcFvp.referPatch().nbrPatchIndex()
+                            )
+                            {
+                                nbrNccPatchi = nbrNccPatchj;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (nbrNccPatchi == -1)
+                    {
+                        FatalErrorInFunction
+                            << "Opposite processor patch not found for "
+                            << "patch " << fvp.name() << " on proc #"
+                            << proci << exit(FatalError);
+                    }
+                }
+                else
+                {
+                    FatalErrorInFunction
+                        << "Non-conformal-coupled type not recognised "
+                        << "for patch " << fvp.name() << " on proc #"
+                        << proci << exit(FatalError);
+                }
+
+                checkNonConformalCoupledPatchOrdering
+                (
+                    {proci, nbrProci},
+                    procMeshes[proci].boundary()[nccPatchi],
+                    procMeshes[nbrProci].boundary()[nbrNccPatchi],
+                    procMeshes[proci].polyFacesBf()[nccPatchi],
+                    procMeshes[nbrProci].polyFacesBf()[nbrNccPatchi]
+                );
+            }
+
+            // Mapped patches
+            if
+            (
+                isA<nonConformalMappedWallFvPatch>(fvp)
+             && refCast<const nonConformalMappedWallFvPatch>(fvp).owner()
+            )
+            {
+                const label ncmwPatchi = patchi;
+
+                const nonConformalMappedWallFvPatch& ncmwFvp =
+                    refCast<const nonConformalMappedWallFvPatch>(fvp);
+
+                typedef
+                    nonConformalMappedPolyFacesFvsPatchLabelField
+                    NcmpfFvsplf;
+
+                const NcmpfFvsplf& polyFacesPf =
+                    refCast<const NcmpfFvsplf>
+                    (procMeshes[proci].polyFacesBf()[ncmwPatchi]);
+
+                forAll(procMeshes, nbrProci)
+                {
+                    const fvMesh& nbrProcMesh =
+                        regionMeshes[ncmwFvp.nbrRegionName()]()
+                       .procMeshes()[nbrProci];
+
+                    if (nbrProcMesh.conformal()) continue;
+
+                    const label nbrNcmwPatchi =
+                        nbrProcMesh
+                       .boundary()[ncmwFvp.nbrPatchName()]
+                       .index();
+
+                    const nonConformalMappedWallFvPatch& nbrNcmwFvp =
+                        refCast<const nonConformalMappedWallFvPatch>
+                        (nbrProcMesh.boundary()[nbrNcmwPatchi]);
+
+                    const NcmpfFvsplf& nbrPolyFacesPf =
+                        refCast<const NcmpfFvsplf>
+                        (nbrProcMesh.polyFacesBf()[nbrNcmwPatchi]);
+
+                    checkNonConformalCoupledPatchOrdering
+                    (
+                        {proci, nbrProci},
+                        ncmwFvp,
+                        nbrNcmwFvp,
+                        SubList<label>
+                        (
+                            procMeshes[proci].polyFacesBf()[ncmwPatchi],
+                            polyFacesPf.procSizes()[nbrProci],
+                            polyFacesPf.procOffsets()[nbrProci]
+                        ),
+                        SubList<label>
+                        (
+                            nbrProcMesh.polyFacesBf()[nbrNcmwPatchi],
+                            nbrPolyFacesPf.procSizes()[proci],
+                            nbrPolyFacesPf.procOffsets()[proci]
+                        )
+                    );
+                }
+            }
+
+            // Error patches
+            if (isA<nonConformalErrorFvPatch>(fvp))
+            {
+                const label ncePatchi = patchi;
+
+                checkNonConformalErrorPatchOrdering
+                (
+                    proci,
+                    procMeshes[proci].boundary()[ncePatchi],
+                    procMeshes[proci].polyFacesBf()[ncePatchi]
+                );
+            }
+        }
+    }
+}
+
+
+}
+
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+bool Foam::domainDecomposition::sortReconstructNonConformalCyclicAddressing_ =
+    Foam::debug::optimisationSwitch
+    (
+        "sortReconstructNonConformalCyclicAddressing",
+        0
+    );
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -149,18 +407,30 @@ bool Foam::domainDecomposition::procsConformal() const
 }
 
 
-Foam::List<Foam::List<Foam::DynamicList<Foam::label>>>
-Foam::domainDecomposition::nonConformalProcFaceAddressingBf() const
+Foam::labelList Foam::domainDecomposition::completeFaceAddressing() const
 {
-    validateComplete();
-    validateProcs();
+    labelList result (completeMesh().nFaces(), -labelMax);
 
-    // Map from reference patch and processors to the interface patch
-    typedef HashTable<label, labelPair, Hash<labelPair>> labelPairTable;
-    List<labelPairTable> refPatchProcPatchTable
-    (
-        completeMesh().boundary().size()
-    );
+    forAll(procMeshes_, proci)
+    {
+        forAll(procFaceAddressing()[proci], procFacei)
+        {
+            const label facei =
+                mag(procFaceAddressing()[proci][procFacei]) - 1;
+
+            result[facei] = result[facei] == -labelMax ? procFacei : -1;
+        }
+    }
+
+    return result;
+}
+
+
+Foam::List<Foam::domainDecomposition::labelPairLabelTable>
+Foam::domainDecomposition::nonConformalCyclicProcCyclics() const
+{
+    List<labelPairLabelTable> result(completeMesh().boundary().size());
+
     forAll(procMeshes_, proci)
     {
         const fvMesh& procMesh = procMeshes_[proci];
@@ -169,20 +439,21 @@ Foam::domainDecomposition::nonConformalProcFaceAddressingBf() const
         {
             const fvPatch& fvp = procMesh.boundary()[procPatchi];
 
-            if (isA<cyclicFvPatch>(fvp))
+            if (isA<nonConformalCyclicFvPatch>(fvp))
             {
-                refPatchProcPatchTable[procPatchi].insert
+                result[procPatchi].insert
                 (
                     labelPair(proci, proci),
                     procPatchi
                 );
             }
-            else if (isA<processorCyclicFvPatch>(fvp))
+
+            if (isA<nonConformalProcessorCyclicFvPatch>(fvp))
             {
                 const processorCyclicFvPatch& pcFvp =
                     refCast<const processorCyclicFvPatch>(fvp);
 
-                refPatchProcPatchTable[pcFvp.referPatchIndex()].insert
+                result[pcFvp.referPatchIndex()].insert
                 (
                     labelPair(proci, pcFvp.neighbProcNo()),
                     procPatchi
@@ -190,6 +461,612 @@ Foam::domainDecomposition::nonConformalProcFaceAddressingBf() const
             }
         }
     }
+
+    return result;
+}
+
+
+Foam::PtrList<Foam::labelListList>
+Foam::domainDecomposition::nonConformalMappedWallProcOffsets
+(
+    const bool appendSize
+) const
+{
+    PtrList<labelListList> result(completeMesh().boundary().size());
+
+    const surfaceLabelField::Boundary& polyFacesBf =
+        completeMesh().polyFacesBf();
+
+    forAll(completeMesh().boundary(), ncmwPatchi)
+    {
+        const fvPatch& fvp = completeMesh().boundary()[ncmwPatchi];
+
+        if (!isA<nonConformalMappedWallFvPatch>(fvp)) continue;
+
+        const nonConformalMappedWallFvPatch& ncmwFvp =
+            refCast<const nonConformalMappedWallFvPatch>(fvp);
+
+        const domainDecomposition& nbrDecomposition =
+            regionMeshes_[ncmwFvp.nbrRegionName()]();
+
+        const fvMesh& nbrCompleteMesh = nbrDecomposition.completeMesh();
+
+        const label nbrNcmwPatchi =
+            nbrCompleteMesh.boundary()[ncmwFvp.nbrPatchName()].index();
+
+        const surfaceLabelField::Boundary& nbrPolyFacesBf =
+            nbrCompleteMesh.polyFacesBf();
+
+        result.set
+        (
+            ncmwPatchi,
+            new labelListList(nProcs(), labelList(nProcs() + appendSize, 0))
+        );
+
+        // Determine the number of faces in each processor block of the
+        // mapped patches
+        labelListList& procNbrProcCounts = result[ncmwPatchi];
+        forAll(polyFacesBf[ncmwPatchi], ncmwPatchFacei)
+        {
+            const label facei = polyFacesBf[ncmwPatchi][ncmwPatchFacei];
+            const label celli = completeMesh().faceOwner()[facei];
+            const label proci = cellProc_[celli];
+
+            const label nbrFacei =
+                nbrPolyFacesBf[nbrNcmwPatchi][ncmwPatchFacei];
+            const label nbrCelli =
+                nbrCompleteMesh.faceOwner()[nbrFacei];
+            const label nbrProci = nbrDecomposition.cellProc()[nbrCelli];
+
+            procNbrProcCounts[proci][nbrProci] ++;
+        }
+
+        // Convert the counts to cumulative sums (i.e., offsets)
+        forAll(procNbrProcCounts, proci)
+        {
+            label count = 0;
+
+            forAll(procNbrProcCounts[proci], nbrProci)
+            {
+                const label count0 = count;
+                count += procNbrProcCounts[proci][nbrProci];
+                procNbrProcCounts[proci][nbrProci] = count0;
+            }
+
+            if (appendSize)
+            {
+                procNbrProcCounts[proci].last() = count;
+            }
+        }
+    }
+
+    return result;
+}
+
+
+void Foam::domainDecomposition::decomposeNonConformalCyclicAddressing
+(
+    const label nccPatchi,
+    const List<labelPairLabelTable>& nonConformalCyclicProcCyclics,
+    List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+) const
+{
+    const surfaceLabelField::Boundary& polyFacesBf =
+        completeMesh().polyFacesBf();
+
+    const nonConformalCyclicFvPatch& nccFvp =
+        refCast<const nonConformalCyclicFvPatch>
+        (
+            completeMesh().boundary()[nccPatchi]
+        );
+
+    if (!nccFvp.owner()) return;
+
+    const label nbrNccPatchi = nccFvp.nbrPatchIndex();
+
+    forAll(polyFacesBf[nccPatchi], nccPatchFacei)
+    {
+        const label facei = polyFacesBf[nccPatchi][nccPatchFacei];
+        const label celli = completeMesh().faceOwner()[facei];
+        const label proci = cellProc_[celli];
+
+        const label nbrFacei = polyFacesBf[nbrNccPatchi][nccPatchFacei];
+        const label nbrCelli = completeMesh().faceOwner()[nbrFacei];
+        const label nbrProci = cellProc_[nbrCelli];
+
+        const label procNccPatchi =
+            nonConformalCyclicProcCyclics
+            [nccPatchi][labelPair(proci, nbrProci)];
+        const label nbrProcNccPatchi =
+            nonConformalCyclicProcCyclics
+            [nbrNccPatchi][labelPair(nbrProci, proci)];
+
+        nonConformalProcFaceAddressingBf[proci][procNccPatchi]
+            .append(nccPatchFacei + 1);
+        nonConformalProcFaceAddressingBf[nbrProci][nbrProcNccPatchi]
+            .append(nccPatchFacei + 1);
+    }
+}
+
+
+void Foam::domainDecomposition::decomposeNonConformalMappedWallAddressing
+(
+    const label ncmwPatchi,
+    PtrList<labelListList>& nonConformalMappedWallProcOffsets,
+    List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+) const
+{
+    const surfaceLabelField::Boundary& polyFacesBf =
+        completeMesh().polyFacesBf();
+
+    const nonConformalMappedWallFvPatch& ncmwFvp =
+        refCast<const nonConformalMappedWallFvPatch>
+        (
+            completeMesh().boundary()[ncmwPatchi]
+        );
+
+    const domainDecomposition& nbrDecomposition =
+        regionMeshes_[ncmwFvp.nbrRegionName()]();
+
+    const fvMesh& nbrCompleteMesh = nbrDecomposition.completeMesh();
+
+    const surfaceLabelField::Boundary& nbrPolyFacesBf =
+        nbrCompleteMesh.polyFacesBf();
+
+    const label nbrNcmwPatchi =
+        nbrCompleteMesh.boundary()[ncmwFvp.nbrPatchName()].index();
+
+    // Resize the addressing as necessary
+    labelListList& procOffsets =
+        nonConformalMappedWallProcOffsets[ncmwPatchi];
+    forAll(procOffsets, proci)
+    {
+        nonConformalProcFaceAddressingBf[proci][ncmwPatchi]
+            .resize(procOffsets[proci].last());
+    }
+
+    // Insert the poly face addressing into the result. Use the
+    // procOffsets array as the index into each processor block.
+    forAll(polyFacesBf[ncmwPatchi], ncmwPatchFacei)
+    {
+        const label facei = polyFacesBf[ncmwPatchi][ncmwPatchFacei];
+        const label celli = completeMesh().faceOwner()[facei];
+        const label proci = cellProc_[celli];
+
+        const label nbrFacei = nbrPolyFacesBf[nbrNcmwPatchi][ncmwPatchFacei];
+        const label nbrCelli = nbrCompleteMesh.faceOwner()[nbrFacei];
+        const label nbrProci = nbrDecomposition.cellProc()[nbrCelli];
+
+        nonConformalProcFaceAddressingBf
+            [proci][ncmwPatchi][procOffsets[proci][nbrProci] ++] =
+            ncmwPatchFacei + 1;
+    }
+}
+
+
+void Foam::domainDecomposition::decomposeNonConformalErrorAddressing
+(
+    const label ncePatchi,
+    List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+) const
+{
+    const surfaceLabelField::Boundary& polyFacesBf =
+        completeMesh().polyFacesBf();
+
+    forAll(polyFacesBf[ncePatchi], ncePatchFacei)
+    {
+        const label facei = polyFacesBf[ncePatchi][ncePatchFacei];
+        const label celli = completeMesh().faceOwner()[facei];
+        const label proci = cellProc_[celli];
+
+        nonConformalProcFaceAddressingBf[proci][ncePatchi]
+            .append(ncePatchFacei + 1);
+    }
+}
+
+
+void Foam::domainDecomposition::reconstructNonConformalCyclicAddressing
+(
+    const label nccPatchi,
+    const List<labelPairLabelTable>& nonConformalCyclicProcCyclics,
+    List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+) const
+{
+    const nonConformalCyclicFvPatch& nccFvp =
+        refCast<const nonConformalCyclicFvPatch>
+        (
+            completeMesh().boundary()[nccPatchi]
+        );
+
+    if (!nccFvp.owner()) return;
+
+    const label nbrNccPatchi = nccFvp.nbrPatchIndex();
+
+    label nccPatchFacei = 0;
+    labelPairLabelTable procNccPatchFaceis;
+    forAllConstIter
+    (
+        labelPairLabelTable,
+        nonConformalCyclicProcCyclics[nccPatchi],
+        iter
+    )
+    {
+        procNccPatchFaceis.insert(iter.key(), 0);
+    }
+
+    while (true)
+    {
+        labelPair procNbrProc(labelMax, labelMax);
+        labelPair faceNbrFace(labelMax, labelMax);
+
+        forAllConstIter(labelPairLabelTable, procNccPatchFaceis, iter)
+        {
+            const label proci = iter.key().first();
+            const label nbrProci = iter.key().second();
+
+            const labelPair procNbrProcStar(proci, nbrProci);
+            const labelPair nbrProcProcStar(nbrProci, proci);
+
+            const label procNccPatchi =
+                nonConformalCyclicProcCyclics[nccPatchi][procNbrProcStar];
+            const label nbrProcNccPatchi =
+                nonConformalCyclicProcCyclics[nbrNccPatchi][nbrProcProcStar];
+
+            const label procNccPatchFacei = iter();
+            const label size =
+                procMeshes_[proci].polyFacesBf()[procNccPatchi].size();
+
+            if (procNccPatchFacei >= size) continue;
+
+            const label procFacei =
+                procMeshes_[proci].polyFacesBf()
+                [procNccPatchi][procNccPatchFacei];
+            const label nbrProcFacei =
+                procMeshes_[nbrProci].polyFacesBf()
+                [nbrProcNccPatchi][procNccPatchFacei];
+
+            const labelPair faceNbrFaceStar
+            (
+                procFaceAddressing_[proci][procFacei] - 1,
+                procFaceAddressing_[nbrProci][nbrProcFacei] - 1
+            );
+
+            if (faceNbrFace > faceNbrFaceStar)
+            {
+                procNbrProc = procNbrProcStar;
+                faceNbrFace = faceNbrFaceStar;
+            }
+        }
+
+        if (faceNbrFace == labelPair(labelMax, labelMax))
+        {
+            break;
+        }
+        else
+        {
+            const label proci = procNbrProc.first();
+            const label nbrProci = procNbrProc.second();
+
+            const labelPair nbrProcProc(nbrProci, proci);
+
+            const label procNccPatchi =
+                nonConformalCyclicProcCyclics[nccPatchi][procNbrProc];
+            const label nbrProcNccPatchi =
+                nonConformalCyclicProcCyclics[nbrNccPatchi][nbrProcProc];
+
+            nonConformalProcFaceAddressingBf[proci][procNccPatchi]
+                .append(nccPatchFacei + 1);
+            nonConformalProcFaceAddressingBf[nbrProci][nbrProcNccPatchi]
+                .append(nccPatchFacei + 1);
+
+            nccPatchFacei ++;
+            procNccPatchFaceis[procNbrProc] ++;
+        }
+    }
+}
+
+
+void Foam::domainDecomposition::sortReconstructNonConformalCyclicAddressing
+(
+    const label nccPatchi,
+    const List<labelPairLabelTable>& nonConformalCyclicProcCyclics,
+    List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+) const
+{
+    const nonConformalCyclicFvPatch& nccFvp =
+        refCast<const nonConformalCyclicFvPatch>
+        (
+            completeMesh().boundary()[nccPatchi]
+        );
+
+    if (!nccFvp.owner()) return;
+
+    const label nbrNccPatchi = nccFvp.nbrPatchIndex();
+
+    // Resize the relevant patches
+    forAllConstIter
+    (
+        labelPairLabelTable,
+        nonConformalCyclicProcCyclics[nccPatchi],
+        iter
+    )
+    {
+        const label proci = iter.key().first();
+        const label nbrProci = iter.key().second();
+
+        const label procNccPatchi = iter();
+        const label nbrProcNccPatchi =
+            nonConformalCyclicProcCyclics
+            [nbrNccPatchi][labelPair(nbrProci, proci)];
+
+        const labelUList& procPolyFacesPf =
+            procMeshes_[proci].polyFacesBf()[procNccPatchi];
+        const labelUList& nbrProcPolyFacesPf =
+            procMeshes_[nbrProci].polyFacesBf()[nbrProcNccPatchi];
+
+        nonConformalProcFaceAddressingBf[proci][procNccPatchi]
+            .resize(procPolyFacesPf.size());
+        nonConformalProcFaceAddressingBf[nbrProci][nbrProcNccPatchi]
+            .resize(nbrProcPolyFacesPf.size());
+    }
+
+    // Obtain references to the original patches
+    const fvPatch& origFvp = nccFvp.origPatch();
+    const fvPatch& nbrOrigFvp = nccFvp.nbrPatch().origPatch();
+
+    // Create a list of "indices", containing every label relevant to each
+    // non-conformal face
+    DynamicList<FixedList<label, 7>> indices;
+    forAllConstIter
+    (
+        labelPairLabelTable,
+        nonConformalCyclicProcCyclics[nccPatchi],
+        iter
+    )
+    {
+        const label proci = iter.key().first();
+        const label nbrProci = iter.key().second();
+
+        const label procNccPatchi = iter();
+        const label nbrProcNccPatchi =
+            nonConformalCyclicProcCyclics
+            [nbrNccPatchi][labelPair(nbrProci, proci)];
+
+        const labelUList& procPolyFacesPf =
+            procMeshes_[proci].polyFacesBf()[procNccPatchi];
+        const labelUList& nbrProcPolyFacesPf =
+            procMeshes_[nbrProci].polyFacesBf()[nbrProcNccPatchi];
+
+        forAll(procPolyFacesPf, procPatchFacei)
+        {
+            const label procPolyFacei =
+                procPolyFacesPf[procPatchFacei];
+            const label nbrProcPolyFacei =
+                nbrProcPolyFacesPf[procPatchFacei];
+
+            const label completePolyFacei =
+                procFaceAddressing_[proci][procPolyFacei] - 1;
+            const label nbcCompletePolyFacei =
+                procFaceAddressing_[nbrProci][nbrProcPolyFacei] - 1;
+
+            indices.append
+            ({
+                proci,
+                nbrProci,
+                procNccPatchi,
+                nbrProcNccPatchi,
+                completePolyFacei - origFvp.start(),
+                nbcCompletePolyFacei - nbrOrigFvp.start(),
+                procPatchFacei
+            });
+        }
+    }
+
+    // Sort the indices by the owner poly face, then by the neighbour poly face
+    Foam::stableSort
+    (
+        indices,
+        [](const FixedList<label, 7>& a, const FixedList<label, 7>& b)
+        {
+            return labelPair(a[4], a[5]) < labelPair(b[4], b[5]);
+        }
+    );
+
+    // Unpack into the addressing
+    forAll(indices, i)
+    {
+        const label proci = indices[i][0];
+        const label nbrProci = indices[i][1];
+        const label procNccPatchi = indices[i][2];
+        const label nbrProcNccPatchi = indices[i][3];
+        //const label completePolyPatchFacei = indices[i][4];
+        //const label nbrCompletePolyPatchFacei = indices[i][5];
+        const label procPatchFacei = indices[i][6];
+
+        nonConformalProcFaceAddressingBf
+            [proci][procNccPatchi][procPatchFacei] = i + 1;
+        nonConformalProcFaceAddressingBf
+            [nbrProci][nbrProcNccPatchi][procPatchFacei] = i + 1;
+    }
+}
+
+
+void Foam::domainDecomposition::reconstructNonConformalMappedWallAddressing
+(
+    const label ncmwPatchi,
+    List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+) const
+{
+    const nonConformalMappedWallFvPatch& ncmwFvp =
+        refCast<const nonConformalMappedWallFvPatch>
+        (
+            completeMesh().boundary()[ncmwPatchi]
+        );
+
+    const bool owner = ncmwFvp.owner();
+
+    const domainDecomposition& nbrDecomposition =
+        regionMeshes_[ncmwFvp.nbrRegionName()]();
+
+    const label nbrNcmwPatchi =
+        nbrDecomposition.completeMesh()
+       .boundary()[ncmwFvp.nbrPatchName()]
+       .index();
+
+    auto calcProcOffsets = []
+    (
+        const domainDecomposition& meshes,
+        const label ncmwPatchi
+    )
+    {
+        labelListList result(meshes.nProcs());
+
+        forAll(meshes.procMeshes(), proci)
+        {
+            typedef
+                nonConformalMappedPolyFacesFvsPatchLabelField
+                NcmpfFvsplf;
+
+            const NcmpfFvsplf& polyFacesPf =
+                refCast<const NcmpfFvsplf>
+                (meshes.procMeshes()[proci].polyFacesBf()[ncmwPatchi]);
+
+            result[proci] = polyFacesPf.procOffsets();
+            result[proci].append(polyFacesPf.size());
+        }
+
+        return result;
+    };
+    const labelListList procOffsets =
+        calcProcOffsets(*this, ncmwPatchi);
+    const labelListList nbrProcOffsets =
+        calcProcOffsets(nbrDecomposition, nbrNcmwPatchi);
+
+    label ncmwPatchFacei = 0;
+    labelListList procNcmwPatchFaceis(nProcs(), labelList(nProcs(), 0));
+
+    while (true)
+    {
+        labelPair procNbrProc(labelMax, labelMax);
+        labelPair faceNbrFace(labelMax, labelMax);
+
+        forAll(procNcmwPatchFaceis, proci)
+        {
+            forAll(procNcmwPatchFaceis[proci], nbrProci)
+            {
+                const labelPair procNbrProcStar(proci, nbrProci);
+
+                const label procNcmwPatchFacei =
+                    procNcmwPatchFaceis[proci][nbrProci];
+                const label size =
+                    procOffsets[proci][nbrProci + 1]
+                  - procOffsets[proci][nbrProci];
+
+                if (procNcmwPatchFacei >= size) continue;
+
+                const label procFacei =
+                    procMeshes_[proci].polyFacesBf()
+                    [ncmwPatchi]
+                    [procNcmwPatchFacei + procOffsets[proci][nbrProci]];
+                const label nbrProcFacei =
+                    nbrDecomposition.procMeshes()[nbrProci].polyFacesBf()
+                    [nbrNcmwPatchi]
+                    [procNcmwPatchFacei + nbrProcOffsets[nbrProci][proci]];
+
+                const labelPair faceNbrFaceStar
+                (
+                    procFaceAddressing_[proci][procFacei] - 1,
+                    nbrDecomposition
+                   .procFaceAddressing_[nbrProci][nbrProcFacei] - 1
+                );
+
+                if
+                (
+                    owner
+                  ? faceNbrFace > faceNbrFaceStar
+                  : reverse(faceNbrFace) > reverse(faceNbrFaceStar)
+                )
+                {
+                    procNbrProc = procNbrProcStar;
+                    faceNbrFace = faceNbrFaceStar;
+                }
+            }
+        }
+
+        if (faceNbrFace == labelPair(labelMax, labelMax))
+        {
+            break;
+        }
+        else
+        {
+            const label proci = procNbrProc.first();
+            const label nbrProci = procNbrProc.second();
+
+            nonConformalProcFaceAddressingBf[proci][ncmwPatchi]
+                .append(ncmwPatchFacei + 1);
+
+            ncmwPatchFacei ++;
+            procNcmwPatchFaceis[proci][nbrProci] ++;
+        }
+    }
+}
+
+
+void Foam::domainDecomposition::reconstructNonConformalErrorAddressing
+(
+    const label ncePatchi,
+    List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
+) const
+{
+    label ncePatchFacei = 0;
+    labelList procNcePatchFaceis(nProcs(), 0);
+
+    while (true)
+    {
+        label facei = labelMax, proci = labelMax;
+
+        forAll(procNcePatchFaceis, procStari)
+        {
+            const label size =
+                procMeshes_[procStari].polyFacesBf()[ncePatchi].size();
+
+            if (procNcePatchFaceis[procStari] >= size) continue;
+
+            const label procFacei =
+                procMeshes_[procStari].polyFacesBf()
+                [ncePatchi][procNcePatchFaceis[procStari]];
+
+            const label faceStari =
+                procFaceAddressing_[procStari][procFacei] - 1;
+
+            if (facei > faceStari)
+            {
+                facei = faceStari;
+                proci = procStari;
+            }
+        }
+
+        if (facei == labelMax)
+        {
+            break;
+        }
+        else
+        {
+            nonConformalProcFaceAddressingBf[proci][ncePatchi]
+                .append(ncePatchFacei + 1);
+
+            ncePatchFacei ++;
+            procNcePatchFaceis[proci] ++;
+        }
+    }
+}
+
+
+Foam::List<Foam::List<Foam::DynamicList<Foam::label>>>
+Foam::domainDecomposition::nonConformalProcFaceAddressingBf() const
+{
+    validateComplete();
+    validateProcs();
 
     // Build non-conformal finite volume face addressing for each processor
     List<List<DynamicList<label>>> result(nProcs());
@@ -207,218 +1084,83 @@ Foam::domainDecomposition::nonConformalProcFaceAddressingBf() const
     }
     else if (!completeConformal())
     {
+        const List<labelPairLabelTable> nonConformalCyclicProcCyclics =
+            this->nonConformalCyclicProcCyclics();
+
+        PtrList<labelListList> nonConformalMappedWallProcOffsets =
+            this->nonConformalMappedWallProcOffsets(true);
+
         // Decompose non-conformal addressing
-
-        const surfaceLabelField::Boundary& polyFacesBf =
-            completeMesh().polyFacesBf();
-
-        // Cyclic patches
-        forAll(completeMesh().boundary(), nccPatchi)
+        forAll(completeMesh().boundary(), ncPatchi)
         {
-            const fvPatch& fvp = completeMesh().boundary()[nccPatchi];
+            const fvPatch& fvp = completeMesh().boundary()[ncPatchi];
 
-            if (!isA<nonConformalCyclicFvPatch>(fvp)) continue;
-
-            const nonConformalCyclicFvPatch& nccFvp =
-                refCast<const nonConformalCyclicFvPatch>(fvp);
-
-            if (!nccFvp.owner()) continue;
-
-            const label nccNbrPatchi = nccFvp.nbrPatchIndex();
-
-            forAll(polyFacesBf[nccPatchi], nccPatchFacei)
+            if (isA<nonConformalCyclicFvPatch>(fvp))
             {
-                const label facei = polyFacesBf[nccPatchi][nccPatchFacei];
-                const label celli = completeMesh().faceOwner()[facei];
-                const label proci = cellProc_[celli];
-
-                const label nbrFacei =
-                    polyFacesBf[nccNbrPatchi][nccPatchFacei];
-                const label nbrCelli =
-                    completeMesh().faceOwner()[nbrFacei];
-                const label nbrProci = cellProc_[nbrCelli];
-
-                const label procNccPatchi =
-                    refPatchProcPatchTable
-                    [nccPatchi][labelPair(proci, nbrProci)];
-                const label nbrProcNccPatchi =
-                    refPatchProcPatchTable
-                    [nccNbrPatchi][labelPair(nbrProci, proci)];
-
-                result[proci][procNccPatchi].append(nccPatchFacei + 1);
-                result[nbrProci][nbrProcNccPatchi].append(nccPatchFacei + 1);
+                decomposeNonConformalCyclicAddressing
+                (
+                    ncPatchi,
+                    nonConformalCyclicProcCyclics,
+                    result
+                );
             }
-        }
 
-        // Error patches
-        forAll(completeMesh().boundary(), ncePatchi)
-        {
-            const fvPatch& fvp = completeMesh().boundary()[ncePatchi];
-
-            if (!isA<nonConformalErrorFvPatch>(fvp)) continue;
-
-            forAll(polyFacesBf[ncePatchi], ncePatchFacei)
+            if (isA<nonConformalMappedWallFvPatch>(fvp))
             {
-                const label facei = polyFacesBf[ncePatchi][ncePatchFacei];
-                const label celli = completeMesh().faceOwner()[facei];
-                const label proci = cellProc_[celli];
+                decomposeNonConformalMappedWallAddressing
+                (
+                    ncPatchi,
+                    nonConformalMappedWallProcOffsets,
+                    result
+                );
+            }
 
-                result[proci][ncePatchi].append(ncePatchFacei + 1);
+            if (isA<nonConformalErrorFvPatch>(fvp))
+            {
+                decomposeNonConformalErrorAddressing(ncPatchi, result);
             }
         }
     }
     else // if (!procsConformal())
     {
+        const List<labelPairLabelTable> nonConformalCyclicProcCyclics =
+            this->nonConformalCyclicProcCyclics();
+
         // Reconstruct non-conformal addressing
-
-        // Cyclic patches
-        forAll(completeMesh().boundary(), nccPatchi)
+        forAll(completeMesh().boundary(), ncPatchi)
         {
-            const fvPatch& fvp = completeMesh().boundary()[nccPatchi];
+            const fvPatch& fvp = completeMesh().boundary()[ncPatchi];
 
-            if (!isA<nonConformalCyclicFvPatch>(fvp)) continue;
-
-            const nonConformalCyclicFvPatch& nccFvp =
-                refCast<const nonConformalCyclicFvPatch>(fvp);
-
-            if (!nccFvp.owner()) continue;
-
-            const label nccNbrPatchi = nccFvp.nbrPatchIndex();
-
-            label nccPatchFacei = 0;
-            labelPairTable procNccPatchFaceis;
-            forAllConstIter
-            (
-                labelPairTable,
-                refPatchProcPatchTable[nccPatchi],
-                iter
-            )
+            if (isA<nonConformalCyclicFvPatch>(fvp))
             {
-                procNccPatchFaceis.insert(iter.key(), 0);
-            }
-
-            while (true)
-            {
-                labelPair procNbrProc(labelMax, labelMax);
-                labelPair faceNbrFace(labelMax, labelMax);
-
-                forAllConstIter(labelPairTable, procNccPatchFaceis, iter)
+                if (sortReconstructNonConformalCyclicAddressing_)
                 {
-                    const label proci = iter.key().first();
-                    const label nbrProci = iter.key().second();
-
-                    const labelPair procNbrProcStar(proci, nbrProci);
-                    const labelPair nbrProcProcStar(nbrProci, proci);
-
-                    const label procNccPatchi =
-                        refPatchProcPatchTable
-                        [nccPatchi][procNbrProcStar];
-                    const label nbrProcNccPatchi =
-                        refPatchProcPatchTable
-                        [nccNbrPatchi][nbrProcProcStar];
-
-                    const label size =
-                        procMeshes_[proci]
-                       .polyFacesBf()[procNccPatchi]
-                       .size();
-
-                    if (iter() >= size) continue;
-
-                    const label procFacei =
-                        procMeshes_[proci].polyFacesBf()
-                        [procNccPatchi][iter()];
-                    const label nbrProcFacei =
-                        procMeshes_[nbrProci].polyFacesBf()
-                        [nbrProcNccPatchi][iter()];
-
-                    const labelPair faceNbrFaceStar
+                    sortReconstructNonConformalCyclicAddressing
                     (
-                        procFaceAddressing_[proci][procFacei] - 1,
-                        procFaceAddressing_[nbrProci][nbrProcFacei] - 1
+                        ncPatchi,
+                        nonConformalCyclicProcCyclics,
+                        result
                     );
-
-                    if (faceNbrFace > faceNbrFaceStar)
-                    {
-                        procNbrProc = procNbrProcStar;
-                        faceNbrFace = faceNbrFaceStar;
-                    }
-                }
-
-                if (faceNbrFace == labelPair(labelMax, labelMax))
-                {
-                    break;
                 }
                 else
                 {
-                    const label proci = procNbrProc.first();
-                    const label nbrProci = procNbrProc.second();
-
-                    const labelPair nbrProcProc(nbrProci, proci);
-
-                    const label procNccPatchi =
-                        refPatchProcPatchTable[nccPatchi][procNbrProc];
-                    const label nbrProcNccPatchi =
-                        refPatchProcPatchTable[nccNbrPatchi][nbrProcProc];
-
-                    result[proci][procNccPatchi]
-                        .append(nccPatchFacei + 1);
-                    result[nbrProci][nbrProcNccPatchi]
-                        .append(nccPatchFacei + 1);
-
-                    nccPatchFacei ++;
-                    procNccPatchFaceis[procNbrProc] ++;
+                    reconstructNonConformalCyclicAddressing
+                    (
+                        ncPatchi,
+                        nonConformalCyclicProcCyclics,
+                        result
+                    );
                 }
             }
-        }
 
-        // Error patches
-        forAll(completeMesh().boundary(), ncePatchi)
-        {
-            const fvPatch& fvp = completeMesh().boundary()[ncePatchi];
-
-            if (!isA<nonConformalErrorFvPatch>(fvp)) continue;
-
-            label ncePatchFacei = 0;
-            labelList procNcePatchFaceis(nProcs(), 0);
-
-            while (true)
+            if (isA<nonConformalMappedWallFvPatch>(fvp))
             {
-                label facei = labelMax, proci = labelMax;
+                reconstructNonConformalMappedWallAddressing(ncPatchi, result);
+            }
 
-                forAll(procNcePatchFaceis, procStari)
-                {
-                    const label size =
-                        procMeshes_[procStari]
-                       .polyFacesBf()[ncePatchi]
-                       .size();
-
-                    if (procNcePatchFaceis[procStari] >= size) continue;
-
-                    const label procFacei =
-                        procMeshes_[procStari].polyFacesBf()
-                        [ncePatchi][procNcePatchFaceis[procStari]];
-
-                    const label faceStari =
-                        procFaceAddressing_[procStari][procFacei] - 1;
-
-                    if (facei > faceStari)
-                    {
-                        facei = faceStari;
-                        proci = procStari;
-                    }
-                }
-
-                if (facei == labelMax)
-                {
-                    break;
-                }
-                else
-                {
-                    result[proci][ncePatchi].append(ncePatchFacei + 1);
-
-                    ncePatchFacei ++;
-                    procNcePatchFaceis[proci] ++;
-                }
+            if (isA<nonConformalErrorFvPatch>(fvp))
+            {
+                reconstructNonConformalErrorAddressing(ncPatchi, result);
             }
         }
     }
@@ -444,44 +1186,43 @@ void Foam::domainDecomposition::unconformComplete()
         const surfaceLabelField::Boundary& faceAddressingBf =
             procFaceAddressingBf()[proci];
 
-        forAll(procMesh.boundary(), procNccPatchi)
+        forAll(procMesh.boundary(), procNcPatchi)
         {
-            const fvPatch& fvp = procMesh.boundary()[procNccPatchi];
+            const fvPatch& fvp = procMesh.boundary()[procNcPatchi];
 
-            if (isA<nonConformalFvPatch>(fvp))
-            {
-                const label completeNccPatchi =
-                    isA<processorCyclicFvPatch>(fvp)
-                  ? refCast<const processorCyclicFvPatch>(fvp)
-                   .referPatchIndex()
-                  : procNccPatchi;
+            if (!isA<nonConformalFvPatch>(fvp)) continue;
 
-                const label size =
-                    max
-                    (
-                        max(mag(faceAddressingBf[procNccPatchi])),
-                        polyFacesBf[completeNccPatchi].size()
-                    );
+            const label completeNcPatchi =
+                isA<processorCyclicFvPatch>(fvp)
+              ? refCast<const processorCyclicFvPatch>(fvp)
+               .referPatchIndex()
+              : procNcPatchi;
 
-                polyFacesBf[completeNccPatchi].resize(size, -1);
-                polyFacesBf[completeNccPatchi].labelField::rmap
+            const label size =
+                max
                 (
-                    mag
-                    (
-                        labelField
-                        (
-                            procFaceAddressing_[proci],
-                            procMesh.polyFacesBf()[procNccPatchi]
-                        )
-                    ) - 1,
-                    mag(faceAddressingBf[procNccPatchi]) - 1
+                    max(mag(faceAddressingBf[procNcPatchi])),
+                    polyFacesBf[completeNcPatchi].size()
                 );
 
-                // Set dummy data for the face geometry. This should not be
-                // used during decomposition.
-                Sf.boundaryFieldRef()[completeNccPatchi].resize(size, Zero);
-                Cf.boundaryFieldRef()[completeNccPatchi].resize(size, Zero);
-            }
+            polyFacesBf[completeNcPatchi].resize(size, -1);
+            polyFacesBf[completeNcPatchi].labelField::rmap
+            (
+                mag
+                (
+                    labelField
+                    (
+                        procFaceAddressing_[proci],
+                        procMesh.polyFacesBf()[procNcPatchi]
+                    )
+                ) - 1,
+                mag(faceAddressingBf[procNcPatchi]) - 1
+            );
+
+            // Set dummy data for the face geometry. This should not be
+            // used during reconstruction.
+            Sf.boundaryFieldRef()[completeNcPatchi].resize(size, Zero);
+            Cf.boundaryFieldRef()[completeNcPatchi].resize(size, Zero);
         }
     }
 
@@ -494,70 +1235,22 @@ void Foam::domainDecomposition::unconformComplete()
         false
     );
 
-    // Check ordering
+    completeMesh_->setPolyFacesBfInstance(procMeshes_[0].polyFacesBfInstance());
+
     if (debug)
     {
-        forAll(completeMesh().boundary(), patchi)
-        {
-            const fvPatch& fvp = completeMesh().boundary()[patchi];
-
-            // Coupled patches
-            if
-            (
-                isA<nonConformalCyclicFvPatch>(fvp)
-             && refCast<const nonConformalCoupledFvPatch>(fvp).owner()
-            )
-            {
-                const label nccPatchi = patchi;
-
-                const label nbrNccPatchi =
-                    refCast<const nonConformalCyclicFvPatch>(fvp)
-                   .nbrPatchIndex();
-
-                checkNonConformalCoupledPatchOrdering
-                (
-                    {-labelMax, labelMax},
-                    completeMesh().boundary()[nccPatchi],
-                    completeMesh().boundary()[nbrNccPatchi],
-                    completeMesh().polyFacesBf()[nccPatchi],
-                    completeMesh().polyFacesBf()[nbrNccPatchi]
-                );
-            }
-
-            // Error patches
-            if (isA<nonConformalErrorFvPatch>(fvp))
-            {
-                const label ncePatchi = patchi;
-
-                checkNonConformalErrorPatchOrdering
-                (
-                    -labelMax,
-                    completeMesh().boundary()[ncePatchi],
-                    completeMesh().polyFacesBf()[ncePatchi]
-                );
-            }
-        }
+        checkCompleteMeshOrdering(completeMesh(), regionMeshes_);
     }
 }
 
 
 void Foam::domainDecomposition::unconformProcs()
 {
-    // Construct the reverse of proc-face-face addressing. -1 indicates a face
-    // that is on a (conformal) processor boundary and hence has multiple
-    // associated proc-face indices.
-    labelList faceProcFace(completeMesh().nFaces(), -labelMax);
-    forAll(procMeshes_, proci)
-    {
-        forAll(procFaceAddressing()[proci], procFacei)
-        {
-            const label facei =
-                mag(procFaceAddressing()[proci][procFacei]) - 1;
+    const labelList completeFaceAddressing =
+        this->completeFaceAddressing();
 
-            faceProcFace[facei] =
-                faceProcFace[facei] == -labelMax ? procFacei : -1;
-        }
-    }
+    const PtrList<labelListList> nonConformalMappedWallProcOffsets =
+        this->nonConformalMappedWallProcOffsets(false);
 
     forAll(procMeshes_, proci)
     {
@@ -574,36 +1267,45 @@ void Foam::domainDecomposition::unconformProcs()
         surfaceVectorField Sf(procMesh.Sf().cloneUnSliced());
         surfaceVectorField Cf(procMesh.Cf().cloneUnSliced());
 
-        forAll(procMesh.boundary(), procNccPatchi)
+        forAll(procMesh.boundary(), procNcPatchi)
         {
-            const fvPatch& fvp = procMesh.boundary()[procNccPatchi];
+            const fvPatch& fvp = procMesh.boundary()[procNcPatchi];
 
-            if (isA<nonConformalFvPatch>(fvp))
-            {
-                const label completeNccPatchi =
-                    isA<processorCyclicFvPatch>(fvp)
-                  ? refCast<const processorCyclicFvPatch>(fvp)
-                   .referPatchIndex()
-                  : procNccPatchi;
+            if (!isA<nonConformalFvPatch>(fvp)) continue;
 
-                polyFacesBf[procNccPatchi] =
+            const label completeNcPatchi =
+                isA<processorCyclicFvPatch>(fvp)
+              ? refCast<const processorCyclicFvPatch>(fvp)
+               .referPatchIndex()
+              : procNcPatchi;
+
+            polyFacesBf[procNcPatchi] =
+                labelField
+                (
+                    completeFaceAddressing,
                     labelField
                     (
-                        faceProcFace,
-                        labelField
-                        (
-                            completeMesh().polyFacesBf()[completeNccPatchi],
-                            mag(faceAddressingBf[procNccPatchi]) - 1
-                        )
-                    );
+                        completeMesh().polyFacesBf()[completeNcPatchi],
+                        mag(faceAddressingBf[procNcPatchi]) - 1
+                    )
+                );
 
-                const label size = polyFacesBf[procNccPatchi].size();
+            if (isA<nonConformalMappedWallFvPatch>(fvp))
+            {
+                typedef
+                    nonConformalMappedPolyFacesFvsPatchLabelField
+                    NcmpfFvsplf;
 
-                // Set dummy data for the face geometry. This should not be
-                // used during decomposition.
-                Sf.boundaryFieldRef()[procNccPatchi].resize(size, Zero);
-                Cf.boundaryFieldRef()[procNccPatchi].resize(size, Zero);
+                refCast<NcmpfFvsplf>(polyFacesBf[procNcPatchi]).procOffsets() =
+                    nonConformalMappedWallProcOffsets[procNcPatchi][proci];
             }
+
+            const label size = polyFacesBf[procNcPatchi].size();
+
+            // Set dummy data for the face geometry. This should not be
+            // used during decomposition.
+            Sf.boundaryFieldRef()[procNcPatchi].resize(size, Zero);
+            Cf.boundaryFieldRef()[procNcPatchi].resize(size, Zero);
         }
 
         procMesh.unconform
@@ -614,108 +1316,14 @@ void Foam::domainDecomposition::unconformProcs()
             NullObjectRef<surfaceScalarField>(),
             false
         );
+
+        procMesh.setPolyFacesBfInstance(completeMesh().polyFacesBfInstance());
     }
 
+    // Check ordering
     if (debug)
     {
-        forAll(procMeshes_, proci)
-        {
-            forAll(procMeshes_[proci].boundary(), patchi)
-            {
-                const fvPatch& fvp =
-                    procMeshes_[proci].boundary()[patchi];
-
-                // Coupled patches
-                if
-                (
-                    isA<nonConformalCoupledFvPatch>(fvp)
-                 && refCast<const nonConformalCoupledFvPatch>(fvp).owner()
-                )
-                {
-                    const label nccPatchi = patchi;
-
-                    label nbrProci = -1, nbrNccPatchi = -1;
-                    if (isA<cyclicFvPatch>(fvp))
-                    {
-                        nbrProci = proci;
-                        nbrNccPatchi =
-                            refCast<const cyclicFvPatch>(fvp).nbrPatchIndex();
-                    }
-                    else if (isA<processorCyclicFvPatch>(fvp))
-                    {
-                        typedef processorCyclicFvPatch PcFvp;
-
-                        const PcFvp& pcFvp = refCast<const PcFvp>(fvp);
-
-                        nbrProci = pcFvp.neighbProcNo();
-
-                        const fvBoundaryMesh& nbrFvPatches =
-                            procMeshes_[nbrProci].boundary();
-
-                        forAll(nbrFvPatches, nbrNccPatchj)
-                        {
-                            const fvPatch& nbrFvp =
-                                nbrFvPatches[nbrNccPatchj];
-
-                            if (isA<PcFvp>(nbrFvp))
-                            {
-                                const PcFvp& nbrPcFvp =
-                                    refCast<const PcFvp>(nbrFvp);
-
-                                if
-                                (
-                                    nbrPcFvp.neighbProcNo()
-                                 == proci
-                                 && nbrPcFvp.referPatchIndex()
-                                 == pcFvp.referPatch().nbrPatchIndex()
-                                )
-                                {
-                                    nbrNccPatchi = nbrNccPatchj;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (nbrNccPatchi == -1)
-                        {
-                            FatalErrorInFunction
-                                << "Opposite processor patch not found for "
-                                << "patch " << fvp.name() << " on proc #"
-                                << proci << exit(FatalError);
-                        }
-                    }
-                    else
-                    {
-                        FatalErrorInFunction
-                            << "Non-conformal-coupled type not recognised "
-                            << "for patch " << fvp.name() << " on proc #"
-                            << proci << exit(FatalError);
-                    }
-
-                    checkNonConformalCoupledPatchOrdering
-                    (
-                        {proci, nbrProci},
-                        procMeshes_[proci].boundary()[nccPatchi],
-                        procMeshes_[nbrProci].boundary()[nbrNccPatchi],
-                        procMeshes_[proci].polyFacesBf()[nccPatchi],
-                        procMeshes_[nbrProci].polyFacesBf()[nbrNccPatchi]
-                    );
-                }
-
-                // Error patches
-                if (isA<nonConformalErrorFvPatch>(fvp))
-                {
-                    const label ncePatchi = patchi;
-
-                    checkNonConformalErrorPatchOrdering
-                    (
-                        proci,
-                        procMeshes_[proci].boundary()[ncePatchi],
-                        procMeshes_[proci].polyFacesBf()[ncePatchi]
-                    );
-                }
-            }
-        }
+        checkProcMeshesOrdering(procMeshes(), regionMeshes_);
     }
 }
 

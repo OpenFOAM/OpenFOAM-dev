@@ -1,0 +1,132 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.01;
+
+vertices
+(
+    (-10 -5 -1) (-10 -3 -1) (-10 1 -1) (-10 5 -1)
+    (  0 -5 -1) (  0 -3 -1) (  0 1 -1) (  0 5 -1)
+    (-10 -5  1) (-10 -3  1) (-10 1  1) (-10 5  1)
+    (  0 -5  1) (  0 -3  1) (  0 1  1) (  0 5  1)
+
+    ( 0 -5 -1) ( 0 -1 -1) ( 0 -0.11 -1) ( 0 2.11 -1) ( 0 3 -1) ( 0 5 -1)
+    (10 -5 -1) (10 -1 -1) (10 -0.11 -1) (10 2.11 -1) (10 3 -1) (10 5 -1)
+    ( 0 -5  1) ( 0 -1  1) ( 0 -0.11  1) ( 0 2.11  1) ( 0 3  1) ( 0 5  1)
+    (10 -5  1) (10 -1  1) (10 -0.11  1) (10 2.11  1) (10 3  1) (10 5  1)
+);
+
+blocks
+(
+    hex (0 4 5 1 8 12 13 9) solid (20 5 1) simpleGrading (1 1 1)
+    hex (1 5 6 2 9 13 14 10) fluid (20 9 1) simpleGrading (1 1 1)
+    hex (2 6 7 3 10 14 15 11) solid (20 9 1) simpleGrading (1 1 1)
+
+    hex (16 22 23 17 28 34 35 29) solid (20 9 1) simpleGrading (1 1 1)
+    hex (17 23 24 18 29 35 36 30) fluid (20 2 1) simpleGrading (1 1 1)
+    hex (18 24 25 19 30 36 37 31) fluid (20 5 1) simpleGrading (1 1 1)
+    hex (19 25 26 20 31 37 38 32) fluid (20 2 1) simpleGrading (1 1 1)
+    hex (20 26 27 21 32 38 39 33) solid (20 5 1) simpleGrading (1 1 1)
+);
+
+defaultPatch
+{
+    name    frontAndBack;
+    type    empty;
+}
+
+boundary
+(
+    external
+    {
+        type wall;
+        faces
+        (
+            (0 4 12 8)
+            (0 1 9 8)
+            (2 3 11 10)
+            (3 7 15 11)
+
+            (16 22 34 28)
+            (22 23 35 34)
+            (23 24 36 35)
+            (25 26 38 37)
+            (26 27 39 38)
+            (21 27 39 33)
+        );
+    }
+
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (1 2 10 9)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (24 25 37 36)
+        );
+    }
+
+    fluidNonCouple1
+    {
+        type wall;
+        faces
+        (
+            (5 6 14 13)
+        );
+    }
+
+    fluidNonCouple2
+    {
+        type wall;
+        faces
+        (
+            (17 18 30 29)
+            (18 19 31 30)
+            (19 20 32 31)
+        );
+    }
+
+    solidNonCouple1
+    {
+        type patch;
+        faces
+        (
+            (4 5 13 12)
+            (6 7 15 14)
+        );
+    }
+
+    solidNonCouple2
+    {
+        type patch;
+        faces
+        (
+            (16 17 29 28)
+            (20 21 33 32)
+        );
+    }
+);
+
+
+// ************************************************************************* //

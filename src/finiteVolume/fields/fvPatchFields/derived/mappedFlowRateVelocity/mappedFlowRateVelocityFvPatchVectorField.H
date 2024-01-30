@@ -47,10 +47,9 @@ Usage
     \endverbatim
 
     This boundary condition can only be applied to patches that are of
-    mappedPatchBase type.
+    mapped type.
 
 See also
-    Foam::mappedPatchBase
     Foam::mappedPolyPatch
     Foam::mappedFvPatch
     Foam::fixedValueFvPatchVectorField

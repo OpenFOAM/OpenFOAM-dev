@@ -57,9 +57,12 @@ Note
 #include "argList.H"
 #include "fvMeshStitchersStationary.H"
 #include "fvMeshTools.H"
+#include "hashedWordList.H"
 #include "IOobjectList.H"
+#include "MultiRegionList.H"
 #include "nonConformalCyclicPolyPatch.H"
 #include "nonConformalErrorPolyPatch.H"
+#include "nonConformalMappedWallPolyPatch.H"
 #include "nonConformalProcessorCyclicPolyPatch.H"
 #include "polyMesh.H"
 #include "processorPolyPatch.H"
@@ -72,6 +75,170 @@ Note
 #include "pointFields.H"
 
 using namespace Foam;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+struct nonConformalCouple
+{
+    // Public Data
+
+        Pair<word> regionNames;
+
+        Pair<word> origPatchNames;
+
+        word ncPatchType;
+
+        Pair<word> ncPatchNames;
+
+        Pair<dictionary> ncPatchFieldDicts;
+
+        cyclicTransform transform;
+
+
+    // Constructors
+
+        // Construct null (for List)
+        nonConformalCouple()
+        {}
+
+        // Construct from arguments
+        nonConformalCouple
+        (
+            const word& primaryRegionName,
+            const argList& args
+        )
+        :
+            regionNames(primaryRegionName, primaryRegionName),
+            origPatchNames(args[1], args[2]),
+            ncPatchType(nonConformalCyclicPolyPatch::typeName),
+            ncPatchNames
+            (
+                ncPatchType + "_on_" + args[1],
+                ncPatchType + "_on_" + args[2]
+            ),
+            ncPatchFieldDicts(),
+            transform(true)
+        {}
+
+        //- Construct from dictionary
+        nonConformalCouple
+        (
+            const word& primaryRegionName,
+            const dictionary& dict
+        )
+        {
+            const bool haveRegion = dict.found("region");
+            const bool haveRegions = dict.found("regions");
+
+            if (haveRegion && haveRegions)
+            {
+                FatalIOErrorInFunction(dict)
+                    << "Regions should be specified either by a \"region\" "
+                    << "entry with a single region name (for in-region "
+                    << "cyclics), or by a \"regions\" entry with a pair of "
+                    << "names (for inter-region mapped walls)"
+                    << exit(FatalIOError);
+            }
+
+            const bool havePatches = dict.found("patches");
+            const bool haveOwnerNeighbour =
+                dict.found("owner") || dict.found("neighbour");
+
+            if (havePatches == haveOwnerNeighbour)
+            {
+                FatalIOErrorInFunction(dict)
+                    << "Patches should be specified with either a single "
+                    << "\"patches\" entry with a pair of patch names, "
+                    << "or with two sub-dictionaries named \"owner\" and "
+                    << "\"neighbour\"" << exit(FatalIOError);
+            }
+
+            if (havePatches)
+            {
+                const word thisRegionName =
+                    haveRegion ? dict.lookup<word>("region") : word::null;
+
+                regionNames =
+                    haveRegion ? Pair<word>(thisRegionName, thisRegionName)
+                  : haveRegions ? dict.lookup<Pair<word>>("regions")
+                  : Pair<word>(primaryRegionName, primaryRegionName);
+                origPatchNames =
+                    dict.lookup<Pair<word>>("patches");
+                ncPatchType =
+                    dict.lookupOrDefault<word>
+                    (
+                        "type",
+                        regionNames.first() == regionNames.second()
+                      ? nonConformalCyclicPolyPatch::typeName
+                      : nonConformalMappedWallPolyPatch::typeName
+                    );
+                ncPatchNames =
+                    Pair<word>
+                    (
+                        dict.dictName() + "_on_" + origPatchNames[0],
+                        dict.dictName() + "_on_" + origPatchNames[1]
+                    );
+                ncPatchFieldDicts = Pair<dictionary>();
+                transform = cyclicTransform(dict, true);
+            }
+            else
+            {
+                const dictionary& ownerDict = dict.subDict("owner");
+                const dictionary& neighbourDict = dict.subDict("neighbour");
+
+                regionNames =
+                    Pair<word>
+                    (
+                        ownerDict.lookupOrDefault<word>
+                        (
+                            "region",
+                            primaryRegionName
+                        ),
+                        neighbourDict.lookupOrDefault<word>
+                        (
+                            "region",
+                            primaryRegionName
+                        )
+                    );
+                origPatchNames =
+                    Pair<word>
+                    (
+                        ownerDict.lookup<word>("patch"),
+                        neighbourDict.lookup<word>("patch")
+                    );
+                ncPatchType =
+                    dict.lookupOrDefault<word>
+                    (
+                        "type",
+                        regionNames.first() == regionNames.second()
+                      ? nonConformalCyclicPolyPatch::typeName
+                      : nonConformalMappedWallPolyPatch::typeName
+                    );
+                ncPatchNames =
+                    Pair<word>
+                    (
+                        ownerDict.lookupOrDefault<word>
+                        (
+                            "name",
+                            dict.dictName() + "_on_" + origPatchNames[0]
+                        ),
+                        neighbourDict.lookupOrDefault<word>
+                        (
+                            "name",
+                            dict.dictName() + "_on_" + origPatchNames[1]
+                        )
+                    );
+                ncPatchFieldDicts =
+                    Pair<dictionary>
+                    (
+                        ownerDict.subOrEmptyDict("patchFields"),
+                        neighbourDict.subOrEmptyDict("patchFields")
+                    );
+                transform = cyclicTransform(dict, true);
+            }
+        }
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -96,34 +263,32 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
 
+    const Foam::word primaryRegionName =
+        args.optionLookupOrDefault("region", polyMesh::defaultRegion);
+
     // Flag to determine whether or not patches are added to fields
     bool fields;
 
-    // Patch names between which to create couples, field dictionaries, the
-    // associated cyclic name prefix and transformation (if any)
-    List<Pair<word>> patchNames;
-    List<Pair<dictionary>> patchFieldDicts;
-    wordList cyclicNames;
-    List<cyclicTransform> transforms;
-
-    // If there are patch name arguments, then we assume fields are not being
-    // changed, the cyclic name is just the cyclic typename, and that there is
-    // no transformation. If there are no arguments then get all this
-    // information from the system dictionary.
+    // Read the couples to be created from arguments or a system dictionary
+    List<nonConformalCouple> couples;
     if (haveArgs)
     {
         fields = args.optionFound("fields");
 
-        patchNames.append(Pair<word>(args[1], args[2]));
-        patchFieldDicts.append(Pair<dictionary>());
-        cyclicNames.append(nonConformalCyclicPolyPatch::typeName);
-        transforms.append(cyclicTransform(true));
+        couples.append(nonConformalCouple(primaryRegionName, args));
     }
     else
     {
-        static const word dictName("createNonConformalCouplesDict");
-
-        IOdictionary dict(systemDict(dictName, args, runTime));
+        const dictionary dict
+        (
+            systemDict
+            (
+                "createNonConformalCouplesDict",
+                args,
+                runTime,
+                primaryRegionName
+            )
+        );
 
         fields = dict.lookupOrDefault<bool>("fields", false);
 
@@ -144,226 +309,326 @@ int main(int argc, char *argv[])
             {
                 FatalIOErrorInFunction(subDict)
                     << "Patches should be specified with either a single "
-                    << "\"patches\" entry with a pair of patch names, or with "
-                    << "two sub-dictionaries named \"owner\" and "
+                    << "\"patches\" entry with a pair of patch names, "
+                    << "or with two sub-dictionaries named \"owner\" and "
                     << "\"neighbour\"." << exit(FatalIOError);
             }
 
-            if (havePatches)
-            {
-                patchNames.append(subDict.lookup<Pair<word>>("patches"));
-                patchFieldDicts.append(Pair<dictionary>());
-            }
-
-            if (haveOwnerNeighbour)
-            {
-                const dictionary& ownerDict = subDict.subDict("owner");
-                const dictionary& neighbourDict = subDict.subDict("neighbour");
-
-                patchNames.append
-                (
-                    Pair<word>
-                    (
-                        ownerDict["patch"],
-                        neighbourDict["patch"]
-                    )
-                );
-                patchFieldDicts.append
-                (
-                    Pair<dictionary>
-                    (
-                        ownerDict.subOrEmptyDict("patchFields"),
-                        neighbourDict.subOrEmptyDict("patchFields")
-                    )
-                );
-            }
-
-            cyclicNames.append(subDict.dictName());
-            transforms.append(cyclicTransform(subDict, true));
+            couples.append(nonConformalCouple(primaryRegionName, subDict));
         }
     }
 
-    Foam::word meshRegionName = polyMesh::defaultRegion;
-    args.optionReadIfPresent("region", meshRegionName);
+    // Create all the meshes needed
+    hashedWordList regionNames;
+    PtrList<fvMesh> regionMeshes;
+    forAll(couples, i)
+    {
+        forAll(couples[i].regionNames, sidei)
+        {
+            const word& regionName = couples[i].regionNames[sidei];
 
-    #include "createRegionMeshNoChangers.H"
+            if (regionNames.found(regionName)) continue;
 
-    const polyBoundaryMesh& patches = mesh.boundaryMesh();
+            regionNames.append(regionName);
+            regionMeshes.append
+            (
+                new fvMesh
+                (
+                    IOobject
+                    (
+                        regionName,
+                        runTime.name(),
+                        runTime,
+                        Foam::IOobject::MUST_READ
+                    ),
+                    false
+                )
+            );
+        }
+    }
 
     const bool overwrite = args.optionFound("overwrite");
 
-    const word oldInstance = mesh.pointsInstance();
+    const word oldInstance = regionMeshes[0].pointsInstance();
 
     // Read the fields
-    IOobjectList objects(mesh, runTime.name());
     if (fields) Info<< "Reading geometric fields" << nl << endl;
-    #include "readVolFields.H"
-    #include "readSurfaceFields.H"
-    #include "readPointFields.H"
-    if (fields) Info<< endl;
 
-    // Make sure the mesh is not connected before couples are added
-    mesh.conform();
+    #define DeclareRegionGeoTypeFields(Type, Geo)                              \
+        PtrList<PtrList<Geo##Field<Type>>>                                     \
+            CAT4(region, Geo, CAPITALIZE(Type), Fields)(regionMeshes.size());  \
+        forAll(regionMeshes, regioni)                                          \
+        {                                                                      \
+            CAT4(region, Geo, CAPITALIZE(Type), Fields).set                    \
+            (                                                                  \
+                regioni,                                                       \
+                new PtrList<Geo##Field<Type>>                                  \
+            );                                                                 \
+        }
+    FOR_ALL_FIELD_TYPES(DeclareRegionGeoTypeFields, Vol);
+    FOR_ALL_FIELD_TYPES(DeclareRegionGeoTypeFields, Surface);
+    FOR_ALL_FIELD_TYPES(DeclareRegionGeoTypeFields, Point);
+    #undef DeclareRegionGeoTypeFields
 
-    // Start building lists of patches and patch-fields to add
-    List<polyPatch*> newPatches;
-    List<dictionary> newPatchFieldDicts;
+    if (fields)
+    {
+        MultiRegionUList<fvMesh> multiRegionMeshes(regionMeshes, false);
+
+        forAll(regionMeshes, regioni)
+        {
+            RegionRef<fvMesh> mesh = multiRegionMeshes[regioni];
+
+            IOobjectList objects(mesh, runTime.name());
+
+            #define ReadRegionGeoTypeFields(Type, Geo, mesh)                   \
+                ReadFields                                                     \
+                (                                                              \
+                    mesh,                                                      \
+                    objects,                                                   \
+                    CAT4(region, Geo, CAPITALIZE(Type), Fields)[regioni]       \
+                );
+            FOR_ALL_FIELD_TYPES(ReadRegionGeoTypeFields, Vol, mesh);
+            FOR_ALL_FIELD_TYPES(ReadRegionGeoTypeFields, Surface, mesh);
+            const pointMesh& pMesh = pointMesh::New(mesh);
+            FOR_ALL_FIELD_TYPES(ReadRegionGeoTypeFields, Point, pMesh);
+            #undef ReadRegionGeoTypeFields
+        }
+
+        Info<< endl;
+    }
+
+    if (!overwrite)
+    {
+        runTime++;
+    }
+
+    // Make sure the meshes are not connected before couples are added
+    forAll(regionMeshes, regioni)
+    {
+        regionMeshes[regioni].conform();
+    }
 
     // Find the first processor patch and face
-    label firstProcPatchi = patches.size(), firstProcFacei = mesh.nFaces();
-    forAll(patches, patchi)
+    labelList regionFirstProcPatchis(regionMeshes.size());
+    labelList regionFirstProcFaceis(regionMeshes.size());;
+    forAll(regionMeshes, regioni)
     {
-        const polyPatch& pp = patches[patchi];
+        const fvMesh& mesh = regionMeshes[regioni];
+        const polyBoundaryMesh& patches = mesh.boundaryMesh();
+        label& firstProcPatchi = regionFirstProcPatchis[regioni];
+        label& firstProcFacei = regionFirstProcFaceis[regioni];
 
-        if (isA<processorPolyPatch>(pp) && firstProcPatchi == patches.size())
-        {
-            firstProcPatchi = patchi;
-            firstProcFacei = pp.start();
-        }
+        firstProcPatchi = patches.size();
+        firstProcFacei = mesh.nFaces();
 
-        if (!isA<processorPolyPatch>(pp) && firstProcPatchi != patches.size())
+        forAll(patches, patchi)
         {
-            FatalErrorInFunction
-                << "Processor patches do not follow boundary patches"
-                << exit(FatalError);
+            const polyPatch& pp = patches[patchi];
+
+            const bool isProcPp = isA<processorPolyPatch>(pp);
+
+            if (isProcPp && firstProcPatchi == patches.size())
+            {
+                firstProcPatchi = patchi;
+                firstProcFacei = pp.start();
+            }
+
+            if (!isProcPp && firstProcPatchi != patches.size())
+            {
+                FatalErrorInFunction
+                    << "Processor patches of region " << regionNames[regioni]
+                    << " do not follow boundary patches"
+                    << exit(FatalError);
+            }
         }
     }
+
+    // Start building lists of patches and patch-fields to add
+    List<List<polyPatch*>> newPatches(regionMeshes.size());
+    List<boolList> newPatchIsCouple(regionMeshes.size());
+    List<List<dictionary>> newPatchFieldDicts(regionMeshes.size());
 
     // Clone the non-processor patches
-    for (label patchi = 0; patchi < firstProcPatchi; ++ patchi)
+    forAll(regionMeshes, regioni)
     {
-        const polyPatch& pp = patches[patchi];
+        const fvMesh& mesh = regionMeshes[regioni];
+        const polyBoundaryMesh& patches = mesh.boundaryMesh();
+        const label firstProcPatchi = regionFirstProcPatchis[regioni];
 
-        newPatches.append
-        (
-            pp.clone(patches, patchi, pp.size(), pp.start()).ptr()
-        );
-        newPatchFieldDicts.append
-        (
-            dictionary()
-        );
+        for (label patchi = 0; patchi < firstProcPatchi; ++ patchi)
+        {
+            const polyPatch& pp = patches[patchi];
+
+            newPatches[regioni].append
+            (
+                pp.clone
+                (
+                    patches,
+                    patchi,
+                    pp.size(),
+                    pp.start()
+                ).ptr()
+            );
+            newPatchIsCouple[regioni].append(false);
+            newPatchFieldDicts[regioni].append(dictionary());
+        }
     }
 
-    // Convenience function to generate patch names for the owner or neighbour
-    auto nccPatchNames = [&](const label i)
+    // Add the non-processor coupled patches
+    forAll(couples, couplei)
     {
-        return
-            Pair<word>
-            (
-                cyclicNames[i] + "_on_" + patchNames[i][0],
-                cyclicNames[i] + "_on_" + patchNames[i][1]
-            );
-    };
+        const nonConformalCouple& couple = couples[couplei];
 
-    // Add the cyclic patches
-    forAll(patchNames, i)
-    {
-        Info<< indent << "Adding "
-            << nonConformalCyclicPolyPatch::typeName
+        Info<< indent << "Adding " << couple.ncPatchType
             << " interfaces between patches: " << incrIndent << nl
-            << indent << patchNames[i] << decrIndent << nl
+            << indent << couple.origPatchNames << decrIndent << nl
+            << "In regions: " << incrIndent << nl
+            << indent << couple.regionNames << decrIndent << nl
             << indent << "Named:" << incrIndent << nl
-            << indent << Pair<word>(nccPatchNames(i)) << decrIndent << nl
+            << indent << couple.ncPatchNames << decrIndent << nl
             << indent << "With transform: " << incrIndent << nl;
-        transforms[i].write(Info);
+        couple.transform.write(Info);
         Info<< decrIndent << nl;
 
-        newPatches.append
-        (
-            new nonConformalCyclicPolyPatch
+        auto appendPatch = [&](const bool owner)
+        {
+            const label regioni =
+                regionNames[couple.regionNames[!owner]];
+
+            dictionary patchDict
             (
-                nccPatchNames(i)[0],
-                0,
-                firstProcFacei,
-                newPatches.size(),
-                patches,
-                nonConformalCyclicPolyPatch::typeName,
-                nccPatchNames(i)[1],
-                patchNames[i][0],
-                transforms[i]
-            )
-        );
-        newPatchFieldDicts.append
-        (
-            patchFieldDicts[i][0]
-        );
-        newPatches.append
-        (
-            new nonConformalCyclicPolyPatch
+                "type", couple.ncPatchType,
+                "nFaces", 0,
+                "startFace", regionFirstProcFaceis[regioni],
+                "originalPatch", couple.origPatchNames[!owner],
+                "neighbourRegion", couple.regionNames[owner],
+                "neighbourPatch", couple.ncPatchNames[owner]
+            );
+
+            {
+                OStringStream oss;
+                (owner ? couple.transform : inv(couple.transform)).write(oss);
+                patchDict.merge(IStringStream(oss.str())());
+            }
+
+            newPatches[regioni].append
             (
-                nccPatchNames(i)[1],
-                0,
-                firstProcFacei,
-                newPatches.size(),
-                patches,
-                nonConformalCyclicPolyPatch::typeName,
-                nccPatchNames(i)[0],
-                patchNames[i][1],
-                inv(transforms[i])
-            )
-        );
-        newPatchFieldDicts.append
-        (
-            patchFieldDicts[i][1]
-        );
+                polyPatch::New
+                (
+                    couple.ncPatchNames[!owner],
+                    patchDict,
+                    newPatches[regioni].size(),
+                    regionMeshes[regioni].boundaryMesh()
+                ).ptr()
+            );
+            newPatchIsCouple[regioni].append(true);
+            newPatchFieldDicts[regioni].append
+            (
+                couple.ncPatchFieldDicts[!owner]
+            );
+        };
+        appendPatch(true);
+        appendPatch(false);
     }
 
-    // Add the error patches. Note there is only one for each source patch,
-    // regardless of how many interfaces are attached to that patch.
-    auto appendErrorPatches = [&](const bool owner)
+    // Add the error patches. Note there is only one for each original patch,
+    // regardless of how many couplings are attached to that patch.
     {
-        wordHashSet patchANames;
-        forAll(patchNames, i)
+        // Create a table of unique original patches
+        HashTable<label, Pair<word>, Hash<Pair<word>>> regionOrigPatchToIndex;
+        DynamicList<Pair<word>> regionOrigPatches;
+        forAll(couples, couplei)
         {
-            patchANames.insert(patchNames[i][!owner]);
+            const nonConformalCouple& couple = couples[couplei];
+            forAll(couple.regionNames, i)
+            {
+                const Pair<word> regionOrigPatch
+                (
+                    couple.regionNames[i],
+                    couple.origPatchNames[i]
+                );
+
+                if (!regionOrigPatchToIndex.found(regionOrigPatch))
+                {
+                    regionOrigPatchToIndex.insert
+                    (
+                        regionOrigPatch,
+                        regionOrigPatches.size()
+                    );
+                    regionOrigPatches.append(regionOrigPatch);
+                }
+            }
         }
-        forAllConstIter(wordHashSet, patchANames, iter)
+
+        // Add an error patch for each unique original patch
+        forAll(regionOrigPatches, i)
         {
-            newPatches.append
+            const word& regionName = regionOrigPatches[i].first();
+            const label regioni = regionNames[regionName];
+            const word& origPatchName = regionOrigPatches[i].second();
+
+            newPatches[regioni].append
             (
                 new nonConformalErrorPolyPatch
                 (
-                    nonConformalErrorPolyPatch::typeName + "_on_" + iter.key(),
+                    nonConformalErrorPolyPatch::typeName
+                  + "_on_"
+                  + origPatchName,
                     0,
-                    firstProcFacei,
-                    newPatches.size(),
-                    patches,
+                    regionFirstProcFaceis[regioni],
+                    newPatches[regioni].size(),
+                    regionMeshes[regioni].boundaryMesh(),
                     nonConformalErrorPolyPatch::typeName,
-                    iter.key()
+                    origPatchName
                 )
             );
-            newPatchFieldDicts.append
-            (
-                dictionary()
-            );
+            newPatchIsCouple[regioni].append(false);
+            newPatchFieldDicts[regioni].append(dictionary());
         }
-    };
-
-    appendErrorPatches(true);
-    appendErrorPatches(false);
+    }
 
     // Clone the processor patches
-    for (label patchi = firstProcPatchi; patchi < patches.size(); ++ patchi)
+    forAll(regionMeshes, regioni)
     {
-        const polyPatch& pp = patches[patchi];
+        const fvMesh& mesh = regionMeshes[regioni];
+        const polyBoundaryMesh& patches = mesh.boundaryMesh();
+        const label firstProcPatchi = regionFirstProcPatchis[regioni];
 
-        newPatches.append
-        (
-            pp.clone(patches, newPatches.size(), pp.size(), pp.start()).ptr()
-        );
-        newPatchFieldDicts.append
-        (
-            dictionary()
-        );
+        for (label patchi = firstProcPatchi; patchi < patches.size(); ++ patchi)
+        {
+            const polyPatch& pp = patches[patchi];
+
+            newPatches[regioni].append
+            (
+                pp.clone
+                (
+                    patches,
+                    newPatches[regioni].size(),
+                    pp.size(),
+                    pp.start()
+                ).ptr()
+            );
+            newPatchIsCouple[regioni].append(false);
+            newPatchFieldDicts[regioni].append(dictionary());
+        }
     }
 
     // Add the processor cyclic patches
     if (Pstream::parRun())
     {
-        forAll(patchNames, i)
+        forAll(couples, couplei)
         {
-            const polyPatch& patch1 = patches[patchNames[i][0]];
-            const polyPatch& patch2 = patches[patchNames[i][1]];
+            const nonConformalCouple& couple = couples[couplei];
+
+            if (couple.ncPatchType != nonConformalCyclicPolyPatch::typeName)
+                continue;
+
+            const label regioni = regionNames[couples[couplei].regionNames[0]];
+            const fvMesh& mesh = regionMeshes[regioni];
+            const polyBoundaryMesh& patches = mesh.boundaryMesh();
+
+            const polyPatch& patch1 = patches[couple.origPatchNames[0]];
+            const polyPatch& patch2 = patches[couple.origPatchNames[1]];
 
             boolList procHasPatch1(Pstream::nProcs(), false);
             procHasPatch1[Pstream::myProcNo()] = !patch1.empty();
@@ -407,7 +672,7 @@ int main(int argc, char *argv[])
                          && procHasPatchB[proci]
                         )
                         {
-                            newPatches.append
+                            newPatches[regioni].append
                             (
                                 new nonConformalProcessorCyclicPolyPatch
                                 (
@@ -417,13 +682,14 @@ int main(int argc, char *argv[])
                                     patches,
                                     Pstream::myProcNo(),
                                     proci,
-                                    nccPatchNames(i)[!owner],
-                                    patchNames[i][!owner]
+                                    couple.ncPatchNames[!owner],
+                                    couple.origPatchNames[!owner]
                                 )
                             );
-                            newPatchFieldDicts.append
+                            newPatchIsCouple[regioni].append(true);
+                            newPatchFieldDicts[regioni].append
                             (
-                                patchFieldDicts[i][!owner]
+                                couple.ncPatchFieldDicts[!owner]
                             );
                         }
                     }
@@ -437,56 +703,75 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Re-patch the mesh. Note that new patches are all constraints, so the
-    // dictionary and patch type do not get used. Overrides will be handled
-    // later, once all patches have been added and the mesh has been stitched.
-    forAll(newPatches, newPatchi)
+    // Re-patch the meshes. Create constraint or calculated patch fields at
+    // this stage; don't apply the patch field dictionaries. The patch fields
+    // will be specified properly later after all patches have been added and
+    // the meshes have been stitched. That way the geometry is fully available
+    // for construction of the patch fields.
+    forAll(regionMeshes, regioni)
     {
-        fvMeshTools::addPatch
-        (
-            mesh,
-            *newPatches[newPatchi],
-            dictionary(),
-            calculatedFvPatchField<scalar>::typeName,
-            false
-        );
-    }
-
-    // Connect the mesh so that the new stitching topology gets written out
-    fvMeshStitchers::stationary(mesh).connect(false, false, false);
-
-    // Set the fields on the new patches. All new patches are constraints, so
-    // this should only be creating overrides; e.g., jump cyclics.
-    forAll(newPatches, newPatchi)
-    {
-        if (!newPatchFieldDicts[newPatchi].empty())
+        forAll(newPatches[regioni], newPatchi)
         {
-            fvMeshTools::setPatchFields
+            fvMeshTools::addPatch
             (
-                mesh,
-                newPatchi,
-                newPatchFieldDicts[newPatchi]
+                regionMeshes[regioni],
+                *newPatches[regioni][newPatchi],
+                dictionary(),
+                calculatedFvPatchField<scalar>::typeName,
+                false
             );
         }
     }
 
-    mesh.setInstance(runTime.name());
+    // Connect the meshes
+    {
+        MultiRegionUList<fvMesh> multiRegionMeshes(regionMeshes, false);
+        forAll(regionMeshes, regioni)
+        {
+            RegionRef<fvMesh> mesh = multiRegionMeshes[regioni];
+            fvMeshStitchers::stationary(mesh).connect(false, false, false);
+        }
+    }
+
+    // Set the fields on the new patches. This allows constraint types (e.g.,
+    // nonConformalCyclic) to be set by default, but requires a dictionary
+    // setting for non-constrained types (e.g., nonConformalMappedWall). It
+    // also allows constraint types to be overridden (e.g., with jumpCyclic) if
+    // there is a dictionary present.
+    forAll(regionMeshes, regioni)
+    {
+        forAll(newPatches[regioni], newPatchi)
+        {
+            if (newPatchIsCouple[regioni][newPatchi])
+            {
+                fvMeshTools::setPatchFields
+                (
+                    regionMeshes[regioni],
+                    newPatchi,
+                    newPatchFieldDicts[regioni][newPatchi]
+                );
+            }
+        }
+    }
 
     // Set the precision of the points data to 10
     IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
 
-    if (!overwrite)
+    if (overwrite)
     {
-        runTime++;
-    }
-    else
-    {
-        mesh.setInstance(oldInstance);
+        forAll(regionMeshes, regioni)
+        {
+            regionMeshes[regioni].setInstance(oldInstance);
+            regionMeshes[regioni].setPolyFacesBfInstance(oldInstance);
+        }
     }
 
     // Write resulting mesh
-    Info<< "Writing mesh to " << runTime.name() << nl << endl;
-    mesh.write();
+    Info<< nl << "Writing mesh to " << runTime.name() << nl << endl;
+    forAll(regionMeshes, regioni)
+    {
+        regionMeshes[regioni].write();
+    }
 
     Info<< "End\n" << endl;
 

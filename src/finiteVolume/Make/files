@@ -35,10 +35,14 @@ $(constraintFvPatches)/nonConformalProcessorCyclic/nonConformalProcessorCyclicFv
 
 derivedFvPatches = $(fvPatches)/derived
 $(derivedFvPatches)/wall/wallFvPatch.C
+$(derivedFvPatches)/mapped/mappedFvPatchBaseBase.C
+$(derivedFvPatches)/mapped/mappedFvPatchBase.C
 $(derivedFvPatches)/mapped/mappedFvPatch.C
 $(derivedFvPatches)/mapped/mappedWallFvPatch.C
 $(derivedFvPatches)/mapped/mappedExtrudedWallFvPatch.C
 $(derivedFvPatches)/mapped/mappedInternalFvPatch.C
+$(derivedFvPatches)/nonConformalMapped/nonConformalMappedFvPatchBase.C
+$(derivedFvPatches)/nonConformalMapped/nonConformalMappedWallFvPatch.C
 
 
 meshWave = algorithms/FvFaceCellWave
@@ -124,6 +128,7 @@ fvMeshStitchers = fvMesh/fvMeshStitchers
 $(fvMeshStitchers)/fvMeshStitcher/fvMeshStitcher.C
 $(fvMeshStitchers)/fvMeshStitcher/fvMeshStitcherNew.C
 $(fvMeshStitchers)/fvMeshStitcher/fvMeshStitcherTools.C
+$(fvMeshStitchers)/fvMeshStitcher/conformedFvPatchFields.C
 $(fvMeshStitchers)/fvMeshStitcher/conformedFvsPatchFields.C
 $(fvMeshStitchers)/stationary/fvMeshStitchersStationary.C
 
@@ -279,6 +284,7 @@ $(constraintFvsPatchFields)/nonConformalProcessorCyclic/nonConformalProcessorCyc
 derivedFvsPatchFields = $(fvsPatchFields)/derived
 $(derivedFvsPatchFields)/polyFaces/polyFacesFvsPatchLabelField.C
 $(derivedFvsPatchFields)/nonConformalPolyFaces/nonConformalPolyFacesFvsPatchLabelField.C
+$(derivedFvsPatchFields)/nonConformalMappedPolyFaces/nonConformalMappedPolyFacesFvsPatchLabelField.C
 
 fvFieldSources = fields/fvFieldSources
 $(fvFieldSources)/fvFieldSource/fvFieldSources.C

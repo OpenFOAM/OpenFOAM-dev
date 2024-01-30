@@ -25,7 +25,7 @@ License
 
 #include "filmSurfaceVelocityFvPatchVectorField.H"
 #include "compressibleMomentumTransportModel.H"
-#include "mappedPatchBase.H"
+#include "mappedFvPatchBaseBase.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -101,10 +101,9 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
     UPstream::msgType() = oldTag + 1;
 
     // Get the coupling information from the mappedPatchBase
-    const mappedPatchBase& mpp = mappedPatchBase::getMap(patch().patch());
-    const label patchiNbr = mpp.nbrPolyPatch().index();
-    const fvPatch& patchNbr =
-        refCast<const fvMesh>(mpp.nbrMesh()).boundary()[patchiNbr];
+    const mappedFvPatchBaseBase& mapper =
+        mappedFvPatchBaseBase::getMap(patch());
+    const fvPatch& patchNbr = mapper.nbrFvPatch();
 
     // Neighbour patch face-cell velocity
     const vectorField UpNbr
@@ -114,7 +113,7 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
     );
 
     // Set the reference value to the neighbouring fluid internal velocity
-    refValue() = mpp.fromNeighbour(UpNbr);
+    refValue() = mapper.fromNeighbour(UpNbr);
 
     // Remove the normal component of the surface vel
     const vectorField n(patch().nf());
@@ -126,7 +125,7 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
 
     // Lookup the neighbour momentum transport model
     const compressibleMomentumTransportModel& transportModelNbr =
-        mpp.nbrMesh().lookupType<compressibleMomentumTransportModel>();
+        mapper.nbrMesh().lookupType<compressibleMomentumTransportModel>();
 
     // Patch laminar dynamic viscosity divided by delta
     const tmp<scalarField> muEffByDelta
@@ -141,9 +140,9 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
         // Get the neighbour patch density
         const tmp<scalarField> rhopNbr
         (
-            mpp.fromNeighbour
+            mapper.fromNeighbour
             (
-                transportModelNbr.rho().boundaryField()[patchiNbr]
+                transportModelNbr.rho().boundaryField()[patchNbr.index()]
             )
         );
 
@@ -160,10 +159,10 @@ void Foam::filmSurfaceVelocityFvPatchVectorField::updateCoeffs()
         // Get the neighbour patch laminar dynamic viscosity divided by delta
         const tmp<scalarField> muEffByDeltaNbr
         (
-            mpp.fromNeighbour
+            mapper.fromNeighbour
             (
-                transportModelNbr.rho().boundaryField()[patchiNbr]
-               *transportModelNbr.nuEff(patchiNbr)
+                transportModelNbr.rho().boundaryField()[patchNbr.index()]
+               *transportModelNbr.nuEff(patchNbr.index())
                *patchNbr.deltaCoeffs()
             )
         );

@@ -33,6 +33,7 @@ SourceFiles
 #define mappedFilmWallFvPatch_H
 
 #include "filmWallFvPatch.H"
+#include "mappedFvPatchBase.H"
 #include "mappedFilmWallPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,7 +47,8 @@ namespace Foam
 
 class mappedFilmWallFvPatch
 :
-    public filmWallFvPatch
+    public filmWallFvPatch,
+    public mappedFvPatchBase
 {
 
 public:
@@ -64,7 +66,8 @@ public:
             const fvBoundaryMesh& bm
         )
         :
-            filmWallFvPatch(patch, bm)
+            filmWallFvPatch(patch, bm),
+            mappedFvPatchBase(static_cast<const fvPatch&>(*this))
         {}
 };
 

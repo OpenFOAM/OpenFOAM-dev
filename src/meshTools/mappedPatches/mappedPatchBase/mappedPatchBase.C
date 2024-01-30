@@ -322,11 +322,7 @@ void Foam::mappedPatchBase::calcMapping() const
 
 Foam::mappedPatchBase::mappedPatchBase(const polyPatch& pp)
 :
-    patch_(pp),
-    coupleGroup_(),
-    nbrRegionName_(patch_.boundaryMesh().mesh().name()),
-    nbrPatchName_(patch_.name()),
-    transform_(true),
+    mappedPatchBaseBase(pp),
     usingTree_(true),
     treeMapPtr_(nullptr),
     treeNbrPatchFaceIndices_(),
@@ -346,11 +342,7 @@ Foam::mappedPatchBase::mappedPatchBase
     const cyclicTransform& transform
 )
 :
-    patch_(pp),
-    coupleGroup_(),
-    nbrRegionName_(nbrRegionName),
-    nbrPatchName_(nbrPatchName),
-    transform_(transform),
+    mappedPatchBaseBase(pp, nbrRegionName, nbrPatchName, transform),
     usingTree_(true),
     treeMapPtr_(nullptr),
     treeNbrPatchFaceIndices_(),
@@ -369,24 +361,7 @@ Foam::mappedPatchBase::mappedPatchBase
     const bool defaultTransformIsNone
 )
 :
-    patch_(pp),
-    coupleGroup_(dict),
-    nbrRegionName_
-    (
-        coupleGroup_.valid() ? word::null
-      : dict.lookupOrDefaultBackwardsCompatible<word>
-        (
-            {"neighbourRegion", "sampleRegion"},
-            pp.boundaryMesh().mesh().name()
-        )
-    ),
-    nbrPatchName_
-    (
-        coupleGroup_.valid() ? word::null
-      : dict.lookupOrDefault<bool>("samePatch", false) ? pp.name()
-      : dict.lookupBackwardsCompatible<word>({"neighbourPatch", "samplePatch"})
-    ),
-    transform_(cyclicTransform(dict, defaultTransformIsNone)),
+    mappedPatchBaseBase(pp, dict, defaultTransformIsNone),
     usingTree_(!dict.found("method") && !dict.found("sampleMode")),
     treeMapPtr_(nullptr),
     treeNbrPatchFaceIndices_(),
@@ -404,30 +379,7 @@ Foam::mappedPatchBase::mappedPatchBase
     matchTol_(dict.lookupOrDefault("matchTolerance", defaultMatchTol_)),
     reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true)),
     reMapNbr_(false)
-{
-    const bool haveCoupleGroup = coupleGroup_.valid();
-
-    const bool haveNbrRegion =
-        dict.found("neighbourRegion") || dict.found("sampleRegion");
-    const bool haveNbrPatch =
-        dict.found("neighbourPatch") || dict.found("samplePatch");
-
-    const bool isSamePatch = dict.lookupOrDefault<bool>("samePatch", false);
-
-    if ((haveNbrRegion || haveNbrPatch || isSamePatch) && haveCoupleGroup)
-    {
-        FatalIOErrorInFunction(dict)
-            << "Either neighbourRegion/Patch information or a coupleGroup "
-            << "should be specified, not both" << exit(FatalIOError);
-    }
-
-    if (haveNbrPatch && isSamePatch)
-    {
-        FatalIOErrorInFunction(dict)
-            << "Either a neighbourPatch should be specified, or samePatch "
-            << "should be set to true, not both" << exit(FatalIOError);
-    }
-}
+{}
 
 
 Foam::mappedPatchBase::mappedPatchBase
@@ -436,11 +388,7 @@ Foam::mappedPatchBase::mappedPatchBase
     const mappedPatchBase& mpb
 )
 :
-    patch_(pp),
-    coupleGroup_(mpb.coupleGroup_),
-    nbrRegionName_(mpb.nbrRegionName_),
-    nbrPatchName_(mpb.nbrPatchName_),
-    transform_(mpb.transform_),
+    mappedPatchBaseBase(pp, mpb),
     usingTree_(mpb.usingTree_),
     treeMapPtr_(nullptr),
     treeNbrPatchFaceIndices_(),
@@ -464,34 +412,6 @@ Foam::mappedPatchBase::~mappedPatchBase()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::polyMesh& Foam::mappedPatchBase::nbrMesh() const
-{
-    return patch_.boundaryMesh().mesh().time().lookupObject<polyMesh>
-    (
-        nbrRegionName()
-    );
-}
-
-
-const Foam::polyPatch& Foam::mappedPatchBase::nbrPolyPatch() const
-{
-    const polyMesh& nbrMesh = this->nbrMesh();
-
-    const label patchi = nbrMesh.boundaryMesh().findIndex(nbrPatchName());
-
-    if (patchi == -1)
-    {
-        FatalErrorInFunction
-            << "Cannot find patch " << nbrPatchName()
-            << " in region " << nbrRegionName() << endl
-            << "Valid patches are " << nbrMesh.boundaryMesh().names()
-            << exit(FatalError);
-    }
-
-    return nbrMesh.boundaryMesh()[patchi];
-}
-
 
 const Foam::mappedPatchBase& Foam::mappedPatchBase::getMap
 (
@@ -521,26 +441,9 @@ void Foam::mappedPatchBase::clearOut()
 }
 
 
-bool Foam::mappedPatchBase::specified(const dictionary& dict)
-{
-    return
-        dict.found("coupleGroup")
-     || dict.found("neighbourRegion")
-     || dict.found("sampleRegion")
-     || dict.found("neighbourPatch")
-     || dict.found("samplePatch")
-     || dict.found("samePatch");
-}
-
-
 void Foam::mappedPatchBase::write(Ostream& os) const
 {
-    writeEntryIfDifferent(os, "neighbourRegion", word::null, nbrRegionName_);
-    writeEntryIfDifferent(os, "neighbourPatch", word::null, nbrPatchName_);
-
-    coupleGroup_.write(os);
-
-    transform_.write(os);
+    mappedPatchBaseBase::write(os);
 
     if (!usingTree_)
     {

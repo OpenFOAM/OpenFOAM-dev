@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,9 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvMeshStitcher.H"
+#include "conformedFvPatchField.H"
 #include "conformedFvsPatchField.H"
+#include "nonConformalErrorFvPatch.H"
 #include "setSizeFieldMapper.H"
 #include "surfaceFields.H"
 #include "volFields.H"
@@ -38,6 +40,7 @@ template<class Type, template<class> class GeoField>
 void Foam::fvMeshStitcher::resizePatchFields()
 {
     UPtrList<GeoField<Type>> fields(mesh_.fields<GeoField<Type>>());
+
     forAll(fields, i)
     {
         forAll(mesh_.boundary(), patchi)
@@ -65,6 +68,26 @@ void Foam::fvMeshStitcher::resizePatchFields()
 
 
 template<class Type>
+void Foam::fvMeshStitcher::preConformVolFields()
+{
+    UPtrList<VolField<Type>> fields(mesh_.curFields<VolField<Type>>());
+
+    forAll(fields, i)
+    {
+        VolField<Type>& field = fields[i];
+
+        for (label ti=0; ti<=field.nOldTimes(false); ti++)
+        {
+            conformedFvPatchField<Type>::conform
+            (
+                boundaryFieldRefNoUpdate(field.oldTime(ti))
+            );
+        }
+    }
+}
+
+
+template<class Type>
 void Foam::fvMeshStitcher::preConformSurfaceFields()
 {
     UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
@@ -85,17 +108,17 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
 
 
 template<class Type>
-void Foam::fvMeshStitcher::postUnconformSurfaceFields()
+void Foam::fvMeshStitcher::postUnconformVolFields()
 {
-    UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
+    UPtrList<VolField<Type>> fields(mesh_.curFields<VolField<Type>>());
 
     forAll(fields, i)
     {
-        SurfaceField<Type>& field = fields[i];
+        VolField<Type>& field = fields[i];
 
         for (label ti=0; ti<=field.nOldTimes(false); ti++)
         {
-            conformedFvsPatchField<Type>::unconform
+            conformedFvPatchField<Type>::unconform
             (
                 boundaryFieldRefNoUpdate(field.oldTime(ti))
             );
@@ -105,8 +128,19 @@ void Foam::fvMeshStitcher::postUnconformSurfaceFields()
 
 
 template<class Type>
-void Foam::fvMeshStitcher::evaluateVolFields()
+void Foam::fvMeshStitcher::postUnconformEvaluateVolFields()
 {
+    auto evaluate = [](const typename VolField<Type>::Patch& pf)
+    {
+        return
+            (
+                isA<nonConformalFvPatch>(pf.patch())
+             && pf.type() == pf.patch().patch().type()
+             && polyPatch::constraintType(pf.patch().patch().type())
+            )
+         || isA<nonConformalErrorFvPatch>(pf.patch());
+    };
+
     UPtrList<VolField<Type>> fields(mesh_.fields<VolField<Type>>());
 
     forAll(fields, i)
@@ -118,7 +152,7 @@ void Foam::fvMeshStitcher::evaluateVolFields()
             typename VolField<Type>::Patch& pf =
                 boundaryFieldRefNoUpdate(fields[i])[patchi];
 
-            if (isA<nonConformalFvPatch>(pf.patch()))
+            if (evaluate(pf))
             {
                 pf.initEvaluate(Pstream::defaultCommsType);
             }
@@ -138,10 +172,30 @@ void Foam::fvMeshStitcher::evaluateVolFields()
             typename VolField<Type>::Patch& pf =
                 boundaryFieldRefNoUpdate(fields[i])[patchi];
 
-            if (isA<nonConformalFvPatch>(pf.patch()))
+            if (evaluate(pf))
             {
                 pf.evaluate(Pstream::defaultCommsType);
             }
+        }
+    }
+}
+
+
+template<class Type>
+void Foam::fvMeshStitcher::postUnconformSurfaceFields()
+{
+    UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
+
+    forAll(fields, i)
+    {
+        SurfaceField<Type>& field = fields[i];
+
+        for (label ti=0; ti<=field.nOldTimes(false); ti++)
+        {
+            conformedFvsPatchField<Type>::unconform
+            (
+                boundaryFieldRefNoUpdate(field.oldTime(ti))
+            );
         }
     }
 }

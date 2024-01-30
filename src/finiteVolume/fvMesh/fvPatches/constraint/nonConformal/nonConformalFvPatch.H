@@ -106,6 +106,9 @@ public:
             //- Return face face-poly-faces
             const labelList& polyFaces() const;
 
+            //- Return the face-poly-faces patch field type
+            virtual word polyFacesType() const = 0;
+
             //- Return the start label of this patch in the polyMesh face list.
             //  Raises an error unless the patch is empty.
             virtual label start() const;

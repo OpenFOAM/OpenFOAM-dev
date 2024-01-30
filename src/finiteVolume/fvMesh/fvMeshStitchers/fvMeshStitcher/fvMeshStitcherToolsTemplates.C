@@ -126,7 +126,7 @@ Foam::fvMeshStitcherTools::conformedNcBoundaryField
         fvMeshStitcherTools::origNcMagSfb(fvbm.mesh())
     );
 
-    const labelList origPatchIDs =
+    const labelList origPatchIndices =
         nonConformalBoundary::New(fvbm.mesh()).allOrigPatchIndices();
 
     // Accumulate the non-conformal parts of the field into the original faces
@@ -157,9 +157,9 @@ Foam::fvMeshStitcherTools::conformedNcBoundaryField
     }
 
     // Scale or average as appropriate
-    forAll(origPatchIDs, i)
+    forAll(origPatchIndices, i)
     {
-        const label origPatchi = origPatchIDs[i];
+        const label origPatchi = origPatchIndices[i];
         const fvPatch& origFvp = fvbm[origPatchi];
 
         // If this is a flux then scale to the total size of the face
@@ -214,13 +214,13 @@ Foam::fvMeshStitcherTools::conformedOrigBoundaryField
         fvMeshStitcherTools::origNcMagSfb(fvbm.mesh())
     );
 
-    const labelList origPatchIDs =
+    const labelList origPatchIndices =
         nonConformalBoundary::New(fvbm.mesh()).allOrigPatchIndices();
 
     // Scale or average as appropriate
-    forAll(origPatchIDs, i)
+    forAll(origPatchIndices, i)
     {
-        const label origPatchi = origPatchIDs[i];
+        const label origPatchi = origPatchIndices[i];
         const fvPatch& origFvp = fvbm[origPatchi];
 
         // If this is a flux then scale to the total size of the face
@@ -290,7 +290,7 @@ Foam::fvMeshStitcherTools::unconformedBoundaryField
             );
     }
 
-    const labelList origPatchIDs =
+    const labelList origPatchIndices =
         nonConformalBoundary::New(fvbm.mesh()).allOrigPatchIndices();
 
     // If a flux then scale down to the part face area
@@ -303,9 +303,9 @@ Foam::fvMeshStitcherTools::unconformedBoundaryField
         );
 
         // Scale the original patch fields
-        forAll(origPatchIDs, i)
+        forAll(origPatchIndices, i)
         {
-            const label origPatchi = origPatchIDs[i];
+            const label origPatchi = origPatchIndices[i];
 
             const scalarField origTotalMagSf
             (

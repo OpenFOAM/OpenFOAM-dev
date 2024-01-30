@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ class multiDomainDecomposition
     // Private Member Functions
 
         //- Initialise and return the list of regions
-        static Foam::PtrList<domainDecomposition> init
+        Foam::PtrList<domainDecomposition> init
         (
             const processorRunTimes& runTimes,
             const wordList& regionNames

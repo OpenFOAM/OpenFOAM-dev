@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,8 @@ Class
     Foam::mappedPolyPatch
 
 Description
-    Patch which holds a mapping engine to map values from another patch
+    Poly patch which can do interpolative mapping of values from another
+    globally conforming poly patch
 
 SourceFiles
     mappedPolyPatch.C

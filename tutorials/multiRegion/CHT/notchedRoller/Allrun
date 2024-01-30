@@ -1,0 +1,47 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+
+runApplication createBaffles -overwrite
+runApplication splitBaffles -overwrite
+
+runApplication splitMeshRegions -cellZonesOnly -overwrite
+
+rm -f 0/cellToRegion 0/*/cellToRegion constant/cellToRegion
+
+runApplication -s fluid topoSet -dict system/topoSetDict -region fluid
+runApplication -s solid topoSet -dict system/topoSetDict -region solid
+runApplication -s roller topoSet -dict system/topoSetDict -region roller
+
+! isTest "$@" && [ -n "$1" ] && mode=$1 || mode=parallel
+
+case $mode in
+    serial)
+        runApplication createNonConformalCouples -overwrite
+        runApplication foamRun
+        ;;
+    parallel | stitchSerial)
+        runApplication createNonConformalCouples -overwrite
+        runApplication decomposePar -allRegions -copyZero -cellProc
+        runParallel foamMultiRun
+        runApplication reconstructPar -allRegions
+        ;;
+    stitchParallel)
+        runApplication decomposePar -allRegions -copyZero -cellProc
+        runParallel createNonConformalCouples -overwrite
+        runParallel foamMultiRun
+        runApplication reconstructPar -allRegions
+        ;;
+    *)
+        echo "Error: mode $mode not recognised"
+        exit 1
+        ;;
+esac
+
+paraFoam -touchAll
+
+#------------------------------------------------------------------------------

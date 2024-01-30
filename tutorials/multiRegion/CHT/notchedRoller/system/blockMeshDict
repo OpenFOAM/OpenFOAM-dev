@@ -1,0 +1,181 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.01;
+
+R 6;
+RbyRoot2 #calc "$<scalar>{R}/sqrt(scalar(2))";
+C 2.1;
+CbyRoot2 #calc "$<scalar>{C}/sqrt(scalar(2))";
+
+vertices
+(
+    (-50 -10 -1) (-10 -10 -1) (10 -10 -1) (50 -10 -1)
+    (-50   0 -1) (-10   0 -1) (10   0 -1) (50   0 -1)
+    (-50  10 -1) (-10  10 -1) (10  10 -1) (50  10 -1)
+    (-50  40 -1) (-10  40 -1) (10  40 -1) (50  40 -1)
+
+    (#neg $R 0 -1)
+    (#neg $RbyRoot2 #neg $RbyRoot2 -1)
+    ($RbyRoot2 #neg $RbyRoot2 -1)
+    ($R 0 -1)
+    ($RbyRoot2 $RbyRoot2 -1)
+    (#neg $RbyRoot2 $RbyRoot2 -1)
+
+    (#neg $C 0 -1)
+    (#neg $CbyRoot2 #neg $CbyRoot2 -1)
+    ($CbyRoot2 #neg $CbyRoot2 -1)
+    ($CbyRoot2 0 -1)
+    ($CbyRoot2 $CbyRoot2 -1)
+    (#neg $CbyRoot2 $CbyRoot2 -1)
+
+
+    (-50 -10 1) (-10 -10 1) (10 -10 1) (50 -10 1)
+    (-50   0 1) (-10   0 1) (10   0 1) (50   0 1)
+    (-50  10 1) (-10  10 1) (10  10 1) (50  10 1)
+    (-50  40 1) (-10  40 1) (10  40 1) (50  40 1)
+
+    (#neg $R 0 1)
+    (#neg $RbyRoot2 #neg $RbyRoot2 1)
+    ($RbyRoot2 #neg $RbyRoot2 1)
+    ($R 0 1)
+    ($RbyRoot2 $RbyRoot2 1)
+    (#neg $RbyRoot2 $RbyRoot2 1)
+
+    (#neg $C 0 1)
+    (#neg $CbyRoot2 #neg $CbyRoot2 1)
+    ($CbyRoot2 #neg $CbyRoot2 1)
+    ($CbyRoot2 0 1)
+    ($CbyRoot2 $CbyRoot2 1)
+    (#neg $CbyRoot2 $CbyRoot2 1)
+);
+
+nCore 16;
+nCoreBy2 #calc "$<label>{nCore}/2";
+nRStatic 8;
+nRRotating 12;
+nAcross 26;
+nAlong 30;
+
+gStatic 0.7;
+
+blocks
+(
+    hex ( 0  1  5  4 28 29 33 32) solid ($nAlong $nCoreBy2 1) simpleGrading (1 1 1)
+    hex ( 4  5  9  8 32 33 37 36) fluid ($nAlong $nCoreBy2 1) simpleGrading (1 1 1)
+    hex ( 8  9 13 12 36 37 41 40) fluid ($nAlong $nAcross 1) simpleGrading (1 1 1)
+
+    hex ( 9 10 14 13 37 38 42 41) fluid ($nCore $nAcross 1) simpleGrading (1 1 1)
+
+    hex ( 2  3  7  6 30 31 35 34) solid ($nAlong $nCoreBy2 1) simpleGrading (1 1 1)
+    hex ( 6  7 11 10 34 35 39 38) fluid ($nAlong $nCoreBy2 1) simpleGrading (1 1 1)
+    hex (10 11 15 14 38 39 43 42) fluid ($nAlong $nAcross 1) simpleGrading (1 1 1)
+
+    hex ( 5  1 17 16 33 29 45 44) solid ($nCoreBy2 $nRStatic 1) simpleGrading (1 $gStatic 1)
+    hex ( 1  2 18 17 29 30 46 45) solid ($nCore $nRStatic 1) simpleGrading (1 $gStatic 1)
+    hex ( 2  6 19 18 30 34 47 46) solid ($nCoreBy2 $nRStatic 1) simpleGrading (1 $gStatic 1)
+    hex ( 6 10 20 19 34 38 48 47) fluid ($nCoreBy2 $nRStatic 1) simpleGrading (1 $gStatic 1)
+    hex (10  9 21 20 38 37 49 48) fluid ($nCore $nRStatic 1) simpleGrading (1 $gStatic 1)
+    hex ( 9  5 16 21 37 33 44 49) fluid ($nCoreBy2 $nRStatic 1) simpleGrading (1 $gStatic 1)
+
+    hex (16 17 23 22 44 45 51 50) fluid  ($nCoreBy2 $nRRotating 1) simpleGrading (1 1 1)
+    hex (17 18 24 23 45 46 52 51) roller ($nCore $nRRotating 1) simpleGrading (1 1 1)
+    hex (18 19 25 24 46 47 53 52) roller ($nCoreBy2 $nRRotating 1) simpleGrading (1 1 1)
+    hex (19 20 26 25 47 48 54 53) roller ($nCoreBy2 $nRRotating 1) simpleGrading (1 1 1)
+    hex (20 21 27 26 48 49 55 54) roller ($nCore $nRRotating 1) simpleGrading (1 1 1)
+    hex (21 16 22 27 49 44 50 55) fluid  ($nCoreBy2 $nRRotating 1) simpleGrading (1 1 1)
+
+    hex (22 23 24 25 50 51 52 53) roller ($nCoreBy2 $nCore 1) simpleGrading (1 1 1)
+    hex (25 26 27 22 53 54 55 50) roller ($nCoreBy2 $nCore 1) simpleGrading (1 1 1)
+);
+
+edges
+(
+    arc 16 17 45 (0 0 1)
+    arc 17 18 90 (0 0 1)
+    arc 18 19 45 (0 0 1)
+    arc 19 20 45 (0 0 1)
+    arc 20 21 90 (0 0 1)
+    arc 21 16 45 (0 0 1)
+
+    arc 44 45 45 (0 0 1)
+    arc 45 46 90 (0 0 1)
+    arc 46 47 45 (0 0 1)
+    arc 47 48 45 (0 0 1)
+    arc 48 49 90 (0 0 1)
+    arc 49 44 45 (0 0 1)
+
+    arc 22 23 45 (0 0 1)
+    arc 27 22 45 (0 0 1)
+
+    arc 50 51 45 (0 0 1)
+    arc 55 50 45 (0 0 1)
+);
+
+defaultPatch
+{
+    name    frontAndBack;
+    type    empty;
+}
+
+boundary
+(
+    atmosphere
+    {
+        type patch;
+        faces
+        (
+            (12 13 41 40)
+            (13 14 42 41)
+            (14 15 43 42)
+        );
+    }
+
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (4 8 36 32)
+            (8 12 40 36)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (7 11 39 35)
+            (11 15 43 39)
+        );
+    }
+
+    external
+    {
+        type patch;
+        faces
+        (
+            (0 4 32 28)
+            (0 1 29 28)
+            (1 2 30 29)
+            (2 3 31 30)
+            (3 7 35 31)
+        );
+    }
+);
+
+// ************************************************************************* //

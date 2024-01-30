@@ -1,0 +1,100 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      createNonConformalCouplesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+fields          yes;
+
+nonConformalCouples
+{
+    fluid1Fluid2
+    {
+        region          fluid;
+        patches         (fluidNonCouple1 fluidNonCouple2);
+    }
+
+    solid1Solid2
+    {
+        region          solid;
+        patches         (solidNonCouple1 solidNonCouple2);
+    }
+
+    fluid1Solid2
+    {
+        owner
+        {
+            region          fluid;
+            patch           fluidNonCouple1;
+
+            patchFields
+            {
+                p
+                {
+                    type        fixedFluxPressure;
+                }
+                T
+                {
+                    type        coupledTemperature;
+                    value       uniform 297;
+                }
+                U
+                {
+                    type        noSlip;
+                }
+            }
+        }
+
+        neighbour
+        {
+            region          solid;
+            patch           solidNonCouple2;
+
+            patchFields
+            {
+                T
+                {
+                    type        coupledTemperature;
+                    value       uniform 297;
+                }
+            }
+        }
+    }
+
+    fluid2Solid1
+    {
+        owner
+        {
+            region          fluid;
+            patch           fluidNonCouple2;
+
+            patchFields
+            {
+                $../../../fluid1Solid2/owner/patchFields;
+            }
+        }
+
+        neighbour
+        {
+            region          solid;
+            patch           solidNonCouple1;
+
+            patchFields
+            {
+                $../../../fluid1Solid2/neighbour/patchFields;
+            }
+        }
+    }
+}
+
+// ************************************************************************* //

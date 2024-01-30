@@ -28,82 +28,6 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class PatchFieldType, class FieldType>
-void Foam::mappedPatchBase::validateMapForField
-(
-    const PatchFieldType& field,
-    const FieldType& iF,
-    const dictionary& context,
-    const label froms
-)
-{
-    const polyPatch& pp = field.patch().patch();
-
-    if (!isA<mappedPatchBase>(pp))
-    {
-        OStringStream str;
-        str << "Field " << iF.name() << " of type "
-            << field.type() << " cannot apply to patch " << pp.name()
-            << " because the patch is not of " << typeName << " type";
-        FatalIOErrorInFunction(context)
-            << stringOps::breakIntoIndentedLines(str.str()).c_str()
-            << exit(FatalIOError);
-    }
-
-    refCast<const mappedPatchBase>(pp).validateForField
-    (
-        field,
-        iF,
-        context,
-        froms
-    );
-}
-
-
-template<class PatchFieldType, class FieldType>
-void Foam::mappedPatchBase::validateForField
-(
-    const PatchFieldType& field,
-    const FieldType& iF,
-    const dictionary& context,
-    const label froms
-) const
-{
-    const bool isNotRegion = !sameRegion() && (froms & from::sameRegion);
-    const bool isRegion = sameRegion() && (froms & from::differentRegion);
-    const bool isPatch = samePatch() && (froms & from::differentPatch);
-
-    OStringStream str;
-
-    if (isNotRegion || isRegion || isPatch)
-    {
-        str << "Field " << iF.name() << " of type "
-            << field.type() << " cannot apply to patch " << patch_.name()
-            << " because values are mapped from ";
-    }
-
-    if (isNotRegion)
-    {
-        str << "a different region";
-    }
-    else if (isRegion)
-    {
-        str << "within the same region";
-    }
-    else if (isPatch)
-    {
-        str << "the same patch";
-    }
-
-    if (isNotRegion || isRegion || isPatch)
-    {
-        FatalIOErrorInFunction(context)
-            << stringOps::breakIntoIndentedLines(str.str()).c_str()
-            << exit(FatalIOError);
-    }
-}
-
-
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::mappedPatchBase::fromNeighbour(const Field<Type>& nbrFld) const
@@ -113,7 +37,7 @@ Foam::mappedPatchBase::fromNeighbour(const Field<Type>& nbrFld) const
         return nbrFld;
     }
 
-    if (nbrPatchIsMapped() && nbrMappedPatch().reMapNbr_)
+   if (nbrPatchIsMapped() && nbrMappedPatch().reMapNbr_)
     {
         treeMapPtr_.clear();
         treeNbrPatchFaceIndices_.clear();

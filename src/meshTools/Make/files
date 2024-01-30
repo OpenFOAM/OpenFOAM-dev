@@ -231,6 +231,8 @@ cellsToCells/cellsToCellsStabilisation/cellsToCellsStabilisation.C
 
 meshToMesh/meshToMesh.C
 
+mappedPatches/mappedPatchBaseBase/mappedPatchBaseBase.C
+
 mappedPatches/mappedPatchBase/mappedPatchBase.C
 mappedPatches/mappedPolyPatch/mappedPolyPatch.C
 mappedPatches/mappedPolyPatch/mappedWallPolyPatch.C
@@ -244,6 +246,10 @@ mappedPatches/mappedExtrudedPointPatch/mappedExtrudedWallPointPatch.C
 mappedPatches/mappedInternalPatchBase/mappedInternalPatchBase.C
 mappedPatches/mappedInternalPolyPatch/mappedInternalPolyPatch.C
 mappedPatches/mappedInternalPointPatch/mappedInternalPointPatch.C
+
+mappedPatches/nonConformalMappedPatchBase/nonConformalMappedPatchBase.C
+mappedPatches/nonConformalMappedPolyPatch/nonConformalMappedWallPolyPatch.C
+mappedPatches/nonConformalMappedPointPatch/nonConformalMappedWallPointPatch.C
 
 meshStructure/meshStructure.C
 meshStructure/topoDistanceData.C

@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "filmCloudTransfer.H"
-#include "mappedPatchBase.H"
+#include "mappedFvPatchBaseBase.H"
 #include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -115,11 +115,8 @@ inline Foam::fv::filmCloudTransfer::CloudToFilmTransferRate
 
     if (cloudFieldsTransferred_)
     {
-        const fvMesh& cloudMesh =
-            refCast<const fvMesh>(film_.surfacePatchMap().nbrMesh());
-
-        const label cloudPatchi =
-            film_.surfacePatchMap().nbrPolyPatch().index();
+        const fvMesh& cloudMesh = film_.surfacePatchMap().nbrMesh();
+        const label cloudPatchi = film_.surfacePatchMap().nbrFvPatch().index();
 
         UIndirectList<Type>(tSu.ref(), film_.surfacePatch().faceCells()) =
             film_.surfacePatchMap().fromNeighbour
@@ -229,9 +226,8 @@ void Foam::fv::filmCloudTransfer::addSup
 
 void Foam::fv::filmCloudTransfer::resetFromCloudFields()
 {
-    const fvMesh& cloudMesh =
-        refCast<const fvMesh>(film_.surfacePatchMap().nbrMesh());
-    const label cloudPatchi = film_.surfacePatchMap().nbrPolyPatch().index();
+    const fvMesh& cloudMesh = film_.surfacePatchMap().nbrMesh();
+    const label cloudPatchi = film_.surfacePatchMap().nbrFvPatch().index();
     const label nCloudPatchFaces = cloudMesh.boundary()[cloudPatchi].size();
 
     if (massFromCloud_.size() != nCloudPatchFaces)
