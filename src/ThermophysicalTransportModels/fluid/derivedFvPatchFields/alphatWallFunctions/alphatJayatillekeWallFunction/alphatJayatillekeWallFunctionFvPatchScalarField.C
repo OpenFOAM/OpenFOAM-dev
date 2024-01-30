@@ -64,9 +64,11 @@ alphatJayatillekeWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper, false),
     Prt_(ptf.Prt_)
-{}
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
 
 
 alphatJayatillekeWallFunctionFvPatchScalarField::
@@ -82,6 +84,16 @@ alphatJayatillekeWallFunctionFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void alphatJayatillekeWallFunctionFvPatchScalarField::map
+(
+    const fvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
+
 
 tmp<scalarField> alphatJayatillekeWallFunctionFvPatchScalarField::P
 (

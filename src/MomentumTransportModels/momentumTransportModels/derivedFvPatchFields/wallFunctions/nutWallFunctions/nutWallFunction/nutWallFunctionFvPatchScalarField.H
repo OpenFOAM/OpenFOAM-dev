@@ -188,6 +188,12 @@ public:
         virtual tmp<scalarField> yPlus() const = 0;
 
 
+        // Mapping functions
+
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchScalarField&, const fieldMapper&);
+
+
         // Evaluation functions
 
             //- Update the coefficients associated with the patch field

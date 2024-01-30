@@ -124,11 +124,27 @@ public:
 
     // Member Functions
 
-        //- Update the patch pressure gradient field from the given snGradp
-        virtual void updateCoeffs(const scalarField& snGradp);
+        // Mapping functions
 
-        //- Update the patch pressure gradient field
-        virtual void updateCoeffs();
+            //- Map the given fvPatchField onto this fvPatchField
+            void map
+            (
+                const fixedFluxPressureFvPatchScalarField&,
+                const fieldMapper&
+            );
+
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchScalarField&, const fieldMapper&);
+
+
+        // Evaluation functions
+
+            //- Update the patch pressure gradient field from the given snGradp
+            virtual void updateCoeffs(const scalarField& snGradp);
+
+            //- Update the patch pressure gradient field
+            virtual void updateCoeffs();
+
 
         //- Write
         virtual void write(Ostream&) const;

@@ -64,7 +64,7 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper, false) // Don't map
 {
-    operator==(Zero);
+    mapper(*this, ptf, vector::zero);
 }
 
 
@@ -79,6 +79,16 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::noSlipFvPatchVectorField::map
+(
+    const fvPatchVectorField& ptf,
+    const fieldMapper& mapper
+)
+{
+    mapper(*this, ptf, vector::zero);
+}
+
 
 void Foam::noSlipFvPatchVectorField::updateCoeffs()
 {

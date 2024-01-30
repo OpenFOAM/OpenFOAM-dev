@@ -62,9 +62,11 @@ Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedGradientFvPatchScalarField(ptf, p, iF, mapper),
+    fixedGradientFvPatchScalarField(ptf, p, iF, mapper, false),
     curTimeIndex_(-1)
-{}
+{
+    map(refCast<const fixedFluxPressureFvPatchScalarField>(ptf), mapper);
+}
 
 
 Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
@@ -79,6 +81,27 @@ Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::fixedFluxPressureFvPatchScalarField::map
+(
+    const fixedFluxPressureFvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    mapper(*this, ptf, [&](){ return patchInternalField(); });
+    mapper(gradient(), ptf.gradient(), scalar(0));
+}
+
+
+void Foam::fixedFluxPressureFvPatchScalarField::map
+(
+    const fvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    map(refCast<const fixedFluxPressureFvPatchScalarField>(ptf), mapper);
+}
+
 
 void Foam::fixedFluxPressureFvPatchScalarField::updateCoeffs
 (

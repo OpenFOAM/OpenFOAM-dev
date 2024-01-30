@@ -62,8 +62,10 @@ Foam::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
     const fieldMapper& mapper
 )
 :
-    fvPatchField<Type>(ptf, p, iF, mapper)
-{}
+    fvPatchField<Type>(ptf, p, iF, mapper, false)
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
 
 
 template<class Type>
@@ -78,6 +80,17 @@ Foam::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::zeroGradientFvPatchField<Type>::map
+(
+    const fvPatchField<Type>& ptf,
+    const fieldMapper& mapper
+)
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
+
 
 template<class Type>
 void Foam::zeroGradientFvPatchField<Type>::evaluate(const Pstream::commsTypes)

@@ -90,13 +90,14 @@ Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper, false),
     Cmu_(ptf.Cmu_),
     kappa_(ptf.kappa_),
     E_(ptf.E_),
     yPlusLam_(ptf.yPlusLam_)
 {
     checkType();
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
 }
 
 
@@ -168,6 +169,16 @@ Foam::scalar Foam::nutWallFunctionFvPatchScalarField::yPlusLam
 Foam::scalar Foam::nutWallFunctionFvPatchScalarField::yPlusLam() const
 {
     return yPlusLam_;
+}
+
+
+void Foam::nutWallFunctionFvPatchScalarField::map
+(
+    const fvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
 }
 
 

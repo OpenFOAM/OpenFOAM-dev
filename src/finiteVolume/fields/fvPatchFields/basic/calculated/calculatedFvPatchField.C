@@ -28,6 +28,24 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+namespace Foam
+{
+    template<class Type>
+    Type calculatedFvPatchFieldNaN()
+    {
+        return pTraits<Type>::nan;
+    }
+
+    template<>
+    inline label calculatedFvPatchFieldNaN<label>()
+    {
+        return -labelMax;
+    }
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 template<class Type>
 const Foam::word& Foam::fvPatchField<Type>::calculatedType()
 {
@@ -71,8 +89,13 @@ Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
     const bool mappingRequired
 )
 :
-    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired)
-{}
+    fvPatchField<Type>(ptf, p, iF, mapper, false)
+{
+    if (mappingRequired)
+    {
+        mapper(*this, ptf, calculatedFvPatchFieldNaN<Type>());
+    }
+}
 
 
 template<class Type>
@@ -130,6 +153,17 @@ Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::NewCalculatedType
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::calculatedFvPatchField<Type>::map
+(
+    const fvPatchField<Type>& ptf,
+    const fieldMapper& mapper
+)
+{
+    mapper(*this, ptf, calculatedFvPatchFieldNaN<Type>());
+}
+
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>

@@ -198,10 +198,12 @@ epsilonWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper, true),
+    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper, false),
     wallCellGPtr_(nullptr),
     wallCellEpsilonPtr_(nullptr)
-{}
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
 
 
 Foam::epsilonWallFunctionFvPatchScalarField::
@@ -218,6 +220,16 @@ epsilonWallFunctionFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::epsilonWallFunctionFvPatchScalarField::map
+(
+    const fvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
+
 
 void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs()
 {

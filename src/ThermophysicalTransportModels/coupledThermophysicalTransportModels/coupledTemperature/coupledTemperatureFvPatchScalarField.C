@@ -220,10 +220,12 @@ coupledTemperatureFvPatchScalarField
     qrName_(psf.qrName_),
     thicknessLayers_(psf.thicknessLayers_),
     kappaLayers_(psf.kappaLayers_),
-    qs_(psf.qs_.valid() ? mapper(psf.qs_()).ptr() : nullptr),
+    qs_(psf.qs_.valid() ? new scalarField(p.size()) : nullptr),
     Qs_(psf.Qs_),
     wallKappaByDelta_(psf.wallKappaByDelta_)
-{}
+{
+    map(psf, mapper);
+}
 
 
 Foam::coupledTemperatureFvPatchScalarField::
@@ -249,19 +251,31 @@ coupledTemperatureFvPatchScalarField
 
 void Foam::coupledTemperatureFvPatchScalarField::map
 (
+    const coupledTemperatureFvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    // Unmapped faces are considered zero-gradient/adiabatic
+    mapper(*this, ptf, [&](){ return patchInternalField(); });
+    mapper(refValue(), ptf.refValue(), [&](){ return patchInternalField(); });
+    mapper(refGrad(), ptf.refGrad(), scalar(0));
+    mapper(valueFraction(), ptf.valueFraction(), scalar(0));
+
+    // Map the heat flux, if present
+    if (ptf.qs_.valid())
+    {
+        mapper(qs_(), ptf.qs_());
+    }
+}
+
+
+void Foam::coupledTemperatureFvPatchScalarField::map
+(
     const fvPatchScalarField& ptf,
     const fieldMapper& mapper
 )
 {
-    mixedFvPatchScalarField::map(ptf, mapper);
-
-    const coupledTemperatureFvPatchScalarField& tiptf =
-        refCast<const coupledTemperatureFvPatchScalarField>(ptf);
-
-    if (tiptf.qs_.valid())
-    {
-        mapper(qs_(), tiptf.qs_());
-    }
+    map(refCast<const coupledTemperatureFvPatchScalarField>(ptf), mapper);
 }
 
 

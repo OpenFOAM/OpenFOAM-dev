@@ -106,10 +106,17 @@ Foam::mixedFvPatchField<Type>::mixedFvPatchField
 )
 :
     fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired),
-    refValue_(mapper(ptf.refValue_)),
-    refGrad_(mapper(ptf.refGrad_)),
-    valueFraction_(mapper(ptf.valueFraction_))
-{}
+    refValue_(p.size()),
+    refGrad_(p.size()),
+    valueFraction_(p.size())
+{
+    if (mappingRequired)
+    {
+        mapper(refValue_, ptf.refValue_);
+        mapper(refGrad_, ptf.refGrad_);
+        mapper(valueFraction_, ptf.valueFraction_);
+    }
+}
 
 
 template<class Type>

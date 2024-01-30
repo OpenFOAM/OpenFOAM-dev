@@ -124,11 +124,20 @@ public:
 
     // Member Functions
 
-        //- Evaluate the patch field
-        virtual void evaluate
-        (
-            const Pstream::commsTypes commsType=Pstream::commsTypes::blocking
-        );
+        // Mapping functions
+
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchField<Type>&, const fieldMapper&);
+
+
+        // Evaluation functions
+
+            //- Evaluate the patch field
+            virtual void evaluate
+            (
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
+            );
 };
 
 

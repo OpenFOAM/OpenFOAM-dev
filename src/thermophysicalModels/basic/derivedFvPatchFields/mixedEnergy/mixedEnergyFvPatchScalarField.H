@@ -126,6 +126,15 @@ public:
 
     // Member Functions
 
+        // Mapping functions
+
+            //- Map the given fvPatchField onto this fvPatchField
+            void map(const mixedEnergyFvPatchScalarField&, const fieldMapper&);
+
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchScalarField&, const fieldMapper&);
+
+
         // Access
 
             //- Allow manipulation of the boundary values

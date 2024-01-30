@@ -123,6 +123,12 @@ public:
 
     // Member Functions
 
+        // Mapping functions
+
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchField<Type>&, const fieldMapper&);
+
+
         // Evaluation functions
 
             //- Return the matrix diagonal coefficients corresponding to the

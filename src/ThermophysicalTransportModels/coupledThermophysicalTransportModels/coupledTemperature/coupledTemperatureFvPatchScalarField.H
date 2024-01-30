@@ -219,6 +219,13 @@ public:
         // Mapping functions
 
             //- Map the given fvPatchField onto this fvPatchField
+            void map
+            (
+                const coupledTemperatureFvPatchScalarField&,
+                const fieldMapper&
+            );
+
+            //- Map the given fvPatchField onto this fvPatchField
             virtual void map(const fvPatchScalarField&, const fieldMapper&);
 
             //- Reset the fvPatchField to the given fvPatchField

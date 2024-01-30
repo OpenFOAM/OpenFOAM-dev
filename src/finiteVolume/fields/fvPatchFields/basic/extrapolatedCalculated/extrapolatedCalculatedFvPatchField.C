@@ -65,8 +65,10 @@ extrapolatedCalculatedFvPatchField
     const fieldMapper& mapper
 )
 :
-    calculatedFvPatchField<Type>(ptf, p, iF, mapper)
-{}
+    calculatedFvPatchField<Type>(ptf, p, iF, mapper, false)
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
 
 
 template<class Type>
@@ -82,6 +84,17 @@ extrapolatedCalculatedFvPatchField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::extrapolatedCalculatedFvPatchField<Type>::map
+(
+    const fvPatchField<Type>& ptf,
+    const fieldMapper& mapper
+)
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
+
 
 template<class Type>
 void Foam::extrapolatedCalculatedFvPatchField<Type>::evaluate

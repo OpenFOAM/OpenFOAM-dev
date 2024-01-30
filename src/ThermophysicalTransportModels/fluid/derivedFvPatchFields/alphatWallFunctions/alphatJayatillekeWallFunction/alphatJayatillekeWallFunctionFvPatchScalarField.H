@@ -153,6 +153,12 @@ public:
 
     // Member Functions
 
+        // Mapping functions
+
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchScalarField&, const fieldMapper&);
+
+
         // Evaluation functions
 
             //- Calculate the smoothing function

@@ -56,9 +56,11 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper, false),
     Prt_(ptf.Prt_)
-{}
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
 
 
 alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
@@ -73,6 +75,16 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void alphatWallFunctionFvPatchScalarField::map
+(
+    const fvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
+
 
 void alphatWallFunctionFvPatchScalarField::updateCoeffs()
 {

@@ -93,8 +93,7 @@ public:
             const coupledFvPatchField<Type>&,
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const fieldMapper&,
-            const bool mappingRequired=true
+            const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
@@ -131,6 +130,12 @@ public:
                 const Pstream::commsTypes commsType =
                     Pstream::commsTypes::blocking
             ) const = 0;
+
+
+        // Mapping functions
+
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchField<Type>&, const fieldMapper&);
 
 
         // Evaluation functions

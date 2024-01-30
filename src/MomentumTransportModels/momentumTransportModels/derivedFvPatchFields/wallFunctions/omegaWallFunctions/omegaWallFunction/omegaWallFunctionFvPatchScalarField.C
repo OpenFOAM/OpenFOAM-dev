@@ -229,12 +229,14 @@ Foam::omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper, true),
+    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper, false),
     beta1_(ptf.beta1_),
     blended_(ptf.blended_),
     wallCellGPtr_(nullptr),
     wallCellOmegaPtr_(nullptr)
-{}
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
 
 
 Foam::omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
@@ -252,6 +254,16 @@ Foam::omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::omegaWallFunctionFvPatchScalarField::map
+(
+    const fvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
+
 
 void Foam::omegaWallFunctionFvPatchScalarField::updateCoeffs()
 {

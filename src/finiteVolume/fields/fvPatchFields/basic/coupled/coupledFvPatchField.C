@@ -72,13 +72,14 @@ Foam::coupledFvPatchField<Type>::coupledFvPatchField
     const coupledFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fieldMapper& mapper,
-    const bool mappingRequired
+    const fieldMapper& mapper
 )
 :
     LduInterfaceField<Type>(refCast<const lduInterface>(p)),
-    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired)
-{}
+    fvPatchField<Type>(ptf, p, iF, mapper, false)
+{
+    mapper(*this, ptf, pTraits<Type>::nan);
+}
 
 
 template<class Type>
@@ -94,6 +95,17 @@ Foam::coupledFvPatchField<Type>::coupledFvPatchField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::coupledFvPatchField<Type>::map
+(
+    const fvPatchField<Type>& ptf,
+    const fieldMapper& mapper
+)
+{
+    mapper(*this, ptf, pTraits<Type>::nan);
+}
+
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>> Foam::coupledFvPatchField<Type>::snGrad
