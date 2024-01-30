@@ -139,6 +139,7 @@ int main(int argc, char *argv[])
         while (pimple.loop())
         {
             solver.moveMesh();
+            solver.motionCorrector();
             solver.fvModels().correct();
             solver.prePredictor();
             solver.momentumPredictor();

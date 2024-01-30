@@ -36,7 +36,14 @@ void Foam::solvers::incompressibleDenseParticleFluid::moveMesh()
     {
         // Move the mesh
         mesh_.move();
+    }
+}
 
+
+void Foam::solvers::incompressibleDenseParticleFluid::motionCorrector()
+{
+    if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
+    {
         if (mesh.changing())
         {
             if (correctPhi || mesh.topoChanged())

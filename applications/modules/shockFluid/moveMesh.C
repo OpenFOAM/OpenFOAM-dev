@@ -33,11 +33,19 @@ void Foam::solvers::shockFluid::moveMesh()
     {
         // Move the mesh
         mesh_.move();
+    }
+}
 
+
+void Foam::solvers::shockFluid::motionCorrector()
+{
+    if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
+    {
         if (mesh.changing())
         {
             if (mesh.topoChanged())
             {
+                // ...
             }
 
             meshCourantNo();

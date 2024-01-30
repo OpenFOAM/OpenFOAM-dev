@@ -85,6 +85,10 @@ void Foam::solvers::movingMesh::moveMesh()
 }
 
 
+void Foam::solvers::movingMesh::motionCorrector()
+{}
+
+
 void Foam::solvers::movingMesh::prePredictor()
 {}
 

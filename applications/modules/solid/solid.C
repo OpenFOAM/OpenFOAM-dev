@@ -201,6 +201,10 @@ void Foam::solvers::solid::moveMesh()
 }
 
 
+void Foam::solvers::solid::motionCorrector()
+{}
+
+
 void Foam::solvers::solid::prePredictor()
 {
     if (pimple.predictTransport())

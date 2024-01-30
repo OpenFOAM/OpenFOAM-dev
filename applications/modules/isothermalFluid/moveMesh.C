@@ -35,9 +35,15 @@ void Foam::solvers::isothermalFluid::moveMesh()
     {
         // Move the mesh
         mesh_.move();
+    }
+}
 
+
+void Foam::solvers::isothermalFluid::motionCorrector()
+{
+    if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
+    {
         // The rhoU field can be cleared following mesh-motion
-        // now the mesh has been re-stitched as necessary
         rhoU.clear();
 
         if (mesh.changing())

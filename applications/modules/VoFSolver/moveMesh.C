@@ -51,7 +51,14 @@ void Foam::solvers::VoFSolver::moveMesh()
 
         // Move the mesh
         mesh_.move();
+    }
+}
 
+
+void Foam::solvers::VoFSolver::motionCorrector()
+{
+    if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
+    {
         if (mesh.changing())
         {
             buoyancy.moveMesh();

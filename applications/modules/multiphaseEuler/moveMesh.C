@@ -57,7 +57,18 @@ void Foam::solvers::multiphaseEuler::moveMesh()
 
         // Move the mesh
         mesh_.move();
+    }
+}
 
+
+void Foam::solvers::multiphaseEuler::motionCorrector()
+{
+    if
+    (
+        pimple.flow()
+     && (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
+    )
+    {
         if (mesh.changing())
         {
             buoyancy.moveMesh();

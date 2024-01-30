@@ -466,6 +466,10 @@ void Foam::solvers::isothermalFilm::moveMesh()
 {}
 
 
+void Foam::solvers::isothermalFilm::motionCorrector()
+{}
+
+
 void Foam::solvers::isothermalFilm::thermophysicalPredictor()
 {
     thermo_.correct();

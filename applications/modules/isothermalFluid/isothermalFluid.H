@@ -255,6 +255,9 @@ public:
         //- Called at the start of the PIMPLE loop to move the mesh
         virtual void moveMesh();
 
+        //- Corrections that follow mesh motion
+        virtual void motionCorrector();
+
         //- Called at the start of the PIMPLE loop
         virtual void prePredictor();
 

@@ -136,6 +136,11 @@ int main(int argc, char *argv[])
 
             forAll(solvers, i)
             {
+                solvers[i].motionCorrector();
+            }
+
+            forAll(solvers, i)
+            {
                 solvers[i].fvModels().correct();
             }
 
