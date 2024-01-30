@@ -199,6 +199,7 @@ $(derivedFvPatchFields)/matchedFlowRateOutletVelocity/matchedFlowRateOutletVeloc
 $(derivedFvPatchFields)/noSlip/noSlipFvPatchVectorField.C
 $(derivedFvPatchFields)/movingWallVelocity/movingWallVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/movingWallSlipVelocity/movingWallSlipVelocityFvPatchVectorField.C
+$(derivedFvPatchFields)/movingMappedWallVelocity/movingMappedWallVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/outletInlet/outletInletFvPatchFields.C
 $(derivedFvPatchFields)/outletMappedUniformInlet/outletMappedUniformInletFvPatchFields.C
 $(derivedFvPatchFields)/fixedMeanOutletInlet/fixedMeanOutletInletFvPatchFields.C
