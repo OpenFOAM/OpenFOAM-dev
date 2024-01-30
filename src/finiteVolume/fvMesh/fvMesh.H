@@ -327,15 +327,10 @@ public:
 
     // Constructors
 
-        //- Construct from IOobject
-        //  with the option to not instantiate the mesh changers and the option
-        //  to prevent some or all of the stitching
-        explicit fvMesh
-        (
-            const IOobject& io,
-            const bool changers = true,
-            const stitchType stitch = stitchType::geometric
-        );
+        //- Construct from IOobject. Optionally prevent post-construction, so
+        //  that postConstruct may be called manually for finer control of
+        //  construction of mesh changes and the level of stitching.
+        explicit fvMesh(const IOobject& io, const bool doPost = true);
 
         //- Construct from cellShapes with boundary.
         fvMesh
@@ -364,7 +359,7 @@ public:
         );
 
         //- Construct without boundary from cells rather than owner/neighbour.
-        //  Boundary is added using addPatches() member function
+        //  Boundary is added using addFvPatches() member function
         fvMesh
         (
             const IOobject& io,
@@ -388,6 +383,13 @@ public:
     // Member Functions
 
         // Helpers
+
+            //- Complete construction of the mesh
+            void postConstruct
+            (
+                const bool changers,
+                const stitchType stitch
+            );
 
             //- Add boundary patches. Constructor helper
             void addFvPatches
@@ -487,6 +489,9 @@ public:
 
             //- Return the stitcher function class
             const fvMeshStitcher& stitcher() const;
+
+            //- Return the stitcher function class
+            fvMeshStitcher& stitcher();
 
             //- Return the topo-changer function class
             const fvMeshTopoChanger& topoChanger() const;

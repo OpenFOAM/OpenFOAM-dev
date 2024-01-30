@@ -113,10 +113,6 @@ Foam::regionSolvers::regionSolvers(const Time& runTime)
     forAll(regionSolverNames, i)
     {
         const word& regionName = regionSolverNames[i].first();
-        const word& solverName = regionSolverNames[i].second();
-
-        // Load the solver library
-        solver::load(solverName);
 
         regions_.set
         (
@@ -129,9 +125,24 @@ Foam::regionSolvers::regionSolvers(const Time& runTime)
                     runTime.name(),
                     runTime,
                     IOobject::MUST_READ
-                )
+                ),
+                false
             )
         );
+    }
+
+    forAll(regions_, i)
+    {
+        regions_[i].postConstruct(true, fvMesh::stitchType::geometric);
+    }
+
+    forAll(regionSolverNames, i)
+    {
+        const word& regionName = regionSolverNames[i].first();
+        const word& solverName = regionSolverNames[i].second();
+
+        // Load the solver library
+        solver::load(solverName);
 
         solvers_.set(i, solver::New(solverName, regions_[i]));
 

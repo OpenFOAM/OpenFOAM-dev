@@ -477,9 +477,10 @@ void Foam::vtkPVFoam::updateFoamMesh()
                 dbPtr_(),
                 IOobject::MUST_READ
             ),
-            false,
-            fvMesh::stitchType::nonGeometric
+            false
         );
+
+        meshPtr_->postConstruct(false, fvMesh::stitchType::nonGeometric);
 
         meshChanged_ = true;
     }

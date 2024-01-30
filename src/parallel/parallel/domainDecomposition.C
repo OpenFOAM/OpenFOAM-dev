@@ -106,11 +106,16 @@ void Foam::domainDecomposition::readComplete(const bool stitch)
                 IOobject::NO_WRITE,
                 false
             ),
-            false,
-            stitch
-          ? fvMesh::stitchType::nonGeometric
-          : fvMesh::stitchType::none
+            false
         )
+    );
+
+    completeMesh_->init
+    (
+        false,
+        stitch
+      ? fvMesh::stitchType::nonGeometric
+      : fvMesh::stitchType::none
     );
 }
 
@@ -135,6 +140,12 @@ void Foam::domainDecomposition::readProcs()
                 ),
                 false
             )
+        );
+
+        procMeshes_[proci].init
+        (
+            false,
+            fvMesh::stitchType::nonGeometric
         );
     }
 }

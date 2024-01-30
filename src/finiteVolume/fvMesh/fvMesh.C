@@ -267,17 +267,12 @@ Foam::surfaceLabelField::Boundary& Foam::fvMesh::polyFacesBfRef()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMesh::fvMesh
-(
-    const IOobject& io,
-    const bool changers,
-    const stitchType stitch
-)
+Foam::fvMesh::fvMesh(const IOobject& io, const bool doPost)
 :
     polyMesh(io),
     surfaceInterpolation(*this),
     boundary_(*this, boundaryMesh()),
-    stitcher_(fvMeshStitcher::New(*this, changers).ptr()),
+    stitcher_(nullptr),
     topoChanger_(nullptr),
     distributor_(nullptr),
     mover_(nullptr),
@@ -307,54 +302,9 @@ Foam::fvMesh::fvMesh
         Pout<< FUNCTION_NAME << "Constructing fvMesh from IOobject" << endl;
     }
 
-    // Stitch or Re-stitch if necessary
-    if (stitch != stitchType::none)
+    if (doPost)
     {
-        stitcher_->connect(false, stitch == stitchType::geometric, true);
-    }
-
-    // Construct changers
-    if (changers)
-    {
-        topoChanger_.set(fvMeshTopoChanger::New(*this).ptr());
-        distributor_.set(fvMeshDistributor::New(*this).ptr());
-        mover_.set(fvMeshMover::New(*this).ptr());
-
-        // Check the existence of the cell volumes and read if present
-        if (fileHandler().isFile(time().timePath()/"Vc0"))
-        {
-            V0Ptr_ = new DimensionedField<scalar, volMesh>
-            (
-                IOobject
-                (
-                    "Vc0",
-                    time().name(),
-                    *this,
-                    IOobject::MUST_READ,
-                    IOobject::NO_WRITE,
-                    true
-                ),
-                *this
-            );
-        }
-
-        // Check the existence of the mesh fluxes and read if present
-        if (fileHandler().isFile(time().timePath()/"meshPhi"))
-        {
-            phiPtr_ = new surfaceScalarField
-            (
-                IOobject
-                (
-                    "meshPhi",
-                    time().name(),
-                    *this,
-                    IOobject::MUST_READ,
-                    IOobject::NO_WRITE,
-                    true
-                ),
-                *this
-            );
-        }
+        postConstruct(true, stitchType::geometric);
     }
 }
 
@@ -572,6 +522,66 @@ Foam::fvMesh::~fvMesh()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+void Foam::fvMesh::postConstruct(const bool changers, const stitchType stitch)
+{
+    // Construct the stitcher
+    stitcher_.set(fvMeshStitcher::New(*this, changers).ptr());
+
+    // Stitch or Re-stitch if necessary
+    if (stitch != stitchType::none)
+    {
+        stitcher_->connect(false, stitch == stitchType::geometric, true);
+    }
+
+    // Construct changers
+    if (changers)
+    {
+        topoChanger_.set(fvMeshTopoChanger::New(*this).ptr());
+        distributor_.set(fvMeshDistributor::New(*this).ptr());
+        mover_.set(fvMeshMover::New(*this).ptr());
+
+        // Check the existence of the cell volumes and read if present
+        // and set the storage of V00
+        if (fileHandler().isFile(time().timePath()/"Vc0"))
+        {
+            V0Ptr_ = new DimensionedField<scalar, volMesh>
+            (
+                IOobject
+                (
+                    "Vc0",
+                    time().name(),
+                    *this,
+                    IOobject::MUST_READ,
+                    IOobject::NO_WRITE,
+                    true
+                ),
+                *this
+            );
+
+            V00();
+        }
+
+        // Check the existence of the mesh fluxes and read if present
+        if (fileHandler().isFile(time().timePath()/"meshPhi"))
+        {
+            phiPtr_ = new surfaceScalarField
+            (
+                IOobject
+                (
+                    "meshPhi",
+                    time().name(),
+                    *this,
+                    IOobject::MUST_READ,
+                    IOobject::NO_WRITE,
+                    true
+                ),
+                *this
+            );
+        }
+    }
+}
+
+
 bool Foam::fvMesh::topoChanging() const
 {
     return topoChanger_.valid() && topoChanger_->dynamic();
@@ -649,7 +659,7 @@ bool Foam::fvMesh::move()
 
 void Foam::fvMesh::addFvPatches
 (
-    const List<polyPatch*> & p,
+    const List<polyPatch*>& p,
     const bool validBoundary
 )
 {
@@ -748,11 +758,11 @@ Foam::fvMesh::readUpdateState Foam::fvMesh::readUpdate
     if
     (
         stitcher_.valid()
-     && stitch != stitchType::none
+     && stitcher_->stitches()
      && state != polyMesh::UNCHANGED
     )
     {
-        stitcher_->disconnect(false, stitch == stitchType::geometric);
+        stitcher_->disconnect(false, false);
     }
 
     if (state == polyMesh::TOPO_PATCH_CHANGE)
@@ -793,8 +803,9 @@ Foam::fvMesh::readUpdateState Foam::fvMesh::readUpdate
     if
     (
         stitcher_.valid()
-     && stitch != stitchType::none
+     && stitcher_->stitches()
      && state != polyMesh::UNCHANGED
+     && stitch != stitchType::none
     )
     {
         stitcher_->connect(false, stitch == stitchType::geometric, true);
@@ -968,6 +979,12 @@ Foam::fvMesh::polyBFacePatchFaces() const
 
 
 const Foam::fvMeshStitcher& Foam::fvMesh::stitcher() const
+{
+    return stitcher_();
+}
+
+
+Foam::fvMeshStitcher& Foam::fvMesh::stitcher()
 {
     return stitcher_();
 }

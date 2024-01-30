@@ -25,3 +25,5 @@ Foam::fvMesh mesh
     ),
     false
 );
+
+mesh.postConstruct(false, fvMesh::stitchType::geometric);

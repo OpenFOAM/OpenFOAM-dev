@@ -245,8 +245,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
                 time,
                 IOobject::MUST_READ
             ),
-            false,
-            fvMesh::stitchType::none
+            false
         );
 
         mesh().swap(otherMesh);
