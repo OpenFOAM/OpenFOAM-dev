@@ -77,7 +77,7 @@ public:
     // Member Operators
 
         //- Map a field
-        FOR_ALL_FIELD_TYPES(DEFINE_FIELD_MAPPER_OPERATOR, );
+        FOR_ALL_FIELD_TYPES(DEFINE_FIELD_MAPPER_MAP_OPERATOR, );
 };
 
 

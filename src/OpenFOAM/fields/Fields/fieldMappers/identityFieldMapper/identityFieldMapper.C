@@ -50,10 +50,10 @@ Foam::tmp<Foam::Field<Type>> Foam::identityFieldMapper::map
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, identityFieldMapper)
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_MAP_OPERATOR, identityFieldMapper)
 
 
-IMPLEMENT_FIELD_MAPPER_OPERATOR(label, identityFieldMapper)
+IMPLEMENT_FIELD_MAPPER_MAP_OPERATOR(label, identityFieldMapper)
 
 
 // ************************************************************************* //

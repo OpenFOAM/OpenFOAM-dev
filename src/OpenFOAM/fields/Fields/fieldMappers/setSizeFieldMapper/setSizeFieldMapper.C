@@ -46,10 +46,10 @@ Foam::tmp<Foam::Field<Type>> Foam::setSizeFieldMapper::map
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, setSizeFieldMapper)
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_MAP_OPERATOR, setSizeFieldMapper)
 
 
-IMPLEMENT_FIELD_MAPPER_OPERATOR(label, setSizeFieldMapper)
+IMPLEMENT_FIELD_MAPPER_MAP_OPERATOR(label, setSizeFieldMapper)
 
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,45 @@ Foam::tmp<Foam::Field<Type>> Foam::fieldMapper::operator()
     tmp<Foam::Field<Type>> tf(operator()(tmapF()));
     tmapF.clear();
     return tf;
+}
+
+
+template<class Type, class FieldOp>
+void Foam::fieldMapper::operator()
+(
+    Field<Type>& f,
+    const Field<Type>& mapF,
+    const FieldOp& unmappedOp
+) const
+{
+    operator()
+    (
+        f,
+        mapF,
+        static_cast<const FieldFunctor<Type>&>
+        (
+            FieldOpFunctor<Type, FieldOp>(unmappedOp)
+        )
+    );
+}
+
+
+template<class Type, class FieldOp>
+Foam::fieldMapper::TmpFieldTypeIfFieldOp<Type, FieldOp>
+Foam::fieldMapper::operator()
+(
+    const Field<Type>& mapF,
+    const FieldOp& unmappedOp
+) const
+{
+    operator()
+    (
+        mapF,
+        static_cast<const FieldFunctor<Type>&>
+        (
+            FieldOpFunctor<Type, FieldOp>(unmappedOp)
+        )
+    );
 }
 
 

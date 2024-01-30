@@ -56,7 +56,7 @@ Foam::tmp<Foam::Field<Type>> Foam::patchToPatchLeftOverFieldMapper::map
 
 FOR_ALL_FIELD_TYPES
 (
-    IMPLEMENT_FIELD_MAPPER_OPERATOR,
+    IMPLEMENT_FIELD_MAPPER_MAP_OPERATOR,
     patchToPatchLeftOverFieldMapper
 )
 

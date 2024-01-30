@@ -80,7 +80,7 @@ public:
     // Member Operators
 
         //- Map a label field (not implemented)
-        DEFINE_FIELD_MAPPER_OPERATOR(label, );
+        DEFINE_FIELD_MAPPER_MAP_OPERATOR(label, );
 
         //- Inherit the base call operator
         using fieldMapper::operator();

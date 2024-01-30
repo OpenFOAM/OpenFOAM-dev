@@ -23,39 +23,70 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "reverseFieldMapper.H"
+#include "fieldMapper.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::reverseFieldMapper::map
+void Foam::fieldMapper::mapOrAssign
 (
     Field<Type>& f,
-    const Field<Type>& mapF
+    const Field<Type>& mapF,
+    const Type& unmappedVal
 ) const
 {
-    f.rmap(mapF, addressing_);
+    // By default, field mappers do not assign anything. Derivations may
+    // override this behaviour.
+    this->operator()(f, mapF);
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::reverseFieldMapper::map
+Foam::tmp<Foam::Field<Type>> Foam::fieldMapper::mapOrAssign
 (
-    const Field<Type>& mapF
+    const Field<Type>& mapF,
+    const Type& unmappedVal
 ) const
 {
-    tmp<Field<Type>> tf(new Field<Type>(max(addressing_) + 1));
-    map(tf.ref(), mapF);
-    return tf;
+    // By default, field mappers do not assign anything. Derivations may
+    // override this behaviour.
+    return this->operator()(mapF);
 }
 
 
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+template<class Type>
+void Foam::fieldMapper::mapOrAssign
+(
+    Field<Type>& f,
+    const Field<Type>& mapF,
+    const FieldFunctor<Type>& unmappedFunc
+) const
+{
+    // By default, field mappers do not assign anything. Derivations may
+    // override this behaviour.
+    this->operator()(f, mapF);
+}
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_MAP_OPERATOR, reverseFieldMapper)
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::fieldMapper::mapOrAssign
+(
+    const Field<Type>& mapF,
+    const FieldFunctor<Type>& unmappedFunc
+) const
+{
+    // By default, field mappers do not assign anything. Derivations may
+    // override this behaviour.
+    return this->operator()(mapF);
+}
 
 
-IMPLEMENT_FIELD_MAPPER_MAP_OPERATOR(label, reverseFieldMapper)
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_MAP_OR_ASSIGN_OPERATOR, fieldMapper)
+
+
+IMPLEMENT_FIELD_MAPPER_MAP_OR_ASSIGN_OPERATOR(label, fieldMapper)
 
 
 // ************************************************************************* //

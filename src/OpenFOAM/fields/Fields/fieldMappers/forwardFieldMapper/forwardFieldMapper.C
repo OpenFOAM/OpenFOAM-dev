@@ -66,10 +66,10 @@ Foam::tmp<Foam::Field<Type>> Foam::forwardFieldMapper::map
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_OPERATOR, forwardFieldMapper)
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FIELD_MAPPER_MAP_OPERATOR, forwardFieldMapper)
 
 
-IMPLEMENT_FIELD_MAPPER_OPERATOR(label, forwardFieldMapper)
+IMPLEMENT_FIELD_MAPPER_MAP_OPERATOR(label, forwardFieldMapper)
 
 
 // ************************************************************************* //
