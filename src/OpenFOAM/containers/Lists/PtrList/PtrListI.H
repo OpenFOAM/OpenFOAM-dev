@@ -52,10 +52,7 @@ inline void Foam::PtrList<T>::append(const autoPtr<T>& aptr)
 
 
 template<class T>
-inline void Foam::PtrList<T>::append
-(
-    const tmp<T>& t
-)
+inline void Foam::PtrList<T>::append(const tmp<T>& t)
 {
     append(const_cast<tmp<T>&>(t).ptr());
 }

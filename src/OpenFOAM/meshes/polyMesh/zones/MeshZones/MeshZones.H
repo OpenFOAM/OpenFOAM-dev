@@ -155,15 +155,11 @@ public:
         //- Mark cells that match the zone specification
         PackedBoolList findMatching(const wordRe&) const;
 
-        using PtrList<ZoneType>::append;
+        //- Append or update a zone
+        void append(ZoneType*) const;
 
         //- Append or update a zone
-        //  Temporary function pending the rewrite of zones
-        void append
-        (
-            const word& zoneName,
-            const labelList& cells
-        ) const;
+        void append(const ZoneType&) const;
 
         //- Clear addressing
         void clearAddressing();

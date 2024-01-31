@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,15 @@ Foam::fv::interRegionPorosityForce::interRegionPorosityForce
         }
         porousCells.setSize(i);
 
-        mesh.cellZones().append(zoneName, porousCells);
+        mesh.cellZones().append
+        (
+            new cellZone
+            (
+                zoneName,
+                porousCells,
+                mesh.cellZones()
+            )
+        );
     }
     else
     {

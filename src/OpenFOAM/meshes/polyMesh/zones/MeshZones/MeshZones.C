@@ -24,11 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "MeshZones.H"
-#include "entry.H"
-#include "demandDrivenData.H"
-#include "stringListOps.H"
-#include "labelPair.H"
 #include "Pstream.H"
+#include "demandDrivenData.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -371,34 +368,36 @@ Foam::PackedBoolList Foam::MeshZones<ZoneType, MeshType>::findMatching
 
 
 template<class ZoneType, class MeshType>
-void Foam::MeshZones<ZoneType, MeshType>::append
-(
-    const word& zoneName,
-    const labelList& cells
-) const
+void Foam::MeshZones<ZoneType, MeshType>::append(ZoneType* zonePtr) const
 {
     MeshZones<ZoneType, MeshType>& zones =
         const_cast<MeshZones<ZoneType, MeshType>&>(*this);
 
-    if (found(zoneName))
+    if (found(zonePtr->name()))
     {
-        zones[zoneName] = cells;
+        zones[zonePtr->name()] = *zonePtr;
+        delete zonePtr;
     }
     else
     {
-        const label zoneID = zones.size();
-        zones.setSize(zoneID + 1);
+        zones.PtrList<ZoneType>::append(zonePtr);
+    }
+}
 
-        zones.set
-        (
-            zoneID,
-            new ZoneType
-            (
-                zoneName,
-                cells,
-                *this
-            )
-        );
+
+template<class ZoneType, class MeshType>
+void Foam::MeshZones<ZoneType, MeshType>::append(const ZoneType& zone) const
+{
+    MeshZones<ZoneType, MeshType>& zones =
+        const_cast<MeshZones<ZoneType, MeshType>&>(*this);
+
+    if (found(zone.name()))
+    {
+        zones[zone.name()] = zone;
+    }
+    else
+    {
+        zones.PtrList<ZoneType>::append(zone.clone(*this));
     }
 }
 

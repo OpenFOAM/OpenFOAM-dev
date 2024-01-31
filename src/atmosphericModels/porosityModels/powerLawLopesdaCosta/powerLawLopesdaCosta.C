@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -266,7 +266,15 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
     // Create the porous region cellZone and add to the mesh cellZones
     if (!mesh.cellZones().found(zoneName_))
     {
-        mesh.cellZones().append(zoneName_, porousCells);
+        mesh.cellZones().append
+        (
+            new cellZone
+            (
+                zoneName_,
+                porousCells,
+                mesh.cellZones()
+            )
+        );
     }
     else
     {
