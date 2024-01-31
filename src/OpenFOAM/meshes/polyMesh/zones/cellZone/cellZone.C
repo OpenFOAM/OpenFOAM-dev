@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,11 +48,10 @@ Foam::cellZone::cellZone
 (
     const word& name,
     const labelUList& addr,
-    const label index,
     const meshCellZones& mz
 )
 :
-    zone(name, addr, index),
+    zone(name, addr),
     meshZones_(mz)
 {}
 
@@ -61,11 +60,10 @@ Foam::cellZone::cellZone
 (
     const word& name,
     labelList&& addr,
-    const label index,
     const meshCellZones& mz
 )
 :
-    zone(name, move(addr), index),
+    zone(name, move(addr)),
     meshZones_(mz)
 {}
 
@@ -74,11 +72,10 @@ Foam::cellZone::cellZone
 (
     const word& name,
     const dictionary& dict,
-    const label index,
     const meshCellZones& mz
 )
 :
-    zone(name, dict, this->labelsName, index),
+    zone(name, dict, this->labelsName),
     meshZones_(mz)
 {}
 
@@ -87,11 +84,10 @@ Foam::cellZone::cellZone
 (
     const cellZone& cz,
     const labelUList& addr,
-    const label index,
     const meshCellZones& mz
 )
 :
-    zone(cz, addr, index),
+    zone(cz, addr),
     meshZones_(mz)
 {}
 
@@ -100,11 +96,10 @@ Foam::cellZone::cellZone
 (
     const cellZone& cz,
     labelList&& addr,
-    const label index,
     const meshCellZones& mz
 )
 :
-    zone(cz, move(addr), index),
+    zone(cz, move(addr)),
     meshZones_(mz)
 {}
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,13 +85,11 @@ void Foam::zone::calcLookupMap() const
 Foam::zone::zone
 (
     const word& name,
-    const labelUList& addr,
-    const label index
+    const labelUList& addr
 )
 :
     labelList(addr),
     name_(name),
-    index_(index),
     lookupMapPtr_(nullptr)
 {}
 
@@ -99,13 +97,11 @@ Foam::zone::zone
 Foam::zone::zone
 (
     const word& name,
-    labelList&& addr,
-    const label index
+    labelList&& addr
 )
 :
     labelList(move(addr)),
     name_(name),
-    index_(index),
     lookupMapPtr_(nullptr)
 {}
 
@@ -114,13 +110,11 @@ Foam::zone::zone
 (
     const word& name,
     const dictionary& dict,
-    const word& labelsName,
-    const label index
+    const word& labelsName
 )
 :
     labelList(dict.lookup(labelsName)),
     name_(name),
-    index_(index),
     lookupMapPtr_(nullptr)
 {}
 
@@ -128,13 +122,11 @@ Foam::zone::zone
 Foam::zone::zone
 (
     const zone& z,
-    const labelUList& addr,
-    const label index
+    const labelUList& addr
 )
 :
     labelList(addr),
     name_(z.name()),
-    index_(index),
     lookupMapPtr_(nullptr)
 {}
 
@@ -142,13 +134,11 @@ Foam::zone::zone
 Foam::zone::zone
 (
     const zone& z,
-    labelList&& addr,
-    const label index
+    labelList&& addr
 )
 :
     labelList(move(addr)),
     name_(z.name()),
-    index_(index),
     lookupMapPtr_(nullptr)
 {}
 

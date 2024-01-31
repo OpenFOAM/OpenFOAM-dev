@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -3380,7 +3380,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
             (
                 oldPointZones[i].name(),
                 labelList(0),
-                i,
                 newMesh.pointZones()
             );
         }
@@ -3396,7 +3395,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
                 oldFaceZones[i].name(),
                 labelList(0),
                 boolList(0),
-                i,
                 newMesh.faceZones()
             );
         }
@@ -3411,7 +3409,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
             (
                 oldCellZones[i].name(),
                 labelList(0),
-                i,
                 newMesh.cellZones()
             );
         }

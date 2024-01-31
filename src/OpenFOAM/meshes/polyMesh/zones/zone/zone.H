@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,9 +67,6 @@ protected:
         //- Name of zone
         word name_;
 
-        //- Index of zone
-        label index_;
-
 
         // Demand-driven private data
 
@@ -95,16 +92,14 @@ public:
         zone
         (
             const word& name,
-            const labelUList& addr,
-            const label index
+            const labelUList& addr
         );
 
         //- Construct from components, moving contents
         zone
         (
             const word& name,
-            labelList&& addr,
-            const label index
+            labelList&& addr
         );
 
         //- Construct from dictionary
@@ -112,8 +107,7 @@ public:
         (
             const word& name,
             const dictionary&,
-            const word& labelsName,
-            const label index
+            const word& labelsName
         );
 
         //- Construct given the original zone and resetting the
@@ -121,8 +115,7 @@ public:
         zone
         (
             const zone&,
-            const labelUList& addr,
-            const label index
+            const labelUList& addr
         );
 
         //- Construct given the original zone, resetting the
@@ -130,8 +123,7 @@ public:
         zone
         (
             const zone&,
-            labelList&& addr,
-            const label index
+            labelList&& addr
         );
 
         //- Disallow default bitwise copy construction
@@ -154,12 +146,6 @@ public:
         //  the index of the item in the zone from the known global index. If
         //  the item is not in the zone, returns -1
         label localID(const label globalID) const;
-
-        //- Return the index of this zone in zone list
-        label index() const
-        {
-            return index_;
-        }
 
         //- Return a reference to the look-up map
         const Map<label>& lookupMap() const;

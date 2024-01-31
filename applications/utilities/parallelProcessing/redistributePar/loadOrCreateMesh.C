@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,7 +181,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
             (
                 "dummyPointZone",
                 labelList(0),
-                0,
                 dummyMesh.pointZones()
             )
         );
@@ -193,7 +192,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
                 "dummyFaceZone",
                 labelList(0),
                 boolList(0),
-                0,
                 dummyMesh.faceZones()
             )
         );
@@ -204,7 +202,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
             (
                 "dummyCellZone",
                 labelList(0),
-                0,
                 dummyMesh.cellZones()
             )
         );
@@ -296,7 +293,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
             (
                 pointZoneNames[i],
                 labelList(0),
-                i,
                 mesh.pointZones()
             );
         }
@@ -308,7 +304,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
                 faceZoneNames[i],
                 labelList(0),
                 boolList(0),
-                i,
                 mesh.faceZones()
             );
         }
@@ -319,7 +314,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
             (
                 cellZoneNames[i],
                 labelList(0),
-                i,
                 mesh.cellZones()
             );
         }

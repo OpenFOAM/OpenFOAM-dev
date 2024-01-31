@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,6 @@ Foam::autoPtr<Foam::pointZone> Foam::pointZone::New
 (
     const word& name,
     const dictionary& dict,
-    const label index,
     const meshPointZones& mz
 )
 {
@@ -58,7 +57,7 @@ Foam::autoPtr<Foam::pointZone> Foam::pointZone::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<pointZone>(cstrIter()(name, dict, index, mz));
+    return autoPtr<pointZone>(cstrIter()(name, dict, mz));
 }
 
 

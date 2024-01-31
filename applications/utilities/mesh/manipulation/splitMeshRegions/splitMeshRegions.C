@@ -1838,7 +1838,6 @@ int main(int argc, char *argv[])
                         (
                             zoneName,           // name
                             regionCells,        // addressing
-                            zoneI,              // index
                             cellZones           // meshCellZones
                         )
                     );

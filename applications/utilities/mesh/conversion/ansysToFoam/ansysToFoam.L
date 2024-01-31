@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -635,7 +635,6 @@ int main(int argc, char *argv[])
                         patchNames[patchi],
                         bFaceLabels,
                         boolList(bFaceLabels.size(), false),
-                        fz.size(),
                         pShapeMesh.faceZones()
                     )
                 );
@@ -678,7 +677,6 @@ int main(int argc, char *argv[])
                 (
                     cellTypes[cellType],
                     addr,
-                    j,
                     pShapeMesh.cellZones()
                 )
             );

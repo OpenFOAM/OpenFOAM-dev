@@ -185,6 +185,7 @@ label createFaces
     const bool internalFacesOnly,
     const fvMesh& mesh,
     const faceZone& fZone,
+    const label fZonei,
     const label newOwnerPatchi,
     const label newNeighbourPatchi,
     polyTopoChange& meshMod,
@@ -213,7 +214,7 @@ label createFaces
                     mesh.faceOwner()[facei],// owner
                     false,                  // face flip
                     newOwnerPatchi,         // patch for face
-                    fZone.index(),          // zone for face
+                    fZonei,                 // zone for face
                     false,                  // face flip in zone
                     modifiedFace            // modify or add status
                 );
@@ -232,7 +233,7 @@ label createFaces
                     mesh.faceNeighbour()[facei],// owner
                     true,                       // face flip
                     newOwnerPatchi,             // patch for face
-                    fZone.index(),              // zone for face
+                    fZonei,                     // zone for face
                     false,                      // face flip in zone
                     modifiedFace                // modify or add status
                 );
@@ -260,7 +261,7 @@ label createFaces
                     mesh.faceNeighbour()[facei],    // owner
                     true,                           // face flip
                     newNeighbourPatchi,             // patch for face
-                    fZone.index(),                  // zone for face
+                    fZonei,                         // zone for face
                     true,                           // face flip in zone
                     modifiedFace                    // modify or add
                 );
@@ -276,7 +277,7 @@ label createFaces
                     mesh.faceOwner()[facei],// owner
                     false,                  // face flip
                     newNeighbourPatchi,     // patch for face
-                    fZone.index(),          // zone for face
+                    fZonei,                 // zone for face
                     true,                   // face flip in zone
                     modifiedFace            // modify or add status
                 );
@@ -324,7 +325,7 @@ label createFaces
                         mesh.faceOwner()[facei],    // owner
                         false,                      // face flip
                         newPp.index(),              // patch for face
-                        fZone.index(),              // zone for face
+                        fZonei,                     // zone for face
                         fZone.flipMap()[zoneFacei], // face flip in zone
                         modifiedFace                // modify or add
                     );
@@ -426,7 +427,7 @@ int main(int argc, char *argv[])
             mesh.faceZones().set
             (
                 sz,
-                new faceZone(name, addr, flip, sz, mesh.faceZones())
+                new faceZone(name, addr, flip, mesh.faceZones())
             );
         }
     }
@@ -479,7 +480,7 @@ int main(int argc, char *argv[])
         mesh.faceZones().set
         (
             zoneID,
-            new faceZone(name, addr, flip, zoneID, mesh.faceZones())
+            new faceZone(name, addr, flip, mesh.faceZones())
         );
     }
 
@@ -608,7 +609,8 @@ int main(int argc, char *argv[])
         {
             const word& groupName = selectors[selectorI].name();
 
-            const faceZone& fZone = mesh.faceZones()[groupName];
+            const label fZonei = mesh.faceZones().findIndex(groupName);
+            const faceZone& fZone = mesh.faceZones()[fZonei];
 
             const dictionary& dict =
                 selectors[selectorI].dict().optionalSubDict("patches");
@@ -635,6 +637,7 @@ int main(int argc, char *argv[])
                     internalFacesOnly,
                     mesh,
                     fZone,
+                    fZonei,
                     newPatchIDs[0],
                     newPatchIDs[1],
                     meshMod,

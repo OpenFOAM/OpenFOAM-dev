@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,11 +48,10 @@ Foam::pointZone::pointZone
 (
     const word& name,
     const labelUList& addr,
-    const label index,
     const meshPointZones& mz
 )
 :
-    zone(name, addr, index),
+    zone(name, addr),
     meshZones_(mz)
 {}
 
@@ -61,11 +60,10 @@ Foam::pointZone::pointZone
 (
     const word& name,
     labelList&& addr,
-    const label index,
     const meshPointZones& mz
 )
 :
-    zone(name, move(addr), index),
+    zone(name, move(addr)),
     meshZones_(mz)
 {}
 
@@ -74,11 +72,10 @@ Foam::pointZone::pointZone
 (
     const word& name,
     const dictionary& dict,
-    const label index,
     const meshPointZones& mz
 )
 :
-    zone(name, dict, this->labelsName, index),
+    zone(name, dict, this->labelsName),
     meshZones_(mz)
 {}
 
@@ -87,11 +84,10 @@ Foam::pointZone::pointZone
 (
     const pointZone& pz,
     const labelUList& addr,
-    const label index,
     const meshPointZones& mz
 )
 :
-    zone(pz, addr, index),
+    zone(pz, addr),
     meshZones_(mz)
 {}
 
@@ -100,11 +96,10 @@ Foam::pointZone::pointZone
 (
     const pointZone& pz,
     labelList&& addr,
-    const label index,
     const meshPointZones& mz
 )
 :
-    zone(pz, move(addr), index),
+    zone(pz, move(addr)),
     meshZones_(mz)
 {}
 
@@ -139,13 +134,15 @@ bool Foam::pointZone::checkParallelSync(const bool report) const
 {
     const polyMesh& mesh = meshZones().mesh();
 
+    const label index = meshZones_.findIndex(name());
+
     labelList maxZone(mesh.nPoints(), -1);
     labelList minZone(mesh.nPoints(), labelMax);
     forAll(*this, i)
     {
-        label pointi = operator[](i);
-        maxZone[pointi] = index();
-        minZone[pointi] = index();
+        const label pointi = operator[](i);
+        maxZone[pointi] = index;
+        minZone[pointi] = index;
     }
     syncTools::syncPointList(mesh, maxZone, maxEqOp<label>(), label(-1));
     syncTools::syncPointList(mesh, minZone, minEqOp<label>(), labelMax);
@@ -166,8 +163,7 @@ bool Foam::pointZone::checkParallelSync(const bool report) const
         {
             if (report && !error)
             {
-                Info<< " ***Problem with pointZone " << index()
-                    << " named " << name()
+                Info<< " ***Problem with pointZone " << name()
                     << ". Point " << pointi
                     << " at " << mesh.points()[pointi]
                     << " is in zone "

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,10 +95,9 @@ public:
             (
                 const word& name,
                 const dictionary& dict,
-                const label index,
                 const meshPointZones& mz
             ),
-            (name, dict, index, mz)
+            (name, dict, mz)
         );
 
 
@@ -109,7 +108,6 @@ public:
         (
             const word& name,
             const labelUList& addr,
-            const label index,
             const meshPointZones&
         );
 
@@ -118,7 +116,6 @@ public:
         (
             const word& name,
             labelList&& addr,
-            const label index,
             const meshPointZones&
         );
 
@@ -127,7 +124,6 @@ public:
         (
             const word& name,
             const dictionary&,
-            const label index,
             const meshPointZones&
         );
 
@@ -137,7 +133,6 @@ public:
         (
             const pointZone&,
             const labelUList& addr,
-            const label index,
             const meshPointZones&
         );
 
@@ -147,7 +142,6 @@ public:
         (
             const pointZone&,
             labelList&& addr,
-            const label index,
             const meshPointZones&
         );
 
@@ -160,7 +154,7 @@ public:
         {
             return autoPtr<pointZone>
             (
-                new pointZone(*this, *this, index(), mz)
+                new pointZone(*this, *this, mz)
             );
         }
 
@@ -169,13 +163,12 @@ public:
         virtual autoPtr<pointZone> clone
         (
             const meshPointZones& mz,
-            const label index,
             const labelUList& addr
         ) const
         {
             return autoPtr<pointZone>
             (
-                new pointZone(*this, addr, index, mz)
+                new pointZone(*this, addr, mz)
             );
         }
 
@@ -188,7 +181,6 @@ public:
         (
             const word& name,
             const dictionary&,
-            const label index,
             const meshPointZones&
         );
 

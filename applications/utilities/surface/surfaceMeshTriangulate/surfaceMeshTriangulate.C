@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -259,11 +259,12 @@ int main(int argc, char *argv[])
         // Collect faces on faceZones
         forAllConstIter(labelHashSet, includeFaceZones, iter)
         {
-            const faceZone& pp = mfz[iter.key()];
-            forAll(pp, i)
+            const label fzi = iter.key();
+            const faceZone& fz = mfz[fzi];
+            forAll(fz, i)
             {
-                faceLabels.append(pp[i]);
-                compactZones.append(faceZoneToCompactZone[pp.index()]);
+                faceLabels.append(fz[i]);
+                compactZones.append(faceZoneToCompactZone[fzi]);
             }
         }
     }

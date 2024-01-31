@@ -450,7 +450,6 @@ void Foam::mergePolyMesh::merge()
                 (
                     pointZoneNames_[zoneI],
                     labelList(),
-                    zoneI,
                     mesh_.pointZones()
                 )
             );
@@ -477,7 +476,6 @@ void Foam::mergePolyMesh::merge()
                 (
                     cellZoneNames_[zoneI],
                     labelList(),
-                    zoneI,
                     mesh_.cellZones()
                 )
             );
@@ -505,7 +503,6 @@ void Foam::mergePolyMesh::merge()
                     faceZoneNames_[zoneI],
                     labelList(),
                     boolList(),
-                    zoneI,
                     mesh_.faceZones()
                 )
             );

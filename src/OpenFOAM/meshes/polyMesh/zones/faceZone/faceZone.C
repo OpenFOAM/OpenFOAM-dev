@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -189,11 +189,10 @@ Foam::faceZone::faceZone
     const word& name,
     const labelUList& addr,
     const boolList& fm,
-    const label index,
     const meshFaceZones& mz
 )
 :
-    zone(name, addr, index),
+    zone(name, addr),
     flipMap_(fm),
     meshZones_(mz),
     patchPtr_(nullptr),
@@ -210,11 +209,10 @@ Foam::faceZone::faceZone
     const word& name,
     labelList&& addr,
     boolList&& fm,
-    const label index,
     const meshFaceZones& mz
 )
 :
-    zone(name, move(addr), index),
+    zone(name, move(addr)),
     flipMap_(move(fm)),
     meshZones_(mz),
     patchPtr_(nullptr),
@@ -230,11 +228,10 @@ Foam::faceZone::faceZone
 (
     const word& name,
     const dictionary& dict,
-    const label index,
     const meshFaceZones& mz
 )
 :
-    zone(name, dict, this->labelsName, index),
+    zone(name, dict, this->labelsName),
     flipMap_(dict.lookup("flipMap")),
     meshZones_(mz),
     patchPtr_(nullptr),
@@ -251,11 +248,10 @@ Foam::faceZone::faceZone
     const faceZone& fz,
     const labelUList& addr,
     const boolList& fm,
-    const label index,
     const meshFaceZones& mz
 )
 :
-    zone(fz, addr, index),
+    zone(fz, addr),
     flipMap_(fm),
     meshZones_(mz),
     patchPtr_(nullptr),
@@ -272,11 +268,10 @@ Foam::faceZone::faceZone
     const faceZone& fz,
     labelList&& addr,
     boolList&& fm,
-    const label index,
     const meshFaceZones& mz
 )
 :
-    zone(fz, move(addr), index),
+    zone(fz, move(addr)),
     flipMap_(move(fm)),
     meshZones_(mz),
     patchPtr_(nullptr),
@@ -474,8 +469,7 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
 
                     if (report)
                     {
-                        Pout<< " ***Problem with faceZone " << index()
-                            << " named " << name()
+                        Pout<< " ***Problem with faceZone " << name()
                             << ". Face " << facei
                             << " on coupled patch "
                             << bm[patchi].name()
@@ -495,8 +489,7 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
 
                     if (report)
                     {
-                        Pout<< " ***Problem with faceZone " << index()
-                            << " named " << name()
+                        Pout<< " ***Problem with faceZone " << name()
                             << ". Face " << facei
                             << " on coupled patch "
                             << bm[patchi].name()

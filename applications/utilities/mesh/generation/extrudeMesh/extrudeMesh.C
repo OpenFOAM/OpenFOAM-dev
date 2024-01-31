@@ -892,7 +892,6 @@ int main(int argc, char *argv[])
                 cutZoneName,
                 frontPatchFaces,
                 boolList(frontPatchFaces.size(), false),
-                0,
                 mesh.faceZones()
             )
         );

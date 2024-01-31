@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,10 +137,9 @@ public:
             (
                 const word& name,
                 const dictionary& dict,
-                const label index,
                 const meshFaceZones& mz
             ),
-            (name, dict, index, mz)
+            (name, dict, mz)
         );
 
 
@@ -152,7 +151,6 @@ public:
             const word& name,
             const labelUList& addr,
             const boolList& fm,
-            const label index,
             const meshFaceZones& mz
         );
 
@@ -162,7 +160,6 @@ public:
             const word& name,
             labelList&& addr,
             boolList&& fm,
-            const label index,
             const meshFaceZones&
         );
 
@@ -171,7 +168,6 @@ public:
         (
             const word& name,
             const dictionary&,
-            const label index,
             const meshFaceZones&
         );
 
@@ -182,7 +178,6 @@ public:
             const faceZone&,
             const labelUList& addr,
             const boolList& fm,
-            const label index,
             const meshFaceZones&
         );
 
@@ -193,7 +188,6 @@ public:
             const faceZone&,
             labelList&& addr,
             boolList&& fm,
-            const label index,
             const meshFaceZones&
         );
 
@@ -206,7 +200,7 @@ public:
         {
             return autoPtr<faceZone>
             (
-                new faceZone(*this, *this, flipMap(), index(), mz)
+                new faceZone(*this, *this, flipMap(), mz)
             );
         }
 
@@ -216,13 +210,12 @@ public:
         (
             const labelUList& addr,
             const boolList& fm,
-            const label index,
             const meshFaceZones& mz
         ) const
         {
             return autoPtr<faceZone>
             (
-                new faceZone(*this, addr, fm, index, mz)
+                new faceZone(*this, addr, fm, mz)
             );
         }
 
@@ -235,7 +228,6 @@ public:
         (
             const word& name,
             const dictionary&,
-            const label index,
             const meshFaceZones&
         );
 

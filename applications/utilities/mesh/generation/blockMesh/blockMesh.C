@@ -311,7 +311,6 @@ int main(int argc, char *argv[])
             (
                 iter.key(),
                 zoneCells[zoneI].shrink(),
-                zoneI,
                 mesh.cellZones()
             );
         }

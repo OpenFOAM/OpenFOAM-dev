@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,10 +94,9 @@ public:
             (
                 const word& name,
                 const dictionary& dict,
-                const label index,
                 const meshCellZones& mz
             ),
-            (name, dict, index, mz)
+            (name, dict, mz)
         );
 
 
@@ -108,7 +107,6 @@ public:
         (
             const word& name,
             const labelUList& addr,
-            const label index,
             const meshCellZones&
         );
 
@@ -117,7 +115,6 @@ public:
         (
             const word& name,
             labelList&& addr,
-            const label index,
             const meshCellZones&
         );
 
@@ -126,7 +123,6 @@ public:
         (
             const word& name,
             const dictionary&,
-            const label index,
             const meshCellZones&
         );
 
@@ -136,7 +132,6 @@ public:
         (
             const cellZone&,
             const labelUList& addr,
-            const label index,
             const meshCellZones&
         );
 
@@ -146,7 +141,6 @@ public:
         (
             const cellZone&,
             labelList&& addr,
-            const label index,
             const meshCellZones&
         );
 
@@ -159,7 +153,7 @@ public:
         {
             return autoPtr<cellZone>
             (
-                new cellZone(*this, *this, index(), mz)
+                new cellZone(*this, *this, mz)
             );
         }
 
@@ -168,13 +162,12 @@ public:
         virtual autoPtr<cellZone> clone
         (
             const labelUList& addr,
-            const label index,
             const meshCellZones& mz
         ) const
         {
             return autoPtr<cellZone>
             (
-                new cellZone(*this, addr, index, mz)
+                new cellZone(*this, addr, mz)
             );
         }
 
@@ -187,7 +180,6 @@ public:
         (
             const word& name,
             const dictionary&,
-            const label index,
             const meshCellZones&
         );
 

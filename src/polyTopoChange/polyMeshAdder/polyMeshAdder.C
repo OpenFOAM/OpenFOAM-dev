@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1109,7 +1109,6 @@ void Foam::polyMeshAdder::addZones
         (
             pointZoneNames[i],
             pzPoints[i],
-            i,
             mesh.pointZones()
         );
     }
@@ -1122,7 +1121,6 @@ void Foam::polyMeshAdder::addZones
             faceZoneNames[i],
             fzFaces[i],
             fzFlips[i],
-            i,
             mesh.faceZones()
         );
     }
@@ -1134,7 +1132,6 @@ void Foam::polyMeshAdder::addZones
         (
             cellZoneNames[i],
             czCells[i],
-            i,
             mesh.cellZones()
         );
     }

@@ -106,7 +106,6 @@ bool Foam::MeshZones<ZoneType, MeshType>::read()
                 (
                     patchEntries[zi].keyword(),
                     patchEntries[zi].dict(),
-                    zi,
                     *this
                 )
             );
@@ -397,7 +396,6 @@ void Foam::MeshZones<ZoneType, MeshType>::append
             (
                 zoneName,
                 cells,
-                zoneID,
                 *this
             )
         );

@@ -983,7 +983,6 @@ void Foam::domainDecomposition::decompose()
                     pz[zoneI].clone
                     (
                         procMesh.pointZones(),
-                        zoneI,
                         zonePoints[zoneI].shrink()
                     )
                 );
@@ -1077,7 +1076,6 @@ void Foam::domainDecomposition::decompose()
                     (
                         zoneFaces[zoneI].shrink(),          // addressing
                         zoneFaceFlips[zoneI].shrink(),      // flipmap
-                        zoneI,
                         procMesh.faceZones()
                     )
                 );
@@ -1141,7 +1139,6 @@ void Foam::domainDecomposition::decompose()
                     cz[zoneI].clone
                     (
                         zoneCells[zoneI].shrink(),
-                        zoneI,
                         procMesh.cellZones()
                     )
                 );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1749,7 +1749,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
         (
             pointZoneNames[i],
             zonePoints[i],
-            i,
             domainMesh.pointZones()
         );
     }
@@ -1762,7 +1761,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
             faceZoneNames[i],
             zoneFaces[i],
             zoneFaceFlip[i],
-            i,
             domainMesh.faceZones()
         );
     }
@@ -1774,7 +1772,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
         (
             cellZoneNames[i],
             zoneCells[i],
-            i,
             domainMesh.cellZones()
         );
     }

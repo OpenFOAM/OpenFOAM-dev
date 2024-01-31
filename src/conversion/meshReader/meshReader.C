@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,6 @@ void Foam::meshReader::addFaceZones(polyMesh& mesh) const
                 iter.key(),
                 iter(),
                 List<bool>(iter().size(), false),
-                nZone,
                 mesh.faceZones()
             )
         );

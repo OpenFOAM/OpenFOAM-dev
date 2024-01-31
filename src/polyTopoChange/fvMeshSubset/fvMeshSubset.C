@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -337,7 +337,6 @@ void Foam::fvMeshSubset::subsetZones()
         (
             pz.name(),
             subset(baseMesh().nPoints(), pz, pointMap()),
-            i,
             fvMeshSubsetPtr_().pointZones()
         );
     }
@@ -405,7 +404,6 @@ void Foam::fvMeshSubset::subsetZones()
             fz.name(),
             subAddressing,
             subFlipStatus,
-            i,
             fvMeshSubsetPtr_().faceZones()
         );
     }
@@ -423,7 +421,6 @@ void Foam::fvMeshSubset::subsetZones()
         (
             cz.name(),
             subset(baseMesh().nCells(), cz, cellMap()),
-            i,
             fvMeshSubsetPtr_().cellZones()
         );
     }
