@@ -162,34 +162,28 @@ tmp<scalarField> alphatJayatillekeWallFunctionFvPatchScalarField::alphat
     const nutWallFunctionFvPatchScalarField& nutw =
         nutWallFunctionFvPatchScalarField::nutw(turbModel, patchi);
 
-    const scalar Cmu25 = pow025(nutw.Cmu());
-
-    const scalarField& y = turbModel.yb()[patchi];
+    const scalar E = nutw.E();
+    const scalar kappa = nutw.kappa();
 
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
-    const scalarField& Cpw(ttm.thermo().Cp().boundaryField()[patchi]);
-    const scalarField alphaw(ttm.thermo().kappa().boundaryField()[patchi]/Cpw);
-
-    const tmp<volScalarField> tk = turbModel.k();
-    const volScalarField& k = tk();
-
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
-    const scalarField magUp(mag(Uw.patchInternalField() - Uw));
-    const scalarField magGradUw(mag(Uw.snGrad()));
+    const scalarField alphaw
+    (
+        ttm.thermo().kappa().boundaryField()[patchi]
+       /ttm.thermo().Cp().boundaryField()[patchi]
+    );
 
     const scalarField& rhow = turbModel.rho().boundaryField()[patchi];
-    const fvPatchScalarField& Tw = ttm.thermo().T().boundaryField()[patchi];
-
-    // Temperature gradient
-    const scalarField gradTw(Tw.snGrad());
 
     // Molecular Prandtl number
     const scalarField Pr(rhow*nuw/alphaw);
 
     // Molecular-to-turbulent Prandtl number ratio
     const scalarField Prat(Pr/Prt);
+
+    // Momentum sublayer thickness
+    const scalarField yPlus(nutw.yPlus());
 
     // Thermal sublayer thickness
     const scalarField P
@@ -207,50 +201,19 @@ tmp<scalarField> alphatJayatillekeWallFunctionFvPatchScalarField::alphat
     );
 
     // Populate boundary values
-    tmp<scalarField> talphatw(new scalarField(nutw.size()));
+    tmp<scalarField> talphatw(new scalarField(nutw.size(), scalar(0)));
     scalarField& alphatw = talphatw.ref();
     forAll(alphatw, facei)
     {
-        const label celli = nutw.patch().faceCells()[facei];
-        const scalar uTau = Cmu25*sqrt(k[celli]);
-        const scalar yPlus = uTau*y[facei]/nuw[facei];
-
-        // Evaluate new effective thermal diffusivity
-        scalar alphaEff = 0;
-        if (yPlus < yPlusTherm[facei])
+        if (yPlus[facei] > yPlusTherm[facei])
         {
-            const scalar A = Cpw[facei]*gradTw[facei]*rhow[facei]*uTau*y[facei];
-            const scalar B = Cpw[facei]*gradTw[facei]*Pr[facei]*yPlus;
-            const scalar C = Pr[facei]*0.5*rhow[facei]*uTau*sqr(magUp[facei]);
+            const scalar Tplus = Prt*(log(E*yPlus[facei])/kappa + P[facei]);
 
-            alphaEff = (A - C)/(B + sign(B)*rootVSmall);
+            const scalar alphaByAlphaEff = Tplus/Pr[facei]/yPlus[facei];
+
+            alphatw[facei] =
+                alphaw[facei]*max(1/alphaByAlphaEff - 1, scalar(0));
         }
-        else
-        {
-            const scalar A = Cpw[facei]*gradTw[facei]*rhow[facei]*uTau*y[facei];
-
-            const scalar B =
-                Cpw[facei]*gradTw[facei]*Prt
-               *(1/nutw.kappa()*log(nutw.E()*yPlus) + P[facei]);
-
-            const scalar magUc =
-                uTau/nutw.kappa()
-               *log(nutw.E()*yPlusTherm[facei]) - mag(Uw[facei]);
-
-            const scalar C =
-                0.5*rhow[facei]*uTau
-               *(Prt*sqr(magUp[facei]) + (Pr[facei] - Prt)*sqr(magUc));
-
-            alphaEff = (A - C)/(B + sign(B)*rootVSmall);
-        }
-
-        // Bounds on turbulent thermal diffusivity
-        static const scalar alphatwMin = 0;
-        const scalar alphatwMax = great*alphaw[facei]*nutw[facei]/nuw[facei];
-
-        // Update turbulent thermal diffusivity
-        alphatw[facei] =
-            min(max(alphaEff - alphaw[facei], alphatwMin), alphatwMax);
     }
 
     return talphatw;
