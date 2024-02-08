@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,11 +34,11 @@ Foam::dictionary Foam::phaseSystem::interfacialDict(const word& name) const
     bool found = false;
     dictionary dict(name);
 
-    // If it is a dictionary then merge it in
+    // If it is a dictionary then use it
     if (this->isDict(name))
     {
         found = true;
-        dict.merge(this->subDict(name));
+        dict = this->subDict(name);
     }
 
     // Function to add old-format list/table entries
@@ -182,7 +182,7 @@ void Foam::phaseSystem::generateInterfacialModels
         if (!names.found(name))
         {
             names.append(name);
-            dicts.append(new dictionary(name));
+            dicts.append(new dictionary(dict.name()));
             interfaces.append(interfacePtr.ptr());
             models.append(nullptr);
         }
