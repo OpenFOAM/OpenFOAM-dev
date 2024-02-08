@@ -1,4 +1,9 @@
 phaseTurbulenceStabilisation/phaseTurbulenceStabilisation.C
 interfaceTurbulenceDamping/interfaceTurbulenceDamping.C
 
+nucleation/nucleation/nucleation.C
+nucleation/derivedFvFieldSources/nucleationSizeGroup/nucleationSizeGroupFvScalarFieldSource.C
+nucleation/homogeneousCondensation/homogeneousCondensation.C
+nucleation/homogeneousLiquidPhaseSeparation/homogeneousLiquidPhaseSeparation.C
+
 LIB = $(FOAM_LIBBIN)/libmultiphaseEulerFvModels
