@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,7 +165,6 @@ void Foam::diameterModels::nucleationModels::wallBoiling::addToNucleationRate
                     popBal_.eta
                     (
                         i,
-                        populationBalanceModel::etaBoundsHandling::extrapolate,
                         fi.x()/pow3(fi.dSph())*pow3(dDep[facei]*unitLength)
                     ).value()
                    *dmdt[facei]/rho[faceCelli]/fi.x().value();

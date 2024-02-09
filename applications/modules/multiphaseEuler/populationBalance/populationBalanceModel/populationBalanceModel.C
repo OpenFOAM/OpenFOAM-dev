@@ -155,7 +155,7 @@ void Foam::diameterModels::populationBalanceModel::birthByCoalescence
 
     for (label i = j; i < sizeGroups().size(); i++)
     {
-        Eta = eta(i, etaBoundsHandling::extrapolate, v);
+        Eta = eta(i, v);
 
         if (Eta.value() == 0) continue;
 
@@ -329,7 +329,7 @@ void Foam::diameterModels::populationBalanceModel::birthByBinaryBreakup
 
     for (label k = 0; k <= j; k++)
     {
-        Eta = eta(k, etaBoundsHandling::extrapolate, v);
+        Eta = eta(k, v);
 
         if (Eta.value() == 0) continue;
 
@@ -637,46 +637,49 @@ template<class EtaType, class VType>
 EtaType Foam::diameterModels::populationBalanceModel::eta
 (
     const label i,
-    const etaBoundsHandling ebh,
     const VType& v
 ) const
 {
     const label n = sizeGroups().size();
 
     static const dimensionedScalar rootVSmallV(dimVolume, rootVSmall);
-    static const dimensionedScalar rootVGreatV(dimVolume, rootVGreat);
     static const dimensionedScalar z(dimless, scalar(0));
 
     const dimensionedScalar& x0 =
         i > 0 ? sizeGroups()[i - 1].x() : rootVSmallV;
-
     const dimensionedScalar& xi = sizeGroups()[i].x();
+    const dimensionedScalar& x1 =
+        i < n - 1 ? sizeGroups()[i + 1].x() : rootVSmallV;
 
-    switch (ebh)
-    {
-        case etaBoundsHandling::extrapolate:
-        {
-            const dimensionedScalar& x1 =
-                i < n - 1 ? sizeGroups()[i + 1].x() : rootVSmallV;
+    return max(min((v - x0)/(xi - x0), (x1 - v)/(x1 - xi)), z);
+}
 
-            return max(min((v - x0)/(xi - x0), (x1 - v)/(x1 - xi)), z);
-        }
 
-        case etaBoundsHandling::clamp:
-        {
-            const dimensionedScalar& x1 =
-                i < n - 1 ? sizeGroups()[i + 1].x() : rootVGreatV;
+template<class EtaType, class VType>
+EtaType Foam::diameterModels::populationBalanceModel::etaV
+(
+    const label i,
+    const VType& v
+) const
+{
+    const label n = sizeGroups().size();
 
-            const VType vClip
-            (
-                min(max(v, sizeGroups().first().x()), sizeGroups().last().x())
-            );
+    static const dimensionedScalar rootVSmallInvV(inv(dimVolume), rootVSmall);
+    static const dimensionedScalar rootVGreatInvV(inv(dimVolume), rootVGreat);
+    static const dimensionedScalar z(dimless, scalar(0));
 
-            return max(min((vClip - x0)/(xi - x0), (x1 - vClip)/(x1 - xi)), z);
-        }
-    }
+    const dimensionedScalar x0 =
+        i > 0 ? 1/sizeGroups()[i - 1].x() : rootVGreatInvV;
+    const dimensionedScalar xi = 1/sizeGroups()[i].x();
+    const dimensionedScalar x1 =
+        i < n - 1 ? 1/sizeGroups()[i + 1].x() : rootVSmallInvV;
 
-    return NaN*v/v;
+    const VType invV
+    (
+        1/min(max(v, sizeGroups().first().x()), sizeGroups().last().x())
+    );
+
+    return max(min((invV - x0)/(xi - x0), (x1 - invV)/(x1 - xi)), z);
 }
 
 
@@ -1060,11 +1063,10 @@ bool Foam::diameterModels::populationBalanceModel::writeData(Ostream& os) const
 Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::eta
 (
     const label i,
-    const etaBoundsHandling ebh,
     const dimensionedScalar& v
 ) const
 {
-    return eta<dimensionedScalar>(i, ebh, v);
+    return eta<dimensionedScalar>(i, v);
 }
 
 
@@ -1072,11 +1074,31 @@ Foam::tmp<Foam::volScalarField::Internal>
 Foam::diameterModels::populationBalanceModel::eta
 (
     const label i,
-    const etaBoundsHandling ebh,
     const volScalarField::Internal& v
 ) const
 {
-    return eta<tmp<volScalarField::Internal>>(i, ebh, v);
+    return eta<tmp<volScalarField::Internal>>(i, v);
+}
+
+
+Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::etaV
+(
+    const label i,
+    const dimensionedScalar& v
+) const
+{
+    return etaV<dimensionedScalar>(i, v);
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::diameterModels::populationBalanceModel::etaV
+(
+    const label i,
+    const volScalarField::Internal& v
+) const
+{
+    return etaV<tmp<volScalarField::Internal>>(i, v);
 }
 
 

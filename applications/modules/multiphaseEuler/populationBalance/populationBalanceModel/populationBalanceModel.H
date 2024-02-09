@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -371,25 +371,6 @@ public:
                 }
         };
 
-    // Public Enumerations
-
-        //- Enumeration for specifying how to allocate out of bounds of the
-        //  population balance size-groups.
-        //
-        //  "Clamp" will create an out-of-bounds allocation coefficient of
-        //  exactly one. This partitions unity across all size-space.
-        //
-        //  "Extrapolate" will create an out-of-bounds allocation coefficient
-        //  in proportion to the ratio between the given size and the nearest
-        //  size-group size. This does not partition unity outside the range of
-        //  the size-groups.
-        //
-        enum class etaBoundsHandling
-        {
-            clamp,
-            extrapolate
-        };
-
 
 private:
 
@@ -530,14 +511,13 @@ private:
         //- Return the interval at which the sources are updated
         inline label sourceUpdateInterval() const;
 
-        //- Calculate and return the allocation coefficient
+        //- Calculate and return the number allocation coefficient
         template<class EtaType, class VType>
-        EtaType eta
-        (
-            const label i,
-            const etaBoundsHandling ebh,
-            const VType& v
-        ) const;
+        EtaType eta(const label i, const VType& v) const;
+
+        //- Calculate and return the volume allocation coefficient
+        template<class EtaType, class VType>
+        EtaType etaV(const label i, const VType& v) const;
 
 
 public:
@@ -632,19 +612,23 @@ public:
         //- Return average velocity
         inline const volVectorField& U() const;
 
-        //- Return allocation coefficient
-        dimensionedScalar eta
-        (
-            const label i,
-            const etaBoundsHandling ebh,
-            const dimensionedScalar& v
-        ) const;
+        //- Return the number allocation coefficient
+        dimensionedScalar eta(const label i, const dimensionedScalar& v) const;
 
-        //- Return allocation coefficient
+        //- Return the number allocation coefficient
         tmp<volScalarField::Internal> eta
         (
             const label i,
-            const etaBoundsHandling ebh,
+            const volScalarField::Internal& v
+        ) const;
+
+        //- Return the volume allocation coefficient
+        dimensionedScalar etaV(const label i, const dimensionedScalar& v) const;
+
+        //- Return the volume allocation coefficient
+        tmp<volScalarField::Internal> etaV
+        (
+            const label i,
             const volScalarField::Internal& v
         ) const;
 
