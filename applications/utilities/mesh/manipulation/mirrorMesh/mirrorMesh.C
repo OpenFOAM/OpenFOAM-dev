@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,10 +43,14 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     #include "addOverwriteOption.H"
+    #include "addRegionOption.H"
     #include "addDictOption.H"
 
     #include "setRootCase.H"
     #include "createTime.H"
+
+    const word regionName =
+        args.optionLookupOrDefault("region", polyMesh::defaultRegion);
 
     const bool overwrite = args.optionFound("overwrite");
 
@@ -54,7 +58,7 @@ int main(int argc, char *argv[])
     (
         IOobject
         (
-            mirrorFvMesh::defaultRegion,
+            regionName,
             runTime.constant(),
             runTime
         ),
