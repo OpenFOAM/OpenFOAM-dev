@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,6 +56,13 @@ Usage
         Prints the keywords (of the selected entry or of the top level if
         no entry was selected
 
+      - \par -rename \<newName\>
+        Renames the entry selected by \c -entry
+
+      - \par -rename \<newNames\>
+        Renames a list of entries specified in the form:
+        "<entryName0>=<newName0>, <entryName1>=<newName1>..."
+
       - \par -add \<value\>
         Adds the entry (should not exist yet)
 
@@ -63,7 +70,8 @@ Usage
         Adds or replaces the entry selected by \c -entry
 
       - \par -set \<substitutions\>
-        Applies the list of substitutions
+        Applies the list of substitutions specified in the form:
+        "<entry0>=<value0>, <entry1>=<value1>..."
 
       - \par -merge \<value\>
         Merges the entry
@@ -255,7 +263,22 @@ void remove(dictionary& dict, const dictionary& removeDict)
 }
 
 
-void substitute(dictionary& dict, string substitutions)
+void rename(dictionary& dict, const string& newNames)
+{
+    wordReList args;
+    List<Tuple2<word, string>> namedArgs;
+    dictArgList(newNames, args, namedArgs);
+
+    forAll(namedArgs, i)
+    {
+        const Pair<word> dAk(dictAndKeyword(namedArgs[i].first()));
+        dictionary& subDict(dict.scopedDict(dAk.first()));
+        subDict.changeKeyword(dAk.second(), word(namedArgs[i].second()));
+    }
+}
+
+
+void substitute(dictionary& dict, const string& substitutions)
 {
     wordReList args;
     List<Tuple2<word, string>> namedArgs;
@@ -288,6 +311,12 @@ int main(int argc, char *argv[])
     (
         "value",
         "Print entry value"
+    );
+    argList::addOption
+    (
+        "rename",
+        "name",
+        "Rename entry or list of entries"
     );
     argList::addOption
     (
@@ -484,7 +513,19 @@ int main(int argc, char *argv[])
         const word scopedName(entryName);
 
         string newValue;
-        if
+
+        if (args.optionReadIfPresent("rename", newValue))
+        {
+            // Extract dictionary name and keyword
+            const Pair<word> dAk(dictAndKeyword(scopedName));
+
+            dictionary& subDict(dict.scopedDict(dAk.first()));
+
+            subDict.changeKeyword(dAk.second(), word(newValue));
+
+            changed = true;
+        }
+        else if
         (
             args.optionReadIfPresent("set", newValue)
          || args.optionReadIfPresent("add", newValue)
@@ -494,7 +535,9 @@ int main(int argc, char *argv[])
             const bool overwrite = args.optionFound("set");
             const bool merge = args.optionFound("merge");
 
+            // Extract dictionary name and keyword
             const Pair<word> dAk(dictAndKeyword(scopedName));
+
             dictionary& subDict(dict.scopedDict(dAk.first()));
 
             entry* ePtr = nullptr;
@@ -632,6 +675,12 @@ int main(int argc, char *argv[])
                     << exit(FatalIOError, 2);
             }
         }
+    }
+    else if (args.optionFound("rename"))
+    {
+        const string newNames(args.optionRead<string>("rename"));
+        rename(dict, newNames);
+        changed = true;
     }
     else if (args.optionFound("set"))
     {
