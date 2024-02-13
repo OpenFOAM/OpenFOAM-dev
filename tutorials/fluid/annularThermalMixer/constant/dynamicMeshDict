@@ -20,7 +20,7 @@ mover
 {
     type            motionSolver;
 
-    libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
+    libs            ("libfvMotionSolvers.so");
 
     motionSolver    solidBody;
 

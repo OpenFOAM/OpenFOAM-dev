@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ Usage
         {
             type            motionSolver;
 
-            libs            ("libfvMeshMovers.so" "libfvMotionSolvers.so");
+            libs            ("libfvMotionSolvers.so");
 
             motionSolver    solidBody;
 

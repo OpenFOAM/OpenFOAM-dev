@@ -1,11 +1,11 @@
 EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/motionSolvers/lnInclude \
-    -I$(LIB_SRC)/fvMeshMovers/lnInclude \
+    -I$(LIB_SRC)/fvMeshMovers/motionSolver/lnInclude \
     -I$(LIB_SRC)/sixDoFRigidBodyMotion/lnInclude
 
 LIB_LIBS = \
     -lfiniteVolume \
     -lmotionSolvers \
-    -lfvMeshMovers \
+    -lfvMeshMoversMotionSolver \
     -lsixDoFRigidBodyMotion

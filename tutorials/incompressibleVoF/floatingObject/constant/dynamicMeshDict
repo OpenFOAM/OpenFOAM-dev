@@ -17,7 +17,7 @@ mover
 {
     type            motionSolver;
 
-    libs            ("libfvMeshMovers.so" "librigidBodyMeshMotion.so");
+    libs            ("librigidBodyMeshMotion.so");
 
     motionSolver       rigidBodyMotion;
 

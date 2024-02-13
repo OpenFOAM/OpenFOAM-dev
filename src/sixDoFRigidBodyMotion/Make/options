@@ -9,4 +9,4 @@ LIB_LIBS = \
     -lforces \
     -lmeshTools \
     -lfileFormats \
-    -lmotionSolvers
+    -lfvMeshMoversMotionSolver
