@@ -58,4 +58,32 @@ userTime
     rpm      1500;
 }
 
+functions
+{
+    setDeltaT
+    {
+        type coded;
+
+        // Load the library containing the 'coded' functionObject
+        libs            ("libutilityFunctionObjects.so");
+
+        codeInclude
+        #{
+            #include "volFields.H"
+        #};
+
+        codeExecute
+        #{
+            const Time& runTime = mesh().time();
+            if (runTime.userTimeValue() >= -15.0)
+            {
+                const_cast<Time&>(runTime).setDeltaT
+                (
+                    runTime.userTimeToTime(0.025)
+                );
+            }
+        #};
+    }
+}
+
 // ************************************************************************* //

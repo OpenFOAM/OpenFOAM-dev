@@ -1,0 +1,117 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform 1e5;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet
+    {
+        type            uniformTotalPressure;
+        p0
+        {
+            type    tableFile;
+            format  csv;
+            file                "constant/expData/pInlet";
+            nHeaderLine         2;          // Number of header lines
+            refColumn           0;          // Reference column index
+            separator           " ";        // Optional (defaults to ",")
+            componentColumns    (1);        // Component column indices
+            mergeSeparators     yes;        // Merge multiple separators
+            // For multi-cycle simulations, use repeat
+            outOfBounds     repeat;
+            interpolationScheme linear;
+        }
+        value           $internalField;
+        psi             psi;
+        rho             rho;
+        gamma           1.4;
+    }
+
+    outlet
+    {
+        type            uniformTotalPressure;
+        p0              table
+        (
+            (0      1.0e5)
+            (100    1.0e5)
+            (240    1.7e5)
+            (380    1.0e5)
+            (720    1.0e5)
+        );
+
+        // For multi-cycle simulations, use repeat
+        outOfBounds     repeat;
+        interpolationScheme linear;
+
+        value           $internalField;
+        psi             psi;
+        rho             rho;
+        gamma           1.4;
+    }
+
+    piston
+    {
+        type            zeroGradient;
+    }
+
+    liner
+    {
+        type            zeroGradient;
+    }
+
+    cylinderHead
+    {
+        type            zeroGradient;
+    }
+
+    ivHead
+    {
+        type            zeroGradient;
+    }
+
+    evHead
+    {
+        type            zeroGradient;
+    }
+
+    ivStem
+    {
+        type            zeroGradient;
+    }
+
+    evStem
+    {
+        type            zeroGradient;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+
+    "nonCouple.*"
+    {
+        type            zeroGradient;
+    }
+}
+
+
+// ************************************************************************* //

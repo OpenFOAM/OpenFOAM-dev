@@ -1,0 +1,300 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+
+createSingleValveBaseMesh()
+{
+    valveLift=-$1
+    nGap=$2
+    pistonPos=-$3
+    nClearance=$4
+    valveRegion=$5
+
+    OPEN=$(echo "$1 > 0" | bc -l)
+    if [ $OPEN -eq 1 ]; then
+        cp system/blockMeshDict.valveOpen system/blockMeshDict
+    else
+        cp system/blockMeshDict.valveClosed system/blockMeshDict
+    fi
+
+    foamDictionary system/blockMeshDict -set " \
+        valveLift=$valveLift, \
+        nValve=$nGap, \
+        x0=-5, \
+        nXLeft=4, \
+        pistonPos=$pistonPos, \
+        nPiston=$nClearance"
+    runApplication -a blockMesh -region $valveRegion \
+                   -dict system/blockMeshDict
+    runApplication -a mirrorMesh -region $valveRegion \
+                   -dict system/mirrorMeshDict -overwrite
+}
+
+createExhaustValveMesh()
+{
+    createSingleValveBaseMesh $1 $2 $3 $4 _tmp_exhaust
+
+    runApplication -a transformPoints -region _tmp_exhaust "translate=(-6 0 0)"
+
+    foamDictionary constant/_tmp_exhaust/polyMesh/boundary -rename " \
+        entry0/valveHead=evHead, \
+        entry0/valveStem=evStem, \
+        entry0/liner=nonCouple_ev_cyl, \
+        entry0/inlet=outlet"
+}
+
+createIntakeValveMesh()
+{
+    createSingleValveBaseMesh $1 $2 $3 $4 _tmp_intake
+
+    runApplication -a transformPoints -region _tmp_intake "translate=(6 0 0)"
+
+    foamDictionary constant/_tmp_intake/polyMesh/boundary -rename " \
+        entry0/valveHead=ivHead, \
+        entry0/valveStem=ivStem, \
+        entry0/liner=nonCouple_iv_cyl"
+}
+
+createCylinderMesh()
+{
+    pistonPos=-$1
+    nClearance=$2
+
+    cp system/blockMeshDict.cylinder system/blockMeshDict
+
+    foamDictionary system/blockMeshDict -set " \
+        pistonPos=$pistonPos,
+        nPiston=$nClearance"
+    runApplication -a blockMesh -region $region -dict system/blockMeshDict
+}
+
+pistonPositionFromTDC()
+{
+    cad=$1
+
+    pi=$(echo "scale=10; 4*a(1)" | bc --mathlib)
+    theta=$(echo "$cad*($pi/180)" | bc --mathlib)
+
+    # - r: position from the crank center
+    TERM1="$CONROD_LENGHT * $CONROD_LENGHT"
+    TERM2="($STROKE * s($theta) / 2.0) * ($STROKE * s($theta) / 2.0)"
+    R=$(echo "$STROKE * c($theta) / 2.0 + sqrt( $TERM1 - $TERM2 )" \
+            | bc --mathlib)
+
+    # - pos: position from tdc
+    POS=$(echo "$CONROD_LENGHT + $STROKE / 2.0 - $R" | bc --mathlib)
+
+    echo $POS
+}
+
+round()
+{
+    echo $(printf %.$2f $(echo "scale=$2;(((10^$2)*$1)+0.5)/(10^$2)" | bc))
+};
+
+setMeshResolution()
+{
+    CYL_BASE_RES=3
+    VALVE_BASE_RES=3
+    oneOverDX=3
+
+    N_IV=$(( $VALVE_BASE_RES + $oneOverDX*$(round $LIFT_IV 0) ))
+    N_EV=$(( $VALVE_BASE_RES + $oneOverDX*$(round $LIFT_EV 0) ))
+    N_CYL=$(( $CYL_BASE_RES + $oneOverDX*$(round $POS 0) ))
+
+    # as valve lift increases, we do not need so many cells below
+    vp_cl=$(echo "$POS - $LIFT_IV" | bc --mathlib)
+
+    N_CYL_IV=$(( $CYL_BASE_RES + $oneOverDX*$(round $vp_cl 0) ))
+    vp_cl=$(echo "$POS - $LIFT_EV" | bc --mathlib)
+
+    N_CYL_EV=$(( $CYL_BASE_RES + $oneOverDX*$(round $vp_cl 0) ))
+}
+
+mergeMeshModules()
+{
+    runApplication -a mergeMeshes -overwrite -region $region \
+                   -addRegions '(_tmp_exhaust _tmp_intake)'
+
+    # Delete temporary valve meshes
+    rm -rf constant/_tmp*
+
+    # Separate ports to mimic complicated engine assembly
+    runApplication -a createBaffles -region $region \
+                   -dict system/createBafflesDict -overwrite
+
+    # Use NCC to enable sliding interface near the valve
+    runApplication -a createNonConformalCouples -region $region \
+                   -dict system/createNonConformalCouplesDict -overwrite
+
+    runApplication -a transformPoints -region $region \
+                   "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
+
+    # Delete temporary fvMesh
+    rm -rf constant/fvMesh
+}
+
+createMesh()
+{
+    region=meshToMesh_$CAD
+
+    POS0=$(pistonPositionFromTDC $CAD)
+    POS=$(echo "$POS0 + $TDC_CLEARANCE" | bc --mathlib)
+
+    setMeshResolution
+
+    createCylinderMesh $POS $N_CYL
+    createExhaustValveMesh $LIFT_EV $N_EV $POS $N_CYL_EV
+    createIntakeValveMesh  $LIFT_IV $N_IV $POS $N_CYL_IV
+    mergeMeshModules
+}
+
+
+# Set geometrical variables according to constant/dynamicMeshDict
+SCALE=10
+SCALE_INV=$(echo "1.0 / $SCALE" | bc --mathlib)
+
+dynamicMeshDict=constant/dynamicMeshDict
+STROKE0=$(foamDictionary $dynamicMeshDict -writePrecision 12 \
+                         -entry mover/piston/motion/stroke -value)
+STROKE=$(echo "$SCALE * $STROKE0" | bc --mathlib)
+CONROD_LENGHT0=$(foamDictionary $dynamicMeshDict -writePrecision 12 \
+                                -entry mover/piston/motion/conRodLength -value)
+CONROD_LENGHT=$(echo "$SCALE * $CONROD_LENGHT0" | bc --mathlib)
+TDC_CLEARANCE=10
+
+
+# Valve lift values are chosen to align with the liftProfile
+# values defined  in the dynamicMeshDict
+
+CAD=0
+LIFT_IV=0
+LIFT_EV=0
+createMesh
+
+# EV opening
+CAD=100
+LIFT_IV=0
+LIFT_EV=0.1
+createMesh
+
+CAD=120
+LIFT_IV=0
+LIFT_EV=0.5
+createMesh
+
+CAD=140
+LIFT_IV=0
+LIFT_EV=0.9
+createMesh
+
+CAD=180
+LIFT_IV=0
+LIFT_EV=1.7
+createMesh
+
+CAD=200
+LIFT_IV=0
+LIFT_EV=2.1
+createMesh
+
+CAD=220
+LIFT_IV=0
+LIFT_EV=2.5
+createMesh
+
+CAD=300
+LIFT_IV=0
+LIFT_EV=1.7
+createMesh
+
+# IV opening
+CAD=340
+LIFT_IV=0.1
+LIFT_EV=0.9
+createMesh
+
+CAD=345
+LIFT_IV=0.2
+LIFT_EV=0.8
+createMesh
+
+CAD=350
+LIFT_IV=0.3
+LIFT_EV=0.7
+createMesh
+
+CAD=360
+LIFT_IV=0.5
+LIFT_EV=0.5
+createMesh
+
+CAD=370
+LIFT_IV=0.7
+LIFT_EV=0.3
+createMesh
+
+# EV closing
+CAD=380
+LIFT_IV=0.9
+LIFT_EV=0
+createMesh
+
+CAD=390
+LIFT_IV=1.1
+LIFT_EV=0
+createMesh
+
+CAD=410
+LIFT_IV=1.5
+LIFT_EV=0
+createMesh
+
+CAD=440
+LIFT_IV=2.1
+LIFT_EV=0
+createMesh
+
+CAD=460
+LIFT_IV=2.5
+LIFT_EV=0
+createMesh
+
+CAD=520
+LIFT_IV=2.1
+LIFT_EV=0
+createMesh
+
+CAD=550
+LIFT_IV=1.5
+LIFT_EV=0
+createMesh
+
+CAD=580
+LIFT_IV=0.9
+LIFT_EV=0
+createMesh
+
+CAD=600
+LIFT_IV=0.5
+LIFT_EV=0
+createMesh
+
+CAD=610
+LIFT_IV=0.3
+LIFT_EV=0
+createMesh
+
+# IV closing
+CAD=620
+LIFT_IV=0
+LIFT_EV=0
+createMesh
+
+ls -d constant/meshToMesh_* | sed 's/.*meshToMesh_//' \
+    | sort -n > constant/meshTimes
+
+#------------------------------------------------------------------------------

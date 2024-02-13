@@ -1,0 +1,59 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+internalFacesOnly true;
+
+baffles
+{
+    baffles_ev_port
+    {
+        type        searchableSurface;
+        surface     searchablePlate;
+        origin      (-10 5 0);
+        span        (12 0 1e30);
+
+        owner
+        {
+            name            nonCouple_ep_ev;
+            type            patch;
+        }
+        neighbour
+        {
+            name            nonCouple_ev_ep;
+            type            patch;
+        }
+    }
+
+    baffles_iv_port
+    {
+        type        searchableSurface;
+        surface     searchablePlate;
+        origin      (2 5 0);
+        span        (10 0 1e30);
+
+        owner
+        {
+            name            nonCouple_ip_iv;
+            type            patch;
+        }
+        neighbour
+        {
+            name            nonCouple_iv_ip;
+            type            patch;
+        }
+    }
+}
+
+// ************************************************************************* //

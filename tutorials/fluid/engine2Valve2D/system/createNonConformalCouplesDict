@@ -10,33 +10,38 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      functions;
+    object      createNonConformalCouplesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-setDeltaT
+fields no;
+
+nonConformalCouples
 {
-    type coded;
+    NCC_iv
+    {
+        patches         (nonCouple_iv_cyl nonCouple_cyl_iv);
+        transform       none;
+    }
 
-    // Load the library containing the 'coded' functionObject
-    libs            ("libutilityFunctionObjects.so");
+    NCC_ev
+    {
+        patches         (nonCouple_ev_cyl nonCouple_cyl_ev);
+        transform       none;
+    }
 
-    codeInclude
-    #{
-        #include "volFields.H"
-    #};
+    NCC_iv_port
+    {
+        patches         (nonCouple_ip_iv nonCouple_iv_ip);
+        transform       none;
+    }
 
-    codeExecute
-    #{
-        const Time& runTime = mesh().time();
-        if (runTime.userTimeValue() >= -15.0)
-        {
-            const_cast<Time&>(runTime).setDeltaT
-            (
-                runTime.userTimeToTime(0.025)
-            );
-        }
-    #};
+    NCC_ev_port
+    {
+        patches         (nonCouple_ep_ev nonCouple_ev_ep);
+        transform       none;
+    }
+
 }
 
 // ************************************************************************* //

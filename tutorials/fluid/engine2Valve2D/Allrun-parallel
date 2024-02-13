@@ -1,0 +1,23 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+./Allmesh
+
+# Copy the start time mesh
+cp -r constant/meshToMesh_0/polyMesh constant/
+
+runApplication decomposePar
+for meshDir in constant/meshToMesh_*; do
+    # Extract mapTime from the directory name
+    mapTime=$(basename "$meshDir")
+
+    # Run the command with the extracted mapTime
+    runApplication -a decomposePar -region "$mapTime"
+done
+
+runParallel $(getApplication)
+
+#------------------------------------------------------------------------------

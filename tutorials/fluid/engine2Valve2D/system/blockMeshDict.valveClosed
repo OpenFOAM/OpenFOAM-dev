@@ -1,0 +1,180 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+//          6.--------.9 .
+//           |        |  |
+//           |        |  |
+//          7. _ _ _ _10 .
+//           /           |
+// 2 _  _ 3 /_ _ _ _ _ _12
+// |       |             |
+// 4 _  _  5 _ _ _ _ _ _ |13
+
+valveLift -0;
+pistonPos -4;
+
+nValve 8;
+nPiston 8;
+nXLeft 8;
+
+x0 -6;
+x1 -4;
+x2 -3;
+x3 -1;
+x4  0;
+
+y0 $valveLift;
+y1 $pistonPos;
+y2 1;
+y3 8;
+y4 #calc "$valveLift+1";
+
+z0 0.0;
+z1 0.5;
+
+vertices
+(
+    ($x0 0.0 $z0) //0
+    ($x1 0.0 $z0) //1
+    ($x0 $y0 $z0) //2
+    ($x1 $y0 $z0) //3
+    ($x0 $y1 $z0) //4
+    ($x1 $y1 $z0) //5
+    ($x2 $y3 $z0) //6
+    ($x2 $y2 $z0) //7
+    ($x2 $y4 $z0) //8
+    ($x3 $y3 $z0) //9
+    ($x3 $y2 $z0) //10
+    ($x3 $y4 $z0) //11
+    ($x4 $y0 $z0) //12
+    ($x4 $y1 $z0) //13
+
+    // + 14
+    ($x0 0.0 $z1) //0
+    ($x1 0.0 $z1) //1
+    ($x0 $y0 $z1) //2
+    ($x1 $y0 $z1) //3
+    ($x0 $y1 $z1) //4
+    ($x1 $y1 $z1) //5
+    ($x2 $y3 $z1) //6
+    ($x2 $y2 $z1) //7
+    ($x2 $y4 $z1) //8
+    ($x3 $y3 $z1) //9
+    ($x3 $y2 $z1) //10
+    ($x3 $y4 $z1) //11
+    ($x4 $y0 $z1) //12
+    ($x4 $y1 $z1) //13
+);
+
+blocks
+(
+    hex (2 4 5 3 16 18 19 17) ($nPiston $nXLeft 1) simpleGrading (1 1 1)
+    hex (6 7 10 9 20 21 24 23) (24 8 1) simpleGrading (1 1 1)
+    hex (3 5 13 12 17 19 27 26) ($nPiston 15 1) simpleGrading (1 1 1)
+);
+
+defaultPatch
+{
+    name    frontAndBack;
+    type    empty;
+}
+
+boundary
+(
+    piston
+    {
+        type    wall;
+        faces
+        (
+            (4 5 18 19)
+            (5 13 19 27)
+        );
+    }
+
+    liner
+    {
+        type    wall;
+        faces
+        (
+            (4 2 18 16)
+        );
+    }
+
+    cylinderHead
+    {
+        type    wall;
+        faces
+        (
+            (2 3 17 16)
+            (7 6 20 21)
+        );
+    }
+
+    inlet
+    {
+        type    patch;
+        faces
+        (
+            (6 9 23 20)
+        );
+    }
+
+    valveHead
+    {
+        type    wall;
+        faces
+        (
+            (7 21 24 10)
+            (12 3 17 26)
+        );
+    }
+
+    valveStem
+    {
+        type    wall;
+        faces
+        (
+            (9 10 24 23)
+        );
+    }
+
+    symmetry
+    {
+        type    patch;
+        faces
+        (
+            (12 13 27 26)
+        );
+    }
+
+    frontAndBack
+    {
+        type    empty;
+        faces
+        (
+            (4 5 3 2)
+            (7 10 9 6)
+            (5 13 12 3)
+
+            (18 19 17 16)
+            (21 24 23 20)
+            (19 27 26 17)
+        );
+    }
+);
+
+// ************************************************************************* //

@@ -1,0 +1,129 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+mover
+{
+
+    type            multiValveEngine;
+
+    libs            ("libfvMeshMoversMultiValveEngine.so");
+
+    slidingPatches
+    (
+        liner
+        evStem
+        ivStem
+        nonCouple_cyl_ev
+        nonCouple_ev_cyl
+        nonCouple_cyl_iv
+        nonCouple_iv_cyl
+    );
+
+    linerPatches        (liner);
+
+    piston
+    {
+        patches             (piston);
+        axis                (0 0 1);
+
+        motion
+        {
+            type            crankConnectingRodMotion;
+
+            conRodLength    1000; // To mimic pure sinusoidal motion
+            stroke          1;
+        }
+
+        movingFrozenLayerThickness  0;
+
+        fractionalTravelInterval    0.1;
+        cosineScaling               yes;
+    }
+
+    valves
+    {
+        iv
+        {
+            patches         (ivHead);
+
+            axis            (0 0 1);
+
+            movingFrozenLayerThickness  0;
+
+            fractionalTravelInterval    0.02;
+            cosineScaling               yes;
+
+            minLift                     0.01;
+
+            motion
+            {
+                type    table;
+                values
+                (
+                    // lift: 0.002 / CAD
+                    (0      0.0)
+                    (340    0.01) // IVO + meshToMesh map
+                    (480    0.29)
+                    (620    0.01) // IVC + meshToMesh map
+                    (720    0.0)
+                );
+
+                // For multi-cycle simulations, use repeat
+                outOfBounds     repeat;
+                interpolationScheme linear;
+            }
+        }
+
+        ev
+        {
+            $iv;
+            patches         (evHead);
+
+            motion
+            {
+                type    table;
+                values
+                (
+                    (0      0.0)
+                    (100    0.01) // EVO + meshToMesh map
+                    (240    0.29)
+                    (380    0.01) // EVC + meshToMesh map
+                    (720    0.0)
+                );
+                // For multi-cycle simulations, use repeat
+                outOfBounds     repeat;
+                interpolationScheme linear;
+            }
+        }
+    };
+}
+
+topoChanger
+{
+    type    meshToMesh;
+
+    libs    ("libmeshToMeshTopoChanger.so");
+
+    times
+    (
+        #include "$FOAM_CASE/constant/meshTimes"
+    );
+
+    repeat          720;
+    timeDelta       1e-6;
+}
+
+// ************************************************************************* //
