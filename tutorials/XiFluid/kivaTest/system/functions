@@ -15,6 +15,5 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #includeFunc multiValveEngineState
-#includeFunc checkMesh(executeControl=adjustableRunTime, executeInterval=5)
 
 // ************************************************************************* //

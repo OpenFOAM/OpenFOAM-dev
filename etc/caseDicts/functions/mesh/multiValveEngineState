@@ -4,17 +4,19 @@
    \\    /   O peration     | Website:  https://openfoam.org
     \\  /    A nd           | Version:  dev
      \\/     M anipulation  |
-\*---------------------------------------------------------------------------*/
-FoamFile
-{
-    format      ascii;
-    class       dictionary;
-    location    "system";
-    object      functions;
-}
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+-------------------------------------------------------------------------------
+Description
+    Writes the multi-valve engine motion state
+    providing details of the piston and valve position, speed etc.
 
-#includeFunc multiValveEngineState
-#includeFunc checkMesh(executeControl=adjustableRunTime, executeInterval=5)
+\*---------------------------------------------------------------------------*/
+
+type           multiValveEngineState;
+libs           ("libfvMeshMoversMultiValveEngine.so");
+
+writeControl   timeStep;
+writeInterval  1;
+
+log            true;
 
 // ************************************************************************* //

@@ -174,27 +174,11 @@ bool Foam::fvMeshMovers::multiValveEngine::update()
     // Accumulate point motion from each moving object into newPoints field.
     pointField newPoints(mesh().points());
 
-    Info<< "Piston: " << nl;
-
     piston_.updatePoints(newPoints);
-
-    Info<< "    position from TDC: " << piston_.position() << " m" << nl
-        << "    displacement: " << piston_.displacement() << " m" << nl
-        << "    speed = " << piston_.speed() << " m/s" << nl
-        << "    clearance: " << piston_.clearance() << " m" << endl;
 
     forAll(valves_, valvei)
     {
-        valveObject& valve = valves_[valvei];
-
-        Info<< "Valve " << valve.name << nl;
-
-        valve.updatePoints(newPoints);
-
-        Info<< "    lift: " << (valve.isOpen() ? valve.lift() : 0.0)  << " m "
-            << (valve.isOpen() ? "(open)" : "(closed)") << nl
-            << "    speed: " << valve.speed() << " m/s" << nl
-            << "    displacement: " << valve.displacement() << " m" << endl;
+        valves_[valvei].updatePoints(newPoints);
     }
 
     // Update the mesh according to the newPoints field.

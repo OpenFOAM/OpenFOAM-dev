@@ -5,5 +5,6 @@ valve.C
 valveList.C
 crankConnectingRodMotion/crankConnectingRodMotion.C
 pistonPointEdgeData/pistonPointEdgeData.C
+multiValveEngineState/multiValveEngineState.C
 
 LIB = $(FOAM_LIBBIN)/libfvMeshMoversMultiValveEngine
