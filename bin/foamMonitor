@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -26,31 +26,50 @@
 #     foamMonitor
 #
 # Description
-#     Monitor data with Gnuplot from time-value(s) graphs written by OpenFOAM
-#     e.g. by functionObjects
-#     - requires gnuplot
+#     Displays graphs to monitor data from files written by OpenFOAM, e.g.
+#     by functionObjects. Requires gnuplot to be installed.
 #
 #------------------------------------------------------------------------------
+
 usage() {
     cat<<USAGE
 
 Usage: ${0##*/} [OPTION] <file>
 options:
+  -ascii    | -a         show the graph by printing ascii in the terminal
+  -columns  | -c <cols>  display specfied columns, comma-separated, e.g. "2,4"
+  -flip     | -f         plot data on x-axis, independent variable on y-axis
   -help     | -h         print the usage
   -idle     | -i <time>  stops if <file> unchanging for <time> sec (default 60s)
-  -title    | -t <title> set the graph title (default "Data Monitoring")
   -logscale | -l         plots data (y-axis) on log scale, e.g. for residuals
+  -once     | -o         print a graph one time without refreshing
   -refresh  | -r <time>  refreshes display every <time> sec (default 10s)
-  -yrange   | -y <range> sets data (y-axis) range, format "[0:1]"
   -size     | -s <size>  set the size of the output plot, format "640,480"
-  -ascii    | -a         show the graph by printing ascii in the terminal
+  -title    | -t <title> set the graph title (default "Data Monitoring")
+  -yrange   | -y <range> sets data (y-axis) range, format "[0:1]"
 
-Monitor data with Gnuplot from time-value(s) graphs written by OpenFOAM
-e.g. by functionObjects
-- requires gnuplot
+Displays graphs to monitor data from files written by OpenFOAM, e.g. by
+functionObjects. Requires gnuplot to be installed.
 
-Example:
-  foamMonitor -l postProcessing/residuals/0/residuals.dat
+Graphs are plotted from column data files written by OpenFOAM, where column 1 is
+the independent variable, e.g. time, plotted on the horizontal axis by default.
+The other columns are the dependent data, plotted on the vertical axis by
+default. The data can be plotted within a specified range, using the '-r' option
+and/or on a log scale using the '-l' option. The default axes can be flipped by
+the '-f' option (with data plotted on the horizontal axis).
+
+In standard monitoring mode, graphs are refreshed (default: every 10s).
+The graph stops refreshing when the data file is unchanged for a prolongued
+period (default: 60s). Graphs can also be printed one time without refreshing
+using the '-o' option.
+
+Examples:
++ Monitor residuals on a log scale, running in background ('&')
+    foamMonitor -l postProcessing/residuals/0/residuals.dat &
++ Monitor probed pressure values from column 2, also in background
+    foamMonitor -c 2 postProcessing/probes/0/p &
++ Plot force coefficients from column 3 once, e.g. after the simulation stops
+    foamMonitor -o -c 3 postProcessing/forces/0/forceCoeffs.dat
 
 USAGE
 }
@@ -63,15 +82,27 @@ error() {
 }
 
 plotFileHeader() {
-    cat<<EOF
-set term $gpterminal $size
-$logscale
-$yrange
-set ytics format "$yticFormat"
-set title "$title"
-set xlabel "$xlabel"
-plot \\
-EOF
+    _term="$1"
+    _size="$2"
+    _logscale="$3"
+    _range="$4"
+    _title="$5"
+    _label="$6"
+
+    _ticFormat="%g"
+    [ "$logscale" = yes ] && _ticFormat="%1.e"
+    _otherAxis="$([ "$AXIS" = x ] && echo y || echo x)"
+
+    printf "set term %s" "$_term"
+    [ "$_size" = default ] || printf " size %s" "$_size"
+    printf "\n"
+
+    [ "$_logscale" = yes ] && printf "set logscale %s\n" "$AXIS"
+    [ "$_range" = none ] || printf "set %srange %s\n" "$AXIS" "$_range"
+    printf "set %stics format \"%s\"\n" "$AXIS" "$_ticFormat"
+    printf "set title \"%s\"\n" "$_title"
+    printf "set %slabel \"%s\"\n" "$_otherAxis" "$_label"
+    echo "plot \\"
 }
 
 plotFileFooter() {
@@ -83,63 +114,91 @@ EOF
 }
 
 howMany() ( echo "$1" | awk '{ print NF }' )
-#howMany() ( echo "$1" | set -f; set -- $1; echo $# )
 
-isInteger() {
-    [ ! -z "${1##*[!0-9]*}" ] && echo "$1" && return 0
+isInt() {
+    [ "$1" -eq "$1" ] 2> /dev/null
 }
+
+flip() {
+    [ "$AXIS" = y ] && echo "$1" && return 0
+    echo "$1" | awk -F: '{print $2 ":" $1}'
+}
+
+# Check gnuplot is insalled
+command -v gnuplot >/dev/null 2>&1 || error "Gnuplot not installed"
+
+# Variables used globally
+AXIS="y"
+
+# Variables used locally
+term='x11 1 font "helvetica,17" linewidth 1.5 persist noraise'
+size="default"
+logscale="no"
+range="none"
+title="Data Monitoring"
 
 idle=60
 refresh=10
-logscale=""
-yrange=""
-yticFormat="%g"
-title="Data Monitoring"
-size=""
-gpterminal='x11 1 font "helvetica,17" linewidth 1.5 persist noraise'
+once=""
+columns=""
 
-command -v gnuplot >/dev/null 2>&1 || error "Gnuplot not installed"
-
-# parse options
+# Options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
+    -a | -ascii)
+        term="dumb"
+        shift 1
+        ;;
+    -c | -columns)
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        columns=$(echo "$2" | tr , " ")
+        for c in $columns
+        do isInt "$c" || error "Argument of '$1' is not an integer: '$c'"
+        done
+        shift 2
+        ;;
+    -f | -flip)
+        AXIS="x"
+        shift 1
+        ;;
     -h | -help)
         usage && exit 0
         ;;
     -i | -idle)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-        idle=$(isInteger "$2") || error "Argument of '$1' is not an integer: '$2'"
+        isInt "$2" || error "Argument of '$1' is not an integer: '$2'"
+        idle="$2"
         shift 2
         ;;
     -l | -logscale)
-        logscale="set logscale y"
-        yticFormat="%1.e"
+        logscale="yes"
         shift 1
+        ;;
+    -o | -once)
+        once="yes"
+        shift 1
+        ;;
+    -r | -refresh)
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        isInt "$2" || error "Argument of '$1' is not an integer: '$2'"
+        refresh="$2"
+        shift 2
+        ;;
+    -s | -size)
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        size="$2"
+        shift 2
         ;;
     -t | -title)
         [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
         title=$2
         shift 2
         ;;
-    -r | -refresh)
-        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-        refresh=$(isInteger "$2") || error "Argument of '$1' is not an integer: '$2'"
-        shift 2
-        ;;
     -y | -yrange)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-        yrange="set yrange $2"
+        range="$2"
         shift 2
-        ;;
-    -s | -size)
-        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-        size="size $2"
-        shift 2
-        ;;
-    -a | -ascii)
-        gpterminal="dumb"
-        shift 1
         ;;
     -*)
         error "unknown option: '$*'"
@@ -150,25 +209,32 @@ do
     esac
 done
 
+# Settings for one graph, without refresh
+[ "$idle" -eq 0 ] && refresh=0
+[ "$once" ] && idle=0 && refresh=0
+
+# Check input file
 [ $# -eq 1 ] || error "Incorrect arguments specified"
 [ -f "$1" ]  || error "File $1 does not exist"
 file=$1
 
-# Get keys from header
-keys=$(grep -E '^#' "$file" | tail -1)
+# Get keys from file header
+keys=$(grep -E '^#' "$file" | tail -1 | tr -s " ")
 
-[ "x$keys" = "x" ] && keys="# Step"
+# If no header, use 'Step' to describe column 1
+[ "$keys" = "" ] && keys="# Step"
+
 n_keys=$(howMany "$keys")
 n_cols=$(tail -1 "$file" | awk '{ print NF }')
 
 # With full column labels, n_keys = n_cols + 1, since it includes "#"
-
 # If n_keys > n_cols + 1, REMOVE EXCESS keys
 n_cols_pone=$(( n_cols + 1 ))
 [ "$n_keys" -gt "$n_cols_pone" ] && \
     keys=$(echo "$keys" | cut -d" " -f1-$n_cols_pone)
 n_keys=$(howMany "$keys")
 
+# If n_keys < n_cols + 1, create keys 'data1', 'data2', etc
 i=0
 while [ "$n_keys" -le "$n_cols" ]
 do
@@ -177,29 +243,76 @@ do
     n_keys=$(howMany "$keys")
 done
 
-# Remove # and Time keys
-xlabel=$(echo "$keys" | cut -d " " -f2)
-keys=$(echo "$keys" | cut -d " " -f3-)
+# Remove starting "#"; set 'n_keys' finally
+keys=$(echo "$keys" | cut -d " " -f2-)
+n_keys=$(howMany "$keys")
 
-gp_file=$(mktemp /tmp/tmp.XXXXXX)
-plotFileHeader > "$gp_file"
-i=1
-for field in $keys
+# Set 'label' to column 1 key
+label=$(echo "$keys" | awk '{print $1}')
+
+# Set columns to display
+[ "$columns" ] || columns="$(seq 2 "$n_keys")"
+
+# Check the highest column is not out of range
+highest_column="$(echo "$columns" | xargs -n 1 | \
+                  sort -n | xargs | awk '{print $NF}')"
+[ "$highest_column" -gt "$n_keys" ] && \
+    error "Data does not extend to specified column '$highest_column'"
+
+# Last column
+# shellcheck disable=SC2086
+last_col="$(echo $columns | awk '{print $NF}')"
+
+# START Gnuplot file
+gp_file=$(mktemp /tmp/tmp.foamMonitor.XXXXXX)
+
+plotFileHeader \
+    "$term" \
+    "$size" \
+    "$logscale" \
+    "$range" \
+    "$title" \
+    "$label" > "$gp_file"
+
+for col in $columns
 do
-    i=$(( i + 1 ))
-    plot_line="\"$file\" using 1:${i} with lines title \"$field\""
-    if [ $i -lt "$n_cols" ]
-    then
-       plot_line="$plot_line, \\"
-    fi
+    field="$(echo "$keys" | awk -v c="$col" '{print $c}')"
+    plot_line="\"$file\" using $(flip "1:${col}") with lines title \"$field\""
+    [ "$col" -ne "$last_col" ] && plot_line="$plot_line, \\"
     echo "$plot_line" >> "$gp_file"
 done
-plotFileFooter >> "$gp_file"
 
-touch "$file"
+# Add re-read footer if re-reading file
+[ "$idle" -eq 0 ] || plotFileFooter >> "$gp_file"
+# END Gnuplot file
+
 gnuplot "$gp_file" &
 pid=$!
 
+# Wait for gnuplot to spawn a process (xterm)
+! [ "$term" = "dumb" ] && \
+    start="$(date +%s)"
+    while ! [ "$(pgrep -P $pid)" ]
+    do
+        # timeout after 2 seconds in event xterm is not spawned
+        now="$(date +%s)"
+        [ $(( now  - start )) -gt 2 ] && break
+        sleep .1
+    done
+
+# Get the PID of the spawned process
+ch_pid="$(pgrep -P $pid)"
+
+# Kill gnuplot/gnuplot_x11 and delete tmp file, then kill foamMonitor on trap
+trap 'kill -9 $pid $ch_pid; rm -f $gp_file; kill -9 $$' EXIT INT TERM
+
+# Display graph once only
+[ "$idle" -eq 0 ] && exit 0
+
+# Update timestamp on data file
+touch "$file"
+
+# Re-read data file to update graph
 while true
 do
     mod_time=$(stat --format=%Y "$file")
@@ -207,8 +320,5 @@ do
     test "$mod_time" -gt "$idle_ago" || break
     sleep "$refresh"
 done
-
-kill -9 $pid
-rm "$gp_file"
 
 #------------------------------------------------------------------------------
