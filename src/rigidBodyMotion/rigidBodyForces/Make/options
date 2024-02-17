@@ -1,0 +1,13 @@
+EXE_INC = \
+    -I$(LIB_SRC)/functionObjects/forces/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/motionSolvers/lnInclude \
+    -I$(LIB_SRC)/fvMeshMovers/motionSolver/lnInclude \
+    -I$(LIB_SRC)/rigidBodyMotion/rigidBodyDynamics/lnInclude
+
+LIB_LIBS = \
+    -lforces \
+    -lfiniteVolume \
+    -lmotionSolvers \
+    -lfvMeshMoversMotionSolver \
+    -lrigidBodyDynamics

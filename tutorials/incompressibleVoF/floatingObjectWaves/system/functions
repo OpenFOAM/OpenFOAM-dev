@@ -21,4 +21,15 @@ rigidBodyState
     angleUnits     degrees;
 }
 
+rigidBodyForces
+{
+    type            rigidBodyForces;
+    libs            ("librigidBodyForces.so");
+    body            floatingObject;
+    patches         (floatingObject);
+    log             on;
+    writeControl    timeStep;
+    writeInterval   1;
+}
+
 // ************************************************************************* //

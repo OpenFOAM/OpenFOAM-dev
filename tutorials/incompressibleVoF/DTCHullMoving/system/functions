@@ -14,15 +14,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-forces
+rigidBodyForces
 {
-    type            forces;
-    libs            ("libforces.so");
+    type            rigidBodyForces;
+    libs            ("librigidBodyForces.so");
+    body            hull;
     patches         (hull);
     log             on;
     writeControl    timeStep;
     writeInterval   1;
-    CofR            (2.929541 0 0.2);
 }
 
 // ************************************************************************* //

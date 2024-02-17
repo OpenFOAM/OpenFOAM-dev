@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void Foam::functionObjects::forceCoeffs::writeFileHeader(const label i)
             writeHeaderValue(file(i), "magUInf", magUInf_);
             writeHeaderValue(file(i), "lRef", lRef_);
             writeHeaderValue(file(i), "Aref", Aref_);
-            writeHeaderValue(file(i), "CofR", coordSys_.origin());
+            writeHeaderValue(file(i), "CofR", CofR_);
             writeCommented(file(i), "Time");
             writeTabbed(file(i), "Cm");
             writeTabbed(file(i), "Cd");
@@ -189,7 +189,7 @@ bool Foam::functionObjects::forceCoeffs::execute()
 
 bool Foam::functionObjects::forceCoeffs::write()
 {
-    forces::calcForcesMoment();
+    forces::calcForcesMoments();
 
     if (Pstream::master())
     {
