@@ -304,7 +304,8 @@ pid=$!
 ch_pid="$(pgrep -P $pid)"
 
 # Kill gnuplot/gnuplot_x11 and delete tmp file, then kill foamMonitor on trap
-trap 'kill -9 $pid $ch_pid; rm -f $gp_file; kill -9 $$' EXIT INT TERM
+trap 'kill -9 $pid $ch_pid; rm -f $gp_file; kill -9 $$' INT TERM
+trap 'rm -f $gp_file' EXIT
 
 # Display graph once only
 [ "$idle" -eq 0 ] && exit 0
