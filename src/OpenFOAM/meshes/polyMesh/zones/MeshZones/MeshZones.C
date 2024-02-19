@@ -569,7 +569,10 @@ void Foam::MeshZones<ZoneType, MeshType>::swap(MeshZones& otherZones)
 
     forAll(toOtherZone, i)
     {
-        otherZones.append(zones[toOtherZone[i]].clone(otherZones));
+        otherZones.PtrList<ZoneType>::append
+        (
+            zones[toOtherZone[i]].clone(otherZones)
+        );
         zones.set(toOtherZone[i], nullptr);
     }
 
