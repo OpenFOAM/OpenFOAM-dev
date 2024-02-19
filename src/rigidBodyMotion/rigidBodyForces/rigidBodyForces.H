@@ -43,7 +43,7 @@ Description
         type        rigidBodyForces;
         libs        ("librigidBodyForces.so");
 
-        body        (hull);
+        body        hull;
         patches     (walls);
 
         log         yes;
