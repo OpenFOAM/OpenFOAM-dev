@@ -1089,7 +1089,6 @@ void Foam::fvMesh::setPoints(const pointField& p)
     clearGeom();
 
     // Update other local data
-    boundary_.movePoints();
     surfaceInterpolation::movePoints();
 
     meshObjects::movePoints<fvMesh>(*this);
@@ -1211,7 +1210,6 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
     updateGeomNotOldVol();
 
     // Update other local data
-    boundary_.movePoints();
     surfaceInterpolation::movePoints();
 
     meshObjects::movePoints<fvMesh>(*this);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,27 +72,7 @@ class fvPatch
         const fvBoundaryMesh& boundaryMesh_;
 
 
-protected:
-
-    // Protected Member Functions
-
-        //- Make patch weighting factors
-        virtual void makeWeights(scalarField&) const;
-
-        //- Initialise the patches for moving points
-        virtual void initMovePoints();
-
-        //- Correct patches after moving points
-        virtual void movePoints();
-
-
 public:
-
-    typedef fvBoundaryMesh BoundaryMesh;
-
-    friend class fvBoundaryMesh;
-    friend class surfaceInterpolation;
-
 
     //- Runtime type information
     TypeName(polyPatch::typeName_());
@@ -228,6 +208,9 @@ public:
 
 
         // Access functions for demand driven data
+
+            //- Make patch weighting factors
+            virtual void makeWeights(scalarField&) const;
 
             //- Return patch weighting factors
             const scalarField& weights() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,9 +112,6 @@ public:
             //- Find patch indices given a name
             labelList findIndices(const wordRe&, const bool useGroups) const;
 
-
-        //- Correct patches after moving points
-        void movePoints();
 
         //- Reorders patches. Ordering does not have to be done in
         //  ascending or descending order. Reordering has to be unique.

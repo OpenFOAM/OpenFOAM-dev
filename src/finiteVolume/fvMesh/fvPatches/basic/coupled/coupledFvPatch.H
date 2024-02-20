@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,12 +56,9 @@ class coupledFvPatch
 {
     // Private Data
 
+        //- Reference to the coupled polyPatch
         const coupledPolyPatch& coupledPolyPatch_;
 
-
-protected:
-
-    // Protected Member Functions
 
 protected:
 
@@ -75,20 +72,11 @@ protected:
             const vectorField& nbrDelta
         ) const;
 
-        //- Make patch weighting factors
-        virtual void makeWeights(scalarField& w) const = 0;
-
         //- Return delta (P to N) vectors across coupled patch
-        tmp<vectorField> delta
-        (
-            const vectorField& nbrDelta
-        ) const;
+        tmp<vectorField> delta(const vectorField& nbrDelta) const;
 
 
 public:
-
-    friend class surfaceInterpolation;
-
 
     //- Runtime type information
     TypeName(coupledPolyPatch::typeName_());
@@ -138,6 +126,9 @@ public:
             {
                 return fvPatch::faceCells();
             }
+
+            //- Make patch weighting factors
+            virtual void makeWeights(scalarField& w) const = 0;
 
             //- Return delta (P to N) vectors across coupled patch
             virtual tmp<vectorField> delta() const = 0;

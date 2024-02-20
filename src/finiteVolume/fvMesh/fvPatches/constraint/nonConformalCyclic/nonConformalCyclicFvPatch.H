@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,14 +66,6 @@ class nonConformalCyclicFvPatch
         const nonConformalCyclicPolyPatch& nonConformalCyclicPolyPatch_;
 
 
-protected:
-
-    // Protected Member functions
-
-        //- Make patch weighting factors
-        void makeWeights(scalarField&) const;
-
-
 public:
 
     //- Runtime type information
@@ -131,6 +123,9 @@ public:
             //- Return the face-cells
             virtual const labelUList& faceCells() const;
 
+
+        //- Make patch weighting factors
+        void makeWeights(scalarField&) const;
 
         //- Return delta (P to N) vectors across coupled patch
         virtual tmp<vectorField> delta() const;

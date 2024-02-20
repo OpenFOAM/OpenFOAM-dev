@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,19 +35,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(nonConformalCyclicFvPatch, 0);
     addToRunTimeSelectionTable(fvPatch, nonConformalCyclicFvPatch, polyPatch);
-}
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void Foam::nonConformalCyclicFvPatch::makeWeights(scalarField& w) const
-{
-    nonConformalCoupledFvPatch::makeWeights
-    (
-        w,
-        nbrPatch().Sf(),
-        nbrPatch().coupledFvPatch::delta()
-    );
 }
 
 
@@ -111,6 +98,17 @@ bool Foam::nonConformalCyclicFvPatch::coupled() const
 const Foam::labelUList& Foam::nonConformalCyclicFvPatch::faceCells() const
 {
     return nonConformalFvPatch::faceCells();
+}
+
+
+void Foam::nonConformalCyclicFvPatch::makeWeights(scalarField& w) const
+{
+    nonConformalCoupledFvPatch::makeWeights
+    (
+        w,
+        nbrPatch().Sf(),
+        nbrPatch().coupledFvPatch::delta()
+    );
 }
 
 
