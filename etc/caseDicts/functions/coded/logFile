@@ -1,0 +1,83 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Prints data to a log file
+
+\*---------------------------------------------------------------------------*/
+
+libs     ("libutilityFunctionObjects.so");
+type     coded;
+
+// Write at the end of every time step but not time zero
+executeAtStart  no;
+writeControl    timeStep;
+writeInterval   1;
+
+// Parameters, which can be read from other files using macro expansions, e.g.
+// magU  ${${FOAM_CASE}/0/U!Uinlet};
+rho  1.2;
+
+codeInclude
+#{
+    // Header files for classes and functions
+    #include "OFstream.H"
+    #include "OSspecific.H"
+    #include "fvc.H"
+#};
+
+// Header file paths for Make/options, e.g. for momentum transport models
+// Example:
+// -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude
+codeOptions
+#{
+#};
+
+// Linked libraries for Make/options, e.g. for momentum transport models
+// Not usually required since libraries are already linked to the solver
+// Example:
+// -lincompressibleMomentumTransportModels
+codeLibs
+#{
+#};
+
+codeData
+#{
+    autoPtr<OFstream> file;
+    autoPtr<scalar> rho;
+#};
+
+codeRead
+#{
+    fileName dir
+    (
+        mesh().time().globalPath()/
+        "postProcessing"/
+        mesh().time().name()/
+        name()
+    );
+
+    mkDir(dir);
+    file = new OFstream(dir/"data");
+
+    // Print a short file header
+    file()<< "#time" << tab << "KE" << endl;
+
+    rho = new scalar($rho);
+#};
+
+codeWrite
+#{
+    const volVectorField& U = mesh().lookupObject<volVectorField>("U");
+
+    scalar KE = 0.5*rho*fvc::domainIntegrate(magSqr(U)).value();
+
+    // Print time-value data in two columns
+    file()<< mesh().time().userTimeValue() << tab << KE << endl;
+#};
+
+// ************************************************************************* //

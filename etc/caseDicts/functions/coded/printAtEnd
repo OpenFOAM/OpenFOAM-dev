@@ -1,0 +1,66 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Prints to standard output at the end of the simulation
+
+\*---------------------------------------------------------------------------*/
+
+libs     ("libutilityFunctionObjects.so");
+type     coded;
+
+// Parameters, which can be read from other files using macro expansions, e.g.
+// magU  ${${FOAM_CASE}/0/U!Uinlet};
+diameter  2;
+
+codeInclude
+#{
+    // Header files for classes and functions
+    #include "constants.H"
+    using namespace Foam::constant::mathematical;
+#};
+
+// Header file paths for Make/options, e.g. for momentum transport models
+// Example:
+// -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude
+codeOptions
+#{
+#};
+
+// Linked libraries for Make/options, e.g. for momentum transport models
+// Not usually required since libraries are already linked to the solver
+// Example:
+// -lincompressibleMomentumTransportModels
+codeLibs
+#{
+#};
+
+codeData
+#{
+    // Member data, must be null constructed, e.g. using autoPtr<...>
+    autoPtr<scalar> radius;
+#};
+
+codeRead
+#{
+    // Initialisation of data using "new" operator
+    // Note: divisions "/" require surrounding spaces with macro-expanded ($)
+    //       variables, since "/" is the scoping operator, see magU above
+    radius = new scalar($diameter / 2.0);
+#};
+
+codeEnd
+#{
+    // Print to standard output
+    const fvPatch& patch = mesh().boundary()[0];
+
+    Info<< "Some area = " << pi*sqr(radius) << nl
+        << "Area of patch '" << patch.name() << "' = " << gSum(patch.magSf())
+        << nl << endl;
+#};
+
+// ************************************************************************* //

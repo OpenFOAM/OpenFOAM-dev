@@ -1,0 +1,60 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Caches and writes a volVectorField of grad(p)
+
+\*---------------------------------------------------------------------------*/
+
+libs     ("libutilityFunctionObjects.so");
+type     coded;
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+codeInclude
+#{
+    // Header files for classes and functions, e.g. for fvc::grad
+    #include "fvcGrad.H"
+#};
+
+// Header file paths for Make/options, e.g. for momentum transport models
+// Example:
+// -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude
+codeOptions
+#{
+#};
+
+// Linked libraries for Make/options, e.g. for momentum transport models
+// Not usually required since libraries are already linked to the solver
+// Example:
+// -lincompressibleMomentumTransportModels
+codeLibs
+#{
+#};
+
+codeFields
+#{
+    // Read fields when executing function objects with "foamPostProcess"
+    fields.append("p");
+#};
+
+codeExecute
+#{
+    // Lookup existing field from objectRegistry, e.g. pressure p
+    const volScalarField& p = mesh().lookupObject<volScalarField>("p");
+
+    // Calculate and store field, e.g. grad(p)
+    store("gradP", fvc::grad(p));
+#};
+
+codeWrite
+#{
+    return writeObject("gradP");
+#};
+
+// ************************************************************************* //
