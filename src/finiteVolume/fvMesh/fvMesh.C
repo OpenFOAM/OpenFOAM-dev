@@ -200,6 +200,7 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
     deleteDemandDrivenData(polyBFaceOffsetPatchFacesPtr_);
     deleteDemandDrivenData(polyBFacePatchesPtr_);
     deleteDemandDrivenData(polyBFacePatchFacesPtr_);
+    deleteDemandDrivenData(ownerBfPtr_);
 }
 
 
@@ -286,6 +287,7 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool doPost)
     polyBFaceOffsetPatchFacesPtr_(nullptr),
     polyBFacePatchesPtr_(nullptr),
     polyBFacePatchFacesPtr_(nullptr),
+    ownerBfPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
     V0Ptr_(nullptr),
@@ -351,6 +353,7 @@ Foam::fvMesh::fvMesh
     polyBFaceOffsetPatchFacesPtr_(nullptr),
     polyBFacePatchesPtr_(nullptr),
     polyBFacePatchFacesPtr_(nullptr),
+    ownerBfPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
     V0Ptr_(nullptr),
@@ -405,6 +408,7 @@ Foam::fvMesh::fvMesh
     polyBFaceOffsetPatchFacesPtr_(nullptr),
     polyBFacePatchesPtr_(nullptr),
     polyBFacePatchFacesPtr_(nullptr),
+    ownerBfPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
     V0Ptr_(nullptr),
@@ -457,6 +461,7 @@ Foam::fvMesh::fvMesh
     polyBFaceOffsetPatchFacesPtr_(nullptr),
     polyBFacePatchesPtr_(nullptr),
     polyBFacePatchFacesPtr_(nullptr),
+    ownerBfPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
     VPtr_(nullptr),
     V0Ptr_(nullptr),
@@ -498,6 +503,7 @@ Foam::fvMesh::fvMesh(fvMesh&& mesh)
     ),
     polyBFacePatchesPtr_(Foam::move(mesh.polyBFacePatchesPtr_)),
     polyBFacePatchFacesPtr_(Foam::move(mesh.polyBFacePatchFacesPtr_)),
+    ownerBfPtr_(Foam::move(mesh.ownerBfPtr_)),
     curTimeIndex_(mesh.curTimeIndex_),
     VPtr_(Foam::move(mesh.VPtr_)),
     V0Ptr_(Foam::move(mesh.V0Ptr_)),
@@ -980,6 +986,34 @@ Foam::fvMesh::polyBFacePatchFaces() const
     }
 
     return *polyBFacePatchFacesPtr_;
+}
+
+
+const Foam::surfaceLabelField::Boundary& Foam::fvMesh::ownerBf() const
+{
+    if (!ownerBfPtr_)
+    {
+        ownerBfPtr_ =
+            new surfaceLabelField::Boundary
+            (
+                boundary(),
+                surfaceLabelField::null(),
+                wordList
+                (
+                    boundary().size(),
+                    calculatedFvsPatchLabelField::typeName
+                ),
+                boundaryMesh().types()
+            );
+
+        forAll(boundary(), patchi)
+        {
+            (*ownerBfPtr_)[patchi] =
+                labelField(faceOwner(), polyFacesBf()[patchi]);
+        }
+    }
+
+    return *ownerBfPtr_;
 }
 
 

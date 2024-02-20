@@ -175,6 +175,10 @@ private:
         //- Poly-bFace-patch-face addressing
         mutable UCompactListList<label>* polyBFacePatchFacesPtr_;
 
+        //- Face-owner addressing
+        mutable GeometricBoundaryField<label, fvsPatchField, surfaceMesh>*
+            ownerBfPtr_;
+
         //- Current time index for cell volumes
         //  Note.  The whole mechanism will be replaced once the
         //  dimensionedField is created and the dimensionedField
@@ -486,6 +490,10 @@ public:
 
             //- Return poly-bFace-patch-face addressing
             const UCompactListList<label>& polyBFacePatchFaces() const;
+
+            //- Return face-owner addressing
+            const GeometricBoundaryField<label, fvsPatchField, surfaceMesh>&
+                ownerBf() const;
 
             //- Return the stitcher function class
             const fvMeshStitcher& stitcher() const;

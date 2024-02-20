@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,14 +119,12 @@ Foam::label Foam::nonConformalFvPatch::size() const
 
 const Foam::labelUList& Foam::nonConformalFvPatch::faceCells() const
 {
-    // !!! This needs an update mechanism, rather than re-calculating the
-    // face-cells every time
-
     const fvMesh& mesh = patch_.boundaryMesh().mesh();
 
-    faceCells_ = UIndirectList<label>(mesh.faceOwner(), polyFaces());
-
-    return faceCells_;
+    return
+        mesh.conformal()
+      ? labelList::null()
+      : mesh.ownerBf()[patch_.index()];
 }
 
 
