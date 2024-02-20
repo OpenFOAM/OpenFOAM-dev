@@ -757,13 +757,12 @@ int main(int argc, char *argv[])
     // Set the precision of the points data to 10
     IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
 
-    if (overwrite)
+    // Set the instance so that the mesh writes
+    const word newInstance = overwrite ? oldInstance : runTime.name();
+    forAll(regionMeshes, regioni)
     {
-        forAll(regionMeshes, regioni)
-        {
-            regionMeshes[regioni].setInstance(oldInstance);
-            regionMeshes[regioni].setPolyFacesBfInstance(oldInstance);
-        }
+        regionMeshes[regioni].setInstance(newInstance);
+        regionMeshes[regioni].setPolyFacesBfInstance(newInstance);
     }
 
     // Write resulting mesh
