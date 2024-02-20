@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "phaseChangeBase.H"
+#include "phaseChange.H"
 #include "fluidThermo.H"
 #include "multicomponentThermo.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,14 +34,14 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(phaseChangeBase, 0);
+    defineTypeNameAndDebug(phaseChange, 0);
 }
 }
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-const Foam::volScalarField& Foam::fv::phaseChangeBase::p() const
+const Foam::volScalarField& Foam::fv::phaseChange::p() const
 {
     for (label i = 0; i < 2; ++ i)
     {
@@ -55,8 +55,7 @@ const Foam::volScalarField& Foam::fv::phaseChangeBase::p() const
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::fv::phaseChangeBase::vifToVf
+Foam::tmp<Foam::volScalarField> Foam::fv::phaseChange::vifToVf
 (
     const tmp<volScalarField::Internal>& tvif
 )
@@ -79,8 +78,7 @@ Foam::fv::phaseChangeBase::vifToVf
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
-Foam::fv::phaseChangeBase::vfToVif
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::vfToVif
 (
     const tmp<volScalarField>& tvf
 )
@@ -95,7 +93,7 @@ Foam::fv::phaseChangeBase::vfToVif
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::phaseChangeBase::phaseChangeBase
+Foam::fv::phaseChange::phaseChange
 (
     const word& name,
     const word& modelType,
@@ -105,7 +103,7 @@ Foam::fv::phaseChangeBase::phaseChangeBase
     const Pair<bool>& specieThermosRequired
 )
 :
-    massTransferBase(name, modelType, mesh, dict),
+    massTransfer(name, modelType, mesh, dict),
     thermos_(mesh, phaseNames()),
     fluidThermos_(thermos_),
     specieThermos_(thermos_),
@@ -138,7 +136,7 @@ Foam::fv::phaseChangeBase::phaseChangeBase
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::fv::phaseChangeBase::Tchange() const
+Foam::fv::phaseChange::Tchange() const
 {
     const volScalarField::Internal mDot(this->mDot());
 
@@ -147,7 +145,7 @@ Foam::fv::phaseChangeBase::Tchange() const
 
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::fv::phaseChangeBase::Lfraction() const
+Foam::fv::phaseChange::Lfraction() const
 {
     const volScalarField& kappa1 = thermos().first().kappa();
     const volScalarField& kappa2 = thermos().second().kappa();

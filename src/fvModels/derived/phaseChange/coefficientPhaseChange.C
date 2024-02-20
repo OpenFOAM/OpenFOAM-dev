@@ -57,7 +57,7 @@ Foam::fv::coefficientPhaseChange::coefficientPhaseChange
     const dictionary& dict
 )
 :
-    singleComponentPhaseChangeBase
+    singleComponentPhaseChange
     (
         name,
         modelType,
@@ -126,7 +126,7 @@ void Foam::fv::coefficientPhaseChange::addSup
     }
     else
     {
-        phaseChangeBase::addSup(alpha, rho, eqn);
+        phaseChange::addSup(alpha, rho, eqn);
     }
 }
 
@@ -147,14 +147,14 @@ void Foam::fv::coefficientPhaseChange::addSup
     }
     else
     {
-        singleComponentPhaseChangeBase::addSup(alpha, rho, Yi, eqn);
+        singleComponentPhaseChange::addSup(alpha, rho, Yi, eqn);
     }
 }
 
 
 bool Foam::fv::coefficientPhaseChange::read(const dictionary& dict)
 {
-    if (singleComponentPhaseChangeBase::read(dict))
+    if (singleComponentPhaseChange::read(dict))
     {
         readCoeffs();
         return true;

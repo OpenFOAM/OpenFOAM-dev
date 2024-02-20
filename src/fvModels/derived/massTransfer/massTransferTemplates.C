@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "massTransferBase.H"
+#include "massTransfer.H"
 #include "fvMatrices.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-const Foam::VolField<Type>& Foam::fv::massTransferBase::otherField
+const Foam::VolField<Type>& Foam::fv::massTransfer::otherField
 (
     const VolField<Type>& field
 ) const
@@ -51,7 +51,7 @@ const Foam::VolField<Type>& Foam::fv::massTransferBase::otherField
 
 
 template<class Type>
-void Foam::fv::massTransferBase::addSupType
+void Foam::fv::massTransfer::addSupType
 (
     const VolField<Type>& field,
     fvMatrix<Type>& eqn
@@ -77,7 +77,7 @@ void Foam::fv::massTransferBase::addSupType
 
 
 template<class Type>
-void Foam::fv::massTransferBase::addSupType
+void Foam::fv::massTransfer::addSupType
 (
     const volScalarField& alphaOrRho,
     const VolField<Type>& field,
@@ -150,7 +150,7 @@ void Foam::fv::massTransferBase::addSupType
 
 
 template<class Type>
-void Foam::fv::massTransferBase::addSupType
+void Foam::fv::massTransfer::addSupType
 (
     const volScalarField& alpha,
     const volScalarField& rho,

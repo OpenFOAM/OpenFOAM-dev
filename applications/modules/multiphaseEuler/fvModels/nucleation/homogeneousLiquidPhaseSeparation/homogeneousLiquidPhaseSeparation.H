@@ -59,7 +59,7 @@ SourceFiles
 #ifndef homogeneousLiquidPhaseSeparation_H
 #define homogeneousLiquidPhaseSeparation_H
 
-#include "singleComponentPhaseChangeBase.H"
+#include "singleComponentPhaseChange.H"
 #include "nucleation.H"
 #include "dispersedPhaseInterface.H"
 #include "saturationPressureModel.H"
@@ -77,7 +77,7 @@ namespace fv
 
 class homogeneousLiquidPhaseSeparation
 :
-    public singleComponentPhaseChangeBase,
+    public singleComponentPhaseChange,
     public nucleation
 {
 private:

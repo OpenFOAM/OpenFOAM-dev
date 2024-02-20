@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,21 +23,47 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "singleComponentPhaseChangeBase.H"
+#include "massTransfer.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-inline const Foam::word&
-Foam::fv::singleComponentPhaseChangeBase::specie() const
+inline Foam::label Foam::fv::massTransfer::index
+(
+    const Pair<word>& names,
+    const word& name
+)
 {
-    return specie_;
+    return name == names.first() ? 0 : name == names.second() ? 1 : -1;
 }
 
 
-inline const Foam::Pair<Foam::label>&
-Foam::fv::singleComponentPhaseChangeBase::specieis() const
+inline Foam::label Foam::fv::massTransfer::sign
+(
+    const Pair<word>& names,
+    const word& name
+)
 {
-    return specieis_;
+    return name == names.first() ? -1 : name == names.second() ? +1 : 0;
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline const Foam::Pair<Foam::word>& Foam::fv::massTransfer::phaseNames() const
+{
+    return phaseNames_;
+}
+
+
+inline const Foam::Pair<Foam::word>& Foam::fv::massTransfer::alphaNames() const
+{
+    return alphaNames_;
+}
+
+
+inline const Foam::Pair<Foam::word>& Foam::fv::massTransfer::rhoNames() const
+{
+    return rhoNames_;
 }
 
 

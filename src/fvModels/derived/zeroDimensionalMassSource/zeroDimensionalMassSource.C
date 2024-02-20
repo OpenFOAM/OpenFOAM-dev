@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,8 +51,7 @@ void Foam::fv::zeroDimensionalMassSource::readCoeffs()
 }
 
 
-Foam::scalar
-Foam::fv::zeroDimensionalMassSource::massFlowRate() const
+Foam::scalar Foam::fv::zeroDimensionalMassSource::massFlowRate() const
 {
     return zeroDimensionalMassFlowRate_->value(mesh().time().userTimeValue());
 }

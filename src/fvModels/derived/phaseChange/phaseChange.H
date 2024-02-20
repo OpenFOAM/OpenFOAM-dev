@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::phaseChangeBase
+    Foam::fv::phaseChange
 
 Description
     Base class for phase change models
 
 SourceFiles
-    phaseChangeBase.C
+    phaseChange.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef phaseChangeBase_H
-#define phaseChangeBase_H
+#ifndef phaseChange_H
+#define phaseChange_H
 
-#include "massTransferBase.H"
+#include "massTransfer.H"
 #include "ThermoRefPair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -51,12 +51,12 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class phaseChangeBase Declaration
+                          Class phaseChange Declaration
 \*---------------------------------------------------------------------------*/
 
-class phaseChangeBase
+class phaseChange
 :
-    public massTransferBase
+    public massTransfer
 {
 private:
 
@@ -98,13 +98,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("phaseChangeBase");
+    TypeName("phaseChange");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        phaseChangeBase
+        phaseChange
         (
             const word& name,
             const word& modelType,
@@ -157,7 +157,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "phaseChangeBaseI.H"
+#include "phaseChangeI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

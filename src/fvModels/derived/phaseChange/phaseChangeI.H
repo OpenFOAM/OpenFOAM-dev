@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,50 +23,34 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "massTransferBase.H"
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-inline Foam::label Foam::fv::massTransferBase::index
-(
-    const Pair<word>& names,
-    const word& name
-)
-{
-    return name == names.first() ? 0 : name == names.second() ? 1 : -1;
-}
-
-
-inline Foam::label Foam::fv::massTransferBase::sign
-(
-    const Pair<word>& names,
-    const word& name
-)
-{
-    return name == names.first() ? -1 : name == names.second() ? +1 : 0;
-}
-
+#include "phaseChange.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::Pair<Foam::word>&
-Foam::fv::massTransferBase::phaseNames() const
+inline const Foam::ThermoRefPair<Foam::basicThermo>&
+Foam::fv::phaseChange::thermos() const
 {
-    return phaseNames_;
+    return thermos_;
 }
 
 
-inline const Foam::Pair<Foam::word>&
-Foam::fv::massTransferBase::alphaNames() const
+inline const Foam::ThermoRefPair<Foam::fluidThermo>&
+Foam::fv::phaseChange::fluidThermos() const
 {
-    return alphaNames_;
+    return fluidThermos_;
 }
 
 
-inline const Foam::Pair<Foam::word>&
-Foam::fv::massTransferBase::rhoNames() const
+inline const Foam::ThermoRefPair<Foam::multicomponentThermo>&
+Foam::fv::phaseChange::specieThermos() const
 {
-    return rhoNames_;
+    return specieThermos_;
+}
+
+
+inline const Foam::Pair<Foam::word>& Foam::fv::phaseChange::heNames() const
+{
+    return heNames_;
 }
 
 

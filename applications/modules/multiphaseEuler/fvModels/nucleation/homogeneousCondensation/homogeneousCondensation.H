@@ -59,7 +59,7 @@ SourceFiles
 #ifndef homogeneousCondensation_H
 #define homogeneousCondensation_H
 
-#include "singleComponentPhaseChangeBase.H"
+#include "singleComponentPhaseChange.H"
 #include "nucleation.H"
 #include "dispersedPhaseInterface.H"
 #include "saturationPressureModel.H"
@@ -77,7 +77,7 @@ namespace fv
 
 class homogeneousCondensation
 :
-    public singleComponentPhaseChangeBase,
+    public singleComponentPhaseChange,
     public nucleation
 {
 private:

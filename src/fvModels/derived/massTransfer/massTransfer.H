@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::massTransferBase
+    Foam::fv::massTransfer
 
 Description
     Base class for mass transfers between phases
 
 SourceFiles
-    massTransferBase.C
-    massTransferBaseI.H
+    massTransfer.C
+    massTransferI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef massTransferBase_H
-#define massTransferBase_H
+#ifndef massTransfer_H
+#define massTransfer_H
 
 #include "fvSpecificSource.H"
 #include "Function1.H"
@@ -47,10 +47,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class massTransferBase Declaration
+                        Class massTransfer Declaration
 \*---------------------------------------------------------------------------*/
 
-class massTransferBase
+class massTransfer
 :
     public fvSpecificSource
 {
@@ -148,13 +148,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("massTransferBase");
+    TypeName("massTransfer");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        massTransferBase
+        massTransfer
         (
             const word& name,
             const word& modelType,
@@ -220,10 +220,10 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "massTransferBaseI.H"
+#include "massTransferI.H"
 
 #ifdef NoRepository
-    #include "massTransferBaseTemplates.C"
+    #include "massTransferTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

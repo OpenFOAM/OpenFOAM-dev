@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "singleComponentPhaseChangeBase.H"
+#include "singleComponentPhaseChange.H"
 #include "basicThermo.H"
 #include "multicomponentThermo.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,14 +34,14 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(singleComponentPhaseChangeBase, 0);
+    defineTypeNameAndDebug(singleComponentPhaseChange, 0);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::singleComponentPhaseChangeBase::readCoeffs()
+void Foam::fv::singleComponentPhaseChange::readCoeffs()
 {
     if
     (
@@ -61,7 +61,7 @@ void Foam::fv::singleComponentPhaseChangeBase::readCoeffs()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::singleComponentPhaseChangeBase::singleComponentPhaseChangeBase
+Foam::fv::singleComponentPhaseChange::singleComponentPhaseChange
 (
     const word& name,
     const word& modelType,
@@ -71,7 +71,7 @@ Foam::fv::singleComponentPhaseChangeBase::singleComponentPhaseChangeBase
     const Pair<bool>& specieThermosRequired
 )
 :
-    phaseChangeBase
+    phaseChange
     (
         name,
         modelType,
@@ -103,7 +103,7 @@ Foam::fv::singleComponentPhaseChangeBase::singleComponentPhaseChangeBase
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::fv::singleComponentPhaseChangeBase::addSup
+void Foam::fv::singleComponentPhaseChange::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -166,14 +166,14 @@ void Foam::fv::singleComponentPhaseChangeBase::addSup
     // Something else. Fall back.
     else
     {
-        massTransferBase::addSup(alpha, rho, heOrYi, eqn);
+        massTransfer::addSup(alpha, rho, heOrYi, eqn);
     }
 }
 
 
-bool Foam::fv::singleComponentPhaseChangeBase::read(const dictionary& dict)
+bool Foam::fv::singleComponentPhaseChange::read(const dictionary& dict)
 {
-    if (phaseChangeBase::read(dict))
+    if (phaseChange::read(dict))
     {
         readCoeffs();
         return true;

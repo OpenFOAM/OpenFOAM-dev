@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::fv::coefficientMassTransfer::coefficientMassTransfer
     const dictionary& dict
 )
 :
-    massTransferBase(name, modelType, mesh, dict),
+    massTransfer(name, modelType, mesh, dict),
     C_("C", dimMass/dimArea/dimTime, NaN)
 {
     readCoeffs();
@@ -104,7 +104,7 @@ void Foam::fv::coefficientMassTransfer::addSup
     }
     else
     {
-        massTransferBase::addSup(alpha, eqn);
+        massTransfer::addSup(alpha, eqn);
     }
 }
 
@@ -136,14 +136,14 @@ void Foam::fv::coefficientMassTransfer::addSup
     }
     else
     {
-        massTransferBase::addSup(alpha, rho, eqn);
+        massTransfer::addSup(alpha, rho, eqn);
     }
 }
 
 
 bool Foam::fv::coefficientMassTransfer::read(const dictionary& dict)
 {
-    if (massTransferBase::read(dict))
+    if (massTransfer::read(dict))
     {
         readCoeffs();
         return true;

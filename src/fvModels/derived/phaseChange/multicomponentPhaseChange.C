@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "multicomponentPhaseChangeBase.H"
+#include "multicomponentPhaseChange.H"
 #include "basicThermo.H"
 #include "multicomponentThermo.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,14 +34,14 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(multicomponentPhaseChangeBase, 0);
+    defineTypeNameAndDebug(multicomponentPhaseChange, 0);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::multicomponentPhaseChangeBase::readCoeffs()
+void Foam::fv::multicomponentPhaseChange::readCoeffs()
 {
     if (species_ != coeffs().lookup<wordList>("species"))
     {
@@ -57,7 +57,7 @@ void Foam::fv::multicomponentPhaseChangeBase::readCoeffs()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::multicomponentPhaseChangeBase::multicomponentPhaseChangeBase
+Foam::fv::multicomponentPhaseChange::multicomponentPhaseChange
 (
     const word& name,
     const word& modelType,
@@ -66,7 +66,7 @@ Foam::fv::multicomponentPhaseChangeBase::multicomponentPhaseChangeBase
     const Pair<bool>& fluidThermosRequired
 )
 :
-    phaseChangeBase
+    phaseChange
     (
         name,
         modelType,
@@ -85,7 +85,7 @@ Foam::fv::multicomponentPhaseChangeBase::multicomponentPhaseChangeBase
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::fv::multicomponentPhaseChangeBase::mDot() const
+Foam::fv::multicomponentPhaseChange::mDot() const
 {
     tmp<volScalarField::Internal> tmDot =
         volScalarField::Internal::New
@@ -104,7 +104,7 @@ Foam::fv::multicomponentPhaseChangeBase::mDot() const
 }
 
 
-void Foam::fv::multicomponentPhaseChangeBase::addSup
+void Foam::fv::multicomponentPhaseChange::addSup
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -170,14 +170,14 @@ void Foam::fv::multicomponentPhaseChangeBase::addSup
     // Something else. Fall back.
     else
     {
-        phaseChangeBase::addSup(alpha, rho, eqn);
+        phaseChange::addSup(alpha, rho, eqn);
     }
 }
 
 
-bool Foam::fv::multicomponentPhaseChangeBase::read(const dictionary& dict)
+bool Foam::fv::multicomponentPhaseChange::read(const dictionary& dict)
 {
-    if (phaseChangeBase::read(dict))
+    if (phaseChange::read(dict))
     {
         readCoeffs();
         return true;

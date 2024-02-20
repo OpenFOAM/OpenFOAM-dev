@@ -30,11 +30,11 @@ derived/heatSource/heatSource.C
 derived/heatTransfer/heatTransfer.C
 derived/zeroDimensionalMassSource/zeroDimensionalMassSourceBase.C
 derived/zeroDimensionalMassSource/zeroDimensionalMassSource.C
-derived/massTransfer/massTransferBase.C
+derived/massTransfer/massTransfer.C
 derived/massTransfer/coefficientMassTransfer.C
-derived/phaseChange/phaseChangeBase.C
-derived/phaseChange/singleComponentPhaseChangeBase.C
-derived/phaseChange/multicomponentPhaseChangeBase.C
+derived/phaseChange/phaseChange.C
+derived/phaseChange/singleComponentPhaseChange.C
+derived/phaseChange/multicomponentPhaseChange.C
 derived/phaseChange/coefficientPhaseChange.C
 
 interRegion/interRegionModel/interRegionModel.C

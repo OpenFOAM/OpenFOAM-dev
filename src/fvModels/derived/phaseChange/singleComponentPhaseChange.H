@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::singleComponentPhaseChangeBase
+    Foam::fv::singleComponentPhaseChange
 
 Description
     Base class for phase change models in which only a single component changes
@@ -31,14 +31,14 @@ Description
     as the one that changes phase.
 
 SourceFiles
-    singleComponentPhaseChangeBase.C
+    singleComponentPhaseChange.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef singleComponentPhaseChangeBase_H
-#define singleComponentPhaseChangeBase_H
+#ifndef singleComponentPhaseChange_H
+#define singleComponentPhaseChange_H
 
-#include "phaseChangeBase.H"
+#include "phaseChange.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,12 +48,12 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class singleComponentPhaseChangeBase Declaration
+                    Class singleComponentPhaseChange Declaration
 \*---------------------------------------------------------------------------*/
 
-class singleComponentPhaseChangeBase
+class singleComponentPhaseChange
 :
-    public phaseChangeBase
+    public phaseChange
 {
 private:
 
@@ -80,13 +80,13 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("singleComponentPhaseChangeBase");
+    TypeName("singleComponentPhaseChange");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        singleComponentPhaseChangeBase
+        singleComponentPhaseChange
         (
             const word& name,
             const word& modelType,
@@ -133,7 +133,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "singleComponentPhaseChangeBaseI.H"
+#include "singleComponentPhaseChangeI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

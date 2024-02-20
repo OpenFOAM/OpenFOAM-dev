@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "massTransferBase.H"
+#include "massTransfer.H"
 #include "fvMatrices.H"
 #include "physicalProperties.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,14 +34,14 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(massTransferBase, 0);
+    defineTypeNameAndDebug(massTransfer, 0);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::massTransferBase::readCoeffs()
+void Foam::fv::massTransfer::readCoeffs()
 {
     if
     (
@@ -59,15 +59,14 @@ void Foam::fv::massTransferBase::readCoeffs()
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-const Foam::Pair<Foam::word>
-Foam::fv::massTransferBase::lookupPhaseNames() const
+const Foam::Pair<Foam::word> Foam::fv::massTransfer::lookupPhaseNames() const
 {
     return coeffs().lookup<Pair<word>>("phases");
 }
 
 
 const Foam::Pair<Foam::word>
-Foam::fv::massTransferBase::lookupPhaseFieldNames(const word& name) const
+Foam::fv::massTransfer::lookupPhaseFieldNames(const word& name) const
 {
     return
         coeffs().lookupOrDefault<Pair<word>>
@@ -82,7 +81,7 @@ Foam::fv::massTransferBase::lookupPhaseFieldNames(const word& name) const
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::fv::massTransferBase::rho
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::massTransfer::rho
 (
     const label i
 ) const
@@ -123,7 +122,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::massTransferBase::rho
 }
 
 
-void Foam::fv::massTransferBase::addSupType
+void Foam::fv::massTransfer::addSupType
 (
     const volScalarField& alphaOrField,
     fvMatrix<scalar>& eqn
@@ -148,7 +147,7 @@ void Foam::fv::massTransferBase::addSupType
 }
 
 
-void Foam::fv::massTransferBase::addSupType
+void Foam::fv::massTransfer::addSupType
 (
     const volScalarField& alphaOrRho,
     const volScalarField& rhoOrField,
@@ -179,7 +178,7 @@ void Foam::fv::massTransferBase::addSupType
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::massTransferBase::massTransferBase
+Foam::fv::massTransfer::massTransfer
 (
     const word& name,
     const word& modelType,
@@ -198,7 +197,7 @@ Foam::fv::massTransferBase::massTransferBase
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::massTransferBase::addsSupToField(const word& fieldName) const
+bool Foam::fv::massTransfer::addsSupToField(const word& fieldName) const
 {
     const word group = IOobject::group(fieldName);
 
@@ -210,13 +209,13 @@ bool Foam::fv::massTransferBase::addsSupToField(const word& fieldName) const
 
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::fv::massTransferBase::S(const word& fieldName) const
+Foam::fv::massTransfer::S(const word& fieldName) const
 {
     return sign(phaseNames(), IOobject::group(fieldName))*mDot();
 }
 
 
-void Foam::fv::massTransferBase::addSup(fvMatrix<scalar>& eqn) const
+void Foam::fv::massTransfer::addSup(fvMatrix<scalar>& eqn) const
 {
     DebugInFunction
         << "eqnField=" << eqn.psi().name() << endl;
@@ -227,24 +226,20 @@ void Foam::fv::massTransferBase::addSup(fvMatrix<scalar>& eqn) const
 }
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_FIELD_SUP, fv::massTransferBase);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_FIELD_SUP, fv::massTransfer);
 
 
-FOR_ALL_FIELD_TYPES
-(
-    IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP,
-    fv::massTransferBase
-);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_FIELD_SUP, fv::massTransfer);
 
 
 FOR_ALL_FIELD_TYPES
 (
     IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_FIELD_SUP,
-    fv::massTransferBase
+    fv::massTransfer
 );
 
 
-bool Foam::fv::massTransferBase::read(const dictionary& dict)
+bool Foam::fv::massTransfer::read(const dictionary& dict)
 {
     if (fvSpecificSource::read(dict))
     {

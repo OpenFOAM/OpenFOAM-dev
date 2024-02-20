@@ -23,35 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "phaseChangeBase.H"
+#include "singleComponentPhaseChange.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::ThermoRefPair<Foam::basicThermo>&
-Foam::fv::phaseChangeBase::thermos() const
+inline const Foam::word&
+Foam::fv::singleComponentPhaseChange::specie() const
 {
-    return thermos_;
+    return specie_;
 }
 
 
-inline const Foam::ThermoRefPair<Foam::fluidThermo>&
-Foam::fv::phaseChangeBase::fluidThermos() const
+inline const Foam::Pair<Foam::label>&
+Foam::fv::singleComponentPhaseChange::specieis() const
 {
-    return fluidThermos_;
-}
-
-
-inline const Foam::ThermoRefPair<Foam::multicomponentThermo>&
-Foam::fv::phaseChangeBase::specieThermos() const
-{
-    return specieThermos_;
-}
-
-
-inline const Foam::Pair<Foam::word>&
-Foam::fv::phaseChangeBase::heNames() const
-{
-    return heNames_;
+    return specieis_;
 }
 
 

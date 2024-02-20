@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ SourceFiles
 #ifndef coefficientPhaseChange_H
 #define coefficientPhaseChange_H
 
-#include "singleComponentPhaseChangeBase.H"
+#include "singleComponentPhaseChange.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,7 +74,7 @@ namespace fv
 
 class coefficientPhaseChange
 :
-    public singleComponentPhaseChangeBase
+    public singleComponentPhaseChange
 {
 private:
 

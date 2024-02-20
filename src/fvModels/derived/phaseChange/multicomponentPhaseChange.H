@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::multicomponentPhaseChangeBase
+    Foam::fv::multicomponentPhaseChange
 
 Description
     Base class for phase change models in which multiple components may change
     phase. This can only be applied between multicomponent phases.
 
 SourceFiles
-    multicomponentPhaseChangeBase.C
+    multicomponentPhaseChange.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef multicomponentPhaseChangeBase_H
-#define multicomponentPhaseChangeBase_H
+#ifndef multicomponentPhaseChange_H
+#define multicomponentPhaseChange_H
 
-#include "phaseChangeBase.H"
+#include "phaseChange.H"
 #include "hashedWordList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,12 +47,12 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class multicomponentPhaseChangeBase Declaration
+                    Class multicomponentPhaseChange Declaration
 \*---------------------------------------------------------------------------*/
 
-class multicomponentPhaseChangeBase
+class multicomponentPhaseChange
 :
-    public phaseChangeBase
+    public phaseChange
 {
 private:
 
@@ -74,13 +74,13 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("multicomponentPhaseChangeBase");
+    TypeName("multicomponentPhaseChange");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        multicomponentPhaseChangeBase
+        multicomponentPhaseChange
         (
             const word& name,
             const word& modelType,
@@ -132,7 +132,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "multicomponentPhaseChangeBaseI.H"
+#include "multicomponentPhaseChangeI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
