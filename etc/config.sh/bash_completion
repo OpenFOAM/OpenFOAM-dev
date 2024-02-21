@@ -218,7 +218,7 @@ _blockMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-blockTopology -case -dict -doc -fileHandler -help -libs -noClean -noFunctionObjects -region -srcDoc"
+    opts="-blockTopology -case -dict -doc -fileHandler -help -libs -noClean -region -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -503,6 +503,31 @@ _createBaffles_ ()
 }
 complete -o filenames -o nospace -F _createBaffles_ createBaffles
 
+_createEngineZones_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="-case -cylinderHead -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -pistonBowl -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -fileHandler)
+            opts="uncollated collated masterUncollated" ; extra="" ;;
+        -hostRoots|-libs|-region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _createEngineZones_ createEngineZones
+
 _createExternalCoupledPatchGeometry_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -747,7 +772,7 @@ _engineCompRatio_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -cellSet -cellZone -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
+    opts="-case -cellSet -cellZone -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -region -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -757,7 +782,7 @@ _engineCompRatio_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -cellSet|-cellZone|-hostRoots|-libs|-roots)
+        -cellSet|-cellZone|-hostRoots|-libs|-region|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -1086,7 +1111,7 @@ _foamDictionary_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-add -case -dict -diff -doc -entry -expand -fileHandler -help -hostRoots -includes -keywords -libs -merge -noFunctionObjects -output -parallel -remove -roots -set -srcDoc -value -writePrecision"
+    opts="-add -case -dict -diff -doc -entry -expand -fileHandler -help -hostRoots -includes -keywords -libs -merge -noFunctionObjects -output -parallel -remove -rename -roots -set -srcDoc -value -writePrecision"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -1096,12 +1121,12 @@ _foamDictionary_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -add|-diff|-entry|-hostRoots|-libs|-merge|-output|-roots|-set|-writePrecision)
+        -add|-diff|-entry|-hostRoots|-libs|-merge|-output|-rename|-roots|-set|-writePrecision)
             opts="" ; extra="" ;;
        -*) ;;
         *)
             case "${COMP_WORDS[COMP_CWORD-2]}" in
-                -add|-diff|-entry|-hostRoots|-libs|-merge|-output|-roots|-set|-writePrecision|-case|-fileHandler) ;;
+                -add|-diff|-entry|-hostRoots|-libs|-merge|-output|-rename|-roots|-set|-writePrecision|-case|-fileHandler) ;;
                 *) opts=""; extra="" ;;
             esac
             ;;
@@ -1144,7 +1169,7 @@ _foamListTimes_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -doc -fileHandler -help -latestTime -libs -noFunctionObjects -noZero -processor -rm -srcDoc -time -functionEntries -functionObjects -withZero"
+    opts="-case -constant -doc -fileHandler -functionEntries -help -latestTime -libs -noZero -processor -rm -srcDoc -time -withZero"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1221,7 +1246,7 @@ _foamPostProcess_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -dict -doc -field -fields -fileHandler -func -funcs -help -hostRoots -latestTime -libs -list -noFunctionObjects -noZero -parallel -region -roots -solver -srcDoc -time"
+    opts="-case -constant -dict -doc -field -fields -fileHandler -func -funcs -help -hostRoots -latestTime -libs -list -listTemplates -noFunctionObjects -noZero -parallel -region -roots -solver -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1899,9 +1924,9 @@ _mergeMeshes_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-addRegion -case -doc -fileHandler -help -libs -masterRegion -noFunctionObjects -overwrite -srcDoc"
+    opts="-addCaseRegions -addCases -addRegions -case -doc -fileHandler -help -libs -noFunctionObjects -overwrite -region -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
-    extra="-d"
+    extra=""
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
@@ -1909,10 +1934,9 @@ _mergeMeshes_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -addRegion|-libs|-masterRegion)
+        -libs|-region)
             opts="" ; extra="" ;;
-       -*) ;;
-        *) opts="";;
+       *) ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -1950,7 +1974,7 @@ _mirrorMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -dict -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -overwrite -parallel -roots -srcDoc"
+    opts="-case -dict -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -overwrite -parallel -region -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1962,7 +1986,7 @@ _mirrorMesh_ ()
             opts="" ; extra="-d -f" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots)
+        -hostRoots|-libs|-region|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -2342,7 +2366,7 @@ _potentialFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -initialiseUBCs -libs -parallel -pName -roots -srcDoc -functionObjects -writep -writePhi"
+    opts="-case -doc -fileHandler -functionObjects -help -hostRoots -initialiseUBCs -libs -parallel -pName -roots -srcDoc -writep -writePhi"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4524,18 +4548,18 @@ _foamMonitor_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-ascii -help -idle -logscale -refresh -size -title -yrange"
+    opts="-ascii -columns -flip -help -idle -logscale -once -refresh -size -title -yrange"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-        -idle|-title|-refresh|-yrange|-size)
+        -columns|-idle|-refresh|-size|-title|-yrange)
             opts="" ; extra="" ;;
        -*) ;;
         *)
             case "${COMP_WORDS[COMP_CWORD-2]}" in
-                -idle|-title|-refresh|-yrange|-size) ;;
+                -columns|-idle|-refresh|-size|-title|-yrange) ;;
                 *) opts=""; extra="" ;;
             esac
             ;;
@@ -4927,7 +4951,7 @@ _postProcess_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -dict -doc -field -fields -fileHandler -func -funcs -help -hostRoots -latestTime -libs -list -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
+    opts="-case -constant -dict -doc -field -fields -fileHandler -func -funcs -help -hostRoots -latestTime -libs -list -listTemplates -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
