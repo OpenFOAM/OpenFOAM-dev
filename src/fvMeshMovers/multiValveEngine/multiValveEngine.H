@@ -45,7 +45,7 @@ Description
       slide mesh nodes while piston is moving.
 
     - frozenZones: list of pointZones the points of which are frozen,
-      i.e. do not move.
+      i.e. do not move with respect to any moving object.
 
     - Run-time clearance estimation based on patch-to-patch distances printed.
 
@@ -66,6 +66,9 @@ Description
 
         - movingZones: list of pointZones the points of which move with the
           object.
+
+        - frozenZones: list of pointZones the points of which are frozen,
+          i.e. do not move with respect to this moving object.
 
         - maxMotionDistance: a distance away from the moving object
           after nodes are not allowed to move. (Default inf.)
@@ -151,6 +154,9 @@ Description
 
             // Move the points in the piston bowl with the piston
             movingZones         (pistonBowl);
+
+            // Freeze the points in the cylinder head
+            frozenZones         (cylinderHead);
 
             // Optional
             maxMotionDistance    1e30;
@@ -295,6 +301,8 @@ public:
 
             wordReList movingPointZones_;
 
+            wordReList frozenPointZones_;
+
             //- Points to move when cell zone is supplied
             labelList pointIDs_;
 
@@ -343,6 +351,8 @@ public:
             void initPatchSets();
 
             labelHashSet movingPointZones() const;
+
+            labelHashSet staticPointZones() const;
 
 
     public:
@@ -550,8 +560,6 @@ private:
 
         //- Find and return the static patch set
         labelHashSet findStaticPatchSet();
-
-        labelHashSet staticPointZones() const;
 
 
 public:

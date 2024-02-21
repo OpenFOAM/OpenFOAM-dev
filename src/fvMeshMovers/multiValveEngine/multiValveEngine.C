@@ -95,38 +95,6 @@ Foam::labelHashSet Foam::fvMeshMovers::multiValveEngine::findStaticPatchSet()
 }
 
 
-Foam::labelHashSet
-Foam::fvMeshMovers::multiValveEngine::staticPointZones() const
-{
-    labelHashSet staticPointZones;
-
-    if (frozenPointZones_.size())
-    {
-        forAll(frozenPointZones_, i)
-        {
-            const labelList indices
-            (
-                mesh().pointZones().findIndices(frozenPointZones_[i])
-            );
-
-            if (indices.size())
-            {
-                staticPointZones.insert(indices);
-                Info<< "    pointZone " << frozenPointZones_[i]
-                    << " is frozen (stationary)" << endl;
-            }
-            else
-            {
-                Info<< "    frozenZone " << frozenPointZones_[i]
-                    << " not found in pointZones" << endl;
-            }
-        }
-    }
-
-    return staticPointZones;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fvMeshMovers::multiValveEngine::multiValveEngine(fvMesh& mesh)

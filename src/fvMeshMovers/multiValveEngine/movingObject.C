@@ -211,6 +211,64 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingPointZones() const
 }
 
 
+Foam::labelHashSet
+Foam::fvMeshMovers::multiValveEngine::movingObject::staticPointZones() const
+{
+    labelHashSet staticPointZones;
+
+    if (frozenPointZones_.size())
+    {
+        forAll(frozenPointZones_, i)
+        {
+            const labelList indices
+            (
+                meshMover_.mesh().pointZones().findIndices(frozenPointZones_[i])
+            );
+
+            if (indices.size())
+            {
+                staticPointZones.insert(indices);
+                Info<< "    pointZone " << frozenPointZones_[i]
+                    << " is frozen (stationary)" << endl;
+            }
+            else
+            {
+                Info<< "    frozenZone " << frozenPointZones_[i]
+                    << " not found in pointZones" << endl;
+            }
+        }
+    }
+
+    if (meshMover_.frozenPointZones_.size())
+    {
+        forAll(meshMover_.frozenPointZones_, i)
+        {
+            const labelList indices
+            (
+                meshMover_.mesh().pointZones().findIndices
+                (
+                    meshMover_.frozenPointZones_[i]
+                )
+            );
+
+            if (indices.size())
+            {
+                staticPointZones.insert(indices);
+                Info<< "    pointZone " << meshMover_.frozenPointZones_[i]
+                    << " is frozen (stationary)" << endl;
+            }
+            else
+            {
+                Info<< "    frozenZone " << meshMover_.frozenPointZones_[i]
+                    << " not found in pointZones" << endl;
+            }
+        }
+    }
+
+    return staticPointZones;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
@@ -240,6 +298,10 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
     movingPointZones_
     (
         dict.lookupOrDefault("movingZones", wordReList::null())
+    ),
+    frozenPointZones_
+    (
+        dict.lookupOrDefault("frozenZones", wordReList::null())
     ),
     scale_
     (

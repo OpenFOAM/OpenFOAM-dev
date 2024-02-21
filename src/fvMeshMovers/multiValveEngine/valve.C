@@ -119,7 +119,7 @@ void Foam::fvMeshMovers::multiValveEngine::valveObject::updatePoints
             (
                 pMesh,
                 staticPatchSet_,
-                meshMover_.staticPointZones(),
+                staticPointZones(),
                 points,
                 maxMotionDistance_
             );

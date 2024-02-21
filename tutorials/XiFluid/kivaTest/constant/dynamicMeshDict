@@ -24,9 +24,6 @@ mover
     slidingPatches      (liner);
     linerPatches        (liner);
 
-    // Freeze the points in the cylinder head
-    frozenZones         (cylinderHead);
-
     piston
     {
         patches             (piston);
@@ -42,6 +39,9 @@ mover
 
         // Move the points in the piston bowl with the piston
         movingZones         (pistonBowl);
+
+        // Freeze the points in the cylinder head
+        frozenZones         (cylinderHead);
 
         // There is no need to update the motion weights
         fractionalTravelInterval       1;
