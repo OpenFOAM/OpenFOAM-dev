@@ -51,6 +51,13 @@ Foam::fileName Foam::functionEntries::includeFuncEntry::functionObjectDictPath
 );
 
 
+Foam::fileName
+Foam::functionEntries::includeFuncEntry::functionObjectTemplatePath
+(
+    "caseDicts/functionTemplates"
+);
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::functionEntries::includeFuncEntry::execute

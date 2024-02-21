@@ -95,6 +95,10 @@ public:
         //  containing the functionObject dictionary files
         static fileName functionObjectDictPath;
 
+        //- Default relative path to the directory structure
+        //  containing the functionObject template files
+        static fileName functionObjectTemplatePath;
+
 
     // Member Functions
 

@@ -243,8 +243,7 @@ int main(int argc, char *argv[])
             << "Available functionObject templates:"
             << listAllConfigFiles
                (
-                   functionEntries::includeFuncEntry::functionObjectDictPath
-                  /"../functionTemplates"
+                   functionEntries::includeFuncEntry::functionObjectTemplatePath
                )
             << endl;
 
