@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,10 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "GeometricBoundaryField.H"
-#include "emptyPolyPatch.H"
 #include "commSchedule.H"
 #include "globalMeshData.H"
-#include "cyclicPolyPatch.H"
+#include "emptyPolyPatch.H"
 #include "processorPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -49,45 +48,26 @@ void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::readField
         InfoInFunction << endl;
     }
 
+    // Construct a list of entry pointers for each patch
+    UPtrList<const entry> patchEntries(this->size());
 
-    label nUnset = this->size();
-
-    // 1. Handle explicit patch names. Note that there can be only one explicit
-    //    patch name since is key of dictionary.
+    // 1. Explicit patch names
     forAllConstIter(dictionary, dict, iter)
     {
         if (iter().isDict() && !iter().keyword().isPattern())
         {
-            label patchi = bmesh_.findIndex(iter().keyword());
+            const label patchi = bmesh_.findIndex(iter().keyword());
 
             if (patchi != -1)
             {
-                this->set
-                (
-                    patchi,
-                    PatchField<Type>::New
-                    (
-                        bmesh_[patchi],
-                        field,
-                        iter().dict()
-                    )
-                );
-                nUnset--;
+                patchEntries.set(patchi, &(iter()));
             }
         }
     }
 
-    if (nUnset == 0)
-    {
-        return;
-    }
-
-
-    // 2. Patch-groups. (using non-wild card entries of dictionaries)
-    // (patchnames already matched above)
-    // Note: in reverse order of entries in the dictionary (last
-    // patchGroups wins). This is so is consistent with dictionary wildcard
-    // behaviour
+    // 2. Patch-groups
+    //    Note: This is done in reverse order of the entries in the dictionary,
+    //    so that it is consistent with dictionary wildcard behaviour.
     if (dict.size())
     {
         for
@@ -97,99 +77,87 @@ void Foam::GeometricBoundaryField<Type, PatchField, GeoMesh>::readField
             ++iter
         )
         {
-            const entry& e = iter();
-
-            if (e.isDict() && !e.keyword().isPattern())
+            if (iter().isDict() && !iter().keyword().isPattern())
             {
-                const labelList patchIDs = bmesh_.findIndices
-                (
-                    wordRe(e.keyword()),
-                    true                    // use patchGroups
-                );
+                const labelList patchIDs =
+                    bmesh_.findIndices(wordRe(iter().keyword()), true);
 
                 forAll(patchIDs, i)
                 {
-                    label patchi = patchIDs[i];
+                    const label patchi = patchIDs[i];
 
-                    if (!this->set(patchi))
+                    if (!patchEntries.set(patchi))
                     {
-                        this->set
-                        (
-                            patchi,
-                            PatchField<Type>::New
-                            (
-                                bmesh_[patchi],
-                                field,
-                                e.dict()
-                            )
-                        );
+                        patchEntries.set(patchi, &(iter()));
                     }
                 }
             }
         }
     }
 
-
-    // 3. Wildcard patch overrides
+    // 3. Empty patches
+    //    These take precedence over wildcards
+    //    (... apparently. Why not wedges and/or other constraints too?)
     forAll(bmesh_, patchi)
     {
-        if (!this->set(patchi))
+        if (!patchEntries.set(patchi))
         {
             if (bmesh_[patchi].type() == emptyPolyPatch::typeName)
             {
-                this->set
-                (
-                    patchi,
-                    PatchField<Type>::New
-                    (
-                        emptyPolyPatch::typeName,
-                        bmesh_[patchi],
-                        field
-                    )
-                );
-            }
-            else
-            {
-                bool found = dict.found(bmesh_[patchi].name());
-
-                if (found)
-                {
-                    this->set
-                    (
-                        patchi,
-                        PatchField<Type>::New
-                        (
-                            bmesh_[patchi],
-                            field,
-                            dict.subDict(bmesh_[patchi].name())
-                        )
-                    );
-                }
+                patchEntries.set(patchi, NullObjectPtr<entry>());
             }
         }
     }
 
-    // Check for any unset patches
+    // 4. Wildcards
     forAll(bmesh_, patchi)
     {
-        if (!this->set(patchi))
+        if (!patchEntries.set(patchi))
         {
-            if (bmesh_[patchi].type() == cyclicPolyPatch::typeName)
+            const entry* ePtr =
+                dict.lookupEntryPtr(bmesh_[patchi].name(), false, true);
+
+            if (ePtr)
             {
-                FatalIOErrorInFunction
-                (
-                    dict
-                )   << "Cannot find patchField entry for cyclic "
-                    << bmesh_[patchi].name() << endl << exit(FatalIOError);
+                patchEntries.set(patchi, ePtr);
             }
-            else
-            {
-                FatalIOErrorInFunction
+        }
+    }
+
+    // Construct all the patches in order
+    forAll(bmesh_, patchi)
+    {
+        if (patchEntries.set(patchi) && !isNull(patchEntries(patchi)))
+        {
+            this->set
+            (
+                patchi,
+                PatchField<Type>::New
                 (
-                    dict
-                )   << "Cannot find patchField entry for "
-                    << bmesh_[patchi].name() << exit(FatalIOError);
-            }
+                    bmesh_[patchi],
+                    field,
+                    patchEntries[patchi].dict()
+                )
+            );
+        }
+        else if (patchEntries.set(patchi) && isNull(patchEntries[patchi]))
+        {
+            this->set
+            (
+                patchi,
+                PatchField<Type>::New
+                (
+                    emptyPolyPatch::typeName,
+                    bmesh_[patchi],
+                    field
+                )
+            );
+        }
+        else
+        {
+            FatalIOErrorInFunction(dict)
+                << "Cannot find patchField entry for "
+                << bmesh_[patchi].name() << exit(FatalIOError);
         }
     }
 }
