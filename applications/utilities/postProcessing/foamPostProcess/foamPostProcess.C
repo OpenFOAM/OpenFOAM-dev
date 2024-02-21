@@ -68,6 +68,9 @@ Usage
       - \par -list
         List the available configured functionObjects
 
+      - \par -list
+        List the available functionObject templates
+
     Example usage:
       - Print the list of available configured functionObjects:
         \verbatim
@@ -208,10 +211,18 @@ int main(int argc, char *argv[])
     #include "addRegionOption.H"
     #include "addFunctionObjectOptions.H"
 
+    argList::addBoolOption
+    (
+        "listTemplates",
+        "List the available functionObjects templates"
+    );
+
     // Set functionObject post-processing mode
     functionObject::postProcess = true;
 
     #include "setRootCase.H"
+
+    bool printedList = false;
 
     if (args.optionFound("list"))
     {
@@ -222,6 +233,26 @@ int main(int argc, char *argv[])
                    functionEntries::includeFuncEntry::functionObjectDictPath
                )
             << endl;
+
+        printedList = true;
+    }
+
+    if (args.optionFound("listTemplates"))
+    {
+        Info<< nl
+            << "Available functionObject templates:"
+            << listAllConfigFiles
+               (
+                   functionEntries::includeFuncEntry::functionObjectDictPath
+                  /"../functionTemplates"
+               )
+            << endl;
+
+        printedList = true;
+    }
+
+    if (printedList)
+    {
         return 0;
     }
 
