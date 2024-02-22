@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -308,7 +308,7 @@ void Foam::mergePatchPairs::addFaces
 
             meshMod.addFace
             (
-                f,          // Face to add
+                f.reverseFace(), // Face to add
                 tgtOwn,     // Owner cell
                 -1,         // Neighbour cell
                 -1,         // Master point index
