@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,6 +69,28 @@ void inplaceRemove(ListType& lst, const T& value, const T&)
         }
     }
     lst.resize(iNew);
+}
+
+template<class ListType>
+ListType reorder
+(
+    const label size,
+    const typename ListType::value_type& defaultValue,
+    const labelUList& oldToNew,
+    const ListType& lst
+)
+{
+    ListType newLst(size, defaultValue);
+
+    forAll(lst, elemI)
+    {
+        if (oldToNew[elemI] >= 0)
+        {
+            newLst[oldToNew[elemI]] = lst[elemI];
+        }
+    }
+
+    return newLst;
 }
 
 }
@@ -248,9 +270,21 @@ Foam::FacePatchIntersection<SrcPatchType, TgtPatchType>::FacePatchIntersection
 
         // Point-point connectivity
         this->srcPointPoints_ =
-            reorder(srcTriPatchPointSrcPatchPoints, tpi.srcPointPoints());
+            reorder
+            (
+                this->srcPatch().nPoints(),
+                -1,
+                srcTriPatchPointSrcPatchPoints,
+                tpi.srcPointPoints()
+            );
         this->tgtPointPoints_ =
-            reorder(tgtTriPatchPointTgtPatchPoints, tpi.tgtPointPoints());
+            reorder
+            (
+                this->tgtPatch().nPoints(),
+                -1,
+                tgtTriPatchPointTgtPatchPoints,
+                tpi.tgtPointPoints()
+            );
         this->pointSrcPoints_ = tpi.pointSrcPoints();
         inplaceRenumber(srcTriPatchPointSrcPatchPoints, this->pointSrcPoints_);
         this->pointTgtPoints_ = tpi.pointTgtPoints();
@@ -258,10 +292,22 @@ Foam::FacePatchIntersection<SrcPatchType, TgtPatchType>::FacePatchIntersection
 
         // Point-edge connectivity
         this->srcEdgePoints_ =
-            reorder(srcTriPatchEdgeSrcPatchEdges, tpi.srcEdgePoints());
+            reorder
+            (
+                this->srcPatch_.nEdges(),
+                DynamicList<label>(),
+                srcTriPatchEdgeSrcPatchEdges,
+                tpi.srcEdgePoints()
+            );
         this->srcEdgePoints_.resize(this->srcPatch_.nEdges());
         this->tgtEdgePoints_ =
-            reorder(tgtTriPatchEdgeTgtPatchEdges, tpi.tgtEdgePoints());
+            reorder
+            (
+                this->tgtPatch_.nEdges(),
+                DynamicList<label>(),
+                tgtTriPatchEdgeTgtPatchEdges,
+                tpi.tgtEdgePoints()
+            );
         this->tgtEdgePoints_.resize(this->tgtPatch_.nEdges());
         this->pointSrcEdges_ = tpi.pointSrcEdges();
         inplaceRenumber(srcTriPatchEdgeSrcPatchEdges, this->pointSrcEdges_);
