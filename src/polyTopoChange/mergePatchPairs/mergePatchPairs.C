@@ -281,7 +281,7 @@ void Foam::mergePatchPairs::addFaces
                 srcFacei,   // Master face index
                 false,      // Flip
                 srcPatchi,  // Patch index
-                zoneIndex,     // Zone index
+                zoneIndex,  // Zone index
                 zoneFlip    // Zone sign
             );
 
@@ -316,7 +316,7 @@ void Foam::mergePatchPairs::addFaces
                 tgtFacei,   // Master face index
                 false,      // Flip
                 tgtPatchi,  // Patch index
-                zoneIndex,     // Zone index
+                zoneIndex,  // Zone index
                 zoneFlip    // Zone sign
             );
 
@@ -447,13 +447,30 @@ void Foam::mergePatchPairs::modifyFaces
 
                 if (edge::compare(e, iter.key()) == 1)
                 {
-                    modifiedFace.append(addedPoints);
+                    forAll(addedPoints, i)
+                    {
+                        if
+                        (
+                            modifiedFace[modifiedFace.size() - 1]
+                         != addedPoints[i]
+                        )
+                        {
+                            modifiedFace.append(addedPoints[i]);
+                        }
+                    }
                 }
                 else
                 {
                     forAllReverse(addedPoints, i)
                     {
-                        modifiedFace.append(addedPoints[i]);
+                        if
+                        (
+                            modifiedFace[modifiedFace.size() - 1]
+                         != addedPoints[i]
+                        )
+                        {
+                            modifiedFace.append(addedPoints[i]);
+                        }
                     }
                 }
 
@@ -530,7 +547,7 @@ void Foam::mergePatchPairs::modifyFaces
                     mesh_.faceNeighbour()[fi], // Neighbour cell
                     false,                  // Face flip
                     -1,                     // Patch index
-                    zoneIndex,                 // Zone index
+                    zoneIndex,              // Zone index
                     zoneFlip                // Zone flip
                 );
             }
@@ -555,7 +572,7 @@ void Foam::mergePatchPairs::modifyFaces
                     -1,                         // Neighbour cell
                     false,                      // Face flip
                     mesh_.boundaryMesh().whichPatch(fi), // Patch index
-                    zoneIndex,                     // Zone index
+                    zoneIndex,                  // Zone index
                     zoneFlip                    // Zone flip
                 );
             }
