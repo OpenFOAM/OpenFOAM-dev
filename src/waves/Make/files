@@ -8,6 +8,7 @@ waveModels/solitary/solitary.C
 waveModels/irregular/waveSpectra/waveSpectrum/waveSpectrum.C
 waveModels/irregular/waveSpectra/PiersonMoskowitz/PiersonMoskowitz.C
 waveModels/irregular/waveSpectra/JONSWAP/JONSWAP.C
+waveModels/irregular/waveSpectra/GodaJONSWAP/GodaJONSWAP.C
 waveModels/irregular/irregular.C
 
 waveSuperpositions/waveSuperposition/waveSuperposition.C
