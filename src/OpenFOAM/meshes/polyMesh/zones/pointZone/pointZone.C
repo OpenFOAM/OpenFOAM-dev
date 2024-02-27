@@ -120,7 +120,7 @@ const Foam::meshPointZones& Foam::pointZone::meshZones() const
 
 Foam::label Foam::pointZone::whichPoint(const label globalPointID) const
 {
-    return zone::localID(globalPointID);
+    return zone::localIndex(globalPointID);
 }
 
 

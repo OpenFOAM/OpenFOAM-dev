@@ -301,7 +301,7 @@ const Foam::meshFaceZones& Foam::faceZone::meshZones() const
 
 Foam::label Foam::faceZone::whichFace(const label globalFaceID) const
 {
-    return zone::localID(globalFaceID);
+    return zone::localIndex(globalFaceID);
 }
 
 

@@ -244,8 +244,8 @@ public:
             return flipMap_;
         }
 
-        //- Helper function to re-direct to zone::localID(...)
-        label whichFace(const label globalCellID) const;
+        //- Convenient renaming of zone::localIndex(globalIndex)
+        label whichFace(const label globalIndex) const;
 
         //- Return reference to primitive patch
         const primitiveFacePatch& operator()() const;

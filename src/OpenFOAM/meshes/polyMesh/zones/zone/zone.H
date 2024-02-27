@@ -145,7 +145,7 @@ public:
         //- Map storing the local index for every global index.  Used to find
         //  the index of the item in the zone from the known global index. If
         //  the item is not in the zone, returns -1
-        label localID(const label globalID) const;
+        label localIndex(const label globalIndex) const;
 
         //- Return a reference to the look-up map
         const Map<label>& lookupMap() const;

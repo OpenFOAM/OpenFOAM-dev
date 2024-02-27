@@ -70,17 +70,11 @@ class MeshZones
         //- Reference to mesh
         const MeshType& mesh_;
 
-        //- Map of zone labels for given element
-        mutable Map<label>* zoneMapPtr_;
-
 
     // Private Member Functions
 
         //- Read if IOobject flags set. Return true if read.
         bool read();
-
-        //- Create zone map
-        void calcZoneMap() const;
 
 
 public:
@@ -129,12 +123,12 @@ public:
             return mesh_;
         }
 
-        //- Map of zones containing zone index for all zoned elements
-        //  Return -1 if the object is not in the zone
-        const Map<label>& zoneMap() const;
+        //- Given a global object index, return the list of zones it is in
+        labelList whichZones(const label objectIndex) const;
 
         //- Given a global object index, return the zone it is in.
         // If object does not belong to any zones, return -1
+        // *** This will be replaced by whichZones
         label whichZone(const label objectIndex) const;
 
         //- Return a list of zone types

@@ -114,7 +114,7 @@ Foam::cellZone::~cellZone()
 
 Foam::label Foam::cellZone::whichCell(const label globalCellID) const
 {
-    return zone::localID(globalCellID);
+    return zone::localIndex(globalCellID);
 }
 
 

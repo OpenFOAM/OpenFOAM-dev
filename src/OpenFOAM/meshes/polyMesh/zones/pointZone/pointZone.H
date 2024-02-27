@@ -194,8 +194,8 @@ public:
         //- Return meshZones reference
         const meshPointZones& meshZones() const;
 
-        //- Helper function to re-direct to zone::localID(...)
-        label whichPoint(const label globalPointID) const;
+        //- Convenient renaming of zone::localIndex(globalIndex)
+        label whichPoint(const label globalIndex) const;
 
         //- Check zone definition. Return true if in error.
         virtual bool checkDefinition(const bool report = false) const;

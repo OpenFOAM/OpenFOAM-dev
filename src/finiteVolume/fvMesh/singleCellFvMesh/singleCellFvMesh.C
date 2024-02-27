@@ -296,14 +296,6 @@ void Foam::singleCellFvMesh::agglomerateMesh
 
             DynamicList<label> newAddressing;
 
-            // Note: uncomment if you think it makes sense. Note that value
-            // of cell0 is the average.
-            //// Was old cell0 in this cellZone?
-            // if (oldFz.localID(0) != -1)
-            //{
-            //    newAddressing.append(0);
-            //}
-
             cellZones().set
             (
                 zoneI,

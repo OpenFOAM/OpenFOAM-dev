@@ -190,8 +190,8 @@ public:
 
     // Member Functions
 
-        //- Helper function to re-direct to zone::localID(...)
-        label whichCell(const label globalCellID) const;
+        //- Convenient renaming of zone::localIndex(globalIndex)
+        label whichCell(const label globalIndex) const;
 
         //- Return meshZones reference
         const meshCellZones& meshZones() const;

@@ -153,11 +153,11 @@ Foam::zone::~zone()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::zone::localID(const label globalCellID) const
+Foam::label Foam::zone::localIndex(const label globalIndex) const
 {
     const Map<label>& lm = lookupMap();
 
-    Map<label>::const_iterator lmIter = lm.find(globalCellID);
+    Map<label>::const_iterator lmIter = lm.find(globalIndex);
 
     if (lmIter == lm.end())
     {

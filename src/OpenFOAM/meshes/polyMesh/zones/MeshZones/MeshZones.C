@@ -30,45 +30,6 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class ZoneType, class MeshType>
-void Foam::MeshZones<ZoneType, MeshType>::calcZoneMap() const
-{
-    // It is an error to attempt to recalculate cellEdges
-    // if the pointer is already set
-    if (zoneMapPtr_)
-    {
-        FatalErrorInFunction
-            << "zone map already calculated"
-            << abort(FatalError);
-    }
-    else
-    {
-        // Count number of objects in all zones
-        label nObjects = 0;
-
-        forAll(*this, zi)
-        {
-            nObjects += this->operator[](zi).size();
-        }
-
-        zoneMapPtr_ = new Map<label>(2*nObjects);
-        Map<label>& zm = *zoneMapPtr_;
-
-        // Fill in objects of all zones into the map.  The key is the global
-        // object index and the result is the zone index
-        forAll(*this, zi)
-        {
-            const labelList& zoneObjects = this->operator[](zi);
-
-            forAll(zoneObjects, objI)
-            {
-                zm.insert(zoneObjects[objI], zi);
-            }
-        }
-    }
-}
-
-
-template<class ZoneType, class MeshType>
 bool Foam::MeshZones<ZoneType, MeshType>::read()
 {
     if
@@ -138,8 +99,7 @@ Foam::MeshZones<ZoneType, MeshType>::MeshZones
 :
     PtrList<ZoneType>(),
     regIOobject(io),
-    mesh_(mesh),
-    zoneMapPtr_(nullptr)
+    mesh_(mesh)
 {
     read();
 }
@@ -155,8 +115,7 @@ Foam::MeshZones<ZoneType, MeshType>::MeshZones
 :
     PtrList<ZoneType>(size),
     regIOobject(io),
-    mesh_(mesh),
-    zoneMapPtr_(nullptr)
+    mesh_(mesh)
 {
     // Optionally read contents, otherwise keep size
     read();
@@ -173,8 +132,7 @@ Foam::MeshZones<ZoneType, MeshType>::MeshZones
 :
     PtrList<ZoneType>(),
     regIOobject(io),
-    mesh_(mesh),
-    zoneMapPtr_(nullptr)
+    mesh_(mesh)
 {
     if (!read())
     {
@@ -201,15 +159,22 @@ Foam::MeshZones<ZoneType, MeshType>::~MeshZones()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ZoneType, class MeshType>
-const Foam::Map<Foam::label>&
-Foam::MeshZones<ZoneType, MeshType>::zoneMap() const
+Foam::labelList Foam::MeshZones<ZoneType, MeshType>::whichZones
+(
+    const label objectIndex
+) const
 {
-    if (!zoneMapPtr_)
+    labelList zones;
+
+    forAll(*this, zi)
     {
-        calcZoneMap();
+        if (this->operator[](zi).localIndex(objectIndex) != -1)
+        {
+            zones.append(zi);
+        }
     }
 
-    return *zoneMapPtr_;
+    return zones;
 }
 
 
@@ -219,17 +184,17 @@ Foam::label Foam::MeshZones<ZoneType, MeshType>::whichZone
     const label objectIndex
 ) const
 {
-    const Map<label>& zm = zoneMap();
-    Map<label>::const_iterator zmIter = zm.find(objectIndex);
+    label zoneIndex = -1;
 
-    if (zmIter == zm.end())
+    forAll(*this, zi)
     {
-        return -1;
+        if (this->operator[](zi).localIndex(objectIndex) != -1)
+        {
+            zoneIndex = zi;
+        }
     }
-    else
-    {
-        return zmIter();
-    }
+
+    return zoneIndex;
 }
 
 
@@ -405,8 +370,6 @@ void Foam::MeshZones<ZoneType, MeshType>::append(const ZoneType& zone) const
 template<class ZoneType, class MeshType>
 void Foam::MeshZones<ZoneType, MeshType>::clearAddressing()
 {
-    deleteDemandDrivenData(zoneMapPtr_);
-
     PtrList<ZoneType>& zones = *this;
 
     forAll(zones, zi)
