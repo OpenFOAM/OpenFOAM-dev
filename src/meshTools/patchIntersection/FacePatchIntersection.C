@@ -140,7 +140,10 @@ Foam::FacePatchIntersection<SrcPatchType, TgtPatchType>::FacePatchIntersection
             this->srcPatch_.localPoints(),
             labelList(),
             labelListList(),
-            this->srcPatch_.localFaces()
+            this->srcPatch_.localFaces(),
+            "normals",
+            true,
+            srcPointNormals
         );
         const fileName tgtFileName = type() + "_tgtPatch.vtk";
         Info<< indent << "Writing patch to " << tgtFileName << endl;

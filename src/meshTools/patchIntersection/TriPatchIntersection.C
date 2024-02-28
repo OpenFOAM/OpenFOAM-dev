@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -3776,7 +3776,10 @@ Foam::TriPatchIntersection<SrcPatchType, TgtPatchType>::TriPatchIntersection
             this->srcPatch_.localPoints(),
             labelList(),
             labelListList(),
-            this->srcPatch_.localFaces()
+            this->srcPatch_.localFaces(),
+            "normals",
+            true,
+            srcPointNormals
         );
         const fileName tgtFileName = type() + "_tgtPatch.vtk";
         Info<< indent << "Writing patch to " << tgtFileName << endl;
