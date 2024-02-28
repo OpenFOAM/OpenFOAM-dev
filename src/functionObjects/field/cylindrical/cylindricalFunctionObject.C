@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,13 +49,12 @@ namespace functionObjects
 
 Foam::tensor Foam::functionObjects::cylindrical::R(const vector& p) const
 {
-    vector dir = p - origin_;
-    dir /= mag(dir) + vSmall;
+    const vector dir = normalised(p - origin_);
 
-    const vector axis = axis_/mag(axis_);
+    const vector axis = normalised(axis_);
     const vector r = dir - (dir & axis)*axis;
 
-    return tensor(r, axis^r, axis);
+    return tensor(normalised(r), normalised(axis^r), axis);
 }
 
 

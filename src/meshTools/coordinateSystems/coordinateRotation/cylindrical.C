@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,12 +53,8 @@ Foam::tensor Foam::cylindrical::R(const vector& p) const
         // If the point is on the axis choose any radial direction
         return axesRotation(axis, perpendicular(axis)).R();
     }
-    else
-    {
-        return axesRotation(axis, dir).R();
-    }
 
-    return tensor(r, axis^r, axis);
+    return axesRotation(axis, dir).R();
 }
 
 
