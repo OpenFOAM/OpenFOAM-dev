@@ -199,6 +199,26 @@ Foam::label Foam::MeshZones<ZoneType, MeshType>::whichZone
 
 
 template<class ZoneType, class MeshType>
+Foam::boolList Foam::MeshZones<ZoneType, MeshType>::zonesFlipFace
+(
+    const label facei,
+    const labelList& faceiZones
+)
+{
+    labelList zones(whichZones(facei));
+    boolList flipFaces(zones.size());
+
+    forAll(zones, zi)
+    {
+        const ZoneType& fz = this->operator[](zi);
+        flipFaces[zi] = fz.flipMap()[fz.localIndex(facei)];
+    }
+
+    return flipFaces;
+}
+
+
+template<class ZoneType, class MeshType>
 Foam::wordList Foam::MeshZones<ZoneType, MeshType>::types() const
 {
     const PtrList<ZoneType>& zones = *this;

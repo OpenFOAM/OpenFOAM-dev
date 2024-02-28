@@ -35,10 +35,10 @@ SourceFiles
 #ifndef MeshZones_H
 #define MeshZones_H
 
-#include "List.H"
 #include "regIOobject.H"
 #include "pointField.H"
 #include "Map.H"
+#include "boolList.H"
 #include "PackedBoolList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -130,6 +130,14 @@ public:
         // If object does not belong to any zones, return -1
         // *** This will be replaced by whichZones
         label whichZone(const label objectIndex) const;
+
+        //- Return the list of flips for the facei
+        //  for each of the face zones in faceiZones
+        boolList zonesFlipFace
+        (
+            const label facei,
+            const labelList& faceiZones
+        );
 
         //- Return a list of zone types
         wordList types() const;
