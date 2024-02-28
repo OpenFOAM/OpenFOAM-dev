@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,8 +66,25 @@ void Foam::planeToFaceZone::combine(faceZoneSet& fzSet, const bool add) const
             ((mesh_.cellCentres()[celli] - point_) & normal_) > 0;
     }
 
+    // Mark all coupled neighbour cells with centres above the plane
+    boolList bFaceNbrCellIsAbovePlane(mesh_.nFaces() - mesh_.nInternalFaces());
+    {
+        vectorField bFaceNbrCellCentres;
+        syncTools::swapBoundaryCellPositions
+        (
+            mesh_,
+            mesh_.cellCentres(),
+            bFaceNbrCellCentres
+        );
+        forAll(bFaceNbrCellIsAbovePlane, bFacei)
+        {
+            bFaceNbrCellIsAbovePlane[bFacei] =
+                ((bFaceNbrCellCentres[bFacei] - point_) & normal_) > 0;
+        }
+    }
+
     // Mark all faces that sit between cells above and below the plane
-    boolList faceIsOnPlane(mesh_.nFaces());
+    boolList faceIsOnPlane(mesh_.nFaces(), false);
     forAll(mesh_.faceNeighbour(), facei)
     {
         faceIsOnPlane[facei] =
@@ -77,14 +94,18 @@ void Foam::planeToFaceZone::combine(faceZoneSet& fzSet, const bool add) const
     forAll(mesh_.boundaryMesh(), patchi)
     {
         const polyPatch& patch = mesh_.boundaryMesh()[patchi];
+        if (!patch.coupled()) continue;
         forAll(patch, patchFacei)
         {
             const label facei = patch.start() + patchFacei;
             faceIsOnPlane[facei] =
-                patch.coupled() && cellIsAbovePlane[mesh_.faceOwner()[facei]];
+                cellIsAbovePlane[mesh_.faceOwner()[facei]]
+             != bFaceNbrCellIsAbovePlane[facei - mesh_.nInternalFaces()];
         }
     }
-    syncTools::syncFaceList(mesh_, faceIsOnPlane, notEqOp<bool>());
+
+    // Ensure consistency across couplings
+    syncTools::syncFaceList(mesh_, faceIsOnPlane, orEqOp<bool>());
 
     // Convert marked faces to a list of indices
     labelList newSetFaces(findIndices(faceIsOnPlane, true));
