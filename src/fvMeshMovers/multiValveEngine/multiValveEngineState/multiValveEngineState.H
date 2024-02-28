@@ -125,13 +125,6 @@ public:
             return wordList::null();
         }
 
-        //- Do not execute at the start of the run
-        //  as the clearance is not available at that point
-        virtual bool executeAtStart() const
-        {
-            return false;
-        }
-
         //- Execute, currently does nothing
         virtual bool execute();
 

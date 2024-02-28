@@ -100,7 +100,7 @@ Foam::fvMeshMovers::multiValveEngine::pistonObject::pistonObject
 :
     movingObject(name, engine, dict),
     bore_(bore()),
-    clearance_(great)
+    clearance_(0)
 {}
 
 
