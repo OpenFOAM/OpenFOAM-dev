@@ -43,6 +43,8 @@ fieldsFunctions
 
     #includeFunc CourantNo
 
+    #includeFunc cylindrical(origin=(0 0 0), axis=(0 0 1), U)
+
     #includeFunc ddt(p)
 
     #includeFunc div(phi)
