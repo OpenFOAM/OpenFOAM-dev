@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,6 +118,12 @@ class lambdaThixotropic
 
         //- Optional Bingham plastic yield stress [m^2/s^2]
         dimensionedScalar sigmay_;
+
+        //- Residual alpha
+        //  Used to stabilise the solution of the lambda equation
+        //  where the phase-fraction is below this value
+        //  Defaults to 1e-6
+        dimensionedScalar residualAlpha_;
 
         //- Structural parameter
         //  0 = freestream value (most liquid)

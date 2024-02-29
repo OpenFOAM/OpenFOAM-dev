@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,16 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
       ? dimensionedScalar("sigmay", dimPressure/dimDensity, this->coeffDict_)
       : dimensionedScalar("sigmay", dimPressure/dimDensity, 0)
     ),
-
+    residualAlpha_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "residualAlpha",
+            this->coeffDict_,
+            dimless,
+            1e-6
+        )
+    ),
     lambda_
     (
         IOobject
@@ -210,7 +219,9 @@ template<class BasicMomentumTransportModel>
 void lambdaThixotropic<BasicMomentumTransportModel>::correct()
 {
     // Local references
-    const surfaceScalarField& phi = this->phi_;
+    const alphaField& alpha = this->alpha_;
+    const rhoField& rho = this->rho_;
+    const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
     const Foam::fvConstraints& fvConstraints
     (
@@ -221,12 +232,20 @@ void lambdaThixotropic<BasicMomentumTransportModel>::correct()
 
     tmp<fvScalarMatrix> lambdaEqn
     (
-        fvm::ddt(lambda_) + fvm::div(phi, lambda_)
-      - fvm::Sp(fvc::div(phi), lambda_)
+        fvm::ddt(alpha, rho, lambda_)
+      + fvm::div(alphaRhoPhi, lambda_)
      ==
-        a_*pow(1 - lambda_(), b_)
-      - fvm::Sp(c_*pow(strainRate(), d_), lambda_)
-      + fvModels.source(lambda_)
+        alpha()*rho()*a_*pow(1 - lambda_(), b_)
+      - fvm::Sp
+        (
+            rho()
+           *(
+               alpha()*c_*pow(strainRate(), d_)
+             + max(residualAlpha_ - alpha(), dimensionedScalar(dimless, 0))*a_
+            ),
+            lambda_
+        )
+      + fvModels.source(alpha, rho, lambda_)
     );
 
     lambdaEqn.ref().relax();
