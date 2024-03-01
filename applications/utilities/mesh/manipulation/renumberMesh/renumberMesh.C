@@ -528,10 +528,6 @@ autoPtr<polyTopoChangeMap> reorderMesh
             reverseCellOrder,           // reverseCellMap,
             flipFaceFlux,               // flipFaceFlux,
             patchPointMap,              // patchPointMap,
-            labelListList(0),           // pointZoneMap,
-            labelListList(0),           // faceZonePointMap,
-            labelListList(0),           // faceZoneFaceMap,
-            labelListList(0),           // cellZoneMap,
             pointField(0),              // preMotionPoints,
             patchStarts,                // oldPatchStarts,
             oldPatchNMeshPoints,        // oldPatchNMeshPoints

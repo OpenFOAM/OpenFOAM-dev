@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,10 +59,6 @@ Foam::polyTopoChangeMap::polyTopoChangeMap
     const labelList& reverseCellMap,
     const labelHashSet& flipFaceFlux,
     const labelListList& patchPointMap,
-    const labelListList& pointZoneMap,
-    const labelListList& faceZonePointMap,
-    const labelListList& faceZoneFaceMap,
-    const labelListList& cellZoneMap,
     const pointField& preMotionPoints,
     const labelList& oldPatchStarts,
     const labelList& oldPatchNMeshPoints,
@@ -89,10 +85,6 @@ Foam::polyTopoChangeMap::polyTopoChangeMap
     reverseCellMap_(reverseCellMap),
     flipFaceFlux_(flipFaceFlux),
     patchPointMap_(patchPointMap),
-    pointZoneMap_(pointZoneMap),
-    faceZonePointMap_(faceZonePointMap),
-    faceZoneFaceMap_(faceZoneFaceMap),
-    cellZoneMap_(cellZoneMap),
     preMotionPoints_(preMotionPoints),
     oldPatchSizes_(oldPatchStarts.size()),
     oldPatchStarts_(oldPatchStarts),
@@ -147,10 +139,6 @@ Foam::polyTopoChangeMap::polyTopoChangeMap
     labelList& reverseCellMap,
     labelHashSet& flipFaceFlux,
     labelListList& patchPointMap,
-    labelListList& pointZoneMap,
-    labelListList& faceZonePointMap,
-    labelListList& faceZoneFaceMap,
-    labelListList& cellZoneMap,
     pointField& preMotionPoints,
     labelList& oldPatchStarts,
     labelList& oldPatchNMeshPoints,
@@ -178,10 +166,6 @@ Foam::polyTopoChangeMap::polyTopoChangeMap
     reverseCellMap_(reverseCellMap, reuse),
     flipFaceFlux_(flipFaceFlux),
     patchPointMap_(patchPointMap, reuse),
-    pointZoneMap_(pointZoneMap, reuse),
-    faceZonePointMap_(faceZonePointMap, reuse),
-    faceZoneFaceMap_(faceZoneFaceMap, reuse),
-    cellZoneMap_(cellZoneMap, reuse),
     preMotionPoints_(preMotionPoints, reuse),
     oldPatchSizes_(oldPatchStarts.size()),
     oldPatchStarts_(oldPatchStarts, reuse),

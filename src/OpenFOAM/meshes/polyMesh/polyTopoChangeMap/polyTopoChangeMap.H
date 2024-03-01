@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -233,26 +233,6 @@ class polyTopoChangeMap
         //- Patch mesh point renumbering
         const labelListList patchPointMap_;
 
-        //- Point zone renumbering
-        //  For every preserved point in zone give the old position.
-        //  For added points, the index is set to -1
-        const labelListList pointZoneMap_;
-
-        //- Face zone point renumbering
-        //  For every preserved point in zone give the old position.
-        //  For added points, the index is set to -1
-        const labelListList faceZonePointMap_;
-
-        //- Face zone face renumbering
-        //  For every preserved face in zone give the old position.
-        //  For added faces, the index is set to -1
-        const labelListList faceZoneFaceMap_;
-
-        //- Cell zone renumbering
-        //  For every preserved cell in zone give the old position.
-        //  For added cells, the index is set to -1
-        const labelListList cellZoneMap_;
-
         //- Pre-motion point positions.
         //  This specifies the correct way of blowing up zero-volume objects
         const pointField preMotionPoints_;
@@ -300,10 +280,6 @@ public:
             const labelList& reverseCellMap,
             const labelHashSet& flipFaceFlux,
             const labelListList& patchPointMap,
-            const labelListList& pointZoneMap,
-            const labelListList& faceZonePointMap,
-            const labelListList& faceZoneFaceMap,
-            const labelListList& cellZoneMap,
             const pointField& preMotionPoints,
             const labelList& oldPatchStarts,
             const labelList& oldPatchNMeshPoints,
@@ -333,10 +309,6 @@ public:
             labelList& reverseCellMap,
             labelHashSet& flipFaceFlux,
             labelListList& patchPointMap,
-            labelListList& pointZoneMap,
-            labelListList& faceZonePointMap,
-            labelListList& faceZoneFaceMap,
-            labelListList& cellZoneMap,
             pointField& preMotionPoints,
             labelList& oldPatchStarts,
             labelList& oldPatchNMeshPoints,
@@ -565,40 +537,6 @@ public:
                     return patchPointMap_;
                 }
 
-
-            // Zone mapping
-
-                //- Point zone renumbering
-                //  For every preserved point in zone give the old position.
-                //  For added points, the index is set to -1
-                const labelListList& pointZoneMap() const
-                {
-                    return pointZoneMap_;
-                }
-
-                //- Face zone point renumbering
-                //  For every preserved point in zone give the old position.
-                //  For added points, the index is set to -1
-                const labelListList& faceZonePointMap() const
-                {
-                    return faceZonePointMap_;
-                }
-
-                //- Face zone face renumbering
-                //  For every preserved face in zone give the old position.
-                //  For added faces, the index is set to -1
-                const labelListList& faceZoneFaceMap() const
-                {
-                    return faceZoneFaceMap_;
-                }
-
-                //- Cell zone renumbering
-                //  For every preserved cell in zone give the old position.
-                //  For added cells, the index is set to -1
-                const labelListList& cellZoneMap() const
-                {
-                    return cellZoneMap_;
-                }
 
             //- Pre-motion point positions.
             //  This specifies the correct way of blowing up

@@ -1537,16 +1537,12 @@ void Foam::polyTopoChange::calcCellInflationMaps
 void Foam::polyTopoChange::resetZones
 (
     const polyMesh& mesh,
-    polyMesh& newMesh,
-    labelListList& pointZoneMap,
-    labelListList& faceZoneFaceMap,
-    labelListList& cellZoneMap
+    polyMesh& newMesh
 ) const
 {
     // pointZones
     // ~~~~~~~~~~
 
-    pointZoneMap.setSize(mesh.pointZones().size());
     {
         const meshPointZones& pointZones = mesh.pointZones();
 
@@ -1589,29 +1585,6 @@ void Foam::polyTopoChange::resetZones
             stableSort(addressing[zoneI]);
         }
 
-        // So now we both have old zones and the new addressing.
-        // Invert the addressing to get pointZoneMap.
-        forAll(addressing, zoneI)
-        {
-            const pointZone& oldZone = pointZones[zoneI];
-            const labelList& newZoneAddr = addressing[zoneI];
-
-            labelList& curPzRnb = pointZoneMap[zoneI];
-            curPzRnb.setSize(newZoneAddr.size());
-
-            forAll(newZoneAddr, i)
-            {
-                if (newZoneAddr[i] < pointMap_.size())
-                {
-                    curPzRnb[i] = oldZone.whichPoint(pointMap_[newZoneAddr[i]]);
-                }
-                else
-                {
-                    curPzRnb[i] = -1;
-                }
-            }
-        }
-
         // Reset the addressing on the zone
         newMesh.pointZones().clearAddressing();
         forAll(newMesh.pointZones(), zoneI)
@@ -1632,7 +1605,6 @@ void Foam::polyTopoChange::resetZones
     // faceZones
     // ~~~~~~~~~
 
-    faceZoneFaceMap.setSize(mesh.faceZones().size());
     {
         const meshFaceZones& faceZones = mesh.faceZones();
 
@@ -1695,32 +1667,6 @@ void Foam::polyTopoChange::resetZones
             }
         }
 
-        // So now we both have old zones and the new addressing.
-        // Invert the addressing to get faceZoneFaceMap.
-        forAll(addressing, zoneI)
-        {
-            const faceZone& oldZone = faceZones[zoneI];
-            const labelList& newZoneAddr = addressing[zoneI];
-
-            labelList& curFzFaceRnb = faceZoneFaceMap[zoneI];
-
-            curFzFaceRnb.setSize(newZoneAddr.size());
-
-            forAll(newZoneAddr, i)
-            {
-                if (newZoneAddr[i] < faceMap_.size())
-                {
-                    curFzFaceRnb[i] =
-                        oldZone.whichFace(faceMap_[newZoneAddr[i]]);
-                }
-                else
-                {
-                    curFzFaceRnb[i] = -1;
-                }
-            }
-        }
-
-
         // Reset the addressing on the zone
         newMesh.faceZones().clearAddressing();
         forAll(newMesh.faceZones(), zoneI)
@@ -1745,7 +1691,6 @@ void Foam::polyTopoChange::resetZones
     // cellZones
     // ~~~~~~~~~
 
-    cellZoneMap.setSize(mesh.cellZones().size());
     {
         const meshCellZones& cellZones = mesh.cellZones();
 
@@ -1788,31 +1733,6 @@ void Foam::polyTopoChange::resetZones
         forAll(addressing, zoneI)
         {
             stableSort(addressing[zoneI]);
-        }
-
-        // So now we both have old zones and the new addressing.
-        // Invert the addressing to get cellZoneMap.
-        forAll(addressing, zoneI)
-        {
-            const cellZone& oldZone = cellZones[zoneI];
-            const labelList& newZoneAddr = addressing[zoneI];
-
-            labelList& curCellRnb = cellZoneMap[zoneI];
-
-            curCellRnb.setSize(newZoneAddr.size());
-
-            forAll(newZoneAddr, i)
-            {
-                if (newZoneAddr[i] < cellMap_.size())
-                {
-                    curCellRnb[i] =
-                        oldZone.whichCell(cellMap_[newZoneAddr[i]]);
-                }
-                else
-                {
-                    curCellRnb[i] = -1;
-                }
-            }
         }
 
         // Reset the addressing on the zone
@@ -3124,15 +3044,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
 
     // Zones
     // ~~~~~
-
-    // Inverse of point/face/cell zone addressing.
-    // For every preserved point/face/cells in zone give the old position.
-    // For added points, the index is set to -1
-    labelListList pointZoneMap(mesh.pointZones().size());
-    labelListList faceZoneFaceMap(mesh.faceZones().size());
-    labelListList cellZoneMap(mesh.cellZones().size());
-
-    resetZones(mesh, mesh, pointZoneMap, faceZoneFaceMap, cellZoneMap);
+    resetZones(mesh, mesh);
 
     // Clear zone info
     {
@@ -3190,12 +3102,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
             flipFaceFluxSet,
 
             patchPointMap,
-
-            pointZoneMap,
-
-            faceZonePointMap,
-            faceZoneFaceMap,
-            cellZoneMap,
 
             newPoints,          // if empty signals no inflation.
             oldPatchStarts,
@@ -3415,15 +3321,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
     }
 
     newMesh.addZones(pZonePtrs, fZonePtrs, cZonePtrs);
-
-    // Inverse of point/face/cell zone addressing.
-    // For every preserved point/face/cells in zone give the old position.
-    // For added points, the index is set to -1
-    labelListList pointZoneMap(mesh.pointZones().size());
-    labelListList faceZoneFaceMap(mesh.faceZones().size());
-    labelListList cellZoneMap(mesh.cellZones().size());
-
-    resetZones(mesh, newMesh, pointZoneMap, faceZoneFaceMap, cellZoneMap);
+    resetZones(mesh, newMesh);
 
     // Clear zone info
     {
@@ -3486,12 +3384,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
             flipFaceFluxSet,
 
             patchPointMap,
-
-            pointZoneMap,
-
-            faceZonePointMap,
-            faceZoneFaceMap,
-            cellZoneMap,
 
             newPoints,          // if empty signals no inflation.
             oldPatchStarts,

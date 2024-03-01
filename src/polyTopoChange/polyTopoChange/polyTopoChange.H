@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -364,10 +364,7 @@ class polyTopoChange
         void resetZones
         (
             const polyMesh&,        // mesh to get existing info from
-            polyMesh&,              // mesh to change zones on
-            labelListList&,
-            labelListList&,
-            labelListList&
+            polyMesh&              // mesh to change zones on
         ) const;
 
         void calcFaceZonePointMap
