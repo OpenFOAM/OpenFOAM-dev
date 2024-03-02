@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,8 +82,6 @@ void Foam::addPatchCellLayer::addVertex
 }
 
 
-// Is edge to the same neighbour? (and needs extrusion and has not been
-// dealt with already)
 bool Foam::addPatchCellLayer::sameEdgeNeighbour
 (
     const indirectPrimitivePatch& pp,
@@ -109,9 +107,6 @@ bool Foam::addPatchCellLayer::sameEdgeNeighbour
 }
 
 
-// Collect consecutive string of edges that connects the same two
-// (possibly coupled) faces. Returns -1 if no unvisited edge can be found.
-// Otherwise returns start and end index in face.
 Foam::labelPair Foam::addPatchCellLayer::getEdgeString
 (
     const indirectPrimitivePatch& pp,
@@ -217,7 +212,6 @@ Foam::labelPair Foam::addPatchCellLayer::getEdgeString
 }
 
 
-// Adds a side face i.e. extrudes a patch edge.
 Foam::label Foam::addPatchCellLayer::addSideFace
 (
     const indirectPrimitivePatch& pp,
@@ -437,29 +431,8 @@ Foam::label Foam::addPatchCellLayer::findProcPatch
 }
 
 
-void Foam::addPatchCellLayer::setFaceProps
-(
-    const polyMesh& mesh,
-    const label facei,
-
-    label& patchi,
-    label& zoneI,
-    bool& zoneFlip
-)
-{
-    patchi = mesh.boundaryMesh().whichPatch(facei);
-    zoneI = mesh.faceZones().whichZone(facei);
-    if (zoneI != -1)
-    {
-        label index = mesh.faceZones()[zoneI].whichFace(facei);
-        zoneFlip = mesh.faceZones()[zoneI].flipMap()[index];
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from mesh
 Foam::addPatchCellLayer::addPatchCellLayer
 (
     const polyMesh& mesh,
@@ -508,7 +481,6 @@ Foam::labelListList Foam::addPatchCellLayer::addedCells() const
 }
 
 
-// Calculate global faces per pp edge.
 Foam::labelListList Foam::addPatchCellLayer::globalEdgeFaces
 (
     const polyMesh& mesh,
@@ -581,8 +553,6 @@ void Foam::addPatchCellLayer::calcSidePatch
 
     labelList inflateEdgeI(pp.nEdges(), -1);
     labelList inflateFacei(pp.nEdges(), -1);
-    labelList sideZoneID(pp.nEdges(), -1);
-    boolList sideFlip(pp.nEdges(), false);
 
     nPatches = patches.size();
 
@@ -667,15 +637,7 @@ void Foam::addPatchCellLayer::calcSidePatch
 
                 if (facei != myFacei && !mesh.isInternalFace(facei))
                 {
-                    setFaceProps
-                    (
-                        mesh,
-                        facei,
-
-                        sidePatchID[edgeI],
-                        sideZoneID[edgeI],
-                        sideFlip[edgeI]
-                    );
+                    sidePatchID[edgeI] = mesh.boundaryMesh().whichPatch(facei);
                     inflateFacei[edgeI] = facei;
                     inflateEdgeI[edgeI] = -1;
 
@@ -743,15 +705,8 @@ void Foam::addPatchCellLayer::calcSidePatch
                     {
                         if (patches.whichPatch(facei) == sidePatchID[edgeI])
                         {
-                            setFaceProps
-                            (
-                                mesh,
-                                facei,
-
-                                sidePatchID[edgeI],
-                                sideZoneID[edgeI],
-                                sideFlip[edgeI]
-                            );
+                            sidePatchID[edgeI] =
+                                mesh.boundaryMesh().whichPatch(facei);
                             inflateFacei[edgeI] = facei;
                             inflateEdgeI[edgeI] = -1;
 

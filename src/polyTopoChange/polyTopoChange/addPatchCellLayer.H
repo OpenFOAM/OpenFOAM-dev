@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,6 +192,8 @@ class addPatchCellLayer
         //- Add vertex to face if unique.
         static void addVertex(const label, face&, label& fp);
 
+        //- Is edge to the same neighbour? (and needs extrusion and has not been
+        // dealt with already)
         bool sameEdgeNeighbour
         (
             const indirectPrimitivePatch& pp,
@@ -202,6 +204,9 @@ class addPatchCellLayer
             const label edgeI
         ) const;
 
+        //- Collect consecutive string of edges that connects the same two
+        // (possibly coupled) faces. Returns -1 if no unvisited edge can be
+        // found.  Otherwise returns start and end index in face.
         labelPair getEdgeString
         (
             const indirectPrimitivePatch& pp,
@@ -213,6 +218,7 @@ class addPatchCellLayer
 
 
         //- Add face between layer-1 and layer.
+        //  i.e. extrudes a patch edge.
         label addSideFace
         (
             const indirectPrimitivePatch&,
@@ -232,16 +238,6 @@ class addPatchCellLayer
 
         //- Find patch to neighbouring processor
         static label findProcPatch(const polyMesh&, const label nbrProcID);
-
-        //- Extract properties from mesh face
-        static void setFaceProps
-        (
-            const polyMesh&,
-            const label,
-            label&,
-            label&,
-            bool&
-        );
 
 
 public:
