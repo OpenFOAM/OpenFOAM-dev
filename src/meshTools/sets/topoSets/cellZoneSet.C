@@ -282,7 +282,6 @@ bool cellZoneSet::writeObject
     {
         cellZones[zoneID] = addressing_;
     }
-    cellZones.clearAddressing();
 
     return ok && cellZones.write(write);
 }

@@ -416,8 +416,6 @@ int main(int argc, char *argv[])
 
         if (mesh.faceZones().findIndex(name) == -1)
         {
-            mesh.faceZones().clearAddressing();
-
             const label sz = mesh.faceZones().size();
 
             labelList addr(0);

@@ -145,29 +145,13 @@ void Foam::cellZone::writeDict(Ostream& os) const
 
 void Foam::cellZone::operator=(const cellZone& zn)
 {
-    clearAddressing();
     zone::operator=(zn);
 }
 
 
 void Foam::cellZone::operator=(cellZone&& zn)
 {
-    clearAddressing();
     zone::operator=(move(zn));
-}
-
-
-void Foam::cellZone::operator=(const labelUList& addr)
-{
-    clearAddressing();
-    zone::operator=(addr);
-}
-
-
-void Foam::cellZone::operator=(labelList&& addr)
-{
-    clearAddressing();
-    zone::operator=(move(addr));
 }
 
 

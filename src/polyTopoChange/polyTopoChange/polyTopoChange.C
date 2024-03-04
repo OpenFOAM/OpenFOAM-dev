@@ -1586,7 +1586,6 @@ void Foam::polyTopoChange::resetZones
         }
 
         // Reset the addressing on the zone
-        newMesh.pointZones().clearAddressing();
         forAll(newMesh.pointZones(), zoneI)
         {
             if (debug)
@@ -1668,7 +1667,6 @@ void Foam::polyTopoChange::resetZones
         }
 
         // Reset the addressing on the zone
-        newMesh.faceZones().clearAddressing();
         forAll(newMesh.faceZones(), zoneI)
         {
             if (debug)
@@ -1736,7 +1734,6 @@ void Foam::polyTopoChange::resetZones
         }
 
         // Reset the addressing on the zone
-        newMesh.cellZones().clearAddressing();
         forAll(newMesh.cellZones(), zoneI)
         {
             if (debug)

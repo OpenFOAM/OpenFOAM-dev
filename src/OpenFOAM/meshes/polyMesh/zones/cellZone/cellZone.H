@@ -212,17 +212,13 @@ public:
 
     // Member Operators
 
+        using zone::operator=;
+
         //- Assignment to zone, clearing demand-driven data
         void operator=(const cellZone&);
 
         //- Move assignment to zone, clearing demand-driven data
         void operator=(cellZone&&);
-
-        //- Assign addressing, clearing demand-driven data
-        void operator=(const labelUList&);
-
-        //- Move addressing, clearing demand-driven data
-        void operator=(labelList&&);
 
 
     // I-O

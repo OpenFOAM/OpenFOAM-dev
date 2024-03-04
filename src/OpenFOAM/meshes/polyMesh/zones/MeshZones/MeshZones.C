@@ -516,6 +516,48 @@ void Foam::MeshZones<ZoneType, MeshType>::movePoints(const pointField& p)
 
 
 template<class ZoneType, class MeshType>
+void Foam::MeshZones<ZoneType, MeshType>::topoChange
+(
+    const polyTopoChangeMap& map
+)
+{
+    PtrList<ZoneType>& zones = *this;
+
+    forAll(zones, zi)
+    {
+        zones[zi].topoChange(map);
+    }
+}
+
+
+template<class ZoneType, class MeshType>
+void Foam::MeshZones<ZoneType, MeshType>::mapMesh(const polyMeshMap& map)
+{
+    PtrList<ZoneType>& zones = *this;
+
+    forAll(zones, zi)
+    {
+        zones[zi].mapMesh(map);
+    }
+}
+
+
+template<class ZoneType, class MeshType>
+void Foam::MeshZones<ZoneType, MeshType>::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    PtrList<ZoneType>& zones = *this;
+
+    forAll(zones, zi)
+    {
+        zones[zi].distribute(map);
+    }
+}
+
+
+template<class ZoneType, class MeshType>
 void Foam::MeshZones<ZoneType, MeshType>::swap(MeshZones& otherZones)
 {
     clearAddressing();

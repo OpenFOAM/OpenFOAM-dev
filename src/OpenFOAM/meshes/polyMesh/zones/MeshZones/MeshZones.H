@@ -50,6 +50,10 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
+class polyTopoChangeMap;
+class polyMeshMap;
+class polyDistributionMap;
+
 template<class ZoneType, class MeshType> class MeshZones;
 
 template<class ZoneType, class MeshType>
@@ -177,7 +181,16 @@ public:
         bool checkParallelSync(const bool report = false) const;
 
         //- Correct zones after moving points
-        void movePoints(const pointField&);
+        virtual void movePoints(const pointField&);
+
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap& map);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
+
+        //- Redistribute or update using the given distribution map
+        virtual void distribute(const polyDistributionMap&);
 
         //- Swap zones
         //  For run-time mesh replacement and mesh to mesh mapping

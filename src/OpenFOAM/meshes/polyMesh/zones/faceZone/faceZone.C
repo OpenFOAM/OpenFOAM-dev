@@ -386,6 +386,7 @@ void Foam::faceZone::topoChange(const polyTopoChangeMap& map)
 {
     clearAddressing();
 
+    /*
     labelList newAddressing(size());
     boolList newFlipMap(flipMap_.size());
     label nFaces = 0;
@@ -409,12 +410,7 @@ void Foam::faceZone::topoChange(const polyTopoChangeMap& map)
 
     transfer(newAddressing);
     flipMap_.transfer(newFlipMap);
-}
-
-
-void Foam::faceZone::mapMesh(const polyMeshMap&)
-{
-    NotImplemented;
+    */
 }
 
 
@@ -551,7 +547,6 @@ void Foam::faceZone::writeDict(Ostream& os) const
 
 void Foam::faceZone::operator=(const faceZone& zn)
 {
-    clearAddressing();
     zone::operator=(zn);
     flipMap_ = zn.flipMap_;
 }
@@ -559,7 +554,6 @@ void Foam::faceZone::operator=(const faceZone& zn)
 
 void Foam::faceZone::operator=(faceZone&& zn)
 {
-    clearAddressing();
     zone::operator=(move(zn));
     flipMap_ = move(zn.flipMap_);
 }

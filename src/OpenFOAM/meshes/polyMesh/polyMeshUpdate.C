@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,9 +49,9 @@ void Foam::polyMesh::topoChange(const polyTopoChangeMap& map)
     boundary_.topoChange();
 
     // Update zones
-    pointZones_.clearAddressing();
-    faceZones_.clearAddressing();
-    cellZones_.clearAddressing();
+    pointZones_.topoChange(map);
+    faceZones_.topoChange(map);
+    cellZones_.topoChange(map);
 
     // Remove the stored tet base points
     tetBasePtIsPtr_.clear();
@@ -127,6 +127,11 @@ void Foam::polyMesh::topoChange(const polyTopoChangeMap& map)
 
 void Foam::polyMesh::mapMesh(const polyMeshMap& map)
 {
+    // Update zones
+    pointZones_.mapMesh(map);
+    faceZones_.mapMesh(map);
+    cellZones_.mapMesh(map);
+
     meshObjects::mapMesh<polyMesh>(*this, map);
     meshObjects::mapMesh<pointMesh>(*this, map);
 }
@@ -134,6 +139,11 @@ void Foam::polyMesh::mapMesh(const polyMeshMap& map)
 
 void Foam::polyMesh::distribute(const polyDistributionMap& map)
 {
+    // Update zones
+    pointZones_.distribute(map);
+    faceZones_.distribute(map);
+    cellZones_.distribute(map);
+
     meshObjects::distribute<polyMesh>(*this, map);
     meshObjects::distribute<pointMesh>(*this, map);
 }

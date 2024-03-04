@@ -204,27 +204,19 @@ public:
         //  true if in error.
         virtual bool checkParallelSync(const bool report = false) const;
 
-        //- Correct patch after moving points
-        virtual void movePoints(const pointField&)
-        {}
-
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
 
 
     // Member Operators
 
+        using zone::operator=;
+
         //- Assignment to zone, clearing demand-driven data
         void operator=(const pointZone&);
 
         //- Move assignment to zone, clearing demand-driven data
         void operator=(pointZone&&);
-
-        //- Assign addressing, clearing demand-driven data
-        void operator=(const labelUList&);
-
-        //- Move addressing, clearing demand-driven data
-        void operator=(labelList&&);
 
 
     // I-O

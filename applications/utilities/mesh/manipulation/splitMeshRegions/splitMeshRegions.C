@@ -1844,7 +1844,6 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    mesh.cellZones()[zoneI].clearAddressing();
                     mesh.cellZones()[zoneI] = regionCells;
                 }
                 Info<< "    Region " << regioni << " : created new cellZone "

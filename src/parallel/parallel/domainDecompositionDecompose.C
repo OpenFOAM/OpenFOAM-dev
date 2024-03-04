@@ -973,7 +973,6 @@ void Foam::domainDecomposition::decompose()
                 }
             }
 
-            procMesh.pointZones().clearAddressing();
             procMesh.pointZones().setSize(zonePoints.size());
             forAll(zonePoints, zoneI)
             {
@@ -1065,7 +1064,6 @@ void Foam::domainDecomposition::decompose()
                 }
             }
 
-            procMesh.faceZones().clearAddressing();
             procMesh.faceZones().setSize(zoneFaces.size());
             forAll(zoneFaces, zoneI)
             {
@@ -1129,7 +1127,6 @@ void Foam::domainDecomposition::decompose()
                 }
             }
 
-            procMesh.cellZones().clearAddressing();
             procMesh.cellZones().setSize(zoneCells.size());
             forAll(zoneCells, zoneI)
             {

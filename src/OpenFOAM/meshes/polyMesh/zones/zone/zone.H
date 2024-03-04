@@ -48,6 +48,10 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
+class polyTopoChangeMap;
+class polyMeshMap;
+class polyDistributionMap;
+
 class zone;
 Ostream& operator<<(Ostream&, const zone&);
 
@@ -166,6 +170,15 @@ public:
         //- Correct patch after moving points
         virtual void movePoints(const pointField&)
         {}
+
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap& map);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
+
+        //- Redistribute or update using the given distribution map
+        virtual void distribute(const polyDistributionMap&);
 
         //- Write
         virtual void write(Ostream&) const;

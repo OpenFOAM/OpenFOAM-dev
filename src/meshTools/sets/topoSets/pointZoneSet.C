@@ -283,7 +283,6 @@ bool pointZoneSet::writeObject
     {
         pointZones[zoneID] = addressing_;
     }
-    pointZones.clearAddressing();
 
     return ok && pointZones.write(write);
 }

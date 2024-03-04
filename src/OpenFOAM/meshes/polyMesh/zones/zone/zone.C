@@ -220,6 +220,24 @@ bool Foam::zone::checkDefinition(const label maxSize, const bool report) const
 }
 
 
+void Foam::zone::topoChange(const polyTopoChangeMap& map)
+{
+    clearAddressing();
+}
+
+
+void Foam::zone::mapMesh(const polyMeshMap&)
+{
+    clearAddressing();
+}
+
+
+void Foam::zone::distribute(const polyDistributionMap&)
+{
+    clearAddressing();
+}
+
+
 void Foam::zone::write(Ostream& os) const
 {
     os  << nl << name_
@@ -231,24 +249,28 @@ void Foam::zone::write(Ostream& os) const
 
 void Foam::zone::operator=(const zone& zn)
 {
+    clearAddressing();
     labelList::operator=(zn);
 }
 
 
 void Foam::zone::operator=(zone&& zn)
 {
+    clearAddressing();
     labelList::operator=(move(zn));
 }
 
 
 void Foam::zone::operator=(const labelUList& addr)
 {
+    clearAddressing();
     labelList::operator=(addr);
 }
 
 
 void Foam::zone::operator=(labelList&& addr)
 {
+    clearAddressing();
     labelList::operator=(move(addr));
 }
 

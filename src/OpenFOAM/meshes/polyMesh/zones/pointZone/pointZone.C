@@ -197,29 +197,13 @@ void Foam::pointZone::writeDict(Ostream& os) const
 
 void Foam::pointZone::operator=(const pointZone& zn)
 {
-    clearAddressing();
     zone::operator=(zn);
 }
 
 
 void Foam::pointZone::operator=(pointZone&& zn)
 {
-    clearAddressing();
     zone::operator=(move(zn));
-}
-
-
-void Foam::pointZone::operator=(const labelUList& addr)
-{
-    clearAddressing();
-    zone::operator=(addr);
-}
-
-
-void Foam::pointZone::operator=(labelList&& addr)
-{
-    clearAddressing();
-    zone::operator=(move(addr));
 }
 
 
