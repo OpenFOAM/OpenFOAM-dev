@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,20 +60,21 @@ private:
         //- Interface
         const phaseInterface interface_;
 
-        //- The name of the phase where the reactions occur
-        const word reactingName_;
+        //- List of species transferring out of phase 1
+        const hashedWordList species1_;
 
-        //- Const reference to the reacting phase
-        const phaseModel& reactingPhase_;
+        //- List of species transferring out of phase 2
+        const hashedWordList species2_;
 
-        //- Const reference to the other phase
-        const phaseModel& otherPhase_;
+        //- List of all transferring species
+        hashedWordList species_;
 
-        //- Sign used to multiply the source terms
-        const scalar sign_;
 
-        //- List of species changing phase
-        const hashedWordList species_;
+    // Private Member Functions
+
+        //- Keyword for the list of species
+        template<bool Index>
+        word speciesKey() const;
 
 
 public:

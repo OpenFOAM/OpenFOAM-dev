@@ -180,9 +180,7 @@ phaseTransfer
     particles_dispersedIn_vapour
     {
         type reactionDriven;
-        reactingPhase vapour;
-        targetPhase particles;
-        species (TiO2);
+        species.vapour (TiO2);
     }
 }
 

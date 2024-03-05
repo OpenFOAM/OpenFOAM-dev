@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,20 @@ namespace phaseTransferModels
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<bool Index>
+Foam::word Foam::phaseTransferModels::reactionDriven::speciesKey() const
+{
+    return
+        IOobject::groupName
+        (
+            "species",
+            (!Index ? interface_.phase1() : interface_.phase2()).name()
+        );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::phaseTransferModels::reactionDriven::reactionDriven
@@ -49,17 +63,22 @@ Foam::phaseTransferModels::reactionDriven::reactionDriven
 :
     phaseTransferModel(dict, interface),
     interface_(interface),
-    reactingName_(dict.lookup("reactingPhase")),
-    reactingPhase_
-    (
-        reactingName_ == interface_.phase1().name()
-      ? interface_.phase1()
-      : interface_.phase2()
-    ),
-    otherPhase_(interface.otherPhase(reactingPhase_)),
-    sign_(reactingName_ == interface_.phase1().name() ? -1 : 1),
-    species_(dict.lookup("species"))
-{}
+    species1_(dict.lookupOrDefault<wordList>(speciesKey<0>(), wordList())),
+    species2_(dict.lookupOrDefault<wordList>(speciesKey<1>(), wordList())),
+    species_()
+{
+    if (!dict.found(speciesKey<0>()) && !dict.found(speciesKey<1>()))
+    {
+        FatalIOErrorInFunction(dict)
+            << "No transferring species specified. Specify either "
+            << speciesKey<0>() << " or " << speciesKey<1>() << " or both."
+            << exit(FatalIOError);
+    }
+
+    wordList species(species1_);
+    species.append(species2_);
+    species_.transfer(species);
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -82,18 +101,21 @@ Foam::phaseTransferModels::reactionDriven::dmidtf() const
 {
     HashPtrTable<volScalarField> result;
 
-    forAll(species_, i)
+    const phaseModel& phase1 = interface_.phase1();
+    const phaseModel& phase2 = interface_.phase2();
+
+    forAll(species1_, i)
     {
-        const word name = species_[i];
+        volScalarField& Y1 =
+            const_cast<volScalarField&>(phase1.Y(species1_[i]));
+        result.set(species_[i], (- phase1*phase1.R(Y1) & Y1).ptr());
+    }
 
-        volScalarField& Y =
-            const_cast<volScalarField&>(reactingPhase_.Y(name));
-
-        result.set
-        (
-            species_[i],
-            (sign_*reactingPhase_*reactingPhase_.R(Y) & Y).ptr()
-        );
+    forAll(species2_, i)
+    {
+        volScalarField& Y2 =
+            const_cast<volScalarField&>(phase2.Y(species2_[i]));
+        result.set(species_[i], (phase2*phase2.R(Y2) & Y2).ptr());
     }
 
     return result;
