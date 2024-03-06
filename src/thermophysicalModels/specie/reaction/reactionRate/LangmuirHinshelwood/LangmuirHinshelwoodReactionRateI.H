@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,10 +149,11 @@ inline void Foam::LangmuirHinshelwoodReactionRate::ddc
     const scalar dbdc2 = k2*dc2mdc2;
 
     const scalar k = k0/pow(b, m_[0]);
+    const scalar dkdb = - k*m_[0]/b;
 
     ddc = 0;
-    ddc[r_[0]] = - k*m_[0]/b*dbdc1;
-    ddc[r_[1]] = - k*m_[1]/b*dbdc2;
+    ddc[r_[0]] = dkdb*dbdc1;
+    ddc[r_[1]] = dkdb*dbdc2;
 }
 
 
