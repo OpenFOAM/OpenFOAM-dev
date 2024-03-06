@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,12 +25,13 @@ Application
     snappyHexMesh
 
 Description
-    Automatic split hex mesher. Refines and snaps to surface.
+    Automatic split hex mesher
+
+    Refines, snaps to surface and adds surface layers.
 
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "Time.H"
 #include "fvMesh.H"
 #include "snappyRefineDriver.H"
 #include "snappySnapDriver.H"
@@ -40,21 +41,14 @@ Description
 #include "refinementFeatures.H"
 #include "refinementRegions.H"
 #include "decompositionMethod.H"
-#include "noDecomp.H"
 #include "fvMeshDistribute.H"
 #include "wallPolyPatch.H"
-#include "refinementParameters.H"
 #include "snapParameters.H"
 #include "layerParameters.H"
 #include "faceSet.H"
 #include "meshCheck.H"
-#include "polyTopoChange.H"
-#include "cellModeller.H"
 #include "uindirectPrimitivePatch.H"
-#include "surfZoneIdentifierList.H"
-#include "UnsortedMeshedSurface.H"
 #include "MeshedSurface.H"
-#include "globalIndex.H"
 #include "IOmanip.H"
 #include "fvMeshTools.H"
 #include "systemDict.H"
@@ -663,41 +657,18 @@ int main(int argc, char *argv[])
         "name of the file to save the simplified surface to"
     );
     #include "addDictOption.H"
+    #include "addRegionOption.H"
 
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
+    #include "createRegionMeshNoChangers.H"
+
+    Info<< "Read mesh in = "
+        << runTime.cpuTimeIncrement() << " s" << endl;
 
     const bool overwrite = args.optionFound("overwrite");
     const bool checkGeometry = args.optionFound("checkGeometry");
     const bool surfaceSimplify = args.optionFound("surfaceSimplify");
-
-    autoPtr<fvMesh> meshPtr;
-
-    {
-        Foam::Info
-            << "Create mesh for time = "
-            << runTime.name() << Foam::nl << Foam::endl;
-
-        meshPtr.set
-        (
-            new fvMesh
-            (
-                Foam::IOobject
-                (
-                    Foam::fvMesh::defaultRegion,
-                    runTime.name(),
-                    runTime,
-                    Foam::IOobject::MUST_READ
-                ),
-                false
-            )
-        );
-    }
-
-    fvMesh& mesh = meshPtr();
-
-    Info<< "Read mesh in = "
-        << runTime.cpuTimeIncrement() << " s" << endl;
 
     // Check that the read mesh is fully 3D
     // as required for mesh relaxation after snapping

@@ -349,7 +349,6 @@ int main(int argc, char *argv[])
     );
     #include "addDictOption.H"
     #include "addOverwriteOption.H"
-    #include "addDictOption.H"
     #include "addRegionOption.H"
 
     #include "setRootCase.H"
