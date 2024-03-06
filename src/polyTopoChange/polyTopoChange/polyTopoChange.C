@@ -2090,7 +2090,7 @@ Foam::polyTopoChange::polyTopoChange
 )
 :
     strict_(strict),
-    nPatches_(0),
+    nPatches_(mesh.boundaryMesh().size()),
     points_(0),
     pointMap_(0),
     reversePointMap_(0),
@@ -2116,67 +2116,6 @@ Foam::polyTopoChange::polyTopoChange
     cellFromFace_(0),
     cellZone_(0)
 {
-    addMesh
-    (
-        mesh,
-        identityMap(mesh.boundaryMesh().size()),
-        identityMap(mesh.pointZones().size()),
-        identityMap(mesh.faceZones().size()),
-        identityMap(mesh.cellZones().size())
-    );
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::polyTopoChange::clear()
-{
-    points_.clearStorage();
-    pointMap_.clearStorage();
-    reversePointMap_.clearStorage();
-    pointZone_.clearStorage();
-    retiredPoints_.clearStorage();
-    oldPoints_.clearStorage();
-
-    faces_.clearStorage();
-    region_.clearStorage();
-    faceOwner_.clearStorage();
-    faceNeighbour_.clearStorage();
-    faceMap_.clearStorage();
-    reverseFaceMap_.clearStorage();
-    faceFromPoint_.clearStorage();
-    faceFromEdge_.clearStorage();
-    flipFaceFlux_.clearStorage();
-    faceZone_.clearStorage();
-    faceZoneFlip_.clearStorage();
-    nActiveFaces_ = 0;
-
-    cellMap_.clearStorage();
-    reverseCellMap_.clearStorage();
-    cellZone_.clearStorage();
-    cellFromPoint_.clearStorage();
-    cellFromEdge_.clearStorage();
-    cellFromFace_.clearStorage();
-}
-
-
-void Foam::polyTopoChange::addMesh
-(
-    const polyMesh& mesh,
-    const labelList& patchMap,
-    const labelList& pointZoneMap,
-    const labelList& faceZoneMap,
-    const labelList& cellZoneMap
-)
-{
-    label maxRegion = nPatches_ - 1;
-    forAll(patchMap, i)
-    {
-        maxRegion = max(maxRegion, patchMap[i]);
-    }
-    nPatches_ = maxRegion + 1;
-
-
     // Add points
     {
         const pointField& points = mesh.points();
@@ -2198,7 +2137,7 @@ void Foam::polyTopoChange::addMesh
 
             forAll(pointLabels, j)
             {
-                newZoneID[pointLabels[j]] = pointZoneMap[zoneI];
+                newZoneID[pointLabels[j]] = zoneI;
             }
         }
 
@@ -2257,7 +2196,7 @@ void Foam::polyTopoChange::addMesh
                 }
                 else
                 {
-                    newZoneID[celli] = cellZoneMap[zoneI];
+                    newZoneID[celli] = zoneI;
                 }
             }
         }
@@ -2305,7 +2244,7 @@ void Foam::polyTopoChange::addMesh
 
             forAll(faceLabels, j)
             {
-                newZoneID[faceLabels[j]] = faceZoneMap[zoneI];
+                newZoneID[faceLabels[j]] = zoneI;
                 zoneFlip[faceLabels[j]] = flipMap[j];
             }
         }
@@ -2358,13 +2297,46 @@ void Foam::polyTopoChange::addMesh
                     -1,                         // masterEdgeID
                     facei,                      // masterFaceID
                     false,                      // flipFaceFlux
-                    patchMap[patchi],           // patchID
+                    patchi,                     // patchID
                     newZoneID[facei],           // zoneID
                     zoneFlip[facei]             // zoneFlip
                 );
             }
         }
     }
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::polyTopoChange::clear()
+{
+    points_.clearStorage();
+    pointMap_.clearStorage();
+    reversePointMap_.clearStorage();
+    pointZone_.clearStorage();
+    retiredPoints_.clearStorage();
+    oldPoints_.clearStorage();
+
+    faces_.clearStorage();
+    region_.clearStorage();
+    faceOwner_.clearStorage();
+    faceNeighbour_.clearStorage();
+    faceMap_.clearStorage();
+    reverseFaceMap_.clearStorage();
+    faceFromPoint_.clearStorage();
+    faceFromEdge_.clearStorage();
+    flipFaceFlux_.clearStorage();
+    faceZone_.clearStorage();
+    faceZoneFlip_.clearStorage();
+    nActiveFaces_ = 0;
+
+    cellMap_.clearStorage();
+    reverseCellMap_.clearStorage();
+    cellZone_.clearStorage();
+    cellFromPoint_.clearStorage();
+    cellFromEdge_.clearStorage();
+    cellFromFace_.clearStorage();
 }
 
 

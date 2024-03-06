@@ -411,11 +411,11 @@ class polyTopoChange
             List<Map<label>>& oldMeshFaceZonesPointMaps
         );
 
+
 public:
 
     //- Runtime type information
     ClassName("polyTopoChange");
-
 
 
     // Constructors
@@ -472,17 +472,6 @@ public:
 
             //- Clear all storage
             void clear();
-
-            //- Add all points/faces/cells of mesh. Additional offset for patch
-            //  or zone ids.
-            void addMesh
-            (
-                const polyMesh&,
-                const labelList& patchMap,
-                const labelList& pointZoneMap,
-                const labelList& faceZoneMap,
-                const labelList& cellZoneMap
-            );
 
             //- Explicitly pre-size the dynamic storage for expected mesh
             //  size for if construct-without-mesh
@@ -633,7 +622,6 @@ public:
                 const bool orderCells = false,
                 const bool orderPoints = false
             );
-
 };
 
 
