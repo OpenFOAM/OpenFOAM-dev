@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,32 +33,6 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(cellLooper, 0);
-    defineRunTimeSelectionTable(cellLooper, word);
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::cellLooper> Foam::cellLooper::New
-(
-    const word& type,
-    const polyMesh& mesh
-)
-{
-    wordConstructorTable::iterator cstrIter =
-        wordConstructorTablePtr_->find(type);
-
-    if (cstrIter == wordConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown set type "
-            << type << nl << nl
-            << "Valid cellLooper types : " << endl
-            << wordConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
-
-    return autoPtr<cellLooper>(cstrIter()(mesh));
 }
 
 

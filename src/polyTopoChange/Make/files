@@ -22,15 +22,12 @@ repatchMesh/repatchMesh.C
 repatchMesh/repatchPatch.C
 
 meshModifiers = meshCut/meshModifiers
-$(meshModifiers)/boundaryCutter/boundaryCutter.C
 $(meshModifiers)/meshCutter/meshCutter.C
-$(meshModifiers)/meshCutAndRemove/meshCutAndRemove.C
 $(meshModifiers)/undoableMeshCutter/undoableMeshCutter.C
 $(meshModifiers)/refinementIterator/refinementIterator.C
 $(meshModifiers)/multiDirRefinement/multiDirRefinement.C
 
 meshCut/cellLooper/cellLooper.C
-meshCut/cellLooper/topoCellLooper.C
 meshCut/cellLooper/geomCellLooper.C
 meshCut/cellLooper/hexCellLooper.C
 meshCut/directions/directions.C
@@ -39,8 +36,6 @@ meshCut/edgeVertex/edgeVertex.C
 meshCut/cellCuts/cellCuts.C
 meshCut/splitCell/splitCell.C
 meshCut/refineCell/refineCell.C
-meshCut/wallLayerCells/wallLayerCells.C
-meshCut/wallLayerCells/wallNormalInfo/wallNormalInfo.C
 
 repatcher/repatcher.C
 

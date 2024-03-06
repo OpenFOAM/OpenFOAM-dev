@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,21 +110,6 @@ public:
     TypeName("cellLooper");
 
 
-    // Declare run-time constructor selection table
-
-        // For the direct constructor
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            cellLooper,
-            word,
-            (
-                const polyMesh& mesh
-            ),
-            (mesh)
-        );
-
-
     // Constructors
 
         //- Construct from components
@@ -132,23 +117,6 @@ public:
 
         //- Disallow default bitwise copy construction
         cellLooper(const cellLooper&) = delete;
-
-        //- Clone
-        autoPtr<cellLooper> clone() const
-        {
-            NotImplemented;
-            return autoPtr<cellLooper>(nullptr);
-        }
-
-
-    // Selectors
-
-        //- Return a reference to the selected cellLooper
-        static autoPtr<cellLooper> New
-        (
-            const word& type,
-            const polyMesh& mesh
-        );
 
 
     //- Destructor
