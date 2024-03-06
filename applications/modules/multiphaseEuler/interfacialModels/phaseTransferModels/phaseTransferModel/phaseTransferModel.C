@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,7 +123,7 @@ Foam::blendedPhaseTransferModel::dmdtf() const
             &phaseTransferModel::dmdtf,
             "dmdtf",
             phaseTransferModel::dimDmdt,
-            true
+            false
         );
 }
 
@@ -137,7 +137,7 @@ Foam::blendedPhaseTransferModel::d2mdtdpf() const
             &phaseTransferModel::d2mdtdpf,
             "d2mdtdpf",
             phaseTransferModel::dimD2mdtdp,
-            true
+            false
         );
 }
 
@@ -157,7 +157,7 @@ Foam::blendedPhaseTransferModel::dmidtf() const
             &phaseTransferModel::dmidtf,
             "dmidtf",
             phaseTransferModel::dimDmdt,
-            true
+            false
         );
 }
 
