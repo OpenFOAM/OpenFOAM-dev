@@ -1106,9 +1106,6 @@ void Foam::addPatchCellLayer::setRefinement
                 // for now add from cell so we can map easily.
                 addedCells[patchFacei][i] = meshMod.addCell
                 (
-                    -1,             // master point
-                    -1,             // master edge
-                    -1,             // master face
                     (addToMesh_ ? mesh_.faceOwner()[meshFacei] : -1),
                     // master
                     ownZoneI        // zone for cell

@@ -1252,9 +1252,6 @@ int main(int argc, char *argv[])
     {
         meshMod.addCell
         (
-            -1,         // masterPointID
-            -1,         // masterEdgeID
-            -1,         // masterFaceID
             celli,      // masterCellID
             -1          // zoneID
         );

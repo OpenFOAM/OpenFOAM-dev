@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -969,9 +969,6 @@ void Foam::meshDualiser::setRefinement
         pointToDualCells_[pointi].setSize(1);
         pointToDualCells_[pointi][0] = meshMod.addCell
         (
-            pointi, // masterPointID,
-            -1,     // masterEdgeID,
-            -1,     // masterFaceID,
             -1,     // masterCellID,
             -1      // zoneID
         );
@@ -1013,9 +1010,6 @@ void Foam::meshDualiser::setRefinement
         {
             pointToDualCells_[pointi][pCelli] = meshMod.addCell
             (
-                pointi,                                     // masterPointID
-                -1,                                         // masterEdgeID
-                -1,                                         // masterFaceID
                 -1,                                         // masterCellID
                 mesh_.cellZones().whichZone(pCells[pCelli]) // zoneID
             );
@@ -1037,9 +1031,6 @@ void Foam::meshDualiser::setRefinement
             pointToDualCells_[pointi].setSize(1);
             pointToDualCells_[pointi][0] = meshMod.addCell
             (
-                pointi, // masterPointID,
-                -1,     // masterEdgeID,
-                -1,     // masterFaceID,
                 -1,     // masterCellID,
                 -1      // zoneID
             );

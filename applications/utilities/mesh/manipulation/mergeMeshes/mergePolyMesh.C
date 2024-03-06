@@ -249,9 +249,6 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
 
         renumberCells[celli] = meshMod_.addCell
         (
-            -1,                   // Master point
-            -1,                   // Master edge
-            -1,                   // Master face
             -1,                   // Master cell
             zoneID                // Zone for cell
         );

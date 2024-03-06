@@ -1442,98 +1442,6 @@ void Foam::polyTopoChange::calcFaceInflationMaps
 }
 
 
-void Foam::polyTopoChange::calcCellInflationMaps
-(
-    const polyMesh& mesh,
-    List<objectMap>& cellsFromPoints,
-    List<objectMap>& cellsFromEdges,
-    List<objectMap>& cellsFromFaces,
-    List<objectMap>& cellsFromCells
-) const
-{
-    cellsFromPoints.setSize(cellFromPoint_.size());
-
-    if (cellFromPoint_.size())
-    {
-        label nCellsFromPoints = 0;
-
-        // Collect all still existing faces connected to this point.
-        forAllConstIter(Map<label>, cellFromPoint_, iter)
-        {
-            cellsFromPoints[nCellsFromPoints++] = objectMap
-            (
-                iter.key(),
-                mesh.pointCells()[iter()]
-            );
-        }
-    }
-
-
-    cellsFromEdges.setSize(cellFromEdge_.size());
-
-    if (cellFromEdge_.size())
-    {
-        label nCellsFromEdges = 0;
-
-        // Collect all still existing faces connected to this point.
-        forAllConstIter(Map<label>, cellFromEdge_, iter)
-        {
-            cellsFromEdges[nCellsFromEdges++] = objectMap
-            (
-                iter.key(),
-                mesh.edgeCells()[iter()]
-            );
-        }
-    }
-
-
-    cellsFromFaces.setSize(cellFromFace_.size());
-
-    if (cellFromFace_.size())
-    {
-        label nCellsFromFaces = 0;
-
-        labelList twoCells(2);
-
-        // Collect all still existing faces connected to this point.
-        forAllConstIter(Map<label>, cellFromFace_, iter)
-        {
-            label oldFacei = iter();
-
-            if (mesh.isInternalFace(oldFacei))
-            {
-                twoCells[0] = mesh.faceOwner()[oldFacei];
-                twoCells[1] = mesh.faceNeighbour()[oldFacei];
-                cellsFromFaces[nCellsFromFaces++] = objectMap
-                (
-                    iter.key(),
-                    twoCells
-                );
-            }
-            else
-            {
-                cellsFromFaces[nCellsFromFaces++] = objectMap
-                (
-                    iter.key(),
-                    labelList(1, mesh.faceOwner()[oldFacei])
-                );
-            }
-        }
-    }
-
-
-    // Cells from cell merging
-    // ~~~~~~~~~~~~~~~~~~~~~~~
-
-    getMergeSets
-    (
-        reverseCellMap_,
-        cellMap_,
-        cellsFromCells
-    );
-}
-
-
 void Foam::polyTopoChange::resetZones
 (
     const polyMesh& mesh,
@@ -1934,9 +1842,6 @@ void Foam::polyTopoChange::compactAndReorder
     List<objectMap>& facesFromPoints,
     List<objectMap>& facesFromEdges,
     List<objectMap>& facesFromFaces,
-    List<objectMap>& cellsFromPoints,
-    List<objectMap>& cellsFromEdges,
-    List<objectMap>& cellsFromFaces,
     List<objectMap>& cellsFromCells,
     List<Map<label>>& oldPatchMeshPointMaps,
     labelList& oldPatchNMeshPoints,
@@ -2001,12 +1906,10 @@ void Foam::polyTopoChange::compactAndReorder
         facesFromFaces
     );
 
-    calcCellInflationMaps
+    getMergeSets
     (
-        mesh,
-        cellsFromPoints,
-        cellsFromEdges,
-        cellsFromFaces,
+        reverseCellMap_,
+        cellMap_,
         cellsFromCells
     );
 
@@ -2205,7 +2108,7 @@ Foam::polyTopoChange::polyTopoChange
         for (label celli = 0; celli < nAllCells; celli++)
         {
             // Add cell from cell
-            addCell(-1, -1, -1, celli, newZoneID[celli]);
+            addCell(celli, newZoneID[celli]);
         }
     }
 
@@ -2751,34 +2654,12 @@ void Foam::polyTopoChange::removeFace(const label facei, const label mergeFacei)
 
 Foam::label Foam::polyTopoChange::addCell
 (
-    const label masterPointID,
-    const label masterEdgeID,
-    const label masterFaceID,
     const label masterCellID,
     const label zoneID
 )
 {
-    label celli = cellMap_.size();
-
-    if (masterPointID >= 0)
-    {
-        cellMap_.append(-1);
-        cellFromPoint_.insert(celli, masterPointID);
-    }
-    else if (masterEdgeID >= 0)
-    {
-        cellMap_.append(-1);
-        cellFromEdge_.insert(celli, masterEdgeID);
-    }
-    else if (masterFaceID >= 0)
-    {
-        cellMap_.append(-1);
-        cellFromFace_.insert(celli, masterFaceID);
-    }
-    else
-    {
-        cellMap_.append(masterCellID);
-    }
+    const label celli = cellMap_.size();
+    cellMap_.append(masterCellID);
     reverseCellMap_.append(celli);
     cellZone_.append(zoneID);
 
@@ -2864,9 +2745,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
     List<objectMap> facesFromPoints;
     List<objectMap> facesFromEdges;
     List<objectMap> facesFromFaces;
-    List<objectMap> cellsFromPoints;
-    List<objectMap> cellsFromEdges;
-    List<objectMap> cellsFromFaces;
     List<objectMap> cellsFromCells;
     // old mesh info
     List<Map<label>> oldPatchMeshPointMaps;
@@ -2890,9 +2768,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
         facesFromPoints,
         facesFromEdges,
         facesFromFaces,
-        cellsFromPoints,
-        cellsFromEdges,
-        cellsFromFaces,
         cellsFromCells,
         oldPatchMeshPointMaps,
         oldPatchNMeshPoints,
@@ -3059,9 +2934,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
             facesFromFaces,
 
             cellMap_,
-            cellsFromPoints,
-            cellsFromEdges,
-            cellsFromFaces,
             cellsFromCells,
 
             reversePointMap_,
@@ -3123,9 +2995,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
     List<objectMap> facesFromPoints;
     List<objectMap> facesFromEdges;
     List<objectMap> facesFromFaces;
-    List<objectMap> cellsFromPoints;
-    List<objectMap> cellsFromEdges;
-    List<objectMap> cellsFromFaces;
     List<objectMap> cellsFromCells;
 
     // old mesh info
@@ -3150,9 +3019,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
         facesFromPoints,
         facesFromEdges,
         facesFromFaces,
-        cellsFromPoints,
-        cellsFromEdges,
-        cellsFromFaces,
         cellsFromCells,
         oldPatchMeshPointMaps,
         oldPatchNMeshPoints,
@@ -3341,9 +3207,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
             facesFromFaces,
 
             cellMap_,
-            cellsFromPoints,
-            cellsFromEdges,
-            cellsFromFaces,
             cellsFromCells,
 
             reversePointMap_,

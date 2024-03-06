@@ -352,15 +352,6 @@ class polyTopoChange
             List<objectMap>&
         ) const;
 
-        void calcCellInflationMaps
-        (
-            const polyMesh&,
-            List<objectMap>&,
-            List<objectMap>&,
-            List<objectMap>&,
-            List<objectMap>&
-        ) const;
-
         void resetZones
         (
             const polyMesh&,        // mesh to get existing info from
@@ -401,9 +392,6 @@ class polyTopoChange
             List<objectMap>& facesFromPoints,
             List<objectMap>& facesFromEdges,
             List<objectMap>& facesFromFaces,
-            List<objectMap>& cellsFromPoints,
-            List<objectMap>& cellsFromEdges,
-            List<objectMap>& cellsFromFaces,
             List<objectMap>& cellsFromCells,
             List<Map<label>>& oldPatchMeshPointMaps,
             labelList& oldPatchNMeshPoints,
@@ -571,9 +559,6 @@ public:
             //- Add cell. Return new cell label.
             label addCell
             (
-                const label masterPointID,
-                const label masterEdgeID,
-                const label masterFaceID,
                 const label masterCellID,
                 const label zoneID
             );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,10 +68,6 @@ Usage
 #include "meshTools.H"
 #include "OFstream.H"
 #include "meshDualiser.H"
-#include "ReadFields.H"
-#include "volFields.H"
-#include "surfaceFields.H"
-#include "pointFields.H"
 
 using namespace Foam;
 
@@ -376,11 +372,6 @@ int main(int argc, char *argv[])
         "disable the default behaviour of preserving faceZones by having"
         " multiple faces in between cells"
     );
-    argList::addBoolOption
-    (
-        "noFields",
-        "do not update fields"
-    );
 
     #include "setRootCase.H"
     #include "createTime.H"
@@ -429,7 +420,6 @@ int main(int argc, char *argv[])
         Info<< "Generating multiple cells for points on concave feature edges."
             << nl << endl;
     }
-    const bool fields = !args.optionFound("noFields");
 
 
     // Face(centre)s that need inclusion in the dual mesh
@@ -477,19 +467,6 @@ int main(int argc, char *argv[])
     );
 
 
-
-    // Read objects in time directory
-    IOobjectList objects(mesh, runTime.name());
-
-    if (fields) Info<< "Reading geometric fields" << nl << endl;
-
-    #include "readVolFields.H"
-    #include "readSurfaceFields.H"
-    #include "readPointFields.H"
-
-    Info<< endl;
-
-
     // Topo change container
     polyTopoChange meshMod(mesh.boundaryMesh().size());
 
@@ -511,7 +488,7 @@ int main(int argc, char *argv[])
     // Create mesh, return map from old to new mesh.
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
-    // Update fields
+    // Update mesh objects
     mesh.topoChange(map);
 
     // Optionally inflate mesh

@@ -40,10 +40,7 @@ Description
 #include "IFstream.H"
 #include "polyTopoChange.H"
 #include "polyTopoChangeMap.H"
-#include "volMesh.H"
-#include "surfaceMesh.H"
 #include "volFields.H"
-#include "surfaceFields.H"
 #include "pointFields.H"
 #include "ReadFields.H"
 
@@ -96,7 +93,8 @@ int main(int argc, char *argv[])
     if (fields) Info<< "Reading geometric fields" << nl << endl;
 
     #include "readVolFields.H"
-    #include "readSurfaceFields.H"
+    // Cannot reliable map surfaceFields to new internal faces
+    // #include "readSurfaceFields.H"
     #include "readPointFields.H"
 
     Info<< endl;

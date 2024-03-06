@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -3687,9 +3687,6 @@ Foam::labelListList Foam::hexRef8::setRefinement
             {
                 cAdded[i] = meshMod.addCell
                 (
-                    -1,                                 // master point
-                    -1,                                 // master edge
-                    -1,                                 // master face
                     celli,                              // master cell
                     mesh_.cellZones().whichZone(celli)  // zone for cell
                 );

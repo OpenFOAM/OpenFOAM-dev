@@ -112,21 +112,6 @@ Description
           (including the old master cell!)
     - added-from-same:
         - cellMap[celli] contains the old master cell label
-    - inflated-from-face:
-        - cellMap[celli] contains -1
-        - cellsFromFaces contains an entry with
-            - celli
-            - list of cells on old mesh that connected to the old face
-    - inflated-from-edge:
-        - cellMap[celli] contains -1
-        - cellsFromEdges contains an entry with
-            - celli
-            - list of cells on old mesh that connected to the old edge
-    - inflated-from-point:
-        - cellMap[celli] contains -1
-        - cellsFromPoints contains an entry with
-            - celli
-            - list of cells on old mesh that connected to the old point
     - appended:
         - cellMap[celli] contains -1
 
@@ -206,15 +191,6 @@ class polyTopoChangeMap
         //  Size of the list equals the number or preserved cells
         const labelList cellMap_;
 
-        //- Cells inflated from points
-        const List<objectMap> cellsFromPointsMap_;
-
-        //- Cells inflated from edges
-        const List<objectMap> cellsFromEdgesMap_;
-
-        //- Cells inflated from faces
-        const List<objectMap> cellsFromFacesMap_;
-
         //- Cells resulting from merging cells
         const List<objectMap> cellsFromCellsMap_;
 
@@ -271,9 +247,6 @@ public:
             const List<objectMap>& facesFromEdges,
             const List<objectMap>& facesFromFaces,
             const labelList& cellMap,
-            const List<objectMap>& cellsFromPoints,
-            const List<objectMap>& cellsFromEdges,
-            const List<objectMap>& cellsFromFaces,
             const List<objectMap>& cellsFromCells,
             const labelList& reversePointMap,
             const labelList& reverseFaceMap,
@@ -300,9 +273,6 @@ public:
             List<objectMap>& facesFromEdges,
             List<objectMap>& facesFromFaces,
             labelList& cellMap,
-            List<objectMap>& cellsFromPoints,
-            List<objectMap>& cellsFromEdges,
-            List<objectMap>& cellsFromFaces,
             List<objectMap>& cellsFromCells,
             labelList& reversePointMap,
             labelList& reverseFaceMap,
@@ -400,24 +370,6 @@ public:
             const labelList& cellMap() const
             {
                 return cellMap_;
-            }
-
-            //- Cells inflated from points
-            const List<objectMap>& cellsFromPointsMap() const
-            {
-                return cellsFromPointsMap_;
-            }
-
-            //- Cells inflated from edges
-            const List<objectMap>& cellsFromEdgesMap() const
-            {
-                return cellsFromEdgesMap_;
-            }
-
-            //- Cells inflated from faces
-            const List<objectMap>& cellsFromFacesMap() const
-            {
-                return cellsFromFacesMap_;
             }
 
             //- Cells originating from cells

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -503,9 +503,6 @@ void Foam::createShellMesh::setRefinement
         {
             addedCells[nLayers*facei+layerI] = meshMod.addCell
             (
-                -1,                     // masterPointID
-                -1,                     // masterEdgeID
-                -1,                     // masterFaceID
                 cellToFaceMap.size(),   // masterCellID
                 -1                      // zoneID
             );

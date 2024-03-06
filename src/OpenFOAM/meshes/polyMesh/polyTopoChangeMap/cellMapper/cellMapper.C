@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellMapper.H"
-#include "demandDrivenData.H"
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
 
@@ -82,72 +81,6 @@ void Foam::cellMapper::calcAddressing() const
 
         weightsPtr_ = new scalarListList(mesh_.nCells());
         scalarListList& w = *weightsPtr_;
-
-        const List<objectMap>& cfp = mpm_.cellsFromPointsMap();
-
-        forAll(cfp, cfpI)
-        {
-            // Get addressing
-            const labelList& mo = cfp[cfpI].masterObjects();
-
-            label celli = cfp[cfpI].index();
-
-            if (addr[celli].size())
-            {
-                FatalErrorInFunction
-                    << "Master cell " << celli
-                    << " mapped from point cells " << mo
-                    << " already destination of mapping." << abort(FatalError);
-            }
-
-            // Map from masters, uniform weights
-            addr[celli] = mo;
-            w[celli] = scalarList(mo.size(), 1.0/mo.size());
-        }
-
-        const List<objectMap>& cfe = mpm_.cellsFromEdgesMap();
-
-        forAll(cfe, cfeI)
-        {
-            // Get addressing
-            const labelList& mo = cfe[cfeI].masterObjects();
-
-            label celli = cfe[cfeI].index();
-
-            if (addr[celli].size())
-            {
-                FatalErrorInFunction
-                    << "Master cell " << celli
-                    << " mapped from edge cells " << mo
-                    << " already destination of mapping." << abort(FatalError);
-            }
-
-            // Map from masters, uniform weights
-            addr[celli] = mo;
-            w[celli] = scalarList(mo.size(), 1.0/mo.size());
-        }
-
-        const List<objectMap>& cff = mpm_.cellsFromFacesMap();
-
-        forAll(cff, cffI)
-        {
-            // Get addressing
-            const labelList& mo = cff[cffI].masterObjects();
-
-            label celli = cff[cffI].index();
-
-            if (addr[celli].size())
-            {
-                FatalErrorInFunction
-                    << "Master cell " << celli
-                    << " mapped from face cells " << mo
-                    << " already destination of mapping." << abort(FatalError);
-            }
-
-            // Map from masters, uniform weights
-            addr[celli] = mo;
-            w[celli] = scalarList(mo.size(), 1.0/mo.size());
-        }
 
         // Volume conservative mapping if possible
 
@@ -261,12 +194,9 @@ void Foam::cellMapper::calcAddressing() const
         {
             if (addr[celli].empty())
             {
-                // Mapped from a dummy cell
-                addr[celli] = labelList(1, label(0));
-                w[celli] = scalarList(1, 1.0);
-
-                insertedCells[nInsertedCells] = celli;
-                nInsertedCells++;
+                FatalErrorInFunction
+                    << "No interpolative addressing provided for cell " << celli
+                    << abort(FatalError);
             }
         }
 
@@ -298,13 +228,7 @@ Foam::cellMapper::cellMapper(const polyTopoChangeMap& mpm)
     insertedCellLabelsPtr_(nullptr)
 {
     // Check for possibility of direct mapping
-    if
-    (
-        mpm_.cellsFromPointsMap().empty()
-     && mpm_.cellsFromEdgesMap().empty()
-     && mpm_.cellsFromFacesMap().empty()
-     && mpm_.cellsFromCellsMap().empty()
-    )
+    if (mpm_.cellsFromCellsMap().empty())
     {
         direct_ = true;
     }
@@ -326,27 +250,6 @@ Foam::cellMapper::cellMapper(const polyTopoChangeMap& mpm)
         // Make a copy of the cell map, add the entried for cells from points,
         // cells from edges and cells from faces and check for left-overs
         labelList cm(mesh_.nCells(), -1);
-
-        const List<objectMap>& cfp = mpm_.cellsFromPointsMap();
-
-        forAll(cfp, cfpI)
-        {
-            cm[cfp[cfpI].index()] = 0;
-        }
-
-        const List<objectMap>& cfe = mpm_.cellsFromEdgesMap();
-
-        forAll(cfe, cfeI)
-        {
-            cm[cfe[cfeI].index()] = 0;
-        }
-
-        const List<objectMap>& cff = mpm_.cellsFromFacesMap();
-
-        forAll(cff, cffI)
-        {
-            cm[cff[cffI].index()] = 0;
-        }
 
         const List<objectMap>& cfc = mpm_.cellsFromCellsMap();
 
