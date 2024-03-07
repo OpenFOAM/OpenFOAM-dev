@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,22 +101,14 @@ label mergePatchFaces
             // Merge all faces of a set into the first face of the set.
             faceCombiner.setRefinement(allFaceSets, meshMod);
 
-            // Change the mesh (no inflation)
-            map = meshMod.changeMesh(mesh, false, true);
+            // Change the mesh
+            map = meshMod.changeMesh(mesh, true);
 
             // Update fields
             mesh.topoChange(map);
 
-            // Move mesh (since morphing does not do this)
-            if (map().hasMotionPoints())
-            {
-                mesh.setPoints(map().preMotionPoints());
-            }
-            else
-            {
-                // Delete mesh volumes. No other way to do this?
-                mesh.clearOut();
-            }
+            // Delete mesh volumes. No other way to do this?
+            mesh.clearOut();
         }
 
 
@@ -239,8 +231,6 @@ label mergePatchFaces
                         setFaceVerts[i],        // vertices
                         own,                    // owner,
                         -1,                     // neighbour,
-                        -1,                     // masterPointID,
-                        -1,                     // masterEdgeID,
                         newMasterI,             // masterFaceID,
                         false,                  // flipFaceFlux,
                         patchID,                // patchID,
@@ -250,22 +240,14 @@ label mergePatchFaces
                 }
             }
 
-            // Change the mesh (no inflation)
-            map = meshMod.changeMesh(mesh, false, true);
+            // Change the mesh
+            map = meshMod.changeMesh(mesh, true);
 
             // Update fields
             mesh.topoChange(map);
 
-            // Move mesh (since morphing does not do this)
-            if (map().hasMotionPoints())
-            {
-                mesh.setPoints(map().preMotionPoints());
-            }
-            else
-            {
-                // Delete mesh volumes. No other way to do this?
-                mesh.clearOut();
-            }
+            // Delete mesh volumes. No other way to do this?
+            mesh.clearOut();
         }
     }
     else
@@ -303,22 +285,14 @@ label mergeEdges(const scalar minCos, polyMesh& mesh)
 
         pointRemover.setRefinement(pointCanBeDeleted, meshMod);
 
-        // Change the mesh (no inflation)
-        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false, true);
+        // Change the mesh
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
         // Update fields
         mesh.topoChange(map);
 
-        // Move mesh (since morphing does not do this)
-        if (map().hasMotionPoints())
-        {
-            mesh.setPoints(map().preMotionPoints());
-        }
-        else
-        {
-            // Delete mesh volumes. No other way to do this?
-            mesh.clearOut();
-        }
+        // Delete mesh volumes. No other way to do this?
+        mesh.clearOut();
     }
     else
     {

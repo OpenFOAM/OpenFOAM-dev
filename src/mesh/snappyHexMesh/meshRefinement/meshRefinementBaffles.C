@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,8 +95,6 @@ Foam::label Foam::meshRefinement::createBaffle
             f.reverseFace(),            // modified face
             mesh_.faceNeighbour()[facei],// owner
             -1,                         // neighbour
-            -1,                         // masterPointID
-            -1,                         // masterEdgeID
             facei,                      // masterFaceID,
             true,                       // face flip
             nbrPatch,                   // patch for face
@@ -364,23 +362,14 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::createBaffles
 
     mesh_.clearOut();
 
-    // Change the mesh (no inflation, parallel sync)
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
+    // Change the mesh, parallel sync
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
 
     // Update fields
     mesh_.topoChange(map);
 
-    // Move mesh if in inflation mode
-    if (map().hasMotionPoints())
-    {
-        mesh_.movePoints(map().preMotionPoints());
-    }
-    else
-    {
-        // Delete mesh volumes.
-        mesh_.clearOut();
-    }
-
+    // Delete mesh volumes.
+    mesh_.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());
@@ -891,22 +880,14 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
 
     mesh_.clearOut();
 
-    // Change the mesh (no inflation)
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
+    // Change the mesh, parallel sync
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
 
     // Update fields
     mesh_.topoChange(map);
 
-    // Move mesh (since morphing does not do this)
-    if (map().hasMotionPoints())
-    {
-        mesh_.movePoints(map().preMotionPoints());
-    }
-    else
-    {
-        // Delete mesh volumes.
-        mesh_.clearOut();
-    }
+    // Delete mesh volumes.
+    mesh_.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());
@@ -2680,22 +2661,14 @@ Foam::meshRefinement::dupNonManifoldPoints
 
     mesh_.clearOut();
 
-    // Change the mesh (no inflation, parallel sync)
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
+    // Change the mesh, parallel sync
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
 
     // Update fields
     mesh_.topoChange(map);
 
-    // Move mesh if in inflation mode
-    if (map().hasMotionPoints())
-    {
-        mesh_.movePoints(map().preMotionPoints());
-    }
-    else
-    {
-        // Delete mesh volumes.
-        mesh_.clearOut();
-    }
+    // Delete mesh volumes.
+    mesh_.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());
@@ -3302,22 +3275,14 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
 
     mesh_.clearOut();
 
-    // Change the mesh (no inflation, parallel sync)
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
+    // Change the mesh without keeping old points, parallel sync
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
 
     // Update fields
     mesh_.topoChange(map);
 
-    // Move mesh if in inflation mode
-    if (map().hasMotionPoints())
-    {
-        mesh_.movePoints(map().preMotionPoints());
-    }
-    else
-    {
-        // Delete mesh volumes.
-        mesh_.clearOut();
-    }
+    // Delete mesh volumes.
+    mesh_.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());

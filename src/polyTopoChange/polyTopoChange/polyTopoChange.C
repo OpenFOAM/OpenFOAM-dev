@@ -112,14 +112,14 @@ void Foam::polyTopoChange::countMap
 (
     const labelList& map,
     const labelList& reverseMap,
-    label& nAdd,
-    label& nInflate,
+    label& nSplit,
+    label& nInserted,
     label& nMerge,
     label& nRemove
 )
 {
-    nAdd = 0;
-    nInflate = 0;
+    nSplit = 0;
+    nInserted = 0;
     nMerge = 0;
     nRemove = 0;
 
@@ -135,14 +135,14 @@ void Foam::polyTopoChange::countMap
             }
             else
             {
-                // Added (from another cell v.s. inflated from face/point)
-                nAdd++;
+                // Added from another cell
+                nSplit++;
             }
         }
         else if (oldCelli == -1)
         {
             // Created from nothing
-            nInflate++;
+            nInserted++;
         }
         else
         {
@@ -869,8 +869,6 @@ void Foam::polyTopoChange::reorderCompactFaces
 
     renumberReverseMap(oldToNew, reverseFaceMap_);
 
-    renumberKey(oldToNew, faceFromPoint_);
-    renumberKey(oldToNew, faceFromEdge_);
     inplaceReorder(oldToNew, flipFaceFlux_);
     flipFaceFlux_.setCapacity(newSize);
     renumberKey(oldToNew, faceZone_);
@@ -1155,10 +1153,6 @@ void Foam::polyTopoChange::compact
             reorder(localCellMap, cellZone_);
             cellZone_.setCapacity(newCelli);
 
-            renumberKey(localCellMap, cellFromPoint_);
-            renumberKey(localCellMap, cellFromEdge_);
-            renumberKey(localCellMap, cellFromFace_);
-
             // Renumber owner/neighbour. Take into account if neighbour suddenly
             // gets lower cell than owner.
             forAll(faceOwner_, facei)
@@ -1327,118 +1321,6 @@ void Foam::polyTopoChange::calcPatchPointMap
             }
         }
     }
-}
-
-
-void Foam::polyTopoChange::calcFaceInflationMaps
-(
-    const polyMesh& mesh,
-    List<objectMap>& facesFromPoints,
-    List<objectMap>& facesFromEdges,
-    List<objectMap>& facesFromFaces
-) const
-{
-    // Faces inflated from points
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    facesFromPoints.setSize(faceFromPoint_.size());
-
-    if (faceFromPoint_.size())
-    {
-        label nFacesFromPoints = 0;
-
-        // Collect all still existing faces connected to this point.
-        forAllConstIter(Map<label>, faceFromPoint_, iter)
-        {
-            label newFacei = iter.key();
-
-            if (region_[newFacei] == -1)
-            {
-                // Get internal faces using point on old mesh
-                facesFromPoints[nFacesFromPoints++] = objectMap
-                (
-                    newFacei,
-                    selectFaces
-                    (
-                        mesh,
-                        mesh.pointFaces()[iter()],
-                        true
-                    )
-                );
-            }
-            else
-            {
-                // Get patch faces using point on old mesh
-                facesFromPoints[nFacesFromPoints++] = objectMap
-                (
-                    newFacei,
-                    selectFaces
-                    (
-                        mesh,
-                        mesh.pointFaces()[iter()],
-                        false
-                    )
-                );
-            }
-        }
-    }
-
-
-    // Faces inflated from edges
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    facesFromEdges.setSize(faceFromEdge_.size());
-
-    if (faceFromEdge_.size())
-    {
-        label nFacesFromEdges = 0;
-
-        // Collect all still existing faces connected to this edge.
-        forAllConstIter(Map<label>, faceFromEdge_, iter)
-        {
-            label newFacei = iter.key();
-
-            if (region_[newFacei] == -1)
-            {
-                // Get internal faces using edge on old mesh
-                facesFromEdges[nFacesFromEdges++] = objectMap
-                (
-                    newFacei,
-                    selectFaces
-                    (
-                        mesh,
-                        mesh.edgeFaces(iter()),
-                        true
-                    )
-                );
-            }
-            else
-            {
-                // Get patch faces using edge on old mesh
-                facesFromEdges[nFacesFromEdges++] = objectMap
-                (
-                    newFacei,
-                    selectFaces
-                    (
-                        mesh,
-                        mesh.edgeFaces(iter()),
-                        false
-                    )
-                );
-            }
-        }
-    }
-
-
-    // Faces from face merging
-    // ~~~~~~~~~~~~~~~~~~~~~~~
-
-    getMergeSets
-    (
-        reverseFaceMap_,
-        faceMap_,
-        facesFromFaces
-    );
 }
 
 
@@ -1839,8 +1721,6 @@ void Foam::polyTopoChange::compactAndReorder
     labelList& patchSizes,
     labelList& patchStarts,
     List<objectMap>& pointsFromPoints,
-    List<objectMap>& facesFromPoints,
-    List<objectMap>& facesFromEdges,
     List<objectMap>& facesFromFaces,
     List<objectMap>& cellsFromCells,
     List<Map<label>>& oldPatchMeshPointMaps,
@@ -1879,14 +1759,13 @@ void Foam::polyTopoChange::compactAndReorder
     );
 
 
-    // Calculate inflation/merging maps
+    // Calculate merging maps
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // These are for the new face(/point/cell) the old faces whose value
     // needs to be
     // averaged/summed to get the new value. These old faces come either from
-    // merged old faces (face remove into other face),
-    // the old edgeFaces (inflate from edge) or the old pointFaces (inflate
-    // from point). As an additional complexity will use only internal faces
+    // merged old faces (face remove into other face).
+    // As an additional complexity will use only internal faces
     // to create new value for internal face and vice versa only patch
     // faces to to create patch face value.
 
@@ -1898,11 +1777,10 @@ void Foam::polyTopoChange::compactAndReorder
         pointsFromPoints
     );
 
-    calcFaceInflationMaps
+    getMergeSets
     (
-        mesh,
-        facesFromPoints,
-        facesFromEdges,
+        reverseFaceMap_,
+        faceMap_,
         facesFromFaces
     );
 
@@ -1912,17 +1790,6 @@ void Foam::polyTopoChange::compactAndReorder
         cellMap_,
         cellsFromCells
     );
-
-    // Clear inflation info
-    {
-        faceFromPoint_.clearStorage();
-        faceFromEdge_.clearStorage();
-
-        cellFromPoint_.clearStorage();
-        cellFromEdge_.clearStorage();
-        cellFromFace_.clearStorage();
-    }
-
 
     const polyBoundaryMesh& boundary = mesh.boundaryMesh();
 
@@ -1971,17 +1838,12 @@ Foam::polyTopoChange::polyTopoChange(const label nPatches, const bool strict)
     faceNeighbour_(0),
     faceMap_(0),
     reverseFaceMap_(0),
-    faceFromPoint_(0),
-    faceFromEdge_(0),
     flipFaceFlux_(0),
     faceZone_(0),
     faceZoneFlip_(0),
     nActiveFaces_(0),
     cellMap_(0),
     reverseCellMap_(0),
-    cellFromPoint_(0),
-    cellFromEdge_(0),
-    cellFromFace_(0),
     cellZone_(0)
 {}
 
@@ -2006,17 +1868,12 @@ Foam::polyTopoChange::polyTopoChange
     faceNeighbour_(0),
     faceMap_(0),
     reverseFaceMap_(0),
-    faceFromPoint_(0),
-    faceFromEdge_(0),
     flipFaceFlux_(0),
     faceZone_(0),
     faceZoneFlip_(0),
     nActiveFaces_(0),
     cellMap_(0),
     reverseCellMap_(0),
-    cellFromPoint_(0),
-    cellFromEdge_(0),
-    cellFromFace_(0),
     cellZone_(0)
 {
     // Add points
@@ -2069,9 +1926,6 @@ Foam::polyTopoChange::polyTopoChange
 
         cellMap_.setCapacity(cellMap_.size() + nAllCells);
         reverseCellMap_.setCapacity(reverseCellMap_.size() + nAllCells);
-        cellFromPoint_.resize(cellFromPoint_.size() + nAllCells/100);
-        cellFromEdge_.resize(cellFromEdge_.size() + nAllCells/100);
-        cellFromFace_.resize(cellFromFace_.size() + nAllCells/100);
         cellZone_.setCapacity(cellZone_.size() + nAllCells);
 
 
@@ -2129,8 +1983,6 @@ Foam::polyTopoChange::polyTopoChange
         faceNeighbour_.setCapacity(faceNeighbour_.size() + nAllFaces);
         faceMap_.setCapacity(faceMap_.size() + nAllFaces);
         reverseFaceMap_.setCapacity(reverseFaceMap_.size() + nAllFaces);
-        faceFromPoint_.resize(faceFromPoint_.size() + nAllFaces/100);
-        faceFromEdge_.resize(faceFromEdge_.size() + nAllFaces/100);
         flipFaceFlux_.setCapacity(faces_.size() + nAllFaces);
         faceZone_.resize(faceZone_.size() + nAllFaces/100);
         faceZoneFlip_.setCapacity(faces_.size() + nAllFaces);
@@ -2162,8 +2014,6 @@ Foam::polyTopoChange::polyTopoChange
                 faces[facei],
                 faceOwner[facei],
                 faceNeighbour[facei],
-                -1,                         // masterPointID
-                -1,                         // masterEdgeID
                 facei,                      // masterFaceID
                 false,                      // flipFaceFlux
                 -1,                         // patchID
@@ -2196,8 +2046,6 @@ Foam::polyTopoChange::polyTopoChange
                     faces[facei],
                     faceOwner[facei],
                     -1,                         // neighbour
-                    -1,                         // masterPointID
-                    -1,                         // masterEdgeID
                     facei,                      // masterFaceID
                     false,                      // flipFaceFlux
                     patchi,                     // patchID
@@ -2227,8 +2075,6 @@ void Foam::polyTopoChange::clear()
     faceNeighbour_.clearStorage();
     faceMap_.clearStorage();
     reverseFaceMap_.clearStorage();
-    faceFromPoint_.clearStorage();
-    faceFromEdge_.clearStorage();
     flipFaceFlux_.clearStorage();
     faceZone_.clearStorage();
     faceZoneFlip_.clearStorage();
@@ -2237,9 +2083,6 @@ void Foam::polyTopoChange::clear()
     cellMap_.clearStorage();
     reverseCellMap_.clearStorage();
     cellZone_.clearStorage();
-    cellFromPoint_.clearStorage();
-    cellFromEdge_.clearStorage();
-    cellFromFace_.clearStorage();
 }
 
 
@@ -2261,17 +2104,12 @@ void Foam::polyTopoChange::setCapacity
     faceNeighbour_.setCapacity(nFaces);
     faceMap_.setCapacity(nFaces);
     reverseFaceMap_.setCapacity(nFaces);
-    faceFromPoint_.resize(faceFromPoint_.size() + nFaces/100);
-    faceFromEdge_.resize(faceFromEdge_.size() + nFaces/100);
     flipFaceFlux_.setCapacity(nFaces);
     faceZone_.resize(faceZone_.size() + nFaces/100);
     faceZoneFlip_.setCapacity(nFaces);
 
     cellMap_.setCapacity(nCells);
     reverseCellMap_.setCapacity(nCells);
-    cellFromPoint_.resize(cellFromPoint_.size() + nCells/100);
-    cellFromEdge_.resize(cellFromEdge_.size() + nCells/100);
-    cellFromFace_.resize(cellFromFace_.size() + nCells/100);
     cellZone_.setCapacity(nCells);
 }
 
@@ -2504,8 +2342,6 @@ Foam::label Foam::polyTopoChange::addFace
     const face& f,
     const label own,
     const label nei,
-    const label masterPointID,
-    const label masterEdgeID,
     const label masterFaceID,
     const bool flipFaceFlux,
     const label patchID,
@@ -2526,23 +2362,13 @@ Foam::label Foam::polyTopoChange::addFace
     faceOwner_.append(own);
     faceNeighbour_.append(nei);
 
-    if (masterPointID >= 0)
-    {
-        faceMap_.append(-1);
-        faceFromPoint_.insert(facei, masterPointID);
-    }
-    else if (masterEdgeID >= 0)
-    {
-        faceMap_.append(-1);
-        faceFromEdge_.insert(facei, masterEdgeID);
-    }
-    else if (masterFaceID >= 0)
+    if (masterFaceID >= 0)
     {
         faceMap_.append(masterFaceID);
     }
     else
     {
-        // Allow inflate-from-nothing?
+        // Allow insert-from-nothing?
         // FatalErrorInFunction
         //    << "Need to specify a master point, edge or face"
         //    << "face:" << f << " own:" << own << " nei:" << nei
@@ -2644,8 +2470,6 @@ void Foam::polyTopoChange::removeFace(const label facei, const label mergeFacei)
     {
         reverseFaceMap_[facei] = -1;
     }
-    faceFromEdge_.erase(facei);
-    faceFromPoint_.erase(facei);
     flipFaceFlux_[facei] = 0;
     faceZone_.erase(facei);
     faceZoneFlip_[facei] = 0;
@@ -2704,9 +2528,6 @@ void Foam::polyTopoChange::removeCell(const label celli, const label mergeCelli)
     {
         reverseCellMap_[celli] = -1;
     }
-    cellFromPoint_.erase(celli);
-    cellFromEdge_.erase(celli);
-    cellFromFace_.erase(celli);
     cellZone_[celli] = -1;
 }
 
@@ -2714,7 +2535,6 @@ void Foam::polyTopoChange::removeCell(const label celli, const label mergeCelli)
 Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
 (
     polyMesh& mesh,
-    const bool inflate,
     const bool syncParallel,
     const bool orderCells,
     const bool orderPoints
@@ -2740,10 +2560,8 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
     // patch slicing
     labelList patchSizes;
     labelList patchStarts;
-    // inflate maps
+    // maps
     List<objectMap> pointsFromPoints;
-    List<objectMap> facesFromPoints;
-    List<objectMap> facesFromEdges;
     List<objectMap> facesFromFaces;
     List<objectMap> cellsFromCells;
     // old mesh info
@@ -2765,8 +2583,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
         patchSizes,
         patchStarts,
         pointsFromPoints,
-        facesFromPoints,
-        facesFromEdges,
         facesFromFaces,
         cellsFromCells,
         oldPatchMeshPointMaps,
@@ -2786,60 +2602,17 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
     // This will invalidate any addressing so better make sure you have
     // all the information you need!!!
 
-    if (inflate)
-    {
-        // Keep (renumbered) mesh points, store new points in map for inflation
-        // (appended points (i.e. from nowhere) get value as provided in
-        //  addPoints)
-        pointField renumberedMeshPoints(newPoints.size());
-
-        forAll(pointMap_, newPointi)
-        {
-            Map<point>::const_iterator iter = oldPoints_.find(newPointi);
-            if (iter != oldPoints_.end())
-            {
-                renumberedMeshPoints[newPointi] = iter();
-            }
-            else
-            {
-                label oldPointi = pointMap_[newPointi];
-
-                if (oldPointi >= 0)
-                {
-                    renumberedMeshPoints[newPointi] = mesh.points()[oldPointi];
-                }
-                else
-                {
-                    renumberedMeshPoints[newPointi] = vector::zero;
-                }
-            }
-        }
-
-        mesh.resetPrimitives
-        (
-            move(renumberedMeshPoints),
-            move(faces_),
-            move(faceOwner_),
-            move(faceNeighbour_),
-            patchSizes,
-            patchStarts,
-            syncParallel
-        );
-    }
-    else
-    {
-        // Set new points.
-        mesh.resetPrimitives
-        (
-            move(newPoints),
-            move(faces_),
-            move(faceOwner_),
-            move(faceNeighbour_),
-            patchSizes,
-            patchStarts,
-            syncParallel
-        );
-    }
+    // Set new points.
+    mesh.resetPrimitives
+    (
+        move(newPoints),
+        move(faces_),
+        move(faceOwner_),
+        move(faceNeighbour_),
+        patchSizes,
+        patchStarts,
+        syncParallel
+    );
 
     // Clear out primitives
     {
@@ -2852,27 +2625,35 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
     if (debug)
     {
         // Some stats on changes
-        label nAdd, nInflate, nMerge, nRemove;
-        countMap(pointMap_, reversePointMap_, nAdd, nInflate, nMerge, nRemove);
+        label nSplit, nInserted, nMerge, nRemove;
+        countMap
+        (
+            pointMap_,
+            reversePointMap_,
+            nSplit,
+            nInserted,
+            nMerge,
+            nRemove
+        );
         Pout<< "Points:"
-            << "  added(from point):" << nAdd
-            << "  added(from nothing):" << nInflate
+            << "  added(from point):" << nSplit
+            << "  added(from nothing):" << nInserted
             << "  merged(into other point):" << nMerge
             << "  removed:" << nRemove
             << nl;
 
-        countMap(faceMap_, reverseFaceMap_, nAdd, nInflate, nMerge, nRemove);
+        countMap(faceMap_, reverseFaceMap_, nSplit, nInserted, nMerge, nRemove);
         Pout<< "Faces:"
-            << "  added(from face):" << nAdd
-            << "  added(inflated):" << nInflate
+            << "  added(from face):" << nSplit
+            << "  added(from nothing):" << nInserted
             << "  merged(into other face):" << nMerge
             << "  removed:" << nRemove
             << nl;
 
-        countMap(cellMap_, reverseCellMap_, nAdd, nInflate, nMerge, nRemove);
+        countMap(cellMap_, reverseCellMap_, nSplit, nInserted, nMerge, nRemove);
         Pout<< "Cells:"
-            << "  added(from cell):" << nAdd
-            << "  added(inflated):" << nInflate
+            << "  added(from cell):" << nSplit
+            << "  added(from nothing):" << nInserted
             << "  merged(into other cell):" << nMerge
             << "  removed:" << nRemove
             << nl
@@ -2929,8 +2710,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
             pointsFromPoints,
 
             faceMap_,
-            facesFromPoints,
-            facesFromEdges,
             facesFromFaces,
 
             cellMap_,
@@ -2944,7 +2723,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
 
             patchPointMap,
 
-            newPoints,          // if empty signals no inflation.
             oldPatchStarts,
             oldPatchNMeshPoints,
 
@@ -2971,7 +2749,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
 {
     if (debug)
     {
-        Pout<< "polyTopoChange::changeMesh"
+        Pout<< "polyTopoChange::makeMesh"
             << "(autoPtr<fvMesh>&, const IOobject&, const fvMesh&"
             << ", const bool, const bool, const bool)"
             << endl;
@@ -2990,10 +2768,8 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
     // patch slicing
     labelList patchSizes;
     labelList patchStarts;
-    // inflate maps
+    // maps
     List<objectMap> pointsFromPoints;
-    List<objectMap> facesFromPoints;
-    List<objectMap> facesFromEdges;
     List<objectMap> facesFromFaces;
     List<objectMap> cellsFromCells;
 
@@ -3016,8 +2792,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
         patchSizes,
         patchStarts,
         pointsFromPoints,
-        facesFromPoints,
-        facesFromEdges,
         facesFromFaces,
         cellsFromCells,
         oldPatchMeshPointMaps,
@@ -3061,27 +2835,36 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
     if (debug)
     {
         // Some stats on changes
-        label nAdd, nInflate, nMerge, nRemove;
-        countMap(pointMap_, reversePointMap_, nAdd, nInflate, nMerge, nRemove);
+        label nSplit, nInserted, nMerge, nRemove;
+        countMap
+        (
+            pointMap_,
+            reversePointMap_,
+            nSplit,
+            nInserted,
+            nMerge,
+            nRemove
+        );
+
         Pout<< "Points:"
-            << "  added(from point):" << nAdd
-            << "  added(from nothing):" << nInflate
+            << "  added(from point):" << nSplit
+            << "  added(from nothing):" << nInserted
             << "  merged(into other point):" << nMerge
             << "  removed:" << nRemove
             << nl;
 
-        countMap(faceMap_, reverseFaceMap_, nAdd, nInflate, nMerge, nRemove);
+        countMap(faceMap_, reverseFaceMap_, nSplit, nInserted, nMerge, nRemove);
         Pout<< "Faces:"
-            << "  added(from face):" << nAdd
-            << "  added(inflated):" << nInflate
+            << "  added(from face):" << nSplit
+            << "  added(from nothing):" << nInserted
             << "  merged(into other face):" << nMerge
             << "  removed:" << nRemove
             << nl;
 
-        countMap(cellMap_, reverseCellMap_, nAdd, nInflate, nMerge, nRemove);
+        countMap(cellMap_, reverseCellMap_, nSplit, nInserted, nMerge, nRemove);
         Pout<< "Cells:"
-            << "  added(from cell):" << nAdd
-            << "  added(inflated):" << nInflate
+            << "  added(from cell):" << nSplit
+            << "  added(from nothing):" << nInserted
             << "  merged(into other cell):" << nMerge
             << "  removed:" << nRemove
             << nl
@@ -3202,8 +2985,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
             pointsFromPoints,
 
             faceMap_,
-            facesFromPoints,
-            facesFromEdges,
             facesFromFaces,
 
             cellMap_,
@@ -3217,7 +2998,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
 
             patchPointMap,
 
-            newPoints,          // if empty signals no inflation.
             oldPatchStarts,
             oldPatchNMeshPoints,
             oldCellVolumes,

@@ -1312,8 +1312,6 @@ int main(int argc, char *argv[])
                     faces[facei],
                     owner[facei],
                     neighbour[facei],
-                    -1,                 // masterPointID
-                    -1,                 // masterEdgeID
                     facei,              // masterFace
                     false,              // flipFaceFlux
                     -1,                 // patchID
@@ -1363,8 +1361,6 @@ int main(int argc, char *argv[])
                     faces[facei],
                     owner[facei],
                     -1,
-                    -1,                 // masterPointID
-                    -1,                 // masterEdgeID
                     facei,              // masterFace
                     false,              // flipFaceFlux
                     patchi,             // patchID
@@ -1380,8 +1376,6 @@ int main(int argc, char *argv[])
                         faces[facei].reverseFace(),
                         neighbour[facei],
                         -1,
-                        -1,                 // masterPointID
-                        -1,                 // masterEdgeID
                         facei,              // masterFace
                         false,              // flipFaceFlux
                         patchi,             // patchID
@@ -1430,8 +1424,6 @@ int main(int argc, char *argv[])
                     faces[facei],
                     owner[facei],
                     neighbour[facei],
-                    -1,                 // masterPointID
-                    -1,                 // masterEdgeID
                     facei,              // masterFace
                     false,              // flipFaceFlux
                     -1,                 // patchID
@@ -1451,7 +1443,7 @@ int main(int argc, char *argv[])
     // Modify mesh
     // ~~~~~~~~~~~
 
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
     // Zip-up the mesh if it contained hanging nodes
     if (hangingNodes)

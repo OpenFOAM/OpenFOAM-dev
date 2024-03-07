@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -625,22 +625,14 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemoveCells
         meshMod
     );
 
-    // Change the mesh (no inflation)
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
+    // Change the mesh
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
 
     // Update fields
     mesh_.topoChange(map);
 
-    // Move mesh (since morphing might not do this)
-    if (map().hasMotionPoints())
-    {
-        mesh_.movePoints(map().preMotionPoints());
-    }
-    else
-    {
-        // Delete mesh volumes. No other way to do this?
-        mesh_.clearOut();
-    }
+    // Delete mesh volumes. No other way to do this?
+    mesh_.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());
@@ -755,8 +747,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
             f1,                         // modified face
             own,                        // owner
             nei,                        // neighbour
-            -1,                         // master point
-            -1,                         // master edge
             facei,                      // master face
             false,                      // face flip
             patchi,                     // patch for face
@@ -766,23 +756,14 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
     }
 
 
-
-    // Change the mesh (no inflation)
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
+    // Change the mesh (without keeping old points)
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
 
     // Update fields
     mesh_.topoChange(map);
 
-    // Move mesh (since morphing might not do this)
-    if (map().hasMotionPoints())
-    {
-        mesh_.movePoints(map().preMotionPoints());
-    }
-    else
-    {
-        // Delete mesh volumes. No other way to do this?
-        mesh_.clearOut();
-    }
+    // Delete mesh volumes. No other way to do this?
+    mesh_.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());

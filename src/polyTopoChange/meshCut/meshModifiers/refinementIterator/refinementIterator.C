@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,17 +164,7 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
         // Do all changes
         //
 
-        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh
-        (
-            mesh_,
-            false
-        );
-
-        // Move mesh (since morphing does not do this)
-        if (map().hasMotionPoints())
-        {
-            mesh_.movePoints(map().preMotionPoints());
-        }
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_);
 
         // Update stored refinement pattern
         meshRefiner_.topoChange(map());

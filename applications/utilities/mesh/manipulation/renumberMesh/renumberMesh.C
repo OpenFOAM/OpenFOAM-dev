@@ -513,8 +513,6 @@ autoPtr<polyTopoChangeMap> reorderMesh
             identityMap(mesh.nPoints()),   // pointMap,
             List<objectMap>(0),         // pointsFromPoints,
             faceOrder,                  // faceMap,
-            List<objectMap>(0),         // facesFromPoints,
-            List<objectMap>(0),         // facesFromEdges,
             List<objectMap>(0),         // facesFromFaces,
             cellOrder,                  // cellMap,
             List<objectMap>(0),         // cellsFromCells,
@@ -523,7 +521,6 @@ autoPtr<polyTopoChangeMap> reorderMesh
             reverseCellOrder,           // reverseCellMap,
             flipFaceFlux,               // flipFaceFlux,
             patchPointMap,              // patchPointMap,
-            pointField(0),              // preMotionPoints,
             patchStarts,                // oldPatchStarts,
             oldPatchNMeshPoints,        // oldPatchNMeshPoints
             autoPtr<scalarField>()      // oldCellVolumes
@@ -962,7 +959,6 @@ int main(int argc, char *argv[])
         autoPtr<polyTopoChangeMap> pointOrderMap = meshMod.changeMesh
         (
             mesh,
-            false,      // inflate
             true,       // syncParallel
             false,      // orderCells
             orderPoints // orderPoints
@@ -1044,13 +1040,6 @@ int main(int argc, char *argv[])
         (
             UIndirectList<label>(pointProcAddressing, map().pointMap())
         );
-    }
-
-
-    // Move mesh (since morphing might not do this)
-    if (map().hasMotionPoints())
-    {
-        mesh.setPoints(map().preMotionPoints());
     }
 
 

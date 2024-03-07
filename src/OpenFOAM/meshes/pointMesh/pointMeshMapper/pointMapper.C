@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,6 +133,11 @@ void Foam::pointMapper::calcAddressing() const
         {
             if (addr[pointi].empty())
             {
+                FatalErrorInFunction
+                    << "No interpolative addressing provided for point "
+                    << pointi
+                    << abort(FatalError);
+
                 // Mapped from a dummy point. Take point 0 with weight 1.
                 addr[pointi] = labelList(1, label(0));
                 w[pointi] = scalarList(1, 1.0);

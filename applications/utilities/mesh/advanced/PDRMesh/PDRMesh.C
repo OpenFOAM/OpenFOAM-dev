@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,8 +100,6 @@ void modifyOrAddFace
             f,                          // modified face
             own,                        // owner
             -1,                         // neighbour
-            -1,                         // master point
-            -1,                         // master edge
             facei,                      // master face
             flipFaceFlux,               // face flip
             newPatchi,                  // patch for face
@@ -496,8 +494,6 @@ void createBaffles
                     f.reverseFace(),            // modified face
                     mesh.faceNeighbour()[facei],// owner
                     -1,                         // neighbour
-                    -1,                         // masterPointID
-                    -1,                         // masterEdgeID
                     facei,                      // masterFaceID,
                     false,                      // face flip
                     wantedPatch[facei],         // patch for face
@@ -1053,9 +1049,8 @@ int main(int argc, char *argv[])
         runTime++;
     }
 
-    // Change the mesh. Change points directly (no inflation).
-    autoPtr<polyTopoChangeMap> map =
-        meshMod.changeMesh(subsetter.subMesh(), false);
+    // Change the mesh. Change points directly
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(subsetter.subMesh());
 
     // Update fields
     subsetter.subMesh().topoChange(map);
@@ -1123,13 +1118,6 @@ int main(int argc, char *argv[])
         map,
         Zero
     );
-
-
-    // Move mesh (since morphing might not do this)
-    if (map().hasMotionPoints())
-    {
-        subsetter.subMesh().setPoints(map().preMotionPoints());
-    }
 
     Info<< "Writing mesh with split blockedFaces to time "
         << runTime.userTimeName() << endl;

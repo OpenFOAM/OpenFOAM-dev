@@ -351,8 +351,6 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
             newOwn,
             newNei,
             -1,
-            -1,
-            -1,
             false,
             newPatch,
             newZone,
@@ -506,8 +504,8 @@ void Foam::mergePolyMesh::merge()
         }
     }
 
-    // Change mesh. No inflation
-    meshMod_.changeMesh(mesh_, false);
+    // Change mesh
+    meshMod_.changeMesh(mesh_);
 
     // Clear topo change for the next operation
     meshMod_.clear();

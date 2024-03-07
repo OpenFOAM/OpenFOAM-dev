@@ -300,8 +300,6 @@ void Foam::extrude2DMesh::setRefinement
                 newFace,
                 mesh_.faceOwner()[facei] + offset,       // own
                 mesh_.faceNeighbour()[facei] + offset,   // nei
-                -1,                             // masterPointID
-                -1,                             // masterEdgeID
                 nFaces++,    // masterFaceID
                 false,                          // flipFaceFlux
                 -1,                             // patchID
@@ -354,8 +352,6 @@ void Foam::extrude2DMesh::setRefinement
                     newFace,
                     mesh_.faceOwner()[facei] + offset,       // own
                     -1,                                      // nei
-                    -1,                                      // masterPointID
-                    -1,                                      // masterEdgeID
                     nFaces++,                                // masterFaceID
                     false,                                   // flipFaceFlux
                     patchi,                                  // patchID
@@ -449,8 +445,6 @@ void Foam::extrude2DMesh::setRefinement
                 frontFace,
                 celli + offset,                 // own
                 nei,                            // nei
-                -1,                             // masterPointID
-                -1,                             // masterEdgeID
                 nFaces++,                       // masterFaceID
                 false,                          // flipFaceFlux
                 -1,                             // patchID
@@ -530,8 +524,6 @@ void Foam::extrude2DMesh::setRefinement
             frontFace.reverseFace(),
             celli,                          // own
             -1,                             // nei
-            -1,                             // masterPointID
-            -1,                             // masterEdgeID
             nFaces++,                       // masterFaceID
             false,                          // flipFaceFlux
             backPatchi_,                    // patchID
@@ -560,8 +552,6 @@ void Foam::extrude2DMesh::setRefinement
             frontFace,
             celli + offset,                 // own
             -1,                             // nei
-            -1,                             // masterPointID
-            -1,                             // masterEdgeID
             nFaces++,                       // masterFaceID
             false,                          // flipFaceFlux
             frontPatchi_,                   // patchID

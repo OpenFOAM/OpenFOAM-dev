@@ -316,15 +316,9 @@ void Foam::multiDirRefinement::refineHex8
 
     hexRefiner.setRefinement(consistentCells, meshMod);
 
-    // Change mesh, no inflation
-    autoPtr<polyTopoChangeMap> mapPtr =
-        meshMod.changeMesh(mesh, false, true);
+    // Change mesh
+    autoPtr<polyTopoChangeMap> mapPtr = meshMod.changeMesh(mesh, true);
     const polyTopoChangeMap& map = mapPtr();
-
-    if (map.hasMotionPoints())
-    {
-        mesh.movePoints(map.preMotionPoints());
-    }
 
     if (writeMesh)
     {

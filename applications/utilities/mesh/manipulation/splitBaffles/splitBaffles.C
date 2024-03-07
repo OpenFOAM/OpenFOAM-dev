@@ -110,17 +110,11 @@ int main(int argc, char *argv[])
         runTime++;
     }
 
-    // Change the mesh. No inflation.
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
+    // Change the mesh
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
     // Update fields
     mesh.topoChange(map);
-
-    // Move mesh (since morphing does not do this)
-    if (map().hasMotionPoints())
-    {
-        mesh.setPoints(map().preMotionPoints());
-    }
 
     if (overwrite)
     {

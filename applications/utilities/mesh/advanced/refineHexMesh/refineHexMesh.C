@@ -139,19 +139,13 @@ int main(int argc, char *argv[])
     }
 
     // Create mesh, return map from old to new mesh.
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
     // Update fields
     mesh.topoChange(map);
 
     // Update numbering of cells/vertices.
     meshCutter.topoChange(map);
-
-    // Optionally inflate mesh
-    if (map().hasMotionPoints())
-    {
-        mesh.setPoints(map().preMotionPoints());
-    }
 
     Info<< "Refined from " << returnReduce(map().nOldCells(), sumOp<label>())
         << " to " << mesh.globalData().nTotalCells() << " cells." << nl << endl;

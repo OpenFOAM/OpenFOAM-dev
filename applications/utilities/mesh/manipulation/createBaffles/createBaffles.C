@@ -168,8 +168,6 @@ void modifyOrAddFace
             f,                          // modified face
             own,                        // owner
             -1,                         // neighbour
-            -1,                         // master point
-            -1,                         // master edge
             facei,                      // master face
             flipFaceFlux,               // face flip
             newPatchi,                  // patch for face
@@ -663,8 +661,8 @@ int main(int argc, char *argv[])
         runTime++;
     }
 
-    // Change the mesh. Change points directly (no inflation).
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
+    // Change the mesh. Change points directly
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
     // Update fields
     mesh.topoChange(map);
@@ -714,12 +712,6 @@ int main(int argc, char *argv[])
                 }
             }
         }
-    }
-
-    // Move mesh (since morphing might not do this)
-    if (map().hasMotionPoints())
-    {
-        mesh.setPoints(map().preMotionPoints());
     }
 
     // Remove any now zero-sized patches

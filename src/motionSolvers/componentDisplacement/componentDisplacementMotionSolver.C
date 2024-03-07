@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,12 +153,7 @@ void Foam::componentDisplacementMotionSolver::topoChange
     // Find out scaling between points0 and current points
 
     // Get the new points either from the map or the mesh
-    const scalarField points
-    (
-        map.hasMotionPoints()
-      ? map.preMotionPoints().component(cmpt_)
-      : mesh().points().component(cmpt_)
-    );
+    const scalarField points(mesh().points().component(cmpt_));
 
     // Get extents of points0 and points and determine scale
     const scalar scale =

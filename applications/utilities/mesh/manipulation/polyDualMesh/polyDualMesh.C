@@ -486,16 +486,10 @@ int main(int argc, char *argv[])
     );
 
     // Create mesh, return map from old to new mesh.
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
     // Update mesh objects
     mesh.topoChange(map);
-
-    // Optionally inflate mesh
-    if (map().hasMotionPoints())
-    {
-        mesh.setPoints(map().preMotionPoints());
-    }
 
     if (!overwrite)
     {

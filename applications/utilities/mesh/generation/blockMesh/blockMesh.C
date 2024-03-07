@@ -341,7 +341,7 @@ int main(int argc, char *argv[])
                 << endl;
             const word oldInstance = mesh.instance();
             polyTopoChange meshMod(mesh);
-            meshMod.changeMesh(mesh, false);
+            meshMod.changeMesh(mesh);
             mesh.setInstance(oldInstance);
         }
     }

@@ -200,8 +200,6 @@ Foam::label Foam::meshDualiser::addInternalFace
             newFace,
             dualCell0,      // own
             dualCell1,      // nei
-            masterPointi,   // masterPointID
-            masterEdgeI,    // masterEdgeID
             masterFacei,    // masterFaceID
             false,          // flipFaceFlux
             -1,             // patchID
@@ -227,8 +225,6 @@ Foam::label Foam::meshDualiser::addInternalFace
             newFace,
             dualCell1,      // own
             dualCell0,      // nei
-            masterPointi,   // masterPointID
-            masterEdgeI,    // masterEdgeID
             masterFacei,    // masterFaceID
             false,          // flipFaceFlux
             -1,             // patchID
@@ -284,8 +280,6 @@ Foam::label Foam::meshDualiser::addBoundaryFace
         newFace,
         dualCelli,      // own
         -1,             // nei
-        masterPointi,   // masterPointID
-        masterEdgeI,    // masterEdgeID
         masterFacei,    // masterFaceID
         false,          // flipFaceFlux
         patchi,         // patchID

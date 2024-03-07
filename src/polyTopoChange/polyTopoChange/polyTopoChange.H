@@ -155,14 +155,6 @@ class polyTopoChange
             //  (used to map return value of addFace to new mesh face)
             DynamicList<label> reverseFaceMap_;
 
-            //- Faces added from point (corresponding faceMap_ will
-            //  be -1)
-            Map<label> faceFromPoint_;
-
-            //- Faces added from edge (corresponding faceMap_ will
-            //  be -1)
-            Map<label> faceFromEdge_;
-
             //- In mapping whether to reverse the flux.
             PackedBoolList flipFaceFlux_;
 
@@ -185,15 +177,6 @@ class polyTopoChange
             //- For all original and added cells contains new cell label
             //  (used to map return value of addCell to new mesh cell)
             DynamicList<label> reverseCellMap_;
-
-            //- Cells added from point
-            Map<label> cellFromPoint_;
-
-            //- Cells added from edge
-            Map<label> cellFromEdge_;
-
-            //- Cells added from face
-            Map<label> cellFromFace_;
 
             //- Zone of cell
             DynamicList<label> cellZone_;
@@ -225,8 +208,8 @@ class polyTopoChange
         (
             const labelList& map,
             const labelList& reverseMap,
-            label& nAdd,
-            label& nInflate,
+            label& nSplit,
+            label& nInserted,
             label& nMerge,
             label& nRemove
         );
@@ -322,13 +305,12 @@ class polyTopoChange
 
         //- Select either internal or external faces out of faceLabels
         //
-        // Find faces to interpolate to create value for new face. Only used if
-        // face was inflated from edge or point. Internal faces should only be
-        // created from internal faces, external faces only from external faces
-        // (and ideally the same patch)
-        // Is bit problematic if there are no faces to select, i.e. in
-        // polyDualMesh an internal face can be created from a boundary edge
-        // with no internal faces connected to it.
+        // Find faces to interpolate to create value for new face. Internal
+        // faces should only be created from internal faces, external faces only
+        // from external faces (and ideally the same patch) Is bit problematic
+        // if there are no faces to select, i.e. in polyDualMesh an internal
+        // face can be created from a boundary edge with no internal faces
+        // connected to it.
         static labelList selectFaces
         (
             const primitiveMesh&,
@@ -342,14 +324,6 @@ class polyTopoChange
             const List<Map<label>>&,
             const polyBoundaryMesh&,
             labelListList&
-        ) const;
-
-        void calcFaceInflationMaps
-        (
-            const polyMesh&,
-            List<objectMap>&,
-            List<objectMap>&,
-            List<objectMap>&
         ) const;
 
         void resetZones
@@ -389,8 +363,6 @@ class polyTopoChange
             labelList& patchSizes,
             labelList& patchStarts,
             List<objectMap>& pointsFromPoints,
-            List<objectMap>& facesFromPoints,
-            List<objectMap>& facesFromEdges,
             List<objectMap>& facesFromFaces,
             List<objectMap>& cellsFromCells,
             List<Map<label>>& oldPatchMeshPointMaps,
@@ -531,8 +503,6 @@ public:
                 const face& f,
                 const label own,
                 const label nei,
-                const label masterPointID,
-                const label masterEdgeID,
                 const label masterFaceID,
                 const bool flipFaceFlux,
                 const label patchID,
@@ -578,11 +548,6 @@ public:
             //- Inplace changes mesh without change of patches.
             //  Adapts patch start/end and by default does parallel matching.
             //  Clears all data. Returns map.
-            //  inflate = true : keep old mesh points. Put new points into the
-            //  returned map (preMotionPoints) so we can use inflation. Any
-            //  points out of nothing (appended points) are vector::zero.
-            //  inflate = false: set mesh points directly. Empty preMotionPoints
-            //  in the map.
             //  orderCells :  whether to order the cells (see bandCompression.H)
             //  orderPoints : whether to order the points into internal first
             //  followed by boundary points. This is not fully consistent
@@ -591,7 +556,6 @@ public:
             autoPtr<polyTopoChangeMap> changeMesh
             (
                 polyMesh& mesh,
-                const bool inflate,
                 const bool syncParallel = true,
                 const bool orderCells = false,
                 const bool orderPoints = false

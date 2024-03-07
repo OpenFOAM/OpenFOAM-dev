@@ -350,19 +350,12 @@ int main(int argc, char *argv[])
                 );
             }
 
-            // Change the mesh. No inflation.
+            // Change the mesh. without keeping old points.
             autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
 
             // Update fields
             mesh.topoChange(map);
-
-            // Move mesh (since morphing does not do this)
-            if (map().hasMotionPoints())
-            {
-                mesh.setPoints(map().preMotionPoints());
-            }
         }
-
 
 
         indirectPrimitivePatch extrudePatch
@@ -817,12 +810,6 @@ int main(int argc, char *argv[])
             updateFaceLabels(map(), frontPatchFaces);
             updateFaceLabels(map(), backPatchFaces);
             updateCellSet(map(), addedCellsSet);
-
-            // Move mesh (if inflation used)
-            if (map().hasMotionPoints())
-            {
-                mesh.setPoints(map().preMotionPoints());
-            }
         }
     }
 
@@ -942,12 +929,6 @@ int main(int argc, char *argv[])
 
         // Update local data
         updateCellSet(map(), addedCellsSet);
-
-        // Move mesh (if inflation used)
-        if (map().hasMotionPoints())
-        {
-            mesh.setPoints(map().preMotionPoints());
-        }
     }
 
     mesh.setInstance(runTimeExtruded.constant());

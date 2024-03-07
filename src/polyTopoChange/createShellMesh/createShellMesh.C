@@ -570,8 +570,6 @@ void Foam::createShellMesh::setRefinement
             patch_.localFaces()[facei].reverseFace(),// vertices
             addedCells[nLayers*facei],  // own
             -1,                         // nei
-            -1,                         // masterPointID
-            -1,                         // masterEdgeID
             faceToFaceMap.size(),       // masterFaceID : current facei
             true,                       // flipFaceFlux
             bottomPatchID[facei],       // patchID
@@ -627,8 +625,6 @@ void Foam::createShellMesh::setRefinement
                 newF,                       // vertices
                 own,                        // own
                 nei,                        // nei
-                -1,                         // masterPointID
-                -1,                         // masterEdgeID
                 faceToFaceMap.size(),       // masterFaceID : current facei
                 false,                      // flipFaceFlux
                 patchi,                     // patchID
@@ -778,8 +774,6 @@ void Foam::createShellMesh::setRefinement
                 newF,                   // vertices
                 minCelli,               // own
                 maxCelli,               // nei
-                -1,                     // masterPointID
-                -1,                     // masterEdgeID
                 faceToFaceMap.size(),   // masterFaceID
                 false,                  // flipFaceFlux
                 patchi,                 // patchID
@@ -873,8 +867,6 @@ void Foam::createShellMesh::setRefinement
                         newF,                   // vertices
                         addedCells[nLayers*minFacei+layerI],   // own
                         -1,                     // nei
-                        -1,                     // masterPointID
-                        -1,                     // masterEdgeID
                         faceToFaceMap.size(),   // masterFaceID
                         false,                  // flipFaceFlux
                         ePatches[i],            // patchID

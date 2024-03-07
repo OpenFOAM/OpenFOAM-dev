@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,10 +89,6 @@ Foam::autoPtr<Foam::fvMesh> Foam::polyMeshFilter::copyMesh(const fvMesh& mesh)
 
     // Update fields
     meshCopy().topoChange(map);
-    if (map.hasMotionPoints())
-    {
-        meshCopy().movePoints(map.preMotionPoints());
-    }
 
     copySets(mesh, meshCopy());
 
@@ -374,19 +370,11 @@ Foam::label Foam::polyMeshFilter::filterFaces
         Info<< indent << "Apply changes to the current mesh" << endl;
 
         // Apply changes to current mesh
-        autoPtr<polyTopoChangeMap> newMapPtr = newMeshMod.changeMesh
-        (
-            newMesh,
-            false
-        );
+        autoPtr<polyTopoChangeMap> newMapPtr = newMeshMod.changeMesh(newMesh);
         const polyTopoChangeMap& newMap = newMapPtr();
 
         // Update fields
         newMesh.topoChange(newMap);
-        if (newMap.hasMotionPoints())
-        {
-            newMesh.movePoints(newMap.preMotionPoints());
-        }
         updateSets(newMap);
 
         updatePointPriorities(newMesh, newMap.pointMap());
@@ -491,19 +479,11 @@ Foam::label Foam::polyMeshFilter::filterEdges
     Info<< indent << "Apply changes to the current mesh" << endl;
 
     // Apply changes to current mesh
-    autoPtr<polyTopoChangeMap> newMapPtr = newMeshMod.changeMesh
-    (
-        newMesh,
-        false
-    );
+    autoPtr<polyTopoChangeMap> newMapPtr = newMeshMod.changeMesh(newMesh);
     const polyTopoChangeMap& newMap = newMapPtr();
 
     // Update fields
     newMesh.topoChange(newMap);
-    if (newMap.hasMotionPoints())
-    {
-        newMesh.movePoints(newMap.preMotionPoints());
-    }
     updateSets(newMap);
 
     // Synchronise the factors

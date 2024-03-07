@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -251,7 +251,7 @@ int main(int argc, char *argv[])
     extruder.setRefinement(meshMod());
 
     // Create a mesh from topo changes.
-    autoPtr<polyTopoChangeMap> map = meshMod().changeMesh(mesh(), false);
+    autoPtr<polyTopoChangeMap> map = meshMod().changeMesh(mesh());
 
     mesh().topoChange(map);
 
@@ -301,8 +301,7 @@ int main(int argc, char *argv[])
         collapser.setRefinement(allPointInfo, meshModCollapse);
 
         // Create a mesh from topo changes.
-        autoPtr<polyTopoChangeMap> map
-            = meshModCollapse.changeMesh(mesh(), false);
+        autoPtr<polyTopoChangeMap> map = meshModCollapse.changeMesh(mesh());
 
         mesh().topoChange(map);
     }

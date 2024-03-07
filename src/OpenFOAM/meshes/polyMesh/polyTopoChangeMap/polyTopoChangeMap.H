@@ -43,8 +43,6 @@ Description
        other cell. Note that probably only cell with cell is relevant)
     - can be added from existing same 'master' entity
       (so point from point, face from face and cell from cell)
-    - can be inflated: face out of edge or point,
-        cell out of face, edge or point.
     - can be appended: added 'out of nothing'.
 
     All this information is necessary to correctly map fields.
@@ -80,23 +78,8 @@ Description
           (including the old master face!)
     - added-from-same:
         - faceMap[facei] contains the old master face label
-    - inflated-from-edge:
-        - faceMap[facei] contains -1
-        - facesFromEdges contains an entry with
-            - facei
-            - list of faces(*) on old mesh that connected to the old edge
-    - inflated-from-point:
-        - faceMap[facei] contains -1
-        - facesFromPoints contains an entry with
-            - facei
-            - list of faces(*) on old mesh that connected to the old point
     - appended:
         - faceMap[facei] contains -1
-
-    Note (*) \n
-       if the newly inflated face is a boundary face the list of faces will
-       only be boundary faces; if the new face is an internal face they
-       will only be internal faces.
 
     \par cells
 
@@ -177,12 +160,6 @@ class polyTopoChangeMap
         //  - for faces added from points or edges, this is -1
         const labelList faceMap_;
 
-        //- Faces inflated from points
-        const List<objectMap> facesFromPointsMap_;
-
-        //- Faces inflated from edges
-        const List<objectMap> facesFromEdgesMap_;
-
         //- Faces resulting from merging faces
         const List<objectMap> facesFromFacesMap_;
 
@@ -208,10 +185,6 @@ class polyTopoChangeMap
 
         //- Patch mesh point renumbering
         const labelListList patchPointMap_;
-
-        //- Pre-motion point positions.
-        //  This specifies the correct way of blowing up zero-volume objects
-        const pointField preMotionPoints_;
 
         //- List of the old patch sizes
         labelList oldPatchSizes_;
@@ -243,8 +216,6 @@ public:
             const labelList& pointMap,
             const List<objectMap>& pointsFromPoints,
             const labelList& faceMap,
-            const List<objectMap>& facesFromPoints,
-            const List<objectMap>& facesFromEdges,
             const List<objectMap>& facesFromFaces,
             const labelList& cellMap,
             const List<objectMap>& cellsFromCells,
@@ -253,7 +224,6 @@ public:
             const labelList& reverseCellMap,
             const labelHashSet& flipFaceFlux,
             const labelListList& patchPointMap,
-            const pointField& preMotionPoints,
             const labelList& oldPatchStarts,
             const labelList& oldPatchNMeshPoints,
             const autoPtr<scalarField>& oldCellVolumesPtr
@@ -269,8 +239,6 @@ public:
             labelList& pointMap,
             List<objectMap>& pointsFromPoints,
             labelList& faceMap,
-            List<objectMap>& facesFromPoints,
-            List<objectMap>& facesFromEdges,
             List<objectMap>& facesFromFaces,
             labelList& cellMap,
             List<objectMap>& cellsFromCells,
@@ -279,7 +247,6 @@ public:
             labelList& reverseCellMap,
             labelHashSet& flipFaceFlux,
             labelListList& patchPointMap,
-            pointField& preMotionPoints,
             labelList& oldPatchStarts,
             labelList& oldPatchNMeshPoints,
             autoPtr<scalarField>& oldCellVolumesPtr,
@@ -345,18 +312,6 @@ public:
             const labelList& faceMap() const
             {
                 return faceMap_;
-            }
-
-            //- Faces inflated from points
-            const List<objectMap>& facesFromPointsMap() const
-            {
-                return facesFromPointsMap_;
-            }
-
-            //- Faces inflated from edges
-            const List<objectMap>& facesFromEdgesMap() const
-            {
-                return facesFromEdgesMap_;
             }
 
             //- Faces originating from faces
@@ -488,21 +443,6 @@ public:
                 {
                     return patchPointMap_;
                 }
-
-
-            //- Pre-motion point positions.
-            //  This specifies the correct way of blowing up
-            //  zero-volume objects
-            const pointField& preMotionPoints() const
-            {
-                return preMotionPoints_;
-            }
-
-            //- Has valid preMotionPoints?
-            bool hasMotionPoints() const
-            {
-                return preMotionPoints_.size() > 0;
-            }
 
 
             //- Return list of the old patch sizes

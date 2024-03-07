@@ -141,8 +141,6 @@ Foam::label Foam::hexRef8::addFace
             newFace,                    // face
             own,                        // owner
             nei,                        // neighbour
-            -1,                         // master point
-            -1,                         // master edge
             facei,                      // master face for addition
             false,                      // flux flip
             patchID,                    // patch for face
@@ -158,8 +156,6 @@ Foam::label Foam::hexRef8::addFace
             newFace.reverseFace(),      // face
             nei,                        // owner
             own,                        // neighbour
-            -1,                         // master point
-            -1,                         // master edge
             facei,                      // master face for addition
             false,                      // flux flip
             patchID,                    // patch for face
@@ -188,8 +184,6 @@ Foam::label Foam::hexRef8::addInternalFace
             newFace,                    // face
             own,                        // owner
             nei,                        // neighbour
-            -1,                         // master point
-            -1,                         // master edge
             meshFacei,                  // master face for addition
             false,                      // flux flip
             -1,                         // patch for face
@@ -199,60 +193,19 @@ Foam::label Foam::hexRef8::addInternalFace
     }
     else
     {
-        // Two choices:
-        // - append (i.e. create out of nothing - will not be mapped)
-        //   problem: field does not get mapped.
-        // - inflate from point.
-        //   problem: does interpolative mapping which constructs full
-        //   volPointInterpolation!
-
         // For now create out of nothing
-
+        //   problem: field does not get mapped.
         return meshMod.addFace
         (
             newFace,                    // face
             own,                        // owner
             nei,                        // neighbour
-            -1,                         // master point
-            -1,                         // master edge
             -1,                         // master face for addition
             false,                      // flux flip
             -1,                         // patch for face
             -1,                         // zone for face
             false                       // face zone flip
         );
-
-
-        ////- Inflate-from-point:
-        //// Check if point has any internal faces we can use.
-        // label masterPointi = -1;
-        //
-        // const labelList& pFaces = mesh_.pointFaces()[meshPointi];
-        //
-        // forAll(pFaces, i)
-        //{
-        //    if (mesh_.isInternalFace(pFaces[i]))
-        //    {
-        //        // meshPoint uses internal faces so ok to inflate from it
-        //        masterPointi = meshPointi;
-        //
-        //        break;
-        //    }
-        //}
-        //
-        // return meshMod.addFace
-        // (
-        //     newFace,                    // face
-        //     own,                        // owner
-        //     nei,                        // neighbour
-        //     masterPointi,               // master point
-        //     -1,                         // master edge
-        //     -1,                         // master face for addition
-        //     false,                      // flux flip
-        //     -1,                         // patch for face
-        //     -1,                         // zone for face
-        //     false                       // face zone flip
-        // );
     }
 }
 
@@ -4284,18 +4237,6 @@ void Foam::hexRef8::topoChange
             }
             cellLevel_[newCelli] = fnd();
         }
-
-        // if (findIndex(cellLevel_, -1) != -1)
-        //{
-        //    WarningInFunction
-        //        << "Problem : "
-        //        << "cellLevel_ contains illegal value -1 after mapping
-        //        << " at cell " << findIndex(cellLevel_, -1) << endl
-        //        << "This means that another program has inflated cells"
-        //        << " (created cells out-of-nothing) and hence we don't know"
-        //        << " their cell level. Continuing with illegal value."
-        //        << abort(FatalError);
-        //}
     }
 
 
@@ -4321,13 +4262,6 @@ void Foam::hexRef8::topoChange
 
                 if (oldPointi == -1)
                 {
-                    // FatalErrorInFunction
-                    //    << "Problem : point " << newPointi
-                    //    << " at " << mesh_.points()[newPointi]
-                    //    << " does not originate from another point"
-                    //    << " (i.e. is inflated)." << nl
-                    //    << "Hence we cannot determine the new pointLevel"
-                    //    << " for it." << abort(FatalError);
                     newPointLevel[newPointi] = -1;
                 }
                 else
@@ -4358,18 +4292,6 @@ void Foam::hexRef8::topoChange
             }
             pointLevel_[newPointi] = fnd();
         }
-
-        // if (findIndex(pointLevel_, -1) != -1)
-        //{
-        //    WarningInFunction
-        //        << "Problem : "
-        //        << "pointLevel_ contains illegal value -1 after mapping"
-        //        << " at point" << findIndex(pointLevel_, -1) << endl
-        //        << "This means that another program has inflated points"
-        //        << " (created points out-of-nothing) and hence we don't know"
-        //        << " their point level. Continuing with illegal value."
-        //        //<< abort(FatalError);
-        //}
     }
 
     // Update refinement tree

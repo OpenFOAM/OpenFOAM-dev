@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -255,9 +255,9 @@ Foam::fvMeshTopoChangers::refiner::refine
     // Play refinement commands into mesh changer.
     meshCutter_.setRefinement(cellsToRefine, meshMod);
 
-    // Create mesh (with inflation), return map from old to new mesh.
-    // autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(*this, true);
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh(), false);
+    // Create mesh
+    // return map from old to new mesh.
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh());
 
     Info<< "Refined from "
         << returnReduce(map().nOldCells(), sumOp<label>())
@@ -388,8 +388,7 @@ Foam::fvMeshTopoChangers::refiner::unrefine
 
 
     // Change mesh and generate map.
-    // autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh(), true);
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh(), false);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh());
 
     Info<< "Unrefined from "
         << returnReduce(map().nOldCells(), sumOp<label>())
@@ -585,7 +584,7 @@ void Foam::fvMeshTopoChangers::refiner::refineUfs
 
                 if (oldFacei == -1)
                 {
-                    // Inflated/appended
+                    // Inserted
                     Uf[facei] = UfU[facei];
                 }
                 else if (reverseFaceMap[oldFacei] != facei)
@@ -611,12 +610,12 @@ void Foam::fvMeshTopoChangers::refiner::refineUfs
 
                     if (oldFacei == -1)
                     {
-                        // Inflated/appended
+                        // Inserted/appended
                         patchUf[i] = patchUfU[i];
                     }
                     else if (reverseFaceMap[oldFacei] != facei)
                     {
-                        // face-from-masterface
+                        // face-from-master-face
                         patchUf[i] = patchUfU[i];
                     }
 

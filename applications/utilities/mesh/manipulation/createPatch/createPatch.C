@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -476,15 +476,11 @@ int main(int argc, char *argv[])
 
     const dictionary dict(systemDict("createPatchDict", args, mesh));
 
-    // Whether to synchronise points
-    const Switch pointSync(dict.lookupOrDefault("pointSync", false));
-
     // Whether to write cyclic matches to .OBJ files
     const Switch writeCyclicMatch
     (
         dict.lookupOrDefault("writeCyclicMatch", false)
     );
-
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
@@ -708,42 +704,10 @@ int main(int argc, char *argv[])
     Info<< endl;
 
 
-    // Change mesh, use inflation to reforce calculation of transformation
+    // Change mesh, use motion to reforce calculation of transformation
     // tensors.
     Info<< "Doing topology modification to order faces." << nl << endl;
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, true);
-    mesh.setPoints(map().preMotionPoints());
-
-    if (writeCyclicMatch)
-    {
-        writeCyclicMatchObjs("coupled_", mesh);
-    }
-
-    // Synchronise points.
-    if (!pointSync)
-    {
-        Info<< "Not synchronising points." << nl << endl;
-    }
-    else
-    {
-        Info<< "Synchronising points." << nl << endl;
-
-        pointField newPoints(mesh.points());
-
-        syncPoints
-        (
-            mesh,
-            newPoints,
-            minMagSqrEqOp<vector>(),
-            point(great, great, great)
-        );
-
-        scalarField diff(mag(newPoints-mesh.points()));
-        Info<< "Points changed by average:" << gAverage(diff)
-            << " max:" << gMax(diff) << nl << endl;
-
-        mesh.setPoints(newPoints);
-    }
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
     // 3. Remove zeros-sized patches
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

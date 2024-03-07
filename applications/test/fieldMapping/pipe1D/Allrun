@@ -12,12 +12,6 @@ wmake ..
 
 runApplication blockMesh
 
-# Run with inflation
-runApplication $application true
-mv "log.$application" "log.$application-inflate"
-
-# Run without inflation
-runApplication $application false
-
+runApplication $application
 
 #------------------------------------------------------------------------------

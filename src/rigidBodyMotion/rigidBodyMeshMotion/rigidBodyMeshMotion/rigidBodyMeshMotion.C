@@ -429,12 +429,7 @@ void Foam::rigidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
     // pointMesh already updates pointFields
 
     // Get the new points either from the map or the mesh
-    const pointField& points =
-    (
-        map.hasMotionPoints()
-      ? map.preMotionPoints()
-      : mesh().points()
-    );
+    const pointField& points = mesh().points();
 
     const pointMesh& pMesh = pointMesh::New(mesh());
 

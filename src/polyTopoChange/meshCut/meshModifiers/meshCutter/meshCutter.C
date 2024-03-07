@@ -222,8 +222,6 @@ void Foam::meshCutter::addFace
             newFace,                    // face
             own,                        // owner
             nei,                        // neighbour
-            -1,                         // master point
-            -1,                         // master edge
             facei,                      // master face for addition
             false,                      // flux flip
             patchID,                    // patch for face
@@ -250,8 +248,6 @@ void Foam::meshCutter::addFace
             newFace.reverseFace(),      // face
             nei,                        // owner
             own,                        // neighbour
-            -1,                         // master point
-            -1,                         // master edge
             facei,                      // master face for addition
             false,                      // flux flip
             patchID,                    // patch for face
@@ -643,17 +639,12 @@ void Foam::meshCutter::setRefinement
             //
             face newFace(loopToFace(celli, loop));
 
-            // Pick any anchor point on cell
-            label masterPointi = findInternalFacePoint(anchorPts[celli]);
-
             label addedFacei =
                 meshMod.addFace
             (
                 newFace,                // face
                 celli,                  // owner
                 addedCells_[celli],     // neighbour
-                masterPointi,           // master point
-                -1,                     // master edge
                 -1,                     // master face for addition
                 false,                  // flux flip
                 -1,                     // patch for face

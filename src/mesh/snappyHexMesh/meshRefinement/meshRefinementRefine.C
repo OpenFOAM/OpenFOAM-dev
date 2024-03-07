@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2240,22 +2240,15 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::refine
     // Play refinement commands into mesh changer.
     meshCutter_.setRefinement(cellsToRefine, meshMod);
 
-    // Create mesh (no inflation), return map from old to new mesh.
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false);
+    // Create mesh
+    // return map from old to new mesh.
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_);
 
     // Update fields
     mesh_.topoChange(map);
 
-    // Optionally inflate mesh
-    if (map().hasMotionPoints())
-    {
-        mesh_.movePoints(map().preMotionPoints());
-    }
-    else
-    {
-        // Delete mesh volumes.
-        mesh_.clearOut();
-    }
+    // Delete mesh volumes.
+    mesh_.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -512,12 +512,7 @@ void subsetMesh
 
     const Time& runTime = mesh.time();
 
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
-
-    if (map().hasMotionPoints())
-    {
-        mesh.setPoints(map().preMotionPoints());
-    }
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
     // Update topology on cellRemover
     cellRemover.topoChange(map());

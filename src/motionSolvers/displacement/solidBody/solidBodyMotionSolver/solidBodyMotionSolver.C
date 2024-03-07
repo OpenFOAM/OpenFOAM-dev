@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,12 +155,7 @@ void Foam::solidBodyMotionSolver::topoChange(const polyTopoChangeMap& map)
     // pointMesh already updates pointFields
 
     // Get the new points either from the map or the mesh
-    const pointField& points =
-    (
-        map.hasMotionPoints()
-      ? map.preMotionPoints()
-      : mesh().points()
-    );
+    const pointField& points = mesh().points();
 
     pointField newPoints0(map.pointMap().size());
 

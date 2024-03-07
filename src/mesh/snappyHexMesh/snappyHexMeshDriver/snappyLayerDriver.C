@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -3506,7 +3506,7 @@ void Foam::snappyLayerDriver::addLayers
     // current mesh.
 
     // Apply the stored topo changes to the current mesh.
-    autoPtr<polyTopoChangeMap> map = savedMeshMod.changeMesh(mesh, false);
+    autoPtr<polyTopoChangeMap> map = savedMeshMod.changeMesh(mesh);
 
     // Hack to remove meshPhi/V0 - mapped incorrectly. TBD.
     mesh.clearOut();
@@ -3514,16 +3514,8 @@ void Foam::snappyLayerDriver::addLayers
     // Update fields
     mesh.topoChange(map);
 
-    // Move mesh (since morphing does not do this)
-    if (map().hasMotionPoints())
-    {
-        mesh.movePoints(map().preMotionPoints());
-    }
-    else
-    {
-        // Delete mesh volumes.
-        mesh.clearOut();
-    }
+    // Delete mesh volumes.
+    mesh.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh.setInstance(meshRefiner_.name());

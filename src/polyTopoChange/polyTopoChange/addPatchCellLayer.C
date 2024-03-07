@@ -221,30 +221,13 @@ Foam::label Foam::addPatchCellLayer::addSideFace
 
     const label ownFacei,               // pp face that provides owner
     const label nbrFacei,
-    const label meshEdgeI,              // corresponding mesh edge
     const label layerI,                 // layer
     const label numEdgeFaces,           // number of layers for edge
     const labelList& meshFaces,         // precalculated edgeFaces
     polyTopoChange& meshMod
 ) const
 {
-    // Face or edge to 'inflate' from
-    label inflateEdgeI = -1;
-    label inflateFacei = -1;
-
-    // Check mesh faces using edge
-    if (addToMesh_)
-    {
-        forAll(meshFaces, i)
-        {
-            if (mesh_.isInternalFace(meshFaces[i]))
-            {
-                // meshEdge uses internal faces so ok to inflate from it
-                inflateEdgeI = meshEdgeI;
-                break;
-            }
-        }
-    }
+    label masterFacei = -1;
 
     // Zone info comes from any side patch face. Otherwise -1 since we
     // don't know what to put it in - inherit from the extruded faces?
@@ -260,8 +243,8 @@ Foam::label Foam::addPatchCellLayer::addSideFace
 
         const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-        // Loop over all faces connected to edge to inflate and
-        // see if we can find a face that is otherPatchID
+        // Loop over all faces connected to edge and see if we can find a face
+        // that is otherPatchID
 
         // Get my mesh face and its zone.
         label meshFacei = pp.addressing()[ownFacei];
@@ -276,9 +259,8 @@ Foam::label Foam::addPatchCellLayer::addSideFace
              && (patches.whichPatch(facei) == newPatchID)
             )
             {
-                // Found the patch face. Use it to inflate from
-                inflateEdgeI = -1;
-                inflateFacei = facei;
+                // Found the patch face. Use it to map from
+                masterFacei = facei;
 
                 zoneI = mesh_.faceZones().whichZone(facei);
                 if (zoneI != -1)
@@ -324,9 +306,7 @@ Foam::label Foam::addPatchCellLayer::addSideFace
             newFace,                    // face
             addedCells[ownFacei][layerOwn],   // owner
             -1,                         // neighbour
-            -1,                         // master point
-            inflateEdgeI,               // master edge
-            inflateFacei,               // master face
+            masterFacei,                // master face
             false,                      // flux flip
             newPatchID,                 // patch for face
             zoneI,                      // zone for face
@@ -387,8 +367,6 @@ Foam::label Foam::addPatchCellLayer::addSideFace
             newFace,                    // face
             addedCells[ownFacei][layerOwn],   // owner
             addedCells[nbrFacei][layerNbr],   // neighbour
-            -1,                         // master point
-            inflateEdgeI,               // master edge
             -1,                         // master face
             false,                      // flux flip
             -1,                         // patch for face
@@ -551,8 +529,7 @@ void Foam::addPatchCellLayer::calcSidePatch
     // - whether face is created from other face or edge
     // - what zone&orientation face should have
 
-    labelList inflateEdgeI(pp.nEdges(), -1);
-    labelList inflateFacei(pp.nEdges(), -1);
+    labelList masterFacei(pp.nEdges(), -1);
 
     nPatches = patches.size();
 
@@ -638,15 +615,13 @@ void Foam::addPatchCellLayer::calcSidePatch
                 if (facei != myFacei && !mesh.isInternalFace(facei))
                 {
                     sidePatchID[edgeI] = mesh.boundaryMesh().whichPatch(facei);
-                    inflateFacei[edgeI] = facei;
-                    inflateEdgeI[edgeI] = -1;
+                    masterFacei[edgeI] = facei;
 
                     break;
                 }
             }
         }
     }
-
 
 
     // Now hopefully every boundary edge has a side patch. Check
@@ -667,19 +642,17 @@ void Foam::addPatchCellLayer::calcSidePatch
     }
 
 
-
-    // Now we have sidepatch see if we have patchface or edge to inflate
-    // from.
+    // Now we have sidepatch see if we have patchface or edge to map from
     forAll(edgeFaces, edgeI)
     {
         if
         (
             edgeFaces[edgeI].size() == 1
          && sidePatchID[edgeI] != -1
-         && inflateFacei[edgeI] == -1
+         && masterFacei[edgeI] == -1
         )
         {
-            // 1. Do we have a boundary face to inflate from
+            // 1. Do we have a boundary face to map from
 
             label myFacei = pp.addressing()[edgeFaces[edgeI][0]];
 
@@ -693,26 +666,18 @@ void Foam::addPatchCellLayer::calcSidePatch
 
             forAll(meshFaces, k)
             {
-                label facei = meshFaces[k];
+                const label facei = meshFaces[k];
 
-                if (facei != myFacei)
+                if
+                (
+                    facei != myFacei
+                 && !mesh.isInternalFace(facei)
+                 && patches.whichPatch(facei) == sidePatchID[edgeI]
+                )
                 {
-                    if (mesh.isInternalFace(facei))
-                    {
-                        inflateEdgeI[edgeI] = meshEdgeI;
-                    }
-                    else
-                    {
-                        if (patches.whichPatch(facei) == sidePatchID[edgeI])
-                        {
-                            sidePatchID[edgeI] =
-                                mesh.boundaryMesh().whichPatch(facei);
-                            inflateFacei[edgeI] = facei;
-                            inflateEdgeI[edgeI] = -1;
-
-                            break;
-                        }
-                    }
+                    sidePatchID[edgeI] = mesh.boundaryMesh().whichPatch(facei);
+                    masterFacei[edgeI] = facei;
+                    break;
                 }
             }
         }
@@ -1193,8 +1158,6 @@ void Foam::addPatchCellLayer::setRefinement
                     newFace,                    // face
                     addedCells[patchFacei][i],  // owner
                     nei,                        // neighbour
-                    -1,                         // master point
-                    -1,                         // master edge
                     (addToMesh_ ? meshFacei : -1), // master face
                     false,                      // flux flip
                     patchi,                     // patch for face
@@ -1262,8 +1225,6 @@ void Foam::addPatchCellLayer::setRefinement
                     f,                          // modified face
                     addedCells[patchFacei][0],  // owner
                     -1,                         // neighbour
-                    -1,                         // masterPoint
-                    -1,                         // masterEdge
                     -1,                         // masterFace
                     true,                       // face flip
                     exposedPatchID[patchFacei], // patch for face
@@ -1628,7 +1589,6 @@ void Foam::addPatchCellLayer::setRefinement
 
                             patchFacei,
                             nbrFacei,
-                            meshEdgeI,          // (mesh) edge to inflate
                             i,                  // layer
                             numEdgeSideFaces,   // num layers
                             meshFaces,          // edgeFaces

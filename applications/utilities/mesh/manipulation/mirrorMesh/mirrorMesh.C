@@ -106,8 +106,6 @@ int main(int argc, char *argv[])
         mesh.pointMap(),        // pointMap,
         List<objectMap>(0),     // pointsFromPoints,
         labelList(0),           // faceMap,
-        List<objectMap>(0),     // facesFromPoints,
-        List<objectMap>(0),     // facesFromEdges,
         List<objectMap>(0),     // facesFromFaces,
         mesh.cellMap(),         // cellMap,
         List<objectMap>(0),     // cellsFromCells,
@@ -116,7 +114,6 @@ int main(int argc, char *argv[])
         labelList(0),           // reverseCellMap,
         labelHashSet(0),        // flipFaceFlux,
         labelListList(0),       // patchPointMap,
-        pointField(0),          // preMotionPoints,
         labelList(0),           // oldPatchStarts,
         labelList(0),           // oldPatchNMeshPoints,
         autoPtr<scalarField>()  // oldCellVolumesPtr

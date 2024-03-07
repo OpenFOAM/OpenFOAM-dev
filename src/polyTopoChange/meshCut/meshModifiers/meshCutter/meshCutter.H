@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Description
     master (anchor) point.
     Think of it as the cell with the anchor points at the bottom. Add a face
     at the bottom to split the cell and then sweep this face up to be through
-    the middle of the cell (inflation).
+    the middle of the cell.
 
 
     -# Start:
@@ -75,7 +75,7 @@ Description
     \endverbatim
 
 
-    -# Inflation:
+    -# Move face:
        splitface shifted up to middle of cell (or wherever cut was)
     \verbatim
     +-------+
@@ -90,13 +90,7 @@ Description
     anchor  anchor
     \endverbatim
 
-    Anyway this was the original idea. Inflation was meant to handle
-    conservative properties distribution without interpolation.
-    (just face sweeping through space). But problem was that
-    only if the introduced splitface was exactly the same shape as bottom face
-    (so same 2D topo or perfectly flat) the volume between them was 0.
-
-    This meshCutting still uses anchorPoints though:
+    This meshCutting uses anchorPoints:
     - the master cell is the one without the anchor points. The added cell
       (on top of the splitFace) is the with.
     - the splitFace is owned by the master cell (since it has the lower number)
@@ -165,9 +159,7 @@ class meshCutter
         //- Returns -1 or the cell in cellLabels that is cut.
         label findCutCell(const cellCuts&, const labelList&) const;
 
-        //- Returns first pointi in pointLabels that uses an internal
-        //  face. Used to find point to inflate cell/face from (has to be
-        //  connected to internal face)
+        //- Returns first pointi in pointLabels that uses an internal face
         label findInternalFacePoint(const labelList& pointLabels) const;
 
         //- Get new owner and neighbour of face. Checks anchor points to see if

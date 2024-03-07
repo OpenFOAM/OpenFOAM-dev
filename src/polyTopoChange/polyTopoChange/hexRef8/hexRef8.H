@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -480,8 +480,7 @@ public:
             //               from original
             //  -added internal faces: added from original cell face(if
             //   that was internal) or created out-of-nothing (so will not
-            //   get mapped!). Note: could make this inflate from point but
-            //   that will allocate interpolation.
+            //   get mapped!).
             //  -points added to split edge: added from edge start()
             //  -midpoints added: added from cellPoints[0].
             labelListList setRefinement

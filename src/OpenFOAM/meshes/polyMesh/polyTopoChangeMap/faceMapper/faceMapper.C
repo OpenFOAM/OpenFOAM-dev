@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,50 +84,6 @@ void Foam::faceMapper::calcAddressing() const
         weightsPtr_ = new scalarListList(mesh_.nFaces());
         scalarListList& w = *weightsPtr_;
 
-        const List<objectMap>& ffp = mpm_.facesFromPointsMap();
-
-        forAll(ffp, ffpI)
-        {
-            // Get addressing
-            const labelList& mo = ffp[ffpI].masterObjects();
-
-            label facei = ffp[ffpI].index();
-
-            if (addr[facei].size())
-            {
-                FatalErrorInFunction
-                    << "Master face " << facei
-                    << " mapped from point faces " << mo
-                    << " already destination of mapping." << abort(FatalError);
-            }
-
-            // Map from masters, uniform weights
-            addr[facei] = mo;
-            w[facei] = scalarList(mo.size(), 1.0/mo.size());
-        }
-
-        const List<objectMap>& ffe = mpm_.facesFromEdgesMap();
-
-        forAll(ffe, ffeI)
-        {
-            // Get addressing
-            const labelList& mo = ffe[ffeI].masterObjects();
-
-            label facei = ffe[ffeI].index();
-
-            if (addr[facei].size())
-            {
-                FatalErrorInFunction
-                    << "Master face " << facei
-                    << " mapped from edge faces " << mo
-                    << " already destination of mapping." << abort(FatalError);
-            }
-
-            // Map from masters, uniform weights
-            addr[facei] = mo;
-            w[facei] = scalarList(mo.size(), 1.0/mo.size());
-        }
-
         const List<objectMap>& fff = mpm_.facesFromFacesMap();
 
         forAll(fff, fffI)
@@ -177,12 +133,9 @@ void Foam::faceMapper::calcAddressing() const
         {
             if (addr[facei].empty())
             {
-                // Mapped from a dummy face
-                addr[facei] = labelList(1, label(0));
-                w[facei] = scalarList(1, 1.0);
-
-                insertedFaces[nInsertedFaces] = facei;
-                nInsertedFaces++;
+                FatalErrorInFunction
+                    << "No interpolative addressing provided for face " << facei
+                    << abort(FatalError);
             }
         }
 
@@ -214,12 +167,7 @@ Foam::faceMapper::faceMapper(const polyTopoChangeMap& mpm)
     insertedFaceLabelsPtr_(nullptr)
 {
     // Check for possibility of direct mapping
-    if
-    (
-        mpm_.facesFromPointsMap().empty()
-     && mpm_.facesFromEdgesMap().empty()
-     && mpm_.facesFromFacesMap().empty()
-    )
+    if (mpm_.facesFromFacesMap().empty())
     {
         direct_ = true;
     }
@@ -241,20 +189,6 @@ Foam::faceMapper::faceMapper(const polyTopoChangeMap& mpm)
         // Make a copy of the face map, add the entries for faces from points
         // and faces from edges and check for left-overs
         labelList fm(mesh_.nFaces(), -1);
-
-        const List<objectMap>& ffp = mpm_.facesFromPointsMap();
-
-        forAll(ffp, ffpI)
-        {
-            fm[ffp[ffpI].index()] = 0;
-        }
-
-        const List<objectMap>& ffe = mpm_.facesFromEdgesMap();
-
-        forAll(ffe, ffeI)
-        {
-            fm[ffe[ffeI].index()] = 0;
-        }
 
         const List<objectMap>& fff = mpm_.facesFromFacesMap();
 

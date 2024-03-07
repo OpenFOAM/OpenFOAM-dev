@@ -217,8 +217,6 @@ void Foam::mergePatchPairs::addFaces
                     f,          // Face to add
                     srcOwn,     // Owner cell
                     tgtOwn,     // Neighbour cell
-                    -1,         // Master point index
-                    -1,         // Master edge index
                     srcFacei,   // Master face index
                     false,      // Flip
                     -1,         // Patch index
@@ -240,8 +238,6 @@ void Foam::mergePatchPairs::addFaces
                     f.reverseFace(), // Face to add
                     tgtOwn,     // Owner cell
                     srcOwn,     // Neighbour cell
-                    -1,         // Master point index
-                    -1,         // Master edge index
                     tgtFacei,   // Master face index
                     false,      // Flip
                     -1,         // Patch index
@@ -276,8 +272,6 @@ void Foam::mergePatchPairs::addFaces
                 f,          // Face to add
                 srcOwn,     // Owner cell
                 -1,         // Neighbour cell
-                -1,         // Master point index
-                -1,         // Master edge index
                 srcFacei,   // Master face index
                 false,      // Flip
                 srcPatchi,  // Patch index
@@ -311,8 +305,6 @@ void Foam::mergePatchPairs::addFaces
                 f.reverseFace(), // Face to add
                 tgtOwn,     // Owner cell
                 -1,         // Neighbour cell
-                -1,         // Master point index
-                -1,         // Master edge index
                 tgtFacei,   // Master face index
                 false,      // Flip
                 tgtPatchi,  // Patch index
@@ -621,11 +613,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::mergePatchPairs::merge
     }
 
     // Change mesh and return map
-    return meshMod.changeMesh
-    (
-        mesh_,
-        false // Update mesh without moving points and calculating meshPhi
-    );
+    return meshMod.changeMesh(mesh_);
 }
 
 

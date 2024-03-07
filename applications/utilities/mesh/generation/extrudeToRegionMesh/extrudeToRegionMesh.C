@@ -1971,8 +1971,6 @@ int main(int argc, char *argv[])
                             f.reverseFace(),                // modified face
                             mesh.faceNeighbour()[meshFacei],// owner
                             -1,                             // neighbour
-                            -1,                             // master point
-                            -1,                             // master edge
                             meshFacei,                      // master face
                             true,                           // flip flux
                             interMeshTopPatch[zonei],       // patch for face
@@ -1988,8 +1986,6 @@ int main(int argc, char *argv[])
                         f,                              // face
                         mesh.faceOwner()[meshFacei],    // owner
                         -1,                             // neighbour
-                        -1,                             // master point
-                        -1,                             // master edge
                         meshFacei,                      // master face
                         false,                          // flip flux
                         interMeshTopPatch[zonei],       // patch for face
@@ -2000,17 +1996,11 @@ int main(int argc, char *argv[])
             }
         }
 
-        // Change the mesh. Change points directly (no inflation).
+        // Change the mesh. Change points directly (without keeping old points).
         addBafflesMap = meshMod.changeMesh(mesh, false);
 
         // Update fields
         mesh.topoChange(addBafflesMap);
-
-        // Move mesh (since morphing might not do this)
-        if (addBafflesMap().hasMotionPoints())
-        {
-            mesh.setPoints(addBafflesMap().preMotionPoints());
-        }
 
         mesh.setInstance(meshInstance);
 

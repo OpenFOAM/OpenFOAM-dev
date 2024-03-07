@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,28 +58,12 @@ bool notEqual(const scalar s1, const scalar s2, const scalar tol)
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
-    argList::validArgs.append("inflate (true|false)");
     #include "setRootCase.H"
     #include "createTime.H"
     timeSelector::select0(runTime, args);
     #include "createMesh.H"
 
-    const Switch inflate(args.args()[1]);
-
-    if (inflate)
-    {
-        Info<< "Deleting cells using inflation/deflation" << nl << endl;
-    }
-    else
-    {
-        Info<< "Deleting cells, introducing points at new position" << nl
-            << endl;
-    }
-
-
     Random rndGen(0);
-
-
 
     // Test mapping
     // ------------
@@ -197,27 +181,18 @@ int main(int argc, char *argv[])
             meshMod
         );
 
-        // Change mesh and inflate
+        // Change mesh
         Info<< "Actually changing mesh" << nl << endl;
-        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, inflate);
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
         Info<< "Mapping fields" << nl << endl;
         mesh.topoChange(map);
 
-        // Move mesh (since morphing does not do this)
-        if (map().hasMotionPoints())
-        {
-            Info<< "Moving mesh" << nl << endl;
-            mesh.movePoints(map().preMotionPoints());
-        }
-
         // Update numbering of cells/vertices.
         faceRemover.topoChange(map);
 
-
         Info<< "Writing fields" << nl << endl;
         runTime.write();
-
 
         // Check mesh volume conservation
         if (mesh.moving())

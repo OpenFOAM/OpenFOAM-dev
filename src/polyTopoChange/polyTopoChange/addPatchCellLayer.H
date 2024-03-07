@@ -229,7 +229,6 @@ class addPatchCellLayer
 
             const label ownFacei,
             const label nbrFacei,
-            const label meshEdgeI,
             const label layerI,
             const label numEdgeFaces,
             const labelList& meshFaces,

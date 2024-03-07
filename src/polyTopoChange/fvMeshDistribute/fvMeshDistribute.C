@@ -580,14 +580,15 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
     PtrList<FieldField<fvsPatchField, tensor>> tFields;
     saveBoundaryFields<tensor, surfaceMesh>(tFields);
 
-    // Change the mesh (no inflation). Note: parallel comms allowed.
+    // Change the mesh (without keeping old points).
+    // Note: parallel comms allowed.
     //
     // NOTE: there is one very particular problem with this ordering.
     // We first create the processor patches and use these to merge out
     // shared points (see mergeSharedPoints below). So temporarily points
     // and edges do not match!
 
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
 
     // Update fields
     mesh_.mapFields(map);
@@ -767,8 +768,9 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::mergeSharedPoints
         }
     }
 
-    // Change the mesh (no inflation). Note: parallel comms allowed.
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, true);
+    // Change the mesh
+    // Note: parallel comms allowed.
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
 
     // Update fields
     mesh_.mapFields(map);
@@ -1272,8 +1274,9 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::doRemoveCells
     initMapExposedFaces(sytFields);
     initMapExposedFaces(tFields);
 
-    // Change the mesh. No inflation. Note: no parallel comms allowed.
-    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false, false);
+    // Change the mesh.
+    // Note: no parallel comms allowed.
+    autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false);
 
     // Update fields
     mesh_.mapFields(map);
