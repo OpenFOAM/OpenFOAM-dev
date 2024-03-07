@@ -95,7 +95,7 @@ findFiles () {
 
 # Remove files from unrelated version subdirs in ~/.OpenFOAM directory
 pruneFiles () {
-    _files="$@"
+    _files="$*"
     _vers="$(find ~/.OpenFOAM/ \
              -maxdepth 1 -mindepth 1 \
              -type d -name "[[:digit:]]*" \
@@ -105,7 +105,7 @@ pruneFiles () {
     [ "$_vers" ] && \
         for _v in $_vers
         do
-            _files="$(echo $_files | xargs -n 1 | grep -v ".OpenFOAM/$_v")"
+            _files="$(echo "$_files" | xargs -n 1 | grep -v ".OpenFOAM/$_v")"
         done
 
     echo "$_files"
@@ -253,7 +253,7 @@ prefix="$1"
 files="$(findFiles "$searchDirs" "$prefix" "$ext")"
 
 # For ~/.OpenFOAM, prune out version subdirs except current version
-files="$(pruneFiles $files)"
+files="$(pruneFiles "$files")"
 
 [ -z "$files" ] && \
     error "no file $prefix found $(noFilesMessage "$ext")"
