@@ -65,7 +65,15 @@ findFilesInDirs () {
     _out=""
     for _d in $_dirs
     do
-        [ -d "$_d" ] && _out="$(find -L "$_d" -name "$_str" -type f | sort) $_out"
+        # Follow links; use not clear, but perhaps for local/site configuration
+        _link_opt="-L"
+
+        # Do not follow links in $FOAM_ETC/caseDicts to avoid duplication from
+        # the postProcessing -> functions link
+        [ "$_d" = "$FOAM_ETC/caseDicts" ] && _link_opt="-P"
+
+        [ -d "$_d" ] && \
+            _out="$(find $_link_opt "$_d" -name "$_str" -type f | sort) $_out"
     done
 
     # Remove whitespace and blank lines
