@@ -65,7 +65,15 @@ findFilesInDirs () {
     _out=""
     for _d in $_dirs
     do
-        [ -d "$_d" ] && _out="$(find -L "$_d" -name "$_str" -type f | sort) $_out"
+        # Follow links; use not clear, but perhaps for local/site configuration
+        _link_opt="-L"
+
+        # Do not follow links in $FOAM_ETC/caseDicts to avoid duplication from
+        # the postProcessing -> functions link
+        [ "$_d" = "$FOAM_ETC/caseDicts" ] && _link_opt="-P"
+
+        [ -d "$_d" ] && \
+            _out="$(find $_link_opt "$_d" -name "$_str" -type f | sort) $_out"
     done
 
     # Remove whitespace and blank lines
@@ -87,7 +95,7 @@ findFiles () {
 
 # Remove files from unrelated version subdirs in ~/.OpenFOAM directory
 pruneFiles () {
-    _files="$@"
+    _files="$*"
     _vers="$(find ~/.OpenFOAM/ \
              -maxdepth 1 -mindepth 1 \
              -type d -name "[[:digit:]]*" \
@@ -97,7 +105,7 @@ pruneFiles () {
     [ "$_vers" ] && \
         for _v in $_vers
         do
-            _files="$(echo $_files | xargs -n 1 | grep -v ".OpenFOAM/$_v")"
+            _files="$(echo "$_files" | xargs -n 1 | grep -v ".OpenFOAM/$_v")"
         done
 
     echo "$_files"
@@ -245,7 +253,7 @@ prefix="$1"
 files="$(findFiles "$searchDirs" "$prefix" "$ext")"
 
 # For ~/.OpenFOAM, prune out version subdirs except current version
-files="$(pruneFiles $files)"
+files="$(pruneFiles "$files")"
 
 [ -z "$files" ] && \
     error "no file $prefix found $(noFilesMessage "$ext")"
