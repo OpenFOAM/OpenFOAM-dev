@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,12 +25,14 @@ Class
     Foam::energyJumpFvPatchScalarField
 
 Description
-    This boundary condition provides an energy jump condition across a pair
-    of coupled patches.  It is not applied directly, but is employed on-the-fly
-    when converting temperature boundary conditions into energy.
+    This boundary condition provides an energy jump condition, using the \c
+    cyclic condition as a base. The jump is calculated from the corresponding
+    temperature jump. This condition is not applied directly by the user, but
+    is constructed automatically by the thermodynamic model when the
+    corresponding temperature boundary condition is a jump cyclic.
 
 See also
-    Foam::fixedJumpFvPatchField
+    Foam::jumpCyclicFvPatchField
 
 SourceFiles
     energyJumpFvPatchScalarField.C
@@ -40,7 +42,7 @@ SourceFiles
 #ifndef energyJumpFvPatchScalarField_H
 #define energyJumpFvPatchScalarField_H
 
-#include "fixedJumpFvPatchField.H"
+#include "jumpCyclicFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,15 +55,28 @@ namespace Foam
 
 class energyJumpFvPatchScalarField
 :
-    public fixedJumpFvPatchField<scalar>
+    public jumpCyclicFvPatchScalarField
 {
+    // Private Data
+
+        //- Jump in value from the other patch to this one
+        scalarField jump_;
+
 
 public:
 
     //- Runtime type information
     TypeName("energyJump");
 
+
     // Constructors
+
+        //- Construct from patch and internal field
+        energyJumpFvPatchScalarField
+        (
+            const fvPatch&,
+            const DimensionedField<scalar, volMesh>&
+        );
 
         //- Construct from patch, internal field and dictionary
         energyJumpFvPatchScalarField
@@ -108,6 +123,22 @@ public:
 
 
     // Member Functions
+
+        // Access
+
+            //- Return the "jump"
+            virtual tmp<scalarField> jump() const;
+
+
+        // Mapping functions
+
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchScalarField&, const fieldMapper&);
+
+            //- Reset the fvPatchField to the given fvPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const fvPatchScalarField&);
+
 
         // Evaluation functions
 

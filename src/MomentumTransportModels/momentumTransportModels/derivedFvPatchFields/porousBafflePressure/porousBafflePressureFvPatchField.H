@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,10 @@ Class
     Foam::porousBafflePressureFvPatchField
 
 Description
-    This boundary condition provides a jump condition, using the \c cyclic
-    condition as a base.
 
-    The porous baffle introduces a pressure jump defined by:
+    This boundary condition provides a porous baffle pressure jump condition,
+    using the \c cyclic condition as a base. The jump in pressure is defined
+    by:
 
         \f[
             \Delta p = -(D \mu U + 0.5 I \rho |U|^2 )L
@@ -49,13 +49,13 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        patchType    | underlying patch type should be \c cyclic| yes |
+        patchType    | underlying patch type (should be \c cyclic) | yes |
         phi          | flux field name         | no          | phi
         rho          | density field name      | no          | rho
         D            | Darcy coefficient       | yes         |
         I            | inertial coefficient    | yes         |
         length       | porous media length in the flow direction | yes |
-        relaxation   | Relaxation factor for pressure jump       | no  | 1
+        relaxation   | relaxation factor for pressure jump | no | 1
     \endtable
 
     Example of the boundary condition specification:
@@ -73,9 +73,6 @@ Usage
     }
     \endverbatim
 
-    Note:
-        The underlying \c patchType should be set to \c cyclic
-
 SourceFiles
     porousBafflePressureFvPatchField.C
 
@@ -84,7 +81,7 @@ SourceFiles
 #ifndef porousBafflePressureFvPatchField_H
 #define porousBafflePressureFvPatchField_H
 
-#include "fixedJumpFvPatchField.H"
+#include "fixedJumpFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -97,7 +94,7 @@ namespace Foam
 
 class porousBafflePressureFvPatchField
 :
-    public fixedJumpFvPatchField<scalar>
+    public fixedJumpFvPatchScalarField
 {
     // Private Data
 
@@ -108,16 +105,16 @@ class porousBafflePressureFvPatchField
         const word rhoName_;
 
         //- Darcy pressure loss coefficient
-        scalar D_;
+        const scalar D_;
 
         //- Inertia pressure lost coefficient
-        scalar I_;
+        const scalar I_;
 
         //- Porous media length
-        scalar length_;
+        const scalar length_;
 
         //- Relaxation for pressure jump
-        scalar relaxation_;
+        const scalar relaxation_;
 
         //- Previous iteration "jump" field for relaxation
         scalarField jump0_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,16 +26,14 @@ Class
 
 Description
     This boundary condition provides a jump condition, using the \c cyclic
-    condition as a base.
-
-    The jump is specified as a fixed value field, applied as an offset to the
-    'owner' patch.
+    condition as a base. The jump is specified as the difference between the
+    neighbour patch and the owner patch value (i.e., neighbour minus owner).
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        patchType    | underlying patch type should be \c cyclic| yes |
-        jump         | current jump value      | yes         |
+        patchType    | underlying patch type (should be \c cyclic) | yes |
+        jump         | jump value              | yes         |
     \endtable
 
     Example of the boundary condition specification:
@@ -47,11 +45,6 @@ Usage
         jump            uniform 10;
     }
     \endverbatim
-
-    The above example shows the use of a fixed jump of '10'.
-
-    Note:
-        The underlying \c patchType should be set to \c cyclic
 
 See also
     Foam::jumpCyclicFvPatchField
@@ -80,23 +73,20 @@ class fixedJumpFvPatchField
 :
     public jumpCyclicFvPatchField<Type>
 {
+    // Private data
 
-protected:
-
-    // Protected data
-
-        //- "jump" field
+        //- The "jump" field. Applied to the owner field when transforming
+        //  to the neighbour side. Negated when transforming the other way.
+        //  Only has a valid value on the owner patch.
         Field<Type> jump_;
 
 
+protected:
+
     // Protected functions
 
-        //- Construct from patch and internal field
-        fixedJumpFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&
-        );
+        //- Access the jump to modify it
+        Field<Type>& jumpRef();
 
 
 public:
@@ -111,7 +101,8 @@ public:
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const dictionary&
+            const dictionary&,
+            const bool jumpRequired=true
         );
 
         //- Construct by mapping given fixedJumpFvPatchField onto a
@@ -154,7 +145,7 @@ public:
 
         // Access
 
-            //- Return the "jump" across the patch
+            //- Return the "jump"
             virtual tmp<Field<Type>> jump() const;
 
 

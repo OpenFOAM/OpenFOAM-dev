@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,46 +25,44 @@ License
 
 #include "fixedJumpFvPatchField.H"
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+Foam::Field<Type>& Foam::fixedJumpFvPatchField<Type>::jumpRef()
+{
+    if (!this->cyclicPatch().owner())
+    {
+        FatalErrorInFunction
+            << "The jump field is not available on the neighbour patch"
+            << exit(FatalError);
+    }
+
+    return jump_;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::fixedJumpFvPatchField<Type>::fixedJumpFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
-)
-:
-    jumpCyclicFvPatchField<Type>(p, iF),
-    jump_(this->size(), Zero)
-{}
-
-
-template<class Type>
-Foam::fixedJumpFvPatchField<Type>::fixedJumpFvPatchField
-(
-    const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool jumpRequired
 )
 :
-    jumpCyclicFvPatchField<Type>(p, iF),
-    jump_(p.size(), Zero)
+    jumpCyclicFvPatchField<Type>(p, iF, dict),
+    jump_(p.size())
 {
-    if (this->cyclicPatch().owner())
+    if (jumpRequired)
     {
-        jump_ = Field<Type>("jump", dict, p.size());
-    }
+        if (this->cyclicPatch().owner())
+        {
+            jump_ = Field<Type>("jump", dict, p.size());
+        }
 
-    if (dict.found("value"))
-    {
-        fvPatchField<Type>::operator=
-        (
-            Field<Type>("value", dict, p.size())
-        );
-    }
-    else
-    {
-        this->evaluate(Pstream::commsTypes::blocking);
+        this->evaluateNoUpdateCoeffs();
     }
 }
 
@@ -102,14 +100,14 @@ Foam::tmp<Foam::Field<Type>> Foam::fixedJumpFvPatchField<Type>::jump() const
 {
     if (this->cyclicPatch().owner())
     {
-        return jump_;
+        return -jump_;
     }
     else
     {
-        return refCast<const fixedJumpFvPatchField<Type>>
-        (
-            this->nbrPatchField()
-        ).jump();
+        const fixedJumpFvPatchField<Type>& nbrField =
+            refCast<const fixedJumpFvPatchField<Type>>(this->nbrPatchField());
+
+        return nbrField.jump_;
     }
 }
 
@@ -152,8 +150,6 @@ void Foam::fixedJumpFvPatchField<Type>::write(Ostream& os) const
     {
         writeEntry(os, "jump", jump_);
     }
-
-    writeEntry(os, "value", *this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,15 @@ License
 
 #include "uniformJumpFvPatchField.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+Foam::scalar Foam::uniformJumpFvPatchField<Type>::t() const
+{
+    return this->db().time().userTimeValue();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -35,25 +44,17 @@ Foam::uniformJumpFvPatchField<Type>::uniformJumpFvPatchField
     const dictionary& dict
 )
 :
-    fixedJumpFvPatchField<Type>(p, iF),
+    fixedJumpFvPatchField<Type>(p, iF, dict, false),
     jumpTable_()
 {
     if (this->cyclicPatch().owner())
     {
         jumpTable_ = Function1<Type>::New("jumpTable", dict);
+
+        this->jumpRef() = Field<Type>(p.size(), jumpTable_->value(t()));
     }
 
-    if (dict.found("value"))
-    {
-        fvPatchField<Type>::operator=
-        (
-            Field<Type>("value", dict, p.size())
-        );
-    }
-    else
-    {
-        this->evaluate(Pstream::commsTypes::blocking);
-    }
+    this->evaluateNoUpdateCoeffs();
 }
 
 
@@ -95,7 +96,7 @@ void Foam::uniformJumpFvPatchField<Type>::updateCoeffs()
 
     if (this->cyclicPatch().owner())
     {
-        this->jump_ = jumpTable_->value(this->db().time().userTimeValue());
+        this->jumpRef() = jumpTable_->value(t());
     }
 
     fixedJumpFvPatchField<Type>::updateCoeffs();
@@ -105,7 +106,8 @@ void Foam::uniformJumpFvPatchField<Type>::updateCoeffs()
 template<class Type>
 void Foam::uniformJumpFvPatchField<Type>::write(Ostream& os) const
 {
-    fixedJumpFvPatchField<Type>::write(os);
+    fvPatchField<Type>::write(os);
+
     if (this->cyclicPatch().owner())
     {
         writeEntry(os, jumpTable_());
