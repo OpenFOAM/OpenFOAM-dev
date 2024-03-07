@@ -1,0 +1,74 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    "alpha.water.*"
+    {
+        nAlphaCorr      2;
+        nAlphaSubCycles 1;
+
+        MULESCorr       yes;
+        nLimiterIter    3;
+
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-8;
+        relTol          0;
+    }
+
+    "pcorr.*"
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-5;
+        relTol          0;
+    }
+
+    p_rgh
+    {
+        $pcorr;
+        tolerance       1e-7;
+        relTol          0.05;
+    }
+
+    p_rghFinal
+    {
+        $p_rgh;
+        relTol          0;
+    }
+}
+
+PIMPLE
+{
+    momentumPredictor   no;
+    nOuterCorrectors    1;
+    nCorrectors         3;
+    nNonOrthogonalCorrectors 0;
+    pRefPoint           (0 0.015 0);
+    pRefValue           0;
+}
+
+relaxationFactors
+{
+    equations
+    {
+        ".*"                1;
+    }
+}
+
+
+// ************************************************************************* //

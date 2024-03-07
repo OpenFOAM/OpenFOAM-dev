@@ -1,0 +1,128 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+nBaffles        6;
+baffleOverlap   0.4;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "blockMeshDict"
+
+innerBaffleOuterRadius #calc "$<scalar>{radius}/(2 - $<scalar>baffleOverlap)";
+outerBaffleInnerRadius #calc "$radius - $innerBaffleOuterRadius";
+
+actions
+(
+    // Create baffles along the length of the pipe, alternating the zone
+    // between "innerBaffles" and "outerBaffles"
+    #codeStream
+    {
+        code
+        #{
+            for (label i = 0; i < $<label>nBaffles; ++ i)
+            {
+                const scalar y =
+                    scalar(2*i + 1)/(2*$<label>nBaffles)*$<scalar>height;
+
+                os <<
+                    dictionary
+                    (
+                        "action", i<2 ? "new" : "add",
+                        "type", "faceZoneSet",
+                        "name", word(i%2 ? "inner" : "outer") + "Baffles",
+                        "source", "planeToFaceZone",
+                        "point", vector(0, y, 0),
+                        "normal", vector(0, 1, 0)
+                    );
+            }
+        #};
+    }
+
+    // Cut away the outer portion of the inner baffles
+    {
+        action  new;
+        type    faceSet;
+        name    innerBaffles;
+        source  zoneToFace;
+        zone    innerBaffles;
+    }
+    {
+        action  delete;
+        type    faceSet;
+        name    innerBaffles;
+        source  cylinderAnnulusToFace;
+        point1  (0 0 0);
+        point2  (0 $height 0);
+        innerRadius $innerBaffleOuterRadius;
+        outerRadius $radius;
+    }
+
+    // Cut away the inner portion of the outer baffles
+    {
+        action  new;
+        type    faceSet;
+        name    outerBaffles;
+        source  zoneToFace;
+        zone    outerBaffles;
+    }
+    {
+        action  delete;
+        type    faceSet;
+        name    outerBaffles;
+        source  cylinderToFace;
+        point1  (0 0 0);
+        point2  (0 $height 0);
+        radius  $outerBaffleInnerRadius;
+    }
+
+    // Combine inner and outer baffles into a single zone
+    {
+        action  new;
+        type    faceZoneSet;
+        name    baffles;
+        source  setAndNormalToFaceZone;
+        set     innerBaffles;
+        normal  (0 1 0);
+    }
+    {
+        action  add;
+        type    faceZoneSet;
+        name    baffles;
+        source  setAndNormalToFaceZone;
+        set     outerBaffles;
+        normal  (0 1 0);
+    }
+
+    // Clean up
+    {
+        action  remove;
+        type    faceSet;
+        name    innerBaffles;
+    }
+    {
+        action  remove;
+        type    faceSet;
+        name    outerBaffles;
+    }
+    {
+        action  remove;
+        type    faceSet;
+        name    baffles;
+    }
+);
+
+
+// ************************************************************************* //

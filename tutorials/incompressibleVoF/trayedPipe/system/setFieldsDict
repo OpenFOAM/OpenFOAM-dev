@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+alphaMean       0.25;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "blockMeshDict"
+
+defaultFieldValues
+(
+    volScalarFieldValue alpha.water 0
+);
+
+regions
+(
+    cylinderToCell
+    {
+        point1  (0 0 0);
+        point2  (0 $height 0);
+        radius  #calc "$<scalar>radius*sqrt($<scalar>alphaMean)";
+        fieldValues
+        (
+            volScalarFieldValue alpha.water 1
+        );
+    }
+);
+
+
+// ************************************************************************* //

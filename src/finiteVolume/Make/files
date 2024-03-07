@@ -257,6 +257,7 @@ $(derivedFvPatchFields)/PrghPressure/prghPressureFvPatchScalarFields.C
 $(derivedFvPatchFields)/prghTotalHydrostaticPressure/prghTotalHydrostaticPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/fixedValueInletOutlet/fixedValueInletOutletFvPatchFields.C
 $(derivedFvPatchFields)/transonicEntrainmentPressure/transonicEntrainmentPressureFvPatchScalarField.C
+$(derivedFvPatchFields)/prghCyclicPressure/prghCyclicPressureFvPatchScalarField.C
 
 fvsPatchFields = fields/fvsPatchFields
 $(fvsPatchFields)/fvsPatchField/fvsPatchFields.C

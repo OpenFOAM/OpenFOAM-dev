@@ -1,0 +1,89 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+height          0.045;
+radius          0.015;
+nCellsPerMetre  2666.67;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+halfThickness #calc "scalar(1)/$<scalar>nCellsPerMetre";
+
+nCellsHeight #calc "round($<scalar>height*$<scalar>nCellsPerMetre)";
+nCellsRadius #calc "round($<scalar>radius*$<scalar>nCellsPerMetre)";
+
+convertToMeters 1;
+
+vertices
+(
+    (0 0 0) (0 $height 0)
+    ($radius 0 #neg $halfThickness) ($radius $height #neg $halfThickness)
+    ($radius 0 $halfThickness) ($radius $height $halfThickness)
+);
+
+blocks
+(
+    hex (1 0 2 3 1 0 4 5) ($nCellsHeight $nCellsRadius 1) simpleGrading (1 1 1)
+);
+
+boundary
+(
+    walls
+    {
+        type wall;
+        faces
+        (
+            (2 3 5 4)
+        );
+    }
+    bottom
+    {
+        type cyclic;
+        faces
+        (
+            (0 0 2 4)
+        );
+        neighbourPatch top;
+    }
+    top
+    {
+        type cyclic;
+        faces
+        (
+            (1 1 3 5)
+        );
+        neighbourPatch bottom;
+    }
+    wedgeBack
+    {
+        type wedge;
+        faces
+        (
+            (0 1 3 2)
+        );
+    }
+    wedgeFront
+    {
+        type wedge;
+        faces
+        (
+            (0 1 5 4)
+        );
+    }
+);
+
+
+// ************************************************************************* //
