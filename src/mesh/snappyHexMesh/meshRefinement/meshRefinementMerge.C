@@ -97,9 +97,6 @@ License
 //        // Update fields
 //        mesh_.topoChange(map);
 //
-//        // Delete mesh volumes. No other way to do this?
-//        mesh_.clearOut();
-//
 //        // Reset the instance for if in overwrite mode
 //        mesh_.setInstance(name());
 //
@@ -186,9 +183,6 @@ License
 //
 //        // Update fields
 //        mesh_.topoChange(map);
-//
-//        // Delete mesh volumes. No other way to do this?
-//        mesh_.clearOut();
 //
 //        // Reset the instance for if in overwrite mode
 //        mesh_.setInstance(name());
@@ -322,9 +316,6 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
 
         // Update fields
         mesh_.topoChange(map);
-
-        // Delete mesh volumes.
-        mesh_.clearOut();
 
         // Reset the instance for if in overwrite mode
         mesh_.setInstance(name());
@@ -504,9 +495,6 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             // Update fields
             mesh_.topoChange(map);
 
-            // Delete mesh volumes.
-            mesh_.clearOut();
-
             // Reset the instance for if in overwrite mode
             mesh_.setInstance(name());
 
@@ -580,9 +568,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemovePoints
     // Update fields
     mesh_.topoChange(map);
 
-    // Delete mesh volumes.
-    mesh_.clearOut();
-
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());
 
@@ -643,9 +628,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRestorePoints
 
     // Update fields
     mesh_.topoChange(map);
-
-    // Delete mesh volumes.
-    mesh_.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());

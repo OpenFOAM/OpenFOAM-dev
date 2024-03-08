@@ -368,9 +368,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::createBaffles
     // Update fields
     mesh_.topoChange(map);
 
-    // Delete mesh volumes.
-    mesh_.clearOut();
-
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());
 
@@ -885,9 +882,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
 
     // Update fields
     mesh_.topoChange(map);
-
-    // Delete mesh volumes.
-    mesh_.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());
@@ -2667,9 +2661,6 @@ Foam::meshRefinement::dupNonManifoldPoints
     // Update fields
     mesh_.topoChange(map);
 
-    // Delete mesh volumes.
-    mesh_.clearOut();
-
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());
 
@@ -3280,9 +3271,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
 
     // Update fields
     mesh_.topoChange(map);
-
-    // Delete mesh volumes.
-    mesh_.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());

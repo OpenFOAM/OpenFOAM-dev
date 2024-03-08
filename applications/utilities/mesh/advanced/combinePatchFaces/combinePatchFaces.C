@@ -106,9 +106,6 @@ label mergePatchFaces
 
             // Update fields
             mesh.topoChange(map);
-
-            // Delete mesh volumes. No other way to do this?
-            mesh.clearOut();
         }
 
 
@@ -245,9 +242,6 @@ label mergePatchFaces
 
             // Update fields
             mesh.topoChange(map);
-
-            // Delete mesh volumes. No other way to do this?
-            mesh.clearOut();
         }
     }
     else
@@ -290,9 +284,6 @@ label mergeEdges(const scalar minCos, polyMesh& mesh)
 
         // Update fields
         mesh.topoChange(map);
-
-        // Delete mesh volumes. No other way to do this?
-        mesh.clearOut();
     }
     else
     {

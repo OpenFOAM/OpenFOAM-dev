@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -672,7 +672,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
         {
             const_cast<Time&>(mesh_.time())++;
             pointField oldPoints(mesh_.points());
-            mesh_.movePoints(newPoints);
+            mesh_.setPoints(newPoints);
             Pout<< "Writing newPoints mesh to time " << name()
                 << endl;
             write
@@ -681,7 +681,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
                 writeType(writeLevel() | WRITEMESH),
                 mesh_.time().path()/"newPoints"
             );
-            mesh_.movePoints(oldPoints);
+            mesh_.setPoints(oldPoints);
         }
     }
 
@@ -1151,7 +1151,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
             vector(great, great, great) // null value (note: cannot use vGreat)
         );
 
-        mesh_.movePoints(newPoints);
+        mesh_.setPoints(newPoints);
     }
 
 
@@ -1278,7 +1278,7 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCellsGeometric
 
 
     // Restore points.
-    mesh_.movePoints(oldPoints);
+    mesh_.setPoints(oldPoints);
 
 
     Info<< "markFacesOnProblemCellsGeometric : marked "

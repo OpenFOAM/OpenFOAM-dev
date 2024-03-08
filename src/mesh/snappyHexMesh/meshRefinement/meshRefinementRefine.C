@@ -2247,9 +2247,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::refine
     // Update fields
     mesh_.topoChange(map);
 
-    // Delete mesh volumes.
-    mesh_.clearOut();
-
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());
 

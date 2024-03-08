@@ -631,9 +631,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::doRemoveCells
     // Update fields
     mesh_.topoChange(map);
 
-    // Delete mesh volumes. No other way to do this?
-    mesh_.clearOut();
-
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());
     setInstance(mesh_.facesInstance());
@@ -761,9 +758,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
 
     // Update fields
     mesh_.topoChange(map);
-
-    // Delete mesh volumes. No other way to do this?
-    mesh_.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh_.setInstance(name());

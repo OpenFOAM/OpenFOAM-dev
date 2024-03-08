@@ -1043,6 +1043,7 @@ void Foam::snappyLayerDriver::determineSidePatches
         }
 
         mesh.clearOut();
+
         const_cast<polyBoundaryMesh&>(mesh.boundaryMesh()).topoChange();
     }
 }
@@ -3256,9 +3257,6 @@ void Foam::snappyLayerDriver::addLayers
                 Info<< "Writing shrunk mesh to time "
                     << meshRefiner_.name() << endl;
 
-                // See comment in snappySnapDriver why we should not remove
-                // meshPhi using mesh.clearOut().
-
                 meshRefiner_.write
                 (
                     meshRefinement::debugType(debug),
@@ -3482,7 +3480,7 @@ void Foam::snappyLayerDriver::addLayers
             }
 
             // Reset mesh points and start again
-            mesh.movePoints(oldPoints);
+            mesh.setPoints(oldPoints);
             pp().clearGeom();
 
             // Grow out region of non-extrusion
@@ -3508,14 +3506,8 @@ void Foam::snappyLayerDriver::addLayers
     // Apply the stored topo changes to the current mesh.
     autoPtr<polyTopoChangeMap> map = savedMeshMod.changeMesh(mesh);
 
-    // Hack to remove meshPhi/V0 - mapped incorrectly. TBD.
-    mesh.clearOut();
-
     // Update fields
     mesh.topoChange(map);
-
-    // Delete mesh volumes.
-    mesh.clearOut();
 
     // Reset the instance for if in overwrite mode
     mesh.setInstance(meshRefiner_.name());
@@ -3568,9 +3560,6 @@ void Foam::snappyLayerDriver::addLayers
         {
             const_cast<Time&>(mesh.time())++;
         }
-
-        // Hack to remove meshPhi/V0 - mapped incorrectly. TBD.
-        mesh.clearOut();
 
         // Balance. No restriction on face zones and baffles.
         autoPtr<polyDistributionMap> map = meshRefiner_.balance

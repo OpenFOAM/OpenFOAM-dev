@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -894,7 +894,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
     pointField newPoints(curPoints());
 
     // Move. No need to do 2D correction since curPoints already done that.
-    mesh_.movePoints(newPoints);
+    mesh_.setPoints(newPoints);
     movePoints();
 
 
