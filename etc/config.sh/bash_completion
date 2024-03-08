@@ -2619,33 +2619,6 @@ _rhoPorousSimpleFoam_ ()
 }
 complete -o filenames -o nospace -F _rhoPorousSimpleFoam_ rhoPorousSimpleFoam
 
-_rotateMesh_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -constant -doc -fileHandler -help -hostRoots -latestTime -libs -noFunctionObjects -noZero -parallel -roots -srcDoc -time"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -time)
-            opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
-        -hostRoots|-libs|-roots)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _rotateMesh_ rotateMesh
-
 _sammToFoam_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
