@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -333,8 +333,8 @@ public:
             //- Clear all storage
             virtual void clear();
 
-            //- Move points
-            virtual void movePoints(const pointField&);
+            //- Reset the points
+            virtual void setPoints(const pointField&);
 
             //- Scale points. A non-positive factor is ignored
             virtual void scalePoints(const scalar);

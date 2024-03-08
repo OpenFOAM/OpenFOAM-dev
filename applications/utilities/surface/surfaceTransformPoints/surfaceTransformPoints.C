@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
     meshedSurface surf1(surfFileName);
     pointField points(surf1.points());
     transforms.transformPosition(points, points);
-    surf1.movePoints(points);
+    surf1.setPoints(points);
     surf1.write(outFileName);
 
     Info<< "End\n" << endl;

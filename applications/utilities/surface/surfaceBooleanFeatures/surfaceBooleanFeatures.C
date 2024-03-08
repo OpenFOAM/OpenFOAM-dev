@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ bool intersectSurfaces
                 if (nIters != 0)
                 {
                     // Update geometric quantities
-                    surf.movePoints(points);
+                    surf.setPoints(points);
                     hasMoved = true;
                 }
             }
@@ -206,7 +206,7 @@ bool intersectSurfaces
                 if (nIters1 != 0)
                 {
                     // Update geometric quantities
-                    surf1.movePoints(points1);
+                    surf1.setPoints(points1);
                     hasMoved1 = true;
                 }
             }
@@ -249,7 +249,7 @@ bool intersectSurfaces
                 if (nIters2 != 0)
                 {
                     // Update geometric quantities
-                    surf2.movePoints(points2);
+                    surf2.setPoints(points2);
                     hasMoved2 = true;
                 }
             }

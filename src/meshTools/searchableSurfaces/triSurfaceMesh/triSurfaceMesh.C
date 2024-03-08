@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -518,11 +518,11 @@ bool Foam::triSurfaceMesh::overlaps(const boundBox& bb) const
 }
 
 
-void Foam::triSurfaceMesh::movePoints(const pointField& newPoints)
+void Foam::triSurfaceMesh::setPoints(const pointField& newPoints)
 {
     triSurfaceRegionSearch::clearOut();
     edgeTree_.clear();
-    triSurface::movePoints(newPoints);
+    triSurface::setPoints(newPoints);
 }
 
 

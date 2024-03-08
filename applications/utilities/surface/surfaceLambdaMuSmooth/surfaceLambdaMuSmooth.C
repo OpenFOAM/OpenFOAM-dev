@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
             UIndirectList<point>(newPoints, surf1.meshPoints()) =
                 newLocalPoints;
 
-            surf1.movePoints(newPoints);
+            surf1.setPoints(newPoints);
         }
 
         // Mu
@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
             UIndirectList<point>(newPoints, surf1.meshPoints()) =
                 newLocalPoints;
 
-            surf1.movePoints(newPoints);
+            surf1.setPoints(newPoints);
         }
     }
 

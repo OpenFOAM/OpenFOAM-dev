@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -220,7 +220,7 @@ public:
         void clearOut();
 
         //- Move points
-        virtual void movePoints(const pointField&);
+        virtual void setPoints(const pointField&);
 
         //- Demand driven construction of octree for boundary edges
         const indexedOctree<treeDataEdge>& edgeTree() const;
