@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,7 +212,7 @@ Foam::wordList Foam::basicThermo::heBoundaryTypes()
         {
             hbt[patchi] = mixedEnergyFvPatchScalarField::typeName;
         }
-        else if (isA<fixedJumpFvPatchScalarField>(tbf[patchi]))
+        else if (isA<jumpCyclicFvPatchScalarField>(tbf[patchi]))
         {
             hbt[patchi] = energyJumpFvPatchScalarField::typeName;
         }

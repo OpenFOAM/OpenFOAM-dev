@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,20 +37,30 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
     const dictionary& dict
 )
 :
-    fixedJumpFvPatchField<scalar>(p, iF),
-    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    D_(dict.lookup<scalar>("D")),
-    I_(dict.lookup<scalar>("I")),
-    length_(dict.lookup<scalar>("length")),
-    relaxation_(dict.lookupOrDefault<scalar>("relaxation", 1)),
-    jump0_(jump_)
-{
-    fvPatchField<scalar>::operator=
+    fixedJumpFvPatchScalarField(p, iF, dict, true),
+    phiName_
     (
-        Field<scalar>("value", dict, p.size())
-    );
-}
+        cyclicPatch().owner()
+      ? dict.lookupOrDefault<word>("phi", "phi")
+      : word::null
+    ),
+    rhoName_
+    (
+        cyclicPatch().owner()
+      ? dict.lookupOrDefault<word>("rho", "rho")
+      : word::null
+    ),
+    D_(cyclicPatch().owner() ? dict.lookup<scalar>("D") : NaN),
+    I_(cyclicPatch().owner() ? dict.lookup<scalar>("I") : NaN),
+    length_(cyclicPatch().owner() ? dict.lookup<scalar>("length") : NaN),
+    relaxation_
+    (
+        cyclicPatch().owner()
+      ? dict.lookupOrDefault<scalar>("relaxation", 1)
+      : NaN
+    ),
+    jump0_(cyclicPatch().owner() ? jump()() : scalarField(p.size()))
+{}
 
 
 Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
@@ -61,14 +71,14 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
     const fieldMapper& mapper
 )
 :
-    fixedJumpFvPatchField<scalar>(ptf, p, iF, mapper),
+    fixedJumpFvPatchScalarField(ptf, p, iF, mapper),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
     D_(ptf.D_),
     I_(ptf.I_),
     length_(ptf.length_),
     relaxation_(ptf.relaxation_),
-    jump0_(ptf.jump_)
+    jump0_(ptf.jump0_)
 {}
 
 
@@ -78,14 +88,14 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedJumpFvPatchField<scalar>(ptf, iF),
+    fixedJumpFvPatchScalarField(ptf, iF),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
     D_(ptf.D_),
     I_(ptf.I_),
     length_(ptf.length_),
     relaxation_(ptf.relaxation_),
-    jump0_(ptf.jump_)
+    jump0_(ptf.jump0_)
 {}
 
 
@@ -98,68 +108,78 @@ void Foam::porousBafflePressureFvPatchField::updateCoeffs()
         return;
     }
 
-    const surfaceScalarField& phi =
-            db().lookupObject<surfaceScalarField>(phiName_);
-
-    const fvsPatchField<scalar>& phip =
-        patch().patchField<surfaceScalarField, scalar>(phi);
-
-    scalarField Un(phip/patch().magSf());
-
-    if (phi.dimensions() == dimMassFlux)
+    if (cyclicPatch().owner())
     {
-        Un /= patch().lookupPatchField<volScalarField, scalar>(rhoName_);
+        const surfaceScalarField& phi =
+                db().lookupObject<surfaceScalarField>(phiName_);
+
+        const fvsPatchField<scalar>& phip =
+            patch().patchField<surfaceScalarField, scalar>(phi);
+
+        scalarField Un(phip/patch().magSf());
+
+        if (phi.dimensions() == dimMassFlux)
+        {
+            Un /= patch().lookupPatchField<volScalarField, scalar>(rhoName_);
+        }
+
+        const scalarField magUn(mag(Un));
+
+        const momentumTransportModel& turbModel =
+            db().lookupType<momentumTransportModel>(internalField().group());
+
+        jumpRef() =
+            -sign(Un)
+            *(
+                D_*turbModel.nu(patch().index())
+              + I_*0.5*magUn
+             )*magUn*length_;
+
+        if (internalField().dimensions() == dimPressure)
+        {
+            jumpRef() *=
+                patch().lookupPatchField<volScalarField, scalar>(rhoName_);
+        }
+
+        if (relaxation_ < 1)
+        {
+            jumpRef() += (1 - relaxation_)*(jump0_ - jumpRef());
+        }
+
+        jump0_ = jumpRef();
+
+        if (debug)
+        {
+            scalar avePressureJump = gAverage(jumpRef());
+            scalar aveVelocity = gAverage(mag(Un));
+
+            Info<< patch().boundaryMesh().mesh().name() << ':'
+                << patch().name() << ':'
+                << " Average pressure drop :" << avePressureJump
+                << " Average velocity :" << aveVelocity
+                << endl;
+        }
     }
 
-    const scalarField magUn(mag(Un));
-
-    const momentumTransportModel& turbModel =
-        db().lookupType<momentumTransportModel>(internalField().group());
-
-    jump_ =
-        -sign(Un)
-        *(
-            D_*turbModel.nu(patch().index())
-          + I_*0.5*magUn
-         )*magUn*length_;
-
-    if (internalField().dimensions() == dimPressure)
-    {
-        jump_ *= patch().lookupPatchField<volScalarField, scalar>(rhoName_);
-    }
-
-    if (relaxation_ < 1)
-    {
-        jump_ += (1 - relaxation_)*(jump0_ - jump_);
-    }
-
-    jump0_ = jump_;
-
-    if (debug)
-    {
-        scalar avePressureJump = gAverage(jump_);
-        scalar aveVelocity = gAverage(mag(Un));
-
-        Info<< patch().boundaryMesh().mesh().name() << ':'
-            << patch().name() << ':'
-            << " Average pressure drop :" << avePressureJump
-            << " Average velocity :" << aveVelocity
-            << endl;
-    }
-
-    fixedJumpFvPatchField<scalar>::updateCoeffs();
+    fixedJumpFvPatchScalarField::updateCoeffs();
 }
 
 
 void Foam::porousBafflePressureFvPatchField::write(Ostream& os) const
 {
-    fixedJumpFvPatchField<scalar>::write(os);
-    writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
-    writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    writeEntry(os, "D", D_);
-    writeEntry(os, "I", I_);
-    writeEntry(os, "length", length_);
-    writeEntryIfDifferent(os, "relaxation", scalar(1), relaxation_);
+    fixedJumpFvPatchScalarField::write(os);
+
+    if (cyclicPatch().owner())
+    {
+        writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
+        writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
+        writeEntry(os, "D", D_);
+        writeEntry(os, "I", I_);
+        writeEntry(os, "length", length_);
+        writeEntryIfDifferent(os, "relaxation", scalar(1), relaxation_);
+    }
+
+    writeEntry(os, "value", *this);
 }
 
 
@@ -173,5 +193,6 @@ namespace Foam
         porousBafflePressureFvPatchField
     );
 }
+
 
 // ************************************************************************* //

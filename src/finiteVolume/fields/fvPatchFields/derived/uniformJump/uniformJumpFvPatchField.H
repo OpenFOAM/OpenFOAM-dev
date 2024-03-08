@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,17 +26,18 @@ Class
 
 Description
     This boundary condition provides a jump condition, using the \c cyclic
-    condition as a base.  The jump is specified as a time-varying uniform
-    value across the patch.
+    condition as a base. The jump is specified as the difference between the
+    neighbour patch and the owner patch value (i.e., neighbour minus owner).
+    The jump value is uniform across the patches, and can vary in time.
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        patchType    | underlying patch type should be \c cyclic| yes |
+        patchType    | underlying patch type (should be \c cyclic) | yes |
         jumpTable    | jump value              | yes         |
     \endtable
 
-    Example of the boundary condition specification:
+    Example of the boundary condition specification with a constant jump:
     \verbatim
     <patchName>
     {
@@ -46,14 +47,25 @@ Usage
     }
     \endverbatim
 
-    The above example shows the use of a fixed jump of '10'.
-
-    Note:
-        The uniformValue entry is a Function1 type, able to describe time
-        varying functions.  The example above gives the usage for supplying a
-        constant value.
-
-    The underlying \c patchType should be set to \c cyclic
+    Example of the boundary condition specification with a time-varying jump:
+    \verbatim
+    <patchName>
+    {
+        type            uniformJump;
+        patchType       cyclic;
+        jumpTable
+        {
+            type            table;
+            values
+            (
+                (0 0)
+                (0.1 10)
+                (0.9 10)
+                (1 0)
+            );
+        }
+    }
+    \endverbatim
 
 See also
     Foam::fixedJumpFvPatchField
@@ -84,19 +96,25 @@ class uniformJumpFvPatchField
 :
     public fixedJumpFvPatchField<Type>
 {
-
 protected:
 
     // Protected data
 
-        //- "jump" table
+        //- The "jump" table
         autoPtr<Function1<Type>> jumpTable_;
+
+
+    // Private Member Functions
+
+        //- Return the current time
+        scalar t() const;
 
 
 public:
 
     //- Runtime type information
     TypeName("uniformJump");
+
 
     // Constructors
 

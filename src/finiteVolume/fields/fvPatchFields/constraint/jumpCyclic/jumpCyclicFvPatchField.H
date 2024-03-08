@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,8 @@ Class
     Foam::jumpCyclicFvPatchField
 
 Description
-    This boundary condition provides a base class for coupled-cyclic
-    conditions with a specified 'jump' (or offset) between the values
+    This boundary condition provides a base class for cyclic conditions with a
+    specified "jump" (or offset) between the sides
 
 See also
     Foam::cyclicFvPatchField
@@ -55,6 +55,19 @@ class jumpCyclicFvPatchField
 :
     public cyclicFvPatchField<Type>
 {
+    // Private Member Functions
+
+        //- Update result field based on interface functionality
+        template<class ... Cmpt>
+        void updateInterfaceMatrixCmpts
+        (
+            Field<Type>& result,
+            const Field<Type>& psi,
+            const scalarField& coeffs,
+            const Pstream::commsTypes comms,
+            const Cmpt ... cmpt
+        ) const;
+
 
 public:
 
@@ -109,7 +122,8 @@ public:
                 return cyclicFvPatchField<Type>::type();
             }
 
-            //- Return the "jump" across the patch as a "half" field
+            //- Return the "jump" in value applied to the opposite field when
+            //  transforming to this side
             virtual tmp<Field<Type>> jump() const = 0;
 
 
@@ -125,31 +139,32 @@ public:
             virtual void updateInterfaceMatrix
             (
                 scalarField& result,
-                const scalarField& psiInternal,
+                const scalarField& psi,
                 const scalarField& coeffs,
                 const direction cmpt,
-                const Pstream::commsTypes commsType
+                const Pstream::commsTypes comms
             ) const;
 
             //- Update result field based on interface functionality
             virtual void updateInterfaceMatrix
             (
-                Field<Type>&,
-                const Field<Type>&,
-                const scalarField&,
-                const Pstream::commsTypes commsType
+                Field<Type>& result,
+                const Field<Type>& psi,
+                const scalarField& coeffs,
+                const Pstream::commsTypes comms
             ) const;
 };
+
 
 //- Update result field based on interface functionality
 template<>
 void jumpCyclicFvPatchField<scalar>::updateInterfaceMatrix
 (
     scalarField& result,
-    const scalarField& psiInternal,
+    const scalarField& psi,
     const scalarField& coeffs,
     const direction cmpt,
-    const Pstream::commsTypes commsType
+    const Pstream::commsTypes comms
 ) const;
 
 

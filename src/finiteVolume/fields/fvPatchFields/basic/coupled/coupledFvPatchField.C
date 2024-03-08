@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,6 +130,17 @@ void Foam::coupledFvPatchField<Type>::initEvaluate(const Pstream::commsTypes)
 
 
 template<class Type>
+void Foam::coupledFvPatchField<Type>::evaluateNoUpdateCoeffs()
+{
+    Field<Type>::operator=
+    (
+        this->patch().weights()*this->patchInternalField()
+      + (1.0 - this->patch().weights())*this->patchNeighbourField()
+    );
+}
+
+
+template<class Type>
 void Foam::coupledFvPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     if (!this->updated())
@@ -137,11 +148,7 @@ void Foam::coupledFvPatchField<Type>::evaluate(const Pstream::commsTypes)
         this->updateCoeffs();
     }
 
-    Field<Type>::operator=
-    (
-        this->patch().weights()*this->patchInternalField()
-      + (1.0 - this->patch().weights())*this->patchNeighbourField()
-    );
+    evaluateNoUpdateCoeffs();
 
     fvPatchField<Type>::evaluate();
 }
