@@ -108,14 +108,14 @@ Foam::phaseTransferModels::reactionDriven::dmidtf() const
     {
         volScalarField& Y1 =
             const_cast<volScalarField&>(phase1.Y(species1_[i]));
-        result.set(species_[i], (- phase1*phase1.R(Y1) & Y1).ptr());
+        result.set(species1_[i], (- phase1*phase1.R(Y1) & Y1).ptr());
     }
 
     forAll(species2_, i)
     {
         volScalarField& Y2 =
             const_cast<volScalarField&>(phase2.Y(species2_[i]));
-        result.set(species_[i], (phase2*phase2.R(Y2) & Y2).ptr());
+        result.set(species2_[i], (phase2*phase2.R(Y2) & Y2).ptr());
     }
 
     return result;
