@@ -1257,23 +1257,6 @@ int main(int argc, char *argv[])
         );
     }
 
-    // Modify cells to be in zones as required
-    forAll(cellZoneIDs, cellZonei)
-    {
-        label cgi = cellZoneIDs[cellZonei];
-
-        for
-        (
-            label celli = cellGroupStartIndex[cgi];
-            celli <= cellGroupEndIndex[cgi];
-            celli++
-        )
-        {
-            meshMod.modifyCell(celli, cellZonei);
-        }
-    }
-
-
     bool doneWarning = false;
 
     // Add faceZone faces
@@ -1460,6 +1443,21 @@ int main(int argc, char *argv[])
     else
     {
         polyMeshUnMergeCyclics(mesh);
+    }
+
+    // Add the cell zones as required
+    forAll(cellZoneIDs, cellZonei)
+    {
+        const label cgi = cellZoneIDs[cellZonei];
+
+        mesh.cellZones()[cellZonei].insert
+        (
+            identityMap
+            (
+                cellGroupStartIndex[cgi],
+                cellGroupEndIndex[cgi] + 1 - cellGroupStartIndex[cgi]
+            )
+        );
     }
 
     mesh.setInstance(runTime.constant());

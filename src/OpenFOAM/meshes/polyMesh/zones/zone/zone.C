@@ -63,14 +63,14 @@ void Foam::zone::calcLookupMap() const
             << abort(FatalError);
     }
 
-    const labelList& addr = *this;
+    const labelList& indices = *this;
 
-    lookupMapPtr_ = new Map<label>(2*addr.size());
+    lookupMapPtr_ = new Map<label>(2*indices.size());
     Map<label>& lm = *lookupMapPtr_;
 
-    forAll(addr, i)
+    forAll(indices, i)
     {
-        lm.insert(addr[i], i);
+        lm.insert(indices[i], i);
     }
 
     if (debug)
@@ -85,10 +85,10 @@ void Foam::zone::calcLookupMap() const
 Foam::zone::zone
 (
     const word& name,
-    const labelUList& addr
+    const labelUList& indices
 )
 :
-    labelList(addr),
+    labelList(indices),
     name_(name),
     lookupMapPtr_(nullptr)
 {}
@@ -97,10 +97,10 @@ Foam::zone::zone
 Foam::zone::zone
 (
     const word& name,
-    labelList&& addr
+    labelList&& indices
 )
 :
-    labelList(move(addr)),
+    labelList(move(indices)),
     name_(name),
     lookupMapPtr_(nullptr)
 {}
@@ -122,10 +122,10 @@ Foam::zone::zone
 Foam::zone::zone
 (
     const zone& z,
-    const labelUList& addr
+    const labelUList& indices
 )
 :
-    labelList(addr),
+    labelList(indices),
     name_(z.name()),
     lookupMapPtr_(nullptr)
 {}
@@ -134,10 +134,10 @@ Foam::zone::zone
 Foam::zone::zone
 (
     const zone& z,
-    labelList&& addr
+    labelList&& indices
 )
 :
-    labelList(move(addr)),
+    labelList(move(indices)),
     name_(z.name()),
     lookupMapPtr_(nullptr)
 {}
@@ -178,16 +178,16 @@ void Foam::zone::clearAddressing()
 
 bool Foam::zone::checkDefinition(const label maxSize, const bool report) const
 {
-    const labelList& addr = *this;
+    const labelList& indices = *this;
 
     bool hasError = false;
 
     // To check for duplicate entries
     labelHashSet elems(size());
 
-    forAll(addr, i)
+    forAll(indices, i)
     {
-        if (addr[i] < 0 || addr[i] >= maxSize)
+        if (indices[i] < 0 || indices[i] >= maxSize)
         {
             hasError = true;
 
@@ -195,7 +195,7 @@ bool Foam::zone::checkDefinition(const label maxSize, const bool report) const
             {
                 SeriousErrorInFunction
                     << "Zone " << name_
-                    << " contains invalid index label " << addr[i] << nl
+                    << " contains invalid index label " << indices[i] << nl
                     << "Valid index labels are 0.."
                     << maxSize-1 << endl;
             }
@@ -205,18 +205,26 @@ bool Foam::zone::checkDefinition(const label maxSize, const bool report) const
                 break;
             }
         }
-        else if (!elems.insert(addr[i]))
+        else if (!elems.insert(indices[i]))
         {
             if (report)
             {
                 WarningInFunction
                     << "Zone " << name_
-                    << " contains duplicate index label " << addr[i] << endl;
+                    << " contains duplicate index label " << indices[i] << endl;
             }
         }
     }
 
     return hasError;
+}
+
+
+void Foam::zone::insert(const HashSet<label>& newIndices)
+{
+    HashSet<label> indices(*this);
+    indices.insert(newIndices);
+    labelList::operator=(indices.sortedToc());
 }
 
 
@@ -261,17 +269,17 @@ void Foam::zone::operator=(zone&& zn)
 }
 
 
-void Foam::zone::operator=(const labelUList& addr)
+void Foam::zone::operator=(const labelUList& indices)
 {
     clearAddressing();
-    labelList::operator=(addr);
+    labelList::operator=(indices);
 }
 
 
-void Foam::zone::operator=(labelList&& addr)
+void Foam::zone::operator=(labelList&& indices)
 {
     clearAddressing();
-    labelList::operator=(move(addr));
+    labelList::operator=(move(indices));
 }
 
 

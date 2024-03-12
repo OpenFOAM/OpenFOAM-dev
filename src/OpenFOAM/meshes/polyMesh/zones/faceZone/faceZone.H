@@ -117,7 +117,7 @@ public:
     // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
-        static const char * const labelsName;
+        static const char* const labelsName;
 
 
     //- Runtime type information

@@ -207,14 +207,4 @@ void Foam::pointZone::operator=(pointZone&& zn)
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const pointZone& zn)
-{
-    zn.write(os);
-    os.check("Ostream& operator<<(Ostream&, const pointZone&");
-    return os;
-}
-
-
 // ************************************************************************* //

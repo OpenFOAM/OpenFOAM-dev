@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -259,8 +259,15 @@ public:
             //- Insert a new hashedEntry
             inline bool insert(const Key&, const T& newElmt);
 
-            //- Assign a new hashedEntry, overwriting existing entries
+            //- Insert all the entries from the given HashTable
+            void insert(const HashTable<T, Key, Hash>&);
+
+            //- Set a new hashedEntry, overwriting existing entries
             inline bool set(const Key&, const T& newElmt);
+
+            //- Insert all the entries from the given HashTable,
+            //  overwriting existing entries
+            void set(const HashTable<T, Key, Hash>&);
 
             //- Erase a hashedEntry specified by given iterator
             //  This invalidates the iterator until the next operator++

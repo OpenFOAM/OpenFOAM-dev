@@ -2997,6 +2997,24 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
     }
 
 
+    // Put the cells into the correct zone
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    List<HashSet<label>> cellZoneNewCells(mesh_.cellZones().size());
+    forAll(cellToZone, celli)
+    {
+        const label zonei = cellToZone[celli];
+
+        if (zonei >= 0)
+        {
+            cellZoneNewCells[zonei].insert(celli);
+        }
+    }
+    forAll(cellZoneNewCells, zonei)
+    {
+        mesh_.cellZones()[zonei].insert(cellZoneNewCells[zonei]);
+    }
+
+
     // Topochange container
     polyTopoChange meshMod(mesh_);
 
@@ -3154,7 +3172,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
         }
     }
 
-
     // Put the faces into the correct zone
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3247,20 +3264,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
                 );
             }
             facei++;
-        }
-    }
-
-
-    // Put the cells into the correct zone
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    forAll(cellToZone, celli)
-    {
-        const label zonei = cellToZone[celli];
-
-        if (zonei >= 0)
-        {
-            meshMod.modifyCell(celli, zonei);
         }
     }
 

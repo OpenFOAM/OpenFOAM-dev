@@ -50,12 +50,6 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of friend functions and operators
-
-class pointZone;
-Ostream& operator<<(Ostream&, const pointZone&);
-
-
 /*---------------------------------------------------------------------------*\
                           Class pointZone Declaration
 \*---------------------------------------------------------------------------*/
@@ -78,7 +72,7 @@ public:
     // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
-        static const char * const labelsName;
+        static const char* const labelsName;
 
 
     //- Runtime type information
@@ -217,12 +211,6 @@ public:
 
         //- Move assignment to zone, clearing demand-driven data
         void operator=(pointZone&&);
-
-
-    // I-O
-
-        //- Ostream Operator
-        friend Ostream& operator<<(Ostream&, const pointZone&);
 };
 
 

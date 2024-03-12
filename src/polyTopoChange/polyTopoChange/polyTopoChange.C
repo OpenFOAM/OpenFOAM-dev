@@ -2491,16 +2491,6 @@ Foam::label Foam::polyTopoChange::addCell
 }
 
 
-void Foam::polyTopoChange::modifyCell
-(
-    const label celli,
-    const label zoneID
-)
-{
-    cellZone_[celli] = zoneID;
-}
-
-
 void Foam::polyTopoChange::removeCell(const label celli, const label mergeCelli)
 {
     if (celli < 0 || celli >= cellMap_.size())

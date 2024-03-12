@@ -500,7 +500,7 @@ int main(int argc, char *argv[])
     forAll(patchSources, addedI)
     {
         const dictionary& dict = patchSources[addedI];
-        addedPatchNames.insert(dict.lookup("name"));
+        addedPatchNames.insert(dict.lookup<word>("name"));
     }
 
 

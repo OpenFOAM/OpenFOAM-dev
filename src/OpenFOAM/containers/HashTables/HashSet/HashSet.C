@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,12 +67,12 @@ Foam::HashSet<Key, Hash>::HashSet
     for
     (
         typename HashTable<AnyType, Key, AnyHash>::const_iterator
-        cit = h.cbegin();
-        cit != h.cend();
-        ++cit
+        iter = h.cbegin();
+        iter != h.cend();
+        ++iter
     )
     {
-        this->insert(cit.key());
+        this->insert(iter.key());
     }
 }
 
@@ -101,6 +101,22 @@ Foam::label Foam::HashSet<Key, Hash>::insert(const UList<Key>& lst)
     forAll(lst, elemI)
     {
         if (this->insert(lst[elemI]))
+        {
+            ++count;
+        }
+    }
+
+    return count;
+}
+
+
+template<class Key, class Hash>
+Foam::label Foam::HashSet<Key, Hash>::insert(const HashSet<Key>& set)
+{
+    label count = 0;
+    for (const_iterator iter = set.cbegin(); iter != set.cend(); ++iter)
+    {
+        if (this->insert(iter.key()))
         {
             ++count;
         }

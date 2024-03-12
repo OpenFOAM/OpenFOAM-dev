@@ -533,9 +533,6 @@ public:
                 const label zoneID
             );
 
-            //- Modify zone of cell
-            void modifyCell(const label, const label zoneID);
-
             //- Remove/merge cell.
             void removeCell(const label, const label);
 

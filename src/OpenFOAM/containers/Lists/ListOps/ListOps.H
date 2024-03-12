@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,6 +168,9 @@ List<OutList> invertManyToMany(const label len, const UList<InList>& in)
 
 //- Create identity map (map[i] == i) of given length
 labelList identityMap(const label len);
+
+//- Create identity map (map[i] == start + i) of given length
+labelList identityMap(const label start, const label len);
 
 //- Count the number of occurrences of a value in a list
 template<class ListType>

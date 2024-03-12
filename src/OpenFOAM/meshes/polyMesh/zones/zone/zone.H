@@ -96,14 +96,14 @@ public:
         zone
         (
             const word& name,
-            const labelUList& addr
+            const labelUList& indices
         );
 
         //- Construct from components, moving contents
         zone
         (
             const word& name,
-            labelList&& addr
+            labelList&& indices
         );
 
         //- Construct from dictionary
@@ -119,7 +119,7 @@ public:
         zone
         (
             const zone&,
-            const labelUList& addr
+            const labelUList& indices
         );
 
         //- Construct given the original zone, resetting the
@@ -127,7 +127,7 @@ public:
         zone
         (
             const zone&,
-            labelList&& addr
+            labelList&& indices
         );
 
         //- Disallow default bitwise copy construction
@@ -167,6 +167,9 @@ public:
             const bool report = false
         ) const;
 
+        //- Insert given indices into zone
+        void insert(const HashSet<label>& newIndices);
+
         //- Correct patch after moving points
         virtual void movePoints(const pointField&)
         {}
@@ -195,10 +198,10 @@ public:
         //- Move assignment operator
         void operator=(zone&&);
 
-        //- Assignment operator to addressing
+        //- Assignment operator to indices
         void operator=(const labelUList&);
 
-        //- Move assignment of addressing
+        //- Move assignment of indices
         void operator=(labelList&&);
 
 

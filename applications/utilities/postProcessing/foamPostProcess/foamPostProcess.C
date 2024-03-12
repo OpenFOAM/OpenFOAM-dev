@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
         }
         if (args.optionFound("field"))
         {
-            requiredFields.insert(args.optionLookup("field")());
+            requiredFields.insert(word(args.optionLookup("field")()));
         }
     }
 

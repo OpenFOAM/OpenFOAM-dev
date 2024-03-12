@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,8 +106,6 @@ public:
 
     // Member Functions
 
-        // Edit
-
         //- Insert a new entry
         bool insert(const Key& key)
         {
@@ -117,6 +115,10 @@ public:
         //- Insert keys from a UList of Key
         //  Return the number of new elements inserted
         label insert(const UList<Key>&);
+
+        //- Insert keys from a HashSet of Key
+        //  Return the number of new elements inserted
+        label insert(const HashSet<Key>&);
 
         //- Same as insert (cannot overwrite nil content)
         bool set(const Key& key)

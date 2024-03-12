@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -302,6 +302,26 @@ bool Foam::HashTable<T, Key, Hash>::set
     }
 
     return true;
+}
+
+
+template<class T, class Key, class Hash>
+void Foam::HashTable<T, Key, Hash>::insert(const HashTable<T, Key, Hash>& ht)
+{
+    for (const_iterator iter = ht.cbegin(); iter != ht.cend(); ++iter)
+    {
+        insert(iter.key(), *iter);
+    }
+}
+
+
+template<class T, class Key, class Hash>
+void Foam::HashTable<T, Key, Hash>::set(const HashTable<T, Key, Hash>& ht)
+{
+    for (const_iterator iter = ht.cbegin(); iter != ht.cend(); ++iter)
+    {
+        set(iter.key(), *iter);
+    }
 }
 
 
