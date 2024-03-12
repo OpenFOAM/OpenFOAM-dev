@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,8 +114,14 @@ bool Foam::PilchErdman<CloudType>::update
             }
             else if (We > 45)
             {
-                // bag-and-stamen breakup  - eq (10)
-                taubBar = 14.1*pow(We - 12.0, 0.25);
+                // bag-and-stamen breakup - eq (10)
+                //
+                // *** Note that the exponent is erroneously negated in the
+                // original reference. This expression matches the second
+                // reference and results in a continuous expression for
+                // taubBar.
+                //
+                taubBar = 14.1*pow(We - 12.0, -0.25);
             }
             else if (We > 18)
             {

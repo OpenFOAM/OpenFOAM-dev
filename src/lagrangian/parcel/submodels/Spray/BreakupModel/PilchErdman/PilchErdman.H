@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,20 @@ Class
     Foam::PilchErdman
 
 Description
-    Particle secondary breakup model, based on the reference:
+    Particle secondary breakup model, based on the references:
 
-    @verbatim
-    Pilch, M. and Erdman, C.A.
-    "Use of breakup time data and velocity history data
-     to predict the maximum size of stable fragments for acceleration
-     induced breakup of a liquid drop."
-    Int. J. Multiphase Flows 13 (1987), 741-757
-    @endverbatim
+    \verbatim
+    Pilch, M., & Erdman, C. A. (1987).
+    Use of breakup time data and velocity history data to predict the maximum
+    size of stable fragments for acceleration-induced breakup of a liquid drop.
+    International journal of multiphase flow, 13(6), 741-757.
+    \endverbatim
+
+    \verbatim
+    Guildenbecher, D. R., López-Rivera, C., & Sojka, P. E. (2009).
+    Secondary atomization.
+    Experiments in Fluids, 46(3), 371-402.
+    \endverbatim
 
     The droplet fragment velocity is described by the equation:
 
@@ -64,6 +69,7 @@ Description
 
 namespace Foam
 {
+
 /*---------------------------------------------------------------------------*\
                          Class PilchErdman Declaration
 \*---------------------------------------------------------------------------*/
