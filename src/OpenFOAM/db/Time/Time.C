@@ -361,7 +361,8 @@ Foam::Time::Time
             *this,
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
-        )
+        ),
+        *this
     ),
 
     startTimeIndex_(0),
@@ -461,7 +462,8 @@ Foam::Time::Time
             *this,
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
-        )
+        ),
+        *this
     ),
 
     startTimeIndex_(0),
@@ -528,7 +530,8 @@ Foam::Time::Time
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         ),
-        dict
+        dict,
+        *this
     ),
 
     startTimeIndex_(0),
@@ -593,7 +596,8 @@ Foam::Time::Time
             *this,
             IOobject::NO_READ,
             IOobject::NO_WRITE
-        )
+        ),
+        *this
     ),
 
     startTimeIndex_(0),

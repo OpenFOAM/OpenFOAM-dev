@@ -283,6 +283,7 @@ db/functionObjects/timeControl/timeControlFunctionObject.C
 db/functionObjects/regionFunctionObject/regionFunctionObject.C
 
 Time = db/Time
+$(Time)/controlIOdictionary/controlIOdictionary.C
 $(Time)/TimePaths.C
 $(Time)/TimeState.C
 $(Time)/Time.C

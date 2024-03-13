@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ SourceFiles
 
 #include "TimePaths.H"
 #include "objectRegistry.H"
-#include "IOdictionary.H"
+#include "controlIOdictionary.H"
 #include "FIFOStack.H"
 #include "clock.H"
 #include "cpuTime.H"
@@ -80,8 +80,10 @@ class Time
         //- Is runtime modification of dictionaries allowed?
         Switch runTimeModifiable_;
 
+        friend class controlIOdictionary;
+
         //- The controlDict
-        IOdictionary controlDict_;
+        controlIOdictionary controlDict_;
 
 
 public:
@@ -305,9 +307,6 @@ public:
             {
                 return runTimeModifiable_;
             }
-
-            //- Read control dictionary, update controls and time
-            virtual bool read();
 
             //- Read the objects that have been modified
             void readModifiedObjects();

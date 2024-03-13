@@ -208,21 +208,6 @@ void Foam::Time::readDict()
 }
 
 
-bool Foam::Time::read()
-{
-    if (controlDict_.regIOobject::read())
-    {
-        readDict();
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
 void Foam::Time::readModifiedObjects()
 {
     if (runTimeModifiable_)
