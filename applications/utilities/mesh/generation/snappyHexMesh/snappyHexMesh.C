@@ -632,6 +632,7 @@ void writeMesh
 
 int main(int argc, char *argv[])
 {
+    Foam::argList::removeOption("noFunctionObjects");
     #include "addOverwriteOption.H"
     Foam::argList::addBoolOption
     (
