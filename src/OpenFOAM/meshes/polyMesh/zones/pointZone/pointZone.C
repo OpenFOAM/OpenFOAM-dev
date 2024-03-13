@@ -24,12 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pointZone.H"
-#include "addToRunTimeSelectionTable.H"
 #include "meshPointZones.H"
 #include "polyMesh.H"
-#include "primitiveMesh.H"
-#include "demandDrivenData.H"
+#include "polyTopoChangeMap.H"
 #include "syncTools.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -179,6 +178,31 @@ bool Foam::pointZone::checkParallelSync(const bool report) const
     }
 
     return error;
+}
+
+
+void Foam::pointZone::topoChange(const polyTopoChangeMap& map)
+{
+    clearAddressing();
+
+    labelList newAddressing(size());
+    label nPoints = 0;
+
+    const labelList& pointMap = map.reversePointMap();
+
+    forAll(*this, i)
+    {
+        const label pointi = operator[](i);
+
+        if (pointMap[pointi] >= 0)
+        {
+            newAddressing[nPoints] = pointMap[pointi];
+            nPoints++;
+        }
+    }
+
+    newAddressing.setSize(nPoints);
+    transfer(newAddressing);
 }
 
 

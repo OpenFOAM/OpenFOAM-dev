@@ -122,9 +122,6 @@ class polyTopoChange
             //  (used to map return value of addPoint to new mesh point)
             DynamicList<label> reversePointMap_;
 
-            //- Zone of point
-            Map<label> pointZone_;
-
             //- Retired points
             labelHashSet retiredPoints_;
 
@@ -442,9 +439,6 @@ public:
                 const label nCells
             );
 
-            //- Move all points. Incompatible with other topology changes.
-            void movePoints(const pointField& newPoints);
-
             //- Add point. Return new point label.
             //  Notes:
             //  - masterPointID can be < 0 (appended points)
@@ -453,7 +447,6 @@ public:
             (
                 const point&,
                 const label masterPointID,
-                const label zoneID,
                 const bool inCell
             );
 
@@ -464,34 +457,8 @@ public:
             (
                 const label,
                 const point&,
-                const label newZoneID,
                 const bool inCell
             );
-
-            // Explicitly provided 'old' point location
-
-                //- Add point with original position. Return new point label.
-                //  Notes:
-                //  - masterPointID can be < 0 (appended points)
-                //  - inCell = false: add retired point (to end of point list)
-                label addPoint
-                (
-                    const point& newPosition,
-                    const point& oldPosition,
-                    const label masterPointID,
-                    const label zoneID
-                );
-
-                //- Modify coordinate.
-                //  Notes:
-                //  - inCell = false: add retired point (to end of point list)
-                void modifyPoint
-                (
-                    const label pointi,
-                    const point& newPosition,
-                    const point& oldPosition,
-                    const label newZoneID
-                );
 
             //- Remove/merge point.
             void removePoint(const label, const label);

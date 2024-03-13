@@ -200,6 +200,9 @@ public:
             return false;
         }
 
+        //- Update zone using the given map
+        virtual void topoChange(const polyTopoChangeMap& map);
+
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
 

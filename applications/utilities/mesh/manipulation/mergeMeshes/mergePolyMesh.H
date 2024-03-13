@@ -66,6 +66,9 @@ class mergePolyMesh
         //- Point zone names
         DynamicList<word> pointZoneNames_;
 
+        //- Zones of the added points
+        List<labelHashSet> pointZonesAddedPoints_;
+
         //- Face zone names
         DynamicList<word> faceZoneNames_;
 

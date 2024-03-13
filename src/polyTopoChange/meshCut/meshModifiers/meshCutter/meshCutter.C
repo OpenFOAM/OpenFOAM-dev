@@ -581,7 +581,6 @@ void Foam::meshCutter::setRefinement
             (
                 newPt,              // point
                 masterPointi,       // master point
-                -1,                 // zone for point
                 true                // supports a cell
             );
 

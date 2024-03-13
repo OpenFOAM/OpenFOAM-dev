@@ -904,7 +904,6 @@ void Foam::combineFaces::setUnrefinement
                         (
                             savedPoints_[localI],   // point
                             -1,                     // master point
-                            -1,                     // zone for point
                             true                    // supports a cell
                         );
                         restoredPoints.insert

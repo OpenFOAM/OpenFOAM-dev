@@ -24,14 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "faceZone.H"
-#include "addToRunTimeSelectionTable.H"
 #include "meshFaceZones.H"
 #include "polyMesh.H"
-#include "primitiveMesh.H"
-#include "demandDrivenData.H"
 #include "polyTopoChangeMap.H"
-#include "polyMeshMap.H"
 #include "syncTools.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -382,38 +379,6 @@ void Foam::faceZone::resetAddressing
 }
 
 
-void Foam::faceZone::topoChange(const polyTopoChangeMap& map)
-{
-    clearAddressing();
-
-    /*
-    labelList newAddressing(size());
-    boolList newFlipMap(flipMap_.size());
-    label nFaces = 0;
-
-    const labelList& faceMap = map.reverseFaceMap();
-
-    forAll(*this, i)
-    {
-        const label facei = operator[](i);
-
-        if (faceMap[facei] >= 0)
-        {
-            newAddressing[nFaces] = faceMap[facei];
-            newFlipMap[nFaces] = flipMap_[i];       // Keep flip map.
-            nFaces++;
-        }
-    }
-
-    newAddressing.setSize(nFaces);
-    newFlipMap.setSize(nFaces);
-
-    transfer(newAddressing);
-    flipMap_.transfer(newFlipMap);
-    */
-}
-
-
 bool Foam::faceZone::checkDefinition(const bool report) const
 {
     return zone::checkDefinition(meshZones().mesh().faces().size(), report);
@@ -511,6 +476,38 @@ void Foam::faceZone::swap(faceZone& fz)
 {
     zone::swap(fz);
     flipMap_.swap(fz.flipMap_);
+}
+
+
+void Foam::faceZone::topoChange(const polyTopoChangeMap& map)
+{
+    clearAddressing();
+
+    /*
+    labelList newAddressing(size());
+    boolList newFlipMap(flipMap_.size());
+    label nFaces = 0;
+
+    const labelList& faceMap = map.reverseFaceMap();
+
+    forAll(*this, i)
+    {
+        const label facei = operator[](i);
+
+        if (faceMap[facei] >= 0)
+        {
+            newAddressing[nFaces] = faceMap[facei];
+            newFlipMap[nFaces] = flipMap_[i];       // Keep flip map.
+            nFaces++;
+        }
+    }
+
+    newAddressing.setSize(nFaces);
+    newFlipMap.setSize(nFaces);
+
+    transfer(newAddressing);
+    flipMap_.transfer(newFlipMap);
+    */
 }
 
 

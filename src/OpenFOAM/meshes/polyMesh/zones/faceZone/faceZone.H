@@ -283,7 +283,7 @@ public:
         //- Correct patch after moving points
         virtual void movePoints(const pointField&);
 
-        //- Update topology using the given map
+        //- Update zone using the given map
         virtual void topoChange(const polyTopoChangeMap&);
 
         //- Write

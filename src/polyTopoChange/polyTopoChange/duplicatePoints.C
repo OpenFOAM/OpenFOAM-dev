@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,9 +83,8 @@ void Foam::duplicatePoints::setRefinement
         {
             duplicates_[localI][i] = meshMod.addPoint
             (
-                mesh_.points()[pointi],  // point
+                mesh_.points()[pointi], // point
                 pointi,                 // master point
-                -1,                     // zone for point
                 true                    // supports a cell
             );
         }

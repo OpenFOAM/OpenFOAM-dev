@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1258,10 +1258,6 @@ bool Foam::edgeCollapser::setRefinement
     const labelList& faceOwner = mesh_.faceOwner();
     const labelList& faceNeighbour = mesh_.faceNeighbour();
     const labelListList& pointFaces = mesh_.pointFaces();
-    const meshPointZones& pointZones = mesh_.pointZones();
-
-
-
 
 //    // Dump point collapses
 //    label count = 0;
@@ -1547,7 +1543,6 @@ bool Foam::edgeCollapser::setRefinement
             (
                 pointi,
                 collapsePoint,
-                pointZones.whichZone(pointi),
                 false
             );
         }

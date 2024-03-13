@@ -422,6 +422,14 @@ int main(int argc, char *argv[])
     }
 
 
+    mesh.cellZones().clear();
+    mesh.pointZones().clear();
+
+    if (doNotPreserveFaceZones)
+    {
+        mesh.faceZones().clear();
+    }
+
     // Face(centre)s that need inclusion in the dual mesh
     labelList featureFaces;
     // Edge(centre)s  ,,
@@ -445,6 +453,8 @@ int main(int argc, char *argv[])
         singleCellFeaturePoints,
         multiCellFeaturePoints
     );
+
+    mesh.faceZones().clear();
 
     // If we want to split all polyMesh faces into one dualface per cell
     // we are passing through we also need a point

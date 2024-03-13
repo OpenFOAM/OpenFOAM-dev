@@ -168,14 +168,14 @@ public:
         ) const;
 
         //- Insert given indices into zone
-        void insert(const HashSet<label>& newIndices);
+        void insert(const labelHashSet& newIndices);
 
         //- Correct patch after moving points
         virtual void movePoints(const pointField&)
         {}
 
-        //- Update topology using the given map
-        virtual void topoChange(const polyTopoChangeMap& map);
+        //- Update zone using the given map
+        virtual void topoChange(const polyTopoChangeMap& map) = 0;
 
         //- Update from another mesh using the given map
         virtual void mapMesh(const polyMeshMap&);

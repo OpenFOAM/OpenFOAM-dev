@@ -238,7 +238,6 @@ void Foam::extrude2DMesh::setRefinement
             (
                 newPoint,
                 pointi + offset,
-                -1,             // zoneID
                 true            // inCell
             );
         }

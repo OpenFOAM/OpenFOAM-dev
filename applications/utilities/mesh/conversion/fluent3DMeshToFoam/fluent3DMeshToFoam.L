@@ -1243,7 +1243,7 @@ int main(int argc, char *argv[])
     // Add all points
     forAll(points, pointi)
     {
-        meshMod.addPoint(points[pointi], pointi, -1, true);
+        meshMod.addPoint(points[pointi], pointi, true);
     }
     points.setSize(0);
 

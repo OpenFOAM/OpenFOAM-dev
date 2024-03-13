@@ -522,7 +522,6 @@ void Foam::createShellMesh::setRefinement
         (
             patch_.localPoints()[pointi],   // point
             pointToPointMap.size(),         // masterPointID
-            -1,                             // zoneID
             true                            // inCell
         );
         pointToPointMap.append(pointi);
@@ -552,7 +551,6 @@ void Foam::createShellMesh::setRefinement
             (
                 pt,                     // point
                 pointToPointMap.size(), // masterPointID - used only addressing
-                -1,                     // zoneID
                 true                    // inCell
             );
             pointToPointMap.append(pointi);

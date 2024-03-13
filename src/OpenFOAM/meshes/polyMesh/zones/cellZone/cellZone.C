@@ -24,12 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellZone.H"
-#include "addToRunTimeSelectionTable.H"
 #include "meshCellZones.H"
 #include "polyMesh.H"
-#include "primitiveMesh.H"
-#include "IOstream.H"
-#include "demandDrivenData.H"
+#include "polyTopoChangeMap.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -127,6 +125,33 @@ const Foam::meshCellZones& Foam::cellZone::meshZones() const
 bool Foam::cellZone::checkDefinition(const bool report) const
 {
     return zone::checkDefinition(meshZones_.mesh().nCells(), report);
+}
+
+
+void Foam::cellZone::topoChange(const polyTopoChangeMap& map)
+{
+    clearAddressing();
+
+    /*
+    labelList newAddressing(size());
+    label nCells = 0;
+
+    const labelList& cellMap = map.reverseCellMap();
+
+    forAll(*this, i)
+    {
+        const label celli = operator[](i);
+
+        if (cellMap[celli] >= 0)
+        {
+            newAddressing[nCells] = cellMap[celli];
+            nCells++;
+        }
+    }
+
+    newAddressing.setSize(nCells);
+    transfer(newAddressing);
+    */
 }
 
 

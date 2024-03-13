@@ -220,17 +220,11 @@ bool Foam::zone::checkDefinition(const label maxSize, const bool report) const
 }
 
 
-void Foam::zone::insert(const HashSet<label>& newIndices)
+void Foam::zone::insert(const labelHashSet& newIndices)
 {
-    HashSet<label> indices(*this);
+    labelHashSet indices(*this);
     indices.insert(newIndices);
     labelList::operator=(indices.sortedToc());
-}
-
-
-void Foam::zone::topoChange(const polyTopoChangeMap& map)
-{
-    clearAddressing();
 }
 
 

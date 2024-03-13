@@ -172,6 +172,9 @@ class addPatchCellLayer
         //  last one is the new point on the surface.
         labelListList addedPoints_;
 
+        //- Zones of the added points
+        List<labelHashSet> pointZonesAddedPoints_;
+
         //- For all patchfaces: list of layer faces.
         //  - empty if no face extruded
         //  - first face is original boundary face
@@ -385,6 +388,10 @@ public:
                 const labelList& faceMap,   // new to old patch faces
                 const labelList& pointMap   // new to old patch points
             );
+
+            //- Update the mesh zones
+            //  adding the point and cell zones for the added layer
+            void updateZones(polyMesh& mesh);
 
 
     // Member Operators

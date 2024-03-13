@@ -231,7 +231,7 @@ Foam::label Foam::addPatchCellLayer::addSideFace
 
     // Zone info comes from any side patch face. Otherwise -1 since we
     // don't know what to put it in - inherit from the extruded faces?
-    label zoneI = -1;   // mesh_.faceZones().whichZone(meshFacei);
+    label zonei = -1;   // mesh_.faceZones().whichZone(meshFacei);
     bool flip = false;
 
     label addedFacei = -1;
@@ -262,11 +262,11 @@ Foam::label Foam::addPatchCellLayer::addSideFace
                 // Found the patch face. Use it to map from
                 masterFacei = facei;
 
-                zoneI = mesh_.faceZones().whichZone(facei);
-                if (zoneI != -1)
+                zonei = mesh_.faceZones().whichZone(facei);
+                if (zonei != -1)
                 {
-                    label index = mesh_.faceZones()[zoneI].whichFace(facei);
-                    flip = mesh_.faceZones()[zoneI].flipMap()[index];
+                    label index = mesh_.faceZones()[zonei].whichFace(facei);
+                    flip = mesh_.faceZones()[zonei].flipMap()[index];
                 }
                 break;
             }
@@ -309,7 +309,7 @@ Foam::label Foam::addPatchCellLayer::addSideFace
             masterFacei,                // master face
             false,                      // flux flip
             newPatchID,                 // patch for face
-            zoneI,                      // zone for face
+            zonei,                      // zone for face
             flip                        // face zone flip
         );
     }
@@ -370,7 +370,7 @@ Foam::label Foam::addPatchCellLayer::addSideFace
             -1,                         // master face
             false,                      // flux flip
             -1,                         // patch for face
-            zoneI,                      // zone for face
+            zonei,                      // zone for face
             flip                        // face zone flip
         );
 
@@ -420,6 +420,7 @@ Foam::addPatchCellLayer::addPatchCellLayer
     mesh_(mesh),
     addToMesh_(addToMesh),
     addedPoints_(0),
+    pointZonesAddedPoints_(mesh.pointZones().size()),
     layerFaces_(0)
 {}
 
@@ -999,15 +1000,24 @@ void Foam::addPatchCellLayer::setRefinement
         {
             if (addedPoints_[patchPointi].size())
             {
-                label meshPointi = meshPoints[patchPointi];
-                label zoneI = mesh_.pointZones().whichZone(meshPointi);
+                const label meshPointi = meshPoints[patchPointi];
+
                 copiedPatchPoints[patchPointi] = meshMod.addPoint
                 (
-                    mesh_.points()[meshPointi],         // point
-                    -1,         // master point
-                    zoneI,      // zone for point
-                    true        // supports a cell
+                    mesh_.points()[meshPointi], // point
+                    -1,                         // master point
+                    true                        // supports a cell
                 );
+
+                const label zonei = mesh_.pointZones().whichZone(meshPointi);
+
+                if (zonei != -1)
+                {
+                    pointZonesAddedPoints_[zonei].insert
+                    (
+                        copiedPatchPoints[patchPointi]
+                    );
+                }
             }
         }
     }
@@ -1018,27 +1028,30 @@ void Foam::addPatchCellLayer::setRefinement
     {
         if (addedPoints_[patchPointi].size())
         {
-            label meshPointi = meshPoints[patchPointi];
-
-            label zoneI = mesh_.pointZones().whichZone(meshPointi);
+            const label meshPointi = meshPoints[patchPointi];
 
             point pt = mesh_.points()[meshPointi];
-
             vector disp = firstLayerDisp[patchPointi];
+
+            const label zonei = mesh_.pointZones().whichZone(meshPointi);
 
             forAll(addedPoints_[patchPointi], i)
             {
                 pt += disp;
 
-                label addedVertI = meshMod.addPoint
+                const label addedVertI = meshMod.addPoint
                 (
-                    pt,         // point
+                    pt,                             // point
                     (addToMesh_ ? meshPointi : -1), // master point
-                    zoneI,      // zone for point
-                    true        // supports a cell
+                    true                            // supports a cell
                 );
 
                 addedPoints_[patchPointi][i] = addedVertI;
+
+                if (zonei != -1)
+                {
+                    pointZonesAddedPoints_[zonei].insert(addedVertI);
+                }
 
                 disp *= expansionRatio[patchPointi];
             }
@@ -1071,8 +1084,7 @@ void Foam::addPatchCellLayer::setRefinement
                 // for now add from cell so we can map easily.
                 addedCells[patchFacei][i] = meshMod.addCell
                 (
-                    (addToMesh_ ? mesh_.faceOwner()[meshFacei] : -1),
-                    // master
+                    (addToMesh_ ? mesh_.faceOwner()[meshFacei] : -1), // master
                     ownZoneI        // zone for cell
                 );
             }
@@ -1129,7 +1141,7 @@ void Foam::addPatchCellLayer::setRefinement
                 // Get new neighbour
                 label nei;
                 label patchi;
-                label zoneI = -1;
+                label zonei = -1;
                 bool flip = false;
 
 
@@ -1138,10 +1150,10 @@ void Foam::addPatchCellLayer::setRefinement
                     // Top layer so is patch face.
                     nei = -1;
                     patchi = patchID[patchFacei];
-                    zoneI = mesh_.faceZones().whichZone(meshFacei);
-                    if (zoneI != -1)
+                    zonei = mesh_.faceZones().whichZone(meshFacei);
+                    if (zonei != -1)
                     {
-                        const faceZone& fz = mesh_.faceZones()[zoneI];
+                        const faceZone& fz = mesh_.faceZones()[zonei];
                         flip = fz.flipMap()[fz.whichFace(meshFacei)];
                     }
                 }
@@ -1161,7 +1173,7 @@ void Foam::addPatchCellLayer::setRefinement
                     (addToMesh_ ? meshFacei : -1), // master face
                     false,                      // flux flip
                     patchi,                     // patch for face
-                    zoneI,                      // zone for face
+                    zonei,                      // zone for face
                     flip                        // face zone flip
                 );
             }
@@ -1190,7 +1202,7 @@ void Foam::addPatchCellLayer::setRefinement
                     addedCells[patchFacei][0],      // neighbour
                     false,                          // face flip
                     -1,                             // patch for face
-                    -1, // zoneI,                    // zone for face
+                    -1, // zonei,                    // zone for face
                     false                           // face flip in zone
                 );
             }
@@ -1205,11 +1217,11 @@ void Foam::addPatchCellLayer::setRefinement
             if (nFaceLayers[patchFacei] > 0)
             {
                 label meshFacei = pp.addressing()[patchFacei];
-                label zoneI = mesh_.faceZones().whichZone(meshFacei);
+                label zonei = mesh_.faceZones().whichZone(meshFacei);
                 bool zoneFlip = false;
-                if (zoneI != -1)
+                if (zonei != -1)
                 {
-                    const faceZone& fz = mesh_.faceZones()[zoneI];
+                    const faceZone& fz = mesh_.faceZones()[zonei];
                     zoneFlip = !fz.flipMap()[fz.whichFace(meshFacei)];
                 }
 
@@ -1228,7 +1240,7 @@ void Foam::addPatchCellLayer::setRefinement
                     -1,                         // masterFace
                     true,                       // face flip
                     exposedPatchID[patchFacei], // patch for face
-                    zoneI,                      // zone for face
+                    zonei,                      // zone for face
                     zoneFlip                    // face flip in zone
                 );
             }
@@ -1661,6 +1673,16 @@ void Foam::addPatchCellLayer::topoChange
             newAdded.setSize(newI);
         }
         layerFaces_.transfer(newLayerFaces);
+    }
+}
+
+
+void Foam::addPatchCellLayer::updateZones(polyMesh& mesh)
+{
+    // Add the pointZones to the merged mesh
+    forAll(pointZonesAddedPoints_, zonei)
+    {
+        mesh.pointZones()[zonei].insert(pointZonesAddedPoints_[zonei]);
     }
 }
 

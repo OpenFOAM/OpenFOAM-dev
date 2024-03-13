@@ -153,6 +153,8 @@ Foam::mergePolyMesh::mergePolyMesh(polyMesh& mesh)
         pointZoneNames_.append(curPointZoneNames[zoneI]);
     }
 
+    pointZonesAddedPoints_.setSize(pointZoneNames_.size());
+
     // Face zones
     wordList curFaceZoneNames = mesh_.faceZones().names();
 
@@ -201,26 +203,26 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
     forAll(pz, zoneI)
     {
         pointZoneIndices[zoneI] = zoneIndex(pointZoneNames_, pz[zoneI].name());
+        pointZonesAddedPoints_.setSize(pointZoneNames_.size());
     }
 
     forAll(p, pointi)
     {
+        renumberPoints[pointi] = meshMod_.addPoint
+        (
+            p[pointi],            // Point to add
+            -1,                   // Master point (straight addition)
+            pointi < m.nPoints()  // Is in cell?
+        );
+
         // Grab zone ID.  If a point is not in a zone, it will return -1
         zoneID = pz.whichZone(pointi);
 
         if (zoneID >= 0)
         {
-            // Translate zone ID into the new index
-            zoneID = pointZoneIndices[zoneID];
+            pointZonesAddedPoints_[pointZoneIndices[zoneID]]
+           .insert(renumberPoints[pointi]);
         }
-
-        renumberPoints[pointi] = meshMod_.addPoint
-        (
-            p[pointi],            // Point to add
-            -1,                   // Master point (straight addition)
-            zoneID,               // Zone for point
-            pointi < m.nPoints()  // Is in cell?
-        );
     }
 
     // Add cells
@@ -509,6 +511,12 @@ void Foam::mergePolyMesh::merge()
 
     // Clear topo change for the next operation
     meshMod_.clear();
+
+    // Add the new points to the pointZones in the merged mesh
+    forAll(pointZonesAddedPoints_, zonei)
+    {
+        mesh_.pointZones()[zonei].insert(pointZonesAddedPoints_[zonei]);
+    }
 }
 
 

@@ -129,7 +129,6 @@ void Foam::mergePatchPairs::addPoints
         (
             intersectionPoints[pi],
             -1,
-            -1,
             false
         );
 

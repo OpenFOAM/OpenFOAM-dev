@@ -3175,7 +3175,6 @@ Foam::labelListList Foam::hexRef8::setRefinement
         (
             mesh_.cellCentres()[celli],     // point
             anchorPointi,                   // master point
-            -1,                             // zone for point
             true                            // supports a cell
         );
 
@@ -3298,7 +3297,6 @@ Foam::labelListList Foam::hexRef8::setRefinement
                 (
                     edgeMids[edgeI],            // point
                     e[0],                       // master point
-                    -1,                         // zone for point
                     true                        // supports a cell
                 );
 
@@ -3484,7 +3482,6 @@ Foam::labelListList Foam::hexRef8::setRefinement
                         : bFaceMids[facei-mesh_.nInternalFaces()]
                     ),                          // point
                     f[0],                       // master point
-                    -1,                         // zone for point
                     true                        // supports a cell
                 );
 

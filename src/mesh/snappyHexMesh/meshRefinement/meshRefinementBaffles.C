@@ -2999,7 +2999,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
 
     // Put the cells into the correct zone
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    List<HashSet<label>> cellZoneNewCells(mesh_.cellZones().size());
+    List<labelHashSet> cellZoneNewCells(mesh_.cellZones().size());
     forAll(cellToZone, celli)
     {
         const label zonei = cellToZone[celli];

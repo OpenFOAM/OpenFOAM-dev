@@ -198,6 +198,9 @@ public:
         //  true if in error.
         virtual bool checkParallelSync(const bool report = false) const;
 
+        //- Update zone using the given map
+        virtual void topoChange(const polyTopoChangeMap& map);
+
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
 
