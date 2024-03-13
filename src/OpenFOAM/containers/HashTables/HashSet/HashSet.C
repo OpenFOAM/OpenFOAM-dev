@@ -111,7 +111,7 @@ Foam::label Foam::HashSet<Key, Hash>::insert(const UList<Key>& lst)
 
 
 template<class Key, class Hash>
-Foam::label Foam::HashSet<Key, Hash>::insert(const HashSet<Key>& set)
+Foam::label Foam::HashSet<Key, Hash>::insert(const HashSet<Key, Hash>& set)
 {
     label count = 0;
     for (const_iterator iter = set.cbegin(); iter != set.cend(); ++iter)

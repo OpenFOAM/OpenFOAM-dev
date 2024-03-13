@@ -118,7 +118,7 @@ public:
 
         //- Insert keys from a HashSet of Key
         //  Return the number of new elements inserted
-        label insert(const HashSet<Key>&);
+        label insert(const HashSet<Key, Hash>&);
 
         //- Same as insert (cannot overwrite nil content)
         bool set(const Key& key)
