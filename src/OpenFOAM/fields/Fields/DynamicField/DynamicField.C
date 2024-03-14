@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,12 +25,25 @@ License
 
 #include "DynamicField.H"
 
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField(Istream& is)
 :
     Field<T>(is),
+    capacity_(Field<T>::size())
+{}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
+(
+    const word& keyword,
+    const dictionary& dict,
+    const label size
+)
+:
+    Field<T>(keyword, dict, size),
     capacity_(Field<T>::size())
 {}
 

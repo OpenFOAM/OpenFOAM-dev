@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,6 +103,20 @@ inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
     Field<T>(lst),
     capacity_(lst.capacity_)
 {}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
+(
+    DynamicField<T, SizeInc, SizeMult, SizeDiv>& lst,
+    const bool reuse
+)
+:
+    Field<T>(lst, reuse),
+    capacity_(lst.capacity_)
+{
+    lst.capacity_ = 0;
+}
 
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>

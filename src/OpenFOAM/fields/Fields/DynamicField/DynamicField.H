@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,11 +130,21 @@ public:
         //- Copy constructor
         inline DynamicField(const DynamicField<T, SizeInc, SizeMult, SizeDiv>&);
 
+        //- Copy constructor or re-use as specified
+        inline DynamicField
+        (
+            DynamicField<T, SizeInc, SizeMult, SizeDiv>&,
+            const bool
+        );
+
         //- Move constructor
         inline DynamicField(DynamicField<T, SizeInc, SizeMult, SizeDiv>&&);
 
         //- Construct from Istream. Size set to size of list read.
         explicit DynamicField(Istream&);
+
+        //- Construct from a dictionary entry
+        DynamicField(const word& keyword, const dictionary&, const label size);
 
         //- Clone
         tmp<DynamicField<T, SizeInc, SizeMult, SizeDiv>> clone() const;
