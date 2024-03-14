@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -515,6 +515,9 @@ void Foam::domainDecomposition::reconstruct()
     completeMesh_.reset(masterMeshes.set(0, nullptr).ptr());
     completeMesh_->setInstance(procMeshes()[0].facesInstance());
     completeMesh_->setPointsInstance(procMeshes()[0].pointsInstance());
+
+    // Allocate a stitcher, but do not stitch
+    completeMesh_->postConstruct(false, fvMesh::stitchType::none);
 
     Info<< decrIndent;
 }

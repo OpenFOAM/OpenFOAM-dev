@@ -109,6 +109,8 @@ void Foam::domainDecomposition::readComplete()
             false
         )
     );
+
+    completeMesh_->postConstruct(false, fvMesh::stitchType::none);
 }
 
 
@@ -132,6 +134,8 @@ void Foam::domainDecomposition::readProcs()
                 false
             )
         );
+
+        procMeshes_[proci].postConstruct(false, fvMesh::stitchType::none);
     }
 }
 
@@ -516,12 +520,7 @@ bool Foam::domainDecomposition::readDecompose()
 
 void Foam::domainDecomposition::postReadDecompose()
 {
-    completeMesh_->postConstruct(false, fvMesh::stitchType::nonGeometric);
-
-    forAll(procMeshes_, proci)
-    {
-        procMeshes_[proci].postConstruct(false, fvMesh::stitchType::none);
-    }
+    completeMesh_->stitcher().connect(false, false, true);
 }
 
 
@@ -663,15 +662,9 @@ bool Foam::domainDecomposition::readReconstruct()
 
 void Foam::domainDecomposition::postReadReconstruct()
 {
-    completeMesh_->postConstruct(false, fvMesh::stitchType::none);
-
     forAll(procMeshes_, proci)
     {
-        procMeshes_[proci].postConstruct
-        (
-            false,
-            fvMesh::stitchType::nonGeometric
-        );
+        procMeshes_[proci].stitcher().connect(false, false, true);
     }
 }
 
@@ -776,14 +769,6 @@ void Foam::domainDecomposition::postReadUpdateDecompose
     const fvMesh::readUpdateState stat
 )
 {
-    if (stat >= fvMesh::TOPO_CHANGE)
-    {
-        forAll(procMeshes_, proci)
-        {
-            procMeshes_[proci].postConstruct(false, fvMesh::stitchType::none);
-        }
-    }
-
     if (completeMesh_->stitcher().stitches() && stat != fvMesh::UNCHANGED)
     {
         procFaceAddressingBf_.clear();
@@ -883,11 +868,6 @@ void Foam::domainDecomposition::postReadUpdateReconstruct
     const fvMesh::readUpdateState stat
 )
 {
-    if (stat >= fvMesh::TOPO_CHANGE)
-    {
-        completeMesh_->postConstruct(false, fvMesh::stitchType::none);
-    }
-
     if (completeMesh_->stitcher().stitches() && stat != fvMesh::UNCHANGED)
     {
         procFaceAddressingBf_.clear();
