@@ -442,8 +442,9 @@ void Foam::mergePatchPairs::modifyFaces
                     {
                         if
                         (
-                            modifiedFace[modifiedFace.size() - 1]
-                         != addedPoints[i]
+                           !modifiedFace.size()
+                         || modifiedFace[modifiedFace.size() - 1]
+                            != addedPoints[i]
                         )
                         {
                             modifiedFace.append(addedPoints[i]);
@@ -456,8 +457,9 @@ void Foam::mergePatchPairs::modifyFaces
                     {
                         if
                         (
-                            modifiedFace[modifiedFace.size() - 1]
-                         != addedPoints[i]
+                            !modifiedFace.size()
+                         || modifiedFace[modifiedFace.size() - 1]
+                            != addedPoints[i]
                         )
                         {
                             modifiedFace.append(addedPoints[i]);
