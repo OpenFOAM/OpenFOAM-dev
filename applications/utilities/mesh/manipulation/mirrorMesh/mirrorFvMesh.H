@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,13 +89,13 @@ public:
         }
 
         //- Mirrored to original cell
-        const labelList& cellMap() const
+        labelList& cellMap()
         {
             return cellMapPtr_();
         }
 
         //- Mirrored to original point
-        const labelList& pointMap() const
+        labelList& pointMap()
         {
             return pointMapPtr_();
         }

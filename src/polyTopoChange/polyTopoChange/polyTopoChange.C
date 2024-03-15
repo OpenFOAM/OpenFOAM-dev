@@ -1590,6 +1590,7 @@ void Foam::polyTopoChange::compactAndReorder
     List<objectMap>& cellsFromCells,
     List<Map<label>>& oldPatchMeshPointMaps,
     labelList& oldPatchNMeshPoints,
+    labelList& oldPatchSizes,
     labelList& oldPatchStarts,
     List<Map<label>>& oldMeshFaceZonesPointMaps
 )
@@ -1661,6 +1662,7 @@ void Foam::polyTopoChange::compactAndReorder
     // Grab patch mesh point maps
     oldPatchMeshPointMaps.setSize(boundary.size());
     oldPatchNMeshPoints.setSize(boundary.size());
+    oldPatchSizes.setSize(boundary.size());
     oldPatchStarts.setSize(boundary.size());
 
     forAll(boundary, patchi)
@@ -1668,6 +1670,7 @@ void Foam::polyTopoChange::compactAndReorder
         // Copy old face zone point maps
         oldPatchMeshPointMaps[patchi] = boundary[patchi].meshPointMap();
         oldPatchNMeshPoints[patchi] = boundary[patchi].meshPoints().size();
+        oldPatchSizes[patchi] = boundary[patchi].size();
         oldPatchStarts[patchi] = boundary[patchi].start();
     }
 
@@ -2223,18 +2226,23 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
 
     // new mesh points
     pointField newPoints;
+
     // number of internal points
     label nInternalPoints;
+
     // patch slicing
     labelList patchSizes;
     labelList patchStarts;
+
     // maps
     List<objectMap> pointsFromPoints;
     List<objectMap> facesFromFaces;
     List<objectMap> cellsFromCells;
+
     // old mesh info
     List<Map<label>> oldPatchMeshPointMaps;
     labelList oldPatchNMeshPoints;
+    labelList oldPatchSizes;
     labelList oldPatchStarts;
     List<Map<label>> oldMeshFaceZonesPointMaps;
 
@@ -2255,6 +2263,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
         cellsFromCells,
         oldPatchMeshPointMaps,
         oldPatchNMeshPoints,
+        oldPatchSizes,
         oldPatchStarts,
         oldMeshFaceZonesPointMaps
     );
@@ -2372,29 +2381,28 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::changeMesh
             nOldFaces,
             nOldCells,
 
-            pointMap_,
-            pointsFromPoints,
+            move(pointMap_),
+            move(pointsFromPoints),
 
-            faceMap_,
-            facesFromFaces,
+            move(faceMap_),
+            move(facesFromFaces),
 
-            cellMap_,
-            cellsFromCells,
+            move(cellMap_),
+            move(cellsFromCells),
 
-            reversePointMap_,
-            reverseFaceMap_,
-            reverseCellMap_,
+            move(reversePointMap_),
+            move(reverseFaceMap_),
+            move(reverseCellMap_),
 
-            flipFaceFluxSet,
+            move(flipFaceFluxSet),
 
-            patchPointMap,
+            move(patchPointMap),
 
-            oldPatchStarts,
-            oldPatchNMeshPoints,
+            move(oldPatchSizes),
+            move(oldPatchStarts),
+            move(oldPatchNMeshPoints),
 
-            oldCellVolumes,
-
-            true                // steal storage.
+            move(oldCellVolumes)
         )
     );
 
@@ -2442,6 +2450,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
     // old mesh info
     List<Map<label>> oldPatchMeshPointMaps;
     labelList oldPatchNMeshPoints;
+    labelList oldPatchSizes;
     labelList oldPatchStarts;
     List<Map<label>> oldMeshFaceZonesPointMaps;
 
@@ -2462,6 +2471,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
         cellsFromCells,
         oldPatchMeshPointMaps,
         oldPatchNMeshPoints,
+        oldPatchSizes,
         oldPatchStarts,
         oldMeshFaceZonesPointMaps
     );
@@ -2560,7 +2570,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
     // Zones
     // ~~~~~
 
-    // Start off from empty zones.
+    // Copy pointZone from old mesh
     const meshPointZones& oldPointZones = mesh.pointZones();
     List<pointZone*> pZonePtrs(oldPointZones.size());
     {
@@ -2570,6 +2580,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
         }
     }
 
+    // Start with empty faceZone
     const meshFaceZones& oldFaceZones = mesh.faceZones();
     List<faceZone*> fZonePtrs(oldFaceZones.size());
     {
@@ -2585,6 +2596,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
         }
     }
 
+    // Copy cellZone from old mesh
     const meshCellZones& oldCellZones = mesh.cellZones();
     List<cellZone*> cZonePtrs(oldCellZones.size());
     {
@@ -2635,27 +2647,28 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
             nOldFaces,
             nOldCells,
 
-            pointMap_,
-            pointsFromPoints,
+            move(pointMap_),
+            move(pointsFromPoints),
 
-            faceMap_,
-            facesFromFaces,
+            move(faceMap_),
+            move(facesFromFaces),
 
-            cellMap_,
-            cellsFromCells,
+            move(cellMap_),
+            move(cellsFromCells),
 
-            reversePointMap_,
-            reverseFaceMap_,
-            reverseCellMap_,
+            move(reversePointMap_),
+            move(reverseFaceMap_),
+            move(reverseCellMap_),
 
-            flipFaceFluxSet,
+            move(flipFaceFluxSet),
 
-            patchPointMap,
+            move(patchPointMap),
 
-            oldPatchStarts,
-            oldPatchNMeshPoints,
-            oldCellVolumes,
-            true                // steal storage.
+            move(oldPatchSizes),
+            move(oldPatchStarts),
+            move(oldPatchNMeshPoints),
+
+            move(oldCellVolumes)
         )
     );
 

@@ -43,137 +43,43 @@ Foam::polyTopoChangeMap::polyTopoChangeMap
     const label nOldPoints,
     const label nOldFaces,
     const label nOldCells,
-    const labelList& pointMap,
-    const List<objectMap>& pointsFromPoints,
-    const labelList& faceMap,
-    const List<objectMap>& facesFromFaces,
-    const labelList& cellMap,
-    const List<objectMap>& cellsFromCells,
-    const labelList& reversePointMap,
-    const labelList& reverseFaceMap,
-    const labelList& reverseCellMap,
-    const labelHashSet& flipFaceFlux,
-    const labelListList& patchPointMap,
-    const labelList& oldPatchStarts,
-    const labelList& oldPatchNMeshPoints,
-    const autoPtr<scalarField>& oldCellVolumesPtr
+    labelList&& pointMap,
+    List<objectMap>&& pointsFromPoints,
+    labelList&& faceMap,
+    List<objectMap>&& facesFromFaces,
+    labelList&& cellMap,
+    List<objectMap>&& cellsFromCells,
+    labelList&& reversePointMap,
+    labelList&& reverseFaceMap,
+    labelList&& reverseCellMap,
+    labelHashSet&& flipFaceFlux,
+    labelListList&& patchPointMap,
+    labelList&& oldPatchSizes,
+    labelList&& oldPatchStarts,
+    labelList&& oldPatchNMeshPoints,
+    autoPtr<scalarField>&& oldCellVolumesPtr
 )
 :
     mesh_(mesh),
     nOldPoints_(nOldPoints),
     nOldFaces_(nOldFaces),
     nOldCells_(nOldCells),
-    pointMap_(pointMap),
-    pointsFromPointsMap_(pointsFromPoints),
-    faceMap_(faceMap),
-    facesFromFacesMap_(facesFromFaces),
-    cellMap_(cellMap),
-    cellsFromCellsMap_(cellsFromCells),
-    reversePointMap_(reversePointMap),
-    reverseFaceMap_(reverseFaceMap),
-    reverseCellMap_(reverseCellMap),
-    flipFaceFlux_(flipFaceFlux),
-    patchPointMap_(patchPointMap),
-    oldPatchSizes_(oldPatchStarts.size()),
-    oldPatchStarts_(oldPatchStarts),
-    oldPatchNMeshPoints_(oldPatchNMeshPoints),
-    oldCellVolumesPtr_(oldCellVolumesPtr)
-{
-    if (oldPatchStarts_.size())
-    {
-        // Calculate old patch sizes
-        for (label patchi = 0; patchi < oldPatchStarts_.size() - 1; patchi++)
-        {
-            oldPatchSizes_[patchi] =
-                oldPatchStarts_[patchi + 1] - oldPatchStarts_[patchi];
-        }
-
-        // Set the last one by hand
-        const label lastPatchID = oldPatchStarts_.size() - 1;
-
-        oldPatchSizes_[lastPatchID] = nOldFaces_ - oldPatchStarts_[lastPatchID];
-
-        if (polyMesh::debug)
-        {
-            if (min(oldPatchSizes_) < 0)
-            {
-                FatalErrorInFunction
-                    << abort(FatalError);
-            }
-        }
-    }
-}
-
-
-Foam::polyTopoChangeMap::polyTopoChangeMap
-(
-    const polyMesh& mesh,
-    const label nOldPoints,
-    const label nOldFaces,
-    const label nOldCells,
-    labelList& pointMap,
-    List<objectMap>& pointsFromPoints,
-    labelList& faceMap,
-    List<objectMap>& facesFromFaces,
-    labelList& cellMap,
-    List<objectMap>& cellsFromCells,
-    labelList& reversePointMap,
-    labelList& reverseFaceMap,
-    labelList& reverseCellMap,
-    labelHashSet& flipFaceFlux,
-    labelListList& patchPointMap,
-    labelList& oldPatchStarts,
-    labelList& oldPatchNMeshPoints,
-    autoPtr<scalarField>& oldCellVolumesPtr,
-    const bool reuse
-)
-:
-    mesh_(mesh),
-    nOldPoints_(nOldPoints),
-    nOldFaces_(nOldFaces),
-    nOldCells_(nOldCells),
-    pointMap_(pointMap, reuse),
-    pointsFromPointsMap_(pointsFromPoints, reuse),
-    faceMap_(faceMap, reuse),
-    facesFromFacesMap_(facesFromFaces, reuse),
-    cellMap_(cellMap, reuse),
-    cellsFromCellsMap_(cellsFromCells, reuse),
-    reversePointMap_(reversePointMap, reuse),
-    reverseFaceMap_(reverseFaceMap, reuse),
-    reverseCellMap_(reverseCellMap, reuse),
-    flipFaceFlux_(flipFaceFlux),
-    patchPointMap_(patchPointMap, reuse),
-    oldPatchSizes_(oldPatchStarts.size()),
-    oldPatchStarts_(oldPatchStarts, reuse),
-    oldPatchNMeshPoints_(oldPatchNMeshPoints, reuse),
-    oldCellVolumesPtr_(oldCellVolumesPtr, reuse)
-{
-    if (oldPatchStarts_.size() > 0)
-    {
-        // Calculate old patch sizes
-        for (label patchi = 0; patchi < oldPatchStarts_.size() - 1; patchi++)
-        {
-            oldPatchSizes_[patchi] =
-                oldPatchStarts_[patchi + 1] - oldPatchStarts_[patchi];
-        }
-
-        // Set the last one by hand
-        const label lastPatchID = oldPatchStarts_.size() - 1;
-
-        oldPatchSizes_[lastPatchID] = nOldFaces_ - oldPatchStarts_[lastPatchID];
-
-        if (polyMesh::debug)
-        {
-            if (min(oldPatchSizes_) < 0)
-            {
-                FatalErrorInFunction
-                    << "Calculated negative old patch size."
-                    << "  Error in mapping data"
-                    << abort(FatalError);
-            }
-        }
-    }
-}
+    pointMap_(move(pointMap)),
+    pointsFromPointsMap_(move(pointsFromPoints)),
+    faceMap_(move(faceMap)),
+    facesFromFacesMap_(move(facesFromFaces)),
+    cellMap_(move(cellMap)),
+    cellsFromCellsMap_(move(cellsFromCells)),
+    reversePointMap_(move(reversePointMap)),
+    reverseFaceMap_(move(reverseFaceMap)),
+    reverseCellMap_(move(reverseCellMap)),
+    flipFaceFlux_(move(flipFaceFlux)),
+    patchPointMap_(move(patchPointMap)),
+    oldPatchSizes_(move(oldPatchSizes)),
+    oldPatchStarts_(move(oldPatchStarts)),
+    oldPatchNMeshPoints_(move(oldPatchNMeshPoints)),
+    oldCellVolumesPtr_(move(oldCellVolumesPtr))
+{}
 
 
 // ************************************************************************* //

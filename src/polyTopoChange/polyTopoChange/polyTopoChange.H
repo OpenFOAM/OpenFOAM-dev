@@ -364,6 +364,7 @@ class polyTopoChange
             List<objectMap>& cellsFromCells,
             List<Map<label>>& oldPatchMeshPointMaps,
             labelList& oldPatchNMeshPoints,
+            labelList& oldPatchSizes,
             labelList& oldPatchStarts,
             List<Map<label>>& oldMeshFaceZonesPointMaps
         );

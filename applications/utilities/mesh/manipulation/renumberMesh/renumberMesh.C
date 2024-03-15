@@ -391,8 +391,8 @@ labelList getRegionFaceOrder
 autoPtr<polyTopoChangeMap> reorderMesh
 (
     polyMesh& mesh,
-    const labelList& cellOrder,
-    const labelList& faceOrder
+    labelList& cellOrder,
+    labelList& faceOrder
 )
 {
     labelList reverseCellOrder(invert(cellOrder.size(), cellOrder));
@@ -506,24 +506,25 @@ autoPtr<polyTopoChangeMap> reorderMesh
     (
         new polyTopoChangeMap
         (
-            mesh,                       // const polyMesh& mesh,
-            mesh.nPoints(),             // nOldPoints,
-            mesh.nFaces(),              // nOldFaces,
-            mesh.nCells(),              // nOldCells,
-            identityMap(mesh.nPoints()),   // pointMap,
-            List<objectMap>(0),         // pointsFromPoints,
-            faceOrder,                  // faceMap,
-            List<objectMap>(0),         // facesFromFaces,
-            cellOrder,                  // cellMap,
-            List<objectMap>(0),         // cellsFromCells,
-            identityMap(mesh.nPoints()),   // reversePointMap,
-            reverseFaceOrder,           // reverseFaceMap,
-            reverseCellOrder,           // reverseCellMap,
-            flipFaceFlux,               // flipFaceFlux,
-            patchPointMap,              // patchPointMap,
-            patchStarts,                // oldPatchStarts,
-            oldPatchNMeshPoints,        // oldPatchNMeshPoints
-            autoPtr<scalarField>()      // oldCellVolumes
+            mesh,                           // const polyMesh& mesh,
+            mesh.nPoints(),                 // nOldPoints,
+            mesh.nFaces(),                  // nOldFaces,
+            mesh.nCells(),                  // nOldCells,
+            identityMap(mesh.nPoints()),    // pointMap,
+            List<objectMap>(0),             // pointsFromPoints,
+            move(faceOrder),                // faceMap,
+            List<objectMap>(0),             // facesFromFaces,
+            move(cellOrder),                // cellMap,
+            List<objectMap>(0),             // cellsFromCells,
+            identityMap(mesh.nPoints()),    // reversePointMap,
+            move(reverseFaceOrder),         // reverseFaceMap,
+            move(reverseCellOrder),         // reverseCellMap,
+            move(flipFaceFlux),             // flipFaceFlux,
+            move(patchPointMap),            // patchPointMap,
+            move(patchSizes),               // oldPatchSizes
+            move(patchStarts),              // oldPatchStarts,
+            move(oldPatchNMeshPoints),      // oldPatchNMeshPoints
+            move(autoPtr<scalarField>())    // oldCellVolumes
         )
     );
 }

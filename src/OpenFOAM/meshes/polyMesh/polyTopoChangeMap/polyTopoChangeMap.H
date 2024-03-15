@@ -98,7 +98,6 @@ Description
     - appended:
         - cellMap[celli] contains -1
 
-
 SourceFiles
     polyTopoChangeMap.C
 
@@ -187,7 +186,7 @@ class polyTopoChangeMap
         const labelListList patchPointMap_;
 
         //- List of the old patch sizes
-        labelList oldPatchSizes_;
+        const labelList oldPatchSizes_;
 
         //- List of the old patch start labels
         const labelList oldPatchStarts_;
@@ -206,51 +205,28 @@ public:
         //- Construct from mesh only, no topology change
         polyTopoChangeMap(const polyMesh& mesh);
 
-        //- Construct from components. Copy (except for oldCellVolumes).
+        //- Construct from components reusing storage
         polyTopoChangeMap
         (
             const polyMesh& mesh,
             const label nOldPoints,
             const label nOldFaces,
             const label nOldCells,
-            const labelList& pointMap,
-            const List<objectMap>& pointsFromPoints,
-            const labelList& faceMap,
-            const List<objectMap>& facesFromFaces,
-            const labelList& cellMap,
-            const List<objectMap>& cellsFromCells,
-            const labelList& reversePointMap,
-            const labelList& reverseFaceMap,
-            const labelList& reverseCellMap,
-            const labelHashSet& flipFaceFlux,
-            const labelListList& patchPointMap,
-            const labelList& oldPatchStarts,
-            const labelList& oldPatchNMeshPoints,
-            const autoPtr<scalarField>& oldCellVolumesPtr
-        );
-
-        //- Construct from components and optionally reuse storage
-        polyTopoChangeMap
-        (
-            const polyMesh& mesh,
-            const label nOldPoints,
-            const label nOldFaces,
-            const label nOldCells,
-            labelList& pointMap,
-            List<objectMap>& pointsFromPoints,
-            labelList& faceMap,
-            List<objectMap>& facesFromFaces,
-            labelList& cellMap,
-            List<objectMap>& cellsFromCells,
-            labelList& reversePointMap,
-            labelList& reverseFaceMap,
-            labelList& reverseCellMap,
-            labelHashSet& flipFaceFlux,
-            labelListList& patchPointMap,
-            labelList& oldPatchStarts,
-            labelList& oldPatchNMeshPoints,
-            autoPtr<scalarField>& oldCellVolumesPtr,
-            const bool reuse
+            labelList&& pointMap,
+            List<objectMap>&& pointsFromPoints,
+            labelList&& faceMap,
+            List<objectMap>&& facesFromFaces,
+            labelList&& cellMap,
+            List<objectMap>&& cellsFromCells,
+            labelList&& reversePointMap,
+            labelList&& reverseFaceMap,
+            labelList&& reverseCellMap,
+            labelHashSet&& flipFaceFlux,
+            labelListList&& patchPointMap,
+            labelList&& oldPatchSizes,
+            labelList&& oldPatchStarts,
+            labelList&& oldPatchNMeshPoints,
+            autoPtr<scalarField>&& oldCellVolumesPtr
         );
 
         //- Disallow default bitwise copy construction
