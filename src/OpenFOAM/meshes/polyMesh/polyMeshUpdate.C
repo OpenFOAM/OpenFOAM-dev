@@ -36,6 +36,14 @@ Description
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+void Foam::polyMesh::topoChangeZones(const polyTopoChangeMap& map)
+{
+    pointZones_.topoChange(map);
+    faceZones_.topoChange(map);
+    cellZones_.topoChange(map);
+}
+
+
 void Foam::polyMesh::topoChange(const polyTopoChangeMap& map)
 {
     if (debug)
@@ -49,9 +57,7 @@ void Foam::polyMesh::topoChange(const polyTopoChangeMap& map)
     boundary_.topoChange();
 
     // Update zones
-    pointZones_.topoChange(map);
-    faceZones_.topoChange(map);
-    cellZones_.topoChange(map);
+    topoChangeZones(map);
 
     // Remove the stored tet base points
     tetBasePtIsPtr_.clear();

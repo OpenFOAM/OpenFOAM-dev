@@ -175,6 +175,9 @@ class addPatchCellLayer
         //- Zones of the added points
         List<labelHashSet> pointZonesAddedPoints_;
 
+        //- Zones of the added cells
+        List<labelHashSet> cellZonesAddedCells_;
+
         //- For all patchfaces: list of layer faces.
         //  - empty if no face extruded
         //  - first face is original boundary face

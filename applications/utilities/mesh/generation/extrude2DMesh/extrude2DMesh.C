@@ -252,6 +252,8 @@ int main(int argc, char *argv[])
     // Create a mesh from topo changes.
     autoPtr<polyTopoChangeMap> map = meshMod().changeMesh(mesh());
 
+    extruder.updateZones();
+
     mesh().topoChange(map);
 
     {

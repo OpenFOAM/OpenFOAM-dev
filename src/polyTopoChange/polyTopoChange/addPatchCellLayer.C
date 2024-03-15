@@ -421,6 +421,7 @@ Foam::addPatchCellLayer::addPatchCellLayer
     addToMesh_(addToMesh),
     addedPoints_(0),
     pointZonesAddedPoints_(mesh.pointZones().size()),
+    cellZonesAddedCells_(mesh.cellZones().size()),
     layerFaces_(0)
 {}
 
@@ -1009,14 +1010,15 @@ void Foam::addPatchCellLayer::setRefinement
                     true                        // supports a cell
                 );
 
-                const label zonei = mesh_.pointZones().whichZone(meshPointi);
-
-                if (zonei != -1)
+                forAll(mesh_.pointZones(), zonei)
                 {
-                    pointZonesAddedPoints_[zonei].insert
-                    (
-                        copiedPatchPoints[patchPointi]
-                    );
+                    if (mesh_.pointZones()[zonei].localIndex(meshPointi) != -1)
+                    {
+                        pointZonesAddedPoints_[zonei].insert
+                        (
+                            copiedPatchPoints[patchPointi]
+                        );
+                    }
                 }
             }
         }
@@ -1033,7 +1035,7 @@ void Foam::addPatchCellLayer::setRefinement
             point pt = mesh_.points()[meshPointi];
             vector disp = firstLayerDisp[patchPointi];
 
-            const label zonei = mesh_.pointZones().whichZone(meshPointi);
+            const labelList zones(mesh_.pointZones().whichZones(meshPointi));
 
             forAll(addedPoints_[patchPointi], i)
             {
@@ -1048,7 +1050,7 @@ void Foam::addPatchCellLayer::setRefinement
 
                 addedPoints_[patchPointi][i] = addedVertI;
 
-                if (zonei != -1)
+                forAll(zones, zonei)
                 {
                     pointZonesAddedPoints_[zonei].insert(addedVertI);
                 }
@@ -1071,11 +1073,11 @@ void Foam::addPatchCellLayer::setRefinement
         {
             addedCells[patchFacei].setSize(nFaceLayers[patchFacei]);
 
-            label meshFacei = pp.addressing()[patchFacei];
+            const label meshFacei = pp.addressing()[patchFacei];
 
-            label ownZoneI = mesh_.cellZones().whichZone
+            const labelList ownZones
             (
-                mesh_.faceOwner()[meshFacei]
+                mesh_.cellZones().whichZones( mesh_.faceOwner()[meshFacei])
             );
 
             for (label i = 0; i < nFaceLayers[patchFacei]; i++)
@@ -1084,13 +1086,19 @@ void Foam::addPatchCellLayer::setRefinement
                 // for now add from cell so we can map easily.
                 addedCells[patchFacei][i] = meshMod.addCell
                 (
-                    (addToMesh_ ? mesh_.faceOwner()[meshFacei] : -1), // master
-                    ownZoneI        // zone for cell
+                    (addToMesh_ ? mesh_.faceOwner()[meshFacei] : -1)
                 );
+
+                forAll(ownZones, zonei)
+                {
+                    cellZonesAddedCells_[zonei].insert
+                    (
+                        addedCells[patchFacei][i]
+                    );
+                }
             }
         }
     }
-
 
 
     // Create faces on top of the original patch faces.
@@ -1683,6 +1691,12 @@ void Foam::addPatchCellLayer::updateZones(polyMesh& mesh)
     forAll(pointZonesAddedPoints_, zonei)
     {
         mesh.pointZones()[zonei].insert(pointZonesAddedPoints_[zonei]);
+    }
+
+    // Add the cellZones to the merged mesh
+    forAll(cellZonesAddedCells_, zonei)
+    {
+        mesh.cellZones()[zonei].insert(cellZonesAddedCells_[zonei]);
     }
 }
 

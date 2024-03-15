@@ -3014,10 +3014,8 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
         mesh_.cellZones()[zonei].insert(cellZoneNewCells[zonei]);
     }
 
-
     // Topochange container
     polyTopoChange meshMod(mesh_);
-
 
 
     // Get coupled neighbour cellZone. Set to -1 on non-coupled patches.
@@ -3038,10 +3036,8 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
     }
 
 
-
     // Get per face whether is it master (of a coupled set of faces)
     const PackedBoolList isMasterFace(syncTools::getMasterFaces(mesh_));
-
 
 
     // faceZones

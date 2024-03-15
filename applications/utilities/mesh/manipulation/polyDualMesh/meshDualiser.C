@@ -933,8 +933,7 @@ void Foam::meshDualiser::setRefinement
         pointToDualCells_[pointi].setSize(1);
         pointToDualCells_[pointi][0] = meshMod.addCell
         (
-            -1,     // masterCellID,
-            -1      // zoneID
+            -1      // masterCellID,
         );
         if (dualCcStr.valid())
         {
@@ -973,8 +972,7 @@ void Foam::meshDualiser::setRefinement
         {
             pointToDualCells_[pointi][pCelli] = meshMod.addCell
             (
-                -1,                                         // masterCellID
-                -1
+                -1                                          // masterCellID
             );
             if (dualCcStr.valid())
             {
@@ -994,8 +992,7 @@ void Foam::meshDualiser::setRefinement
             pointToDualCells_[pointi].setSize(1);
             pointToDualCells_[pointi][0] = meshMod.addCell
             (
-                -1,     // masterCellID,
-                -1      // zoneID
+                -1      // masterCellID,
             );
 
             if (dualCcStr.valid())

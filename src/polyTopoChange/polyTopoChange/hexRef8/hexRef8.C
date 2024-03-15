@@ -3632,16 +3632,10 @@ Foam::labelListList Foam::hexRef8::setRefinement
             // Update cell level
             newCellLevel[celli] = cellLevel_[celli]+1;
 
-
             for (label i = 1; i < 8; i++)
             {
-                cAdded[i] = meshMod.addCell
-                (
-                    celli,                              // master cell
-                    mesh_.cellZones().whichZone(celli)  // zone for cell
-                );
-
-                newCellLevel(cAdded[i]) = cellLevel_[celli]+1;
+                cAdded[i] = meshMod.addCell(celli);
+                newCellLevel(cAdded[i]) = cellLevel_[celli] + 1;
             }
         }
     }

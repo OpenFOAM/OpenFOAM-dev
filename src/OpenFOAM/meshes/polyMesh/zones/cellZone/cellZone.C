@@ -132,26 +132,18 @@ void Foam::cellZone::topoChange(const polyTopoChangeMap& map)
 {
     clearAddressing();
 
-    /*
-    labelList newAddressing(size());
-    label nCells = 0;
+    labelHashSet newIndices;
+    const labelList& cellMap = map.cellMap();
 
-    const labelList& cellMap = map.reverseCellMap();
-
-    forAll(*this, i)
+    forAll(cellMap, celli)
     {
-        const label celli = operator[](i);
-
-        if (cellMap[celli] >= 0)
+        if (cellMap[celli] >= 0 && localIndex(cellMap[celli]) != -1)
         {
-            newAddressing[nCells] = cellMap[celli];
-            nCells++;
+            newIndices.insert(celli);
         }
     }
 
-    newAddressing.setSize(nCells);
-    transfer(newAddressing);
-    */
+    labelList::operator=(newIndices.sortedToc());
 }
 
 

@@ -100,7 +100,7 @@ class polyTopoChange
     // Private Data
 
         //- Whether to allow referencing illegal points/cells/faces
-        //  when adding/removing data.
+        //  when adding/removing data
         bool strict_;
 
 
@@ -118,7 +118,7 @@ class polyTopoChange
             //- Original point label (or masterpoint for added points)
             DynamicList<label> pointMap_;
 
-            //- For all original and added points contains new point label.
+            //- For all original and added points contains new point label
             //  (used to map return value of addPoint to new mesh point)
             DynamicList<label> reversePointMap_;
 
@@ -152,7 +152,7 @@ class polyTopoChange
             //  (used to map return value of addFace to new mesh face)
             DynamicList<label> reverseFaceMap_;
 
-            //- In mapping whether to reverse the flux.
+            //- In mapping whether to reverse the flux
             PackedBoolList flipFaceFlux_;
 
             //- Zone of face
@@ -168,15 +168,12 @@ class polyTopoChange
         // Cells
 
             //- Original cell label or master cell for added-from-cell;
-            //  -1 for cells added from face or edge.
+            //  -1 for cells added from face or edge
             DynamicList<label> cellMap_;
 
             //- For all original and added cells contains new cell label
             //  (used to map return value of addCell to new mesh cell)
             DynamicList<label> reverseCellMap_;
-
-            //- Zone of cell
-            DynamicList<label> cellZone_;
 
 
     // Private Member Functions
@@ -184,13 +181,16 @@ class polyTopoChange
         //- Reorder contents of container according to map
         template<class T>
         static void reorder(const labelList& map, DynamicList<T>&);
+
         template<class T>
         static void reorder(const labelList& map, List<DynamicList<T>>&);
+
         template<class T>
         static void renumberKey(const labelList& map, Map<T>&);
 
         //- Renumber elements of container according to map
         static void renumber(const labelList&, labelHashSet&);
+
         //- Special handling of reverse maps which have <-1 in them
         static void renumberReverseMap(const labelList&, DynamicList<label>&);
 
@@ -200,7 +200,7 @@ class polyTopoChange
         //- Get all set elements as a labelHashSet
         static labelHashSet getSetIndices(const PackedBoolList&);
 
-        //- Count number of added and removed quantities from maps.
+        //- Count number of added and removed quantities from maps
         static void countMap
         (
             const labelList& map,
@@ -215,7 +215,7 @@ class polyTopoChange
         static void writeMeshStats(const polyMesh& mesh, Ostream&);
 
         //- Calculate object maps. Requires reverseMap to have destination
-        //  to be marked with <-1.
+        //  to be marked with < -1
         static void getMergeSets
         (
             const labelList& reverseCellMap,
@@ -255,14 +255,14 @@ class polyTopoChange
             CompactListList<label>& cellCells
         ) const;
 
-        //- Cell ordering (bandCompression). Returns number of remaining cells.
+        //- Cell ordering (bandCompression). Returns number of remaining cells
         label getCellOrder
         (
             const CompactListList<label>&,
             labelList&
         ) const;
 
-        //- Do upper-triangular ordering and patch ordering.
+        //- Do upper-triangular ordering and patch ordering
         void getFaceOrder
         (
             const label nActiveFaces,
@@ -381,7 +381,7 @@ public:
         //  setNumPatches before trying to make a mesh (makeMesh, changeMesh)
         polyTopoChange(const label nPatches, const bool strict = true);
 
-        //- Construct from mesh. Adds all points/face/cells from mesh.
+        //- Construct from mesh. Adds all points/face/cells from mesh
         polyTopoChange(const polyMesh& mesh, const bool strict = true);
 
 
@@ -439,7 +439,7 @@ public:
                 const label nCells
             );
 
-            //- Add point. Return new point label.
+            //- Add point and return new point index
             //  Notes:
             //  - masterPointID can be < 0 (appended points)
             //  - inCell = false: add retired point (to end of point list)
@@ -450,7 +450,7 @@ public:
                 const bool inCell
             );
 
-            //- Modify coordinate.
+            //- Modify coordinate
             //  Notes:
             //  - inCell = false: add retired point (to end of point list)
             void modifyPoint
@@ -460,10 +460,10 @@ public:
                 const bool inCell
             );
 
-            //- Remove/merge point.
+            //- Remove point / merge points
             void removePoint(const label, const label);
 
-            //- Add face to cells. Return new face label.
+            //- Add face to cells and return new face index
             //  own,nei<0, zoneID>=0 : add inactive face (to end of face list)
             label addFace
             (
@@ -477,7 +477,7 @@ public:
                 const bool zoneFlip
             );
 
-            //- Modify vertices or cell of face.
+            //- Modify vertices or cell of face
             void modifyFace
             (
                 const face& f,
@@ -490,22 +490,19 @@ public:
                 const bool zoneFlip
             );
 
-            //- Remove/merge face.
+            //- Remove face / merge faces
             void removeFace(const label, const label);
 
-            //- Add cell. Return new cell label.
-            label addCell
-            (
-                const label masterCellID,
-                const label zoneID
-            );
+            //- Add cell and return new cell index
+            label addCell(const label masterCellID);
 
-            //- Remove/merge cell.
+            //- Remove cell / merge cells
             void removeCell(const label, const label);
 
             //- Explicitly set the number of patches if construct-without-mesh
-            //  used.
+            //  used
             inline void setNumPatches(const label nPatches);
+
 
         // Other
 

@@ -590,6 +590,9 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
 
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
 
+    // Update zones
+    mesh_.topoChangeZones(map);
+
     // Update fields
     mesh_.mapFields(map);
 
@@ -771,6 +774,9 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::mergeSharedPoints
     // Change the mesh
     // Note: parallel comms allowed.
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
+
+    // Update zones
+    mesh_.topoChangeZones(map);
 
     // Update fields
     mesh_.mapFields(map);
@@ -1277,6 +1283,9 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::doRemoveCells
     // Change the mesh.
     // Note: no parallel comms allowed.
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, false);
+
+    // Update zones
+    mesh_.topoChangeZones(map);
 
     // Update fields
     mesh_.mapFields(map);

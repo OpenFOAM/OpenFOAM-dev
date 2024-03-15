@@ -630,6 +630,8 @@ int main(int argc, char *argv[])
 
         layerExtrude.updateZones(meshFromMesh());
 
+        meshFromMesh().topoChange(map);
+
         layerExtrude.topoChange
         (
             map(),

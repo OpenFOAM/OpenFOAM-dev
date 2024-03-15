@@ -75,6 +75,9 @@ class mergePolyMesh
         //- Cell zone names
         DynamicList<word> cellZoneNames_;
 
+        //- Zones of the added cells
+        List<labelHashSet> cellZonesAddedCells_;
+
 
     // Private Member Functions
 

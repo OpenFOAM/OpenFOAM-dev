@@ -503,8 +503,7 @@ void Foam::createShellMesh::setRefinement
         {
             addedCells[nLayers*facei+layerI] = meshMod.addCell
             (
-                cellToFaceMap.size(),   // masterCellID
-                -1                      // zoneID
+                cellToFaceMap.size()    // masterCellID
             );
             cellToFaceMap.append(facei);
         }

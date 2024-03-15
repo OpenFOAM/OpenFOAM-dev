@@ -1252,8 +1252,7 @@ int main(int argc, char *argv[])
     {
         meshMod.addCell
         (
-            celli,      // masterCellID
-            -1          // zoneID
+            celli       // masterCellID
         );
     }
 

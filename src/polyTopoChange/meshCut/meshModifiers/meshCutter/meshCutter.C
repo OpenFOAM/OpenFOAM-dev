@@ -606,11 +606,7 @@ void Foam::meshCutter::setRefinement
         if (cellLoops[celli].size())
         {
             // Add a cell to the existing cell
-            label addedCelli = meshMod.addCell
-            (
-                celli,              // master cell
-                mesh().cellZones().whichZone(celli) // zone for cell
-            );
+            label addedCelli = meshMod.addCell(celli);
 
             addedCells_.insert(celli, addedCelli);
 

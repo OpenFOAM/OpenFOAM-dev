@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -560,6 +560,9 @@ public:
             //- Update the mesh based on the mesh files saved in
             //  time directories
             readUpdateState readUpdate();
+
+            //- Update zones using the given map
+            void topoChangeZones(const polyTopoChangeMap&);
 
             //- Update topology using the given map
             virtual void topoChange(const polyTopoChangeMap&);

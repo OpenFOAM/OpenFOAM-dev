@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,8 +68,6 @@ class extrude2DMesh
 
         const dictionary dict_;
 
-        // const dictionary patchDict_;
-
         const extrudeModel& model_;
 
         const word modelType_;
@@ -77,15 +75,17 @@ class extrude2DMesh
         const word patchType_;
 
         label frontPatchi_;
+
         label backPatchi_;
+
+        //- Zones of the added cells
+        List<labelHashSet> cellZonesAddedCells_;
+
 
     // Private Member Functions
 
         //- Check the mesh is 2D
         void check2D() const;
-
-        //- Find extrusion direction
-        // void findExtrudeDirection();
 
 
 public:
@@ -115,17 +115,6 @@ public:
         //- Add front and back patches
         void addFrontBackPatches();
 
-        //- Play commands into polyTopoChange to extrude mesh.
-        void setRefinement(polyTopoChange&);
-
-        //- Force recalculation of locally stored data on topological change
-        void topoChange(const polyTopoChangeMap&)
-        {}
-
-        //- Force recalculation of locally stored data for mesh distribution
-        void distribute(const polyDistributionMap&)
-        {}
-
         label frontPatchi() const
         {
             return frontPatchi_;
@@ -135,6 +124,13 @@ public:
         {
             return backPatchi_;
         }
+
+        //- Play commands into polyTopoChange to extrude mesh.
+        void setRefinement(polyTopoChange&);
+
+        //- Update the mesh zones
+        //  adding the point and cell zones for the added layer
+        void updateZones();
 
 
     // Member Operators
