@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,12 +45,21 @@ Foam::solvers::functions::functions(fvMesh& mesh)
     movingMesh(mesh)
 {
     // Read the solverName from the subSolver or solver entry in controlDict
-    const word solverName
-    (
-        runTime.controlDict().found("subSolver")
-      ? runTime.controlDict().lookup("subSolver")
-      : runTime.controlDict().lookup("solver")
-    );
+    word solverName;
+    if (functionObject::postProcess)
+    {
+        solverName = runTime.controlDict().lookup<word>("solver");
+    }
+    if (!functionObject::postProcess || solverName == typeName)
+    {
+        solverName = runTime.controlDict().lookup<word>("subSolver");
+    }
+    if (solverName == typeName)
+    {
+        FatalIOErrorInFunction(runTime.controlDict())
+            << "Invalid sub-solver type "
+            << solverName << exit(FatalIOError);
+    }
 
     Time& time(const_cast<Time&>(runTime));
     const TimeState ts(time);
@@ -69,7 +78,7 @@ Foam::solvers::functions::functions(fvMesh& mesh)
     }
 
     // Instantiate the selected solver
-    solverPtr = (solver::New(solverName, mesh));
+    solverPtr = solver::New(solverName, mesh);
 
     if (startTimeChanged)
     {
