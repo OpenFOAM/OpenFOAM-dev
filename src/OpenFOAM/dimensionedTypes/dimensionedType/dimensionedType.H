@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,8 +78,10 @@ class dimensioned
 
     // Private Member Functions
 
+        //- Read the dimensions if present
+        bool readDimensions(Istream& is, scalar& multiplier);
+
         //- Initialise from Istream
-        //  Helper-function for constructors
         void initialise(Istream& is);
 
 

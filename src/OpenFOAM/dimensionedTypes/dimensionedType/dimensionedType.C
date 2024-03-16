@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,25 +27,17 @@ License
 #include "pTraits.H"
 #include "dictionary.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::dimensioned<Type>::initialise(Istream& is)
+bool Foam::dimensioned<Type>::readDimensions
+(
+    Istream& is,
+    scalar& multiplier
+)
 {
     token nextToken(is);
     is.putBack(nextToken);
-
-    // Check if the original format is used in which the name is provided
-    // and reset the name to that read
-    if (nextToken.isWord())
-    {
-        is >> name_;
-        is >> nextToken;
-        is.putBack(nextToken);
-    }
-
-    // If the dimensions are provided compare with the argument
-    scalar multiplier = 1.0;
 
     if (nextToken == token::BEGIN_SQR)
     {
@@ -59,9 +51,46 @@ void Foam::dimensioned<Type>::initialise(Istream& is)
                 << " provided do not match the required dimensions "
                 << dimensions_ << abort(FatalIOError);
         }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+template<class Type>
+void Foam::dimensioned<Type>::initialise(Istream& is)
+{
+    token nextToken(is);
+    is.putBack(nextToken);
+
+    // Check if the original format is used in which the name is provided
+    // and reset the name to that read
+    if (nextToken.isWord())
+    {
+        is >> name_;
     }
 
+    scalar multiplier = 1;
+
+    // Read dimensions if they are before the value,
+    // compare with the argument with current
+    // and set the multiplier
+    const bool dimensionsRead = readDimensions(is, multiplier);
+
     is >> value_;
+
+    // Read dimensions if they are after the value,
+    // compare with the argument with current
+    // and set the multiplier
+    if (!dimensionsRead && !is.eof())
+    {
+        readDimensions(is, multiplier);
+    }
+
     value_ *= multiplier;
 }
 
