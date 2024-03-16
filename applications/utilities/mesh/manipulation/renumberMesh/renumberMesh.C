@@ -52,13 +52,7 @@ Description
 #include "pointSet.H"
 #include "systemDict.H"
 
-#ifdef FOAM_USE_ZOLTAN
-    #include "zoltanRenumber.H"
-#endif
-
-
 using namespace Foam;
-
 
 void writeCellLabels
 (
@@ -610,13 +604,6 @@ int main(int argc, char *argv[])
 
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
-
-    // Force linker to include zoltan symbols. This section is only needed since
-    // Zoltan is a static library
-    #ifdef FOAM_USE_ZOLTAN
-        Info<< "renumberMesh built with zoltan support." << nl << endl;
-        (void)zoltanRenumber::typeName;
-    #endif
 
     // Get times list
     const instantList Times = timeSelector::select0(runTime, args);

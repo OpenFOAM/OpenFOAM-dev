@@ -10,27 +10,4 @@ wmake $targetType renumberMethods
 # installation problems on a range of legacy systems.
 # wmake $targetType SloanRenumber
 
-if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/zoltan`
-then
-    . $settings
-    echo "    using ZOLTAN_ARCH_PATH=$ZOLTAN_ARCH_PATH"
-
-    if [ -n "$ZOLTAN_ARCH_PATH" ] \
-    && [ -r "$ZOLTAN_ARCH_PATH/include/zoltan.h" ] \
-    && { \
-         [ -r "$FOAM_EXT_LIBBIN/$FOAM_MPI/libzoltan.a" ] \
-      || [ -r "$ZOLTAN_ARCH_PATH/lib/libzoltan.a" ]; \
-       }
-    then
-        wmake $targetType zoltanRenumber
-    else
-        echo "    skipping zoltanRenumber"
-    fi
-else
-    echo
-    echo "    Error: no config.sh/zoltan settings"
-    echo
-fi
-
-
 #------------------------------------------------------------------------------

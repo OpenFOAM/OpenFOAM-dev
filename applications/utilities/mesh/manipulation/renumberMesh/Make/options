@@ -4,7 +4,6 @@ EXE_INC = \
     -I$(LIB_SRC)/polyTopoChange/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/renumber/renumberMethods/lnInclude \
-    -I$(LIB_SRC)/renumber/zoltanRenumber/lnInclude \
     -I$(LIB_SRC)/parallel/decompose/decompositionMethods/lnInclude
 
 EXE_LIBS = \

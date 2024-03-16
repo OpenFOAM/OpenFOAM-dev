@@ -44,9 +44,6 @@ method          CuthillMcKee;
 //method          structured;
 //method          spring;
 
-//method          zoltan;
-//libs            ("libzoltanRenumber.so");
-
 //CuthillMcKeeCoeffs
 //{
 //    // Reverse CuthillMcKee (RCM) or plain
@@ -101,12 +98,6 @@ blockCoeffs
     //    delta       0.001;
     //    order       xyz;
     //}
-}
-
-
-zoltanCoeffs
-{
-    ORDER_METHOD    LOCAL_HSFC;
 }
 
 
