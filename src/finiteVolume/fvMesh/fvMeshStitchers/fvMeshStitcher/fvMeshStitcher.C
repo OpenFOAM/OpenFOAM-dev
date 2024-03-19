@@ -1628,7 +1628,7 @@ bool Foam::fvMeshStitcher::disconnectThis
         surfaceScalarField phi(mesh_.phi());
         for (label i = 1; i < mesh_.phi().nOldTimes(false); ++ i)
         {
-            phi.oldTime(i) == mesh_.phi().oldTime(i);
+            phi.oldTimeRef(i) == mesh_.phi().oldTime(i);
         }
         conformCorrectMeshPhi(phi);
         mesh_.conform(phi);
@@ -1774,7 +1774,7 @@ bool Foam::fvMeshStitcher::connectThis
         surfaceScalarField phi(mesh_.phi());
         for (label i = 1; i <= mesh_.phi().nOldTimes(false); ++ i)
         {
-            phi.oldTime(i) == mesh_.phi().oldTime(i);
+            phi.oldTimeRef(i) == mesh_.phi().oldTime(i);
         }
         unconformCorrectMeshPhi(polyFacesBf, Sf, Cf, phi);
         mesh_.unconform(polyFacesBf, Sf, Cf, phi);

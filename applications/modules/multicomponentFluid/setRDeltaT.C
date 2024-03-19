@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
         const scalar maxCo(pimpleDict.lookup<scalar>("maxCo"));
 
         // Set the reciprocal time-step from the local Courant number
-        rDeltaT.ref() =
+        rDeltaT.internalFieldRef() =
             fvc::surfaceSum(mag(phi))()()/((2*maxCo)*mesh.V()*rho());
 
         // Clip to user-defined maximum and minimum time-steps
@@ -80,10 +80,10 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
         );
 
         Info<< "    Temperature = "
-            << 1/(gMax(rDeltaTT.field()) + vSmall) << ", "
-            << 1/(gMin(rDeltaTT.field()) + vSmall) << endl;
+            << 1/(gMax(rDeltaTT.primitiveField()) + vSmall) << ", "
+            << 1/(gMin(rDeltaTT.primitiveField()) + vSmall) << endl;
 
-        rDeltaT.ref() = max(rDeltaT(), rDeltaTT);
+        rDeltaT.internalFieldRef() = max(rDeltaT(), rDeltaTT);
     }
 
     // Reaction rate time scale
@@ -120,7 +120,7 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
                     foundY = true;
                     scalar Yrefi = Yref.lookup<scalar>(Yi.name());
 
-                    rDeltaTY.field() = max
+                    rDeltaTY.primitiveFieldRef() = max
                     (
                         mag
                         (
@@ -136,10 +136,10 @@ void Foam::solvers::multicomponentFluid::setRDeltaT()
         if (foundY)
         {
             Info<< "    Composition = "
-                << 1/(gMax(rDeltaTY.field()) + vSmall) << ", "
-                << 1/(gMin(rDeltaTY.field()) + vSmall) << endl;
+                << 1/(gMax(rDeltaTY.primitiveField()) + vSmall) << ", "
+                << 1/(gMin(rDeltaTY.primitiveField()) + vSmall) << endl;
 
-            rDeltaT.ref() = max(rDeltaT(), rDeltaTY);
+            rDeltaT.internalFieldRef() = max(rDeltaT(), rDeltaTY);
         }
         else
         {

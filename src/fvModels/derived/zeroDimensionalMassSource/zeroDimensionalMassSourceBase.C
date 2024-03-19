@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,11 +71,11 @@ Foam::fv::zeroDimensionalMassSourceBase::calcM0D() const
                     IOobject::groupName("alpha", phaseName)
                 );
 
-            tm.ref().ref() += alpha()*rho()*mesh().V();
+            tm.ref().internalFieldRef() += alpha()*rho()*mesh().V();
         }
         else
         {
-            tm.ref().ref() += rho()*mesh().V();
+            tm.ref().internalFieldRef() += rho()*mesh().V();
         }
     }
 

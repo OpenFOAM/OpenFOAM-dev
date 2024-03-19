@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -394,7 +394,7 @@ public:
         //- Return a reference to the dimensioned internal field
         //  Note: this increments the event counter and checks the
         //  old-time fields; avoid in loops.
-        Internal& ref();
+        Internal& internalFieldRef();
 
         //- Return a const-reference to the dimensioned internal field
         inline const Internal& internalField() const;
@@ -404,12 +404,12 @@ public:
         //  for FV equations
         inline const Internal& v() const;
 
-        //- Return a reference to the internal field
+        //- Return a reference to the primitive field
         //  Note: this increments the event counter and checks the
         //  old-time fields; avoid in loops.
         typename Internal::FieldType& primitiveFieldRef();
 
-        //- Return a const-reference to the  internal field
+        //- Return a const-reference to the primitive field
         inline const typename Internal::FieldType& primitiveField() const;
 
         //- Return a reference to the boundary field
@@ -443,7 +443,7 @@ public:
 
         //- Return non-const old time field
         //  (Not a good idea but it is used for sub-cycling)
-        GeometricField<Type, PatchField, GeoMesh>& oldTime();
+        GeometricField<Type, PatchField, GeoMesh>& oldTimeRef();
 
         //- Return the n-th old time field
         const GeometricField<Type, PatchField, GeoMesh>& oldTime
@@ -453,7 +453,7 @@ public:
 
         //- Return the n-th non-const old time field
         //  (Not a good idea but it is used for sub-cycling)
-        GeometricField<Type, PatchField, GeoMesh>& oldTime(const label n);
+        GeometricField<Type, PatchField, GeoMesh>& oldTimeRef(const label n);
 
         //- Store the field as the previous iteration value
         void storePrevIter() const;

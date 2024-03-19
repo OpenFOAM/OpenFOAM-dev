@@ -1637,8 +1637,8 @@ void Foam::fvMeshDistribute::sendMesh
         << mesh.boundaryMesh()
 
         //*** Write the old-time volumes if present
-        // << mesh.V0().field()
-        // << mesh.V0().field()
+        // << mesh.V0().primitiveField()
+        // << mesh.V00().primitiveField()
 
         << zonePoints
         << zoneFaces

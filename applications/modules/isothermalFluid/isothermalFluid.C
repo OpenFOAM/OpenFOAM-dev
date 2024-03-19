@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -316,7 +316,7 @@ void Foam::solvers::isothermalFluid::preSolve()
 
         for (label i = 1; i <= rhoUf().nOldTimes(false); ++ i)
         {
-            rhoU().oldTime(i) == rho.oldTime(i)*U.oldTime(i);
+            rhoU().oldTimeRef(i) == rho.oldTime(i)*U.oldTime(i);
         }
     }
 

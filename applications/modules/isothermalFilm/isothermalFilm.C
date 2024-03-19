@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,10 +172,12 @@ void Foam::solvers::isothermalFilm::correctCoNum()
 {
     const scalarField sumPhi(fvc::surfaceSum(mag(phi))().primitiveField());
 
-    CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
+    CoNum = 0.5*gMax(sumPhi/mesh.V().primitiveField())*runTime.deltaTValue();
 
     const scalar meanCoNum =
-        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
+        0.5
+       *(gSum(sumPhi)/gSum(mesh.V().primitiveField()))
+       *runTime.deltaTValue();
 
     Info<< "Courant Number mean: " << meanCoNum
         << " max: " << CoNum << endl;

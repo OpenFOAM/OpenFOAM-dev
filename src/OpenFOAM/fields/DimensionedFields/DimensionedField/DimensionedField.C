@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -437,6 +437,14 @@ DimensionedField<Type, GeoMesh>::~DimensionedField()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type, class GeoMesh>
+Foam::Field<Type>& Foam::DimensionedField<Type, GeoMesh>::primitiveFieldRef()
+{
+    this->setUpToDate();
+    return *this;
+}
+
+
+template<class Type, class GeoMesh>
 tmp
 <
     DimensionedField
@@ -518,7 +526,7 @@ dimensioned<Type> DimensionedField<Type, GeoMesh>::average() const
     (
         this->name() + ".average()",
         this->dimensions(),
-        gAverage(field())
+        gAverage(primitiveField())
     );
 
     return Average;
@@ -537,7 +545,7 @@ dimensioned<Type> DimensionedField<Type, GeoMesh>::weightedAverage
         (
             this->name() + ".weightedAverage(weights)",
             this->dimensions(),
-            gSum(weightField*field())/gSum(weightField)
+            gSum(weightField*primitiveField())/gSum(weightField)
         )
     );
 }

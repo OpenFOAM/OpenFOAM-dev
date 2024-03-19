@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ volumeIntegrate
 template<class Type>
 tmp<Field<Type>> volumeIntegrate(const DimensionedField<Type, volMesh>& df)
 {
-    return df.mesh().V()*df.field();
+    return df.mesh().V()*df.primitiveField();
 }
 
 
@@ -74,7 +74,7 @@ template<class Type>
 tmp<Field<Type>>
 volumeIntegrate(const tmp<DimensionedField<Type, volMesh>>& tdf)
 {
-    tmp<Field<Type>> tdidf = tdf().mesh().V()*tdf().field();
+    tmp<Field<Type>> tdidf = tdf().mesh().V()*tdf().primitiveField();
     tdf.clear();
     return tdidf;
 }

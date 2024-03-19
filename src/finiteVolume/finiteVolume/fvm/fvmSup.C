@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::fvm::Su
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    fvm.source() -= mesh.V()*su.field();
+    fvm.source() -= mesh.V()*su.primitiveField();
 
     return tfvm;
 }
@@ -115,7 +115,7 @@ Foam::fvm::Sp
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    fvm.diag() += mesh.V()*sp.field();
+    fvm.diag() += mesh.V()*sp.primitiveField();
 
     return tfvm;
 }
@@ -207,9 +207,9 @@ Foam::fvm::SuSp
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    fvm.diag() += mesh.V()*max(susp.field(), scalar(0));
+    fvm.diag() += mesh.V()*max(susp.primitiveField(), scalar(0));
 
-    fvm.source() -= mesh.V()*min(susp.field(), scalar(0))
+    fvm.source() -= mesh.V()*min(susp.primitiveField(), scalar(0))
         *vf.primitiveField();
 
     return tfvm;

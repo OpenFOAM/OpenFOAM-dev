@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 void Foam::solvers::shockFluid::pressureCorrector()
 {
     const volScalarField& psi = thermo.psi();
-    p_.ref() = rho()/psi();
+    p_.internalFieldRef() = rho()/psi();
     p_.correctBoundaryConditions();
     rho_.boundaryFieldRef() == psi.boundaryField()*p.boundaryField();
 }

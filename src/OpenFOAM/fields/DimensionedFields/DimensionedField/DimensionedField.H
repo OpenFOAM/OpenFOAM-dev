@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -294,9 +294,11 @@ public:
         //- Return non-const access to dimensions
         inline dimensionSet& dimensions();
 
-        inline const Field<Type>& field() const;
+        //- Return a reference to the internal field
+        Field<Type>& primitiveFieldRef();
 
-        inline Field<Type>& field();
+        //- Return a const-reference to the primitive field
+        inline const Field<Type>& primitiveField() const;
 
         //- Return a component field of the field
         tmp<DimensionedField<cmptType, GeoMesh>> component

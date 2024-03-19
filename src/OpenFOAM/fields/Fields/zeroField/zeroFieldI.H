@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ inline Foam::scalar Foam::zeroField::operator[](const label) const
 }
 
 
-inline Foam::zeroField Foam::zeroField::field() const
+inline Foam::zeroField Foam::zeroField::primitiveField() const
 {
     return zeroField();
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -405,14 +405,14 @@ template<class CloudType>
 void Foam::ThermoCloud<CloudType>::resetSourceTerms()
 {
     CloudType::resetSourceTerms();
-    hsTrans_->field() = 0.0;
-    hsCoeff_->field() = 0.0;
+    hsTrans_->primitiveFieldRef() = 0.0;
+    hsCoeff_->primitiveFieldRef() = 0.0;
 
     if (radiation_)
     {
-        radAreaP_->field() = 0.0;
-        radT4_->field() = 0.0;
-        radAreaPT4_->field() = 0.0;
+        radAreaP_->primitiveFieldRef() = 0.0;
+        radT4_->primitiveFieldRef() = 0.0;
+        radAreaPT4_->primitiveFieldRef() = 0.0;
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,6 +64,7 @@ public:
         typedef oneFieldField Boundary;
         typedef one cmptType;
 
+
     // Constructors
 
         //- Construct null
@@ -77,11 +78,11 @@ public:
 
         inline one operator[](const label) const;
 
-        inline oneField field() const;
-
-        inline oneField oldTime() const;
+        inline geometricOneField oldTime() const;
 
         inline Internal operator()() const;
+
+        inline Internal internalField() const;
 
         inline Internal v() const;
 

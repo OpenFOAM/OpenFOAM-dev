@@ -3,7 +3,12 @@
     if (ign.igniting())
     {
         // Calculate volume of ignition kernel
-        dimensionedScalar Vk("Vk", dimVolume, gSum(c*mesh.V().field()));
+        dimensionedScalar Vk
+        (
+            "Vk",
+            dimVolume,
+            gSum(c*mesh.V().primitiveField())
+        );
         dimensionedScalar Ak("Ak", dimArea, 0.0);
 
         if (Vk.value() > small)
@@ -78,7 +83,7 @@
             (
                 fvc::div(nf, b, "div(phiSt,b)") - b*fvc::div(nf) + dMgb
             );
-            dimensionedScalar AkEst = gSum(mgb*mesh.V().field());
+            dimensionedScalar AkEst = gSum(mgb*mesh.V().primitiveField());
 
             StCorr.value() = max(min((Ak/AkEst).value(), 10.0), 1.0);
 

@@ -150,8 +150,8 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffsMaster()
     UIndirectList<scalar>(G, wallCells()) =
         (1 - wallCellFraction())*scalarField(G, wallCells())
       + wallCellFraction()*wallCellGPtr_();
-    UIndirectList<scalar>(epsilon.ref(), wallCells()) =
-        (1 - wallCellFraction())*scalarField(epsilon.ref(), wallCells())
+    UIndirectList<scalar>(epsilon, wallCells()) =
+        (1 - wallCellFraction())*scalarField(epsilon, wallCells())
       + wallCellFraction()*wallCellEpsilonPtr_();
 }
 

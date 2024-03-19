@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,14 +84,15 @@ void Foam::solvers::twoPhaseVoFSolver::setInterfaceRDeltaT
 
         volScalarField alpha1Bar(fvc::average(alpha1));
 
-        rDeltaT.ref() = max
-        (
-            rDeltaT(),
-            pos0(alpha1Bar() - alphaSpreadMin)
-           *pos0(alphaSpreadMax - alpha1Bar())
-           *fvc::surfaceSum(mag(phi))()()
-           /((2*maxAlphaCo)*mesh.V())
-        );
+        rDeltaT.internalFieldRef() =
+            max
+            (
+                rDeltaT(),
+                pos0(alpha1Bar() - alphaSpreadMin)
+               *pos0(alphaSpreadMax - alpha1Bar())
+               *fvc::surfaceSum(mag(phi))()()
+               /((2*maxAlphaCo)*mesh.V())
+            );
     }
 
     // Update the boundary values of the reciprocal time-step

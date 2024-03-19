@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,18 +51,20 @@ void Foam::solvers::isothermalFluid::setRDeltaT()
     const volScalarField rDeltaT0("rDeltaT0", rDeltaT);
 
     // Set the reciprocal time-step from the local Courant number
-    rDeltaT.ref() = fvc::surfaceSum(mag(phi))()()/((2*maxCo)*mesh.V()*rho());
+    rDeltaT.internalFieldRef() =
+        fvc::surfaceSum(mag(phi))()()/((2*maxCo)*mesh.V()*rho());
 
     // Set the reciprocal time-step from the local acoustic Courant number
     if (pimple.transonic())
     {
         surfaceScalarField phid("phid", fvc::interpolate(psi)*fvc::flux(U));
 
-        rDeltaT.ref() = max
-        (
-            rDeltaT(),
-            fvc::surfaceSum(mag(phid))()()/((2*maxCo)*mesh.V()*psi())
-        );
+        rDeltaT.internalFieldRef() =
+            max
+            (
+                rDeltaT(),
+                fvc::surfaceSum(mag(phid))()()/((2*maxCo)*mesh.V()*psi())
+            );
     }
 
     // Clip to user-defined maximum and minimum time-steps

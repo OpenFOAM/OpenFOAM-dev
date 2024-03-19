@@ -305,7 +305,7 @@ inline Foam::tmp<Foam::volScalarField> Foam::ThermoCloud<CloudType>::Ep() const
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
-        const scalarField& sumAreaPT4 = radAreaPT4_->field();
+        const scalarField& sumAreaPT4 = radAreaPT4_->primitiveField();
 
         Ep = sumAreaPT4*epsilon*physicoChemical::sigma.value()/V/dt;
     }
@@ -333,7 +333,7 @@ inline Foam::tmp<Foam::volScalarField> Foam::ThermoCloud<CloudType>::ap() const
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
-        const scalarField& sumAreaP = radAreaP_->field();
+        const scalarField& sumAreaP = radAreaP_->primitiveField();
 
         ap = sumAreaP*epsilon/V/dt;
     }
@@ -363,7 +363,7 @@ Foam::ThermoCloud<CloudType>::sigmap() const
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
         const scalar f = constProps_.f0();
-        const scalarField& sumAreaP = radAreaP_->field();
+        const scalarField& sumAreaP = radAreaP_->primitiveField();
 
         sigmap = sumAreaP*(1.0 - f)*(1.0 - epsilon)/V/dt;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
 
             forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
             {
-                sumCpuLoad += sum(iter()->field());
+                sumCpuLoad += sum(iter()->primitiveField());
             }
 
             const scalar cellCFDCpuTime = returnReduce
@@ -157,7 +157,7 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
                 label loadi = 1;
                 forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
                 {
-                    const scalarField& cpuLoadField = iter()->field();
+                    const scalarField& cpuLoadField = iter()->primitiveField();
 
                     forAll(cpuLoadField, i)
                     {
@@ -173,7 +173,7 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
 
                 forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
                 {
-                    weights += iter()->field();
+                    weights += iter()->primitiveField();
                 }
             }
 

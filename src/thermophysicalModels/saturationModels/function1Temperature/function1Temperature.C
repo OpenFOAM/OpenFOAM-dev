@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ Foam::saturationModels::function1Temperature::Tsat
 
     volScalarField::Internal& Tsat = tTsat.ref();
 
-    Tsat.field() = function_->value(p.field());
+    Tsat.primitiveFieldRef() = function_->value(p.primitiveField());
 
     return tTsat;
 }

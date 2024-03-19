@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ pow
         )
     );
 
-    pow<Type, r, GeoMesh>(tPow.ref().field(), df.field());
+    pow<Type, r, GeoMesh>(tPow.ref().primitiveFieldRef(), df.primitiveField());
 
     return tPow;
 }
@@ -81,7 +81,7 @@ pow
             pow(df.dimensions(), r)
         );
 
-    pow<Type, r, GeoMesh>(tPow.ref().field(), df.field());
+    pow<Type, r, GeoMesh>(tPow.ref().primitiveFieldRef(), df.primitiveField());
 
     tdf.clear();
 
@@ -104,7 +104,7 @@ sqr(const DimensionedField<Type, GeoMesh>& df)
         )
     );
 
-    sqr(tSqr.ref().field(), df.field());
+    sqr(tSqr.ref().primitiveFieldRef(), df.primitiveField());
 
     return tSqr;
 }
@@ -125,7 +125,7 @@ sqr(const tmp<DimensionedField<Type, GeoMesh>>& tdf)
             sqr(df.dimensions())
         );
 
-    sqr(tSqr.ref().field(), df.field());
+    sqr(tSqr.ref().primitiveFieldRef(), df.primitiveField());
 
     tdf.clear();
 
@@ -149,7 +149,7 @@ tmp<DimensionedField<scalar, GeoMesh>> magSqr
         )
     );
 
-    magSqr(tMagSqr.ref().field(), df.field());
+    magSqr(tMagSqr.ref().primitiveFieldRef(), df.primitiveField());
 
     return tMagSqr;
 }
@@ -170,7 +170,7 @@ tmp<DimensionedField<scalar, GeoMesh>> magSqr
             sqr(df.dimensions())
         );
 
-    magSqr(tMagSqr.ref().field(), df.field());
+    magSqr(tMagSqr.ref().primitiveFieldRef(), df.primitiveField());
 
     tdf.clear();
 
@@ -194,7 +194,7 @@ tmp<DimensionedField<scalar, GeoMesh>> mag
         )
     );
 
-    mag(tMag.ref().field(), df.field());
+    mag(tMag.ref().primitiveFieldRef(), df.primitiveField());
 
     return tMag;
 }
@@ -215,7 +215,7 @@ tmp<DimensionedField<scalar, GeoMesh>> mag
             df.dimensions()
         );
 
-    mag(tMag.ref().field(), df.field());
+    mag(tMag.ref().primitiveFieldRef(), df.primitiveField());
 
     tdf.clear();
 
@@ -243,7 +243,7 @@ cmptAv(const DimensionedField<Type, GeoMesh>& df)
         )
     );
 
-    cmptAv(CmptAv.ref().field(), df.field());
+    cmptAv(CmptAv.ref().primitiveFieldRef(), df.primitiveField());
 
     return CmptAv;
 }
@@ -269,7 +269,7 @@ cmptAv(const tmp<DimensionedField<Type, GeoMesh>>& tdf)
             df.dimensions()
         );
 
-    cmptAv(CmptAv.ref().field(), df.field());
+    cmptAv(CmptAv.ref().primitiveFieldRef(), df.primitiveField());
 
     tdf.clear();
 
@@ -291,7 +291,7 @@ dimensioned<returnType> func                                                   \
     (                                                                          \
         #func "(" + df.name() + ')',                                           \
         df.dimensions(),                                                       \
-        dfunc(df.field())                                                      \
+        dfunc(df.primitiveField())                                             \
     );                                                                         \
 }                                                                              \
                                                                                \
@@ -363,7 +363,12 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
+    Foam::opFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -388,7 +393,12 @@ operator op                                                                    \
             df1.dimensions() op df2.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
+    Foam::opFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     tdf2.clear();                                                              \
                                                                                \
@@ -415,7 +425,12 @@ operator op                                                                    \
             df1.dimensions() op df2.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
+    Foam::opFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     tdf1.clear();                                                              \
                                                                                \
@@ -444,7 +459,12 @@ operator op                                                                    \
             df1.dimensions() op df2.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes.ref().field(), df1.field(), df2.field());                \
+    Foam::opFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     tdf1.clear();                                                              \
     tdf2.clear();                                                              \
@@ -472,7 +492,12 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::opFunc(tRes.ref().field(), df1.field(), dvs.value());                \
+    Foam::opFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        dvs.value()                                                            \
+    );                                                                         \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -509,7 +534,12 @@ operator op                                                                    \
             df1.dimensions() op dvs.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes.ref().field(), df1.field(), dvs.value());                \
+    Foam::opFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        dvs.value()                                                            \
+    );                                                                         \
                                                                                \
     tdf1.clear();                                                              \
                                                                                \
@@ -547,7 +577,12 @@ operator op                                                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::opFunc(tRes.ref().field(), dvs.value(), df1.field());                \
+    Foam::opFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        dvs.value(),                                                           \
+        df1.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -583,7 +618,12 @@ operator op                                                                    \
             dvs.dimensions() op df1.dimensions()                               \
         );                                                                     \
                                                                                \
-    Foam::opFunc(tRes.ref().field(), dvs.value(), df1.field());                \
+    Foam::opFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        dvs.value(),                                                           \
+        df1.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     tdf1.clear();                                                              \
                                                                                \

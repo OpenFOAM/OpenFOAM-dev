@@ -1399,7 +1399,7 @@ void Foam::fvMesh::conform(const surfaceScalarField& phi)
     {
         for (label i = 0; i <= phi.nOldTimes(); ++ i)
         {
-            phiRef().oldTime(i) == phi.oldTime(i);
+            phiRef().oldTimeRef(i) == phi.oldTime(i);
         }
     }
 }
@@ -1503,7 +1503,7 @@ void Foam::fvMesh::unconform
     {
         for (label i = 0; i <= phi.nOldTimes(); ++ i)
         {
-            phiRef().oldTime(i) == phi.oldTime(i);
+            phiRef().oldTimeRef(i) == phi.oldTime(i);
         }
     }
 }

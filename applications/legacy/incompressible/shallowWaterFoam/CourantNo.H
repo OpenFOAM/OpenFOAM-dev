@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,10 +37,12 @@ Description
     );
 
     const scalar CoNum =
-        0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
+        0.5*gMax(sumPhi/mesh.V().primitiveField())*runTime.deltaTValue();
 
     const scalar meanCoNum =
-        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
+        0.5
+       *(gSum(sumPhi)/gSum(mesh.V().primitiveField()))
+       *runTime.deltaTValue();
 
     // Gravity wave Courant number
     const scalar waveCoNum = 0.25*gMax
@@ -48,7 +50,7 @@ Description
         fvc::surfaceSum
         (
             fvc::interpolate(sqrt(h))*mesh.magSf()
-        )().primitiveField()/mesh.V().field()
+        )().primitiveField()/mesh.V().primitiveField()
     )*sqrt(magg).value()*runTime.deltaTValue();
 
     Info<< "Courant number mean: " << meanCoNum

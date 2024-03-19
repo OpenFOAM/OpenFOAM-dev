@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ inline Type Foam::UniformField<Type>::operator[](const label) const
 
 
 template<class Type>
-inline Foam::UniformField<Type> Foam::UniformField<Type>::field() const
+inline Foam::UniformField<Type> Foam::UniformField<Type>::primitiveField() const
 {
     return UniformField(value_);
 }

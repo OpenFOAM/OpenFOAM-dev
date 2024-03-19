@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -579,8 +579,8 @@ void Foam::MomentumCloud<CloudType>::restoreState()
 template<class CloudType>
 void Foam::MomentumCloud<CloudType>::resetSourceTerms()
 {
-    UTransRef().field() = Zero;
-    UCoeffRef().field() = 0.0;
+    UTransRef().primitiveFieldRef() = Zero;
+    UCoeffRef().primitiveFieldRef() = 0.0;
 }
 
 

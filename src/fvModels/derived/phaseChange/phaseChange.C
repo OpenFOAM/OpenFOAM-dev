@@ -69,7 +69,7 @@ Foam::tmp<Foam::volScalarField> Foam::fv::phaseChange::vifToVf
             extrapolatedCalculatedFvPatchField<scalar>::typeName
         );
 
-    tvf->ref() = tvif();
+    tvf->internalFieldRef() = tvif();
     tvf->correctBoundaryConditions();
 
     tvif.clear();

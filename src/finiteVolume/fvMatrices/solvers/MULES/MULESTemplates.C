@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,20 +57,20 @@ void Foam::MULES::explicitSolve
     {
         psiIf =
         (
-            mesh.Vsc0()().field()*rho.oldTime().field()
-           *psi0*rDeltaT/mesh.Vsc()().field()
-          + Su.field()
+            mesh.Vsc0()().primitiveField()*rho.oldTime().primitiveField()
+           *psi0*rDeltaT/mesh.Vsc()().primitiveField()
+          + Su.primitiveField()
           - psiIf
-        )/(rho.field()*rDeltaT - Sp.field());
+        )/(rho.primitiveField()*rDeltaT - Sp.primitiveField());
     }
     else
     {
         psiIf =
         (
-            rho.oldTime().field()*psi0*rDeltaT
-          + Su.field()
+            rho.oldTime().primitiveField()*psi0*rDeltaT
+          + Su.primitiveField()
           - psiIf
-        )/(rho.field()*rDeltaT - Sp.field());
+        )/(rho.primitiveField()*rDeltaT - Sp.primitiveField());
     }
 
     psi.correctBoundaryConditions();
@@ -380,19 +380,19 @@ void Foam::MULES::limiter
         psiMaxn =
             V
            *(
-               (rho.field()*rDeltaT - Sp.field())*psiMaxn
-             - Su.field()
+               (rho.primitiveField()*rDeltaT - Sp.primitiveField())*psiMaxn
+             - Su.primitiveField()
             )
-          - (V0().field()*rDeltaT)*rho.oldTime().field()*psi0
+          - (V0().primitiveField()*rDeltaT)*rho.oldTime().primitiveField()*psi0
           + sumPhiBD;
 
         psiMinn =
             V
            *(
-               Su.field()
-             - (rho.field()*rDeltaT - Sp.field())*psiMinn
+               Su.primitiveField()
+             - (rho.primitiveField()*rDeltaT - Sp.primitiveField())*psiMinn
             )
-          + (V0().field()*rDeltaT)*rho.oldTime().field()*psi0
+          + (V0().primitiveField()*rDeltaT)*rho.oldTime().primitiveField()*psi0
           - sumPhiBD;
     }
     else
@@ -400,18 +400,18 @@ void Foam::MULES::limiter
         psiMaxn =
             V
            *(
-               (rho.field()*rDeltaT - Sp.field())*psiMaxn
-             - Su.field()
-             - (rho.oldTime().field()*rDeltaT)*psi0
+               (rho.primitiveField()*rDeltaT - Sp.primitiveField())*psiMaxn
+             - Su.primitiveField()
+             - (rho.oldTime().primitiveField()*rDeltaT)*psi0
             )
           + sumPhiBD;
 
         psiMinn =
             V
            *(
-               Su.field()
-             - (rho.field()*rDeltaT - Sp.field())*psiMinn
-             + (rho.oldTime().field()*rDeltaT)*psi0
+               Su.primitiveField()
+             - (rho.primitiveField()*rDeltaT - Sp.primitiveField())*psiMinn
+             + (rho.oldTime().primitiveField()*rDeltaT)*psi0
             )
           - sumPhiBD;
     }

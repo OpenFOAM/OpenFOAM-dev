@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -233,7 +233,9 @@ public:
             );
 
             Co.primitiveFieldRef() =
-                (sumPhi/mesh.V().field())*(0.5*mesh.time().deltaTValue());
+                (sumPhi/mesh.V().primitiveField())
+               *(0.5*mesh.time().deltaTValue());
+
             Co.correctBoundaryConditions();
 
             return surfaceScalarField::New

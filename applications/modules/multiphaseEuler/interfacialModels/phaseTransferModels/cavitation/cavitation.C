@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,8 @@ Foam::phaseTransferModels::cavitation::dmdtf() const
     const volScalarField::Internal pSat1(cavitation_->pSat1());
     const volScalarField::Internal pSat2(cavitation_->pSat2());
 
-    tResult.ref().ref() = coeffs[0]*(p - pSat1) - coeffs[1]*(p - pSat2);
+    tResult.ref().internalFieldRef() =
+        coeffs[0]*(p - pSat1) - coeffs[1]*(p - pSat2);
     tResult.ref().correctBoundaryConditions();
 
     return tResult;
@@ -112,7 +113,7 @@ Foam::phaseTransferModels::cavitation::d2mdtdpf() const
 
     const Pair<tmp<volScalarField::Internal>> coeffs(cavitation_->mDot12P());
 
-    tResult.ref().ref() = coeffs[0] - coeffs[1];
+    tResult.ref().internalFieldRef() = coeffs[0] - coeffs[1];
     tResult.ref().correctBoundaryConditions();
 
     return tResult;

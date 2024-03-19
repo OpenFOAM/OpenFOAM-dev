@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,8 +124,8 @@ inline Foam::fv::filmCloudTransfer::CloudToFilmTransferRate
                 prop/cloudMesh.boundary()[cloudPatchi].magSf()
             );
 
-        tSu.ref().field() /= film_.VbyA;
-        tSu.ref().field() /= mesh().time().deltaTValue();
+        tSu.ref().primitiveFieldRef() /= film_.VbyA;
+        tSu.ref().primitiveFieldRef() /= mesh().time().deltaTValue();
     }
 
     return tSu;

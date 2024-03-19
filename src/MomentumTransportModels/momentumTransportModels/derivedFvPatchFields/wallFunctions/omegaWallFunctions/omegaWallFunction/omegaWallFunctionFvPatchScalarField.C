@@ -181,8 +181,8 @@ void Foam::omegaWallFunctionFvPatchScalarField::updateCoeffsMaster()
     UIndirectList<scalar>(G, wallCells()) =
         (1 - wallCellFraction())*scalarField(G, wallCells())
       + wallCellFraction()*wallCellGPtr_();
-    UIndirectList<scalar>(omega.ref(), wallCells()) =
-        (1 - wallCellFraction())*scalarField(omega.ref(), wallCells())
+    UIndirectList<scalar>(omega, wallCells()) =
+        (1 - wallCellFraction())*scalarField(omega, wallCells())
       + wallCellFraction()*wallCellOmegaPtr_();
 }
 

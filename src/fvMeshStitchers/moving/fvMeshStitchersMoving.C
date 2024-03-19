@@ -148,7 +148,7 @@ void Foam::fvMeshStitchers::moving::conformCorrectMeshPhi
 
             for (label i = 0; i <= phi.nOldTimes(false); ++ i)
             {
-                phi.oldTime(i).boundaryFieldRef()[origPatchi] +=
+                phi.oldTimeRef(i).boundaryFieldRef()[origPatchi] +=
                     fvMeshStitcherTools::fieldRMapSum
                     (
                         phi.oldTime(i).boundaryField()[nccPatchi],
@@ -157,7 +157,7 @@ void Foam::fvMeshStitchers::moving::conformCorrectMeshPhi
                         origFvp.start()
                     );
 
-                phi.oldTime(i).boundaryFieldRef()[nccPatchi].clear();
+                phi.oldTimeRef(i).boundaryFieldRef()[nccPatchi].clear();
             }
         }
     }
@@ -879,7 +879,7 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
         );
         phiErrorbs[i] = phi.oldTime(i).boundaryField() - tphib();
 
-        phi.oldTime(i).boundaryFieldRef() = tphib;
+        phi.oldTimeRef(i).boundaryFieldRef() = tphib;
     }
 
     // Add the mesh flux error into the error patch so that the mesh fluxes
@@ -909,7 +909,7 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
                 for (label i = 0; i <= phi.nOldTimes(false); ++ i)
                 {
                     fvsPatchField<scalar>& phip =
-                        phi.oldTime(i).boundaryFieldRef()[errorPatchi];
+                        phi.oldTimeRef(i).boundaryFieldRef()[errorPatchi];
                     phip[errorPatchFacei0] +=
                         phiErrorbs[i][nccPatchi][nccPatchFacei]/2;
                     phip[errorPatchFacei1] +=
@@ -1049,7 +1049,7 @@ void Foam::fvMeshStitchers::moving::unconformCorrectMeshPhi
     // the area taken from the old original faces
     for (label i = 0; i <= phi.nOldTimes(false); ++ i)
     {
-        phi.oldTime(i).boundaryFieldRef() =
+        phi.oldTimeRef(i).boundaryFieldRef() =
             fvMeshStitcherTools::unconformedBoundaryField
             (
                 phi.oldTime(i).boundaryField(),

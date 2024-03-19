@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,12 +89,14 @@ void Foam::solvers::fluidSolver::meshCourantNo() const
 
         const scalar meshCoNum
         (
-            0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue()
+            0.5*gMax(sumPhi/mesh.V().primitiveField())*runTime.deltaTValue()
         );
 
         const scalar meanMeshCoNum
         (
-            0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue()
+            0.5
+           *(gSum(sumPhi)/gSum(mesh.V().primitiveField()))
+           *runTime.deltaTValue()
         );
 
         Info<< "Mesh Courant Number mean: " << meanMeshCoNum
@@ -115,10 +117,12 @@ void Foam::solvers::fluidSolver::correctCoNum
         fvc::surfaceSum(mag(phi))().primitiveField()/rho.primitiveField()
     );
 
-    CoNum_ = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();
+    CoNum_ = 0.5*gMax(sumPhi/mesh.V().primitiveField())*runTime.deltaTValue();
 
     const scalar meanCoNum =
-        0.5*(gSum(sumPhi)/gSum(mesh.V().field()))*runTime.deltaTValue();
+        0.5
+       *(gSum(sumPhi)/gSum(mesh.V().primitiveField()))
+       *runTime.deltaTValue();
 
     Info<< "Courant Number mean: " << meanCoNum
         << " max: " << CoNum << endl;

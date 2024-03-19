@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,19 +53,19 @@ void Foam::MULES::correct
     {
         psi.primitiveFieldRef() =
         (
-            rho.field()*psi.primitiveField()*rDeltaT
-          + Su.field()
+            rho.primitiveField()*psi.primitiveField()*rDeltaT
+          + Su.primitiveField()
           - psiIf
-        )/(rho.field()*rDeltaT - Sp.field());
+        )/(rho.primitiveField()*rDeltaT - Sp.primitiveField());
     }
     else
     {
         psi.primitiveFieldRef() =
         (
-            rho.field()*psi.primitiveField()*rDeltaT
-          + Su.field()
+            rho.primitiveField()*psi.primitiveField()*rDeltaT
+          + Su.primitiveField()
           - psiIf
-        )/(rho.field()*rDeltaT - Sp.field());
+        )/(rho.primitiveField()*rDeltaT - Sp.primitiveField());
     }
 
     psi.correctBoundaryConditions();
@@ -383,17 +383,17 @@ void Foam::MULES::limiterCorr
     psiMaxn =
         V
        *(
-           (rho.field()*rDeltaT - Sp.field())*psiMaxn
-         - Su.field()
-         - rho.field()*psi.primitiveField()*rDeltaT
+           (rho.primitiveField()*rDeltaT - Sp.primitiveField())*psiMaxn
+         - Su.primitiveField()
+         - rho.primitiveField()*psi.primitiveField()*rDeltaT
         );
 
     psiMinn =
         V
        *(
-           Su.field()
-         - (rho.field()*rDeltaT - Sp.field())*psiMinn
-         + rho.field()*psi.primitiveField()*rDeltaT
+           Su.primitiveField()
+         - (rho.primitiveField()*rDeltaT - Sp.primitiveField())*psiMinn
+         + rho.primitiveField()*psi.primitiveField()*rDeltaT
         );
 
     scalarField sumlPhip(psiIf.size());

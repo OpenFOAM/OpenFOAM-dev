@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
         )
     );
 
-    tK.ref().ref() = lambda*sqr(magGradI)*muI;
+    tK.ref().internalFieldRef() = lambda*sqr(magGradI)*muI;
     tK.ref().correctBoundaryConditions();
 
     return tK;

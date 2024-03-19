@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ tmp<DimensionedField<scalar, GeoMesh>> stabilise
         )
     );
 
-    stabilise(tRes.ref().field(), dsf.field(), ds.value());
+    stabilise(tRes.ref().primitiveFieldRef(), dsf.primitiveField(), ds.value());
 
     return tRes;
 }
@@ -74,7 +74,7 @@ tmp<DimensionedField<scalar, GeoMesh>> stabilise
         dsf.dimensions() + ds.dimensions()
     );
 
-    stabilise(tRes.ref().field(), dsf.field(), ds.value());
+    stabilise(tRes.ref().primitiveFieldRef(), dsf.primitiveField(), ds.value());
 
     tdsf.clear();
 
@@ -125,7 +125,12 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
         )
     );
 
-    pow(tPow.ref().field(), dsf1.field(), dsf2.field());
+    pow
+    (
+        tPow.ref().primitiveFieldRef(),
+        dsf1.primitiveField(),
+        dsf2.primitiveField()
+    );
 
     return tPow;
 }
@@ -161,7 +166,12 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
         dimless
     );
 
-    pow(tPow.ref().field(), dsf1.field(), dsf2.field());
+    pow
+    (
+        tPow.ref().primitiveFieldRef(),
+        dsf1.primitiveField(),
+        dsf2.primitiveField()
+    );
 
     tdsf1.clear();
 
@@ -199,7 +209,12 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
         dimless
     );
 
-    pow(tPow.ref().field(), dsf1.field(), dsf2.field());
+    pow
+    (
+        tPow.ref().primitiveFieldRef(),
+        dsf1.primitiveField(),
+        dsf2.primitiveField()
+    );
 
     tdsf2.clear();
 
@@ -240,7 +255,12 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             dimless
         );
 
-    pow(tPow.ref().field(), dsf1.field(), dsf2.field());
+    pow
+    (
+        tPow.ref().primitiveFieldRef(),
+        dsf1.primitiveField(),
+        dsf2.primitiveField()
+    );
 
     tdsf1.clear();
     tdsf2.clear();
@@ -273,7 +293,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
         )
     );
 
-    pow(tPow.ref().field(), dsf.field(), ds.value());
+    pow(tPow.ref().primitiveFieldRef(), dsf.primitiveField(), ds.value());
 
     return tPow;
 }
@@ -302,7 +322,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
         pow(dsf.dimensions(), ds)
     );
 
-    pow(tPow.ref().field(), dsf.field(), ds.value());
+    pow(tPow.ref().primitiveFieldRef(), dsf.primitiveField(), ds.value());
 
     tdsf.clear();
 
@@ -363,7 +383,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
         )
     );
 
-    pow(tPow.ref().field(), ds.value(), dsf.field());
+    pow(tPow.ref().primitiveFieldRef(), ds.value(), dsf.primitiveField());
 
     return tPow;
 }
@@ -399,7 +419,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
         dimless
     );
 
-    pow(tPow.ref().field(), ds.value(), dsf.field());
+    pow(tPow.ref().primitiveFieldRef(), ds.value(), dsf.primitiveField());
 
     tdsf.clear();
 
@@ -446,7 +466,12 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
         )
     );
 
-    atan2(tAtan2.ref().field(), dsf1.field(), dsf2.field());
+    atan2
+    (
+        tAtan2.ref().primitiveFieldRef(),
+        dsf1.primitiveField(),
+        dsf2.primitiveField()
+    );
 
     return tAtan2;
 }
@@ -468,7 +493,12 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
         atan2(dsf1.dimensions(), dsf2.dimensions())
     );
 
-    atan2(tAtan2.ref().field(), dsf1.field(), dsf2.field());
+    atan2
+    (
+        tAtan2.ref().primitiveFieldRef(),
+        dsf1.primitiveField(),
+        dsf2.primitiveField()
+    );
 
     tdsf1.clear();
 
@@ -492,7 +522,12 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
         atan2(dsf1.dimensions(), dsf2.dimensions())
     );
 
-    atan2(tAtan2.ref().field(), dsf1.field(), dsf2.field());
+    atan2
+    (
+        tAtan2.ref().primitiveFieldRef(),
+        dsf1.primitiveField(),
+        dsf2.primitiveField()
+    );
 
     tdsf2.clear();
 
@@ -518,7 +553,12 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
             atan2(dsf1.dimensions(), dsf2.dimensions())
         );
 
-    atan2(tAtan2.ref().field(), dsf1.field(), dsf2.field());
+    atan2
+    (
+        tAtan2.ref().primitiveFieldRef(),
+        dsf1.primitiveField(),
+        dsf2.primitiveField()
+    );
 
     tdsf1.clear();
     tdsf2.clear();
@@ -544,7 +584,7 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
         )
     );
 
-    atan2(tAtan2.ref().field(), dsf.field(), ds.value());
+    atan2(tAtan2.ref().primitiveFieldRef(), dsf.primitiveField(), ds.value());
 
     return tAtan2;
 }
@@ -565,7 +605,7 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
         atan2(dsf.dimensions(), ds)
     );
 
-    atan2(tAtan2.ref().field(), dsf.field(), ds.value());
+    atan2(tAtan2.ref().primitiveFieldRef(), dsf.primitiveField(), ds.value());
 
     tdsf.clear();
 
@@ -610,7 +650,7 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
         )
     );
 
-    atan2(tAtan2.ref().field(), ds.value(), dsf.field());
+    atan2(tAtan2.ref().primitiveFieldRef(), ds.value(), dsf.primitiveField());
 
     return tAtan2;
 }
@@ -632,7 +672,7 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
         atan2(ds, dsf.dimensions())
     );
 
-    atan2(tAtan2.ref().field(), ds.value(), dsf.field());
+    atan2(tAtan2.ref().primitiveFieldRef(), ds.value(), dsf.primitiveField());
 
     tdsf.clear();
 
@@ -729,7 +769,7 @@ tmp<DimensionedField<scalar, GeoMesh>> func                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    func(tFunc.ref().field(), n, dsf.field());                                 \
+    func(tFunc.ref().primitiveFieldRef(), n, dsf.primitiveField());            \
                                                                                \
     return tFunc;                                                              \
 }                                                                              \
@@ -760,7 +800,7 @@ tmp<DimensionedField<scalar, GeoMesh>> func                                    \
         )                                                                      \
     );                                                                         \
                                                                                \
-    func(tFunc.ref().field(), n, dsf.field());                                 \
+    func(tFunc.ref().primitiveFieldRef(), n, dsf.primitiveField());            \
                                                                                \
     tdsf.clear();                                                              \
                                                                                \

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,27 +32,49 @@ inline const Foam::dimensionSet& Foam::geometricZeroField::dimensions() const
     return dimless;
 }
 
+
 inline Foam::scalar Foam::geometricZeroField::operator[](const label) const
 {
     return scalar(0);
 }
 
-inline Foam::zeroField Foam::geometricZeroField::field() const
+
+inline Foam::geometricZeroField Foam::geometricZeroField::oldTime() const
+{
+    return geometricZeroField();
+}
+
+
+inline Foam::geometricZeroField::Internal
+Foam::geometricZeroField::operator()() const
 {
     return zeroField();
 }
 
-inline Foam::zeroField Foam::geometricZeroField::operator()() const
+
+inline Foam::geometricZeroField::Internal
+Foam::geometricZeroField::internalField() const
 {
     return zeroField();
 }
 
-inline Foam::zeroField Foam::geometricZeroField::oldTime() const
+
+inline Foam::geometricZeroField::Internal
+Foam::geometricZeroField::v() const
+{
+    return Internal();
+}
+
+
+inline typename Foam::geometricZeroField::Internal::FieldType
+Foam::geometricZeroField::primitiveField() const
 {
     return zeroField();
 }
 
-inline Foam::zeroFieldField Foam::geometricZeroField::boundaryField() const
+
+inline Foam::geometricZeroField::Boundary
+Foam::geometricZeroField::boundaryField() const
 {
     return zeroFieldField();
 }

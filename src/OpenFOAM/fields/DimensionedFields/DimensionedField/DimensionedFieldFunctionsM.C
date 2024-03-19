@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Func(tRes.ref().field(), df1.field());                                     \
+    Func(tRes.ref().primitiveFieldRef(), df1.primitiveField());                \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -68,7 +68,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Func(tRes.ref().field(), df1.field());                                     \
+    Func(tRes.ref().primitiveFieldRef(), df1.primitiveField());                \
                                                                                \
     tdf1.clear();                                                              \
                                                                                \
@@ -96,7 +96,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes.ref().field(), df1.field());                             \
+    Foam::OpFunc(tRes.ref().primitiveFieldRef(), df1.primitiveField());        \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -119,7 +119,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes.ref().field(), df1.field());                             \
+    Foam::OpFunc(tRes.ref().primitiveFieldRef(), df1.primitiveField());        \
                                                                                \
     tdf1.clear();                                                              \
                                                                                \
@@ -148,7 +148,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Func(tRes.ref().field(), df1.field(), df2.field());                        \
+    Func                                                                       \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -172,7 +177,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Func(tRes.ref().field(), df1.field(), df2.field());                        \
+    Func                                                                       \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     tdf2.clear();                                                              \
                                                                                \
@@ -198,7 +208,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Func(tRes.ref().field(), df1.field(), df2.field());                        \
+    Func                                                                       \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     tdf1.clear();                                                              \
                                                                                \
@@ -226,7 +241,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Func(tRes.ref().field(), df1.field(), df2.field());                        \
+    Func                                                                       \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     tdf1.clear();                                                              \
     tdf2.clear();                                                              \
@@ -256,7 +276,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Func(tRes.ref().field(), dt1.value(), df2.field());                        \
+    Func(tRes.ref().primitiveFieldRef(), dt1.value(), df2.primitiveField());   \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -291,7 +311,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Func(tRes.ref().field(), dt1.value(), df2.field());                        \
+    Func(tRes.ref().primitiveFieldRef(), dt1.value(), df2.primitiveField());   \
                                                                                \
     tdf2.clear();                                                              \
                                                                                \
@@ -328,7 +348,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Func(tRes.ref().field(), df1.field(), dt2.value());                        \
+    Func(tRes.ref().primitiveFieldRef(), df1.primitiveField(), dt2.value());   \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -363,7 +383,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Func(tRes.ref().field(), df1.field(), dt2.value());                        \
+    Func(tRes.ref().primitiveFieldRef(), df1.primitiveField(), dt2.value());   \
                                                                                \
     tdf1.clear();                                                              \
                                                                                \
@@ -407,7 +427,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes.ref().field(), df1.field(), df2.field());                \
+    Foam::OpFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -431,7 +456,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes.ref().field(), df1.field(), df2.field());                \
+    Foam::OpFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     tdf2.clear();                                                              \
                                                                                \
@@ -457,7 +487,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes.ref().field(), df1.field(), df2.field());                \
+    Foam::OpFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     tdf1.clear();                                                              \
                                                                                \
@@ -485,7 +520,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes.ref().field(), df1.field(), df2.field());                \
+    Foam::OpFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     tdf1.clear();                                                              \
     tdf2.clear();                                                              \
@@ -496,7 +536,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define BINARY_TYPE_OPERATOR_SF(ReturnType, Type1, Type2, Op, OpName, OpFunc) \
+#define BINARY_TYPE_OPERATOR_SF(ReturnType, Type1, Type2, Op, OpName, OpFunc)  \
                                                                                \
 TEMPLATE                                                                       \
 tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
@@ -515,7 +555,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes.ref().field(), dt1.value(), df2.field());                \
+    Foam::OpFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        dt1.value(),                                                           \
+        df2.primitiveField()                                                   \
+    );                                                                         \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -550,7 +595,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes.ref().field(), dt1.value(), tdf2().field());             \
+    Foam::OpFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        dt1.value(),                                                           \
+        tdf2().primitiveField()                                                \
+    );                                                                         \
                                                                                \
     tdf2.clear();                                                              \
                                                                                \
@@ -568,7 +618,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
 }
 
 
-#define BINARY_TYPE_OPERATOR_FS(ReturnType, Type1, Type2, Op, OpName, OpFunc) \
+#define BINARY_TYPE_OPERATOR_FS(ReturnType, Type1, Type2, Op, OpName, OpFunc)  \
                                                                                \
 TEMPLATE                                                                       \
 tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
@@ -587,7 +637,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes.ref().field(), df1.field(), dt2.value());                \
+    Foam::OpFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        df1.primitiveField(),                                                  \
+        dt2.value()                                                            \
+    );                                                                         \
                                                                                \
     return tRes;                                                               \
 }                                                                              \
@@ -622,7 +677,12 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
         )                                                                      \
     );                                                                         \
                                                                                \
-    Foam::OpFunc(tRes.ref().field(), tdf1().field(), dt2.value());             \
+    Foam::OpFunc                                                               \
+    (                                                                          \
+        tRes.ref().primitiveFieldRef(),                                        \
+        tdf1().primitiveField(),                                               \
+        dt2.value()                                                            \
+    );                                                                         \
                                                                                \
     tdf1.clear();                                                              \
                                                                                \

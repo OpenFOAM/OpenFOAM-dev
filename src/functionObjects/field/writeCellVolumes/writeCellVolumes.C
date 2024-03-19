@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ bool Foam::functionObjects::writeCellVolumes::write()
         calculatedFvPatchField<scalar>::typeName
     );
 
-    V.ref() = mesh_.V();
+    V.internalFieldRef() = mesh_.V();
 
     Log << "    Writing cell-volumes field " << V.name()
         << " to " << time_.name() << endl;

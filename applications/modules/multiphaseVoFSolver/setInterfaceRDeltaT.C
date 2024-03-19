@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,13 +76,14 @@ void Foam::solvers::multiphaseVoFSolver::setInterfaceRDeltaT
         {
             const volScalarField alphaBar(fvc::average(phases[phasei]));
 
-            rDeltaT.ref() = max
-            (
-                rDeltaT(),
-                pos0(alphaBar() - alphaSpreadMin)
-               *pos0(alphaSpreadMax - alphaBar())
-               *alphaCoRdeltaT
-            );
+            rDeltaT.internalFieldRef() =
+                max
+                (
+                    rDeltaT(),
+                    pos0(alphaBar() - alphaSpreadMin)
+                   *pos0(alphaSpreadMax - alphaBar())
+                   *alphaCoRdeltaT
+                );
         }
     }
 

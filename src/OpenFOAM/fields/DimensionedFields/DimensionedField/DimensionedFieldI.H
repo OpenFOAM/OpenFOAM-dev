@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "DimensionedField.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -58,14 +60,7 @@ Foam::DimensionedField<Type, GeoMesh>::dimensions()
 
 template<class Type, class GeoMesh>
 inline const Foam::Field<Type>&
-Foam::DimensionedField<Type, GeoMesh>::field() const
-{
-    return *this;
-}
-
-template<class Type, class GeoMesh>
-inline Foam::Field<Type>&
-Foam::DimensionedField<Type, GeoMesh>::field()
+Foam::DimensionedField<Type, GeoMesh>::primitiveField() const
 {
     return *this;
 }

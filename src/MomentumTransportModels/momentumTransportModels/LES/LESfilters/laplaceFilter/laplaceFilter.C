@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::laplaceFilter::laplaceFilter(const fvMesh& mesh, scalar widthCoeff)
         calculatedFvPatchScalarField::typeName
     )
 {
-    coeff_.ref() = pow(mesh.V(), 2.0/3.0)/widthCoeff_;
+    coeff_.internalFieldRef() = pow(mesh.V(), 2.0/3.0)/widthCoeff_;
 }
 
 
@@ -79,7 +79,7 @@ Foam::laplaceFilter::laplaceFilter(const fvMesh& mesh, const dictionary& bd)
         calculatedFvPatchScalarField::typeName
     )
 {
-    coeff_.ref() = pow(mesh.V(), 2.0/3.0)/widthCoeff_;
+    coeff_.internalFieldRef() = pow(mesh.V(), 2.0/3.0)/widthCoeff_;
 }
 
 

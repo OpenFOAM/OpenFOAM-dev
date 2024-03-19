@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,10 @@ tmp<scalarField> curvatureSeparation::calcInvR1
     const volVectorField& U
 ) const
 {
-    const vectorField UHat(U.field()/(mag(U.field()) + rootVSmall));
+    const vectorField UHat
+    (
+        U.primitiveField()/(mag(U.primitiveField()) + rootVSmall)
+    );
 
     tmp<scalarField> tinvR1(-(UHat & (UHat & gradNHat_)));
     scalarField& invR1 = tinvR1.ref();

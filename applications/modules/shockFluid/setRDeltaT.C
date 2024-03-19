@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,8 @@ void Foam::solvers::shockFluid::setRDeltaT(const surfaceScalarField& amaxSf)
     );
 
     // Set the reciprocal time-step from the local Courant number
-    rDeltaT.ref() = fvc::surfaceSum(amaxSf)()()/((2*maxCo)*mesh.V());
+    rDeltaT.internalFieldRef() =
+        fvc::surfaceSum(amaxSf)()()/((2*maxCo)*mesh.V());
 
     // Clip to user-defined maximum and minimum time-steps
     scalar minRDeltaT = gMin(rDeltaT.primitiveField());

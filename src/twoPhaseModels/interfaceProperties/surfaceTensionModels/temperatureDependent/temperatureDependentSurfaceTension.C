@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::surfaceTensionModels::temperatureDependent::sigma() const
 
     const volScalarField& T = mesh_.lookupObject<volScalarField>(TName_);
 
-    sigma.field() = sigma_->value(T.field());
+    sigma.primitiveFieldRef() = sigma_->value(T.primitiveField());
 
     volScalarField::Boundary& sigmaBf = sigma.boundaryFieldRef();
     const volScalarField::Boundary& TBf = T.boundaryField();
