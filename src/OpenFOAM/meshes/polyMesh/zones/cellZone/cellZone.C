@@ -134,12 +134,21 @@ void Foam::cellZone::topoChange(const polyTopoChangeMap& map)
 
     labelHashSet newIndices;
     const labelList& cellMap = map.cellMap();
+    const labelList& reverseCellMap = map.reverseCellMap();
 
     forAll(cellMap, celli)
     {
         if (cellMap[celli] >= 0 && localIndex(cellMap[celli]) != -1)
         {
             newIndices.insert(celli);
+        }
+    }
+
+    forAll(reverseCellMap, celli)
+    {
+        if (reverseCellMap[celli] >= 0 && localIndex(celli) != -1)
+        {
+            newIndices.insert(reverseCellMap[celli]);
         }
     }
 

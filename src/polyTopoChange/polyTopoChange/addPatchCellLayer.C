@@ -698,6 +698,7 @@ void Foam::addPatchCellLayer::setRefinement
     const labelList& nFaceLayers,
     const labelList& nPointLayers,
     const vectorField& firstLayerDisp,
+    const labelList& faceCellZones,
     polyTopoChange& meshMod
 )
 {
@@ -1077,7 +1078,7 @@ void Foam::addPatchCellLayer::setRefinement
 
             const labelList ownZones
             (
-                mesh_.cellZones().whichZones( mesh_.faceOwner()[meshFacei])
+                mesh_.cellZones().whichZones(mesh_.faceOwner()[meshFacei])
             );
 
             for (label i = 0; i < nFaceLayers[patchFacei]; i++)
@@ -1092,6 +1093,14 @@ void Foam::addPatchCellLayer::setRefinement
                 forAll(ownZones, zonei)
                 {
                     cellZonesAddedCells_[zonei].insert
+                    (
+                        addedCells[patchFacei][i]
+                    );
+                }
+
+                if (faceCellZones[patchFacei] != -1)
+                {
+                    cellZonesAddedCells_[faceCellZones[patchFacei]].insert
                     (
                         addedCells[patchFacei][i]
                     );

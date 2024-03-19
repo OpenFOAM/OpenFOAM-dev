@@ -36,6 +36,14 @@ surface "movingWall.stl";
 // patch.
 flipNormals false;
 
+// Optional zone name/names for the cells in the extruded regions
+// The cells can be in a single zone or a separate zone for each extruded patch
+//zoneNames (movingWallCells)
+
+// ... or in a separate zone for each extruded patch
+// with the same name as the corresponding patch
+//zoneNames (patchNames)
+
 //- Linear extrusion in point-normal direction
 //extrudeModel        linearNormal;
 

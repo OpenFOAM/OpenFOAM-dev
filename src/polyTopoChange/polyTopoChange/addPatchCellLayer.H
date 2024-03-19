@@ -350,6 +350,7 @@ public:
                 const labelList& nFaceLayers,
                 const labelList& nPointLayers,
                 const vectorField& firstLayerDisp,
+                const labelList& faceCellZones,
                 polyTopoChange& meshMod
             );
 
@@ -363,6 +364,7 @@ public:
                 const indirectPrimitivePatch& pp,
                 const labelList& sidePatchID,
                 const vectorField& overallDisplacement,
+                const labelList& faceCellZones,
                 polyTopoChange& meshMod
             )
             {
@@ -377,6 +379,7 @@ public:
                     labelList(pp.size(), nLayers),      // nFaceLayers
                     labelList(pp.nPoints(), nLayers),   // nPointLayers
                     overallDisplacement / nLayers,      // firstLayerDisp
+                    faceCellZones,
                     meshMod
                 );
             }

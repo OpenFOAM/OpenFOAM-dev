@@ -25,10 +25,7 @@ Application
     extrudeMesh
 
 Description
-    Extrude mesh from existing patch (by default outwards facing normals;
-    optional flips faces) or from patch read from file.
-
-    Note: Merges close points so be careful.
+    Extrude mesh from existing patch or from patch read from file.
 
     Type of extrusion prescribed by run-time selectable model.
 
@@ -96,26 +93,89 @@ label findIndex(const polyBoundaryMesh& patches, const word& name)
 }
 
 
-labelList patchFaces(const polyBoundaryMesh& patches, const wordList& names)
+labelList findPatchZones(polyMesh& mesh, const wordList& zoneNames)
 {
+    labelList patchZones(zoneNames.size());
+
+    // Add optional cellZone generation for the extrusion layer
+    forAll(zoneNames, i)
+    {
+        const label cellZonei = mesh.cellZones().findIndex(zoneNames[i]);
+        if (cellZonei >= 0)
+        {
+            patchZones[i] = cellZonei;
+        }
+        else
+        {
+            label nZones = mesh.cellZones().size();
+            mesh.cellZones().setSize(nZones + 1);
+            mesh.cellZones().set
+            (
+                nZones,
+                new cellZone
+                (
+                    zoneNames[i],
+                    labelList(),
+                    mesh.cellZones()
+                )
+            );
+            patchZones[i] = nZones;
+        }
+    }
+
+    return patchZones;
+}
+
+
+labelList findPatchFaces
+(
+    polyMesh& mesh,
+    const polyBoundaryMesh& patches,
+    const wordList& patchNames,
+    const labelList& patchZones,
+    labelList& faceCellZones
+)
+{
+    // Count of the number of faces in the named patches
     label n = 0;
 
-    forAll(names, i)
+    forAll(patchNames, i)
     {
-        const polyPatch& pp = patches[findIndex(patches, names[i])];
-
-        n += pp.size();
+        n += patches[findIndex(patches, patchNames[i])].size();
     }
+
     labelList faceLabels(n);
+    faceCellZones.setSize(n);
     n = 0;
-    forAll(names, i)
+
+    forAll(patchNames, i)
     {
-        const polyPatch& pp = patches[findIndex(patches, names[i])];
+        const polyPatch& pp = patches[findIndex(patches, patchNames[i])];
 
         forAll(pp, j)
         {
-            faceLabels[n++] = pp.start()+j;
+            faceLabels[n] = pp.start()+j;
+            faceCellZones[n] = patchZones[i];
+            n++;
         }
+    }
+
+    return faceLabels;
+}
+
+
+labelList findPatchFaces
+(
+    const polyBoundaryMesh& patches,
+    const word& name
+)
+{
+    const polyPatch& pp = patches[findIndex(patches, name)];
+    labelList faceLabels(pp.size());
+
+    forAll(pp, i)
+    {
+        faceLabels[i] = pp.start() + i;
     }
 
     return faceLabels;
@@ -282,12 +342,31 @@ int main(int argc, char *argv[])
                 sourceCaseDir
                /"processor" + Foam::name(Pstream::myProcNo());
         }
-        wordList sourcePatches;
-        dict.lookup("sourcePatches") >> sourcePatches;
+        wordList sourcePatches(dict.lookup("sourcePatches"));
 
         if (sourcePatches.size() == 1)
         {
             frontPatchName = sourcePatches[0];
+        }
+
+        wordList zoneNames(dict.lookupOrDefault("zoneNames", wordList::null()));
+        if (zoneNames.size() == 1)
+        {
+            if (zoneNames[0] == "patchNames")
+            {
+                zoneNames = sourcePatches;
+            }
+            else
+            {
+                zoneNames = wordList(sourcePatches.size(), zoneNames[0]);
+            }
+        }
+        else if (zoneNames.size() && zoneNames.size() != sourcePatches.size())
+        {
+            FatalErrorInFunction
+                << "Number of zoneNames "
+                   "does not equal the number of sourcePatches"
+                << exit(FatalError);
         }
 
         Info<< "Extruding patches " << sourcePatches
@@ -305,42 +384,59 @@ int main(int argc, char *argv[])
 
         const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
+        const labelList patchZones
+        (
+            zoneNames.size()
+          ? findPatchZones(mesh, zoneNames)
+          : labelList(sourcePatches.size(), -1)
+        );
+
+        labelList faceCellZones;
+        const labelList patchFaces
+        (
+            findPatchFaces
+            (
+                mesh,
+                patches,
+                sourcePatches,
+                patchZones,
+                faceCellZones
+            )
+        );
 
         // Extrusion engine. Either adding to existing mesh or
         // creating separate mesh.
         addPatchCellLayer layerExtrude(mesh, (mode == MESH));
-
-        const labelList meshFaces(patchFaces(patches, sourcePatches));
 
         if (mode == PATCH && flipNormals)
         {
             // Cheat. Flip patch faces in mesh. This invalidates the
             // mesh (open cells) but does produce the correct extrusion.
             polyTopoChange meshMod(mesh);
-            forAll(meshFaces, i)
+            forAll(patchFaces, i)
             {
-                label meshFacei = meshFaces[i];
+                label patchFacei = patchFaces[i];
 
-                label patchi = patches.whichPatch(meshFacei);
-                label own = mesh.faceOwner()[meshFacei];
+                label patchi = patches.whichPatch(patchFacei);
+                label own = mesh.faceOwner()[patchFacei];
                 label nei = -1;
                 if (patchi == -1)
                 {
-                    nei = mesh.faceNeighbour()[meshFacei];
+                    nei = mesh.faceNeighbour()[patchFacei];
                 }
 
-                label zoneI = mesh.faceZones().whichZone(meshFacei);
+                label zoneI = mesh.faceZones().whichZone(patchFacei);
                 bool zoneFlip = false;
                 if (zoneI != -1)
                 {
-                    label index = mesh.faceZones()[zoneI].whichFace(meshFacei);
+                    label index = mesh.faceZones()[zoneI].whichFace(patchFacei);
                     zoneFlip = mesh.faceZones()[zoneI].flipMap()[index];
                 }
 
                 meshMod.modifyFace
                 (
-                    mesh.faces()[meshFacei].reverseFace(),  // modified face
-                    meshFacei,                      // label of face
+                    mesh.faces()[patchFacei].reverseFace(), // modified face
+                    patchFacei,                     // label of face
                     own,                            // owner
                     nei,                            // neighbour
                     true,                           // face flip
@@ -363,7 +459,7 @@ int main(int argc, char *argv[])
             IndirectList<face>
             (
                 mesh.faces(),
-                meshFaces
+                patchFaces
             ),
             mesh.points()
         );
@@ -428,7 +524,7 @@ int main(int argc, char *argv[])
         );
 
 
-        // Add any patches.
+        // Add any patches
 
         label nAdded = nPatches - mesh.boundaryMesh().size();
         reduce(nAdded, sumOp<label>());
@@ -572,6 +668,7 @@ int main(int argc, char *argv[])
             nFaceLayers,
             nPointLayers,
             firstLayerDisp,
+            faceCellZones,
             meshMod()
         );
 
@@ -718,16 +815,16 @@ int main(int argc, char *argv[])
 
         // Get the faces on front and back
         frontPatchName = "originalPatch";
-        frontPatchFaces = patchFaces
+        frontPatchFaces = findPatchFaces
         (
             meshFromSurface().boundaryMesh(),
-            wordList(1, frontPatchName)
+            frontPatchName
         );
         backPatchName = "otherSide";
-        backPatchFaces = patchFaces
+        backPatchFaces = findPatchFaces
         (
             meshFromSurface().boundaryMesh(),
-            wordList(1, backPatchName)
+            backPatchName
         );
     }
 
