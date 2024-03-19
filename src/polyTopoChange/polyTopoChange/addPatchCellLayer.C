@@ -1098,7 +1098,7 @@ void Foam::addPatchCellLayer::setRefinement
                     );
                 }
 
-                if (faceCellZones[patchFacei] != -1)
+                if (faceCellZones.size() && faceCellZones[patchFacei] != -1)
                 {
                     cellZonesAddedCells_[faceCellZones[patchFacei]].insert
                     (
