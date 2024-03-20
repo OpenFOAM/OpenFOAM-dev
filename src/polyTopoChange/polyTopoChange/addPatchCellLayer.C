@@ -1092,7 +1092,7 @@ void Foam::addPatchCellLayer::setRefinement
 
                 forAll(ownZones, zonei)
                 {
-                    cellZonesAddedCells_[zonei].insert
+                    cellZonesAddedCells_[ownZones[zonei]].insert
                     (
                         addedCells[patchFacei][i]
                     );
