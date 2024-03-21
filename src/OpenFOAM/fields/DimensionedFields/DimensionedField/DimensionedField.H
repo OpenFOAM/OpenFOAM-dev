@@ -40,6 +40,7 @@ SourceFiles
 
 #include "regIOobject.H"
 #include "Field.H"
+#include "OldTimeField.H"
 #include "dimensionedType.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -72,7 +73,8 @@ template<class Type, class GeoMesh>
 class DimensionedField
 :
     public regIOobject,
-    public Field<Type>
+    public Field<Type>,
+    public OldTimeField<DimensionedField<Type, GeoMesh>>
 {
 
 public:
@@ -84,6 +86,9 @@ public:
 
         //- Type of the field from which this DimensionedField is derived
         typedef Field<Type> FieldType;
+
+        //- Type of the field from which this DimensionedField is derived
+        typedef Field<Type> Base;
 
         //- Component type of the elements of the field
         typedef typename Field<Type>::cmptType cmptType;
@@ -102,7 +107,8 @@ private:
 
     // Private Member Functions
 
-        void readIfPresent(const word& fieldDictEntry = "value");
+        //- Read from file if it is present
+        bool readIfPresent(const word& fieldDictEntry = "value");
 
 
 public:
@@ -193,7 +199,8 @@ public:
         DimensionedField
         (
             const IOobject&,
-            const DimensionedField<Type, GeoMesh>&
+            const DimensionedField<Type, GeoMesh>&,
+            const bool checkIOFlags = true
         );
 
         //- Copy constructor resetting IO parameters and re-use as specified.
@@ -201,7 +208,16 @@ public:
         (
             const IOobject&,
             DimensionedField<Type, GeoMesh>&,
-            bool reuse
+            bool reuse,
+            const bool checkIOFlags = true
+        );
+
+        //- Copy constructor from tmp resetting IO parameters
+        DimensionedField
+        (
+            const IOobject&,
+            const tmp<DimensionedField<Type, GeoMesh>>&,
+            const bool checkIOFlags = true
         );
 
         //- Copy constructor resetting name
@@ -219,7 +235,7 @@ public:
             bool reuse
         );
 
-        //- Copy constructor resetting name
+        //- Copy constructor from tmp resetting name
         DimensionedField
         (
             const word& newName,
@@ -237,7 +253,6 @@ public:
             const Mesh& mesh,
             const dimensionSet&,
             const Field<Type>&
-
         );
 
         //- Return a temporary field constructed from name, mesh
@@ -300,6 +315,9 @@ public:
         //- Return a const-reference to the primitive field
         inline const Field<Type>& primitiveField() const;
 
+        //- Use old-time methods from the base class
+        USING_OLD_TIME_FIELD(DimensionedField);
+
         //- Return a component field of the field
         tmp<DimensionedField<cmptType, GeoMesh>> component
         (
@@ -357,6 +375,10 @@ public:
         void operator=(const tmp<DimensionedField<Type, GeoMesh>>&);
         void operator=(const dimensioned<Type>&);
         void operator=(const zero&);
+
+        void operator==(const tmp<DimensionedField<Type, GeoMesh>>&);
+        void operator==(const dimensioned<Type>&);
+        void operator==(const zero&);
 
         void operator+=(const DimensionedField<Type, GeoMesh>&);
         void operator+=(const tmp<DimensionedField<Type, GeoMesh>>&);

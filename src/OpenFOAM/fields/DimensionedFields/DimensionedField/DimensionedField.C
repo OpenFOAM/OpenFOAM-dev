@@ -59,6 +59,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 :
     regIOobject(io),
     Field<Type>(field),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(mesh),
     dimensions_(dims)
 {
@@ -84,6 +85,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 :
     regIOobject(io),
     Field<Type>(GeoMesh::size(mesh)),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(mesh),
     dimensions_(dims)
 {
@@ -105,6 +107,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 :
     regIOobject(io),
     Field<Type>(GeoMesh::size(mesh), dt.value()),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(mesh),
     dimensions_(dt.dimensions())
 {
@@ -123,6 +126,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 :
     regIOobject(df),
     Field<Type>(df),
+    OldTimeField<DimensionedField>(df),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
 {}
@@ -137,6 +141,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 :
     regIOobject(df, reuse && df.registered()),
     Field<Type>(df, reuse),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
 {}
@@ -150,6 +155,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 :
     regIOobject(move(df)),
     Field<Type>(move(df)),
+    OldTimeField<DimensionedField>(move(df)),
     mesh_(df.mesh_),
     dimensions_(move(df.dimensions_))
 {}
@@ -167,6 +173,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
         const_cast<DimensionedField<Type, GeoMesh>&>(tdf()),
         tdf.isTmp()
     ),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(tdf().mesh_),
     dimensions_(tdf().dimensions_)
 {
@@ -178,14 +185,21 @@ template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (
     const IOobject& io,
-    const DimensionedField<Type, GeoMesh>& df
+    const DimensionedField<Type, GeoMesh>& df,
+    const bool checkIOFlags
 )
 :
     regIOobject(io),
     Field<Type>(df),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
-{}
+{
+    if (!checkIOFlags || !readIfPresent())
+    {
+        copyOldTimes(io, df);
+    }
+}
 
 
 template<class Type, class GeoMesh>
@@ -193,14 +207,48 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 (
     const IOobject& io,
     DimensionedField<Type, GeoMesh>& df,
-    bool reuse
+    bool reuse,
+    const bool checkIOFlags
 )
 :
     regIOobject(io, df),
     Field<Type>(df, reuse),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
-{}
+{
+    if (checkIOFlags)
+    {
+        readIfPresent();
+    }
+}
+
+
+template<class Type, class GeoMesh>
+DimensionedField<Type, GeoMesh>::DimensionedField
+(
+    const IOobject& io,
+    const tmp<DimensionedField<Type, GeoMesh>>& tdf,
+    const bool checkIOFlags
+)
+:
+    regIOobject(io),
+    Field<Type>
+    (
+        const_cast<DimensionedField<Type, GeoMesh>&>(tdf()),
+        tdf.isTmp()
+    ),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
+    mesh_(tdf().mesh_),
+    dimensions_(tdf().dimensions_)
+{
+    tdf.clear();
+
+    if (checkIOFlags)
+    {
+        readIfPresent();
+    }
+}
 
 
 template<class Type, class GeoMesh>
@@ -212,9 +260,12 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 :
     regIOobject(newName, df, newName != df.name()),
     Field<Type>(df),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
-{}
+{
+    copyOldTimes(newName, df);
+}
 
 
 template<class Type, class GeoMesh>
@@ -227,6 +278,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 :
     regIOobject(newName, df, true),
     Field<Type>(df, reuse),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(df.mesh_),
     dimensions_(df.dimensions_)
 {}
@@ -245,6 +297,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
         const_cast<DimensionedField<Type, GeoMesh>&>(tdf()),
         tdf.isTmp()
     ),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(tdf().mesh_),
     dimensions_(tdf().dimensions_)
 {
@@ -440,6 +493,7 @@ template<class Type, class GeoMesh>
 Foam::Field<Type>& Foam::DimensionedField<Type, GeoMesh>::primitiveFieldRef()
 {
     this->setUpToDate();
+    storeOldTimes();
     return *this;
 }
 
@@ -645,7 +699,16 @@ void DimensionedField<Type, GeoMesh>::operator=
     checkField(*this, df, "=");
 
     dimensions_ = df.dimensions();
-    this->transfer(const_cast<DimensionedField<Type, GeoMesh>&>(df));
+
+    if (tdf.isTmp())
+    {
+        this->transfer(tdf.ref());
+    }
+    else
+    {
+        Field<Type>::operator=(df);
+    }
+
     tdf.clear();
 }
 
@@ -663,6 +726,57 @@ void DimensionedField<Type, GeoMesh>::operator=
 
 template<class Type, class GeoMesh>
 void DimensionedField<Type, GeoMesh>::operator=(const zero&)
+{
+    Field<Type>::operator=(Zero);
+}
+
+
+template<class Type, class GeoMesh>
+void DimensionedField<Type, GeoMesh>::operator==
+(
+    const tmp<DimensionedField<Type, GeoMesh>>& tdf
+)
+{
+    const DimensionedField<Type, GeoMesh>& df = tdf();
+
+    // Check for assignment to self
+    if (this == &df)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    checkField(*this, df, "==");
+
+    dimensions_ = df.dimensions();
+
+    if (tdf.isTmp())
+    {
+        this->transfer(tdf.ref());
+    }
+    else
+    {
+        Field<Type>::operator=(df);
+    }
+
+    tdf.clear();
+}
+
+
+template<class Type, class GeoMesh>
+void DimensionedField<Type, GeoMesh>::operator==
+(
+    const dimensioned<Type>& dt
+)
+{
+    dimensions_ = dt.dimensions();
+    Field<Type>::operator=(dt.value());
+}
+
+
+template<class Type, class GeoMesh>
+void DimensionedField<Type, GeoMesh>::operator==(const zero&)
 {
     Field<Type>::operator=(Zero);
 }

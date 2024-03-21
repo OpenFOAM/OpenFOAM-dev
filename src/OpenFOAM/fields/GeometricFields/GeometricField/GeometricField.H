@@ -77,15 +77,13 @@ Ostream& operator<<
 template<class Type, template<class> class PatchField, class GeoMesh>
 class GeometricField
 :
-    public DimensionedField<Type, GeoMesh>
+    public DimensionedField<Type, GeoMesh>,
+    public OldTimeField<GeometricField<Type, PatchField, GeoMesh>>
 {
     // Private Member Functions
 
         //- Read from file if it is present
         bool readIfPresent();
-
-        //- Read old time field from file if it is present
-        bool readOldTimeIfPresent();
 
 
 public:
@@ -97,6 +95,9 @@ public:
 
         //- Type of the internal field from which this GeometricField is derived
         typedef DimensionedField<Type, GeoMesh> Internal;
+
+        //- Type of the field from which this GeometricField is derived
+        typedef DimensionedField<Type, GeoMesh> Base;
 
         //- Type of the patch field of which the Boundary is composed
         typedef PatchField<Type> Patch;
@@ -110,17 +111,13 @@ public:
         //- Type of the field sources
         typedef GeometricFieldSources<Type, GeoMesh> Sources;
 
+        //- Component type of the elements of the field
+        typedef typename Field<Type>::cmptType cmptType;
+
 
 private:
 
     // Private Data
-
-        //- Current time index.
-        //  Used to trigger the storing of the old-time value
-        mutable label timeIndex_;
-
-        //- Pointer to old time field
-        mutable GeometricField<Type, PatchField, GeoMesh>* field0Ptr_;
 
         //-  Pointer to previous iteration (used for under-relaxation)
         mutable GeometricField<Type, PatchField, GeoMesh>* fieldPrevIterPtr_;
@@ -140,22 +137,12 @@ private:
         //- Read the field - create the field dictionary on-the-fly
         void readFields();
 
-        //- Store the old-time field
-        void storeOldTime() const;
-
-        //- Find oldest time and set to nullObject
-        void nullOldestTimeFound();
-
 
 public:
 
     //- Runtime type information
     TypeName("GeometricField");
 
-
-    // Public Typedefs
-
-        typedef typename Field<Type>::cmptType cmptType;
 
     // Static Member Functions
 
@@ -252,7 +239,7 @@ public:
         //- Move constructor
         GeometricField(GeometricField<Type, PatchField, GeoMesh>&&);
 
-        //- Construct as copy of tmp<GeometricField> deleting argument
+        //- Construct as copy of tmp
         GeometricField(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
 
         //- Construct as copy resetting IO parameters
@@ -262,7 +249,7 @@ public:
             const GeometricField<Type, PatchField, GeoMesh>&
         );
 
-        //- Construct as copy of tmp<GeometricField> resetting IO parameters
+        //- Construct as copy of tmp resetting IO parameters
         GeometricField
         (
             const IOobject&,
@@ -276,7 +263,7 @@ public:
             const GeometricField<Type, PatchField, GeoMesh>&
         );
 
-        //- Construct as copy resetting name
+        //- Construct as copy of tmp resetting name
         GeometricField
         (
             const word& newName,
@@ -301,7 +288,7 @@ public:
             const HashTable<word>& fieldSourceTypes = HashTable<word>()
         );
 
-        //- Construct as copy resetting IO parameters and boundary types
+        //- Construct as copy of tmp resetting IO parameters and boundary types
         GeometricField
         (
             const IOobject&,
@@ -423,54 +410,17 @@ public:
         //- Return const-reference to the sources
         inline const Sources& sources() const;
 
-        //- Return the time index of the field
-        inline label timeIndex() const;
-
-        //- Return the time index of the field
-        inline label& timeIndex();
-
-        //- Return whether or not this is an old-time field
-        bool isOldTime() const;
-
-        //- Store the old-time fields
-        void storeOldTimes() const;
-
-        //- Return the number of old time fields stored
-        label nOldTimes(const bool includeNull=true) const;
-
-        //- Return old time field
-        const GeometricField<Type, PatchField, GeoMesh>& oldTime() const;
-
-        //- Return non-const old time field
-        //  (Not a good idea but it is used for sub-cycling)
-        GeometricField<Type, PatchField, GeoMesh>& oldTimeRef();
-
-        //- Return the n-th old time field
-        const GeometricField<Type, PatchField, GeoMesh>& oldTime
-        (
-            const label n
-        ) const;
-
-        //- Return the n-th non-const old time field
-        //  (Not a good idea but it is used for sub-cycling)
-        GeometricField<Type, PatchField, GeoMesh>& oldTimeRef(const label n);
-
         //- Store the field as the previous iteration value
         void storePrevIter() const;
+
+        //- Delete the previous iteration field
+        void clearPrevIter();
 
         //- Return previous iteration field
         const GeometricField<Type, PatchField, GeoMesh>& prevIter() const;
 
-        //- Delete old time and previous iteration fields
-        void clearOldTimes();
-
-        //- Set oldest time field pointer to nullObjectPtr
-        //  to remove the oldest time field while maintaining a tag
-        //  so that it is reinstated on the next call to oldTime().
-        //
-        //  This is used to temporarily remove the oldest-time field
-        //  prior to mesh topology change.
-        void nullOldestTime();
+        //- Use old-time methods from the base class
+        USING_OLD_TIME_FIELD(GeometricField);
 
         //- Correct boundary field
         void correctBoundaryConditions();

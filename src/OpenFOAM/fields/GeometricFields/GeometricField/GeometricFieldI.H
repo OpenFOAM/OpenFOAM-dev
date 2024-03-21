@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "GeometricField.H"
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -34,8 +36,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::null()
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-inline
-const typename
+inline const typename
 Foam::GeometricField<Type, PatchField, GeoMesh>::Internal&
 Foam::GeometricField<Type, PatchField, GeoMesh>::
 internalField() const
@@ -45,8 +46,7 @@ internalField() const
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-inline
-const typename
+inline const typename
 Foam::GeometricField<Type, PatchField, GeoMesh>::Internal::FieldType&
 Foam::GeometricField<Type, PatchField, GeoMesh>::primitiveField() const
 {
@@ -55,8 +55,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::primitiveField() const
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-inline const typename Foam::GeometricField<Type, PatchField, GeoMesh>::
-Boundary&
+inline const typename
+Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary&
 Foam::GeometricField<Type, PatchField, GeoMesh>::boundaryField() const
 {
     return boundaryField_;
@@ -72,27 +72,10 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::sources() const
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-inline Foam::label
-Foam::GeometricField<Type, PatchField, GeoMesh>::timeIndex() const
-{
-    return timeIndex_;
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-inline Foam::label&
-Foam::GeometricField<Type, PatchField, GeoMesh>::timeIndex()
-{
-    return timeIndex_;
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-inline
-const typename
+inline const typename
 Foam::GeometricField<Type, PatchField, GeoMesh>::Internal&
 Foam::GeometricField<Type, PatchField, GeoMesh>::
 operator()() const

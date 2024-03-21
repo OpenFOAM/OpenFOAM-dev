@@ -145,48 +145,6 @@ bool Foam::GeometricField<Type, PatchField, GeoMesh>::readIfPresent()
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-bool Foam::GeometricField<Type, PatchField, GeoMesh>::readOldTimeIfPresent()
-{
-    // Read the old time field if present
-    typeIOobject<GeometricField<Type, PatchField, GeoMesh>> field0
-    (
-        this->name()  + "_0",
-        this->time().name(),
-        this->db(),
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE,
-        this->registerObject()
-    );
-
-    if (field0.headerOk())
-    {
-        if (debug)
-        {
-            InfoInFunction << "Reading old time level for field"
-                << endl << this->info() << endl;
-        }
-
-        field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
-        (
-            field0,
-            this->mesh()
-        );
-
-        field0Ptr_->timeIndex_ = timeIndex_ - 1;
-
-        if (!field0Ptr_->readOldTimeIfPresent())
-        {
-            field0Ptr_->oldTime();
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
-
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -199,8 +157,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 )
 :
     Internal(io, mesh, ds, false),
-    timeIndex_(this->time().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, patchFieldType),
     sources_()
@@ -226,8 +183,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 )
 :
     Internal(io, mesh, ds, false),
-    timeIndex_(this->time().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, patchFieldTypes, actualPatchTypes),
     sources_(*this, fieldSourceTypes)
@@ -251,8 +207,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 )
 :
     Internal(io, mesh, dt, false),
-    timeIndex_(this->time().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, patchFieldType),
     sources_()
@@ -280,8 +235,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 )
 :
     Internal(io, mesh, dt, false),
-    timeIndex_(this->time().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, patchFieldTypes, actualPatchTypes),
     sources_(*this, fieldSourceTypes)
@@ -307,8 +261,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 )
 :
     Internal(io, diField),
-    timeIndex_(this->time().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(this->mesh().boundary(), *this, ptfl),
     sources_(*this, stft)
@@ -335,8 +288,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 )
 :
     Internal(io, mesh, ds, iField),
-    timeIndex_(this->time().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, ptfl),
     sources_(*this, stft)
@@ -359,8 +311,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 )
 :
     Internal(io, mesh, dimless, false),
-    timeIndex_(this->time().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary()),
     sources_()
@@ -396,8 +347,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 )
 :
     Internal(io, mesh, dimless, false),
-    timeIndex_(this->time().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary()),
     sources_()
@@ -430,8 +380,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 )
 :
     Internal(gf),
-    timeIndex_(gf.timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(gf),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, gf.boundaryField_),
     sources_(*this, gf.sources_)
@@ -440,14 +389,6 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     {
         InfoInFunction
             << "Constructing as copy" << endl << this->info() << endl;
-    }
-
-    if (gf.field0Ptr_ && notNull(gf.field0Ptr_))
-    {
-        field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
-        (
-            *gf.field0Ptr_
-        );
     }
 
     this->writeOpt() = IOobject::NO_WRITE;
@@ -461,8 +402,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 )
 :
     Internal(move(gf)),
-    timeIndex_(gf.timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(move(gf)),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, gf.boundaryField_),
     sources_(*this, gf.sources_)
@@ -471,12 +411,6 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     {
         InfoInFunction
             << "Constructing by moving" << endl << this->info() << endl;
-    }
-
-    if (gf.field0Ptr_ && notNull(gf.field0Ptr_))
-    {
-        field0Ptr_ = gf.field0Ptr_;
-        gf.field0Ptr_ = nullptr;
     }
 
     this->writeOpt() = IOobject::NO_WRITE;
@@ -494,8 +428,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
         const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
         tgf.isTmp()
     ),
-    timeIndex_(tgf().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(tgf().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, tgf().boundaryField_),
     sources_(*this, tgf().sources_)
@@ -519,9 +452,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 :
-    Internal(io, gf),
-    timeIndex_(gf.timeIndex()),
-    field0Ptr_(nullptr),
+    Internal(io, gf, false),
+    OldTimeField<GeometricField>(gf.timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, gf.boundaryField_),
     sources_(*this, gf.sources_)
@@ -533,13 +465,9 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
             << endl << this->info() << endl;
     }
 
-    if (!readIfPresent() && gf.field0Ptr_ && notNull(gf.field0Ptr_))
+    if (!readIfPresent())
     {
-        field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
-        (
-            io.name() + "_0",
-            *gf.field0Ptr_
-        );
+        copyOldTimes(io, gf);
     }
 }
 
@@ -555,10 +483,10 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     (
         io,
         const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
-        tgf.isTmp()
+        tgf.isTmp(),
+        false
     ),
-    timeIndex_(tgf().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(tgf().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, tgf().boundaryField_),
     sources_(*this, tgf().sources_)
@@ -584,8 +512,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 )
 :
     Internal(newName, gf),
-    timeIndex_(gf.timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(gf.timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, gf.boundaryField_),
     sources_(*this, gf.sources_)
@@ -597,14 +524,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
             << endl << this->info() << endl;
     }
 
-    if (!readIfPresent() && gf.field0Ptr_ && notNull(gf.field0Ptr_))
-    {
-        field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
-        (
-            newName + "_0",
-            *gf.field0Ptr_
-        );
-    }
+    copyOldTimes(newName, gf);
 }
 
 
@@ -621,8 +541,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
         const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
         tgf.isTmp()
     ),
-    timeIndex_(tgf().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(tgf().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, tgf().boundaryField_),
     sources_(*this, tgf().sources_)
@@ -646,9 +565,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const word& patchFieldType
 )
 :
-    Internal(io, gf),
-    timeIndex_(gf.timeIndex()),
-    field0Ptr_(nullptr),
+    Internal(io, gf, false),
+    OldTimeField<GeometricField>(gf.timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(this->mesh().boundary(), *this, patchFieldType),
     sources_(*this, gf.sources_)
@@ -662,13 +580,9 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     boundaryField_ == gf.boundaryField_;
 
-    if (!readIfPresent() && gf.field0Ptr_ && notNull(gf.field0Ptr_))
+    if (!readIfPresent())
     {
-        field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
-        (
-            io.name() + "_0",
-            *gf.field0Ptr_
-        );
+        copyOldTimes(io, gf);
     }
 }
 
@@ -683,9 +597,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     const HashTable<word>& fieldSourceTypes
 )
 :
-    Internal(io, gf),
-    timeIndex_(gf.timeIndex()),
-    field0Ptr_(nullptr),
+    Internal(io, gf, false),
+    OldTimeField<GeometricField>(gf.timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_
     (
@@ -705,13 +618,9 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     boundaryField_ == gf.boundaryField_;
 
-    if (!readIfPresent() && gf.field0Ptr_ && notNull(gf.field0Ptr_))
+    if (!readIfPresent())
     {
-        field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
-        (
-            io.name() + "_0",
-            *gf.field0Ptr_
-        );
+        copyOldTimes(io, gf);
     }
 }
 
@@ -730,10 +639,10 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     (
         io,
         const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
-        tgf.isTmp()
+        tgf.isTmp(),
+        false
     ),
-    timeIndex_(tgf().timeIndex()),
-    field0Ptr_(nullptr),
+    OldTimeField<GeometricField>(tgf().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_
     (
@@ -1043,7 +952,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::~GeometricField()
 {
     this->db().cacheTemporaryObject(*this);
 
-    clearOldTimes();
+    clearPrevIter();
 }
 
 
@@ -1083,159 +992,6 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::boundaryFieldRef()
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-bool Foam::GeometricField<Type, PatchField, GeoMesh>::isOldTime() const
-{
-    return
-        this->name().size() > 2
-     && this->name()(this->name().size()-2, 2) == "_0";
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::GeometricField<Type, PatchField, GeoMesh>::storeOldTimes() const
-{
-    if (field0Ptr_ && timeIndex_ != this->time().timeIndex() && !isOldTime())
-    {
-        storeOldTime();
-    }
-
-    // Correct time index
-    timeIndex_ = this->time().timeIndex();
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::GeometricField<Type, PatchField, GeoMesh>::storeOldTime() const
-{
-    if (field0Ptr_)
-    {
-        if (notNull(field0Ptr_))
-        {
-            field0Ptr_->storeOldTime();
-
-            if (debug)
-            {
-                InfoInFunction
-                    << "Storing old time field for field" << endl
-                    << this->info() << endl;
-            }
-
-            *field0Ptr_ == *this;
-            field0Ptr_->timeIndex_ = timeIndex_;
-
-            if (field0Ptr_->field0Ptr_)
-            {
-                field0Ptr_->writeOpt() = this->writeOpt();
-            }
-        }
-        else
-        {
-            // Reinstate old-time field
-            oldTime();
-        }
-    }
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::label Foam::GeometricField<Type, PatchField, GeoMesh>::nOldTimes
-(
-    const bool includeNull
-) const
-{
-    if (field0Ptr_)
-    {
-        if (isNull(field0Ptr_))
-        {
-            return includeNull;
-        }
-        else
-        {
-            return field0Ptr_->nOldTimes(includeNull) + 1;
-        }
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-const Foam::GeometricField<Type, PatchField, GeoMesh>&
-Foam::GeometricField<Type, PatchField, GeoMesh>::oldTime() const
-{
-    if (!field0Ptr_ || isNull(field0Ptr_))
-    {
-        // Set field0Ptr_ null to ensure the old-time field constructor
-        // does not construct the old-old-time field
-        field0Ptr_ = nullptr;
-
-        field0Ptr_ = new GeometricField<Type, PatchField, GeoMesh>
-        (
-            IOobject
-            (
-                this->name() + "_0",
-                this->time().name(),
-                this->db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                this->registerObject()
-            ),
-            *this
-        );
-    }
-    else
-    {
-        storeOldTimes();
-    }
-
-    return *field0Ptr_;
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::GeometricField<Type, PatchField, GeoMesh>&
-Foam::GeometricField<Type, PatchField, GeoMesh>::oldTimeRef()
-{
-    static_cast<const GeometricField<Type, PatchField, GeoMesh>&>(*this)
-        .oldTime();
-
-    return *field0Ptr_;
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-const Foam::GeometricField<Type, PatchField, GeoMesh>&
-Foam::GeometricField<Type, PatchField, GeoMesh>::oldTime(const label n) const
-{
-    if (n == 0)
-    {
-        return *this;
-    }
-    else
-    {
-        return oldTime().oldTime(n - 1);
-    }
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::GeometricField<Type, PatchField, GeoMesh>&
-Foam::GeometricField<Type, PatchField, GeoMesh>::oldTimeRef(const label n)
-{
-    if (n == 0)
-    {
-        return *this;
-    }
-    else
-    {
-        return oldTimeRef().oldTimeRef(n - 1);
-    }
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricField<Type, PatchField, GeoMesh>::storePrevIter() const
 {
     if (!fieldPrevIterPtr_)
@@ -1261,6 +1017,13 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::storePrevIter() const
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::clearPrevIter()
+{
+    deleteDemandDrivenData(fieldPrevIterPtr_);
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 const Foam::GeometricField<Type, PatchField, GeoMesh>&
 Foam::GeometricField<Type, PatchField, GeoMesh>::prevIter() const
 {
@@ -1274,47 +1037,6 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::prevIter() const
     }
 
     return *fieldPrevIterPtr_;
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::GeometricField<Type, PatchField, GeoMesh>::clearOldTimes()
-{
-    if (field0Ptr_ && notNull(field0Ptr_))
-    {
-        deleteDemandDrivenData(field0Ptr_);
-    }
-
-    deleteDemandDrivenData(fieldPrevIterPtr_);
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::GeometricField<Type, PatchField, GeoMesh>::nullOldestTime()
-{
-    // Check that the field is not an old-time field
-    if (!isOldTime())
-    {
-        // Search for the oldest old-time field and set to nullObject
-        nullOldestTimeFound();
-    }
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::GeometricField<Type, PatchField, GeoMesh>::nullOldestTimeFound()
-{
-    if (field0Ptr_ && notNull(field0Ptr_))
-    {
-        if (field0Ptr_->field0Ptr_)
-        {
-            field0Ptr_->nullOldestTimeFound();
-        }
-        else
-        {
-            nullDemandDrivenData(field0Ptr_);
-        }
-    }
 }
 
 
