@@ -195,7 +195,7 @@ class meshCutter
         //- Modifies existing facei for either new owner/neighbour or
         //  new face points. Checks if anything changed and flips face
         //  if owner>neighbour
-        void modFace
+        void modifyFace
         (
             polyTopoChange& meshMod,
             const label facei,

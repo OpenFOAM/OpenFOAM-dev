@@ -210,7 +210,7 @@ Foam::label Foam::hexRef8::addInternalFace
 }
 
 
-void Foam::hexRef8::modFace
+void Foam::hexRef8::modifyFace
 (
     polyTopoChange& meshMod,
     const label facei,
@@ -3816,7 +3816,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
                     {
                         modifiedFace = true;
 
-                        modFace(meshMod, facei, newFace, own, nei);
+                        modifyFace(meshMod, facei, newFace, own, nei);
                     }
                     else
                     {
@@ -3934,7 +3934,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
                         }
                     }
 
-                    modFace(meshMod, facei, newFace, own, nei);
+                    modifyFace(meshMod, facei, newFace, own, nei);
 
                     // Mark face as having been handled
                     affectedFace.unset(facei);
@@ -3976,7 +3976,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
                 nei
             );
 
-            modFace(meshMod, facei, f, own, nei);
+            modifyFace(meshMod, facei, f, own, nei);
 
             // Mark face as having been handled
             affectedFace.unset(facei);

@@ -229,7 +229,7 @@ class polyTopoChange
         //- Return face points
         pointField facePoints(const face& f) const;
 
-        //- Check inputs to modFace or addFace
+        //- Check inputs to modifyFace or addFace
         void checkFace
         (
             const face&,

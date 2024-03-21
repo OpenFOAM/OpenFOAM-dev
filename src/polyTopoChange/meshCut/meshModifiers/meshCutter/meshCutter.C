@@ -258,7 +258,7 @@ void Foam::meshCutter::addFace
 }
 
 
-void Foam::meshCutter::modFace
+void Foam::meshCutter::modifyFace
 (
     polyTopoChange& meshMod,
     const label facei,
@@ -841,7 +841,7 @@ void Foam::meshCutter::setRefinement
         // f0 is the added face, f1 the modified one
         addFace(meshMod, facei, f0, f0Owner, f0Neighbour);
 
-        modFace(meshMod, facei, f1, f1Owner, f1Neighbour);
+        modifyFace(meshMod, facei, f1, f1Owner, f1Neighbour);
 
         faceUptodate[facei] = true;
     }
@@ -880,7 +880,7 @@ void Foam::meshCutter::setRefinement
                     label own, nei;
                     faceCells(cuts, facei, own, nei);
 
-                    modFace(meshMod, facei, newFace, own, nei);
+                    modifyFace(meshMod, facei, newFace, own, nei);
 
                     faceUptodate[facei] = true;
                 }
@@ -923,7 +923,7 @@ void Foam::meshCutter::setRefinement
                     label own, nei;
                     faceCells(cuts, facei, own, nei);
 
-                    modFace
+                    modifyFace
                     (
                         meshMod,
                         facei,

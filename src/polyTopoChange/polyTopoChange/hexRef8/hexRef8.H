@@ -143,7 +143,7 @@ class hexRef8
 
         //- Modifies existing facei for either new owner/neighbour or new face
         //  points. Reverses if necessary.
-        void modFace
+        void modifyFace
         (
             polyTopoChange& meshMod,
             const label facei,

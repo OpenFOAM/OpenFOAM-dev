@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -378,7 +378,7 @@ void Foam::removeFaces::mergeFaces
     //        << endl;
     //}
 
-    modFace
+    modifyFace
     (
         mergedFace,         // modified face
         facei,              // label of face being modified
@@ -467,7 +467,7 @@ Foam::face Foam::removeFaces::filterFace
 
 
 // Wrapper for meshMod.modifyFace. Reverses face if own>nei.
-void Foam::removeFaces::modFace
+void Foam::removeFaces::modifyFace
 (
     const face& f,
     const label masterFaceID,
@@ -1466,7 +1466,7 @@ void Foam::removeFaces::setRefinement
 //                    << endl;
 //            }
 
-            modFace
+            modifyFace
             (
                 f,                  // modified face
                 facei,              // label of face being modified
