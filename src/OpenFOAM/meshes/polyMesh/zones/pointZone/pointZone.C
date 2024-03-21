@@ -185,24 +185,27 @@ void Foam::pointZone::topoChange(const polyTopoChangeMap& map)
 {
     clearAddressing();
 
-    labelList newAddressing(size());
-    label nPoints = 0;
+    labelHashSet indices;
+    const labelList& pointMap = map.pointMap();
+    const labelList& reversePointMap = map.reversePointMap();
 
-    const labelList& pointMap = map.reversePointMap();
-
-    forAll(*this, i)
+    forAll(pointMap, pointi)
     {
-        const label pointi = operator[](i);
-
-        if (pointMap[pointi] >= 0)
+        if (pointMap[pointi] >= 0 && localIndex(pointMap[pointi]) != -1)
         {
-            newAddressing[nPoints] = pointMap[pointi];
-            nPoints++;
+            indices.insert(pointi);
         }
     }
 
-    newAddressing.setSize(nPoints);
-    transfer(newAddressing);
+    forAll(reversePointMap, pointi)
+    {
+        if (reversePointMap[pointi] >= 0 && localIndex(pointi) != -1)
+        {
+            indices.insert(reversePointMap[pointi]);
+        }
+    }
+
+    labelList::operator=(indices.sortedToc());
 }
 
 

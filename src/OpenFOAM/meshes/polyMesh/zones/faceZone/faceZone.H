@@ -111,6 +111,9 @@ protected:
         //- Check addressing
         void checkAddressing() const;
 
+        //- Reset the indices and flipMap from the given map
+        void reset(const Map<bool>& indices);
+
 
 public:
 
@@ -277,8 +280,11 @@ public:
         //  true if in error.
         virtual bool checkParallelSync(const bool report = false) const;
 
+        //- Insert given indices and corresponding face flips into zone
+        void insert(const Map<bool>& newIndices);
+
         //- Swap two faceZones
-        virtual void swap(faceZone&);
+        void swap(faceZone&);
 
         //- Correct patch after moving points
         virtual void movePoints(const pointField&);

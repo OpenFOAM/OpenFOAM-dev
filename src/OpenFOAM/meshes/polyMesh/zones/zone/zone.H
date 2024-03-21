@@ -170,6 +170,9 @@ public:
         //- Insert given indices into zone
         void insert(const labelHashSet& newIndices);
 
+        //- Swap two zones
+        void swap(zone&);
+
         //- Correct patch after moving points
         virtual void movePoints(const pointField&)
         {}

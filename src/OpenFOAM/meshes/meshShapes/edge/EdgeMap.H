@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,23 +54,7 @@ public:
 
     // Constructors
 
-        //- Construct given initial map size
-        EdgeMap(const label size = 128)
-        :
-            HashTable<T, edge, Hash<edge>>(size)
-        {}
-
-        //- Construct from Istream
-        EdgeMap(Istream& is)
-        :
-            HashTable<T, edge, Hash<edge>>(is)
-        {}
-
-        //- Copy constructor
-        EdgeMap(const EdgeMap<T>& map)
-        :
-            HashTable<T, edge, Hash<edge>>(map)
-        {}
+        using HashTable<T, edge, Hash<edge>>::HashTable;
 };
 
 

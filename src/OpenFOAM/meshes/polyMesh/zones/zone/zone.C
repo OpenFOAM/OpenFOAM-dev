@@ -228,6 +228,13 @@ void Foam::zone::insert(const labelHashSet& newIndices)
 }
 
 
+void Foam::zone::swap(zone& z)
+{
+    clearAddressing();
+    labelList::swap(z);
+}
+
+
 void Foam::zone::mapMesh(const polyMeshMap&)
 {
     clearAddressing();

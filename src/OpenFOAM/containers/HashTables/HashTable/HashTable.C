@@ -82,6 +82,31 @@ Foam::HashTable<T, Key, Hash>::HashTable
 template<class T, class Key, class Hash>
 Foam::HashTable<T, Key, Hash>::HashTable
 (
+    const UList<Key>& keyList,
+    const UList<T>& elmtList
+)
+:
+    HashTable<T, Key, Hash>(keyList.size())
+{
+    if (keyList.size() != elmtList.size())
+    {
+        FatalErrorInFunction
+            << "Lists of keys and elements have different sizes" << nl
+            << "    number of keys: " << keyList.size()
+            << ", number of elements: " << elmtList.size()
+            << abort(FatalError);
+    }
+
+    forAll(keyList, i)
+    {
+        insert(keyList[i], elmtList[i]);
+    }
+}
+
+
+template<class T, class Key, class Hash>
+Foam::HashTable<T, Key, Hash>::HashTable
+(
     std::initializer_list<Tuple2<Key, T>> lst
 )
 :

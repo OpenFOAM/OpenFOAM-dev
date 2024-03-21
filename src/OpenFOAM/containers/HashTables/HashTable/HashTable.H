@@ -206,6 +206,10 @@ public:
         //- Construct from Istream
         HashTable(Istream&, const label size = 128);
 
+        //- Construct from a list of keys and list of elements
+        //  Lists must have equal length
+        HashTable(const UList<Key>& keyList, const UList<T>& elmtList);
+
         //- Copy constructor
         HashTable(const HashTable<T, Key, Hash>&);
 

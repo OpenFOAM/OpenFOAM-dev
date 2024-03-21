@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,61 +54,9 @@ class Map
 
 public:
 
-    typedef typename HashTable<T, label, Hash<label>>::iterator iterator;
-
-    typedef typename HashTable<T, label, Hash<label>>::const_iterator
-        const_iterator;
-
     // Constructors
 
-        //- Construct given initial size
-        Map(const label size = 128)
-        :
-            HashTable<T, label, Hash<label>>(size)
-        {}
-
-        //- Construct from Istream
-        Map(Istream& is)
-        :
-            HashTable<T, label, Hash<label>>(is)
-        {}
-
-        //- Copy constructor
-        Map(const Map<T>& map)
-        :
-            HashTable<T, label, Hash<label>>(map)
-        {}
-
-        //- Move constructor
-        Map(Map<T>&& map)
-        :
-            HashTable<T, label, Hash<label>>(move(map))
-        {}
-
-        //- Move constructor
-        Map(HashTable<T, label, Hash<label>>&& map)
-        :
-            HashTable<T, label, Hash<label>>(move(map))
-        {}
-
-        //- Construct from an initialiser list
-        Map(std::initializer_list<Tuple2<label, T>> map)
-        :
-            HashTable<T, label, Hash<label>>(map)
-        {}
-
-
-    // Member Operators
-
-        void operator=(const Map<T>& map)
-        {
-            HashTable<T, label, Hash<label>>::operator=(map);
-        }
-
-        void operator=(Map<T>&& map)
-        {
-            HashTable<T, label, Hash<label>>::operator=(move(map));
-        }
+        using HashTable<T, label, Hash<label>>::HashTable;
 };
 
 

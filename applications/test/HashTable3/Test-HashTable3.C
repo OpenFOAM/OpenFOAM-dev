@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,10 +45,7 @@ int main(int argc, char *argv[])
 
     cpuTime timer;
 
-    // ie, a
-    // Map<label> map(2 * nSize);
-    // HashTable<label, label, Hash<label>> map(2 * nSize);
-    HashTable<label, label, Hash<label>> map(2 * nSize);
+    Map<label> map(2*nSize);
 
     Info<< "Constructed map of size: " << nSize
         << " (size " << map.size() << " capacity " << map.capacity() << ") "
@@ -62,12 +59,12 @@ int main(int argc, char *argv[])
         << " (size " << map.size() << " capacity " << map.capacity() << ") "
         << timer.cpuTimeIncrement() << " s\n";
 
-    label elemI = 0;
+    label elemi = 0;
     for (label iLoop = 0; iLoop < nLoops; iLoop++)
     {
         for (label i = 0; i < nBase; i++)
         {
-            map.erase(elemI++);
+            map.erase(elemi++);
         }
 
         map.shrink();

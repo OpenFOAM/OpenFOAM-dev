@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,15 @@ int main(int argc, char *argv[])
 
     Info<< "table4: " << table4 << nl
         << "toc: " << table4.toc() << endl;
+
+    HashTable<label, label, Hash<label>> table5
+    {
+        List<label>{3, 5, 7},
+        List<label>{10, 12, 16}
+    };
+
+    Info<< "table5: " << table5 << nl
+        << "toc: " << table5.toc() << endl;
 
     HashPtrTable<label, Foam::string> ptable1(0);
     ptable1.insert("kjhkjh", new label(10));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,15 +57,13 @@ SourceFiles
 #include "point.H"
 #include "intersection.H"
 #include "HashSet.H"
+#include "Map.H"
 #include "objectHit.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class face;
-template<class T> class Map;
 
 /*---------------------------------------------------------------------------*\
                      Class PrimitivePatchName Declaration

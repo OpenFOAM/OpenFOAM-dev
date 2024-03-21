@@ -179,6 +179,23 @@ void Foam::faceZone::checkAddressing() const
 }
 
 
+void Foam::faceZone::reset(const Map<bool>& indices)
+{
+    clearAddressing();
+
+    labelList::setSize(indices.size());
+    flipMap_.setSize(indices.size());
+
+    label i = 0;
+    forAllConstIter(Map<bool>, indices, iter)
+    {
+        operator[](i) = iter.key();
+        flipMap_[i] = *iter;
+        i++;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::faceZone::faceZone
@@ -472,6 +489,14 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
 }
 
 
+void Foam::faceZone::insert(const Map<bool>& newIndices)
+{
+    Map<bool> indices(*this, flipMap_);
+    indices.insert(newIndices);
+    reset(indices);
+}
+
+
 void Foam::faceZone::swap(faceZone& fz)
 {
     zone::swap(fz);
@@ -481,32 +506,30 @@ void Foam::faceZone::swap(faceZone& fz)
 
 void Foam::faceZone::topoChange(const polyTopoChangeMap& map)
 {
-    clearAddressing();
-
     /*
-    labelList newAddressing(size());
-    boolList newFlipMap(flipMap_.size());
-    label nFaces = 0;
+    Map<bool> indices;
+    const labelList& faceMap = map.faceMap();
+    const labelList& reverseFaceMap = map.reverseFaceMap();
 
-    const labelList& faceMap = map.reverseFaceMap();
-
-    forAll(*this, i)
+    forAll(faceMap, facei)
     {
-        const label facei = operator[](i);
-
-        if (faceMap[facei] >= 0)
+        const label i = localIndex(faceMap[facei]);
+        if (faceMap[facei] >= 0 && i != -1)
         {
-            newAddressing[nFaces] = faceMap[facei];
-            newFlipMap[nFaces] = flipMap_[i];       // Keep flip map.
-            nFaces++;
+            indices.insert(facei, flipMap_[i]);
         }
     }
 
-    newAddressing.setSize(nFaces);
-    newFlipMap.setSize(nFaces);
+    forAll(reverseFaceMap, facei)
+    {
+        const label i = localIndex(facei);
+        if (reverseFaceMap[facei] >= 0 && i != -1)
+        {
+            indices.insert(reverseFaceMap[facei], flipMap_[i]);
+        }
+    }
 
-    transfer(newAddressing);
-    flipMap_.transfer(newFlipMap);
+    reset(indices);
     */
 }
 
