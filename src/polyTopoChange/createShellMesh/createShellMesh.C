@@ -569,21 +569,11 @@ void Foam::createShellMesh::setRefinement
             -1,                         // nei
             faceToFaceMap.size(),       // masterFaceID : current facei
             true,                       // flipFaceFlux
-            bottomPatchID[facei],       // patchID
-            -1,                         // zoneID
-            false                       // zoneFlip
+            bottomPatchID[facei]        // patchID
         );
+
         faceToFaceMap.append(-facei-1); // points to flipped original face
         faceToEdgeMap.append(-1);
-
-        // const face newF(patch_.localFaces()[facei].reverseFace());
-        // Pout<< "Added bottom face "
-        //    << newF
-        //    << " coords:" << UIndirectList<point>(meshMod.points(), newF)
-        //    << " own " << addedCells[facei]
-        //    << " patch:" << bottomPatchID[facei]
-        //    << "  at " << patch_.faceCentres()[facei]
-        //    << endl;
     }
 
     // Add in between faces and face on top
@@ -624,20 +614,11 @@ void Foam::createShellMesh::setRefinement
                 nei,                        // nei
                 faceToFaceMap.size(),       // masterFaceID : current facei
                 false,                      // flipFaceFlux
-                patchi,                     // patchID
-                -1,                         // zoneID
-                false                       // zoneFlip
+                patchi                      // patchID
             );
+
             faceToFaceMap.append(facei+1);  // unflipped
             faceToEdgeMap.append(-1);
-
-            // Pout<< "Added in between face " << newF
-            //    << " coords:" << UIndirectList<point>(meshMod.points(), newF)
-            //    << " at layer " << layerI
-            //    << " own " << own
-            //    << " nei " << nei
-            //    << "  at " << patch_.faceCentres()[facei]
-            //    << endl;
         }
     }
 
@@ -750,21 +731,6 @@ void Foam::createShellMesh::setRefinement
                 patchi = ePatches[0];
             }
 
-            //{
-            //    Pout<< "Adding from face:" << patch_.faceCentres()[eFaces[0]]
-            //        << " from edge:"
-            //        << patch_.localPoints()[f[fp0]]
-            //        << patch_.localPoints()[f[fp1]]
-            //        << " at layer:" << layerI
-            //        << " with new points:" << newF
-            //        << " locations:"
-            //        << UIndirectList<point>(meshMod.points(), newF)
-            //        << " own:" << minCelli
-            //        << " nei:" << maxCelli
-            //        << endl;
-            //}
-
-
             // newF already outwards pointing.
             meshMod.addFace
             (
@@ -773,10 +739,9 @@ void Foam::createShellMesh::setRefinement
                 maxCelli,               // nei
                 faceToFaceMap.size(),   // masterFaceID
                 false,                  // flipFaceFlux
-                patchi,                 // patchID
-                -1,                     // zoneID
-                false                   // zoneFlip
+                patchi                  // patchID
             );
+
             faceToFaceMap.append(0);
             faceToEdgeMap.append(edgeI);
         }
@@ -844,19 +809,6 @@ void Foam::createShellMesh::setRefinement
                         }
                         newF.last() = v0;
                     }
-                    ////if (ePatches.size() == 0)
-                    //{
-                    //    Pout<< "Adding from MULTI face:"
-                    //        << patch_.faceCentres()[minFacei]
-                    //        << " from edge:"
-                    //        << patch_.localPoints()[f[fp0]]
-                    //        << patch_.localPoints()[f[fp1]]
-                    //        << " at layer:" << layerI
-                    //        << " with new points:" << newF
-                    //        << " locations:"
-                    //        << UIndirectList<point>(meshMod.points(), newF)
-                    //        << endl;
-                    //}
 
                     // newF already outwards pointing.
                     meshMod.addFace
@@ -866,9 +818,7 @@ void Foam::createShellMesh::setRefinement
                         -1,                     // nei
                         faceToFaceMap.size(),   // masterFaceID
                         false,                  // flipFaceFlux
-                        ePatches[i],            // patchID
-                        -1,                     // zoneID
-                        false                   // zoneFlip
+                        ePatches[i]             // patchID
                     );
                     faceToFaceMap.append(0);
                     faceToEdgeMap.append(edgeI);

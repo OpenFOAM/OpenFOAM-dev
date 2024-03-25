@@ -61,17 +61,6 @@ void changePatchID
     polyTopoChange& meshMod
 )
 {
-    const label zoneID = mesh.faceZones().whichZone(faceID);
-
-    bool zoneFlip = false;
-
-    if (zoneID >= 0)
-    {
-        const faceZone& fZone = mesh.faceZones()[zoneID];
-
-        zoneFlip = fZone.flipMap()[fZone.whichFace(faceID)];
-    }
-
     meshMod.modifyFace
     (
         mesh.faces()[faceID],               // face
@@ -79,9 +68,7 @@ void changePatchID
         mesh.faceOwner()[faceID],           // owner
         -1,                                 // neighbour
         false,                              // flip flux
-        patchID,                            // patch ID
-        zoneID,                             // zone ID
-        zoneFlip                            // zone flip
+        patchID                             // patch ID
     );
 }
 

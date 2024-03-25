@@ -224,14 +224,6 @@ void Foam::extrude2DMesh::setRefinement
 
         for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
         {
-            label zoneID = mesh_.faceZones().whichZone(facei);
-            bool zoneFlip = false;
-            if (zoneID != -1)
-            {
-                const faceZone& fZone = mesh_.faceZones()[zoneID];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-            }
-
             face newFace(4);
             const face& f = faces[facei];
             newFace[0] = f[0] + currentLayerOffset;
@@ -246,11 +238,9 @@ void Foam::extrude2DMesh::setRefinement
                 newFace,
                 mesh_.faceOwner()[facei] + offset,       // own
                 mesh_.faceNeighbour()[facei] + offset,   // nei
-                nFaces++,    // masterFaceID
+                nFaces++,                       // masterFaceID
                 false,                          // flipFaceFlux
-                -1,                             // patchID
-                zoneID,                         // zoneID
-                zoneFlip                        // zoneFlip
+                -1                              // patchID
             );
 
             if (debug)
@@ -276,14 +266,6 @@ void Foam::extrude2DMesh::setRefinement
 
             for (label facei = startFacei; facei < endFacei; facei++)
             {
-                label zoneID = mesh_.faceZones().whichZone(facei);
-                bool zoneFlip = false;
-                if (zoneID != -1)
-                {
-                    const faceZone& fZone = mesh_.faceZones()[zoneID];
-                    zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-                }
-
                 face newFace(4);
                 const face& f = faces[facei];
                 newFace[0] = f[0] + currentLayerOffset;
@@ -300,9 +282,7 @@ void Foam::extrude2DMesh::setRefinement
                     -1,                                      // nei
                     nFaces++,                                // masterFaceID
                     false,                                   // flipFaceFlux
-                    patchi,                                  // patchID
-                    zoneID,                                  // zoneID
-                    zoneFlip                                 // zoneFlip
+                    patchi                                   // patchID
                 );
 
                 if (debug)
@@ -393,9 +373,7 @@ void Foam::extrude2DMesh::setRefinement
                 nei,                            // nei
                 nFaces++,                       // masterFaceID
                 false,                          // flipFaceFlux
-                -1,                             // patchID
-                -1,                             // zoneID
-                false                           // zoneFlip
+                -1                              // patchID
             );
 
             if (debug)
@@ -472,9 +450,7 @@ void Foam::extrude2DMesh::setRefinement
             -1,                             // nei
             nFaces++,                       // masterFaceID
             false,                          // flipFaceFlux
-            backPatchi_,                    // patchID
-            -1,                             // zoneID
-            false                           // zoneFlip
+            backPatchi_                     // patchID
         );
 
         if (debug)
@@ -500,9 +476,7 @@ void Foam::extrude2DMesh::setRefinement
             -1,                             // nei
             nFaces++,                       // masterFaceID
             false,                          // flipFaceFlux
-            frontPatchi_,                   // patchID
-            -1,                             // zoneID
-            false                           // zoneFlip
+            frontPatchi_                    // patchID
         );
 
         if (debug)

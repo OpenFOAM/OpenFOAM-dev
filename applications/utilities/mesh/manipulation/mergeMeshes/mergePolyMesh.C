@@ -162,10 +162,13 @@ Foam::mergePolyMesh::mergePolyMesh(polyMesh& mesh)
     {
         faceZoneNames_.setCapacity(2*curFaceZoneNames.size());
     }
+
     forAll(curFaceZoneNames, zonei)
     {
         faceZoneNames_.append(curFaceZoneNames[zonei]);
     }
+
+    faceZonesAddedFaces_.setSize(faceZoneNames_.size());
 
     // Cell zones
     wordList curCellZoneNames = mesh_.cellZones().names();
@@ -278,8 +281,7 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
     const labelList& own = m.faceOwner();
     const labelList& nei = m.faceNeighbour();
 
-    label newOwn, newNei, newPatch, newZone;
-    bool newZoneFlip;
+    label newOwn, newNei, newPatch;
 
     forAll(f, facei)
     {
@@ -326,18 +328,6 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
             newNei = renumberCells[newNei];
         }
 
-
-        newZone = fz.whichZone(facei);
-        newZoneFlip = false;
-
-        if (newZone >= 0)
-        {
-            newZoneFlip = fz[newZone].flipMap()[fz[newZone].whichFace(facei)];
-
-            // Grab the new zone
-            newZone = faceZoneIndices[newZone];
-        }
-
         renumberFaces[facei] = meshMod_.addFace
         (
             newFace,
@@ -345,10 +335,18 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
             newNei,
             -1,
             false,
-            newPatch,
-            newZone,
-            newZoneFlip
+            newPatch
         );
+
+        const labelList zones(fz.whichZones(facei));
+        forAll(zones, zonei)
+        {
+            const faceZone& fzi = fz[zones[zonei]];
+            const bool flip = fzi.flipMap()[fzi.whichFace(facei)];
+
+            faceZonesAddedFaces_[faceZoneIndices[zonei]]
+           .insert(renumberFaces[facei], flip);
+        }
     }
 }
 
@@ -504,6 +502,12 @@ void Foam::mergePolyMesh::merge()
     forAll(pointZonesAddedPoints_, zonei)
     {
         mesh_.pointZones()[zonei].insert(pointZonesAddedPoints_[zonei]);
+    }
+
+    // Add the new faces to the faceZones in the merged mesh
+    forAll(faceZonesAddedFaces_, zonei)
+    {
+        mesh_.faceZones()[zonei].insert(faceZonesAddedFaces_[zonei]);
     }
 
     // Add the new cells to the cellZones in the merged mesh

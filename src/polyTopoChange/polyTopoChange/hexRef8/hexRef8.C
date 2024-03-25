@@ -90,31 +90,16 @@ void Foam::hexRef8::reorder
 }
 
 
-void Foam::hexRef8::getFaceInfo
-(
-    const label facei,
-    label& patchID,
-    label& zoneID,
-    label& zoneFlip
-) const
+Foam::label Foam::hexRef8::getPatchIndex(const label facei) const
 {
-    patchID = -1;
+    label patchID = -1;
 
     if (!mesh_.isInternalFace(facei))
     {
         patchID = mesh_.boundaryMesh().whichPatch(facei);
     }
 
-    zoneID = mesh_.faceZones().whichZone(facei);
-
-    zoneFlip = false;
-
-    if (zoneID >= 0)
-    {
-        const faceZone& fZone = mesh_.faceZones()[zoneID];
-
-        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-    }
+    return patchID;
 }
 
 
@@ -127,9 +112,7 @@ Foam::label Foam::hexRef8::addFace
     const label nei
 ) const
 {
-    label patchID, zoneID, zoneFlip;
-
-    getFaceInfo(facei, patchID, zoneID, zoneFlip);
+    const label patchID = getPatchIndex(facei);
 
     label newFacei = -1;
 
@@ -143,9 +126,7 @@ Foam::label Foam::hexRef8::addFace
             nei,                        // neighbour
             facei,                      // master face for addition
             false,                      // flux flip
-            patchID,                    // patch for face
-            zoneID,                     // zone for face
-            zoneFlip                    // face zone flip
+            patchID                     // patch for face
         );
     }
     else
@@ -158,9 +139,7 @@ Foam::label Foam::hexRef8::addFace
             own,                        // neighbour
             facei,                      // master face for addition
             false,                      // flux flip
-            patchID,                    // patch for face
-            zoneID,                     // zone for face
-            zoneFlip                    // face zone flip
+            patchID                     // patch for face
         );
     }
     return newFacei;
@@ -186,9 +165,7 @@ Foam::label Foam::hexRef8::addInternalFace
             nei,                        // neighbour
             meshFacei,                  // master face for addition
             false,                      // flux flip
-            -1,                         // patch for face
-            -1,                         // zone for face
-            false                       // face zone flip
+            -1                          // patch for face
         );
     }
     else
@@ -202,9 +179,7 @@ Foam::label Foam::hexRef8::addInternalFace
             nei,                        // neighbour
             -1,                         // master face for addition
             false,                      // flux flip
-            -1,                         // patch for face
-            -1,                         // zone for face
-            false                       // face zone flip
+            -1                          // patch for face
         );
     }
 }
@@ -219,9 +194,7 @@ void Foam::hexRef8::modifyFace
     const label nei
 ) const
 {
-    label patchID, zoneID, zoneFlip;
-
-    getFaceInfo(facei, patchID, zoneID, zoneFlip);
+    const label patchID = getPatchIndex(facei);
 
     if
     (
@@ -242,9 +215,7 @@ void Foam::hexRef8::modifyFace
                 own,                // owner
                 nei,                // neighbour
                 false,              // face flip
-                patchID,            // patch for face
-                zoneID,             // zone for face
-                zoneFlip            // face flip in zone
+                patchID             // patch for face
             );
         }
         else
@@ -256,9 +227,7 @@ void Foam::hexRef8::modifyFace
                 nei,                    // owner
                 own,                    // neighbour
                 false,                  // face flip
-                patchID,                // patch for face
-                zoneID,                 // zone for face
-                zoneFlip                // face flip in zone
+                patchID                 // patch for face
             );
         }
     }

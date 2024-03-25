@@ -126,14 +126,8 @@ class removeFaces
                 polyTopoChange& meshMod
             ) const;
 
-            //- Get patch, zone info for facei
-            void getFaceInfo
-            (
-                const label facei,
-                label& patchID,
-                label& zoneID,
-                label& zoneFlip
-            ) const;
+            //- Get patch index
+            label getPatchIndex(const label facei) const;
 
             //- Return face with all pointsToRemove removed.
             face filterFace(const labelHashSet&, const label) const;
@@ -147,9 +141,6 @@ class removeFaces
                 const label nei,
                 const bool flipFaceFlux,
                 const label newPatchID,
-                const bool removeFromZone,
-                const label zoneID,
-                const bool zoneFlip,
 
                 polyTopoChange& meshMod
             ) const;

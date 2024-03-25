@@ -142,16 +142,6 @@ void Foam::duplicatePoints::setRefinement
             }
         }
 
-        // Get current zone info
-        label zoneID = mesh_.faceZones().whichZone(facei);
-        bool zoneFlip = false;
-        if (zoneID >= 0)
-        {
-            const faceZone& fZone = mesh_.faceZones()[zoneID];
-            zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-        }
-
-
         if (mesh_.isInternalFace(facei))
         {
             meshMod.modifyFace
@@ -161,9 +151,7 @@ void Foam::duplicatePoints::setRefinement
                 mesh_.faceOwner()[facei],   // owner
                 mesh_.faceNeighbour()[facei],   // neighbour
                 false,                      // face flip
-                -1,                         // patch for face
-                zoneID,                     // zone for face
-                zoneFlip                    // face flip in zone
+                -1                          // patch for face
             );
         }
         else
@@ -175,9 +163,7 @@ void Foam::duplicatePoints::setRefinement
                 mesh_.faceOwner()[facei],   // owner
                 -1,                         // neighbour
                 false,                      // face flip
-                patches.whichPatch(facei),  // patch for face
-                zoneID,                     // zone for face
-                zoneFlip                    // face flip in zone
+                patches.whichPatch(facei)   // patch for face
             );
         }
     }

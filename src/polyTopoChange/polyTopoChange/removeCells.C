@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -244,7 +244,6 @@ void Foam::removeCells::setRefinement
     const faceList& faces = mesh_.faces();
     const labelList& faceOwner = mesh_.faceOwner();
     const labelList& faceNeighbour = mesh_.faceNeighbour();
-    const meshFaceZones& faceZones = mesh_.faceZones();
 
     // Count starting number of faces using each point. Keep up to date whenever
     // removing a face.
@@ -291,21 +290,6 @@ void Foam::removeCells::setRefinement
 
                 // nei is remaining cell. Facei becomes external cell
 
-                label zoneID = faceZones.whichZone(facei);
-                bool zoneFlip = false;
-
-                if (zoneID >= 0)
-                {
-                    const faceZone& fZone = faceZones[zoneID];
-                    // Note: we reverse the owner/neighbour of the face
-                    // so should also select the other side of the zone
-                    zoneFlip = !fZone.flipMap()[fZone.whichFace(facei)];
-                }
-
-                // Pout<< "Putting exposed internal face " << facei
-                //    << " fc:" << mesh_.faceCentres()[facei]
-                //    << " into patch " << newPatchID[facei] << endl;
-
                 meshMod.modifyFace
                 (
                     f.reverseFace(),        // modified face
@@ -313,9 +297,7 @@ void Foam::removeCells::setRefinement
                     nei,                    // owner
                     -1,                     // neighbour
                     true,                   // face flip
-                    newPatchID[facei],      // patch for face
-                    zoneID,                 // zone for face
-                    zoneFlip                // face flip in zone
+                    newPatchID[facei]       // patch for face
                 );
             }
         }
@@ -334,16 +316,6 @@ void Foam::removeCells::setRefinement
             //    << " fc:" << mesh_.faceCentres()[facei]
             //    << " into patch " << newPatchID[facei] << endl;
 
-            // own is remaining cell. Facei becomes external cell.
-            label zoneID = faceZones.whichZone(facei);
-            bool zoneFlip = false;
-
-            if (zoneID >= 0)
-            {
-                const faceZone& fZone = faceZones[zoneID];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-            }
-
             meshMod.modifyFace
             (
                 f,                      // modified face
@@ -351,9 +323,7 @@ void Foam::removeCells::setRefinement
                 own,                    // owner
                 -1,                     // neighbour
                 false,                  // face flip
-                newPatchID[facei],      // patch for face
-                zoneID,                 // zone for face
-                zoneFlip                // face flip in zone
+                newPatchID[facei]       // patch for face
             );
         }
     }
@@ -370,19 +340,6 @@ void Foam::removeCells::setRefinement
             {
                 if (newPatchID[facei] != -1)
                 {
-                    // Pout<< "Putting uncoupled coupled face " << facei
-                    //    << " fc:" << mesh_.faceCentres()[facei]
-                    //    << " into patch " << newPatchID[facei] << endl;
-
-                    label zoneID = faceZones.whichZone(facei);
-                    bool zoneFlip = false;
-
-                    if (zoneID >= 0)
-                    {
-                        const faceZone& fZone = faceZones[zoneID];
-                        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-                    }
-
                     meshMod.modifyFace
                     (
                         faces[facei],           // modified face
@@ -390,9 +347,7 @@ void Foam::removeCells::setRefinement
                         faceOwner[facei],       // owner
                         -1,                     // neighbour
                         false,                  // face flip
-                        newPatchID[facei],      // patch for face
-                        zoneID,                 // zone for face
-                        zoneFlip                // face flip in zone
+                        newPatchID[facei]       // patch for face
                     );
                 }
                 else if (removedCell[faceOwner[facei]])

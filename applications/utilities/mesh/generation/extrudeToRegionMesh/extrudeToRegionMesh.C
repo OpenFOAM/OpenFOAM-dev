@@ -1896,9 +1896,7 @@ int main(int argc, char *argv[])
                     mesh.faceOwner()[meshFacei],// owner
                     -1,                         // neighbour
                     false,                      // face flip
-                    interMeshBottomPatch[zonei],// patch for face
-                    zoneMeshZoneID[zonei],      // zone for face
-                    false                       // face flip in zone
+                    interMeshBottomPatch[zonei] // patch for face
                 );
             }
             else if (mesh.isInternalFace(meshFacei))
@@ -1910,9 +1908,7 @@ int main(int argc, char *argv[])
                     mesh.faceNeighbour()[meshFacei],// owner
                     -1,                             // neighbour
                     true,                           // face flip
-                    interMeshBottomPatch[zonei],    // patch for face
-                    zoneMeshZoneID[zonei],          // zone for face
-                    true                            // face flip in zone
+                    interMeshBottomPatch[zonei]     // patch for face
                 );
             }
         }
@@ -1935,9 +1931,7 @@ int main(int argc, char *argv[])
                         mesh.faceOwner()[meshFacei],// owner
                         -1,                         // neighbour
                         false,                      // face flip
-                        interMeshTopPatch[zonei],   // patch for face
-                        zoneMeshZoneID[zonei],      // zone for face
-                        false                       // face flip in zone
+                        interMeshTopPatch[zonei]    // patch for face
                     );
                 }
                 else if (mesh.isInternalFace(meshFacei))
@@ -1949,9 +1943,7 @@ int main(int argc, char *argv[])
                         mesh.faceNeighbour()[meshFacei],// owner
                         -1,                             // neighbour
                         true,                           // face flip
-                        interMeshTopPatch[zonei],       // patch for face
-                        zoneMeshZoneID[zonei],          // zone for face
-                        true                            // face flip in zone
+                        interMeshTopPatch[zonei]        // patch for face
                     );
                 }
             }
@@ -1973,9 +1965,7 @@ int main(int argc, char *argv[])
                             -1,                             // neighbour
                             meshFacei,                      // master face
                             true,                           // flip flux
-                            interMeshTopPatch[zonei],       // patch for face
-                            -1,                             // zone for face
-                            false                           // face flip in zone
+                            interMeshTopPatch[zonei]        // patch for face
                         );
                     }
                 }
@@ -1988,9 +1978,7 @@ int main(int argc, char *argv[])
                         -1,                             // neighbour
                         meshFacei,                      // master face
                         false,                          // flip flux
-                        interMeshTopPatch[zonei],       // patch for face
-                        -1,                             // zone for face
-                        false                           // zone flip
+                        interMeshTopPatch[zonei]        // patch for face
                     );
                 }
             }

@@ -191,13 +191,6 @@ label mergePatchFaces
                 // Restore. Get face properties.
 
                 label own = mesh.faceOwner()[newMasterI];
-                label zoneID = mesh.faceZones().whichZone(newMasterI);
-                bool zoneFlip = false;
-                if (zoneID >= 0)
-                {
-                    const faceZone& fZone = mesh.faceZones()[zoneID];
-                    zoneFlip = fZone.flipMap()[fZone.whichFace(newMasterI)];
-                }
                 label patchID = mesh.boundaryMesh().whichPatch(newMasterI);
 
                 Pout<< "Restoring new master face " << newMasterI
@@ -211,11 +204,8 @@ label mergePatchFaces
                     own,                            // owner
                     -1,                             // neighbour
                     false,                          // face flip
-                    patchID,                        // patch for face
-                    zoneID,                         // zone for face
-                    zoneFlip                        // face flip in zone
+                    patchID                         // patch for face
                 );
-
 
                 // Add the previously removed faces
                 for (label i = 1; i < setFaces.size(); i++)
@@ -230,9 +220,7 @@ label mergePatchFaces
                         -1,                     // neighbour,
                         newMasterI,             // masterFaceID,
                         false,                  // flipFaceFlux,
-                        patchID,                // patchID,
-                        zoneID,                 // zoneID,
-                        zoneFlip                // zoneFlip
+                        patchID                 // patchID,
                     );
                 }
             }

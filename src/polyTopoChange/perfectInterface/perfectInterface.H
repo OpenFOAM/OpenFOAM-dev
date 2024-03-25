@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,9 +56,6 @@ class perfectInterface
 
         const polyMesh& mesh_;
 
-        //- Master face zone ID
-        label faceZoneIndex_;
-
         //- Master patch ID
         label masterPatchIndex_;
 
@@ -88,7 +85,6 @@ public:
         (
             const word& name,
             const polyMesh& mesh,
-            const word& faceZoneName,
             const word& masterPatchName,
             const word& slavePatchName
         );
@@ -109,7 +105,7 @@ public:
 
         //- Insert the layer addition/removal instructions
         //  into the topological change. Uses only mesh, not any of the
-        //  patch and zone indices. Bit of a workaround - used in extruding
+        //  patch indices. Bit of a workaround - used in extruding
         //  a mesh.
         virtual void setRefinement
         (

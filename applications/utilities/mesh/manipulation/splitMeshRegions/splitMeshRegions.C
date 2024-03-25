@@ -293,6 +293,41 @@ void addToInterface
 }
 
 
+label whichZone
+(
+    const polyMesh& mesh,
+    const bool useFaceZones,
+    const label facei
+)
+{
+    if (useFaceZones)
+    {
+        const labelList zones(mesh.faceZones().whichZones(facei));
+
+        if (zones.size() == 0)
+        {
+            return -1;
+        }
+        else if (zones.size() == 1)
+        {
+            return zones[0];
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Face " << facei << " is in more than one zone " << zones
+                << exit(FatalError);
+
+            return -1;
+        }
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+
 // Get region-region interface name and sizes.
 // Returns interfaces as straight list for looping in identical order.
 void getInterfaceSizes
@@ -326,7 +361,7 @@ void getInterfaceSizes
             addToInterface
             (
                 mesh,
-                (useFaceZones ? mesh.faceZones().whichZone(facei) : -1),
+                whichZone(mesh, useFaceZones, facei),
                 ownRegion,
                 neiRegion,
                 regionsToSize
@@ -358,7 +393,7 @@ void getInterfaceSizes
             addToInterface
             (
                 mesh,
-                (useFaceZones ? mesh.faceZones().whichZone(facei) : -1),
+                whichZone(mesh, useFaceZones, facei),
                 ownRegion,
                 neiRegion,
                 regionsToSize
@@ -517,11 +552,7 @@ void getInterfaceSizes
 
         if (ownRegion != neiRegion)
         {
-            label zoneID = -1;
-            if (useFaceZones)
-            {
-                zoneID = mesh.faceZones().whichZone(facei);
-            }
+            const label zoneID = whichZone(mesh, useFaceZones, facei);
 
             edge interface
             (
@@ -540,11 +571,7 @@ void getInterfaceSizes
 
         if (ownRegion != neiRegion)
         {
-            label zoneID = -1;
-            if (useFaceZones)
-            {
-                zoneID = mesh.faceZones().whichZone(facei);
-            }
+            const label zoneID = whichZone(mesh, useFaceZones, facei);
 
             edge interface
             (

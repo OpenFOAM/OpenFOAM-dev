@@ -94,17 +94,6 @@ void Foam::removePoints::modifyFace
         patchi = mesh_.boundaryMesh().whichPatch(facei);
     }
 
-    label zoneID = mesh_.faceZones().whichZone(facei);
-
-    bool zoneFlip = false;
-
-    if (zoneID >= 0)
-    {
-        const faceZone& fZone = mesh_.faceZones()[zoneID];
-
-        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-    }
-
     meshMod.modifyFace
     (
         newFace,        // modified face
@@ -112,9 +101,7 @@ void Foam::removePoints::modifyFace
         owner,          // owner
         neighbour,      // neighbour
         false,          // face flip
-        patchi,         // patch for face
-        zoneID,         // zone for face
-        zoneFlip        // face flip in zone
+        patchi          // patch for face
     );
 }
 

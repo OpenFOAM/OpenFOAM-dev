@@ -105,14 +105,8 @@ class hexRef8
             labelList& elems
         );
 
-        //- Get patch and zone info
-        void getFaceInfo
-        (
-            const label facei,
-            label& patchID,
-            label& zoneID,
-            label& zoneFlip
-        ) const;
+        //- Get patch index
+        label getPatchIndex(const label facei) const;
 
         //- Adds a face on top of existing facei. Reverses if necessary.
         label addFace

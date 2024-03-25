@@ -127,13 +127,11 @@ public:
             return mesh_;
         }
 
+        //- Return true if objectIndex is in any zone
+        bool found(const label objectIndex) const;
+
         //- Given a global object index, return the list of zones it is in
         labelList whichZones(const label objectIndex) const;
-
-        //- Given a global object index, return the zone it is in.
-        // If object does not belong to any zones, return -1
-        // *** This will be replaced by whichZones
-        label whichZone(const label objectIndex) const;
 
         //- Return the list of flips for the facei
         //  for each of the face zones in faceiZones

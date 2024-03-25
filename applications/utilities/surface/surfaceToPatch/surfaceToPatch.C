@@ -116,24 +116,13 @@ bool repatchFace
     if (nearest[bFacei] != -1)
     {
         // Use boundary mesh one.
-        label rMeshPatchID = rMesh.whichPatch(nearest[bFacei]);
+        const label rMeshPatchID = rMesh.whichPatch(nearest[bFacei]);
 
-        label patchID = surfToMeshPatch[rMeshPatchID];
+        const label patchID = surfToMeshPatch[rMeshPatchID];
 
         if (patchID != mesh.boundaryMesh().whichPatch(facei))
         {
-            label own = mesh.faceOwner()[facei];
-
-            label zoneID = mesh.faceZones().whichZone(facei);
-
-            bool zoneFlip = false;
-
-            if (zoneID >= 0)
-            {
-                const faceZone& fZone = mesh.faceZones()[zoneID];
-
-                zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-            }
+            const label own = mesh.faceOwner()[facei];
 
             meshMod.modifyFace
             (
@@ -142,9 +131,7 @@ bool repatchFace
                 own,                // owner
                 -1,                 // neighbour
                 false,              // face flip
-                patchID,            // patch for face
-                zoneID,             // zone for face
-                zoneFlip            // face flip in zone
+                patchID             // patch for face
             );
 
             changed = true;
@@ -154,6 +141,7 @@ bool repatchFace
     {
         changed = false;
     }
+
     return changed;
 }
 

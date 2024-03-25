@@ -218,9 +218,7 @@ void Foam::mergePatchPairs::addFaces
                     tgtOwn,     // Neighbour cell
                     srcFacei,   // Master face index
                     false,      // Flip
-                    -1,         // Patch index
-                    -1,         // Zone index
-                    false       // Zone sign
+                    -1          // Patch index
                 );
 
                 if (debug)
@@ -239,9 +237,7 @@ void Foam::mergePatchPairs::addFaces
                     srcOwn,     // Neighbour cell
                     tgtFacei,   // Master face index
                     false,      // Flip
-                    -1,         // Patch index
-                    -1,         // Zone index
-                    false       // Zone sign
+                    -1          // Patch index
                 );
 
                 if (debug)
@@ -257,15 +253,6 @@ void Foam::mergePatchPairs::addFaces
             const label srcFacei = srcPatchStart + faceSrcFaces[fi];
             const label srcOwn = mesh_.faceOwner()[srcFacei];
 
-            // Get source face zone info
-            const label zoneIndex = mesh_.faceZones().whichZone(srcFacei);
-            bool zoneFlip = false;
-            if (zoneIndex >= 0)
-            {
-                const faceZone& fZone = mesh_.faceZones()[zoneIndex];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(srcFacei)];
-            }
-
             meshMod.addFace
             (
                 f,          // Face to add
@@ -273,9 +260,7 @@ void Foam::mergePatchPairs::addFaces
                 -1,         // Neighbour cell
                 srcFacei,   // Master face index
                 false,      // Flip
-                srcPatchi,  // Patch index
-                zoneIndex,  // Zone index
-                zoneFlip    // Zone sign
+                srcPatchi   // Patch index
             );
 
             if (debug)
@@ -290,15 +275,6 @@ void Foam::mergePatchPairs::addFaces
             const label tgtFacei = tgtPatchStart + faceTgtFaces[fi];
             const label tgtOwn = mesh_.faceOwner()[tgtFacei];
 
-            // Get target face zone info
-            const label zoneIndex = mesh_.faceZones().whichZone(tgtFacei);
-            bool zoneFlip = false;
-            if (zoneIndex >= 0)
-            {
-                const faceZone& fZone = mesh_.faceZones()[zoneIndex];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(tgtFacei)];
-            }
-
             meshMod.addFace
             (
                 f.reverseFace(), // Face to add
@@ -306,9 +282,7 @@ void Foam::mergePatchPairs::addFaces
                 -1,         // Neighbour cell
                 tgtFacei,   // Master face index
                 false,      // Flip
-                tgtPatchi,  // Patch index
-                zoneIndex,  // Zone index
-                zoneFlip    // Zone sign
+                tgtPatchi   // Patch index
             );
 
             if (debug)
@@ -510,15 +484,6 @@ void Foam::mergePatchPairs::modifyFaces
 
         if (modified)
         {
-            // Get current zone info
-            const label zoneIndex = mesh_.faceZones().whichZone(fi);
-            bool zoneFlip = false;
-            if (zoneIndex >= 0)
-            {
-                const faceZone& fZone = mesh_.faceZones()[zoneIndex];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(fi)];
-            }
-
             if (mesh_.isInternalFace(fi))
             {
                 if (debug)
@@ -539,9 +504,7 @@ void Foam::mergePatchPairs::modifyFaces
                     mesh_.faceOwner()[fi],  // Owner cell
                     mesh_.faceNeighbour()[fi], // Neighbour cell
                     false,                  // Face flip
-                    -1,                     // Patch index
-                    zoneIndex,              // Zone index
-                    zoneFlip                // Zone flip
+                    -1                      // Patch index
                 );
             }
             else
@@ -564,9 +527,7 @@ void Foam::mergePatchPairs::modifyFaces
                     mesh_.faceOwner()[fi],      // Owner cell
                     -1,                         // Neighbour cell
                     false,                      // Face flip
-                    mesh_.boundaryMesh().whichPatch(fi), // Patch index
-                    zoneIndex,                  // Zone index
-                    zoneFlip                    // Zone flip
+                    mesh_.boundaryMesh().whichPatch(fi) // Patch index
                 );
             }
         }

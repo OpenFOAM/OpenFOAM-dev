@@ -159,6 +159,21 @@ Foam::MeshZones<ZoneType, MeshType>::~MeshZones()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ZoneType, class MeshType>
+bool Foam::MeshZones<ZoneType, MeshType>::found(const label objectIndex) const
+{
+    forAll(*this, zi)
+    {
+        if (this->operator[](zi).localIndex(objectIndex) != -1)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+template<class ZoneType, class MeshType>
 Foam::labelList Foam::MeshZones<ZoneType, MeshType>::whichZones
 (
     const label objectIndex
@@ -175,26 +190,6 @@ Foam::labelList Foam::MeshZones<ZoneType, MeshType>::whichZones
     }
 
     return zones;
-}
-
-
-template<class ZoneType, class MeshType>
-Foam::label Foam::MeshZones<ZoneType, MeshType>::whichZone
-(
-    const label objectIndex
-) const
-{
-    label zoneIndex = -1;
-
-    forAll(*this, zi)
-    {
-        if (this->operator[](zi).localIndex(objectIndex) != -1)
-        {
-            zoneIndex = zi;
-        }
-    }
-
-    return zoneIndex;
 }
 
 

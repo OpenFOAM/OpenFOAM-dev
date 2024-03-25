@@ -272,9 +272,7 @@ void Foam::polyMeshUnMergeCyclics(polyMesh& mesh, const scalar includedAngle)
                     false,
                     patchFaceHalves[patchFacei]
                   ? patchHalf0[patchi]
-                  : patchHalf1[patchi],
-                    -1,
-                    false
+                  : patchHalf1[patchi]
                 );
             }
         }

@@ -172,14 +172,8 @@ class meshCutter
             label& nei
         ) const;
 
-        //- Get patch information for face.
-        void getFaceInfo
-        (
-            const label facei,
-            label& patchID,
-            label& zoneID,
-            label& zoneFlip
-        ) const;
+        //- Get patch index face
+        label getPatchIndex(const label facei) const;
 
         //- Adds a face on top of existing facei. Flips face
         //  if owner>neighbour

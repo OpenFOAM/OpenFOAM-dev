@@ -102,17 +102,6 @@ void Foam::repatcher::changePatchID
         }
     }
 
-    const label zoneID = mesh_.faceZones().whichZone(faceID);
-
-    bool zoneFlip = false;
-
-    if (zoneID >= 0)
-    {
-        const faceZone& fZone = mesh_.faceZones()[zoneID];
-
-        zoneFlip = fZone.flipMap()[fZone.whichFace(faceID)];
-    }
-
     meshMod().modifyFace
     (
         mesh_.faces()[faceID],              // face
@@ -120,41 +109,7 @@ void Foam::repatcher::changePatchID
         mesh_.faceOwner()[faceID],          // owner
         -1,                                 // neighbour
         false,                              // flip flux
-        patchID,                            // patch ID
-        zoneID,                             // zone ID
-        zoneFlip                            // zone flip
-    );
-}
-
-
-void Foam::repatcher::setFaceZone
-(
-    const label faceID,
-    const label zoneID,
-    const bool zoneFlip
-)
-{
-    if (polyTopoChange::debug)
-    {
-        // Check that the request is possible
-        if (faceID > mesh_.faces().size())
-        {
-            FatalErrorInFunction
-                << "out of range."
-                << abort(FatalError);
-        }
-    }
-
-    meshMod().modifyFace
-    (
-        mesh_.faces()[faceID],              // face
-        faceID,                             // face ID
-        mesh_.faceOwner()[faceID],          // owner
-        mesh_.faceNeighbour()[faceID],      // neighbour
-        false,                              // flip flux
-        mesh_.boundaryMesh().whichPatch(faceID),  // patch ID
-        zoneID,                             // zone ID
-        zoneFlip                            // zone flip
+        patchID                             // patch ID
     );
 }
 
@@ -188,17 +143,6 @@ void Foam::repatcher::changeAnchorPoint
 
     label patchID = mesh_.boundaryMesh().whichPatch(faceID);
 
-    const label zoneID = mesh_.faceZones().whichZone(faceID);
-
-    bool zoneFlip = false;
-
-    if (zoneID >= 0)
-    {
-        const faceZone& fZone = mesh_.faceZones()[zoneID];
-
-        zoneFlip = fZone.flipMap()[fZone.whichFace(faceID)];
-    }
-
     if (fp == 0)
     {
         // Do dummy modify to keep patch ordering.
@@ -209,9 +153,7 @@ void Foam::repatcher::changeAnchorPoint
             mesh_.faceOwner()[faceID],          // owner
             -1,                                 // neighbour
             false,                              // flip flux
-            patchID,                            // patch ID
-            zoneID,                             // zone ID
-            zoneFlip                            // zone flip
+            patchID                             // patch ID
         );
     }
     else
@@ -239,9 +181,7 @@ void Foam::repatcher::changeAnchorPoint
             mesh_.faceOwner()[faceID],          // owner
             -1,                                 // neighbour
             false,                              // flip flux
-            patchID,                            // patch ID
-            zoneID,                             // zone ID
-            zoneFlip                            // zone flip
+            patchID                             // patch ID
         );
     }
 }

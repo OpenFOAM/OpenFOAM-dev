@@ -162,31 +162,16 @@ void Foam::meshCutter::faceCells
 }
 
 
-void Foam::meshCutter::getFaceInfo
-(
-    const label facei,
-    label& patchID,
-    label& zoneID,
-    label& zoneFlip
-) const
+Foam::label Foam::meshCutter::getPatchIndex(const label facei) const
 {
-    patchID = -1;
+    label patchID = -1;
 
     if (!mesh().isInternalFace(facei))
     {
         patchID = mesh().boundaryMesh().whichPatch(facei);
     }
 
-    zoneID = mesh().faceZones().whichZone(facei);
-
-    zoneFlip = false;
-
-    if (zoneID >= 0)
-    {
-        const faceZone& fZone = mesh().faceZones()[zoneID];
-
-        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-    }
+    return patchID;
 }
 
 
@@ -199,9 +184,7 @@ void Foam::meshCutter::addFace
     const label nei
 )
 {
-    label patchID, zoneID, zoneFlip;
-
-    getFaceInfo(facei, patchID, zoneID, zoneFlip);
+    const label patchID = getPatchIndex(facei);
 
     if ((nei == -1) || (own < nei))
     {
@@ -212,8 +195,6 @@ void Foam::meshCutter::addFace
                 << " with new owner:" << own
                 << " with new neighbour:" << nei
                 << " patchID:" << patchID
-                << " zoneID:" << zoneID
-                << " zoneFlip:" << zoneFlip
                 << endl;
         }
 
@@ -224,9 +205,7 @@ void Foam::meshCutter::addFace
             nei,                        // neighbour
             facei,                      // master face for addition
             false,                      // flux flip
-            patchID,                    // patch for face
-            zoneID,                     // zone for face
-            zoneFlip                    // face zone flip
+            patchID                     // patch for face
         );
     }
     else
@@ -238,8 +217,6 @@ void Foam::meshCutter::addFace
                 << " with new owner:" << nei
                 << " with new neighbour:" << own
                 << " patchID:" << patchID
-                << " zoneID:" << zoneID
-                << " zoneFlip:" << zoneFlip
                 << endl;
         }
 
@@ -250,9 +227,7 @@ void Foam::meshCutter::addFace
             own,                        // neighbour
             facei,                      // master face for addition
             false,                      // flux flip
-            patchID,                    // patch for face
-            zoneID,                     // zone for face
-            zoneFlip                    // face zone flip
+            patchID                     // patch for face
         );
     }
 }
@@ -267,9 +242,7 @@ void Foam::meshCutter::modifyFace
     const label nei
 )
 {
-    label patchID, zoneID, zoneFlip;
-
-    getFaceInfo(facei, patchID, zoneID, zoneFlip);
+    const label patchID = getPatchIndex(facei);
 
     if
     (
@@ -288,8 +261,6 @@ void Foam::meshCutter::modifyFace
                 << " new vertices:" << newFace
                 << " new owner:" << own
                 << " new neighbour:" << nei
-                << " new zoneID:" << zoneID
-                << " new zoneFlip:" << zoneFlip
                 << endl;
         }
 
@@ -302,9 +273,7 @@ void Foam::meshCutter::modifyFace
                 own,                // owner
                 nei,                // neighbour
                 false,              // face flip
-                patchID,            // patch for face
-                zoneID,             // zone for face
-                zoneFlip            // face flip in zone
+                patchID             // patch for face
             );
         }
         else
@@ -316,9 +285,7 @@ void Foam::meshCutter::modifyFace
                 nei,                    // owner
                 own,                    // neighbour
                 false,                  // face flip
-                patchID,                // patch for face
-                zoneID,                 // zone for face
-                zoneFlip                // face flip in zone
+                patchID                 // patch for face
             );
         }
     }
@@ -632,19 +599,16 @@ void Foam::meshCutter::setRefinement
             // Convert loop (=list of cuts) into proper face.
             // Orientation should already be ok. (done by cellCuts)
             //
-            face newFace(loopToFace(celli, loop));
+            const face newFace(loopToFace(celli, loop));
 
-            label addedFacei =
-                meshMod.addFace
+            const label addedFacei = meshMod.addFace
             (
                 newFace,                // face
                 celli,                  // owner
                 addedCells_[celli],     // neighbour
                 -1,                     // master face for addition
                 false,                  // flux flip
-                -1,                     // patch for face
-                -1,                     // zone for face
-                false                   // face zone flip
+                -1                      // patch for face
             );
 
             addedFaces_.insert(celli, addedFacei);

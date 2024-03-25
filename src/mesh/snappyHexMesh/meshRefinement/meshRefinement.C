@@ -710,15 +710,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
             nei = mesh_.faceNeighbour()[facei];
         }
 
-        const label zonei = mesh_.faceZones().whichZone(facei);
-        bool zoneFlip = false;
-        if (zonei != -1)
-        {
-            const faceZone& fz = mesh_.faceZones()[zonei];
-            zoneFlip = fz.flipMap()[fz.whichFace(facei)];
-        }
-
-
         if (debug)
         {
             Pout<< "face:" << facei << " verts:" << f
@@ -734,9 +725,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
             own,                        // owner
             nei,                        // neighbour
             false,                      // face flip
-            patchi,                     // patch for face
-            zonei,                      // zone for face
-            zoneFlip                    // face flip in zone
+            patchi                      // patch for face
         );
 
         meshMod.addFace
@@ -746,9 +735,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::splitFaces
             nei,                        // neighbour
             facei,                      // master face
             false,                      // face flip
-            patchi,                     // patch for face
-            zonei,                      // zone for face
-            zoneFlip                    // face flip in zone
+            patchi                      // patch for face
         );
     }
 

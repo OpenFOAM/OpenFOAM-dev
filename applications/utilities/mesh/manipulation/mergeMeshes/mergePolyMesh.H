@@ -72,6 +72,9 @@ class mergePolyMesh
         //- Face zone names
         DynamicList<word> faceZoneNames_;
 
+        //- Zones of the added faces
+        List<Map<bool>> faceZonesAddedFaces_;
+
         //- Cell zone names
         DynamicList<word> cellZoneNames_;
 

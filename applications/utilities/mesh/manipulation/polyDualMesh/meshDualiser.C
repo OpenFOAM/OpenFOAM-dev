@@ -187,9 +187,7 @@ Foam::label Foam::meshDualiser::addInternalFace
             dualCell1,      // nei
             masterFacei,    // masterFaceID
             false,          // flipFaceFlux
-            -1,             // patchID
-            -1,             // zoneID
-            false           // zoneFlip
+            -1              // patchID
         );
 
         // pointField dualPoints(meshMod.points());
@@ -212,9 +210,7 @@ Foam::label Foam::meshDualiser::addInternalFace
             dualCell0,      // nei
             masterFacei,    // masterFaceID
             false,          // flipFaceFlux
-            -1,             // patchID
-            -1,             // zoneID
-            false           // zoneFlip
+            -1              // patchID
         );
 
         // pointField dualPoints(meshMod.points());
@@ -253,9 +249,7 @@ Foam::label Foam::meshDualiser::addBoundaryFace
         -1,             // nei
         masterFacei,    // masterFaceID
         false,          // flipFaceFlux
-        patchi,         // patchID
-        -1,             // zoneID
-        false           // zoneFlip
+        patchi          // patchID
     );
 
     // pointField dualPoints(meshMod.points());

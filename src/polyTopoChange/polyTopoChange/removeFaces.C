@@ -325,10 +325,7 @@ void Foam::removeFaces::mergeFaces
         own = cellRegionMaster[cellRegion[own]];
     }
 
-    label patchID, zoneID, zoneFlip;
-
-    getFaceInfo(facei, patchID, zoneID, zoneFlip);
-
+    const label patchID = getPatchIndex(facei);
     label nei = -1;
 
     if (mesh_.isInternalFace(facei))
@@ -367,17 +364,6 @@ void Foam::removeFaces::mergeFaces
         reverse(mergedFace);
     }
 
-    //{
-    //    Pout<< "Modifying masterface " << facei
-    //        << " from faces:" << faceLabels
-    //        << " old verts:" << UIndirectList<face>(mesh_.faces(), faceLabels)
-    //        << " for new verts:"
-    //        << mergedFace
-    //        << " possibly new owner " << own
-    //        << " or new nei " << nei
-    //        << endl;
-    //}
-
     modifyFace
     (
         mergedFace,         // modified face
@@ -386,13 +372,9 @@ void Foam::removeFaces::mergeFaces
         nei,                // neighbour
         false,              // face flip
         patchID,            // patch for face
-        false,              // remove from zone
-        zoneID,             // zone for face
-        zoneFlip,           // face flip in zone
 
         meshMod
     );
-
 
     // Remove all but master face.
     forAll(faceLabels, patchFacei)
@@ -407,37 +389,19 @@ void Foam::removeFaces::mergeFaces
 }
 
 
-// Get patch, zone info for facei
-void Foam::removeFaces::getFaceInfo
-(
-    const label facei,
-
-    label& patchID,
-    label& zoneID,
-    label& zoneFlip
-) const
+Foam::label Foam::removeFaces::getPatchIndex(const label facei) const
 {
-    patchID = -1;
+    label patchID = -1;
 
     if (!mesh_.isInternalFace(facei))
     {
         patchID = mesh_.boundaryMesh().whichPatch(facei);
     }
 
-    zoneID = mesh_.faceZones().whichZone(facei);
-
-    zoneFlip = false;
-
-    if (zoneID >= 0)
-    {
-        const faceZone& fZone = mesh_.faceZones()[zoneID];
-
-        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-    }
+    return patchID;
 }
 
 
-// Return face with all pointsToRemove removed.
 Foam::face Foam::removeFaces::filterFace
 (
     const labelHashSet& pointsToRemove,
@@ -466,7 +430,6 @@ Foam::face Foam::removeFaces::filterFace
 }
 
 
-// Wrapper for meshMod.modifyFace. Reverses face if own>nei.
 void Foam::removeFaces::modifyFace
 (
     const face& f,
@@ -475,30 +438,12 @@ void Foam::removeFaces::modifyFace
     const label nei,
     const bool flipFaceFlux,
     const label newPatchID,
-    const bool removeFromZone,
-    const label zoneID,
-    const bool zoneFlip,
 
     polyTopoChange& meshMod
 ) const
 {
     if ((nei == -1) || (own < nei))
     {
-//        if (debug)
-//        {
-//            Pout<< "ModifyFace (unreversed) :"
-//                << "  facei:" << masterFaceID
-//                << "  f:" << f
-//                << "  own:" << own
-//                << "  nei:" << nei
-//                << "  flipFaceFlux:" << flipFaceFlux
-//                << "  newPatchID:" << newPatchID
-//                << "  removeFromZone:" << removeFromZone
-//                << "  zoneID:" << zoneID
-//                << "  zoneFlip:" << zoneFlip
-//                << endl;
-//        }
-
         meshMod.modifyFace
         (
             f,              // modified face
@@ -506,28 +451,11 @@ void Foam::removeFaces::modifyFace
             own,            // owner
             nei,            // neighbour
             flipFaceFlux,   // face flip
-            newPatchID,     // patch for face
-            zoneID,         // zone for face
-            zoneFlip        // face flip in zone
+            newPatchID      // patch for face
         );
     }
     else
     {
-//        if (debug)
-//        {
-//            Pout<< "ModifyFace (!reversed) :"
-//                << "  facei:" << masterFaceID
-//                << "  f:" << f.reverseFace()
-//                << "  own:" << nei
-//                << "  nei:" << own
-//                << "  flipFaceFlux:" << flipFaceFlux
-//                << "  newPatchID:" << newPatchID
-//                << "  removeFromZone:" << removeFromZone
-//                << "  zoneID:" << zoneID
-//                << "  zoneFlip:" << zoneFlip
-//                << endl;
-//        }
-
         meshMod.modifyFace
         (
             f.reverseFace(),// modified face
@@ -535,9 +463,7 @@ void Foam::removeFaces::modifyFace
             nei,            // owner
             own,            // neighbour
             flipFaceFlux,   // face flip
-            newPatchID,     // patch for face
-            zoneID,         // zone for face
-            zoneFlip        // face flip in zone
+            newPatchID      // patch for face
         );
     }
 }
@@ -1440,10 +1366,7 @@ void Foam::removeFaces::setRefinement
                 own = cellRegionMaster[cellRegion[own]];
             }
 
-            label patchID, zoneID, zoneFlip;
-
-            getFaceInfo(facei, patchID, zoneID, zoneFlip);
-
+            const label patchID = getPatchIndex(facei);
             label nei = -1;
 
             if (mesh_.isInternalFace(facei))
@@ -1456,16 +1379,6 @@ void Foam::removeFaces::setRefinement
                 }
             }
 
-//            if (debug)
-//            {
-//                Pout<< "Modifying " << facei
-//                    << " old verts:" << mesh_.faces()[facei]
-//                    << " for new verts:" << f
-//                    << " or for new owner " << own << " or for new nei "
-//                    << nei
-//                    << endl;
-//            }
-
             modifyFace
             (
                 f,                  // modified face
@@ -1474,10 +1387,6 @@ void Foam::removeFaces::setRefinement
                 nei,                // neighbour
                 false,              // face flip
                 patchID,            // patch for face
-                false,              // remove from zone
-                zoneID,             // zone for face
-                zoneFlip,           // face flip in zone
-
                 meshMod
             );
         }

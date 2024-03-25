@@ -425,14 +425,6 @@ int main(int argc, char *argv[])
                     nei = mesh.faceNeighbour()[patchFacei];
                 }
 
-                label zoneI = mesh.faceZones().whichZone(patchFacei);
-                bool zoneFlip = false;
-                if (zoneI != -1)
-                {
-                    label index = mesh.faceZones()[zoneI].whichFace(patchFacei);
-                    zoneFlip = mesh.faceZones()[zoneI].flipMap()[index];
-                }
-
                 meshMod.modifyFace
                 (
                     mesh.faces()[patchFacei].reverseFace(), // modified face
@@ -440,9 +432,7 @@ int main(int argc, char *argv[])
                     own,                            // owner
                     nei,                            // neighbour
                     true,                           // face flip
-                    patchi,                         // patch for face
-                    zoneI,                          // zone for face
-                    zoneFlip                        // face flip in zone
+                    patchi                          // patch for face
                 );
             }
 
@@ -968,30 +958,11 @@ int main(int argc, char *argv[])
                 << exit(FatalError);
         }
 
-
-
-        const word cutZoneName("originalCutFaceZone");
-
-        List<faceZone*> fz
-        (
-            1,
-            new faceZone
-            (
-                cutZoneName,
-                frontPatchFaces,
-                boolList(frontPatchFaces.size(), false),
-                mesh.faceZones()
-            )
-        );
-
-        mesh.addZones(List<pointZone*>(0), fz, List<cellZone*>(0));
-
         // Add the perfect interface mesh modifier
         perfectInterface perfectStitcher
         (
             "couple",
             mesh,
-            cutZoneName,
             word::null,         // dummy patch name
             word::null          // dummy patch name
         );

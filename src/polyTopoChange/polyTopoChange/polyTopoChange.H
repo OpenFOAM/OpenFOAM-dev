@@ -155,12 +155,6 @@ class polyTopoChange
             //- In mapping whether to reverse the flux
             PackedBoolList flipFaceFlux_;
 
-            //- Zone of face
-            Map<label> faceZone_;
-
-            //- Orientation of face in zone
-            PackedBoolList faceZoneFlip_;
-
             //- Active faces
             label nActiveFaces_;
 
@@ -236,8 +230,7 @@ class polyTopoChange
             const label facei,
             const label own,
             const label nei,
-            const label patchi,
-            const label zoneI
+            const label patchi
         ) const;
 
         //- Construct cells (in packed storage)
@@ -323,31 +316,15 @@ class polyTopoChange
             labelListList&
         ) const;
 
-        void resetZones
+        //- Do all coupled patch face reordering
+        void reorderCoupledFaces
         (
-            const polyMesh&,        // mesh to get existing info from
-            polyMesh&              // mesh to change zones on
-        ) const;
-
-        void calcFaceZonePointMap
-        (
-            const polyMesh&,
-            const List<Map<label>>&,
-            labelListList&
-        ) const;
-
-
-        // Coupling
-
-            //- Do all coupled patch face reordering
-            void reorderCoupledFaces
-            (
-                const bool syncParallel,
-                const polyBoundaryMesh&,
-                const labelList& patchStarts,
-                const labelList& patchSizes,
-                const pointField& points
-            );
+            const bool syncParallel,
+            const polyBoundaryMesh&,
+            const labelList& patchStarts,
+            const labelList& patchSizes,
+            const pointField& points
+        );
 
         void compactAndReorder
         (
@@ -365,8 +342,7 @@ class polyTopoChange
             List<Map<label>>& oldPatchMeshPointMaps,
             labelList& oldPatchNMeshPoints,
             labelList& oldPatchSizes,
-            labelList& oldPatchStarts,
-            List<Map<label>>& oldMeshFaceZonesPointMaps
+            labelList& oldPatchStarts
         );
 
 
@@ -465,7 +441,7 @@ public:
             void removePoint(const label, const label);
 
             //- Add face to cells and return new face index
-            //  own,nei<0, zoneID>=0 : add inactive face (to end of face list)
+            //  own, nei <0 >=0 : add inactive face (to end of face list)
             label addFace
             (
                 const face& f,
@@ -473,9 +449,7 @@ public:
                 const label nei,
                 const label masterFaceID,
                 const bool flipFaceFlux,
-                const label patchID,
-                const label zoneID,
-                const bool zoneFlip
+                const label patchID
             );
 
             //- Modify vertices or cell of face
@@ -486,9 +460,7 @@ public:
                 const label own,
                 const label nei,
                 const bool flipFaceFlux,
-                const label patchID,
-                const label zoneID,
-                const bool zoneFlip
+                const label patchID
             );
 
             //- Remove face / merge faces

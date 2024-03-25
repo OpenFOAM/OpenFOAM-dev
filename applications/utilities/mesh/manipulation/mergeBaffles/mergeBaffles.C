@@ -88,7 +88,6 @@ void mergeDuplicateBoundaryFaces
 
     const faceList& faces = mesh.faces();
     const labelList& faceOwner = mesh.faceOwner();
-    const meshFaceZones& faceZones = mesh.faceZones();
 
     forAll(duplicates, bFacei)
     {
@@ -107,14 +106,6 @@ void mergeDuplicateBoundaryFaces
             if (own0 < own1)
             {
                 // Use face0 as the new internal face.
-                label zoneID = faceZones.whichZone(face0);
-                bool zoneFlip = false;
-
-                if (zoneID >= 0)
-                {
-                    const faceZone& fZone = faceZones[zoneID];
-                    zoneFlip = fZone.flipMap()[fZone.whichFace(face0)];
-                }
 
                 meshMod.removeFace(face1, -1);
                 meshMod.modifyFace
@@ -124,22 +115,12 @@ void mergeDuplicateBoundaryFaces
                     own0,                   // owner
                     own1,                   // neighbour
                     false,                  // face flip
-                    -1,                     // patch for face
-                    zoneID,                 // zone for face
-                    zoneFlip                // face flip in zone
+                    -1                      // patch for face
                 );
             }
             else
             {
                 // Use face1 as the new internal face.
-                label zoneID = faceZones.whichZone(face1);
-                bool zoneFlip = false;
-
-                if (zoneID >= 0)
-                {
-                    const faceZone& fZone = faceZones[zoneID];
-                    zoneFlip = fZone.flipMap()[fZone.whichFace(face1)];
-                }
 
                 meshMod.removeFace(face0, -1);
                 meshMod.modifyFace
@@ -149,9 +130,7 @@ void mergeDuplicateBoundaryFaces
                     own1,                   // owner
                     own0,                   // neighbour
                     false,                  // face flip
-                    -1,                     // patch for face
-                    zoneID,                 // zone for face
-                    zoneFlip                // face flip in zone
+                    -1                      // patch for face
                 );
             }
         }

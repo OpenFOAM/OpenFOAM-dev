@@ -179,19 +179,18 @@ void Foam::faceZone::checkAddressing() const
 }
 
 
-void Foam::faceZone::reset(const Map<bool>& indices)
+void Foam::faceZone::reset(const Map<bool>& newIndices)
 {
     clearAddressing();
 
-    labelList::setSize(indices.size());
+    labelList& indices = *this;
+    indices = newIndices.sortedToc();
+
     flipMap_.setSize(indices.size());
 
-    label i = 0;
-    forAllConstIter(Map<bool>, indices, iter)
+    forAll(flipMap_, i)
     {
-        operator[](i) = iter.key();
-        flipMap_[i] = *iter;
-        i++;
+        flipMap_[i] = newIndices[indices[i]];
     }
 }
 
@@ -506,17 +505,23 @@ void Foam::faceZone::swap(faceZone& fz)
 
 void Foam::faceZone::topoChange(const polyTopoChangeMap& map)
 {
-    /*
     Map<bool> indices;
     const labelList& faceMap = map.faceMap();
     const labelList& reverseFaceMap = map.reverseFaceMap();
+    const labelHashSet& flipFaceFlux = map.flipFaceFlux();
 
     forAll(faceMap, facei)
     {
         const label i = localIndex(faceMap[facei]);
         if (faceMap[facei] >= 0 && i != -1)
         {
-            indices.insert(facei, flipMap_[i]);
+            indices.insert
+            (
+                facei,
+                flipFaceFlux.found(facei)
+              ? !flipMap_[i]
+              : flipMap_[i]
+            );
         }
     }
 
@@ -525,12 +530,17 @@ void Foam::faceZone::topoChange(const polyTopoChangeMap& map)
         const label i = localIndex(facei);
         if (reverseFaceMap[facei] >= 0 && i != -1)
         {
-            indices.insert(reverseFaceMap[facei], flipMap_[i]);
+            indices.insert
+            (
+                reverseFaceMap[facei],
+                flipFaceFlux.found(reverseFaceMap[facei])
+              ? !flipMap_[i]
+              : flipMap_[i]
+            );
         }
     }
 
     reset(indices);
-    */
 }
 
 

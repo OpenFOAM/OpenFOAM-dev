@@ -1296,9 +1296,7 @@ int main(int argc, char *argv[])
                     neighbour[facei],
                     facei,              // masterFace
                     false,              // flipFaceFlux
-                    -1,                 // patchID
-                    faceZonei,          // zoneID
-                    fm[facei]           // zoneFlip
+                    -1                  // patchID
                 );
             }
 
@@ -1345,9 +1343,7 @@ int main(int argc, char *argv[])
                     -1,
                     facei,              // masterFace
                     false,              // flipFaceFlux
-                    patchi,             // patchID
-                    -1,                 // zoneID
-                    false               // zoneFlip
+                    patchi              // patchID
                 );
 
                 // For baffles create the opposite face
@@ -1360,9 +1356,7 @@ int main(int argc, char *argv[])
                         -1,
                         facei,              // masterFace
                         false,              // flipFaceFlux
-                        patchi,             // patchID
-                        -1,                 // zoneID
-                        false               // zoneFlip
+                        patchi              // patchID
                     );
                 }
             }
@@ -1408,9 +1402,7 @@ int main(int argc, char *argv[])
                     neighbour[facei],
                     facei,              // masterFace
                     false,              // flipFaceFlux
-                    -1,                 // patchID
-                    -1,                 // zoneID
-                    false               // zoneFlip
+                    -1                  // patchID
                 );
             }
         }
@@ -1455,6 +1447,27 @@ int main(int argc, char *argv[])
             (
                 cellGroupStartIndex[cgi],
                 cellGroupEndIndex[cgi] + 1 - cellGroupStartIndex[cgi]
+            )
+        );
+    }
+
+    // Add the face zones as required
+    forAll(faceZoneIDs, faceZonei)
+    {
+        const label cgi = faceZoneIDs[faceZonei];
+
+        mesh.faceZones()[faceZonei].resetAddressing
+        (
+            identityMap
+            (
+                faceGroupStartIndex[cgi],
+                faceGroupEndIndex[cgi] + 1 - faceGroupStartIndex[cgi]
+            ),
+            boolList::subList
+            (
+                fm,
+                faceGroupEndIndex[cgi] + 1 - faceGroupStartIndex[cgi],
+                faceGroupStartIndex[cgi]
             )
         );
     }

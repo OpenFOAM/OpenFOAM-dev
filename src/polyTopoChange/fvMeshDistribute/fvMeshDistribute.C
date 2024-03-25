@@ -539,16 +539,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
     {
         if (newPatchID[bFacei] != -1)
         {
-            label facei = mesh_.nInternalFaces() + bFacei;
-
-            label zoneID = mesh_.faceZones().whichZone(facei);
-            bool zoneFlip = false;
-
-            if (zoneID >= 0)
-            {
-                const faceZone& fZone = mesh_.faceZones()[zoneID];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-            }
+            const label facei = mesh_.nInternalFaces() + bFacei;
 
             meshMod.modifyFace
             (
@@ -557,9 +548,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::repatch
                 mesh_.faceOwner()[facei],   // owner
                 -1,                         // neighbour
                 false,                      // face flip
-                newPatchID[bFacei],         // patch for face
-                zoneID,                     // zone for face
-                zoneFlip                    // face flip in zone
+                newPatchID[bFacei]          // patch for face
             );
         }
     }
@@ -747,14 +736,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::mergeSharedPoints
 
                 label patchID = mesh_.boundaryMesh().whichPatch(facei);
                 label nei = (patchID == -1 ? mesh_.faceNeighbour()[facei] : -1);
-                label zoneID = mesh_.faceZones().whichZone(facei);
-                bool zoneFlip = false;
-
-                if (zoneID >= 0)
-                {
-                    const faceZone& fZone = mesh_.faceZones()[zoneID];
-                    zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-                }
 
                 meshMod.modifyFace
                 (
@@ -763,9 +744,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::fvMeshDistribute::mergeSharedPoints
                     mesh_.faceOwner()[facei],   // owner
                     nei,                        // neighbour
                     false,                      // face flip
-                    patchID,                    // patch for face
-                    zoneID,                     // zone for face
-                    zoneFlip                    // face flip in zone
+                    patchID                     // patch for face
                 );
             }
         }

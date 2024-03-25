@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,13 +69,11 @@ Foam::perfectInterface::perfectInterface
 (
     const word& name,
     const polyMesh& mesh,
-    const word& faceZoneName,
     const word& masterPatchName,
     const word& slavePatchName
 )
 :
     mesh_(mesh),
-    faceZoneIndex_(mesh_.faceZones().findIndex(faceZoneName)),
     masterPatchIndex_(mesh_.boundaryMesh().findIndex(masterPatchName)),
     slavePatchIndex_(mesh_.boundaryMesh().findIndex(slavePatchName))
 {}
@@ -250,16 +248,6 @@ void Foam::perfectInterface::setRefinement
             patchi = patches.whichPatch(facei);
         }
 
-        const label zoneID = mesh_.faceZones().whichZone(facei);
-
-        bool zoneFlip = false;
-
-        if (zoneID >= 0)
-        {
-            const faceZone& fZone = mesh_.faceZones()[zoneID];
-            zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-        }
-
         ref.modifyFace
         (
             newFace,                    // modified face
@@ -267,9 +255,7 @@ void Foam::perfectInterface::setRefinement
             mesh_.faceOwner()[facei],    // owner
             nbr,                        // neighbour
             false,                      // face flip
-            patchi,                     // patch for face
-            zoneID,                     // zone for face
-            zoneFlip                    // face flip in zone
+            patchi                      // patch for face
         );
     }
 
@@ -297,9 +283,6 @@ void Foam::perfectInterface::setRefinement
     // 5. Modify patch0 faces for new points (not really necessary; see
     // comment above about patch1 and patch0 never sharing points) and
     // becoming internal.
-    const boolList& mfFlip =
-        mesh_.faceZones()[faceZoneIndex_].flipMap();
-
     forAll(pp0, i)
     {
         const label facei = pp0.addressing()[i];
@@ -325,9 +308,7 @@ void Foam::perfectInterface::setRefinement
                 own,                    // owner
                 nbr,                    // neighbour
                 false,                  // face flip
-                -1,                     // patch for face
-                faceZoneIndex_,            // zone for face
-                mfFlip[i]               // face flip in zone
+                -1                      // patch for face
             );
         }
         else
@@ -339,9 +320,7 @@ void Foam::perfectInterface::setRefinement
                 nbr,                    // owner
                 own,                    // neighbour
                 true,                   // face flip
-                -1,                     // patch for face
-                faceZoneIndex_,            // zone for face
-                !mfFlip[i]              // face flip in zone
+                -1                      // patch for face
             );
         }
     }
@@ -354,8 +333,7 @@ void Foam::perfectInterface::setRefinement(polyTopoChange& ref) const
     {
         Pout<< "bool perfectInterface::setRefinement(polyTopoChange&) const : "
             << "masterPatchIndex_:" << masterPatchIndex_
-            << " slavePatchIndex_:" << slavePatchIndex_
-            << " faceZoneIndex_:" << faceZoneIndex_ << endl;
+            << " slavePatchIndex_:" << slavePatchIndex_ << endl;
     }
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();

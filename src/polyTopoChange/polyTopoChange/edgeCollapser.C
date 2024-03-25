@@ -1550,7 +1550,6 @@ bool Foam::edgeCollapser::setRefinement
 
 
     const polyBoundaryMesh& boundaryMesh = mesh_.boundaryMesh();
-    const meshFaceZones& faceZones = mesh_.faceZones();
 
     // Renumber faces that use points
     forAll(allPointInfo, pointi)
@@ -1566,18 +1565,6 @@ bool Foam::edgeCollapser::setRefinement
                 if (!doneFace[facei])
                 {
                     doneFace[facei] = true;
-
-                    // Get current zone info
-                    label zoneID = faceZones.whichZone(facei);
-
-                    bool zoneFlip = false;
-
-                    if (zoneID >= 0)
-                    {
-                        const faceZone& fZone = faceZones[zoneID];
-
-                        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-                    }
 
                     // Get current connectivity
                     label own = faceOwner[facei];
@@ -1600,9 +1587,7 @@ bool Foam::edgeCollapser::setRefinement
                         own,                        // owner
                         nei,                        // neighbour
                         false,                      // flipFaceFlux
-                        patchID,                    // patch
-                        zoneID,
-                        zoneFlip
+                        patchID                     // patch
                     );
 
                     meshChanged = true;

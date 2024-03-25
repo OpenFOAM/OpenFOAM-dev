@@ -27,7 +27,6 @@ License
 #include "refinementSurfaces.H"
 #include "faceSet.H"
 #include "polyTopoChange.H"
-#include "meshTools.H"
 #include "localPointRegion.H"
 #include "duplicatePoints.H"
 #include "regionSplit.H"
@@ -37,7 +36,6 @@ License
 #include "patchFaceOrientation.H"
 #include "PatchEdgeFaceWave.H"
 #include "patchEdgeFaceRegion.H"
-#include "OSspecific.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -50,14 +48,6 @@ Foam::label Foam::meshRefinement::createBaffle
 ) const
 {
     const face& f = mesh_.faces()[facei];
-    const label zoneID = mesh_.faceZones().whichZone(facei);
-    bool zoneFlip = false;
-
-    if (zoneID >= 0)
-    {
-        const faceZone& fZone = mesh_.faceZones()[zoneID];
-        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-    }
 
     meshMod.modifyFace
     (
@@ -66,11 +56,8 @@ Foam::label Foam::meshRefinement::createBaffle
         mesh_.faceOwner()[facei],   // owner
         -1,                         // neighbour
         false,                      // face flip
-        ownPatch,                   // patch for face
-        zoneID,                     // zone for face
-        zoneFlip                    // face flip in zone
+        ownPatch                    // patch for face
     );
-
 
     label dupFacei = -1;
 
@@ -84,12 +71,6 @@ Foam::label Foam::meshRefinement::createBaffle
                 << " ownPatch:" << ownPatch << abort(FatalError);
         }
 
-        bool reverseFlip = false;
-        if (zoneID >= 0)
-        {
-            reverseFlip = !zoneFlip;
-        }
-
         dupFacei = meshMod.addFace
         (
             f.reverseFace(),            // modified face
@@ -97,9 +78,7 @@ Foam::label Foam::meshRefinement::createBaffle
             -1,                         // neighbour
             facei,                      // masterFaceID,
             true,                       // face flip
-            nbrPatch,                   // patch for face
-            zoneID,                     // zone for face
-            reverseFlip                 // face flip in zone
+            nbrPatch                    // patch for face
         );
     }
     return dupFacei;
@@ -431,14 +410,17 @@ void Foam::meshRefinement::checkZoneFaces() const
             forAll(pp, i)
             {
                 const label facei = pp.start() + i;
-                const label zonei = fZones.whichZone(facei);
+                const labelList zones = fZones.whichZones(facei);
 
-                if (zonei != -1)
+                forAll(zones, zonei)
                 {
-                    FatalErrorInFunction
-                        << "face:" << facei << " on patch " << pp.name()
-                        << " is in zone " << fZones[zonei].name()
-                        << exit(FatalError);
+                    if (zones[zonei] != -1)
+                    {
+                        FatalErrorInFunction
+                            << "face:" << facei << " on patch " << pp.name()
+                            << " is in zone " << fZones[zones[zonei]].name()
+                            << exit(FatalError);
+                    }
                 }
             }
         }
@@ -809,7 +791,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
 
     const faceList& faces = mesh_.faces();
     const labelList& faceOwner = mesh_.faceOwner();
-    const meshFaceZones& faceZones = mesh_.faceZones();
 
     forAll(couples, i)
     {
@@ -824,15 +805,6 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
         if (face1 < 0 || own0 < own1)
         {
             // Use face0 as the new internal face.
-            const label zoneID = faceZones.whichZone(face0);
-            bool zoneFlip = false;
-
-            if (zoneID >= 0)
-            {
-                const faceZone& fZone = faceZones[zoneID];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(face0)];
-            }
-
             const label nei = (face1 < 0 ? -1 : own1);
 
             meshMod.removeFace(face1, -1);
@@ -843,22 +815,12 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
                 own0,                   // owner
                 nei,                    // neighbour
                 false,                  // face flip
-                -1,                     // patch for face
-                zoneID,                 // zone for face
-                zoneFlip                // face flip in zone
+                -1                      // patch for face
             );
         }
         else
         {
             // Use face1 as the new internal face.
-            const label zoneID = faceZones.whichZone(face1);
-            bool zoneFlip = false;
-
-            if (zoneID >= 0)
-            {
-                const faceZone& fZone = faceZones[zoneID];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(face1)];
-            }
 
             meshMod.removeFace(face0, -1);
             meshMod.modifyFace
@@ -868,9 +830,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::mergeBaffles
                 own1,                   // owner
                 own0,                   // neighbour
                 false,                  // face flip
-                -1,                     // patch for face
-                zoneID,                 // zone for face
-                zoneFlip                // face flip in zone
+                -1                      // patch for face
             );
         }
     }
@@ -3170,6 +3130,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
 
     // Put the faces into the correct zone
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    List<Map<bool>> faceZonesAddedFaces(mesh_.faceZones().size());
 
     for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
@@ -3200,17 +3161,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
                 );
             }
 
-            meshMod.modifyFace
-            (
-                mesh_.faces()[facei],           // modified face
-                facei,                          // label of face
-                faceOwner[facei],               // owner
-                faceNeighbour[facei],           // neighbour
-                false,                          // face flip
-                -1,                             // patch for face
-                faceZoneI,                      // zone for face
-                flip                            // face flip in zone
-            );
+            faceZonesAddedFaces[faceZoneI].insert(facei, flip);
         }
     }
 
@@ -3247,17 +3198,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
                     );
                 }
 
-                meshMod.modifyFace
-                (
-                    mesh_.faces()[facei],           // modified face
-                    facei,                          // label of face
-                    faceOwner[facei],               // owner
-                    -1,                             // neighbour
-                    false,                          // face flip
-                    patchi,                         // patch for face
-                    faceZoneI,                      // zone for face
-                    flip                            // face flip in zone
-                );
+                faceZonesAddedFaces[faceZoneI].insert(facei, flip);
             }
             facei++;
         }
@@ -3267,6 +3208,12 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
 
     // Change the mesh without keeping old points, parallel sync
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
+
+    // Add the new faces to the faceZones in the merged mesh
+    forAll(faceZonesAddedFaces, zonei)
+    {
+        mesh_.faceZones()[zonei].insert(faceZonesAddedFaces[zonei]);
+    }
 
     // Update fields
     mesh_.topoChange(map);

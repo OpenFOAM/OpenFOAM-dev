@@ -138,8 +138,6 @@ void modifyOrAddFace
     const label own,
     const bool flipFaceFlux,
     const label newPatchi,
-    const label zoneID,
-    const bool zoneFlip,
     PackedBoolList& modifiedFace
 )
 {
@@ -153,9 +151,7 @@ void modifyOrAddFace
             own,                        // owner
             -1,                         // neighbour
             flipFaceFlux,               // face flip
-            newPatchi,                  // patch for face
-            zoneID,                     // zone for face
-            zoneFlip                    // face flip in zone
+            newPatchi                   // patch for face
         );
 
         modifiedFace[facei] = 1;
@@ -170,9 +166,7 @@ void modifyOrAddFace
             -1,                         // neighbour
             facei,                      // master face
             flipFaceFlux,               // face flip
-            newPatchi,                  // patch for face
-            zoneID,                     // zone for face
-            zoneFlip                    // face flip in zone
+            newPatchi                   // patch for face
         );
     }
 }
@@ -183,7 +177,6 @@ label createFaces
     const bool internalFacesOnly,
     const fvMesh& mesh,
     const faceZone& fZone,
-    const label fZonei,
     const label newOwnerPatchi,
     const label newNeighbourPatchi,
     polyTopoChange& meshMod,
@@ -212,8 +205,6 @@ label createFaces
                     mesh.faceOwner()[facei],// owner
                     false,                  // face flip
                     newOwnerPatchi,         // patch for face
-                    fZonei,                 // zone for face
-                    false,                  // face flip in zone
                     modifiedFace            // modify or add status
                 );
             }
@@ -231,8 +222,6 @@ label createFaces
                     mesh.faceNeighbour()[facei],// owner
                     true,                       // face flip
                     newOwnerPatchi,             // patch for face
-                    fZonei,                     // zone for face
-                    false,                      // face flip in zone
                     modifiedFace                // modify or add status
                 );
             }
@@ -259,8 +248,6 @@ label createFaces
                     mesh.faceNeighbour()[facei],    // owner
                     true,                           // face flip
                     newNeighbourPatchi,             // patch for face
-                    fZonei,                         // zone for face
-                    true,                           // face flip in zone
                     modifiedFace                    // modify or add
                 );
             }
@@ -275,8 +262,6 @@ label createFaces
                     mesh.faceOwner()[facei],// owner
                     false,                  // face flip
                     newNeighbourPatchi,     // patch for face
-                    fZonei,                 // zone for face
-                    true,                   // face flip in zone
                     modifiedFace            // modify or add status
                 );
             }
@@ -323,8 +308,6 @@ label createFaces
                         mesh.faceOwner()[facei],    // owner
                         false,                      // face flip
                         newPp.index(),              // patch for face
-                        fZonei,                     // zone for face
-                        fZone.flipMap()[zoneFacei], // face flip in zone
                         modifiedFace                // modify or add
                     );
 
@@ -632,7 +615,6 @@ int main(int argc, char *argv[])
                     internalFacesOnly,
                     mesh,
                     fZone,
-                    fZonei,
                     newPatchIDs[0],
                     newPatchIDs[1],
                     meshMod,

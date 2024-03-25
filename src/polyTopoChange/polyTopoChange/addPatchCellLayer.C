@@ -228,12 +228,6 @@ Foam::label Foam::addPatchCellLayer::addSideFace
 ) const
 {
     label masterFacei = -1;
-
-    // Zone info comes from any side patch face. Otherwise -1 since we
-    // don't know what to put it in - inherit from the extruded faces?
-    label zonei = -1;   // mesh_.faceZones().whichZone(meshFacei);
-    bool flip = false;
-
     label addedFacei = -1;
 
     // Is patch edge external edge of indirectPrimitivePatch?
@@ -246,7 +240,7 @@ Foam::label Foam::addPatchCellLayer::addSideFace
         // Loop over all faces connected to edge and see if we can find a face
         // that is otherPatchID
 
-        // Get my mesh face and its zone.
+        // Get my mesh face
         label meshFacei = pp.addressing()[ownFacei];
 
         forAll(meshFaces, k)
@@ -261,13 +255,6 @@ Foam::label Foam::addPatchCellLayer::addSideFace
             {
                 // Found the patch face. Use it to map from
                 masterFacei = facei;
-
-                zonei = mesh_.faceZones().whichZone(facei);
-                if (zonei != -1)
-                {
-                    label index = mesh_.faceZones()[zonei].whichFace(facei);
-                    flip = mesh_.faceZones()[zonei].flipMap()[index];
-                }
                 break;
             }
         }
@@ -295,12 +282,6 @@ Foam::label Foam::addPatchCellLayer::addSideFace
             layerOwn = layerI;
         }
 
-
-        // Pout<< "Added boundary face:" << newFace
-        //    << " own:" << addedCells[ownFacei][layerOwn]
-        //    << " patch:" << newPatchID
-        //    << endl;
-
         addedFacei = meshMod.addFace
         (
             newFace,                    // face
@@ -308,9 +289,7 @@ Foam::label Foam::addPatchCellLayer::addSideFace
             -1,                         // neighbour
             masterFacei,                // master face
             false,                      // flux flip
-            newPatchID,                 // patch for face
-            zonei,                      // zone for face
-            flip                        // face zone flip
+            newPatchID                  // patch for face
         );
     }
     else
@@ -369,15 +348,8 @@ Foam::label Foam::addPatchCellLayer::addSideFace
             addedCells[nbrFacei][layerNbr],   // neighbour
             -1,                         // master face
             false,                      // flux flip
-            -1,                         // patch for face
-            zonei,                      // zone for face
-            flip                        // face zone flip
+            -1                          // patch for face
         );
-
-       // Pout<< "Added internal face:" << newFace
-        //    << " own:" << addedCells[ownFacei][layerOwn]
-        //    << " nei:" << addedCells[nbrFacei][layerNbr]
-        //    << endl;
     }
 
     return addedFacei;
@@ -1158,21 +1130,12 @@ void Foam::addPatchCellLayer::setRefinement
                 // Get new neighbour
                 label nei;
                 label patchi;
-                label zonei = -1;
-                bool flip = false;
-
 
                 if (i == addedCells[patchFacei].size()-1)
                 {
                     // Top layer so is patch face.
                     nei = -1;
                     patchi = patchID[patchFacei];
-                    zonei = mesh_.faceZones().whichZone(meshFacei);
-                    if (zonei != -1)
-                    {
-                        const faceZone& fz = mesh_.faceZones()[zonei];
-                        flip = fz.flipMap()[fz.whichFace(meshFacei)];
-                    }
                 }
                 else
                 {
@@ -1181,7 +1144,6 @@ void Foam::addPatchCellLayer::setRefinement
                     patchi = -1;
                 }
 
-
                 layerFaces_[patchFacei][i+1] = meshMod.addFace
                 (
                     newFace,                    // face
@@ -1189,9 +1151,7 @@ void Foam::addPatchCellLayer::setRefinement
                     nei,                        // neighbour
                     (addToMesh_ ? meshFacei : -1), // master face
                     false,                      // flux flip
-                    patchi,                     // patch for face
-                    zonei,                      // zone for face
-                    flip                        // face zone flip
+                    patchi                      // patch for face
                 );
             }
         }
@@ -1218,9 +1178,7 @@ void Foam::addPatchCellLayer::setRefinement
                     mesh_.faceOwner()[meshFacei],   // owner
                     addedCells[patchFacei][0],      // neighbour
                     false,                          // face flip
-                    -1,                             // patch for face
-                    -1, // zonei,                    // zone for face
-                    false                           // face flip in zone
+                    -1                              // patch for face
                 );
             }
         }
@@ -1233,15 +1191,6 @@ void Foam::addPatchCellLayer::setRefinement
         {
             if (nFaceLayers[patchFacei] > 0)
             {
-                label meshFacei = pp.addressing()[patchFacei];
-                label zonei = mesh_.faceZones().whichZone(meshFacei);
-                bool zoneFlip = false;
-                if (zonei != -1)
-                {
-                    const faceZone& fz = mesh_.faceZones()[zonei];
-                    zoneFlip = !fz.flipMap()[fz.whichFace(meshFacei)];
-                }
-
                 // Reverse and renumber old patch face.
                 face f(pp.localFaces()[patchFacei].reverseFace());
                 forAll(f, fp)
@@ -1256,9 +1205,7 @@ void Foam::addPatchCellLayer::setRefinement
                     -1,                         // neighbour
                     -1,                         // masterFace
                     true,                       // face flip
-                    exposedPatchID[patchFacei], // patch for face
-                    zonei,                      // zone for face
-                    zoneFlip                    // face flip in zone
+                    exposedPatchID[patchFacei]  // patch for face
                 );
             }
         }

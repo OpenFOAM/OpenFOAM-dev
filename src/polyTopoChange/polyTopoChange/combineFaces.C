@@ -639,23 +639,12 @@ void Foam::combineFaces::setRefinement
         // Modify master face
         // ~~~~~~~~~~~~~~~~~~
 
-        label masterFacei = setFaces[0];
+        const label masterFacei = setFaces[0];
 
         // Get outside face in mesh vertex labels
-        face outsideFace(getOutsideFace(bigFace));
+        const face outsideFace(getOutsideFace(bigFace));
 
-        label zoneID = mesh_.faceZones().whichZone(masterFacei);
-
-        bool zoneFlip = false;
-
-        if (zoneID >= 0)
-        {
-            const faceZone& fZone = mesh_.faceZones()[zoneID];
-
-            zoneFlip = fZone.flipMap()[fZone.whichFace(masterFacei)];
-        }
-
-        label patchi = mesh_.boundaryMesh().whichPatch(masterFacei);
+        const label patchi = mesh_.boundaryMesh().whichPatch(masterFacei);
 
         meshMod.modifyFace
         (
@@ -664,9 +653,7 @@ void Foam::combineFaces::setRefinement
             mesh_.faceOwner()[masterFacei], // owner
             -1,                             // neighbour
             false,                          // face flip
-            patchi,                         // patch for face
-            zoneID,                         // zone for face
-            zoneFlip                        // face flip in zone
+            patchi                          // patch for face
         );
 
 
@@ -922,15 +909,8 @@ void Foam::combineFaces::setUnrefinement
         // Restore
         // ~~~~~~~
 
-        label own = mesh_.faceOwner()[masterFacei];
-        label zoneID = mesh_.faceZones().whichZone(masterFacei);
-        bool zoneFlip = false;
-        if (zoneID >= 0)
-        {
-            const faceZone& fZone = mesh_.faceZones()[zoneID];
-            zoneFlip = fZone.flipMap()[fZone.whichFace(masterFacei)];
-        }
-        label patchi = mesh_.boundaryMesh().whichPatch(masterFacei);
+        const label own = mesh_.faceOwner()[masterFacei];
+        const label patchi = mesh_.boundaryMesh().whichPatch(masterFacei);
 
         if (mesh_.boundaryMesh()[patchi].coupled())
         {
@@ -951,9 +931,7 @@ void Foam::combineFaces::setUnrefinement
             own,                            // owner
             -1,                             // neighbour
             false,                          // face flip
-            patchi,                         // patch for face
-            zoneID,                         // zone for face
-            zoneFlip                        // face flip in zone
+            patchi                          // patch for face
         );
         restoredFaces.insert(masterFacei, masterFacei);
 
@@ -970,9 +948,7 @@ void Foam::combineFaces::setUnrefinement
                 -1,                     // neighbour,
                 masterFacei,             // masterFaceID,
                 false,                  // flipFaceFlux,
-                patchi,                 // patchID,
-                zoneID,                 // zoneID,
-                zoneFlip                // zoneFlip
+                patchi                  // patchID,
             );
             restoredFaces.insert(facei, masterFacei);
         }
