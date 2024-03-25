@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,10 +26,11 @@ Class
 
 Description
     Enthalpy based thermodynamics package using a constant heat capacity
-    at constant pressure:
+    at constant pressure.
 
+    The sensible enthalpy is evaluated as:
     \verbatim
-        h = Cp*(T - Tref) + hsRef
+        hs = Cp*(T - Tref) + hsRef
     \endverbatim
 
 Usage

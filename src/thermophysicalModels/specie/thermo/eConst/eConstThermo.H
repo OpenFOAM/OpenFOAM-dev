@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,10 +26,11 @@ Class
 
 Description
     Internal energy based thermodynamics package using a constant heat capacity
-    at constant volume:
+    at constant volume.
 
+    The sensible internal energy is evaluated as:
     \verbatim
-        e = Cv*(T - Tref) + esRef
+        es = Cv*(T - Tref) + esRef
     \endverbatim
 
 Usage
