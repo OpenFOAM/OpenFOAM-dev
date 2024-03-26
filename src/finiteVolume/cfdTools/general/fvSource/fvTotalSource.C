@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,10 +58,11 @@ void Foam::fvTotalSource::addSource(fvMatrix<scalar>& eqn) const
     eqn.dimensions() = S.dimensions();
 
     // Apply the source
+    scalarField& eqnSource = eqn.source();
     forAll(cells, i)
     {
         const scalar f = mesh().V()[cells[i]]/V;
-        eqn.source()[cells[i]] -= f*S.value();
+        eqnSource[cells[i]] -= f*S.value();
     }
 }
 

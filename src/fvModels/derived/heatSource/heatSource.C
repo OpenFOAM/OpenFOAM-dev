@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,9 +132,10 @@ void Foam::fv::heatSource::addSup
     const scalar t = mesh().time().userTimeValue();
     const scalar q = q_->value(t);
 
+    scalarField& eqnSource = eqn.source();
     forAll(cells, i)
     {
-        eqn.source()[cells[i]] -= mesh().V()[cells[i]]*q;
+        eqnSource[cells[i]] -= mesh().V()[cells[i]]*q;
     }
 }
 
