@@ -60,81 +60,18 @@ class cellZone
 
 public:
 
-    typedef cellZones ZonesType;
-
     // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
         static const char* const labelsName;
 
-
     //- Runtime type information
     TypeName("cellZone");
 
 
-    // Declare run-time constructor selection tables
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            cellZone,
-            dictionary,
-            (
-                const word& name,
-                const dictionary& dict,
-                const cellZones& mz
-            ),
-            (name, dict, mz)
-        );
-
-
     // Constructors
 
-        //- Construct from components
-        cellZone
-        (
-            const word& name,
-            const labelUList& addr,
-            const cellZones&
-        );
-
-        //- Construct from components, transferring contents
-        cellZone
-        (
-            const word& name,
-            labelList&& addr,
-            const cellZones&
-        );
-
-        //- Construct from dictionary
-        cellZone
-        (
-            const word& name,
-            const dictionary&,
-            const cellZones&
-        );
-
-        //- Construct given the original zone and resetting the
-        //  cell list and mesh zones information
-        cellZone
-        (
-            const cellZone&,
-            const labelUList& addr,
-            const cellZones&
-        );
-
-        //- Construct given the original zone, resetting the
-        //  cell list and mesh zones information
-        cellZone
-        (
-            const cellZone&,
-            labelList&& addr,
-            const cellZones&
-        );
-
-        //- Disallow default bitwise copy construction
-        cellZone(const cellZone&) = delete;
-
+        using Zone<cellZone, cellZones>::Zone;
 
         //- Construct and return a clone, resetting the mesh zones
         virtual autoPtr<cellZone> clone(const cellZones& mz) const
@@ -158,22 +95,6 @@ public:
                 new cellZone(*this, addr, mz)
             );
         }
-
-
-    // Selectors
-
-        //- Return a pointer to a new cell zone
-        //  created on freestore from dictionary
-        static autoPtr<cellZone> New
-        (
-            const word& name,
-            const dictionary&,
-            const cellZones&
-        );
-
-
-    //- Destructor
-    virtual ~cellZone();
 
 
     // Member Functions
@@ -201,12 +122,6 @@ public:
     // Member Operators
 
         using Zone<cellZone, cellZones>::operator=;
-
-        //- Assignment to zone, clearing demand-driven data
-        void operator=(const cellZone&);
-
-        //- Move assignment to zone, clearing demand-driven data
-        void operator=(cellZone&&);
 };
 
 

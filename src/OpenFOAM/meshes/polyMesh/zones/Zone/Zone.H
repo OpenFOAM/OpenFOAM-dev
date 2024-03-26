@@ -92,6 +92,22 @@ protected:
 
 public:
 
+    // Declare run-time constructor selection tables
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            ZoneType,
+            dictionary,
+            (
+                const word& name,
+                const dictionary& dict,
+                const ZonesType& mz
+            ),
+            (name, dict, mz)
+        );
+
+
     // Constructors
 
         //- Construct from components
@@ -115,7 +131,6 @@ public:
         (
             const word& name,
             const dictionary&,
-            const word& labelsName,
             const ZonesType& zones
         );
 
@@ -139,6 +154,18 @@ public:
 
         //- Disallow default bitwise copy construction
         Zone(const Zone&) = delete;
+
+
+    // Selectors
+
+        //- Return a pointer to a new cell zone
+        //  created on freestore from dictionary
+        static autoPtr<ZoneType> New
+        (
+            const word& name,
+            const dictionary&,
+            const ZonesType&
+        );
 
 
     //- Destructor
@@ -195,9 +222,6 @@ public:
 
         //- Redistribute or update using the given distribution map
         virtual void distribute(const polyDistributionMap&);
-
-        //- Write
-        virtual void write(Ostream&) const;
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const = 0;

@@ -984,8 +984,8 @@ void Foam::domainDecomposition::decompose()
                     zoneI,
                     pz[zoneI].clone
                     (
-                        procMesh.pointZones(),
-                        zonePoints[zoneI].shrink()
+                        zonePoints[zoneI].shrink(),
+                        procMesh.pointZones()
                     )
                 );
             }

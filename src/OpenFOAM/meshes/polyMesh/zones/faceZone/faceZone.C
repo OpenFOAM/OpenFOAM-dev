@@ -34,8 +34,10 @@ License
 
 namespace Foam
 {
+    typedef Zone<faceZone, faceZones> faceZoneType;
+    defineTemplateRunTimeSelectionTable(faceZoneType, dictionary);
+
     defineTypeNameAndDebug(faceZone, 0);
-    defineRunTimeSelectionTable(faceZone, dictionary);
     addToRunTimeSelectionTable(faceZone, faceZone, dictionary);
 }
 
@@ -242,7 +244,7 @@ Foam::faceZone::faceZone
     const faceZones& mz
 )
 :
-    Zone<faceZone, faceZones>(name, dict, this->labelsName, mz),
+    Zone<faceZone, faceZones>(name, dict, mz),
     flipMap_(dict.lookup("flipMap")),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -546,14 +548,6 @@ void Foam::faceZone::movePoints(const pointField& p)
 }
 
 
-void Foam::faceZone::write(Ostream& os) const
-{
-    os  << nl << name()
-        << nl << static_cast<const labelList&>(*this)
-        << nl << flipMap();
-}
-
-
 void Foam::faceZone::writeDict(Ostream& os) const
 {
     os  << nl << name() << nl << token::BEGIN_BLOCK << nl
@@ -579,16 +573,6 @@ void Foam::faceZone::operator=(faceZone&& zn)
 {
     Zone<faceZone, faceZones>::operator=(move(zn));
     flipMap_ = move(zn.flipMap_);
-}
-
-
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const faceZone& zn)
-{
-    zn.write(os);
-    os.check("Ostream& operator<<(Ostream&, const faceZone&");
-    return os;
 }
 
 

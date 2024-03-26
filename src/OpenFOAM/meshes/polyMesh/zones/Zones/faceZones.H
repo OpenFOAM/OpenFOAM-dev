@@ -35,6 +35,20 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+namespace Foam
+{
+    // class faceZones
+    // :
+    //     public Zones<faceZone, polyMesh>
+    // {
+    // public:
+
+    //     using Zones<faceZone, polyMesh>::Zones;
+    // };
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 #endif
 
 // ************************************************************************* //

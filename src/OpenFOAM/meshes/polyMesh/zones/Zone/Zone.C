@@ -101,11 +101,10 @@ Foam::Zone<ZoneType, ZonesType>::Zone
 (
     const word& name,
     const dictionary& dict,
-    const word& labelsName,
     const ZonesType& zones
 )
 :
-    labelList(dict.lookup(labelsName)),
+    labelList(dict.lookup(ZoneType::labelsName)),
     name_(name),
     zones_(zones),
     lookupMapPtr_(nullptr)
@@ -140,6 +139,41 @@ Foam::Zone<ZoneType, ZonesType>::Zone
     zones_(zones),
     lookupMapPtr_(nullptr)
 {}
+
+
+template<class ZoneType, class ZonesType>
+Foam::autoPtr<ZoneType> Foam::Zone<ZoneType, ZonesType>::New
+(
+    const word& name,
+    const dictionary& dict,
+    const ZonesType& mz
+)
+{
+    if (ZoneType::debug)
+    {
+        InfoInFunction
+            << "Constructing " << ZoneType::typeName << " " << name << endl;
+    }
+
+    const word type(dict.lookup("type"));
+
+    typename dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(type);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "Unknown " << ZoneType::typeName << " type "
+            << type << nl << nl
+            << "Valid " << ZoneType::typeName << " types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalIOError);
+    }
+
+    return autoPtr<ZoneType>(cstrIter()(name, dict, mz));
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -268,14 +302,6 @@ void Foam::Zone<ZoneType, ZonesType>::distribute(const polyDistributionMap&)
 }
 
 
-template<class ZoneType, class ZonesType>
-void Foam::Zone<ZoneType, ZonesType>::write(Ostream& os) const
-{
-    os  << nl << name_
-        << nl << static_cast<const labelList&>(*this);
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class ZoneType, class ZonesType>
@@ -315,7 +341,7 @@ void Foam::Zone<ZoneType, ZonesType>::operator=(labelList&& indices)
 template<class ZoneType, class ZonesType>
 Foam::Ostream& Foam::operator<<(Ostream& os, const Zone<ZoneType, ZonesType>& z)
 {
-    z.write(os);
+    z.writeDict(os);
     os.check("Ostream& operator<<(Ostream& f, const Zone& z");
     return os;
 }

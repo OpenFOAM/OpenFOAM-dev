@@ -514,15 +514,12 @@ zone = $(polyMesh)/zones/zone
 
 cellZone = $(polyMesh)/zones/cellZone
 $(cellZone)/cellZone.C
-$(cellZone)/cellZoneNew.C
 
 faceZone = $(polyMesh)/zones/faceZone
 $(faceZone)/faceZone.C
-$(faceZone)/faceZoneNew.C
 
 pointZone = $(polyMesh)/zones/pointZone
 $(pointZone)/pointZone.C
-$(pointZone)/pointZoneNew.C
 
 $(polyMesh)/polyMesh.C
 $(polyMesh)/polyMeshFromShapeMesh.C

@@ -121,25 +121,8 @@ public:
         //- The name associated with the zone-labels dictionary entry
         static const char* const labelsName;
 
-
     //- Runtime type information
     TypeName("faceZone");
-
-
-    // Declare run-time constructor selection tables
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            faceZone,
-            dictionary,
-            (
-                const word& name,
-                const dictionary& dict,
-                const faceZones& mz
-            ),
-            (name, dict, mz)
-        );
 
 
     // Constructors
@@ -193,7 +176,6 @@ public:
         //- Disallow default bitwise copy construction
         faceZone(const faceZone&) = delete;
 
-
         //- Construct and return a clone, resetting the mesh zones
         virtual autoPtr<faceZone> clone(const faceZones& mz) const
         {
@@ -217,18 +199,6 @@ public:
                 new faceZone(*this, addr, fm, mz)
             );
         }
-
-
-    // Selectors
-
-        //- Return a pointer to a new face zone
-        //  created on freestore from dictionary
-        static autoPtr<faceZone> New
-        (
-            const word& name,
-            const dictionary&,
-            const faceZones&
-        );
 
 
     //- Destructor
@@ -288,9 +258,6 @@ public:
         //- Update zone using the given map
         virtual void topoChange(const polyTopoChangeMap&);
 
-        //- Write
-        virtual void write(Ostream&) const;
-
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
 
@@ -302,12 +269,6 @@ public:
 
         //- Move assignment to zone, clearing demand-driven data
         void operator=(faceZone&&);
-
-
-    // I-O
-
-        //- Ostream Operator
-        friend Ostream& operator<<(Ostream&, const faceZone&);
 };
 
 

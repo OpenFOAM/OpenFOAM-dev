@@ -43,15 +43,6 @@ namespace Foam
     class polyMesh;
 
     typedef Zones<faceZone, polyMesh> faceZones;
-
-    // class faceZones
-    // :
-    //     public Zones<faceZone, polyMesh>
-    // {
-    // public:
-
-    //     using Zones<faceZone, polyMesh>::Zones;
-    // };
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

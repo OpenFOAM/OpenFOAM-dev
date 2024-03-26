@@ -366,8 +366,8 @@ void Foam::singleCellFvMesh::agglomerateMesh
                 zoneI,
                 oldFz.clone
                 (
-                    pointZones(),
-                    newAddressing
+                    newAddressing,
+                    pointZones()
                 )
             );
         }

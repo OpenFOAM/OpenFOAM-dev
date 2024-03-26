@@ -33,74 +33,14 @@ License
 
 namespace Foam
 {
+    typedef Zone<cellZone, cellZones> cellZoneType;
+    defineTemplateRunTimeSelectionTable(cellZoneType, dictionary);
+
     defineTypeNameAndDebug(cellZone, 0);
-    defineRunTimeSelectionTable(cellZone, dictionary);
     addToRunTimeSelectionTable(cellZone, cellZone, dictionary);
 }
 
 const char * const Foam::cellZone::labelsName = "cellLabels";
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::cellZone::cellZone
-(
-    const word& name,
-    const labelUList& addr,
-    const cellZones& mz
-)
-:
-    Zone<cellZone, cellZones>(name, addr, mz)
-{}
-
-
-Foam::cellZone::cellZone
-(
-    const word& name,
-    labelList&& addr,
-    const cellZones& mz
-)
-:
-    Zone<cellZone, cellZones>(name, move(addr), mz)
-{}
-
-
-Foam::cellZone::cellZone
-(
-    const word& name,
-    const dictionary& dict,
-    const cellZones& mz
-)
-:
-    Zone<cellZone, cellZones>(name, dict, this->labelsName, mz)
-{}
-
-
-Foam::cellZone::cellZone
-(
-    const cellZone& cz,
-    const labelUList& addr,
-    const cellZones& mz
-)
-:
-    Zone<cellZone, cellZones>(cz, addr, mz)
-{}
-
-
-Foam::cellZone::cellZone
-(
-    const cellZone& cz,
-    labelList&& addr,
-    const cellZones& mz
-)
-:
-    Zone<cellZone, cellZones>(cz, move(addr), mz)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::cellZone::~cellZone()
-{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -157,20 +97,6 @@ void Foam::cellZone::writeDict(Ostream& os) const
     writeEntry(os, this->labelsName, *this);
 
     os  << token::END_BLOCK << endl;
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-void Foam::cellZone::operator=(const cellZone& zn)
-{
-    Zone<cellZone, cellZones>::operator=(zn);
-}
-
-
-void Foam::cellZone::operator=(cellZone&& zn)
-{
-    Zone<cellZone, cellZones>::operator=(move(zn));
 }
 
 

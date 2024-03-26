@@ -34,74 +34,14 @@ License
 
 namespace Foam
 {
+    typedef Zone<pointZone, pointZones> pointZoneType;
+    defineTemplateRunTimeSelectionTable(pointZoneType, dictionary);
+
     defineTypeNameAndDebug(pointZone, 0);
-    defineRunTimeSelectionTable(pointZone, dictionary);
     addToRunTimeSelectionTable(pointZone, pointZone, dictionary);
 }
 
 const char* const Foam::pointZone::labelsName = "pointLabels";
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::pointZone::pointZone
-(
-    const word& name,
-    const labelUList& addr,
-    const pointZones& mz
-)
-:
-    Zone<pointZone, pointZones>(name, addr, mz)
-{}
-
-
-Foam::pointZone::pointZone
-(
-    const word& name,
-    labelList&& addr,
-    const pointZones& mz
-)
-:
-    Zone<pointZone, pointZones>(name, move(addr), mz)
-{}
-
-
-Foam::pointZone::pointZone
-(
-    const word& name,
-    const dictionary& dict,
-    const pointZones& mz
-)
-:
-    Zone<pointZone, pointZones>(name, dict, this->labelsName, mz)
-{}
-
-
-Foam::pointZone::pointZone
-(
-    const pointZone& pz,
-    const labelUList& addr,
-    const pointZones& mz
-)
-:
-    Zone<pointZone, pointZones>(pz, addr, mz)
-{}
-
-
-Foam::pointZone::pointZone
-(
-    const pointZone& pz,
-    labelList&& addr,
-    const pointZones& mz
-)
-:
-    Zone<pointZone, pointZones>(pz, move(addr), mz)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::pointZone::~pointZone()
-{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -210,20 +150,6 @@ void Foam::pointZone::writeDict(Ostream& os) const
     writeEntry(os, this->labelsName, *this);
 
     os  << token::END_BLOCK << endl;
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-void Foam::pointZone::operator=(const pointZone& zn)
-{
-    Zone<pointZone, pointZones>::operator=(zn);
-}
-
-
-void Foam::pointZone::operator=(pointZone&& zn)
-{
-    Zone<pointZone, pointZones>::operator=(move(zn));
 }
 
 

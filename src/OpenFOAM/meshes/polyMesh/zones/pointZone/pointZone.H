@@ -61,8 +61,6 @@ class pointZone
 
 public:
 
-    typedef pointZones ZonesType;
-
     // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
@@ -73,69 +71,9 @@ public:
     TypeName("pointZone");
 
 
-    // Declare run-time constructor selection tables
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            pointZone,
-            dictionary,
-            (
-                const word& name,
-                const dictionary& dict,
-                const pointZones& mz
-            ),
-            (name, dict, mz)
-        );
-
-
     // Constructors
 
-        //- Construct from components
-        pointZone
-        (
-            const word& name,
-            const labelUList& addr,
-            const pointZones&
-        );
-
-        //- Construct from components, transferring contents
-        pointZone
-        (
-            const word& name,
-            labelList&& addr,
-            const pointZones&
-        );
-
-        //- Construct from dictionary
-        pointZone
-        (
-            const word& name,
-            const dictionary&,
-            const pointZones&
-        );
-
-        //- Construct given the original zone and resetting the
-        //  point list and mesh zones information
-        pointZone
-        (
-            const pointZone&,
-            const labelUList& addr,
-            const pointZones&
-        );
-
-        //- Construct given the original zone, resetting the
-        //  face list and mesh zones information
-        pointZone
-        (
-            const pointZone&,
-            labelList&& addr,
-            const pointZones&
-        );
-
-        //- Disallow default bitwise copy construction
-        pointZone(const pointZone&) = delete;
-
+        using Zone<pointZone, pointZones>::Zone;
 
         //- Construct and return a clone, resetting the mesh zones
         virtual autoPtr<pointZone> clone(const pointZones& mz) const
@@ -150,8 +88,8 @@ public:
         //  and mesh zones
         virtual autoPtr<pointZone> clone
         (
-            const pointZones& mz,
-            const labelUList& addr
+            const labelUList& addr,
+            const pointZones& mz
         ) const
         {
             return autoPtr<pointZone>
@@ -159,22 +97,6 @@ public:
                 new pointZone(*this, addr, mz)
             );
         }
-
-
-    // Selectors
-
-        //- Return a pointer to a new point zone
-        //  created on freestore from dictionary
-        static autoPtr<pointZone> New
-        (
-            const word& name,
-            const dictionary&,
-            const pointZones&
-        );
-
-
-    //- Destructor
-    virtual ~pointZone();
 
 
     // Member Functions
@@ -199,12 +121,6 @@ public:
     // Member Operators
 
         using Zone<pointZone, pointZones>::operator=;
-
-        //- Assignment to zone, clearing demand-driven data
-        void operator=(const pointZone&);
-
-        //- Move assignment to zone, clearing demand-driven data
-        void operator=(pointZone&&);
 };
 
 
