@@ -58,12 +58,8 @@ void printMesh(const Time& runTime, const polyMesh& mesh)
 }
 
 
-template<class ZoneType>
-void removeZone
-(
-    Zones<ZoneType, polyMesh>& zones,
-    const word& setName
-)
+template<class ZonesType>
+void removeZone(ZonesType& zones, const word& setName)
 {
     label zoneID = zones.findIndex(setName);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,30 +21,29 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::cellZones
-
-Description
-    A Zones with the type cellZone
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef cellZonesFwd_H
-#define cellZonesFwd_H
+#include "faceZones.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-namespace Foam
+Foam::boolList Foam::faceZones::zonesFlipFace
+(
+    const label facei,
+    const labelList& faceiZones
+)
 {
-    template<class Zone, class MeshType> class Zones;
-    class cellZone;
-    class polyMesh;
+    labelList zones(whichZones(facei));
+    boolList flipFaces(zones.size());
 
-    typedef Zones<cellZone, polyMesh> cellZones;
+    forAll(zones, zi)
+    {
+        const faceZone& fz = this->operator[](zi);
+        flipFaces[zi] = fz.flipMap()[fz.localIndex(facei)];
+    }
+
+    return flipFaces;
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

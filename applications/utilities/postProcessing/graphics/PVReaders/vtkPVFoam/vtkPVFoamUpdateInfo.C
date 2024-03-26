@@ -81,10 +81,10 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class ZoneType>
+template<class ZoneType, class ZonesType>
 Foam::wordList Foam::vtkPVFoam::getZoneNames
 (
-    const Zones<ZoneType, polyMesh>& zmesh
+    const Zones<ZoneType, ZonesType, polyMesh>& zmesh
 ) const
 {
     wordList names(zmesh.size());

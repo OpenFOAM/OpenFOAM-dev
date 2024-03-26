@@ -34,7 +34,6 @@ Description
 
 SourceFiles
     cellZone.C
-    cellZoneNew.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -42,12 +41,13 @@ SourceFiles
 #define cellZone_H
 
 #include "Zone.H"
-#include "cellZonesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+class cellZones;
 
 /*---------------------------------------------------------------------------*\
                           Class cellZone Declaration

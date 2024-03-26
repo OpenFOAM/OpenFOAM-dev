@@ -471,6 +471,11 @@ meshes/Identifiers/patch/coupleGroupIdentifier.C
 
 meshes/meshObjects/meshObjects.C
 
+meshes/zones/pointZones/pointZone.C
+meshes/zones/cellZones/cellZone.C
+meshes/zones/faceZones/faceZone.C
+meshes/zones/faceZones/faceZones.C
+
 polyMesh = meshes/polyMesh
 
 polyPatches = $(polyMesh)/polyPatches
@@ -509,17 +514,6 @@ $(globalMeshData)/processorTopology.C
 $(polyMesh)/syncTools/syncTools.C
 $(polyMesh)/polyMeshTetDecomposition/polyMeshTetDecomposition.C
 $(polyMesh)/polyMeshTetDecomposition/tetIndices.C
-
-zone = $(polyMesh)/zones/zone
-
-cellZone = $(polyMesh)/zones/cellZone
-$(cellZone)/cellZone.C
-
-faceZone = $(polyMesh)/zones/faceZone
-$(faceZone)/faceZone.C
-
-pointZone = $(polyMesh)/zones/pointZone
-$(pointZone)/pointZone.C
 
 $(polyMesh)/polyMesh.C
 $(polyMesh)/polyMeshFromShapeMesh.C

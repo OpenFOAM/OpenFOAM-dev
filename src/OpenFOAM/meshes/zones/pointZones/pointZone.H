@@ -35,7 +35,6 @@ Description
 
 SourceFiles
     pointZone.C
-    pointZoneNew.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -43,12 +42,13 @@ SourceFiles
 #define pointZone_H
 
 #include "Zone.H"
-#include "pointZonesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+class pointZones;
 
 /*---------------------------------------------------------------------------*\
                           Class pointZone Declaration

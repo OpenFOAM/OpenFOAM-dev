@@ -363,10 +363,10 @@ class vtkPVFoam
             wordList getZoneNames(const word& zoneType) const;
 
             //- Get non-empty zone names from mesh info
-            template<class ZoneType>
+            template<class ZoneType, class ZonesType>
             wordList getZoneNames
             (
-                const Zones<ZoneType, polyMesh>&
+                const Zones<ZoneType, ZonesType, polyMesh>&
             ) const;
 
             //- Add objects of Type to paraview array selection

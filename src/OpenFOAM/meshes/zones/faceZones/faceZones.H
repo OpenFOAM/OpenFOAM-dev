@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,16 +22,51 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Foam::cellZones
+    Foam::faceZones
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cellZones_H
-#define cellZones_H
+#ifndef faceZones_H
+#define faceZones_H
 
+#include "faceZone.H"
 #include "Zones.H"
-#include "cellZone.H"
-#include "cellZonesFwd.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+class polyMesh;
+
+/*---------------------------------------------------------------------------*\
+                          Class cellZones Declaration
+\*---------------------------------------------------------------------------*/
+
+class faceZones
+:
+    public Zones<faceZone, faceZones, polyMesh>
+{
+public:
+
+    using Zones<faceZone, faceZones, polyMesh>::Zones;
+
+
+    // Member Functions
+
+        //- Return the list of flips for the facei
+        //  for each of the face zones in faceiZones
+        boolList zonesFlipFace
+        (
+            const label facei,
+            const labelList& faceiZones
+        );
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

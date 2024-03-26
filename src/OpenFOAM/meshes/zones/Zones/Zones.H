@@ -36,7 +36,7 @@ SourceFiles
 #define Zones_H
 
 #include "regIOobject.H"
-#include "pointField.H"
+#include "pointFieldFwd.H"
 #include "Map.H"
 #include "boolList.H"
 #include "PackedBoolList.H"
@@ -54,16 +54,16 @@ class polyTopoChangeMap;
 class polyMeshMap;
 class polyDistributionMap;
 
-template<class ZoneType, class MeshType> class Zones;
+template<class ZoneType, class ZonesType, class MeshType> class Zones;
 
-template<class ZoneType, class MeshType>
-Ostream& operator<<(Ostream&, const Zones<ZoneType, MeshType>&);
+template<class ZoneType, class ZonesType, class MeshType>
+Ostream& operator<<(Ostream&, const Zones<ZoneType, ZonesType, MeshType>&);
 
 /*---------------------------------------------------------------------------*\
                           Class Zones Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ZoneType, class MeshType>
+template<class ZoneType, class ZonesType, class MeshType>
 class Zones
 :
     public PtrList<ZoneType>,
@@ -133,14 +133,6 @@ public:
         //- Given a global object index, return the list of zones it is in
         labelList whichZones(const label objectIndex) const;
 
-        //- Return the list of flips for the facei
-        //  for each of the face zones in faceiZones
-        boolList zonesFlipFace
-        (
-            const label facei,
-            const labelList& faceiZones
-        );
-
         //- Return a list of zone types
         wordList types() const;
 
@@ -192,7 +184,7 @@ public:
 
         //- Swap zones
         //  For run-time mesh replacement and mesh to mesh mapping
-        void swap(Zones&);
+        void swap(ZonesType&);
 
         //- writeData member function required by regIOobject
         bool writeData(Ostream&) const;
@@ -210,15 +202,15 @@ public:
         ZoneType& operator[](const word&);
 
         //- Disallow default bitwise assignment
-        void operator=(const Zones<ZoneType, MeshType>&) = delete;
+        void operator=(const Zones<ZoneType, ZonesType, MeshType>&) = delete;
 
 
     // Ostream operator
 
-        friend Ostream& operator<< <ZoneType, MeshType>
+        friend Ostream& operator<< <ZoneType, ZonesType, MeshType>
         (
             Ostream&,
-            const Zones<ZoneType, MeshType>&
+            const Zones<ZoneType, ZonesType, MeshType>&
         );
 };
 
