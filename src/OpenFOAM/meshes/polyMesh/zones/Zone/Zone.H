@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zone
+    Foam::Zone
 
 Description
     Base class for zones
 
 SourceFiles
-    zone.C
+    Zone.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zone_H
-#define zone_H
+#ifndef Zone_H
+#define Zone_H
 
 #include "labelList.H"
 #include "typeInfo.H"
@@ -52,14 +52,17 @@ class polyTopoChangeMap;
 class polyMeshMap;
 class polyDistributionMap;
 
-class zone;
-Ostream& operator<<(Ostream&, const zone&);
+template<class ZoneType, class ZonesType> class Zone;
+
+template<class ZoneType, class ZonesType>
+Ostream& operator<<(Ostream&, const Zone<ZoneType, ZonesType>&);
 
 /*---------------------------------------------------------------------------*\
-                            Class zone Declaration
+                            Class Zone Declaration
 \*---------------------------------------------------------------------------*/
 
-class zone
+template<class ZoneType, class ZonesType>
+class Zone
 :
     public labelList
 {
@@ -70,6 +73,9 @@ protected:
 
         //- Name of zone
         word name_;
+
+        //- Reference to zone list
+        const ZonesType& zones_;
 
 
         // Demand-driven private data
@@ -86,56 +92,57 @@ protected:
 
 public:
 
-    //- Runtime type information
-    TypeName("zone");
-
-
     // Constructors
 
         //- Construct from components
-        zone
+        Zone
         (
             const word& name,
-            const labelUList& indices
+            const labelUList& indices,
+            const ZonesType& zones
         );
 
         //- Construct from components, moving contents
-        zone
+        Zone
         (
             const word& name,
-            labelList&& indices
+            labelList&& indices,
+            const ZonesType& zones
         );
 
         //- Construct from dictionary
-        zone
+        Zone
         (
             const word& name,
             const dictionary&,
-            const word& labelsName
+            const word& labelsName,
+            const ZonesType& zones
         );
 
         //- Construct given the original zone and resetting the
         //  cell list and mesh zones information
-        zone
+        Zone
         (
-            const zone&,
-            const labelUList& indices
+            const Zone&,
+            const labelUList& indices,
+            const ZonesType& zones
         );
 
         //- Construct given the original zone, resetting the
         //  cell list and mesh zones information
-        zone
+        Zone
         (
-            const zone&,
-            labelList&& indices
+            const Zone&,
+            labelList&& indices,
+            const ZonesType& zones
         );
 
         //- Disallow default bitwise copy construction
-        zone(const zone&) = delete;
+        Zone(const Zone&) = delete;
 
 
     //- Destructor
-    virtual ~zone();
+    virtual ~Zone();
 
 
     // Member Functions
@@ -145,6 +152,9 @@ public:
         {
             return name_;
         }
+
+        //- Return ZonesType reference
+        const ZonesType& meshZones() const;
 
         //- Map storing the local index for every global index.  Used to find
         //  the index of the item in the zone from the known global index. If
@@ -171,7 +181,7 @@ public:
         void insert(const labelHashSet& newIndices);
 
         //- Swap two zones
-        void swap(zone&);
+        void swap(Zone&);
 
         //- Correct patch after moving points
         virtual void movePoints(const pointField&)
@@ -196,10 +206,10 @@ public:
     // Member Operators
 
         //- Assignment operator
-        void operator=(const zone&);
+        void operator=(const Zone&);
 
         //- Move assignment operator
-        void operator=(zone&&);
+        void operator=(Zone&&);
 
         //- Assignment operator to indices
         void operator=(const labelUList&);
@@ -211,13 +221,23 @@ public:
     // I-O
 
         //- Ostream Operator
-        friend Ostream& operator<<(Ostream&, const zone&);
+        friend Ostream& operator<< <ZoneType, ZonesType>
+        (
+            Ostream&,
+            const Zone<ZoneType, ZonesType>&
+        );
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "Zone.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

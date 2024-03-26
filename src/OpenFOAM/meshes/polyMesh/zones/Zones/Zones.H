@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::MeshZones
+    Foam::Zones
 
 Description
     A list of mesh zones.
 
 SourceFiles
-    MeshZones.C
+    Zones.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MeshZones_H
-#define MeshZones_H
+#ifndef Zones_H
+#define Zones_H
 
 #include "regIOobject.H"
 #include "pointField.H"
@@ -54,17 +54,17 @@ class polyTopoChangeMap;
 class polyMeshMap;
 class polyDistributionMap;
 
-template<class ZoneType, class MeshType> class MeshZones;
+template<class ZoneType, class MeshType> class Zones;
 
 template<class ZoneType, class MeshType>
-Ostream& operator<<(Ostream&, const MeshZones<ZoneType, MeshType>&);
+Ostream& operator<<(Ostream&, const Zones<ZoneType, MeshType>&);
 
 /*---------------------------------------------------------------------------*\
-                          Class MeshZones Declaration
+                          Class Zones Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ZoneType, class MeshType>
-class MeshZones
+class Zones
 :
     public PtrList<ZoneType>,
     public regIOobject
@@ -86,14 +86,14 @@ public:
     // Constructors
 
         //- Read constructor given IOobject and a MeshType reference
-        MeshZones
+        Zones
         (
             const IOobject&,
             const MeshType&
         );
 
-        //- Construct given size
-        MeshZones
+        //- Read constructor if file present otherwise from size
+        Zones
         (
             const IOobject&,
             const MeshType&,
@@ -101,7 +101,7 @@ public:
         );
 
          //- Construct given a PtrList
-        MeshZones
+        Zones
         (
             const IOobject&,
             const MeshType&,
@@ -109,14 +109,14 @@ public:
         );
 
         //- Move constructor
-        MeshZones(MeshZones&&) = default;
+        Zones(Zones&&) = default;
 
         //- Disallow default bitwise copy construction
-        MeshZones(const MeshZones&) = delete;
+        Zones(const Zones&) = delete;
 
 
     //- Destructor
-    ~MeshZones();
+    ~Zones();
 
 
     // Member Functions
@@ -192,7 +192,7 @@ public:
 
         //- Swap zones
         //  For run-time mesh replacement and mesh to mesh mapping
-        void swap(MeshZones&);
+        void swap(Zones&);
 
         //- writeData member function required by regIOobject
         bool writeData(Ostream&) const;
@@ -210,7 +210,7 @@ public:
         ZoneType& operator[](const word&);
 
         //- Disallow default bitwise assignment
-        void operator=(const MeshZones<ZoneType, MeshType>&) = delete;
+        void operator=(const Zones<ZoneType, MeshType>&) = delete;
 
 
     // Ostream operator
@@ -218,7 +218,7 @@ public:
         friend Ostream& operator<< <ZoneType, MeshType>
         (
             Ostream&,
-            const MeshZones<ZoneType, MeshType>&
+            const Zones<ZoneType, MeshType>&
         );
 };
 
@@ -230,7 +230,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "MeshZones.C"
+    #include "Zones.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,12 +77,12 @@ void Foam::vtkPVFoam::convertSurfaceField
 
     // For interior faces: average owner/neighbour
     // For boundary faces: owner
-    forAll(faceLabels, facei)
+    forAll(faceLabels, i)
     {
-        const label faceNo = faceLabels[facei];
-        if (faceNo < nInternalFaces)
+        const label facei = faceLabels[i];
+        if (facei < nInternalFaces)
         {
-            Type t = 0.5*(tf[faceOwner[faceNo]] + tf[faceNeigh[faceNo]]);
+            const Type t = 0.5*(tf[faceOwner[facei]] + tf[faceNeigh[facei]]);
 
             for (direction d=0; d<nComp; ++d)
             {
@@ -91,7 +91,10 @@ void Foam::vtkPVFoam::convertSurfaceField
         }
         else
         {
-            const Type& t = tf[faceOwner[faceNo]];
+            const label patchi = mesh.boundaryMesh().whichPatch(facei);
+            const label pFacei = mesh.boundaryMesh()[patchi].whichFace(facei);
+            const Type& t = tf.boundaryField()[patchi][pFacei];
+
             for (direction d=0; d<nComp; ++d)
             {
                 vec[d] = component(t, d);
@@ -99,7 +102,7 @@ void Foam::vtkPVFoam::convertSurfaceField
         }
         vtkOpenFOAMTupleRemap<Type>(vec);
 
-        cellData->InsertTuple(facei, vec);
+        cellData->InsertTuple(i, vec);
     }
 
 
@@ -157,21 +160,18 @@ void Foam::vtkPVFoam::convertSurfaceField
         ) = fvs;
     }
 
-
-    // For interior faces: average owner/neighbour
-    // For boundary faces: owner
-    forAll(faceLabels, facei)
+    forAll(faceLabels, i)
     {
-        const label faceNo = faceLabels[facei];
+        const label facei = faceLabels[i];
 
         float vec[nComp];
         for (direction d=0; d<nComp; ++d)
         {
-            vec[d] = component(flatFld[faceNo], d);
+            vec[d] = component(flatFld[facei], d);
         }
         vtkOpenFOAMTupleRemap<Type>(vec);
 
-        cellData->InsertTuple(facei, vec);
+        cellData->InsertTuple(i, vec);
     }
 
     vtkPolyData::SafeDownCast

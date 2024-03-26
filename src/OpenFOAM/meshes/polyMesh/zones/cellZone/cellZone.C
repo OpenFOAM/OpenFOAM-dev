@@ -49,8 +49,7 @@ Foam::cellZone::cellZone
     const meshCellZones& mz
 )
 :
-    zone(name, addr),
-    meshZones_(mz)
+    Zone<cellZone, meshCellZones>(name, addr, mz)
 {}
 
 
@@ -61,8 +60,7 @@ Foam::cellZone::cellZone
     const meshCellZones& mz
 )
 :
-    zone(name, move(addr)),
-    meshZones_(mz)
+    Zone<cellZone, meshCellZones>(name, move(addr), mz)
 {}
 
 
@@ -73,8 +71,7 @@ Foam::cellZone::cellZone
     const meshCellZones& mz
 )
 :
-    zone(name, dict, this->labelsName),
-    meshZones_(mz)
+    Zone<cellZone, meshCellZones>(name, dict, this->labelsName, mz)
 {}
 
 
@@ -85,8 +82,7 @@ Foam::cellZone::cellZone
     const meshCellZones& mz
 )
 :
-    zone(cz, addr),
-    meshZones_(mz)
+    Zone<cellZone, meshCellZones>(cz, addr, mz)
 {}
 
 
@@ -97,8 +93,7 @@ Foam::cellZone::cellZone
     const meshCellZones& mz
 )
 :
-    zone(cz, move(addr)),
-    meshZones_(mz)
+    Zone<cellZone, meshCellZones>(cz, move(addr), mz)
 {}
 
 
@@ -112,19 +107,17 @@ Foam::cellZone::~cellZone()
 
 Foam::label Foam::cellZone::whichCell(const label globalCellID) const
 {
-    return zone::localIndex(globalCellID);
-}
-
-
-const Foam::meshCellZones& Foam::cellZone::meshZones() const
-{
-    return meshZones_;
+    return Zone<cellZone, meshCellZones>::localIndex(globalCellID);
 }
 
 
 bool Foam::cellZone::checkDefinition(const bool report) const
 {
-    return zone::checkDefinition(meshZones_.mesh().nCells(), report);
+    return Zone<cellZone, meshCellZones>::checkDefinition
+    (
+        zones_.mesh().nCells(),
+        report
+    );
 }
 
 
@@ -171,13 +164,13 @@ void Foam::cellZone::writeDict(Ostream& os) const
 
 void Foam::cellZone::operator=(const cellZone& zn)
 {
-    zone::operator=(zn);
+    Zone<cellZone, meshCellZones>::operator=(zn);
 }
 
 
 void Foam::cellZone::operator=(cellZone&& zn)
 {
-    zone::operator=(move(zn));
+    Zone<cellZone, meshCellZones>::operator=(move(zn));
 }
 
 

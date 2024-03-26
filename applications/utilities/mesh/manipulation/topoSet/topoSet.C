@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ void printMesh(const Time& runTime, const polyMesh& mesh)
 template<class ZoneType>
 void removeZone
 (
-    MeshZones<ZoneType, polyMesh>& zones,
+    Zones<ZoneType, polyMesh>& zones,
     const word& setName
 )
 {

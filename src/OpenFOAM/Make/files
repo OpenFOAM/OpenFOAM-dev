@@ -511,7 +511,6 @@ $(polyMesh)/polyMeshTetDecomposition/polyMeshTetDecomposition.C
 $(polyMesh)/polyMeshTetDecomposition/tetIndices.C
 
 zone = $(polyMesh)/zones/zone
-$(zone)/zone.C
 
 cellZone = $(polyMesh)/zones/cellZone
 $(cellZone)/cellZone.C

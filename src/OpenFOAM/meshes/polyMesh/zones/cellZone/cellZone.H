@@ -41,7 +41,7 @@ SourceFiles
 #ifndef cellZone_H
 #define cellZone_H
 
-#include "zone.H"
+#include "Zone.H"
 #include "meshCellZonesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -55,18 +55,12 @@ namespace Foam
 
 class cellZone
 :
-    public zone
+    public Zone<cellZone, meshCellZones>
 {
 
-protected:
-
-    // Protected data
-
-        //- Reference to zone list
-        const meshCellZones& meshZones_;
-
-
 public:
+
+    typedef meshCellZones ZonesType;
 
     // Static Data Members
 
@@ -187,9 +181,6 @@ public:
         //- Convenient renaming of zone::localIndex(globalIndex)
         label whichCell(const label globalIndex) const;
 
-        //- Return meshZones reference
-        const meshCellZones& meshZones() const;
-
         //- Check zone definition. Return true if in error.
         virtual bool checkDefinition(const bool report = false) const;
 
@@ -209,7 +200,7 @@ public:
 
     // Member Operators
 
-        using zone::operator=;
+        using Zone<cellZone, meshCellZones>::operator=;
 
         //- Assignment to zone, clearing demand-driven data
         void operator=(const cellZone&);

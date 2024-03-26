@@ -42,7 +42,7 @@ SourceFiles
 #ifndef pointZone_H
 #define pointZone_H
 
-#include "zone.H"
+#include "Zone.H"
 #include "meshPointZonesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,18 +56,12 @@ namespace Foam
 
 class pointZone
 :
-    public zone
+    public Zone<pointZone, meshPointZones>
 {
 
-protected:
-
-    // Protected data
-
-        //- Reference to zone list
-        const meshPointZones& meshZones_;
-
-
 public:
+
+    typedef meshPointZones ZonesType;
 
     // Static Data Members
 
@@ -185,9 +179,6 @@ public:
 
     // Member Functions
 
-        //- Return meshZones reference
-        const meshPointZones& meshZones() const;
-
         //- Convenient renaming of zone::localIndex(globalIndex)
         label whichPoint(const label globalIndex) const;
 
@@ -207,7 +198,7 @@ public:
 
     // Member Operators
 
-        using zone::operator=;
+        using Zone<pointZone, meshPointZones>::operator=;
 
         //- Assignment to zone, clearing demand-driven data
         void operator=(const pointZone&);

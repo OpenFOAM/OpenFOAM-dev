@@ -205,9 +205,8 @@ Foam::faceZone::faceZone
     const meshFaceZones& mz
 )
 :
-    zone(name, addr),
+    Zone<faceZone, meshFaceZones>(name, addr, mz),
     flipMap_(fm),
-    meshZones_(mz),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -225,9 +224,8 @@ Foam::faceZone::faceZone
     const meshFaceZones& mz
 )
 :
-    zone(name, move(addr)),
+    Zone<faceZone, meshFaceZones>(name, move(addr), mz),
     flipMap_(move(fm)),
-    meshZones_(mz),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -244,9 +242,8 @@ Foam::faceZone::faceZone
     const meshFaceZones& mz
 )
 :
-    zone(name, dict, this->labelsName),
+    Zone<faceZone, meshFaceZones>(name, dict, this->labelsName, mz),
     flipMap_(dict.lookup("flipMap")),
-    meshZones_(mz),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -264,9 +261,8 @@ Foam::faceZone::faceZone
     const meshFaceZones& mz
 )
 :
-    zone(fz, addr),
+    Zone<faceZone, meshFaceZones>(fz, addr, mz),
     flipMap_(fm),
-    meshZones_(mz),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -284,9 +280,8 @@ Foam::faceZone::faceZone
     const meshFaceZones& mz
 )
 :
-    zone(fz, move(addr)),
+    Zone<faceZone, meshFaceZones>(fz, move(addr), mz),
     flipMap_(move(fm)),
-    meshZones_(mz),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -306,15 +301,9 @@ Foam::faceZone::~faceZone()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::meshFaceZones& Foam::faceZone::meshZones() const
-{
-    return meshZones_;
-}
-
-
 Foam::label Foam::faceZone::whichFace(const label globalFaceID) const
 {
-    return zone::localIndex(globalFaceID);
+    return Zone<faceZone, meshFaceZones>::localIndex(globalFaceID);
 }
 
 
@@ -372,7 +361,7 @@ const Foam::labelList& Foam::faceZone::meshEdges() const
 
 void Foam::faceZone::clearAddressing()
 {
-    zone::clearAddressing();
+    Zone<faceZone, meshFaceZones>::clearAddressing();
 
     deleteDemandDrivenData(patchPtr_);
 
@@ -397,7 +386,11 @@ void Foam::faceZone::resetAddressing
 
 bool Foam::faceZone::checkDefinition(const bool report) const
 {
-    return zone::checkDefinition(meshZones().mesh().faces().size(), report);
+    return Zone<faceZone, meshFaceZones>::checkDefinition
+    (
+        meshZones().mesh().faces().size(),
+        report
+    );
 }
 
 
@@ -498,7 +491,7 @@ void Foam::faceZone::insert(const Map<bool>& newIndices)
 
 void Foam::faceZone::swap(faceZone& fz)
 {
-    zone::swap(fz);
+    Zone<faceZone, meshFaceZones>::swap(fz);
     flipMap_.swap(fz.flipMap_);
 }
 
@@ -577,14 +570,14 @@ void Foam::faceZone::writeDict(Ostream& os) const
 
 void Foam::faceZone::operator=(const faceZone& zn)
 {
-    zone::operator=(zn);
+    Zone<faceZone, meshFaceZones>::operator=(zn);
     flipMap_ = zn.flipMap_;
 }
 
 
 void Foam::faceZone::operator=(faceZone&& zn)
 {
-    zone::operator=(move(zn));
+    Zone<faceZone, meshFaceZones>::operator=(move(zn));
     flipMap_ = move(zn.flipMap_);
 }
 

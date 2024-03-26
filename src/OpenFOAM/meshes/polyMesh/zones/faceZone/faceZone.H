@@ -40,7 +40,7 @@ SourceFiles
 #ifndef faceZone_H
 #define faceZone_H
 
-#include "zone.H"
+#include "Zone.H"
 #include "meshFaceZonesFwd.H"
 #include "boolList.H"
 #include "primitiveFacePatch.H"
@@ -62,7 +62,7 @@ Ostream& operator<<(Ostream&, const faceZone&);
 
 class faceZone
 :
-    public zone
+    public Zone<faceZone, meshFaceZones>
 {
     // Private Data
 
@@ -77,9 +77,6 @@ protected:
         //- Flip map for all faces in the zone.  Set to true if the
         //  face needs to be flipped to achieve the correct orientation.
         boolList flipMap_;
-
-        //- Reference to zone list
-        const meshFaceZones& meshZones_;
 
 
         // Demand-driven private data
@@ -116,6 +113,8 @@ protected:
 
 
 public:
+
+    typedef meshFaceZones ZonesType;
 
     // Static Data Members
 
@@ -249,9 +248,6 @@ public:
 
         //- Return reference to primitive patch
         const primitiveFacePatch& operator()() const;
-
-        //- Return meshZones reference
-        const meshFaceZones& meshZones() const;
 
 
         // Addressing into mesh

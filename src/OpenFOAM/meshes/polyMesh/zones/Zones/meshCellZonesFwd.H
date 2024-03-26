@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Typedef
     Foam::meshCellZones
 
 Description
-    A MeshZones with the type cellZone
+    A Zones with the type cellZone
 
 \*---------------------------------------------------------------------------*/
 
@@ -36,11 +36,11 @@ Description
 
 namespace Foam
 {
-    template<class Zone, class MeshType> class MeshZones;
+    template<class Zone, class MeshType> class Zones;
     class cellZone;
     class polyMesh;
 
-    typedef MeshZones<cellZone, polyMesh> meshCellZones;
+    typedef Zones<cellZone, polyMesh> meshCellZones;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

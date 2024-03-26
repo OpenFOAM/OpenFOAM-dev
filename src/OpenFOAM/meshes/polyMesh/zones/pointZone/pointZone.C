@@ -50,8 +50,7 @@ Foam::pointZone::pointZone
     const meshPointZones& mz
 )
 :
-    zone(name, addr),
-    meshZones_(mz)
+    Zone<pointZone, meshPointZones>(name, addr, mz)
 {}
 
 
@@ -62,8 +61,7 @@ Foam::pointZone::pointZone
     const meshPointZones& mz
 )
 :
-    zone(name, move(addr)),
-    meshZones_(mz)
+    Zone<pointZone, meshPointZones>(name, move(addr), mz)
 {}
 
 
@@ -74,8 +72,7 @@ Foam::pointZone::pointZone
     const meshPointZones& mz
 )
 :
-    zone(name, dict, this->labelsName),
-    meshZones_(mz)
+    Zone<pointZone, meshPointZones>(name, dict, this->labelsName, mz)
 {}
 
 
@@ -86,8 +83,7 @@ Foam::pointZone::pointZone
     const meshPointZones& mz
 )
 :
-    zone(pz, addr),
-    meshZones_(mz)
+    Zone<pointZone, meshPointZones>(pz, addr, mz)
 {}
 
 
@@ -98,8 +94,7 @@ Foam::pointZone::pointZone
     const meshPointZones& mz
 )
 :
-    zone(pz, move(addr)),
-    meshZones_(mz)
+    Zone<pointZone, meshPointZones>(pz, move(addr), mz)
 {}
 
 
@@ -111,21 +106,19 @@ Foam::pointZone::~pointZone()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::meshPointZones& Foam::pointZone::meshZones() const
-{
-    return meshZones_;
-}
-
-
 Foam::label Foam::pointZone::whichPoint(const label globalPointID) const
 {
-    return zone::localIndex(globalPointID);
+    return Zone<pointZone, meshPointZones>::localIndex(globalPointID);
 }
 
 
 bool Foam::pointZone::checkDefinition(const bool report) const
 {
-    return zone::checkDefinition(meshZones_.mesh().points().size(), report);
+    return Zone<pointZone, meshPointZones>::checkDefinition
+    (
+        zones_.mesh().points().size(),
+        report
+    );
 }
 
 
@@ -133,7 +126,7 @@ bool Foam::pointZone::checkParallelSync(const bool report) const
 {
     const polyMesh& mesh = meshZones().mesh();
 
-    const label index = meshZones_.findIndex(name());
+    const label index = zones_.findIndex(name());
 
     labelList maxZone(mesh.nPoints(), -1);
     labelList minZone(mesh.nPoints(), labelMax);
@@ -224,13 +217,13 @@ void Foam::pointZone::writeDict(Ostream& os) const
 
 void Foam::pointZone::operator=(const pointZone& zn)
 {
-    zone::operator=(zn);
+    Zone<pointZone, meshPointZones>::operator=(zn);
 }
 
 
 void Foam::pointZone::operator=(pointZone&& zn)
 {
-    zone::operator=(move(zn));
+    Zone<pointZone, meshPointZones>::operator=(move(zn));
 }
 
 
