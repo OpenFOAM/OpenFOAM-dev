@@ -154,7 +154,7 @@ Foam::Zone<ZoneType, ZonesType>::~Zone()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ZoneType, class ZonesType>
-const ZonesType& Foam::Zone<ZoneType, ZonesType>::meshZones() const
+const ZonesType& Foam::Zone<ZoneType, ZonesType>::zones() const
 {
     return zones_;
 }

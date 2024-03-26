@@ -154,7 +154,7 @@ public:
         }
 
         //- Return ZonesType reference
-        const ZonesType& meshZones() const;
+        const ZonesType& zones() const;
 
         //- Map storing the local index for every global index.  Used to find
         //  the index of the item in the zone from the known global index. If

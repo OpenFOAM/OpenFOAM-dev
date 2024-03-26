@@ -62,12 +62,12 @@ void Foam::faceZone::calcFaceZonePatch() const
         new primitiveFacePatch
         (
             faceList(size()),
-            meshZones().mesh().points()
+            zones().mesh().points()
         );
 
     primitiveFacePatch& patch = *patchPtr_;
 
-    const faceList& f = meshZones().mesh().faces();
+    const faceList& f = zones().mesh().faces();
 
     const labelList& addr = *this;
     const boolList& flip = flipMap();
@@ -111,8 +111,8 @@ void Foam::faceZone::calcCellLayers() const
         // Go through all the faces in the master zone.  Choose the
         // master or slave cell based on the face flip
 
-        const labelList& own = meshZones().mesh().faceOwner();
-        const labelList& nei = meshZones().mesh().faceNeighbour();
+        const labelList& own = zones().mesh().faceOwner();
+        const labelList& nei = zones().mesh().faceNeighbour();
 
         const labelList& mf = *this;
 
@@ -129,7 +129,7 @@ void Foam::faceZone::calcCellLayers() const
             label ownCelli = own[mf[facei]];
             label neiCelli =
             (
-                meshZones().mesh().isInternalFace(mf[facei])
+                zones().mesh().isInternalFace(mf[facei])
               ? nei[mf[facei]]
               : -1
             );
@@ -163,7 +163,7 @@ void Foam::faceZone::checkAddressing() const
     const labelList& mf = *this;
 
     // Note: nFaces, nCells might not be set yet on mesh so use owner size
-    const label nFaces = meshZones().mesh().faceOwner().size();
+    const label nFaces = zones().mesh().faceOwner().size();
 
     bool hasWarned = false;
     forAll(mf, i)
@@ -349,8 +349,8 @@ const Foam::labelList& Foam::faceZone::meshEdges() const
             (
                 operator()().meshEdges
                 (
-                    meshZones().mesh().edges(),
-                    meshZones().mesh().pointEdges()
+                    zones().mesh().edges(),
+                    zones().mesh().pointEdges()
                 )
             );
     }
@@ -388,7 +388,7 @@ bool Foam::faceZone::checkDefinition(const bool report) const
 {
     return Zone<faceZone, meshFaceZones>::checkDefinition
     (
-        meshZones().mesh().faces().size(),
+        zones().mesh().faces().size(),
         report
     );
 }
@@ -396,7 +396,7 @@ bool Foam::faceZone::checkDefinition(const bool report) const
 
 bool Foam::faceZone::checkParallelSync(const bool report) const
 {
-    const polyMesh& mesh = meshZones().mesh();
+    const polyMesh& mesh = zones().mesh();
     const polyBoundaryMesh& bm = mesh.boundaryMesh();
 
     bool hasError = false;

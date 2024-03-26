@@ -124,7 +124,7 @@ bool Foam::pointZone::checkDefinition(const bool report) const
 
 bool Foam::pointZone::checkParallelSync(const bool report) const
 {
-    const polyMesh& mesh = meshZones().mesh();
+    const polyMesh& mesh = zones().mesh();
 
     const label index = zones_.findIndex(name());
 
