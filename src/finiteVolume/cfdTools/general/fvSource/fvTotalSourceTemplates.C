@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,11 +60,13 @@ void Foam::fvTotalSource::addSupType
         );
 
         // Apply the source
+        Field<Type>& eqnSource = eqn.source();
+        scalarField& eqnDiag = eqn.diag();
         forAll(cells, i)
         {
             const scalar f = mesh().V()[cells[i]]/V;
-            eqn.source()[cells[i]] -= f*S.value()*sourceCoeff[i];
-            eqn.diag()[cells[i]] += f*S.value()*internalCoeff[i];
+            eqnSource[cells[i]] -= f*S.value()*sourceCoeff[i];
+            eqnDiag[cells[i]] += f*S.value()*internalCoeff[i];
         }
     }
     else
@@ -76,10 +78,11 @@ void Foam::fvTotalSource::addSupType
         );
 
         // Apply the source
+        Field<Type>& eqnSource = eqn.source();
         forAll(cells, i)
         {
             const scalar f = mesh().V()[cells[i]]/V;
-            eqn.source()[cells[i]] -= f*S.value()*value[i];
+            eqnSource[cells[i]] -= f*S.value()*value[i];
         }
     }
 }

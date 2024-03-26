@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,10 +77,10 @@ void Foam::fv::acceleration::add
 
     const labelUList cells = set_.cells();
 
+    vectorField& eqnSource = eqn.source();
     forAll(cells, i)
     {
-        const label celli = cells[i];
-        eqn.source()[celli] -= V[celli]*alphaRho[celli]*a;
+        eqnSource[cells[i]] -= V[cells[i]]*alphaRho[cells[i]]*a;
     }
 }
 
