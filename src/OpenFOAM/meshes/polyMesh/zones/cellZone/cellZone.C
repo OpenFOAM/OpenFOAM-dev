@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellZone.H"
-#include "meshCellZones.H"
+#include "cellZones.H"
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
 #include "addToRunTimeSelectionTable.H"
@@ -46,10 +46,10 @@ Foam::cellZone::cellZone
 (
     const word& name,
     const labelUList& addr,
-    const meshCellZones& mz
+    const cellZones& mz
 )
 :
-    Zone<cellZone, meshCellZones>(name, addr, mz)
+    Zone<cellZone, cellZones>(name, addr, mz)
 {}
 
 
@@ -57,10 +57,10 @@ Foam::cellZone::cellZone
 (
     const word& name,
     labelList&& addr,
-    const meshCellZones& mz
+    const cellZones& mz
 )
 :
-    Zone<cellZone, meshCellZones>(name, move(addr), mz)
+    Zone<cellZone, cellZones>(name, move(addr), mz)
 {}
 
 
@@ -68,10 +68,10 @@ Foam::cellZone::cellZone
 (
     const word& name,
     const dictionary& dict,
-    const meshCellZones& mz
+    const cellZones& mz
 )
 :
-    Zone<cellZone, meshCellZones>(name, dict, this->labelsName, mz)
+    Zone<cellZone, cellZones>(name, dict, this->labelsName, mz)
 {}
 
 
@@ -79,10 +79,10 @@ Foam::cellZone::cellZone
 (
     const cellZone& cz,
     const labelUList& addr,
-    const meshCellZones& mz
+    const cellZones& mz
 )
 :
-    Zone<cellZone, meshCellZones>(cz, addr, mz)
+    Zone<cellZone, cellZones>(cz, addr, mz)
 {}
 
 
@@ -90,10 +90,10 @@ Foam::cellZone::cellZone
 (
     const cellZone& cz,
     labelList&& addr,
-    const meshCellZones& mz
+    const cellZones& mz
 )
 :
-    Zone<cellZone, meshCellZones>(cz, move(addr), mz)
+    Zone<cellZone, cellZones>(cz, move(addr), mz)
 {}
 
 
@@ -107,13 +107,13 @@ Foam::cellZone::~cellZone()
 
 Foam::label Foam::cellZone::whichCell(const label globalCellID) const
 {
-    return Zone<cellZone, meshCellZones>::localIndex(globalCellID);
+    return Zone<cellZone, cellZones>::localIndex(globalCellID);
 }
 
 
 bool Foam::cellZone::checkDefinition(const bool report) const
 {
-    return Zone<cellZone, meshCellZones>::checkDefinition
+    return Zone<cellZone, cellZones>::checkDefinition
     (
         zones_.mesh().nCells(),
         report
@@ -164,13 +164,13 @@ void Foam::cellZone::writeDict(Ostream& os) const
 
 void Foam::cellZone::operator=(const cellZone& zn)
 {
-    Zone<cellZone, meshCellZones>::operator=(zn);
+    Zone<cellZone, cellZones>::operator=(zn);
 }
 
 
 void Foam::cellZone::operator=(cellZone&& zn)
 {
-    Zone<cellZone, meshCellZones>::operator=(move(zn));
+    Zone<cellZone, cellZones>::operator=(move(zn));
 }
 
 

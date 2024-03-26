@@ -2322,7 +2322,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
     // ~~~~~
 
     // Copy pointZone from old mesh
-    const meshPointZones& oldPointZones = mesh.pointZones();
+    const pointZones& oldPointZones = mesh.pointZones();
     List<pointZone*> pZonePtrs(oldPointZones.size());
     {
         forAll(oldPointZones, i)
@@ -2332,7 +2332,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
     }
 
     // Copy faceZone from old mesh
-    const meshFaceZones& oldFaceZones = mesh.faceZones();
+    const faceZones& oldFaceZones = mesh.faceZones();
     List<faceZone*> fZonePtrs(oldFaceZones.size());
     {
         forAll(oldFaceZones, i)
@@ -2342,7 +2342,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::polyTopoChange::makeMesh
     }
 
     // Copy cellZone from old mesh
-    const meshCellZones& oldCellZones = mesh.cellZones();
+    const cellZones& oldCellZones = mesh.cellZones();
     List<cellZone*> cZonePtrs(oldCellZones.size());
     {
         forAll(oldCellZones, i)

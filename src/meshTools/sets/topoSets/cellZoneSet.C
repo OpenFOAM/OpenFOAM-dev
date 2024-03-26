@@ -74,7 +74,7 @@ cellZoneSet::cellZoneSet
     mesh_(mesh),
     addressing_(0)
 {
-    const meshCellZones& cellZones = mesh.cellZones();
+    const cellZones& cellZones = mesh.cellZones();
     label zoneID = cellZones.findIndex(name);
 
     if
@@ -259,7 +259,7 @@ bool cellZoneSet::writeObject
     const_cast<word&>(type()) = oldTypeName;
 
     // Modify cellZone
-    meshCellZones& cellZones = const_cast<polyMesh&>(mesh_).cellZones();
+    cellZones& cellZones = const_cast<polyMesh&>(mesh_).cellZones();
     label zoneID = cellZones.findIndex(name());
 
     if (zoneID == -1)

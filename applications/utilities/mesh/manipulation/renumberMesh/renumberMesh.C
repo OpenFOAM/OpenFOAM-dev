@@ -453,7 +453,7 @@ autoPtr<polyTopoChangeMap> reorderMesh
 
     // Re-do the faceZones
     {
-        meshFaceZones& faceZones = mesh.faceZones();
+        faceZones& faceZones = mesh.faceZones();
         forAll(faceZones, zoneI)
         {
             faceZone& fZone = faceZones[zoneI];
@@ -483,7 +483,7 @@ autoPtr<polyTopoChangeMap> reorderMesh
     }
     // Re-do the cellZones
     {
-        meshCellZones& cellZones = mesh.cellZones();
+        cellZones& cellZones = mesh.cellZones();
         forAll(cellZones, zoneI)
         {
             cellZones[zoneI] = UIndirectList<label>

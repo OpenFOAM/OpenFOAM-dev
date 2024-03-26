@@ -52,9 +52,9 @@ SourceFiles
 #include "labelIOList.H"
 #include "polyBoundaryMesh.H"
 #include "boundBox.H"
-#include "meshPointZones.H"
-#include "meshFaceZones.H"
-#include "meshCellZones.H"
+#include "pointZones.H"
+#include "faceZones.H"
+#include "cellZones.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -159,13 +159,13 @@ private:
         // Zoning information
 
             //- Point zones
-            meshPointZones pointZones_;
+            Foam::pointZones pointZones_;
 
             //- Face zones
-            meshFaceZones faceZones_;
+            Foam::faceZones faceZones_;
 
             //- Cell zones
-            meshCellZones cellZones_;
+            Foam::cellZones cellZones_;
 
 
         //- Parallel info
@@ -438,19 +438,19 @@ public:
             const indexedOctree<treeDataCell>& cellTree() const;
 
             //- Return point zones
-            const meshPointZones& pointZones() const
+            const Foam::pointZones& pointZones() const
             {
                 return pointZones_;
             }
 
             //- Return face zones
-            const meshFaceZones& faceZones() const
+            const Foam::faceZones& faceZones() const
             {
                 return faceZones_;
             }
 
             //- Return cell zones
-            const meshCellZones& cellZones() const
+            const Foam::cellZones& cellZones() const
             {
                 return cellZones_;
             }
@@ -506,19 +506,19 @@ public:
         // Topological change
 
             //- Return non-const access to the pointZones
-            meshPointZones& pointZones()
+            Foam::pointZones& pointZones()
             {
                 return pointZones_;
             }
 
             //- Return non-const access to the faceZones
-            meshFaceZones& faceZones()
+            Foam::faceZones& faceZones()
             {
                 return faceZones_;
             }
 
             //- Return non-const access to the cellZones
-            meshCellZones& cellZones()
+            Foam::cellZones& cellZones()
             {
                 return cellZones_;
             }

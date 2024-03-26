@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,8 +133,8 @@ private:
         (
             const label nAllPoints,
 
-            const meshPointZones& pz0,
-            const meshPointZones& pz1,
+            const pointZones& pz0,
+            const pointZones& pz1,
             const labelList& from0ToAllPoints,
             const labelList& from1ToAllPoints,
 
@@ -165,8 +165,8 @@ private:
         (
             const label nAllCells,
 
-            const meshCellZones& cz0,
-            const meshCellZones& cz1,
+            const cellZones& cz0,
+            const cellZones& cz1,
             const labelList& from1ToAllCells,
 
             DynamicList<word>& zoneNames,

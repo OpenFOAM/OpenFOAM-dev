@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -308,7 +308,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 
         // pointZones
         {
-            meshPointZones newPointZones
+            Foam::pointZones newPointZones
             (
                 IOobject
                 (
@@ -329,7 +329,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 
         // faceZones
         {
-            meshFaceZones newFaceZones
+            Foam::faceZones newFaceZones
             (
                 IOobject
                 (
@@ -350,7 +350,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 
         // cellZones
         {
-            meshCellZones newCellZones
+            Foam::cellZones newCellZones
             (
                 IOobject
                 (

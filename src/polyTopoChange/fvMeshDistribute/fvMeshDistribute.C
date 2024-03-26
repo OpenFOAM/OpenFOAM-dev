@@ -1525,7 +1525,7 @@ void Foam::fvMeshDistribute::sendMesh
     // in merged-zone indices.
     CompactListList<label> zonePoints;
     {
-        const meshPointZones& pointZones = mesh.pointZones();
+        const pointZones& pointZones = mesh.pointZones();
 
         labelList rowSizes(pointZoneNames.size(), 0);
 
@@ -1555,7 +1555,7 @@ void Foam::fvMeshDistribute::sendMesh
     CompactListList<label> zoneFaces;
     CompactListList<bool> zoneFaceFlip;
     {
-        const meshFaceZones& faceZones = mesh.faceZones();
+        const faceZones& faceZones = mesh.faceZones();
 
         labelList rowSizes(faceZoneNames.size(), 0);
 
@@ -1587,7 +1587,7 @@ void Foam::fvMeshDistribute::sendMesh
     // Assume sparse, possibly overlapping cell zones
     CompactListList<label> zoneCells;
     {
-        const meshCellZones& cellZones = mesh.cellZones();
+        const cellZones& cellZones = mesh.cellZones();
 
         labelList rowSizes(cellZoneNames.size(), 0);
 
@@ -1620,7 +1620,7 @@ void Foam::fvMeshDistribute::sendMesh
     //    cellZoneID.setSize(mesh.nCells());
     //    cellZoneID = -1;
     //
-    //    const meshCellZones& cellZones = mesh.cellZones();
+    //    const cellZones& cellZones = mesh.cellZones();
     //
     //    forAll(cellZones, zoneI)
     //    {

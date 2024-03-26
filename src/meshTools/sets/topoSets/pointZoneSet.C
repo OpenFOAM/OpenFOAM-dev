@@ -76,7 +76,7 @@ pointZoneSet::pointZoneSet
     mesh_(mesh),
     addressing_(0)
 {
-    const meshPointZones& pointZones = mesh.pointZones();
+    const pointZones& pointZones = mesh.pointZones();
     label zoneID = pointZones.findIndex(name);
 
     if
@@ -260,7 +260,7 @@ bool pointZoneSet::writeObject
     const_cast<word&>(type()) = oldTypeName;
 
     // Modify pointZone
-    meshPointZones& pointZones = const_cast<polyMesh&>(mesh_).pointZones();
+    pointZones& pointZones = const_cast<polyMesh&>(mesh_).pointZones();
     label zoneID = pointZones.findIndex(name());
 
     if (zoneID == -1)

@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pointZone.H"
-#include "meshPointZones.H"
+#include "pointZones.H"
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
 #include "syncTools.H"
@@ -47,10 +47,10 @@ Foam::pointZone::pointZone
 (
     const word& name,
     const labelUList& addr,
-    const meshPointZones& mz
+    const pointZones& mz
 )
 :
-    Zone<pointZone, meshPointZones>(name, addr, mz)
+    Zone<pointZone, pointZones>(name, addr, mz)
 {}
 
 
@@ -58,10 +58,10 @@ Foam::pointZone::pointZone
 (
     const word& name,
     labelList&& addr,
-    const meshPointZones& mz
+    const pointZones& mz
 )
 :
-    Zone<pointZone, meshPointZones>(name, move(addr), mz)
+    Zone<pointZone, pointZones>(name, move(addr), mz)
 {}
 
 
@@ -69,10 +69,10 @@ Foam::pointZone::pointZone
 (
     const word& name,
     const dictionary& dict,
-    const meshPointZones& mz
+    const pointZones& mz
 )
 :
-    Zone<pointZone, meshPointZones>(name, dict, this->labelsName, mz)
+    Zone<pointZone, pointZones>(name, dict, this->labelsName, mz)
 {}
 
 
@@ -80,10 +80,10 @@ Foam::pointZone::pointZone
 (
     const pointZone& pz,
     const labelUList& addr,
-    const meshPointZones& mz
+    const pointZones& mz
 )
 :
-    Zone<pointZone, meshPointZones>(pz, addr, mz)
+    Zone<pointZone, pointZones>(pz, addr, mz)
 {}
 
 
@@ -91,10 +91,10 @@ Foam::pointZone::pointZone
 (
     const pointZone& pz,
     labelList&& addr,
-    const meshPointZones& mz
+    const pointZones& mz
 )
 :
-    Zone<pointZone, meshPointZones>(pz, move(addr), mz)
+    Zone<pointZone, pointZones>(pz, move(addr), mz)
 {}
 
 
@@ -108,13 +108,13 @@ Foam::pointZone::~pointZone()
 
 Foam::label Foam::pointZone::whichPoint(const label globalPointID) const
 {
-    return Zone<pointZone, meshPointZones>::localIndex(globalPointID);
+    return Zone<pointZone, pointZones>::localIndex(globalPointID);
 }
 
 
 bool Foam::pointZone::checkDefinition(const bool report) const
 {
-    return Zone<pointZone, meshPointZones>::checkDefinition
+    return Zone<pointZone, pointZones>::checkDefinition
     (
         zones_.mesh().points().size(),
         report
@@ -217,13 +217,13 @@ void Foam::pointZone::writeDict(Ostream& os) const
 
 void Foam::pointZone::operator=(const pointZone& zn)
 {
-    Zone<pointZone, meshPointZones>::operator=(zn);
+    Zone<pointZone, pointZones>::operator=(zn);
 }
 
 
 void Foam::pointZone::operator=(pointZone&& zn)
 {
-    Zone<pointZone, meshPointZones>::operator=(move(zn));
+    Zone<pointZone, pointZones>::operator=(move(zn));
 }
 
 

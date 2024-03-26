@@ -21,27 +21,17 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::meshCellZones
-
 Description
-    A Zones with the type cellZone
+    Foam::cellZones
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef meshCellZonesFwd_H
-#define meshCellZonesFwd_H
+#ifndef cellZones_H
+#define cellZones_H
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    template<class Zone, class MeshType> class Zones;
-    class cellZone;
-    class polyMesh;
-
-    typedef Zones<cellZone, polyMesh> meshCellZones;
-}
+#include "Zones.H"
+#include "cellZone.H"
+#include "cellZonesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

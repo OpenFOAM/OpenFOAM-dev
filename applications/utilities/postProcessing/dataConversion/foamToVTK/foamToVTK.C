@@ -144,7 +144,7 @@ Usage
 #include "sphericalTensorIOField.H"
 #include "symmTensorIOField.H"
 #include "tensorIOField.H"
-#include "meshFaceZones.H"
+#include "faceZones.H"
 #include "Cloud.H"
 #include "passiveParticle.H"
 #include "stringListOps.H"
@@ -1074,7 +1074,7 @@ int main(int argc, char *argv[])
             );
             print("    surfVectorFields  :", Info, svf);
 
-            const meshFaceZones& zones = mesh.faceZones();
+            const faceZones& zones = mesh.faceZones();
 
             forAll(zones, zoneI)
             {

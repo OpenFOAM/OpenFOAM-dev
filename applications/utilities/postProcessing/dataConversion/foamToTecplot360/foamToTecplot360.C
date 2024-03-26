@@ -1062,18 +1062,18 @@ int main(int argc, char *argv[])
         //
         //---------------------------------------------------------------------
 
-        const meshFaceZones& zones = mesh.faceZones();
+        const faceZones& zones = mesh.faceZones();
 
         if (doFaceZones && zones.size() > 0)
         {
-            mkDir(fvPath/"meshFaceZones");
+            mkDir(fvPath/"faceZones");
 
             fileName patchFileName;
 
             if (vMesh.useSubMesh())
             {
                 patchFileName =
-                    fvPath/"meshFaceZones"/cellSetName
+                    fvPath/"faceZones"/cellSetName
                   + "_"
                   + timeDesc
                   + ".plt";
@@ -1081,7 +1081,7 @@ int main(int argc, char *argv[])
             else
             {
                 patchFileName =
-                    fvPath/"meshFaceZones"/"meshFaceZones"
+                    fvPath/"faceZones"/"faceZones"
                   + "_"
                   + timeDesc
                   + ".plt";

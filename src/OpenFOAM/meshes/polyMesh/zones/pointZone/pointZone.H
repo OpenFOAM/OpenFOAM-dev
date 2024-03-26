@@ -30,7 +30,7 @@ Description
     list.
 
     For quick check whether a point belongs to the zone use the lookup
-    mechanism in meshPointZones, where all the zoned points are registered
+    mechanism in pointZones, where all the zoned points are registered
     with their zone number.
 
 SourceFiles
@@ -43,7 +43,7 @@ SourceFiles
 #define pointZone_H
 
 #include "Zone.H"
-#include "meshPointZonesFwd.H"
+#include "pointZonesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,12 +56,12 @@ namespace Foam
 
 class pointZone
 :
-    public Zone<pointZone, meshPointZones>
+    public Zone<pointZone, pointZones>
 {
 
 public:
 
-    typedef meshPointZones ZonesType;
+    typedef pointZones ZonesType;
 
     // Static Data Members
 
@@ -83,7 +83,7 @@ public:
             (
                 const word& name,
                 const dictionary& dict,
-                const meshPointZones& mz
+                const pointZones& mz
             ),
             (name, dict, mz)
         );
@@ -96,7 +96,7 @@ public:
         (
             const word& name,
             const labelUList& addr,
-            const meshPointZones&
+            const pointZones&
         );
 
         //- Construct from components, transferring contents
@@ -104,7 +104,7 @@ public:
         (
             const word& name,
             labelList&& addr,
-            const meshPointZones&
+            const pointZones&
         );
 
         //- Construct from dictionary
@@ -112,7 +112,7 @@ public:
         (
             const word& name,
             const dictionary&,
-            const meshPointZones&
+            const pointZones&
         );
 
         //- Construct given the original zone and resetting the
@@ -121,7 +121,7 @@ public:
         (
             const pointZone&,
             const labelUList& addr,
-            const meshPointZones&
+            const pointZones&
         );
 
         //- Construct given the original zone, resetting the
@@ -130,7 +130,7 @@ public:
         (
             const pointZone&,
             labelList&& addr,
-            const meshPointZones&
+            const pointZones&
         );
 
         //- Disallow default bitwise copy construction
@@ -138,7 +138,7 @@ public:
 
 
         //- Construct and return a clone, resetting the mesh zones
-        virtual autoPtr<pointZone> clone(const meshPointZones& mz) const
+        virtual autoPtr<pointZone> clone(const pointZones& mz) const
         {
             return autoPtr<pointZone>
             (
@@ -150,7 +150,7 @@ public:
         //  and mesh zones
         virtual autoPtr<pointZone> clone
         (
-            const meshPointZones& mz,
+            const pointZones& mz,
             const labelUList& addr
         ) const
         {
@@ -169,7 +169,7 @@ public:
         (
             const word& name,
             const dictionary&,
-            const meshPointZones&
+            const pointZones&
         );
 
 
@@ -198,7 +198,7 @@ public:
 
     // Member Operators
 
-        using Zone<pointZone, meshPointZones>::operator=;
+        using Zone<pointZone, pointZones>::operator=;
 
         //- Assignment to zone, clearing demand-driven data
         void operator=(const pointZone&);

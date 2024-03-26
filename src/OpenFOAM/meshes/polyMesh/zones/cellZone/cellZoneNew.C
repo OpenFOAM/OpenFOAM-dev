@@ -32,7 +32,7 @@ Foam::autoPtr<Foam::cellZone> Foam::cellZone::New
 (
     const word& name,
     const dictionary& dict,
-    const meshCellZones& mz
+    const cellZones& mz
 )
 {
     if (debug)

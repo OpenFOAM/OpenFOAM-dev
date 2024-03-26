@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
                 (
                     set.name(),             // name
                     pointLabels,            // addressing
-                    mesh.pointZones()       // meshPointZones
+                    mesh.pointZones()       // pointZones
                 )
             );
             mesh.pointZones().writeOpt() = IOobject::AUTO_WRITE;
@@ -256,7 +256,7 @@ int main(int argc, char *argv[])
                     set.name(),             // name
                     addressing.shrink(),    // addressing
                     flipMap.shrink(),       // flipmap
-                    mesh.faceZones()        // meshFaceZones
+                    mesh.faceZones()        // faceZones
                 )
             );
             mesh.faceZones().writeOpt() = IOobject::AUTO_WRITE;
@@ -303,7 +303,7 @@ int main(int argc, char *argv[])
                     (
                         set.name(),             // name
                         cellLabels,             // addressing
-                        mesh.cellZones()        // meshCellZones
+                        mesh.cellZones()        // cellZones
                     )
                 );
                 mesh.cellZones().writeOpt() = IOobject::AUTO_WRITE;

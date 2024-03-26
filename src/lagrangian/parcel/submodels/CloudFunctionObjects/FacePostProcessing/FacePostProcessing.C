@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ void Foam::FacePostProcessing<CloudType>::write()
 {
     const fvMesh& mesh = this->owner().mesh();
     const Time& time = mesh.time();
-    const meshFaceZones& mfz = mesh.faceZones();
+    const faceZones& mfz = mesh.faceZones();
     scalar timeNew = time.value();
     scalar timeElapsed = timeNew - timeOld_;
 
@@ -264,7 +264,7 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
     outputFilePtr_.setSize(faceZoneNames.size());
 
     DynamicList<label> zoneIDs;
-    const meshFaceZones& mfz = owner.mesh().faceZones();
+    const faceZones& mfz = owner.mesh().faceZones();
     const surfaceScalarField& magSf = owner.mesh().magSf();
     const polyBoundaryMesh& pbm = owner.mesh().boundaryMesh();
     forAll(faceZoneNames, i)
@@ -357,7 +357,7 @@ void Foam::FacePostProcessing<CloudType>::preFace(const parcelType& p)
      || this->owner().solution().transient()
     )
     {
-        const meshFaceZones& mfz = this->owner().mesh().faceZones();
+        const faceZones& mfz = this->owner().mesh().faceZones();
 
         forAll(faceZoneIndices_, i)
         {

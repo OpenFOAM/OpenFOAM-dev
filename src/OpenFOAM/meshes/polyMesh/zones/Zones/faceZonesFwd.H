@@ -22,15 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Typedef
-    Foam::meshFaceZones
+    Foam::faceZones
 
 Description
     A Zones with the type faceZone
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef meshFaceZonesFwd_H
-#define meshFaceZonesFwd_H
+#ifndef faceZonesFwd_H
+#define faceZonesFwd_H
 
 #include "Zones.H"
 
@@ -42,9 +42,9 @@ namespace Foam
     class faceZone;
     class polyMesh;
 
-    typedef Zones<faceZone, polyMesh> meshFaceZones;
+    typedef Zones<faceZone, polyMesh> faceZones;
 
-    // class meshFaceZones
+    // class faceZones
     // :
     //     public Zones<faceZone, polyMesh>
     // {

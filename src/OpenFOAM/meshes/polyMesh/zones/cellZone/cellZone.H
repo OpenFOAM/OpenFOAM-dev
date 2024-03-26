@@ -29,7 +29,7 @@ Description
 
     Currently set up as an indirect list but will be extended to use a
     primitive mesh.  For quick check whether a cell belongs to the zone use
-    the lookup mechanism in meshCellZones, where all the zoned cells are
+    the lookup mechanism in cellZones, where all the zoned cells are
     registered with their zone number.
 
 SourceFiles
@@ -42,7 +42,7 @@ SourceFiles
 #define cellZone_H
 
 #include "Zone.H"
-#include "meshCellZonesFwd.H"
+#include "cellZonesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,12 +55,12 @@ namespace Foam
 
 class cellZone
 :
-    public Zone<cellZone, meshCellZones>
+    public Zone<cellZone, cellZones>
 {
 
 public:
 
-    typedef meshCellZones ZonesType;
+    typedef cellZones ZonesType;
 
     // Static Data Members
 
@@ -82,7 +82,7 @@ public:
             (
                 const word& name,
                 const dictionary& dict,
-                const meshCellZones& mz
+                const cellZones& mz
             ),
             (name, dict, mz)
         );
@@ -95,7 +95,7 @@ public:
         (
             const word& name,
             const labelUList& addr,
-            const meshCellZones&
+            const cellZones&
         );
 
         //- Construct from components, transferring contents
@@ -103,7 +103,7 @@ public:
         (
             const word& name,
             labelList&& addr,
-            const meshCellZones&
+            const cellZones&
         );
 
         //- Construct from dictionary
@@ -111,7 +111,7 @@ public:
         (
             const word& name,
             const dictionary&,
-            const meshCellZones&
+            const cellZones&
         );
 
         //- Construct given the original zone and resetting the
@@ -120,7 +120,7 @@ public:
         (
             const cellZone&,
             const labelUList& addr,
-            const meshCellZones&
+            const cellZones&
         );
 
         //- Construct given the original zone, resetting the
@@ -129,7 +129,7 @@ public:
         (
             const cellZone&,
             labelList&& addr,
-            const meshCellZones&
+            const cellZones&
         );
 
         //- Disallow default bitwise copy construction
@@ -137,7 +137,7 @@ public:
 
 
         //- Construct and return a clone, resetting the mesh zones
-        virtual autoPtr<cellZone> clone(const meshCellZones& mz) const
+        virtual autoPtr<cellZone> clone(const cellZones& mz) const
         {
             return autoPtr<cellZone>
             (
@@ -150,7 +150,7 @@ public:
         virtual autoPtr<cellZone> clone
         (
             const labelUList& addr,
-            const meshCellZones& mz
+            const cellZones& mz
         ) const
         {
             return autoPtr<cellZone>
@@ -168,7 +168,7 @@ public:
         (
             const word& name,
             const dictionary&,
-            const meshCellZones&
+            const cellZones&
         );
 
 
@@ -200,7 +200,7 @@ public:
 
     // Member Operators
 
-        using Zone<cellZone, meshCellZones>::operator=;
+        using Zone<cellZone, cellZones>::operator=;
 
         //- Assignment to zone, clearing demand-driven data
         void operator=(const cellZone&);

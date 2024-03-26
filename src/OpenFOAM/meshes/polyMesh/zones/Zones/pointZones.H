@@ -22,16 +22,16 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Foam::meshCellZones
+    Foam::pointZones
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef meshCellZones_H
-#define meshCellZones_H
+#ifndef pointZones_H
+#define pointZones_H
 
 #include "Zones.H"
-#include "cellZone.H"
-#include "meshCellZonesFwd.H"
+#include "pointZone.H"
+#include "pointZonesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "multiSolidBodyMotionSolver.H"
 #include "addToRunTimeSelectionTable.H"
 #include "transformField.H"
-#include "meshCellZones.H"
+#include "cellZones.H"
 #include "boolList.H"
 #include "syncTools.H"
 

@@ -32,7 +32,7 @@ Foam::autoPtr<Foam::pointZone> Foam::pointZone::New
 (
     const word& name,
     const dictionary& dict,
-    const meshPointZones& mz
+    const pointZones& mz
 )
 {
     if (debug)
