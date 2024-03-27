@@ -207,11 +207,8 @@ public:
             return flipMap_;
         }
 
-        //- Convenient renaming of zone::localIndex(globalIndex)
-        label whichFace(const label globalIndex) const;
-
         //- Return reference to primitive patch
-        const primitiveFacePatch& operator()() const;
+        const primitiveFacePatch& patch() const;
 
 
         // Addressing into mesh

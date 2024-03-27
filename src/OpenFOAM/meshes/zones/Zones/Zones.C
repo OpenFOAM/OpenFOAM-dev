@@ -488,6 +488,29 @@ bool Foam::Zones<ZoneType, ZonesType, MeshType>::checkParallelSync
 
 
 template<class ZoneType, class ZonesType, class MeshType>
+void Foam::Zones<ZoneType, ZonesType, MeshType>::insert
+(
+    const List<labelHashSet>& zonesIndices
+)
+{
+    PtrList<ZoneType>& zones = *this;
+
+    if (zonesIndices.size() != zones.size())
+    {
+        FatalErrorInFunction
+            << "zonesIndices.size() " << zonesIndices.size()
+            << " != number of zones " << zones.size()
+            << exit(FatalError);
+    }
+
+    forAll(zonesIndices, zonei)
+    {
+        zones[zonei].insert(zonesIndices[zonei]);
+    }
+}
+
+
+template<class ZoneType, class ZonesType, class MeshType>
 void Foam::Zones<ZoneType, ZonesType, MeshType>::movePoints(const pointField& p)
 {
     PtrList<ZoneType>& zones = *this;

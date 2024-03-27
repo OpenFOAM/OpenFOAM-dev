@@ -61,6 +61,9 @@ public:
             const label facei,
             const labelList& faceiZones
         );
+
+        //- Insert given indices and corresponding face flips into zones
+        void insert(const List<Map<bool>>& zonesIndices);
 };
 
 

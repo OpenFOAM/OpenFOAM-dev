@@ -46,4 +46,23 @@ Foam::boolList Foam::faceZones::zonesFlipFace
 }
 
 
+void Foam::faceZones::insert(const List<Map<bool>>& zonesIndices)
+{
+    PtrList<faceZone>& zones = *this;
+
+    if (zonesIndices.size() != zones.size())
+    {
+        FatalErrorInFunction
+            << "zonesIndices.size() " << zonesIndices.size()
+            << " != number of zones " << zones.size()
+            << exit(FatalError);
+    }
+
+    forAll(zonesIndices, zonei)
+    {
+        zones[zonei].insert(zonesIndices[zonei]);
+    }
+}
+
+
 // ************************************************************************* //

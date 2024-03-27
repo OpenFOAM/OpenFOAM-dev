@@ -127,7 +127,7 @@ void surfaceDisplacementPointPatchVectorField::calcProjection
 
         forAll(nearest, i)
         {
-            if (zonePtr && (zonePtr->whichPoint(meshPoints[i]) >= 0))
+            if (zonePtr && (zonePtr->localIndex(meshPoints[i]) >= 0))
             {
                 // Fixed point. Reset to point0 location.
                 displacement[i] = points0[meshPoints[i]] - localPoints[i];
@@ -217,7 +217,7 @@ void surfaceDisplacementPointPatchVectorField::calcProjection
         // 3. Choose either -fixed, nearest, right, left.
         forAll(displacement, i)
         {
-            if (zonePtr && (zonePtr->whichPoint(meshPoints[i]) >= 0))
+            if (zonePtr && (zonePtr->localIndex(meshPoints[i]) >= 0))
             {
                 // Fixed point. Reset to point0 location.
                 displacement[i] = points0[meshPoints[i]] - localPoints[i];

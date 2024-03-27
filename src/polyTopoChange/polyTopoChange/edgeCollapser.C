@@ -1994,7 +1994,7 @@ Foam::labelPair Foam::edgeCollapser::markFaceZoneEdges
 
     forAll(faces, fI)
     {
-        if (fZone.whichFace(fI) == -1)
+        if (fZone.localIndex(fI) == -1)
         {
             continue;
         }
@@ -2080,7 +2080,7 @@ Foam::labelPair Foam::edgeCollapser::markFaceZoneEdges
 //                else
 //                {
 //                    // Keep the edge if an attached face is not in the zone
-//                    if (fZone.whichFace(eFaceIndex) == -1)
+//                    if (fZone.localIndex(eFaceIndex) == -1)
 //                    {
 //                        nPatchFaces++;
 //                    }

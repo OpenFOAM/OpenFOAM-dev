@@ -31,18 +31,6 @@ License
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 template<class ZoneType, class ZonesType>
-const Foam::Map<Foam::label>& Foam::Zone<ZoneType, ZonesType>::lookupMap() const
-{
-    if (!lookupMapPtr_)
-    {
-        calcLookupMap();
-    }
-
-    return *lookupMapPtr_;
-}
-
-
-template<class ZoneType, class ZonesType>
 void Foam::Zone<ZoneType, ZonesType>::calcLookupMap() const
 {
     if (lookupMapPtr_)
@@ -61,6 +49,37 @@ void Foam::Zone<ZoneType, ZonesType>::calcLookupMap() const
     {
         lm.insert(indices[i], i);
     }
+}
+
+
+template<class ZoneType, class ZonesType>
+void Foam::Zone<ZoneType, ZonesType>::topoChange
+(
+    const labelList& map,
+    const labelList& reverseMap
+)
+{
+    clearAddressing();
+
+    labelHashSet indices;
+
+    forAll(map, celli)
+    {
+        if (map[celli] >= 0 && localIndex(map[celli]) != -1)
+        {
+            indices.insert(celli);
+        }
+    }
+
+    forAll(reverseMap, celli)
+    {
+        if (reverseMap[celli] >= 0 && localIndex(celli) != -1)
+        {
+            indices.insert(reverseMap[celli]);
+        }
+    }
+
+    labelList::operator=(indices.sortedToc());
 }
 
 
@@ -212,6 +231,18 @@ Foam::label Foam::Zone<ZoneType, ZonesType>::localIndex
     {
         return lmIter();
     }
+}
+
+
+template<class ZoneType, class ZonesType>
+const Foam::Map<Foam::label>& Foam::Zone<ZoneType, ZonesType>::lookupMap() const
+{
+    if (!lookupMapPtr_)
+    {
+        calcLookupMap();
+    }
+
+    return *lookupMapPtr_;
 }
 
 

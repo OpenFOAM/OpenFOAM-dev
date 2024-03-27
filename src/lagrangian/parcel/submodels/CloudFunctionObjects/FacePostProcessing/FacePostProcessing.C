@@ -155,8 +155,8 @@ void Foam::FacePostProcessing<CloudType>::write()
             autoPtr<globalIndex> globalPointsPtr =
                 mesh.globalData().mergePoints
                 (
-                    fZone().meshPoints(),
-                    fZone().meshPointMap(),
+                    fZone.patch().meshPoints(),
+                    fZone.patch().meshPointMap(),
                     pointToGlobal,
                     uniqueMeshPointLabels
                 );
@@ -166,7 +166,7 @@ void Foam::FacePostProcessing<CloudType>::write()
             allProcPoints[proci] = uniquePoints;
             Pstream::gatherList(allProcPoints);
 
-            faceList faces(fZone().localFaces());
+            faceList faces(fZone.patch().localFaces());
             forAll(faces, i)
             {
                 inplaceRenumber(pointToGlobal, faces[i]);

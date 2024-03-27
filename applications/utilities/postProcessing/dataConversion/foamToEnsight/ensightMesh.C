@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1267,8 +1267,8 @@ void Foam::ensightMesh::write
             autoPtr<globalIndex> globalPointsPtr =
                 mesh_.globalData().mergePoints
                 (
-                    fz().meshPoints(),
-                    fz().meshPointMap(),
+                    fz.patch().meshPoints(),
+                    fz.patch().meshPointMap(),
                     pointToGlobal,
                     uniqueMeshPointLabels
                 );
@@ -1277,7 +1277,7 @@ void Foam::ensightMesh::write
 
             // Find the list of master faces belonging to the faceZone,
             // in local numbering
-            faceList faceZoneFaces(fz().localFaces());
+            faceList faceZoneFaces(fz.patch().localFaces());
 
             // Count how many master faces belong to the faceZone. Is there
             // a better way of doing this?

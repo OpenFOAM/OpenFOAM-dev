@@ -342,7 +342,7 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
         forAll(zones, zonei)
         {
             const faceZone& fzi = fz[zones[zonei]];
-            const bool flip = fzi.flipMap()[fzi.whichFace(facei)];
+            const bool flip = fzi.flipMap()[fzi.localIndex(facei)];
 
             faceZonesAddedFaces_[faceZoneIndices[zonei]]
            .insert(renumberFaces[facei], flip);
@@ -499,22 +499,13 @@ void Foam::mergePolyMesh::merge()
     autoPtr<polyTopoChangeMap> map(meshMod_.changeMesh(mesh_));
 
     // Add the new points to the pointZones in the merged mesh
-    forAll(pointZonesAddedPoints_, zonei)
-    {
-        mesh_.pointZones()[zonei].insert(pointZonesAddedPoints_[zonei]);
-    }
+    mesh_.pointZones().insert(pointZonesAddedPoints_);
 
     // Add the new faces to the faceZones in the merged mesh
-    forAll(faceZonesAddedFaces_, zonei)
-    {
-        mesh_.faceZones()[zonei].insert(faceZonesAddedFaces_[zonei]);
-    }
+    mesh_.faceZones().insert(faceZonesAddedFaces_);
 
     // Add the new cells to the cellZones in the merged mesh
-    forAll(cellZonesAddedCells_, zonei)
-    {
-        mesh_.cellZones()[zonei].insert(cellZonesAddedCells_[zonei]);
-    }
+    mesh_.cellZones().insert(cellZonesAddedCells_);
 
     mesh_.topoChange(map);
 

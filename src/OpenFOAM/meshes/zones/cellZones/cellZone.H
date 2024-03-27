@@ -71,7 +71,7 @@ public:
 
     // Constructors
 
-        using Zone<cellZone, cellZones>::Zone;
+        using Zone::Zone;
 
         //- Construct and return a clone, resetting the mesh zones
         virtual autoPtr<cellZone> clone(const cellZones& mz) const
@@ -99,9 +99,6 @@ public:
 
     // Member Functions
 
-        //- Convenient renaming of zone::localIndex(globalIndex)
-        label whichCell(const label globalIndex) const;
-
         //- Check zone definition. Return true if in error.
         virtual bool checkDefinition(const bool report = false) const;
 
@@ -121,7 +118,7 @@ public:
 
     // Member Operators
 
-        using Zone<cellZone, cellZones>::operator=;
+        using Zone::operator=;
 };
 
 

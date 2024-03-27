@@ -450,7 +450,7 @@ void Foam::vtkPVFoam::convertMeshFaceZones
                 << zoneName << endl;
         }
 
-        vtkPolyData* vtkmesh = patchVTKMesh(zoneName, zMesh[zoneId]());
+        vtkPolyData* vtkmesh = patchVTKMesh(zoneName, zMesh[zoneId].patch());
 
         if (vtkmesh)
         {

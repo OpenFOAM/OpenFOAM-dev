@@ -170,6 +170,9 @@ public:
         //  true if in error.
         bool checkParallelSync(const bool report = false) const;
 
+        //- Insert given indices into zones
+        void insert(const List<labelHashSet>& zonesIndices);
+
         //- Correct zones after moving points
         virtual void movePoints(const pointField&);
 

@@ -89,6 +89,9 @@ protected:
         //- Construct the look-up map
         void calcLookupMap() const;
 
+        //- Update the addressing using the maps provided
+        void topoChange(const labelList& map, const labelList& reverseMap);
+
 
 public:
 

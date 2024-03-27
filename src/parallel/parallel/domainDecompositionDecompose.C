@@ -966,7 +966,7 @@ void Foam::domainDecomposition::decompose()
                     // Multiple zones. Lookup.
                     forAll(pz, zoneI)
                     {
-                        label index = pz[zoneI].whichPoint(curPoint);
+                        label index = pz[zoneI].localIndex(curPoint);
 
                         if (index != -1)
                         {
@@ -1032,7 +1032,7 @@ void Foam::domainDecomposition::decompose()
                     // Single zone. Add the face
                     zoneFaces[zoneI].append(facei);
 
-                    label index = fz[zoneI].whichFace(curF);
+                    label index = fz[zoneI].localIndex(curF);
 
                     bool flip = fz[zoneI].flipMap()[index];
 
@@ -1048,7 +1048,7 @@ void Foam::domainDecomposition::decompose()
                     // Multiple zones. Lookup.
                     forAll(fz, zoneI)
                     {
-                        label index = fz[zoneI].whichFace(curF);
+                        label index = fz[zoneI].localIndex(curF);
 
                         if (index != -1)
                         {
@@ -1120,7 +1120,7 @@ void Foam::domainDecomposition::decompose()
                     // Multiple zones. Lookup.
                     forAll(cz, zoneI)
                     {
-                        label index = cz[zoneI].whichCell(curCelli);
+                        label index = cz[zoneI].localIndex(curCelli);
 
                         if (index != -1)
                         {

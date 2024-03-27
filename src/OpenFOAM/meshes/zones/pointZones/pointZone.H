@@ -73,7 +73,7 @@ public:
 
     // Constructors
 
-        using Zone<pointZone, pointZones>::Zone;
+        using Zone::Zone;
 
         //- Construct and return a clone, resetting the mesh zones
         virtual autoPtr<pointZone> clone(const pointZones& mz) const
@@ -101,9 +101,6 @@ public:
 
     // Member Functions
 
-        //- Convenient renaming of zone::localIndex(globalIndex)
-        label whichPoint(const label globalIndex) const;
-
         //- Check zone definition. Return true if in error.
         virtual bool checkDefinition(const bool report = false) const;
 
@@ -120,7 +117,7 @@ public:
 
     // Member Operators
 
-        using Zone<pointZone, pointZones>::operator=;
+        using Zone::operator=;
 };
 
 

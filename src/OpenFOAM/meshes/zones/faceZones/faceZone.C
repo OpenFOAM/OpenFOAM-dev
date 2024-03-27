@@ -303,13 +303,7 @@ Foam::faceZone::~faceZone()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::faceZone::whichFace(const label globalFaceID) const
-{
-    return Zone<faceZone, faceZones>::localIndex(globalFaceID);
-}
-
-
-const Foam::primitiveFacePatch& Foam::faceZone::operator()() const
+const Foam::primitiveFacePatch& Foam::faceZone::patch() const
 {
     if (!patchPtr_)
     {
@@ -349,7 +343,7 @@ const Foam::labelList& Foam::faceZone::meshEdges() const
         mePtr_ =
             new labelList
             (
-                operator()().meshEdges
+                patch().meshEdges
                 (
                     zones().mesh().edges(),
                     zones().mesh().pointEdges()
@@ -363,7 +357,7 @@ const Foam::labelList& Foam::faceZone::meshEdges() const
 
 void Foam::faceZone::clearAddressing()
 {
-    Zone<faceZone, faceZones>::clearAddressing();
+    Zone::clearAddressing();
 
     deleteDemandDrivenData(patchPtr_);
 
@@ -388,7 +382,7 @@ void Foam::faceZone::resetAddressing
 
 bool Foam::faceZone::checkDefinition(const bool report) const
 {
-    return Zone<faceZone, faceZones>::checkDefinition
+    return Zone::checkDefinition
     (
         zones().mesh().faces().size(),
         report
@@ -493,7 +487,7 @@ void Foam::faceZone::insert(const Map<bool>& newIndices)
 
 void Foam::faceZone::swap(faceZone& fz)
 {
-    Zone<faceZone, faceZones>::swap(fz);
+    Zone::swap(fz);
     flipMap_.swap(fz.flipMap_);
 }
 
@@ -564,14 +558,14 @@ void Foam::faceZone::writeDict(Ostream& os) const
 
 void Foam::faceZone::operator=(const faceZone& zn)
 {
-    Zone<faceZone, faceZones>::operator=(zn);
+    Zone::operator=(zn);
     flipMap_ = zn.flipMap_;
 }
 
 
 void Foam::faceZone::operator=(faceZone&& zn)
 {
-    Zone<faceZone, faceZones>::operator=(move(zn));
+    Zone::operator=(move(zn));
     flipMap_ = move(zn.flipMap_);
 }
 

@@ -1644,16 +1644,10 @@ void Foam::addPatchCellLayer::topoChange
 void Foam::addPatchCellLayer::updateZones(polyMesh& mesh)
 {
     // Add the pointZones to the merged mesh
-    forAll(pointZonesAddedPoints_, zonei)
-    {
-        mesh.pointZones()[zonei].insert(pointZonesAddedPoints_[zonei]);
-    }
+    mesh.pointZones().insert(pointZonesAddedPoints_);
 
     // Add the cellZones to the merged mesh
-    forAll(cellZonesAddedCells_, zonei)
-    {
-        mesh.cellZones()[zonei].insert(cellZonesAddedCells_[zonei]);
-    }
+    mesh.cellZones().insert(cellZonesAddedCells_);
 }
 
 

@@ -45,15 +45,9 @@ const char * const Foam::cellZone::labelsName = "cellLabels";
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::cellZone::whichCell(const label globalCellID) const
-{
-    return Zone<cellZone, cellZones>::localIndex(globalCellID);
-}
-
-
 bool Foam::cellZone::checkDefinition(const bool report) const
 {
-    return Zone<cellZone, cellZones>::checkDefinition
+    return Zone::checkDefinition
     (
         zones_.mesh().nCells(),
         report
@@ -63,29 +57,7 @@ bool Foam::cellZone::checkDefinition(const bool report) const
 
 void Foam::cellZone::topoChange(const polyTopoChangeMap& map)
 {
-    clearAddressing();
-
-    labelHashSet indices;
-    const labelList& cellMap = map.cellMap();
-    const labelList& reverseCellMap = map.reverseCellMap();
-
-    forAll(cellMap, celli)
-    {
-        if (cellMap[celli] >= 0 && localIndex(cellMap[celli]) != -1)
-        {
-            indices.insert(celli);
-        }
-    }
-
-    forAll(reverseCellMap, celli)
-    {
-        if (reverseCellMap[celli] >= 0 && localIndex(celli) != -1)
-        {
-            indices.insert(reverseCellMap[celli]);
-        }
-    }
-
-    labelList::operator=(indices.sortedToc());
+    Zone::topoChange(map.cellMap(), map.reverseCellMap());
 }
 
 

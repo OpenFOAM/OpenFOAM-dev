@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -672,7 +672,7 @@ void ensightPointField
 
             const faceZone& fz = mesh.faceZones()[zoneID];
 
-            if (returnReduce(fz().nPoints(), sumOp<label>()) > 0)
+            if (returnReduce(fz.patch().nPoints(), sumOp<label>()) > 0)
             {
                 // Renumber the faceZone points/faces into unique points
                 labelList pointToGlobal;
@@ -680,8 +680,8 @@ void ensightPointField
                 autoPtr<globalIndex> globalPointsPtr =
                 mesh.globalData().mergePoints
                 (
-                    fz().meshPoints(),
-                    fz().meshPointMap(),
+                    fz.patch().meshPoints(),
+                    fz.patch().meshPointMap(),
                     pointToGlobal,
                     uniqueMeshPointLabels
                 );

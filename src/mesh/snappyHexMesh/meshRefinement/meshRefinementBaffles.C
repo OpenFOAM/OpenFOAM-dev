@@ -3210,10 +3210,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::zonify
     autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
 
     // Add the new faces to the faceZones in the merged mesh
-    forAll(faceZonesAddedFaces, zonei)
-    {
-        mesh_.faceZones()[zonei].insert(faceZonesAddedFaces[zonei]);
-    }
+    mesh_.faceZones().insert(faceZonesAddedFaces);
 
     // Update fields
     mesh_.topoChange(map);

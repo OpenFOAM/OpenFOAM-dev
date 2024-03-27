@@ -493,10 +493,7 @@ void Foam::extrude2DMesh::setRefinement
 void Foam::extrude2DMesh::updateZones()
 {
     // Add the cellZones to the merged mesh
-    forAll(cellZonesAddedCells_, zonei)
-    {
-        mesh_.cellZones()[zonei].insert(cellZonesAddedCells_[zonei]);
-    }
+    mesh_.cellZones().insert(cellZonesAddedCells_);
 }
 
 

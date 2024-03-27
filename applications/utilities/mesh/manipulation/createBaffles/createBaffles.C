@@ -190,7 +190,7 @@ label createFaces
     // Pass 1. Do selected side of zone
     for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
     {
-        const label zoneFacei = fZone.whichFace(facei);
+        const label zoneFacei = fZone.localIndex(facei);
 
         if (zoneFacei != -1)
         {
@@ -233,7 +233,7 @@ label createFaces
     // Pass 2. Do other side of zone
     for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
     {
-        label zoneFacei = fZone.whichFace(facei);
+        label zoneFacei = fZone.localIndex(facei);
 
         if (zoneFacei != -1)
         {
@@ -278,7 +278,7 @@ label createFaces
             forAll(pp, i)
             {
                 const label facei = pp.start() + i;
-                const label zoneFacei = fZone.whichFace(facei);
+                const label zoneFacei = fZone.localIndex(facei);
 
                 if (zoneFacei != -1)
                 {

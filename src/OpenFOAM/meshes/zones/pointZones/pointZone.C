@@ -46,15 +46,9 @@ const char* const Foam::pointZone::labelsName = "pointLabels";
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::pointZone::whichPoint(const label globalPointID) const
-{
-    return Zone<pointZone, pointZones>::localIndex(globalPointID);
-}
-
-
 bool Foam::pointZone::checkDefinition(const bool report) const
 {
-    return Zone<pointZone, pointZones>::checkDefinition
+    return Zone::checkDefinition
     (
         zones_.mesh().points().size(),
         report
@@ -116,29 +110,7 @@ bool Foam::pointZone::checkParallelSync(const bool report) const
 
 void Foam::pointZone::topoChange(const polyTopoChangeMap& map)
 {
-    clearAddressing();
-
-    labelHashSet indices;
-    const labelList& pointMap = map.pointMap();
-    const labelList& reversePointMap = map.reversePointMap();
-
-    forAll(pointMap, pointi)
-    {
-        if (pointMap[pointi] >= 0 && localIndex(pointMap[pointi]) != -1)
-        {
-            indices.insert(pointi);
-        }
-    }
-
-    forAll(reversePointMap, pointi)
-    {
-        if (reversePointMap[pointi] >= 0 && localIndex(pointi) != -1)
-        {
-            indices.insert(reversePointMap[pointi]);
-        }
-    }
-
-    labelList::operator=(indices.sortedToc());
+    Zone::topoChange(map.pointMap(), map.reversePointMap());
 }
 
 
