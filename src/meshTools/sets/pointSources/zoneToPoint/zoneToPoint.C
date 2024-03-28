@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ void Foam::zoneToPoint::combine(topoSet& set, const bool add) const
     {
         WarningInFunction
             << "Cannot find any pointZone named " << zoneName_ << endl
-            << "Valid names are " << mesh_.pointZones().names() << endl;
+            << "Valid names are " << mesh_.pointZones().toc() << endl;
     }
 }
 

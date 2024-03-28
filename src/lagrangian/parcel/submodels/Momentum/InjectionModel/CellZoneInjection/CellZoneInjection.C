@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -223,7 +223,7 @@ void Foam::CellZoneInjection<CloudType>::topoChange()
     {
         FatalErrorInFunction
             << "Unknown cell zone name: " << cellZoneName_
-            << ". Valid cell zones are: " << mesh.cellZones().names()
+            << ". Valid cell zones are: " << mesh.cellZones().toc()
             << nl << exit(FatalError);
     }
 

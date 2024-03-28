@@ -573,7 +573,7 @@ void Foam::polyMeshAdder::mergePointZones
 )
 {
     zoneNames.setCapacity(pz0.size() + pz1.size());
-    zoneNames.append(pz0.names());
+    zoneNames.append(pz0.toc());
 
     from1ToAll.setSize(pz1.size());
 
@@ -719,7 +719,7 @@ void Foam::polyMeshAdder::mergeFaceZones
 
 
     zoneNames.setCapacity(fz0.size() + fz1.size());
-    zoneNames.append(fz0.names());
+    zoneNames.append(fz0.toc());
 
     from1ToAll.setSize(fz1.size());
 
@@ -900,7 +900,7 @@ void Foam::polyMeshAdder::mergeCellZones
 )
 {
     zoneNames.setCapacity(cz0.size() + cz1.size());
-    zoneNames.append(cz0.names());
+    zoneNames.append(cz0.toc());
 
     from1ToAll.setSize(cz1.size());
     forAll(cz1, zoneI)

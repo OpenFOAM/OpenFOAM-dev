@@ -272,11 +272,11 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
     // Determine zones
     // ~~~~~~~~~~~~~~~
 
-    wordList pointZoneNames(mesh.pointZones().names());
+    wordList pointZoneNames(mesh.pointZones().toc());
     Pstream::scatter(pointZoneNames);
-    wordList faceZoneNames(mesh.faceZones().names());
+    wordList faceZoneNames(mesh.faceZones().toc());
     Pstream::scatter(faceZoneNames);
-    wordList cellZoneNames(mesh.cellZones().names());
+    wordList cellZoneNames(mesh.cellZones().toc());
     Pstream::scatter(cellZoneNames);
 
     if (!haveMesh)

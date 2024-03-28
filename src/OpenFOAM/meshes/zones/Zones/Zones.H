@@ -35,6 +35,7 @@ SourceFiles
 #ifndef Zones_H
 #define Zones_H
 
+#include "PtrListDictionary.H"
 #include "regIOobject.H"
 #include "pointFieldFwd.H"
 #include "Map.H"
@@ -66,8 +67,8 @@ Ostream& operator<<(Ostream&, const Zones<ZoneType, ZonesType, MeshType>&);
 template<class ZoneType, class ZonesType, class MeshType>
 class Zones
 :
-    public PtrList<ZoneType>,
-    public regIOobject
+    public regIOobject,
+    public PtrListDictionary<ZoneType>
 {
     // Private Data
 
@@ -127,6 +128,8 @@ public:
             return mesh_;
         }
 
+        using PtrListDictionary<ZoneType>::found;
+
         //- Return true if objectIndex is in any zone
         bool found(const label objectIndex) const;
 
@@ -135,21 +138,6 @@ public:
 
         //- Return a list of zone types
         wordList types() const;
-
-        //- Return a list of zone names
-        wordList names() const;
-
-        //- Return true if the given zoneName is present
-        bool found(const word& zoneName) const;
-
-        //- Find the zone index given the zone name
-        label findIndex(const word& zoneName) const;
-
-        //- Find and return the zone indices for all matches
-        labelList findIndices(const wordRe&) const;
-
-        //- Mark cells that match the zone specification
-        PackedBoolList findMatching(const wordRe&) const;
 
         //- Append or update a zone
         void append(ZoneType*) const;
@@ -196,13 +184,7 @@ public:
     // Member Operators
 
         //- Return const and non-const reference to ZoneType by index.
-        using PtrList<ZoneType>::operator[];
-
-        //- Return const reference to ZoneType by name.
-        const ZoneType& operator[](const word&) const;
-
-        //- Return reference to ZoneType by name.
-        ZoneType& operator[](const word&);
+        using PtrListDictionary<ZoneType>::operator[];
 
         //- Disallow default bitwise assignment
         void operator=(const Zones<ZoneType, ZonesType, MeshType>&) = delete;

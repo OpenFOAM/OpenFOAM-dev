@@ -1209,7 +1209,7 @@ int main(int argc, char *argv[])
         {
             FatalIOErrorIn(args.executable().c_str(), dict)
                 << "Cannot find zone " << zoneNames[zonei]
-                << endl << "Valid zones are " << mesh.faceZones().names()
+                << endl << "Valid zones are " << mesh.faceZones().toc()
                 << exit(FatalIOError);
         }
 
@@ -1222,7 +1222,7 @@ int main(int argc, char *argv[])
             {
                 FatalIOErrorIn(args.executable().c_str(), dict)
                     << "Cannot find opposite zone " << oppositeZoneNames[zonei]
-                    << endl << "Valid zones are " << mesh.faceZones().names()
+                    << endl << "Valid zones are " << mesh.faceZones().toc()
                     << exit(FatalIOError);
             }
         }

@@ -374,7 +374,7 @@ Foam::labelList Foam::surfaceZonesInfo::addCellZonesToMesh
 
     // Check they are synced
     List<wordList> allCellZones(Pstream::nProcs());
-    allCellZones[Pstream::myProcNo()] = cellZones.names();
+    allCellZones[Pstream::myProcNo()] = cellZones.toc();
     Pstream::gatherList(allCellZones);
     Pstream::scatterList(allCellZones);
 
@@ -436,7 +436,7 @@ Foam::labelList Foam::surfaceZonesInfo::addFaceZonesToMesh
 
     // Check they are synced
     List<wordList> allFaceZones(Pstream::nProcs());
-    allFaceZones[Pstream::myProcNo()] = faceZones.names();
+    allFaceZones[Pstream::myProcNo()] = faceZones.toc();
     Pstream::gatherList(allFaceZones);
     Pstream::scatterList(allFaceZones);
 

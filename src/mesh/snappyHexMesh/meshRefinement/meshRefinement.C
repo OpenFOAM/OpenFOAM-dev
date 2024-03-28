@@ -1807,7 +1807,7 @@ void Foam::meshRefinement::checkCoupledFaceZones(const polyMesh& mesh)
 
     {
         List<wordList> zoneNames(Pstream::nProcs());
-        zoneNames[Pstream::myProcNo()] = fZones.names();
+        zoneNames[Pstream::myProcNo()] = fZones.toc();
         Pstream::gatherList(zoneNames);
         Pstream::scatterList(zoneNames);
         // All have same data now. Check.

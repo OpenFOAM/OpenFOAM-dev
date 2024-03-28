@@ -261,7 +261,7 @@ void Foam::ensightMesh::correct()
     // faceZones
     if (faceZones_)
     {
-        wordList faceZoneNamesAll = mesh_.faceZones().names();
+        wordList faceZoneNamesAll = mesh_.faceZones().toc();
         // Need to sort the list of all face zones since the index may vary
         // from processor to processor...
         sort(faceZoneNamesAll);

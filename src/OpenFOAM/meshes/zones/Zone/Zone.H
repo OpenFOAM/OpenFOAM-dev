@@ -183,6 +183,12 @@ public:
             return name_;
         }
 
+        //- Return name as the keyword
+        const word& keyword() const
+        {
+            return name_;
+        }
+
         //- Return ZonesType reference
         const ZonesType& zones() const;
 

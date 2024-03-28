@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,10 @@ public:
 
     // Member Functions
 
-        //- Return const access to the names
+        //- Return the list of log file names
+        const wordList& toc() const;
+
+        //- Return the list of log file names
         const wordList& names() const;
 
         //- Return access to the files

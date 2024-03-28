@@ -292,14 +292,14 @@ void Foam::singleCellFvMesh::agglomerateMesh
     {
         forAll(mesh.cellZones(), zoneI)
         {
-            const cellZone& oldFz = mesh.cellZones()[zoneI];
+            const cellZone& oldCz = mesh.cellZones()[zoneI];
 
             DynamicList<label> newAddressing;
 
             cellZones().set
             (
                 zoneI,
-                oldFz.clone
+                oldCz.clone
                 (
                     newAddressing,
                     cellZones()
@@ -348,13 +348,13 @@ void Foam::singleCellFvMesh::agglomerateMesh
     {
         forAll(mesh.pointZones(), zoneI)
         {
-            const pointZone& oldFz = mesh.pointZones()[zoneI];
+            const pointZone& oldPz = mesh.pointZones()[zoneI];
 
-            DynamicList<label> newAddressing(oldFz.size());
+            DynamicList<label> newAddressing(oldPz.size());
 
-            forAll(oldFz, i)
+            forAll(oldPz, i)
             {
-                label newPointi  = reversePointMap_[oldFz[i]];
+                label newPointi  = reversePointMap_[oldPz[i]];
                 if (newPointi != -1)
                 {
                     newAddressing.append(newPointi);
@@ -364,7 +364,7 @@ void Foam::singleCellFvMesh::agglomerateMesh
             pointZones().set
             (
                 zoneI,
-                oldFz.clone
+                oldPz.clone
                 (
                     newAddressing,
                     pointZones()

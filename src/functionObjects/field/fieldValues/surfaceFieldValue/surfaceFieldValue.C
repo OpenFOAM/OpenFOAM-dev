@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
             << selectionTypeNames[selectionType_]
             << "(" << selectionName_ << "):" << nl
             << "    Unknown face zone name: " << selectionName_
-            << ". Valid face zones are: " << mesh_.faceZones().names()
+            << ". Valid face zones are: " << mesh_.faceZones().toc()
             << nl << exit(FatalError);
     }
 

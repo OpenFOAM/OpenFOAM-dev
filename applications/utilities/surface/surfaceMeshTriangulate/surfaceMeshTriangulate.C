@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
     if (args.optionFound("faceZones"))
     {
         wordReList zoneNames(args.optionLookup("faceZones")());
-        const wordList allZoneNames(mfz.names());
+        const wordList allZoneNames(mfz.toc());
         forAll(zoneNames, i)
         {
             const wordRe& zoneName = zoneNames[i];

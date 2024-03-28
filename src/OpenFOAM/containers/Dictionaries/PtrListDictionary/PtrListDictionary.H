@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,7 @@ SourceFiles
 
 #include "DictionaryBase.H"
 #include "PtrList.H"
+#include "wordRe.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -88,14 +89,59 @@ public:
 
     // Member Functions
 
-        //- Set element to pointer provided and return old element
-        autoPtr<T> set(const label, const word& key, T*);
+        // Access
 
-        //- Set element to autoPtr value provided and return old element
-        autoPtr<T> set(const label, const word& key, autoPtr<T>&);
+            //- Return the index of the given the key or -1 if not found
+            label findIndex(const word& key) const;
 
-        //- Set element to tmp value provided and return old element
-        autoPtr<T> set(const label, const word& key, tmp<T>&);
+            //- Return the indices for all matches
+            //  of the given key regular expression
+            List<label> findIndices(const wordRe& key) const;
+
+
+        // Edit
+
+            //- Append an element at the end of the list
+            inline void append(const word& key, T*);
+
+            //- Append an element at the end of the list
+            inline void append(const word& key, const autoPtr<T>&);
+
+            //- Append an element at the end of the list
+            inline void append(const word& key, const tmp<T>&);
+
+            //- Append an element at the end of the list
+            //  using the element's keyword as the key
+            inline void append(T*);
+
+            //- Append an element at the end of the list
+            //  using the element's keyword as the key
+            inline void append(const autoPtr<T>&);
+
+            //- Append an element at the end of the list
+            //  using the element's keyword as the key
+            inline void append(const tmp<T>&);
+
+            //- Set element to pointer provided and return old element
+            autoPtr<T> set(const label, const word& key, T*);
+
+            //- Set element to autoPtr value provided and return old element
+            autoPtr<T> set(const label, const word& key, const autoPtr<T>&);
+
+            //- Set element to tmp value provided and return old element
+            autoPtr<T> set(const label, const word& key, const tmp<T>&);
+
+            //- Set element to pointer provided and return old element
+            //  using the element's keyword as the key
+            autoPtr<T> set(const label, T*);
+
+            //- Set element to autoPtr value provided and return old element
+            //  using the element's keyword as the key
+            autoPtr<T> set(const label, const autoPtr<T>&);
+
+            //- Set element to tmp value provided and return old element
+            //  using the element's keyword as the key
+            autoPtr<T> set(const label, const tmp<T>&);
 
 
         // Conversion

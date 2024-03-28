@@ -309,7 +309,7 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
         {
             FatalErrorInFunction
                 << "Cannot find faceZone " << faceZoneName
-                << endl << "Valid zones are " << mesh().faceZones().names()
+                << endl << "Valid zones are " << mesh().faceZones().toc()
                 << exit(FatalError);
         }
 
@@ -543,7 +543,7 @@ void Foam::displacementLayeredMotionMotionSolver::solve()
         {
             FatalErrorInFunction
                 << "Cannot find cellZone " << cellZoneName
-                << endl << "Valid zones are " << mesh().cellZones().names()
+                << endl << "Valid zones are " << mesh().cellZones().toc()
                 << exit(FatalError);
         }
 

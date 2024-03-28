@@ -70,7 +70,7 @@ lookup
 void Foam::meshReader::addCellZones(polyMesh& mesh) const
 {
     cellTable_.addCellZones(mesh, cellTableId_);
-    warnDuplicates("cellZones", mesh.cellZones().names());
+    warnDuplicates("cellZones", mesh.cellZones().toc());
 }
 
 
@@ -112,7 +112,7 @@ void Foam::meshReader::addFaceZones(polyMesh& mesh) const
         nZone++;
     }
     mesh.faceZones().writeOpt() = IOobject::AUTO_WRITE;
-    warnDuplicates("faceZones", mesh.faceZones().names());
+    warnDuplicates("faceZones", mesh.faceZones().toc());
 }
 
 

@@ -1196,7 +1196,7 @@ void matchRegions
     labelList zoneSizes(cellZones.size(), 0);
     {
         List<wordList> zoneNames(Pstream::nProcs());
-        zoneNames[Pstream::myProcNo()] = cellZones.names();
+        zoneNames[Pstream::myProcNo()] = cellZones.toc();
         Pstream::gatherList(zoneNames);
         Pstream::scatterList(zoneNames);
 

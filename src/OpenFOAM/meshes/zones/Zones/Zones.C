@@ -47,7 +47,7 @@ bool Foam::Zones<ZoneType, ZonesType, MeshType>::read()
                 << endl;
         }
 
-        PtrList<ZoneType>& zones = *this;
+        PtrListDictionary<ZoneType>& zones = *this;
 
         // Read zones
         Istream& is = readStream(typeName);
@@ -60,6 +60,7 @@ bool Foam::Zones<ZoneType, ZonesType, MeshType>::read()
             zones.set
             (
                 zi,
+                patchEntries[zi].keyword(),
                 ZoneType::New
                 (
                     patchEntries[zi].keyword(),
@@ -97,8 +98,8 @@ Foam::Zones<ZoneType, ZonesType, MeshType>::Zones
     const MeshType& mesh
 )
 :
-    PtrList<ZoneType>(),
     regIOobject(io),
+    PtrListDictionary<ZoneType>(0),
     mesh_(mesh)
 {
     read();
@@ -113,8 +114,8 @@ Foam::Zones<ZoneType, ZonesType, MeshType>::Zones
     const label size
 )
 :
-    PtrList<ZoneType>(size),
     regIOobject(io),
+    PtrListDictionary<ZoneType>(size),
     mesh_(mesh)
 {
     // Optionally read contents, otherwise keep size
@@ -130,21 +131,26 @@ Foam::Zones<ZoneType, ZonesType, MeshType>::Zones
     const PtrList<ZoneType>& mpz
 )
 :
-    PtrList<ZoneType>(),
     regIOobject(io),
+    PtrListDictionary<ZoneType>(0),
     mesh_(mesh)
 {
     if (!read())
     {
         // Nothing read. Use supplied zones
-        PtrList<ZoneType>& zones = *this;
+        PtrListDictionary<ZoneType>& zones = *this;
         zones.setSize(mpz.size());
         forAll(zones, zi)
         {
-            zones.set(zi, mpz[zi].clone
+            zones.set
             (
-                static_cast<const ZonesType&>(*this)
-            ).ptr());
+                zi,
+                mpz[zi].name(),
+                mpz[zi].clone
+                (
+                    static_cast<const ZonesType&>(*this)
+                )
+            );
         }
     }
 }
@@ -202,131 +208,13 @@ Foam::labelList Foam::Zones<ZoneType, ZonesType, MeshType>::whichZones
 template<class ZoneType, class ZonesType, class MeshType>
 Foam::wordList Foam::Zones<ZoneType, ZonesType, MeshType>::types() const
 {
-    const PtrList<ZoneType>& zones = *this;
+    const PtrListDictionary<ZoneType>& zones = *this;
 
     wordList lst(zones.size());
 
     forAll(zones, zi)
     {
         lst[zi] = zones[zi].type();
-    }
-
-    return lst;
-}
-
-
-template<class ZoneType, class ZonesType, class MeshType>
-Foam::wordList Foam::Zones<ZoneType, ZonesType, MeshType>::names() const
-{
-    const PtrList<ZoneType>& zones = *this;
-
-    wordList lst(zones.size());
-
-    forAll(zones, zi)
-    {
-        lst[zi] = zones[zi].name();
-    }
-
-    return lst;
-}
-
-
-template<class ZoneType, class ZonesType, class MeshType>
-bool Foam::Zones<ZoneType, ZonesType, MeshType>::found
-(
-    const word& zoneName
-) const
-{
-    if (zoneName != word::null)
-    {
-        forAll(*this, i)
-        {
-            if (zoneName == operator[](i).name())
-            {
-                return true;
-            }
-        }
-    }
-
-    // Not found
-    return false;
-}
-
-
-template<class ZoneType, class ZonesType, class MeshType>
-Foam::label Foam::Zones<ZoneType, ZonesType, MeshType>::findIndex
-(
-    const word& zoneName
-) const
-{
-    const PtrList<ZoneType>& zones = *this;
-
-    forAll(zones, zi)
-    {
-        if (zones[zi].name() == zoneName)
-        {
-            return zi;
-        }
-    }
-
-    // Zone not found
-    if (debug)
-    {
-        InfoInFunction
-            << "Zone named " << zoneName << " not found.  "
-            << "List of available zone names: " << names() << endl;
-    }
-
-    // not found
-    return -1;
-}
-
-
-template<class ZoneType, class ZonesType, class MeshType>
-Foam::labelList Foam::Zones<ZoneType, ZonesType, MeshType>::findIndices
-(
-    const wordRe& key
-) const
-{
-    labelList indices;
-
-    if (!key.empty())
-    {
-        if (key.isPattern())
-        {
-            indices = findStrings(key, this->names());
-        }
-        else
-        {
-            indices.setSize(this->size());
-            label nFound = 0;
-            forAll(*this, i)
-            {
-                if (key == operator[](i).name())
-                {
-                    indices[nFound++] = i;
-                }
-            }
-            indices.setSize(nFound);
-        }
-    }
-
-    return indices;
-}
-
-
-template<class ZoneType, class ZonesType, class MeshType>
-Foam::PackedBoolList Foam::Zones<ZoneType, ZonesType, MeshType>::findMatching
-(
-    const wordRe& key
-) const
-{
-    PackedBoolList lst;
-
-    const labelList indices = this->findIndices(key);
-    forAll(indices, i)
-    {
-        lst |= static_cast<const labelList&>(this->operator[](indices[i]));
     }
 
     return lst;
@@ -346,7 +234,11 @@ void Foam::Zones<ZoneType, ZonesType, MeshType>::append(ZoneType* zonePtr) const
     }
     else
     {
-        zones.PtrList<ZoneType>::append(zonePtr);
+        zones.PtrListDictionary<ZoneType>::append
+        (
+            zonePtr->name(),
+            zonePtr
+        );
     }
 }
 
@@ -366,7 +258,11 @@ void Foam::Zones<ZoneType, ZonesType, MeshType>::append
     }
     else
     {
-        zones.PtrList<ZoneType>::append(zone.clone(*this));
+        zones.PtrListDictionary<ZoneType>::append
+        (
+            zone.name(),
+            zone.clone(*this)
+        );
     }
 }
 
@@ -374,7 +270,7 @@ void Foam::Zones<ZoneType, ZonesType, MeshType>::append
 template<class ZoneType, class ZonesType, class MeshType>
 void Foam::Zones<ZoneType, ZonesType, MeshType>::clearAddressing()
 {
-    PtrList<ZoneType>& zones = *this;
+    PtrListDictionary<ZoneType>& zones = *this;
 
     forAll(zones, zi)
     {
@@ -387,7 +283,7 @@ template<class ZoneType, class ZonesType, class MeshType>
 void Foam::Zones<ZoneType, ZonesType, MeshType>::clear()
 {
     clearAddressing();
-    PtrList<ZoneType>::clear();
+    PtrListDictionary<ZoneType>::clear();
 }
 
 
@@ -399,7 +295,7 @@ bool Foam::Zones<ZoneType, ZonesType, MeshType>::checkDefinition
 {
     bool inError = false;
 
-    const PtrList<ZoneType>& zones = *this;
+    const PtrListDictionary<ZoneType>& zones = *this;
 
     forAll(zones, zi)
     {
@@ -421,13 +317,13 @@ bool Foam::Zones<ZoneType, ZonesType, MeshType>::checkParallelSync
     }
 
 
-    const PtrList<ZoneType>& zones = *this;
+    const PtrListDictionary<ZoneType>& zones = *this;
 
     bool hasError = false;
 
     // Collect all names
     List<wordList> allNames(Pstream::nProcs());
-    allNames[Pstream::myProcNo()] = this->names();
+    allNames[Pstream::myProcNo()] = this->toc();
     Pstream::gatherList(allNames);
     Pstream::scatterList(allNames);
 
@@ -493,7 +389,7 @@ void Foam::Zones<ZoneType, ZonesType, MeshType>::insert
     const List<labelHashSet>& zonesIndices
 )
 {
-    PtrList<ZoneType>& zones = *this;
+    PtrListDictionary<ZoneType>& zones = *this;
 
     if (zonesIndices.size() != zones.size())
     {
@@ -513,7 +409,7 @@ void Foam::Zones<ZoneType, ZonesType, MeshType>::insert
 template<class ZoneType, class ZonesType, class MeshType>
 void Foam::Zones<ZoneType, ZonesType, MeshType>::movePoints(const pointField& p)
 {
-    PtrList<ZoneType>& zones = *this;
+    PtrListDictionary<ZoneType>& zones = *this;
 
     forAll(zones, zi)
     {
@@ -528,7 +424,7 @@ void Foam::Zones<ZoneType, ZonesType, MeshType>::topoChange
     const polyTopoChangeMap& map
 )
 {
-    PtrList<ZoneType>& zones = *this;
+    PtrListDictionary<ZoneType>& zones = *this;
 
     forAll(zones, zi)
     {
@@ -540,7 +436,7 @@ void Foam::Zones<ZoneType, ZonesType, MeshType>::topoChange
 template<class ZoneType, class ZonesType, class MeshType>
 void Foam::Zones<ZoneType, ZonesType, MeshType>::mapMesh(const polyMeshMap& map)
 {
-    PtrList<ZoneType>& zones = *this;
+    PtrListDictionary<ZoneType>& zones = *this;
 
     forAll(zones, zi)
     {
@@ -555,7 +451,7 @@ void Foam::Zones<ZoneType, ZonesType, MeshType>::distribute
     const polyDistributionMap& map
 )
 {
-    PtrList<ZoneType>& zones = *this;
+    PtrListDictionary<ZoneType>& zones = *this;
 
     forAll(zones, zi)
     {
@@ -570,7 +466,7 @@ void Foam::Zones<ZoneType, ZonesType, MeshType>::swap(ZonesType& otherZones)
     clearAddressing();
     otherZones.clearAddressing();
 
-    PtrList<ZoneType>& zones = *this;
+    PtrListDictionary<ZoneType>& zones = *this;
 
     DynamicList<label> toOtherZone;
 
@@ -586,15 +482,19 @@ void Foam::Zones<ZoneType, ZonesType, MeshType>::swap(ZonesType& otherZones)
 
     forAll(otherZones, ozi)
     {
-        const label zi = findIndex(otherZones[ozi].name());
+        const label zi = this->findIndex(otherZones[ozi].name());
 
         if (zi < 0)
         {
-            zones.append(otherZones[ozi].clone
+            zones.append
             (
-                static_cast<const ZonesType&>(*this))
+                otherZones[ozi].name(),
+                otherZones[ozi].clone
+                (
+                    static_cast<const ZonesType&>(*this)
+                )
             );
-            otherZones.set(ozi, nullptr);
+            otherZones.set(ozi, otherZones[ozi].name(), nullptr);
         }
         else
         {
@@ -604,11 +504,12 @@ void Foam::Zones<ZoneType, ZonesType, MeshType>::swap(ZonesType& otherZones)
 
     forAll(toOtherZone, i)
     {
-        otherZones.PtrList<ZoneType>::append
+        otherZones.PtrListDictionary<ZoneType>::append
         (
+            zones[toOtherZone[i]].name(),
             zones[toOtherZone[i]].clone(otherZones)
         );
-        zones.set(toOtherZone[i], nullptr);
+        zones.set(toOtherZone[i], zones[toOtherZone[i]].name(), nullptr);
     }
 
     zones.shrink();
@@ -621,48 +522,6 @@ bool Foam::Zones<ZoneType, ZonesType, MeshType>::writeData(Ostream& os) const
 {
     os  << *this;
     return os.good();
-}
-
-
-// * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
-
-template<class ZoneType, class ZonesType, class MeshType>
-const ZoneType& Foam::Zones<ZoneType, ZonesType, MeshType>::operator[]
-(
-    const word& zoneName
-) const
-{
-    const label zi = findIndex(zoneName);
-
-    if (zi < 0)
-    {
-        FatalErrorInFunction
-            << "Zone named " << zoneName << " not found." << nl
-            << "Available zone names: " << names() << endl
-            << abort(FatalError);
-    }
-
-    return operator[](zi);
-}
-
-
-template<class ZoneType, class ZonesType, class MeshType>
-ZoneType& Foam::Zones<ZoneType, ZonesType, MeshType>::operator[]
-(
-    const word& zoneName
-)
-{
-    const label zi = findIndex(zoneName);
-
-    if (zi < 0)
-    {
-        FatalErrorInFunction
-            << "Zone named " << zoneName << " not found." << nl
-            << "Available zone names: " << names() << endl
-            << abort(FatalError);
-    }
-
-    return operator[](zi);
 }
 
 

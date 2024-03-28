@@ -72,7 +72,7 @@ Foam::multiSolidBodyMotionSolver::multiSolidBodyMotionSolver
                 (
                     coeffDict()
                 )   << "Cannot find cellZone named " << iter().keyword()
-                    << ". Valid zones are " << mesh.cellZones().names()
+                    << ". Valid zones are " << mesh.cellZones().toc()
                     << exit(FatalIOError);
             }
 

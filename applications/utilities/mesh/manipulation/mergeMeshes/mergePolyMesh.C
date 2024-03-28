@@ -142,7 +142,7 @@ Foam::mergePolyMesh::mergePolyMesh(polyMesh& mesh)
     // Insert point, face and cell zones into the list
 
     // Point zones
-    wordList curPointZoneNames = mesh_.pointZones().names();
+    wordList curPointZoneNames = mesh_.pointZones().toc();
     if (curPointZoneNames.size())
     {
         pointZoneNames_.setCapacity(2*curPointZoneNames.size());
@@ -156,7 +156,7 @@ Foam::mergePolyMesh::mergePolyMesh(polyMesh& mesh)
     pointZonesAddedPoints_.setSize(pointZoneNames_.size());
 
     // Face zones
-    wordList curFaceZoneNames = mesh_.faceZones().names();
+    wordList curFaceZoneNames = mesh_.faceZones().toc();
 
     if (curFaceZoneNames.size())
     {
@@ -171,7 +171,7 @@ Foam::mergePolyMesh::mergePolyMesh(polyMesh& mesh)
     faceZonesAddedFaces_.setSize(faceZoneNames_.size());
 
     // Cell zones
-    wordList curCellZoneNames = mesh_.cellZones().names();
+    wordList curCellZoneNames = mesh_.cellZones().toc();
 
     if (curCellZoneNames.size())
     {

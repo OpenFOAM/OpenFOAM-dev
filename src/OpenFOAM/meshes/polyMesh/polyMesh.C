@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1144,7 +1144,7 @@ void Foam::polyMesh::addZones
         // Copy the zone pointers
         forAll(pz, pI)
         {
-            pointZones_.set(pI, pz[pI]);
+            pointZones_.set(pI, pz[pI]->name(), pz[pI]);
         }
 
         pointZones_.writeOpt() = IOobject::AUTO_WRITE;
@@ -1158,7 +1158,7 @@ void Foam::polyMesh::addZones
         // Copy the zone pointers
         forAll(fz, fI)
         {
-            faceZones_.set(fI, fz[fI]);
+            faceZones_.set(fI, fz[fI]->name(), fz[fI]);
         }
 
         faceZones_.writeOpt() = IOobject::AUTO_WRITE;
@@ -1172,7 +1172,7 @@ void Foam::polyMesh::addZones
         // Copy the zone pointers
         forAll(cz, cI)
         {
-            cellZones_.set(cI, cz[cI]);
+            cellZones_.set(cI, cz[cI]->name(), cz[cI]);
         }
 
         cellZones_.writeOpt() = IOobject::AUTO_WRITE;

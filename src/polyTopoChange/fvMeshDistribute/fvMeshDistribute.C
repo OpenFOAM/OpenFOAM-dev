@@ -1879,9 +1879,9 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
 
 
     // Collect any zone names
-    const wordList pointZoneNames(mergeWordList(mesh_.pointZones().names()));
-    const wordList faceZoneNames(mergeWordList(mesh_.faceZones().names()));
-    const wordList cellZoneNames(mergeWordList(mesh_.cellZones().names()));
+    const wordList pointZoneNames(mergeWordList(mesh_.pointZones().toc()));
+    const wordList faceZoneNames(mergeWordList(mesh_.faceZones().toc()));
+    const wordList cellZoneNames(mergeWordList(mesh_.cellZones().toc()));
 
 
     // Local environment of all boundary faces

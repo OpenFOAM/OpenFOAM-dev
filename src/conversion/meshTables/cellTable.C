@@ -399,7 +399,7 @@ void Foam::cellTable::operator=(const polyMesh& mesh)
     // create cellTableId and cellTable based on cellZones
     label nZoneCells = 0;
 
-    wordList zoneNames = mesh.cellZones().names();
+    wordList zoneNames = mesh.cellZones().toc();
     label unZonedType = zoneNames.size() + 1;
 
     // do cell zones
