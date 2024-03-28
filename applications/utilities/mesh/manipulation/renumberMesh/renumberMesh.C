@@ -44,7 +44,6 @@ Description
 #include "SortableList.H"
 #include "decompositionMethod.H"
 #include "renumberMethod.H"
-#include "zeroGradientFvPatchFields.H"
 #include "CuthillMcKeeRenumber.H"
 #include "fvMeshSubset.H"
 #include "cellSet.H"
@@ -449,52 +448,6 @@ autoPtr<polyTopoChangeMap> reorderMesh
         patchStarts,
         true
     );
-
-
-    // Re-do the faceZones
-    {
-        faceZones& faceZones = mesh.faceZones();
-        forAll(faceZones, zoneI)
-        {
-            faceZone& fZone = faceZones[zoneI];
-            labelList newAddressing(fZone.size());
-            boolList newFlipMap(fZone.size());
-            forAll(fZone, i)
-            {
-                label oldFacei = fZone[i];
-                newAddressing[i] = reverseFaceOrder[oldFacei];
-                if (flipFaceFlux.found(newAddressing[i]))
-                {
-                    newFlipMap[i] = !fZone.flipMap()[i];
-                }
-                else
-                {
-                    newFlipMap[i] = fZone.flipMap()[i];
-                }
-            }
-            labelList newToOld;
-            sortedOrder(newAddressing, newToOld);
-            fZone.resetAddressing
-            (
-                UIndirectList<label>(newAddressing, newToOld)(),
-                UIndirectList<bool>(newFlipMap, newToOld)()
-            );
-        }
-    }
-    // Re-do the cellZones
-    {
-        cellZones& cellZones = mesh.cellZones();
-        forAll(cellZones, zoneI)
-        {
-            cellZones[zoneI] = UIndirectList<label>
-            (
-                reverseCellOrder,
-                cellZones[zoneI]
-            )();
-            Foam::sort(cellZones[zoneI]);
-        }
-    }
-
 
     return autoPtr<polyTopoChangeMap>
     (
