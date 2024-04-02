@@ -28,7 +28,7 @@ Description
     A subset of mesh faces organised as a primitive patch.
 
     For quick check whether a face belongs to the zone use the lookup
-    mechanism in faceZones, where all the zoned faces are registered
+    mechanism in faceZoneList, where all the zoned faces are registered
     with their zone number.
 
 SourceFiles
@@ -48,7 +48,7 @@ SourceFiles
 namespace Foam
 {
 
-class faceZones;
+class faceZoneList;
 
 /*---------------------------------------------------------------------------*\
                           Class faceZone Declaration
@@ -56,7 +56,7 @@ class faceZones;
 
 class faceZone
 :
-    public Zone<faceZone, faceZones>
+    public Zone<faceZone, faceZoneList>
 {
     // Private Data
 
@@ -108,7 +108,7 @@ protected:
 
 public:
 
-    typedef faceZones ZonesType;
+    typedef faceZoneList ZonesType;
 
     // Static Data Members
 
@@ -127,7 +127,7 @@ public:
             const word& name,
             const labelUList& addr,
             const boolList& fm,
-            const faceZones& mz
+            const faceZoneList& mz
         );
 
         //- Construct from components, moving contents
@@ -136,7 +136,7 @@ public:
             const word& name,
             labelList&& addr,
             boolList&& fm,
-            const faceZones&
+            const faceZoneList&
         );
 
         //- Construct from dictionary
@@ -144,7 +144,7 @@ public:
         (
             const word& name,
             const dictionary&,
-            const faceZones&
+            const faceZoneList&
         );
 
         //- Construct given the original zone and resetting the
@@ -154,7 +154,7 @@ public:
             const faceZone&,
             const labelUList& addr,
             const boolList& fm,
-            const faceZones&
+            const faceZoneList&
         );
 
         //- Construct given the original zone, resetting the
@@ -164,14 +164,14 @@ public:
             const faceZone&,
             labelList&& addr,
             boolList&& fm,
-            const faceZones&
+            const faceZoneList&
         );
 
         //- Disallow default bitwise copy construction
         faceZone(const faceZone&) = delete;
 
         //- Construct and return a clone, resetting the mesh zones
-        virtual autoPtr<faceZone> clone(const faceZones& mz) const
+        virtual autoPtr<faceZone> clone(const faceZoneList& mz) const
         {
             return autoPtr<faceZone>
             (
@@ -185,7 +185,7 @@ public:
         (
             const labelUList& addr,
             const boolList& fm,
-            const faceZones& mz
+            const faceZoneList& mz
         ) const
         {
             return autoPtr<faceZone>

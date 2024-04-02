@@ -324,7 +324,7 @@ void Foam::fvMeshSubset::subsetZones()
 {
     // Keep all zones, even if zero size.
 
-    const pointZones& pointZones = baseMesh().pointZones();
+    const pointZoneList& pointZones = baseMesh().pointZones();
 
     // PointZones
     List<pointZone*> pZonePtrs(pointZones.size());
@@ -343,7 +343,7 @@ void Foam::fvMeshSubset::subsetZones()
 
 
     // FaceZones
-    const faceZones& faceZones = baseMesh().faceZones();
+    const faceZoneList& faceZones = baseMesh().faceZones();
 
     // Do we need to remove zones where the side we're interested in
     // no longer exists? Guess not.
@@ -409,7 +409,7 @@ void Foam::fvMeshSubset::subsetZones()
     }
 
     // CellZones
-    const cellZones& cellZones = baseMesh().cellZones();
+    const cellZoneList& cellZones = baseMesh().cellZones();
 
     List<cellZone*> cZonePtrs(cellZones.size());
 

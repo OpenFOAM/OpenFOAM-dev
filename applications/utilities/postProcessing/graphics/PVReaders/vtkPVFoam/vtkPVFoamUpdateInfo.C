@@ -84,7 +84,7 @@ public:
 template<class ZoneType, class ZonesType>
 Foam::wordList Foam::vtkPVFoam::getZoneNames
 (
-    const Zones<ZoneType, ZonesType, polyMesh>& zmesh
+    const ZoneList<ZoneType, ZonesType, polyMesh>& zmesh
 ) const
 {
     wordList names(zmesh.size());

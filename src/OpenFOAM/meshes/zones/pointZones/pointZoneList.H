@@ -22,15 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Foam::pointZones
+    Foam::pointZoneList
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef pointZones_H
-#define pointZones_H
+#ifndef pointZoneList_H
+#define pointZoneList_H
 
 #include "pointZone.H"
-#include "Zones.H"
+#include "ZoneList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,16 +40,16 @@ namespace Foam
 class polyMesh;
 
 /*---------------------------------------------------------------------------*\
-                          Class pointZones Declaration
+                          Class pointZoneList Declaration
 \*---------------------------------------------------------------------------*/
 
-class pointZones
+class pointZoneList
 :
-    public Zones<pointZone, pointZones, polyMesh>
+    public ZoneList<pointZone, pointZoneList, polyMesh>
 {
 public:
 
-    using Zones<pointZone, pointZones, polyMesh>::Zones;
+    using ZoneList<pointZone, pointZoneList, polyMesh>::ZoneList;
 };
 
 

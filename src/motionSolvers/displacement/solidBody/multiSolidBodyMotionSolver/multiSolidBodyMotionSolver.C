@@ -26,7 +26,7 @@ License
 #include "multiSolidBodyMotionSolver.H"
 #include "addToRunTimeSelectionTable.H"
 #include "transformField.H"
-#include "cellZones.H"
+#include "cellZoneList.H"
 #include "boolList.H"
 #include "syncTools.H"
 

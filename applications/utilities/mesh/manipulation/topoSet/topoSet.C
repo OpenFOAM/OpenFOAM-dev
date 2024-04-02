@@ -122,7 +122,7 @@ void removeSet
     {
         removeZone
         (
-            const_cast<cellZones&>(mesh.cellZones()),
+            const_cast<cellZoneList&>(mesh.cellZones()),
             setName
         );
     }
@@ -130,7 +130,7 @@ void removeSet
     {
         removeZone
         (
-            const_cast<faceZones&>(mesh.faceZones()),
+            const_cast<faceZoneList&>(mesh.faceZones()),
             setName
         );
     }
@@ -138,7 +138,7 @@ void removeSet
     {
         removeZone
         (
-            const_cast<pointZones&>(mesh.pointZones()),
+            const_cast<pointZoneList&>(mesh.pointZones()),
             setName
         );
     }

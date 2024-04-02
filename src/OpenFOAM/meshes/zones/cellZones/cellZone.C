@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellZone.H"
-#include "cellZones.H"
+#include "cellZoneList.H"
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
 #include "addToRunTimeSelectionTable.H"
@@ -33,7 +33,7 @@ License
 
 namespace Foam
 {
-    typedef Zone<cellZone, cellZones> cellZoneType;
+    typedef Zone<cellZone, cellZoneList> cellZoneType;
     defineTemplateRunTimeSelectionTable(cellZoneType, dictionary);
 
     defineTypeNameAndDebug(cellZone, 0);

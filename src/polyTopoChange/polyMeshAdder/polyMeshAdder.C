@@ -562,8 +562,8 @@ void Foam::polyMeshAdder::mergePrimitives
 void Foam::polyMeshAdder::mergePointZones
 (
     const label nAllPoints,
-    const pointZones& pz0,
-    const pointZones& pz1,
+    const pointZoneList& pz0,
+    const pointZoneList& pz1,
     const labelList& from0ToAllPoints,
     const labelList& from1ToAllPoints,
 
@@ -712,9 +712,9 @@ void Foam::polyMeshAdder::mergeFaceZones
     List<DynamicList<bool>>& fzFlips
 )
 {
-    const faceZones& fz0 = mesh0.faceZones();
+    const faceZoneList& fz0 = mesh0.faceZones();
     const labelList& owner0 = mesh0.faceOwner();
-    const faceZones& fz1 = mesh1.faceZones();
+    const faceZoneList& fz1 = mesh1.faceZones();
     const labelList& owner1 = mesh1.faceOwner();
 
 
@@ -890,8 +890,8 @@ void Foam::polyMeshAdder::mergeCellZones
 (
     const label nAllCells,
 
-    const cellZones& cz0,
-    const cellZones& cz1,
+    const cellZoneList& cz0,
+    const cellZoneList& cz1,
     const labelList& from1ToAllCells,
 
     DynamicList<word>& zoneNames,

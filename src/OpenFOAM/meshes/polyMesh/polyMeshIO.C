@@ -308,7 +308,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 
         // pointZones
         {
-            Foam::pointZones newPointZones
+            pointZoneList newPointZones
             (
                 IOobject
                 (
@@ -329,7 +329,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 
         // faceZones
         {
-            Foam::faceZones newFaceZones
+            faceZoneList newFaceZones
             (
                 IOobject
                 (
@@ -350,7 +350,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 
         // cellZones
         {
-            Foam::cellZones newCellZones
+            cellZoneList newCellZones
             (
                 IOobject
                 (

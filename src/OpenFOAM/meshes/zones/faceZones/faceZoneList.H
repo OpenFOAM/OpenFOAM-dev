@@ -22,15 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Foam::faceZones
+    Foam::faceZoneList
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef faceZones_H
-#define faceZones_H
+#ifndef faceZoneList_H
+#define faceZoneList_H
 
 #include "faceZone.H"
-#include "Zones.H"
+#include "ZoneList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,13 +43,13 @@ class polyMesh;
                           Class cellZones Declaration
 \*---------------------------------------------------------------------------*/
 
-class faceZones
+class faceZoneList
 :
-    public Zones<faceZone, faceZones, polyMesh>
+    public ZoneList<faceZone, faceZoneList, polyMesh>
 {
 public:
 
-    using Zones<faceZone, faceZones, polyMesh>::Zones;
+    using ZoneList<faceZone, faceZoneList, polyMesh>::ZoneList;
 
 
     // Member Functions

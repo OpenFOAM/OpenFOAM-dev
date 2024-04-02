@@ -29,7 +29,7 @@ Description
 
     Currently set up as an indirect list but will be extended to use a
     primitive mesh.  For quick check whether a cell belongs to the zone use
-    the lookup mechanism in cellZones, where all the zoned cells are
+    the lookup mechanism in cellZoneList, where all the zoned cells are
     registered with their zone number.
 
 SourceFiles
@@ -47,7 +47,7 @@ SourceFiles
 namespace Foam
 {
 
-class cellZones;
+class cellZoneList;
 
 /*---------------------------------------------------------------------------*\
                           Class cellZone Declaration
@@ -55,7 +55,7 @@ class cellZones;
 
 class cellZone
 :
-    public Zone<cellZone, cellZones>
+    public Zone<cellZone, cellZoneList>
 {
 
 public:
@@ -74,7 +74,7 @@ public:
         using Zone::Zone;
 
         //- Construct and return a clone, resetting the mesh zones
-        virtual autoPtr<cellZone> clone(const cellZones& mz) const
+        virtual autoPtr<cellZone> clone(const cellZoneList& mz) const
         {
             return autoPtr<cellZone>
             (
@@ -87,7 +87,7 @@ public:
         virtual autoPtr<cellZone> clone
         (
             const labelUList& addr,
-            const cellZones& mz
+            const cellZoneList& mz
         ) const
         {
             return autoPtr<cellZone>

@@ -79,7 +79,7 @@ faceZoneSet::faceZoneSet
     addressing_(0),
     flipMap_(0)
 {
-    const faceZones& faceZones = mesh.faceZones();
+    const faceZoneList& faceZones = mesh.faceZones();
     label zoneID = faceZones.findIndex(name);
 
     if
@@ -474,7 +474,7 @@ bool faceZoneSet::writeObject
     const_cast<word&>(type()) = oldTypeName;
 
     // Modify faceZone
-    faceZones& faceZones = const_cast<polyMesh&>(mesh_).faceZones();
+    faceZoneList& faceZones = const_cast<polyMesh&>(mesh_).faceZones();
     label zoneID = faceZones.findIndex(name());
 
     if (zoneID == -1)

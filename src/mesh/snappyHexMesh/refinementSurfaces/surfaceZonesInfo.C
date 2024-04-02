@@ -340,7 +340,7 @@ Foam::labelList Foam::surfaceZonesInfo::addCellZonesToMesh
 {
     labelList surfaceToCellZone(surfList.size(), -1);
 
-    cellZones& cellZones = mesh.cellZones();
+    cellZoneList& cellZones = mesh.cellZones();
 
     forAll(namedSurfaces, i)
     {
@@ -404,7 +404,7 @@ Foam::labelList Foam::surfaceZonesInfo::addFaceZonesToMesh
 {
     labelList surfaceToFaceZone(surfList.size(), -1);
 
-    faceZones& faceZones = mesh.faceZones();
+    faceZoneList& faceZones = mesh.faceZones();
 
     forAll(namedSurfaces, i)
     {

@@ -366,7 +366,7 @@ class vtkPVFoam
             template<class ZoneType, class ZonesType>
             wordList getZoneNames
             (
-                const Zones<ZoneType, ZonesType, polyMesh>&
+                const ZoneList<ZoneType, ZonesType, polyMesh>&
             ) const;
 
             //- Add objects of Type to paraview array selection

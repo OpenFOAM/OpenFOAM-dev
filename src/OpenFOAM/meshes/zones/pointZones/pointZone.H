@@ -30,7 +30,7 @@ Description
     list.
 
     For quick check whether a point belongs to the zone use the lookup
-    mechanism in pointZones, where all the zoned points are registered
+    mechanism in pointZoneList, where all the zoned points are registered
     with their zone number.
 
 SourceFiles
@@ -48,7 +48,7 @@ SourceFiles
 namespace Foam
 {
 
-class pointZones;
+class pointZoneList;
 
 /*---------------------------------------------------------------------------*\
                           Class pointZone Declaration
@@ -56,7 +56,7 @@ class pointZones;
 
 class pointZone
 :
-    public Zone<pointZone, pointZones>
+    public Zone<pointZone, pointZoneList>
 {
 
 public:
@@ -76,7 +76,7 @@ public:
         using Zone::Zone;
 
         //- Construct and return a clone, resetting the mesh zones
-        virtual autoPtr<pointZone> clone(const pointZones& mz) const
+        virtual autoPtr<pointZone> clone(const pointZoneList& mz) const
         {
             return autoPtr<pointZone>
             (
@@ -89,7 +89,7 @@ public:
         virtual autoPtr<pointZone> clone
         (
             const labelUList& addr,
-            const pointZones& mz
+            const pointZoneList& mz
         ) const
         {
             return autoPtr<pointZone>

@@ -23,11 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "faceZones.H"
+#include "faceZoneList.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::boolList Foam::faceZones::zonesFlipFace
+Foam::boolList Foam::faceZoneList::zonesFlipFace
 (
     const label facei,
     const labelList& faceiZones
@@ -46,7 +46,7 @@ Foam::boolList Foam::faceZones::zonesFlipFace
 }
 
 
-void Foam::faceZones::insert(const List<Map<bool>>& zonesIndices)
+void Foam::faceZoneList::insert(const List<Map<bool>>& zonesIndices)
 {
     PtrList<faceZone>& zones = *this;
 

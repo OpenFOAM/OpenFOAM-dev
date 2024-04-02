@@ -481,7 +481,7 @@ void Foam::moleculeCloud::initialiseMolecules
         << "Initialising molecules in each zone specified in mdInitialiseDict."
         << endl;
 
-    const cellZones& cellZones = mesh_.cellZones();
+    const cellZoneList& cellZones = mesh_.cellZones();
 
     if (!cellZones.size())
     {

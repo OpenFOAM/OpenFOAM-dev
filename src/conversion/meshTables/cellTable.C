@@ -470,7 +470,7 @@ void Foam::cellTable::addCellZones
     }
     zoneUsed.setSize(nZone);
 
-    cellZones& czMesh = mesh.cellZones();
+    cellZoneList& czMesh = mesh.cellZones();
 
     czMesh.clear();
     if (nZone <= 1)

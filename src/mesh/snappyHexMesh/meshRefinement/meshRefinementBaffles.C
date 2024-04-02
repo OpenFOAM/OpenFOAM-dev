@@ -214,7 +214,7 @@ Foam::Map<Foam::labelPair> Foam::meshRefinement::getZoneBafflePatches
     Map<labelPair> bafflePatch(mesh_.nFaces()/1000);
 
     const PtrList<surfaceZonesInfo>& surfZones = surfaces_.surfZones();
-    const faceZones& fZones = mesh_.faceZones();
+    const faceZoneList& fZones = mesh_.faceZones();
 
     forAll(surfZones, surfi)
     {
@@ -397,7 +397,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::meshRefinement::createBaffles
 
 void Foam::meshRefinement::checkZoneFaces() const
 {
-    const faceZones& fZones = mesh_.faceZones();
+    const faceZoneList& fZones = mesh_.faceZones();
 
     const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 

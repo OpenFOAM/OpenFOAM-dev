@@ -474,7 +474,7 @@ meshes/meshObjects/meshObjects.C
 meshes/zones/pointZones/pointZone.C
 meshes/zones/cellZones/cellZone.C
 meshes/zones/faceZones/faceZone.C
-meshes/zones/faceZones/faceZones.C
+meshes/zones/faceZones/faceZoneList.C
 
 polyMesh = meshes/polyMesh
 

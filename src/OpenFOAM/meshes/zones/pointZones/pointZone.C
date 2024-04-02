@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pointZone.H"
-#include "pointZones.H"
+#include "pointZoneList.H"
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
 #include "syncTools.H"
@@ -34,7 +34,7 @@ License
 
 namespace Foam
 {
-    typedef Zone<pointZone, pointZones> pointZoneType;
+    typedef Zone<pointZone, pointZoneList> pointZoneType;
     defineTemplateRunTimeSelectionTable(pointZoneType, dictionary);
 
     defineTypeNameAndDebug(pointZone, 0);

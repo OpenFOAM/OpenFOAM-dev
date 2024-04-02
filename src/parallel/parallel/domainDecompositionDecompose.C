@@ -935,7 +935,7 @@ void Foam::domainDecomposition::decompose()
 
         // Create point zones
         {
-            const pointZones& pz = completeMesh().pointZones();
+            const pointZoneList& pz = completeMesh().pointZones();
 
             // Go through all the zoned points and find out if they
             // belong to a zone.  If so, add it to the zone as
@@ -999,7 +999,7 @@ void Foam::domainDecomposition::decompose()
 
         // Create face zones
         {
-            const faceZones& fz = completeMesh().faceZones();
+            const faceZoneList& fz = completeMesh().faceZones();
 
             // Go through all the zoned face and find out if they
             // belong to a zone.  If so, add it to the zone as
@@ -1091,7 +1091,7 @@ void Foam::domainDecomposition::decompose()
 
         // Create cell zones
         {
-            const cellZones& cz = completeMesh().cellZones();
+            const cellZoneList& cz = completeMesh().cellZones();
 
             // Go through all the zoned cells and find out if they
             // belong to a zone.  If so, add it to the zone as

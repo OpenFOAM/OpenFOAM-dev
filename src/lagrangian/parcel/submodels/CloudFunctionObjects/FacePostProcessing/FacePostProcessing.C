@@ -82,7 +82,7 @@ void Foam::FacePostProcessing<CloudType>::write()
 {
     const fvMesh& mesh = this->owner().mesh();
     const Time& time = mesh.time();
-    const faceZones& mfz = mesh.faceZones();
+    const faceZoneList& mfz = mesh.faceZones();
     scalar timeNew = time.value();
     scalar timeElapsed = timeNew - timeOld_;
 
@@ -264,7 +264,7 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
     outputFilePtr_.setSize(faceZoneNames.size());
 
     DynamicList<label> zoneIDs;
-    const faceZones& mfz = owner.mesh().faceZones();
+    const faceZoneList& mfz = owner.mesh().faceZones();
     const surfaceScalarField& magSf = owner.mesh().magSf();
     const polyBoundaryMesh& pbm = owner.mesh().boundaryMesh();
     forAll(faceZoneNames, i)
@@ -357,7 +357,7 @@ void Foam::FacePostProcessing<CloudType>::preFace(const parcelType& p)
      || this->owner().solution().transient()
     )
     {
-        const faceZones& mfz = this->owner().mesh().faceZones();
+        const faceZoneList& mfz = this->owner().mesh().faceZones();
 
         forAll(faceZoneIndices_, i)
         {

@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
 
 
 
-    const faceZones& mfz = mesh.faceZones();
+    const faceZoneList& mfz = mesh.faceZones();
     labelHashSet includeFaceZones(mfz.size());
 
     if (args.optionFound("faceZones"))

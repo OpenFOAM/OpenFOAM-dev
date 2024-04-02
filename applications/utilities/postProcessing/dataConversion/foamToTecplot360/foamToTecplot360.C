@@ -1062,7 +1062,7 @@ int main(int argc, char *argv[])
         //
         //---------------------------------------------------------------------
 
-        const faceZones& zones = mesh.faceZones();
+        const faceZoneList& zones = mesh.faceZones();
 
         if (doFaceZones && zones.size() > 0)
         {

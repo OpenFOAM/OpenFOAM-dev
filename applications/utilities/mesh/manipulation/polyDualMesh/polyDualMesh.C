@@ -238,7 +238,7 @@ void simpleMarkFeatures
     }
 
     // B. face zones.
-    const faceZones& faceZones = mesh.faceZones();
+    const faceZoneList& faceZones = mesh.faceZones();
 
     if (doNotPreserveFaceZones)
     {

@@ -217,7 +217,7 @@ void Foam::vtkPVFoam::convertVolFields
                 continue;
             }
 
-            const faceZones& zMesh = mesh.faceZones();
+            const faceZoneList& zMesh = mesh.faceZones();
             const label zoneId = zMesh.findIndex(zoneName);
 
             if (zoneId < 0)

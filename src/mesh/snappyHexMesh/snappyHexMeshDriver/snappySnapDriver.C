@@ -1839,7 +1839,7 @@ Foam::autoPtr<Foam::polyTopoChangeMap> Foam::snappySnapDriver::repatchToSurface
 
         // 2. All faces on zoned surfaces
         const PtrList<surfaceZonesInfo>& surfZones = surfaces.surfZones();
-        const faceZones& fZones = mesh.faceZones();
+        const faceZoneList& fZones = mesh.faceZones();
 
         forAll(zonedSurfaces, i)
         {
@@ -2138,7 +2138,7 @@ void Foam::snappySnapDriver::doSnap
     // Selectively 'forget' about the baffles, i.e. not check across them
     // or merge across them.
     {
-        const faceZones& fZones = mesh.faceZones();
+        const faceZoneList& fZones = mesh.faceZones();
         const refinementSurfaces& surfaces = meshRefiner_.surfaces();
         const PtrList<surfaceZonesInfo>& surfZones = surfaces.surfZones();
 

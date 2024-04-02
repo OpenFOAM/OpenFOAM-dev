@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Zones
+    Foam::ZoneList
 
 Description
     A list of mesh zones.
 
 SourceFiles
-    Zones.C
+    ZoneList.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Zones_H
-#define Zones_H
+#ifndef ZoneList_H
+#define ZoneList_H
 
 #include "PtrListDictionary.H"
 #include "regIOobject.H"
@@ -55,17 +55,17 @@ class polyTopoChangeMap;
 class polyMeshMap;
 class polyDistributionMap;
 
-template<class ZoneType, class ZonesType, class MeshType> class Zones;
+template<class ZoneType, class ZonesType, class MeshType> class ZoneList;
 
 template<class ZoneType, class ZonesType, class MeshType>
-Ostream& operator<<(Ostream&, const Zones<ZoneType, ZonesType, MeshType>&);
+Ostream& operator<<(Ostream&, const ZoneList<ZoneType, ZonesType, MeshType>&);
 
 /*---------------------------------------------------------------------------*\
-                          Class Zones Declaration
+                          Class ZoneList Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ZoneType, class ZonesType, class MeshType>
-class Zones
+class ZoneList
 :
     public regIOobject,
     public PtrListDictionary<ZoneType>
@@ -87,14 +87,14 @@ public:
     // Constructors
 
         //- Read constructor given IOobject and a MeshType reference
-        Zones
+        ZoneList
         (
             const IOobject&,
             const MeshType&
         );
 
         //- Read constructor if file present otherwise from size
-        Zones
+        ZoneList
         (
             const IOobject&,
             const MeshType&,
@@ -102,7 +102,7 @@ public:
         );
 
          //- Construct given a PtrList
-        Zones
+        ZoneList
         (
             const IOobject&,
             const MeshType&,
@@ -110,14 +110,14 @@ public:
         );
 
         //- Move constructor
-        Zones(Zones&&) = default;
+        ZoneList(ZoneList&&) = default;
 
         //- Disallow default bitwise copy construction
-        Zones(const Zones&) = delete;
+        ZoneList(const ZoneList&) = delete;
 
 
     //- Destructor
-    ~Zones();
+    ~ZoneList();
 
 
     // Member Functions
@@ -187,7 +187,7 @@ public:
         using PtrListDictionary<ZoneType>::operator[];
 
         //- Disallow default bitwise assignment
-        void operator=(const Zones<ZoneType, ZonesType, MeshType>&) = delete;
+        void operator=(const ZoneList<ZoneType, ZonesType, MeshType>&) = delete;
 
 
     // Ostream operator
@@ -195,7 +195,7 @@ public:
         friend Ostream& operator<< <ZoneType, ZonesType, MeshType>
         (
             Ostream&,
-            const Zones<ZoneType, ZonesType, MeshType>&
+            const ZoneList<ZoneType, ZonesType, MeshType>&
         );
 };
 
@@ -207,7 +207,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "Zones.C"
+    #include "ZoneList.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -264,7 +264,7 @@ void Foam::vtkPVFoam::convertMeshCellZones
         printMemory();
     }
 
-    const cellZones& zMesh = mesh.cellZones();
+    const cellZoneList& zMesh = mesh.cellZones();
     for (int partId = range.start(); partId < range.end(); ++partId)
     {
         const word zoneName = getPartName(partId);
@@ -432,7 +432,7 @@ void Foam::vtkPVFoam::convertMeshFaceZones
         printMemory();
     }
 
-    const faceZones& zMesh = mesh.faceZones();
+    const faceZoneList& zMesh = mesh.faceZones();
     for (int partId = range.start(); partId < range.end(); ++partId)
     {
         const word zoneName = getPartName(partId);
@@ -550,7 +550,7 @@ void Foam::vtkPVFoam::convertMeshPointZones
 
     if (range.size())
     {
-        const pointZones& zMesh = mesh.pointZones();
+        const pointZoneList& zMesh = mesh.pointZones();
         for (int partId = range.start(); partId < range.end(); ++partId)
         {
             word zoneName = getPartName(partId);

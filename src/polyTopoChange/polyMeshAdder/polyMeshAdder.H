@@ -133,8 +133,8 @@ private:
         (
             const label nAllPoints,
 
-            const pointZones& pz0,
-            const pointZones& pz1,
+            const pointZoneList& pz0,
+            const pointZoneList& pz1,
             const labelList& from0ToAllPoints,
             const labelList& from1ToAllPoints,
 
@@ -165,8 +165,8 @@ private:
         (
             const label nAllCells,
 
-            const cellZones& cz0,
-            const cellZones& cz1,
+            const cellZoneList& cz0,
+            const cellZoneList& cz1,
             const labelList& from1ToAllCells,
 
             DynamicList<word>& zoneNames,

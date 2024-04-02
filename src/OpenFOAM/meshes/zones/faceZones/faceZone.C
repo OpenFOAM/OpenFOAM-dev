@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "faceZone.H"
-#include "faceZones.H"
+#include "faceZoneList.H"
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
 #include "syncTools.H"
@@ -34,7 +34,7 @@ License
 
 namespace Foam
 {
-    typedef Zone<faceZone, faceZones> faceZoneType;
+    typedef Zone<faceZone, faceZoneList> faceZoneType;
     defineTemplateRunTimeSelectionTable(faceZoneType, dictionary);
 
     defineTypeNameAndDebug(faceZone, 0);
@@ -204,10 +204,10 @@ Foam::faceZone::faceZone
     const word& name,
     const labelUList& addr,
     const boolList& fm,
-    const faceZones& mz
+    const faceZoneList& mz
 )
 :
-    Zone<faceZone, faceZones>(name, addr, mz),
+    Zone<faceZone, faceZoneList>(name, addr, mz),
     flipMap_(fm),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -223,10 +223,10 @@ Foam::faceZone::faceZone
     const word& name,
     labelList&& addr,
     boolList&& fm,
-    const faceZones& mz
+    const faceZoneList& mz
 )
 :
-    Zone<faceZone, faceZones>(name, move(addr), mz),
+    Zone<faceZone, faceZoneList>(name, move(addr), mz),
     flipMap_(move(fm)),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -241,10 +241,10 @@ Foam::faceZone::faceZone
 (
     const word& name,
     const dictionary& dict,
-    const faceZones& mz
+    const faceZoneList& mz
 )
 :
-    Zone<faceZone, faceZones>(name, dict, mz),
+    Zone<faceZone, faceZoneList>(name, dict, mz),
     flipMap_(dict.lookup("flipMap")),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -260,10 +260,10 @@ Foam::faceZone::faceZone
     const faceZone& fz,
     const labelUList& addr,
     const boolList& fm,
-    const faceZones& mz
+    const faceZoneList& mz
 )
 :
-    Zone<faceZone, faceZones>(fz, addr, mz),
+    Zone<faceZone, faceZoneList>(fz, addr, mz),
     flipMap_(fm),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -279,10 +279,10 @@ Foam::faceZone::faceZone
     const faceZone& fz,
     labelList&& addr,
     boolList&& fm,
-    const faceZones& mz
+    const faceZoneList& mz
 )
 :
-    Zone<faceZone, faceZones>(fz, move(addr), mz),
+    Zone<faceZone, faceZoneList>(fz, move(addr), mz),
     flipMap_(move(fm)),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),

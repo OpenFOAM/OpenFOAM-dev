@@ -1122,7 +1122,7 @@ label findCorrespondingRegion
 void getZoneID
 (
     const polyMesh& mesh,
-    const cellZones& cellZones,
+    const cellZoneList& cellZones,
     labelList& zoneID,
     labelList& neiZoneID
 )
@@ -1181,7 +1181,7 @@ void matchRegions
     labelList& zoneToRegion
 )
 {
-    const cellZones& cellZones = mesh.cellZones();
+    const cellZoneList& cellZones = mesh.cellZones();
 
     regionToZone.setSize(nCellRegions, -1);
     regionNames.setSize(nCellRegions);
@@ -1513,7 +1513,7 @@ int main(int argc, char *argv[])
         args.optionLookupOrDefault("defaultRegionName", standardRegionName)
     );
 
-    const Foam::cellZones& cellZones = mesh.cellZones();
+    const cellZoneList& cellZones = mesh.cellZones();
 
     // Existing zoneID
     labelList zoneID(mesh.nCells(), -1);
@@ -1528,10 +1528,13 @@ int main(int argc, char *argv[])
 
     // cellRegion is the labelList with the region per cell.
     labelList cellRegion;
+
     // Region per zone
     labelList regionToZone;
+
     // Name of region
     wordList regionNames;
+
     // Zone to region
     labelList zoneToRegion;
 
@@ -1572,7 +1575,7 @@ int main(int argc, char *argv[])
             << "This requires all"
             << " cells to be in one and only one cellZone." << nl << endl;
 
-        Foam::cellZones newCellZones
+        cellZoneList newCellZones
         (
             IOobject
             (

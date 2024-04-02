@@ -85,7 +85,7 @@ void surfaceDisplacementPointPatchVectorField::calcProjection
 
     if (frozenPointsZone_.size() > 0)
     {
-        const pointZones& pZones = mesh.pointZones();
+        const pointZoneList& pZones = mesh.pointZones();
 
         zonePtr = &pZones[frozenPointsZone_];
 
