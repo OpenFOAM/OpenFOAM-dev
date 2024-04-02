@@ -1840,7 +1840,7 @@ void Foam::meshRefinement::checkCoupledFaceZones(const polyMesh& mesh)
 
         forAll(fZone, i)
         {
-            label bFacei = fZone[i]-mesh.nInternalFaces();
+            const label bFacei = fZone[i] - mesh.nInternalFaces();
 
             if (bFacei >= 0)
             {
@@ -1854,15 +1854,6 @@ void Foam::meshRefinement::checkCoupledFaceZones(const polyMesh& mesh)
                         << "Face " << fZone[i] << " in zone "
                         << fZone.name()
                         << " is twice in zone!"
-                        << abort(FatalError);
-                }
-                else
-                {
-                    FatalErrorInFunction
-                        << "Face " << fZone[i] << " in zone "
-                        << fZone.name()
-                        << " is also in zone "
-                        << fZones[faceToZone[bFacei]].name()
                         << abort(FatalError);
                 }
             }
