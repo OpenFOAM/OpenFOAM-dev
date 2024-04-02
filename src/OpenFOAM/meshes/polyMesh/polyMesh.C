@@ -244,7 +244,7 @@ Foam::polyMesh::polyMesh(const IOobject& io)
             ),
             meshSubDir,
             *this,
-            IOobject::NO_READ,
+            IOobject::NO_READ, // Delay reading
             IOobject::NO_WRITE
         ),
         *this
@@ -262,7 +262,7 @@ Foam::polyMesh::polyMesh(const IOobject& io)
             ),
             meshSubDir,
             *this,
-            IOobject::NO_READ,
+            IOobject::NO_READ, // Delay reading
             IOobject::NO_WRITE
         ),
         *this
@@ -280,7 +280,7 @@ Foam::polyMesh::polyMesh(const IOobject& io)
             ),
             meshSubDir,
             *this,
-            IOobject::NO_READ,
+            IOobject::NO_READ, // Delay reading
             IOobject::NO_WRITE
         ),
         *this
@@ -341,6 +341,7 @@ Foam::polyMesh::polyMesh(const IOobject& io)
     // Initialise demand-driven data
     calcDirections();
 
+    // Read the zones now that the mesh geometry is available to construct them
     pointZones_.readIfPresent();
     faceZones_.readIfPresent();
     cellZones_.readIfPresent();
