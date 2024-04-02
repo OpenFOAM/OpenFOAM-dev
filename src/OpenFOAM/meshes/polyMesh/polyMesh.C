@@ -439,8 +439,7 @@ Foam::polyMesh::polyMesh
             io.readOpt(),
             IOobject::NO_WRITE
         ),
-        *this,
-        PtrList<pointZone>()
+        *this
     ),
     faceZones_
     (
@@ -453,8 +452,7 @@ Foam::polyMesh::polyMesh
             io.readOpt(),
             IOobject::NO_WRITE
         ),
-        *this,
-        PtrList<faceZone>()
+        *this
     ),
     cellZones_
     (
@@ -467,8 +465,7 @@ Foam::polyMesh::polyMesh
             io.readOpt(),
             IOobject::NO_WRITE
         ),
-        *this,
-        PtrList<cellZone>()
+        *this
     ),
     globalMeshDataPtr_(nullptr),
     curMotionTimeIndex_(-1),
@@ -593,8 +590,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        *this,
-        0
+        *this
     ),
     faceZones_
     (
@@ -607,8 +603,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        *this,
-        0
+        *this
     ),
     cellZones_
     (
@@ -621,8 +616,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        *this,
-        0
+        *this
     ),
     globalMeshDataPtr_(nullptr),
     curMotionTimeIndex_(-1),

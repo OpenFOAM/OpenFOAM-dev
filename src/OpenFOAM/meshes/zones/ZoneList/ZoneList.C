@@ -106,56 +106,6 @@ Foam::ZoneList<ZoneType, ZonesType, MeshType>::ZoneList
 }
 
 
-template<class ZoneType, class ZonesType, class MeshType>
-Foam::ZoneList<ZoneType, ZonesType, MeshType>::ZoneList
-(
-    const IOobject& io,
-    const MeshType& mesh,
-    const label size
-)
-:
-    regIOobject(io),
-    PtrListDictionary<ZoneType>(size),
-    mesh_(mesh)
-{
-    // Optionally read contents, otherwise keep size
-    read();
-}
-
-
-template<class ZoneType, class ZonesType, class MeshType>
-Foam::ZoneList<ZoneType, ZonesType, MeshType>::ZoneList
-(
-    const IOobject& io,
-    const MeshType& mesh,
-    const PtrList<ZoneType>& mpz
-)
-:
-    regIOobject(io),
-    PtrListDictionary<ZoneType>(0),
-    mesh_(mesh)
-{
-    if (!read())
-    {
-        // Nothing read. Use supplied zones
-        PtrListDictionary<ZoneType>& zones = *this;
-        zones.setSize(mpz.size());
-        forAll(zones, zi)
-        {
-            zones.set
-            (
-                zi,
-                mpz[zi].name(),
-                mpz[zi].clone
-                (
-                    static_cast<const ZonesType&>(*this)
-                )
-            );
-        }
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class ZoneType, class ZonesType, class MeshType>

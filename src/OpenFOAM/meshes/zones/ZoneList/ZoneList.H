@@ -93,22 +93,6 @@ public:
             const MeshType&
         );
 
-        //- Read constructor if file present otherwise from size
-        ZoneList
-        (
-            const IOobject&,
-            const MeshType&,
-            const label size
-        );
-
-         //- Construct given a PtrList
-        ZoneList
-        (
-            const IOobject&,
-            const MeshType&,
-            const PtrList<ZoneType>&
-        );
-
         //- Move constructor
         ZoneList(ZoneList&&) = default;
 

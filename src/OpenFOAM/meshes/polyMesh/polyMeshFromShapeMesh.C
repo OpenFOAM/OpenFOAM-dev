@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -486,8 +486,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        *this,
-        0
+        *this
     ),
     faceZones_
     (
@@ -500,8 +499,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        *this,
-        0
+        *this
     ),
     cellZones_
     (
@@ -514,8 +512,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        *this,
-        0
+        *this
     ),
     globalMeshDataPtr_(nullptr),
     curMotionTimeIndex_(-1),
@@ -767,8 +764,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        *this,
-        0
+        *this
     ),
     faceZones_
     (
@@ -781,8 +777,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        *this,
-        0
+        *this
     ),
     cellZones_
     (
@@ -795,8 +790,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        *this,
-        0
+        *this
     ),
     globalMeshDataPtr_(nullptr),
     curMotionTimeIndex_(-1),
