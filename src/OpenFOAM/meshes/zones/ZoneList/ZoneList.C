@@ -477,6 +477,14 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::swap(ZonesType& otherZones)
 
 
 template<class ZoneType, class ZonesType, class MeshType>
+bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::readIfPresent()
+{
+    readOpt() = IOobject::READ_IF_PRESENT;
+    return read();
+}
+
+
+template<class ZoneType, class ZonesType, class MeshType>
 bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::writeData(Ostream& os) const
 {
     os  << *this;

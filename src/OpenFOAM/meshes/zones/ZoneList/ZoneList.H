@@ -161,6 +161,9 @@ public:
         //  For run-time mesh replacement and mesh to mesh mapping
         void swap(ZonesType&);
 
+        //- Read zones if the zones file is present
+        bool readIfPresent();
+
         //- writeData member function required by regIOobject
         bool writeData(Ostream&) const;
 

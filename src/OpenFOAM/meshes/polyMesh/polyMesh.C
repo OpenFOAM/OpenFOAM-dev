@@ -244,7 +244,7 @@ Foam::polyMesh::polyMesh(const IOobject& io)
             ),
             meshSubDir,
             *this,
-            IOobject::READ_IF_PRESENT,
+            IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
         *this
@@ -262,7 +262,7 @@ Foam::polyMesh::polyMesh(const IOobject& io)
             ),
             meshSubDir,
             *this,
-            IOobject::READ_IF_PRESENT,
+            IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
         *this
@@ -280,7 +280,7 @@ Foam::polyMesh::polyMesh(const IOobject& io)
             ),
             meshSubDir,
             *this,
-            IOobject::READ_IF_PRESENT,
+            IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
         *this
@@ -340,6 +340,10 @@ Foam::polyMesh::polyMesh(const IOobject& io)
 
     // Initialise demand-driven data
     calcDirections();
+
+    pointZones_.readIfPresent();
+    faceZones_.readIfPresent();
+    cellZones_.readIfPresent();
 }
 
 
