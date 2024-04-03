@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,11 +48,13 @@ void Foam::functionObjects::timeControl::readControls(const dictionary& dict)
     {
         dict.readIfPresent("timeStart", startTime_);
     }
+    startTime_ = time_.userTimeToTime(startTime_);
 
     if (!dict.readIfPresent("endTime", endTime_))
     {
         dict.readIfPresent("timeEnd", endTime_);
     }
+    endTime_ = time_.userTimeToTime(endTime_);
 
     dict.readIfPresent("nStepsToStartTimeChange", nStepsToStartTimeChange_);
 }
