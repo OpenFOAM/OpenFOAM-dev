@@ -186,13 +186,16 @@ void Foam::faceZone::reset(const Map<bool>& newIndices)
     clearAddressing();
 
     labelList& indices = *this;
-    indices = newIndices.sortedToc();
 
-    flipMap_.setSize(indices.size());
+    indices.setSize(newIndices.size());
+    flipMap_.setSize(newIndices.size());
 
-    forAll(flipMap_, i)
+    const List<Map<bool>::const_iterator> sortedNewIndices(newIndices.sorted());
+
+    forAll(sortedNewIndices, i)
     {
-        flipMap_[i] = newIndices[indices[i]];
+        indices[i] = sortedNewIndices[i].key();
+        flipMap_[i] = sortedNewIndices[i]();
     }
 }
 
