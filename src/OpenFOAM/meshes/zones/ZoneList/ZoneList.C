@@ -50,7 +50,7 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::read()
         PtrListDictionary<ZoneType>& zones = *this;
 
         // Read zones
-        Istream& is = readStream(typeName);
+        Istream& is = readStream(ZonesType::typeName);
 
         PtrList<entry> patchEntries(is);
         zones.setSize(patchEntries.size());
