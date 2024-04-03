@@ -215,7 +215,7 @@ Foam::wordList Foam::fvMeshDistribute::fieldNames
     label& nFields
 ) const
 {
-    wordList fieldNames(mesh_.names(typeName));
+    wordList fieldNames(mesh_.toc(typeName));
 
     if (fieldNames.size())
     {

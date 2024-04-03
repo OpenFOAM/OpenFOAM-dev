@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Foam::wordList Foam::functionObjects::writeObjectsBase::objectNames()
     {
         if (regExp_)
         {
-            wordList names(writeObr_.names<regIOobject>(writeObjectNames_[i]));
+            wordList names(writeObr_.toc<regIOobject>(writeObjectNames_[i]));
 
             if (names.size())
             {

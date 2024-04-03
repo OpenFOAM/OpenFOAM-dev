@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::wordList Foam::objectRegistry::names() const
+Foam::wordList Foam::objectRegistry::toc() const
 {
     wordList objectNames(size());
 
@@ -49,7 +49,7 @@ Foam::wordList Foam::objectRegistry::names() const
 
 
 template<class Type>
-Foam::wordList Foam::objectRegistry::names(const wordRe& name) const
+Foam::wordList Foam::objectRegistry::toc(const wordRe& name) const
 {
     wordList objectNames(size());
 
@@ -74,9 +74,9 @@ Foam::wordList Foam::objectRegistry::names(const wordRe& name) const
 
 
 template<class Type>
-Foam::wordList Foam::objectRegistry::names(const wordReList& patterns) const
+Foam::wordList Foam::objectRegistry::toc(const wordReList& patterns) const
 {
-    wordList names(this->names<Type>());
+    wordList names(this->toc<Type>());
 
     return wordList(names, findStrings(patterns, names));
 }
@@ -196,7 +196,7 @@ const Type& Foam::objectRegistry::lookupObject(const word& name) const
             << " " << name << " from objectRegistry " << this->name()
             << " failed\n    available objects of type " << Type::typeName
             << " are" << nl
-            << names<Type>();
+            << toc<Type>();
 
         if (cacheTemporaryObject(name))
         {

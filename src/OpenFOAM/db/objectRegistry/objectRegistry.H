@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,29 +162,26 @@ public:
                 const fileName& local = ""
             ) const;
 
-            //- Return the list of names of the IOobjects
-            wordList names() const;
-
-            //- Return the sorted list of names of the IOobjects
-            wordList sortedNames() const;
+            using HashTable<regIOobject*>::toc;
+            using HashTable<regIOobject*>::sortedToc;
 
             //- Return the list of names of IOobjects of given class name
-            wordList names(const word& className) const;
+            wordList toc(const word& className) const;
 
             //- Return the sorted list of names of IOobjects of given class name
-            wordList sortedNames(const word& className) const;
+            wordList sortedToc(const word& className) const;
 
             //- Return the list of names of the IOobjects of given type
             template<class Type>
-            wordList names() const;
+            wordList toc() const;
 
             //- Return the list of objects whose name matches the input regExp
             template<class Type>
-            wordList names(const wordRe& name) const;
+            wordList toc(const wordRe& name) const;
 
             //- Return the list of objects whose name matches the input regExp
             template<class Type>
-            wordList names(const wordReList& name) const;
+            wordList toc(const wordReList& name) const;
 
             //- Lookup and return a const sub-objectRegistry. Optionally create
             //  it if it does not exist.

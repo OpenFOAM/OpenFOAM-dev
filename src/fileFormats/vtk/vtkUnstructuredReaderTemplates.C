@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void Foam::vtkUnstructuredReader::printFieldStats
     const objectRegistry& obj
 ) const
 {
-    wordList fieldNames(obj.names(Type::typeName));
+    wordList fieldNames(obj.toc(Type::typeName));
 
     if (fieldNames.size() > 0)
     {
