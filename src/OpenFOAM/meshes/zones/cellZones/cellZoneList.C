@@ -21,50 +21,16 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Foam::pointZoneList
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef pointZoneList_H
-#define pointZoneList_H
+#include "cellZoneList.H"
 
-#include "pointZone.H"
-#include "ZoneList.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
+    defineTypeNameAndDebug(cellZoneList, 0);
+}
 
-class polyMesh;
-
-/*---------------------------------------------------------------------------*\
-                          Class pointZoneList Declaration
-\*---------------------------------------------------------------------------*/
-
-class pointZoneList
-:
-    public ZoneList<pointZone, pointZoneList, polyMesh>
-{
-public:
-
-    //- Runtime type information
-    TypeName("pointZoneList");
-
-
-    // Constructors
-
-        using ZoneList<pointZone, pointZoneList, polyMesh>::ZoneList;
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

@@ -71,8 +71,8 @@ Foam::wordList Foam::functionObjects::writeObjectsBase::objectNames()
             {
                 Warning
                     << "writeObjects: object " << writeObjectNames_[i]
-                    << " not found in database. Available objects:"
-                    << nl << writeObr_.sortedToc() << endl;
+                    << " not found in database. Available objects:" << endl;
+                writeObr_.printToc(Info);
             }
         }
         else
@@ -87,8 +87,8 @@ Foam::wordList Foam::functionObjects::writeObjectsBase::objectNames()
             {
                 Warning
                     << "writeObjects: object " << name
-                    << " not found in database. Available objects:"
-                    << nl << writeObr_.sortedToc() << endl;
+                    << " not found in database. Available objects:" << endl;
+                writeObr_.printToc(Info);
             }
         }
     }

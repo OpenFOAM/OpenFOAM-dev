@@ -49,7 +49,13 @@ class cellZoneList
 {
 public:
 
-    using ZoneList<cellZone, cellZoneList, polyMesh>::ZoneList;
+    //- Runtime type information
+    TypeName("cellZoneList");
+
+
+    // Constructors
+
+        using ZoneList<cellZone, cellZoneList, polyMesh>::ZoneList;
 };
 
 

@@ -472,7 +472,11 @@ meshes/Identifiers/patch/coupleGroupIdentifier.C
 meshes/meshObjects/meshObjects.C
 
 meshes/zones/pointZones/pointZone.C
+meshes/zones/pointZones/pointZoneList.C
+
 meshes/zones/cellZones/cellZone.C
+meshes/zones/cellZones/cellZoneList.C
+
 meshes/zones/faceZones/faceZone.C
 meshes/zones/faceZones/faceZoneList.C
 

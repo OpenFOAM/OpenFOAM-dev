@@ -25,6 +25,7 @@ License
 
 #include "objectRegistry.H"
 #include "Time.H"
+#include "IOmanip.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -552,6 +553,23 @@ void Foam::objectRegistry::readModifiedObjects()
     if (modified)
     {
         objectRegistry::read();
+    }
+}
+
+
+void Foam::objectRegistry::printToc(Ostream& os) const
+{
+    const List<HashTable<regIOobject*>::const_iterator> sortedObjects
+    (
+        sorted()
+    );
+
+    forAll(sortedObjects, i)
+    {
+        os  << "    " << setf(ios_base::left)
+            << setw(39) << sortedObjects[i].key()
+            << ' ' << sortedObjects[i]()->type()
+            << endl;
     }
 }
 

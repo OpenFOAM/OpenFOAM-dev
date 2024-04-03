@@ -254,6 +254,9 @@ public:
             //- Return the table of contents as a sorted list
             List<Key> sortedToc() const;
 
+            //- Return a sorted list of constant iterators
+            List<const_iterator> sorted() const;
+
             //- Print information
             Ostream& printInfo(Ostream&) const;
 

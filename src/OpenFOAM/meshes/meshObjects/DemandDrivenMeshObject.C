@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,6 +166,14 @@ Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Mesh, template<class> class MeshObjectType, class Type>
+const Foam::word&
+Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::type() const
+{
+    return Type::typeName;
+}
+
 
 template<class Mesh, template<class> class MeshObjectType, class Type>
 bool Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::found

@@ -49,7 +49,13 @@ class faceZoneList
 {
 public:
 
-    using ZoneList<faceZone, faceZoneList, polyMesh>::ZoneList;
+    //- Runtime type information
+    TypeName("faceZoneList");
+
+
+    // Constructors
+
+        using ZoneList<faceZone, faceZoneList, polyMesh>::ZoneList;
 
 
     // Member Functions

@@ -284,6 +284,10 @@ public:
 
         // Writing
 
+            //- Print the list of object names and their type
+            //  to the given stream
+            void printToc(Ostream& os) const;
+
             //- writeData function required by regIOobject but not used
             //  for this class, writeObject is used instead
             virtual bool writeData(Ostream&) const

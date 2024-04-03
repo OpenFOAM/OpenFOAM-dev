@@ -25,6 +25,14 @@ License
 
 #include "faceZoneList.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(faceZoneList, 0);
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::boolList Foam::faceZoneList::zonesFlipFace
