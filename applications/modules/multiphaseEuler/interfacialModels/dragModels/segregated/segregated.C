@@ -126,7 +126,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
     const volScalarField::Internal muAlphaI
     (
         limitedAlpha1*rho1*nu1*limitedAlpha2*rho2*nu2
-       /(limitedAlpha1*rho1*nu1 + limitedAlpha2*rho2*nu2)
+       /(limitedAlpha2*rho1*nu1 + limitedAlpha1*rho2*nu2)
     );
 
     const volScalarField::Internal ReI
