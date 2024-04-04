@@ -327,39 +327,6 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
 {
     Info << indent << "Setting motion for " << name << endl;
 
-    scalar maxTravel = -great;
-    scalar minTravel = great;
-
-    const scalar userBeginTime
-    (
-        meshMover_.mesh().time().timeToUserTime
-        (
-            meshMover_.mesh().time().beginTime().value()
-        )
-    );
-
-    const scalar userEndTime
-    (
-        meshMover_.mesh().time().timeToUserTime
-        (
-            meshMover_.mesh().time().endTime().value()
-        )
-    );
-
-    const scalar userDeltaT = meshMover_.userDeltaT();
-
-    scalar userTime = userBeginTime;
-
-    while (userTime <= userEndTime)
-    {
-        const scalar position = motion_->value(userTime);
-
-        maxTravel = max(maxTravel, position);
-        minTravel = min(minTravel, position);
-
-        userTime += userDeltaT;
-    }
-
     initPatchSets();
 }
 
