@@ -101,7 +101,7 @@ void Foam::fvMeshMovers::multiValveEngine::valveObject::updatePoints
         const scalar position = this->lift();
 
         // Update a cached scale_ field if needed
-        if (mag(position - position0_)/travel_ > fractionalTravelInterval_)
+        if (mag(position - position0_) > travelInterval_)
         {
             const pointMesh& pMesh = pointMesh::New(meshMover_.mesh());
             const pointField& points(meshMover_.mesh().points());

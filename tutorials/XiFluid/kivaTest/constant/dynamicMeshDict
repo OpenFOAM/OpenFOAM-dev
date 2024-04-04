@@ -44,7 +44,7 @@ mover
         frozenZones         (cylinderHead);
 
         // There is no need to update the motion weights
-        fractionalTravelInterval       1;
+        // travelInterval      0.01;
     }
 }
 

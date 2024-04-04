@@ -140,7 +140,7 @@ Foam::scalar Foam::fvMeshMovers::multiValveEngine::pistonObject::speed() const
 Foam::scalar
 Foam::fvMeshMovers::multiValveEngine::pistonObject::clearance() const
 {
-    if (mag(position() - position0_)/travel_ > fractionalTravelInterval_)
+    if (mag(position() - position0_) > travelInterval_)
     {
         return clearance_;
     }
@@ -162,7 +162,7 @@ void Foam::fvMeshMovers::multiValveEngine::pistonObject::updatePoints
     const scalar position = this->position();
 
     // Update a cached scale_ field if needed
-    if (mag(position - position0_)/travel_ > fractionalTravelInterval_)
+    if (mag(position - position0_) > travelInterval_)
     {
         Info << "    Updating scale field" << endl;
 

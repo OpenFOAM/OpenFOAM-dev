@@ -49,7 +49,7 @@ mover
 
         movingFrozenLayerThickness  0;
 
-        fractionalTravelInterval    0.1;
+        travelInterval              0.1;
         cosineScaling               yes;
     }
 
@@ -63,7 +63,7 @@ mover
 
             movingFrozenLayerThickness  0;
 
-            fractionalTravelInterval    0.02;
+            travelInterval              5.8e-3;
             cosineScaling               yes;
 
             minLift                     0.01;

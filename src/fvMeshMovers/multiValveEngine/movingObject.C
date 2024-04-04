@@ -317,9 +317,9 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
         dimensionedScalar(dimless, 0)
     ),
     cosine_(dict.lookupOrDefault("cosineScaling", false)),
-    fractionalTravelInterval_
+    travelInterval_
     (
-        dict.lookupOrDefault<scalar>("fractionalTravelInterval", 1)
+        dict.lookupOrDefault<scalar>("travelInterval", great)
     ),
     executionCount_(0),
     position0_(-great),
@@ -359,8 +359,6 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
 
         userTime += userDeltaT;
     }
-
-    travel_ = maxTravel - minTravel;
 
     initPatchSets();
 }

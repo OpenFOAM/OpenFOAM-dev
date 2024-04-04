@@ -84,7 +84,7 @@ Description
           deformation near the moving object and sustain e.g. boundary layer.
           (Default no, i.e. linear weighting)
 
-        - fractionalTravelInterval: fraction of the stroke travelled after
+        - travelInterval: part of the stroke travelled after
           which the cached motion scaling weights are recalculated
 
         For valve object only:
@@ -163,7 +163,7 @@ Description
             movingFrozenLayerThickness  0;
             staticFrozenLayerThickness  0;
 
-            fractionalTravelInterval    0.1;
+            travelInterval      0.1;
 
             cosineScaling       yes;
         }
@@ -180,7 +180,7 @@ Description
                 movingFrozenLayerThickness  0;
                 staticFrozenLayerThickness  0;
 
-                fractionalTravelInterval    0.1;
+                travelInterval      0.01;
 
                 cosineScaling       yes;
 
@@ -279,9 +279,6 @@ public:
             //- Piston motion function
             autoPtr<Function1<scalar>> motion_;
 
-            //- Maximum travel of the object
-            scalar travel_;
-
             //- Object patchSet
             labelHashSet patchSet_;
 
@@ -313,9 +310,8 @@ public:
             //  for the boundary point motion
             Switch cosine_;
 
-            //- Update the scale_ field when the normalised travel exceeds
-            //  fractionalTravelInterval_
-            const scalar fractionalTravelInterval_;
+            //- Update the scale_ field when the travel exceeds travelInterval
+            const scalar travelInterval_;
 
             //- Count of the scale_ field updates
             mutable label executionCount_;
