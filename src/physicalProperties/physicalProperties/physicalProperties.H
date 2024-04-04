@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::physicalProperties
 
 Description
-    An abstract base class for physical properties.
+    A base class for physical properties.
 
 SourceFiles
     physicalProperties.C
@@ -41,9 +41,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class fvMesh;
 
 /*---------------------------------------------------------------------------*\
                        Class physicalProperties Declaration
@@ -63,7 +60,7 @@ public:
     // Constructors
 
         //- Construct from components
-        physicalProperties(const fvMesh& mesh, const word& group);
+        physicalProperties(const objectRegistry& obr, const word& group);
 
         //- Disallow default bitwise copy construction
         physicalProperties(const physicalProperties&) = delete;
@@ -76,6 +73,7 @@ public:
 
     // Member Functions
 
+        //- Find the physicalProperties dictionary and return the IOobject
         static IOobject findModelDict
         (
             const objectRegistry& obr,
@@ -84,7 +82,7 @@ public:
         );
 
         //- Read physicalProperties dictionary
-        virtual bool read() = 0;
+        virtual bool read();
 
 
     // Member Operators

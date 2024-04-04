@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "physicalProperties.H"
-#include "fvMesh.H"
+#include "objectRegistry.H"
+#include "Time.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -102,11 +103,11 @@ Foam::IOobject Foam::physicalProperties::findModelDict
 
 Foam::physicalProperties::physicalProperties
 (
-    const fvMesh& mesh,
+    const objectRegistry& obr,
     const word& group
 )
 :
-    IOdictionary(findModelDict(mesh, group, true))
+    IOdictionary(findModelDict(obr, group, true))
 {
     // Ensure name of IOdictionary is typeName
     rename(IOobject::groupName(physicalProperties::typeName, group));
