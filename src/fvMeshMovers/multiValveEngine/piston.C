@@ -162,7 +162,11 @@ void Foam::fvMeshMovers::multiValveEngine::pistonObject::updatePoints
     const scalar position = this->position();
 
     // Update a cached scale_ field if needed
-    if (mag(position - position0_) > travelInterval_)
+    if
+    (
+        executionCount_ == 0
+     || mag(position - position0_) > travelInterval_
+    )
     {
         Info << "    Updating scale field" << endl;
 
