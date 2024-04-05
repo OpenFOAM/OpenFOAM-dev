@@ -1,0 +1,388 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamFile
+#
+# Description
+#     Finds one or more files in OpenFOAM and optionally processes the contents
+#     by printing the file or lines matching a search string
+#
+#------------------------------------------------------------------------------
+usage () {
+    cat <<USAGE
+
+Usage: ${0##*/} [OPTIONS] <filename>
+options:
+  -a | -applications     search for the file from the \$FOAM_APP directory
+  -d | -dir <dir>        specify search directory
+  -f | -files            find wmake 'files' file associated with searched file
+  -h | -help             help
+  -i | -isearch <string> searches files for a <string>, case insensitive
+  -m | -modules          search for the file from the \$FOAM_MODULES directory
+  -n | -numbers          print line numbers with file output
+  -o | -options          find wmake 'options' file associated with searched file
+  -p | -print            print the file(s)
+  -s | -search <string>  searches files for a <string>, case sensitive
+  -t | -tutorials        search for the file from the \$FOAM_TUTORIALS directory
+
+Finds one or more files in OpenFOAM and optionally processes the contents by:
++ printing the file ('-print' option);
++ printing lines within the file matching a search string ('-search' option).
+
+With source code files, can locate the 'files' and 'options' files associated
+with their compilation using 'wmake'.
+
+By default, files are searched from the src (\$FOAM_SRC) directory.
+Alternatively the '-dir' option allows the user to specify the search directory
+The '-applications', '-modules' and '-tutorials' options specifically set the
+search path to the \$FOAM_APP, \$FOAM_MODULES and \$FOAM_TUTORIALS directories,
+respectively.
+
+Examples:
+    foamFind -print wallHeatFlux.C | less
+    + click space bar to scroll down
+    + enter line number (after ":") to jump to line
+    + enter "/text" to search for "text" (or any other string)
+
+    foamFind -applications -isearch "momentumtransport" -options fluid.C
+    foamFind -numbers -search laminar BirdCarreau.C
+
+USAGE
+}
+
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+findWmakeFiles () {
+    _file="$1" ; shift
+    _wmakeFiles="$*"
+
+    # Check if file is source code
+    ! file -b "$_file" | grep -Eq "C.*source" && \
+        "'-$_filename' invalid, file is not source code" >&2 && \
+        return 1
+
+    _files=""
+    while true
+    do
+        _oldFile="$_file"
+        _file="${_file%/*}"
+
+        # cannot contract the path further
+        [ "$_oldFile" = "$_file" ] && break
+
+        # search for 'files' and/or 'options'
+        [ -d "$_file" ] && \
+            for _w in $_wmakeFiles
+            do
+                _files="$(echo "$_files" \
+                        "$(find "$_file" -name "$_w" -type f)" | xargs)"
+            done
+
+        [ "$_files" ] && break
+    done
+
+    ! [ "$_files" ] && \
+        error "no '$_filename' file found for '-files' or '-options'" >&2 && \
+        return 1
+
+    echo "$_files"
+    return 0
+}
+
+nParams () {
+    [ "$1" ] || return 1
+
+    echo "$1" | xargs | awk -F' ' '{print NF}'
+    return 0
+}
+
+selectFile () {
+    _filename="$1"; shift
+    _files="$*"
+    _nFiles="$(nParams "$_files")"
+
+    # Return file if only one
+    [ "$_nFiles" -eq 1 ] && echo "$_files" && exit 0
+
+    printf "Multiple files" >&2
+    [ "$_filename" ] && printf " with name '%s'" "$_filename" >&2
+    printf " found:\n" >&2
+
+    _i=1
+    for _f in $_files
+    do
+        printf "%i) %s\n" "$_i" "$_f" >&2
+        _i=$((_i + 1))
+    done
+    printf "Type ENTER to select all, or " >&2
+    printf "enter file number (1-%s) for specific file: " \
+           "$_nFiles" >&2
+
+    read -r _nFile
+
+    # Enter nothing
+    [ -z "$_nFile" ] && echo "$_files" && return 0
+
+    # Check incorrect number
+    ! [ "$_nFile" -eq "$_nFile" ] 2>/dev/null && \
+        echo "\"$_nFile\" is not a number" >&2 && \
+        return 1
+    { [ "$_nFile" -lt 1 ] || [ "$_nFile" -gt "$_nFiles" ] ; } && \
+        echo "\"$_nFile\" is not a number between 1 and $_nFiles" >&2 && \
+        return 1
+
+    # Enter number corresponding to file
+    # shellcheck disable=SC2086
+    echo $_files | awk -v n="$_nFile" '{print $n}'
+    return 0
+}
+
+setFile () {
+    _files="$1"
+    _n="$2"
+    echo "$_files" | xargs -n 1 | awk -v n="${_n}" 'NR==n'
+}
+
+isSrcDir () {
+    echo "$1" | grep -wqE "^($FOAM_SRC|$FOAM_APP)"
+}
+
+listFiles () {
+    _dir="$1"
+    _filename="$2"
+    _search="$3"
+    _ins=""
+
+    [ "$4" = "on" ] && _ins="i"
+
+    # Specify code files if _dir is in $FOAM_SRC or $FOAM_APP
+    _name="*"
+    isSrcDir "$dir" && _name="*.[CHL]"
+    [ "$_filename" ] && _name="$_filename"
+
+    [ "$_search" ] && \
+        find "$_dir" -name "$_name" -type f -print0 | \
+            xargs -0 grep -l$_ins "$search" && \
+        return 0
+
+    # Remove "\n"
+    find "$dir" -name "$filename" -type f -print0 | xargs -0
+}
+
+grepFile () {
+    _string="$1"
+    _file="$2"
+    _ins=""
+    [ "$3" = "on" ] && _ins="i"
+    _arg="$4"
+
+    # use $_arg for different cases: test, and with and without line numbers
+    case "$_arg" in
+        test)
+            grep -q"$_ins" "$_string" "$_file"
+            ;;
+        numbers)
+            grep -hn"$_ins" "$_string" "$_file" | \
+                awk '{
+                         split($0,f,":");
+                         sub(/^([^:]+:)/,"",$0);
+                         printf "%6i  %s\n", f[1], $0
+                     }'
+            ;;
+        *)
+            grep -h"$_ins" "$_string" "$_file"
+            ;;
+    esac
+}
+
+dirError () {
+    cat<<EOF
+Search directory specified with more than one option from '-applications', '-dir',
+'-modules' and '-tutorials'. Please specify only one of these options.
+EOF
+}
+
+searchError () {
+    cat<<EOF
+The '-search' and '-isearch' options are both be specified.
+Please specify only one of these options, either '-isearch' for a
+case-insensitive search or '-search' for case-sensitive.
+EOF
+}
+
+printError () {
+    cat<<EOF
+The '-search/-isearch' and '-print' options are both be specified.
+Please specify only one of these options, either '-search/-isearch' to print
+lines of files(s) matching an expression, or '-print' for the entire file(s).
+EOF
+}
+
+dir=""
+print=""
+wmakeFiles=""
+search=""
+insensitive=""
+numbers=""
+filename=""
+
+while [ "$#" -gt 0 ]
+do
+   case "$1" in
+   -a | -applications)
+       [ "$dir" ] && error "$(dirError)"
+       dir="$FOAM_APP"
+       shift
+       ;;
+   -d | -dir)
+       [ "$dir" ] && error "$(dirError)"
+       [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+       [ -d "$2" ] || error "'$2' argument to '-dir' option is not a directory"
+       # shellcheck disable=SC2164
+       dir="$(cd "$2"; pwd)"
+       # Check $dir is in OpenFOAM
+       ! echo "$dir" | grep -wq "^$WM_PROJECT_DIR" && \
+           error "Specified directory '$dir' is not in OpenFOAM installation"
+       shift 2
+       ;;
+   -f | -files)
+       wmakeFiles="$wmakeFiles files"
+       shift
+       ;;
+   -h | -help)
+       usage
+       ;;
+   -i | -isearch)
+       [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+       [ "$insensitive" ] && error "$(searchError)"
+       [ "$print" ] && error "$(printError)"
+       search="$2"
+       insensitive=on
+       shift 2
+       ;;
+   -m | -modules)
+       [ "$dir" ] && error "$(dirError)"
+       dir="$FOAM_MODULES"
+       shift
+       ;;
+   -n | -numbers)
+       numbers="numbers" # flag for line numbers in cat or grep
+       shift
+       ;;
+   -o | -options)
+       wmakeFiles="$wmakeFiles options"
+       shift
+       ;;
+   -p | -print)
+       [ "$insensitive" ] && error "$(printError)"
+       print="yes"
+       shift
+       ;;
+   -s | -search)
+       [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+       [ "$insensitive" ] && error "$(searchError)"
+       [ "$print" ] && error "$(printError)"
+       search="$2"
+       insensitive=off
+       shift 2
+       ;;
+   -t | -tutorials)
+       [ "$dir" ] && error "$(dirError)"
+       dir="$FOAM_TUTORIALS"
+       shift
+       ;;
+   -*)
+       error "Invalid option '$1'"
+       ;;
+   *)
+       # If filename is already set, then exit
+       [ "$filename" ] && error "Arguments specified ($#) =/= 1"
+       filename="$1"
+       shift
+       ;;
+    esac
+done
+
+# Default search directory if not specified
+[ "$dir" ] || dir="$FOAM_SRC"
+
+# Disallow '-files' and '-options' if search directory does not include source code
+[ "$wmakeFiles" ] && ! isSrcDir "$dir" && \
+    error "With search directory '$dir' (not source code)," \
+          "cannot use '-files' or '-options'"
+
+# Check number of arguments
+[ "$#" -eq 0 ] || error "Arguments specified =/= 1 (optional)"
+
+# If filename is not set, check search string is specified
+! [ "$filename" ] && ! [ "$search" ] && \
+    error "<filename> can only be omitted if a search string is specified" \
+          "with the '-search' option"
+
+# If '-files' or '-options' is selected, ensure <filename> is set
+! [ "$filename" ] && [ "$wmakeFiles" ] && \
+    error "With '-files' or '-options', <filename> must be specified"
+
+# Find files
+files="$(listFiles "$dir" "$filename" "$search" "$insensitive")"
+
+# Ensure there is at least one file
+nParams "$files" > /dev/null || error "No file '$filename' found in '$dir'"
+
+# Select files when more than one is found
+files="$(selectFile "$filename" "$files")" || error
+
+# With '-files' and/or '-options', reuse file variable as the file
+[ "$wmakeFiles" ] && \
+    [ "$(nParams "$files")" -ne 1 ] && \
+    error "With '-files' or '-options', a single <filename> must be specified"
+
+[ "$wmakeFiles" ] &&
+    ! files="$(findWmakeFiles "$files" "$wmakeFiles")" && error
+
+# Output
+for f in $files
+do
+    printf "\nFile: %s\n" "$f"
+
+    # Printing entire files
+    [ "$print" ] && \
+        printf ">>>\n" && \
+        { [ "$numbers" ] && cat -n "$f" || cat "$f" ; } && \
+        printf "<<<\n"
+
+    # Printing lines matching strings
+    [ "$search" ] || continue
+    ! grepFile "$search" "$f" "$insensitive" test && \
+        echo "Search: no match" && continue
+    printf ">>>\n"
+    grepFile "$search" "$f" "$insensitive" "$numbers"
+    printf "<<<\n"
+done

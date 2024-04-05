@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -120,6 +120,29 @@ _func ()
     foamPostProcess -list | sed -n '/^(/,/^)/p' | grep -v '[()]'
 }
 
+_optSet () {
+    _used="\$1"
+    _opts="\$2"
+
+    for _o in \${_opts//-/\\\\-}
+    do
+        echo "\$_used" | grep -wq "\$_o" && return 0
+    done
+
+    return 1
+}
+
+_removeOpts () {
+    _opts="\$1"
+    _removes="\$2"
+
+    for _r in \${_removes//-/\\\\-}
+    do
+        _opts="\${_opts/\$_r/}"
+    done
+
+    echo "\$_opts"
+}
 
 _infoArgs ()
 {
@@ -129,6 +152,20 @@ _infoArgs ()
        tr '<>,' '\n' | \\
        sort -u | \\
        xargs
+}
+
+_findArgs () {
+    _dir="\$1"
+
+    [ -d "\$_dir" ] || return 1
+
+    _name="*"
+    echo "\$_dir" | grep -wqE "^(\$FOAM_SRC|\$FOAM_APP)" && _name="*.[CHL]"
+
+    find "\$_dir" -name "\$_name" -type f | \\
+        awk -F/ '{print \$NF}' | \\
+        sort -u | \\
+        xargs
 }
 
 EOF
@@ -159,6 +196,57 @@ EOF
 
 isScript () {
     file "$(command -v "$1")" | grep -q "POSIX shell script"
+}
+
+_foamFind ()
+{
+    cat <<EOF
+_foamFind_ ()
+{
+$(declareLocals)
+
+    opts="\\
+        -applications \\
+        -dir \\
+        -files \\
+        -help \\
+        -isearch \\
+        -numbers \\
+        -modules \\
+        -options \\
+        -print \\
+        -search \\
+        -tutorials"
+
+    for o in \$used ; do opts="\${opts/\$o/}" ; done
+
+    # use only one of '-isearch', '-search', '-print'
+    local actions="-isearch -search -print"
+    _optSet "\$used" "\$actions" && opts="\$(_removeOpts "\$opts" "\$actions")"
+
+    # use only one of '-applications', '-dir', '-modules', '-tutorials'
+    local paths="-applications -dir -modules -tutorials"
+    _optSet "\$used" "\$paths" && opts="\$(_removeOpts "\$opts" "\$paths")"
+
+    local dir=\$FOAM_SRC
+    echo "\$used" | grep -wq "\-applications" && dir=\$FOAM_APP
+    echo "\$line" | grep -wq "\-dir" && \\
+        dir="\$(echo "\$line" | grep -ow "\-dir[\t ]*[^ ]*" | cut -d" " -f2)"
+    echo "\$used" | grep -wq "\-modules" && dir=\$FOAM_MODULES
+    echo "\$used" | grep -wq "\-tutorials" && dir=\$FOAM_TUTORIALS
+
+    echo "\$line" | grep -wq "[^ ]*.[CHL]" || opts="\$opts \$(_findArgs "\$dir")"
+    extra=""
+
+$(caseStart)
+        -dir)
+            opts="" ; extra="-d" ;;
+       *) ;;
+$(caseEnd)
+}
+complete -o filenames -o nospace -F _foamFind_ foamFind
+
+EOF
 }
 
 # shellcheck disable=SC2154
@@ -287,7 +375,7 @@ apps="$(ls "$FOAM_APPBIN") \
       $(find "$WM_PROJECT_DIR/bin" -maxdepth 1 -type f | sort) \
       $(find "$WM_PROJECT_DIR/wmake" -maxdepth 1 -type f | sort)"
 
-specialApps="foamGet foamCloneCase foamInfo surfaceTransformPoints"
+specialApps="foamFind foamGet foamCloneCase foamInfo surfaceTransformPoints"
 
 banner > "$file"
 optionFunctions >> "$file"

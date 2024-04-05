@@ -50,6 +50,29 @@ _func ()
     foamPostProcess -list | sed -n '/^(/,/^)/p' | grep -v '[()]'
 }
 
+_optSet () {
+    _used="$1"
+    _opts="$2"
+
+    for _o in ${_opts//-/\\-}
+    do
+        echo "$_used" | grep -wq "$_o" && return 0
+    done
+
+    return 1
+}
+
+_removeOpts () {
+    _opts="$1"
+    _removes="$2"
+
+    for _r in ${_removes//-/\\-}
+    do
+        _opts="${_opts/$_r/}"
+    done
+
+    echo "$_opts"
+}
 
 _infoArgs ()
 {
@@ -59,6 +82,20 @@ _infoArgs ()
        tr '<>,' '\n' | \
        sort -u | \
        xargs
+}
+
+_findArgs () {
+    _dir="$1"
+
+    [ -d "$_dir" ] || return 1
+
+    _name="*"
+    echo "$_dir" | grep -wqE "^($FOAM_SRC|$FOAM_APP)" && _name="*.[CHL]"
+
+    find "$_dir" -name "$_name" -type f | \
+        awk -F/ '{print $NF}' | \
+        sort -u | \
+        xargs
 }
 
 _adiabaticFlameT_ ()
@@ -2316,7 +2353,7 @@ _polyDualMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -concaveMultiCells -doc -doNotPreserveFaceZones -fileHandler -help -libs -noFields -noFunctionObjects -overwrite -splitAllFaces -srcDoc"
+    opts="-case -concaveMultiCells -doc -doNotPreserveFaceZones -fileHandler -help -libs -noFunctionObjects -overwrite -splitAllFaces -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2873,7 +2910,7 @@ _snappyHexMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -checkGeometry -dict -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -outFile -overwrite -parallel -patches -roots -srcDoc -surfaceSimplify"
+    opts="-case -checkGeometry -dict -doc -fileHandler -help -hostRoots -libs -outFile -overwrite -parallel -patches -region -roots -srcDoc -surfaceSimplify"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2885,7 +2922,7 @@ _snappyHexMesh_ ()
             opts="" ; extra="-d -f" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-patches|-roots|-surfaceSimplify)
+        -hostRoots|-libs|-patches|-region|-roots|-surfaceSimplify)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -4395,6 +4432,56 @@ _foamExec_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _foamExec_ foamExec
+
+_foamFind_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="\
+        -applications \
+        -dir \
+        -files \
+        -help \
+        -isearch \
+        -numbers \
+        -modules \
+        -options \
+        -print \
+        -search \
+        -tutorials"
+
+    for o in $used ; do opts="${opts/$o/}" ; done
+
+    # use only one of '-isearch', '-search', '-print'
+    local actions="-isearch -search -print"
+    _optSet "$used" "$actions" && opts="$(_removeOpts "$opts" "$actions")"
+
+    # use only one of '-applications', '-dir', '-modules', '-tutorials'
+    local paths="-applications -dir -modules -tutorials"
+    _optSet "$used" "$paths" && opts="$(_removeOpts "$opts" "$paths")"
+
+    local dir=$FOAM_SRC
+    echo "$used" | grep -wq "\-applications" && dir=$FOAM_APP
+    echo "$line" | grep -wq "\-dir" && \
+        dir="$(echo "$line" | grep -ow "\-dir[\t ]*[^ ]*" | cut -d" " -f2)"
+    echo "$used" | grep -wq "\-modules" && dir=$FOAM_MODULES
+    echo "$used" | grep -wq "\-tutorials" && dir=$FOAM_TUTORIALS
+
+    echo "$line" | grep -wq "[^ ]*.[CHL]" || opts="$opts $(_findArgs "$dir")"
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -dir)
+            opts="" ; extra="-d" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _foamFind_ foamFind
 
 _foamGet_ ()
 {
