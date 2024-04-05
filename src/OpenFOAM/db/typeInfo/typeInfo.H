@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,7 @@ Description
 
 #include "error.H"
 #include "className.H"
+#include "nullObject.H"
 #include <type_traits>
 #include <typeinfo>
 
@@ -105,6 +106,23 @@ inline To& dynamicCast(From& r)
 }
 
 
+//- Reference type cast template function,
+//  wraps dynamic_cast to handle bad_cast exception and generate a null
+//  reference.
+template<class To, class From>
+inline To& dynamicCastNull(From& r)
+{
+    try
+    {
+        return dynamic_cast<To&>(r);
+    }
+    catch (const std::bad_cast&)
+    {
+        return NullObjectNonConstRef<To>();
+    }
+}
+
+
 //- Reference type cast template function.
 //  As per dynamicCast, but handles type names via the virtual type() method.
 template<class To, class From>
@@ -123,6 +141,15 @@ inline To& refCast(From& r)
 
         return dynamic_cast<To&>(r);
     }
+}
+
+
+//- Reference type cast template function,
+//  As dynamicCastNull.
+template<class To, class From>
+inline To& refCastNull(From& r)
+{
+    return dynamicCastNull<To, From>(r);
 }
 
 

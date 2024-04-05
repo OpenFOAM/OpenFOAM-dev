@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,6 +71,10 @@ extern const NullObject* nullObjectPtr;
 //- Return const reference to the nullObject of type T
 template<class T>
 inline const T& NullObjectRef();
+
+//- Return non-const reference to the nullObject of type T
+template<class T>
+inline T& NullObjectNonConstRef();
 
 //- Return const pointer to the nullObject of type T
 template<class T>
