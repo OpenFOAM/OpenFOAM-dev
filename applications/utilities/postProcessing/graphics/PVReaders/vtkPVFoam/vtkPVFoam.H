@@ -360,14 +360,12 @@ class vtkPVFoam
             void updateInfoZones(vtkDataArraySelection*);
 
             //- Get non-empty zone names for zoneType from file
-            wordList getZoneNames(const word& zoneType) const;
+            template<class ZonesType>
+            wordList getZoneNames(const word& zonesName) const;
 
             //- Get non-empty zone names from mesh info
-            template<class ZoneType, class ZonesType>
-            wordList getZoneNames
-            (
-                const ZoneList<ZoneType, ZonesType, polyMesh>&
-            ) const;
+            template<class ZonesType>
+            wordList getZoneNames(const ZonesType&) const;
 
             //- Add objects of Type to paraview array selection
             template<class Type>

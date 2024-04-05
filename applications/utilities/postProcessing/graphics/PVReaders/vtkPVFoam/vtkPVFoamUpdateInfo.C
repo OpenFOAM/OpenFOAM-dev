@@ -50,6 +50,7 @@ namespace Foam
 {
 
 //- A class for reading zone information without requiring a mesh
+template<class ZonesType>
 class zonesEntries
 :
     public regIOobject,
@@ -63,7 +64,7 @@ public:
         explicit zonesEntries(const IOobject& io)
         :
             regIOobject(io),
-            PtrList<entry>(readStream(word("regIOobject")))
+            PtrList<entry>(readStream(ZonesType::typeName))
         {
             close();
         }
@@ -81,20 +82,17 @@ public:
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class ZoneType, class ZonesType>
-Foam::wordList Foam::vtkPVFoam::getZoneNames
-(
-    const ZoneList<ZoneType, ZonesType, polyMesh>& zmesh
-) const
+template<class ZonesType>
+Foam::wordList Foam::vtkPVFoam::getZoneNames(const ZonesType& zones) const
 {
-    wordList names(zmesh.size());
+    wordList names(zones.size());
     label nZone = 0;
 
-    forAll(zmesh, zoneI)
+    forAll(zones, zoneI)
     {
-        if (zmesh[zoneI].size())
+        if (zones[zoneI].size())
         {
-            names[nZone++] = zmesh[zoneI].name();
+            names[nZone++] = zones[zoneI].name();
         }
     }
     names.setSize(nZone);
@@ -103,18 +101,19 @@ Foam::wordList Foam::vtkPVFoam::getZoneNames
 }
 
 
-Foam::wordList Foam::vtkPVFoam::getZoneNames(const word& zoneType) const
+template<class ZonesType>
+Foam::wordList Foam::vtkPVFoam::getZoneNames(const word& zonesName) const
 {
     wordList names;
 
     // Mesh not loaded - read from file
-    IOobject ioObj
+    typeIOobject<ZonesType> ioObj
     (
-        zoneType,
+        zonesName,
         dbPtr_().findInstance
         (
             meshDir_,
-            zoneType,
+            zonesName,
             IOobject::READ_IF_PRESENT
         ),
         meshDir_,
@@ -126,7 +125,7 @@ Foam::wordList Foam::vtkPVFoam::getZoneNames(const word& zoneType) const
 
     if (ioObj.headerOk())
     {
-        zonesEntries zones(ioObj);
+        const zonesEntries<ZonesType> zones(ioObj);
 
         names.setSize(zones.size());
         forAll(zones, zoneI)
@@ -523,7 +522,7 @@ void Foam::vtkPVFoam::updateInfoZones
     }
     else
     {
-        namesLst = getZoneNames("cellZones");
+        namesLst = getZoneNames<cellZoneList>("cellZones");
     }
 
     arrayRangeCellZones_.reset(arraySelection->GetNumberOfArrays());
@@ -544,7 +543,7 @@ void Foam::vtkPVFoam::updateInfoZones
     }
     else
     {
-        namesLst = getZoneNames("faceZones");
+        namesLst = getZoneNames<faceZoneList>("faceZones");
     }
 
     arrayRangeFaceZones_.reset(arraySelection->GetNumberOfArrays());
@@ -565,7 +564,7 @@ void Foam::vtkPVFoam::updateInfoZones
     }
     else
     {
-        namesLst = getZoneNames("pointZones");
+        namesLst = getZoneNames<pointZoneList>("pointZones");
     }
 
     arrayRangePointZones_.reset(arraySelection->GetNumberOfArrays());
