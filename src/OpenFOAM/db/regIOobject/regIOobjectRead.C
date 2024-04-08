@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,11 +166,11 @@ Foam::Istream& Foam::regIOobject::readStream
             }
             else
             {
-                FatalIOErrorInFunction(isPtr_())
-                    << "unexpected class name " << headerClassName()
-                    << " expected " << expectName << endl
+                IOWarningInFunction(isPtr_())
+                    << "Unexpected class name " << headerClassName()
+                    << ", expected " << expectName << endl
                     << "    while reading object " << name()
-                    << exit(FatalIOError);
+                    << endl;
             }
         }
     }
