@@ -1242,8 +1242,7 @@ Foam::Time& Foam::Time::operator++()
             writeOnce_ = false;
         }
 
-        // Adjust the precision of the time directory name if necessary
-        if (writeTime_)
+        // Adjust the precision of the time name if necessary
         {
             // User-time equivalent of deltaT
             const scalar userDeltaT =
@@ -1288,13 +1287,13 @@ Foam::Time& Foam::Time::operator++()
                     if (curPrecision_ == maxPrecision_)
                     {
                         // Reached maxPrecision limit
-                        WarningInFunction
+                        FatalErrorInFunction
                             << "Current time name " << dimensionedScalar::name()
                             << nl
                             << "    The maximum time precision has been reached"
                                " which might result in overwriting previous"
                                " results."
-                            << endl;
+                            << exit(FatalError);
                     }
 
                     // Check if round-off error caused time-reversal
@@ -1308,14 +1307,14 @@ Foam::Time& Foam::Time::operator++()
                         )
                     )
                     {
-                        WarningInFunction
+                        FatalErrorInFunction
                             << "Current time name " << dimensionedScalar::name()
                             << " is set to an instance prior to the "
                                "previous one "
                             << oldTimeName << nl
                             << "    This might result in temporal "
                                "discontinuities."
-                            << endl;
+                            << exit(FatalError);
                     }
                 }
             }
