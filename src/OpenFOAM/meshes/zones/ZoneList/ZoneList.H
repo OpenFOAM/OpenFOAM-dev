@@ -165,7 +165,17 @@ public:
         bool readIfPresent();
 
         //- writeData member function required by regIOobject
-        bool writeData(Ostream&) const;
+        virtual bool writeData(Ostream&) const;
+
+        //- Write using given format, version and compression
+        //  Only write the zones file if there are zones in the list
+        virtual bool writeObject
+        (
+            IOstream::streamFormat,
+            IOstream::versionNumber,
+            IOstream::compressionType,
+            const bool write
+        ) const;
 
 
     // Member Operators
