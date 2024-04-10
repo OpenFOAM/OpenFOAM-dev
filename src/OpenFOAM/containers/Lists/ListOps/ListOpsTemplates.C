@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -835,8 +835,9 @@ void Foam::inplaceRotateList(ListType<DataType>& list, label n)
 }
 
 
-template<class Type, template<class> class BinaryOp>
-Foam::List<Type> Foam::ListOp<BinaryOp<Type>>::operator()
+template<class BinaryOp>
+template<class Type>
+Foam::List<Type> Foam::ListOp<BinaryOp>::operator()
 (
     const List<Type>& a,
     const List<Type>& b
@@ -845,14 +846,15 @@ Foam::List<Type> Foam::ListOp<BinaryOp<Type>>::operator()
     List<Type> c(a.size());
     forAll(a, i)
     {
-        c[i] = BinaryOp<Type>()(a[i], b[i]);
+        c[i] = BinaryOp()(a[i], b[i]);
     }
     return c;
 }
 
 
-template<class Type, template<class> class BinaryEqOp>
-void Foam::ListEqOp<BinaryEqOp<Type>>::operator()
+template<class BinaryEqOp>
+template<class Type>
+void Foam::ListEqOp<BinaryEqOp>::operator()
 (
     List<Type>& a,
     const List<Type>& b
@@ -860,7 +862,7 @@ void Foam::ListEqOp<BinaryEqOp<Type>>::operator()
 {
     forAll(a, i)
     {
-        BinaryEqOp<Type>()(a[i], b[i]);
+        BinaryEqOp()(a[i], b[i]);
     }
 }
 

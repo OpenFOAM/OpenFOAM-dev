@@ -284,23 +284,17 @@ void inplaceRotateList(ListType<DataType>& list, label n);
 
 //- Operator to apply a binary operation to a pair of lists
 template<class BinaryOp>
-struct ListOp;
-
-//- Operator to apply a binary operation to a pair of lists
-template<class Type, template<class> class BinaryOp>
-struct ListOp<BinaryOp<Type>>
+struct ListOp
 {
+    template<class Type>
     List<Type> operator()(const List<Type>& a, const List<Type>& b) const;
 };
 
 //- Operator to apply a binary-equals operation to a pair of lists
 template<class BinaryOp>
-struct ListEqOp;
-
-//- Operator to apply a binary-equals operation to a pair of lists
-template<class Type, template<class> class BinaryEqOp>
-struct ListEqOp<BinaryEqOp<Type>>
+struct ListEqOp
 {
+    template<class Type>
     void operator()(List<Type>& a, const List<Type>& b) const;
 };
 

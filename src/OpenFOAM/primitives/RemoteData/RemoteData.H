@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,8 +95,8 @@ public:
         {
             inline void operator()
             (
-                RemoteData<Type>& x,
-                const RemoteData<Type>& y
+                RemoteData<Type>& a,
+                const RemoteData<Type>& b
             ) const;
         };
 
@@ -105,8 +105,8 @@ public:
         {
             inline void operator()
             (
-                RemoteData<Type>& x,
-                const RemoteData<Type>& y
+                RemoteData<Type>& a,
+                const RemoteData<Type>& b
             ) const;
         };
 

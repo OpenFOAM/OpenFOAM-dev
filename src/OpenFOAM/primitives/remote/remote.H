@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,6 +81,21 @@ public:
 
         //- Construct from stream
         inline remote(Istream& is);
+
+
+    // Public Classes
+
+        //- Operator to take the first valid process
+        struct firstProcOp
+        {
+            inline remote operator()(const remote& a, const remote& b) const;
+        };
+
+        //- Operator to take the first valid process
+        struct firstProcEqOp
+        {
+            inline void operator()(remote& a, const remote& b) const;
+        };
 
 
     // Friend Operators

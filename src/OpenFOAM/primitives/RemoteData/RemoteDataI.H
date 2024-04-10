@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,20 +60,13 @@ inline Foam::RemoteData<Type>::RemoteData(Istream& is)
 template<class Type>
 inline void Foam::RemoteData<Type>::smallestEqOp::operator()
 (
-    RemoteData<Type>& x,
-    const RemoteData<Type>& y
+    RemoteData<Type>& a,
+    const RemoteData<Type>& b
 ) const
 {
-    if (y.proci != -1)
+    if (b.proci != -1 && (a.proci == -1 || b.data < a.data))
     {
-        if (x.proci == -1)
-        {
-            x = y;
-        }
-        else if (y.data < x.data)
-        {
-            x = y;
-        }
+        a = b;
     }
 }
 
@@ -81,20 +74,13 @@ inline void Foam::RemoteData<Type>::smallestEqOp::operator()
 template<class Type>
 inline void Foam::RemoteData<Type>::smallestFirstEqOp::operator()
 (
-    RemoteData<Type>& x,
-    const RemoteData<Type>& y
+    RemoteData<Type>& a,
+    const RemoteData<Type>& b
 ) const
 {
-    if (y.proci != -1)
+    if (b.proci != -1 && (a.proci == -1 || b.data.first() < a.data.first()))
     {
-        if (x.proci == -1)
-        {
-            x = y;
-        }
-        else if (y.data.first() < x.data.first())
-        {
-            x = y;
-        }
+        a = b;
     }
 }
 
