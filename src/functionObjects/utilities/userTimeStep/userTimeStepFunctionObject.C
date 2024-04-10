@@ -107,7 +107,7 @@ bool Foam::functionObjects::userTimeStep::write()
     {
         writeTime(file());
 
-        file() << tab << time_.timeToUserTime(time_.deltaTValue());
+        file() << tab << time_.userDeltaTValue();
 
         file() << endl;
     }

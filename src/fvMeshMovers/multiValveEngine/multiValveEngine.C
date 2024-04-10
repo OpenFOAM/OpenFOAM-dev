@@ -133,7 +133,7 @@ Foam::scalar Foam::fvMeshMovers::multiValveEngine::userTime() const
 
 Foam::scalar Foam::fvMeshMovers::multiValveEngine::userDeltaT() const
 {
-    return mesh().time().timeToUserTime(mesh().time().deltaTValue());
+    return mesh().time().userDeltaTValue();
 }
 
 

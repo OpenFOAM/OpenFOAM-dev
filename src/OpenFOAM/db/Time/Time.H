@@ -411,6 +411,9 @@ public:
             //- Return current user time value
             scalar userTimeValue() const;
 
+            //- Return user time step value
+            scalar userDeltaTValue() const;
+
             //- Convert the user-time (e.g. CA deg) to real-time (s).
             scalar userTimeToTime(const scalar tau) const;
 

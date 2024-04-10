@@ -831,6 +831,14 @@ Foam::scalar Foam::Time::userTimeValue() const
 }
 
 
+Foam::scalar Foam::Time::userDeltaTValue() const
+{
+    return
+        userTime_->timeToUserTime(value())
+      - userTime_->timeToUserTime(value() - deltaT_);
+}
+
+
 Foam::scalar Foam::Time::userTimeToTime(const scalar tau) const
 {
     return userTime_->userTimeToTime(tau);
@@ -1245,8 +1253,7 @@ Foam::Time& Foam::Time::operator++()
         // Adjust the precision of the time name if necessary
         {
             // User-time equivalent of deltaT
-            const scalar userDeltaT =
-                timeToUserTime(value()) - timeToUserTime(value() - deltaT_);
+            const scalar userDeltaT = userDeltaTValue();
 
             // Tolerance used when testing time equivalence
             const scalar timeTol =
