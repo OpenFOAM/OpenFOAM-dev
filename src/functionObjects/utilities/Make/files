@@ -2,6 +2,7 @@ codedFunctionObject/codedFunctionObject.C
 residuals/residuals.C
 timeActivatedFileUpdate/timeActivatedFileUpdate.C
 timeStep/timeStepFunctionObject.C
+userTimeStep/userTimeStepFunctionObject.C
 setTimeStep/setTimeStepFunctionObject.C
 setWriteInterval/setWriteIntervalFunctionObject.C
 systemCall/systemCall.C
