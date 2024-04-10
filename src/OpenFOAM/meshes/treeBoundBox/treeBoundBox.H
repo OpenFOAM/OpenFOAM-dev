@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -211,6 +211,8 @@ public:
             const FixedList<label, Size>& indices
         );
 
+        //- Construct from dictionary
+        inline treeBoundBox(const dictionary&);
 
         //- Construct from Istream
         inline treeBoundBox(Istream&);

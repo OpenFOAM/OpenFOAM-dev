@@ -86,6 +86,10 @@ protected:
 
     // Protected Member Functions
 
+        //- Select the
+        template<class Type>
+        void select(const Type& zone);
+
         //- Construct the look-up map
         void calcLookupMap() const;
 
@@ -203,11 +207,8 @@ public:
         //- Clear addressing
         virtual void clearAddressing();
 
-        //- Check zone definition. Return true if in error.
-        virtual bool checkDefinition(const bool report = false) const = 0;
-
         //- Check zone definition with max size given. Return true if in error.
-        virtual bool checkDefinition
+        bool checkDefinition
         (
             const label maxSize,
             const bool report = false

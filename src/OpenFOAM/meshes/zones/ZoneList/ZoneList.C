@@ -507,7 +507,7 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::writeObject
     }
     else
     {
-        return false;
+        return true;
     }
 }
 

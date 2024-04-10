@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,12 @@ inline Foam::treeBoundBox::treeBoundBox(const point& min, const point& max)
 inline Foam::treeBoundBox::treeBoundBox(const boundBox& bb)
 :
     boundBox(bb)
+{}
+
+
+inline Foam::treeBoundBox::treeBoundBox(const dictionary& dict)
+:
+    boundBox(dict)
 {}
 
 

@@ -207,6 +207,9 @@ public:
             return flipMap_;
         }
 
+        //- Return the mesh face centres
+        const pointField& meshCentres() const;
+
         //- Return reference to primitive patch
         const primitiveFacePatch& patch() const;
 
@@ -231,11 +234,11 @@ public:
         virtual void resetAddressing(const labelUList&, const boolList&);
 
         //- Check zone definition. Return true if in error.
-        virtual bool checkDefinition(const bool report = false) const;
+        bool checkDefinition(const bool report = false) const;
 
         //- Check whether all procs have faces synchronised. Return
         //  true if in error.
-        virtual bool checkParallelSync(const bool report = false) const;
+        bool checkParallelSync(const bool report = false) const;
 
         //- Insert given indices and corresponding face flips into zone
         void insert(const Map<bool>& newIndices);

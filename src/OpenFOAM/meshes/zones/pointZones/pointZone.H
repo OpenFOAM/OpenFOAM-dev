@@ -101,12 +101,15 @@ public:
 
     // Member Functions
 
+        //- Return the mesh points
+        const pointField& meshCentres() const;
+
         //- Check zone definition. Return true if in error.
-        virtual bool checkDefinition(const bool report = false) const;
+        bool checkDefinition(const bool report = false) const;
 
         //- Check whether zone is synchronised across coupled boundaries. Return
         //  true if in error.
-        virtual bool checkParallelSync(const bool report = false) const;
+        bool checkParallelSync(const bool report = false) const;
 
         //- Update zone using the given map
         virtual void topoChange(const polyTopoChangeMap& map);

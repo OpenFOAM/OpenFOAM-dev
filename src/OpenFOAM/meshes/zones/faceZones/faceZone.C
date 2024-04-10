@@ -306,6 +306,12 @@ Foam::faceZone::~faceZone()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+const Foam::pointField& Foam::faceZone::meshCentres() const
+{
+    return zones_.mesh().faceCentres();
+}
+
+
 const Foam::primitiveFacePatch& Foam::faceZone::patch() const
 {
     if (!patchPtr_)

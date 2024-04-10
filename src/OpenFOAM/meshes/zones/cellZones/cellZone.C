@@ -45,11 +45,17 @@ const char * const Foam::cellZone::labelsName = "cellLabels";
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+const Foam::pointField& Foam::cellZone::meshCentres() const
+{
+    return zones_.mesh().cellCentres();
+}
+
+
 bool Foam::cellZone::checkDefinition(const bool report) const
 {
     return Zone::checkDefinition
     (
-        zones_.mesh().nCells(),
+        meshCentres().size(),
         report
     );
 }

@@ -46,11 +46,17 @@ const char* const Foam::pointZone::labelsName = "pointLabels";
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+const Foam::pointField& Foam::pointZone::meshCentres() const
+{
+    return zones_.mesh().points();
+}
+
+
 bool Foam::pointZone::checkDefinition(const bool report) const
 {
     return Zone::checkDefinition
     (
-        zones_.mesh().points().size(),
+        meshCentres().size(),
         report
     );
 }

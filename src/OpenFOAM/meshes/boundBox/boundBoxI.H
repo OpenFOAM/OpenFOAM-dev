@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,13 @@ inline Foam::boundBox::boundBox(const point& min, const point& max)
 :
     min_(min),
     max_(max)
+{}
+
+
+inline Foam::boundBox::boundBox(const dictionary& dict)
+:
+    min_(dict.lookup("min")),
+    max_(dict.lookup("max"))
 {}
 
 

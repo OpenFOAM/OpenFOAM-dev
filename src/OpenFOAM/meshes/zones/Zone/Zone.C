@@ -24,11 +24,33 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Zone.H"
-#include "IOstream.H"
-#include "demandDrivenData.H"
 #include "HashSet.H"
+#include "pointField.H"
+#include "demandDrivenData.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+template<class ZoneType, class ZonesType>
+template<class Type>
+void Foam::Zone<ZoneType, ZonesType>::select(const Type& zone)
+{
+    const pointField& ctrs = zone.meshCentres();
+
+    labelList& indices = *this;
+    indices.setSize(ctrs.size());
+
+    label nInZone = 0;
+    forAll(ctrs, i)
+    {
+        if (zone.contains(ctrs[i]))
+        {
+            indices[nInZone++] = i;
+        }
+    }
+
+    indices.setSize(nInZone);
+}
+
 
 template<class ZoneType, class ZonesType>
 void Foam::Zone<ZoneType, ZonesType>::calcLookupMap() const
@@ -63,19 +85,19 @@ void Foam::Zone<ZoneType, ZonesType>::topoChange
 
     labelHashSet indices;
 
-    forAll(map, celli)
+    forAll(map, i)
     {
-        if (map[celli] >= 0 && localIndex(map[celli]) != -1)
+        if (map[i] >= 0 && localIndex(map[i]) != -1)
         {
-            indices.insert(celli);
+            indices.insert(i);
         }
     }
 
-    forAll(reverseMap, celli)
+    forAll(reverseMap, i)
     {
-        if (reverseMap[celli] >= 0 && localIndex(celli) != -1)
+        if (reverseMap[i] >= 0 && localIndex(i) != -1)
         {
-            indices.insert(reverseMap[celli]);
+            indices.insert(reverseMap[i]);
         }
     }
 
