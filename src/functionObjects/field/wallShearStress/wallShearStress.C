@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,20 +150,21 @@ bool Foam::functionObjects::wallShearStress::read(const dictionary& dict)
     else
     {
         Info<< "    processing wall patches: " << nl;
+
         labelHashSet filteredPatchSet;
         forAllConstIter(labelHashSet, patchSet_, iter)
         {
-            label patchi = iter.key();
+            const label patchi = iter.key();
+            filteredPatchSet.insert(patchi);
+
             if (isA<wallPolyPatch>(pbm[patchi]))
             {
-                filteredPatchSet.insert(patchi);
                 Info<< "        " << pbm[patchi].name() << endl;
             }
             else
             {
-                WarningInFunction
-                    << "Requested wall shear stress on non-wall boundary "
-                    << "type patch: " << pbm[patchi].name() << endl;
+                Info<< "        " << pbm[patchi].name()
+                    << "    type " << pbm[patchi].type() << endl;
             }
         }
 
