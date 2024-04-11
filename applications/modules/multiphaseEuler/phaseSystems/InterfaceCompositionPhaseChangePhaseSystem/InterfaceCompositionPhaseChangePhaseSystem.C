@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,9 +183,9 @@ InterfaceCompositionPhaseChangePhaseSystem
         if (!this->diffusiveMassTransferModels_.found(interface))
         {
             FatalErrorInFunction
-                << "A diffusive mass transfer model for the " << interface
-                << " interface is not specified. This is required by the "
-                << "corresponding interface composition model."
+                << "A diffusive mass transfer model for the "
+                << interface.name() << " interface is not specified. This is "
+                << "required by the corresponding interface composition model."
                 << exit(FatalError);
         }
 

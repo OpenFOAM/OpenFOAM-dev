@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ Foam::phaseTransferModels::deposition::dmdtf() const
     {
         FatalErrorInFunction
             << "The specified droplet phase, " << dropletName_ << ", is not in "
-            << "the " << interface_ << " pair"
+            << "the " << interface_.name() << " pair"
             << exit(FatalError);
     }
 
