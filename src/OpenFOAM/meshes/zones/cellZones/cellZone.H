@@ -60,6 +60,8 @@ class cellZone
 
 public:
 
+    typedef cellZoneList ZonesType;
+
     // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
