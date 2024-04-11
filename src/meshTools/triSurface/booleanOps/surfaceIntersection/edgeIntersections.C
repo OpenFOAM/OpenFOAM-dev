@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ License
 #include "indexedOctree.H"
 #include "meshTools.H"
 #include "plane.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "unitConversion.H"
 #include "treeBoundBox.H"
 
@@ -229,7 +229,7 @@ bool Foam::edgeIntersections::inlinePerturb
     const triSurface& surf1,
     const scalarField& surf1PointTol,   // surf1 tolerance per point
     const label edgeI,
-    Random& rndGen,
+    randomGenerator& rndGen,
     pointField& points1,
     boolList& affectedEdges
 ) const
@@ -310,7 +310,7 @@ bool Foam::edgeIntersections::rotatePerturb
     const scalarField& surf1PointTol,   // surf1 tolerance per point
     const label edgeI,
 
-    Random& rndGen,
+    randomGenerator& rndGen,
     pointField& points1,
     boolList& affectedEdges
 ) const
@@ -383,7 +383,7 @@ bool Foam::edgeIntersections::offsetPerturb
     const triSurface& surf2,
     const label edgeI,
 
-    Random& rndGen,
+    randomGenerator& rndGen,
     pointField& points1,
     boolList& affectedEdges
 ) const
@@ -549,7 +549,7 @@ Foam::label Foam::edgeIntersections::removeDegenerates
 {
     const triSurface& surf2 = query2.surface();
 
-    Random rndGen(356574);
+    randomGenerator rndGen(356574);
 
     // Current set of edges to (re)test
     labelList edgesToTest(surf1.nEdges());

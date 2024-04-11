@@ -24,7 +24,7 @@
 
     mkDir(pdfPath);
 
-    Random rndGen(label(0));
+    randomGenerator rndGen(label(0));
 
     autoPtr<distribution> p
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ Foam::scalar Foam::IsotropyModels::Stochastic<CloudType>::sampleGauss()
     }
     else
     {
-        Random& rndGen = this->owner().rndGen();
+        randomGenerator& rndGen = this->owner().rndGen();
 
         scalar f, m, x, y;
 
@@ -98,7 +98,7 @@ void Foam::IsotropyModels::Stochastic<CloudType>::calculate()
 {
     const fvMesh& mesh = this->owner().mesh();
     const scalar deltaT(this->owner().db().time().deltaTValue());
-    Random& rndGen = this->owner().rndGen();
+    randomGenerator& rndGen = this->owner().rndGen();
 
     const scalar oneBySqrtThree = sqrt(1.0/3.0);
 

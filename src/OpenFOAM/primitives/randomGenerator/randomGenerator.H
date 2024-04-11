@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Random
+    Foam::randomGenerator
 
 Description
     Random number generator
@@ -37,12 +37,13 @@ Description
     details of the seeding and iteration sequence.
 
 SourceFiles
-    RandomI.H
+    randomGenerator.C
+    randomGeneratorI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Random_H
-#define Random_H
+#ifndef randomGenerator_H
+#define randomGenerator_H
 
 #include "scalar.H"
 
@@ -52,10 +53,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Random Declaration
+                       Class randomGenerator Declaration
 \*---------------------------------------------------------------------------*/
 
-class Random
+class randomGenerator
 {
     // Private Typedefs
 
@@ -92,11 +93,11 @@ public:
     // Constructors
 
         //- Construct from a seed
-        inline Random(const label s);
+        inline randomGenerator(const label s);
 
 
     //- Destructor
-    inline ~Random();
+    inline ~randomGenerator();
 
 
     // Member Functions
@@ -150,19 +151,19 @@ public:
 
 
 template<>
-inline scalar Random::sample01();
+inline scalar randomGenerator::sample01();
 
 template<>
-inline label Random::sample01();
+inline label randomGenerator::sample01();
 
 template<>
-inline scalar Random::sampleAB(const scalar& a, const scalar& b);
+inline scalar randomGenerator::sampleAB(const scalar& a, const scalar& b);
 
 template<>
-inline label Random::sampleAB(const label& a, const label& b);
+inline label randomGenerator::sampleAB(const label& a, const label& b);
 
 template<>
-inline scalar Random::sampleNormal();
+inline scalar randomGenerator::sampleNormal();
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -171,7 +172,7 @@ inline scalar Random::sampleNormal();
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "RandomI.H"
+#include "randomGeneratorI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

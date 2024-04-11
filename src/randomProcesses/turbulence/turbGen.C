@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,10 +35,10 @@ License
 
 Foam::turbGen::turbGen(const Kmesh& k, const scalar EA, const scalar K0)
 :
-    K(k),
-    Ea(EA),
-    k0(K0),
-    RanGen(label(0))
+    K_(k),
+    Ea_(EA),
+    k0_(K0),
+    rndGen_(label(0))
 {}
 
 
@@ -46,19 +46,19 @@ Foam::turbGen::turbGen(const Kmesh& k, const scalar EA, const scalar K0)
 
 Foam::vectorField Foam::turbGen::U()
 {
-    vectorField s(K.size());
-    scalarField rndPhases(K.size());
+    vectorField s(K_.size());
+    scalarField rndPhases(K_.size());
 
-    forAll(K, i)
+    forAll(K_, i)
     {
-        s[i] = RanGen.sample01<vector>();
-        rndPhases[i] = RanGen.scalar01();
+        s[i] = rndGen_.sample01<vector>();
+        rndPhases[i] = rndGen_.scalar01();
     }
 
-    s = K ^ s;
+    s = K_ ^ s;
     s = s/(mag(s) + 1.0e-20);
 
-    s = Ek(Ea, k0, mag(K))*s;
+    s = Ek(Ea_, k0_, mag(K_))*s;
 
     complexVectorField up
     (
@@ -66,7 +66,7 @@ Foam::vectorField Foam::turbGen::U()
         (
             ComplexField(cos(constant::mathematical::twoPi*rndPhases)*s,
             sin(constant::mathematical::twoPi*rndPhases)*s),
-            K.nn()
+            K_.nn()
         )
     );
 

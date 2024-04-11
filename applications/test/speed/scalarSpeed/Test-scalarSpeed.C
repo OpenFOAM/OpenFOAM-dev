@@ -1,5 +1,5 @@
 #include "primitiveFields.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "cpuTime.H"
 #include "IOstreams.H"
 #include "OFstream.H"
@@ -15,7 +15,7 @@ int main()
     const label rndAddrSkip = 40;
     const label redFac = 6;
     const label redSize = size/redFac;
-    Random genAddr(100);
+    randomGenerator rndGen(100);
 
     double* f1 = new double[size];
     double* f2 = new double[size];
@@ -38,7 +38,7 @@ int main()
 
     for (label i=0; i<size; i+=rndAddrSkip)
     {
-        addr[i] = genAddr.sampleAB<label>(0, size);
+        addr[i] = rndGen.sampleAB<label>(0, size);
     }
 
     for (label i=0; i<redSize; i++)

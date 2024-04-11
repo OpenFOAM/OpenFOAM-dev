@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class Random;
+class randomGenerator;
 
 namespace fv
 {
@@ -111,7 +111,7 @@ protected:
         typedef typename CloudType::parcelType parcelType;
 
         //- Reference to the cloud random number generator
-        Random& rndGen_;
+        randomGenerator& rndGen_;
 
 
         // Film models

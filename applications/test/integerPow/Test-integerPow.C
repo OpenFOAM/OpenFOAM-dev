@@ -1,6 +1,6 @@
 #include "cpuTime.H"
 #include "Pair.H"
-#include "Random.H"
+#include "randomGenerator.H"
 
 using namespace Foam;
 
@@ -17,7 +17,7 @@ static const label E = 4;
 template<class Pow>
 Pair<scalar> run(Pow pow)
 {
-    Random rndGen(0);
+    randomGenerator rndGen(0);
 
     cpuTime time;
 

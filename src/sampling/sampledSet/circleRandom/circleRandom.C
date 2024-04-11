@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "word.H"
 #include "mathematicalConstants.H"
-#include "Random.H"
+#include "randomGenerator.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -55,7 +55,7 @@ void Foam::sampledSets::circleRandom::calcSamples
     DynamicList<label>& samplingFaces
 ) const
 {
-    Random rndGen(261782);
+    randomGenerator rndGen(261782);
 
     const vector radial1 = normalised(perpendicular(normal_));
     const vector radial2 = normalised(normal_ ^ radial1);

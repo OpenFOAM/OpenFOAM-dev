@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ SourceFiles
 #define boundSphere_H
 
 #include "point.H"
-#include "Random.H"
+#include "randomGenerator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,7 +78,11 @@ Tuple2<point, scalar> weizlBoundSphere
 //- Compute a bounding sphere for an arbitrary number of points, and given an
 //  engine with which to randomise Weizl's algorithm
 template<class PointField>
-Tuple2<point, scalar> boundSphere(const PointField& ps, Random& rndGen);
+Tuple2<point, scalar> boundSphere
+(
+    const PointField& ps,
+    randomGenerator& rndGen
+);
 
 //- Compute a bounding sphere for an arbitrary number of points
 template<class PointField>

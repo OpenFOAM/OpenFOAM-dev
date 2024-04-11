@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -254,7 +254,7 @@ Foam::Tuple2<Foam::point, Foam::scalar> Foam::weizlBoundSphere
 
 template<class PointField>
 Foam::Tuple2<Foam::point, Foam::scalar>
-Foam::boundSphere(const PointField& ps, Random& rndGen)
+Foam::boundSphere(const PointField& ps, randomGenerator& rndGen)
 {
     if (ps.size() <= 4)
     {
@@ -283,7 +283,7 @@ Foam::boundSphere(const PointField& ps)
     else
     {
         labelList pis(identityMap(ps.size()));
-        Random(0).permute(pis);
+        randomGenerator(0).permute(pis);
         FixedList<label, 4> boundaryPis({-1, -1, -1, -1});
         return weizlBoundSphere(ps, pis, ps.size(), boundaryPis, 0);
     }

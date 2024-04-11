@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -237,7 +237,7 @@ public:
         //- Generate a random polygon for testing purposes
         static List<point> randomPolygon
         (
-            Random& rndGen,
+            randomGenerator& rndGen,
             const label n,
             const scalar error
         );

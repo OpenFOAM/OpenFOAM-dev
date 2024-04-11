@@ -39,7 +39,7 @@ void Foam::CellZoneInjection<CloudType>::setPositions
 {
     const fvMesh& mesh = this->owner().mesh();
 
-    Random& rnd = this->owner().rndGen();
+    randomGenerator& rndGen = this->owner().rndGen();
 
     const label nCells = cellZoneCells.size();
     DynamicList<barycentric> injectorCoordinates(nCells);
@@ -85,7 +85,7 @@ void Foam::CellZoneInjection<CloudType>::setPositions
         // Set new particle position and cellId
         for (label pI = 0; pI < addParticles; pI++)
         {
-            const scalar volFrac = rnd.sample01<scalar>();
+            const scalar volFrac = rndGen.sample01<scalar>();
             label tetI = 0;
             forAll(cTetVFrac, vfI)
             {
@@ -96,7 +96,7 @@ void Foam::CellZoneInjection<CloudType>::setPositions
                 }
             }
 
-            injectorCoordinates.append(barycentric01(rnd));
+            injectorCoordinates.append(barycentric01(rndGen));
             injectorCells.append(celli);
             injectorTetFaces.append(cellTetIs[tetI].face());
             injectorTetPts.append(cellTetIs[tetI].tetPt());

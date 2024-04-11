@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ SourceFiles
 #include "point.H"
 #include "primitiveFieldsFwd.H"
 #include "pointHit.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "FixedList.H"
 #include "UList.H"
 #include "triPointRef.H"
@@ -162,7 +162,7 @@ public:
 
             //- Return a random point in the tetrahedron from a
             //  uniform distribution
-            inline Point randomPoint(Random& rndGen) const;
+            inline Point randomPoint(randomGenerator& rndGen) const;
 
             //- Calculate the point from the given barycentric coordinates.
             inline Point barycentricToPoint(const barycentric& bary) const;

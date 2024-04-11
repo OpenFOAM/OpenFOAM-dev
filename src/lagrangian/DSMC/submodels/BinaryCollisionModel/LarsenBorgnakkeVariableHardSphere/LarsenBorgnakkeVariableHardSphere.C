@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Foam::scalar Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::energyRatio
 {
     CloudType& cloud(this->owner());
 
-    Random& rndGen(cloud.rndGen());
+    randomGenerator& rndGen(cloud.rndGen());
 
     scalar ChiAMinusOne = ChiA - 1;
     scalar ChiBMinusOne = ChiB - 1;
@@ -179,7 +179,7 @@ void Foam::LarsenBorgnakkeVariableHardSphere<CloudType>::collide
     scalar& EiP = pP.Ei();
     scalar& EiQ = pQ.Ei();
 
-    Random& rndGen(cloud.rndGen());
+    randomGenerator& rndGen(cloud.rndGen());
 
     scalar inverseCollisionNumber = 1/relaxationCollisionNumber_;
 

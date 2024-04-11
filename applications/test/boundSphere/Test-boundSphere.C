@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     cpuTime time;
     for (label testi = 0; testi < nTests; ++ testi)
     {
-        Random rndGen(seed + testi);
+        randomGenerator rndGen(seed + testi);
 
         // Get random points
         ps.resize(nPs);

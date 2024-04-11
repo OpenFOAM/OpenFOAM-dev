@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ SourceFiles
 
 #include "ejectionModel.H"
 #include "distribution.H"
-#include "Random.H"
+#include "randomGenerator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -97,7 +97,7 @@ class dripping
         scalar minParticlesPerParcel_;
 
         //- Random number generator
-        Random rndGen_;
+        randomGenerator rndGen_;
 
         //- Parcel size PDF model
         const autoPtr<distribution> parcelDistribution_;

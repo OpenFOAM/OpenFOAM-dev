@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -213,7 +213,10 @@ inline Foam::tensor Foam::triangle<Point, PointRef>::inertia
 
 
 template<class Point, class PointRef>
-inline Point Foam::triangle<Point, PointRef>::randomPoint(Random& rndGen) const
+inline Point Foam::triangle<Point, PointRef>::randomPoint
+(
+    randomGenerator& rndGen
+) const
 {
     return barycentricToPoint(barycentric2D01(rndGen));
 }

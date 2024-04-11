@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "barycentric2D.H"
-#include "Random.H"
+#include "randomGenerator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::barycentric2D Foam::barycentric2D01(Random& rndGen)
+Foam::barycentric2D Foam::barycentric2D01(randomGenerator& rndGen)
 {
     scalar s = rndGen.scalar01();
     scalar t = rndGen.scalar01();

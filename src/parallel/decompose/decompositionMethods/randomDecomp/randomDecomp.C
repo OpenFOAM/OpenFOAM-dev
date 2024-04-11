@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "randomDecomp.H"
 #include "clock.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -74,7 +74,7 @@ Foam::labelList Foam::randomDecomp::decompose
     const scalarField& pointWeights
 )
 {
-    Random rndGen(seed_);
+    randomGenerator rndGen(seed_);
 
     // Simple random integer. No guarantees about balance.
     /*

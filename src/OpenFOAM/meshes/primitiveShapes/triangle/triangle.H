@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ SourceFiles
 #include "vector.H"
 #include "tensor.H"
 #include "pointHit.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "FixedList.H"
 #include "UList.H"
 #include "linePointRef.H"
@@ -161,7 +161,7 @@ public:
 
             //- Return a random point on the triangle from a uniform
             //  distribution
-            inline Point randomPoint(Random& rndGen) const;
+            inline Point randomPoint(randomGenerator& rndGen) const;
 
             //- Calculate the point from the given barycentric coordinates.
             inline Point barycentricToPoint(const barycentric2D& bary) const;

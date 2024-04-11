@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
 #include "word.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "SubField.H"
 #include "barycentric2D.H"
 #include "triPointRef.H"
@@ -118,7 +118,7 @@ void Foam::sampledSets::boundaryRandom::calcSamples
     }
 
     // Generate the samples
-    Random rndGen(261782);
+    randomGenerator rndGen(261782);
     const label proci = Pstream::myProcNo();
     for (label i = 0; i < nPoints_; ++ i)
     {

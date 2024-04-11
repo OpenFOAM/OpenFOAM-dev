@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ SourceFiles
 #include "Cloud.H"
 #include "IOdictionary.H"
 #include "autoPtr.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "scalarIOField.H"
@@ -141,7 +141,7 @@ class DSMCCloud
         List<typename ParcelType::constantProperties> constProps_;
 
         //- Random number generator
-        Random rndGen_;
+        randomGenerator rndGen_;
 
 
         // boundary value fields
@@ -268,7 +268,7 @@ public:
                     constProps(label typeId) const;
 
                 //- Return references to the random object
-                inline Random& rndGen();
+                inline randomGenerator& rndGen();
 
 
             // References to the boundary fields for surface data collection

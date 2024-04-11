@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "patchInjectionBase.H"
 #include "polyMesh.H"
 #include "SubField.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "triPointRef.H"
 #include "volFields.H"
 #include "polyMeshTetDecomposition.H"
@@ -132,7 +132,7 @@ void Foam::patchInjectionBase::topoChange(const polyMesh& mesh)
 void Foam::patchInjectionBase::setPositionAndCell
 (
     const fvMesh& mesh,
-    Random& rnd,
+    randomGenerator& rndGen,
     barycentric& coordinates,
     label& celli,
     label& tetFacei,
@@ -161,7 +161,7 @@ void Foam::patchInjectionBase::setPositionAndCell
 
     const polyPatch& patch = mesh.boundaryMesh()[patchId_];
 
-    scalar area = rnd.globalScalar01()*sumProcArea_.last();
+    scalar area = rndGen.globalScalar01()*sumProcArea_.last();
 
     if (patch.size() > 0)
     {
@@ -179,7 +179,7 @@ void Foam::patchInjectionBase::setPositionAndCell
                 findArea(sumFaceTriArea_[patchFacei], area);
 
             // Set the topology
-            const barycentric2D r = barycentric2D01(rnd);
+            const barycentric2D r = barycentric2D01(rndGen);
             coordinates = barycentric(0, r.a(), r.b(), r.c());
             celli = mesh.faceOwner()[patch.start() + patchFacei];
             tetFacei = patch.start() + patchFacei;

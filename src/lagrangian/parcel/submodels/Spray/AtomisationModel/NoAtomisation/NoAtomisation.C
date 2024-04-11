@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ void Foam::NoAtomisation<CloudType>::update
     const vector& injectionPos,
     const scalar pAmbient,
     const scalar chi,
-    Random& rndGen
+    randomGenerator& rndGen
 ) const
 {}
 

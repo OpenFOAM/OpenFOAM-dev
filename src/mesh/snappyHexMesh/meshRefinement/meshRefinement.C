@@ -51,7 +51,7 @@ License
 #include "meshTools.H"
 #include "OFstream.H"
 #include "geomDecomp.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "searchableSurfaces.H"
 #include "treeBoundBox.H"
 #include "fvMeshTools.H"

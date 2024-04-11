@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,7 @@ Foam::scalar Foam::distributions::normal::sampleForZeroQ(const scalar s) const
 Foam::distributions::normal::normal
 (
     const dictionary& dict,
-    Random& rndGen,
+    randomGenerator& rndGen,
     const label sampleQ
 )
 :
@@ -133,7 +133,7 @@ Foam::distributions::normal::normal
 
 Foam::distributions::normal::normal
 (
-    Random& rndGen,
+    randomGenerator& rndGen,
     const label Q,
     const label sampleQ,
     const label n,

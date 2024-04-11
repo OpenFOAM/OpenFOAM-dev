@@ -41,7 +41,7 @@ Description
 #include "polyTopoChange.H"
 #include "fvcDiv.H"
 #include "zeroGradientFvPatchFields.H"
-#include "Random.H"
+#include "randomGenerator.H"
 
 using namespace Foam;
 
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     timeSelector::select0(runTime, args);
     #include "createMesh.H"
 
-    Random rndGen(0);
+    randomGenerator rndGen(0);
 
     // Test mapping
     // ------------

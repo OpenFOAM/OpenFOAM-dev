@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ Foam::label Foam::PatchInjection<CloudType>::nParcelsToInject
     {
         scalar nParcels = parcelsPerSecond_->integral(time0, time1);
 
-        Random& rnd = this->owner().rndGen();
+        randomGenerator& rndGen = this->owner().rndGen();
 
         label nParcelsToInject = floor(nParcels);
 
@@ -181,7 +181,7 @@ Foam::label Foam::PatchInjection<CloudType>::nParcelsToInject
         if
         (
             nParcelsToInject > 0
-         && (nParcels - scalar(nParcelsToInject) > rnd.globalScalar01())
+         && (nParcels - scalar(nParcelsToInject) > rndGen.globalScalar01())
         )
         {
             ++nParcelsToInject;

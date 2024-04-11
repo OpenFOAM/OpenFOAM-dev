@@ -67,7 +67,7 @@ SourceFiles
 namespace Foam
 {
 
-class Random;
+class randomGenerator;
 
 
 // Forward declaration of friend functions and operators

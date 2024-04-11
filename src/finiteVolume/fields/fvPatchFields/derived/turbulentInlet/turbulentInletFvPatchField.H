@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ SourceFiles
 #ifndef turbulentInletFvPatchField_H
 #define turbulentInletFvPatchField_H
 
-#include "Random.H"
+#include "randomGenerator.H"
 #include "fixedValueFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -93,7 +93,7 @@ class turbulentInletFvPatchField
     // Private Data
 
         //- Random number generator
-        Random ranGen_;
+        randomGenerator ranGen_;
 
         //- Fluctuation scale
         Type fluctuationScale_;

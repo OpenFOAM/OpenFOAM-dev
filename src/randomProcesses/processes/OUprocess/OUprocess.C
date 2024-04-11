@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,9 +37,9 @@ complexVector OUprocess::WeinerProcess(const scalar deltaT) const
 {
     return sqrt(deltaT)*complexVector
     (
-        complex(GaussGen_.scalarNormal(), GaussGen_.scalarNormal()),
-        complex(GaussGen_.scalarNormal(), GaussGen_.scalarNormal()),
-        complex(GaussGen_.scalarNormal(), GaussGen_.scalarNormal())
+        complex(rndGen_.scalarNormal(), rndGen_.scalarNormal()),
+        complex(rndGen_.scalarNormal(), rndGen_.scalarNormal()),
+        complex(rndGen_.scalarNormal(), rndGen_.scalarNormal())
     );
 }
 
@@ -53,7 +53,7 @@ OUprocess::OUprocess
     const dictionary& OUdict
 )
 :
-    GaussGen_(label(0)),
+    rndGen_(label(0)),
     Kmesh_(kmesh),
     OUfield_(Kmesh_.size()),
 

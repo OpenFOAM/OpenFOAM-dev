@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,14 +33,14 @@ Description
 #include "argList.H"
 #include "polyMesh.H"
 #include "Time.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "PackedList.H"
 
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void testPackedList(const polyMesh& mesh, Random& rndGen)
+void testPackedList(const polyMesh& mesh, randomGenerator& rndGen)
 {
     Info<< nl << "Testing PackedList synchronisation." << endl;
 
@@ -182,7 +182,7 @@ void testPackedList(const polyMesh& mesh, Random& rndGen)
 }
 
 
-void testSparseData(const polyMesh& mesh, Random& rndGen)
+void testSparseData(const polyMesh& mesh, randomGenerator& rndGen)
 {
     Info<< nl << "Testing Map synchronisation." << endl;
 
@@ -372,7 +372,7 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
 }
 
 
-void testPointSync(const polyMesh& mesh, Random& rndGen)
+void testPointSync(const polyMesh& mesh, randomGenerator& rndGen)
 {
     Info<< nl << "Testing point-wise data synchronisation." << endl;
 
@@ -440,7 +440,7 @@ void testPointSync(const polyMesh& mesh, Random& rndGen)
 }
 
 
-void testEdgeSync(const polyMesh& mesh, Random& rndGen)
+void testEdgeSync(const polyMesh& mesh, randomGenerator& rndGen)
 {
     Info<< nl << "Testing edge-wise data synchronisation." << endl;
 
@@ -517,7 +517,7 @@ void testEdgeSync(const polyMesh& mesh, Random& rndGen)
 }
 
 
-void testFaceSync(const polyMesh& mesh, Random& rndGen)
+void testFaceSync(const polyMesh& mesh, randomGenerator& rndGen)
 {
     Info<< nl << "Testing face-wise data synchronisation." << endl;
 
@@ -593,7 +593,7 @@ int main(int argc, char *argv[])
     #include "createPolyMesh.H"
 
 
-    Random rndGen(5341*(Pstream::myProcNo()+1));
+    randomGenerator rndGen(5341*(Pstream::myProcNo()+1));
 
 
     // Face sync

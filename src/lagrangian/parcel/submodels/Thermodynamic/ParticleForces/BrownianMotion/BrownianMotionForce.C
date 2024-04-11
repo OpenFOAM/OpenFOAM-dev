@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -202,15 +202,15 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
 
     // To generate a spherical distribution:
 
-    Random& rnd = this->owner().rndGen();
+    randomGenerator& rndGen = this->owner().rndGen();
 
-    const scalar theta = rnd.scalar01()*twoPi;
-    const scalar u = 2*rnd.scalar01() - 1;
+    const scalar theta = rndGen.scalar01()*twoPi;
+    const scalar u = 2*rndGen.scalar01() - 1;
 
     const scalar a = sqrt(1 - sqr(u));
     const vector dir(a*cos(theta), a*sin(theta), u);
 
-    value.Su() = f*mag(rnd.scalarNormal())*dir;
+    value.Su() = f*mag(rndGen.scalarNormal())*dir;
 
     return value;
 }

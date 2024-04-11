@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ SourceFiles
 #include "Cloud.H"
 #include "timeIOdictionary.H"
 #include "autoPtr.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "fvMatrices.H"
@@ -156,7 +156,7 @@ protected:
         const dictionary subModelProperties_;
 
         //- Random number generator - used by some injection routines
-        mutable Random rndGen_;
+        mutable randomGenerator rndGen_;
 
         //- Cell occupancy information for each parcel, (demand driven)
         autoPtr<List<DynamicList<parcelType*>>> cellOccupancyPtr_;
@@ -365,7 +365,7 @@ public:
             // Cloud data
 
                 //- Return reference to the random object
-                inline Random& rndGen() const;
+                inline randomGenerator& rndGen() const;
 
                 //- Return the cell occupancy information for each
                 //  parcel, non-const access, the caller is

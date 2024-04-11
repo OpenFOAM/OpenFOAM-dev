@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "pointToPointPlanarInterpolation.H"
 #include "boundBox.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "vector2D.H"
 #include "triSurface.H"
 #include "triSurfaceTools.H"
@@ -211,7 +211,7 @@ void Foam::pointToPointPlanarInterpolation::calcWeights
                 << nl << endl;
         }
 
-        Random rndGen(123456);
+        randomGenerator rndGen(123456);
         forAll(localVertices, i)
         {
             localVertices[i] +=

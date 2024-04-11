@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 #ifndef turbGen_H
 #define turbGen_H
 
-#include "Random.H"
+#include "randomGenerator.H"
 #include "primitiveFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -55,10 +55,10 @@ class turbGen
 {
     // Private Data
 
-        const Kmesh& K;
-        const scalar Ea;
-        const scalar k0;
-        Random RanGen;
+        const Kmesh& K_;
+        const scalar Ea_;
+        const scalar k0_;
+        randomGenerator rndGen_;
 
 
 public:

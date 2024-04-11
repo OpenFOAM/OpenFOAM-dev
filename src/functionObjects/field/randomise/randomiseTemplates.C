@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "volFields.H"
-#include "Random.H"
+#include "randomGenerator.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -38,11 +38,11 @@ bool Foam::functionObjects::randomise::calcRandomised()
         tmp<VolField<Type>> rfieldt(new VolField<Type>(field));
         VolField<Type>& rfield = rfieldt.ref();
 
-        Random rand(1234567);
+        randomGenerator rndGen(1234567);
 
         forAll(field, celli)
         {
-            Type rndPert = rand.sample01<Type>();
+            Type rndPert = rndGen.sample01<Type>();
             rndPert = 2.0*rndPert - pTraits<Type>::one;
             rndPert /= mag(rndPert);
             rfield[celli] += magPerturbation_*rndPert;

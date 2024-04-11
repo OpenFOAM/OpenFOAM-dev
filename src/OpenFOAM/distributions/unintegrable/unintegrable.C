@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -306,7 +306,7 @@ Foam::distributions::unintegrable::unintegrable
 (
     const word& name,
     const dictionary& dict,
-    Random& rndGen,
+    randomGenerator& rndGen,
     const label sampleQ
 )
 :
@@ -317,7 +317,7 @@ Foam::distributions::unintegrable::unintegrable
 
 Foam::distributions::unintegrable::unintegrable
 (
-    Random& rndGen,
+    randomGenerator& rndGen,
     const label Q,
     const label sampleQ,
     const label n

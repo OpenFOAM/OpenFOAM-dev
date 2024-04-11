@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,8 +180,8 @@ void Foam::ThermoLookupTableInjection<CloudType>::setPositionAndCell
     label injectorI = 0;
     if (randomise_)
     {
-        Random& rnd = this->owner().rndGen();
-        injectorI = rnd.sampleAB<label>(0, injectorCells_.size());
+        randomGenerator& rndGen = this->owner().rndGen();
+        injectorI = rndGen.sampleAB<label>(0, injectorCells_.size());
     }
     else
     {

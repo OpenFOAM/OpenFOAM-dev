@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ SourceFiles
 #include "potential.H"
 #include "InteractionLists.H"
 #include "labelVector.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "fileName.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -70,7 +70,7 @@ class moleculeCloud
 
         List<molecule::constantProperties> constPropList_;
 
-        Random rndGen_;
+        randomGenerator rndGen_;
 
 
     // Private Member Functions
@@ -191,7 +191,7 @@ public:
             inline const molecule::constantProperties&
                 constProps(label id) const;
 
-            inline Random& rndGen();
+            inline randomGenerator& rndGen();
 
 
     // Member Functions

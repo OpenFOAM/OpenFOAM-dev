@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ SourceFiles
 #define distribution_H
 
 #include "dictionary.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "scalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -79,7 +79,7 @@ protected:
     // Protected data
 
         //- Reference to a random number generator
-        Random& rndGen_;
+        randomGenerator& rndGen_;
 
         //- Distribution size exponent
         const label Q_;
@@ -124,7 +124,7 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            Random& rndGen,
+            randomGenerator& rndGen,
             const label sampleQ
         ),
         (dict, rndGen, sampleQ)
@@ -138,12 +138,17 @@ public:
         (
             const word& name,
             const dictionary& dict,
-            Random& rndGen,
+            randomGenerator& rndGen,
             const label sampleQ
         );
 
         //- Construct from components
-        distribution(Random& rndGen, const label Q, const label sampleQ);
+        distribution
+        (
+            randomGenerator& rndGen,
+            const label Q,
+            const label sampleQ
+        );
 
         //- Construct copy
         distribution(const distribution& d, const label sampleQ);
@@ -162,7 +167,7 @@ public:
     static autoPtr<distribution> New
     (
         const dictionary& dict,
-        Random& rndGen,
+        randomGenerator& rndGen,
         const label sampleQ
     );
 

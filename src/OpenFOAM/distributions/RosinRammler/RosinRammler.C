@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ Foam::tmp<Foam::scalarField> Foam::distributions::RosinRammler::Phi
 Foam::distributions::RosinRammler::RosinRammler
 (
     const dictionary& dict,
-    Random& rndGen,
+    randomGenerator& rndGen,
     const label sampleQ
 )
 :

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
     scalar& tTurb
 )
 {
-    Random& rnd = this->owner().rndGen();
+    randomGenerator& rndGen = this->owner().rndGen();
 
     const scalar cps = 0.16432;
 
@@ -99,13 +99,13 @@ Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
             // Calculate a random direction dir distributed uniformly
             // in spherical coordinates
 
-            const scalar theta = rnd.scalar01()*twoPi;
-            const scalar u = 2*rnd.scalar01() - 1;
+            const scalar theta = rndGen.scalar01()*twoPi;
+            const scalar u = 2*rndGen.scalar01() - 1;
 
             const scalar a = sqrt(1 - sqr(u));
             const vector dir(a*cos(theta), a*sin(theta), u);
 
-            UTurb = sigma*mag(rnd.scalarNormal())*dir;
+            UTurb = sigma*mag(rndGen.scalarNormal())*dir;
         }
     }
     else

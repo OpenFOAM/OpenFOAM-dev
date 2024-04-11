@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "irregular.H"
 #include "mathematicalConstants.H"
 #include "OSspecific.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "rawSetWriter.H"
 #include "writeFile.H"
 #include "addToRunTimeSelectionTable.H"
@@ -135,7 +135,7 @@ Foam::waveModels::irregular::irregular
     }
 
     // Set random phases
-    Random rndGen(0);
+    randomGenerator rndGen(0);
     forAll(phases_, i)
     {
         phases_[i] = rndGen.scalarAB(0, constant::mathematical::twoPi);

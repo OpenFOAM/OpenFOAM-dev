@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
 
 #include "IStringStream.H"
 #include "Polynomial.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "cpuTime.H"
 
 using namespace Foam;
@@ -136,10 +136,10 @@ int main(int argc, char *argv[])
     polyCopy = 2.5*poly;
     Info<< "2.5*poly = " << polyCopy << nl << endl;
 
-    Random rnd(123456);
+    randomGenerator rndGen(123456);
     for (int i=0; i<10; i++)
     {
-        scalar x = rnd.scalar01()*100;
+        scalar x = rndGen.scalar01()*100;
 
         scalar px = polyValue(x);
         scalar ipx = intPolyValue(x);

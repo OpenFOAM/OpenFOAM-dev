@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     static const label nSamples = 10000000;
 
     // Initialise the random number generator
-    Random rndGen(clock::getTime());
+    randomGenerator rndGen(clock::getTime());
 
     // Create a zero-size-exponent, zero-sampling-size-exponent distribution
     // from which to get X-coordinates

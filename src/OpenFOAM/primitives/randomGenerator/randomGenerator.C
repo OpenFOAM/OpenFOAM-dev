@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,12 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Random.H"
+#include "randomGenerator.H"
 #include "PstreamReduceOps.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::scalar Foam::Random::scalarNormal()
+Foam::scalar Foam::randomGenerator::scalarNormal()
 {
     // Proper inversion of the distribution. Slow. Exactly maintains
     // the random behaviour of the generator.
@@ -91,7 +91,7 @@ Foam::scalar Foam::Random::scalarNormal()
 }
 
 
-Foam::scalar Foam::Random::globalScalar01()
+Foam::scalar Foam::randomGenerator::globalScalar01()
 {
     scalar value = - vGreat;
 

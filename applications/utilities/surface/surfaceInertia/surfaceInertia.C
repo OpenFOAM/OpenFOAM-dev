@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
 #include "triSurface.H"
 #include "OFstream.H"
 #include "meshTools.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "transform.H"
 #include "IOmanip.H"
 #include "Pair.H"
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 
     label pertI = 0;
 
-    Random rand(57373);
+    randomGenerator rndGen(57373);
 
     while ((magSqr(eVal) < vSmall) && pertI < 10)
     {
@@ -122,9 +122,9 @@ int main(int argc, char *argv[])
             << "No eigenValues found, shape may have symmetry, "
             << "perturbing inertia tensor diagonal" << endl;
 
-        J.xx() *= 1.0 + small*rand.scalar01();
-        J.yy() *= 1.0 + small*rand.scalar01();
-        J.zz() *= 1.0 + small*rand.scalar01();
+        J.xx() *= 1.0 + small*rndGen.scalar01();
+        J.yy() *= 1.0 + small*rndGen.scalar01();
+        J.zz() *= 1.0 + small*rndGen.scalar01();
 
         eVal = eigenValues(J);
 

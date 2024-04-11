@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -378,7 +378,7 @@ inline const Foam::molecule::constantProperties&
 }
 
 
-inline Foam::Random& Foam::moleculeCloud::rndGen()
+inline Foam::randomGenerator& Foam::moleculeCloud::rndGen()
 {
     return rndGen_;
 }

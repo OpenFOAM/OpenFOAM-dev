@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -301,7 +301,7 @@ Foam::star::context Foam::star::populate
 
     /*
     // Randomise swapping
-    static Random rndGen(12345);
+    static randomGenerator rndGen(12345);
     const label starEdgeiA = rndGen.sampleAB<label>(0, starEdgeEdges_.size());
     const label starEdgeiB = rndGen.sampleAB<label>(0, starEdgeEdges_.size());
     swapStarEdges(starEdgeiA, starEdgeiB);

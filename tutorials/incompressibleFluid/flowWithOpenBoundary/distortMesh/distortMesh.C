@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 
 #include "argList.H"
 #include "fvMesh.H"
-#include "Random.H"
+#include "randomGenerator.H"
 
 using namespace Foam;
 
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
         mesh.bounds().min() - boundExtend,
         mesh.bounds().max() + boundExtend
     );
-    Random RanGen(0);
+    randomGenerator rndGen(0);
     const scalar s(0.04);
 
     forAll(points, i)
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
         if (bounds.containsInside(pi))
         {
-            disp[i] += cmptMultiply(RanGen.sample01<vector>(),vector(s, s, 0));
+            disp[i] += cmptMultiply(rndGen.sample01<vector>(),vector(s, s, 0));
         }
     }
 

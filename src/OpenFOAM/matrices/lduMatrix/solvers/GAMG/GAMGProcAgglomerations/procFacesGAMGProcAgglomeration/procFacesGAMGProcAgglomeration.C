@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "procFacesGAMGProcAgglomeration.H"
 #include "addToRunTimeSelectionTable.H"
 #include "GAMGAgglomeration.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "lduMesh.H"
 #include "processorLduInterface.H"
 #include "processorGAMGInterface.H"
@@ -253,7 +253,7 @@ bool Foam::procFacesGAMGProcAgglomeration::agglomerate()
 
     if (agglom_.size() >= 1)
     {
-        Random rndGen(0);
+        randomGenerator rndGen(0);
 
         for
         (

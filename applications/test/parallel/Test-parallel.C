@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Description
 #include "OPstream.H"
 #include "vector.H"
 #include "IOstreams.H"
-#include "Random.H"
+#include "randomGenerator.H"
 #include "Tuple2.H"
 
 using namespace Foam;
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
     if (true)
     {
-        Random rndGen(43544*Pstream::myProcNo());
+        randomGenerator rndGen(43544*Pstream::myProcNo());
 
         // Generate random data.
         List<Tuple2<label, List<scalar>>> complexData(100);

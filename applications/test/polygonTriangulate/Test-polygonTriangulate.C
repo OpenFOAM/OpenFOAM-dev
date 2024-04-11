@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
         Info<< "Seeding random number generator with value " << seed
             << nl << endl;
     }
-    Random rndGen(seed);
+    randomGenerator rndGen(seed);
 
     // Get controls
     const bool simple = args.optionFound("simple");

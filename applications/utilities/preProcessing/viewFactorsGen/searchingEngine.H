@@ -1,4 +1,4 @@
-Random rndGen(653213);
+randomGenerator rndGen(653213);
 
 // Determine mesh bounding boxes:
 List<treeBoundBox> meshBb
