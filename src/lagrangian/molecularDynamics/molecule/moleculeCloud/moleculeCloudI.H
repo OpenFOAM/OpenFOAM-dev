@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constants.H"
+#include "standardNormal.H"
 
 using namespace Foam::constant;
 
@@ -303,7 +304,7 @@ inline Foam::vector Foam::moleculeCloud::equipartitionLinearVelocity
 {
     return
         sqrt(physicoChemical::k.value()*temperature/mass)
-       *rndGen_.sampleNormal<vector>();
+       *distributions::standardNormal(rndGen_).sample<vector>();
 }
 
 
@@ -315,22 +316,24 @@ inline Foam::vector Foam::moleculeCloud::equipartitionAngularMomentum
 {
     scalar sqrtKbT = sqrt(physicoChemical::k.value()*temperature);
 
+    distributions::standardNormal stdNormal(rndGen_);
+
     if (cP.linearMolecule())
     {
         return sqrtKbT*vector
         (
             0.0,
-            sqrt(cP.momentOfInertia().yy())*rndGen_.scalarNormal(),
-            sqrt(cP.momentOfInertia().zz())*rndGen_.scalarNormal()
+            sqrt(cP.momentOfInertia().yy())*stdNormal.sample(),
+            sqrt(cP.momentOfInertia().zz())*stdNormal.sample()
         );
     }
     else
     {
         return sqrtKbT*vector
         (
-            sqrt(cP.momentOfInertia().xx())*rndGen_.scalarNormal(),
-            sqrt(cP.momentOfInertia().yy())*rndGen_.scalarNormal(),
-            sqrt(cP.momentOfInertia().zz())*rndGen_.scalarNormal()
+            sqrt(cP.momentOfInertia().xx())*stdNormal.sample(),
+            sqrt(cP.momentOfInertia().yy())*stdNormal.sample(),
+            sqrt(cP.momentOfInertia().zz())*stdNormal.sample()
         );
     }
 }

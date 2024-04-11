@@ -75,12 +75,6 @@ class randomGenerator
         //- The stored integer
         type x_;
 
-        //- Is a normal scalar sample stored?
-        bool scalarNormalStored_;
-
-        //- A stored normal scalar sample
-        scalar scalarNormalValue_;
-
 
     // Private Member Functions
 
@@ -112,10 +106,6 @@ public:
             //  distribution between two limits
             inline scalar scalarAB(const scalar a, const scalar b);
 
-            //- Advance the state and return a scalar sample from a normal
-            //  distribution with mean zero and standard deviation one
-            scalar scalarNormal();
-
 
         // Other types
 
@@ -128,11 +118,6 @@ public:
             //  uniform distribution between two limits
             template<class Type>
             inline Type sampleAB(const Type& a, const Type& b);
-
-            //- Advance the state and return a sample of a given type from a
-            //  normal distribution with mean zero and standard deviation one
-            template<class Type>
-            inline Type sampleNormal();
 
 
         // Global scalars
@@ -161,9 +146,6 @@ inline scalar randomGenerator::sampleAB(const scalar& a, const scalar& b);
 
 template<>
 inline label randomGenerator::sampleAB(const label& a, const label& b);
-
-template<>
-inline scalar randomGenerator::sampleNormal();
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -719,6 +719,7 @@ distributions/fixedValue/fixedValue.C
 distributions/multiNormal/multiNormal.C
 distributions/normal/normal.C
 distributions/RosinRammler/RosinRammler.C
+distributions/standardNormal/standardNormal.C
 distributions/tabulatedCumulative/tabulatedCumulative.C
 distributions/tabulatedDensity/tabulatedDensity.C
 distributions/uniform/uniform.C

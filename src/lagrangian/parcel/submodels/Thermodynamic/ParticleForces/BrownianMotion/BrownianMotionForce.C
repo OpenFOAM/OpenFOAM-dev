@@ -28,29 +28,11 @@ License
 #include "fundamentalConstants.H"
 #include "demandDrivenData.H"
 #include "momentumTransportModel.H"
+#include "standardNormal.H"
 
 using namespace Foam::constant;
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
-
-template<class CloudType>
-Foam::scalar Foam::BrownianMotionForce<CloudType>::erfInv(const scalar y) const
-{
-    const scalar a = 0.147;
-    scalar k = 2.0/(mathematical::pi*a) +  0.5*log(1.0 - y*y);
-    scalar h = log(1.0 - y*y)/a;
-    scalar x = sqrt(-k + sqrt(k*k - h));
-
-    if (y < 0.0)
-    {
-        return -x;
-    }
-    else
-    {
-        return x;
-    }
-}
-
 
 template<class CloudType>
 Foam::tmp<Foam::volScalarField>
@@ -189,28 +171,18 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
         f = mass*sqrt(mathematical::pi*s0/dt);
     }
 
+    randomGenerator& rndGen = this->owner().rndGen();
+    distributions::standardNormal stdNormal(rndGen);
 
-    // To generate a cubic distribution (3 independent directions) :
-    // const scalar sqrt2 = sqrt(2.0);
-    // for (direction dir = 0; dir < vector::nComponents; dir++)
-    // {
-    //     const scalar x = rndGen_.sample01<scalar>();
-    //     const scalar eta = sqrt2*erfInv(2*x - 1.0);
-    //     value.Su()[dir] = f*eta;
-    // }
-
+    // To generate a cubic distribution (i.e., 3 independent directions):
+    // value.Su() = f*stdNormal.sample<vector>();
 
     // To generate a spherical distribution:
-
-    randomGenerator& rndGen = this->owner().rndGen();
-
     const scalar theta = rndGen.scalar01()*twoPi;
     const scalar u = 2*rndGen.scalar01() - 1;
-
     const scalar a = sqrt(1 - sqr(u));
     const vector dir(a*cos(theta), a*sin(theta), u);
-
-    value.Su() = f*mag(rndGen.scalarNormal())*dir;
+    value.Su() = f*mag(stdNormal.sample())*dir;
 
     return value;
 }

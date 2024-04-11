@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "normal.H"
+#include "standardNormal.H"
 #include "mathematicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -39,28 +40,7 @@ namespace distributions
 }
 
 
-const Foam::scalar Foam::distributions::normal::a_ = 0.147;
-
-
 using namespace Foam::constant::mathematical;
-
-
-// * * * * * * * * * * * Private Static Member Functions * * * * * * * * * * //
-
-Foam::tmp<Foam::scalarField> Foam::distributions::normal::approxErf
-(
-    const scalarField& x
-)
-{
-    return sign(x)*sqrt(1 - exp(-sqr(x)*(4/pi + a_*sqr(x))/(1 + a_*sqr(x))));
-}
-
-
-Foam::scalar Foam::distributions::normal::approxErfInv(const scalar y)
-{
-    const scalar l = log(1 - y*y), b = 2/(pi*a_) + l/2;
-    return sign(y)*sqrt(-b + sqrt(b*b - l/a_));
-}
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -85,7 +65,7 @@ Foam::tmp<Foam::scalarField> Foam::distributions::normal::Phi
     if (q == 0)
     {
         static const scalar sqrt2 = sqrt(scalar(2));
-        return (1 + approxErf((x - mu_)/(sigma_*sqrt2)))/2;
+        return (1 + standardNormal::approxErf((x - mu_)/(sigma_*sqrt2)))/2;
     }
     else
     {
@@ -99,7 +79,7 @@ Foam::scalar Foam::distributions::normal::sampleForZeroQ(const scalar s) const
     static const scalar sqrt2 = sqrt(scalar(2));
     const Pair<scalar>& Phi01 = this->Phi01();
     const scalar PhiS = (1 - s)*Phi01[0] + s*Phi01[1];
-    return approxErfInv(2*PhiS - 1)*sigma_*sqrt2 + mu_;
+    return standardNormal::approxErfInv(2*PhiS - 1)*sigma_*sqrt2 + mu_;
 }
 
 

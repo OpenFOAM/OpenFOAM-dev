@@ -26,6 +26,7 @@ License
 #include "GradientDispersionRAS.H"
 #include "demandDrivenData.H"
 #include "fvcGrad.H"
+#include "standardNormal.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -100,7 +101,7 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
     scalar& tTurb
 )
 {
-    randomGenerator& rndGen = this->owner().rndGen();
+    distributions::standardNormal stdNormal(this->owner().rndGen());
 
     const scalar cps = 0.16432;
 
@@ -135,11 +136,11 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
             // prevent this we let fac be both negative/positive
             if (this->owner().mesh().nSolutionD() == 2)
             {
-                fac = rndGen.scalarNormal();
+                fac = stdNormal.sample();
             }
             else
             {
-                fac = mag(rndGen.scalarNormal());
+                fac = mag(stdNormal.sample());
             }
 
             UTurb = sigma*fac*dir;

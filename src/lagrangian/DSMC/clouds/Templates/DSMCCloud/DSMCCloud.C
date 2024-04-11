@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,7 @@ License
 #include "constants.H"
 #include "zeroGradientFvPatchFields.H"
 #include "polyMeshTetDecomposition.H"
+#include "standardNormal.H"
 
 using namespace Foam::constant;
 
@@ -1042,7 +1043,7 @@ Foam::vector Foam::DSMCCloud<ParcelType>::equipartitionLinearVelocity
 {
     return
         sqrt(physicoChemical::k.value()*temperature/mass)
-       *rndGen_.sampleNormal<vector>();
+       *distributions::standardNormal(rndGen_).sample<vector>();
 }
 
 

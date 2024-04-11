@@ -82,9 +82,6 @@ class BrownianMotionForce
 
     // Private Member Functions
 
-        //- Inverse erf for Gaussian distribution
-        scalar erfInv(const scalar y) const;
-
         //- Return the k field from the turbulence model
         tmp<volScalarField> kModel() const;
 

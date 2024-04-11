@@ -61,6 +61,7 @@ SourceFiles
 
 #include "dictionary.H"
 #include "randomGenerator.H"
+#include "fieldTypes.H"
 #include "scalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -109,10 +110,16 @@ protected:
             return sampleQ_ - Q_;
         }
 
+        //- Sample the distribution into components of a primitive type
+        #define VIRTUAL_SAMPLE_TYPE(Type, nullArg)                             \
+            virtual Type CAT(sample, CAPITALIZE(Type))() const = 0;
+        FOR_ALL_FIELD_TYPES(VIRTUAL_SAMPLE_TYPE);
+        #undef VIRTUAL_SAMPLE_TYPE
+
 
 public:
 
-    //-Runtime type information
+    //- Runtime type information
     TypeName("distribution");
 
 
@@ -181,7 +188,11 @@ public:
         //- Sample the distribution
         virtual scalar sample() const = 0;
 
-        //- Sample the distribution
+        //- Sample the distribution into components of a primitive type
+        template<class Type>
+        Type sample() const;
+
+        //- Sample the distribution into a field
         virtual tmp<scalarField> sample(const label n) const = 0;
 
         //- Return the minimum value
@@ -204,6 +215,16 @@ public:
 };
 
 
+#define DISTRIBUTION_TEMPLATED_SAMPLE_TYPE(Type, nullArg)                      \
+    template<>                                                                 \
+    inline Type Foam::distribution::sample<Type>() const                       \
+    {                                                                          \
+        return CAT(sample, CAPITALIZE(Type))();                                \
+    }
+FOR_ALL_FIELD_TYPES(DISTRIBUTION_TEMPLATED_SAMPLE_TYPE);
+#undef DISTRIBUTION_TEMPLATED_SAMPLE_TYPE
+
+
 /*---------------------------------------------------------------------------*\
                       Class FieldDistribution Declaration
 \*---------------------------------------------------------------------------*/
@@ -213,6 +234,20 @@ class FieldDistribution
 :
     public Base
 {
+protected:
+
+    // Protected Member Functions
+
+        //- Sample the distribution into components of a primitive type
+        #define VIRTUAL_SAMPLE_TYPE(Type, nullArg)                             \
+            virtual Type CAT(sample, CAPITALIZE(Type))() const                 \
+            {                                                                  \
+                return sample<Type>();                                         \
+            }
+        FOR_ALL_FIELD_TYPES(VIRTUAL_SAMPLE_TYPE);
+        #undef VIRTUAL_SAMPLE_TYPE
+
+
 public:
 
     // Constructors
@@ -226,7 +261,20 @@ public:
         //- Sample the distribution
         using Base::sample;
 
-        //- Sample the distribution
+        //- Sample the distribution into components of a primitive type
+        template<class Type>
+        Type sample() const
+        {
+            Type value;
+            for (direction i = 0; i < pTraits<Type>::nComponents; ++ i)
+            {
+                setComponent(value, i) =
+                    static_cast<const Derived&>(*this).sample();
+            }
+            return value;
+        }
+
+        //- Sample the distribution into a field
         virtual tmp<scalarField> sample(const label n) const
         {
             tmp<scalarField> tResult(new scalarField(n));

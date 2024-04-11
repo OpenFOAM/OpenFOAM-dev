@@ -27,6 +27,7 @@ License
 #include "constants.H"
 #include "triPointRef.H"
 #include "tetIndices.H"
+#include "standardNormal.H"
 
 using namespace Foam::constant::mathematical;
 
@@ -146,6 +147,7 @@ void Foam::FreeStream<CloudType>::inflow()
     const scalar deltaT = mesh.time().deltaTValue();
 
     randomGenerator& rndGen(cloud.rndGen());
+    distributions::standardNormal stdNormal(rndGen);
 
     scalar sqrtPi = sqrt(pi);
 
@@ -388,10 +390,7 @@ void Foam::FreeStream<CloudType>::inflow()
 
                     vector U =
                         sqrt(physicoChemical::k.value()*faceTemperature/mass)
-                       *(
-                            rndGen.scalarNormal()*t1
-                          + rndGen.scalarNormal()*t2
-                        )
+                       *(stdNormal.sample()*t1 + stdNormal.sample()*t2)
                       + (t1 & faceVelocity)*t1
                       + (t2 & faceVelocity)*t2
                       + mostProbableSpeed*uNormal*n;

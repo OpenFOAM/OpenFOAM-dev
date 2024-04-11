@@ -25,6 +25,7 @@ License
 
 #include "MaxwellianThermal.H"
 #include "constants.H"
+#include "standardNormal.H"
 
 using namespace Foam::constant;
 
@@ -81,6 +82,7 @@ void Foam::MaxwellianThermal<CloudType>::correct
     CloudType& cloud(this->owner());
 
     randomGenerator& rndGen(cloud.rndGen());
+    distributions::standardNormal stdNormal(rndGen);
 
     while (mag(Ut) < small)
     {
@@ -115,8 +117,8 @@ void Foam::MaxwellianThermal<CloudType>::correct
     U =
         sqrt(physicoChemical::k.value()*T/mass)
        *(
-            rndGen.scalarNormal()*tw1
-          + rndGen.scalarNormal()*tw2
+            stdNormal.sample()*tw1
+          + stdNormal.sample()*tw2
           - sqrt(-2.0*log(max(1 - rndGen.scalar01(), vSmall)))*nw
         );
 

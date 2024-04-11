@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,40 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::distributions::normal
+    Foam::distributions::standardNormal
 
 Description
-    Normal distribution, scaled so that it spans between a specified
-    minimum and maximum value, rather than from zero to infinity
+    Standard normal distribution. Not selectable.
 
     \f[
-        PDF(x) = \frac{1}{\sigma \sqrt{2 \pi}} \exp \\
-        \left( - \frac{1}{2} \left( \frac{x - \mu}{\sigma} \right)^2 \right)
+        PDF(x) = \frac{1}{\sqrt{2 \pi}} \exp \left( - \frac{1}{2} x^2 \right)
     \f]
 
-Usage
-    Example usage:
-    \verbatim
-    {
-        type    normal;
-        Q       0;
-        min     0.001;
-        max     0.019;
-        mu      0.011;
-        sigma   0.003;
-    }
-    \endverbatim
-
 SourceFiles
-    normal.C
+    standardNormal.C
 
 See also
     Foam::distribution
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef normal_H
-#define normal_H
+#ifndef standardNormal_H
+#define standardNormal_H
 
 #include "unintegrable.H"
 
@@ -67,95 +52,55 @@ namespace distributions
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class normal Declaration
+                        Class standardNormal Declaration
 \*---------------------------------------------------------------------------*/
 
-class normal
+class standardNormal
 :
-    public FieldDistribution<unintegrableForNonZeroQ, normal>
+    public FieldDistribution<distribution, standardNormal>
 {
     // Private Data
 
-        //- Minimum value
-        const scalar min_;
-
-        //- Maximum value
-        const scalar max_;
-
-        //- Mean
-        const scalar mu_;
-
-        //- Standard deviation
-        const scalar sigma_;
-
-
-    // Private Member Functions
-
-        //- Return values of the un-normalised PDF for the given size exponent
-        //  and x-coordinates.
-        virtual tmp<scalarField> phi
-        (
-            const label q,
-            const scalarField& x
-        ) const;
-
-        //- Return values of the un-normalised CDF for the given size exponent
-        //  and x-coordinates.
-        virtual tmp<scalarField> Phi
-        (
-            const label q,
-            const scalarField& x
-        ) const;
-
-        //- Sample the distribution for zero effective size exponent
-        scalar sampleForZeroQ(const scalar s) const;
+        //- Constant for approximate error function and inverse error function
+        static const scalar a_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("normal");
+    TypeName("standardNormal");
 
 
     //- Permit the multiNormal distribution to use private parts of this class
     friend class multiNormal;
 
 
+    // Static Member Functions
+
+        //- Approximate error function
+        static tmp<scalarField> approxErf(const scalarField& x);
+
+        //- Approximate error function inverse
+        static scalar approxErfInv(const scalar y);
+
+
     // Constructors
 
-        //- Construct from a dictionary
-        normal
-        (
-            const dictionary& dict,
-            randomGenerator& rndGen,
-            const label sampleQ
-        );
-
-        //- Construct from components
-        normal
-        (
-            randomGenerator& rndGen,
-            const label Q,
-            const label sampleQ,
-            const label n,
-            const scalar min,
-            const scalar max,
-            const scalar mu,
-            const scalar sigma
-        );
+        //- Construct from a random generator
+        standardNormal(randomGenerator& rndGen);
 
         //- Construct copy
-        normal(const normal& d, const label sampleQ);
+        standardNormal(const standardNormal& d);
 
         //- Construct and return a clone
         virtual autoPtr<distribution> clone(const label sampleQ) const
         {
-            return autoPtr<distribution>(new normal(*this, sampleQ));
+            return autoPtr<distribution>(new standardNormal(*this));
         }
 
 
     //- Destructor
-    virtual ~normal();
+    virtual ~standardNormal();
 
 
     // Member Functions
@@ -164,7 +109,7 @@ public:
         virtual scalar sample() const;
 
         //- Sample the distribution
-        using FieldDistribution<unintegrableForNonZeroQ, normal>::sample;
+        using FieldDistribution<distribution, standardNormal>::sample;
 
         //- Return the minimum value
         virtual scalar min() const;
@@ -177,6 +122,9 @@ public:
 
         //- Return coordinates to plot across the range of the distribution
         virtual tmp<scalarField> x(const label n) const;
+
+        //- Return the distribution probability density function
+        virtual tmp<scalarField> PDF(const scalarField& x) const;
 };
 
 

@@ -25,6 +25,7 @@ License
 
 #include "StochasticDispersionRAS.H"
 #include "constants.H"
+#include "standardNormal.H"
 
 using namespace Foam::constant::mathematical;
 
@@ -72,6 +73,7 @@ Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
 )
 {
     randomGenerator& rndGen = this->owner().rndGen();
+    distributions::standardNormal stdNormal(rndGen);
 
     const scalar cps = 0.16432;
 
@@ -105,7 +107,7 @@ Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
             const scalar a = sqrt(1 - sqr(u));
             const vector dir(a*cos(theta), a*sin(theta), u);
 
-            UTurb = sigma*mag(rndGen.scalarNormal())*dir;
+            UTurb = sigma*mag(stdNormal.sample())*dir;
         }
     }
     else

@@ -30,7 +30,6 @@ License
 inline Foam::randomGenerator::type Foam::randomGenerator::sample()
 {
     x_ = (A*x_ + C) % M;
-
     return x_ >> 17;
 }
 
@@ -39,9 +38,7 @@ inline Foam::randomGenerator::type Foam::randomGenerator::sample()
 
 inline Foam::randomGenerator::randomGenerator(const label s)
 :
-    x_((type(s) << 16) + 0x330E),
-    scalarNormalStored_(false),
-    scalarNormalValue_(0)
+    x_((type(s) << 16) + 0x330E)
 {}
 
 
@@ -123,27 +120,6 @@ inline Foam::label Foam::randomGenerator::sampleAB
 )
 {
     return a + sample() % (b - a);
-}
-
-
-template<class Type>
-inline Type Foam::randomGenerator::sampleNormal()
-{
-    Type value;
-
-    for (direction i = 0; i < pTraits<Type>::nComponents; ++ i)
-    {
-        value.component(i) = scalarNormal();
-    }
-
-    return value;
-}
-
-
-template<>
-inline Foam::scalar Foam::randomGenerator::sampleNormal()
-{
-    return scalarNormal();
 }
 
 
