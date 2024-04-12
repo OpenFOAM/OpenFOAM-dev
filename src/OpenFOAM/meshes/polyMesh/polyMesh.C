@@ -217,7 +217,7 @@ Foam::polyMesh::polyMesh(const IOobject& io)
         IOobject
         (
             "boundary",
-            time().findInstance(meshDir(), "boundary"),
+            faces_.instance(),
             meshSubDir,
             *this,
             IOobject::MUST_READ,
@@ -240,7 +240,8 @@ Foam::polyMesh::polyMesh(const IOobject& io)
             (
                 meshDir(),
                 "pointZones",
-                IOobject::READ_IF_PRESENT
+                IOobject::READ_IF_PRESENT,
+                faces_.instance()
             ),
             meshSubDir,
             *this,
@@ -258,7 +259,8 @@ Foam::polyMesh::polyMesh(const IOobject& io)
             (
                 meshDir(),
                 "faceZones",
-                IOobject::READ_IF_PRESENT
+                IOobject::READ_IF_PRESENT,
+                faces_.instance()
             ),
             meshSubDir,
             *this,
@@ -276,7 +278,8 @@ Foam::polyMesh::polyMesh(const IOobject& io)
             (
                 meshDir(),
                 "cellZones",
-                IOobject::READ_IF_PRESENT
+                IOobject::READ_IF_PRESENT,
+                faces_.instance()
             ),
             meshSubDir,
             *this,
@@ -304,7 +307,7 @@ Foam::polyMesh::polyMesh(const IOobject& io)
             IOobject
             (
                 "cells",
-                time().findInstance(meshDir(), "cells"),
+                faces_.instance(),
                 meshSubDir,
                 *this,
                 IOobject::MUST_READ,
