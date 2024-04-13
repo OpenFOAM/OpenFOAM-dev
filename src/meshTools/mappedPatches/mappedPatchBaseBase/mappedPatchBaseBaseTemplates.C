@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,8 @@ void Foam::mappedPatchBaseBase::validateMapForField
         OStringStream str;
         str << "Field " << iF.name() << " of type "
             << field.type() << " cannot apply to patch " << pp.name()
-            << " because the patch is not of " << typeName << " type";
+            << " of type " << pp.type()
+            << ", which should be a " << typeName << " type";
         FatalIOErrorInFunction(context)
             << stringOps::breakIntoIndentedLines(str.str()).c_str()
             << exit(FatalIOError);
