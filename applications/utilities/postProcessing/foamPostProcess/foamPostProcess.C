@@ -259,6 +259,30 @@ int main(int argc, char *argv[])
 
     const instantList timeDirs = timeSelector::select0(runTime, args);
 
+    // Either the solver name is specified...
+    word solverName;
+
+    // ...or the fields are specified on the command-line
+    // or later inferred from the function arguments
+    HashSet<word> requiredFields;
+
+    if (args.optionReadIfPresent("solver", solverName))
+    {
+        libs.open("lib" + solverName + ".so");
+    }
+    else
+    {
+        // Initialise the set of selected fields from the command-line options
+        if (args.optionFound("fields"))
+        {
+            args.optionLookup("fields")() >> requiredFields;
+        }
+        if (args.optionFound("field"))
+        {
+            requiredFields.insert(word(args.optionLookup("field")()));
+        }
+    }
+
     word regionName = fvMesh::defaultRegion;
 
     if (args.optionReadIfPresent("region", regionName))
@@ -284,30 +308,6 @@ int main(int argc, char *argv[])
             IOobject::MUST_READ
         )
     );
-
-    // Either the solver name is specified...
-    word solverName;
-
-    // ...or the fields are specified on the command-line
-    // or later inferred from the function arguments
-    HashSet<word> requiredFields;
-
-    if (args.optionReadIfPresent("solver", solverName))
-    {
-        libs.open("lib" + solverName + ".so");
-    }
-    else
-    {
-        // Initialise the set of selected fields from the command-line options
-        if (args.optionFound("fields"))
-        {
-            args.optionLookup("fields")() >> requiredFields;
-        }
-        if (args.optionFound("field"))
-        {
-            requiredFields.insert(word(args.optionLookup("field")()));
-        }
-    }
 
     // Construct functionObjectList
     autoPtr<functionObjectList> functionsPtr
