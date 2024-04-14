@@ -52,42 +52,51 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of classes
+class Istream;
+class Ostream;
+
+// Forward declaration of friend functions and operators
+class randomGenerator;
+Istream& operator>>(Istream&, randomGenerator&);
+Ostream& operator<<(Ostream&, const randomGenerator&);
+
 /*---------------------------------------------------------------------------*\
                        Class randomGenerator Declaration
 \*---------------------------------------------------------------------------*/
 
 class randomGenerator
 {
-    // Private Typedefs
-
-        //- Working type
-        typedef uint64_t type;
-
-
     // Private static data
 
         //- The parameters of the linear congruential iteration
-        static const type A = 0x5DEECE66D, C = 0xB, M = type(1) << 48;
+        static const uint64_t A = 0x5DEECE66D, C = 0xB, M = uint64_t(1) << 48;
 
 
     // Private Data
 
         //- The stored integer
-        type x_;
+        uint64_t x_;
 
 
     // Private Member Functions
 
         //- Advance the state and return an integer sample
-        inline type sample();
+        inline uint64_t sample();
 
 
 public:
 
     // Constructors
 
-        //- Construct from a seed
+        //- Construct from a label seed
         inline randomGenerator(const label s);
+
+        //- Construct from a word seed
+        inline randomGenerator(const word& s);
+
+        //- Construct from a stream
+        randomGenerator(Istream& is);
 
 
     //- Destructor
@@ -132,6 +141,15 @@ public:
         //- Randomly permute a list
         template<class Container>
         inline void permute(Container& l);
+
+
+    // IOstream Operators
+
+        //- Read from stream
+        friend Istream& operator>>(Istream&, randomGenerator&);
+
+        //- Write to stream
+        friend Ostream& operator<<(Ostream&, const randomGenerator&);
 };
 
 

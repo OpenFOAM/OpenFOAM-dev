@@ -24,10 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "randomGenerator.H"
+#include "Hash.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-inline Foam::randomGenerator::type Foam::randomGenerator::sample()
+inline uint64_t Foam::randomGenerator::sample()
 {
     x_ = (A*x_ + C) % M;
     return x_ >> 17;
@@ -38,7 +39,13 @@ inline Foam::randomGenerator::type Foam::randomGenerator::sample()
 
 inline Foam::randomGenerator::randomGenerator(const label s)
 :
-    x_((type(s) << 16) + 0x330E)
+    x_((uint64_t(s) << 16) + 0x330E)
+{}
+
+
+inline Foam::randomGenerator::randomGenerator(const word& s)
+:
+    x_((uint64_t(Hash<word>()(s)) << 16) + 0x330E)
 {}
 
 

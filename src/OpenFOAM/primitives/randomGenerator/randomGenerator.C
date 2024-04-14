@@ -24,7 +24,16 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "randomGenerator.H"
+#include "uint64.H"
 #include "PstreamReduceOps.H"
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::randomGenerator::randomGenerator(Istream& is)
+:
+    x_(pTraits<uint64_t>(is))
+{}
+
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -40,6 +49,20 @@ Foam::scalar Foam::randomGenerator::globalScalar01()
     Pstream::scatter(value);
 
     return value;
+}
+
+
+// * * * * * * * * * * * * * * Friend Operators * * * * * * * * * * * * * * //
+
+Foam::Istream& Foam::operator>>(Istream& is, randomGenerator& rndGen)
+{
+    return is >> rndGen.x_;
+}
+
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const randomGenerator& rndGen)
+{
+    return os << rndGen.x_;
 }
 
 
