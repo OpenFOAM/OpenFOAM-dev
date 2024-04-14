@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,8 +82,20 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const token& t)
             os << *t.verbatimStringTokenPtr_;
         break;
 
-        case token::LABEL:
-            os << t.labelToken_;
+        case token::INTEGER_32:
+            os << t.integer32Token_;
+        break;
+
+        case token::INTEGER_64:
+            os << t.integer64Token_;
+        break;
+
+        case token::UNSIGNED_INTEGER_32:
+            os << t.unsignedInteger32Token_;
+        break;
+
+        case token::UNSIGNED_INTEGER_64:
+            os << t.unsignedInteger64Token_;
         break;
 
         case token::FLOAT_SCALAR:
@@ -181,8 +193,22 @@ ostream& Foam::operator<<(ostream& os, const InfoProxy<token>& ip)
             os  << " the variable " << t.variableToken();
         break;
 
-        case token::LABEL:
-            os  << " the label " << t.labelToken();
+        case token::INTEGER_32:
+            os  << " the 32-bit integer " << t.integer32Token();
+        break;
+
+        case token::INTEGER_64:
+            os  << " the 64-bit integer " << t.integer64Token();
+        break;
+
+        case token::UNSIGNED_INTEGER_32:
+            os  << " the unsigned 32-bit integer "
+                << t.unsignedInteger32Token();
+        break;
+
+        case token::UNSIGNED_INTEGER_64:
+            os  << " the unsigned 64-bit integer "
+                << t.unsignedInteger64Token();
         break;
 
         case token::FLOAT_SCALAR:
@@ -261,8 +287,23 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<token>& ip)
             os  << " the variable " << t.variableToken();
         break;
 
-        case token::LABEL:
-            os  << " the label " << t.labelToken();
+        break;
+        case token::INTEGER_32:
+            os  << " the 32-bit integer " << t.integer32Token();
+        break;
+
+        case token::INTEGER_64:
+            os  << " the 64-bit integer " << t.integer64Token();
+        break;
+
+        case token::UNSIGNED_INTEGER_32:
+            os  << " the unsigned 32-bit integer "
+                << t.unsignedInteger32Token();
+        break;
+
+        case token::UNSIGNED_INTEGER_64:
+            os  << " the unsigned 64-bit integer "
+                << t.unsignedInteger64Token();
         break;
 
         case token::FLOAT_SCALAR:

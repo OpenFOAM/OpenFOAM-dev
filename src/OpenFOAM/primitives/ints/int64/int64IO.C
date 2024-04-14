@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,9 @@ Foam::Istream& Foam::operator>>(Istream& is, int64_t& i)
         return is;
     }
 
-    if (t.isLabel())
+    if (t.isInteger64())
     {
-        i = int64_t(t.labelToken());
+        i = t.integer64Token();
     }
     else
     {
@@ -94,7 +94,7 @@ bool Foam::read(const char* buf, int64_t& s)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const int64_t i)
 {
-    os.write(label(i));
+    os.write(i);
     os.check("Ostream& operator<<(Ostream&, const int64_t)");
     return os;
 }

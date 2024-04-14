@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,8 +150,17 @@ public:
             // Read a string (including enclosing double-quotes)
             Istream& read(string&);
 
-            //- Read a label
-            Istream& read(label&);
+            //- Read an int32_t
+            Istream& read(int32_t&);
+
+            //- Read an int64_t
+            Istream& read(int64_t&);
+
+            //- Read a uint32_t
+            Istream& read(uint32_t&);
+
+            //- Read a uint64_t
+            Istream& read(uint64_t&);
 
             //- Read a floatScalar
             Istream& read(floatScalar&);

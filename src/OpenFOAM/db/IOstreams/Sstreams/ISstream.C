@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,7 +180,6 @@ Foam::Istream& Foam::ISstream::read(token& t)
             return *this;
         }
 
-
         // String: enclosed by double quotes.
         case token::BEGIN_STRING :
         {
@@ -199,6 +198,7 @@ Foam::Istream& Foam::ISstream::read(token& t)
 
             return *this;
         }
+
         // Possible verbatim string or dictionary functionEntry
         case token::HASH :
         {
@@ -332,47 +332,58 @@ Foam::Istream& Foam::ISstream::read(token& t)
                     // A single '-' is punctuation
                     t = token::punctuationToken(token::SUBTRACT);
                 }
-                else
+                else if (asLabel)
                 {
-                    if (asLabel)
+                    label labelVal = 0;
+                    uLabel uLabelVal = 0;
+                    #if WM_LABEL_SIZE == 32
+                    int64_t int64Val = 0;
+                    uint64_t uint64Val = 0;
+                    #endif
+                    scalar scalarVal;
+                    if (Foam::read(buf_.cdata(), labelVal))
                     {
-                        label labelVal = 0;
-                        if (Foam::read(buf_.cdata(), labelVal))
-                        {
-                            t = labelVal;
-                        }
-                        else
-                        {
-                            // Maybe too big? Try as scalar
-                            scalar scalarVal;
-                            if (readScalar(buf_.cdata(), scalarVal))
-                            {
-                                t = scalarVal;
-                            }
-                            else
-                            {
-                                t.setBad();
-                            }
-                        }
+                        t = labelVal;
+                    }
+                    else if (Foam::read(buf_.cdata(), uLabelVal))
+                    {
+                        t = uLabelVal;
+                    }
+                    #if WM_LABEL_SIZE == 32
+                    else if (Foam::read(buf_.cdata(), int64Val))
+                    {
+                        t = int64Val;
+                    }
+                    else if (Foam::read(buf_.cdata(), uint64Val))
+                    {
+                        t = uint64Val;
+                    }
+                    #endif
+                    else if (readScalar(buf_.cdata(), scalarVal))
+                    {
+                        t = scalarVal;
                     }
                     else
                     {
-                        scalar scalarVal;
-                        if (readScalar(buf_.cdata(), scalarVal))
-                        {
-                            t = scalarVal;
-                        }
-                        else
-                        {
-                            t.setBad();
-                        }
+                        t.setBad();
+                    }
+                }
+                else
+                {
+                    scalar scalarVal;
+                    if (readScalar(buf_.cdata(), scalarVal))
+                    {
+                        t = scalarVal;
+                    }
+                    else
+                    {
+                        t.setBad();
                     }
                 }
             }
 
             return *this;
         }
-
 
         // Should be a word (which can also be a single character)
         default:
@@ -767,7 +778,31 @@ Foam::Istream& Foam::ISstream::readBlock(string& str)
 }
 
 
-Foam::Istream& Foam::ISstream::read(label& val)
+Foam::Istream& Foam::ISstream::read(int32_t& val)
+{
+    is_ >> val;
+    setState(is_.rdstate());
+    return *this;
+}
+
+
+Foam::Istream& Foam::ISstream::read(int64_t& val)
+{
+    is_ >> val;
+    setState(is_.rdstate());
+    return *this;
+}
+
+
+Foam::Istream& Foam::ISstream::read(uint32_t& val)
+{
+    is_ >> val;
+    setState(is_.rdstate());
+    return *this;
+}
+
+
+Foam::Istream& Foam::ISstream::read(uint64_t& val)
 {
     is_ >> val;
     setState(is_.rdstate());

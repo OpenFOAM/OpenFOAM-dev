@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,8 +151,68 @@ bool Foam::functionEntries::ifeqEntry::equalToken
                 << exit(FatalIOError);
             return false;
 
-        case token::LABEL:
+        case token::INTEGER_32:
             if (eqType)
+            {
+                return t1.integer32Token() == t2.integer32Token();
+            }
+            else if (t2.isLabel())
+            {
+                return t1.labelToken() == t2.labelToken();
+            }
+            else if (t2.isScalar())
+            {
+                return t1.labelToken() == t2.scalarToken();
+            }
+            else
+            {
+                return false;
+            }
+
+        case token::INTEGER_64:
+            if (eqType)
+            {
+                return t1.integer64Token() == t2.integer64Token();
+            }
+            else if (t2.isLabel())
+            {
+                return t1.labelToken() == t2.labelToken();
+            }
+            else if (t2.isScalar())
+            {
+                return t1.labelToken() == t2.scalarToken();
+            }
+            else
+            {
+                return false;
+            }
+
+        case token::UNSIGNED_INTEGER_32:
+            if (eqType)
+            {
+                return
+                    t1.unsignedInteger32Token() == t2.unsignedInteger32Token();
+            }
+            else if (t2.isLabel())
+            {
+                return t1.labelToken() == t2.labelToken();
+            }
+            else if (t2.isScalar())
+            {
+                return t1.labelToken() == t2.scalarToken();
+            }
+            else
+            {
+                return false;
+            }
+
+        case token::UNSIGNED_INTEGER_64:
+            if (eqType)
+            {
+                return
+                    t1.unsignedInteger64Token() == t2.unsignedInteger64Token();
+            }
+            else if (t2.isLabel())
             {
                 return t1.labelToken() == t2.labelToken();
             }

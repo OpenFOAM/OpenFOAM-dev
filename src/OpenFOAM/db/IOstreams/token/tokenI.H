@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include <iostream>
+#include "token.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -113,8 +114,20 @@ inline Foam::token::token(const token& t)
                 new verbatimString(*t.verbatimStringTokenPtr_);
         break;
 
-        case LABEL:
-            labelToken_ = t.labelToken_;
+        case INTEGER_32:
+            integer32Token_ = t.integer32Token_;
+        break;
+
+        case INTEGER_64:
+            integer64Token_ = t.integer64Token_;
+        break;
+
+        case UNSIGNED_INTEGER_32:
+            unsignedInteger32Token_ = t.unsignedInteger32Token_;
+        break;
+
+        case UNSIGNED_INTEGER_64:
+            unsignedInteger64Token_ = t.unsignedInteger64Token_;
         break;
 
         case FLOAT_SCALAR:
@@ -173,10 +186,34 @@ inline Foam::token::token(const verbatimString& vs, label lineNumber)
 {}
 
 
-inline Foam::token::token(const label l, label lineNumber)
+inline Foam::token::token(const int32_t l, label lineNumber)
 :
-    type_(LABEL),
-    labelToken_(l),
+    type_(INTEGER_32),
+    integer32Token_(l),
+    lineNumber_(lineNumber)
+{}
+
+
+inline Foam::token::token(const int64_t l, label lineNumber)
+:
+    type_(INTEGER_64),
+    integer64Token_(l),
+    lineNumber_(lineNumber)
+{}
+
+
+inline Foam::token::token(const uint32_t l, label lineNumber)
+:
+    type_(UNSIGNED_INTEGER_32),
+    unsignedInteger32Token_(l),
+    lineNumber_(lineNumber)
+{}
+
+
+inline Foam::token::token(const uint64_t l, label lineNumber)
+:
+    type_(UNSIGNED_INTEGER_64),
+    unsignedInteger64Token_(l),
     lineNumber_(lineNumber)
 {}
 
@@ -389,20 +426,232 @@ inline const Foam::string& Foam::token::anyStringToken() const
     }
 }
 
+inline bool Foam::token::isInteger32() const
+{
+    return
+        type_ == INTEGER_32
+     || (
+            type_ == INTEGER_64
+         && (integer64Token_ >= INT32_MIN) && (integer64Token_ <= INT32_MAX)
+        )
+     || (type_ == UNSIGNED_INTEGER_32 && unsignedInteger32Token_ <= INT32_MAX)
+     || (type_ == UNSIGNED_INTEGER_64 && unsignedInteger64Token_ <= INT32_MAX);
+}
+
+inline int32_t Foam::token::integer32Token() const
+{
+    if (type_ == INTEGER_32)
+    {
+        return integer32Token_;
+    }
+    else if (type_ == INTEGER_64)
+    {
+        return integer64Token_;
+    }
+    if (type_ == UNSIGNED_INTEGER_32)
+    {
+        return unsignedInteger32Token_;
+    }
+    else if (type_ == UNSIGNED_INTEGER_64)
+    {
+        return unsignedInteger64Token_;
+    }
+    else
+    {
+        parseError(pTraits<int32_t>::typeName);
+        return 0;
+    }
+}
+
+inline bool Foam::token::isInteger64() const
+{
+    return
+        type_ == INTEGER_32
+     || type_ == INTEGER_64
+     || type_ == UNSIGNED_INTEGER_32
+     || (type_ == UNSIGNED_INTEGER_64 && unsignedInteger64Token_ <= INT64_MAX);
+}
+
+inline int64_t Foam::token::integer64Token() const
+{
+    if (type_ == INTEGER_32)
+    {
+        return integer32Token_;
+    }
+    else if (type_ == INTEGER_64)
+    {
+        return integer64Token_;
+    }
+    if (type_ == UNSIGNED_INTEGER_32)
+    {
+        return unsignedInteger32Token_;
+    }
+    else if (type_ == UNSIGNED_INTEGER_64)
+    {
+        return unsignedInteger64Token_;
+    }
+    else
+    {
+        parseError(pTraits<int64_t>::typeName);
+        return 0;
+    }
+}
+
+inline bool Foam::token::isUnsignedInteger32() const
+{
+    return
+        (type_ == INTEGER_32 && integer32Token_ >= 0)
+     || (
+            type_ == INTEGER_64
+         && (integer64Token_ >= 0) && (integer64Token_ <= UINT32_MAX)
+        )
+     || type_ == UNSIGNED_INTEGER_32
+     || (type_ == UNSIGNED_INTEGER_64 && unsignedInteger64Token_ <= UINT32_MAX);
+}
+
+inline uint32_t Foam::token::unsignedInteger32Token() const
+{
+    if (type_ == INTEGER_32)
+    {
+        return integer32Token_;
+    }
+    else if (type_ == INTEGER_64)
+    {
+        return integer64Token_;
+    }
+    if (type_ == UNSIGNED_INTEGER_32)
+    {
+        return unsignedInteger32Token_;
+    }
+    else if (type_ == UNSIGNED_INTEGER_64)
+    {
+        return unsignedInteger64Token_;
+    }
+    else
+    {
+        parseError(pTraits<uint32_t>::typeName);
+        return 0;
+    }
+}
+
+inline bool Foam::token::isUnsignedInteger64() const
+{
+    return
+        (type_ == INTEGER_32 && integer32Token_ >= 0)
+     || (type_ == INTEGER_64 && integer64Token_ >= 0)
+     || type_ == UNSIGNED_INTEGER_32
+     || type_ == UNSIGNED_INTEGER_64;
+}
+
+inline uint64_t Foam::token::unsignedInteger64Token() const
+{
+    if (type_ == INTEGER_32)
+    {
+        return integer32Token_;
+    }
+    else if (type_ == INTEGER_64)
+    {
+        return integer64Token_;
+    }
+    if (type_ == UNSIGNED_INTEGER_32)
+    {
+        return unsignedInteger32Token_;
+    }
+    else if (type_ == UNSIGNED_INTEGER_64)
+    {
+        return unsignedInteger64Token_;
+    }
+    else
+    {
+        parseError(pTraits<uint64_t>::typeName);
+        return 0;
+    }
+}
+
 inline bool Foam::token::isLabel() const
 {
-    return (type_ == LABEL);
+    return
+        type_ == INTEGER_32
+     || (
+            type_ == INTEGER_64
+         && integer64Token_ >= int64_t(labelMin)
+         && integer64Token_ <= int64_t(labelMax)
+        )
+     || (
+            type_ == UNSIGNED_INTEGER_32
+         && uint64_t(unsignedInteger32Token_) <= uint64_t(labelMax)
+        )
+     || (
+            type_ == UNSIGNED_INTEGER_64
+         && unsignedInteger64Token_ <= uint64_t(labelMax)
+        );
 }
 
 inline Foam::label Foam::token::labelToken() const
 {
-    if (type_ == LABEL)
+    if (type_ == INTEGER_32)
     {
-        return labelToken_;
+        return integer32Token_;
+    }
+    else if (type_ == INTEGER_64)
+    {
+        return integer64Token_;
+    }
+    if (type_ == UNSIGNED_INTEGER_32)
+    {
+        return unsignedInteger32Token_;
+    }
+    else if (type_ == UNSIGNED_INTEGER_64)
+    {
+        return unsignedInteger64Token_;
     }
     else
     {
         parseError(pTraits<label>::typeName);
+        return 0;
+    }
+}
+
+inline bool Foam::token::isULabel() const
+{
+    return
+        (
+            type_ == INTEGER_32
+         && integer32Token_ >= 0
+        )
+     || (
+            type_ == INTEGER_64
+         && integer64Token_ >= 0
+         && uint64_t(integer64Token_) <= uint64_t(uLabelMax)
+        )
+     || type_ == UNSIGNED_INTEGER_32
+     || (
+            type_ == UNSIGNED_INTEGER_64
+         && unsignedInteger64Token_ <= uint64_t(uLabelMax)
+        );
+}
+
+inline Foam::uLabel Foam::token::uLabelToken() const
+{
+    if (type_ == INTEGER_32)
+    {
+        return integer32Token_;
+    }
+    else if (type_ == INTEGER_64)
+    {
+        return integer64Token_;
+    }
+    if (type_ == UNSIGNED_INTEGER_32)
+    {
+        return unsignedInteger32Token_;
+    }
+    else if (type_ == UNSIGNED_INTEGER_64)
+    {
+        return unsignedInteger64Token_;
+    }
+    else
+    {
+        parseError(pTraits<uLabel>::typeName);
         return 0;
     }
 }
@@ -467,11 +716,9 @@ inline Foam::longDoubleScalar Foam::token::longDoubleScalarToken() const
 inline bool Foam::token::isScalar() const
 {
     return
-    (
         type_ == FLOAT_SCALAR
      || type_ == DOUBLE_SCALAR
-     || type_ == LONG_DOUBLE_SCALAR
-    );
+     || type_ == LONG_DOUBLE_SCALAR;
 }
 
 inline Foam::scalar Foam::token::scalarToken() const
@@ -497,14 +744,31 @@ inline Foam::scalar Foam::token::scalarToken() const
 
 inline bool Foam::token::isNumber() const
 {
-    return (type_ == LABEL || isScalar());
+    return
+        type_ == INTEGER_32
+     || type_ == INTEGER_64
+     || type_ == UNSIGNED_INTEGER_32
+     || type_ == UNSIGNED_INTEGER_64
+     || isScalar();
 }
 
 inline Foam::scalar Foam::token::number() const
 {
-    if (type_ == LABEL)
+    if (type_ == INTEGER_32)
     {
-        return labelToken_;
+        return integer32Token_;
+    }
+    else if (type_ == INTEGER_64)
+    {
+        return integer64Token_;
+    }
+    if (type_ == UNSIGNED_INTEGER_32)
+    {
+        return unsignedInteger32Token_;
+    }
+    else if (type_ == UNSIGNED_INTEGER_64)
+    {
+        return unsignedInteger64Token_;
     }
     else if (isScalar())
     {
@@ -591,8 +855,20 @@ inline void Foam::token::operator=(const token& t)
                 new verbatimString(*t.verbatimStringTokenPtr_);
         break;
 
-        case LABEL:
-            labelToken_ = t.labelToken_;
+        case INTEGER_32:
+            integer32Token_ = t.integer32Token_;
+        break;
+
+        case INTEGER_64:
+            integer64Token_ = t.integer64Token_;
+        break;
+
+        case UNSIGNED_INTEGER_32:
+            unsignedInteger32Token_ = t.unsignedInteger32Token_;
+        break;
+
+        case UNSIGNED_INTEGER_64:
+            unsignedInteger64Token_ = t.unsignedInteger64Token_;
         break;
 
         case FLOAT_SCALAR:
@@ -687,11 +963,32 @@ inline void Foam::token::operator=(const verbatimString& vs)
     operator=(new verbatimString(vs));
 }
 
-inline void Foam::token::operator=(const label l)
+inline void Foam::token::operator=(const int32_t l)
 {
     clear();
-    type_ = LABEL;
-    labelToken_ = l;
+    type_ = INTEGER_32;
+    integer32Token_ = l;
+}
+
+inline void Foam::token::operator=(const int64_t l)
+{
+    clear();
+    type_ = INTEGER_64;
+    integer64Token_ = l;
+}
+
+inline void Foam::token::operator=(const uint32_t l)
+{
+    clear();
+    type_ = UNSIGNED_INTEGER_32;
+    unsignedInteger32Token_ = l;
+}
+
+inline void Foam::token::operator=(const uint64_t l)
+{
+    clear();
+    type_ = UNSIGNED_INTEGER_64;
+    unsignedInteger64Token_ = l;
 }
 
 inline void Foam::token::operator=(const floatScalar s)
@@ -753,8 +1050,17 @@ inline bool Foam::token::operator==(const token& t) const
         case VERBATIMSTRING:
             return *verbatimStringTokenPtr_ == *t.verbatimStringTokenPtr_;
 
-        case LABEL:
-            return labelToken_ == t.labelToken_;
+        case INTEGER_32:
+            return integer32Token_ == t.integer32Token_;
+
+        case INTEGER_64:
+            return integer64Token_ == t.integer64Token_;
+
+        case UNSIGNED_INTEGER_32:
+            return unsignedInteger32Token_ == t.unsignedInteger32Token_;
+
+        case UNSIGNED_INTEGER_64:
+            return unsignedInteger64Token_ == t.unsignedInteger64Token_;
 
         case FLOAT_SCALAR:
             return equal(floatScalarToken_, t.floatScalarToken_);
@@ -809,9 +1115,24 @@ inline bool Foam::token::operator==(const verbatimString& vs) const
     return (type_ == VERBATIMSTRING && verbatimStringToken() == vs);
 }
 
-inline bool Foam::token::operator==(const label l) const
+inline bool Foam::token::operator==(const int32_t l) const
 {
-    return (type_ == LABEL && labelToken_ == l);
+    return (type_ == INTEGER_32 && integer32Token_ == l);
+}
+
+inline bool Foam::token::operator==(const int64_t l) const
+{
+    return (type_ == INTEGER_64 && integer64Token_ == l);
+}
+
+inline bool Foam::token::operator==(const uint32_t l) const
+{
+    return (type_ == UNSIGNED_INTEGER_32 && unsignedInteger32Token_ == l);
+}
+
+inline bool Foam::token::operator==(const uint64_t l) const
+{
+    return (type_ == UNSIGNED_INTEGER_64 && unsignedInteger64Token_ == l);
 }
 
 inline bool Foam::token::operator==(const floatScalar s) const
@@ -867,6 +1188,26 @@ inline bool Foam::token::operator!=(const verbatimString& vs) const
     return !operator==(vs);
 }
 
+inline bool Foam::token::operator!=(const int32_t l) const
+{
+    return !operator==(l);
+}
+
+inline bool Foam::token::operator!=(const int64_t l) const
+{
+    return !operator==(l);
+}
+
+inline bool Foam::token::operator!=(const uint32_t l) const
+{
+    return !operator==(l);
+}
+
+inline bool Foam::token::operator!=(const uint64_t l) const
+{
+    return !operator==(l);
+}
+
 inline bool Foam::token::operator!=(const floatScalar s) const
 {
     return !operator==(s);
@@ -880,11 +1221,6 @@ inline bool Foam::token::operator!=(const doubleScalar s) const
 inline bool Foam::token::operator!=(const longDoubleScalar s) const
 {
     return !operator==(s);
-}
-
-inline bool Foam::token::operator!=(const label l) const
-{
-    return !operator==(l);
 }
 
 

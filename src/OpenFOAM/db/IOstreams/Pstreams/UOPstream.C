@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -241,7 +241,7 @@ Foam::Ostream& Foam::UOPstream::writeQuoted
 
 Foam::Ostream& Foam::UOPstream::write(const int32_t val)
 {
-    writeToBuffer(char(token::LABEL));
+    writeToBuffer(char(token::INTEGER_32));
     writeToBuffer(val);
     return *this;
 }
@@ -249,7 +249,23 @@ Foam::Ostream& Foam::UOPstream::write(const int32_t val)
 
 Foam::Ostream& Foam::UOPstream::write(const int64_t val)
 {
-    writeToBuffer(char(token::LABEL));
+    writeToBuffer(char(token::INTEGER_64));
+    writeToBuffer(val);
+    return *this;
+}
+
+
+Foam::Ostream& Foam::UOPstream::write(const uint32_t val)
+{
+    writeToBuffer(char(token::UNSIGNED_INTEGER_32));
+    writeToBuffer(val);
+    return *this;
+}
+
+
+Foam::Ostream& Foam::UOPstream::write(const uint64_t val)
+{
+    writeToBuffer(char(token::UNSIGNED_INTEGER_64));
     writeToBuffer(val);
     return *this;
 }

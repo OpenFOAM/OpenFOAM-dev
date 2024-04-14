@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,8 +99,29 @@ public:
                 return *this;
             }
 
-            //- Read a label
-            virtual Istream& read(label&)
+            //- Read an int32_t
+            virtual Istream& read(int32_t&)
+            {
+                NotImplemented;
+                return *this;
+            }
+
+            //- Read an int64_t
+            virtual Istream& read(int64_t&)
+            {
+                NotImplemented;
+                return *this;
+            }
+
+            //- Read a uint32_t
+            virtual Istream& read(uint32_t&)
+            {
+                NotImplemented;
+                return *this;
+            }
+
+            //- Read a uint64_t
+            virtual Istream& read(uint64_t&)
             {
                 NotImplemented;
                 return *this;

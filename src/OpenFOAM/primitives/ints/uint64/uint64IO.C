@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,9 @@ License
 #include "uint64.H"
 #include "IOstreams.H"
 
+#include <inttypes.h>
 #include <sstream>
+#include <cerrno>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,9 +52,9 @@ Foam::Istream& Foam::operator>>(Istream& is, uint64_t& i)
         return is;
     }
 
-    if (t.isLabel())
+    if (t.isUnsignedInteger64())
     {
-        i = uint64_t(t.labelToken());
+        i = t.unsignedInteger64Token();
     }
     else
     {
@@ -83,15 +85,16 @@ uint64_t Foam::readUint64(Istream& is)
 bool Foam::read(const char* buf, uint64_t& s)
 {
     char *endptr = nullptr;
-    long l = strtol(buf, &endptr, 10);
+    errno = 0;
+    uintmax_t l = strtoumax(buf, &endptr, 10);
     s = uint64_t(l);
-    return (*endptr == 0);
+    return (*endptr == 0) && (errno == 0);
 }
 
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const uint64_t i)
 {
-    os.write(label(i));
+    os.write(i);
     os.check("Ostream& operator<<(Ostream&, const uint64_t)");
     return os;
 }

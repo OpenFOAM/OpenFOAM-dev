@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -223,10 +223,55 @@ Foam::Istream& Foam::UIPstream::read(token& t)
             return *this;
         }
 
-        // Label
-        case token::LABEL :
+        // 32-bit integer
+        case token::INTEGER_32 :
         {
-            label val;
+            int32_t val;
+            if (read(val))
+            {
+                t = val;
+            }
+            else
+            {
+                t.setBad();
+            }
+            return *this;
+        }
+
+        // 64-bit integer
+        case token::INTEGER_64 :
+        {
+            int64_t val;
+            if (read(val))
+            {
+                t = val;
+            }
+            else
+            {
+                t.setBad();
+            }
+            return *this;
+        }
+
+        // unsigned 32-bit integer
+        case token::UNSIGNED_INTEGER_32 :
+        {
+            uint32_t val;
+            if (read(val))
+            {
+                t = val;
+            }
+            else
+            {
+                t.setBad();
+            }
+            return *this;
+        }
+
+        // Unsigned 64-bit integer
+        case token::UNSIGNED_INTEGER_64 :
+        {
+            uint64_t val;
             if (read(val))
             {
                 t = val;
@@ -332,7 +377,28 @@ Foam::Istream& Foam::UIPstream::read(string& str)
 }
 
 
-Foam::Istream& Foam::UIPstream::read(label& val)
+Foam::Istream& Foam::UIPstream::read(int32_t& val)
+{
+    readFromBuffer(val);
+    return *this;
+}
+
+
+Foam::Istream& Foam::UIPstream::read(int64_t& val)
+{
+    readFromBuffer(val);
+    return *this;
+}
+
+
+Foam::Istream& Foam::UIPstream::read(uint32_t& val)
+{
+    readFromBuffer(val);
+    return *this;
+}
+
+
+Foam::Istream& Foam::UIPstream::read(uint64_t& val)
 {
     readFromBuffer(val);
     return *this;

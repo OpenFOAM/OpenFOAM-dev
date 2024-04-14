@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,10 +157,16 @@ public:
             );
 
             //- Write int32_t
-            virtual Ostream& write(const int32_t);
+            Ostream& write(const int32_t);
 
             //- Write int64_t
             Ostream& write(const int64_t);
+
+            //- Write uint32_t
+            Ostream& write(const uint32_t);
+
+            //- Write uint64_t
+            Ostream& write(const uint64_t);
 
             //- Write floatScalar
             Ostream& write(const floatScalar);

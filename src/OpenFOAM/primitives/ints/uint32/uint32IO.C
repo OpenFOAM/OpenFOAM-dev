@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,9 @@ License
 #include "uint32.H"
 #include "IOstreams.H"
 
+#include <inttypes.h>
 #include <sstream>
+#include <cerrno>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,9 +52,9 @@ Foam::Istream& Foam::operator>>(Istream& is, uint32_t& i)
         return is;
     }
 
-    if (t.isLabel())
+    if (t.isUnsignedInteger32())
     {
-        i = uint32_t(t.labelToken());
+        i = t.unsignedInteger32Token();
     }
     else
     {
@@ -83,15 +85,18 @@ uint32_t Foam::readUint32(Istream& is)
 bool Foam::read(const char* buf, uint32_t& s)
 {
     char *endptr = nullptr;
-    long l = strtol(buf, &endptr, 10);
+    errno = 0;
+    uintmax_t l = strtoumax(buf, &endptr, 10);
     s = uint32_t(l);
-    return (*endptr == 0);
+    return
+        (*endptr == 0) && (errno == 0)
+     && (l <= UINT32_MAX);
 }
 
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const uint32_t i)
 {
-    os.write(label(i));
+    os.write(i);
     os.check("Ostream& operator<<(Ostream&, const uint32_t)");
     return os;
 }
