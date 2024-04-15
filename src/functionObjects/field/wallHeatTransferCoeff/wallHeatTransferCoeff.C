@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,11 +109,7 @@ bool Foam::functionObjects::wallHeatTransferCoeff::read(const dictionary& dict)
 
     const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
-    patchSet_ =
-        pbm.patchSet
-        (
-            wordReList(dict.lookupOrDefault("patches", wordReList()))
-        );
+    patchSet_ = patchSet(dict, true);
 
     Info<< type() << ":" << nl;
 

@@ -240,11 +240,7 @@ bool Foam::functionObjects::layerAverage::read(const dictionary& dict)
 {
     Info<< type() << " " << name() << ":" << nl;
 
-    patchIndices_ =
-        mesh_.boundaryMesh().patchSet
-        (
-            dict.lookupOrDefault<wordReList>("patches", wordReList())
-        ).toc();
+    patchIndices_ = patchSet(dict, true).toc();
 
     zoneIndices_ =
         findStrings

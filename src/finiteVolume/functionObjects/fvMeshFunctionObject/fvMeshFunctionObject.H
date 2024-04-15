@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,6 +71,17 @@ protected:
 
         //- Reference to the fvMesh
         const fvMesh& mesh_;
+
+
+    // Protected member functions
+
+        //- Return the patch set corresponding to the patch selection entries
+        //  in the given dictionary
+        labelHashSet patchSet
+        (
+            const dictionary&,
+            const bool optional = false
+        ) const;
 
 
 public:

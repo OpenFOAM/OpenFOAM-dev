@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,6 +57,7 @@ Usage
     \table
         Property | Description                | Required   | Default value
         type     | type name: wallShearStress | yes        |
+        patch    | patch to process           | no         |
         patches  | list of patches to process | no         | all wall patches
         phase    | phase name                 | no         |
     \endtable

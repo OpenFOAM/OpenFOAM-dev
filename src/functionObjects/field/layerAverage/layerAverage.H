@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,6 +54,7 @@ Usage
         Property      | Description                | Required   | Default value
         type          | Type name: layerAverage    | yes        |
         setFormat     | Output plotting format     | yes        |
+        patch         | Patch that layers extrude from | no         |
         patches       | Patches that layers extrude from | no | ()
         zones         | Face zones that the layers extrude from | no | ()
         axis          | Component of the position to plot against | yes |

@@ -125,15 +125,11 @@ bool Foam::functionObjects::wallShearStress::read(const dictionary& dict)
 
     phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
 
-    const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
-
-    patchSet_ =
-        mesh_.boundaryMesh().patchSet
-        (
-            wordReList(dict.lookupOrDefault("patches", wordReList()))
-        );
+    patchSet_ = patchSet(dict, true);
 
     Info<< type() << " " << name() << ":" << nl;
+
+    const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
     if (patchSet_.empty())
     {

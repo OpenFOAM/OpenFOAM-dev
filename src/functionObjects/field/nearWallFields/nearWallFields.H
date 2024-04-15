@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Description
             (U UNear)
         );
 
-        patches     (movingWall);
+        patch       movingWall;
 
         distance    0.13;
     }
@@ -61,7 +61,8 @@ Usage
         Property | Description               | Required    | Default value
         type     | type name: nearWallFields | yes         |
         fields   | list of fields with corresponding output field names | yes |
-        patches  | list of patches to sample | yes         |
+        patch    | patch to sample           | no          |
+        patches  | list of patches to sample | no          |
         distance | distance from patch to sample | yes     |
     \endtable
 

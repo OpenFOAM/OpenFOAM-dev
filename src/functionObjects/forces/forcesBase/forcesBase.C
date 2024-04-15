@@ -662,7 +662,7 @@ bool Foam::functionObjects::forcesBase::read(const dictionary& dict)
 
     const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
-    patchSet_ = pbm.patchSet(wordReList(dict.lookup("patches")));
+    patchSet_ = patchSet(dict);
 
     if (directForceDensity_)
     {
