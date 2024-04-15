@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,6 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
     PtrList<PtrList<surfaceScalarField>> invADVfs;
     {
         PtrList<volScalarField> As(movingPhases.size());
-        PtrList<surfaceScalarField> Afs(movingPhases.size());
         forAll(movingPhases, movingPhasei)
         {
             const phaseModel& phase = movingPhases[movingPhasei];
@@ -88,12 +87,6 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
                     max(phase.residualAlpha() - alpha, scalar(0))
                    *phase.rho()
                 )
-            );
-
-            Afs.set
-            (
-                movingPhasei,
-                fvc::interpolate(As[movingPhasei])
             );
 
             if (fluid.implicitPhasePressure())
