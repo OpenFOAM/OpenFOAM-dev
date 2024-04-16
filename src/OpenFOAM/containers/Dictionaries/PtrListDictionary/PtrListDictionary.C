@@ -184,12 +184,18 @@ inline Foam::autoPtr<T> Foam::PtrListDictionary<T>::set
     T* ptr
 )
 {
-    if (!DictionaryBase<PtrList<T>, T>::hashedTs_.set(key, ptr))
+    if (ptr == nullptr)
+    {
+        // Remove key from hash table if the pointer is null
+        DictionaryBase<PtrList<T>, T>::hashedTs_.erase(key);
+    }
+    else if (!DictionaryBase<PtrList<T>, T>::hashedTs_.set(key, ptr))
     {
         FatalErrorInFunction
             << "Cannot set with key '" << key << "' into hash-table"
             << abort(FatalError);
     }
+
     return PtrList<T>::set(i, ptr);
 }
 
