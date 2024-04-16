@@ -1188,10 +1188,12 @@ void Foam::polyMesh::reorderPatches
     const bool validBoundary
 )
 {
-    // Clear local fields and e.g. polyMesh parallelInfo. Do not clearGeom
-    // so we keep RepatchableMeshObjects intact.
+    // Clear local fields and e.g. polyMesh parallelInfo.
+    // Do not clearGeom to keep RepatchableMeshObjects intact.
     boundary_.clearGeom();
+
     clearAddressing(true);
+
     // Clear all but RepatchableMeshObjects
     meshObjects::clearUpto
     <
@@ -1211,6 +1213,11 @@ void Foam::polyMesh::reorderPatches
     (
         *this
     );
+
+    // Update time instance for the mesh
+    // so that it writes the mesh with the changed boundary
+    // into a new time directory
+    setInstance(time().name());
 
     boundary_.reorderPatches(newToOld, validBoundary);
 
