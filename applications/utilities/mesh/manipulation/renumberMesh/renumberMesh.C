@@ -471,7 +471,7 @@ autoPtr<polyTopoChangeMap> reorderMesh
             move(patchSizes),               // oldPatchSizes
             move(patchStarts),              // oldPatchStarts,
             move(oldPatchNMeshPoints),      // oldPatchNMeshPoints
-            move(autoPtr<scalarField>())    // oldCellVolumes
+            autoPtr<scalarField>()          // oldCellVolumes
         )
     );
 }

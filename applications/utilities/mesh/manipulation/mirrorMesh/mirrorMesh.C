@@ -100,24 +100,24 @@ int main(int argc, char *argv[])
     polyTopoChangeMap map
     (
         mesh,
-        mesh.nPoints(),               // nOldPoints,
-        mesh.nFaces(),                // nOldFaces,
-        mesh.nCells(),                // nOldCells,
-        move(mesh.pointMap()),        // pointMap,
-        move(List<objectMap>(0)),     // pointsFromPoints,
-        move(labelList(0)),           // faceMap,
-        move(List<objectMap>(0)),     // facesFromFaces,
-        move(mesh.cellMap()),         // cellMap,
-        move(List<objectMap>(0)),     // cellsFromCells,
-        move(labelList(0)),           // reversePointMap,
-        move(labelList(0)),           // reverseFaceMap,
-        move(labelList(0)),           // reverseCellMap,
-        move(labelHashSet(0)),        // flipFaceFlux,
-        move(labelListList(0)),       // patchPointMap,
-        move(labelList(0)),           // oldPatchSizes,
-        move(labelList(0)),           // oldPatchStarts,
-        move(labelList(0)),           // oldPatchNMeshPoints,
-        move(autoPtr<scalarField>())  // oldCellVolumesPtr
+        mesh.nPoints(),         // nOldPoints,
+        mesh.nFaces(),          // nOldFaces,
+        mesh.nCells(),          // nOldCells,
+        move(mesh.pointMap()),  // pointMap,
+        List<objectMap>(0),     // pointsFromPoints,
+        labelList(0),           // faceMap,
+        List<objectMap>(0),     // facesFromFaces,
+        move(mesh.cellMap()),   // cellMap,
+        List<objectMap>(0),     // cellsFromCells,
+        labelList(0),           // reversePointMap,
+        labelList(0),           // reverseFaceMap,
+        labelList(0),           // reverseCellMap,
+        labelHashSet(0),        // flipFaceFlux,
+        labelListList(0),       // patchPointMap,
+        labelList(0),           // oldPatchSizes,
+        labelList(0),           // oldPatchStarts,
+        labelList(0),           // oldPatchNMeshPoints,
+        autoPtr<scalarField>()  // oldCellVolumesPtr
     );
     refData.topoChange(map);
     refData.write();
