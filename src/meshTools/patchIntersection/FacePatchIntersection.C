@@ -533,9 +533,9 @@ Foam::FacePatchIntersection<SrcPatchType, TgtPatchType>::FacePatchIntersection
         inplaceRenumber(oldPointNewPoints, this->tgtEdgePoints_);
 
         // Remove deleted points
-        inplaceRemove(this->faces_, -1);
-        inplaceRemove(this->srcEdgePoints_, -1);
-        inplaceRemove(this->tgtEdgePoints_, -1);
+        inplaceRemove(this->faces_, label(-1));
+        inplaceRemove(this->srcEdgePoints_, label(-1));
+        inplaceRemove(this->tgtEdgePoints_, label(-1));
     }
 
     // Step 6: Reporting

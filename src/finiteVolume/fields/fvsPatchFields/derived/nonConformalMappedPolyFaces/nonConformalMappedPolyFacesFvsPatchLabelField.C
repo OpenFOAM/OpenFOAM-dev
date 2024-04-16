@@ -62,7 +62,7 @@ nonConformalMappedPolyFacesFvsPatchLabelField
     (
         db().time().processorCase()
       ? dict.lookup<labelList>("procOffsets")
-      : labelList(1, 0)
+      : labelList(1, label(0))
     )
 {
     labelField::operator=

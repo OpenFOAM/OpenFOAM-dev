@@ -695,7 +695,7 @@ Foam::TriPatchIntersection<SrcPatchType, TgtPatchType>::edgePatchEdge
 
         if (patchPointi == -1)
         {
-            return pointPatchEdges[pointi] == -1 ? 0 : 1;
+            return pointPatchEdges[pointi] == -1 ? label(0) : label(1);
         }
         else
         {
@@ -1628,7 +1628,7 @@ Foam::TriPatchIntersection<SrcPatchType, TgtPatchType>::snapPatchFaceTris
     checkPatchFace(tgtFacei, false);
 
     // Insertion workspace
-    labelList insertPointis(1), insertEdgeis(2, -1), fixedEdgeis(0);
+    labelList insertPointis(1), insertEdgeis(2, label(-1)), fixedEdgeis(0);
 
     // Do source-point-target-edge snapping
     forAll(srcFaceSnapTgtFaceEdge, srcFacePointi)
@@ -2427,7 +2427,7 @@ Foam::TriPatchIntersection<SrcPatchType, TgtPatchType>::conformPatchFaceTris
             }
         }
 
-        return -1;
+        return label(-1);
     };
 
     // Track from a point on a triangle towards a given point. Stop at an edge
