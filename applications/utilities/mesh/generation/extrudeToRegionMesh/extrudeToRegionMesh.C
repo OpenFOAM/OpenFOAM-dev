@@ -1858,15 +1858,15 @@ int main(int argc, char *argv[])
         meshMod.changeMesh(regionMesh, false);
     }
 
-    // Set region mesh instance and write options
-    regionMesh.setInstance(meshInstance);
-
     // Remove any unused patches
     deleteEmptyPatches(regionMesh);
 
+    // Set region mesh instance and write options
+    regionMesh.setInstance(meshInstance);
 
     Info<< "Writing mesh " << regionMesh.name() << " to "
         << regionMesh.facesInstance() << nl << endl;
+
     regionMesh.write();
 
 
@@ -1990,13 +1990,14 @@ int main(int argc, char *argv[])
         // Update fields
         mesh.topoChange(addBafflesMap);
 
-        mesh.setInstance(meshInstance);
-
         // Remove any unused patches
         deleteEmptyPatches(mesh);
 
+        mesh.setInstance(meshInstance);
+
         Info<< "Writing mesh " << mesh.name() << " to "
             << mesh.facesInstance() << nl << endl;
+
         mesh.write();
     }
 
