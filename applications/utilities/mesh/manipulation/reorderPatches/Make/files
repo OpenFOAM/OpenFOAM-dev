@@ -1,0 +1,3 @@
+reorderPatches.C
+
+EXE = $(FOAM_APPBIN)/reorderPatches
