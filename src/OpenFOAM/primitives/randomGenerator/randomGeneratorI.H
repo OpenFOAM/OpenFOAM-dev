@@ -35,17 +35,33 @@ inline uint64_t Foam::randomGenerator::sample()
 }
 
 
+// * * * * * * * * * * * * * Protected Constructors  * * * * * * * * * * * * //
+
+inline Foam::randomGenerator::randomGenerator(const pTraits<uint64_t> s)
+:
+    x_((s << 16) + 0x330E)
+{}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+inline uint64_t Foam::randomGenerator::x() const
+{
+    return x_;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 inline Foam::randomGenerator::randomGenerator(const label s)
 :
-    x_((uint64_t(s) << 16) + 0x330E)
+    randomGenerator(pTraits<uint64_t>(s))
 {}
 
 
 inline Foam::randomGenerator::randomGenerator(const word& s)
 :
-    x_((uint64_t(Hash<word>()(s)) << 16) + 0x330E)
+    randomGenerator(pTraits<uint64_t>(Hash<word>()(s)))
 {}
 
 
@@ -63,6 +79,20 @@ inline Foam::scalar Foam::randomGenerator::scalar01()
 }
 
 
+inline Foam::tmp<Foam::scalarField> Foam::randomGenerator::scalar01
+(
+    const label n
+)
+{
+    tmp<scalarField> tValues(new scalarField(n));
+    for (label i = 0; i < n; ++ i)
+    {
+        tValues.ref()[i] = scalar01();
+    }
+    return tValues;
+}
+
+
 inline Foam::scalar Foam::randomGenerator::scalarAB
 (
     const scalar a,
@@ -73,16 +103,30 @@ inline Foam::scalar Foam::randomGenerator::scalarAB
 }
 
 
+inline Foam::tmp<Foam::scalarField> Foam::randomGenerator::scalarAB
+(
+    const label n,
+    const scalar a,
+    const scalar b
+)
+{
+    tmp<scalarField> tValues(new scalarField(n));
+    for (label i = 0; i < n; ++ i)
+    {
+        tValues.ref()[i] = scalarAB(a, b);
+    }
+    return tValues;
+}
+
+
 template<class Type>
 inline Type Foam::randomGenerator::sample01()
 {
     Type value;
-
     for (direction i = 0; i < pTraits<Type>::nComponents; ++ i)
     {
         value.component(i) = scalar01();
     }
-
     return value;
 }
 
@@ -98,6 +142,21 @@ template<>
 inline Foam::label Foam::randomGenerator::sample01()
 {
     return sample() % 2;
+}
+
+
+template<class Type>
+inline Foam::tmp<Foam::Field<Type>> Foam::randomGenerator::sample01
+(
+    const label n
+)
+{
+    tmp<Field<Type>> tValues(new Field<Type>(n));
+    for (label i = 0; i < n; ++ i)
+    {
+        tValues.ref()[i] = sample01<Type>();
+    }
+    return tValues;
 }
 
 
@@ -127,6 +186,23 @@ inline Foam::label Foam::randomGenerator::sampleAB
 )
 {
     return a + sample() % (b - a);
+}
+
+
+template<class Type>
+inline Foam::tmp<Foam::Field<Type>> Foam::randomGenerator::sampleAB
+(
+    const label n,
+    const Type& a,
+    const Type& b
+)
+{
+    tmp<Field<Type>> tValues(new Field<Type>(n));
+    for (label i = 0; i < n; ++ i)
+    {
+        tValues.ref()[i] = sampleAB(a, b);
+    }
+    return tValues;
 }
 
 

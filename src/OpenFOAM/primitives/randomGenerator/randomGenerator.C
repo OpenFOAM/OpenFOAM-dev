@@ -56,13 +56,17 @@ Foam::scalar Foam::randomGenerator::globalScalar01()
 
 Foam::Istream& Foam::operator>>(Istream& is, randomGenerator& rndGen)
 {
-    return is >> rndGen.x_;
+    is >> rndGen.x_;
+    is.check("operator>>(Istream& is, randomGenerator& rndGen)");
+    return is;
 }
 
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const randomGenerator& rndGen)
 {
-    return os << rndGen.x_;
+    os << rndGen.x_;
+    os.check("operator<<(Ostream& os, const randomGenerator& rndGen)");
+    return os;
 }
 
 

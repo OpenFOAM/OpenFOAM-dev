@@ -45,7 +45,7 @@ SourceFiles
 #ifndef randomGenerator_H
 #define randomGenerator_H
 
-#include "scalar.H"
+#include "scalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,7 +67,7 @@ Ostream& operator<<(Ostream&, const randomGenerator&);
 
 class randomGenerator
 {
-    // Private static data
+    // Private Static Data
 
         //- The parameters of the linear congruential iteration
         static const uint64_t A = 0x5DEECE66D, C = 0xB, M = uint64_t(1) << 48;
@@ -83,6 +83,20 @@ class randomGenerator
 
         //- Advance the state and return an integer sample
         inline uint64_t sample();
+
+
+protected:
+
+    // Protected Constructors
+
+        //- Construct from a 64-bit unsigned integer seed
+        inline randomGenerator(const pTraits<uint64_t> s);
+
+
+    // Protected Member Functions
+
+        //- Access the stored integer
+        uint64_t x() const;
 
 
 public:
@@ -107,34 +121,60 @@ public:
 
         // Scalars
 
-            //- Advance the state and return a scalar sample from a uniform
-            //  distribution between zero and one
+            //- Return a scalar uniformly distributed between zero and one
             inline scalar scalar01();
 
-            //- Advance the state and return a scalar sample from a uniform
-            //  distribution between two limits
+            //- Return scalars uniformly distributed between zero and one
+            inline tmp<scalarField> scalar01(const label n);
+
+            //- Return a scalar uniformly distributed between two limits
             inline scalar scalarAB(const scalar a, const scalar b);
 
+            //- Return scalars uniformly distributed between two limits
+            inline tmp<scalarField> scalarAB
+            (
+                const label n,
+                const scalar a,
+                const scalar b
+            );
 
-        // Other types
 
-            //- Advance the state and return a sample of a given type from a
-            //  uniform distribution between zero and one
+        // Other Types
+
+            //- Return a type with components uniformly distributed between
+            //  zero and one
             template<class Type>
             inline Type sample01();
 
-            //- Advance the state and return a sample of a given type from a
-            //  uniform distribution between two limits
+            //- Return types with components uniformly distributed between zero
+            //  and one
+            template<class Type>
+            inline tmp<Field<Type>> sample01(const label n);
+
+            //- Return a type with components uniformly distributed between two
+            //  limits
             template<class Type>
             inline Type sampleAB(const Type& a, const Type& b);
+
+            //- Return types with components uniformly distributed between two
+            //  limits
+            template<class Type>
+            inline tmp<Field<Type>> sampleAB
+            (
+                const label n,
+                const Type& a,
+                const Type& b
+            );
 
 
         // Global scalars
 
-            //- Advance the state and return a scalar sample from a uniform
-            //  distribution between zero and one. Synchronises across all
-            //  cores. Use of this is discouraged. It is expensive and
+            //- Return a scalar uniformly distributed between zero and one.
+            //  Samples on the master and then scatters the result to all
+            //  processors. Use of this is discouraged. It is expensive and
             //  introduces non-randomness in all cores other then the master.
+            //  It is better practice to keep a generator synchronised by
+            //  calling it the same number of times on the different processes.
             scalar globalScalar01();
 
 
