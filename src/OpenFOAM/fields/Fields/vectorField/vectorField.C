@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,21 @@ License
 
 #include "vectorField.H"
 
+#define TEMPLATE
+#include "FieldFunctionsM.C"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::vectorField> Foam::zip
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+UNARY_FUNCTION(vector, vector, normalised)
+UNARY_FUNCTION(vector, vector, perpendicular)
+
+
+tmp<vectorField> zip
 (
     const tmp<scalarField>& x,
     const tmp<scalarField>& y,
@@ -41,5 +53,14 @@ Foam::tmp<Foam::vectorField> Foam::zip
     xyz.replace(2, z);
     return txyz;
 }
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "undefFieldFunctionsM.H"
 
 // ************************************************************************* //
