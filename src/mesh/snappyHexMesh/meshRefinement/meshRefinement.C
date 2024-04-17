@@ -2433,6 +2433,10 @@ void Foam::meshRefinement::topoChange
 
 bool Foam::meshRefinement::write() const
 {
+    // Set correct instance (for if overwrite)
+    mesh_.setInstance(name());
+    // setInstance(mesh_.facesInstance());
+
     bool writeOk = mesh_.write();
 
     // Make sure that any distributed surfaces (so ones which probably have
