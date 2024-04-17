@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,9 +42,7 @@ SourceFiles
 #include "bool.H"
 #include "dimensionedScalarFwd.H"
 #include "className.H"
-#include "scalarField.H"
-#include "PtrList.H"
-#include "HashTable.H"
+#include "List.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -95,6 +93,9 @@ dimensionSet atan2(const dimensionSet&, const dimensionSet&);
 
 // Return the argument; transformations do not change the dimensions
 dimensionSet transform(const dimensionSet&);
+
+dimensionSet normalised(const dimensionSet&);
+dimensionSet perpendicular(const dimensionSet&);
 
 // Friend operators
 
@@ -347,6 +348,9 @@ public:
 
         //- Return the argument; transformations do not change the dimensions
         friend dimensionSet transform(const dimensionSet&);
+
+        friend dimensionSet normalised(const dimensionSet&);
+        friend dimensionSet perpendicular(const dimensionSet&);
 
 
     // Friend operators
