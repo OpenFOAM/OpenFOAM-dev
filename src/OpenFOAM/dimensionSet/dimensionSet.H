@@ -42,9 +42,7 @@ SourceFiles
 #include "bool.H"
 #include "dimensionedScalarFwd.H"
 #include "className.H"
-#include "scalarField.H"
-#include "PtrList.H"
-#include "HashTable.H"
+#include "List.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

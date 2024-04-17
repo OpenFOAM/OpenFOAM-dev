@@ -25,6 +25,7 @@ License
 
 #include "Time.H"
 #include "timeIOdictionary.H"
+#include "PstreamReduceOps.H"
 #include "argList.H"
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
