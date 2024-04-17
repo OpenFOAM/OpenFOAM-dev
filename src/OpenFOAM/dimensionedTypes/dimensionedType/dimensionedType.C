@@ -33,7 +33,8 @@ template<class Type>
 bool Foam::dimensioned<Type>::readDimensions
 (
     Istream& is,
-    scalar& multiplier
+    scalar& multiplier,
+    const bool haveDims
 )
 {
     token nextToken(is);
@@ -44,7 +45,11 @@ bool Foam::dimensioned<Type>::readDimensions
         dimensionSet dims(dimless);
         dims.read(is, multiplier);
 
-        if (dims != dimensions_)
+        if (!haveDims)
+        {
+            dimensions_.reset(dims);
+        }
+        else if (dims != dimensions_)
         {
             FatalIOErrorInFunction(is)
                 << "The dimensions " << dims
@@ -62,14 +67,19 @@ bool Foam::dimensioned<Type>::readDimensions
 
 
 template<class Type>
-void Foam::dimensioned<Type>::initialise(Istream& is)
+bool Foam::dimensioned<Type>::initialise
+(
+    Istream& is,
+    const bool haveName,
+    const bool haveDims
+)
 {
     token nextToken(is);
     is.putBack(nextToken);
 
     // Check if the original format is used in which the name is provided
     // and reset the name to that read
-    if (nextToken.isWord())
+    if (!haveName && nextToken.isWord())
     {
         is >> name_;
     }
@@ -79,7 +89,7 @@ void Foam::dimensioned<Type>::initialise(Istream& is)
     // Read dimensions if they are before the value,
     // compare with the argument with current
     // and set the multiplier
-    const bool dimensionsRead = readDimensions(is, multiplier);
+    const bool dimensionsRead = readDimensions(is, multiplier, haveDims);
 
     is >> value_;
 
@@ -88,10 +98,12 @@ void Foam::dimensioned<Type>::initialise(Istream& is)
     // and set the multiplier
     if (!dimensionsRead && !is.eof())
     {
-        readDimensions(is, multiplier);
+        readDimensions(is, multiplier, haveDims);
     }
 
     value_ *= multiplier;
+
+    return !haveName && nextToken.isWord();
 }
 
 
@@ -112,11 +124,7 @@ Foam::dimensioned<Type>::dimensioned
 
 
 template<class Type>
-Foam::dimensioned<Type>::dimensioned
-(
-    const dimensionSet& dimSet,
-    const Type& t
-)
+Foam::dimensioned<Type>::dimensioned(const dimensionSet& dimSet, const Type& t)
 :
     name_(::Foam::name(t)),
     dimensions_(dimSet),
@@ -147,31 +155,21 @@ Foam::dimensioned<Type>::dimensioned
 
 
 template<class Type>
-Foam::dimensioned<Type>::dimensioned
-(
-    Istream& is
-)
+Foam::dimensioned<Type>::dimensioned(Istream& is)
 :
     dimensions_(dimless)
 {
-    read(is);
+    initialise(is, false, false);
 }
 
 
 template<class Type>
-Foam::dimensioned<Type>::dimensioned
-(
-    const word& name,
-    Istream& is
-)
+Foam::dimensioned<Type>::dimensioned(const word& name, Istream& is)
 :
     name_(name),
     dimensions_(dimless)
 {
-    scalar multiplier;
-    dimensions_.read(is, multiplier);
-    is >> value_;
-    value_ *= multiplier;
+    initialise(is, true, false);
 }
 
 
@@ -187,7 +185,7 @@ Foam::dimensioned<Type>::dimensioned
     dimensions_(dimSet),
     value_(Zero)
 {
-    initialise(is);
+    initialise(is, true, true);
 }
 
 
@@ -203,17 +201,16 @@ Foam::dimensioned<Type>::dimensioned
     dimensions_(dimSet),
     value_(Zero)
 {
-    initialise(dict.lookup(name));
+    initialise(dict.lookup(name), true, true);
 }
 
 
 template<class Type>
-Foam::dimensioned<Type>::dimensioned
-()
+Foam::dimensioned<Type>::dimensioned()
 :
-    name_("undefined"),
+    name_("NaN"),
     dimensions_(dimless),
-    value_(Zero)
+    value_(pTraits<Type>::nan)
 {}
 
 
@@ -349,47 +346,45 @@ void Foam::dimensioned<Type>::replace
 template<class Type>
 void Foam::dimensioned<Type>::read(const dictionary& dict)
 {
-    initialise(dict.lookup(name_));
+    initialise(dict.lookup(name_), true, true);
 }
 
 
 template<class Type>
 bool Foam::dimensioned<Type>::readIfPresent(const dictionary& dict)
 {
-    return dict.readIfPresent(name_, value_);
+    const entry* entryPtr = dict.lookupEntryPtr(name_, false, true);
+
+    if (entryPtr)
+    {
+        initialise(entryPtr->stream(), true, true);
+        return true;
+    }
+    else
+    {
+        if (dictionary::writeOptionalEntries)
+        {
+            IOInfoInFunction(dict)
+                << "Optional entry '" << name_ << "' is not present,"
+                << " the default value '" << *this << "' will be used."
+                << endl;
+        }
+
+        return false;
+    }
 }
 
 
 template<class Type>
 Foam::Istream& Foam::dimensioned<Type>::read(Istream& is)
 {
-    // If the name is present, read it
-    token nextToken(is);
-    is.putBack(nextToken);
-    if (nextToken.isWord())
-    {
-        is >> name_;
-    }
-
-    // Read the dimensions and multiplier
-    scalar multiplier;
-    dimensions_.read(is, multiplier);
-
-    // Read and scale the value
-    is >> value_;
-    value_ *= multiplier;
-
-    // If the name is not present, set it
-    if (!nextToken.isWord())
+    if (!initialise(is, false, false))
     {
         name_ = Foam::name(value_);
     }
 
     // Check state of Istream
-    is.check
-    (
-        "Istream& dimensioned<Type>::read(Istream& is)"
-    );
+    is.check("Istream& dimensioned<Type>::read(Istream& is)");
 
     return is;
 }
@@ -399,20 +394,14 @@ Foam::Istream& Foam::dimensioned<Type>::read(Istream& is)
 
 template<class Type>
 Foam::dimensioned<typename Foam::dimensioned<Type>::cmptType>
-Foam::dimensioned<Type>::operator[]
-(
-    const direction d
-) const
+Foam::dimensioned<Type>::operator[](const direction d) const
 {
     return component(d);
 }
 
 
 template<class Type>
-void Foam::dimensioned<Type>::operator+=
-(
-    const dimensioned<Type>& dt
-)
+void Foam::dimensioned<Type>::operator+=(const dimensioned<Type>& dt)
 {
     dimensions_ += dt.dimensions_;
     value_ += dt.value_;
@@ -420,10 +409,7 @@ void Foam::dimensioned<Type>::operator+=
 
 
 template<class Type>
-void Foam::dimensioned<Type>::operator-=
-(
-    const dimensioned<Type>& dt
-)
+void Foam::dimensioned<Type>::operator-=(const dimensioned<Type>& dt)
 {
     dimensions_ -= dt.dimensions_;
     value_ -= dt.value_;
@@ -431,20 +417,14 @@ void Foam::dimensioned<Type>::operator-=
 
 
 template<class Type>
-void Foam::dimensioned<Type>::operator*=
-(
-    const scalar s
-)
+void Foam::dimensioned<Type>::operator*=(const scalar s)
 {
     value_ *= s;
 }
 
 
 template<class Type>
-void Foam::dimensioned<Type>::operator/=
-(
-    const scalar s
-)
+void Foam::dimensioned<Type>::operator/=(const scalar s)
 {
     value_ /= s;
 }
@@ -477,6 +457,7 @@ Foam::sqr(const dimensioned<Type>& dt)
     );
 }
 
+
 template<class Type>
 Foam::dimensioned<Foam::scalar> Foam::magSqr(const dimensioned<Type>& dt)
 {
@@ -487,6 +468,7 @@ Foam::dimensioned<Foam::scalar> Foam::magSqr(const dimensioned<Type>& dt)
         magSqr(dt.value())
     );
 }
+
 
 template<class Type>
 Foam::dimensioned<Foam::scalar> Foam::mag(const dimensioned<Type>& dt)
@@ -514,6 +496,7 @@ Foam::dimensioned<Type> Foam::cmptMultiply
         cmptMultiply(dt1.value(), dt2.value())
     );
 }
+
 
 template<class Type>
 Foam::dimensioned<Type> Foam::cmptDivide
@@ -591,28 +574,7 @@ void Foam::writeEntry(Ostream& os, const dimensioned<Type>& dt)
 template<class Type>
 Foam::Istream& Foam::operator>>(Istream& is, dimensioned<Type>& dt)
 {
-    token nextToken(is);
-    is.putBack(nextToken);
-
-    // Check if the original format is used in which the name is provided
-    // and reset the name to that read
-    if (nextToken.isWord())
-    {
-        is >> dt.name_;
-        is >> nextToken;
-        is.putBack(nextToken);
-    }
-
-    // If the dimensions are provided reset the dimensions to those read
-    scalar multiplier = 1.0;
-    if (nextToken == token::BEGIN_SQR)
-    {
-        dt.dimensions_.read(is, multiplier);
-    }
-
-    // Read the value
-    is >> dt.value_;
-    dt.value_ *= multiplier;
+    dt.initialise(is, false, false);
 
     // Check state of Istream
     is.check("Istream& operator>>(Istream&, dimensioned<Type>&)");
@@ -791,7 +753,6 @@ Foam::operator op                                                              \
         static_cast<const Form&>(t1) op dt2.value()                            \
     );                                                                         \
 }
-
 
 PRODUCT_OPERATOR(outerProduct, *, outer)
 PRODUCT_OPERATOR(crossProduct, ^, cross)

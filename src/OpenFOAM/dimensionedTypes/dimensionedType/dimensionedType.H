@@ -46,16 +46,13 @@ namespace Foam
 {
 
 // Forward declaration of friend functions and operators
-
-template<class Type> class dimensioned;
-
+class dictionary;
+template<class Type>
+class dimensioned;
 template<class Type>
 Istream& operator>>(Istream&, dimensioned<Type>&);
-
 template<class Type>
 Ostream& operator<<(Ostream&, const dimensioned<Type>&);
-
-class dictionary;
 
 /*---------------------------------------------------------------------------*\
                          Class dimensioned Declaration
@@ -78,11 +75,16 @@ class dimensioned
 
     // Private Member Functions
 
-        //- Read the dimensions if present
-        bool readDimensions(Istream& is, scalar& multiplier);
+        //- Read the dimensions if present. Return whether dimensions were read.
+        bool readDimensions
+        (
+            Istream& is,
+            scalar& multiplier,
+            const bool haveDims
+        );
 
-        //- Initialise from Istream
-        void initialise(Istream& is);
+        //- Initialise from Istream. Return whether the name was read.
+        bool initialise(Istream& is, const bool haveName, const bool haveDims);
 
 
 public:
@@ -217,11 +219,8 @@ public:
 
     // IOstream Operators
 
-        friend Istream& operator>> <Type>
-        (Istream&, dimensioned<Type>&);
-
-        friend Ostream& operator<< <Type>
-        (Ostream&, const dimensioned<Type>&);
+        friend Istream& operator>> <Type>(Istream&, dimensioned<Type>&);
+        friend Ostream& operator<< <Type>(Ostream&, const dimensioned<Type>&);
 };
 
 
