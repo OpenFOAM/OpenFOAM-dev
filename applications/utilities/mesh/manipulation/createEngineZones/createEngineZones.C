@@ -210,6 +210,8 @@ void calcPistonBowlPoints(const fvMeshMovers::multiValveEngine& mve)
 
 int main(int argc, char *argv[])
 {
+    argList::noParallel();
+
     #include "addRegionOption.H"
 
     argList::addBoolOption
