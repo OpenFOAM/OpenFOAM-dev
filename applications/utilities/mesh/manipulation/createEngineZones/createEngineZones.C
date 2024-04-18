@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
     Info<< "Writing pointZones" << endl;
     mesh.pointZones().write();
 
-    Pout<< "End\n" << endl;
+    Info<< "End\n" << endl;
 
     return 0;
 }

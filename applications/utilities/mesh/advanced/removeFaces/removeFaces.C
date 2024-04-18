@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
     // Read faces
     faceSet candidateSet(mesh, setName);
 
-    Pout<< "Read " << candidateSet.size() << " faces to remove" << nl
+    Info<< "Read " << candidateSet.size() << " faces to remove" << nl
         << endl;
 
 
@@ -97,11 +97,11 @@ int main(int argc, char *argv[])
     {
         faceSet compatibleRemoves(mesh, "compatibleRemoves", facesToRemove);
 
-        Pout<< "Original faces to be removed:" << candidateSet.size() << nl
+        Info<< "Original faces to be removed:" << candidateSet.size() << nl
             << "New faces to be removed:" << compatibleRemoves.size() << nl
             << endl;
 
-        Pout<< "Writing new faces to be removed to faceSet "
+        Info<< "Writing new faces to be removed to faceSet "
             << compatibleRemoves.instance()
               /compatibleRemoves.local()
               /compatibleRemoves.name()
@@ -152,10 +152,10 @@ int main(int argc, char *argv[])
     }
 
     // Take over refinement levels and write to new time directory.
-    Pout<< "Writing mesh to time " << runTime.name() << endl;
+    Info<< "Writing mesh to time " << runTime.name() << endl;
     mesh.write();
 
-    Pout<< "End\n" << endl;
+    Info<< "End\n" << endl;
 
     return 0;
 }
