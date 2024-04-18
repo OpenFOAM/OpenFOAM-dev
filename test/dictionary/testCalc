@@ -37,7 +37,10 @@ d
 e   #calc "$a / $d/b";
 
 s   "field";
-fieldName #calc "$<string>s + \"Name\" ";
+fieldName #calc "$<string>s + \"Name\"";
+
+time    100;
+fileName #calc "\"movingBox_\" + name($time) + \".obj\"";
 
 // Additional include files for the #calc code compilation can be specified
 // using the #calcInclude entry, e.g. if functions from transform.H are used
