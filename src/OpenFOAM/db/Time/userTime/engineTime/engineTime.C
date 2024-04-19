@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "engineTime.H"
+#include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -43,9 +44,8 @@ namespace userTimes
 Foam::userTimes::engine::engine(const dictionary& controlDict)
 :
     userTime(controlDict),
-    rpm_("rpm", dimless/dimTime, 0)
+    omega_(dict(controlDict))
 {
-    read(controlDict);
     addUnit(dimensionedScalar(unit(), dimTime, userTimeToTime(1)));
 }
 
@@ -58,24 +58,18 @@ Foam::userTimes::engine::~engine()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::dimensionedScalar& Foam::userTimes::engine::rpm() const
-{
-    return rpm_;
-}
-
-
 Foam::scalar Foam::userTimes::engine::userTimeToTime
 (
     const scalar theta
 ) const
 {
-    return theta/(6*rpm_.value());
+    return theta/radToDeg(omega_.value());
 }
 
 
 Foam::scalar Foam::userTimes::engine::timeToUserTime(const scalar t) const
 {
-    return t*(6*rpm_.value());
+    return t*radToDeg(omega_.value());
 }
 
 
@@ -87,7 +81,7 @@ Foam::word Foam::userTimes::engine::unit() const
 
 bool Foam::userTimes::engine::read(const dictionary& controlDict)
 {
-    rpm_.read(dict(controlDict));
+    omega_ = omega(dict(controlDict));
     addUnit(dimensionedScalar(unit(), dimTime, userTimeToTime(1)));
     return true;
 }

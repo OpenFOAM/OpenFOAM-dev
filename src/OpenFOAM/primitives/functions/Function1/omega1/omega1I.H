@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,11 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "omega1.H"
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 inline Foam::scalar Foam::Function1s::omega::value(const scalar t) const
 {
-    return omegaFactor_*omega_->value(t);
+    return factor_*omega_->value(t);
 }
 
 
@@ -37,7 +39,7 @@ inline Foam::scalar Foam::Function1s::omega::integral
     const scalar t2
 ) const
 {
-    return omegaFactor_*omega_->integral(t1, t2);
+    return factor_*omega_->integral(t1, t2);
 }
 
 

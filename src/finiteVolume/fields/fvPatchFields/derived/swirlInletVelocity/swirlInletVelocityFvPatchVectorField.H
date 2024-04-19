@@ -73,7 +73,7 @@ SourceFiles
 
 #include "fixedValueFvPatchFields.H"
 #include "Function2.H"
-#include "omega.H"
+#include "omega1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

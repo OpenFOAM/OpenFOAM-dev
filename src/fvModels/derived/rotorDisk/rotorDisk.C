@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 #include "geometricOneField.H"
 #include "syncTools.H"
 #include "axesRotation.H"
+#include "omega.H"
 #include "addToRunTimeSelectionTable.H"
 
 using namespace Foam::constant;
@@ -76,9 +77,7 @@ void Foam::fv::rotorDisk::readCoeffs()
 {
     UName_ = coeffs().lookupOrDefault<word>("U", "U");
 
-    // Read co-ordinate system/geometry invariant properties
-    scalar rpm(coeffs().lookup<scalar>("rpm"));
-    omega_ = rpm/60.0*mathematical::twoPi;
+    omega_ = Foam::omega(coeffs()).value();
 
     coeffs().lookup("nBlades") >> nBlades_;
 

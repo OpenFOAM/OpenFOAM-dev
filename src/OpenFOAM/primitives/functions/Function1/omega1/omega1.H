@@ -85,12 +85,13 @@ See also
     Foam::Function1s
 
 SourceFiles
-    omega.C
+    omega1.C
+    omega1I.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef omega_H
-#define omega_H
+#ifndef omega1_H
+#define omega1_H
 
 #include "Function1.H"
 
@@ -109,14 +110,17 @@ class omega
 {
     // Private Data
 
-        //- True if the input specification is rpm rather than omega
-        const bool rpm_;
-
-        //- 1 for omega, pi/30 for rpm
-        const scalar omegaFactor_;
-
         //- The omega function
         const autoPtr<Function1<scalar>> omega_;
+
+        //- Conversion factor. 1 for omega. pi/30 for rpm.
+        const scalar factor_;
+
+
+    // Private Member Functions
+
+        //- Read and construct the omega function
+        autoPtr<Function1<scalar>> init(const dictionary& dict);
 
 
 public:
@@ -169,7 +173,7 @@ void writeEntry(Ostream& os, const omega& a);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "omegaI.H"
+#include "omega1I.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

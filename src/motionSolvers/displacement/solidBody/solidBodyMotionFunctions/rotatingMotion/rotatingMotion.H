@@ -40,7 +40,7 @@ SourceFiles
 
 #include "solidBodyMotionFunction.H"
 #include "primitiveFields.H"
-#include "omega.H"
+#include "omega1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

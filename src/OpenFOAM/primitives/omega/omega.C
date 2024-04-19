@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,40 +28,31 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function1s::omega::omega(const dictionary& dict)
+Foam::omega::omega(const dictionary& dict)
 :
-    rpm_(dict.found("rpm")),
-    omegaFactor_(rpm_ ? constant::mathematical::pi/30.0 : 1),
-    omega_
-    (
-        rpm_
-      ? Function1<scalar>::New("rpm", dict)
-      : Function1<scalar>::New("omega", dict)
-    )
-{}
-
-
-Foam::Function1s::omega::omega(const omega& o)
-:
-    rpm_(o.rpm_),
-    omegaFactor_(o.omegaFactor_),
-    omega_(o.omega_, false)
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::Function1s::omega::write(Ostream& os) const
+    dimensionedScalar("omega", dimless/dimTime, NaN)
 {
-    writeEntry(os, omega_());
-}
+    const bool foundOmega = dict.found("omega");
+    const bool foundRpm = dict.found("rpm");
 
+    if (foundOmega && foundRpm)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Rotational speeds rpm and omega both defined in dictionary "
+            << dict.name() << exit(FatalIOError);
+    }
 
-// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+    if (!foundOmega && !foundRpm)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Neither rotational speed rpm or omega defined in dictionary "
+            << dict.name() << exit(FatalIOError);
+    }
 
-void Foam::Function1s::writeEntry(Ostream& os, const omega& o)
-{
-    o.write(os);
+    value() =
+        foundOmega
+      ? dict.lookup<scalar>("omega")
+      : constant::mathematical::pi/30*dict.lookup<scalar>("rpm");
 }
 
 
