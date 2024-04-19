@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,16 @@ void Foam::fv::zeroDimensionalFixedPressureConstraint::readCoeffs()
 
     rhoName_ = coeffs().lookupOrDefault<word>("rho", "rho");
 
-    p_.reset(Function1<scalar>::New("pressure", coeffs()).ptr());
+    p_.reset
+    (
+        Function1<scalar>::New
+        (
+            "pressure",
+            mesh().time().userUnits(),
+            dimPressure,
+            coeffs()
+        ).ptr()
+    );
 }
 
 
@@ -273,7 +282,7 @@ bool Foam::fv::zeroDimensionalFixedPressureConstraint::constrain
             dimensionedScalar
             (
                 dimPressure,
-                p_->value(mesh().time().userTimeValue())
+                p_->value(mesh().time().value())
             )
         );
 

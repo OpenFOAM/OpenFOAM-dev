@@ -46,12 +46,17 @@ Foam::prghCyclicPressureFvPatchScalarField::prghCyclicPressureFvPatchScalarField
       ? dict.lookupOrDefault<word>("rho", "rho")
       : word::null
     ),
-    rhoInf_(cyclicPatch().owner() ? dict.lookup<scalar>("rhoInf") : NaN),
+    rhoInf_
+    (
+        cyclicPatch().owner()
+      ? dict.lookup<scalar>("rhoInf", dimDensity)
+      : NaN
+    ),
     jump_(p.size(), Zero)
 {
     if (dict.found("jump"))
     {
-        jump_ = scalarField("jump", dict, p.size());
+        jump_ = scalarField("jump", iF.dimensions(), dict, p.size());
     }
 
     evaluateNoUpdateCoeffs();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,6 +69,7 @@ Ostream& operator<<(Ostream&, const Field<Type>&);
 template<class Type>
 Ostream& operator<<(Ostream&, const tmp<Field<Type>>&);
 
+class unitConversion;
 class dictionary;
 
 /*---------------------------------------------------------------------------*\
@@ -187,6 +188,15 @@ public:
 
         //- Construct from a dictionary entry
         Field(const word& keyword, const dictionary&, const label size);
+
+        //- Construct from a dictionary entry with unit conversion
+        Field
+        (
+            const word& keyword,
+            const unitConversion&,
+            const dictionary&,
+            const label size
+        );
 
         //- Clone
         tmp<Field<Type>> clone() const;

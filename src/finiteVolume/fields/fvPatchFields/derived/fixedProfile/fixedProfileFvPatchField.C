@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,9 +51,12 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF, dict, false),
-    profile_(Function1<Type>::New("profile", dict)),
-    origin_(dict.lookup<scalar>("origin")),
-    direction_(dict.lookup("direction"))
+    profile_
+    (
+        Function1<Type>::New("profile", dimLength, iF.dimensions(), dict)
+    ),
+    origin_(dict.lookup<scalar>("origin", dimLength)),
+    direction_(dict.lookup<vector>("direction", dimless))
 {
     if (mag(direction_) == 0)
     {

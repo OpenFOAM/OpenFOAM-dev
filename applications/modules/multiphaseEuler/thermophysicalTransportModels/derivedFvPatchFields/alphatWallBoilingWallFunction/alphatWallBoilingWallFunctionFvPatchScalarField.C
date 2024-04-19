@@ -576,8 +576,8 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     ),
     tolerance_(dict.lookupOrDefault<scalar>("tolerance", rootSmall)),
 
-    Prt_(dict.lookupOrDefault<scalar>("Prt", 0.85)),
-    tau_(dict.lookupOrDefault<scalar>("bubbleWaitingTimeRatio", 0.8)),
+    Prt_(dict.lookupOrDefault<scalar>("Prt", dimless, 0.85)),
+    tau_(dict.lookupOrDefault<scalar>("bubbleWaitingTimeRatio", dimless, 0.8)),
 
     partitioningModel_(nullptr),
     nucleationSiteModel_(nullptr),
@@ -628,6 +628,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     auto readFieldBackwardsCompatible = [&p]
     (
         const dictionary& dict,
+        const unitConversion& units,
         const wordList& keywords,
         scalarField& field
     )
@@ -636,7 +637,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
         {
             if (dict.found(keywords[i]))
             {
-                field = scalarField(keywords[i], dict, p.size());
+                field = scalarField(keywords[i], units, dict, p.size());
                 return;
             }
         }
@@ -646,17 +647,25 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     readFieldBackwardsCompatible
     (
         dict,
+        unitFraction,
         {"wetFraction", "wallLiquidFraction"},
         wetFraction_
     );
 
     if (phaseType_ == liquidPhase)
     {
-        readFieldBackwardsCompatible(dict, {"dDeparture"}, dDeparture_);
+        readFieldBackwardsCompatible
+        (
+            dict,
+            dimLength,
+            {"dDeparture"},
+            dDeparture_
+        );
 
         readFieldBackwardsCompatible
         (
             dict,
+            dimless/dimTime,
             {"fDeparture", "depFrequency"},
             fDeparture_
         );
@@ -664,15 +673,34 @@ alphatWallBoilingWallFunctionFvPatchScalarField
         readFieldBackwardsCompatible
         (
             dict,
+            dimless/dimArea,
             {"nucleationSiteDensity", "nucSiteDensity"},
             nucleationSiteDensity_
         );
 
-        readFieldBackwardsCompatible(dict, {"qQuenching"}, qQuenching_);
+        readFieldBackwardsCompatible
+        (
+            dict,
+            dimPower/dimArea,
+            {"qQuenching"},
+            qQuenching_
+        );
 
-        readFieldBackwardsCompatible(dict, {"qEvaporative"}, qEvaporative_);
+        readFieldBackwardsCompatible
+        (
+            dict,
+            dimPower/dimArea,
+            {"qEvaporative"},
+            qEvaporative_
+        );
 
-        readFieldBackwardsCompatible(dict, {"dmdtf"}, dmdtf_);
+        readFieldBackwardsCompatible
+        (
+            dict,
+            dimDensity/dimTime,
+            {"dmdtf"},
+            dmdtf_
+        );
     }
 }
 

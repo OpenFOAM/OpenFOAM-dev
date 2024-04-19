@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ filmSurfaceVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(p, iF, dict, false),
-    Cs_(dict.lookupOrDefault<scalar>("Cs", 0))
+    Cs_(dict.lookupOrDefault<scalar>("Cs", dimless, 0))
 {
     refValue() = Zero;
     refGrad() = Zero;
@@ -49,7 +49,7 @@ filmSurfaceVelocityFvPatchVectorField
     {
         fvPatchVectorField::operator=
         (
-            vectorField("value", dict, p.size())
+            vectorField("value", iF.dimensions(), dict, p.size())
         );
     }
     else

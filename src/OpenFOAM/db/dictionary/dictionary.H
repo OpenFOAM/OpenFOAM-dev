@@ -58,6 +58,7 @@ SourceFiles
 #include "wordReList.H"
 #include "Pair.H"
 #include "className.H"
+#include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,9 +66,10 @@ namespace Foam
 {
 
 // Forward declaration of friend functions and operators
-class regExp;
 class dictionary;
+class regExp;
 class SHA1Digest;
+class unitConversion;
 
 Istream& operator>>(Istream&, dictionary&);
 Ostream& operator<<(Ostream&, const dictionary&);
@@ -174,7 +176,7 @@ class dictionary
         DLList<autoPtr<regExp>> patternRegexps_;
 
 
-   // Private Member Functions
+    // Private Member Functions
 
         //- Find and return an entry data stream pointer if present
         //  otherwise return nullptr.
@@ -203,6 +205,37 @@ class dictionary
             DLList<entry*>::iterator& wcLink,
             DLList<autoPtr<regExp>>::iterator& reLink
         );
+
+        //- Check that no unit conversions are being performed
+        void assertNoConvertUnits
+        (
+            const char* typeName,
+            const word& keyword,
+            const unitConversion& defaultUnits,
+            ITstream& is
+        ) const;
+
+        //- Read a value, check its dimensions and convert its units
+        template<class T>
+        T readTypeAndConvertUnits
+        (
+            const word& keyword,
+            const unitConversion& defaultUnits,
+            ITstream& is
+        ) const;
+
+        //- Read a value from the token stream
+        template<class T>
+        T readType
+        (
+            const word& keyword,
+            const unitConversion& defaultUnits,
+            ITstream& is
+        ) const;
+
+        //- Read a value from the token stream
+        template<class T>
+        T readType(const word& keyword, ITstream& is) const;
 
 
     // Private Classes
@@ -420,8 +453,7 @@ public:
                 bool patternMatch=true
             ) const;
 
-            //- Find and return a T,
-            //  if not found throw a fatal error.
+            //- Find and return a T, if not found throw a fatal error.
             //  If recursive, search parent dictionaries.
             //  If patternMatch, use regular expressions.
             template<class T>
@@ -432,8 +464,22 @@ public:
                 bool patternMatch=true
             ) const;
 
-            //- Find and return a T, trying a list of keywords in sequence
-            //  if not found throw a fatal error relating to the first keyword
+            //- Find and return a T, with dimension checking and unit
+            //  conversions, and if not found throw a fatal error.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            template<class T>
+            T lookup
+            (
+                const word&,
+                const unitConversion&,
+                bool recursive=false,
+                bool patternMatch=true
+            ) const;
+
+            //- Find and return a T, trying a list of keywords in sequence,
+            //  and if not found throw a fatal error relating to the first
+            //  (preferred) keyword.
             //  If recursive, search parent dictionaries.
             //  If patternMatch, use regular expressions.
             template<class T>
@@ -444,8 +490,23 @@ public:
                 bool patternMatch=true
             ) const;
 
-            //- Find and return a T,
-            //  if not found return the given default value.
+            //- Find and return a T, with dimension checking and unit
+            //  conversions, trying a list of keywords in sequence, and if not
+            //  found throw a fatal error relating to the first (preferred)
+            //  keyword.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            template<class T>
+            T lookupBackwardsCompatible
+            (
+                const wordList&,
+                const unitConversion&,
+                bool recursive=false,
+                bool patternMatch=true
+            ) const;
+
+            //- Find and return a T, if not found return the given default
+            //  value.
             //  If recursive, search parent dictionaries.
             //  If patternMatch, use regular expressions.
             template<class T>
@@ -457,14 +518,45 @@ public:
                 bool patternMatch=true
             ) const;
 
-            //- Find and return a T, trying a list of keywords in sequence
-            //  if not found throw a fatal error relating to the first keyword
+            //- Find and return a T with dimension checking and unit
+            //  conversions, and if not found return the given default value.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            template<class T>
+            T lookupOrDefault
+            (
+                const word&,
+                const unitConversion&,
+                const T&,
+                bool recursive=false,
+                bool patternMatch=true
+            ) const;
+
+            //- Find and return a T, trying a list of keywords in sequence,
+            //  and if not found throw a fatal error relating to the first
+            //  (preferred) keyword
             //  If recursive, search parent dictionaries.
             //  If patternMatch, use regular expressions.
             template<class T>
             T lookupOrDefaultBackwardsCompatible
             (
                 const wordList&,
+                const T&,
+                bool recursive=false,
+                bool patternMatch=true
+            ) const;
+
+            //- Find and return a T, with dimension checking and unit
+            //  conversions, trying a list of keywords in sequence, and if not
+            //  found throw a fatal error relating to the first (preferred)
+            //  keyword
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            template<class T>
+            T lookupOrDefaultBackwardsCompatible
+            (
+                const wordList&,
+                const unitConversion&,
                 const T&,
                 bool recursive=false,
                 bool patternMatch=true
@@ -483,7 +575,7 @@ public:
                 bool patternMatch=true
             );
 
-            //- Find an entry if present, and assign to T
+            //- Find an entry if present, and assign to T.
             //  Returns true if the entry was found.
             //  If recursive, search parent dictionaries.
             //  If patternMatch, use regular expressions.
@@ -491,6 +583,21 @@ public:
             bool readIfPresent
             (
                 const word&,
+                T&,
+                bool recursive=false,
+                bool patternMatch=true
+            ) const;
+
+            //- Find an entry if present, and assign to T, with dimension
+            //  checking and unit conversions.
+            //  Returns true if the entry was found.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            template<class T>
+            bool readIfPresent
+            (
+                const word&,
+                const unitConversion&,
                 T&,
                 bool recursive=false,
                 bool patternMatch=true
@@ -768,6 +875,36 @@ public:
 };
 
 
+// Template Specialisations
+
+//- Specialise readType for types for which unit conversions can be performed
+#define DECLARE_SPECIALISED_READ_TYPE(T, nullArg)                              \
+                                                                               \
+    template<>                                                                 \
+    T Foam::dictionary::readType                                               \
+    (                                                                          \
+        const word& keyword,                                                   \
+        const unitConversion& defaultUnits,                                    \
+        ITstream& is                                                           \
+    ) const;                                                                   \
+                                                                               \
+    template<>                                                                 \
+    T Foam::dictionary::readType                                               \
+    (                                                                          \
+        const word& keyword,                                                   \
+        ITstream& is                                                           \
+    ) const;
+
+#define DECLARE_SPECIALISED_READ_LIST_TYPE(T, nullArg)                         \
+    DECLARE_SPECIALISED_READ_TYPE(List<T>, nullArg)
+
+FOR_ALL_FIELD_TYPES(DECLARE_SPECIALISED_READ_TYPE);
+FOR_ALL_FIELD_TYPES(DECLARE_SPECIALISED_READ_LIST_TYPE);
+
+#undef DECLARE_SPECIALISED_READ_TYPE
+#undef DECLARE_SPECIALISED_READ_FIELD_TYPE
+
+
 // Global Operators
 
 //- Combine dictionaries.
@@ -888,6 +1025,16 @@ void writeEntry(Ostream& os, const dictionary& dict);
 template<class EntryType>
 void writeEntry(Ostream& os, const word& entryName, const EntryType& value);
 
+//- Helper function to write the keyword and entry
+template<class EntryType>
+void writeEntry
+(
+    Ostream& os,
+    const word& entryName,
+    const unitConversion& defaultUnits,
+    const EntryType& value
+);
+
 //- Helper function to write the keyword and entry only if the
 //  values are not equal. The value is then output as value2
 template<class EntryType>
@@ -895,6 +1042,18 @@ void writeEntryIfDifferent
 (
     Ostream& os,
     const word& entryName,
+    const EntryType& value1,
+    const EntryType& value2
+);
+
+//- Helper function to write the keyword and entry only if the
+//  values are not equal. The value is then output as value2
+template<class EntryType>
+void writeEntryIfDifferent
+(
+    Ostream& os,
+    const word& entryName,
+    const unitConversion& defaultUnits,
     const EntryType& value1,
     const EntryType& value2
 );

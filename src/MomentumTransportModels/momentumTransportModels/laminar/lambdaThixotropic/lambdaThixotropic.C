@@ -65,8 +65,8 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
     b_("b", dimless, this->coeffDict_),
     d_("d", dimless, this->coeffDict_),
     c_("c", pow(dimTime, d_.value() - scalar(1)), this->coeffDict_),
-    nu0_("nu0", dimViscosity, this->coeffDict_),
-    nuInf_("nuInf", dimViscosity, this->coeffDict_),
+    nu0_("nu0", dimKinematicViscosity, this->coeffDict_),
+    nuInf_("nuInf", dimKinematicViscosity, this->coeffDict_),
     K_(1 - sqrt(nuInf_/nu0_)),
     BinghamPlastic_(this->coeffDict_.found("sigmay")),
     sigmay_

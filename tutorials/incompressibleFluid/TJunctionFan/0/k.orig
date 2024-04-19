@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [m^2 s^-2];
+dimensions      [energy/mass];
 
 internalField   uniform 0.375;
 

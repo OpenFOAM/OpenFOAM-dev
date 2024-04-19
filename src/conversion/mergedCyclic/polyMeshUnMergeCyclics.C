@@ -40,7 +40,7 @@ labelList primitivePatchGetZones
     const scalar includedAngle
 )
 {
-    const scalar minCos = Foam::cos(degToRad(180.0 - includedAngle));
+    const scalar minCos = Foam::cos(degToRad(180.0) - includedAngle);
 
     const labelListList& edgeFaces = pp.edgeFaces();
     const labelListList& faceEdges = pp.faceEdges();
@@ -154,7 +154,7 @@ boolList primitivePatchGetHalves
     {
         FatalErrorInFunction
             << "Patch did not divide into halves based on topology and an "
-            << "included angle of " << includedAngle << " degrees"
+            << "included angle of " << radToDeg(includedAngle) << " degrees"
             << exit(FatalError);
     }
 

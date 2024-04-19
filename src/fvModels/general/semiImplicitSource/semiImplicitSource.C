@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,12 +72,22 @@ void Foam::fv::semiImplicitSource::readCoeffs()
         fieldSu_.set
         (
             iter().keyword(),
-            new unknownTypeFunction1("explicit", iter().dict())
+            new unknownTypeFunction1
+            (
+                "explicit",
+                mesh().time().userUnits(),
+                iter().dict()
+            )
         );
         fieldSp_.set
         (
             iter().keyword(),
-            Function1<scalar>::New("implicit", iter().dict()).ptr()
+            new unknownTypeFunction1
+            (
+                "implicit",
+                mesh().time().userUnits(),
+                iter().dict()
+            )
         );
     }
 }
@@ -90,7 +100,17 @@ void Foam::fv::semiImplicitSource::addSupType
     fvMatrix<Type>& eqn
 ) const
 {
-    const scalar t = mesh().time().userTimeValue();
+    // Set the value units for the functions
+    fieldSu_[field.name()]->template setValueUnits<Type>
+    (
+        eqn.dimensions()
+    );
+    fieldSp_[field.name()]->template setValueUnits<scalar>
+    (
+        eqn.dimensions()/eqn.psi().dimensions()
+    );
+
+    const scalar t = mesh().time().value();
 
     const VolField<Type>& psi = eqn.psi();
 
@@ -152,7 +172,7 @@ void Foam::fv::semiImplicitSource::addSupType
 
     // Implicit source function for the field
     UIndirectList<scalar>(Sp, set_.cells()) =
-        fieldSp_[field.name()]->value(t)/VDash;
+        fieldSp_[field.name()]->template value<scalar>(t)/VDash;
 
     eqn += Su - fvm::SuSp(-Sp, psi);
 }

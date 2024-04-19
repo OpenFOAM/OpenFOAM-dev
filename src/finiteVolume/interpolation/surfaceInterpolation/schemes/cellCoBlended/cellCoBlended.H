@@ -207,7 +207,7 @@ public:
 
                 tUflux = faceFlux_/fvc::interpolate(rho);
             }
-            else if (faceFlux_.dimensions() != dimFlux)
+            else if (faceFlux_.dimensions() != dimVolumetricFlux)
             {
                 FatalErrorInFunction
                     << "dimensions of faceFlux are not correct"

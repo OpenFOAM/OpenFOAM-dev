@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,10 +52,19 @@ displacementLinearMotionMotionSolver
 )
 :
     points0MotionSolver(name, mesh, dict, typeName),
-    axis_(normalised(vector(coeffDict().lookup("axis")))),
-    xFixed_(coeffDict().lookup<scalar>("xFixed")),
-    xMoving_(coeffDict().lookup<scalar>("xMoving")),
-    displacement_(Function1<scalar>::New("displacement", coeffDict()))
+    axis_(normalised(coeffDict().lookup<vector>("axis", dimless))),
+    xFixed_(coeffDict().lookup<scalar>("xFixed", dimLength)),
+    xMoving_(coeffDict().lookup<scalar>("xMoving", dimLength)),
+    displacement_
+    (
+        Function1<scalar>::New
+        (
+            "displacement",
+            mesh.time().userUnits(),
+            dimLength,
+            coeffDict()
+        )
+    )
 {}
 
 
@@ -74,9 +83,7 @@ Foam::displacementLinearMotionMotionSolver::curPoints() const
     tmp<pointField> tcurPoints(new pointField(points0()));
     pointField& curPoints = tcurPoints.ref();
 
-    const scalar t = mesh().time().userTimeValue();
-
-    const scalar displacement = displacement_->value(t);
+    const scalar displacement = displacement_->value(mesh().time().value());
 
     forAll(curPoints, i)
     {

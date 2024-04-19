@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,12 @@ class Constant
         const Type value_;
 
 
+    // Private Member Functions
+
+        //- Read the value
+        static Type readValue(const unitConversions& units, Istream& is);
+
+
 public:
 
     // Runtime type information
@@ -77,12 +83,15 @@ public:
         Constant(const word& name, const Type& val);
 
         //- Construct from name and dictionary
-        Constant(const word& name, const dictionary& dict);
+        Constant
+        (
+            const word& name,
+            const unitConversions& units,
+            const dictionary& dict
+        );
 
         //- Construct from name and Istream
-        //  Reads the constant value without the Function1 type
-        //  for backward compatibility
-        Constant(const word& name, Istream& is);
+        Constant(const word& name, const unitConversions& units, Istream& is);
 
         //- Copy constructor
         Constant(const Constant<Type>& cnst);
@@ -110,7 +119,7 @@ public:
         virtual inline bool constant() const;
 
         //- Write in dictionary format
-        virtual void write(Ostream& os) const;
+        virtual void write(Ostream& os, const unitConversions& units) const;
 
 
     // Member Operators

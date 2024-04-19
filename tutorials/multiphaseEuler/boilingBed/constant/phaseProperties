@@ -209,17 +209,13 @@ saturationTemperature
     {
         type            function1;
 
-        function        scale;
-
-        xScale          1e-5;
-        scale           1;
-        value
+        function
         {
             type            table;
             format          csv;
             nHeaderLine     1;
-            refColumn       1;
-            componentColumns (0);
+            units           ([bar] [K]);
+            columns         (1 0);
             mergeSeparators no;
             file            "constant/water-saturation.csv";
             outOfBounds     clamp;

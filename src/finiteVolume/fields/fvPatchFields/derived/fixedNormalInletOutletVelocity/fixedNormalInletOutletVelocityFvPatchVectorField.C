@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,10 @@ fixedNormalInletOutletVelocityFvPatchVectorField
         fvPatchVectorField::New(p, iF, dict.subDict("normalVelocity"))
     )
 {
-    fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
+    fvPatchVectorField::operator=
+    (
+        vectorField("value", iF.dimensions(), dict, p.size())
+    );
     refValue() = normalVelocity();
     refGrad() = Zero;
     valueFraction() = Zero;

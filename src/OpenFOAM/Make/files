@@ -92,6 +92,7 @@ primitives/triad/triad.C
 primitives/omega/omega.C
 
 # Run-time selectable functions
+primitives/functions/Function1/Function1/Function1UnitConversions.C
 primitives/functions/Function1/makeFunction1s.C
 primitives/functions/Function1/reverseRamp/reverseRamp.C
 primitives/functions/Function1/linearRamp/linearRamp.C
@@ -106,6 +107,7 @@ primitives/functions/Function1/Table/TableReader/makeTableReaders.C
 primitives/functions/Function1/unknownTypeFunction1/unknownTypeFunction1.C
 primitives/functions/Function1/omega1/omega1.C
 
+primitives/functions/Function2/Function2/Function2UnitConversions.C
 primitives/functions/Function2/makeFunction2s.C
 
 primitives/subModelBase/subModelBase.C
@@ -303,9 +305,15 @@ $(userTime)/userTime/userTimeNew.C
 $(userTime)/realTime/realTime.C
 $(userTime)/engineTime/engineTime.C
 
+symbols/symbols.C
 dimensionSet/dimensionSet.C
 dimensionSet/dimensionSetIO.C
 dimensionSet/dimensionSets.C
+unitConversion/unitConversion.C
+unitConversion/unitConversionIO.C
+unitConversion/unitConversions.C
+unitConversion/namedUnitConversion.C
+unitConversion/namedUnitConversionIO.C
 dimensionedTypes/dimensionedScalar/dimensionedScalar.C
 dimensionedTypes/dimensionedSphericalTensor/dimensionedSphericalTensor.C
 dimensionedTypes/dimensionedSymmTensor/dimensionedSymmTensor.C

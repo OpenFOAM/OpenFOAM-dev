@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,13 +38,22 @@ Foam::fixedMeanOutletInletFvPatchField<Type>::fixedMeanOutletInletFvPatchField
 )
 :
     outletInletFvPatchField<Type>(p, iF),
-    meanValue_(Function1<Type>::New("meanValue", dict))
+    meanValue_
+    (
+        Function1<Type>::New
+        (
+            "meanValue",
+            this->db().time().userUnits(),
+            iF.dimensions(),
+            dict
+        )
+    )
 {
     this->phiName_ = dict.lookupOrDefault<word>("phi", "phi");
 
     fvPatchField<Type>::operator=
     (
-        Field<Type>("value", dict, p.size())
+        Field<Type>("value", iF.dimensions(), dict, p.size())
     );
 
     this->refValue() = *this;
@@ -89,8 +98,7 @@ void Foam::fixedMeanOutletInletFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTimeValue();
-    Type meanValue = meanValue_->value(t);
+    Type meanValue = meanValue_->value(this->db().time().value());
 
     Field<Type> newValues(this->patchInternalField());
 
@@ -117,7 +125,13 @@ template<class Type>
 void Foam::fixedMeanOutletInletFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    writeEntry(os, meanValue_());
+    writeEntry
+    (
+        os,
+        this->db().time().userUnits(),
+        this->internalField().dimensions(),
+        meanValue_()
+    );
     writeEntry(os, "value", *this);
 }
 

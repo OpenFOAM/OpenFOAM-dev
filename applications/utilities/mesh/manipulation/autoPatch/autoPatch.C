@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,6 @@ Description
 #include "Time.H"
 #include "repatchMesh.H"
 #include "repatcher.H"
-#include "unitConversion.H"
 #include "OFstream.H"
 #include "ListOps.H"
 
@@ -84,12 +83,12 @@ int main(int argc, char *argv[])
         << " s\n" << endl << endl;
 
 
-    const scalar featureAngle = args.argRead<scalar>(1);
+    const scalar featureAngle = degToRad(args.argRead<scalar>(1));
     const bool overwrite      = args.optionFound("overwrite");
 
-    const scalar minCos = Foam::cos(degToRad(featureAngle));
+    const scalar minCos = Foam::cos(featureAngle);
 
-    Info<< "Feature:" << featureAngle << endl
+    Info<< "Feature:" << radToDeg(featureAngle) << endl
         << "minCos :" << minCos << endl
         << endl;
 

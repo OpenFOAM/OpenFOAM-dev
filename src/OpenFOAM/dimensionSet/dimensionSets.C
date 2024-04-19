@@ -24,8 +24,27 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dimensionSet.H"
-#include "dimensionedScalar.H"
 #include "demandDrivenData.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+HashTable<dimensionSet>* dimensionsPtr_(nullptr);
+
+// Delete the above data at the end of the run
+struct deleteDimensionsPtr
+{
+    ~deleteDimensionsPtr()
+    {
+        deleteDemandDrivenData(dimensionsPtr_);
+    }
+};
+
+deleteDimensionsPtr deleteDimensionsPtr_;
+
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -41,7 +60,6 @@ const Foam::dimensionSet Foam::dimLuminousIntensity(0, 0, 0, 0, 0, 0, 1);
 
 const Foam::dimensionSet Foam::dimArea(sqr(dimLength));
 const Foam::dimensionSet Foam::dimVolume(pow3(dimLength));
-const Foam::dimensionSet Foam::dimVol(dimVolume);
 
 const Foam::dimensionSet Foam::dimRate(dimless/dimTime);
 
@@ -55,136 +73,79 @@ const Foam::dimensionSet Foam::dimEnergy(dimForce*dimLength);
 const Foam::dimensionSet Foam::dimPower(dimEnergy/dimTime);
 
 const Foam::dimensionSet Foam::dimPressure(dimForce/dimArea);
+const Foam::dimensionSet Foam::dimKinematicPressure(dimPressure/dimDensity);
 const Foam::dimensionSet Foam::dimCompressibility(dimDensity/dimPressure);
 const Foam::dimensionSet Foam::dimGasConstant(dimEnergy/dimMass/dimTemperature);
 const Foam::dimensionSet Foam::dimSpecificHeatCapacity(dimGasConstant);
-const Foam::dimensionSet Foam::dimViscosity(dimArea/dimTime);
-const Foam::dimensionSet Foam::dimDynamicViscosity(dimDensity*dimViscosity);
+const Foam::dimensionSet Foam::dimKinematicViscosity(dimArea/dimTime);
+const Foam::dimensionSet Foam::dimDynamicViscosity
+(
+    dimDensity*dimKinematicViscosity
+);
+const Foam::dimensionSet Foam::dimThermalConductivity
+(
+    dimPower/dimLength/dimTemperature
+);
 
-const Foam::dimensionSet Foam::dimFlux(dimArea*dimVelocity);
-const Foam::dimensionSet Foam::dimMassFlux(dimDensity*dimFlux);
+const Foam::dimensionSet Foam::dimVolumetricFlux(dimArea*dimVelocity);
+const Foam::dimensionSet Foam::dimMassFlux(dimDensity*dimVolumetricFlux);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
+const Foam::HashTable<Foam::dimensionSet>& Foam::dimensions()
 {
+    static const NamedEnum<dimensionSet::dimensionType, 7>& names =
+        dimensionSet::dimensionTypeNames_;
 
-dictionary* dimensionSetsDictPtr_(nullptr);
-
-const dictionary& dimensionSetsDict()
-{
-    if (!dimensionSetsDictPtr_)
+    if (!dimensionsPtr_)
     {
-        dictionary* cachedPtr = nullptr;
-        dimensionSetsDictPtr_ = new dictionary
+        dimensionsPtr_ = new HashTable<dimensionSet>();
+
+        dimensionsPtr_->insert(names[dimensionSet::MASS], dimMass);
+        dimensionsPtr_->insert(names[dimensionSet::LENGTH], dimLength);
+        dimensionsPtr_->insert(names[dimensionSet::TIME], dimTime);
+        dimensionsPtr_->insert
         (
-            debug::switchSet
-            (
-                "DimensionSets",
-                cachedPtr
-            )
+            names[dimensionSet::TEMPERATURE],
+            dimTemperature
         );
+        dimensionsPtr_->insert(names[dimensionSet::MOLES], dimMoles);
+        dimensionsPtr_->insert(names[dimensionSet::CURRENT], dimCurrent);
+        dimensionsPtr_->insert
+        (
+            names[dimensionSet::LUMINOUS_INTENSITY],
+            dimLuminousIntensity
+        );
+
+        dimensionsPtr_->insert("area", dimArea);
+        dimensionsPtr_->insert("volume", dimVolume);
+
+        dimensionsPtr_->insert("rate", dimRate);
+
+        dimensionsPtr_->insert("velocity", dimVelocity);
+        dimensionsPtr_->insert("momentum", dimMomentum);
+        dimensionsPtr_->insert("acceleration", dimAcceleration);
+
+        dimensionsPtr_->insert("density", dimDensity);
+        dimensionsPtr_->insert("force", dimForce);
+        dimensionsPtr_->insert("energy", dimEnergy);
+        dimensionsPtr_->insert("power", dimPower);
+
+        dimensionsPtr_->insert("pressure", dimPressure);
+        dimensionsPtr_->insert("kinematicPressure", dimKinematicPressure);
+        dimensionsPtr_->insert("compressibility", dimCompressibility);
+        dimensionsPtr_->insert("gasConstant", dimGasConstant);
+        dimensionsPtr_->insert("specificHeatCapacity", dimSpecificHeatCapacity);
+        dimensionsPtr_->insert("kinematicViscosity", dimKinematicViscosity);
+        dimensionsPtr_->insert("dynamicViscosity", dimDynamicViscosity);
+        dimensionsPtr_->insert("thermalConductivity", dimThermalConductivity);
+
+        dimensionsPtr_->insert("volumetricFlux", dimVolumetricFlux);
+        dimensionsPtr_->insert("massFlux", dimMassFlux);
     }
 
-    return *dimensionSetsDictPtr_;
-}
-
-HashTable<dimensionedScalar>* addedUnitsPtr_(nullptr);
-HashTable<dimensionedScalar>* unitSetPtr_(nullptr);
-
-// Delete the above data at the end of the run
-struct deleteDimensionSystemsPtr
-{
-    ~deleteDimensionSystemsPtr()
-    {
-        deleteDemandDrivenData(dimensionSetsDictPtr_);
-        deleteDemandDrivenData(addedUnitsPtr_);
-        deleteDemandDrivenData(unitSetPtr_);
-    }
-};
-
-deleteDimensionSystemsPtr deleteDimensionSystemsPtr_;
-
-}
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-void Foam::addUnit(const dimensionedScalar& unit)
-{
-    deleteDemandDrivenData(dimensionSetsDictPtr_);
-
-    if (!addedUnitsPtr_)
-    {
-        addedUnitsPtr_ = new HashTable<dimensionedScalar>();
-    }
-
-    addedUnitsPtr_->insert(unit.name(), unit);
-
-    deleteDemandDrivenData(unitSetPtr_);
-}
-
-
-const Foam::HashTable<Foam::dimensionedScalar>& Foam::unitSet()
-{
-    if (!unitSetPtr_)
-    {
-        const dictionary& dimSetsDict = dimensionSetsDict();
-
-        if (!dimSetsDict.found("unitSet"))
-        {
-            FatalIOErrorInFunction(dimSetsDict)
-                << "Cannot find unitSet in dictionary " << dimSetsDict.name()
-                << exit(FatalIOError);
-        }
-
-        const word unitSetDictName =
-            dimSetsDict.lookup<word>("unitSet") + "Coeffs";
-
-        if (!dimSetsDict.found(unitSetDictName))
-        {
-            FatalIOErrorInFunction(dimSetsDict)
-                << "Cannot find " << unitSetDictName << " in dictionary "
-                << dimSetsDict.name() << exit(FatalIOError);
-        }
-
-        const dictionary& unitSetDict = dimSetsDict.subDict(unitSetDictName);
-
-        unitSetPtr_ = new HashTable<dimensionedScalar>(unitSetDict.size());
-
-        forAllConstIter(dictionary, unitSetDict, iter)
-        {
-            const dimensionedScalar dt(iter().keyword(), iter().stream());
-
-            const bool ok = unitSetPtr_->insert(iter().keyword(), dt);
-
-            if (!ok)
-            {
-                FatalIOErrorInFunction(dimSetsDict)
-                    << "Duplicate unit " << iter().keyword()
-                    << " read from dictionary"
-                    << exit(FatalIOError);
-            }
-        }
-
-        if (addedUnitsPtr_)
-        {
-            forAllConstIter(HashTable<dimensionedScalar>, *addedUnitsPtr_, iter)
-            {
-                const bool ok = unitSetPtr_->insert(iter.key(), iter());
-
-                if (!ok)
-                {
-                    FatalIOErrorInFunction(dimSetsDict)
-                        << "Duplicate unit " << iter.key()
-                        << " added to dictionary"
-                        << exit(FatalIOError);
-                }
-            }
-        }
-    }
-
-    return *unitSetPtr_;
+    return *dimensionsPtr_;
 }
 
 

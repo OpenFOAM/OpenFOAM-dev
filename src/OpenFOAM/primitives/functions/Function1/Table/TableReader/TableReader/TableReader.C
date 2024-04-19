@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,57 @@ License
 
 #include "TableReader.H"
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+template<class Type>
+void Foam::TableReader<Type>::convertRead
+(
+    const Function1s::unitConversions& units,
+    List<Tuple2<scalar, Type>>& table
+) const
+{
+    forAll(table, i)
+    {
+        table[i].first() = units.x.toStandard(table[i].first());
+        table[i].second() = units.value.toStandard(table[i].second());
+    }
+}
+
+
+template<class Type>
+Foam::List<Foam::Tuple2<Foam::scalar, Type>>
+Foam::TableReader<Type>::convertRead
+(
+    const Function1s::unitConversions& units,
+    const List<Tuple2<scalar, Type>>& table
+) const
+{
+    List<Tuple2<scalar, Type>> tableCopy(table);
+    convertRead(units, tableCopy);
+    return tableCopy;
+}
+
+
+template<class Type>
+Foam::List<Foam::Tuple2<Foam::scalar, Type>>
+Foam::TableReader<Type>::convertWrite
+(
+    const Function1s::unitConversions& units,
+    const List<Tuple2<scalar, Type>>& table
+) const
+{
+    List<Tuple2<scalar, Type>> tableCopy(table);
+
+    forAll(tableCopy, i)
+    {
+        tableCopy[i].first() = units.x.toUser(tableCopy[i].first());
+        tableCopy[i].second() = units.value.toUser(tableCopy[i].second());
+    }
+
+    return tableCopy;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -36,6 +87,18 @@ Foam::TableReader<Type>::TableReader()
 
 template<class Type>
 Foam::TableReader<Type>::~TableReader()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::TableReader<Type>::write
+(
+    Ostream& os,
+    const Function1s::unitConversions& units,
+    const List<Tuple2<scalar, Type>>& table
+) const
 {}
 
 

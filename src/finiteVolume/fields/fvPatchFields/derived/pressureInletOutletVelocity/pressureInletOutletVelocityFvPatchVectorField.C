@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,12 +42,21 @@ pressureInletOutletVelocityFvPatchVectorField
     directionMixedFvPatchVectorField(p, iF),
     phiName_(dict.lookupOrDefault<word>("phi", "phi"))
 {
-    fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
+    fvPatchVectorField::operator=
+    (
+        vectorField("value", iF.dimensions(), dict, p.size())
+    );
 
     if (dict.found("tangentialVelocity"))
     {
         tangentialVelocity_ =
-            Function1<vector>::New("tangentialVelocity", dict);
+            Function1<vector>::New
+            (
+                "tangentialVelocity",
+                db().time().userUnits(),
+                dimVelocity,
+                dict
+            );
     }
 
     refValue() = Zero;
@@ -95,8 +104,8 @@ void Foam::pressureInletOutletVelocityFvPatchVectorField::updateCoeffs()
 
     if (tangentialVelocity_.valid())
     {
-        const scalar t = this->db().time().userTimeValue();
-        const vector tangentialVelocity = tangentialVelocity_->value(t);
+        const vector tangentialVelocity =
+            tangentialVelocity_->value(db().time().value());
         const vectorField n(patch().nf());
         refValue() = tangentialVelocity - n*(n & tangentialVelocity);
     }
@@ -121,7 +130,13 @@ const
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     if (tangentialVelocity_.valid())
     {
-        writeEntry(os, tangentialVelocity_());
+        writeEntry
+        (
+            os,
+            db().time().userUnits(),
+            dimVelocity,
+            tangentialVelocity_()
+        );
     }
     writeEntry(os, "value", *this);
 }

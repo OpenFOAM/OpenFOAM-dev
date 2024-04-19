@@ -59,6 +59,7 @@ codeRead
     const Function1s::Table<scalar> initialDistribution
     (
         "initialDistribution",
+        {dimLength, dimless},
         dictionary
         (
             "format", "foam",

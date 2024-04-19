@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,16 @@ uniformInletOutletEnergyTemperatureFvScalarFieldSource
 )
 :
     energyCalculatedTemperatureFvScalarFieldSource(iF, dict),
-    uniformInletHe_(Function1<scalar>::New("uniformInletHe", dict))
+    uniformInletHe_
+    (
+        Function1<scalar>::New
+        (
+            "uniformInletHe",
+            db().time().userUnits(),
+            dimEnergy/dimMass,
+            dict
+        )
+    )
 {}
 
 
@@ -70,8 +79,7 @@ Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::sourceHeValue
     const fvSource& source
 ) const
 {
-    const scalar t = this->db().time().userTimeValue();
-    const scalar v = uniformInletHe_->value(t);
+    const scalar v = uniformInletHe_->value(db().time().value());
     return tmp<scalarField>(new scalarField(source.nCells(), v));
 }
 
@@ -94,7 +102,13 @@ void Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::write
 ) const
 {
     fvScalarFieldSource::write(os);
-    writeEntry(os, uniformInletHe_());
+    writeEntry
+    (
+        os,
+        db().time().userUnits(),
+        dimEnergy/dimMass,
+        uniformInletHe_()
+    );
 }
 
 

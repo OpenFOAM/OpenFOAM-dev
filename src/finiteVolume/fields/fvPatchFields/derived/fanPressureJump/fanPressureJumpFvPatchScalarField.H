@@ -57,8 +57,7 @@ Usage
             file            "$FOAM_CASE/constant/pressureVsQ";
             format          csv;
             nHeaderLine     1;
-            refColumn       0;
-            componentColumns 1(1);
+            columns         (0 1);
             separator       ",";
             mergeSeparators no;
             outOfBounds     clamp;

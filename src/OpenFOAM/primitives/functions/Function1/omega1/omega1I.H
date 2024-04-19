@@ -29,7 +29,7 @@ License
 
 inline Foam::scalar Foam::Function1s::omega::value(const scalar t) const
 {
-    return factor_*omega_->value(t);
+    return omega_->value(t);
 }
 
 
@@ -39,7 +39,7 @@ inline Foam::scalar Foam::Function1s::omega::integral
     const scalar t2
 ) const
 {
-    return factor_*omega_->integral(t1, t2);
+    return omega_->integral(t1, t2);
 }
 
 

@@ -43,7 +43,7 @@ namespace functionObjects
 
 Foam::vector Foam::functionObjects::movingForces::CofR() const
 {
-    return CofR_->value(time_.userTimeValue());
+    return CofR_->value(time_.value());
 }
 
 
@@ -88,7 +88,7 @@ bool Foam::functionObjects::movingForces::read(const dictionary& dict)
     forcesBase::read(dict);
 
     // Centre of rotation for moment calculations
-    CofR_ = Function1<vector>::New("CofR", dict);
+    CofR_ = Function1<vector>::New("CofR", time_.userUnits(), dimLength, dict);
 
     return true;
 }

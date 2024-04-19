@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,56 +21,26 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-InNamespace
-    Foam
-
-Description
-    Unit conversion functions
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef unitConversion_H
-#define unitConversion_H
+#include "Function2.H"
 
-#include "mathematicalConstants.H"
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+void Foam::assertNoConvertUnits
+(
+    const word& typeName,
+    const Function2s::unitConversions& units,
+    const dictionary& dict
+)
 {
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-//- Conversion from degrees to radians
-inline scalar degToRad(const scalar deg)
-{
-    return deg*constant::mathematical::pi/180.0;
+    if (!units.x.standard() || !units.y.standard() || !units.value.standard())
+    {
+        FatalIOErrorInFunction(dict)
+            << "Unit conversions are not supported by "
+            << typeName << " function2 types" << abort(FatalError);
+    }
 }
 
-//- Conversion from radians to degrees
-inline scalar radToDeg(const scalar rad)
-{
-    return rad*180.0/constant::mathematical::pi;
-}
-
-//- Conversion from atm to Pa
-inline scalar atmToPa(const scalar atm)
-{
-    return atm*101325.0;
-}
-
-//- Conversion from atm to Pa
-inline scalar paToAtm(const scalar pa)
-{
-    return pa/101325.0;
-}
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

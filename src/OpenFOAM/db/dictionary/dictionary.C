@@ -27,6 +27,7 @@ License
 #include "dictionaryEntry.H"
 #include "regExp.H"
 #include "OSHA1stream.H"
+#include "unitConversion.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -235,6 +236,83 @@ bool Foam::dictionary::findInPatterns
 
     return false;
 }
+
+
+void Foam::dictionary::assertNoConvertUnits
+(
+    const char* typeName,
+    const word& keyword,
+    const unitConversion& defaultUnits,
+    ITstream& is
+) const
+{
+    if (!defaultUnits.standard())
+    {
+        FatalIOErrorInFunction(is)
+            << "Unit conversions are not supported when reading "
+            << typeName << " types" << abort(FatalError);
+    }
+}
+
+
+template<class T>
+T Foam::dictionary::readTypeAndConvertUnits
+(
+    const word& keyword,
+    const unitConversion& defaultUnits,
+    ITstream& is
+) const
+{
+    // Read the units if they are before the value
+    unitConversion units(defaultUnits);
+    const bool haveUnits = units.readIfPresent(keyword, *this, is);
+
+    // Read the value
+    T value = pTraits<T>(is);
+
+    // Read the units if they are after the value
+    if (!haveUnits && !is.eof())
+    {
+        units.readIfPresent(keyword, *this, is);
+    }
+
+    // Modify the value by the unit conversion
+    units.makeStandard(value);
+
+    return value;
+}
+
+
+#define IMPLEMENT_SPECIALISED_READ_TYPE(T, nullArg)                            \
+                                                                               \
+    template<>                                                                 \
+    Foam::T Foam::dictionary::readType                                         \
+    (                                                                          \
+        const word& keyword,                                                   \
+        const unitConversion& defaultUnits,                                    \
+        ITstream& is                                                           \
+    ) const                                                                    \
+    {                                                                          \
+        return readTypeAndConvertUnits<T>(keyword, defaultUnits, is);          \
+    }                                                                          \
+                                                                               \
+    template<>                                                                 \
+    Foam::T Foam::dictionary::readType                                         \
+    (                                                                          \
+        const word& keyword,                                                   \
+        ITstream& is                                                           \
+    ) const                                                                    \
+    {                                                                          \
+        return readTypeAndConvertUnits<T>(keyword, unitAny, is);               \
+    }
+
+#define IMPLEMENT_SPECIALISED_READ_LIST_TYPE(T, nullArg)                       \
+    IMPLEMENT_SPECIALISED_READ_TYPE(List<Foam::T>, nullArg)
+
+FOR_ALL_FIELD_TYPES(IMPLEMENT_SPECIALISED_READ_TYPE)
+FOR_ALL_FIELD_TYPES(IMPLEMENT_SPECIALISED_READ_LIST_TYPE)
+
+#undef IMPLEMENT_SPECIALISED_READ_TYPE
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

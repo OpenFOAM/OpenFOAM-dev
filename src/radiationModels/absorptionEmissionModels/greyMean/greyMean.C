@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "greyMean.H"
 #include "addToRunTimeSelectionTable.H"
-#include "unitConversion.H"
 #include "extrapolatedCalculatedFvPatchFields.H"
 #include "fluidMulticomponentThermo.H"
 
@@ -200,6 +199,8 @@ Foam::radiationModels::absorptionEmissionModels::greyMean::aCont
 
     scalarField& a = ta.ref().primitiveFieldRef();
 
+    const unitConversion& unitAtm = units()["atm"];
+
     forAll(a, celli)
     {
         forAllConstIter(HashTable<label>, speciesNames_, iter)
@@ -213,8 +214,9 @@ Foam::radiationModels::absorptionEmissionModels::greyMean::aCont
                     mesh_.lookupObject<volScalarField>("ft");
 
                 const List<scalar>& Ynft = lookUpTablePtr_().lookUp(ft[celli]);
+
                 // moles x pressure [atm]
-                Xipi = Ynft[specieIndex_[n]]*paToAtm(p[celli]);
+                Xipi = unitAtm.toUser(Ynft[specieIndex_[n]]*p[celli]);
             }
             else
             {
@@ -229,7 +231,7 @@ Foam::radiationModels::absorptionEmissionModels::greyMean::aCont
                 const scalar Xk =
                     mcThermo.Y(index)[celli]/(mcThermo.WiValue(index)*invWt);
 
-                Xipi = Xk*paToAtm(p[celli]);
+                Xipi = unitAtm.toUser(Xk*p[celli]);
             }
 
             const absorptionCoeffs::coeffArray& b = coeffs_[n].coeffs(T[celli]);

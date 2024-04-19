@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,6 @@ License
 #include "triSurfaceFields.H"
 #include "meshTools.H"
 #include "Time.H"
-#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -209,12 +208,12 @@ Foam::triSurfaceMesh::extractCloseness
 {
     const scalar internalToleranceCosAngle
     (
-        cos(degToRad(180 - internalAngleTolerance))
+        cos(degToRad(180) - internalAngleTolerance)
     );
 
     const scalar externalToleranceCosAngle
     (
-        cos(degToRad(180 - externalAngleTolerance))
+        cos(degToRad(180) - externalAngleTolerance)
     );
 
     const Time& runTime = objectRegistry::time();
@@ -305,12 +304,12 @@ Foam::triSurfaceMesh::extractPointCloseness
 {
     const scalar internalToleranceCosAngle
     (
-        cos(degToRad(180 - internalAngleTolerance))
+        cos(degToRad(180) - internalAngleTolerance)
     );
 
     const scalar externalToleranceCosAngle
     (
-        cos(degToRad(180 - externalAngleTolerance))
+        cos(degToRad(180) - externalAngleTolerance)
     );
 
     const Time& runTime = objectRegistry::time();

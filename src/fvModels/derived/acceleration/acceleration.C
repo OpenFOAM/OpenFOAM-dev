@@ -55,7 +55,14 @@ void Foam::fv::acceleration::readCoeffs()
 {
     UName_ = coeffs().lookupOrDefault<word>("U", "U");
 
-    velocity_ = Function1<vector>::New("velocity", coeffs());
+    velocity_ =
+        Function1<vector>::New
+        (
+            "velocity",
+            mesh().time().userUnits(),
+            dimVelocity,
+            coeffs()
+        );
 }
 
 
@@ -70,9 +77,7 @@ void Foam::fv::acceleration::add
 
     const scalar t = mesh().time().value();
     const scalar dt = mesh().time().deltaTValue();
-    const vector dU =
-        velocity_->value(mesh().time().timeToUserTime(t))
-      - velocity_->value(mesh().time().timeToUserTime(t - dt));
+    const vector dU = velocity_->value(t) - velocity_->value(t - dt);
     const vector a = dU/mesh().time().deltaTValue();
 
     const labelUList cells = set_.cells();

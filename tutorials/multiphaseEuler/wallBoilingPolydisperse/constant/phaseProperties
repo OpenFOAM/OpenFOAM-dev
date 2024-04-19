@@ -216,22 +216,18 @@ saturationTemperature
 {
     gas_liquid
     {
-        type function1;
+        type            function1;
 
-        function scale;
-
-        xScale 1e-6;
-        scale   1;
-        value
+        function
         {
-            type                tableFile;
-            format              csv;
-            nHeaderLine         1;
-            refColumn           1;
-            componentColumns    (0);
-            mergeSeparators     no;
+            type            table;
+            format          csv;
+            nHeaderLine     1;
+            units           ([MPa] [K]);
+            columns         (1 0);
+            mergeSeparators no;
             file "$FOAM_TUTORIALS/resources/thermoData/wallBoiling-saturation.csv";
-            outOfBounds         clamp;
+            outOfBounds     clamp;
             interpolationScheme linear;
         }
     }

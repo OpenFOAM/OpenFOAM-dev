@@ -272,6 +272,7 @@ Foam::timeVaryingMappedFvPatchField<Type>::timeVaryingMappedFvPatchField
 )
 :
     patch_(p),
+    internalField_(iF),
     fieldTableName_(dict.lookupOrDefault("fieldTable", iF.name())),
     dataDir_
     (
@@ -309,7 +310,8 @@ Foam::timeVaryingMappedFvPatchField<Type>::timeVaryingMappedFvPatchField
 
     if (dict.found("offset"))
     {
-        offset_ = Function1<Type>::New("offset", dict);
+        offset_ =
+            Function1<Type>::New("offset", dimTime, iF.dimensions(), dict);
     }
 
     if
@@ -318,10 +320,8 @@ Foam::timeVaryingMappedFvPatchField<Type>::timeVaryingMappedFvPatchField
      && mapMethod_ != "nearest"
     )
     {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "mapMethod should be one of 'planarInterpolation'"
+        FatalIOErrorInFunction(dict)
+            << "mapMethod should be one of 'planarInterpolation'"
             << ", 'nearest'" << exit(FatalIOError);
     }
 }
@@ -335,6 +335,7 @@ timeVaryingMappedFvPatchField
 )
 :
     patch_(ptf.patch_),
+    internalField_(ptf.internalField_),
     fieldTableName_(ptf.fieldTableName_),
     dataDir_(ptf.dataDir_),
     pointsName_(ptf.pointsName_),
@@ -475,8 +476,7 @@ Foam::tmp<Foam::Field<Type>> Foam::timeVaryingMappedFvPatchField<Type>::map()
     // Apply offset to mapped values
     if (offset_.valid())
     {
-        const scalar t = time().userTimeValue();
-        fld += offset_->value(t);
+        fld += offset_->value(time().value());
     }
 
     if (debug)
@@ -521,7 +521,13 @@ void Foam::timeVaryingMappedFvPatchField<Type>::write
 
     if (offset_.valid())
     {
-        writeEntry(os, offset_());
+        writeEntry
+        (
+            os,
+            time().userUnits(),
+            internalField_.dimensions(),
+            offset_()
+        );
     }
 }
 

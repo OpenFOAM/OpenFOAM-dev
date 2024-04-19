@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#define CHEMICALLY_ACTIVATION_FUNCTION_JACOBIAN false
+#include "ChemicallyActivatedReactionRate.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define CHEMICALLY_ACTIVATION_FUNCTION_JACOBIAN false
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ReactionRate, class ChemicallyActivationFunction>
 inline Foam::ChemicallyActivatedReactionRate
@@ -55,11 +59,12 @@ inline Foam::ChemicallyActivatedReactionRate
 >::ChemicallyActivatedReactionRate
 (
     const speciesTable& species,
+    const dimensionSet& dims,
     const dictionary& dict
 )
 :
-    k0_(species, dict.subDict("k0")),
-    kInf_(species, dict.subDict("kInf")),
+    k0_(species, dims, dict.subDict("k0")),
+    kInf_(species, dims, dict.subDict("kInf")),
     F_(dict.subDict("F")),
     thirdBodyEfficiencies_(species, dict.subDict("thirdBodyEfficiencies"))
 {}

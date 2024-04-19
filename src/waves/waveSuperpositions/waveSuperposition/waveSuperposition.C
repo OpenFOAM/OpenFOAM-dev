@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,21 +181,42 @@ Foam::waveSuperposition::waveSuperposition(const objectRegistry& db)
             IOobject::NO_WRITE
         )
     ),
-    origin_(lookup("origin")),
-    direction_(lookup("direction")),
+    origin_(lookup<vector>("origin", dimLength)),
+    direction_(lookup<vector>("direction", dimless)),
     waveModels_(),
     waveAngles_(),
-    UMean_(Function1<vector>::New("UMean", *this)),
+    UMean_
+    (
+        Function1<vector>::New
+        (
+            "UMean",
+            db.time().userUnits(),
+            dimVelocity,
+            *this
+        )
+    ),
     scale_
     (
         found("scale")
-      ? Function1<scalar>::New("scale", *this)
+      ? Function1<scalar>::New
+        (
+            "scale",
+            db.time().userUnits(),
+            dimless,
+            *this
+        )
       : autoPtr<Function1<scalar>>()
     ),
     crossScale_
     (
         found("crossScale")
-      ? Function1<scalar>::New("crossScale", *this)
+      ? Function1<scalar>::New
+        (
+            "crossScale",
+            db.time().userUnits(),
+            dimless,
+            *this
+        )
       : autoPtr<Function1<scalar>>()
     ),
     heightAboveWave_(lookupOrDefault<Switch>("heightAboveWave", false))
@@ -340,14 +361,14 @@ void Foam::waveSuperposition::write(Ostream& os) const
             << nl << decrIndent << indent << token::END_BLOCK << nl;
     }
     os  << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
-    writeEntry(os, UMean_());
+    writeEntry(os, db().time().userUnits(), dimVelocity, UMean_());
     if (scale_.valid())
     {
-        writeEntry(os, scale_());
+        writeEntry(os, db().time().userUnits(), dimless, scale_());
     }
     if (crossScale_.valid())
     {
-        writeEntry(os, crossScale_());
+        writeEntry(os, db().time().userUnits(), dimless, crossScale_());
     }
     if (heightAboveWave_)
     {

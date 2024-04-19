@@ -61,7 +61,6 @@ Usage
 #include "argList.H"
 #include "Time.H"
 #include "fvMesh.H"
-#include "unitConversion.H"
 #include "polyTopoChange.H"
 #include "polyTopoChangeMap.H"
 #include "PackedBoolList.H"
@@ -90,7 +89,7 @@ void simpleMarkFeatures
     labelList& multiCellFeaturePoints
 )
 {
-    scalar minCos = Foam::cos(degToRad(featureAngle));
+    const scalar minCos = Foam::cos(featureAngle);
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
@@ -393,10 +392,10 @@ int main(int argc, char *argv[])
         }
     }
 
-    const scalar featureAngle = args.argRead<scalar>(1);
-    const scalar minCos = Foam::cos(degToRad(featureAngle));
+    const scalar featureAngle = degToRad(args.argRead<scalar>(1));
+    const scalar minCos = Foam::cos(featureAngle);
 
-    Info<< "Feature:" << featureAngle << endl
+    Info<< "Feature:" << radToDeg(featureAngle) << endl
         << "minCos :" << minCos << endl
         << endl;
 

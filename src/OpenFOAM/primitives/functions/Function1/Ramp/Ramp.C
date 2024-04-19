@@ -31,12 +31,13 @@ template<class Function1Type>
 Foam::Function1s::Ramp<Function1Type>::Ramp
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
     FieldFunction1<scalar, Function1Type>(name),
-    start_(dict.lookupOrDefault<scalar>("start", 0)),
-    duration_(dict.lookup<scalar>("duration"))
+    start_(dict.lookupOrDefault<scalar>("start", units.x, 0)),
+    duration_(dict.lookup<scalar>("duration", units.x))
 {}
 
 
@@ -50,10 +51,14 @@ Foam::Function1s::Ramp<Function1Type>::~Ramp()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Function1Type>
-void Foam::Function1s::Ramp<Function1Type>::write(Ostream& os) const
+void Foam::Function1s::Ramp<Function1Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
-    writeEntry(os, "start", start_);
-    writeEntry(os, "duration", duration_);
+    writeEntry(os, "start", units.x, start_);
+    writeEntry(os, "duration", units.x, duration_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,33 @@ License
 
 #include "Constant.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+Type Foam::Function1s::Constant<Type>::readValue
+(
+    const unitConversions& defaultUnits,
+    Istream& is
+)
+{
+    // Read the units if they are before the value
+    unitConversion units(defaultUnits.value);
+    const bool haveUnits = units.readIfPresent(is);
+
+    // Read the value
+    const Type value = pTraits<Type>(is);
+
+    // Read the units if they are after the value
+    if (!haveUnits && !is.eof())
+    {
+        units.readIfPresent(is);
+    }
+
+    // Modify the value by the unit conversion and return
+    return units.toStandard(value);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -43,11 +70,12 @@ template<class Type>
 Foam::Function1s::Constant<Type>::Constant
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
     FieldFunction1<Type, Constant<Type>>(name),
-    value_(dict.lookup<Type>("value"))
+    value_(dict.lookup<Type>("value", units.value))
 {}
 
 
@@ -55,11 +83,12 @@ template<class Type>
 Foam::Function1s::Constant<Type>::Constant
 (
     const word& name,
+    const unitConversions& units,
     Istream& is
 )
 :
     FieldFunction1<Type, Constant<Type>>(name),
-    value_(pTraits<Type>(is))
+    value_(readValue(units, is))
 {}
 
 
@@ -81,9 +110,13 @@ Foam::Function1s::Constant<Type>::~Constant()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::Constant<Type>::write(Ostream& os) const
+void Foam::Function1s::Constant<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
-    writeEntry(os, "value", value_);
+    writeEntry(os, "value", units.value, value_);
 }
 
 

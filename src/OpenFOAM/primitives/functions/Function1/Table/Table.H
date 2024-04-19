@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,10 +181,20 @@ public:
         );
 
         //- Construct from name and dictionary
-        Table(const word& name, const dictionary& dict);
+        Table
+        (
+            const word& name,
+            const unitConversions& units,
+            const dictionary& dict
+        );
 
         //- Construct from name and Istream
-        Table(const word& name, Istream& dict);
+        Table
+        (
+            const word& name,
+            const unitConversions& units,
+            Istream& dict
+        );
 
         //- Copy constructor
         Table(const Table<Type>& tbl);
@@ -227,7 +237,7 @@ public:
         virtual tmp<Field<Type>> y() const;
 
         //- Write data to dictionary stream
-        virtual void write(Ostream& os) const;
+        virtual void write(Ostream& os, const unitConversions& units) const;
 
 
     // Member Operators

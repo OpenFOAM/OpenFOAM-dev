@@ -41,11 +41,12 @@ namespace Function1s
 Foam::Function1s::turbulentBL::turbulentBL
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
     FieldFunction1<scalar, turbulentBL>(name),
-    exponent_(dict.lookupOrDefault<scalar>("exponent", 1.0/7.0))
+    exponent_(dict.lookupOrDefault<scalar>("exponent", unitless, 1.0/7.0))
 {}
 
 
@@ -57,7 +58,11 @@ Foam::Function1s::turbulentBL::~turbulentBL()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::Function1s::turbulentBL::write(Ostream& os) const
+void Foam::Function1s::turbulentBL::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
     writeEntry(os, "exponent", exponent_);
 }

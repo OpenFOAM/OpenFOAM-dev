@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [m^2 s^-2];
+dimensions      [kinematicPressure];
 
 internalField   uniform 0;
 

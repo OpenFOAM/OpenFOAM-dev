@@ -118,12 +118,6 @@ class CONSTRUCT
         bool boolData_;
 
 
-    // Private Member Functions
-
-        //- Return current time
-        scalar t() const;
-
-
 public:
 
     //- Runtime type information

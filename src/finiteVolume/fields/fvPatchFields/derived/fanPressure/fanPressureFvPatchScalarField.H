@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        fanCurve     | fan curve file name     | yes         |
+        fanCurve     | fan curve function      | yes         |
         p0           | environmental total pressure | yes    |
     \endtable
 
@@ -46,8 +46,7 @@ Usage
             file            "$FOAM_CASE/constant/pressureVsQ";
             format          csv;
             nHeaderLine     1;
-            refColumn       0;
-            componentColumns 1(1);
+            columns         (0 1);
             separator       ",";
             mergeSeparators no;
             outOfBounds     clamp;
@@ -67,8 +66,7 @@ Usage
             file            "$FOAM_CASE/constant/pressureVsQ";
             format          csv;
             nHeaderLine     1;
-            refColumn       0;
-            componentColumns 1(1);
+            columns         (0 1);
             separator       ",";
             mergeSeparators no;
             outOfBounds     clamp;

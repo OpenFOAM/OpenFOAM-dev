@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,20 +44,28 @@ uniformTotalPressureFvPatchScalarField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "none")),
-    gamma_(psiName_ != "none" ? dict.lookup<scalar>("gamma") : 1),
-    p0_(Function1<scalar>::New("p0", dict))
+    gamma_(psiName_ != "none" ? dict.lookup<scalar>("gamma", dimless) : 1),
+    p0_
+    (
+        Function1<scalar>::New
+        (
+            "p0",
+            db().time().userUnits(),
+            iF.dimensions(),
+            dict
+        )
+    )
 {
     if (dict.found("value"))
     {
         fvPatchField<scalar>::operator=
         (
-            scalarField("value", dict, p.size())
+            scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        const scalar t = this->db().time().userTimeValue();
-        fvPatchScalarField::operator==(p0_->value(t));
+        fvPatchScalarField::operator==(p0_->value(db().time().value()));
     }
 }
 
@@ -81,8 +89,7 @@ uniformTotalPressureFvPatchScalarField
 {
     // Set the patch pressure to the current total pressure
     // This is not ideal but avoids problems with the creation of patch faces
-    const scalar t = this->db().time().userTimeValue();
-    fvPatchScalarField::operator==(p0_->value(t));
+    fvPatchScalarField::operator==(p0_->value(this->db().time().value()));
 }
 
 
@@ -115,7 +122,7 @@ void Foam::uniformTotalPressureFvPatchScalarField::updateCoeffs
         return;
     }
 
-    scalar p0 = p0_->value(this->db().time().userTimeValue());
+    scalar p0 = p0_->value(this->db().time().value());
 
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
@@ -197,7 +204,13 @@ void Foam::uniformTotalPressureFvPatchScalarField::write(Ostream& os) const
     writeEntry(os, "rho", rhoName_);
     writeEntry(os, "psi", psiName_);
     writeEntry(os, "gamma", gamma_);
-    writeEntry(os, p0_());
+    writeEntry
+    (
+        os,
+        db().time().userUnits(),
+        internalField().dimensions(),
+        p0_()
+    );
     writeEntry(os, "value", *this);
 }
 

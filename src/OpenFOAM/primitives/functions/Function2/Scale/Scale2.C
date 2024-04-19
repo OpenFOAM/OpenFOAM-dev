@@ -31,15 +31,16 @@ template<class Type>
 Foam::Function2s::Scale<Type>::Scale
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
     FieldFunction2<Type, Scale<Type>>(name),
-    scale_(Function2<scalar>::New("scale", dict)),
+    scale_(Function2<scalar>::New("scale", units.x, units.y, unitless, dict)),
     xScale_
     (
         dict.found("xScale")
-      ? Function1<scalar>::New("xScale", dict)
+      ? Function1<scalar>::New("xScale", units.x, units.x, dict)
       : autoPtr<Function1<scalar>>
         (
             new Function1s::Constant<scalar>("xScale", 1)
@@ -48,13 +49,13 @@ Foam::Function2s::Scale<Type>::Scale
     yScale_
     (
         dict.found("yScale")
-      ? Function1<scalar>::New("yScale", dict)
+      ? Function1<scalar>::New("yScale", units.y, units.y, dict)
       : autoPtr<Function1<scalar>>
         (
             new Function1s::Constant<scalar>("yScale", 1)
         )
     ),
-    value_(Function2<Type>::New("value", dict))
+    value_(Function2<Type>::New("value", units, dict))
 {}
 
 
@@ -79,12 +80,16 @@ Foam::Function2s::Scale<Type>::~Scale()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function2s::Scale<Type>::write(Ostream& os) const
+void Foam::Function2s::Scale<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
-    writeEntry(os, scale_());
-    writeEntry(os, xScale_());
-    writeEntry(os, yScale_());
-    writeEntry(os, value_());
+    writeEntry(os, {units.x, units.y, unitless}, scale_());
+    writeEntry(os, {units.x, units.x}, xScale_());
+    writeEntry(os, {units.y, units.y}, yScale_());
+    writeEntry(os, units, value_());
 }
 
 

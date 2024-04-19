@@ -45,7 +45,7 @@ convectiveHeatTransferFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    L_(dict.lookup<scalar>("L"))
+    L_(dict.lookup<scalar>("L", dimLength))
 {}
 
 

@@ -68,7 +68,16 @@ void Foam::fv::heatSource::readCoeffs()
 
     if (coeffs().found("q"))
     {
-        q_.reset(Function1<scalar>::New("q", coeffs()).ptr());
+        q_.reset
+        (
+            Function1<scalar>::New
+            (
+                "q",
+                mesh().time().userUnits(),
+                dimPower/dimVolume,
+                coeffs()
+            ).ptr()
+        );
     }
     else
     {
@@ -79,7 +88,13 @@ void Foam::fv::heatSource::readCoeffs()
                 "q",
                 Function1s::Constant<scalar>("1/V", 1/set_.V()),
                 Function1s::Constant<scalar>("1", 1),
-                Function1<scalar>::New("Q", coeffs())()
+                Function1<scalar>::New
+                (
+                    "Q",
+                    mesh().time().userUnits(),
+                    dimPower,
+                    coeffs()
+                )()
             )
         );
     }
@@ -129,8 +144,7 @@ void Foam::fv::heatSource::addSup
 {
     const labelUList cells = set_.cells();
 
-    const scalar t = mesh().time().userTimeValue();
-    const scalar q = q_->value(t);
+    const scalar q = q_->value(mesh().time().value());
 
     scalarField& eqnSource = eqn.source();
     forAll(cells, i)

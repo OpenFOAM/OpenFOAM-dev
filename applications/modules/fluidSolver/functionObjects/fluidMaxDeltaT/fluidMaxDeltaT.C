@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,8 +72,22 @@ bool Foam::functionObjects::fluidMaxDeltaT::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    maxCoPtr_ = Function1<scalar>::New("maxCo", dict);
-    maxDeltaTPtr_ = Function1<scalar>::New("maxDeltaT", dict);
+    maxCoPtr_ =
+        Function1<scalar>::New
+        (
+            "maxCo",
+            time_.userUnits(),
+            dimless,
+            dict
+        );
+    maxDeltaTPtr_ =
+        Function1<scalar>::New
+        (
+            "maxDeltaT",
+            time_.userUnits(),
+            time_.userUnits(),
+            dict
+        );
 
     return true;
 }
@@ -93,15 +107,14 @@ bool Foam::functionObjects::fluidMaxDeltaT::write()
 
 Foam::scalar Foam::functionObjects::fluidMaxDeltaT::maxDeltaT() const
 {
-    scalar deltaT =
-        time_.userTimeToTime(maxDeltaTPtr_().value(time_.userTimeValue()));
+    scalar deltaT = maxDeltaTPtr_().value(time_.value());
 
     const scalar CoNum =
         mesh_.lookupObject<solvers::fluidSolver>(solver::typeName).CoNum;
 
     if (CoNum > small)
     {
-        const scalar maxCo = maxCoPtr_().value(time_.userTimeValue());
+        const scalar maxCo = maxCoPtr_().value(time_.value());
 
         deltaT = min(deltaT, maxCo/CoNum*time_.deltaTValue());
     }

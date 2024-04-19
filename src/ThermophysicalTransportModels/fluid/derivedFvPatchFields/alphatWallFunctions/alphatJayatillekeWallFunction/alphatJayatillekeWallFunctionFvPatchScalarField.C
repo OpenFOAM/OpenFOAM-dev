@@ -51,7 +51,7 @@ alphatJayatillekeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    Prt_(dict.lookupOrDefault<scalar>("Prt", 0.85))
+    Prt_(dict.lookupOrDefault<scalar>("Prt", dimless, 0.85))
 {}
 
 

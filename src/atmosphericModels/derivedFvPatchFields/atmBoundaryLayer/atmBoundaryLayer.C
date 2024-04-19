@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,19 +110,27 @@ Foam::atmBoundaryLayer::atmBoundaryLayer
     const dictionary& dict
 )
 :
-    flowDir_(dict.lookup("flowDir")),
-    zDir_(dict.lookup("zDir")),
-    kappa_(dict.lookupOrDefault<scalar>("kappa", kappaDefault_)),
-    Cmu_(dict.lookupOrDefault<scalar>("Cmu", CmuDefault_)),
-    Uref_(dict.lookup<scalar>("Uref")),
-    Zref_(dict.lookup<scalar>("Zref")),
-    z0_("z0", dict, p.size()),
-    zGround_("zGround", dict, p.size()),
+    flowDir_(dict.lookup<vector>("flowDir", dimless)),
+    zDir_(dict.lookup<vector>("zDir", dimless)),
+    kappa_(dict.lookupOrDefault<scalar>("kappa", dimless, kappaDefault_)),
+    Cmu_(dict.lookupOrDefault<scalar>("Cmu", dimless, CmuDefault_)),
+    Uref_(dict.lookup<scalar>("Uref", dimVelocity)),
+    Zref_(dict.lookup<scalar>("Zref", dimLength)),
+    z0_("z0", dimLength, dict, p.size()),
+    zGround_("zGround", dimLength, dict, p.size()),
     Ustar_(p.size()),
     offset_(dict.found("Ulower")),
-    Ulower_(dict.lookupOrDefault<scalar>("Ulower", 0)),
-    kLower_(dict.lookupOrDefault<scalar>("kLower", 0)),
-    epsilonLower_(dict.lookupOrDefault<scalar>("epsilonLower", 0))
+    Ulower_(dict.lookupOrDefault<scalar>("Ulower", dimVelocity, 0)),
+    kLower_(dict.lookupOrDefault<scalar>("kLower", dimEnergy/dimMass, 0)),
+    epsilonLower_
+    (
+        dict.lookupOrDefault<scalar>
+        (
+            "epsilonLower",
+            dimEnergy/dimMass/dimTime,
+            0
+        )
+    )
 {
     init();
 }

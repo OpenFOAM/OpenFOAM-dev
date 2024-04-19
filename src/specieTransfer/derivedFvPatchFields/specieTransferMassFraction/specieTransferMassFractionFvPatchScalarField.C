@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ specieTransferMassFractionFvPatchScalarField
     UName_(dict.lookupOrDefault<word>("U", "U")),
     phiYp_(p.size(), 0),
     timeIndex_(-1),
-    c_(dict.lookupOrDefault<scalar>("c", scalar(0))),
+    c_(dict.lookupOrDefault<scalar>("c", unitAny, scalar(0))),
     property_
     (
         c_ == scalar(0)
@@ -94,7 +94,10 @@ specieTransferMassFractionFvPatchScalarField
       : propertyNames_.read(dict.lookup("property"))
     )
 {
-    fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
+    fvPatchScalarField::operator=
+    (
+        scalarField("value", iF.dimensions(), dict, p.size())
+    );
 
     refValue() = Zero;
     refGrad() = Zero;

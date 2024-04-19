@@ -31,6 +31,21 @@ Description
     window and compared to specified velocity convergence criteria and the run
     stopped after writing the current time results, if the criteria are met.
 
+Usage
+    \table
+        Property | Description                       | Required | Default value
+        type     | Type name: sixDoFRigidBodyControl | yes      |
+        angleUnits           | units in which angles are written \\
+                                                     | no       | [rad]
+        angularVelocityUnits | units in which angular velocities are written \\
+                                                     | no       | [rad/s]
+        window   | Averaging window                  | yes      |
+        convergedVelocity        | Linear velocity convergence criterion \\
+                                                     | yes      |
+        convergedAngularVelocity | Angular velocity convergence criterion \\
+                                                     | yes      |
+    \endtable
+
     Example of function object specification:
     \verbatim
     sixDoFRigidBodyControl
@@ -38,26 +53,14 @@ Description
         type           sixDoFRigidBodyControl;
         libs           ("libsixDoFRigidBodyState.so");
 
-        angleUnits     degrees;
+        angleUnits     [deg];
+        angularVelocityUnits [deg/s];
 
-        window                      1;
-        convergedVelocity           (1e-2 1e-2 1e-2);
-        convergedAngularVelocity    (5 5 5);
+        window         1;
+        convergedVelocity (1e-2 1e-2 1e-2);
+        convergedAngularVelocity (5 5 5);
     }
     \endverbatim
-
-    Note the units of the \c convergedAngularVelocity are specified by the \c
-    angleUnits entry.
-
-Usage
-    \table
-    Property     | Description                       | Required | Default value
-    type         | Type name: sixDoFRigidBodyControl | yes      |
-    angleUnits  | Degrees or radians                | no       | radian
-    window       | Averaging window                  | yes      |
-    convergedVelocity | Linear velocity convergence criterion         | yes |
-    convergedAngularVelocity | Angular velocity convergence criterion | yes |
-    \endtable
 
 See also
     Foam::functionObjects::sixDoFRigidBodyState
@@ -101,7 +104,6 @@ class sixDoFRigidBodyControl
         vector meanVelocity_;
 
         vector meanAngularVelocity_;
-
 
 
 public:

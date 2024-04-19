@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,13 +43,16 @@ namespace Function1s
 Foam::Function1s::integratedNonUniformTable::integratedNonUniformTable
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
-    NonUniformTable<scalar>(name, dict),
+    NonUniformTable<scalar>(name, units, dict),
     intf_(values().size()),
     intfByT_(values().size())
 {
+    assertNoConvertUnits(typeName, units, dict);
+
     intf_[0] = 0;
     intfByT_[0] = 0;
 
@@ -107,10 +110,11 @@ Foam::scalar Foam::Function1s::integratedNonUniformTable::intfByTdT
 
 void Foam::Function1s::integratedNonUniformTable::write
 (
-    Ostream& os
+    Ostream& os,
+    const unitConversions& units
 ) const
 {
-    NonUniformTable<scalar>::write(os);
+    NonUniformTable<scalar>::write(os, units);
 }
 
 

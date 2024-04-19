@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,14 +42,14 @@ Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
     UName_(dict.lookupOrDefault<word>("U", "U")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     psiName_(dict.lookupOrDefault<word>("psi", "psi")),
-    gamma_(dict.lookup<scalar>("gamma")),
-    T0_("T0", dict, p.size())
+    gamma_(dict.lookup<scalar>("gamma", dimless)),
+    T0_("T0", dimTemperature, dict, p.size())
 {
     if (dict.found("value"))
     {
         fvPatchField<scalar>::operator=
         (
-            scalarField("value", dict, p.size())
+            scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else

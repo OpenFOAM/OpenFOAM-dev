@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 0 0 1 0 0 0 ];
+dimensions      [temperature];
 
 internalField   uniform 300;
 
@@ -27,14 +27,12 @@ boundaryField
         type            fixedValue;
         value           $internalField;
     }
-
     outlet
     {
         type            inletOutlet;
         value           $internalField;
         inletValue      $internalField;
     }
-
     gas_to_solid
     {
         type            coupledTemperature;

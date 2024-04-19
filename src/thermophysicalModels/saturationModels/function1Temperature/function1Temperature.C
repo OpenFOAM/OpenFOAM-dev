@@ -51,7 +51,10 @@ Foam::saturationModels::function1Temperature::function1Temperature
 )
 :
     saturationTemperatureModel(),
-    function_(Function1<scalar>::New("function", dict))
+    function_
+    (
+        Function1<scalar>::New("function", {dimPressure, dimTemperature}, dict)
+    )
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,14 +21,22 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Global
+    unitConversions
+
 Description
+    Useful unit conversions
+
+SourceFiles
+    unitConversions.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef dimensionedScalarFwd_H
-#define dimensionedScalarFwd_H
+#ifndef unitConversions_H
+#define unitConversions_H
 
-#include "scalar.H"
+#include "unitConversion.H"
+#include "dimensionSets.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -37,10 +45,33 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type>
-class dimensioned;
+extern const unitConversion unitless;
 
-typedef dimensioned<scalar> dimensionedScalar;
+extern const unitConversion unitAny;
+extern const unitConversion unitNone;
+
+extern const unitConversion unitFraction;
+extern const unitConversion unitPercent;
+
+extern const unitConversion unitRadians;
+extern const unitConversion unitRotations;
+extern const unitConversion unitDegrees;
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//- Convert degrees to radians
+scalar degToRad(const scalar deg);
+
+//- Convert radians to degrees
+scalar radToDeg(const scalar rad);
+
+//- Add a unit conversion
+void addUnits(const word& name, const unitConversion& units);
+
+//- Get the table of unit conversions
+const HashTable<unitConversion>& units();
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

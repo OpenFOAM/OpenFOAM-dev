@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,14 +52,7 @@ class cylindrical
 :
     public coordinateSystem
 {
-    // Private Data members
-
-        //- Are angles in degrees? (default = true)
-        bool inDegrees_;
-
-
     // Private Member Functions
-
 
         //- Convert from local coordinate system to the global Cartesian system
         //  with optional translation for the origin
@@ -99,8 +92,7 @@ public:
         (
             const word& name,
             const point& origin,
-            const coordinateRotation&,
-            const bool inDegrees=true
+            const coordinateRotation&
         );
 
         //- Construct from origin and 2 axes
@@ -109,8 +101,7 @@ public:
             const word& name,
             const point& origin,
             const vector& axis,
-            const vector& dirn,
-            const bool inDegrees=true
+            const vector& dirn
         );
 
         //- Construct from dictionary and name

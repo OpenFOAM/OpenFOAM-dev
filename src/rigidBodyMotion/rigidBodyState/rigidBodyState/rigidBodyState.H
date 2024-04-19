@@ -29,9 +29,12 @@ Description
 
 Usage
     \table
-        Property     | Description                  | Required | Default value
-        type         | type name: rigidBodyState    | yes      |
-        angleUnits   | degrees or radians           | no       | radians
+        Property     | Description                   | Required | Default value
+        type         | type name: rigidBodyState     | yes      |
+        angleUnits           | units in which angles are written \\
+                                                     | no       | [rad]
+        angularVelocityUnits | units in which angular velocities are written \\
+                                                     | no       | [rad/s]
     \endtable
 
     Example of function object specification:
@@ -40,7 +43,8 @@ Usage
     {
         type           rigidBodyState;
         libs           ("librigidBodyState.so");
-        angleUnits     degrees;
+        angleUnits     [deg];
+        angularVelocityUnits [rpm];
     }
     \endverbatim
 
@@ -58,6 +62,7 @@ SourceFiles
 
 #include "fvMeshFunctionObject.H"
 #include "logFiles.H"
+#include "namedUnitConversion.H"
 #include "rigidBodyMotion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -78,7 +83,11 @@ class rigidBodyState
 {
     // Private Data
 
-        word angleUnits_;
+        //- Units in which to write the angles
+        namedUnitConversion angleUnits_;
+
+        //- Units in which to write the angular velocities
+        namedUnitConversion angularVelocityUnits_;
 
         //- List of the names of the rigid bodies
         wordList names_;

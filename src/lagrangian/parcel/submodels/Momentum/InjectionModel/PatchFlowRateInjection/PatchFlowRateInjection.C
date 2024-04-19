@@ -45,10 +45,10 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
     duration_(this->readDuration(dict, owner)),
     concentration_
     (
-        new Function1s::Dimensioned<scalar>
+        Function1<scalar>::New
         (
             "concentration",
-            dimTime,
+            this->owner().db().time().userUnits(),
             dimless,
             this->coeffDict()
         )
@@ -120,7 +120,7 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::flowRate() const
     const scalarField& phip = phi.boundaryField()[patchId_];
 
     scalar flowRateIn = 0.0;
-    if (phi.dimensions() == dimFlux)
+    if (phi.dimensions() == dimVolumetricFlux)
     {
         flowRateIn = max(0.0, -sum(phip));
     }

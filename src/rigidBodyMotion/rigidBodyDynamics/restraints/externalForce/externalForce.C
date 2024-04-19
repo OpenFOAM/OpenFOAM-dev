@@ -106,7 +106,8 @@ bool Foam::RBD::restraints::externalForce::read
 
     coeffs_.lookup("location") >> location_;
 
-    externalForce_ = Function1<vector>::New("force", coeffs_);
+    externalForce_ =
+        Function1<vector>::New("force", dimTime, dimForce, coeffs_);
 
     return true;
 }

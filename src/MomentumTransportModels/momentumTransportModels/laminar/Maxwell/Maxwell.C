@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,7 +136,7 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
 
     nModes_(modeCoefficients_.size() ? modeCoefficients_.size() : 1),
 
-    nuM_("nuM", dimViscosity, this->coeffDict_.lookup("nuM")),
+    nuM_("nuM", dimKinematicViscosity, this->coeffDict_.lookup("nuM")),
 
     lambdas_(readModeCoefficients("lambda", dimTime)),
 

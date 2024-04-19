@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ Description
 #include "OBJstream.H"
 #include "meshTools.H"
 #include "PatchTools.H"
-#include "unitConversion.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -1169,9 +1168,9 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
                     // on this patch.
                     Info<< "Inserting points on patch " << pp.name()
                         << " if angle to nearest layer patch > "
-                        << featureAngle << " degrees." << endl;
+                        << radToDeg(featureAngle) << " degrees." << endl;
 
-                    scalar featureAngleCos = Foam::cos(degToRad(featureAngle));
+                    scalar featureAngleCos = Foam::cos(featureAngle);
                     pointField pointNormals(PatchTools::pointNormals(mesh, pp));
 
                     forAll(meshPoints, i)

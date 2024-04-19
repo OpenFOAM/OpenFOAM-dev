@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,10 @@ public:
         virtual scalar timeToUserTime(const scalar t) const = 0;
 
         //- Return user-time unit
-        virtual word unit() const = 0;
+        virtual word unitName() const = 0;
+
+        //- Return the user-time unit conversion
+        virtual const unitConversion& units() const = 0;
 
         //- Read the controlDict and set all the parameters
         virtual bool read(const dictionary& controlDict) = 0;

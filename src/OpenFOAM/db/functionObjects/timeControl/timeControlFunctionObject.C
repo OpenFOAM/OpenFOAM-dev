@@ -44,17 +44,8 @@ namespace functionObjects
 
 void Foam::functionObjects::timeControl::readControls(const dictionary& dict)
 {
-    if (!dict.readIfPresent("startTime", startTime_))
-    {
-        dict.readIfPresent("timeStart", startTime_);
-    }
-    startTime_ = time_.userTimeToTime(startTime_);
-
-    if (!dict.readIfPresent("endTime", endTime_))
-    {
-        dict.readIfPresent("timeEnd", endTime_);
-    }
-    endTime_ = time_.userTimeToTime(endTime_);
+    dict.readIfPresent("startTime", time().userUnits(), startTime_);
+    dict.readIfPresent("endTime", time().userUnits(), endTime_);
 }
 
 
@@ -83,10 +74,9 @@ Foam::functionObjects::timeControl::timeControl
     writeControl_(t, dict, "write"),
     foPtr_(functionObject::New(name, t, dict))
 {
+    readControls(dict);
     writeControl_.read(dict);
     executeControl_.read(dict);
-
-    readControls(dict);
 }
 
 

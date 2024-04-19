@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,14 @@ Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
     {
         if (dict.found("gradient"))
         {
-            gradient_ = Field<Type>("gradient", dict, p.size());
+            gradient_ =
+                Field<Type>
+                (
+                    "gradient",
+                    iF.dimensions()/dimLength,
+                    dict,
+                    p.size()
+                );
             evaluate();
         }
         else

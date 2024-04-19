@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,16 @@ variableHeightFlowRateInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(p, iF, dict),
-    flowRate_(Function1<scalar>::New("flowRate", dict)),
+    flowRate_
+    (
+        Function1<scalar>::New
+        (
+            "flowRate",
+            db().time().userUnits(),
+            dimVolumetricFlux,
+            dict
+        )
+    ),
     alphaName_(dict.lookup("alpha"))
 {}
 
@@ -87,8 +96,7 @@ updateCoeffs()
     alphap = max(alphap, scalar(0));
     alphap = min(alphap, scalar(1));
 
-    const scalar t = db().time().userTimeValue();
-    scalar flowRate = flowRate_->value(t);
+    scalar flowRate = flowRate_->value(db().time().value());
 
     // a simpler way of doing this would be nice
     scalar avgU = -flowRate/gSum(patch().magSf()*alphap);
@@ -107,7 +115,7 @@ void Foam::variableHeightFlowRateInletVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchField<vector>::write(os);
-    writeEntry(os, flowRate_());
+    writeEntry(os, db().time().userUnits(), dimVolumetricFlux, flowRate_());
     writeEntry(os, "alpha", alphaName_);
     writeEntry(os, "value", *this);
 }

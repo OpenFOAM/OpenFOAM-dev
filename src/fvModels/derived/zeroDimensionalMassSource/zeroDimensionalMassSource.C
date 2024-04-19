@@ -46,14 +46,20 @@ void Foam::fv::zeroDimensionalMassSource::readCoeffs()
 {
     zeroDimensionalMassFlowRate_.reset
     (
-        Function1<scalar>::New("massFlowRate", coeffs()).ptr()
+        Function1<scalar>::New
+        (
+            "massFlowRate",
+            mesh().time().userUnits(),
+            dimMass/dimTime,
+            coeffs()
+        ).ptr()
     );
 }
 
 
 Foam::scalar Foam::fv::zeroDimensionalMassSource::massFlowRate() const
 {
-    return zeroDimensionalMassFlowRate_->value(mesh().time().userTimeValue());
+    return zeroDimensionalMassFlowRate_->value(mesh().time().value());
 }
 
 

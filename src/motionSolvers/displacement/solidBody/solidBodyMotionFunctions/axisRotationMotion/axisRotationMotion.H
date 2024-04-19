@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Constant velocity rotation around CoG. Similar to rotatingMotion but
-    motion specified as rotation vector.
+    motion specified as an angular velocity vector.
 
 SourceFiles
     axisRotationMotion.C
@@ -60,8 +60,8 @@ class axisRotationMotion
         //- Origin
         point origin_;
 
-        //- Rotational velocity (deg/s)
-        vector radialVelocity_;
+        //- Angular velocity
+        vector omega_;
 
 
 public:

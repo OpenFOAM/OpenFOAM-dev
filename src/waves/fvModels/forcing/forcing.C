@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ void Foam::fv::forcing::readCoeffs()
 
     if (foundAll)
     {
-        scale_ = Function1<scalar>::New("scale", coeffs());
+        scale_ = Function1<scalar>::New("scale", dimLength, dimless, coeffs());
         if (foundOgn)
         {
             origins_.setSize(1);
@@ -145,15 +145,7 @@ Foam::dimensionedScalar Foam::fv::forcing::regionLength() const
           & directions_[i]
         );
 
-        const volScalarField scale
-        (
-            evaluate
-            (
-                *scale_,
-                dimless,
-                x
-            )
-        );
+        const volScalarField scale(evaluate(*scale_, dimless, x));
 
         vs += fvc::domainIntegrate(scale);
         vgrads += fvc::domainIntegrate(directions_[i] & fvc::grad(scale));

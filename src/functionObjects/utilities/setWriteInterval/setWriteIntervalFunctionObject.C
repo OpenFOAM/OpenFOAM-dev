@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,14 @@ bool Foam::functionObjects::setWriteIntervalFunctionObject::read
     const dictionary& dict
 )
 {
-    writeIntervalPtr_ = Function1<scalar>::New("writeInterval", dict);
+    writeIntervalPtr_ =
+        Function1<scalar>::New
+        (
+            "writeInterval",
+            time_.userUnits(),
+            time_.writeIntervalUnits(),
+            dict
+        );
 
     return true;
 }
@@ -84,7 +91,7 @@ bool Foam::functionObjects::setWriteIntervalFunctionObject::execute()
 {
     const_cast<Time&>(time_).setWriteInterval
     (
-        time_.userTimeToTime(writeIntervalPtr_().value(time_.userTimeValue()))
+        writeIntervalPtr_().value(time_.value())
     );
 
     return true;

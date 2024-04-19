@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,9 +41,11 @@ totalFlowRateAdvectiveDiffusiveFvPatchScalarField
     mixedFvPatchField<scalar>(p, iF, dict, false),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "none")),
-    massFluxFraction_(dict.lookupOrDefault<scalar>("massFluxFraction", 1.0))
+    massFluxFraction_
+    (
+        dict.lookupOrDefault<scalar>("massFluxFraction", dimless, 1.0)
+    )
 {
-
     refValue() = 1.0;
     refGrad() = 0.0;
     valueFraction() = 0.0;
@@ -52,7 +54,7 @@ totalFlowRateAdvectiveDiffusiveFvPatchScalarField
     {
         fvPatchField<scalar>::operator=
         (
-            Field<scalar>("value", dict, p.size())
+            Field<scalar>("value", iF.dimensions(), dict, p.size())
         );
     }
     else

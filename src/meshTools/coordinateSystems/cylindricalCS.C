@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,10 +47,7 @@ Foam::vector Foam::coordinateSystems::cylindrical::localToGlobal
     bool translate
 ) const
 {
-    scalar theta
-    (
-        local.y()*(inDegrees_ ? constant::mathematical::pi/180.0 : 1.0)
-    );
+    const scalar theta = local.y();
 
     return coordinateSystem::localToGlobal
     (
@@ -66,11 +63,7 @@ Foam::tmp<Foam::vectorField> Foam::coordinateSystems::cylindrical::localToGlobal
     bool translate
 ) const
 {
-    scalarField theta
-    (
-        local.component(vector::Y)
-       *(inDegrees_ ? constant::mathematical::pi/180.0 : 1.0)
-    );
+    const scalarField theta(local.component(vector::Y));
 
     vectorField lc(local.size());
     lc.replace(vector::X, local.component(vector::X)*cos(theta));
@@ -95,11 +88,7 @@ Foam::vector Foam::coordinateSystems::cylindrical::globalToLocal
     return vector
     (
         sqrt(sqr(lc.x()) + sqr(lc.y())),
-        atan2
-        (
-            lc.y(),
-            lc.x()
-        )*(inDegrees_ ? 180.0/constant::mathematical::pi : 1.0),
+        atan2(lc.y(), lc.x()),
         lc.z()
     );
 }
@@ -128,11 +117,7 @@ Foam::tmp<Foam::vectorField> Foam::coordinateSystems::cylindrical::globalToLocal
     result.replace
     (
         vector::Y,
-        atan2
-        (
-            lc.component(vector::Y),
-            lc.component(vector::X)
-        )*(inDegrees_ ? 180.0/constant::mathematical::pi : 1.0)
+        atan2(lc.component(vector::Y), lc.component(vector::X))
     );
 
     result.replace(vector::Z, lc.component(vector::Z));
@@ -147,12 +132,10 @@ Foam::coordinateSystems::cylindrical::cylindrical
 (
     const word& name,
     const point& origin,
-    const coordinateRotation& cr,
-    const bool inDegrees
+    const coordinateRotation& cr
 )
 :
-    coordinateSystem(name, origin, cr),
-    inDegrees_(inDegrees)
+    coordinateSystem(name, origin, cr)
 {}
 
 
@@ -161,12 +144,10 @@ Foam::coordinateSystems::cylindrical::cylindrical
     const word& name,
     const point& origin,
     const vector& axis,
-    const vector& dirn,
-    const bool inDegrees
+    const vector& dirn
 )
 :
-    coordinateSystem(name, origin, axis, dirn),
-    inDegrees_(inDegrees)
+    coordinateSystem(name, origin, axis, dirn)
 {}
 
 
@@ -176,8 +157,7 @@ Foam::coordinateSystems::cylindrical::cylindrical
     const dictionary& dict
 )
 :
-    coordinateSystem(name, dict),
-    inDegrees_(dict.lookupOrDefault("degrees", true))
+    coordinateSystem(name, dict)
 {}
 
 

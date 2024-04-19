@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ void Foam::timeControl::read(const dictionary& dict)
         case timeControls::cpuTime:
         case timeControls::adjustableRunTime:
         {
-            interval_ = time_.userTimeToTime(dict.lookup<scalar>(intervalName));
+            interval_ = dict.lookup<scalar>(intervalName, time_.userUnits());
 
             if (timeControl_ == timeControls::adjustableRunTime)
             {
@@ -150,15 +150,17 @@ void Foam::timeControl::read(const dictionary& dict)
             const word frequenciesName(prefix_ + "Frequencies");
             const bool repeat = dict.lookupOrDefault("writeRepeat", false);
 
-            timeDelta_ = dict.lookupOrDefault
-            (
-                "timeDelta",
-                1e-3*time_.deltaTValue()
-            );
+            timeDelta_ =
+                dict.lookupOrDefault
+                (
+                    "timeDelta",
+                    unitNone,
+                    1e-3*time_.userDeltaTValue()
+                );
 
             if (dict.found(timesName))
             {
-                times_ = dict.lookup<scalarList>(timesName);
+                times_ = dict.lookup<scalarList>(timesName, unitNone);
             }
             else if (dict.found(frequenciesName))
             {

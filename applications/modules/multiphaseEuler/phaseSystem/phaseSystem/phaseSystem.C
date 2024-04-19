@@ -222,7 +222,7 @@ Foam::phaseSystem::phaseSystem
             mesh
         ),
         mesh,
-        dimensionedScalar(dimFlux, 0)
+        dimensionedScalar(dimVolumetricFlux, 0)
     ),
 
     dpdt_

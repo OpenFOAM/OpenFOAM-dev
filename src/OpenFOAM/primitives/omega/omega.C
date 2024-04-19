@@ -51,8 +51,8 @@ Foam::omega::omega(const dictionary& dict)
 
     value() =
         foundOmega
-      ? dict.lookup<scalar>("omega")
-      : constant::mathematical::pi/30*dict.lookup<scalar>("rpm");
+      ? dict.lookup<scalar>("omega", unitRadians/dimTime)
+      : dict.lookup<scalar>("rpm", units()["rpm"]);
 }
 
 

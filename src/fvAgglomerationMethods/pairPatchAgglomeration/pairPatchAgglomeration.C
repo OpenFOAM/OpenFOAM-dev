@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ void Foam::pairPatchAgglomeration::setBasedEdgeWeights()
                     facePairWeight_.insert(edgeCommon, edgeLength);
                 }
 
-                if (cosI < Foam::cos(degToRad(featureAngle_)))
+                if (cosI < Foam::cos(featureAngle_))
                 {
                     facePairWeight_[edgeCommon] = -1.0;
                 }
@@ -204,7 +204,7 @@ Foam::pairPatchAgglomeration::pairPatchAgglomeration
     ),
     featureAngle_
     (
-        controlDict.lookupOrDefault<scalar>("featureAngle", 0)
+        controlDict.lookupOrDefault<scalar>("featureAngle", unitDegrees, 0)
     ),
     nFaces_(maxLevels_),
     restrictAddressing_(maxLevels_),

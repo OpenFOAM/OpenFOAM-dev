@@ -26,7 +26,6 @@ License
 #include "ConeInjection.H"
 #include "Constant.H"
 #include "mathematicalConstants.H"
-#include "unitConversion.H"
 
 using namespace Foam::constant::mathematical;
 
@@ -53,9 +52,9 @@ void Foam::ConeInjection<CloudType>::setInjectionMethod()
         injectionMethod_ = imDisc;
 
         dInner_ =
-            dimensionedScalar("dInner", dimLength, this->coeffDict()).value();
+            this->coeffDict().template lookup<scalar>("dInner", dimLength);
         dOuter_ =
-            dimensionedScalar("dOuter", dimLength, this->coeffDict()).value();
+            this->coeffDict().template lookup<scalar>("dOuter", dimLength);
     }
     else
     {
@@ -82,13 +81,13 @@ void Foam::ConeInjection<CloudType>::setFlowType()
 
         Umag_.reset
         (
-            new Function1s::Dimensioned<scalar>
+            Function1<scalar>::New
             (
                 "Umag",
-                dimTime,
+                this->owner().db().time().userUnits(),
                 dimVelocity,
                 this->coeffDict()
-            )
+            ).ptr()
         );
     }
     else if (flowType == "pressureDrivenVelocity")
@@ -97,13 +96,13 @@ void Foam::ConeInjection<CloudType>::setFlowType()
 
         Pinj_.reset
         (
-            new Function1s::Dimensioned<scalar>
+            Function1<scalar>::New
             (
                 "Pinj",
-                dimTime,
+                this->owner().db().time().userUnits(),
                 dimPressure,
                 this->coeffDict()
-            )
+            ).ptr()
         );
     }
     else if (flowType == "flowRateAndDischarge")
@@ -111,19 +110,19 @@ void Foam::ConeInjection<CloudType>::setFlowType()
         flowType_ = ftFlowRateAndDischarge;
 
         dInner_ =
-            dimensionedScalar("dInner", dimLength, this->coeffDict()).value();
+            this->coeffDict().template lookup<scalar>("dInner", dimLength);
         dOuter_ =
-            dimensionedScalar("dOuter", dimLength, this->coeffDict()).value();
+            this->coeffDict().template lookup<scalar>("dOuter", dimLength);
 
         Cd_.reset
         (
-            new Function1s::Dimensioned<scalar>
+            Function1<scalar>::New
             (
                 "Cd",
-                dimTime,
+                this->owner().db().time().userUnits(),
                 dimless,
                 this->coeffDict()
-            )
+            ).ptr()
         );
     }
     else
@@ -151,20 +150,20 @@ Foam::ConeInjection<CloudType>::ConeInjection
     flowType_(ftConstantVelocity),
     position_
     (
-        new Function1s::Dimensioned<vector>
+        Function1<vector>::New
         (
             "position",
-            dimTime,
+            this->owner().db().time().userUnits(),
             dimLength,
             this->coeffDict()
         )
     ),
     direction_
     (
-        new Function1s::Dimensioned<vector>
+        Function1<vector>::New
         (
             "direction",
-            dimTime,
+            this->owner().db().time().userUnits(),
             dimless,
             this->coeffDict()
         )
@@ -178,21 +177,21 @@ Foam::ConeInjection<CloudType>::ConeInjection
     parcelsPerSecond_(this->readParcelsPerSecond(dict, owner)),
     thetaInner_
     (
-        new Function1s::Dimensioned<scalar>
+        Function1<scalar>::New
         (
             "thetaInner",
-            dimTime,
-            dimless,
+            this->owner().db().time().userUnits(),
+            unitDegrees,
             this->coeffDict()
         )
     ),
     thetaOuter_
     (
-        new Function1s::Dimensioned<scalar>
+        Function1<scalar>::New
         (
             "thetaOuter",
-            dimTime,
-            dimless,
+            this->owner().db().time().userUnits(),
+            unitDegrees,
             this->coeffDict()
         )
     ),
@@ -433,13 +432,10 @@ void Foam::ConeInjection<CloudType>::setProperties
             const vector t2 = normalised(n ^ t1);
             tanVec = t1*cos(beta) + t2*sin(beta);
             theta =
-                degToRad
+                sqrt
                 (
-                    sqrt
-                    (
-                        (1 - frac)*sqr(thetaInner_->value(t))
-                        + frac*sqr(thetaOuter_->value(t))
-                    )
+                    (1 - frac)*sqr(thetaInner_->value(t))
+                  + frac*sqr(thetaOuter_->value(t))
                 );
             break;
         }
@@ -449,11 +445,8 @@ void Foam::ConeInjection<CloudType>::setProperties
             const scalar frac = (2*r - dInner_)/(dOuter_ - dInner_);
             tanVec = normalised(parcel.position(mesh) - position_->value(t));
             theta =
-                degToRad
-                (
-                    (1 - frac)*thetaInner_->value(t)
-                    + frac*thetaOuter_->value(t)
-                );
+                (1 - frac)*thetaInner_->value(t)
+              + frac*thetaOuter_->value(t);
             break;
         }
         default:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -226,7 +226,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
                 IOobject::AUTO_WRITE
             ),
             mesh,
-            dimensionedScalar(dimFlux, 0)
+            dimensionedScalar(dimVolumetricFlux, 0)
         );
 
         forAll(movingPhases, movingPhasei)

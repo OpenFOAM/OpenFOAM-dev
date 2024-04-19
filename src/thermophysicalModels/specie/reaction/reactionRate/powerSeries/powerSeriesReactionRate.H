@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ SourceFiles
 #ifndef powerSeriesReactionRate_H
 #define powerSeriesReactionRate_H
 
+#include "speciesTable.H"
 #include "scalarField.H"
 #include "typeInfo.H"
 #include "FixedList.H"
@@ -59,9 +60,8 @@ class powerSeriesReactionRate
 {
     // Private Data
 
-        scalar A_;
         scalar beta_;
-        scalar Ta_;
+        scalar A_;
 
         static const label nCoeff_ = 4;
         FixedList<scalar, nCoeff_> coeffs_;
@@ -76,7 +76,6 @@ public:
         (
             const scalar A,
             const scalar beta,
-            const scalar Ta,
             const FixedList<scalar, nCoeff_> coeffs
         );
 
@@ -84,6 +83,7 @@ public:
         inline powerSeriesReactionRate
         (
             const speciesTable& species,
+            const dimensionSet& dims,
             const dictionary& dict
         );
 

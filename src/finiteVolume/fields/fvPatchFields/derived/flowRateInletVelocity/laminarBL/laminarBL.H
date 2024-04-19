@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,6 +76,7 @@ public:
         laminarBL
         (
             const word& name,
+            const unitConversions& units,
             const dictionary& dict
         );
 
@@ -97,7 +98,7 @@ public:
         ) const;
 
         //- Write data to dictionary stream
-        virtual void write(Ostream& os) const;
+        virtual void write(Ostream& os, const unitConversions& units) const;
 
 
     // Member Operators

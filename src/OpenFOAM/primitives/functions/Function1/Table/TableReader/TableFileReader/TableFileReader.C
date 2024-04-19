@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,33 @@ License
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 template<class Type>
+Foam::autoPtr<Foam::Function1s::unitConversions>
+Foam::TableFileReader<Type>::readUnits
+(
+    const Function1s::unitConversions& defaultUnits,
+    const dictionary& dict
+) const
+{
+    if (dict.found("units"))
+    {
+        autoPtr<Function1s::unitConversions> unitsPtr
+        (
+            new Function1s::unitConversions(defaultUnits)
+        );
+        unitsPtr->readIfPresent("units", dict);
+        return unitsPtr;
+    }
+    else
+    {
+        return autoPtr<Function1s::unitConversions>(nullptr);
+    }
+}
+
+
+template<class Type>
 void Foam::TableFileReader<Type>::read
 (
+    const Function1s::unitConversions& defaultUnits,
     const dictionary& dict,
     List<Tuple2<scalar, Type>>& table
 ) const
@@ -45,7 +70,7 @@ void Foam::TableFileReader<Type>::read
     if (!is.good())
     {
         FatalIOErrorInFunction(is)
-            << "Cannot open file" << fName_ << nl
+            << "Cannot open file " << fName_ << nl
             << exit(FatalIOError);
     }
 
@@ -59,16 +84,40 @@ void Foam::TableFileReader<Type>::read
             << "Table read from " << fName_ << " is empty" << nl
             << exit(FatalIOError);
     }
+
+    // Convert units
+    TableReader<Type>::convertRead
+    (
+        unitsPtr_.valid() ? unitsPtr_() : defaultUnits,
+        table
+    );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::TableFileReader<Type>::TableFileReader(const dictionary& dict)
+Foam::TableFileReader<Type>::TableFileReader
+(
+    const Function1s::unitConversions& defaultUnits,
+    const dictionary& dict
+)
 :
     TableReader<Type>(),
-    fName_(dict.lookup("file"))
+    fName_(dict.lookup("file")),
+    unitsPtr_(readUnits(defaultUnits, dict))
+{}
+
+
+template<class Type>
+Foam::TableFileReader<Type>::TableFileReader
+(
+    const TableFileReader<Type>& tfr
+)
+:
+    TableReader<Type>(tfr),
+    fName_(tfr.fName_),
+    unitsPtr_(tfr.unitsPtr_, false)
 {}
 
 
@@ -83,10 +132,14 @@ Foam::TableFileReader<Type>::~TableFileReader()
 
 template<class Type>
 Foam::List<Foam::Tuple2<Foam::scalar, Type>>
-Foam::TableFileReader<Type>::read(const dictionary& dict) const
+Foam::TableFileReader<Type>::read
+(
+    const Function1s::unitConversions& units,
+    const dictionary& dict
+) const
 {
     List<Tuple2<scalar, Type>> data;
-    read(dict, data);
+    read(units, dict, data);
     return data;
 }
 
@@ -95,11 +148,19 @@ template<class Type>
 void Foam::TableFileReader<Type>::write
 (
     Ostream& os,
+    const Function1s::unitConversions& units,
     const List<Tuple2<scalar, Type>>& table
 ) const
 {
+    TableReader<Type>::write(os, units, table);
+
     writeEntry(os, "format", this->type());
     writeEntry(os, "file", fName_);
+
+    if (unitsPtr_.valid())
+    {
+        writeEntry(os, "units", unitsPtr_());
+    }
 }
 
 

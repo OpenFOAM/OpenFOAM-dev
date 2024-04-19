@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ MarshakRadiationFixedTemperatureFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF, dict, false),
     radiationCoupledBase(p, dict),
-    Trad_("Trad", dict, p.size())
+    Trad_("Trad", dimTemperature, dict, p.size())
 {
     // refValue updated on each call to updateCoeffs()
     refValue() = 4.0*constant::physicoChemical::sigma.value()*pow4(Trad_);

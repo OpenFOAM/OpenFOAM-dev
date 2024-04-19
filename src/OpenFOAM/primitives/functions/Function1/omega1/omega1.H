@@ -99,6 +99,9 @@ SourceFiles
 
 namespace Foam
 {
+
+class Time;
+
 namespace Function1s
 {
 
@@ -113,14 +116,15 @@ class omega
         //- The omega function
         const autoPtr<Function1<scalar>> omega_;
 
-        //- Conversion factor. 1 for omega. pi/30 for rpm.
-        const scalar factor_;
-
 
     // Private Member Functions
 
         //- Read and construct the omega function
-        autoPtr<Function1<scalar>> init(const dictionary& dict);
+        autoPtr<Function1<scalar>> init
+        (
+            const Time& time,
+            const dictionary& dict
+        );
 
 
 public:
@@ -128,7 +132,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        omega(const dictionary& dict);
+        omega(const Time& time, const dictionary& dict);
 
         //- Copy constructor
         omega(const omega&);

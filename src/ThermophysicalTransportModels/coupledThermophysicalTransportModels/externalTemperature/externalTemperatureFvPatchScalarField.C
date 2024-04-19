@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,41 +78,82 @@ externalTemperatureFvPatchScalarField
     Q_
     (
         haveQ_
-      ? Function1<scalar>::New("Q", dict)
+      ? Function1<scalar>::New("Q", db().time().userUnits(), dimPower, dict)
       : autoPtr<Function1<scalar>>()
     ),
     haveq_(dict.found("q")),
     q_
     (
         haveq_
-      ? Function1<scalar>::New("q", dict)
+      ? Function1<scalar>::New
+        (
+            "q",
+            db().time().userUnits(),
+            dimPower/dimArea,
+            dict
+        )
       : autoPtr<Function1<scalar>>()
     ),
     haveh_(dict.found("h")),
-    h_(haveh_ ? Function1<scalar>::New("h", dict).ptr() : nullptr),
-    Ta_(haveh_ ? Function1<scalar>::New("Ta", dict).ptr() : nullptr),
-    emissivity_(dict.lookupOrDefault<scalar>("emissivity", 0)),
+    h_
+    (
+        haveh_
+      ? Function1<scalar>::New
+        (
+            "h",
+            db().time().userUnits(),
+            dimPower/dimArea/dimTemperature,
+            dict
+        ).ptr()
+      : nullptr
+    ),
+    Ta_
+    (
+        haveh_
+      ? Function1<scalar>::New
+        (
+            "Ta",
+            db().time().userUnits(),
+            dimTemperature,
+            dict
+        ).ptr()
+      : nullptr
+    ),
+    emissivity_(dict.lookupOrDefault<scalar>("emissivity", unitFraction, 0)),
     thicknessLayers_
     (
-        dict.lookupOrDefault<scalarList>("thicknessLayers", scalarList())
+        dict.lookupOrDefault<scalarList>
+        (
+            "thicknessLayers",
+            dimLength,
+            scalarList()
+        )
     ),
     kappaLayers_
     (
-        dict.lookupOrDefault<scalarList>("kappaLayers", scalarList())
+        dict.lookupOrDefault<scalarList>
+        (
+            "kappaLayers",
+            dimThermalConductivity,
+            scalarList()
+        )
     ),
-    relax_(dict.lookupOrDefault<scalar>("relaxation", 1)),
+    relax_(dict.lookupOrDefault<scalar>("relaxation", unitFraction, 1)),
     qrName_(dict.lookupOrDefault<word>("qr", word::null)),
-    qrRelax_(dict.lookupOrDefault<scalar>("qrRelaxation", 1)),
+    qrRelax_(dict.lookupOrDefault<scalar>("qrRelaxation", unitFraction, 1)),
     qrPrevious_
     (
         qrName_ != word::null
       ? dict.found("qrPrevious")
-      ? scalarField("qrPrevious", dict, p.size())
+      ? scalarField("qrPrevious", dimPower/dimArea, dict, p.size())
       : scalarField(0, p.size())
       : scalarField()
     )
 {
-    fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
+    fvPatchScalarField::operator=
+    (
+        scalarField("value", iF.dimensions(), dict, p.size())
+    );
 
     if (!haveQ_ && !haveq_ && !haveh_)
     {
@@ -133,9 +174,17 @@ externalTemperatureFvPatchScalarField
     if (dict.found("refValue"))
     {
         // Full restart
-        refValue() = scalarField("refValue", dict, p.size());
-        refGrad() = scalarField("refGradient", dict, p.size());
-        valueFraction() = scalarField("valueFraction", dict, p.size());
+        refValue() = scalarField("refValue", iF.dimensions(), dict, p.size());
+        refGrad() =
+            scalarField
+            (
+                "refGradient",
+                iF.dimensions()/dimLength,
+                dict,
+                p.size()
+            );
+        valueFraction() =
+            scalarField("valueFraction", unitFraction, dict, p.size());
     }
     else
     {
@@ -263,11 +312,11 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
     scalarField sumq(qr);
     if (haveQ_)
     {
-        sumq += Q_->value(db().time().userTimeValue())/gSum(patch().magSf());
+        sumq += Q_->value(db().time().value())/gSum(patch().magSf());
     }
     if (haveq_)
     {
-        sumq += q_->value(db().time().userTimeValue());
+        sumq += q_->value(db().time().value());
     }
 
     scalarField kappa(size(), 0);
@@ -303,8 +352,8 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
             }
         }
 
-        const scalar h = h_->value(this->db().time().userTimeValue());
-        const scalar Ta = Ta_->value(this->db().time().userTimeValue());
+        const scalar h = h_->value(this->db().time().value());
+        const scalar Ta = Ta_->value(this->db().time().value());
 
         const scalarField hp
         (
@@ -375,18 +424,24 @@ void Foam::externalTemperatureFvPatchScalarField::write
 
     if (haveQ_)
     {
-        writeEntry(os, Q_());
+        writeEntry(os, db().time().userUnits(), dimPower, Q_());
     }
 
     if (haveq_)
     {
-        writeEntry(os, q_());
+        writeEntry(os, db().time().userUnits(), dimPower/dimArea, q_());
     }
 
     if (haveh_)
     {
-        writeEntry(os, h_());
-        writeEntry(os, Ta_());
+        writeEntry
+        (
+            os,
+            db().time().userUnits(),
+            dimPower/dimArea/dimTemperature,
+            h_()
+        );
+        writeEntry(os, db().time().userUnits(), dimTemperature, Ta_());
         writeEntryIfDifferent(os, "emissivity", scalar(0), emissivity_);
         writeEntryIfDifferent
         (

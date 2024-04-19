@@ -22,7 +22,7 @@ dimensionedScalar rho
 dimensionedScalar nu
 (
     "nu",
-    dimViscosity,
+    dimKinematicViscosity,
     physicalProperties
 );
 

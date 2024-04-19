@@ -52,7 +52,13 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::readCoeffs()
 {
     solubilityCurve_.reset
     (
-        Function1<scalar>::New("solubility", coeffs()).ptr()
+        Function1<scalar>::New
+        (
+            "solubility",
+            dimTemperature,
+            unitFraction,
+            coeffs()
+        ).ptr()
     );
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #define realTime_H
 
 #include "userTime.H"
+#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,7 +53,6 @@ class real
 :
     public userTime
 {
-
 public:
 
     //- Runtime type information
@@ -77,8 +77,11 @@ public:
         //- Return t (s)
         virtual scalar timeToUserTime(const scalar t) const;
 
-        //- Return real-time unit (s)
-        virtual word unit() const;
+        //- Return real-time unit name (s)
+        virtual word unitName() const;
+
+        //- Return the real-time unit conversion
+        virtual const unitConversion& units() const;
 
         //- Read the controlDict and set all the parameters
         virtual bool read(const dictionary& controlDict);

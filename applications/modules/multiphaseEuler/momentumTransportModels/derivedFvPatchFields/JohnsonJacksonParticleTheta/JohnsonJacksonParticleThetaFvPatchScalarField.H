@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,10 +69,10 @@ class JohnsonJacksonParticleThetaFvPatchScalarField
     // Private Data
 
         //- Particle-wall restitution coefficient
-        dimensionedScalar restitutionCoefficient_;
+        const scalar restitutionCoefficient_;
 
         //- Specularity coefficient
-        dimensionedScalar specularityCoefficient_;
+        const scalar specularityCoefficient_;
 
 
 public:

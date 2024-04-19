@@ -69,6 +69,7 @@ Foam::Function1s::${typeName}Function1${TemplateType}::
 ${typeName}Function1${TemplateType}
 (
     const word& entryName,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
@@ -130,7 +131,8 @@ Foam::Function1s::${typeName}Function1${TemplateType}::integral
 
 void Foam::Function1s::${typeName}Function1${TemplateType}::write
 (
-    Ostream& os
+    Ostream& os,
+    const unitConversions&
 ) const
 {
     NotImplemented;

@@ -83,8 +83,11 @@ public:
         //- Return the time t in crank-angle
         virtual scalar timeToUserTime(const scalar t) const;
 
-        //- Return real-time unit (s)
-        virtual word unit() const;
+        //- Return engine-time unit name (CAD)
+        virtual word unitName() const;
+
+        //- Return the engine-time unit conversion
+        virtual const unitConversion& units() const;
 
         //- Read the controlDict and set all the parameters
         virtual bool read(const dictionary& controlDict);

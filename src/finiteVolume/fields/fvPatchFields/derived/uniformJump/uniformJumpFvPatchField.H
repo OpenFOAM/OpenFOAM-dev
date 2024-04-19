@@ -104,12 +104,6 @@ protected:
         autoPtr<Function1<Type>> jumpTable_;
 
 
-    // Private Member Functions
-
-        //- Return the current time
-        scalar t() const;
-
-
 public:
 
     //- Runtime type information

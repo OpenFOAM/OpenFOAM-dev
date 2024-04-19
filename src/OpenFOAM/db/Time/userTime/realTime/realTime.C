@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,9 +66,16 @@ Foam::scalar Foam::userTimes::real::timeToUserTime(const scalar t) const
 }
 
 
-Foam::word Foam::userTimes::real::unit() const
+Foam::word Foam::userTimes::real::unitName() const
 {
     return "s";
+}
+
+
+const Foam::unitConversion& Foam::userTimes::real::units() const
+{
+    static const unitConversion unitSeconds(dimTime, 0, 0, 1);
+    return unitSeconds;
 }
 
 

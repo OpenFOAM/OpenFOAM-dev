@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,9 +38,12 @@ hydrostaticDisplacementFvPatchVectorField
 )
 :
     tractionDisplacementFvPatchVectorField(p, iF),
-    rhoLiquid_(dict.lookup<scalar>("rhoLiquid")),
-    liquidSurfacePressure_(dict.lookup<scalar>("liquidSurfacePressure")),
-    liquidSurfacePoint_(dict.lookup("liquidSurfacePoint"))
+    rhoLiquid_(dict.lookup<scalar>("rhoLiquid", dimDensity)),
+    liquidSurfacePressure_
+    (
+        dict.lookup<scalar>("liquidSurfacePressure", dimPressure)
+    ),
+    liquidSurfacePoint_(dict.lookup<vector>("liquidSurfacePoint", dimLength))
 {}
 
 

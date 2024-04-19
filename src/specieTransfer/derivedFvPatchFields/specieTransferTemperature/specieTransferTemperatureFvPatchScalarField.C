@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,10 @@ specieTransferTemperatureFvPatchScalarField
 {
     if (readValue)
     {
-        fvPatchScalarField::operator==(scalarField("value", dict, p.size()));
+        fvPatchScalarField::operator==
+        (
+            scalarField("value", iF.dimensions(), dict, p.size())
+        );
     }
 }
 

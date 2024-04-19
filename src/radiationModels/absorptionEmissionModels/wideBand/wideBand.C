@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "wideBand.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fluidMulticomponentThermo.H"
-#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -220,6 +219,8 @@ Foam::radiationModels::absorptionEmissionModels::wideBand::aCont
 
     scalarField& a = ta.ref().primitiveFieldRef();
 
+    const unitConversion& unitAtm = units()["atm"];
+
     forAll(a, celli)
     {
         forAllConstIter(HashTable<label>, speciesNames_, iter)
@@ -234,7 +235,7 @@ Foam::radiationModels::absorptionEmissionModels::wideBand::aCont
                 const List<scalar>& Ynft = lookUpTablePtr_().lookUp(ft[celli]);
 
                 // moles*pressure [atm]
-                Xipi = Ynft[specieIndex_[n]]*paToAtm(p[celli]);
+                Xipi = unitAtm.toUser(Ynft[specieIndex_[n]]*p[celli]);
             }
             else
             {
@@ -249,7 +250,7 @@ Foam::radiationModels::absorptionEmissionModels::wideBand::aCont
                 const scalar Xk =
                     mcThermo.Y(index)[celli]/(mcThermo.WiValue(index)*invWt);
 
-                Xipi = Xk*paToAtm(p[celli]);
+                Xipi = unitAtm.toUser(Xk*p[celli]);
             }
 
             scalar Ti = T[celli];

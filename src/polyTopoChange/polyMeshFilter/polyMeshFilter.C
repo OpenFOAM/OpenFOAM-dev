@@ -26,7 +26,6 @@ License
 #include "polyMeshFilter.H"
 #include "polyMesh.H"
 #include "fvMesh.H"
-#include "unitConversion.H"
 #include "edgeCollapser.H"
 #include "syncTools.H"
 #include "polyTopoChange.H"

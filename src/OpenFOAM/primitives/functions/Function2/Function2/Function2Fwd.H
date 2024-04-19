@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,21 +27,17 @@ License
 #define Function2Fwd_H
 
 #include "Function2.H"
-#include "vector.H"
-#include "symmTensor.H"
-#include "sphericalTensor.H"
-#include "tensor.H"
+#include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    typedef Function2<label> labelFunction2;
-    typedef Function2<scalar> scalarFunction2;
-    typedef Function2<vector> vectorFunction2;
-    typedef Function2<symmTensor> symmTensorFunction2;
-    typedef Function2<sphericalTensor> sphericalTensorFunction2;
-    typedef Function2<tensor> tensorFunction2;
+    #define TYPEDEF_TYPE_FUNCTION2(Type, nullArg) \
+        typedef Function2<Type> Type##Function2;
+    FOR_ALL_FIELD_TYPES(TYPEDEF_TYPE_FUNCTION2);
+    TYPEDEF_TYPE_FUNCTION2(label, );
+    #undef TYPEDEF_TYPE_FUNCTION2
 }
 
 

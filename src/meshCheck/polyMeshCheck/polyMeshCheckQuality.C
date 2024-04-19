@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,6 @@ License
 #include "pyramidPointFaceRef.H"
 #include "tetPointRef.H"
 #include "syncTools.H"
-#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -215,7 +214,7 @@ bool Foam::meshCheck::checkFaceOrthogonality
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
     // Severe nonorthogonality threshold
-    const scalar severeNonorthogonalityThreshold = ::cos(degToRad(orthWarn));
+    const scalar severeNonorthogonalityThreshold = ::cos(orthWarn);
 
     // Calculate coupled cell centre
     pointField neiCc(mesh.nFaces() - mesh.nInternalFaces());
@@ -1299,7 +1298,7 @@ bool Foam::meshCheck::checkVolRatio
 bool Foam::meshCheck::checkFaceAngles
 (
     const bool report,
-    const scalar maxDeg,
+    const scalar maxConcave,
     const polyMesh& mesh,
     const vectorField& faceAreas,
     const pointField& p,
@@ -1307,14 +1306,14 @@ bool Foam::meshCheck::checkFaceAngles
     labelHashSet* setPtr
 )
 {
-    if (maxDeg < -small || maxDeg > 180+small)
+    if (maxConcave < -small || maxConcave > degToRad(180)+small)
     {
         FatalErrorInFunction
-            << "maxDeg should be [0..180] but is now " << maxDeg
-            << abort(FatalError);
+            << "maxConcave should be [0..180] degrees but is "
+            << radToDeg(maxConcave) << abort(FatalError);
     }
 
-    const scalar maxSin = Foam::sin(degToRad(maxDeg));
+    const scalar maxSin = Foam::sin(maxConcave);
 
     const faceList& fcs = mesh.faces();
 
@@ -1403,8 +1402,8 @@ bool Foam::meshCheck::checkFaceAngles
         }
         else
         {
-            Info<< "All angles in faces are convex or less than "  << maxDeg
-                << " degrees concave.\n" << endl;
+            Info<< "All angles in faces are convex or less than "
+                << radToDeg(maxConcave) << " degrees concave.\n" << endl;
         }
     }
 
@@ -1414,7 +1413,7 @@ bool Foam::meshCheck::checkFaceAngles
         {
             WarningInFunction
                 << nConcave  << " face points with severe concave angle (> "
-                << maxDeg << " deg) found.\n"
+                << radToDeg(maxConcave) << " deg) found.\n"
                 << endl;
         }
 

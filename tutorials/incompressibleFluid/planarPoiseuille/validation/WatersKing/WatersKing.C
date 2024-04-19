@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,6 @@ Description
     \endverbatim
 
 \*---------------------------------------------------------------------------*/
-
 
 #include "argList.H"
 #include "viscosityModel.H"
@@ -107,7 +106,7 @@ int main(int argc, char *argv[])
     const scalar LOGvGreat = Foam::log(vGreat);
     while (!runTime.end())
     {
-        const scalar t = runTime.userTimeValue()/lambda;
+        const scalar t = runTime.value()/lambda;
         forAll(A, i)
         {
             if (bk[i]*t < LOGvGreat)

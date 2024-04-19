@@ -118,8 +118,7 @@ void Foam::Time::setControls()
 
     if (startFrom == "startTime")
     {
-        controlDict_.lookup("startTime") >> startTime_;
-        startTime_ = userTimeToTime(startTime_);
+        startTime_ = controlDict_.lookup<scalar>("startTime", userUnits());
     }
     else
     {
@@ -242,11 +241,11 @@ void Foam::Time::setControls()
 
     if (controlDict_.found("beginTime"))
     {
-        beginTime_ = userTimeToTime(controlDict_.lookup<scalar>("beginTime"));
+        beginTime_ = controlDict_.lookup<scalar>("beginTime", userUnits());
     }
     else if (timeDict.found("beginTime"))
     {
-        beginTime_ = userTimeToTime(timeDict.lookup<scalar>("beginTime"));
+        beginTime_ = timeDict.lookup<scalar>("beginTime", userUnits());
     }
     else
     {
@@ -259,7 +258,7 @@ void Foam::Time::setControls()
     {
         if (timeDict.found("deltaT"))
         {
-            deltaT_ = userTimeToTime(timeDict.lookup<scalar>("deltaT"));
+            deltaT_ = timeDict.lookup<scalar>("deltaT", userUnits());
             deltaTSave_ = deltaT_;
             deltaT0_ = deltaT_;
         }
@@ -267,7 +266,7 @@ void Foam::Time::setControls()
 
     if (timeDict.found("deltaT0"))
     {
-        deltaT0_ = userTimeToTime(timeDict.lookup<scalar>("deltaT0"));
+        deltaT0_ = timeDict.lookup<scalar>("deltaT0", userUnits());
     }
 
     if (timeDict.readIfPresent("index", startTimeIndex_))
@@ -414,7 +413,8 @@ Foam::Time::Time
                 "OptimisationSwitches",
                 "DebugSwitches",
                 "DimensionedConstants",
-                "DimensionSets"
+                "DimensionSets",
+                "UnitConversions"
             }
         );
 
@@ -680,6 +680,7 @@ Foam::word Foam::Time::findInstance
             stopInstance
         )
     );
+
     return io.instance();
 }
 
@@ -860,8 +861,34 @@ Foam::word Foam::Time::userTimeName() const
     }
     else
     {
-        return timeName(userTimeValue()) + userTime_->unit();
+        return timeName(userTimeValue()) + userTime_->unitName();
     }
+}
+
+
+const Foam::unitConversion& Foam::Time::userUnits() const
+{
+    return userTime_->units();
+}
+
+
+const Foam::unitConversion& Foam::Time::writeIntervalUnits() const
+{
+    static const unitConversion unitSeconds(dimTime);
+
+    switch (writeControl_)
+    {
+        case writeControl::timeStep:
+            return unitless;
+        case writeControl::runTime:
+        case writeControl::adjustableRunTime:
+            return userUnits();
+        case writeControl::cpuTime:
+        case writeControl::clockTime:
+            return unitSeconds;
+    }
+
+    return unitNone;
 }
 
 
@@ -986,12 +1013,12 @@ void Foam::Time::setTime(const instant& inst, const label newIndex)
 
     if (timeDict.found("deltaT"))
     {
-        deltaT_ = userTimeToTime(timeDict.lookup<scalar>("deltaT"));
+        deltaT_ = timeDict.lookup<scalar>("deltaT", userUnits());
     }
 
     if (timeDict.found("deltaT0"))
     {
-        deltaT0_ = userTimeToTime(timeDict.lookup<scalar>("deltaT0"));
+        deltaT0_ = timeDict.lookup<scalar>("deltaT0", userUnits());
     }
 
     timeDict.readIfPresent("index", timeIndex_);

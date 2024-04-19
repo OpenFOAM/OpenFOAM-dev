@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,6 +100,7 @@ public:
         NSRDS7
         (
             const word& name,
+            const unitConversions& units,
             const dictionary& dict
         );
 
@@ -122,7 +123,7 @@ public:
         virtual scalar integral(const scalar x1, const scalar x2) const;
 
         //- Write the function coefficients
-        virtual void write(Ostream& os) const;
+        virtual void write(Ostream& os, const unitConversions& units) const;
 };
 
 

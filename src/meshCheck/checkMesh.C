@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "meshCheck.H"
 #include "IOmanip.H"
+#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -40,7 +41,7 @@ bool Foam::meshCheck::checkMesh
 {
     const scalar maxNonOrtho
     (
-        dict.lookup<scalar>("maxNonOrtho", true)
+        dict.lookup<scalar>("maxNonOrtho", unitDegrees, true)
     );
     const scalar minVol
     (
@@ -52,7 +53,7 @@ bool Foam::meshCheck::checkMesh
     );
     const scalar maxConcave
     (
-        dict.lookup<scalar>("maxConcave", true)
+        dict.lookup<scalar>("maxConcave", unitDegrees, true)
     );
     const scalar maxIntSkew
     (
@@ -88,7 +89,7 @@ bool Foam::meshCheck::checkMesh
 
     Info<< "Checking faces in error :" << endl;
 
-    if (maxNonOrtho < 180.0-small)
+    if (maxNonOrtho < degToRad(180.0)-small)
     {
         meshCheck::checkFaceOrthogonality
         (
@@ -164,7 +165,7 @@ bool Foam::meshCheck::checkMesh
         nWrongFaces = nNewWrongFaces;
     }
 
-    if (maxConcave < 180.0-small)
+    if (maxConcave < degToRad(180.0)-small)
     {
         meshCheck::checkFaceAngles
         (
@@ -181,7 +182,7 @@ bool Foam::meshCheck::checkMesh
             returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    faces with concavity > "
-            << setw(3) << maxConcave
+            << setw(3) << radToDeg(maxConcave)
             << " degrees                     : "
             << nNewWrongFaces - nWrongFaces << endl;
 

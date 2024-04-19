@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,6 +145,15 @@ public:
 
         //- Construct from a dictionary entry
         DynamicField(const word& keyword, const dictionary&, const label size);
+
+        //- Construct from a dictionary entry with unit conversion
+        DynamicField
+        (
+            const word& keyword,
+            const unitConversion&,
+            const dictionary&,
+            const label size
+        );
 
         //- Clone
         tmp<DynamicField<T, SizeInc, SizeMult, SizeDiv>> clone() const;

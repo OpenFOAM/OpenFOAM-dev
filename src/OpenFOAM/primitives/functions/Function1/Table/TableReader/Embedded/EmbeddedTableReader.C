@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,7 @@ template<class Type>
 Foam::TableReaders::Embedded<Type>::Embedded
 (
     const word& name,
+    const Function1s::unitConversions& units,
     const dictionary& dict
 )
 :
@@ -56,9 +57,27 @@ Foam::TableReaders::Embedded<Type>::~Embedded()
 
 template<class Type>
 Foam::List<Foam::Tuple2<Foam::scalar, Type>>
-Foam::TableReaders::Embedded<Type>::read(const dictionary& dict) const
+Foam::TableReaders::Embedded<Type>::read
+(
+    const Function1s::unitConversions& defaultUnits,
+    const dictionary& dict
+) const
 {
-    return dict.lookup<List<Tuple2<scalar, Type>>>("values");
+    Function1s::unitConversions units(defaultUnits);
+    units.readIfPresent("units", dict);
+    return TableReader<Type>::convertRead(units, dict.lookup("values"));
+}
+
+
+template<class Type>
+Foam::List<Foam::Tuple2<Foam::scalar, Type>>
+Foam::TableReaders::Embedded<Type>::read
+(
+    const Function1s::unitConversions& units,
+    Istream& is
+)
+{
+    return TableReader<Type>::convertRead(units, is);
 }
 
 
@@ -66,10 +85,13 @@ template<class Type>
 void Foam::TableReaders::Embedded<Type>::write
 (
     Ostream& os,
+    const Function1s::unitConversions& units,
     const List<Tuple2<scalar, Type>>& table
 ) const
 {
-    writeEntry(os, "values", table);
+    TableReader<Type>::write(os, units, table);
+
+    writeEntry(os, "values", TableReader<Type>::convertWrite(units, table));
 }
 
 

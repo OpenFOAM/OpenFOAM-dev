@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,9 +57,9 @@ BirdCarreau
 )
 :
     strainRateViscosityModel(viscosityProperties, viscosity, U),
-    nuInf_("nuInf", dimViscosity, 0),
+    nuInf_("nuInf", dimKinematicViscosity, 0),
     k_("k", dimTime, 0),
-    tauStar_( "tauStar", dimViscosity/dimTime, 0),
+    tauStar_( "tauStar", dimKinematicViscosity/dimTime, 0),
     n_("n", dimless, 0),
     a_("a", dimless, 2)
 {

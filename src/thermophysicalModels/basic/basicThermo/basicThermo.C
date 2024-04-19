@@ -273,7 +273,7 @@ Foam::basicThermo::implementation::implementation
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimEnergy/dimTime/dimLength/dimTemperature, Zero)
+        dimensionedScalar(dimThermalConductivity, Zero)
     ),
 
     dpdt_(dict.lookupOrDefault<Switch>("dpdt", true))

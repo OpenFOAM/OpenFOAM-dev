@@ -2182,7 +2182,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
         }
 
 
-        const scalar planarCos = Foam::cos(degToRad(planarAngle));
+        const scalar planarCos = Foam::cos(planarAngle);
 
         if
         (
@@ -2192,7 +2192,7 @@ Foam::labelList Foam::meshRefinement::refineCandidates
         )
         {
             Info<< "Specified gap level : " << max(surfaces_.gapLevel())
-                << ", planar angle " << planarAngle << endl;
+                << ", planar angle " << radToDeg(planarAngle) << endl;
 
             const label nGap = markProximityRefinement
             (

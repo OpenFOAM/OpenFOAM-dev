@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,7 @@ SourceFiles
 #define Function1_H
 
 #include "dictionary.H"
+#include "unitConversion.H"
 #include "tmp.H"
 #include "typeInfo.H"
 #include "Field.H"
@@ -53,6 +54,66 @@ namespace Foam
 // Forward declaration of friend functions and operators
 template<class Type> class Function1;
 template<class Type> Ostream& operator<<(Ostream&, const Function1<Type>&);
+
+/*---------------------------------------------------------------------------*\
+                Class Function1s::unitConversions Declaration
+\*---------------------------------------------------------------------------*/
+
+namespace Function1s
+{
+struct unitConversions
+{
+    // Public Data
+
+        //- Unit conversion for x-axis values
+        unitConversion x;
+
+        //- Unit conversion for result values
+        unitConversion value;
+
+
+    // Constructors
+
+        //- Construct from initialiser list
+        unitConversions(std::initializer_list<unitConversion>);
+
+        //- Construct from stream
+        unitConversions(Istream& is);
+
+        //- Construct a clone
+        autoPtr<unitConversions> clone() const;
+
+
+    // Member Functions
+
+        //- Update if found in the dictionary
+        bool readIfPresent(const word& keyword, const dictionary&);
+};
+}
+
+
+// Global Functions
+
+//- Generate an error in an context where unit conversions are not supported
+void assertNoConvertUnits
+(
+    const word& typeName,
+    const Function1s::unitConversions& units,
+    const dictionary& dict
+);
+
+//- Write a units entry
+void writeEntry(Ostream& os, const Function1s::unitConversions& units);
+
+
+// IOStream Operators
+
+//- Read from stream
+Istream& operator>>(Istream& is, Function1s::unitConversions&);
+
+//- Write to stream
+Ostream& operator<<(Ostream& os, const Function1s::unitConversions&);
+
 
 /*---------------------------------------------------------------------------*\
                           Class Function1 Declaration
@@ -90,9 +151,10 @@ public:
             dictionary,
             (
                 const word& name,
+                const Function1s::unitConversions& units,
                 const dictionary& dict
             ),
-            (name, dict)
+            (name, units, dict)
         );
 
         declareRunTimeSelectionTable
@@ -102,9 +164,10 @@ public:
             Istream,
             (
                 const word& name,
+                const Function1s::unitConversions& units,
                 Istream& is
             ),
-            (name, is)
+            (name, units, is)
         );
 
 
@@ -126,6 +189,16 @@ public:
         static autoPtr<Function1<Type>> New
         (
             const word& name,
+            const Function1s::unitConversions& units,
+            const dictionary& dict
+        );
+
+        //- Select from dictionary
+        static autoPtr<Function1<Type>> New
+        (
+            const word& name,
+            const unitConversion& xUnits,
+            const unitConversion& valueUnits,
             const dictionary& dict
         );
 
@@ -133,6 +206,17 @@ public:
         static autoPtr<Function1<Type>> New
         (
             const word& name,
+            const Function1s::unitConversions& units,
+            const word& Function1Type,
+            Istream& is
+        );
+
+        //- Select from Istream
+        static autoPtr<Function1<Type>> New
+        (
+            const word& name,
+            const unitConversion& xUnits,
+            const unitConversion& valueUnits,
             const word& Function1Type,
             Istream& is
         );
@@ -167,7 +251,11 @@ public:
         virtual bool constant() const;
 
         //- Write data to dictionary stream
-        virtual void write(Ostream& os) const = 0;
+        virtual void write
+        (
+            Ostream& os,
+            const Function1s::unitConversions&
+        ) const = 0;
 
 
     // Member Operators
@@ -189,6 +277,23 @@ public:
 
 template<class Type>
 void writeEntry(Ostream& os, const Function1<Type>& f1);
+
+template<class Type>
+void writeEntry
+(
+    Ostream& os,
+    const Function1s::unitConversions& units,
+    const Function1<Type>& f1
+);
+
+template<class Type>
+void writeEntry
+(
+    Ostream& os,
+    const unitConversion& xUnits,
+    const unitConversion& valueUnits,
+    const Function1<Type>& f1
+);
 
 
 /*---------------------------------------------------------------------------*\

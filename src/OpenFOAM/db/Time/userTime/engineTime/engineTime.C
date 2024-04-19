@@ -46,7 +46,7 @@ Foam::userTimes::engine::engine(const dictionary& controlDict)
     userTime(controlDict),
     omega_(dict(controlDict))
 {
-    addUnit(dimensionedScalar(unit(), dimTime, userTimeToTime(1)));
+    addUnits(unitName(), unitConversion(dimTime, 0, 0, userTimeToTime(1)));
 }
 
 
@@ -73,16 +73,22 @@ Foam::scalar Foam::userTimes::engine::timeToUserTime(const scalar t) const
 }
 
 
-Foam::word Foam::userTimes::engine::unit() const
+Foam::word Foam::userTimes::engine::unitName() const
 {
     return "CAD";
+}
+
+
+const Foam::unitConversion& Foam::userTimes::engine::units() const
+{
+    return Foam::units()[unitName()];
 }
 
 
 bool Foam::userTimes::engine::read(const dictionary& controlDict)
 {
     omega_ = omega(dict(controlDict));
-    addUnit(dimensionedScalar(unit(), dimTime, userTimeToTime(1)));
+    addUnits(unitName(), unitConversion(dimTime, 0, 0, userTimeToTime(1)));
     return true;
 }
 

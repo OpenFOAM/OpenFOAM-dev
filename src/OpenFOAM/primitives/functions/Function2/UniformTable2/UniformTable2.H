@@ -120,7 +120,12 @@ public:
     // Constructors
 
         //- Construct from name and dictionary
-        UniformTable(const word& name, const dictionary& dict);
+        UniformTable
+        (
+            const word& name,
+            const unitConversions& units,
+            const dictionary& dict
+        );
 
 
     // Member Functions
@@ -141,7 +146,7 @@ public:
         Type dfdT(scalar p, scalar T) const;
 
         //- Write the function coefficients
-        void write(Ostream& os) const;
+        void write(Ostream& os, const unitConversions& units) const;
 };
 
 

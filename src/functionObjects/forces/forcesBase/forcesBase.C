@@ -256,7 +256,7 @@ Foam::functionObjects::forcesBase::devTau() const
         const dimensionedScalar nu
         (
             "nu",
-            dimViscosity,
+            dimKinematicViscosity,
             physicalProperties.lookup("nu")
         );
 
@@ -326,7 +326,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::forcesBase::mu() const
         const dimensionedScalar nu
         (
             "nu",
-            dimViscosity,
+            dimKinematicViscosity,
             physicalProperties.lookup("nu")
         );
 

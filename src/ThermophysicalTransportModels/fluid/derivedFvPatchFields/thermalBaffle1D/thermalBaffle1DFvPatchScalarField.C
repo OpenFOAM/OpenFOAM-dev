@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ thermalBaffle1DFvPatchScalarField
     solidDict_(dict),
     solidPtr_(),
     qrPrevious_(p.size(), 0.0),
-    qrRelaxation_(dict.lookupOrDefault<scalar>("qrRelaxation", 1)),
+    qrRelaxation_(dict.lookupOrDefault<scalar>("qrRelaxation", dimless, 1)),
     qrName_(dict.lookupOrDefault<word>("qr", "none"))
 {
     mappedPatchBaseBase::validateMapForField
@@ -67,33 +67,41 @@ thermalBaffle1DFvPatchScalarField
       & mappedPatchBaseBase::from::differentPatch
     );
 
-    fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
+    fvPatchScalarField::operator=
+    (
+        scalarField("value", iF.dimensions(), dict, p.size())
+    );
 
     if (dict.found("thickness"))
     {
-        thickness_ = scalarField("thickness", dict, p.size());
+        thickness_ = scalarField("thickness", dimLength, dict, p.size());
     }
 
     if (dict.found("qs"))
     {
-        qs_ = scalarField("qs", dict, p.size());
-    }
-    else if (dict.found("Qs"))
-    {
-        qs_ = scalarField("Qs", dict, p.size());
+        qs_ = scalarField("qs", dimPower/dimArea, dict, p.size());
     }
 
     if (dict.found("qrPrevious"))
     {
-        qrPrevious_ = scalarField("qrPrevious", dict, p.size());
+        qrPrevious_ =
+            scalarField("qrPrevious", dimPower/dimArea, dict, p.size());
     }
 
     if (dict.found("refValue") && baffleActivated_)
     {
         // Full restart
-        refValue() = scalarField("refValue", dict, p.size());
-        refGrad() = scalarField("refGradient", dict, p.size());
-        valueFraction() = scalarField("valueFraction", dict, p.size());
+        refValue() = scalarField("refValue", iF.dimensions(), dict, p.size());
+        refGrad() =
+            scalarField
+            (
+                "refGradient",
+                iF.dimensions()/dimLength,
+                dict,
+                p.size()
+            );
+        valueFraction() =
+            scalarField("valueFraction", unitFraction, dict, p.size());
     }
     else
     {

@@ -25,17 +25,63 @@ License
 
 #include "Polynomial1.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+Foam::List<Type> Foam::Function1s::Polynomial<Type>::convertRead
+(
+    const unitConversions& units,
+    List<Type> coeffs
+)
+{
+    unitConversion unitsXPowI(units.x);
+    forAll(coeffs, i)
+    {
+        coeffs[i] = units.value.toStandard(unitsXPowI.toUser(coeffs[i]));
+        unitsXPowI.reset(units.x*unitsXPowI);
+    }
+    return coeffs;
+}
+
+
+template<class Type>
+Foam::List<Type> Foam::Function1s::Polynomial<Type>::convertWrite
+(
+    const unitConversions& units,
+    List<Type> coeffs
+)
+{
+    unitConversion unitsXPowI(units.x);
+    forAll(coeffs, i)
+    {
+        coeffs[i] = units.value.toUser(unitsXPowI.toStandard(coeffs[i]));
+        unitsXPowI.reset(units.x*unitsXPowI);
+    }
+    return coeffs;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::Function1s::Polynomial<Type>::Polynomial
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
     FieldFunction1<Type, Polynomial<Type>>(name),
-    coeffs_(dict.lookup("coeffs"))
+    coeffs_
+    (
+        convertRead
+        (
+            dict.found("units")
+          ? Function1s::unitConversions(dict.lookup("units"))
+          : units,
+            dict.lookup("coeffs")
+        )
+    )
 {
     if (!coeffs_.size())
     {
@@ -51,11 +97,12 @@ template<class Type>
 Foam::Function1s::Polynomial<Type>::Polynomial
 (
     const word& name,
+    const unitConversions& units,
     Istream& is
 )
 :
     FieldFunction1<Type, Polynomial<Type>>(name),
-    coeffs_(is)
+    coeffs_(convertRead(units, is))
 {
     if (!coeffs_.size())
     {
@@ -118,9 +165,15 @@ Type Foam::Function1s::Polynomial<Type>::integral
 
 
 template<class Type>
-void Foam::Function1s::Polynomial<Type>::write(Ostream& os) const
+void Foam::Function1s::Polynomial<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
-    writeKeyword(os, "coeffs") << coeffs_ << token::END_STATEMENT << nl;
+    writeKeyword(os, "coeffs")
+        << convertWrite(units, coeffs_)
+        << token::END_STATEMENT << nl;
 }
 
 

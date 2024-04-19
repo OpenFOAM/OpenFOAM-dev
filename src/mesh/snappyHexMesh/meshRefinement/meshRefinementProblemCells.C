@@ -35,7 +35,6 @@ License
 #include "searchableSurfaces.H"
 #include "meshCheck.H"
 #include "IOmanip.H"
-#include "unitConversion.H"
 #include "snappySnapDriver.H"
 
 #include "snapParameters.H"
@@ -250,7 +249,7 @@ Foam::Map<Foam::label> Foam::meshRefinement::findEdgeConnectedProblemCells
             nearestRegion[i]
         );
 
-        const scalar angle = degToRad(perpendicularAngle[region]);
+        const scalar angle = perpendicularAngle[region];
 
         if (angle >= 0)
         {
@@ -288,8 +287,7 @@ bool Foam::meshRefinement::isCollapsedFace
 ) const
 {
     // Severe nonorthogonality threshold
-    const scalar severeNonorthogonalityThreshold =
-        ::cos(degToRad(maxNonOrtho));
+    const scalar severeNonorthogonalityThreshold = ::cos(maxNonOrtho);
 
     const vector s = mesh_.faces()[facei].area(points);
     const scalar magS = mag(s);
@@ -623,15 +621,15 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
     if (checkCollapse)
     {
         minArea = motionDict.lookup<scalar>("minArea");
-        maxNonOrtho = motionDict.lookup<scalar>("maxNonOrtho");
+        maxNonOrtho = motionDict.lookup<scalar>("maxNonOrtho", unitDegrees);
 
         Info<< "markFacesOnProblemCells :"
             << " Deleting all-anchor surface cells only if"
             << " snapping them violates mesh quality constraints:" << nl
             << "    snapped/original cell volume < " << volFraction << nl
             << "    face area                    < " << minArea << nl
-            << "    non-orthogonality            > " << maxNonOrtho << nl
-            << endl;
+            << "    non-orthogonality            > " << radToDeg(maxNonOrtho)
+            << nl << endl;
 
         // Construct addressing engine.
         autoPtr<indirectPrimitivePatch> ppPtr

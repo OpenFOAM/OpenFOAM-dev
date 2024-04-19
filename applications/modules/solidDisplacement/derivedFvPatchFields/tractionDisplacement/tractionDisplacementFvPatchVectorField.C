@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,17 @@ tractionDisplacementFvPatchVectorField
 )
 :
     fixedGradientFvPatchVectorField(p, iF),
-    traction_("traction", dict, p.size()),
-    pressure_(Function1<scalar>::New("pressure", dict))
+    traction_("traction", dimPressure, dict, p.size()),
+    pressure_
+    (
+        Function1<scalar>::New
+        (
+            "pressure",
+            db().time().userUnits(),
+            dimPressure,
+            dict
+        )
+    )
 {
     fvPatchVectorField::operator=(patchInternalField());
     gradient() = Zero;
@@ -127,7 +136,7 @@ void Foam::tractionDisplacementFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    this->updateCoeffs(pressure_->value(this->db().time().userTimeValue()));
+    this->updateCoeffs(pressure_->value(db().time().value()));
 }
 
 
@@ -135,7 +144,7 @@ void Foam::tractionDisplacementFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
     writeEntry(os, "traction", traction_);
-    writeEntry(os, pressure_());
+    writeEntry(os, db().time().userUnits(), dimPressure, pressure_());
     writeEntry(os, "value", *this);
 }
 

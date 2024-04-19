@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,6 +32,7 @@ template<class Type>
 Foam::autoPtr<Foam::TableReader<Type>> Foam::TableReader<Type>::New
 (
     const word& name,
+    const Function1s::unitConversions& units,
     const dictionary& dict
 )
 {
@@ -52,7 +53,7 @@ Foam::autoPtr<Foam::TableReader<Type>> Foam::TableReader<Type>::New
                 << exit(FatalError);
         }
 
-        return autoPtr<TableReader<Type>>(cstrIter()(name, dict));
+        return autoPtr<TableReader<Type>>(cstrIter()(name, units, dict));
     }
     else
     {
@@ -60,14 +61,14 @@ Foam::autoPtr<Foam::TableReader<Type>> Foam::TableReader<Type>::New
         {
             return autoPtr<TableReader<Type>>
             (
-                new TableReaders::Foam<Type>(name, dict)
+                new TableReaders::Foam<Type>(name, units, dict)
             );
         }
         else
         {
             return autoPtr<TableReader<Type>>
             (
-                new TableReaders::Embedded<Type>(name, dict)
+                new TableReaders::Embedded<Type>(name, units, dict)
             );
         }
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,9 +42,9 @@ phaseHydrostaticPressureFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF, dict, false),
     phaseFraction_(dict.lookupOrDefault<word>("phaseFraction", "alpha")),
-    rho_(dict.lookup<scalar>("rho")),
-    pRefValue_(dict.lookup<scalar>("pRefValue")),
-    pRefPoint_(dict.lookup("pRefPoint"))
+    rho_(dict.lookup<scalar>("rho", dimDensity)),
+    pRefValue_(dict.lookup<scalar>("pRefValue", dimPressure)),
+    pRefPoint_(dict.lookup<vector>("pRefPoint", dimLength))
 {
     this->refValue() = pRefValue_;
 
@@ -52,7 +52,7 @@ phaseHydrostaticPressureFvPatchScalarField
     {
         fvPatchScalarField::operator=
         (
-            scalarField("value", dict, p.size())
+            scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else

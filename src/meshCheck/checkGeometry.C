@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,6 @@ License
 #include "pointSet.H"
 #include "EdgeMap.H"
 #include "wedgePolyPatch.H"
-#include "unitConversion.H"
 #include "polyMeshTetDecomposition.H"
 
 #include "vtkSurfaceWriter.H"
@@ -937,7 +936,7 @@ Foam::label Foam::meshCheck::checkGeometry
     if (allGeometry)
     {
         faceSet faces(mesh, "concaveFaces", mesh.nFaces()/100 + 1);
-        if (meshCheck::checkFaceAngles(mesh, true, 10, &faces))
+        if (meshCheck::checkFaceAngles(mesh, true, degToRad(10), &faces))
         {
             // noFailedChecks++;
 

@@ -173,7 +173,7 @@ DimensionedConstants
 }
 
 
-DimensionSets
+UnitConversions
 {
     unitSet             SI; // USCS
 
@@ -195,16 +195,7 @@ DimensionSets
         J           [N m]               1;
         W           [J s^-1]            1;
 
-        // Some non-symbolic units
-        area        [m^2]               1;
-        volume      [m^3]               1;
-        density     [kg m^-3]           1;
-        acceleration [m s^-2]           1;
-        kinematicPressure [Pa density^-1] 1;
-
-        // Scaled units. Supported in dimensionedType and
-        // UniformDimensionedField. Not supported in DimensionedField or
-        // GeometricField.
+        // Scaled units
         g           [kg]                1e-3;
         um          [m]                 1e-6;
         mm          [m]                 1e-3;
@@ -212,7 +203,22 @@ DimensionSets
         km          [m]                 1e3;
         us          [s]                 1e-6;
         ms          [s]                 1e-3;
+        min         [s]                 60;
+        hr          [s]                 3600;
         mol         [kmol]              1e-3;
+
+        // Derived scaled units
+        l           [m^3]               1e-3;
+        ml          [m^3]               1e-6;
+        rpm         [rot/min]           1;
+        bar         [Pa]                1e5;
+        atm         [Pa]                101325;
+        kPa         [Pa]                1e3;
+        MPa         [Pa]                1e6;
+        cal         [J]                 4.184;
+        kcal        [J]                 4184;
+        cSt         [m^2/s]             1e-6;
+        cP          [kg/m/s]            1e-3;
     }
 
     USCSCoeffs

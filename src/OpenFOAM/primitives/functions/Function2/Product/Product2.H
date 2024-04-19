@@ -176,6 +176,7 @@ public:
         //- Construct from a dictionary
         ProductFunction1s
         (
+            const unitConversions& units,
             const dictionary& dict,
             const Pair<Tuple2<word, label>>& typeAndRanks
         );
@@ -190,7 +191,7 @@ public:
         inline Type value(const scalar x, const scalar y) const;
 
         //- Write to a stream
-        void write(Ostream& os) const;
+        void write(Ostream& os, const unitConversions& units) const;
 };
 
 
@@ -214,6 +215,7 @@ public:
         //- Construct from a dictionary
         ProductFunction1s
         (
+            const unitConversions& units,
             const dictionary& dict,
             const Pair<Tuple2<word, label>>& typeAndRanks
         );
@@ -228,7 +230,7 @@ public:
         inline Type value(const scalar x, const scalar y) const;
 
         //- Write to a stream
-        void write(Ostream& os) const;
+        void write(Ostream& os, const unitConversions& units) const;
 };
 
 
@@ -259,6 +261,7 @@ public:
         Product
         (
             const word& name,
+            const unitConversions& units,
             const dictionary& dict
         );
 
@@ -275,8 +278,8 @@ public:
         //- Return value
         virtual inline Type value(const scalar x, const scalar y) const;
 
-        //- Write data to dictionary stream
-        virtual void write(Ostream& os) const;
+        //- Write in dictionary format
+        virtual void write(Ostream& os, const unitConversions& units) const;
 
 
     // Member Operators

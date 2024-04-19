@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,12 @@ Foam::hIcoTabulatedThermo<EquationOfState>::hIcoTabulatedThermo
        .subDict("thermodynamics")
        .lookupBackwardsCompatible<scalar>({"sf", "Sf"})
     ),
-    Cp_("Cp", dict.subDict("thermodynamics").subDict("Cp"))
+    Cp_
+    (
+        "Cp",
+        {dimTemperature, dimSpecificHeatCapacity},
+        dict.subDict("thermodynamics").subDict("Cp")
+    )
 {}
 
 

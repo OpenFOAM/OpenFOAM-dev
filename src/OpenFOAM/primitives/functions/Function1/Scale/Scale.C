@@ -49,18 +49,19 @@ template<class Type>
 Foam::Function1s::Scale<Type>::Scale
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
     FieldFunction1<Type, Scale<Type>>(name),
-    scale_(Function1<scalar>::New("scale", dict)),
+    scale_(Function1<scalar>::New("scale", units.x, unitless, dict)),
     xScale_
     (
         dict.found("xScale")
-      ? Function1<scalar>::New("xScale", dict)
+      ? Function1<scalar>::New("xScale", units.x, units.x, dict)
       : autoPtr<Function1<scalar>>(new Constant<scalar>("xScale", 1))
     ),
-    value_(Function1<Type>::New("value", dict)),
+    value_(Function1<Type>::New("value", units, dict)),
     integrableScale_(xScale_->constant() && scale_->constant()),
     integrableValue_(xScale_->constant() && value_->constant())
 {}
@@ -88,11 +89,15 @@ Foam::Function1s::Scale<Type>::~Scale()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::Scale<Type>::write(Ostream& os) const
+void Foam::Function1s::Scale<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
-    writeEntry(os, scale_());
-    writeEntry(os, xScale_());
-    writeEntry(os, value_());
+    writeEntry(os, {units.x, unitless}, scale_());
+    writeEntry(os, {units.x, units.x}, xScale_());
+    writeEntry(os, units, value_());
 }
 
 

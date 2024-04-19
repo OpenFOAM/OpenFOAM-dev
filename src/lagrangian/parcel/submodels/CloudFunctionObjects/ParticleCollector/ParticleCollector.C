@@ -26,7 +26,6 @@ License
 #include "ParticleCollector.H"
 #include "Pstream.H"
 #include "surfaceWriter.H"
-#include "unitConversion.H"
 #include "randomGenerator.H"
 #include "triangle.H"
 #include "cloud.H"
@@ -172,8 +171,8 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
         refDir = normalised(perpendicular(normal_[0]));
     }
 
-    scalar dTheta = 5.0;
-    scalar dThetaSector = 360.0/scalar(nS);
+    scalar dTheta = degToRad(5.0);
+    scalar dThetaSector = degToRad(360.0)/scalar(nS);
     label intervalPerSector = max(1, ceil(dThetaSector/dTheta));
     dTheta = dThetaSector/scalar(intervalPerSector);
 
@@ -190,14 +189,8 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
     faces_.setSize(nFace);
     area_.setSize(nFace);
 
-    coordSys_ = coordinateSystems::cylindrical
-    (
-        "coordSys",
-        origin,
-        normal_[0],
-        refDir,
-        false
-    );
+    coordSys_ =
+        coordinateSystems::cylindrical("coordSys", origin, normal_[0], refDir);
 
     List<label> ptIDs(identityMap(nPointPerRadius));
 
@@ -211,7 +204,7 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
         for (label i = 0; i < nPointPerRadius; i++)
         {
             label pI = i + pointOffset;
-            point pCyl(radius_[radI], degToRad(i*dTheta), 0.0);
+            point pCyl(radius_[radI], i*dTheta, 0.0);
             points_[pI] = coordSys_.globalPosition(pCyl);
         }
     }

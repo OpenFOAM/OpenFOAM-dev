@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,16 @@ Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF, dict),
-    meanValue_(Function1<Type>::New("meanValue", dict))
+    meanValue_
+    (
+        Function1<Type>::New
+        (
+            "meanValue",
+            this->db().time().userUnits(),
+            iF.dimensions(),
+            dict
+        )
+    )
 {}
 
 
@@ -77,8 +86,7 @@ void Foam::fixedMeanFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTimeValue();
-    Type meanValue = meanValue_->value(t);
+    Type meanValue = meanValue_->value(this->db().time().value());
 
     Field<Type> newValues(this->patchInternalField());
 
@@ -105,7 +113,13 @@ template<class Type>
 void Foam::fixedMeanFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    writeEntry(os, meanValue_());
+    writeEntry
+    (
+        os,
+        this->db().time().userUnits(),
+        this->internalField().dimensions(),
+        meanValue_()
+    );
     writeEntry(os, "value", *this);
 }
 

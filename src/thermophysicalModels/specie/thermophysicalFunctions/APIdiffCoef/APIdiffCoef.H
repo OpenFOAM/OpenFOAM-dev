@@ -58,10 +58,10 @@ class APIdiffCoef
     // Private Data
 
         // API vapour mass diffusivity function coefficients
-        const scalar a_, b_, wf_, wa_;
+        scalar a_, b_, wf_, wa_;
 
         // Helper variables
-        const scalar alpha_, beta_;
+        scalar alpha_, beta_;
 
 
 public:
@@ -86,6 +86,7 @@ public:
         APIdiffCoef
         (
             const word& name,
+            const unitConversions& units,
             const dictionary& dict
         );
 
@@ -117,7 +118,7 @@ public:
         }
 
         //- Write the function coefficients
-        virtual void write(Ostream& os) const;
+        virtual void write(Ostream& os, const unitConversions& units) const;
 };
 
 

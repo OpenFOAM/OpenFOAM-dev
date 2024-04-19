@@ -53,7 +53,6 @@ Description
 #include "removePoints.H"
 #include "meshCheck.H"
 #include "polyTopoChangeMap.H"
-#include "unitConversion.H"
 
 using namespace Foam;
 
@@ -305,24 +304,25 @@ int main(int argc, char *argv[])
     #include "createPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
-    const scalar featureAngle = args.argRead<scalar>(1);
-    const scalar minCos = Foam::cos(degToRad(featureAngle));
+    const scalar featureAngle = degToRad(args.argRead<scalar>(1));
+    const scalar minCos = Foam::cos(featureAngle);
 
     // Sin of angle between two consecutive edges on a face.
     // If sin(angle) larger than this the face will be considered concave.
-    scalar concaveAngle = args.optionLookupOrDefault("concaveAngle", 30.0);
-    scalar concaveSin = Foam::sin(degToRad(concaveAngle));
+    const scalar concaveAngle =
+        degToRad(args.optionLookupOrDefault("concaveAngle", 30.0));
+    const scalar concaveSin = Foam::sin(concaveAngle);
 
     const bool overwrite = args.optionFound("overwrite");
     const bool meshQuality = args.optionFound("meshQuality");
 
     Info<< "Merging all faces of a cell" << nl
         << "    - which are on the same patch" << nl
-        << "    - which make an angle < " << featureAngle << " degrees"
-        << nl
+        << "    - which make an angle < " << radToDeg(featureAngle)
+        << " degrees" << nl
         << "      (cos:" << minCos << ')' << nl
         << "    - even when resulting face becomes concave by more than "
-        << concaveAngle << " degrees" << nl
+        << radToDeg(concaveAngle) << " degrees" << nl
         << "      (sin:" << concaveSin << ')' << nl
         << endl;
 

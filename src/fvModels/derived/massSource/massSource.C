@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,13 @@ void Foam::fv::massSource::readCoeffs()
 
     massFlowRate_.reset
     (
-        Function1<scalar>::New("massFlowRate", coeffs()).ptr()
+        Function1<scalar>::New
+        (
+            "massFlowRate",
+            mesh().time().userUnits(),
+            dimMass/dimTime,
+            coeffs()
+        ).ptr()
     );
 }
 
@@ -96,7 +102,7 @@ Foam::dimensionedScalar Foam::fv::massSource::S() const
         dimensionedScalar
         (
             dimMass/dimTime,
-            massFlowRate_->value(mesh().time().userTimeValue())
+            massFlowRate_->value(mesh().time().value())
         );
 }
 

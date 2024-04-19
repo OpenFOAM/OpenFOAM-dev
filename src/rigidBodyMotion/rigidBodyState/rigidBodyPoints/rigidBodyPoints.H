@@ -32,7 +32,10 @@ Usage
     \table
         Property     | Description                  | Required | Default value
         type         | type name: rigidBodyPoints   | yes      |
-        angleUnits   | degrees or radians           | no       | radians
+        angularVelocityUnits     | units in which angular velocities are \\
+                                   written          | no       | [rad/s]
+        angularAccelerationUnits | units in which angular accelerations are \\
+                                   written          | no       | [rad/s^2]
         body         | name of the body             | yes      |
         points       | list of points on the body   | yes      |
     \endtable
@@ -44,7 +47,8 @@ Usage
         type           rigidBodyPoints;
         libs           ("librigidBodyState.so");
 
-        angleUnits     degrees;
+        angularVelocityUnits [rpm];
+        angularAccelerationUnits [rad/s^2];
 
         body           floatingObject;
 
@@ -70,6 +74,7 @@ SourceFiles
 
 #include "fvMeshFunctionObject.H"
 #include "logFiles.H"
+#include "namedUnitConversion.H"
 #include "rigidBodyMotion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -90,8 +95,11 @@ class rigidBodyPoints
 {
     // Private Data
 
-        //- Angle units, radians (default) or degrees
-        word angleUnits_;
+        //- Units in which to write the angular velocities
+        namedUnitConversion angularVelocityUnits_;
+
+        //- Units in which to write the angular accelerations
+        namedUnitConversion angularAccelerationUnits_;
 
         //- Name of the body
         word body_;

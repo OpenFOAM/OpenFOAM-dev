@@ -91,6 +91,7 @@ public:
         crankConnectingRodMotion
         (
             const word& name,
+            const unitConversions& units,
             const dictionary& dict
         );
 
@@ -132,7 +133,7 @@ public:
 
 
         //- Write data to dictionary stream
-        virtual void write(Ostream& os) const;
+        virtual void write(Ostream& os, const unitConversions& units) const;
 
 
     // Member Operators

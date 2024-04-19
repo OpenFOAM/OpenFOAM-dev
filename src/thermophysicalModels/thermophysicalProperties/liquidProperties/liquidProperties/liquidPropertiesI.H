@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "liquidProperties.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -125,14 +127,46 @@ template<class Func>
 inline void Foam::liquidProperties::readIfPresent
 (
     Func& f,
+    const Function1<scalar>&,
     const word& name,
+    const dimensionSet& dims,
     const dictionary& dict
 )
 {
     if (dict.found(name))
     {
-        f = Func(name, dict.subDict(name));
+        f = Func(name, {dimTemperature, dims}, dict.subDict(name));
     }
+}
+
+
+template<class Func>
+inline void Foam::liquidProperties::readIfPresent
+(
+    Func& f,
+    const Function2<scalar>&,
+    const word& name,
+    const dimensionSet& dims,
+    const dictionary& dict
+)
+{
+    if (dict.found(name))
+    {
+        f = Func(name, {dimTemperature, dimPressure, dims}, dict.subDict(name));
+    }
+}
+
+
+template<class Func>
+inline void Foam::liquidProperties::readIfPresent
+(
+    Func& f,
+    const word& name,
+    const dimensionSet& dims,
+    const dictionary& dict
+)
+{
+    readIfPresent(f, f, name, dims, dict);
 }
 
 
@@ -144,19 +178,69 @@ inline void Foam::liquidProperties::readIfPresent
 )
 {
     l.liquidProperties::readIfPresent(dict);
-    readIfPresent(l.rho_, "rho", dict);
-    readIfPresent(l.pv_, "pv", dict);
-    readIfPresent(l.hl_, "hl", dict);
-    readIfPresent(l.Cp_, "Cp", dict);
-    readIfPresent(l.h_, "h", dict);
-    readIfPresent(l.Cpg_, "Cpg", dict);
-    readIfPresent(l.B_, "B", dict);
-    readIfPresent(l.mu_, "mu", dict);
-    readIfPresent(l.mug_, "mug", dict);
-    readIfPresent(l.kappa_, "kappa", dict);
-    readIfPresent(l.kappag_, "kappag", dict);
-    readIfPresent(l.sigma_, "sigma", dict);
-    // readIfPresent(l.D_, "D", dict);
+    readIfPresent(l.rho_, "rho", dimDensity, dict);
+    readIfPresent(l.pv_, "pv", dimPressure, dict);
+    readIfPresent(l.hl_, "hl", dimEnergy/dimMass, dict);
+    readIfPresent(l.Cp_, "Cp", dimSpecificHeatCapacity, dict);
+    readIfPresent(l.h_, "h", dimEnergy/dimMass, dict);
+    readIfPresent(l.Cpg_, "Cpg", dimSpecificHeatCapacity, dict);
+    readIfPresent(l.B_, "B", dimVolume/dimMass, dict);
+    readIfPresent(l.mu_, "mu", dimDynamicViscosity, dict);
+    readIfPresent(l.mug_, "mug", dimDynamicViscosity, dict);
+    readIfPresent(l.kappa_, "kappa", dimThermalConductivity, dict);
+    readIfPresent(l.kappag_, "kappag", dimThermalConductivity, dict);
+    readIfPresent(l.sigma_, "sigma", dimForce/dimLength, dict);
+    readIfPresent(l.D_, "D", dimArea/dimTime, dict);
+}
+
+
+template<class Func>
+inline void Foam::liquidProperties::write
+(
+    const Func& f,
+    const Function1<scalar>&,
+    const dimensionSet& dims,
+    Ostream& os
+) const
+{
+    writeEntry(os, {dimTemperature, dims}, f);
+}
+
+
+template<class Func>
+inline void Foam::liquidProperties::write
+(
+    const Func& f,
+    const Function2<scalar>&,
+    const dimensionSet& dims,
+    Ostream& os
+) const
+{
+    writeEntry(os, {dimPressure, dimTemperature, dims}, f);
+}
+
+
+template<class Func>
+inline void Foam::liquidProperties::write
+(
+    const Func& f,
+    const dimensionSet& dims,
+    Ostream& os
+) const
+{
+    write(f, f, dims, os);
+}
+
+
+template<class Func>
+inline void Foam::liquidProperties::write
+(
+    const autoPtr<Func>& fPtr,
+    const dimensionSet& dims,
+    Ostream& os
+) const
+{
+    write(fPtr(), fPtr(), dims, os);
 }
 
 
@@ -168,19 +252,19 @@ inline void Foam::liquidProperties::write
 ) const
 {
     l.liquidProperties::write(os);
-    writeEntry(os, l.rho_);
-    writeEntry(os, l.pv_);
-    writeEntry(os, l.hl_);
-    writeEntry(os, l.Cp_);
-    writeEntry(os, l.h_);
-    writeEntry(os, l.Cpg_);
-    writeEntry(os, l.B_);
-    writeEntry(os, l.mu_);
-    writeEntry(os, l.mug_);
-    writeEntry(os,  l.kappa_);
-    writeEntry(os, l.kappag_);
-    writeEntry(os, l.sigma_);
-    writeEntry(os,  l.D_);
+    write(l.rho_, dimDensity, os);
+    write(l.pv_, dimPressure, os);
+    write(l.hl_, dimEnergy/dimMass, os);
+    write(l.Cp_, dimSpecificHeatCapacity, os);
+    write(l.h_, dimEnergy/dimMass, os);
+    write(l.Cpg_, dimSpecificHeatCapacity, os);
+    write(l.B_, dimVolume/dimMass, os);
+    write(l.mu_, dimDynamicViscosity, os);
+    write(l.mug_, dimDynamicViscosity, os);
+    write(l.kappa_, dimThermalConductivity, os);
+    write(l.kappag_, dimThermalConductivity, os);
+    write(l.sigma_, dimForce/dimLength, os);
+    write(l.D_, dimArea/dimTime, os);
 }
 
 

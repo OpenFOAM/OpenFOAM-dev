@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,7 +178,7 @@ coupledTemperatureFvPatchScalarField
                 << exit(FatalIOError);
         }
 
-        qs_ = new scalarField("qs", dict, p.size());
+        qs_ = new scalarField("qs", dimPower/dimTime, dict, p.size());
     }
     else if (dict.found("Qs"))
     {
@@ -186,14 +186,25 @@ coupledTemperatureFvPatchScalarField
         qs_ = new scalarField(p.size(), Qs_/gSum(patch().magSf()));
     }
 
-    fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
+    fvPatchScalarField::operator=
+    (
+        scalarField("value", iF.dimensions(), dict, p.size())
+    );
 
     if (dict.found("refValue"))
     {
         // Full restart
-        refValue() = scalarField("refValue", dict, p.size());
-        refGrad() = scalarField("refGradient", dict, p.size());
-        valueFraction() = scalarField("valueFraction", dict, p.size());
+        refValue() = scalarField("refValue", iF.dimensions(), dict, p.size());
+        refGrad() =
+            scalarField
+            (
+                "refGradient",
+                iF.dimensions()/dimLength,
+                dict,
+                p.size()
+            );
+        valueFraction() =
+            scalarField("valueFraction", unitFraction, dict, p.size());
     }
     else
     {

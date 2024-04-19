@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::porosityModels::solidification::solidification
     TName_(coeffs_.lookupOrDefault<word>("T", "T")),
     alphaName_(coeffs_.lookupOrDefault<word>("alpha", "none")),
     rhoName_(coeffs_.lookupOrDefault<word>("rho", "rho")),
-    D_(Function1<scalar>::New("D", coeffs_))
+    D_(Function1<scalar>::New("D", dimTemperature, dimless/dimTime, coeffs_))
 {}
 
 

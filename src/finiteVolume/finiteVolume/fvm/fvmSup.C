@@ -44,7 +44,7 @@ Foam::fvm::Su
         new fvMatrix<Type>
         (
             vf,
-            dimVol*su.dimensions()
+            dimVolume*su.dimensions()
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -110,7 +110,7 @@ Foam::fvm::Sp
         new fvMatrix<Type>
         (
             vf,
-            dimVol*sp.dimensions()*vf.dimensions()
+            dimVolume*sp.dimensions()*vf.dimensions()
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -164,7 +164,7 @@ Foam::fvm::Sp
         new fvMatrix<Type>
         (
             vf,
-            dimVol*sp.dimensions()*vf.dimensions()
+            dimVolume*sp.dimensions()*vf.dimensions()
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -202,7 +202,7 @@ Foam::fvm::SuSp
         new fvMatrix<Type>
         (
             vf,
-            dimVol*susp.dimensions()*vf.dimensions()
+            dimVolume*susp.dimensions()*vf.dimensions()
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();

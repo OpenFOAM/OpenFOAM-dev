@@ -41,12 +41,13 @@ namespace Function1s
 Foam::Function1s::squarePulse::squarePulse
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
     FieldFunction1<scalar, squarePulse>(name),
-    start_(dict.lookupOrDefault<scalar>("start", 0)),
-    duration_(dict.lookup<scalar>("duration"))
+    start_(dict.lookupOrDefault<scalar>("start", units.x, 0)),
+    duration_(dict.lookup<scalar>("duration", units.x))
 {}
 
 
@@ -58,10 +59,14 @@ Foam::Function1s::squarePulse::~squarePulse()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::Function1s::squarePulse::write(Ostream& os) const
+void Foam::Function1s::squarePulse::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
-    writeEntry(os, "start", start_);
-    writeEntry(os, "duration", duration_);
+    writeEntry(os, "start", units.x, start_);
+    writeEntry(os, "duration", units.x, duration_);
 }
 
 

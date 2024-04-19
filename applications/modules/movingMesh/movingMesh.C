@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,10 +46,7 @@ Foam::solvers::movingMesh::movingMesh(fvMesh& mesh)
     maxDeltaT_
     (
         runTime.controlDict().found("maxDeltaT")
-      ? runTime.userTimeToTime
-        (
-            runTime.controlDict().lookup<scalar>("maxDeltaT")
-        )
+      ? runTime.controlDict().lookup<scalar>("maxDeltaT", runTime.userUnits())
       : vGreat
     )
 {}

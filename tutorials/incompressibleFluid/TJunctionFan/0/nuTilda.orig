@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [m^2 s^-1];
+dimensions      [kinematicViscosity];
 
 internalField   uniform 0;
 

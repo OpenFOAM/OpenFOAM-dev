@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,12 +47,15 @@ activePressureForceBaffleVelocityFvPatchVectorField
     initWallSf_(0),
     initCyclicSf_(0),
     nbrCyclicSf_(0),
-    openFraction_(dict.lookup<scalar>("openFraction")),
-    openingTime_(dict.lookup<scalar>("openingTime")),
-    maxOpenFractionDelta_(dict.lookup<scalar>("maxOpenFractionDelta")),
+    openFraction_(dict.lookup<scalar>("openFraction", unitFraction)),
+    openingTime_(dict.lookup<scalar>("openingTime", dimTime)),
+    maxOpenFractionDelta_
+    (
+        dict.lookup<scalar>("maxOpenFractionDelta", unitFraction)
+    ),
     curTimeIndex_(-1),
-    minThresholdValue_(dict.lookup<scalar>("minThresholdValue")),
-    fBased_(readBool(dict.lookup("forceBased"))),
+    minThresholdValue_(dict.lookup<scalar>("minThresholdValue", dimPressure)),
+    fBased_(dict.lookup<bool>("forceBased")),
     baffleActivated_(0)
 {
     fvPatchVectorField::operator=(Zero);

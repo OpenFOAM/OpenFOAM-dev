@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ SourceFiles
 #ifndef LandauTellerReactionRate_H
 #define LandauTellerReactionRate_H
 
+#include "speciesTable.H"
 #include "scalarField.H"
 #include "typeInfo.H"
 
@@ -58,8 +59,8 @@ class LandauTellerReactionRate
 {
     // Private Data
 
-        scalar A_;
         scalar beta_;
+        scalar A_;
         scalar Ta_;
         scalar B_;
         scalar C_;
@@ -83,6 +84,7 @@ public:
         inline LandauTellerReactionRate
         (
             const speciesTable& species,
+            const dimensionSet& dims,
             const dictionary& dict
         );
 

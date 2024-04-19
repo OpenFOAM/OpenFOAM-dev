@@ -81,6 +81,8 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
                 false,
                 true
             ).keyword(),
+            dimLength,
+            dimArea/dimVolume,
             dict
         )
     );

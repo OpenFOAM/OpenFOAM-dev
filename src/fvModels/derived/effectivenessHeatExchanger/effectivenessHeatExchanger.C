@@ -53,11 +53,24 @@ namespace fv
 
 void Foam::fv::effectivenessHeatExchanger::readCoeffs()
 {
-    secondaryMassFlowRate_ = coeffs().lookup<scalar>("secondaryMassFlowRate");
-    secondaryInletT_ = coeffs().lookup<scalar>("secondaryInletT");
-    primaryInletT_ = coeffs().lookup<scalar>("primaryInletT");
+    secondaryMassFlowRate_ =
+        coeffs().lookup<scalar>("secondaryMassFlowRate", dimMass/dimTime);
+    secondaryInletT_ =
+        coeffs().lookup<scalar>("secondaryInletT", dimTemperature);
+    primaryInletT_ =
+        coeffs().lookup<scalar>("primaryInletT", dimTemperature);
 
-    eTable_.reset(Function2<scalar>::New("effectiveness", coeffs()).ptr());
+    eTable_.reset
+    (
+        Function2<scalar>::New
+        (
+            "effectiveness",
+            dimMass/dimTime,
+            dimMass/dimTime,
+            dimless,
+            coeffs()
+        ).ptr()
+    );
 
     UName_ = coeffs().lookupOrDefault<word>("U", "U");
     TName_ = coeffs().lookupOrDefault<word>("T", "T");

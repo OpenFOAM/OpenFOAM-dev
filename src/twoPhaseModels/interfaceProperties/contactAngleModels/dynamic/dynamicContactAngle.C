@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dynamicContactAngle.H"
-#include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -43,10 +42,10 @@ namespace contactAngleModels
 
 Foam::contactAngleModels::dynamic::dynamic(const dictionary& dict)
 :
-    theta0_(dict.lookup<scalar>("theta0")),
-    uTheta_(dict.lookup<scalar>("uTheta")),
-    thetaAdv_(dict.lookup<scalar>("thetaAdv")),
-    thetaRec_(dict.lookup<scalar>("thetaRec"))
+    theta0_(dict.lookup<scalar>("theta0", unitDegrees)),
+    uTheta_(dict.lookup<scalar>("uTheta", dimVelocity)),
+    thetaAdv_(dict.lookup<scalar>("thetaAdv", unitDegrees)),
+    thetaRec_(dict.lookup<scalar>("thetaRec", unitDegrees))
 {}
 
 
@@ -81,19 +80,19 @@ Foam::contactAngleModels::dynamic::cosTheta
 
     return cos
     (
-        degToRad(theta0_)
-      + degToRad(thetaRec_ - theta0_)*max(uCoeff, scalar(0))
-      - degToRad(thetaAdv_ - theta0_)*min(uCoeff, scalar(0))
+        theta0_
+      + thetaRec_ - theta0_*max(uCoeff, scalar(0))
+      - thetaAdv_ - theta0_*min(uCoeff, scalar(0))
     );
 }
 
 
 void Foam::contactAngleModels::dynamic::write(Ostream& os) const
 {
-    writeEntry(os, "theta0", theta0_);
-    writeEntry(os, "uTheta", uTheta_);
-    writeEntry(os, "thetaAdv", thetaAdv_);
-    writeEntry(os, "thetaRec", thetaRec_);
+    writeEntry(os, "theta0", unitDegrees, theta0_);
+    writeEntry(os, "uTheta", dimVelocity, uTheta_);
+    writeEntry(os, "thetaAdv", unitDegrees, thetaAdv_);
+    writeEntry(os, "thetaRec", unitDegrees, thetaRec_);
 }
 
 

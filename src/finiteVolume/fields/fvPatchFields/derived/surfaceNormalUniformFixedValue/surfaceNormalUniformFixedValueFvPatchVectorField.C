@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,16 @@ surfaceNormalUniformFixedValueFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF, dict, false),
-    uniformValue_(Function1<scalar>::New("uniformValue", dict))
+    uniformValue_
+    (
+        Function1<scalar>::New
+        (
+            "uniformValue",
+            db().time().userUnits(),
+            iF.dimensions(),
+            dict
+        )
+    )
 {
     this->evaluate();
 }
@@ -89,8 +98,10 @@ void Foam::surfaceNormalUniformFixedValueFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTimeValue();
-    fvPatchVectorField::operator=(uniformValue_->value(t)*patch().nf());
+    fvPatchVectorField::operator=
+    (
+        uniformValue_->value(db().time().value())*patch().nf()
+    );
 
     fvPatchVectorField::updateCoeffs();
 }
@@ -102,7 +113,13 @@ void Foam::surfaceNormalUniformFixedValueFvPatchVectorField::write
 ) const
 {
     fvPatchVectorField::write(os);
-    writeEntry(os, uniformValue_());
+    writeEntry
+    (
+        os,
+        db().time().userUnits(),
+        internalField().dimensions(),
+        uniformValue_()
+    );
 }
 
 

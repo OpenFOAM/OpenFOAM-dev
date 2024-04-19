@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ MRFFreestreamVelocityFvPatchVectorField
 :
     freestreamVelocityFvPatchVectorField(p, iF, dict),
     MRFPatchField(dict),
-    freestreamValue0_(dict.lookup("freestreamValue0"))
+    freestreamValue0_(dict.lookup<vector>("freestreamValue0", dimVelocity))
 {}
 
 

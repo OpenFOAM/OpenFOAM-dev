@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ strainRateViscosityModel::strainRateViscosityModel
             IOobject::AUTO_WRITE
         ),
         U.mesh(),
-        dimensionedScalar(dimViscosity, 0)
+        dimensionedScalar(dimKinematicViscosity, 0)
     )
 {}
 

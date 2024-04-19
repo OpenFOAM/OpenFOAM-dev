@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,16 +52,10 @@ JohnsonJacksonParticleSlipFvPatchVectorField
     partialSlipFvPatchVectorField(p, iF),
     specularityCoefficient_
     (
-        "specularityCoefficient",
-        dimless,
-        dict.lookup("specularityCoefficient")
+        dict.lookup<scalar>("specularityCoefficient", unitFraction)
     )
 {
-    if
-    (
-        (specularityCoefficient_.value() < 0)
-     || (specularityCoefficient_.value() > 1)
-    )
+    if (specularityCoefficient_ < 0 || specularityCoefficient_ > 1)
     {
         FatalErrorInFunction
             << "The specularity coefficient has to be between 0 and 1"
@@ -70,7 +64,7 @@ JohnsonJacksonParticleSlipFvPatchVectorField
 
     fvPatchVectorField::operator=
     (
-        vectorField("value", dict, p.size())
+        vectorField("value", iF.dimensions(), dict, p.size())
     );
 }
 
@@ -163,7 +157,7 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
         constant::mathematical::pi
        *alpha
        *gs0
-       *specularityCoefficient_.value()
+       *specularityCoefficient_
        *sqrt(3*Theta)
        /max(6*nu*phase.alphaMax(), small)
     );

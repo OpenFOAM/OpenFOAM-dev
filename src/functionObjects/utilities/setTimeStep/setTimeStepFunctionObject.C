@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,14 @@ bool Foam::functionObjects::setTimeStepFunctionObject::read
     const dictionary& dict
 )
 {
-    timeStepPtr_ = Function1<scalar>::New("deltaT", dict);
+    timeStepPtr_ =
+        Function1<scalar>::New
+        (
+            "deltaT",
+            time_.userUnits(),
+            time_.userUnits(),
+            dict
+        );
 
     return true;
 }
@@ -80,15 +87,12 @@ bool Foam::functionObjects::setTimeStepFunctionObject::read
 
 bool Foam::functionObjects::setTimeStepFunctionObject::execute()
 {
-    bool adjustTimeStep =
+    const bool adjustTimeStep =
         time_.controlDict().lookupOrDefault("adjustTimeStep", false);
 
     if (!adjustTimeStep)
     {
-        const_cast<Time&>(time_).setDeltaT
-        (
-            time_.userTimeToTime(timeStepPtr_().value(time_.userTimeValue()))
-        );
+        const_cast<Time&>(time_).setDeltaT(timeStepPtr_().value(time_.value()));
     }
 
     return true;

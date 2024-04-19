@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,10 +57,10 @@ Foam::laminarModels::generalisedNewtonianViscosityModels::powerLaw::powerLaw
 )
 :
     strainRateViscosityModel(viscosityProperties, viscosity, U),
-    k_("k", dimViscosity, 0),
+    k_("k", dimKinematicViscosity, 0),
     n_("n", dimless, 0),
-    nuMin_("nuMin", dimViscosity, 0),
-    nuMax_("nuMax", dimViscosity, 0)
+    nuMin_("nuMin", dimKinematicViscosity, 0),
+    nuMax_("nuMax", dimKinematicViscosity, 0)
 {
     read(viscosityProperties);
     correct();

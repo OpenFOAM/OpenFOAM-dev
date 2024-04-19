@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "thirdBodyArrheniusReactionRate.H"
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 inline Foam::thirdBodyArrheniusReactionRate::thirdBodyArrheniusReactionRate
@@ -41,14 +43,11 @@ inline Foam::thirdBodyArrheniusReactionRate::thirdBodyArrheniusReactionRate
 inline Foam::thirdBodyArrheniusReactionRate::thirdBodyArrheniusReactionRate
 (
     const speciesTable& species,
+    const dimensionSet& dims,
     const dictionary& dict
 )
 :
-    ArrheniusReactionRate
-    (
-        species,
-        dict
-    ),
+    ArrheniusReactionRate(species, dims, dict),
     thirdBodyEfficiencies_(species, dict)
 {}
 

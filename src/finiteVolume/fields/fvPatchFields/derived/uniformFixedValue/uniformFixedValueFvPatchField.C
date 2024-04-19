@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,16 @@ Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF, dict, false),
-    uniformValue_(Function1<Type>::New("uniformValue", dict))
+    uniformValue_
+    (
+        Function1<Type>::New
+        (
+            "uniformValue",
+            this->db().time().userUnits(),
+            iF.dimensions(),
+            dict
+        )
+    )
 {
     this->evaluate();
 }
@@ -87,8 +96,10 @@ void Foam::uniformFixedValueFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTimeValue();
-    fvPatchField<Type>::operator==(uniformValue_->value(t));
+    fvPatchField<Type>::operator==
+    (
+        uniformValue_->value(this->db().time().value())
+    );
 
     fixedValueFvPatchField<Type>::updateCoeffs();
 }
@@ -98,7 +109,13 @@ template<class Type>
 void Foam::uniformFixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    writeEntry(os, uniformValue_());
+    writeEntry
+    (
+        os,
+        this->db().time().userUnits(),
+        this->internalField().dimensions(),
+        uniformValue_()
+    );
     writeEntry(os, "value", *this);
 }
 

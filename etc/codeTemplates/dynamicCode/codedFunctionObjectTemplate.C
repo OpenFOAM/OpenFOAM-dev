@@ -26,7 +26,6 @@ License
 #include "codedFunctionObjectTemplate.H"
 #include "volFields.H"
 #include "read.H"
-#include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

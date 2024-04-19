@@ -31,6 +31,7 @@ template<class Type>
 Foam::Function2s::Function12<Type>::Function12
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
@@ -59,7 +60,13 @@ Foam::Function2s::Function12<Type>::Function12
 
     index_ = found2;
 
-    f_ = Function1<Type>::New(found2 ? name2 : name1, dict);
+    f_ =
+        Function1<Type>::New
+        (
+            found2 ? name2 : name1,
+            {found2 ? units.y : units.x, units.value},
+            dict
+        );
 }
 
 
@@ -82,9 +89,13 @@ Foam::Function2s::Function12<Type>::~Function12()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function2s::Function12<Type>::write(Ostream& os) const
+void Foam::Function2s::Function12<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
-    writeEntry(os, f_());
+    writeEntry(os, {index_ ? units.y : units.x, units.value}, f_());
 }
 
 

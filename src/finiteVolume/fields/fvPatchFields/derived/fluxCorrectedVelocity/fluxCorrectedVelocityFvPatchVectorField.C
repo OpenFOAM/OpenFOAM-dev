@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,7 @@ void Foam::fluxCorrectedVelocityFvPatchVectorField::evaluate
     const vectorField n(patch().nf());
     const Field<scalar>& magS = patch().magSf();
 
-    if (phi.dimensions() == dimFlux)
+    if (phi.dimensions() == dimVolumetricFlux)
     {
         operator==(*this - n*(n & *this) + n*phip/magS);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,13 +41,16 @@ waveDisplacementPointPatchVectorField
 )
 :
     fixedValuePointPatchField<vector>(p, iF, dict),
-    amplitude_(dict.lookup("amplitude")),
-    omega_(dict.lookup<scalar>("omega")),
-    waveNumber_(dict.lookupOrDefault<vector>("waveNumber", Zero)),
+    amplitude_(dict.lookup<vector>("amplitude", dimLength)),
+    omega_(dict.lookup<scalar>("omega", unitRadians/dimTime)),
+    waveNumber_
+    (
+        dict.lookupOrDefault<vector>("waveNumber", dimless/dimLength, Zero)
+    ),
     startRamp_
     (
         dict.found("startRamp")
-      ? Function1<scalar>::New("startRamp", dict)
+      ? Function1<scalar>::New("startRamp", dimless, dimless, dict)
       : autoPtr<Function1<scalar>>
         (
             new Function1s::OneConstant<scalar>("startRamp")
@@ -56,7 +59,7 @@ waveDisplacementPointPatchVectorField
     endRamp_
     (
         dict.found("endRamp")
-      ? Function1<scalar>::New("endRamp", dict)
+      ? Function1<scalar>::New("endRamp", dimless, dimless, dict)
       : autoPtr<Function1<scalar>>
         (
             new Function1s::OneConstant<scalar>("endRamp")
@@ -65,7 +68,7 @@ waveDisplacementPointPatchVectorField
     timeRamp_
     (
         dict.found("timeRamp")
-      ? Function1<scalar>::New("timeRamp", dict)
+      ? Function1<scalar>::New("timeRamp", dimTime, dimless, dict)
       : autoPtr<Function1<scalar>>
         (
             new Function1s::OneConstant<scalar>("timeRamp")

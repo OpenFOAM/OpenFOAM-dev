@@ -6,7 +6,7 @@ const scalar nu2 =
     dimensionedScalar
     (
         "nu",
-        dimViscosity,
+        dimKinematicViscosity,
         viscosity->lookup("nu")
     ).value();
 

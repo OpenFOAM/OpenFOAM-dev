@@ -40,9 +40,9 @@ SourceFiles
 #define dimensionSet_H
 
 #include "bool.H"
-#include "dimensionedScalarFwd.H"
 #include "className.H"
-#include "List.H"
+#include "NamedEnum.H"
+#include "InfoProxy.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,6 +52,9 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 class dimensionSet;
+class unitConversion;
+template<class Type> class dimensioned;
+typedef dimensioned<scalar> dimensionedScalar;
 
 // Friend Functions
 
@@ -112,6 +115,7 @@ dimensionSet operator&&(const dimensionSet&, const dimensionSet&);
 
 Istream& operator>>(Istream&, dimensionSet&);
 Ostream& operator<<(Ostream&, const dimensionSet&);
+Ostream& operator<<(Ostream&, const InfoProxy<dimensionSet>&);
 
 
 /*---------------------------------------------------------------------------*\
@@ -125,6 +129,7 @@ public:
 
     // Member constants
 
+        //- Define an enumeration for the number of dimensions
         enum
         {
             nDimensions = 7    // Number of dimensions in SI is 7
@@ -137,70 +142,22 @@ public:
             LENGTH,             // metre      m
             TIME,               // second     s
             TEMPERATURE,        // Kelvin     K
-            MOLES,              // mole       mol
+            MOLES,              // kilomole   kmol
             CURRENT,            // Ampere     A
             LUMINOUS_INTENSITY  // Candela    Cd
         };
 
+        //- Names of the dimensions
+        static const NamedEnum<dimensionType, 7> dimensionTypeNames_;
+
 
     // Static Data Members
 
+        //- A small exponent with which to perform inexact comparisons
         static const scalar smallExponent;
 
 
 private:
-
-    // Private classes
-
-        class tokeniser
-        {
-            // Private Data
-
-                Istream& is_;
-
-                List<token> tokens_;
-
-                label start_;
-
-                label size_;
-
-
-            // Private Member Functions
-
-                void push(const token&);
-
-                token pop();
-
-                void unpop(const token&);
-
-
-        public:
-
-            // Constructors
-
-                 tokeniser(Istream&);
-
-
-            // Member Functions
-
-                Istream& stream()
-                {
-                    return is_;
-                }
-
-                bool hasToken() const;
-
-                token nextToken();
-
-                void putBack(const token&);
-
-                void splitWord(const word&);
-
-                static bool valid(char c);
-
-                static label priority(const token& t);
-        };
-
 
     // Private Data
 
@@ -213,14 +170,6 @@ private:
         //- Reset exponents to nearest integer if close to it. Used to
         //  handle reading with insufficient precision.
         void round(const scalar tol);
-
-        //- Parse tokens into a dimensioned scalar
-        dimensionedScalar parse
-        (
-            const label lastPrior,
-            tokeniser& tis,
-            const HashTable<dimensionedScalar>& readSet
-        ) const;
 
 
 public:
@@ -278,12 +227,20 @@ public:
 
     // I/O
 
-        //- Read using units from the system table. Return the multiplier with
-        //  which to convert associated values to the given units.
-        Istream& read(Istream& is, scalar& multiplier);
+        //- Read, assuming the '[' has already been read
+        Istream& readNoBegin(Istream& is);
+
+        //- Read
+        Istream& read(Istream& is);
 
         //- Write
         Ostream& write(Ostream& os) const;
+
+        //- Return info proxy
+        inline InfoProxy<dimensionSet> info() const
+        {
+            return *this;
+        }
 
 
     // Member Operators
@@ -346,14 +303,13 @@ public:
 
         friend dimensionSet atan2(const dimensionSet&, const dimensionSet&);
 
-        //- Return the argument; transformations do not change the dimensions
         friend dimensionSet transform(const dimensionSet&);
 
         friend dimensionSet normalised(const dimensionSet&);
         friend dimensionSet perpendicular(const dimensionSet&);
 
 
-    // Friend operators
+    // Friend Operators
 
         friend dimensionSet operator-(const dimensionSet&);
 
@@ -404,6 +360,7 @@ public:
 
         friend Istream& operator>>(Istream&, dimensionSet&);
         friend Ostream& operator<<(Ostream&, const dimensionSet&);
+        friend Ostream& operator<<(Ostream&, const InfoProxy<dimensionSet>&);
 };
 
 

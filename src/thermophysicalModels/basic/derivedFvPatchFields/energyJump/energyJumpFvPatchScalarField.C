@@ -50,7 +50,7 @@ Foam::energyJumpFvPatchScalarField::energyJumpFvPatchScalarField
 )
 :
     jumpCyclicFvPatchScalarField(p, iF, dict),
-    jump_("jump", dict, p.size())
+    jump_("jump", iF.dimensions(), dict, p.size())
 {
     evaluateNoUpdateCoeffs();
 }

@@ -16,27 +16,21 @@ FoamFile
 
 setDeltaT
 {
-    type coded;
-
-    // Load the library containing the 'coded' functionObject
     libs            ("libutilityFunctionObjects.so");
 
-    codeInclude
-    #{
-        #include "volFields.H"
-    #};
+    type            setTimeStep;
 
-    codeExecute
-    #{
-        const Time& runTime = mesh().time();
-        if (runTime.userTimeValue() >= -15.0)
-        {
-            const_cast<Time&>(runTime).setDeltaT
-            (
-                runTime.userTimeToTime(0.025)
-            );
-        }
-    #};
+    deltaT
+    {
+        type            table;
+        values
+        (
+            (-180 0.25)
+            (-15 0.025)
+        );
+        interpolationScheme step;
+        outOfBounds     clamp;
+    }
 }
 
 #includeFunc multiValveEngineState

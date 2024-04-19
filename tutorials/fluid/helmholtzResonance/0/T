@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+dimensions      [temperature];
 
 internalField   uniform 300;
 
@@ -23,14 +23,14 @@ boundaryField
     inlet
     {
         type            fixedValue;
-        value           uniform 300;
+        value           $internalField;
     }
 
     outlet
     {
         type            inletOutlet;
-        inletValue      uniform 300;
-        value           uniform 300;
+        inletValue      $internalField;
+        value           $internalField;
     }
 
     symmetry
@@ -41,13 +41,13 @@ boundaryField
     wall
     {
         type            fixedValue;
-        value           uniform 300;
+        value           $internalField;
     }
 
     plenum
     {
         type            fixedValue;
-        value           uniform 300;
+        value           $internalField;
     }
 }
 

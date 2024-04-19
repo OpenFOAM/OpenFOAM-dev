@@ -41,12 +41,13 @@ namespace Function1s
 Foam::Function1s::crankConnectingRodMotion::crankConnectingRodMotion
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
     Function1<scalar>(name),
-    conRodLength_(dict.lookup<scalar>("conRodLength")),
-    stroke_(dict.lookup<scalar>("stroke"))
+    conRodLength_(dict.lookup<scalar>("conRodLength", dimLength)),
+    stroke_(dict.lookup<scalar>("stroke", dimLength))
 {}
 
 
@@ -58,7 +59,11 @@ Foam::Function1s::crankConnectingRodMotion::~crankConnectingRodMotion()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::Function1s::crankConnectingRodMotion::write(Ostream& os) const
+void Foam::Function1s::crankConnectingRodMotion::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
     writeEntry(os, "conRodLength", conRodLength_);
     writeEntry(os, "stroke", stroke_);

@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [m s^-1];
+dimensions      [velocity];
 
 internalField   uniform (0 0 0);
 

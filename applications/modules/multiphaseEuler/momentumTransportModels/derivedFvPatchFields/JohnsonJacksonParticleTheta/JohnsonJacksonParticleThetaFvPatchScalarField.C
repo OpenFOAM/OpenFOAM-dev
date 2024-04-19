@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,33 +51,21 @@ JohnsonJacksonParticleThetaFvPatchScalarField
     mixedFvPatchScalarField(p, iF, dict, false),
     restitutionCoefficient_
     (
-        "restitutionCoefficient",
-        dimless,
-        dict.lookup("restitutionCoefficient")
+        dict.lookup<scalar>("restitutionCoefficient", unitFraction)
     ),
     specularityCoefficient_
     (
-        "specularityCoefficient",
-        dimless,
-        dict.lookup("specularityCoefficient")
+        dict.lookup<scalar>("specularityCoefficient", unitFraction)
     )
 {
-    if
-    (
-        (restitutionCoefficient_.value() < 0)
-     || (restitutionCoefficient_.value() > 1)
-    )
+    if (restitutionCoefficient_ < 0 || restitutionCoefficient_ > 1)
     {
         FatalErrorInFunction
             << "The restitution coefficient has to be between 0 and 1"
             << abort(FatalError);
     }
 
-    if
-    (
-        (specularityCoefficient_.value() < 0)
-     || (specularityCoefficient_.value() > 1)
-    )
+    if (specularityCoefficient_ < 0 || specularityCoefficient_ > 1)
     {
         FatalErrorInFunction
             << "The specularity coefficient has to be between 0 and 1"
@@ -86,7 +74,7 @@ JohnsonJacksonParticleThetaFvPatchScalarField
 
     fvPatchScalarField::operator=
     (
-        scalarField("value", dict, p.size())
+        scalarField("value", iF.dimensions(), dict, p.size())
     );
 }
 
@@ -182,13 +170,13 @@ void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
     const scalarField Theta(patchInternalField());
 
     // calculate the reference value and the value fraction
-    if (restitutionCoefficient_.value() != 1.0)
+    if (restitutionCoefficient_ != 1.0)
     {
         this->refValue() =
             (2.0/3.0)
-           *specularityCoefficient_.value()
+           *specularityCoefficient_
            *magSqr(U)
-           /(scalar(1) - sqr(restitutionCoefficient_.value()));
+           /(scalar(1) - sqr(restitutionCoefficient_));
 
         this->refGrad() = 0.0;
 
@@ -197,7 +185,7 @@ void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
              constant::mathematical::pi
             *alpha
             *gs0
-            *(scalar(1) - sqr(restitutionCoefficient_.value()))
+            *(scalar(1) - sqr(restitutionCoefficient_))
             *sqrt(3*Theta)
             /max(4*kappa*phase.alphaMax(), small)
         );
@@ -214,7 +202,7 @@ void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
         this->refGrad() =
             pos0(alpha - small)
            *constant::mathematical::pi
-           *specularityCoefficient_.value()
+           *specularityCoefficient_
            *alpha
            *gs0
            *sqrt(3*Theta)

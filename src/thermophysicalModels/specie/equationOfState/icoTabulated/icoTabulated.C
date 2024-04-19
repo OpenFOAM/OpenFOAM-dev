@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,12 @@ Foam::icoTabulated<Specie>::icoTabulated
 )
 :
     Specie(name, dict),
-    rho_("rho", dict.subDict("equationOfState").subDict("rho"))
+    rho_
+    (
+        "rho",
+        {dimTemperature, dimDensity},
+        dict.subDict("equationOfState").subDict("rho")
+    )
 {}
 
 

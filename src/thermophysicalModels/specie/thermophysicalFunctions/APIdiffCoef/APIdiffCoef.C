@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,6 +61,7 @@ Foam::Function2s::APIdiffCoef::APIdiffCoef
 Foam::Function2s::APIdiffCoef::APIdiffCoef
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
@@ -71,12 +72,18 @@ Foam::Function2s::APIdiffCoef::APIdiffCoef
     wa_(dict.lookup<scalar>("wa")),
     alpha_(sqrt(1/wf_ + 1/wa_)),
     beta_(sqr((cbrt(a_) + cbrt(b_))))
-{}
+{
+    assertNoConvertUnits(typeName, units, dict);
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::Function2s::APIdiffCoef::write(Ostream& os) const
+void Foam::Function2s::APIdiffCoef::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
     writeEntry(os, "a", a_);
     writeEntry(os, "b", b_);

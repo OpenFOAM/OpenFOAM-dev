@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ class meshToMesh
 
         //- Return true if the set of meshes are being traversed in the forward
         //  sequence or false if cycling is currently traversing the meshes in
-        //  revers order
+        //  reverse order
         bool forward() const;
 
         //- Return the user time mapped to the mesh sequence

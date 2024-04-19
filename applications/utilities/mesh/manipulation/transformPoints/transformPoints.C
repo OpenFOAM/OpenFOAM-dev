@@ -75,7 +75,6 @@ See also
 #include "pointSet.H"
 #include "transformField.H"
 #include "transformGeometricField.H"
-#include "unitConversion.H"
 
 using namespace Foam;
 

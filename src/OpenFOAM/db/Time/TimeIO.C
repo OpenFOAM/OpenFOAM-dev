@@ -40,7 +40,7 @@ void Foam::Time::readDict()
 
     if (!deltaTchanged_)
     {
-        deltaT_ = userTimeToTime(controlDict_.lookup<scalar>("deltaT"));
+        deltaT_ = controlDict_.lookup<scalar>("deltaT", userUnits());
     }
 
     if (controlDict_.found("writeControl"))
@@ -51,33 +51,22 @@ void Foam::Time::readDict()
         );
     }
 
-    scalar newWriteInterval = writeInterval_;
-
-    if (controlDict_.readIfPresent("writeInterval", newWriteInterval))
-    {
-        if
+    const scalar newWriteInterval =
+        controlDict_.lookupBackwardsCompatible<scalar>
         (
-            writeControl_ == writeControl::runTime
-         || writeControl_ == writeControl::adjustableRunTime
-        )
-        {
-            newWriteInterval = userTimeToTime(newWriteInterval);
-        }
+            {"writeInterval", "writeFrequency"},
+            writeIntervalUnits()
+        );
 
-        if
-        (
-            writeControl_ == writeControl::timeStep
-         && label(newWriteInterval) < 1
-        )
-        {
-            FatalIOErrorInFunction(controlDict_)
-                << "writeInterval < 1 for writeControl timeStep"
-                << exit(FatalIOError);
-        }
-    }
-    else
+    if
+    (
+        writeControl_ == writeControl::timeStep
+     && label(newWriteInterval) < 1
+    )
     {
-        controlDict_.lookup("writeFrequency") >> newWriteInterval;
+        FatalIOErrorInFunction(controlDict_)
+            << "writeInterval < 1 for writeControl timeStep"
+            << exit(FatalIOError);
     }
 
     setWriteInterval(newWriteInterval);

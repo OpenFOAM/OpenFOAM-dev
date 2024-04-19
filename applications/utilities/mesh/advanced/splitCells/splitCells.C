@@ -50,7 +50,6 @@ Description
 #include "cellSet.H"
 #include "cellModeller.H"
 #include "meshCutter.H"
-#include "unitConversion.H"
 #include "geomCellLooper.H"
 #include "plane.H"
 #include "edgeVertex.H"
@@ -548,9 +547,9 @@ int main(int argc, char *argv[])
     #include "createPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
-    const scalar featureAngle = args.argRead<scalar>(1);
-    const scalar minCos = Foam::cos(degToRad(featureAngle));
-    const scalar minSin = Foam::sin(degToRad(featureAngle));
+    const scalar featureAngle = degToRad(args.argRead<scalar>(1));
+    const scalar minCos = Foam::cos(featureAngle);
+    const scalar minSin = Foam::sin(featureAngle);
 
     const bool readSet   = args.optionFound("set");
     const bool geometry  = args.optionFound("geometry");
@@ -559,7 +558,7 @@ int main(int argc, char *argv[])
     const scalar edgeTol = args.optionLookupOrDefault("tol", 0.2);
 
     Info<< "Trying to split cells with internal angles > feature angle\n" << nl
-        << "featureAngle      : " << featureAngle << nl
+        << "featureAngle      : " << radToDeg(featureAngle) << nl
         << "edge snapping tol : " << edgeTol << nl;
     if (readSet)
     {

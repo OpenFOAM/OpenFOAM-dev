@@ -86,12 +86,9 @@ void Foam::fv::rotorDisk::readCoeffs()
     coeffs().lookup("tipEffect") >> tipEffect_;
 
     const dictionary& flapCoeffs(coeffs().subDict("flapCoeffs"));
-    flapCoeffs.lookup("beta0") >> flap_.beta0;
-    flapCoeffs.lookup("beta1c") >> flap_.beta1c;
-    flapCoeffs.lookup("beta2s") >> flap_.beta2s;
-    flap_.beta0 = degToRad(flap_.beta0);
-    flap_.beta1c = degToRad(flap_.beta1c);
-    flap_.beta2s = degToRad(flap_.beta2s);
+    flap_.beta0 = flapCoeffs.lookup<scalar>("beta0", unitDegrees);
+    flap_.beta1c = flapCoeffs.lookup<scalar>("beta1c", unitDegrees);
+    flap_.beta2s = flapCoeffs.lookup<scalar>("beta2s", unitDegrees);
 
     // Create co-ordinate system
     createCoordinateSystem();
@@ -419,14 +416,8 @@ void Foam::fv::rotorDisk::createCoordinateSystem()
         }
     }
 
-    coordSys_ = coordinateSystems::cylindrical
-    (
-        "rotorCoordSys",
-        origin,
-        axis,
-        refDir,
-        false
-    );
+    coordSys_ =
+        coordinateSystems::cylindrical("rotorCoordSys", origin, axis, refDir);
 
     const scalar sumArea = gSum(area_);
     const scalar diameter = Foam::sqrt(4.0*sumArea/mathematical::pi);

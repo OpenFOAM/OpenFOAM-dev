@@ -114,6 +114,9 @@ class timeVaryingMappedFvPatchField
         //- Reference to the patch the data is mapped to
         const fvPatch& patch_;
 
+        //- Reference to internal field
+        const DimensionedField<Type, volMesh>& internalField_;
+
         //- Name of the field data table, defaults to the name of the field
         word fieldTableName_;
 

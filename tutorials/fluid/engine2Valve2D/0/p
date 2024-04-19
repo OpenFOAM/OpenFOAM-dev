@@ -16,7 +16,7 @@ FoamFile
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 1e5;
+internalField   uniform 1 [bar];
 
 boundaryField
 {
@@ -27,16 +27,15 @@ boundaryField
         type            uniformTotalPressure;
         p0
         {
-            type    tableFile;
-            format  csv;
-            file                "constant/expData/pInlet";
-            nHeaderLine         2;          // Number of header lines
-            refColumn           0;          // Reference column index
-            separator           " ";        // Optional (defaults to ",")
-            componentColumns    (1);        // Component column indices
-            mergeSeparators     yes;        // Merge multiple separators
-            // For multi-cycle simulations, use repeat
-            outOfBounds     repeat;
+            type            table;
+            format          csv;
+            file            "constant/expData/pInlet";
+            nHeaderLine     2;          // Number of header lines
+            units           ([CAD] [bar]);
+            columns         (0 1);      // Column indices
+            separator       " ";        // Optional (defaults to ",")
+            mergeSeparators yes;        // Merge multiple separators
+            outOfBounds     repeat;     // For multi-cycle simulations, use repeat
             interpolationScheme linear;
         }
         value           $internalField;
@@ -48,19 +47,21 @@ boundaryField
     outlet
     {
         type            uniformTotalPressure;
-        p0              table
-        (
-            (0      1.0e5)
-            (100    1.0e5)
-            (240    1.7e5)
-            (380    1.0e5)
-            (720    1.0e5)
-        );
-
-        // For multi-cycle simulations, use repeat
-        outOfBounds     repeat;
-        interpolationScheme linear;
-
+        p0
+        {
+            type            table;
+            units           ([CAD] [bar]);
+            values
+            (
+                (0      1.0)
+                (100    1.0)
+                (240    1.7)
+                (380    1.0)
+                (720    1.0)
+            );
+            outOfBounds     repeat;     // For multi-cycle simulations, use repeat
+            interpolationScheme linear;
+        }
         value           $internalField;
         psi             psi;
         rho             rho;

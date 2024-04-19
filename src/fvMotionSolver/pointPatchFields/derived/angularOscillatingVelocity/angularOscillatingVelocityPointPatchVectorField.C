@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,11 +45,11 @@ angularOscillatingVelocityPointPatchVectorField
 )
 :
     fixedValuePointPatchField<vector>(p, iF, dict),
-    axis_(dict.lookup("axis")),
-    origin_(dict.lookup("origin")),
-    angle0_(dict.lookup<scalar>("angle0")),
-    amplitude_(dict.lookup<scalar>("amplitude")),
-    omega_(dict.lookup<scalar>("omega"))
+    axis_(dict.lookup<vector>("axis", dimless)),
+    origin_(dict.lookup<vector>("origin", dimLength)),
+    angle0_(dict.lookup<scalar>("angle0", unitRadians)),
+    amplitude_(dict.lookup<scalar>("amplitude", unitRadians)),
+    omega_(dict.lookup<scalar>("omega", unitRadians/dimTime))
 {
     if (!dict.found("value"))
     {
@@ -58,7 +58,7 @@ angularOscillatingVelocityPointPatchVectorField
 
     if (dict.found("p0"))
     {
-        p0_ = vectorField("p0", dict , p.size());
+        p0_ = vectorField("p0", dimLength, dict, p.size());
     }
     else
     {

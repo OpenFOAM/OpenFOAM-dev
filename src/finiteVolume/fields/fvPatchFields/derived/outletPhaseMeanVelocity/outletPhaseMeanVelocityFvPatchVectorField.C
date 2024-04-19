@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,16 @@ outletPhaseMeanVelocityFvPatchVectorField
 )
 :
     mixedFvPatchField<vector>(p, iF, dict, false),
-    UnMean_(Function1<scalar>::New("UnMean", dict)),
+    UnMean_
+    (
+        Function1<scalar>::New
+        (
+            "UnMean",
+            db().time().userUnits(),
+            dimVelocity,
+            dict
+        )
+    ),
     alphaName_(dict.lookup("alpha"))
 {
     refValue() = Zero;
@@ -51,7 +60,7 @@ outletPhaseMeanVelocityFvPatchVectorField
     {
         fvPatchVectorField::operator=
         (
-            vectorField("value", dict, p.size())
+            vectorField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
@@ -98,8 +107,6 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTimeValue();
-
     scalarField alphap =
         patch().lookupPatchField<volScalarField, scalar>(alphaName_);
 
@@ -116,7 +123,7 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::updateCoeffs()
 
     // Set the refValue and valueFraction to adjust the boundary field
     // such that the phase mean is UnMean_
-    const scalar UnMean = UnMean_->value(t);
+    const scalar UnMean = UnMean_->value(db().time().value());
     if (UnzgMean >= UnMean)
     {
         refValue() = Zero;
@@ -139,7 +146,7 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::write
 {
     fvPatchField<vector>::write(os);
 
-    writeEntry(os, UnMean_());
+    writeEntry(os, db().time().userUnits(), dimVelocity, UnMean_());
     writeEntry(os, "alpha", alphaName_);
     writeEntry(os, "value", *this);
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::SaffmanMei::Cl() const
        *sqr(interface_.dispersed().d())
        /(
             interface_.continuous().fluidThermo().nu()
-          + dimensionedScalar(dimViscosity, small)
+          + dimensionedScalar(dimKinematicViscosity, small)
         )
     );
 

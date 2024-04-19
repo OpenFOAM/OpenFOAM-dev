@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,21 +45,15 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
     psiName_(dict.lookupOrDefault<word>("psi", "psi")),
     muName_(dict.lookupOrDefault<word>("mu", "mu")),
     accommodationCoeff_(dict.lookup<scalar>("accommodationCoeff")),
-    Uwall_("Uwall", dict, p.size()),
+    Uwall_("Uwall", dimVelocity, dict, p.size()),
     thermalCreep_(dict.lookupOrDefault("thermalCreep", true)),
     curvature_(dict.lookupOrDefault("curvature", true))
 {
-    if
-    (
-        mag(accommodationCoeff_) < small
-     || mag(accommodationCoeff_) > 2.0
-    )
+    if (mag(accommodationCoeff_) < small || mag(accommodationCoeff_) > 2.0)
     {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "unphysical accommodationCoeff_ specified"
-            << "(0 < accommodationCoeff_ <= 1)" << endl
+        FatalIOErrorInFunction(dict)
+            << "unphysical accommodationCoeff_ specified"
+            << "(0 < accommodationCoeff_ <= 2)" << endl
             << exit(FatalIOError);
     }
 
@@ -67,14 +61,15 @@ Foam::maxwellSlipUFvPatchVectorField::maxwellSlipUFvPatchVectorField
     {
         fvPatchField<vector>::operator=
         (
-            vectorField("value", dict, p.size())
+            vectorField("value", iF.dimensions(), dict, p.size())
         );
 
         if (dict.found("refValue") && dict.found("valueFraction"))
         {
-            this->refValue() = vectorField("refValue", dict, p.size());
+            this->refValue() =
+                vectorField("refValue", iF.dimensions(), dict, p.size());
             this->valueFraction() =
-                scalarField("valueFraction", dict, p.size());
+                scalarField("valueFraction", unitFraction, dict, p.size());
         }
         else
         {

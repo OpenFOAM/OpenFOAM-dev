@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,10 +32,10 @@ Description
         externalStart_ .. internalStart_-1  : external edges
         internalStart_ .. size-1            : internal edges
 
-    NOTE: angle is included angle, not feature angle and is in degrees.
-    The included angle is the smallest angle between two planes. For coplanar
-    faces it is 180, for straight angles it is 90. To pick up straight edges
-    only use included angle of 91 degrees
+    NOTE: angle is included angle, not feature angle. The included angle is the
+    smallest angle between two planes. For coplanar faces it is 180 degrees,
+    for straight angles it is 90 degrees. To pick up straight edges only use
+    included angle of 91 degrees.
 
 SourceFiles
     surfaceFeatures.C

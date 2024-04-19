@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,16 @@ Foam::uniformInletOutletFvFieldSource<Type>::uniformInletOutletFvFieldSource
 )
 :
     fvFieldSource<Type>(iF, dict),
-    uniformInletValue_(Function1<Type>::New("uniformInletValue", dict))
+    uniformInletValue_
+    (
+        Function1<Type>::New
+        (
+            "uniformInletValue",
+            this->db().time().userUnits(),
+            iF.dimensions(),
+            dict
+        )
+    )
 {}
 
 
@@ -67,7 +76,7 @@ Foam::uniformInletOutletFvFieldSource<Type>::sourceValue
     const fvSource& source
 ) const
 {
-    const scalar t = this->db().time().userTimeValue();
+    const scalar t = this->db().time().value();
     const Type v = uniformInletValue_->value(t);
     return tmp<Field<Type>>(new Field<Type>(source.nCells(), v));
 }
@@ -90,7 +99,13 @@ template<class Type>
 void Foam::uniformInletOutletFvFieldSource<Type>::write(Ostream& os) const
 {
     fvFieldSource<Type>::write(os);
-    writeEntry(os, uniformInletValue_());
+    writeEntry
+    (
+        os,
+        this->db().time().userUnits(),
+        this->internalField().dimensions(),
+        uniformInletValue_()
+    );
 }
 
 

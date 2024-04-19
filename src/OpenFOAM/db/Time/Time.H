@@ -423,6 +423,12 @@ public:
             //- Return current user time name with units
             word userTimeName() const;
 
+            //- Return the user-time unit conversion
+            const unitConversion& userUnits() const;
+
+            //- Return the write interval units
+            const unitConversion& writeIntervalUnits() const;
+
             //- Return the list of function objects
             const functionObjectList& functionObjects() const
             {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::viscosityModels::constant::constant
 )
 :
     viscosityModel(mesh, group),
-    nu0_("nu", dimViscosity, *this),
+    nu0_("nu", dimKinematicViscosity, *this),
     nu_
     (
         IOobject

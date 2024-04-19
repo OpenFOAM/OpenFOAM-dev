@@ -26,6 +26,29 @@ License
 #include "dictionary.H"
 #include "primitiveEntry.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class T>
+T Foam::dictionary::readType
+(
+    const word& keyword,
+    const unitConversion& defaultUnits,
+    ITstream& is
+) const
+{
+    assertNoConvertUnits(pTraits<T>::typeName, keyword, defaultUnits, is);
+
+    return pTraits<T>(is);
+}
+
+
+template<class T>
+T Foam::dictionary::readType(const word& keyword, ITstream& is) const
+{
+    return pTraits<T>(is);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class T, class ... KeysAndTs>
@@ -72,15 +95,34 @@ T Foam::dictionary::lookup
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction
-        (
-            *this
-        )   << "keyword " << keyword << " is undefined in dictionary "
-            << name()
-            << exit(FatalIOError);
+        FatalIOErrorInFunction(*this)
+            << "keyword " << keyword << " is undefined in dictionary "
+            << name() << exit(FatalIOError);
     }
 
-    return pTraits<T>(entryPtr->stream());
+    return readType<T>(keyword, entryPtr->stream());
+}
+
+
+template<class T>
+T Foam::dictionary::lookup
+(
+    const word& keyword,
+    const unitConversion& defaultUnits,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
+
+    if (entryPtr == nullptr)
+    {
+        FatalIOErrorInFunction(*this)
+            << "keyword " << keyword << " is undefined in dictionary "
+            << name() << exit(FatalIOError);
+    }
+
+    return readType<T>(keyword, defaultUnits, entryPtr->stream());
 }
 
 
@@ -97,7 +139,32 @@ T Foam::dictionary::lookupBackwardsCompatible
 
     if (entryPtr)
     {
-        return pTraits<T>(entryPtr->stream());
+        return readType<T>(entryPtr->keyword(), entryPtr->stream());
+    }
+    else
+    {
+        // Generate error message using the first keyword
+        return lookup<T>(keywords[0], recursive, patternMatch);
+    }
+}
+
+
+template<class T>
+T Foam::dictionary::lookupBackwardsCompatible
+(
+    const wordList& keywords,
+    const unitConversion& defaultUnits,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr =
+        lookupEntryPtrBackwardsCompatible(keywords, recursive, patternMatch);
+
+    if (entryPtr)
+    {
+        return
+            readType<T>(entryPtr->keyword(), defaultUnits, entryPtr->stream());
     }
     else
     {
@@ -120,7 +187,38 @@ T Foam::dictionary::lookupOrDefault
 
     if (entryPtr)
     {
-        return pTraits<T>(entryPtr->stream());
+        return readType<T>(keyword, entryPtr->stream());
+    }
+    else
+    {
+        if (writeOptionalEntries)
+        {
+            IOInfoInFunction(*this)
+                << "Optional entry '" << keyword << "' is not present,"
+                << " returning the default value '" << deflt << "'"
+                << endl;
+        }
+
+        return deflt;
+    }
+}
+
+
+template<class T>
+T Foam::dictionary::lookupOrDefault
+(
+    const word& keyword,
+    const unitConversion& defaultUnits,
+    const T& deflt,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
+
+    if (entryPtr)
+    {
+        return readType<T>(keyword, defaultUnits, entryPtr->stream());
     }
     else
     {
@@ -151,7 +249,33 @@ T Foam::dictionary::lookupOrDefaultBackwardsCompatible
 
     if (entryPtr)
     {
-        return pTraits<T>(entryPtr->stream());
+        return readType<T>(entryPtr->keyword(), entryPtr->stream());
+    }
+    else
+    {
+        // Generate debugging messages using the first keyword
+        return lookupOrDefault<T>(keywords[0], deflt, recursive, patternMatch);
+    }
+}
+
+
+template<class T>
+T Foam::dictionary::lookupOrDefaultBackwardsCompatible
+(
+    const wordList& keywords,
+    const unitConversion& defaultUnits,
+    const T& deflt,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr =
+        lookupEntryPtrBackwardsCompatible(keywords, recursive, patternMatch);
+
+    if (entryPtr)
+    {
+        return
+            readType<T>(entryPtr->keyword(), defaultUnits, entryPtr->stream());
     }
     else
     {
@@ -174,7 +298,7 @@ T Foam::dictionary::lookupOrAddDefault
 
     if (entryPtr)
     {
-        return pTraits<T>(entryPtr->stream());
+        return readType<T>(keyword, entryPtr->stream());
     }
     else
     {
@@ -205,7 +329,39 @@ bool Foam::dictionary::readIfPresent
 
     if (entryPtr)
     {
-        entryPtr->stream() >> val;
+        val = readType<T>(keyword, entryPtr->stream());
+        return true;
+    }
+    else
+    {
+        if (writeOptionalEntries)
+        {
+            IOInfoInFunction(*this)
+                << "Optional entry '" << keyword << "' is not present,"
+                << " the default value '" << val << "' will be used."
+                << endl;
+        }
+
+        return false;
+    }
+}
+
+
+template<class T>
+bool Foam::dictionary::readIfPresent
+(
+    const word& keyword,
+    const unitConversion& defaultUnits,
+    T& val,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
+
+    if (entryPtr)
+    {
+        val = readType<T>(keyword, defaultUnits, entryPtr->stream());
         return true;
     }
     else
@@ -236,12 +392,9 @@ T Foam::dictionary::lookupScoped
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction
-        (
-            *this
-        )   << "keyword " << keyword << " is undefined in dictionary "
-            << name()
-            << exit(FatalIOError);
+        FatalIOErrorInFunction(*this)
+            << "keyword " << keyword << " is undefined in dictionary "
+            << name() << exit(FatalIOError);
     }
 
     return pTraits<T>(entryPtr->stream());
@@ -319,6 +472,21 @@ void Foam::writeEntry
 
 
 template<class EntryType>
+void Foam::writeEntry
+(
+    Ostream& os,
+    const word& entryName,
+    const unitConversion& defaultUnits,
+    const EntryType& value
+)
+{
+    writeKeyword(os, entryName);
+    writeEntry(os, defaultUnits, value);
+    os << token::END_STATEMENT << endl;
+}
+
+
+template<class EntryType>
 void Foam::writeEntryIfDifferent
 (
     Ostream& os,
@@ -330,6 +498,23 @@ void Foam::writeEntryIfDifferent
     if (value1 != value2)
     {
         writeEntry(os, entryName, value2);
+    }
+}
+
+
+template<class EntryType>
+void Foam::writeEntryIfDifferent
+(
+    Ostream& os,
+    const word& entryName,
+    const unitConversion& defaultUnits,
+    const EntryType& value1,
+    const EntryType& value2
+)
+{
+    if (value1 != value2)
+    {
+        writeEntry(os, entryName, defaultUnits, value2);
     }
 }
 

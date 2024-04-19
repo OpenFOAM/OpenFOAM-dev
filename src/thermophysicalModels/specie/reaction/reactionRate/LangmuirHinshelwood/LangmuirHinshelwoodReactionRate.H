@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,7 @@ SourceFiles
 #ifndef LangmuirHinshelwoodReactionRate_H
 #define LangmuirHinshelwoodReactionRate_H
 
+#include "speciesTable.H"
 #include "scalarField.H"
 #include "typeInfo.H"
 
@@ -86,6 +87,7 @@ public:
         inline LangmuirHinshelwoodReactionRate
         (
             const speciesTable& species,
+            const dimensionSet& dims,
             const dictionary& dict
         );
 

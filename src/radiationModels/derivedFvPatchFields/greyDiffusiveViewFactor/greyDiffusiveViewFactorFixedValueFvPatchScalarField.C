@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,6 @@ License
 #include "fieldMapper.H"
 #include "volFields.H"
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::greyDiffusiveViewFactorFixedValueFvPatchScalarField::
@@ -41,15 +40,14 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
 :
     fixedValueFvPatchScalarField(p, iF, dict, false),
     radiationCoupledBase(p, dict),
-    qro_("qro", dict, p.size())
+    qro_("qro", dimPower/dimArea, dict, p.size())
 {
     if (dict.found("value"))
     {
         fvPatchScalarField::operator=
         (
-            scalarField("value", dict, p.size())
+            scalarField("value", iF.dimensions(), dict, p.size())
         );
-
     }
     else
     {

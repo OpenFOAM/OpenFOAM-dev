@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,7 +173,7 @@ void Foam::surfaceFeatures::setFromStatus
         }
     }
 
-    const scalar minCos = Foam::cos(degToRad(180.0 - includedAngle));
+    const scalar minCos = Foam::cos(degToRad(180) - includedAngle);
 
     calcFeatPoints(edgeStat, minCos);
 }
@@ -676,7 +676,7 @@ void Foam::surfaceFeatures::findFeatures
     const bool geometricTestOnly
 )
 {
-    scalar minCos = Foam::cos(degToRad(180.0 - includedAngle));
+    scalar minCos = Foam::cos(degToRad(180) - includedAngle);
 
     // Per edge whether is feature edge.
     List<edgeStatus> edgeStat(surf_.nEdges(), NONE);
@@ -831,7 +831,6 @@ Foam::labelList Foam::surfaceFeatures::trimFeatures
 
 void Foam::surfaceFeatures::writeDict(Ostream& writeFile) const
 {
-
     dictionary featInfoDict;
     featInfoDict.add("externalStart", externalStart_);
     featInfoDict.add("internalStart", internalStart_);
@@ -1624,7 +1623,7 @@ Foam::surfaceFeatures::edgeStatus Foam::checkNonManifoldEdge
 
         if (includedAngle >= 0)
         {
-            scalar minCos = Foam::cos(degToRad(180.0 - includedAngle));
+            scalar minCos = Foam::cos(degToRad(180) - includedAngle);
 
             forAll(eFaces, i)
             {

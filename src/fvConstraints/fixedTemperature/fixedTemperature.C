@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,13 @@ void Foam::fv::fixedTemperature::readCoeffs()
         {
             TValue_.reset
             (
-                Function1<scalar>::New("temperature", coeffs()).ptr()
+                Function1<scalar>::New
+                (
+                    "temperature",
+                    mesh().time().userUnits(),
+                    dimTemperature,
+                    coeffs()
+                ).ptr()
             );
             break;
         }
@@ -92,7 +98,13 @@ void Foam::fv::fixedTemperature::readCoeffs()
 
     fraction_ =
         coeffs().found("fraction")
-      ? Function1<scalar>::New("fraction", coeffs())
+      ? Function1<scalar>::New
+        (
+            "fraction",
+            mesh().time().userUnits(),
+            unitFraction,
+            coeffs()
+        )
       : autoPtr<Function1<scalar>>();
 }
 
@@ -146,7 +158,7 @@ bool Foam::fv::fixedTemperature::constrain
             IOobject::groupName(physicalProperties::typeName, phaseName_)
         );
 
-    const scalar t = mesh().time().userTimeValue();
+    const scalar t = mesh().time().value();
 
     switch (mode_)
     {

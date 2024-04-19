@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ template<class Type>
 Foam::Function2s::ZeroConstant<Type>::ZeroConstant
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
@@ -48,7 +49,11 @@ Foam::Function2s::ZeroConstant<Type>::~ZeroConstant()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function2s::ZeroConstant<Type>::write(Ostream& os) const
+void Foam::Function2s::ZeroConstant<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {}
 
 

@@ -78,6 +78,15 @@ class Polynomial
         const List<Type> coeffs_;
 
 
+    // Private Member Functions
+
+        //- Do unit conversions on input data
+        static List<Type> convertRead(const unitConversions&, List<Type>);
+
+        //- Do unit conversions in order to output data
+        static List<Type> convertWrite(const unitConversions&, List<Type>);
+
+
 public:
 
     //- Runtime type information
@@ -87,10 +96,20 @@ public:
     // Constructors
 
         //- Construct from name and dictionary
-        Polynomial(const word& name, const dictionary& dict);
+        Polynomial
+        (
+            const word& name,
+            const unitConversions& units,
+            const dictionary& dict
+        );
 
         //- Construct from name and Istream
-        Polynomial(const word& name, Istream& is);
+        Polynomial
+        (
+            const word& name,
+            const unitConversions& units,
+            Istream& is
+        );
 
         //- Copy constructor
         Polynomial(const Polynomial& poly);
@@ -112,7 +131,7 @@ public:
 
 
         //- Write in dictionary format
-        virtual void write(Ostream& os) const;
+        virtual void write(Ostream& os, const unitConversions& units) const;
 
 
     // Member Operators

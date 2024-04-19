@@ -57,7 +57,7 @@ Foam::RBD::joints::functionDot::functionDot
 )
 :
     joint(model, 0),
-    f_(Function1<scalar>::New("function", dict)),
+    f_(Function1<scalar>::New("function", unitNone, unitNone, dict)),
     delta_(dict.lookupOrDefault<scalar>("delta", rootSmall))
 {}
 

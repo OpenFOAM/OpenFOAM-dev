@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ surfaceIntegrate
             dimensioned<Type>
             (
                 "0",
-                ssf.dimensions()/dimVol,
+                ssf.dimensions()/dimVolume,
                 Zero
             ),
             extrapolatedCalculatedFvPatchField<Type>::typeName

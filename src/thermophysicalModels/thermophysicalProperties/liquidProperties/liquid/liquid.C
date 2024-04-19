@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,18 +44,19 @@ namespace Foam
 Foam::autoPtr<Foam::Function1<Foam::scalar>> Foam::liquid::New
 (
     const word& name,
+    const dimensionSet& dims,
     const dictionary& dict
 )
 {
     if (dict.isDict(name))
     {
-        return Function1<scalar>::New(name, dict);
+        return Function1<scalar>::New(name, {dimTemperature, dims}, dict);
     }
     else
     {
         return autoPtr<Function1<scalar>>
         (
-            new Function1s::None<scalar>(name, dict)
+            new Function1s::None<scalar>(name, {dimTemperature, dims}, dict)
         );
     }
 }
@@ -66,19 +67,19 @@ Foam::autoPtr<Foam::Function1<Foam::scalar>> Foam::liquid::New
 Foam::liquid::liquid(const dictionary& dict)
 :
     liquidProperties(dict),
-    rho_(New("rho", dict)),
-    pv_(New("pv", dict)),
-    hl_(New("hl", dict)),
-    Cp_(New("Cp", dict)),
-    h_(New("h", dict)),
-    Cpg_(New("Cpg", dict)),
-    B_(New("B", dict)),
-    mu_(New("mu", dict)),
-    mug_(New("mug", dict)),
-    kappa_(New("kappa", dict)),
-    kappag_(New("kappag", dict)),
-    sigma_(New("sigma", dict)),
-    D_(New("D", dict)),
+    rho_(New("rho", dimDensity, dict)),
+    pv_(New("pv", dimPressure, dict)),
+    hl_(New("hl", dimEnergy/dimMass, dict)),
+    Cp_(New("Cp", dimSpecificHeatCapacity, dict)),
+    h_(New("h", dimEnergy/dimMass, dict)),
+    Cpg_(New("Cpg", dimSpecificHeatCapacity, dict)),
+    B_(New("B", dimVolume/dimMass, dict)),
+    mu_(New("mu", dimDynamicViscosity, dict)),
+    mug_(New("mug", dimDynamicViscosity, dict)),
+    kappa_(New("kappa", dimThermalConductivity, dict)),
+    kappag_(New("kappag", dimThermalConductivity, dict)),
+    sigma_(New("sigma", dimForce/dimLength, dict)),
+    D_(New("D", dimArea/dimTime, dict)),
     hf_(h_->value(Tstd))
 {}
 
@@ -108,20 +109,7 @@ Foam::liquid::liquid(const liquid& lm)
 
 void Foam::liquid::write(Ostream& os) const
 {
-    liquidProperties::write(os); os << nl;
-    rho_->write(os); os << nl;
-    pv_->write(os); os << nl;
-    hl_->write(os); os << nl;
-    Cp_->write(os); os << nl;
-    h_->write(os); os << nl;
-    Cpg_->write(os); os << nl;
-    B_->write(os); os << nl;
-    mu_->write(os); os << nl;
-    mug_->write(os); os << nl;
-    kappa_->write(os); os << nl;
-    kappag_->write(os); os << nl;
-    sigma_->write(os); os << nl;
-    D_->write(os); os << endl;
+    liquidProperties::write(*this, os);
 }
 
 

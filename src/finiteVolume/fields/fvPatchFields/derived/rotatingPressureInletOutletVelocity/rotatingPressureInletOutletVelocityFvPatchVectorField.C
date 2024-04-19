@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,8 +33,7 @@ License
 void Foam::rotatingPressureInletOutletVelocityFvPatchVectorField::
 calcTangentialVelocity()
 {
-    const scalar t = this->db().time().userTimeValue();
-    const scalar omega = omega_.value(t);
+    const scalar omega = omega_.value(db().time().value());
 
     const vectorField tangentialVelocity
     (
@@ -58,9 +57,9 @@ rotatingPressureInletOutletVelocityFvPatchVectorField
 )
 :
     pressureInletOutletVelocityFvPatchVectorField(p, iF, dict),
-    origin_(dict.lookup("origin")),
-    axis_(dict.lookup("axis")),
-    omega_(dict)
+    origin_(dict.lookup<vector>("origin", dimLength)),
+    axis_(dict.lookup<vector>("axis", dimless)),
+    omega_(db().time(), dict)
 {
     calcTangentialVelocity();
 }

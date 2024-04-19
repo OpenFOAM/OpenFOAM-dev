@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "gravitationalContactAngle.H"
-#include "unitConversion.H"
 #include "uniformDimensionedFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -44,10 +43,10 @@ namespace contactAngleModels
 
 Foam::contactAngleModels::gravitational::gravitational(const dictionary& dict)
 :
-    theta0_(dict.lookup<scalar>("theta0")),
-    gTheta_(dict.lookup<scalar>("gTheta")),
-    thetaAdv_(dict.lookup<scalar>("thetaAdv")),
-    thetaRec_(dict.lookup<scalar>("thetaRec"))
+    theta0_(dict.lookup<scalar>("theta0", unitDegrees)),
+    gTheta_(dict.lookup<scalar>("gTheta", dimAcceleration)),
+    thetaAdv_(dict.lookup<scalar>("thetaAdv", unitDegrees)),
+    thetaRec_(dict.lookup<scalar>("thetaRec", unitDegrees))
 {}
 
 
@@ -82,10 +81,10 @@ Foam::contactAngleModels::gravitational::cosTheta
 
 void Foam::contactAngleModels::gravitational::write(Ostream& os) const
 {
-    writeEntry(os, "theta0", theta0_);
-    writeEntry(os, "gTheta", gTheta_);
-    writeEntry(os, "thetaAdv", thetaAdv_);
-    writeEntry(os, "thetaRec", thetaRec_);
+    writeEntry(os, "theta0", unitDegrees, theta0_);
+    writeEntry(os, "gTheta", dimAcceleration, gTheta_);
+    writeEntry(os, "thetaAdv", unitDegrees, thetaAdv_);
+    writeEntry(os, "thetaRec", unitDegrees, thetaRec_);
 }
 
 

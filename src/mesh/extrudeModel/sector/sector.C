@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,10 +48,7 @@ sector::sector(const dictionary& dict)
     extrudeModel(typeName, dict),
     axisPt_(coeffDict_.lookup("axisPt")),
     axis_(coeffDict_.lookup("axis")),
-    angle_
-    (
-        degToRad(coeffDict_.lookup<scalar>("angle"))
-    )
+    angle_(coeffDict_.lookup<scalar>("angle", unitDegrees))
 {}
 
 

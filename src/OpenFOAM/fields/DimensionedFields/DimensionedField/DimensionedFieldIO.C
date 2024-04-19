@@ -38,7 +38,7 @@ void Foam::DimensionedField<Type, GeoMesh>::readField
 {
     dimensions_.reset(dimensionSet(fieldDict.lookup("dimensions")));
 
-    Field<Type> f(fieldDictEntry, fieldDict, GeoMesh::size(mesh_));
+    Field<Type> f(fieldDictEntry, dimensions_, fieldDict, GeoMesh::size(mesh_));
 
     this->transfer(f);
 }

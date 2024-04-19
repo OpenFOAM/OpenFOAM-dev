@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,84 +25,13 @@ License
 
 #include "Constant2.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-/*
-template<class Type>
-Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
-(
-    const word& name,
-    const dictionary& dict
-)
-{
-    if (dict.isDict(name))
-    {
-        const dictionary& coeffsDict(dict.subDict(name));
-
-        const word Function2Type(coeffsDict.lookup("type"));
-
-        typename dictionaryConstructorTable::iterator cstrIter =
-            dictionaryConstructorTablePtr_->find(Function2Type);
-
-        if (cstrIter == dictionaryConstructorTablePtr_->end())
-        {
-            FatalErrorInFunction
-                << "Unknown Function2 type "
-                << Function2Type << " for Function2 "
-                << name << nl << nl
-                << "Valid Function2 types are:" << nl
-                << dictionaryConstructorTablePtr_->sortedToc() << nl
-                << exit(FatalError);
-        }
-
-        return cstrIter()(name, coeffsDict);
-    }
-    else
-    {
-        Istream& is(dict.lookup(name, false));
-
-        token firstToken(is);
-        word Function2Type;
-
-        if (!firstToken.isWord())
-        {
-            is.putBack(firstToken);
-            return autoPtr<Function2<Type>>
-            (
-                new Function2s::Constant<Type>(name, is)
-            );
-        }
-        else
-        {
-            Function2Type = firstToken.wordToken();
-        }
-
-        typename dictionaryConstructorTable::iterator cstrIter =
-            dictionaryConstructorTablePtr_->find(Function2Type);
-
-        if (cstrIter == dictionaryConstructorTablePtr_->end())
-        {
-            FatalErrorInFunction
-                << "Unknown Function2 type "
-                << Function2Type << " for Function2 "
-                << name << nl << nl
-                << "Valid Function2 types are:" << nl
-                << dictionaryConstructorTablePtr_->sortedToc() << nl
-                << exit(FatalError);
-        }
-
-        return cstrIter()(name, dict);
-    }
-}
-*/
-
-
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
 (
     const word& name,
+    const Function2s::unitConversions& units,
     const dictionary& dict
 )
 {
@@ -127,7 +56,7 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
                 << exit(FatalError);
         }
 
-        return cstrIter()(name, coeffsDict);
+        return cstrIter()(name, units, coeffsDict);
     }
 
     // Find the entry
@@ -145,7 +74,7 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
     // construct the function from the stream
     if (!firstToken.isWord() || !is.eof())
     {
-        return New(name, Function2Type, is);
+        return New(name, units, Function2Type, is);
     }
 
     // Otherwise, construct from the current dictionary
@@ -163,7 +92,7 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
             << exit(FatalError);
     }
 
-    return dictCstrIter()(name, dict);
+    return dictCstrIter()(name, units, dict);
 }
 
 
@@ -171,6 +100,21 @@ template<class Type>
 Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
 (
     const word& name,
+    const unitConversion& xUnits,
+    const unitConversion& yUnits,
+    const unitConversion& valueUnits,
+    const dictionary& dict
+)
+{
+    return New(name, {xUnits, yUnits, valueUnits}, dict);
+}
+
+
+template<class Type>
+Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
+(
+    const word& name,
+    const Function2s::unitConversions& units,
     const word& Function2Type,
     Istream& is
 )
@@ -205,7 +149,22 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
             << exit(FatalError);
     }
 
-    return isCstrIter()(name, is);
+    return isCstrIter()(name, units, is);
+}
+
+
+template<class Type>
+Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
+(
+    const word& name,
+    const unitConversion& xUnits,
+    const unitConversion& yUnits,
+    const unitConversion& valueUnits,
+    const word& Function2Type,
+    Istream& is
+)
+{
+    return New(name, {xUnits, yUnits, valueUnits}, Function2Type, is);
 }
 
 

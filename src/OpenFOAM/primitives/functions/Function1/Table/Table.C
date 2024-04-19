@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,6 +154,7 @@ template<class Type>
 Foam::Function1s::Table<Type>::Table
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
@@ -172,8 +173,8 @@ Foam::Function1s::Table<Type>::Table
             linearInterpolationWeights::typeName
         )
     ),
-    reader_(TableReader<Type>::New(name, dict)),
-    values_(reader_->read(dict))
+    reader_(TableReader<Type>::New(name, units, dict)),
+    values_(reader_->read(units, dict))
 {
     check();
 }
@@ -183,6 +184,7 @@ template<class Type>
 Foam::Function1s::Table<Type>::Table
 (
     const word& name,
+    const unitConversions& units,
     Istream& is
 )
 :
@@ -190,7 +192,7 @@ Foam::Function1s::Table<Type>::Table
     boundsHandling_(tableBase::boundsHandling::clamp),
     interpolationScheme_(linearInterpolationWeights::typeName),
     reader_(new TableReaders::Embedded<Type>()),
-    values_(is)
+    values_(TableReaders::Embedded<Type>().read(units, is))
 {
     check();
 }
@@ -314,7 +316,11 @@ Foam::Function1s::Table<Type>::y() const
 
 
 template<class Type>
-void Foam::Function1s::Table<Type>::write(Ostream& os) const
+void Foam::Function1s::Table<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
     writeEntryIfDifferent
     (
@@ -332,7 +338,7 @@ void Foam::Function1s::Table<Type>::write(Ostream& os) const
         interpolationScheme_
     );
 
-    reader_->write(os, values_);
+    reader_->write(os, units, values_);
 }
 
 

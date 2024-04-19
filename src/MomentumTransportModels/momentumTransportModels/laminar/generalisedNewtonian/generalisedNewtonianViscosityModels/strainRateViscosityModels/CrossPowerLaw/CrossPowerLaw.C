@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,9 +58,9 @@ CrossPowerLaw
 )
 :
     strainRateViscosityModel(viscosityProperties, viscosity, U),
-    nuInf_("nuInf", dimViscosity, 0),
+    nuInf_("nuInf", dimKinematicViscosity, 0),
     m_("m", dimTime, 0),
-    tauStar_( "tauStar", dimViscosity/dimTime, 0),
+    tauStar_( "tauStar", dimKinematicViscosity/dimTime, 0),
     n_("n", dimless, 0)
 {
     read(viscosityProperties);

@@ -36,6 +36,7 @@ SourceFiles
 #define dimensionSets_H
 
 #include "dimensionSet.H"
+#include "unitConversions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,7 +57,6 @@ extern const dimensionSet dimLuminousIntensity;
 
 extern const dimensionSet dimArea;
 extern const dimensionSet dimVolume;
-extern const dimensionSet dimVol;
 
 extern const dimensionSet dimRate;
 
@@ -70,22 +70,22 @@ extern const dimensionSet dimEnergy;
 extern const dimensionSet dimPower;
 
 extern const dimensionSet dimPressure;
+extern const dimensionSet dimKinematicPressure;
 extern const dimensionSet dimCompressibility;
 extern const dimensionSet dimGasConstant;
 extern const dimensionSet dimSpecificHeatCapacity;
-extern const dimensionSet dimViscosity;
+extern const dimensionSet dimKinematicViscosity;
 extern const dimensionSet dimDynamicViscosity;
+extern const dimensionSet dimThermalConductivity;
 
-extern const dimensionSet dimFlux;
+extern const dimensionSet dimVolumetricFlux;
 extern const dimensionSet dimMassFlux;
 
 
-//- Add a unit
-void addUnit(const dimensionedScalar& unit);
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
-//- Set of all units
-const HashTable<dimensionedScalar>& unitSet();
+//- Get the table of dimension sets
+const HashTable<dimensionSet>& dimensions();
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

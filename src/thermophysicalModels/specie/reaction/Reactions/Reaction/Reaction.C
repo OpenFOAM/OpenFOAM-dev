@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -256,9 +256,26 @@ Foam::Reaction<ThermoType>::New
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-void Foam::Reaction<ThermoType>::write(Ostream& os) const
+Foam::dimensionSet Foam::Reaction<ThermoType>::kfDims() const
 {
-    reaction::write(os);
+    scalar order = 0;
+    forAll(lhs(), i)
+    {
+        order += lhs()[i].exponent;
+    }
+    return pow(dimMoles/dimVolume, 1 - order)/dimTime;
+}
+
+
+template<class ThermoType>
+Foam::dimensionSet Foam::Reaction<ThermoType>::krDims() const
+{
+    scalar order = 0;
+    forAll(rhs(), i)
+    {
+        order += rhs()[i].exponent;
+    }
+    return pow(dimMoles/dimVolume, 1 - order)/dimTime;
 }
 
 
@@ -526,6 +543,13 @@ void Foam::Reaction<ThermoType>::ddNdtByVdcTp
             }
         }
     }
+}
+
+
+template<class ThermoType>
+void Foam::Reaction<ThermoType>::write(Ostream& os) const
+{
+    reaction::write(os);
 }
 
 

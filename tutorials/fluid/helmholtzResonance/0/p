@@ -14,9 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 -1 -2 0 0 0 0];
+dimensions      [pressure];
 
-internalField   uniform 1e5;
+internalField   uniform 1 [bar];
 
 boundaryField
 {
@@ -28,8 +28,8 @@ boundaryField
     outlet
     {
         type            fixedMean;
-        meanValue       constant 1e5;
-        value           uniform 1e5;
+        meanValue       constant 1 [bar];
+        value           $internalField;
     }
 
     symmetry
@@ -47,15 +47,15 @@ boundaryField
         type            plenumPressure;
         gamma           1.4;
         R               287.04;
-        supplyMassFlowRate 0.0001;
+        supplyMassFlowRate 0.1 [g/s];
         supplyTotalTemperature 300;
-        plenumVolume    0.000125;
+        plenumVolume    0.125 [l];
         plenumDensity   1.1613;
         plenumTemperature 300;
-        inletAreaRatio  1.0;
-        inletDischargeCoefficient 0.8;
+        inletAreaRatio  100 [%];
+        inletDischargeCoefficient 80 [%];
         timeScale       1e-4;
-        value           uniform 1e5;
+        value           $internalField;
     }
 }
 

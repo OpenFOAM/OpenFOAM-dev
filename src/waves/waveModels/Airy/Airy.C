@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,7 @@ Foam::waveModels::Airy::Airy
 :
     waveModel(dict, g),
     depth_(dict.lookupOrDefault<scalar>("depth", great)),
-    amplitude_(Function1<scalar>::New("amplitude", dict)),
+    amplitude_(Function1<scalar>::New("amplitude", dimTime, dimLength, dict)),
     length_(readLength(dict, depth_, amplitude(), g, celerityPtr)),
     phase_(dict.lookup<scalar>("phase"))
 {

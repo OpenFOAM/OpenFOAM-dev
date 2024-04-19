@@ -29,7 +29,8 @@ rigidBodyState
 {
     type           rigidBodyState;
     libs           ("librigidBodyState.so");
-    angleUnits     degrees;
+    angleUnits     [deg];
+    angularVelocityUnits [deg/s];
 }
 
 #includeFunc surfaces

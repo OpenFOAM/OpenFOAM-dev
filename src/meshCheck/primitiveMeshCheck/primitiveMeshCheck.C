@@ -950,7 +950,7 @@ bool Foam::meshCheck::checkFaceAngles
 (
     const primitiveMesh& mesh,
     const bool report,
-    const scalar maxDeg,
+    const scalar maxConcave,
     labelHashSet* setPtr
 )
 {
@@ -959,14 +959,14 @@ bool Foam::meshCheck::checkFaceAngles
         InfoInFunction << "Checking face angles" << endl;
     }
 
-    if (maxDeg < -small || maxDeg > 180+small)
+    if (maxConcave < -small || maxConcave > degToRad(180)+small)
     {
         FatalErrorInFunction
-            << "maxDeg should be [0..180] but is now " << maxDeg
-            << exit(FatalError);
+            << "maxConcave should be [0..180] degrees but is "
+            << radToDeg(maxConcave) << abort(FatalError);
     }
 
-    const scalar maxSin = Foam::sin(degToRad(maxDeg));
+    const scalar maxSin = Foam::sin(maxConcave);
 
     const pointField& points = mesh.points();
     const vectorField& faceAreas = mesh.faceAreas();
@@ -1002,14 +1002,12 @@ bool Foam::meshCheck::checkFaceAngles
 
     if (nConcave > 0)
     {
-        scalar maxConcaveDegr =
-            radToDeg(Foam::asin(Foam::min(1.0, maxEdgeSin)));
-
         if (report)
         {
             Info<< "   *There are " << nConcave
                 << " faces with concave angles between consecutive"
-                << " edges. Max concave angle = " << maxConcaveDegr
+                << " edges. Max concave angle = "
+                << radToDeg(Foam::asin(Foam::min(1.0, maxEdgeSin)))
                 << " degrees." << endl;
         }
 

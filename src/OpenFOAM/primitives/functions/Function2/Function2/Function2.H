@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,7 @@ SourceFiles
 #define Function2_H
 
 #include "dictionary.H"
+#include "unitConversion.H"
 #include "tmp.H"
 #include "typeInfo.H"
 #include "Field.H"
@@ -53,6 +54,39 @@ namespace Foam
 // Forward declaration of friend functions and operators
 template<class Type> class Function2;
 template<class Type> Ostream& operator<<(Ostream&, const Function2<Type>&);
+
+/*---------------------------------------------------------------------------*\
+                 Class Function2s::unitConversions Declaration
+\*---------------------------------------------------------------------------*/
+
+namespace Function2s
+{
+struct unitConversions
+{
+    // Public Data
+
+        //- Unit conversion for x-axis values
+        unitConversion x;
+
+        //- Unit conversion for y-axis values
+        unitConversion y;
+
+        //- Unit conversion for result values
+        unitConversion value;
+};
+}
+
+
+// Global Functions
+
+//- Generate an error in an context where unit conversions are not supported
+void assertNoConvertUnits
+(
+    const word& typeName,
+    const Function2s::unitConversions& units,
+    const dictionary& dict
+);
+
 
 /*---------------------------------------------------------------------------*\
                           Class Function2 Declaration
@@ -90,9 +124,10 @@ public:
             dictionary,
             (
                 const word& name,
+                const Function2s::unitConversions& units,
                 const dictionary& dict
             ),
-            (name, dict)
+            (name, units, dict)
         );
 
         declareRunTimeSelectionTable
@@ -102,9 +137,10 @@ public:
             Istream,
             (
                 const word& name,
+                const Function2s::unitConversions& units,
                 Istream& is
             ),
-            (name, is)
+            (name, units, is)
         );
 
 
@@ -126,6 +162,17 @@ public:
         static autoPtr<Function2<Type>> New
         (
             const word& name,
+            const Function2s::unitConversions& units,
+            const dictionary& dict
+        );
+
+        //- Select from dictionary
+        static autoPtr<Function2<Type>> New
+        (
+            const word& name,
+            const unitConversion& xUnits,
+            const unitConversion& yUnits,
+            const unitConversion& valueUnits,
             const dictionary& dict
         );
 
@@ -133,6 +180,18 @@ public:
         static autoPtr<Function2<Type>> New
         (
             const word& name,
+            const Function2s::unitConversions& units,
+            const word& Function2Type,
+            Istream& is
+        );
+
+        //- Select from Istream
+        static autoPtr<Function2<Type>> New
+        (
+            const word& name,
+            const unitConversion& xUnits,
+            const unitConversion& yUnits,
+            const unitConversion& valueUnits,
             const word& Function2Type,
             Istream& is
         );
@@ -158,7 +217,11 @@ public:
         ) const = 0;
 
         //- Write in dictionary format
-        virtual void write(Ostream& os) const = 0;
+        virtual void write
+        (
+            Ostream& os,
+            const Function2s::unitConversions&
+        ) const = 0;
 
 
     // Member Operators
@@ -180,6 +243,24 @@ public:
 
 template<class Type>
 void writeEntry(Ostream& os, const Function2<Type>& f2);
+
+template<class Type>
+void writeEntry
+(
+    Ostream& os,
+    const Function2s::unitConversions& units,
+    const Function2<Type>& f2
+);
+
+template<class Type>
+void writeEntry
+(
+    Ostream& os,
+    const unitConversion& xUnits,
+    const unitConversion& yUnits,
+    const unitConversion& valueUnits,
+    const Function2<Type>& f2
+);
 
 
 /*---------------------------------------------------------------------------*\

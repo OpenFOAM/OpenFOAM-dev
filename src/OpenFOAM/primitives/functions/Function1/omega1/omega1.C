@@ -24,12 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "omega1.H"
-#include "mathematicalConstants.H"
+#include "Time.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::Function1<Foam::scalar>> Foam::Function1s::omega::init
 (
+    const Time& time,
     const dictionary& dict
 )
 {
@@ -50,23 +51,28 @@ Foam::autoPtr<Foam::Function1<Foam::scalar>> Foam::Function1s::omega::init
             << dict.name() << exit(FatalIOError);
     }
 
-    return Function1<scalar>::New(foundOmega ? "omega" : "rpm", dict);
+    return
+        Function1<scalar>::New
+        (
+            foundOmega ? "omega" : "rpm",
+            time.userUnits(),
+            foundOmega ? unitRadians/dimTime : units()["rpm"],
+            dict
+        );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function1s::omega::omega(const dictionary& dict)
+Foam::Function1s::omega::omega(const Time& time, const dictionary& dict)
 :
-    omega_(init(dict)),
-    factor_(omega_->name() == "omega" ? 1 : constant::mathematical::pi/30)
+    omega_(init(time, dict))
 {}
 
 
 Foam::Function1s::omega::omega(const omega& o)
 :
-    omega_(o.omega_, false),
-    factor_(o.factor_)
+    omega_(o.omega_, false)
 {}
 
 
@@ -74,7 +80,13 @@ Foam::Function1s::omega::omega(const omega& o)
 
 void Foam::Function1s::omega::write(Ostream& os) const
 {
-    writeEntry(os, omega_());
+    writeEntry
+    (
+        os,
+        dimTime,
+        omega_->name() == "omega" ? unitRadians/dimTime : units()["rpm"],
+        omega_()
+    );
 }
 
 

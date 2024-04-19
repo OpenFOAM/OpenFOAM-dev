@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,16 +42,16 @@ supersonicFreestreamFvPatchVectorField
     TName_(dict.lookupOrDefault<word>("T", "T")),
     pName_(dict.lookupOrDefault<word>("p", "p")),
     psiName_(dict.lookupOrDefault<word>("psi", "psi")),
-    UInf_(dict.lookup("UInf")),
-    pInf_(dict.lookup<scalar>("pInf")),
-    TInf_(dict.lookup<scalar>("TInf")),
+    UInf_(dict.lookup<vector>("UInf", dimVelocity)),
+    pInf_(dict.lookup<scalar>("pInf", dimPressure)),
+    TInf_(dict.lookup<scalar>("TInf", dimTemperature)),
     gamma_(dict.lookup<scalar>("gamma"))
 {
     if (dict.found("value"))
     {
         fvPatchField<vector>::operator=
         (
-            vectorField("value", dict, p.size())
+            vectorField("value", iF.dimensions(), dict, p.size())
         );
     }
     else

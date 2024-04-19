@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,12 @@ public:
     // Constructors
 
         //- Construct from name and dictionary
-        NonUniformTable(const word& name, const dictionary& dict);
+        NonUniformTable
+        (
+            const word& name,
+            const Function1s::unitConversions& units,
+            const dictionary& dict
+        );
 
         //- Copy constructor
         NonUniformTable(const NonUniformTable<Type>& nut);
@@ -139,7 +144,7 @@ public:
         Type dfdT(scalar T) const;
 
         //- Write the function coefficients
-        void write(Ostream& os) const;
+        void write(Ostream& os, const unitConversions& units) const;
 
 
     // Member Operators

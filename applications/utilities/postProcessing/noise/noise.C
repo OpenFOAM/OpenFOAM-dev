@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,8 +45,7 @@ Usage
     {
         file                "pressureData";
         nHeaderLine         1;          // number of header lines
-        refColumn           0;          // reference column index
-        componentColumns    (1);        // component column indices
+        columns             (0 1);      // column indices
         separator           " ";        // optional (defaults to ",")
         mergeSeparators     no;         // merge multiple separators
         outOfBounds         clamp;      // optional out-of-bounds handling
@@ -162,6 +161,7 @@ int main(int argc, char *argv[])
     Function1s::Table<scalar> pData
     (
         "pressure",
+        {dimTime, dimPressure},
         dict.subDict("pressureData")
     );
 

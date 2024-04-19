@@ -41,7 +41,6 @@ Description
 #include "mergePoints.H"
 #include "snapParameters.H"
 #include "refinementSurfaces.H"
-#include "unitConversion.H"
 #include "localPointRegion.H"
 #include "PatchTools.H"
 
@@ -2442,7 +2441,7 @@ void Foam::snappySnapDriver::doSnap
             //    {
             //        detectNearSurfaces
             //        (
-            //            Foam::cos(degToRad(planarAngle)),// planar gaps
+            //            Foam::cos(planarAngle), // planar gaps
             //            pp,
             //            nearestPoint,   // surfacepoint from nearest test
             //            nearestNormal,  // surfacenormal from nearest test
@@ -2666,7 +2665,7 @@ void Foam::snappySnapDriver::doSnap
             {
                 detectNearSurfaces
                 (
-                    Foam::cos(degToRad(planarAngle)),// planar cos for gaps
+                    Foam::cos(planarAngle), // planar cos for gaps
                     pp,
                     nearestPoint,   // surfacepoint from nearest test
                     nearestNormal,  // surfacenormal from nearest test

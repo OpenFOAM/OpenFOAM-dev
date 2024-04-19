@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,7 +207,7 @@ localEulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            vf.dimensions()*dimVol/dimTime
+            vf.dimensions()*dimVolume/dimTime
         )
     );
 
@@ -235,7 +235,7 @@ localEulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVol/dimTime
+            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -264,7 +264,7 @@ localEulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVol/dimTime
+            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -295,7 +295,11 @@ localEulerDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
+            alpha.dimensions()
+           *rho.dimensions()
+           *vf.dimensions()
+           *dimVolume
+           /dimTime
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -524,7 +528,7 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
     if
     (
         U.dimensions() == dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimFlux
+     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
     )
     {
         VolField<Type> rhoU0
@@ -561,7 +565,7 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
     else if
     (
         U.dimensions() == rho.dimensions()*dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimFlux
+     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
     )
     {
         fluxFieldType phiCorr
@@ -656,7 +660,7 @@ localEulerDdtScheme<Type>::fvcDdtPhiCorr
 {
     const surfaceScalarField rDeltaT(fvc::interpolate(localRDeltaT()));
 
-    if (U.dimensions() == dimVelocity && phi.dimensions() == dimFlux)
+    if (U.dimensions() == dimVelocity && phi.dimensions() == dimVolumetricFlux)
     {
         const volScalarField alphaRho0(alpha.oldTime()*rho.oldTime());
 

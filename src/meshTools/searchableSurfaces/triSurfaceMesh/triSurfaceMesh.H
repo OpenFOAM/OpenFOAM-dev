@@ -66,6 +66,7 @@ SourceFiles
 #include "triSurfaceRegionSearch.H"
 #include "triSurfaceFieldsFwd.H"
 #include "pointIndexHitList.H"
+#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -330,16 +331,16 @@ public:
             //  internal and external closeness of regions of the surface
             Pair<tmp<triSurfaceScalarField>> extractCloseness
             (
-                const scalar internalAngleTolerance = 80,
-                const scalar externalAngleTolerance = 80
+                const scalar internalAngleTolerance = degToRad(80),
+                const scalar externalAngleTolerance = degToRad(80)
             ) const;
 
             //- Return a pair of triSurfaceScalarPointFields representing the
             //  internal and external closeness of regions of the surface
             Pair<tmp<triSurfacePointScalarField>> extractPointCloseness
             (
-                const scalar internalAngleTolerance = 80,
-                const scalar externalAngleTolerance = 80
+                const scalar internalAngleTolerance = degToRad(80),
+                const scalar externalAngleTolerance = degToRad(80)
             ) const;
 
 

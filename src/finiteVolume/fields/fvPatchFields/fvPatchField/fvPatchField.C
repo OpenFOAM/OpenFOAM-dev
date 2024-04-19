@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,15 +84,13 @@ Foam::fvPatchField<Type>::fvPatchField
         {
             Field<Type>::operator=
             (
-                Field<Type>("value", dict, p.size())
+                Field<Type>("value", iF.dimensions(), dict, p.size())
             );
         }
         else
         {
-            FatalIOErrorInFunction
-            (
-                dict
-            )   << "Essential entry 'value' missing"
+            FatalIOErrorInFunction(dict)
+                << "Essential entry 'value' missing"
                 << exit(FatalIOError);
         }
     }

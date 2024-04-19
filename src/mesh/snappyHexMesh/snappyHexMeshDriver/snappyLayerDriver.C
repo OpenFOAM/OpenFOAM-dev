@@ -34,7 +34,6 @@ Description
 #include "removePoints.H"
 #include "pointFields.H"
 #include "meshCheck.H"
-#include "unitConversion.H"
 #include "pointSet.H"
 #include "faceSet.H"
 #include "cellSet.H"
@@ -2795,21 +2794,21 @@ void Foam::snappyLayerDriver::mergePatchFacesUndo
 {
     scalar planarAngle = layerParams.featureAngle();
 
-    scalar minCos = Foam::cos(degToRad(planarAngle));
+    scalar minCos = Foam::cos(planarAngle);
 
-    scalar concaveCos = Foam::cos(degToRad(layerParams.concaveAngle()));
+    scalar concaveCos = Foam::cos(layerParams.concaveAngle());
 
     Info<< nl
         << "Merging all faces of a cell" << nl
         << "---------------------------" << nl
         << "    - which are on the same patch" << nl
-        << "    - which make an angle < " << planarAngle
+        << "    - which make an angle < " << radToDeg(planarAngle)
         << " degrees"
         << nl
         << "      (cos:" << minCos << ')' << nl
         << "    - as long as the resulting face doesn't become concave"
         << " by more than "
-        << layerParams.concaveAngle() << " degrees" << nl
+        << radToDeg(layerParams.concaveAngle()) << " degrees" << nl
         << "      (0=straight, 180=fully concave)" << nl
         << endl;
 
@@ -2989,7 +2988,7 @@ void Foam::snappyLayerDriver::addLayers
         (
             pp,
             meshEdges,
-            Foam::cos(degToRad(layerParams.featureAngle())),
+            Foam::cos(layerParams.featureAngle()),
 
             patchDisp,
             patchNLayers,

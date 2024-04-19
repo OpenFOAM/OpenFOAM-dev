@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #define polyMeshUnMergeCyclics_H
 
 #include "polyMesh.H"
+#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -38,7 +39,11 @@ namespace Foam
 //- Find all patches of type "mergedCyclic" in the given mesh and split them
 //  into two "standard" cyclics, using the given included angle to
 //  geometrically separate the halves if they meet at an angle at the axis
-void polyMeshUnMergeCyclics(polyMesh& mesh, const scalar includedAngle=165);
+void polyMeshUnMergeCyclics
+(
+    polyMesh& mesh,
+    const scalar includedAngle=degToRad(165)
+);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,15 @@ inline Type Foam::Function2s::Coded<Type>::value
     // Make sure library containing user-defined Function2 is up-to-date
     this->updateLibrary();
 
-    return redirectFunction2Ptr_->value(x, y);
+    return
+        units_.value.toStandard
+        (
+            redirectFunction2Ptr_->value
+            (
+                units_.x.toUser(x),
+                units_.y.toUser(y)
+            )
+        );
 }
 
 

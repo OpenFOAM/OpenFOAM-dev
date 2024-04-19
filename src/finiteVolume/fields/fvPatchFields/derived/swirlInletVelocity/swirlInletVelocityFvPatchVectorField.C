@@ -42,6 +42,7 @@ swirlInletVelocityFvPatchVectorField
         dict.lookupOrDefault
         (
             "origin",
+            dimLength,
             returnReduce(patch().size(), sumOp<label>())
           ? gSum(patch().Cf()*patch().magSf())/gSum(patch().magSf())
           : Zero
@@ -52,24 +53,52 @@ swirlInletVelocityFvPatchVectorField
         dict.lookupOrDefault
         (
             "axis",
+            dimless,
             returnReduce(patch().size(), sumOp<label>())
           ? -gSum(patch().Sf())/gSum(patch().magSf())
           : Zero
         )
     ),
-    axialVelocity_(Function2<scalar>::New("axialVelocity", dict)),
-    radialVelocity_(Function2<scalar>::New("radialVelocity", dict)),
+    axialVelocity_
+    (
+        Function2<scalar>::New
+        (
+            "axialVelocity",
+            db().time().userUnits(),
+            dimLength,
+            dimVelocity,
+            dict
+        )
+    ),
+    radialVelocity_
+    (
+        Function2<scalar>::New
+        (
+            "radialVelocity",
+            db().time().userUnits(),
+            dimLength,
+            dimVelocity,
+            dict
+        )
+    ),
     omega_(nullptr),
     tangentialVelocity_(nullptr)
 {
     if (dict.found("omega") || dict.found("rpm"))
     {
-        omega_ = new Function1s::omega(dict);
+        omega_ = new Function1s::omega(db().time(), dict);
     }
     else if (dict.found("tangentialVelocity"))
     {
         tangentialVelocity_ =
-            Function2<scalar>::New("tangentialVelocity", dict);
+            Function2<scalar>::New
+            (
+                "tangentialVelocity",
+                db().time().userUnits(),
+                dimLength,
+                dimVelocity,
+                dict
+            );
     }
     else
     {
@@ -82,7 +111,7 @@ swirlInletVelocityFvPatchVectorField
     {
         fvPatchField<vector>::operator=
         (
-            vectorField("value", dict, p.size())
+            vectorField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
@@ -137,7 +166,7 @@ void Foam::swirlInletVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTimeValue();
+    const scalar t = this->db().time().value();
     const scalarField ts(size(), t);
 
     // Compute geometry
@@ -177,15 +206,36 @@ void Foam::swirlInletVelocityFvPatchVectorField::write(Ostream& os) const
     fvPatchField<vector>::write(os);
     writeEntry(os, "origin", origin_);
     writeEntry(os, "axis", axis_);
-    writeEntry(os, axialVelocity_());
-    writeEntry(os, radialVelocity_());
+    writeEntry
+    (
+        os,
+        db().time().userUnits(),
+        dimLength,
+        dimVelocity,
+        axialVelocity_()
+    );
+    writeEntry
+    (
+        os,
+        db().time().userUnits(),
+        dimLength,
+        dimVelocity,
+        radialVelocity_()
+    );
     if (omega_.valid())
     {
         writeEntry(os, omega_());
     }
     else
     {
-        writeEntry(os, tangentialVelocity_());
+        writeEntry
+        (
+            os,
+            db().time().userUnits(),
+            dimLength,
+            dimVelocity,
+            tangentialVelocity_()
+        );
     }
     writeEntry(os, "value", *this);
 }

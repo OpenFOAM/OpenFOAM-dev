@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "Field.H"
 #include "FieldM.H"
+#include "unitConversions.H"
 #include "dictionary.H"
 #include "contiguous.H"
 
@@ -185,6 +186,19 @@ Foam::Field<Type>::Field
     const dictionary& dict,
     const label s
 )
+:
+    Field<Type>(keyword, unitAny, dict, s)
+{}
+
+
+template<class Type>
+Foam::Field<Type>::Field
+(
+    const word& keyword,
+    const unitConversion& defaultUnits,
+    const dictionary& dict,
+    const label s
+)
 {
     if (s)
     {
@@ -193,45 +207,55 @@ Foam::Field<Type>::Field
         // Read first token
         token firstToken(is);
 
+        // Read the units if they are before the values
+        unitConversion units(defaultUnits);
+        const bool haveUnits = units.readIfPresent(keyword, dict, is);
+
+        // Read the values
         if (firstToken.isWord())
         {
             if (firstToken.wordToken() == "uniform")
             {
                 this->setSize(s);
+
                 operator=(pTraits<Type>(is));
             }
             else if (firstToken.wordToken() == "nonuniform")
             {
                 is >> static_cast<List<Type>&>(*this);
+
                 if (this->size() != s)
                 {
-                    FatalIOErrorInFunction
-                    (
-                        dict
-                    )   << "size " << this->size()
+                    FatalIOErrorInFunction(dict)
+                        << "size " << this->size()
                         << " is not equal to the given value of " << s
                         << exit(FatalIOError);
                 }
             }
             else
             {
-                FatalIOErrorInFunction
-                (
-                    dict
-                )   << "expected keyword 'uniform' or 'nonuniform', found "
+                FatalIOErrorInFunction(dict)
+                    << "expected keyword 'uniform' or 'nonuniform', found "
                     << firstToken.wordToken()
                     << exit(FatalIOError);
             }
         }
         else
         {
-            FatalIOErrorInFunction
-            (
-                dict
-            )   << "expected keyword 'uniform' or 'nonuniform', found "
+            FatalIOErrorInFunction(dict)
+                << "expected keyword 'uniform' or 'nonuniform', found "
                 << firstToken.info()
                 << exit(FatalIOError);
         }
+
+        // Read the units if they are after the value
+        if (!haveUnits && !is.eof())
+        {
+            units.readIfPresent(keyword, dict, is);
+        }
+
+        // Modify the values by the unit conversion
+        units.makeStandard(*this);
     }
 }
 

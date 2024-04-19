@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,16 @@ translatingWallVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(p, iF, dict, false),
-    U_(Function1<vector>::New("U", dict))
+    U_
+    (
+        Function1<vector>::New
+        (
+            "U",
+            db().time().userUnits(),
+            dimVelocity,
+            dict
+        )
+    )
 {
     // Evaluate the wall velocity
     updateCoeffs();
@@ -80,8 +89,7 @@ void Foam::translatingWallVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const scalar t = this->db().time().userTimeValue();
-    const vector U = U_->value(t);
+    const vector U = U_->value(db().time().value());
 
     // Remove the component of U normal to the wall in case the wall is not flat
     const vectorField n(patch().nf());
@@ -94,7 +102,7 @@ void Foam::translatingWallVelocityFvPatchVectorField::updateCoeffs()
 void Foam::translatingWallVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    writeEntry(os, U_());
+    writeEntry(os, db().time().userUnits(), dimVelocity, U_());
     writeEntry(os, "value", *this);
 }
 

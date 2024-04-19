@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,11 +115,11 @@ contactAngleProperties::contactAngleProperties
 Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField::
 contactAngleProperties::contactAngleProperties(const dictionary& dict)
 :
-    theta0_(dict.lookup<scalar>("theta0")),
+    theta0_(dict.lookup<scalar>("theta0", unitDegrees)),
     dynamic_(dict.found("uTheta")),
-    uTheta_(dynamic_ ? dict.lookup<scalar>("uTheta") : NaN),
-    thetaA_(dynamic_ ? dict.lookup<scalar>("thetaA") : NaN),
-    thetaR_(dynamic_ ? dict.lookup<scalar>("thetaR") : NaN)
+    uTheta_(dynamic_ ? dict.lookup<scalar>("uTheta", dimVelocity) : NaN),
+    thetaA_(dynamic_ ? dict.lookup<scalar>("thetaA", unitDegrees) : NaN),
+    thetaR_(dynamic_ ? dict.lookup<scalar>("thetaR", unitDegrees) : NaN)
 {}
 
 
@@ -155,14 +155,14 @@ const
         dynamic()
       ? contactAngleProperties
         (
-            180 - theta0_,
+            degToRad(180) - theta0_,
             uTheta_,
-            180 - thetaA_,
-            180 - thetaR_
+            degToRad(180) - thetaA_,
+            degToRad(180) - thetaR_
         )
       : contactAngleProperties
         (
-            180 - theta0_
+            degToRad(180) - theta0_
         );
 }
 
@@ -171,12 +171,12 @@ void
 Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField::
 contactAngleProperties::write(Ostream& os) const
 {
-    writeEntry(os, "theta0", theta0_);
+    writeEntry(os, "theta0", unitDegrees, theta0_);
     if (dynamic())
     {
-        writeEntry(os, "uTheta", uTheta_);
-        writeEntry(os, "thetaA", thetaA_);
-        writeEntry(os, "thetaR", thetaR_);
+        writeEntry(os, "uTheta", dimVelocity, uTheta_);
+        writeEntry(os, "thetaA", unitDegrees, thetaA_);
+        writeEntry(os, "thetaR", unitDegrees, thetaR_);
     }
 }
 
@@ -190,7 +190,7 @@ contactAngleProperties::operator==
 {
     if (dynamic() != thetaProps.dynamic()) return false;
 
-    static const scalar thetaTol = 180*rootSmall;
+    static const scalar thetaTol = degToRad(180)*rootSmall;
     static const scalar uThetaTol = rootSmall;
 
     return

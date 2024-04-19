@@ -281,19 +281,19 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
     dict_(dict),
     meshMover_(engine),
     name(objectName),
-    axis(dict.lookup("axis")),
-    motion_(Function1<scalar>::New("motion", dict)),
+    axis(dict.lookup<vector>("axis", dimless)),
+    motion_(Function1<scalar>::New("motion", unitNone, dimLength, dict)),
     maxMotionDistance_
     (
-        dict.lookupOrDefault<scalar>("maxMotionDistance", great)
+        dict.lookupOrDefault<scalar>("maxMotionDistance", dimLength, great)
     ),
     movingFrozenLayerThickness_
     (
-        dict.lookupOrDefault<scalar>("movingFrozenLayerThickness", 0)
+        dict.lookupOrDefault<scalar>("movingFrozenLayerThickness", dimLength, 0)
     ),
     staticFrozenLayerThickness_
     (
-        dict.lookupOrDefault<scalar>("staticFrozenLayerThickness", 0)
+        dict.lookupOrDefault<scalar>("staticFrozenLayerThickness", dimLength, 0)
     ),
     movingPointZones_
     (
@@ -319,7 +319,7 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
     cosine_(dict.lookupOrDefault("cosineScaling", false)),
     travelInterval_
     (
-        dict.lookupOrDefault<scalar>("travelInterval", great)
+        dict.lookupOrDefault<scalar>("travelInterval", dimLength, great)
     ),
     executionCount_(0),
     position0_(-great),

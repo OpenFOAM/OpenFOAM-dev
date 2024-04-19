@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,17 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "MichaelisMentenReactionRate.H"
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 inline Foam::MichaelisMentenReactionRate::MichaelisMentenReactionRate
 (
     const speciesTable& st,
+    const dimensionSet& dims,
     const dictionary& dict
 )
 :
     species_(st),
-    Vmax_(dict.lookup<scalar>("Vmax")),
-    Km_(dict.lookup<scalar>("Km")),
+    Vmax_(dict.lookup<scalar>("Vmax", dims*dimMoles/dimVolume)),
+    Km_(dict.lookup<scalar>("Km", dimMoles/dimVolume)),
     s_(st[dict.lookup("S")])
 {}
 

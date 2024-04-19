@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,8 +37,8 @@ NonEquilibriumReversibleReaction
 )
 :
     Reaction<ThermoType>(reaction),
-    fk_(forwardReactionRate),
-    rk_(reverseReactionRate)
+    kf_(forwardReactionRate),
+    kr_(reverseReactionRate)
 {}
 
 
@@ -52,8 +52,8 @@ NonEquilibriumReversibleReaction
 )
 :
     Reaction<ThermoType>(species, speciesThermo, dict),
-    fk_(species, dict.subDict("forward")),
-    rk_(species, dict.subDict("reverse"))
+    kf_(species, this->kfDims(), dict.subDict("forward")),
+    kr_(species, this->krDims(), dict.subDict("reverse"))
 {}
 
 
@@ -68,8 +68,8 @@ NonEquilibriumReversibleReaction
 )
 :
     Reaction<ThermoType>(species, speciesThermo, dict),
-    fk_(species, ob, dict.subDict("forward")),
-    rk_(species, ob, dict.subDict("reverse"))
+    kf_(species, ob, this->kfDims(), dict.subDict("forward")),
+    kr_(species, ob, this->krDims(), dict.subDict("reverse"))
 {}
 
 
@@ -83,8 +83,8 @@ NonEquilibriumReversibleReaction
 )
 :
     Reaction<ThermoType>(nerr, species),
-    fk_(nerr.fk_),
-    rk_(nerr.rk_)
+    kf_(nerr.kf_),
+    kr_(nerr.kr_)
 {}
 
 
@@ -94,8 +94,8 @@ template<class ThermoType, class ReactionRate>
 void Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::
 preEvaluate() const
 {
-    fk_.preEvaluate();
-    rk_.preEvaluate();
+    kf_.preEvaluate();
+    kr_.preEvaluate();
 }
 
 
@@ -103,8 +103,8 @@ template<class ThermoType, class ReactionRate>
 void Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::
 postEvaluate() const
 {
-    fk_.postEvaluate();
-    rk_.postEvaluate();
+    kf_.postEvaluate();
+    kr_.postEvaluate();
 }
 
 
@@ -118,7 +118,7 @@ Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::kf
     const label li
 ) const
 {
-    return fk_(p, T, c, li);
+    return kf_(p, T, c, li);
 }
 
 
@@ -133,7 +133,7 @@ Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::kr
     const label li
 ) const
 {
-    return rk_(p, T, c, li);
+    return kr_(p, T, c, li);
 }
 
 
@@ -147,7 +147,7 @@ Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::kr
     const label li
 ) const
 {
-    return rk_(p, T, c, li);
+    return kr_(p, T, c, li);
 }
 
 
@@ -161,7 +161,7 @@ Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::dkfdT
     const label li
 ) const
 {
-    return fk_.ddT(p, T, c, li);
+    return kf_.ddT(p, T, c, li);
 }
 
 
@@ -177,7 +177,7 @@ Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::dkrdT
     const scalar kr
 ) const
 {
-    return rk_.ddT(p, T, c, li);
+    return kr_.ddT(p, T, c, li);
 }
 
 
@@ -185,7 +185,7 @@ template<class ThermoType, class ReactionRate>
 bool Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::
 hasDkdc() const
 {
-    return fk_.hasDdc() || rk_.hasDdc();
+    return kf_.hasDdc() || kr_.hasDdc();
 }
 
 
@@ -199,7 +199,7 @@ void Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::dkfdc
     scalarField& dkfdc
 ) const
 {
-    fk_.ddc(p, T, c, li, dkfdc);
+    kf_.ddc(p, T, c, li, dkfdc);
 }
 
 
@@ -215,7 +215,7 @@ void Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::dkrdc
     scalarField& dkrdc
 ) const
 {
-    rk_.ddc(p, T, c, li, dkrdc);
+    kr_.ddc(p, T, c, li, dkrdc);
 }
 
 
@@ -230,14 +230,14 @@ void Foam::NonEquilibriumReversibleReaction<ThermoType, ReactionRate>::write
     os  << indent << "forward" << nl;
     os  << indent << token::BEGIN_BLOCK << nl;
     os  << incrIndent;
-    fk_.write(os);
+    kf_.write(os);
     os  << decrIndent;
     os  << indent << token::END_BLOCK << nl;
 
     os  << indent << "reverse" << nl;
     os  << indent << token::BEGIN_BLOCK << nl;
     os  << incrIndent;
-    rk_.write(os);
+    kr_.write(os);
     os  << decrIndent;
     os  << indent << token::END_BLOCK << nl;
 }

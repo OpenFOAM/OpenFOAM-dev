@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ template<class Type>
 Foam::Function2s::UniformTable<Type>::UniformTable
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
@@ -39,6 +40,8 @@ Foam::Function2s::UniformTable<Type>::UniformTable
     high_(dict.lookup("high")),
     values_(dict.lookup("values"))
 {
+    assertNoConvertUnits(typeName, units, dict);
+
     if (values_.m() < 2 || values_.n() < 2)
     {
         FatalErrorInFunction
@@ -181,7 +184,11 @@ Type Foam::Function2s::UniformTable<Type>::dfdT
 
 
 template<class Type>
-void Foam::Function2s::UniformTable<Type>::write(Ostream& os) const
+void Foam::Function2s::UniformTable<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
     writeEntry(os, "low", low_);
     writeEntry(os, "high", high_);

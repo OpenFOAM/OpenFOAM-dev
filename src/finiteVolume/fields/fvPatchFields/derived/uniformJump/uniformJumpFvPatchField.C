@@ -25,15 +25,6 @@ License
 
 #include "uniformJumpFvPatchField.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-Foam::scalar Foam::uniformJumpFvPatchField<Type>::t() const
-{
-    return this->db().time().userTimeValue();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -49,9 +40,17 @@ Foam::uniformJumpFvPatchField<Type>::uniformJumpFvPatchField
 {
     if (this->cyclicPatch().owner())
     {
-        jumpTable_ = Function1<Type>::New("jumpTable", dict);
+        jumpTable_ =
+            Function1<Type>::New
+            (
+                "jumpTable",
+                this->db().time().userUnits(),
+                iF.dimensions(),
+                dict
+            );
 
-        this->jumpRef() = Field<Type>(p.size(), jumpTable_->value(t()));
+        this->jumpRef() =
+            Field<Type>(p.size(), jumpTable_->value(this->db().time().value()));
     }
 
     this->evaluateNoUpdateCoeffs();
@@ -96,7 +95,7 @@ void Foam::uniformJumpFvPatchField<Type>::updateCoeffs()
 
     if (this->cyclicPatch().owner())
     {
-        this->jumpRef() = jumpTable_->value(t());
+        this->jumpRef() = jumpTable_->value(this->db().time().value());
     }
 
     fixedJumpFvPatchField<Type>::updateCoeffs();
@@ -110,7 +109,13 @@ void Foam::uniformJumpFvPatchField<Type>::write(Ostream& os) const
 
     if (this->cyclicPatch().owner())
     {
-        writeEntry(os, jumpTable_());
+        writeEntry
+        (
+            os,
+            this->db().time().userUnits(),
+            this->internalField().dimensions(),
+            jumpTable_()
+        );
     }
 }
 

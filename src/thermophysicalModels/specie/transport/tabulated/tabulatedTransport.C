@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,18 @@ Foam::tabulatedTransport<Thermo>::tabulatedTransport
 )
 :
     Thermo(name, dict),
-    mu_("mu", dict.subDict("transport").subDict("mu")),
-    kappa_("kappa", dict.subDict("transport").subDict("kappa"))
+    mu_
+    (
+        "mu",
+        {dimPressure, dimTemperature, dimDynamicViscosity},
+        dict.subDict("transport").subDict("mu")
+    ),
+    kappa_
+    (
+        "kappa",
+        {dimPressure, dimTemperature, dimThermalConductivity},
+        dict.subDict("transport").subDict("kappa")
+    )
 {}
 
 

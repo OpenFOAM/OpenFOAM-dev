@@ -86,6 +86,14 @@ class dimensioned
         //- Initialise from Istream
         void initialise(Istream& is, const bool haveName, const bool haveDims);
 
+        //- Initialise from Istream
+        void initialise
+        (
+            const word& name,
+            const unitConversion& defaultUnits,
+            Istream& is
+        );
+
 
 public:
 
@@ -94,6 +102,9 @@ public:
 
 
     // Constructors
+
+        //- Null constructor
+        dimensioned();
 
         //- Construct given name, dimensions and value
         dimensioned(const word&, const dimensionSet&, const Type&);
@@ -120,9 +131,6 @@ public:
 
         //- Construct from dictionary lookup with a given name and dimensions
         dimensioned(const word&, const dimensionSet&, const dictionary&);
-
-        //- Null constructor
-        dimensioned();
 
 
     // Static member functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,12 @@ public:
     // Constructors
 
         //- Construct from name and dictionary
-        UniformTable(const word& name, const dictionary& dict);
+        UniformTable
+        (
+            const word& name,
+            const unitConversions& units,
+            const dictionary& dict
+        );
 
 
     // Member Functions
@@ -116,7 +121,7 @@ public:
         virtual Type integral(const scalar x1, const scalar x2) const;
 
         //- Write the function coefficients
-        void write(Ostream& os) const;
+        void write(Ostream& os, const unitConversions& units) const;
 };
 
 

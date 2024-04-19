@@ -28,7 +28,6 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "read.H"
-#include "unitConversion.H"
 #include "fvMatrix.H"
 
 //{{{ begin codeInclude

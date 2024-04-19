@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,10 +34,11 @@ phaseSurfaceArrheniusReactionRate
 (
     const speciesTable& species,
     const objectRegistry& ob,
+    const dimensionSet& dims,
     const dictionary& dict
 )
 :
-    ArrheniusReactionRate(species, dict),
+    ArrheniusReactionRate(species, dims, dict),
     phaseName_(dict.lookup("phase")),
     ob_(ob),
     tAv_(nullptr)

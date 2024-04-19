@@ -76,7 +76,7 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateValues
 
     const scalar avgU =
        scale
-      *flowRate_->value(db().time().userTimeValue())
+      *flowRate_->value(db().time().value())
       /gSum(alpha*rho*profile*patch().magSf());
 
     operator==(- avgU*profile*patch().nf());
@@ -148,7 +148,7 @@ flowRateInletVelocityFvPatchVectorField
     volumetric_(),
     profile_(),
     rhoName_("rho"),
-    rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", -vGreat)),
+    rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", dimDensity, -vGreat)),
     alphaName_(dict.lookupOrDefault<word>("alpha", word::null)),
     y_(),
     area_(NaN)
@@ -157,19 +157,40 @@ flowRateInletVelocityFvPatchVectorField
     {
         meanVelocity_ = true;
         volumetric_ = false;
-        flowRate_ = Function1<scalar>::New("meanVelocity", dict);
+        flowRate_ =
+            Function1<scalar>::New
+            (
+                "meanVelocity",
+                db().time().userUnits(),
+                dimVelocity,
+                dict
+            );
     }
     else if (dict.found("volumetricFlowRate"))
     {
         meanVelocity_ = false;
         volumetric_ = true;
-        flowRate_ = Function1<scalar>::New("volumetricFlowRate", dict);
+        flowRate_ =
+            Function1<scalar>::New
+            (
+                "volumetricFlowRate",
+                db().time().userUnits(),
+                dimVolumetricFlux,
+                dict
+            );
     }
     else if (dict.found("massFlowRate"))
     {
         meanVelocity_ = false;
         volumetric_ = false;
-        flowRate_ = Function1<scalar>::New("massFlowRate", dict);
+        flowRate_ =
+            Function1<scalar>::New
+            (
+                "massFlowRate",
+                db().time().userUnits(),
+                dimMassFlux,
+                dict
+            );
         rhoName_ = word(dict.lookupOrDefault<word>("rho", "rho"));
     }
     else
@@ -181,7 +202,7 @@ flowRateInletVelocityFvPatchVectorField
 
     if (dict.found("profile"))
     {
-        profile_ = Function1<scalar>::New("profile", dict);
+        profile_ = Function1<scalar>::New("profile", dimless, dimless, dict);
     }
 
     if (canEvaluate())
@@ -193,7 +214,7 @@ flowRateInletVelocityFvPatchVectorField
     {
         fvPatchField<vector>::operator=
         (
-            vectorField("value", dict, p.size())
+            vectorField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
@@ -320,7 +341,7 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
 void Foam::flowRateInletVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchField<vector>::write(os);
-    writeEntry(os, flowRate_());
+    writeEntry(os, db().time().userUnits(), unitAny, flowRate_());
     if (profile_.valid())
     {
         writeEntry(os, profile_());

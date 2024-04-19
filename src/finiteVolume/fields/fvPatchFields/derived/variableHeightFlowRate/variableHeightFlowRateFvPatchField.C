@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,8 +41,8 @@ variableHeightFlowRateFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF, dict, false),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    lowerBound_(dict.lookup<scalar>("lowerBound")),
-    upperBound_(dict.lookup<scalar>("upperBound"))
+    lowerBound_(dict.lookup<scalar>("lowerBound", dimless)),
+    upperBound_(dict.lookup<scalar>("upperBound", dimless))
 {
     this->refValue() = 0.0;
 
@@ -50,7 +50,7 @@ variableHeightFlowRateFvPatchScalarField
     {
         fvPatchScalarField::operator=
         (
-            scalarField("value", dict, p.size())
+            scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else

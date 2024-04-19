@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ Foam::waveAlphaFvPatchScalarField::waveAlphaFvPatchScalarField
     {
         fixedValueInletOutletFvPatchField<scalar>::operator==
         (
-            scalarField("value", dict, p.size())
+            scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
@@ -172,9 +172,7 @@ void Foam::waveAlphaFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const scalar t = db().time().userTimeValue();
-
-    operator==(alpha(t));
+    operator==(alpha(db().time().value()));
 
     fixedValueInletOutletFvPatchField<scalar>::updateCoeffs();
 }

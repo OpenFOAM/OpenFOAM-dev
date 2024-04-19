@@ -29,7 +29,6 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "read.H"
-#include "unitConversion.H"
 
 //{{{ begin codeInclude
 ${codeInclude}

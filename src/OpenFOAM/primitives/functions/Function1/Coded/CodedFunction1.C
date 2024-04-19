@@ -98,7 +98,7 @@ Foam::Function1s::Coded<Type>::compileNew()
     dictionary redirectDict(codeDict());
     redirectDict.set(codeName(), codeName());
 
-    return Function1<Type>::New(codeName(), redirectDict);
+    return Function1<Type>::New(codeName(), unitAny, unitAny, redirectDict);
 }
 
 
@@ -108,11 +108,13 @@ template<class Type>
 Foam::Function1s::Coded<Type>::Coded
 (
     const word& name,
+    const Function1s::unitConversions& units,
     const dictionary& dict
 )
 :
     Function1<Type>(name),
-    codedBase(dict)
+    codedBase(dict),
+    units_(units)
 {
     redirectFunction1Ptr_ = compileNew();
 }
@@ -123,7 +125,8 @@ template<class Type>
 Foam::Function1s::Coded<Type>::Coded(const Coded<Type>& cf1)
 :
     Function1<Type>(cf1),
-    codedBase(cf1)
+    codedBase(cf1),
+    units_(cf1.units_)
 {
     redirectFunction1Ptr_ = compileNew();
 }
@@ -151,7 +154,14 @@ Foam::tmp<Foam::Field<Type>> Foam::Function1s::Coded<Type>::value
     const scalarField& x
 ) const
 {
-    return redirectFunction1Ptr_->value(x);
+    return
+        units_.value.toStandard
+        (
+            redirectFunction1Ptr_->value
+            (
+                units_.x.toUser(x)
+            )
+        );
 }
 
 
@@ -180,7 +190,11 @@ Foam::tmp<Foam::Field<Type>> Foam::Function1s::Coded<Type>::integral
 
 
 template<class Type>
-void Foam::Function1s::Coded<Type>::write(Ostream& os) const
+void Foam::Function1s::Coded<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
     writeCode(os);
 }

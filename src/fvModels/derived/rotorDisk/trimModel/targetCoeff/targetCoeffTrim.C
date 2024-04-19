@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -237,9 +237,9 @@ void Foam::targetCoeffTrim::read(const dictionary& dict)
     target_[2] = targetDict.lookup<scalar>("roll" + ext);
 
     const dictionary& pitchAngleDict(coeffs_.subDict("pitchAngles"));
-    theta_[0] = degToRad(pitchAngleDict.lookup<scalar>("theta0Ini"));
-    theta_[1] = degToRad(pitchAngleDict.lookup<scalar>("theta1cIni"));
-    theta_[2] = degToRad(pitchAngleDict.lookup<scalar>("theta1sIni"));
+    theta_[0] = pitchAngleDict.lookup<scalar>("theta0Ini", unitDegrees);
+    theta_[1] = pitchAngleDict.lookup<scalar>("theta1cIni", unitDegrees);
+    theta_[2] = pitchAngleDict.lookup<scalar>("theta1sIni", unitDegrees);
 
     coeffs_.lookup("calcFrequency") >> calcFrequency_;
 
@@ -247,10 +247,7 @@ void Foam::targetCoeffTrim::read(const dictionary& dict)
     coeffs_.readIfPresent("tol", tol_);
     coeffs_.readIfPresent("relax", relax_);
 
-    if (coeffs_.readIfPresent("dTheta", dTheta_))
-    {
-        dTheta_ = degToRad(dTheta_);
-    }
+    coeffs_.readIfPresent("dTheta", unitDegrees, dTheta_);
 
     alpha_ = coeffs_.lookup<scalar>("alpha");
 }

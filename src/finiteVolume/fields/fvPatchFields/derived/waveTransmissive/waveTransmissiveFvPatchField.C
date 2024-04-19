@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
 :
     advectiveFvPatchField<Type>(p, iF, dict),
     psiName_(dict.lookupOrDefault<word>("psi", "psi")),
-    gamma_(dict.lookup<scalar>("gamma"))
+    gamma_(dict.lookup<scalar>("gamma", dimless))
 {}
 
 

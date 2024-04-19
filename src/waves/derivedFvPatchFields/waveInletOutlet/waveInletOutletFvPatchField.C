@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,13 +42,34 @@ Foam::waveInletOutletFvPatchField<Type>::waveInletOutletFvPatchField
 )
 :
     mixedFvPatchField<Type>(p, iF, dict, false),
-    inletValueAbove_(Function1<Type>::New("inletValueAbove", dict)),
-    inletValueBelow_(Function1<Type>::New("inletValueBelow", dict)),
+    inletValueAbove_
+    (
+        Function1<Type>::New
+        (
+            "inletValueAbove",
+            this->db().time().userUnits(),
+            iF.dimensions(),
+            dict
+        )
+    ),
+    inletValueBelow_
+    (
+        Function1<Type>::New
+        (
+            "inletValueBelow",
+            this->db().time().userUnits(),
+            iF.dimensions(),
+            dict
+        )
+    ),
     phiName_(dict.lookupOrDefault<word>("phi", "phi"))
 {
     if (dict.found("value"))
     {
-        fvPatchField<Type>::operator=(Field<Type>("value", dict, p.size()));
+        fvPatchField<Type>::operator=
+        (
+            Field<Type>("value", iF.dimensions(), dict, p.size())
+        );
     }
     else
     {
@@ -107,7 +128,8 @@ void Foam::waveInletOutletFvPatchField<Type>::updateCoeffs()
             phiName_
         );
 
-    const scalar t = this->db().time().userTimeValue();
+    const scalar t = this->db().time().value();
+
     const waveSuperposition& waves = waveSuperposition::New(this->db());
 
     const pointField& localPoints = this->patch().patch().localPoints();
@@ -134,8 +156,20 @@ template<class Type>
 void Foam::waveInletOutletFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    writeEntry(os, inletValueAbove_());
-    writeEntry(os, inletValueBelow_());
+    writeEntry
+    (
+        os,
+        this->db().time().userUnits(),
+        this->internalField().dimensions(),
+        inletValueAbove_()
+    );
+    writeEntry
+    (
+        os,
+        this->db().time().userUnits(),
+        this->internalField().dimensions(),
+        inletValueBelow_()
+    );
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
 }
 

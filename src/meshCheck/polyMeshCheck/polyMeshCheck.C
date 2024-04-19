@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -305,8 +305,7 @@ bool Foam::meshCheck::checkFaceOrthogonality
     const scalarField& ortho = tortho.ref();
 
     // Severe nonorthogonality threshold
-    const scalar severeNonorthogonalityThreshold =
-        ::cos(degToRad(nonOrthThreshold));
+    const scalar severeNonorthogonalityThreshold = ::cos(nonOrthThreshold);
 
 
     scalar minDDotS = great;
@@ -375,7 +374,7 @@ bool Foam::meshCheck::checkFaceOrthogonality
         if (severeNonOrth > 0)
         {
             Info<< "   *Number of severely non-orthogonal (> "
-                << nonOrthThreshold << " degrees) faces: "
+                << radToDeg(nonOrthThreshold) << " degrees) faces: "
                 << severeNonOrth << "." << endl;
         }
     }

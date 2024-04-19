@@ -101,6 +101,7 @@ public:
         Function12
         (
             const word& name,
+            const unitConversions& units,
             const dictionary& dict
         );
 
@@ -118,7 +119,7 @@ public:
         virtual inline Type value(const scalar x, const scalar y) const;
 
         //- Write data to dictionary stream
-        virtual void write(Ostream& os) const;
+        virtual void write(Ostream& os, const unitConversions& units) const;
 
 
     // Member Operators

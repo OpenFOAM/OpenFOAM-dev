@@ -27,7 +27,6 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "sixDoFRigidBodyMotion.H"
 #include "transform.H"
-#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -49,8 +48,7 @@ namespace sixDoFRigidBodyMotionRestraints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::
-axialAngularSpring
+Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::axialAngularSpring
 (
     const word& name,
     const dictionary& sDoFRBMRDict
@@ -60,7 +58,6 @@ axialAngularSpring
     refQ_(),
     axis_(),
     moment_(),
-    convertToDegrees_(),
     damping_()
 {
     read(sDoFRBMRDict);
@@ -69,15 +66,13 @@ axialAngularSpring
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::
-~axialAngularSpring()
+Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::~axialAngularSpring()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void
-Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::restrain
+void Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::restrain
 (
     const sixDoFRigidBodyMotion& motion,
     vector& restraintPosition,
@@ -113,16 +108,7 @@ Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::restrain
     // the direction vectors with the axis
     theta *= sign((oldDir ^ newDir) & axis_);
 
-    scalar moment;
-
-    if (convertToDegrees_)
-    {
-        moment = moment_->value(radToDeg(theta));
-    }
-    else
-    {
-        moment = moment_->value(theta);
-    }
+    const scalar moment = moment_->value(theta);
 
     // Damping of along axis angular velocity only
     restraintMoment = moment*axis_ - damping_*(motion.omega() & axis_)*axis_;
@@ -175,29 +161,26 @@ bool Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::read
             << abort(FatalError);
     }
 
-    moment_ = Function1<scalar>::New("moment", sDoFRBMRCoeffs_);
-
-    const word angleUnits
-    (
-        sDoFRBMRCoeffs_.lookupBackwardsCompatible
+    moment_ =
+        Function1<scalar>::New
         (
-            {"angleUnits", "angleFormat"}
-        )
-    );
+            "moment",
+            unitRadians,
+            dimForce/dimLength,
+            sDoFRBMRCoeffs_
+        );
 
-    if (angleUnits == "degrees" || angleUnits == "degree")
+    if
+    (
+        sDoFRBMRCoeffs_.found("angleUnits")
+     || sDoFRBMRCoeffs_.found("angleFormat")
+    )
     {
-        convertToDegrees_ = true;
-    }
-    else if (angleUnits == "radians" || angleUnits == "radian")
-    {
-        convertToDegrees_ = false;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "angleUnits must be degree, degrees, radian or radians"
-            << abort(FatalError);
+        FatalIOErrorInFunction(sDoFRBMRCoeffs_)
+            << "Angle units are no longer specified with 'angleUnits' or "
+            << "'angleFormat' entries. Instead, parameters of the 'moment' "
+            << "function can have their units specified directly."
+            << exit(FatalIOError);
     }
 
     sDoFRBMRCoeffs_.lookup("damping") >> damping_;
@@ -215,18 +198,7 @@ void Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::write
 
     writeEntry(os, "axis", axis_);
 
-    moment_->write(os);
-
-    writeKeyword(os, "angleUnits");
-
-    if (convertToDegrees_)
-    {
-        os  << "degrees" << token::END_STATEMENT << nl;
-    }
-    else
-    {
-        os  << "radians" << token::END_STATEMENT << nl;
-    }
+    writeEntry(os, moment_());
 
     writeEntry(os, "damping", damping_);
 }

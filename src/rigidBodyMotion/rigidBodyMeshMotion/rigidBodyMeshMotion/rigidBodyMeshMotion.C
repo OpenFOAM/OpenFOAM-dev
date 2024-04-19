@@ -179,7 +179,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
 
     if (coeffDict().found("ramp"))
     {
-        ramp_ = Function1<scalar>::New("ramp", coeffDict());
+        ramp_ = Function1<scalar>::New("ramp", dimTime, dimless, coeffDict());
     }
     else
     {

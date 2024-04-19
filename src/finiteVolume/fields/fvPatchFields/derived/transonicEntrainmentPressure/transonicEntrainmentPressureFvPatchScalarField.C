@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,15 +41,15 @@ transonicEntrainmentPressureFvPatchScalarField
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "psi")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    gamma_(dict.lookup<scalar>("gamma")),
-    Mb_(dict.lookupOrDefault<scalar>("Mb", 0.5)),
-    p0_("p0", dict, p.size())
+    gamma_(dict.lookup<scalar>("gamma", dimless)),
+    Mb_(dict.lookupOrDefault<scalar>("Mb", dimless, 0.5)),
+    p0_("p0", dimPressure, dict, p.size())
 {
     if (dict.found("value"))
     {
         fvPatchScalarField::operator=
         (
-            scalarField("value", dict, p.size())
+            scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else

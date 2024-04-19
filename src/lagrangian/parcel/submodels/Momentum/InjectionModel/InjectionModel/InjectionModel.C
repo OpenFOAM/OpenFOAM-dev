@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,12 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "InjectionModel.H"
-#include "mathematicalConstants.H"
 #include "meshTools.H"
 #include "volFields.H"
 #include "Scale.H"
-
-using namespace Foam::constant::mathematical;
 
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
@@ -62,7 +59,7 @@ Foam::scalar Foam::InjectionModel<CloudType>::readMassTotal
         return NaN;
     }
 
-    return dimensionedScalar("massTotal", dimMass, dict).value();
+    return dict.lookup<scalar>("massTotal", dimMass);
 }
 
 
@@ -78,7 +75,7 @@ Foam::scalar Foam::InjectionModel<CloudType>::readDuration
         return vGreat;
     }
 
-    return dimensionedScalar("duration", dimTime, dict).value();
+    return dict.lookup<scalar>("duration", owner.db().time().userUnits());
 }
 
 
@@ -127,20 +124,16 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
     if (owner.solution().steadyState() || haveMassFlowRate)
     {
         return
-            autoPtr<Function1<scalar>>
+            Function1<scalar>::New
             (
-                new Function1s::Dimensioned<scalar>
-                (
-                    "massFlowRate",
-                    dimTime,
-                    dimMass/dimTime,
-                    dict
-                )
+                "massFlowRate",
+                this->owner().db().time().userUnits(),
+                dimMass/dimTime,
+                dict
             );
     }
 
-    const scalar massTotal =
-        dimensionedScalar("massTotal", dimMass, dict).value();
+    const scalar massTotal = dict.lookup<scalar>("massTotal", dimMass);
 
     if (!dict.found("flowRateProfile"))
     {
@@ -157,10 +150,10 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
 
     autoPtr<Function1<scalar>> flowRateProfile
     (
-        new Function1s::Dimensioned<scalar>
+        Function1<scalar>::New
         (
             "flowRateProfile",
-            dimTime,
+            this->owner().db().time().userUnits(),
             dimless,
             dict
         )
@@ -191,15 +184,12 @@ Foam::InjectionModel<CloudType>::readParcelsPerSecond
 )
 {
     return
-        autoPtr<Function1<scalar>>
+        Function1<scalar>::New
         (
-            new Function1s::Dimensioned<scalar>
-            (
-                "parcelsPerSecond",
-                dimTime,
-                dimless/dimTime,
-                dict
-            )
+            "parcelsPerSecond",
+            this->owner().db().time().userUnits(),
+            dimless/dimTime,
+            dict
         );
 }
 
@@ -554,7 +544,7 @@ Foam::InjectionModel<CloudType>::InjectionModel
 
     if (owner.solution().transient())
     {
-        SOI_ = dimensionedScalar("SOI", dimTime, dict).value();
+        SOI_ = dict.lookup<scalar>("SOI", owner.db().time().userUnits());
     }
 }
 

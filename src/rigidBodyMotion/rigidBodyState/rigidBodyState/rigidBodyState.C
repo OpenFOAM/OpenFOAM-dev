@@ -26,7 +26,6 @@ License
 #include "rigidBodyState.H"
 #include "fvMeshMoversMotionSolver.H"
 #include "motionSolver.H"
-#include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -70,6 +69,8 @@ Foam::functionObjects::rigidBodyState::rigidBodyState
 :
     fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
+    angleUnits_("[rad]"),
+    angularVelocityUnits_("[rad/s]"),
     names_(motion().movingBodyNames())
 {
     read(dict);
@@ -88,11 +89,10 @@ bool Foam::functionObjects::rigidBodyState::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    angleUnits_ = dict.lookupOrDefaultBackwardsCompatible<word>
-    (
-        {"angleUnits", "angleFormat"},
-        "radians"
-    );
+    units();
+
+    angleUnits_.readIfPresent("angleUnits", dict);
+    angularVelocityUnits_.readIfPresent("angularVelocityUnits", dict);
 
     resetNames(names_);
 
@@ -102,16 +102,18 @@ bool Foam::functionObjects::rigidBodyState::read(const dictionary& dict)
 
 void Foam::functionObjects::rigidBodyState::writeFileHeader(const label i)
 {
-    writeHeader(this->files()[i], "Motion State");
-    writeHeaderValue(this->files()[i], "Angle Units", angleUnits_);
-    writeCommented(this->files()[i], "Time");
+    OFstream& file = this->files()[i];
 
-    this->files()[i]<< tab
+    writeHeader(file, "Motion State");
+    writeHeaderValue(file, "Angle Units", angleUnits_);
+    writeHeaderValue(file, "Angular Velocity Units", angularVelocityUnits_);
+    writeCommented(file, "Time");
+
+    file<< tab
         << "Centre of rotation" << tab
         << "Orientation" << tab
         << "Linear velocity" << tab
         << "Angular velocity" << endl;
-
 }
 
 
@@ -136,31 +138,17 @@ bool Foam::functionObjects::rigidBodyState::write()
             const spatialTransform CofR(motion.X0(bodyID));
             const spatialVector vCofR(motion.v(bodyID, Zero));
 
-            vector rotationAngle
-            (
-                quaternion(CofR.E()).eulerAngles(quaternion::XYZ)
-            );
-
-            vector angularVelocity(vCofR.w());
-
-            if (angleUnits_ == "degrees")
-            {
-                rotationAngle.x() = radToDeg(rotationAngle.x());
-                rotationAngle.y() = radToDeg(rotationAngle.y());
-                rotationAngle.z() = radToDeg(rotationAngle.z());
-
-                angularVelocity.x() = radToDeg(angularVelocity.x());
-                angularVelocity.y() = radToDeg(angularVelocity.y());
-                angularVelocity.z() = radToDeg(angularVelocity.z());
-            }
+            const vector theta =
+                quaternion(CofR.E()).eulerAngles(quaternion::XYZ);
+            const vector omega(vCofR.w());
 
             writeTime(files()[i]);
             files()[i]
                 << tab
-                << CofR.r()  << tab
-                << rotationAngle  << tab
+                << CofR.r() << tab
+                << angleUnits_.toUser(theta) << tab
                 << vCofR.l() << tab
-                << angularVelocity << endl;
+                << angularVelocityUnits_.toUser(omega) << endl;
         }
     }
 

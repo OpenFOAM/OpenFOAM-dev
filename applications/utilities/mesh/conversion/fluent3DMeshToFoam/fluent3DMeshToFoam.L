@@ -1429,7 +1429,11 @@ int main(int argc, char *argv[])
     // Un-merge any merged cyclics
     if (args.optionFound("includedAngle"))
     {
-        polyMeshUnMergeCyclics(mesh, args.optionRead<scalar>("includedAngle"));
+        polyMeshUnMergeCyclics
+        (
+            mesh,
+            degToRad(args.optionRead<scalar>("includedAngle"))
+        );
     }
     else
     {

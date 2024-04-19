@@ -75,9 +75,12 @@ bool Foam::functionObjects::sixDoFRigidBodyControl::read(const dictionary& dict)
 {
     sixDoFRigidBodyState::read(dict);
 
-    dict.lookup("window") >> w_;
-    dict.lookup("convergedVelocity") >> convergedVelocity_;
-    dict.lookup("convergedAngularVelocity") >> convergedAngularVelocity_;
+    w_ = dict.lookup<scalar>("window", dimTime);
+
+    convergedVelocity_ =
+        dict.lookup<vector>("convergedVelocity", dimVelocity);
+    convergedAngularVelocity_ =
+        dict.lookup<vector>("convergedAngularVelocity", angularVelocityUnits());
 
     resetName(typeName);
 

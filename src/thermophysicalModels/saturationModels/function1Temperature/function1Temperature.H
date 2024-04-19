@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,8 +55,7 @@ Description
             file                "filename.csv";
             format              csv;
             nHeaderLine         1;
-            refColumn           0;
-            componentColumns    (1);
+            columns             (0 1);
             separator           ",";
             mergeSeparators     no;
             outOfBounds         clamp;

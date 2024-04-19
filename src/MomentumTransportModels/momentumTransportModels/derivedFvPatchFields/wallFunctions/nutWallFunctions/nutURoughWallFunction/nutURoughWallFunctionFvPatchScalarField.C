@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,8 +217,8 @@ nutURoughWallFunctionFvPatchScalarField::nutURoughWallFunctionFvPatchScalarField
 )
 :
     nutUWallFunctionFvPatchScalarField(p, iF, dict),
-    Ks_("Ks", dict, p.size()),
-    Cs_("Cs", dict, p.size())
+    Ks_("Ks", dimLength, dict, p.size()),
+    Cs_("Cs", dimless, dict, p.size())
 {}
 
 

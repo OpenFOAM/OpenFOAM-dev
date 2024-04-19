@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,10 +91,7 @@ bool Foam::solvers::solid::read()
 
     maxDeltaT_ =
         runTime.controlDict().found("maxDeltaT")
-      ? runTime.userTimeToTime
-        (
-            runTime.controlDict().lookup<scalar>("maxDeltaT")
-        )
+      ? runTime.controlDict().lookup<scalar>("maxDeltaT", runTime.userUnits())
       : vGreat;
 
     return true;

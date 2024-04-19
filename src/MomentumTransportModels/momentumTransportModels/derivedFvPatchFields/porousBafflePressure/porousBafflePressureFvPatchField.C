@@ -50,13 +50,28 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
       ? dict.lookupOrDefault<word>("rho", "rho")
       : word::null
     ),
-    D_(cyclicPatch().owner() ? dict.lookup<scalar>("D") : NaN),
-    I_(cyclicPatch().owner() ? dict.lookup<scalar>("I") : NaN),
-    length_(cyclicPatch().owner() ? dict.lookup<scalar>("length") : NaN),
+    D_
+    (
+        cyclicPatch().owner()
+      ? dict.lookup<scalar>("D", dimless/dimArea)
+      : NaN
+    ),
+    I_
+    (
+        cyclicPatch().owner()
+      ? dict.lookup<scalar>("I", dimless/dimLength)
+      : NaN
+    ),
+    length_
+    (
+        cyclicPatch().owner()
+      ? dict.lookup<scalar>("length", dimLength)
+      : NaN
+    ),
     relaxation_
     (
         cyclicPatch().owner()
-      ? dict.lookupOrDefault<scalar>("relaxation", 1)
+      ? dict.lookupOrDefault<scalar>("relaxation", unitFraction, 1)
       : NaN
     ),
     jump0_(cyclicPatch().owner() ? jump()() : scalarField(p.size()))

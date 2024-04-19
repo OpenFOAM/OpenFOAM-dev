@@ -60,7 +60,6 @@ See also
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "unitConversion.H"
 #include "MeshedSurfaces.H"
 
 using namespace Foam;

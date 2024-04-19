@@ -29,15 +29,6 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-Foam::scalar Foam::CLASS::t() const
-{
-    return this->db().time().userTimeValue();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -50,10 +41,19 @@ CONSTRUCT
 )
 :
     PARENT(p, iF),
-    scalarData_(dict.lookup<scalar>("scalarData")),
+    scalarData_(dict.lookup<scalar>("scalarData", unitAny)),
     data_(dict.lookup<TYPE>("data")),
-    fieldData_("fieldData", dict, p.size()),
-    timeVsData_(Function1<TYPE>::New("timeVsData", dict)),
+    fieldData_("fieldData", iF.dimensions(), dict, p.size()),
+    timeVsData_
+    (
+        Function1<TYPE>::New
+        (
+            "timeVsData",
+            this->db().time().userUnits(),
+            unitAny,
+            dict
+        )
+    ),
     wordData_(dict.lookupOrDefault<word>("wordName", "wordDefault")),
     labelData_(-1),
     boolData_(false)
@@ -61,7 +61,7 @@ CONSTRUCT
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 
-    this->refValue() = FIELD("fieldData", dict, p.size());
+    this->refValue() = FIELD("fieldData", iF.dimensions(), dict, p.size());
     FVPATCHF::operator=(this->refValue());
 
     PARENT::evaluate();
@@ -70,7 +70,7 @@ CONSTRUCT
     // Initialise with the value entry if evaluation is not possible
     FVPATCHF::operator=
     (
-        FIELD("value", dict, p.size())
+        FIELD("value", iF.dimensions(), dict, p.size())
     );
     this->refValue() = *this;
     */
@@ -162,7 +162,7 @@ void Foam::CLASS::updateCoeffs()
     (
         data_
       + fieldData_
-      + scalarData_*timeVsData_->value(t())
+      + scalarData_*timeVsData_->value(this->db().time().value())
     );
 
     const scalarField& phip =
@@ -186,7 +186,7 @@ void Foam::CLASS::write
     writeEntry(os, "scalarData", scalarData_);
     writeEntry(os, "data", data_);
     writeEntry(os, "fieldData", fieldData_);
-    writeEntry(os, timeVsData_());
+    writeEntry(os, this->db().time().userUnits(), unitAny, timeVsData_());
     writeEntry(os, "wordData", wordData_);
     writeEntry(os, "value", *this);
 }

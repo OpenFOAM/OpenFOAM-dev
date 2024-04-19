@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,21 +44,15 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "psi")),
     muName_(dict.lookupOrDefault<word>("mu", "mu")),
-    accommodationCoeff_(dict.lookup<scalar>("accommodationCoeff")),
-    Twall_("Twall", dict, p.size()),
-    gamma_(dict.lookupOrDefault<scalar>("gamma", 1.4))
+    accommodationCoeff_(dict.lookup<scalar>("accommodationCoeff", dimless)),
+    Twall_("Twall", dimTemperature, dict, p.size()),
+    gamma_(dict.lookupOrDefault<scalar>("gamma", dimless, 1.4))
 {
-    if
-    (
-        mag(accommodationCoeff_) < small
-     || mag(accommodationCoeff_) > 2.0
-    )
+    if (mag(accommodationCoeff_) < small || mag(accommodationCoeff_) > 2.0)
     {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "unphysical accommodationCoeff specified"
-            << "(0 < accommodationCoeff <= 1)" << endl
+        FatalIOErrorInFunction(dict)
+            << "unphysical accommodationCoeff specified"
+            << "(0 < accommodationCoeff <= 2)" << endl
             << exit(FatalIOError);
     }
 
@@ -66,7 +60,7 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
     {
         fvPatchField<scalar>::operator=
         (
-            scalarField("value", dict, p.size())
+            scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else

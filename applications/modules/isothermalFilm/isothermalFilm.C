@@ -235,10 +235,7 @@ bool Foam::solvers::isothermalFilm::read()
 
     maxDeltaT_ =
         runTime.controlDict().found("maxDeltaT")
-      ? runTime.userTimeToTime
-        (
-            runTime.controlDict().lookup<scalar>("maxDeltaT")
-        )
+      ? runTime.controlDict().lookup<scalar>("maxDeltaT", runTime.userUnits())
       : vGreat;
 
     return true;

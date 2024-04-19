@@ -813,7 +813,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::A() const
         (
             "A(" + psi_.name() + ')',
             psi_.mesh(),
-            dimensions_/psi_.dimensions()/dimVol,
+            dimensions_/psi_.dimensions()/dimVolume,
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -834,7 +834,7 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMatrix<Type>::Su() const
         (
             "Su(" +psi_.name() + ')',
             psi_.mesh(),
-            dimensions_/dimVol,
+            dimensions_/dimVolume,
             -source()/psi_.mesh().V()
         )
     );
@@ -852,7 +852,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fvMatrix<Type>::Sp() const
         (
             "Sp(" + psi_.name() + ')',
             psi_.mesh(),
-            dimensions_/psi_.dimensions()/dimVol,
+            dimensions_/psi_.dimensions()/dimVolume,
             hasDiag()
           ? diag()/psi_.mesh().V()
           : tmp<scalarField>(new scalarField(lduAddr().size(), scalar(0)))
@@ -873,7 +873,7 @@ Foam::fvMatrix<Type>::H() const
         (
             "H(" + psi_.name() + ')',
             psi_.mesh(),
-            dimensions_/dimVol,
+            dimensions_/dimVolume,
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -928,7 +928,7 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::H1() const
         (
             "H(1)",
             psi_.mesh(),
-            dimensions_/(dimVol*psi_.dimensions()),
+            dimensions_/(dimVolume*psi_.dimensions()),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
@@ -2478,7 +2478,7 @@ Foam::operator&
         (
             "M&" + psi.name(),
             psi.mesh(),
-            M.dimensions()/dimVol,
+            M.dimensions()/dimVolume,
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );

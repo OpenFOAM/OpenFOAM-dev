@@ -142,6 +142,7 @@ public:
         Ramp
         (
             const word& name,
+            const unitConversions& units,
             const dictionary& dict
         );
 
@@ -156,7 +157,7 @@ public:
         virtual scalar value(const scalar t) const = 0;
 
         //- Write data to dictionary stream
-        virtual void write(Ostream& os) const;
+        virtual void write(Ostream& os, const unitConversions& units) const;
 
 
     // Member Operators

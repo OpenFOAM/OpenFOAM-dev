@@ -65,7 +65,12 @@ public:
     // Constructors
 
         //- Construct from name and dictionary
-        None(const word& name, const dictionary& dict);
+        None
+        (
+            const word& name,
+            const unitConversions& units,
+            const dictionary& dict
+        );
 
 
     //- Destructor
@@ -81,7 +86,7 @@ public:
         virtual Type integral(const scalar x1, const scalar x2) const;
 
         //- Write in dictionary format
-        virtual void write(Ostream& os) const;
+        virtual void write(Ostream& os, const unitConversions& units) const;
 
 
     // Member Operators

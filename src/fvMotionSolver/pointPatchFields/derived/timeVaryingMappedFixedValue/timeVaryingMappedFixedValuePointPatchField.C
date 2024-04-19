@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,14 @@ timeVaryingMappedFixedValuePointPatchField
 {
     if (dict.found("offset"))
     {
-        offset_ = Function1<Type>::New("offset", dict);
+        offset_ =
+            Function1<Type>::New
+            (
+                "offset",
+                this->db().time().userUnits(),
+                iF.dimensions(),
+                dict
+            );
     }
 
     if
@@ -85,7 +92,7 @@ timeVaryingMappedFixedValuePointPatchField
     {
         fixedValuePointPatchField<Type>::operator==
         (
-            Field<Type>("value", dict, p.size())
+            Field<Type>("value", iF.dimensions(), dict, p.size())
         );
     }
     else
@@ -527,8 +534,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::updateCoeffs()
     // Apply offset to mapped values
     if (offset_.valid())
     {
-        const scalar t = this->db().time().userTimeValue();
-        this->operator==(*this + offset_->value(t));
+        this->operator==(*this + offset_->value(this->db().time().value()));
     }
 
     if (debug)

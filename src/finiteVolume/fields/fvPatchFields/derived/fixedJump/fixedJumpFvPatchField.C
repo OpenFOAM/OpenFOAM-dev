@@ -59,7 +59,7 @@ Foam::fixedJumpFvPatchField<Type>::fixedJumpFvPatchField
     {
         if (this->cyclicPatch().owner())
         {
-            jump_ = Field<Type>("jump", dict, p.size());
+            jump_ = Field<Type>("jump", iF.dimensions(), dict, p.size());
         }
 
         this->evaluateNoUpdateCoeffs();

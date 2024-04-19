@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ void Foam::cyclicTransform::update()
             else
             {
                 const tensor R =
-                    quaternion(rotationAxis_, degToRad(rotationAngle_)).R();
+                    quaternion(rotationAxis_, rotationAngle_).R();
 
                 if (mag(rotationCentre_) == 0)
                 {
@@ -183,7 +183,7 @@ bool Foam::cyclicTransform::set
             {
                 if
                 (
-                    mag(degToRad(rotationAngle_ - sign(dot)*t.rotationAngle_))
+                    mag(rotationAngle_ - sign(dot)*t.rotationAngle_)
                   > matchTolerance
                 )
                 {
@@ -268,7 +268,10 @@ Foam::cyclicTransform::cyclicTransform
       ? dict.lookup<point>("rotationCentre")
       : point::uniform(NaN)
     ),
-    rotationAngle_(dict.lookupOrDefault<scalar>("rotationAngle", NaN)),
+    rotationAngle_
+    (
+        dict.lookupOrDefault<scalar>("rotationAngle", unitDegrees, NaN)
+    ),
     separation_
     (
         transformType_ == TRANSLATIONAL
@@ -461,8 +464,7 @@ Foam::cyclicTransform::cyclicTransform
             const scalar theta =
                 acos(min(max(normalPerpA & negNbrNormalPerpA, -1), 1));
             rotationAngle_ =
-              - sign((normalPerpA ^ negNbrNormalPerpA) & rotationAxis_)
-               *radToDeg(theta);
+              - sign((normalPerpA ^ negNbrNormalPerpA) & rotationAxis_)*theta;
 
             // Calculate the angle
             // Calculate the centre of rotation, if necessary
@@ -560,7 +562,7 @@ void Foam::cyclicTransform::write(Ostream& os) const
 
         if (transformComplete_)
         {
-            writeEntry(os, "rotationAngle", rotationAngle_);
+            writeEntry(os, "rotationAngle", unitDegrees, rotationAngle_);
         }
     }
 

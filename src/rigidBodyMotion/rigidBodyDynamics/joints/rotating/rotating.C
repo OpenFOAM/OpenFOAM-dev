@@ -57,7 +57,7 @@ Foam::RBD::joints::rotating::rotating
 )
 :
     joint(model, 0),
-    omega_(Function1<vector>::New("omega", dict))
+    omega_(Function1<vector>::New("omega", dimTime, unitRadians/dimTime, dict))
 {}
 
 

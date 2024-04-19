@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,11 +36,15 @@ SourceFiles
 #define liquidProperties_H
 
 #include "thermophysicalProperties.H"
+#include "dimensionSets.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+template<class> class Function1;
+template<class> class Function2;
 
 // Forward declaration of friend functions and operators
 class liquidProperties;
@@ -297,7 +301,32 @@ public:
         inline void readIfPresent
         (
             Func& f,
+            const Function1<scalar>&,
             const word& name,
+            const dimensionSet& dims,
+            const dictionary& dict
+        );
+
+        //- Read and set the function coefficients
+        //  if present it the given dictionary
+        template<class Func>
+        inline void readIfPresent
+        (
+            Func& f,
+            const Function2<scalar>&,
+            const word& name,
+            const dimensionSet& dims,
+            const dictionary& dict
+        );
+
+        //- Read and set the function coefficients
+        //  if present it the given dictionary
+        template<class Func>
+        inline void readIfPresent
+        (
+            Func& f,
+            const word& name,
+            const dimensionSet& dims,
             const dictionary& dict
         );
 
@@ -308,6 +337,44 @@ public:
 
         //- Write the function coefficients
         virtual void write(Ostream& os) const = 0;
+
+        //- ...
+        template<class Func>
+        inline void write
+        (
+            const Func& f,
+            const Function1<scalar>&,
+            const dimensionSet& dims,
+            Ostream& os
+        ) const;
+
+        //- ...
+        template<class Func>
+        inline void write
+        (
+            const Func& f,
+            const Function2<scalar>&,
+            const dimensionSet& dims,
+            Ostream& os
+        ) const;
+
+        //- ...
+        template<class Func>
+        inline void write
+        (
+            const Func& f,
+            const dimensionSet& dims,
+            Ostream& os
+        ) const;
+
+        //- ...
+        template<class Func>
+        inline void write
+        (
+            const autoPtr<Func>& f,
+            const dimensionSet& dims,
+            Ostream& os
+        ) const;
 
         //- Write the data for each of the property functions
         template<class Liquid>

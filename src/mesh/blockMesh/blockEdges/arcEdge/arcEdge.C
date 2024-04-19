@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,9 +92,9 @@ void Foam::blockEdges::arcEdge::calc(const scalar theta, const vector& axis)
     const vector chord = dp - l*axis;
     const scalar magChord = mag(chord);
 
-    centre_ = pM - l*axis/2 - rM*magChord/2/tan(degToRad(theta)/2);
+    centre_ = pM - l*axis/2 - rM*magChord/2/tan(theta/2);
     axis_ = axis;
-    theta_ = degToRad(theta);
+    theta_ = theta;
     length_ = l;
 }
 
@@ -128,7 +128,7 @@ Foam::blockEdges::arcEdge::arcEdge
     }
     else
     {
-        const scalar theta = readScalar(is);
+        const scalar theta = degToRad(readScalar(is));
         const vector axis(is);
         calc(theta, normalised(axis));
     }
@@ -158,7 +158,7 @@ Foam::scalar Foam::blockEdges::arcEdge::length() const
     const vector r1 = p0_ - centre_;
 
     // Length of a helical segment
-    return degToRad(theta_*sqrt(magSqr(r1) + sqr(length_)));
+    return theta_*sqrt(magSqr(r1) + sqr(length_));
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,16 @@ Foam::uniformFixedValueFvFieldSource<Type>::uniformFixedValueFvFieldSource
 )
 :
     fvFieldSource<Type>(iF, dict),
-    uniformValue_(Function1<Type>::New("uniformValue", dict))
+    uniformValue_
+    (
+        Function1<Type>::New
+        (
+            "uniformValue",
+            this->db().time().userUnits(),
+            iF.dimensions(),
+            dict
+        )
+    )
 {}
 
 
@@ -67,8 +76,7 @@ Foam::uniformFixedValueFvFieldSource<Type>::sourceValue
     const fvSource& source
 ) const
 {
-    const scalar t = this->db().time().userTimeValue();
-    const Type v = uniformValue_->value(t);
+    const Type v = uniformValue_->value(this->db().time().value());
     return tmp<Field<Type>>(new Field<Type>(source.nCells(), v));
 }
 
@@ -88,7 +96,13 @@ template<class Type>
 void Foam::uniformFixedValueFvFieldSource<Type>::write(Ostream& os) const
 {
     fvFieldSource<Type>::write(os);
-    writeEntry(os, uniformValue_());
+    writeEntry
+    (
+        os,
+        this->db().time().userUnits(),
+        this->internalField().dimensions(),
+        uniformValue_()
+    );
 }
 
 

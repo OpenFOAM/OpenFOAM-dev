@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,8 +56,18 @@ class TableFileReader
         //- File name for table
         const fileName fName_;
 
+        //- Unit conversions
+        const autoPtr<Function1s::unitConversions> unitsPtr_;
+
 
     // Private Member Functions
+
+        //- Read the units, if any
+        autoPtr<Function1s::unitConversions> readUnits
+        (
+            const Function1s::unitConversions& defaultUnits,
+            const dictionary& dict
+        ) const;
 
         //- Read a 1D table
         virtual void read(ISstream&, List<Tuple2<scalar, Type>>&) const = 0;
@@ -68,7 +78,12 @@ protected:
     // Protected Member Functions
 
         //- Read a 1D table
-        void read(const dictionary& dict, List<Tuple2<scalar, Type>>&) const;
+        void read
+        (
+            const Function1s::unitConversions& defaultUnits,
+            const dictionary& dict,
+            List<Tuple2<scalar, Type>>&
+        ) const;
 
 
 public:
@@ -76,7 +91,14 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        TableFileReader(const dictionary& dict);
+        TableFileReader
+        (
+            const Function1s::unitConversions& defaultUnits,
+            const dictionary& dict
+        );
+
+        //- Copy construct
+        TableFileReader(const TableFileReader<Type>&);
 
 
     //- Destructor
@@ -86,12 +108,17 @@ public:
     // Member Functions
 
         //- Read values
-        virtual List<Tuple2<scalar, Type>> read(const dictionary& dict) const;
+        virtual List<Tuple2<scalar, Type>> read
+        (
+            const Function1s::unitConversions& units,
+            const dictionary& dict
+        ) const;
 
         //- Write additional information
         virtual void write
         (
             Ostream& os,
+            const Function1s::unitConversions& units,
             const List<Tuple2<scalar, Type>>& table
         ) const;
 };

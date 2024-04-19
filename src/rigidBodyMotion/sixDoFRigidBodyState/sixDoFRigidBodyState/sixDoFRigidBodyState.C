@@ -28,7 +28,6 @@ License
 #include "motionSolver.H"
 #include "sixDoFRigidBodyMotion.H"
 #include "quaternion.H"
-#include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -59,7 +58,9 @@ Foam::functionObjects::sixDoFRigidBodyState::sixDoFRigidBodyState
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    logFiles(obr_, name)
+    logFiles(obr_, name),
+    angleUnits_("[rad]"),
+    angularVelocityUnits_("[rad/s]")
 {
     read(dict);
 }
@@ -77,11 +78,8 @@ bool Foam::functionObjects::sixDoFRigidBodyState::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    angleUnits_ = dict.lookupOrDefaultBackwardsCompatible<word>
-    (
-        {"angleUnits", "angleFormat"},
-        "radians"
-    );
+    angleUnits_.readIfPresent("angleUnits", dict);
+    angularVelocityUnits_.readIfPresent("angularVelocityUnits", dict);
 
     resetName(typeName);
 
@@ -95,6 +93,7 @@ void Foam::functionObjects::sixDoFRigidBodyState::writeFileHeader(const label)
 
     writeHeader(file, "Motion State");
     writeHeaderValue(file, "Angle Units", angleUnits_);
+    writeHeaderValue(file, "Angular Velocity Units", angularVelocityUnits_);
     writeCommented(file, "Time");
 
     file<< tab
@@ -122,8 +121,7 @@ Foam::functionObjects::sixDoFRigidBodyState::motion() const
 }
 
 
-Foam::vector
-Foam::functionObjects::sixDoFRigidBodyState::velocity() const
+Foam::vector Foam::functionObjects::sixDoFRigidBodyState::velocity() const
 {
     return motion().v();
 }
@@ -132,16 +130,14 @@ Foam::functionObjects::sixDoFRigidBodyState::velocity() const
 Foam::vector
 Foam::functionObjects::sixDoFRigidBodyState::angularVelocity() const
 {
-    vector angularVelocity(motion().omega());
+    return motion().omega();
+}
 
-    if (angleUnits_ == "degrees")
-    {
-        angularVelocity.x() = radToDeg(angularVelocity.x());
-        angularVelocity.y() = radToDeg(angularVelocity.y());
-        angularVelocity.z() = radToDeg(angularVelocity.z());
-    }
 
-    return angularVelocity;
+const Foam::unitConversion&
+Foam::functionObjects::sixDoFRigidBodyState::angularVelocityUnits() const
+{
+    return angularVelocityUnits_;
 }
 
 
@@ -153,32 +149,18 @@ bool Foam::functionObjects::sixDoFRigidBodyState::write()
     {
         const sixDoFRigidBodyMotion& motion = this->motion();
 
-        vector rotationAngle
-        (
-            quaternion(motion.orientation()).eulerAngles(quaternion::XYZ)
-        );
-
-        vector angularVelocity(motion.omega());
-
-        if (angleUnits_ == "degrees")
-        {
-            rotationAngle.x() = radToDeg(rotationAngle.x());
-            rotationAngle.y() = radToDeg(rotationAngle.y());
-            rotationAngle.z() = radToDeg(rotationAngle.z());
-
-            angularVelocity.x() = radToDeg(angularVelocity.x());
-            angularVelocity.y() = radToDeg(angularVelocity.y());
-            angularVelocity.z() = radToDeg(angularVelocity.z());
-        }
+        const vector theta =
+            quaternion(motion.orientation()).eulerAngles(quaternion::XYZ);
+        const vector omega(motion.omega());
 
         writeTime(file());
         file()
             << tab
             << motion.centreOfRotation()  << tab
             << motion.centreOfMass()  << tab
-            << rotationAngle  << tab
+            << angleUnits_.toUser(theta)  << tab
             << motion.v()  << tab
-            << angularVelocity << endl;
+            << angularVelocityUnits_.toUser(omega) << endl;
     }
 
     return true;

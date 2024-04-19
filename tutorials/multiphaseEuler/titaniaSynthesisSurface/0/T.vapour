@@ -23,8 +23,8 @@ boundaryField
 
     inlet
     {
-        type                fixedValue;
-        value               uniform 296;
+        type            fixedValue;
+        value           uniform 296;
     }
 
     outlet
@@ -37,15 +37,14 @@ boundaryField
         type            fixedProfile;
         profile
         {
-            type                tableFile;
-            format              csv;        // Input format
-            nHeaderLine         0;          // Number of header lines
-            refColumn           0;          // Reference column index
-            componentColumns    (1);        // Component column indices
-            separator           " ";        // Optional (defaults to ",")
-            mergeSeparators     yes;        // Merge multiple separators
-            outOfBounds         clamp;      // Optional out-of-bounds handling
-            file                "validation/exptData/wallTemperature";
+            type            table;
+            format          csv;        // Input format
+            nHeaderLine     0;          // Number of header lines
+            columns         (0 1);      // Column indices
+            separator       " ";        // Optional (defaults to ",")
+            mergeSeparators yes;        // Merge multiple separators
+            outOfBounds     clamp;      // Optional out-of-bounds handling
+            file            "validation/exptData/wallTemperature";
             interpolationScheme linear;     // Optional interpolation scheme
         }
         direction        (1 0 0);

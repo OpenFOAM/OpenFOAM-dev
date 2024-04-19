@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::PhiScheme<Type, PhiLimiter>::limiter
 
         tUflux = this->faceFlux_/fvc::interpolate(rho);
     }
-    else if (this->faceFlux_.dimensions() != dimFlux)
+    else if (this->faceFlux_.dimensions() != dimVolumetricFlux)
     {
         FatalErrorInFunction
             << "dimensions of faceFlux are not correct"

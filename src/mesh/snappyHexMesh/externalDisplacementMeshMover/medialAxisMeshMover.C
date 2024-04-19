@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,6 @@ License
 #include "valuePointPatchFields.H"
 #include "PointEdgeWave.H"
 #include "meshRefinement.H"
-#include "unitConversion.H"
 #include "PatchTools.H"
 #include "OBJstream.H"
 #include "pointData.H"
@@ -362,27 +361,28 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
         coeffDict.lookup<label>("nSmoothSurfaceNormals");
 
     //- When is medial axis
-    word angleKey = "minMedialAxisAngle";
-    if (!coeffDict.found(angleKey))
-    {
-        // Backwards compatibility
-        angleKey = "minMedianAxisAngle";
-    }
-    scalar minMedialAxisAngleCos = Foam::cos
-    (
-        degToRad(coeffDict.lookup<scalar>(angleKey))
-    );
+    const scalar minMedialAxisAngleCos =
+        Foam::cos
+        (
+            coeffDict.lookupBackwardsCompatible<scalar>
+            (
+                {"minMedialAxisAngle", "minMedianAxisAngle"},
+                unitDegrees
+            )
+        );
 
     //- Feature angle when to stop adding layers
-    const scalar featureAngle = coeffDict.lookup<scalar>("featureAngle");
+    const scalar featureAngle =
+        coeffDict.lookup<scalar>("featureAngle", unitDegrees);
 
     //- When to slip along wall
     const scalar slipFeatureAngle =
-    (
-        coeffDict.found("slipFeatureAngle")
-      ? coeffDict.lookup<scalar>("slipFeatureAngle")
-      : 0.5*featureAngle
-    );
+        coeffDict.lookupOrDefault
+        (
+            "slipFeatureAngle",
+            unitDegrees,
+            featureAngle/2
+        );
 
     //- Smooth internal normals
     const label nSmoothNormals =
@@ -686,12 +686,9 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
                     Info<< typeName
                         << " : Inserting points on patch " << pp.name()
                         << " if angle to nearest layer patch > "
-                        << slipFeatureAngle << " degrees." << endl;
+                        << radToDeg(slipFeatureAngle) << " degrees." << endl;
 
-                    scalar slipFeatureAngleCos = Foam::cos
-                    (
-                        degToRad(slipFeatureAngle)
-                    );
+                    scalar slipFeatureAngleCos = Foam::cos(slipFeatureAngle);
                     pointField pointNormals
                     (
                         PatchTools::pointNormals(mesh(), pp)
@@ -1651,13 +1648,11 @@ void Foam::medialAxisMeshMover::calculateDisplacement
         coeffDict.lookup<scalar>("maxThicknessToMedialRatio");
 
     //- Feature angle when to stop adding layers
-    const scalar featureAngle = coeffDict.lookup<scalar>("featureAngle");
+    const scalar featureAngle =
+        coeffDict.lookup<scalar>("featureAngle", unitDegrees);
 
     //- Stop layer growth where mesh wraps around sharp edge
-    const scalar minCosLayerTermination = Foam::cos
-    (
-        degToRad(0.5*featureAngle)
-    );
+    const scalar minCosLayerTermination = Foam::cos(featureAngle/2);
 
     //- Smoothing wanted patch thickness
     const label nSmoothPatchThickness =

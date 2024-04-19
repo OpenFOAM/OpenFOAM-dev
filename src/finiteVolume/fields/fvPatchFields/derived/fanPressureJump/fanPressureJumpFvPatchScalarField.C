@@ -56,20 +56,29 @@ Foam::fanPressureJumpFvPatchScalarField::fanPressureJumpFvPatchScalarField
 {
     if (cyclicPatch().owner())
     {
-        if (dict.found("fanCurve"))
-        {
-            // Preferred entry name
-            fanCurve_ = Function1<scalar>::New("fanCurve", dict);
-        }
-        else if (dict.found("jumpTable"))
+        if (!dict.found("fanCurve") && dict.found("jumpTable"))
         {
             // Backwards compatibility fallback
-            jumpTable_ = Function1<scalar>::New("jumpTable", dict);
+            jumpTable_ =
+                Function1<scalar>::New
+                (
+                    "jumpTable",
+                    dimVelocity,
+                    iF.dimensions(),
+                    dict
+                );
         }
         else
         {
-            // Call function construction for error message
-            fanCurve_ = Function1<scalar>::New("fanCurve", dict);
+            // Preferred entry name
+            fanCurve_ =
+                Function1<scalar>::New
+                (
+                    "fanCurve",
+                    dimVolumetricFlux,
+                    iF.dimensions(),
+                    dict
+                );
         }
     }
 }
@@ -129,7 +138,7 @@ void Foam::fanPressureJumpFvPatchScalarField::updateCoeffs()
 
             scalar volFlowRate = 0;
 
-            if (phip.internalField().dimensions() == dimFlux)
+            if (phip.internalField().dimensions() == dimVolumetricFlux)
             {
                 volFlowRate = gSum(phip);
             }
@@ -161,7 +170,7 @@ void Foam::fanPressureJumpFvPatchScalarField::updateCoeffs()
 
             scalarField Un(max(sign*phip/patch().magSf(), scalar(0)));
 
-            if (phip.internalField().dimensions() == dimFlux)
+            if (phip.internalField().dimensions() == dimVolumetricFlux)
             {
                 // Do nothing
             }

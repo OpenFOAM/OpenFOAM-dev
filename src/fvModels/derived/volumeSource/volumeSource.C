@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,13 @@ void Foam::fv::volumeSource::readCoeffs()
 
     volumetricFlowRate_.reset
     (
-        Function1<scalar>::New("volumetricFlowRate", coeffs()).ptr()
+        Function1<scalar>::New
+        (
+            "volumetricFlowRate",
+            mesh().time().userUnits(),
+            dimVolume/dimTime,
+            coeffs()
+        ).ptr()
     );
 }
 
@@ -248,7 +254,7 @@ Foam::dimensionedScalar Foam::fv::volumeSource::S() const
         dimensionedScalar
         (
             dimVolume/dimTime,
-            volumetricFlowRate_->value(mesh().time().userTimeValue())
+            volumetricFlowRate_->value(mesh().time().value())
         );
 }
 

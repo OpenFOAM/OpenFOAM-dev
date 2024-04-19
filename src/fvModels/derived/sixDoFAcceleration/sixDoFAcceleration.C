@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,6 +106,8 @@ void Foam::fv::sixDoFAcceleration::readCoeffs()
         Function1<accelerationVectors>::New
         (
             "accelerations",
+            mesh().time().userUnits(),
+            unitNone,
             coeffs()
         ).ptr()
     );
@@ -123,7 +125,7 @@ void Foam::fv::sixDoFAcceleration::addForce
 {
     const Vector<vector> accelerations
     (
-        accelerations_->value(mesh().time().userTimeValue())
+        accelerations_->value(mesh().time().value())
     );
 
     // If gravitational force is present combine with the linear acceleration

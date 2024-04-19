@@ -31,15 +31,16 @@ template<class Type>
 Foam::Function1s::Square<Type>::Square
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
     FieldFunction1<Type, Square<Type>>(name),
-    amplitude_(Function1<Type>::New("amplitude", dict)),
-    frequency_(dict.lookup<scalar>("frequency")),
-    start_(dict.lookupOrDefault<scalar>("start", 0)),
-    level_(Function1<Type>::New("level", dict)),
-    markSpace_(dict.lookupOrDefault<scalar>("markSpace", 1)),
+    amplitude_(Function1<Type>::New("amplitude", units, dict)),
+    frequency_(dict.lookup<scalar>("frequency", unitless/units.x)),
+    start_(dict.lookupOrDefault<scalar>("start", units.x, 0)),
+    level_(Function1<Type>::New("level", units, dict)),
+    markSpace_(dict.lookupOrDefault<scalar>("markSpace", unitless, 1)),
     integrable_(amplitude_->constant() && level_->constant())
 {}
 
@@ -67,13 +68,17 @@ Foam::Function1s::Square<Type>::~Square()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::Square<Type>::write(Ostream& os) const
+void Foam::Function1s::Square<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
-    writeEntry(os, amplitude_());
-    writeEntry(os, "frequency", frequency_);
-    writeEntry(os, "start", start_);
-    writeEntry(os, level_());
-    writeEntry(os, "markSpace", markSpace_);
+    writeEntry(os, units, amplitude_());
+    writeEntry(os, "frequency", unitless/units.x, frequency_);
+    writeEntry(os, "start", units.x, start_);
+    writeEntry(os, units, level_());
+    writeEntry(os, "markSpace", unitless, markSpace_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,7 +175,7 @@ Foam::MRFZone::MRFZone
     cellSet_(mesh, coeffs_),
     origin_(coeffs_.lookup("origin")),
     axis_(coeffs_.lookup("axis")),
-    omega_(coeffs_)
+    omega_(mesh.time(), coeffs_)
 {
     axis_ = axis_/mag(axis_);
     setMRFFaces();
@@ -186,7 +186,7 @@ Foam::MRFZone::MRFZone
 
 Foam::vector Foam::MRFZone::Omega() const
 {
-    return omega_.value(mesh_.time().userTimeValue())*axis_;
+    return omega_.value(mesh_.time().value())*axis_;
 }
 
 

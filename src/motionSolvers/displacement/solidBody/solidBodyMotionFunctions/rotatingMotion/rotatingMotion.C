@@ -57,7 +57,7 @@ Foam::solidBodyMotionFunctions::rotatingMotion::rotatingMotion
     solidBodyMotionFunction(SBMFCoeffs, runTime),
     origin_(SBMFCoeffs_.lookup("origin")),
     axis_(SBMFCoeffs_.lookup("axis")),
-    omega_(new Function1s::omega(SBMFCoeffs_))
+    omega_(new Function1s::omega(runTime, SBMFCoeffs_))
 {}
 
 
@@ -72,15 +72,14 @@ Foam::solidBodyMotionFunctions::rotatingMotion::~rotatingMotion()
 Foam::septernion
 Foam::solidBodyMotionFunctions::rotatingMotion::transformation() const
 {
-    const scalar t = time_.value();
-
     // Rotation around axis
-    const scalar angle = omega_->integral(0, t);
+    const scalar angle = omega_->integral(0, time_.value());
 
     const quaternion R(axis_, angle);
     const septernion TR(septernion(-origin_)*R*septernion(origin_));
 
-    DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
+    DebugInFunction
+        << "Time = " << time_.value() << " transformation: " << TR << endl;
 
     return TR;
 }
@@ -93,7 +92,7 @@ bool Foam::solidBodyMotionFunctions::rotatingMotion::read
 {
     solidBodyMotionFunction::read(SBMFCoeffs);
 
-    omega_.reset(new Function1s::omega(SBMFCoeffs));
+    omega_.reset(new Function1s::omega(time_, SBMFCoeffs));
 
     return true;
 }

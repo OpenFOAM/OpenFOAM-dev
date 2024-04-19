@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,30 +39,36 @@ Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    gamma_(dict.lookup<scalar>("gamma")),
-    R_(dict.lookup<scalar>("R")),
-    supplyMassFlowRate_(dict.lookup<scalar>("supplyMassFlowRate")),
+    gamma_(dict.lookup<scalar>("gamma", dimless)),
+    R_(dict.lookup<scalar>("R", dimGasConstant)),
+    supplyMassFlowRate_
+    (
+        dict.lookup<scalar>("supplyMassFlowRate", dimMass/dimTime)
+    ),
     supplyTotalTemperature_
     (
-        dict.lookup<scalar>("supplyTotalTemperature")
+        dict.lookup<scalar>("supplyTotalTemperature", dimTemperature)
     ),
-    plenumVolume_(dict.lookup<scalar>("plenumVolume")),
-    plenumDensity_(dict.lookup<scalar>("plenumDensity")),
-    plenumTemperature_(dict.lookup<scalar>("plenumTemperature")),
+    plenumVolume_(dict.lookup<scalar>("plenumVolume", dimVolume)),
+    plenumDensity_(dict.lookup<scalar>("plenumDensity", dimDensity)),
+    plenumTemperature_
+    (
+        dict.lookup<scalar>("plenumTemperature", dimTemperature)
+    ),
     rho_(1.0),
     hasRho_(false),
-    inletAreaRatio_(dict.lookup<scalar>("inletAreaRatio")),
+    inletAreaRatio_(dict.lookup<scalar>("inletAreaRatio", unitFraction)),
     inletDischargeCoefficient_
     (
-        dict.lookup<scalar>("inletDischargeCoefficient")
+        dict.lookup<scalar>("inletDischargeCoefficient", unitFraction)
     ),
-    timeScale_(dict.lookupOrDefault<scalar>("timeScale", 0.0)),
+    timeScale_(dict.lookupOrDefault<scalar>("timeScale", dimTime, 0.0)),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     UName_(dict.lookupOrDefault<word>("U", "U"))
 {
     if (dict.found("rho"))
     {
-        rho_ = dict.lookup<scalar>("rho");
+        rho_ = dict.lookup<scalar>("rho", dimDensity);
         hasRho_ = true;
     }
 }
@@ -153,7 +159,7 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
 
     // Calculate the current mass flow rate
     scalar massFlowRate(1.0);
-    if (phi.internalField().dimensions() == dimFlux)
+    if (phi.internalField().dimensions() == dimVolumetricFlux)
     {
         if (hasRho_)
         {

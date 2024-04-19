@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "Function1.H"
 
-
 // * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -44,10 +43,7 @@ Foam::Function1<Type>::Function1(const Function1<Type>& f1)
 
 
 template<class Type, class Function1Type>
-Foam::FieldFunction1<Type, Function1Type>::FieldFunction1
-(
-    const word& name
-)
+Foam::FieldFunction1<Type, Function1Type>::FieldFunction1(const word& name)
 :
     Function1<Type>(name)
 {}
@@ -150,33 +146,51 @@ void Foam::Function1<Type>::operator=(const Function1<Type>& f)
 template<class Type>
 void Foam::writeEntry(Ostream& os, const Function1<Type>& f1)
 {
+    writeEntry(os, {unitAny, unitAny}, f1);
+}
+
+
+template<class Type>
+void Foam::writeEntry
+(
+    Ostream& os,
+    const Function1s::unitConversions& units,
+    const Function1<Type>& f1
+)
+{
     writeKeyword(os, f1.name())
         << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
 
     writeEntry(os, "type", f1.type());
 
-    f1.write(os);
+    f1.write(os, units);
 
     os  << decrIndent << indent << token::END_BLOCK << endl;
+}
+
+
+template<class Type>
+void Foam::writeEntry
+(
+    Ostream& os,
+    const unitConversion& xUnits,
+    const unitConversion& valueUnits,
+    const Function1<Type>& f1
+)
+{
+    writeEntry(os, {xUnits, valueUnits}, f1);
 }
 
 
 // * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const Function1<Type>& f1
-)
+Foam::Ostream& Foam::operator<<(Ostream& os, const Function1<Type>& f1)
 {
-    // Check state of Ostream
-    os.check
-    (
-        "Ostream& operator<<(Ostream&, const Function1<Type>&)"
-    );
+    f1.write(os, {unitAny, unitAny});
 
-    f1.write(os);
+    // Check state of Ostream
+    os.check("Ostream& operator<<(Ostream&, const Function1<Type>&)");
 
     return os;
 }

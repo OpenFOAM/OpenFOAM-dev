@@ -68,10 +68,6 @@ class axialAngularSpring
         //- Spring moment as a function of angle
         autoPtr<Function1<scalar>> moment_;
 
-        //- Boolean stating whether the angle around the axis needs to
-        //  be converted to degrees before evaluating the moment function
-        bool convertToDegrees_;
-
         //- Damping coefficient (Nms/rad)
         scalar damping_;
 

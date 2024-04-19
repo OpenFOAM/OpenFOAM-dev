@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 0 0 1 0 0 0 ];
+dimensions      [temperature];
 
 internalField   uniform 300;
 
@@ -25,11 +25,10 @@ boundaryField
     external
     {
         type            externalTemperature;
-        h               uniform 1e3;
+        h               1e3 [W/m^2/K];
         Ta              $internalField;
         value           $internalField;
     }
-
     solid_to_gas
     {
         type            coupledTemperature;

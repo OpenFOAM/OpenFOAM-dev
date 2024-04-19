@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::contactAngleModels::temperatureDependent::temperatureDependent
 )
 :
     TName_(dict.lookupOrDefault<word>("T", "T")),
-    theta0_(Function1<scalar>::New("theta0", dict))
+    theta0_(Function1<scalar>::New("theta0", dimTemperature, unitDegrees, dict))
 {}
 
 
@@ -71,16 +71,14 @@ Foam::contactAngleModels::temperatureDependent::cosTheta
     const vectorField& nHat
 ) const
 {
-    return cos
-    (
-        degToRad
+    return
+        cos
         (
             theta0_->value
             (
                 Up.patch().lookupPatchField<volScalarField, scalar>(TName_)
             )
-        )
-    );
+        );
 }
 
 

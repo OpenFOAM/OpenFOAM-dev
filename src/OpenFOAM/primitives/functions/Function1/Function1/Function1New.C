@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ template<class Type>
 Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
 (
     const word& name,
+    const Function1s::unitConversions& units,
     const dictionary& dict
 )
 {
@@ -55,7 +56,7 @@ Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
                 << exit(FatalError);
         }
 
-        return cstrIter()(name, coeffsDict);
+        return cstrIter()(name, units, coeffsDict);
     }
 
     // Find the entry
@@ -73,7 +74,7 @@ Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
     // construct the function from the stream
     if (!firstToken.isWord() || !is.eof())
     {
-        return New(name, Function1Type, is);
+        return New(name, units, Function1Type, is);
     }
 
     // Otherwise, construct from the current or coeffs dictionary
@@ -98,6 +99,7 @@ Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
         dictCstrIter()
         (
             name,
+            units,
             haveCoeffsDict ? dict.subDict(name + "Coeffs") : dict
         )
     );
@@ -108,7 +110,7 @@ Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
             << "Using deprecated "
             << (name + "Coeffs") << " sub-dictionary."<< nl
             << "    Please use the simpler form" << endl;
-        funcPtr->write(Info);
+        funcPtr->write(Info, units);
     }
 
     return funcPtr;
@@ -119,6 +121,20 @@ template<class Type>
 Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
 (
     const word& name,
+    const unitConversion& xUnits,
+    const unitConversion& valueUnits,
+    const dictionary& dict
+)
+{
+    return New(name, {xUnits, valueUnits}, dict);
+}
+
+
+template<class Type>
+Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
+(
+    const word& name,
+    const Function1s::unitConversions& units,
     const word& Function1Type,
     Istream& is
 )
@@ -154,7 +170,21 @@ Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
             << exit(FatalError);
     }
 
-    return isCstrIter()(name, is);
+    return isCstrIter()(name, units, is);
+}
+
+
+template<class Type>
+Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
+(
+    const word& name,
+    const unitConversion& xUnits,
+    const unitConversion& valueUnits,
+    const word& Function1Type,
+    Istream& is
+)
+{
+    return New(name, {xUnits, valueUnits}, Function1Type, is);
 }
 
 

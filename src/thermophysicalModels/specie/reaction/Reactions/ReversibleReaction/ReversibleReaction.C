@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ Foam::ReversibleReaction<ThermoType, ReactionRate>::ReversibleReaction
 )
 :
     Reaction<ThermoType>(species, speciesThermo, dict),
-    k_(species, dict)
+    k_(species, this->kfDims(), dict)
 {}
 
 
@@ -62,7 +62,7 @@ Foam::ReversibleReaction<ThermoType, ReactionRate>::ReversibleReaction
 )
 :
     Reaction<ThermoType>(species, speciesThermo, dict),
-    k_(species, ob, dict)
+    k_(species, ob, this->kfDims(), dict)
 {}
 
 

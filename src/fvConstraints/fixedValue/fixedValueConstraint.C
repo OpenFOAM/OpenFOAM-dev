@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,7 @@ void Foam::fv::fixedValueConstraint::readCoeffs()
             new unknownTypeFunction1
             (
                 iter().keyword(),
+                mesh().time().userUnits(),
                 coeffs().subDict("fieldValues")
             )
         );
@@ -75,7 +76,13 @@ void Foam::fv::fixedValueConstraint::readCoeffs()
 
     fraction_ =
         coeffs().found("fraction")
-      ? Function1<scalar>::New("fraction", coeffs())
+      ? Function1<scalar>::New
+        (
+            "fraction",
+            mesh().time().userUnits(),
+            unitFraction,
+            coeffs()
+        )
       : autoPtr<Function1<scalar>>();
 }
 
@@ -87,7 +94,13 @@ bool Foam::fv::fixedValueConstraint::constrainType
     const word& fieldName
 ) const
 {
-    const scalar t = mesh().time().userTimeValue();
+    // Set the value units for the function
+    fieldValues_[fieldName]->template setValueUnits<Type>
+    (
+        eqn.psi().dimensions()
+    );
+
+    const scalar t = mesh().time().value();
 
     const List<Type> values
     (

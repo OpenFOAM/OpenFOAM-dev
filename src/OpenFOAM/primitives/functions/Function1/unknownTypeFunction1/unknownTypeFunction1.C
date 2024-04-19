@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,10 +30,12 @@ License
 Foam::unknownTypeFunction1::unknownTypeFunction1
 (
     const word& name,
+    const unitConversion& xUnits,
     const dictionary& dict
 )
 :
     name_(name),
+    xUnits_(xUnits),
     topDict_(dict.topDict()),
     topDictKeyword_(dict.topDictKeyword())
 {}

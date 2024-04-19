@@ -14,9 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 1 -1 -2 0 0 0 0 ];
+dimensions      [pressure];
 
-internalField   uniform 1e6;
+internalField   uniform 10 [bar];
 
 boundaryField
 {

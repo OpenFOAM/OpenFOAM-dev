@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
     {
         forAll(Y, i)
         {
-            Dm_.set(i, evaluate(DmFuncs_[i], dimViscosity, p, T));
+            Dm_.set(i, evaluate(DmFuncs_[i], dimKinematicViscosity, p, T));
         }
     }
     else
@@ -63,7 +63,7 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
             (
                 "sumXbyD",
                 T.mesh(),
-                dimless/dimViscosity/Wm.dimensions()
+                dimless/dimKinematicViscosity/Wm.dimensions()
             )
         );
 
@@ -78,11 +78,23 @@ void Fickian<BasicThermophysicalTransportModel>::updateDm() const
                     sumXbyD +=
                         Y[j]
                        /(
-                           this->thermo().Wi(j)
-                          *(
-                               i < j
-                             ? evaluate(DFuncs_[i][j], dimViscosity, p, T)
-                             : evaluate(DFuncs_[j][i], dimViscosity, p, T)
+                            this->thermo().Wi(j)
+                           *(
+                                i < j
+                              ? evaluate
+                                (
+                                    DFuncs_[i][j],
+                                    dimKinematicViscosity,
+                                    p,
+                                    T
+                                )
+                              : evaluate
+                                (
+                                    DFuncs_[j][i],
+                                    dimKinematicViscosity,
+                                    p,
+                                    T
+                                )
                            )
                        );
                 }
@@ -151,10 +163,7 @@ Fickian<BasicThermophysicalTransportModel>::Fickian
 template<class BasicThermophysicalTransportModel>
 bool Fickian<BasicThermophysicalTransportModel>::read()
 {
-    if
-    (
-        BasicThermophysicalTransportModel::read()
-    )
+    if (BasicThermophysicalTransportModel::read())
     {
         const speciesTable& species = this->thermo().species();
 
@@ -170,7 +179,14 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
                 DmFuncs_.set
                 (
                     i,
-                    Function2<scalar>::New(species[i], Ddict).ptr()
+                    Function2<scalar>::New
+                    (
+                        species[i],
+                        dimPressure,
+                        dimTemperature,
+                        dimKinematicViscosity,
+                        Ddict
+                    ).ptr()
                 );
             }
         }
@@ -225,7 +241,14 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
                         DFuncs_[i].set
                         (
                             j,
-                            Function2<scalar>::New(Dname, Ddict).ptr()
+                            Function2<scalar>::New
+                            (
+                                Dname,
+                                dimPressure,
+                                dimTemperature,
+                                dimKinematicViscosity,
+                                Ddict
+                            ).ptr()
                         );
                     }
                 }
@@ -243,7 +266,14 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
                 DTFuncs_.set
                 (
                     i,
-                    Function2<scalar>::New(species[i], DTdict).ptr()
+                    Function2<scalar>::New
+                    (
+                        species[i],
+                        dimPressure,
+                        dimTemperature,
+                        dimDynamicViscosity,
+                        DTdict
+                    ).ptr()
                 );
             }
         }

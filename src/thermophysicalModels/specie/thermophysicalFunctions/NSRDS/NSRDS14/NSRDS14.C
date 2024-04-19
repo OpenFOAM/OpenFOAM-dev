@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,6 +61,7 @@ Foam::Function1s::NSRDS14::NSRDS14
 Foam::Function1s::NSRDS14::NSRDS14
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
@@ -70,7 +71,9 @@ Foam::Function1s::NSRDS14::NSRDS14
     b_(dict.lookup<scalar>("b")),
     c_(dict.lookup<scalar>("c")),
     d_(dict.lookup<scalar>("d"))
-{}
+{
+    assertNoConvertUnits(typeName, units, dict);
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -86,7 +89,11 @@ Foam::scalar Foam::Function1s::NSRDS14::integral
 }
 
 
-void Foam::Function1s::NSRDS14::write(Ostream& os) const
+void Foam::Function1s::NSRDS14::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
     writeEntry(os, "Tc", Tc_);
     writeEntry(os, "a", a_);

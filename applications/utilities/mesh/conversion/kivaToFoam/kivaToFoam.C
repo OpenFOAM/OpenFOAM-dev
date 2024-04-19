@@ -43,7 +43,6 @@ Description
 #include "wedgePolyPatch.H"
 #include "mergedCyclicPolyPatch.H"
 #include "polyMeshUnMergeCyclics.H"
-#include "unitConversion.H"
 
 using namespace Foam;
 

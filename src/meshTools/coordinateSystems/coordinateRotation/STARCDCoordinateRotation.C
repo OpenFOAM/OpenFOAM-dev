@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "STARCDCoordinateRotation.H"
-
-#include "mathematicalConstants.H"
+#include "unitConversions.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -52,23 +51,11 @@ namespace Foam
 
 void Foam::STARCDCoordinateRotation::calcTransform
 (
-    const scalar rotZ,
-    const scalar rotX,
-    const scalar rotY,
-    const bool inDegrees
+    const scalar z,
+    const scalar x,
+    const scalar y
 )
 {
-    scalar x = rotX;
-    scalar y = rotY;
-    scalar z = rotZ;
-
-    if (inDegrees)
-    {
-        x *= constant::mathematical::pi/180.0;
-        y *= constant::mathematical::pi/180.0;
-        z *= constant::mathematical::pi/180.0;
-    }
-
     R_ =
     (
         tensor
@@ -101,14 +88,22 @@ Foam::STARCDCoordinateRotation::STARCDCoordinateRotation
     R_(sphericalTensor::I),
     Rtr_(R_)
 {
-    vector rotation(dict.lookup("rotation"));
+    const vector rotation(dict.lookup<vector>("rotation", unitDegrees));
+
+    if (dict.found("degrees"))
+    {
+        FatalIOErrorInFunction(dict)
+            << "Angle units are no longer specified with a 'degrees' entry. "
+            << "Instead, the 'rotation' can have its units specified directly."
+            << " e.g., rotation (30 45 60) [deg]."
+            << exit(FatalIOError);
+    }
 
     calcTransform
     (
         rotation.component(vector::X),
         rotation.component(vector::Y),
-        rotation.component(vector::Z),
-        dict.lookupOrDefault("degrees", true)
+        rotation.component(vector::Z)
     );
 }
 

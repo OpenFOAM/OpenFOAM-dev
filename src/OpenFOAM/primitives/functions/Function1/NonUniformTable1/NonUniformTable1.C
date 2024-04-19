@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ template<class Type>
 Foam::Function1s::NonUniformTable<Type>::NonUniformTable
 (
     const word& name,
+    const Function1s::unitConversions& units,
     const dictionary& dict
 )
 :
@@ -39,9 +40,11 @@ Foam::Function1s::NonUniformTable<Type>::NonUniformTable
     high_(-great),
     values_(),
     delta_(great),
-    reader_(TableReader<Type>::New(name, dict))
+    reader_(TableReader<Type>::New(name, units, dict))
 {
-    values_ = reader_->read(dict);
+    assertNoConvertUnits(typeName, units, dict);
+
+    values_ = reader_->read(units, dict);
 
     if (values_.size() < 2)
     {
@@ -142,9 +145,13 @@ Type Foam::Function1s::NonUniformTable<Type>::dfdT
 
 
 template<class Type>
-void Foam::Function1s::NonUniformTable<Type>::write(Ostream& os) const
+void Foam::Function1s::NonUniformTable<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
-    reader_->write(os, values_);
+    reader_->write(os, units, values_);
 }
 
 

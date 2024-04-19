@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -256,7 +256,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::updateDii() const
             }
         }
 
-        Dii_.set(i, evaluate(DFuncs_[i][i], dimViscosity, p, T));
+        Dii_.set(i, evaluate(DFuncs_[i][i], dimKinematicViscosity, p, T));
 
         Dij[i].setSize(Y.size());
 
@@ -264,7 +264,11 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::updateDii() const
         {
             if (j > i)
             {
-                Dij[i].set(j, evaluate(DFuncs_[i][j], dimViscosity, p, T));
+                Dij[i].set
+                (
+                    j,
+                    evaluate(DFuncs_[i][j], dimKinematicViscosity, p, T)
+                );
             }
             else if (j < i)
             {
@@ -448,7 +452,14 @@ bool MaxwellStefan<BasicThermophysicalTransportModel>::read()
                     DFuncs_[i].set
                     (
                         j,
-                        Function2<scalar>::New(Dname, Ddict).ptr()
+                        Function2<scalar>::New
+                        (
+                            Dname,
+                            dimPressure,
+                            dimTemperature,
+                            dimKinematicViscosity,
+                            Ddict
+                        ).ptr()
                     );
                 }
             }
@@ -465,7 +476,14 @@ bool MaxwellStefan<BasicThermophysicalTransportModel>::read()
                 DTFuncs_.set
                 (
                     i,
-                    Function2<scalar>::New(species[i], DTdict).ptr()
+                    Function2<scalar>::New
+                    (
+                        species[i],
+                        dimPressure,
+                        dimTemperature,
+                        dimDynamicViscosity,
+                        DTdict
+                    ).ptr()
                 );
             }
         }

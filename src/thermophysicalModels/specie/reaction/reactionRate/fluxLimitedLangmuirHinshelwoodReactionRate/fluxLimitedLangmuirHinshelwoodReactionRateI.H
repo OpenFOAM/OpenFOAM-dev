@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "volFields.H"
+#include "fluxLimitedLangmuirHinshelwoodReactionRate.H"
 #include "mathematicalConstants.H"
 #include "thermodynamicConstants.H"
 
@@ -55,6 +55,7 @@ fluxLimitedLangmuirHinshelwoodReactionRate
 (
     const speciesTable& st,
     const objectRegistry& ob,
+    const dimensionSet& dims,
     const dictionary& dict
 )
 :

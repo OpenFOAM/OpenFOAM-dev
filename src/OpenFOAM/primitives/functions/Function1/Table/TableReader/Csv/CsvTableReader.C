@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,30 +39,30 @@ namespace TableReaders
 template<>
 label Csv<label>::readValue(const List<string>& split) const
 {
-    if (componentColumns_[0] >= split.size())
+    if (component(columns_.second(), 0) >= split.size())
     {
         FatalErrorInFunction
-            << "No column " << componentColumns_[0] << " in "
+            << "No column " << component(columns_.second(), 0) << " in "
             << split << endl
             << exit(FatalError);
     }
 
-    return readLabel(IStringStream(split[componentColumns_[0]])());
+    return readLabel(IStringStream(split[component(columns_.second(), 0)])());
 }
 
 
 template<>
 scalar Csv<scalar>::readValue(const List<string>& split) const
 {
-    if (componentColumns_[0] >= split.size())
+    if (component(columns_.second(), 0) >= split.size())
     {
         FatalErrorInFunction
-            << "No column " << componentColumns_[0] << " in "
+            << "No column " << component(columns_.second(), 0) << " in "
             << split << endl
             << exit(FatalError);
     }
 
-    return readScalar(IStringStream(split[componentColumns_[0]])());
+    return readScalar(IStringStream(split[component(columns_.second(), 0)])());
 }
 
 
@@ -71,19 +71,19 @@ Type Csv<Type>::readValue(const List<string>& split) const
 {
     Type result;
 
-    for(label i = 0;i < pTraits<Type>::nComponents; i++)
+    for (label i = 0; i < pTraits<Type>::nComponents; i++)
     {
-        if (componentColumns_[i] >= split.size())
+        if (component(columns_.second(), i) >= split.size())
         {
             FatalErrorInFunction
-                << "No column " << componentColumns_[i] << " in "
+                << "No column " << component(columns_.second(), i) << " in "
                 << split << endl
                 << exit(FatalError);
         }
 
         result[i] = readScalar
         (
-            IStringStream(split[componentColumns_[i]])()
+            IStringStream(split[component(columns_.second(), i)])()
         );
     }
 
@@ -113,7 +113,7 @@ void Foam::TableReaders::Csv<Type>::read
         is.getLine(line);
     }
 
-    const label nEntries = max(refColumn_, max(componentColumns_));
+    const label nEntries = max(columns_.first(), cmptMax(columns_.second()));
 
     // Read data
     while (is.good())
@@ -188,10 +188,10 @@ void Foam::TableReaders::Csv<Type>::read
             break;
         }
 
-        scalar x = readScalar(IStringStream(split[refColumn_])());
+        scalar x = readScalar(IStringStream(split[columns_.first()])());
         Type value = readValue(split);
 
-        values.append(Tuple2<scalar,Type>(x, value));
+        values.append(Tuple2<scalar, Type>(x, value));
     }
 
     data.transfer(values);
@@ -204,24 +204,31 @@ template<class Type>
 Foam::TableReaders::Csv<Type>::Csv
 (
     const word& name,
+    const Function1s::unitConversions& units,
     const dictionary& dict
 )
 :
-    TableFileReader<Type>(dict),
+    TableFileReader<Type>(units, dict),
     nHeaderLine_(dict.lookup<label>("nHeaderLine")),
-    refColumn_(dict.lookup<label>("refColumn")),
-    componentColumns_(dict.lookup("componentColumns")),
+    columns_
+    (
+        !dict.found("refColumn") || !dict.found("componentColumns")
+      ? columnIndices(dict.lookup("columns"))
+      : columnIndices
+        (
+            dict.lookup<label>("refColumn"),
+            CsvLabelType<Type>()
+            (
+                dict.lookup<typename CsvLabelType<Type>::oldType>
+                (
+                    "componentColumns"
+                )
+            )
+        )
+    ),
     separator_(dict.lookupOrDefault<string>("separator", string(","))[0]),
     mergeSeparators_(readBool(dict.lookup("mergeSeparators")))
-{
-    if (componentColumns_.size() != pTraits<Type>::nComponents)
-    {
-        FatalErrorInFunction
-            << componentColumns_ << " does not have the expected length "
-            << pTraits<Type>::nComponents << endl
-            << exit(FatalError);
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -237,14 +244,14 @@ template<class Type>
 void Foam::TableReaders::Csv<Type>::write
 (
     Ostream& os,
+    const Function1s::unitConversions& units,
     const List<Tuple2<scalar, Type>>& table
 ) const
 {
-    TableFileReader<Type>::write(os, table);
+    TableFileReader<Type>::write(os, units, table);
 
     writeEntry(os, "nHeaderLine", nHeaderLine_);
-    writeEntry(os, "refColumn", refColumn_);
-    writeEntry(os, "componentColumns", componentColumns_);
+    writeEntry(os, "columns", columns_);
     writeEntry(os, "separator", string(separator_));
     writeEntry(os, "mergeSeparators", mergeSeparators_);
 }

@@ -25,6 +25,7 @@ License
 
 #include "intersectionPatchToPatch.H"
 #include "triIntersect.H"
+#include "unitConversion.H"
 #include "vtkWritePolyData.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -737,7 +738,7 @@ Foam::label Foam::patchToPatches::intersection::finalise
         scalarField srcOpenness(srcPatch.size());
         scalarField srcError(srcPatch.size());
         scalarField srcDepth(srcPatch.size());
-        scalarField srcAngle(srcPatch.size());
+        scalarField srcAngleDeg(srcPatch.size());
         forAll(srcPatch, srcFacei)
         {
             const vector& a = srcPatch.faceAreas()[srcFacei];
@@ -787,7 +788,7 @@ Foam::label Foam::patchToPatches::intersection::finalise
 
             const vector aHat = normalised(a);
             const vector aOppHat = normalised(a - Cpl.area + Cpl.nbr.area);
-            srcAngle[srcFacei] =
+            srcAngleDeg[srcFacei] =
                 radToDeg(acos(min(max(aHat & aOppHat, -1), +1)));
             srcOpenness[srcFacei] = mag(projectionA - Cpl.area)/magA;
             srcError[srcFacei] = mag(srcErrorParts_[srcFacei].area)/magA;
@@ -805,10 +806,10 @@ Foam::label Foam::patchToPatches::intersection::finalise
             << gMax(tgtCoverage_) << endl
             << indent << "Source average openness/error/depth/angle = "
             << gAverage(srcOpenness) << '/' << gAverage(srcError) << '/'
-            << gAverage(srcDepth) << '/' << gAverage(srcAngle) << endl
+            << gAverage(srcDepth) << '/' << gAverage(srcAngleDeg) << endl
             << indent << "Source max openness/error/depth/angle = "
             << gMax(srcOpenness) << '/' << gMax(srcError) << '/'
-            << gMax(srcDepth) << '/' << gMax(srcAngle) << endl;
+            << gMax(srcDepth) << '/' << gMax(srcAngleDeg) << endl;
 
         if (debug)
         {
@@ -834,7 +835,7 @@ Foam::label Foam::patchToPatches::intersection::finalise
                 "openness", false, srcOpenness,
                 "error", false, srcError,
                 "depth", false, srcDepth,
-                "angle", false, srcAngle,
+                "angle", false, srcAngleDeg,
                 "normals", true, srcPointNormals
             );
 

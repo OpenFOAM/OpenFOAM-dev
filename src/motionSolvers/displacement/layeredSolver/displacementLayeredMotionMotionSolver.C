@@ -229,13 +229,17 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
 
     if (type == "fixedValue")
     {
-        fld = vectorField("value", dict, meshPoints.size());
+        fld = vectorField("value", dimLength, dict, meshPoints.size());
     }
     else if (type == "timeVaryingUniformFixedValue")
     {
-        Function1s::Table<vector> timeSeries(word::null, dict);
-
-        fld = timeSeries.value(mesh().time().userTimeValue());
+        fld =
+            Function1s::Table<vector>
+            (
+                word::null,
+                {mesh().time().userUnits(), dimLength},
+                dict
+            ).value(mesh().time().value());
     }
     else if (type == "slip")
     {
@@ -245,6 +249,7 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
                 << "FaceZone:" << fz.name()
                 << exit(FatalError);
         }
+
         // Use field set by previous bc
         fld = vectorField(patchDisp[patchi - 1], meshPoints);
     }

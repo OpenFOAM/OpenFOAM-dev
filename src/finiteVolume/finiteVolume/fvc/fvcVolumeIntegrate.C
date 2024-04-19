@@ -90,7 +90,7 @@ domainIntegrate
     return dimensioned<Type>
     (
         "domainIntegrate(" + vf.name() + ')',
-        dimVol*vf.dimensions(),
+        dimVolume*vf.dimensions(),
         gSum(fvc::volumeIntegrate(vf))
     );
 }
@@ -117,7 +117,7 @@ dimensioned<Type> domainIntegrate
     return dimensioned<Type>
     (
         "domainIntegrate(" + df.name() + ')',
-        dimVol*df.dimensions(),
+        dimVolume*df.dimensions(),
         gSum(fvc::volumeIntegrate(df))
     );
 }

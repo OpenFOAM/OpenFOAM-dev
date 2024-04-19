@@ -36,7 +36,7 @@ Foam::fvMeshMovers::multiValveEngine::valveObject::valveObject
 )
 :
     movingObject(name, engine, dict),
-    minLift_(dict.lookup<scalar>("minLift"))
+    minLift_(dict.lookup<scalar>("minLift", dimLength))
 {}
 
 

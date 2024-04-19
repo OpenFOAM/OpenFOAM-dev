@@ -49,10 +49,10 @@ Foam::UniformDimensionedField<Type>::UniformDimensionedField
     )
     {
         dictionary dict(readStream(typeName));
-        scalar multiplier;
-        this->dimensions().read(dict.lookup("dimensions"), multiplier);
-        dict.lookup("value") >> this->value();
-        this->value() *= multiplier;
+
+        this->dimensions().read(dict.lookup("dimensions"));
+
+        this->value() = dict.lookup<Type>("value", this->dimensions());
     }
 }
 
@@ -80,10 +80,10 @@ Foam::UniformDimensionedField<Type>::UniformDimensionedField
     OldTimeField<UniformDimensionedField>(this->time().timeIndex())
 {
     dictionary dict(readStream(typeName));
-    scalar multiplier;
-    this->dimensions().read(dict.lookup("dimensions"), multiplier);
-    dict.lookup("value") >> this->value();
-    this->value() *= multiplier;
+
+    this->dimensions().read(dict.lookup("dimensions"));
+
+    this->value() = dict.lookup<Type>("value", this->dimensions());
 }
 
 

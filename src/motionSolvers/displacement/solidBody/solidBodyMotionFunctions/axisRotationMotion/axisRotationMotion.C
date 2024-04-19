@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "axisRotationMotion.H"
 #include "addToRunTimeSelectionTable.H"
-#include "unitConversion.H"
 
 using namespace Foam::constant::mathematical;
 
@@ -75,16 +74,9 @@ Foam::solidBodyMotionFunctions::axisRotationMotion::transformation() const
 
     if (t > small)
     {
-        // Rotational position (in radians)
-        const vector omega
-        (
-            t*degToRad(radialVelocity_.x()),
-            t*degToRad(radialVelocity_.y()),
-            t*degToRad(radialVelocity_.z())
-        );
-
-        const scalar magOmega = mag(omega);
-        const quaternion R(omega/magOmega, magOmega);
+        const vector theta(t*omega_);
+        const scalar magTheta = mag(theta);
+        const quaternion R(theta/magTheta, magTheta);
         const septernion TR(septernion(-origin_)*R*septernion(origin_));
 
         DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
@@ -105,8 +97,8 @@ bool Foam::solidBodyMotionFunctions::axisRotationMotion::read
 {
     solidBodyMotionFunction::read(SBMFCoeffs);
 
-    SBMFCoeffs_.lookup("origin") >> origin_;
-    SBMFCoeffs_.lookup("radialVelocity") >> radialVelocity_;
+    origin_ = SBMFCoeffs_.lookup<vector>("origin", dimLength);
+    omega_ = SBMFCoeffs_.lookup<vector>("omega", unitRadians/dimTime);
 
     return true;
 }

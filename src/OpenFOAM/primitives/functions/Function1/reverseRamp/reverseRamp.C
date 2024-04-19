@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,11 +41,12 @@ namespace Function1s
 Foam::Function1s::reverseRamp::reverseRamp
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
-    Ramp<reverseRamp>(name, dict),
-    ramp_(Function1<scalar>::New("ramp", dict))
+    Ramp<reverseRamp>(name, units, dict),
+    ramp_(Function1<scalar>::New("ramp", units.x, dimless, dict))
 {}
 
 
@@ -67,10 +68,14 @@ Foam::Function1s::reverseRamp::~reverseRamp()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::Function1s::reverseRamp::write(Ostream& os) const
+void Foam::Function1s::reverseRamp::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
-    Ramp<reverseRamp>::write(os);
-    writeEntry(os, ramp_());
+    Ramp<reverseRamp>::write(os, units);
+    writeEntry(os, units, ramp_());
 }
 
 

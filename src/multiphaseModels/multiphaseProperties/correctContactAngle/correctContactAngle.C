@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "correctContactAngle.H"
-#include "unitConversion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -110,15 +109,11 @@ void Foam::correctContactAngle
             vectorField& nHatp = nHatbf[patchi];
 
             // Calculate the contact angle
-            scalarField theta(np.size(), degToRad(tp.theta0()));
+            scalarField theta(np.size(), tp.theta0());
 
             // Calculate the dynamic contact angle if required
             if (tp.dynamic())
             {
-                const scalar uTheta = tp.uTheta();
-                const scalar thetaA = degToRad(tp.thetaA());
-                const scalar thetaR = degToRad(tp.thetaR());
-
                 // Calculated the component of the velocity parallel to the wall
                 vectorField Uwall
                 (
@@ -134,7 +129,7 @@ void Foam::correctContactAngle
                 // the interface
                 const scalarField uwall(nWall & Uwall);
 
-                theta += (thetaA - thetaR)*tanh(uwall/uTheta);
+                theta += (tp.thetaA() - tp.thetaR())*tanh(uwall/tp.uTheta());
             }
 
             // Reset nHatp to correspond to the contact angle

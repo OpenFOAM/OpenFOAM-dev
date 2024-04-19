@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,16 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 )
 :
     totalPressureFvPatchScalarField(p, iF, dict),
-    fanCurve_(Function1<scalar>::New("fanCurve", dict)),
+    fanCurve_
+    (
+        Function1<scalar>::New
+        (
+            "fanCurve",
+            dimVolumetricFlux,
+            iF.dimensions(),
+            dict
+        )
+    ),
     direction_(fanFlowDirectionNames_.read(dict.lookup("direction")))
 {}
 
@@ -111,7 +120,7 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
 
     // Get the volumetric flow rate
     scalar volFlowRate = 0;
-    if (phip.internalField().dimensions() == dimFlux)
+    if (phip.internalField().dimensions() == dimVolumetricFlux)
     {
         volFlowRate = sign*gSum(phip);
     }

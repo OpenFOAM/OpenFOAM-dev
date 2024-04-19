@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ turbulentMixingLengthFrequencyFvScalarFieldSource
 )
 :
     fvScalarFieldSource(iF, dict),
-    mixingLength_(dict.lookup<scalar>("mixingLength")),
+    mixingLength_(dict.lookup<scalar>("mixingLength", dimLength)),
     kName_(dict.lookupOrDefault<word>("k", "k"))
 {}
 

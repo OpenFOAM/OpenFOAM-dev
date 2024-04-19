@@ -90,6 +90,7 @@ public:
         turbulentBL
         (
             const word& name,
+            const unitConversions& units,
             const dictionary& dict
         );
 
@@ -111,7 +112,7 @@ public:
         ) const;
 
         //- Write data to dictionary stream
-        virtual void write(Ostream& os) const;
+        virtual void write(Ostream& os, const unitConversions& units) const;
 
 
     // Member Operators

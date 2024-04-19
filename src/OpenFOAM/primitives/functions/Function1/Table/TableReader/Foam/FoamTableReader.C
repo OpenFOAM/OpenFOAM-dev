@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,10 +44,11 @@ template<class Type>
 Foam::TableReaders::Foam<Type>::Foam
 (
     const word& name,
+    const Function1s::unitConversions& units,
     const dictionary& dict
 )
 :
-    TableFileReader<Type>(dict)
+    TableFileReader<Type>(units, dict)
 {}
 
 

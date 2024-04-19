@@ -39,7 +39,6 @@ Usage
 #include "indexedOctree.H"
 #include "treeBoundBox.H"
 #include "PackedBoolList.H"
-#include "unitConversion.H"
 #include "searchableSurfaces.H"
 #include "systemDict.H"
 
@@ -112,41 +111,6 @@ void greenRefine
         );
     }
 }
-
-
-//scalar checkEdgeAngle
-//(
-//    const triSurface& surf,
-//    const label edgeIndex,
-//    const label pointIndex,
-//    const scalar& angle
-//)
-//{
-//    const edge& e = surf.edges()[edgeIndex];
-
-//    vector eVec = e.vec(surf.localPoints());
-//    eVec /= mag(eVec) + small;
-
-//    const labelList& pEdges = surf.pointEdges()[pointIndex];
-//
-//    forAll(pEdges, eI)
-//    {
-//        const edge& nearE = surf.edges()[pEdges[eI]];
-
-//        vector nearEVec = nearE.vec(surf.localPoints());
-//        nearEVec /= mag(nearEVec) + small;
-
-//        const scalar dot = eVec & nearEVec;
-//        const scalar minCos = degToRad(angle);
-
-//        if (mag(dot) > minCos)
-//        {
-//            return false;
-//        }
-//    }
-
-//    return true;
-//}
 
 
 void createBoundaryEdgeTrees
@@ -429,15 +393,6 @@ int main(int argc, char *argv[])
 
                 if (nearestHit.hit())
                 {
-    //                bool rejectEdge =
-    //                    checkEdgeAngle
-    //                    (
-    //                        surf,
-    //                        nearestHit.index(),
-    //                        pointi,
-    //                        30
-    //                    );
-
                     if (dist2 > Foam::sqr(dist))
                     {
                         nearestHit.setMiss();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
     {
         fvPatchField<Type>::operator=
         (
-            Field<Type>("value", dict, p.size())
+            Field<Type>("value", iF.dimensions(), dict, p.size())
         );
     }
     else
@@ -64,21 +64,19 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 
-    if (dict.readIfPresent("lInf", lInf_))
+    if (dict.readIfPresent<scalar>("lInf", dimLength, lInf_))
     {
-        dict.lookup("fieldInf") >> fieldInf_;
-
         if (lInf_ < 0.0)
         {
-            FatalIOErrorInFunction
-            (
-                dict
-            )   << "unphysical lInf specified (lInf < 0)" << nl
+            FatalIOErrorInFunction(dict)
+                << "unphysical lInf specified (lInf < 0)" << nl
                 << "    on patch " << this->patch().name()
                 << " of field " << this->internalField().name()
                 << " in file " << this->internalField().objectPath()
                 << exit(FatalIOError);
         }
+
+        fieldInf_ = dict.lookup<Type>("fieldInf", iF.dimensions());
     }
 }
 

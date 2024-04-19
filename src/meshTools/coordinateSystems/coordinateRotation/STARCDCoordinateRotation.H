@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,10 +80,9 @@ class STARCDCoordinateRotation
         //- Calculate transformation tensor
         void calcTransform
         (
-            const scalar rotZ,
-            const scalar rotX,
-            const scalar rotY,
-            const bool inDegrees=true
+            const scalar z,
+            const scalar x,
+            const scalar y
         );
 
 

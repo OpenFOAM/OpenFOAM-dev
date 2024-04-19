@@ -59,11 +59,20 @@ namespace Foam
 
 void Foam::fv::VoFSolidificationMelting::readCoeffs()
 {
-    alphaSolidT_.reset(Function1<scalar>::New("alphaSolidT", coeffs()).ptr());
+    alphaSolidT_.reset
+    (
+        Function1<scalar>::New
+        (
+            "alphaSolidT",
+            dimTemperature,
+            unitFraction,
+            coeffs()
+        ).ptr()
+    );
     L_ = dimensionedScalar("L", dimEnergy/dimMass, coeffs());
-    relax_ = coeffs().lookupOrDefault<scalar>("relax", 0.9);
-    Cu_ = coeffs().lookupOrDefault<scalar>("Cu", 100000);
-    q_ = coeffs().lookupOrDefault<scalar>("q", 0.001);
+    relax_ = coeffs().lookupOrDefault<scalar>("relax", dimless, 0.9);
+    Cu_ = coeffs().lookupOrDefault<scalar>("Cu", dimless/dimTime, 100000);
+    q_ = coeffs().lookupOrDefault<scalar>("q", dimless, 0.001);
 }
 
 

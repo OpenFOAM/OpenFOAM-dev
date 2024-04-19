@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,13 +51,22 @@ wideBandDiffusiveRadiationMixedFvPatchScalarField
 {
     if (dict.found("value"))
     {
+        refValue() = scalarField("refValue", iF.dimensions(), dict, p.size());
+        refGrad() =
+            scalarField
+            (
+                "refGradient",
+                iF.dimensions()/dimLength,
+                dict,
+                p.size()
+            );
+        valueFraction() =
+            scalarField("valueFraction", unitFraction, dict, p.size());
+
         fvPatchScalarField::operator=
         (
-            scalarField("value", dict, p.size())
+            scalarField("value", iF.dimensions(), dict, p.size())
         );
-        refValue() = scalarField("refValue", dict, p.size());
-        refGrad() = scalarField("refGradient", dict, p.size());
-        valueFraction() = scalarField("valueFraction", dict, p.size());
     }
     else
     {

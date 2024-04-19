@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,14 +69,15 @@ Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
 {
     if (dict.found("gradient"))
     {
-        gradient() = scalarField("gradient", dict, p.size());
+        gradient() =
+            scalarField("gradient", iF.dimensions()/dimLength, dict, p.size());
         fixedGradientFvPatchScalarField::updateCoeffs();
         fixedGradientFvPatchScalarField::evaluate();
     }
     else
     {
-        fvPatchField<scalar>::operator=(patchInternalField());
         gradient() = 0.0;
+        fvPatchField<scalar>::operator=(patchInternalField());
     }
 }
 

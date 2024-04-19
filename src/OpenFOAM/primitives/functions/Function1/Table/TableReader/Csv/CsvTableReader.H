@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,18 +26,18 @@ Class
 
 Description
     Reads an interpolation table from a file in CSV-format. Entries govern the
-    layout of the CSV file. The index of the first (x) column of the table is
-    given by the refColumn entry, and is always scalar. The indices of the
-    components of the second (y) column are given by the componentColumns
-    entry.
+    layout of the CSV file. The indices of the columns of the table that are to
+    be used are given by the columns entry. This is a tuple for which the first
+    part is the index of the column used for the x-axis, and the second part is
+    the column index used for the scalar values, or a list of column indices
+    used for the components of vector, tensor, etc..., values.
 
 Usage
     \verbatim
-        nHeaderLine         4;          // number of header lines
-        refColumn           0;          // reference column index
-        componentColumns    (1 2 3);    // component column indices
-        separator           ",";        // optional (defaults to ",")
-        mergeSeparators     no;         // merge multiple separators
+        nHeaderLine         4;           // number of header lines
+        columns             (0 (1 2 3)); // column indices for vector values
+        separator           ",";         // optional (defaults to ",")
+        mergeSeparators     no;          // merge multiple separators
     \endverbatim
 
 SourceFiles
@@ -59,6 +59,51 @@ namespace TableReaders
 {
 
 /*---------------------------------------------------------------------------*\
+                           Using CsvVoid Declaration
+\*---------------------------------------------------------------------------*/
+
+template<typename T>
+using CsvVoid = void;
+
+
+/*---------------------------------------------------------------------------*\
+                        Struct CsvLabelType Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type, typename = void>
+struct CsvLabelType
+{
+    typedef label type;
+
+    typedef FixedList<label, 1> oldType;
+
+    type operator()(const oldType& ot)
+    {
+        return ot[0];
+    }
+};
+
+
+template<class Type>
+struct CsvLabelType<Type, CsvVoid<typename pTraits<Type>::labelType>>
+{
+    typedef typename pTraits<Type>::labelType type;
+
+    typedef FixedList<label, pTraits<Type>::nComponents> oldType;
+
+    type operator()(const oldType& ot) const
+    {
+        type t;
+        for (direction i = 0; i < pTraits<Type>::nComponents; ++ i)
+        {
+            setComponent(t, i) = ot[i];
+        }
+        return t;
+    }
+};
+
+
+/*---------------------------------------------------------------------------*\
                              Class Csv Declaration
 \*---------------------------------------------------------------------------*/
 
@@ -67,16 +112,19 @@ class Csv
 :
     public TableFileReader<Type>
 {
+    // Private Typedefs
+
+        //- Type of the column indices
+        typedef Tuple2<label, typename CsvLabelType<Type>::type> columnIndices;
+
+
     // Private Data
 
         //- Number of header lines
         const label nHeaderLine_;
 
-        //- Reference column
-        const label refColumn_;
-
-        //- Labels of the components
-        const labelList componentColumns_;
+        //- Column indices
+        const columnIndices columns_;
 
         //- Separator character
         const char separator_;
@@ -103,7 +151,12 @@ public:
     // Constructors
 
         //- Construct from name and dictionary
-        Csv(const word& name, const dictionary& dict);
+        Csv
+        (
+            const word& name,
+            const Function1s::unitConversions& units,
+            const dictionary& dict
+        );
 
         //- Construct and return a copy
         virtual autoPtr<TableReader<Type>> clone() const
@@ -122,6 +175,7 @@ public:
         virtual void write
         (
             Ostream& os,
+            const Function1s::unitConversions& units,
             const List<Tuple2<scalar, Type>>& table
         ) const;
 };

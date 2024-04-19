@@ -31,7 +31,6 @@ License
 #include "duplicatePoints.H"
 #include "regionSplit.H"
 #include "removeCells.H"
-#include "unitConversion.H"
 #include "OBJstream.H"
 #include "patchFaceOrientation.H"
 #include "PatchEdgeFaceWave.H"
@@ -733,7 +732,7 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
             normal2
         );
 
-        const scalar planarAngleCos = Foam::cos(degToRad(planarAngle));
+        const scalar planarAngleCos = Foam::cos(planarAngle);
 
         label filterI = 0;
         forAll(filteredCouples, i)
@@ -771,7 +770,7 @@ Foam::List<Foam::labelPair> Foam::meshRefinement::freeStandingBaffles
 
         Info<< "freeStandingBaffles : detected "
             << returnReduce(filterI, sumOp<label>())
-            << " planar (within " << planarAngle
+            << " planar (within " << radToDeg(planarAngle)
             << " degrees) free-standing baffles out of "
             << nFiltered
             << nl << endl;

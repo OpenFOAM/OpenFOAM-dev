@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,13 +120,10 @@ int main(int argc, char *argv[])
             // Read field
             volScalarField field(*iter(), mesh);
 
-            // lookup field from dictionary and convert field
-            label unitNumber;
-            if
-            (
-                foamDataToFluentDict.readIfPresent(field.name(), unitNumber)
-             && unitNumber > 0
-            )
+            // Lookup field from dictionary and convert field
+            const label unitNumber =
+                foamDataToFluentDict.lookupOrDefault<label>(field.name(), 0);
+            if (unitNumber > 0)
             {
                 Info<< "    Converting field " << field.name() << endl;
                 writeFluentField(field, unitNumber, fluentDataFile);
@@ -145,13 +142,10 @@ int main(int argc, char *argv[])
             // Read field
             volVectorField field(*iter(), mesh);
 
-            // lookup field from dictionary and convert field
-            label unitNumber;
-            if
-            (
-                foamDataToFluentDict.readIfPresent(field.name(), unitNumber)
-             && unitNumber > 0
-            )
+            // Lookup field from dictionary and convert field
+            const label unitNumber =
+                foamDataToFluentDict.lookupOrDefault<label>(field.name(), 0);
+            if (unitNumber > 0)
             {
                 Info<< "    Converting field " << field.name() << endl;
                 writeFluentField(field, unitNumber, fluentDataFile);

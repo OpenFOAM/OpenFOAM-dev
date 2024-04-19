@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,7 +197,8 @@ namespace Foam
         // Either construct features from surface & featureAngle or read set.
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        const scalar includedAngle = dict.lookup<scalar>("includedAngle");
+        const scalar includedAngle =
+            dict.lookup<scalar>("includedAngle", unitDegrees);
 
         autoPtr<surfaceFeatures> set
         (
@@ -451,7 +452,9 @@ namespace Foam
             (
                 closenessDict.lookupOrDefault<scalar>
                 (
-                    "internalAngleTolerance", 80
+                    "internalAngleTolerance",
+                    unitDegrees,
+                    80
                 )
             );
 
@@ -459,7 +462,9 @@ namespace Foam
             (
                 closenessDict.lookupOrDefault<scalar>
                 (
-                    "externalAngleTolerance", 80
+                    "externalAngleTolerance",
+                    unitDegrees,
+                    80
                 )
             );
 

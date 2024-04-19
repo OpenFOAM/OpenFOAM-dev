@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [velocity];
 
 internalField   uniform (0 0 0);
 
@@ -23,15 +23,15 @@ boundaryField
     inlet
     {
         type            flowRateInletVelocity;
-        massFlowRate    0.0001;
-        value           uniform (0 0 0);
+        massFlowRate    0.1 [g/s];
+        value           $internalField;
     }
 
     outlet
     {
         type            pressureInletOutletVelocity;
-        inletValue      uniform (0 0 0);
-        value           uniform (0 0 0);
+        inletValue      $internalField;
+        value           $internalField;
     }
 
     symmetry
@@ -42,13 +42,13 @@ boundaryField
     wall
     {
         type            fixedValue;
-        value           uniform (0 0 0);
+        value           $internalField;
     }
 
     plenum
     {
         type            pressureInletVelocity;
-        value           uniform (0 0 0);
+        value           $internalField;
     }
 }
 

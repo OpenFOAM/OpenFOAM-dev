@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ steadyStateD2dt2Scheme<Type>::fvmD2dt2
         new fvMatrix<Type>
         (
             vf,
-            vf.dimensions()*dimVol/dimTime/dimTime
+            vf.dimensions()*dimVolume/dimTime/dimTime
         )
     );
 
@@ -115,7 +115,7 @@ steadyStateD2dt2Scheme<Type>::fvmD2dt2
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVol/dimTime/dimTime
+            rho.dimensions()*vf.dimensions()*dimVolume/dimTime/dimTime
         )
     );
 
@@ -136,7 +136,7 @@ steadyStateD2dt2Scheme<Type>::fvmD2dt2
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVol/dimTime/dimTime
+            rho.dimensions()*vf.dimensions()*dimVolume/dimTime/dimTime
         )
     );
 

@@ -31,11 +31,15 @@ template<class Type>
 Foam::Function2s::Radial<Type>::Radial
 (
     const word& name,
+    const unitConversions& units,
     const dictionary& dict
 )
 :
     FieldFunction2<Type, Radial<Type>>(name),
-    value_(Function1<Type>::New("value", dict))
+    value_
+    (
+        Function1<Type>::New("value", {units.x + units.y, units.value}, dict)
+    )
 {}
 
 
@@ -57,9 +61,13 @@ Foam::Function2s::Radial<Type>::~Radial()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function2s::Radial<Type>::write(Ostream& os) const
+void Foam::Function2s::Radial<Type>::write
+(
+    Ostream& os,
+    const unitConversions& units
+) const
 {
-    value_->write(os);
+    writeEntry(os, {units.x + units.y, units.value}, value_());
 }
 
 

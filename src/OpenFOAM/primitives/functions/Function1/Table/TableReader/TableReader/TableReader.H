@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,8 +35,8 @@ SourceFiles
 #ifndef TableReader_H
 #define TableReader_H
 
-#include "dictionary.H"
-#include "addToRunTimeSelectionTable.H"
+#include "Function1.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,6 +50,31 @@ namespace Foam
 template<class Type>
 class TableReader
 {
+protected:
+
+    // Protected Member Functions
+
+        //- Do unit conversions on input data
+        void convertRead
+        (
+            const Function1s::unitConversions& units,
+            List<Tuple2<scalar, Type>>& table
+        ) const;
+
+        //- Do unit conversions on input data
+        List<Tuple2<scalar, Type>> convertRead
+        (
+            const Function1s::unitConversions& units,
+            const List<Tuple2<scalar, Type>>& table
+        ) const;
+
+        //- Do unit conversions in order to output data
+        List<Tuple2<scalar, Type>> convertWrite
+        (
+            const Function1s::unitConversions& units,
+            const List<Tuple2<scalar, Type>>& table
+        ) const;
+
 
 public:
 
@@ -66,9 +91,10 @@ public:
             dictionary,
             (
                 const word& name,
+                const Function1s::unitConversions& units,
                 const dictionary& dict
             ),
-            (name, dict)
+            (name, units, dict)
         );
 
 
@@ -85,6 +111,7 @@ public:
     static autoPtr<TableReader<Type>> New
     (
         const word& name,
+        const Function1s::unitConversions& units,
         const dictionary& dict
     );
 
@@ -98,6 +125,7 @@ public:
         //- Read values
         virtual List<Tuple2<scalar, Type>> read
         (
+            const Function1s::unitConversions& units,
             const dictionary& dict
         ) const = 0;
 
@@ -105,8 +133,9 @@ public:
         virtual void write
         (
             Ostream& os,
+            const Function1s::unitConversions& units,
             const List<Tuple2<scalar, Type>>& table
-        ) const = 0;
+        ) const;
 };
 
 

@@ -42,7 +42,10 @@ timeVaryingMappedFixedValueFvPatchField
 {
     if (dict.found("value"))
     {
-        fvPatchField<Type>::operator==(Field<Type>("value", dict, p.size()));
+        fvPatchField<Type>::operator==
+        (
+            Field<Type>("value", iF.dimensions(), dict, p.size())
+        );
     }
     else
     {

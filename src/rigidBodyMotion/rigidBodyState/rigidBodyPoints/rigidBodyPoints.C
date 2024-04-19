@@ -26,7 +26,6 @@ License
 #include "rigidBodyPoints.H"
 #include "fvMeshMoversMotionSolver.H"
 #include "motionSolver.H"
-#include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -69,7 +68,9 @@ Foam::functionObjects::rigidBodyPoints::rigidBodyPoints
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    logFiles(obr_, name)
+    logFiles(obr_, name),
+    angularVelocityUnits_("[rad/s]"),
+    angularAccelerationUnits_("[rad/s^2]")
 {
     read(dict);
 }
@@ -87,7 +88,8 @@ bool Foam::functionObjects::rigidBodyPoints::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    angleUnits_ = dict.lookupOrDefault<word>("angleUnits", "radians");
+    angularVelocityUnits_.readIfPresent("angularVelocityUnits", dict);
+    angularAccelerationUnits_.readIfPresent("angularAccelerationUnits", dict);
 
     dict.lookup("body") >> body_;
 
@@ -110,13 +112,21 @@ bool Foam::functionObjects::rigidBodyPoints::read(const dictionary& dict)
 
 void Foam::functionObjects::rigidBodyPoints::writeFileHeader(const label i)
 {
-    writeHeader(this->files()[i], "Body point motion");
-    writeHeaderValue(this->files()[i], "Body", body_);
-    writeHeaderValue(this->files()[i], "Point", points_[i]);
-    writeHeaderValue(this->files()[i], "Angle Units", angleUnits_);
-    writeCommented(this->files()[i], "Time");
+    OFstream& file = this->files()[i];
 
-    this->files()[i]<< tab
+    writeHeader(file, "Body point motion");
+    writeHeaderValue(file, "Body", body_);
+    writeHeaderValue(file, "Point", points_[i]);
+    writeHeaderValue(file, "Angular Velocity Units", angularVelocityUnits_);
+    writeHeaderValue
+    (
+        file,
+        "Angular Acceleration Units",
+        angularAccelerationUnits_
+    );
+    writeCommented(file, "Time");
+
+    file<< tab
         << "Position" << tab
         << "Linear velocity" << tab
         << "Angular velocity" << tab
@@ -147,28 +157,14 @@ bool Foam::functionObjects::rigidBodyPoints::write()
             const spatialVector v(motion.v(bodyID, points_[i]));
             const spatialVector a(motion.a(bodyID, points_[i]));
 
-            vector angularVelocity(v.w());
-            vector angularAcceleration(a.w());
-
-            if (angleUnits_ == "degrees")
-            {
-                angularVelocity.x() = radToDeg(angularVelocity.x());
-                angularVelocity.y() = radToDeg(angularVelocity.y());
-                angularVelocity.z() = radToDeg(angularVelocity.z());
-
-                angularAcceleration.x() = radToDeg(angularAcceleration.x());
-                angularAcceleration.y() = radToDeg(angularAcceleration.y());
-                angularAcceleration.z() = radToDeg(angularAcceleration.z());
-            }
-
             writeTime(files()[i]);
             files()[i]
                 << tab
                 << p  << tab
                 << v.l() << tab
-                << angularVelocity << tab
+                << angularVelocityUnits_.toUser(v.w()) << tab
                 << a.l() << tab
-                << angularAcceleration << endl;
+                << angularAccelerationUnits_.toUser(a.w()) << endl;
         }
     }
 

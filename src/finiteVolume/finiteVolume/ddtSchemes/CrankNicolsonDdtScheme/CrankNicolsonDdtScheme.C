@@ -308,27 +308,30 @@ CrankNicolsonDdtScheme<Type>::CrankNicolsonDdtScheme
     if (firstToken.isNumber())
     {
         const scalar ocCoeff = firstToken.number();
+
         if (ocCoeff < 0 || ocCoeff > 1)
         {
-            FatalIOErrorInFunction
-            (
-                is
-            )   << "Off-centreing coefficient = " << ocCoeff
+            FatalIOErrorInFunction(is)
+                << "Off-centreing coefficient = " << ocCoeff
                 << " should be >= 0 and <= 1"
                 << exit(FatalIOError);
         }
 
-        ocCoeff_ = new Function1s::Constant<scalar>
-        (
-            "ocCoeff",
-            ocCoeff
-        );
+        ocCoeff_ =
+            new Function1s::Constant<scalar>("ocCoeff", ocCoeff);
     }
     else
     {
         is.putBack(firstToken);
         dictionary dict(is);
-        ocCoeff_ = Function1<scalar>::New("ocCoeff", dict);
+        ocCoeff_ =
+            Function1<scalar>::New
+            (
+                "ocCoeff",
+                mesh.time().userUnits(),
+                unitFraction,
+                dict
+            );
     }
 
     // Ensure the old-old-time cell volumes are available
@@ -769,7 +772,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            vf.dimensions()*dimVol/dimTime
+            vf.dimensions()*dimVolume/dimTime
         )
     );
 
@@ -852,7 +855,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVol/dimTime
+            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -934,7 +937,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            rho.dimensions()*vf.dimensions()*dimVol/dimTime
+            rho.dimensions()*vf.dimensions()*dimVolume/dimTime
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -1025,7 +1028,11 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         new fvMatrix<Type>
         (
             vf,
-            alpha.dimensions()*rho.dimensions()*vf.dimensions()*dimVol/dimTime
+            alpha.dimensions()
+           *rho.dimensions()
+           *vf.dimensions()
+           *dimVolume
+           /dimTime
         )
     );
     fvMatrix<Type>& fvm = tfvm.ref();
@@ -1373,7 +1380,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
     if
     (
         U.dimensions() == dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimFlux
+     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
     )
     {
         DDt0Field<VolField<Type>>& ddt0 =
@@ -1430,7 +1437,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
     else if
     (
         U.dimensions() == rho.dimensions()*dimVelocity
-     && phi.dimensions() == rho.dimensions()*dimFlux
+     && phi.dimensions() == rho.dimensions()*dimVolumetricFlux
     )
     {
         DDt0Field<VolField<Type>>& ddt0 =

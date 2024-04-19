@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,16 +38,24 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
 :
     mixedFvPatchField<Type>(p, iF, dict, false),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    uniformInletValue_(Function1<Type>::New("uniformInletValue", dict))
+    uniformInletValue_
+    (
+        Function1<Type>::New
+        (
+            "uniformInletValue",
+            this->db().time().userUnits(),
+            iF.dimensions(),
+            dict
+        )
+    )
 {
-    this->refValue() =
-        uniformInletValue_->value(this->db().time().userTimeValue());
+    this->refValue() = uniformInletValue_->value(this->db().time().value());
 
     if (dict.found("value"))
     {
         fvPatchField<Type>::operator=
         (
-            Field<Type>("value", dict, p.size())
+            Field<Type>("value", iF.dimensions(), dict, p.size())
         );
     }
     else
@@ -74,8 +82,7 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
     uniformInletValue_(ptf.uniformInletValue_, false)
 {
     // Evaluate refValue since not mapped
-    this->refValue() =
-        uniformInletValue_->value(this->db().time().userTimeValue());
+    this->refValue() = uniformInletValue_->value(this->db().time().value());
 
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
@@ -110,8 +117,7 @@ void Foam::uniformInletOutletFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    this->refValue() =
-        uniformInletValue_->value(this->db().time().userTimeValue());
+    this->refValue() = uniformInletValue_->value(this->db().time().value());
 
     const Field<scalar>& phip =
         this->patch().template lookupPatchField<surfaceScalarField, scalar>
@@ -133,7 +139,13 @@ void Foam::uniformInletOutletFvPatchField<Type>::write(Ostream& os) const
     {
         writeEntry(os, "phi", phiName_);
     }
-    writeEntry(os, this->uniformInletValue_());
+    writeEntry
+    (
+        os,
+        this->db().time().userUnits(),
+        this->internalField().dimensions(),
+        uniformInletValue_()
+    );
     writeEntry(os, "value", *this);
 }
 
@@ -150,8 +162,7 @@ void Foam::uniformInletOutletFvPatchField<Type>::map
     mixedFvPatchField<Type>::map(ptf, mapper);
 
     // Override
-    this->refValue() =
-        uniformInletValue_->value(this->db().time().userTimeValue());
+    this->refValue() = uniformInletValue_->value(this->db().time().value());
 }
 
 
@@ -164,8 +175,7 @@ void Foam::uniformInletOutletFvPatchField<Type>::reset
     mixedFvPatchField<Type>::reset(ptf);
 
     // Override
-    this->refValue() =
-        uniformInletValue_->value(this->db().time().userTimeValue());
+    this->refValue() = uniformInletValue_->value(this->db().time().value());
 }
 
 

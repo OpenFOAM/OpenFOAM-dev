@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,7 @@ Usage
             file                "UProfile";
             format              csv;
             nHeaderLine         0;
-            refColumn           0;
-            componentColumns    (1 2 3);
+            columns             (0 (1 2 3));
             separator           ",";
             mergeSeparators     no;
             outOfBounds         clamp;

@@ -27,5 +27,4 @@ boundaryField
     #includeEtc "caseDicts/setConstraintTypes"
 }
 
-
 // ************************************************************************* //

@@ -27,22 +27,26 @@ Class
 Description
     Writes the 6-DoF motion state.
 
+Usage
+    \table
+        Property     | Description                  | Required | Default value
+        type         | type name: sixDoFRigidBodyState    | yes |
+        angleUnits           | units in which angles are written \\
+                                                     | no       | [rad]
+        angularVelocityUnits | units in which angular velocities are written \\
+                                                     | no       | [rad/s]
+    \endtable
+
     Example of function object specification:
     \verbatim
     sixDoFRigidBodyState
     {
         type           sixDoFRigidBodyState;
         libs           ("libsixDoFRigidBodyState.so");
-        angleUnits     degrees;
+        angleUnits     [deg];
+        angularVelocityUnits [rpm];
     }
     \endverbatim
-
-Usage
-    \table
-        Property     | Description                  | Required | Default value
-        type         | type name: sixDoFRigidBodyState    | yes |
-        angleUnits  | degrees or radians           | no       | radian
-    \endtable
 
 See also
     Foam::functionObjects::fvMeshFunctionObject
@@ -57,15 +61,14 @@ SourceFiles
 #define sixDoFRigidBodyState_H
 
 #include "fvMeshFunctionObject.H"
-#include "vector.H"
 #include "logFiles.H"
+#include "namedUnitConversion.H"
+#include "sixDoFRigidBodyMotion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    class sixDoFRigidBodyMotion;
-
 namespace functionObjects
 {
 
@@ -80,7 +83,11 @@ class sixDoFRigidBodyState
 {
     // Private Data
 
-        word angleUnits_;
+        //- Units in which to write the angles
+        namedUnitConversion angleUnits_;
+
+        //- Units in which to write the angular velocities
+        namedUnitConversion angularVelocityUnits_;
 
 
     // Private Member Functions
@@ -127,6 +134,9 @@ public:
 
         //- Return the current body angular velocity
         vector angularVelocity() const;
+
+        //- Return the units in which to write the angular velocities
+        const unitConversion& angularVelocityUnits() const;
 
         //- Read the sixDoFRigidBodyState data
         virtual bool read(const dictionary&);

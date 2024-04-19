@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,16 +37,16 @@ Foam::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
 :
     fixedValueFvPatchField<Type>(p, iF, dict, false),
     ranGen_(label(0)),
-    fluctuationScale_(pTraits<Type>(dict.lookup("fluctuationScale"))),
-    referenceField_("referenceField", dict, p.size()),
-    alpha_(dict.lookupOrDefault<scalar>("alpha", 0.1)),
+    fluctuationScale_(dict.lookup<Type>("fluctuationScale", unitFraction)),
+    referenceField_("referenceField", iF.dimensions(), dict, p.size()),
+    alpha_(dict.lookupOrDefault<scalar>("alpha", unitFraction, 0.1)),
     curTimeIndex_(-1)
 {
     if (dict.found("value"))
     {
         fixedValueFvPatchField<Type>::operator==
         (
-            Field<Type>("value", dict, p.size())
+            Field<Type>("value", iF.dimensions(), dict, p.size())
         );
     }
     else

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,8 @@ bool Foam::functionObjects::checkMesh::read(const dictionary& dict)
         );
     }
 
-    nonOrthThreshold_ = dict.lookupOrDefault("nonOrthThreshold", 70.0);
+    nonOrthThreshold_ =
+        dict.lookupOrDefault("nonOrthThreshold", unitDegrees, degToRad(70.0));
     skewThreshold_ = dict.lookupOrDefault("skewThreshold", 4.0);
 
     stopAt_ = Time::stopAtControlNames
