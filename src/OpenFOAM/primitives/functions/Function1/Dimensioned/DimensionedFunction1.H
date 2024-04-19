@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,14 +98,6 @@ class Dimensioned
 
         //- Value function
         autoPtr<Function1<Type>> value_;
-
-
-    // Private Member Functions
-
-        //- Read the coefficients from the given dictionary. Note that this is
-        //  the outer dictionary, not the coefficients dictionary, as is the
-        //  case for most/all other Function1-s.
-        void read(const word& name, const dictionary& dict);
 
 
 public:

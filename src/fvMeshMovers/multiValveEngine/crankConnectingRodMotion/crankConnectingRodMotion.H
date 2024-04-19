@@ -73,16 +73,10 @@ class crankConnectingRodMotion
     // Private data
 
         //- Connecting-rod length
-        scalar conRodLength_;
+        const scalar conRodLength_;
 
         //- Stroke
-        scalar stroke_;
-
-
-    // Private Member Functions
-
-        //- Read the coefficients from the given dictionary
-        void read(const dictionary& dict);
+        const scalar stroke_;
 
 
 public:

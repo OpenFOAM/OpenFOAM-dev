@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,21 +25,6 @@ License
 
 #include "Square.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::Function1s::Square<Type>::read(const dictionary& dict)
-{
-    amplitude_ = Function1<Type>::New("amplitude", dict);
-    frequency_ = dict.lookup<scalar>("frequency");
-    start_ = dict.lookupOrDefault<scalar>("start", 0);
-    level_ = Function1<Type>::New("level", dict);
-    markSpace_ = dict.lookupOrDefault<scalar>("markSpace", 1);
-
-    integrable_ = amplitude_->constant() && level_->constant();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -49,10 +34,14 @@ Foam::Function1s::Square<Type>::Square
     const dictionary& dict
 )
 :
-    FieldFunction1<Type, Square<Type>>(name)
-{
-    read(dict);
-}
+    FieldFunction1<Type, Square<Type>>(name),
+    amplitude_(Function1<Type>::New("amplitude", dict)),
+    frequency_(dict.lookup<scalar>("frequency")),
+    start_(dict.lookupOrDefault<scalar>("start", 0)),
+    level_(Function1<Type>::New("level", dict)),
+    markSpace_(dict.lookupOrDefault<scalar>("markSpace", 1)),
+    integrable_(amplitude_->constant() && level_->constant())
+{}
 
 
 template<class Type>

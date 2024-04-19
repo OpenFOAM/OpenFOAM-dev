@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,30 +25,6 @@ License
 
 #include "Scale2.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::Function2s::Scale<Type>::read(const dictionary& dict)
-{
-    scale_ = Function2<scalar>::New("scale", dict);
-    xScale_ =
-        dict.found("xScale")
-      ? Function1<scalar>::New("xScale", dict)
-      : autoPtr<Function1<scalar>>
-        (
-            new Function1s::Constant<scalar>("xScale", 1)
-        );
-    yScale_ =
-        dict.found("yScale")
-      ? Function1<scalar>::New("yScale", dict)
-      : autoPtr<Function1<scalar>>
-        (
-            new Function1s::Constant<scalar>("yScale", 1)
-        );
-    value_ = Function2<Type>::New("value", dict);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -58,10 +34,28 @@ Foam::Function2s::Scale<Type>::Scale
     const dictionary& dict
 )
 :
-    FieldFunction2<Type, Scale<Type>>(name)
-{
-    read(dict);
-}
+    FieldFunction2<Type, Scale<Type>>(name),
+    scale_(Function2<scalar>::New("scale", dict)),
+    xScale_
+    (
+        dict.found("xScale")
+      ? Function1<scalar>::New("xScale", dict)
+      : autoPtr<Function1<scalar>>
+        (
+            new Function1s::Constant<scalar>("xScale", 1)
+        )
+    ),
+    yScale_
+    (
+        dict.found("yScale")
+      ? Function1<scalar>::New("yScale", dict)
+      : autoPtr<Function1<scalar>>
+        (
+            new Function1s::Constant<scalar>("yScale", 1)
+        )
+    ),
+    value_(Function2<Type>::New("value", dict))
+{}
 
 
 template<class Type>

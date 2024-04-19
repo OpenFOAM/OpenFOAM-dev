@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,13 +28,6 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function1s::omega::omega()
-:
-    rpm_(false),
-    omegaFactor_(1)
-{}
-
-
 Foam::Function1s::omega::omega(const dictionary& dict)
 :
     rpm_(dict.found("rpm")),
@@ -57,22 +50,6 @@ Foam::Function1s::omega::omega(const omega& o)
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::Function1s::omega::read(const dictionary& dict)
-{
-    rpm_ = dict.found("rpm");
-    omegaFactor_ = rpm_ ? constant::mathematical::pi/30.0 : 1;
-
-    omega_.reset
-    (
-        rpm_
-      ? Function1<scalar>::New("rpm", dict).ptr()
-      : Function1<scalar>::New("omega", dict).ptr()
-    );
-
-    return true;
-}
-
 
 void Foam::Function1s::omega::write(Ostream& os) const
 {

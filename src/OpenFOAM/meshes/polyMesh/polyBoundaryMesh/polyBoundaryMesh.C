@@ -967,7 +967,6 @@ bool Foam::polyBoundaryMesh::checkParallelSync(const bool report) const
 
 bool Foam::polyBoundaryMesh::checkDefinition(const bool report) const
 {
-    label nextPatchStart = mesh().nInternalFaces();
     const polyBoundaryMesh& bm = *this;
 
     bool hasError = false;
@@ -976,20 +975,6 @@ bool Foam::polyBoundaryMesh::checkDefinition(const bool report) const
 
     forAll(bm, patchi)
     {
-        if (bm[patchi].start() != nextPatchStart && !hasError)
-        {
-            hasError = true;
-
-            Info<< " ****Problem with boundary patch " << patchi
-                << " named " << bm[patchi].name()
-                << " of type " <<  bm[patchi].type()
-                << ". The patch should start on face no " << nextPatchStart
-                << " and the patch specifies " << bm[patchi].start()
-                << "." << endl
-                << "Possibly consecutive patches have this same problem."
-                << " Suppressing future warnings." << endl;
-        }
-
         if (!patchNames.insert(bm[patchi].name()) && !hasError)
         {
             hasError = true;
@@ -1000,8 +985,6 @@ bool Foam::polyBoundaryMesh::checkDefinition(const bool report) const
                 << "." << endl
                 << "Suppressing future warnings." << endl;
         }
-
-        nextPatchStart += bm[patchi].size();
     }
 
     reduce(hasError, orOp<bool>());

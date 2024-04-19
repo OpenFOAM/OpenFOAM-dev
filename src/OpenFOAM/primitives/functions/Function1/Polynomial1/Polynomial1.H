@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ class Polynomial
     // Private Data
 
         //- Polynomial coefficients - list of prefactor, exponent
-        List<Tuple2<Type, Type>> coeffs_;
+        const List<Tuple2<Type, Type>> coeffs_;
 
         //- Flag to indicate whether the function can be integrated
         bool integrable_;
