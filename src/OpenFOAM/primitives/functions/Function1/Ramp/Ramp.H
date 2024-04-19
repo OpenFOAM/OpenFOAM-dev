@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,10 +108,10 @@ protected:
     // Protected data
 
         //- Start-time of the ramp function
-        scalar start_;
+        const scalar start_;
 
         //- Duration of the ramp function
-        scalar duration_;
+        const scalar duration_;
 
         //- Return the end-time of the ramp function
         inline scalar end() const
@@ -132,14 +132,6 @@ protected:
         {
             return 1/duration_;
         }
-
-
-private:
-
-    // Private Member Functions
-
-        //- Read the coefficients from the given dictionary
-        void read(const dictionary& dict);
 
 
 public:

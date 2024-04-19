@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,22 +63,16 @@ class Scale
     // Private Data
 
         //- Scalar scaling function
-        autoPtr<Function2<scalar>> scale_;
+        const autoPtr<Function2<scalar>> scale_;
 
         //- Argument scaling function
-        autoPtr<Function1<scalar>> xScale_;
+        const autoPtr<Function1<scalar>> xScale_;
 
         //- Argument scaling function
-        autoPtr<Function1<scalar>> yScale_;
+        const autoPtr<Function1<scalar>> yScale_;
 
         //- Value function
-        autoPtr<Function2<Type>> value_;
-
-
-    // Private Member Functions
-
-        //- Read the coefficients from the given dictionary
-        void read(const dictionary& dict);
+        const autoPtr<Function2<Type>> value_;
 
 
 public:

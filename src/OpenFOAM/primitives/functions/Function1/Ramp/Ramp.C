@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,24 +28,16 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Function1Type>
-void Foam::Function1s::Ramp<Function1Type>::read(const dictionary& dict)
-{
-    start_ = dict.lookupOrDefault<scalar>("start", 0);
-    duration_ = dict.lookup<scalar>("duration");
-}
-
-
-template<class Function1Type>
 Foam::Function1s::Ramp<Function1Type>::Ramp
 (
     const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<scalar, Function1Type>(name)
-{
-    read(dict);
-}
+    FieldFunction1<scalar, Function1Type>(name),
+    start_(dict.lookupOrDefault<scalar>("start", 0)),
+    duration_(dict.lookup<scalar>("duration"))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,14 +113,22 @@ inline void lookupUnitsIfPresent
 
 }
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::Dimensioned<Type>::read
+Foam::Function1s::Dimensioned<Type>::Dimensioned
 (
     const word& name,
+    const dimensionSet& xDimensions,
+    const dimensionSet& dimensions,
     const dictionary& dict
 )
+:
+    FieldFunction1<Type, Dimensioned<Type>>(name),
+    xUnits_(word::null, xDimensions, scalar(1)),
+    units_(word::null, dimensions, scalar(1)),
+    value_(nullptr)
 {
     // If the function is a dictionary (preferred) then read straightforwardly
     if (dict.isDict(name))
@@ -188,26 +196,6 @@ void Foam::Function1s::Dimensioned<Type>::read
     lookupUnitsIfPresent(coeffsDict, "", units_);
 
     value_.reset(Function1<Type>::New(name, dict).ptr());
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::Function1s::Dimensioned<Type>::Dimensioned
-(
-    const word& name,
-    const dimensionSet& xDimensions,
-    const dimensionSet& dimensions,
-    const dictionary& dict
-)
-:
-    FieldFunction1<Type, Dimensioned<Type>>(name),
-    xUnits_(word::null, xDimensions, scalar(1)),
-    units_(word::null, dimensions, scalar(1)),
-    value_(nullptr)
-{
-    read(name, dict);
 }
 
 

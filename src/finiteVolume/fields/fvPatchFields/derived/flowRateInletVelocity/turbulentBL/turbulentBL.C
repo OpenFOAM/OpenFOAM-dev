@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,14 +36,6 @@ namespace Function1s
 }
 
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
-
-void Foam::Function1s::turbulentBL::read(const dictionary& dict)
-{
-    exponent_ = dict.lookupOrDefault<scalar>("exponent", 1.0/7.0);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::Function1s::turbulentBL::turbulentBL
@@ -52,10 +44,9 @@ Foam::Function1s::turbulentBL::turbulentBL
     const dictionary& dict
 )
 :
-    FieldFunction1<scalar, turbulentBL>(name)
-{
-    read(dict);
-}
+    FieldFunction1<scalar, turbulentBL>(name),
+    exponent_(dict.lookupOrDefault<scalar>("exponent", 1.0/7.0))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
