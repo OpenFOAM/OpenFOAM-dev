@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,20 +25,6 @@ License
 
 #include "Sine.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::Function1s::Sine<Type>::read(const dictionary& dict)
-{
-    amplitude_ = Function1<Type>::New("amplitude", dict);
-    frequency_ = dict.lookup<scalar>("frequency");
-    start_ = dict.lookupOrDefault<scalar>("start", 0);
-    level_ = Function1<Type>::New("level", dict);
-
-    integrable_ = amplitude_->constant() && level_->constant();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -48,10 +34,13 @@ Foam::Function1s::Sine<Type>::Sine
     const dictionary& dict
 )
 :
-    FieldFunction1<Type, Sine<Type>>(name)
-{
-    read(dict);
-}
+    FieldFunction1<Type, Sine<Type>>(name),
+    amplitude_(Function1<Type>::New("amplitude", dict)),
+    frequency_(dict.lookup<scalar>("frequency")),
+    start_(dict.lookupOrDefault<scalar>("start", 0)),
+    level_(Function1<Type>::New("level", dict)),
+    integrable_(amplitude_->constant() && level_->constant())
+{}
 
 
 template<class Type>

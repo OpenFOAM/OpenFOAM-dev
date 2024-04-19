@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,30 +100,24 @@ class Square
     // Private Data
 
         //- Scalar amplitude of the square function
-        autoPtr<Function1<Type>> amplitude_;
+        const autoPtr<Function1<Type>> amplitude_;
 
         //- Frequency of the square function
-        scalar frequency_;
+        const scalar frequency_;
 
         //- Argument offset
-        scalar start_;
+        const scalar start_;
 
         //- Level to which the square function is added
-        autoPtr<Function1<Type>> level_;
+        const autoPtr<Function1<Type>> level_;
 
         //- Mark/space ratio of the square function; the fraction of one period
         //  in which the function value is at the higher of the two possible
         //  values.
-        scalar markSpace_;
+        const scalar markSpace_;
 
         //- Is this function integrable?
-        bool integrable_;
-
-
-    // Private Member Functions
-
-        //- Read the coefficients from the given dictionary
-        void read(const dictionary& dict);
+        const bool integrable_;
 
 
 public:

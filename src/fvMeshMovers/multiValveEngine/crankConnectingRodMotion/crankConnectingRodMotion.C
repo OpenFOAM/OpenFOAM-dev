@@ -36,15 +36,6 @@ namespace Function1s
 }
 
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
-
-void Foam::Function1s::crankConnectingRodMotion::read(const dictionary& dict)
-{
-    conRodLength_ = dict.lookup<scalar>("conRodLength");
-    stroke_ = dict.lookup<scalar>("stroke");
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::Function1s::crankConnectingRodMotion::crankConnectingRodMotion
@@ -53,10 +44,10 @@ Foam::Function1s::crankConnectingRodMotion::crankConnectingRodMotion
     const dictionary& dict
 )
 :
-    Function1<scalar>(name)
-{
-    read(dict);
-}
+    Function1<scalar>(name),
+    conRodLength_(dict.lookup<scalar>("conRodLength")),
+    stroke_(dict.lookup<scalar>("stroke"))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

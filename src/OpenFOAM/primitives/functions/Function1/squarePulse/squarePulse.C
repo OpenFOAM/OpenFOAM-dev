@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,23 +38,16 @@ namespace Function1s
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-void Foam::Function1s::squarePulse::read(const dictionary& dict)
-{
-    start_ = dict.lookupOrDefault<scalar>("start", 0);
-    duration_ = dict.lookup<scalar>("duration");
-}
-
-
 Foam::Function1s::squarePulse::squarePulse
 (
     const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<scalar, squarePulse>(name)
-{
-    read(dict);
-}
+    FieldFunction1<scalar, squarePulse>(name),
+    start_(dict.lookupOrDefault<scalar>("start", 0)),
+    duration_(dict.lookup<scalar>("duration"))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

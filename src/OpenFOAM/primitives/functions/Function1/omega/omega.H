@@ -110,21 +110,18 @@ class omega
     // Private Data
 
         //- True if the input specification is rpm rather than omega
-        bool rpm_;
+        const bool rpm_;
 
         //- 1 for omega, pi/30 for rpm
-        scalar omegaFactor_;
+        const scalar omegaFactor_;
 
         //- The omega function
-        autoPtr<Function1<scalar>> omega_;
+        const autoPtr<Function1<scalar>> omega_;
 
 
 public:
 
     // Constructors
-
-        //- Construct null
-        omega();
 
         //- Construct from dictionary
         omega(const dictionary& dict);
@@ -134,9 +131,6 @@ public:
 
 
     // Member Functions
-
-        //- Update omega function from given dictionary
-        bool read(const dictionary& dict);
 
         //- Return value for time t
         inline scalar value(const scalar t) const;

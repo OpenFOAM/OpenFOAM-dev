@@ -23,7 +23,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     foamFile
+#     foamFind
 #
 # Description
 #     Finds one or more files in OpenFOAM and optionally processes the contents

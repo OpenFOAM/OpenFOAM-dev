@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,23 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Scale.H"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::Function1s::Scale<Type>::read(const dictionary& dict)
-{
-    scale_ = Function1<scalar>::New("scale", dict);
-    xScale_ =
-        dict.found("xScale")
-      ? Function1<scalar>::New("xScale", dict)
-      : autoPtr<Function1<scalar>>(new Constant<scalar>("xScale", 1));
-    value_ = Function1<Type>::New("value", dict);
-
-    integrableScale_ = xScale_->constant() && scale_->constant();
-    integrableValue_ = xScale_->constant() && value_->constant();
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -69,10 +52,18 @@ Foam::Function1s::Scale<Type>::Scale
     const dictionary& dict
 )
 :
-    FieldFunction1<Type, Scale<Type>>(name)
-{
-    read(dict);
-}
+    FieldFunction1<Type, Scale<Type>>(name),
+    scale_(Function1<scalar>::New("scale", dict)),
+    xScale_
+    (
+        dict.found("xScale")
+      ? Function1<scalar>::New("xScale", dict)
+      : autoPtr<Function1<scalar>>(new Constant<scalar>("xScale", 1))
+    ),
+    value_(Function1<Type>::New("value", dict)),
+    integrableScale_(xScale_->constant() && scale_->constant()),
+    integrableValue_(xScale_->constant() && value_->constant())
+{}
 
 
 template<class Type>
