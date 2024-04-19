@@ -4470,6 +4470,7 @@ _foamFind_ ()
     opts="\
         -applications \
         -dir \
+        -edit \
         -files \
         -help \
         -isearch \
@@ -4482,8 +4483,8 @@ _foamFind_ ()
 
     for o in $used ; do opts="${opts/$o/}" ; done
 
-    # use only one of '-isearch', '-search', '-print'
-    local actions="-isearch -search -print"
+    # use only one of '-edit', '-isearch', '-search', '-print'
+    local actions="-edit -isearch -search -print"
     _optSet "$used" "$actions" && opts="$(_removeOpts "$opts" "$actions")"
 
     # use only one of '-applications', '-dir', '-modules', '-tutorials'

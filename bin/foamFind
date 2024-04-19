@@ -37,6 +37,7 @@ Usage: ${0##*/} [OPTIONS] <filename>
 options:
   -a | -applications     search for the file from the \$FOAM_APP directory
   -d | -dir <dir>        specify search directory
+  -e | -edit             open the file in a file editor, see below for info
   -f | -files            find wmake 'files' file associated with searched file
   -h | -help             help
   -i | -isearch <string> searches files for a <string>, case insensitive
@@ -48,8 +49,15 @@ options:
   -t | -tutorials        search for the file from the \$FOAM_TUTORIALS directory
 
 Finds one or more files in OpenFOAM and optionally processes the contents by:
-+ printing the file ('-print' option);
-+ printing lines within the file matching a search string ('-search' option).
++ printing the file(s) ('-print' option);
++ printing lines within the file matching a search string ('-search' option);
++ opening a single (only) file in a text editor ('-edit' option).
+
+The '-edit' option required the user to specify their choice of text editor by
+setting the EDITOR environment variable. For example, to set the 'gedit' editor,
+they could add to their \$HOME/.bashrc file, the line:
+
+export EDITOR=gedit
 
 With source code files, can locate the 'files' and 'options' files associated
 with their compilation using 'wmake'.
@@ -102,7 +110,7 @@ findWmakeFiles () {
             for _w in $_wmakeFiles
             do
                 _files="$(echo "$_files" \
-                        "$(find "$_file" -name "$_w" -type f)" | xargs)"
+                       "$(find "$_file" -name "$_w" -type f)" | xargs)"
             done
 
         [ "$_files" ] && break
@@ -224,29 +232,42 @@ grepFile () {
 
 dirError () {
     cat<<EOF
-Search directory specified with more than one option from '-applications', '-dir',
-'-modules' and '-tutorials'. Please specify only one of these options.
+Search directory specified with more than one option from '-applications',
+'-dir', '-modules' and '-tutorials'. Please specify only one of these options.
+EOF
+}
+
+editConfigError () {
+    cat<<EOF
+The '-edit' option requires the user to specify their chosen text editor using
+the EDITOR environment variable. For example, to set the 'gedit' editor, they
+could add to their \$HOME/.bashrc file, the line:
+
+export EDITOR=gedit
+
 EOF
 }
 
 searchError () {
     cat<<EOF
-The '-search' and '-isearch' options are both be specified.
+The '-search' and '-isearch' options are both specified.
 Please specify only one of these options, either '-isearch' for a
 case-insensitive search or '-search' for case-sensitive.
 EOF
 }
 
-printError () {
+optionsError () {
     cat<<EOF
-The '-search/-isearch' and '-print' options are both be specified.
-Please specify only one of these options, either '-search/-isearch' to print
-lines of files(s) matching an expression, or '-print' for the entire file(s).
+Two or more of the '-search/-isearch', '-print' and '-edit' options are
+specified. Please specify only one of these options, either '-search/-isearch'
+to print lines of files(s) matching an expression, or '-print' or '-edit' to
+view the entire file(s).
 EOF
 }
 
 dir=""
 print=""
+edit=""
 wmakeFiles=""
 search=""
 insensitive=""
@@ -272,6 +293,12 @@ do
            error "Specified directory '$dir' is not in OpenFOAM installation"
        shift 2
        ;;
+   -e | -edit)
+       { [ "$insensitive" ] || [ "$print" ]; } && error "$(optionsError)"
+       [ "$EDITOR" ] || error "$(editConfigError)"
+       edit="$(which "$EDITOR")"
+       shift
+       ;;
    -f | -files)
        wmakeFiles="$wmakeFiles files"
        shift
@@ -282,7 +309,7 @@ do
    -i | -isearch)
        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
        [ "$insensitive" ] && error "$(searchError)"
-       [ "$print" ] && error "$(printError)"
+       { [ "$print" ] || [ "$edit" ]; } && error "$(optionsError)"
        search="$2"
        insensitive=on
        shift 2
@@ -301,14 +328,14 @@ do
        shift
        ;;
    -p | -print)
-       [ "$insensitive" ] && error "$(printError)"
+       { [ "$insensitive" ] || [ "$edit" ]; } && error "$(optionsError)"
        print="yes"
        shift
        ;;
    -s | -search)
        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
        [ "$insensitive" ] && error "$(searchError)"
-       [ "$print" ] && error "$(printError)"
+       { [ "$print" ] || [ "$edit" ]; } && error "$(optionsError)"
        search="$2"
        insensitive=off
        shift 2
@@ -360,9 +387,9 @@ nParams "$files" > /dev/null || error "No file '$filename' found in '$dir'"
 files="$(selectFile "$filename" "$files")" || error
 
 # With '-files' and/or '-options', reuse file variable as the file
-[ "$wmakeFiles" ] && \
+{ [ "$wmakeFiles" ] || [ "$edit" ] ; } && \
     [ "$(nParams "$files")" -ne 1 ] && \
-    error "With '-files' or '-options', a single <filename> must be specified"
+    error "With '-files', '-options' or '-edit', a single file must be selected"
 
 [ "$wmakeFiles" ] &&
     ! files="$(findWmakeFiles "$files" "$wmakeFiles")" && error
@@ -377,6 +404,9 @@ do
         printf ">>>\n" && \
         { [ "$numbers" ] && cat -n "$f" || cat "$f" ; } && \
         printf "<<<\n"
+
+    # Opening files in a editor
+    [ "$edit" ] && "$edit" "$f"
 
     # Printing lines matching strings
     [ "$search" ] || continue
