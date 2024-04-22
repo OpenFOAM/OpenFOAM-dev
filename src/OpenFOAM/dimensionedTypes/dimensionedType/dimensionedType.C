@@ -67,7 +67,7 @@ bool Foam::dimensioned<Type>::readDimensions
 
 
 template<class Type>
-bool Foam::dimensioned<Type>::initialise
+void Foam::dimensioned<Type>::initialise
 (
     Istream& is,
     const bool haveName,
@@ -75,13 +75,19 @@ bool Foam::dimensioned<Type>::initialise
 )
 {
     token nextToken(is);
-    is.putBack(nextToken);
 
     // Check if the original format is used in which the name is provided
     // and reset the name to that read
-    if (!haveName && nextToken.isWord())
+    if (nextToken.isWord())
     {
-        is >> name_;
+        if (!haveName)
+        {
+            name_ = nextToken.wordToken();
+        }
+    }
+    else
+    {
+        is.putBack(nextToken);
     }
 
     scalar multiplier = 1;
@@ -102,8 +108,6 @@ bool Foam::dimensioned<Type>::initialise
     }
 
     value_ *= multiplier;
-
-    return !haveName && nextToken.isWord();
 }
 
 

@@ -83,8 +83,8 @@ class dimensioned
             const bool haveDims
         );
 
-        //- Initialise from Istream. Return whether the name was read.
-        bool initialise(Istream& is, const bool haveName, const bool haveDims);
+        //- Initialise from Istream
+        void initialise(Istream& is, const bool haveName, const bool haveDims);
 
 
 public:
