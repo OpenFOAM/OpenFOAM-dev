@@ -27,15 +27,23 @@ Class
 Description
     Arbitrary order polynomial Function1.
 
-    The coefficients and exponents of the terms in the polynomial are specified
-    as a list of Tuple2's e.g. for the polynomial y = x^2 + 2x^3
+    The coefficients in the polynomial are specified in order of increasing
+    exponent, starting from the constant coefficient (i.e., zero exponent).
+
+    For example, the polynomial y = -1 + x^2 + 2x^3 can be specified as:
 
     \verbatim
-        <name>  polynomial
-        (
-            (1    2)
-            (2    3)
-        );
+        <name>  polynomial (-1 0 1 2);
+    \endverbatim
+
+    Or, alternatively:
+
+    \verbatim
+        <name>
+        {
+            type    polynomial;
+            coeffs  (-1 0 1 2);
+        }
     \endverbatim
 
 SourceFiles
@@ -47,7 +55,6 @@ SourceFiles
 #define Polynomial1_H
 
 #include "Function1.H"
-#include "Tuple2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,14 +74,8 @@ class Polynomial
 {
     // Private Data
 
-        //- Polynomial coefficients - list of prefactor, exponent
-        const List<Tuple2<Type, Type>> coeffs_;
-
-        //- Flag to indicate whether the function can be integrated
-        bool integrable_;
-
-
-    // Private member functions
+        //- Polynomial coefficients
+        const List<Type> coeffs_;
 
 
 public:
@@ -84,13 +85,6 @@ public:
 
 
     // Constructors
-
-        //- Construct from components
-        Polynomial
-        (
-            const word& name,
-            const List<Tuple2<Type, Type>>&
-        );
 
         //- Construct from name and dictionary
         Polynomial(const word& name, const dictionary& dict);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,50 +31,20 @@ template<class Type>
 Foam::Function1s::Polynomial<Type>::Polynomial
 (
     const word& name,
-    const List<Tuple2<Type, Type>>& coeffs
-)
-:
-    FieldFunction1<Type, Polynomial<Type>>(name),
-    coeffs_(coeffs),
-    integrable_(true)
-{
-    if (!coeffs_.size())
-    {
-        FatalErrorInFunction
-            << "Polynomial coefficients for entry " << this->name_
-            << " are invalid (empty)" << nl << exit(FatalError);
-    }
-
-    forAll(coeffs_, i)
-    {
-        if (mag(coeffs_[i].second() + pTraits<Type>::one) < rootVSmall)
-        {
-            integrable_ = false;
-            break;
-        }
-    }
-
-    if (debug)
-    {
-        if (!integrable_)
-        {
-            WarningInFunction
-                << "Polynomial " << this->name_ << " cannot be integrald"
-                << endl;
-        }
-    }
-}
-
-
-template<class Type>
-Foam::Function1s::Polynomial<Type>::Polynomial
-(
-    const word& name,
     const dictionary& dict
 )
 :
-    Polynomial<Type>(name, dict.lookup("coeffs"))
-{}
+    FieldFunction1<Type, Polynomial<Type>>(name),
+    coeffs_(dict.lookup("coeffs"))
+{
+    if (!coeffs_.size())
+    {
+        FatalIOErrorInFunction(dict)
+            << typeName.capitalise() << ' ' << name
+            << " must have at least one coefficient"
+            << exit(FatalError);
+    }
+}
 
 
 template<class Type>
@@ -84,16 +54,24 @@ Foam::Function1s::Polynomial<Type>::Polynomial
     Istream& is
 )
 :
-    Polynomial<Type>(name, List<Tuple2<Type, Type>>(is))
-{}
+    FieldFunction1<Type, Polynomial<Type>>(name),
+    coeffs_(is)
+{
+    if (!coeffs_.size())
+    {
+        FatalIOErrorInFunction(is)
+            << typeName.capitalise() << ' ' << name
+            << " must have at least one coefficient"
+            << exit(FatalError);
+    }
+}
 
 
 template<class Type>
 Foam::Function1s::Polynomial<Type>::Polynomial(const Polynomial& poly)
 :
     FieldFunction1<Type, Polynomial<Type>>(poly),
-    coeffs_(poly.coeffs_),
-    integrable_(poly.integrable_)
+    coeffs_(poly.coeffs_)
 {}
 
 
@@ -109,14 +87,11 @@ Foam::Function1s::Polynomial<Type>::~Polynomial()
 template<class Type>
 Type Foam::Function1s::Polynomial<Type>::value(const scalar x) const
 {
-    Type y(Zero);
-    forAll(coeffs_, i)
+    Type y = coeffs_[coeffs_.size() - 1];
+
+    for (label i = coeffs_.size() - 2; i >= 0; i --)
     {
-        y += cmptMultiply
-        (
-            coeffs_[i].first(),
-            cmptPow(pTraits<Type>::one*x, coeffs_[i].second())
-        );
+        y = y*x + coeffs_[i];
     }
 
     return y;
@@ -130,34 +105,15 @@ Type Foam::Function1s::Polynomial<Type>::integral
     const scalar x2
 ) const
 {
-    Type intx(Zero);
+    Type Sy1 = coeffs_[coeffs_.size() - 1]/coeffs_.size(), Sy2 = Sy1;
 
-    if (integrable_)
+    for (label i = coeffs_.size() - 2; i >= 0; i --)
     {
-        forAll(coeffs_, i)
-        {
-            intx += cmptMultiply
-            (
-                cmptDivide
-                (
-                    coeffs_[i].first(),
-                    coeffs_[i].second() + pTraits<Type>::one
-                ),
-                cmptPow
-                (
-                    pTraits<Type>::one*x2,
-                    coeffs_[i].second() + pTraits<Type>::one
-                )
-              - cmptPow
-                (
-                    pTraits<Type>::one*x1,
-                    coeffs_[i].second() + pTraits<Type>::one
-                )
-            );
-        }
+        Sy1 = Sy1*x1 + coeffs_[i]/(i + 1);
+        Sy2 = Sy2*x2 + coeffs_[i]/(i + 1);
     }
 
-    return intx;
+    return x2*Sy2 - x1*Sy1;
 }
 
 

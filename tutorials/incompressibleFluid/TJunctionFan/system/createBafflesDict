@@ -99,7 +99,7 @@ baffles
                     patchType   cyclic;
                     jump        uniform 0;
                     value       uniform 0;
-                    jumpTable   polynomial 1((100 0));
+                    jumpTable   polynomial (100);
                 }
             }
         }
