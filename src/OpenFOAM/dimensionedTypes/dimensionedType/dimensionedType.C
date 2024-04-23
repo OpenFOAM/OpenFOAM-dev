@@ -379,21 +379,6 @@ bool Foam::dimensioned<Type>::readIfPresent(const dictionary& dict)
 }
 
 
-template<class Type>
-Foam::Istream& Foam::dimensioned<Type>::read(Istream& is)
-{
-    if (!initialise(is, false, false))
-    {
-        name_ = Foam::name(value_);
-    }
-
-    // Check state of Istream
-    is.check("Istream& dimensioned<Type>::read(Istream& is)");
-
-    return is;
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>

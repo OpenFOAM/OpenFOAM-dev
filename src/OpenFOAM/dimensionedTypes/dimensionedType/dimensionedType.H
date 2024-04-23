@@ -200,12 +200,6 @@ public:
         bool readIfPresent(const dictionary&);
 
 
-    // I/O
-
-        //- Read value from stream using units from the system table
-        Istream& read(Istream& is);
-
-
     // Member Operators
 
         //- Return a component as a dimensioned<cmptType>
