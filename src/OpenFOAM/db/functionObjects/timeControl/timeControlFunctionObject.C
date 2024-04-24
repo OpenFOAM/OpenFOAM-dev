@@ -55,8 +55,6 @@ void Foam::functionObjects::timeControl::readControls(const dictionary& dict)
         dict.readIfPresent("timeEnd", endTime_);
     }
     endTime_ = time_.userTimeToTime(endTime_);
-
-    dict.readIfPresent("nStepsToStartTimeChange", nStepsToStartTimeChange_);
 }
 
 
@@ -81,10 +79,6 @@ Foam::functionObjects::timeControl::timeControl
     time_(t),
     startTime_(-vGreat),
     endTime_(vGreat),
-    nStepsToStartTimeChange_
-    (
-        dict.lookupOrDefault("nStepsToStartTimeChange", 3)
-    ),
     executeControl_(t, dict, "execute"),
     writeControl_(t, dict, "write"),
     foPtr_(functionObject::New(name, t, dict))
