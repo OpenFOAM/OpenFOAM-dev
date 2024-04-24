@@ -24,10 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "refinementRegions.H"
-#include "refinementSurfaces.H"
 #include "searchableSurfaces.H"
 #include "orientedSurface.H"
-#include "volumeType.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

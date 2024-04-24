@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,8 +37,8 @@ SourceFiles
 #ifndef refinementSurfaces_H
 #define refinementSurfaces_H
 
-#include "triSurfaceGeoMesh.H"
-#include "triSurfaceFields.H"
+#include "primitiveFields.H"
+#include "pointFields.H"
 #include "vectorList.H"
 #include "pointIndexHit.H"
 #include "surfaceZonesInfo.H"
@@ -50,7 +50,6 @@ namespace Foam
 
 class searchableSurfaces;
 class refinementRegions;
-class triSurfaceMesh;
 
 typedef List<point> pointList;
 
