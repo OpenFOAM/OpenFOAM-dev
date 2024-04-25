@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,6 +37,9 @@ Description
 #include "ZeroConstant2.H"
 #include "OneConstant2.H"
 #include "Scale2.H"
+#include "Function12.H"
+#include "Product2.H"
+#include "Radial2.H"
 #include "UniformTable2.H"
 #include "CodedFunction2.H"
 
@@ -53,6 +56,9 @@ Description
         addFunction2(ZeroConstant, Type);                                      \
         addFunction2(OneConstant, Type);                                       \
         addFunction2(Scale, Type);                                             \
+        addFunction2(Function12, Type);                                        \
+        addFunction2(Product, Type);                                           \
+        addFunction2(Radial, Type);                                            \
         addFunction2(UniformTable, Type);                                      \
         addFunction2(Coded, Type);                                             \
     }
