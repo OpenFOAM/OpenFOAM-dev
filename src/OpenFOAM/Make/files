@@ -276,6 +276,7 @@ db/functionObjects/functionObjectList/functionObjectList.C
 db/functionObjects/functionObjectList/wordAndDictionary.C
 db/functionObjects/writeFile/writeFile.C
 db/functionObjects/logFiles/logFiles.C
+db/functionObjects/logFile/logFile.C
 db/functionObjects/writeObjectsBase/writeObjectsBase.C
 db/functionObjects/writeLocalObjects/writeLocalObjects.C
 db/functionObjects/timeControl/timeControl.C
