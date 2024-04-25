@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -267,38 +267,12 @@ template<class Type>
 Foam::timeVaryingMappedFvPatchField<Type>::timeVaryingMappedFvPatchField
 (
     const fvPatch& p,
-    const word& fieldName
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
 )
 :
     patch_(p),
-    fieldTableName_(word::null),
-    dataDir_(time().constant()/"boundaryData"/p.name()),
-    pointsName_("points"),
-    sampleName_(word::null),
-    setAverage_(false),
-    perturb_(0),
-    mapperPtr_(nullptr),
-    sampleTimes_(0),
-    startSampleTime_(-1),
-    startSampledValues_(0),
-    startAverage_(Zero),
-    endSampleTime_(-1),
-    endSampledValues_(0),
-    endAverage_(Zero),
-    offset_()
-{}
-
-
-template<class Type>
-Foam::timeVaryingMappedFvPatchField<Type>::timeVaryingMappedFvPatchField
-(
-    const fvPatch& p,
-    const dictionary& dict,
-    const word& fieldName
-)
-:
-    patch_(p),
-    fieldTableName_(dict.lookupOrDefault("fieldTable", fieldName)),
+    fieldTableName_(dict.lookupOrDefault("fieldTable", iF.name())),
     dataDir_
     (
         dict.lookupOrDefault

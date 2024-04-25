@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,62 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "timeVaryingMappedFvPatchField.H"
+#include "AverageField.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-namespace Foam
+template<class Type>
+Foam::AverageField<Type>::AverageField(const label size)
+:
+    Field<Type>(size),
+    average_(Zero)
+{}
+
+
+template<class Type>
+Foam::AverageField<Type>::AverageField
+(
+    const Field<Type>& f,
+    const Type& average
+)
+:
+    Field<Type>(f),
+    average_(average)
+{}
+
+
+template<class Type>
+Foam::AverageField<Type>::AverageField(Istream& is)
+:
+    Field<Type>(is),
+    average_(pTraits<Type>(is))
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+const Type& Foam::AverageField<Type>::average() const
 {
-    defineTypeNameAndDebug(timeVaryingMapped, 0);
+    return average_;
+}
+
+
+template<class Type>
+Type&Foam::AverageField<Type>::average()
+{
+    return average_;
+}
+
+
+template<class Type>
+bool Foam::AverageField<Type>::writeData(Ostream& os) const
+{
+    os  << static_cast<const Field<Type>&>(*this)
+        << token::NL
+        << average_;
+
+    return os.good();
 }
 
 

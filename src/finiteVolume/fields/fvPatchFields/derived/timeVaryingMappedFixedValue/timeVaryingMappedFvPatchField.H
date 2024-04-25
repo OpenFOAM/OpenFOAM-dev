@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,23 +94,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class timeVaryingMapped Declaration
+                Class timeVaryingMappedFvPatchFieldName Declaration
 \*---------------------------------------------------------------------------*/
 
-class timeVaryingMapped
-{
-public:
-
-    //- Runtime type information
-    ClassName("timeVaryingMapped");
-
-
-    // Constructors
-
-        //- Construct null
-        timeVaryingMapped()
-        {}
-};
+TemplateName(timeVaryingMappedFvPatchField);
 
 
 /*---------------------------------------------------------------------------*\
@@ -120,7 +107,7 @@ public:
 template<class Type>
 class timeVaryingMappedFvPatchField
 :
-    public timeVaryingMapped
+    public timeVaryingMappedFvPatchFieldName
 {
     // Private Data
 
@@ -188,15 +175,12 @@ public:
 
     // Constructors
 
-        //- Construct from patch and field name
-        timeVaryingMappedFvPatchField(const fvPatch&, const word& fieldName);
-
-        //- Construct from patch, dictionary and field name
+        //- Construct from patch, internal field and dictionary
         timeVaryingMappedFvPatchField
         (
             const fvPatch&,
-            const dictionary&,
-            const word& fieldName
+            const DimensionedField<Type, volMesh>&,
+            const dictionary&
         );
 
         //- Copy constructor
