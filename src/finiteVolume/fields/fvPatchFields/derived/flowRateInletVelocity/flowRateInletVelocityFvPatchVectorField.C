@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,10 +75,11 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateValues
     const scalarField profile(this->profile());
 
     const scalar avgU =
-      -(scale*flowRate_->value(db().time().userTimeValue()))
-       /gSum(alpha*rho*profile*patch().magSf());
+       scale
+      *flowRate_->value(db().time().userTimeValue())
+      /gSum(alpha*rho*profile*patch().magSf());
 
-    operator==(avgU*profile*patch().nf());
+    operator==(- avgU*profile*patch().nf());
 }
 
 
@@ -142,9 +143,15 @@ flowRateInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(p, iF, dict, false),
+    flowRate_(),
+    meanVelocity_(),
+    volumetric_(),
+    profile_(),
     rhoName_("rho"),
     rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", -vGreat)),
-    alphaName_(dict.lookupOrDefault<word>("alpha", word::null))
+    alphaName_(dict.lookupOrDefault<word>("alpha", word::null)),
+    y_(),
+    area_(NaN)
 {
     if (dict.found("meanVelocity"))
     {
@@ -167,10 +174,8 @@ flowRateInletVelocityFvPatchVectorField
     }
     else
     {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Please supply 'meanVelocity', 'volumetricFlowRate' or"
+        FatalIOErrorInFunction(dict)
+            << "Please supply 'meanVelocity', 'volumetricFlowRate' or"
             << " 'massFlowRate' and 'rho'" << exit(FatalIOError);
     }
 
@@ -209,9 +214,9 @@ flowRateInletVelocityFvPatchVectorField
 :
     fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
     flowRate_(ptf.flowRate_, false),
-    profile_(ptf.profile_, false),
     meanVelocity_(ptf.meanVelocity_),
     volumetric_(ptf.volumetric_),
+    profile_(ptf.profile_, false),
     rhoName_(ptf.rhoName_),
     rhoInlet_(ptf.rhoInlet_),
     alphaName_(ptf.alphaName_),
@@ -234,9 +239,9 @@ flowRateInletVelocityFvPatchVectorField
 :
     fixedValueFvPatchField<vector>(ptf, iF),
     flowRate_(ptf.flowRate_, false),
-    profile_(ptf.profile_, false),
     meanVelocity_(ptf.meanVelocity_),
     volumetric_(ptf.volumetric_),
+    profile_(ptf.profile_, false),
     rhoName_(ptf.rhoName_),
     rhoInlet_(ptf.rhoInlet_),
     alphaName_(ptf.alphaName_),

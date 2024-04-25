@@ -174,7 +174,6 @@ derivedFvPatchFields = $(fvPatchFields)/derived
 $(derivedFvPatchFields)/advective/advectiveFvPatchFields.C
 $(derivedFvPatchFields)/codedFixedValue/codedFixedValueFvPatchFields.C
 $(derivedFvPatchFields)/codedMixed/codedMixedFvPatchFields.C
-$(derivedFvPatchFields)/cylindricalInletVelocity/cylindricalInletVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/externalCoupledMixed/externalCoupledMixedFvPatchFields.C
 $(derivedFvPatchFields)/fanPressureJump/fanPressureJumpFvPatchScalarField.C
 $(derivedFvPatchFields)/fanPressure/fanPressureFvPatchScalarField.C

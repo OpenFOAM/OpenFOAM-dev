@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,13 +36,60 @@ swirlInletVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<vector>(p, iF, dict),
-    origin_(dict.lookup("origin")),
-    axis_(dict.lookup("axis")),
-    axialVelocity_(Function1<scalar>::New("axialVelocity", dict)),
-    radialVelocity_(Function1<scalar>::New("radialVelocity", dict)),
-    tangentialVelocity_(Function1<scalar>::New("tangentialVelocity", dict))
-{}
+    fixedValueFvPatchField<vector>(p, iF, dict, false),
+    origin_
+    (
+        dict.lookupOrDefault
+        (
+            "origin",
+            returnReduce(patch().size(), sumOp<label>())
+          ? gSum(patch().Cf()*patch().magSf())/gSum(patch().magSf())
+          : Zero
+        )
+    ),
+    axis_
+    (
+        dict.lookupOrDefault
+        (
+            "axis",
+            returnReduce(patch().size(), sumOp<label>())
+          ? -gSum(patch().Sf())/gSum(patch().magSf())
+          : Zero
+        )
+    ),
+    axialVelocity_(Function2<scalar>::New("axialVelocity", dict)),
+    radialVelocity_(Function2<scalar>::New("radialVelocity", dict)),
+    omega_(nullptr),
+    tangentialVelocity_(nullptr)
+{
+    if (dict.found("omega") || dict.found("rpm"))
+    {
+        omega_ = new Function1s::omega(dict);
+    }
+    else if (dict.found("tangentialVelocity"))
+    {
+        tangentialVelocity_ =
+            Function2<scalar>::New("tangentialVelocity", dict);
+    }
+    else
+    {
+        FatalIOErrorInFunction(dict)
+            << "Please supply either 'omega' or 'rpm' or"
+            << " 'tangentialVelocity'" << exit(FatalIOError);
+    }
+
+    if (dict.found("value"))
+    {
+        fvPatchField<vector>::operator=
+        (
+            vectorField("value", dict, p.size())
+        );
+    }
+    else
+    {
+        evaluate(Pstream::commsTypes::blocking);
+    }
+}
 
 
 Foam::swirlInletVelocityFvPatchVectorField::
@@ -59,6 +106,7 @@ swirlInletVelocityFvPatchVectorField
     axis_(ptf.axis_),
     axialVelocity_(ptf.axialVelocity_, false),
     radialVelocity_(ptf.radialVelocity_, false),
+    omega_(ptf.omega_, false),
     tangentialVelocity_(ptf.tangentialVelocity_, false)
 {}
 
@@ -75,6 +123,7 @@ swirlInletVelocityFvPatchVectorField
     axis_(ptf.axis_),
     axialVelocity_(ptf.axialVelocity_, false),
     radialVelocity_(ptf.radialVelocity_, false),
+    omega_(ptf.omega_, false),
     tangentialVelocity_(ptf.tangentialVelocity_, false)
 {}
 
@@ -88,18 +137,30 @@ void Foam::swirlInletVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const vector axisHat = axis_/mag(axis_);
+    const scalar t = this->db().time().userTimeValue();
+    const scalarField ts(size(), t);
 
-    // Radius vector in plane of rotation
-    vectorField r(patch().Cf() - origin_);
-    r -= (axisHat & r)*axisHat;
-    const scalarField magr(mag(r));
-    const vectorField rHat(r/magr);
+    // Compute geometry
+    const vector axisHat = normalised(axis_);
+    const vectorField d(patch().Cf() - origin_);
+    const vectorField r(d - (axisHat & d)*axisHat);
+    const scalarField magR(mag(r));
+    const vectorField rHat(normalised(r));
 
-    const scalarField axialVelocity(axialVelocity_->value(magr));
-    const scalarField radialVelocity(radialVelocity_->value(magr));
-    const scalarField tangentialVelocity(tangentialVelocity_->value(magr));
+    // Evaluate individual velocity components
+    const scalarField axialVelocity(axialVelocity_->value(ts, magR));
+    const scalarField radialVelocity(radialVelocity_->value(ts, magR));
+    tmp<scalarField> tangentialVelocity;
+    if (omega_.valid())
+    {
+        tangentialVelocity = omega_->value(t)*magR;
+    }
+    else
+    {
+        tangentialVelocity = tangentialVelocity_->value(ts, magR);
+    }
 
+    // Combine components the complete vector velocity
     operator==
     (
         axialVelocity*axisHat
@@ -118,7 +179,14 @@ void Foam::swirlInletVelocityFvPatchVectorField::write(Ostream& os) const
     writeEntry(os, "axis", axis_);
     writeEntry(os, axialVelocity_());
     writeEntry(os, radialVelocity_());
-    writeEntry(os, tangentialVelocity_());
+    if (omega_.valid())
+    {
+        writeEntry(os, omega_());
+    }
+    else
+    {
+        writeEntry(os, tangentialVelocity_());
+    }
     writeEntry(os, "value", *this);
 }
 

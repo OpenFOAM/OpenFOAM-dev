@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,24 +25,34 @@ Class
     Foam::swirlFlowRateInletVelocityFvPatchVectorField
 
 Description
-    This boundary condition provides a volumetric- OR mass-flow normal vector
-    boundary condition by its magnitude as an integral over its area with a
-    swirl component determined by the angular speed, given in revolutions per
-    minute (RPM)
+    Velocity inlet boundary condition creating a normal velocity field to match
+    the specified mass or volumetric flow rate, and radial and tangential
+    velocity fields specified by functions of time and radius or by a given
+    angular speed.
 
-    The basis of the patch (volumetric or mass) is determined by the
-    dimensions of the flux, phi. The current density is used to correct the
-    velocity when applying the mass basis.
+    For a mass-based flux:
+    - the flow rate should be provided in kg/s
+    - if \c rho is "none" the flow rate is in m3/s
+    - otherwise \c rho should correspond to the name of the density field
+    - if the density field cannot be found in the database, the user must
+      specify the inlet density using the \c rhoInlet entry
+
+    For a volumetric-based flux:
+    - the flow rate is in m3/s
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        phi          | flux field name         | no          | phi
-        rho          | density field name      | no          | rho
-        origin       | origin of rotation      | no          | patch centre
-        axis         | axis of rotation        | no          | -patch normal
-        flowRate     | flow rate profile       | yes         |
-        rpm          | rotational speed profile | yes        |
+        origin       | Origin of rotation      | no          | patch centre
+        axis         | Axis of rotation        | no          | patch normal
+        massFlowRate | Mass flow rate [kg/s]   | no          |
+        volumetricFlowRate | Volumetric flow rate [m^3/s] | no |
+        rho          | Density field name      | no          | rho
+        rhoInlet     | Inlet density           | no          |
+        radialVelocity | Radial velocity [m/s] | yes         |
+        omega        | Angular velocity of the frame [rad/s] | no |
+        rpm          | Angular velocity of the frame [rpm]   | no |
+        tangentialVelocity | Tangential velocity [m/s] | no  |
     \endtable
 
     Example of the boundary condition specification:
@@ -50,20 +60,30 @@ Usage
     <patchName>
     {
         type            swirlFlowRateInletVelocity;
-        flowRate        constant 0.2;
+        origin          (0 0 0);
+        axis            (0 0 1);
+        volumetricFlowRate constant 0.2;
+        radialVelocity  constant 10;
         rpm             constant 100;
     }
     \endverbatim
 
+    The \c volumetricFlowRate or \c massFlowRate and the \omega or \c rpm
+    entries are \c Function1 of time, see Foam::Function1s. The \c
+    radialVelocity and \c tangentialVelocity entries are \c Function2 of time
+    and radius, see Foam::Function2s.
+
     Note:
-      - the \c flowRate and \c rpm entries are Function1 types, able to describe
-        time varying functions.  The example above gives the usage for supplying
-        constant values.
-      - the value is positive into the domain
+      - \c rhoInlet is required for the case of a mass flow rate, where the
+        density field is not available at start-up
+      - The value is positive into the domain (as an inlet)
+      - May not work correctly for transonic inlets
+      - Strange behaviour with potentialFoam since the U equation is not solved
 
 See also
     Foam::fixedValueFvPatchField
     Foam::Function1s
+    Foam::Function2s
 
 SourceFiles
     swirlFlowRateInletVelocityFvPatchVectorField.C
@@ -74,7 +94,8 @@ SourceFiles
 #define swirlFlowRateInletVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "Function1.H"
+#include "Function2.H"
+#include "omega.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -90,12 +111,6 @@ class swirlFlowRateInletVelocityFvPatchVectorField
 {
     // Private Data
 
-        //- Name of the flux transporting the field
-        const word phiName_;
-
-        //- Name of the density field used to normalise the mass flux
-        const word rhoName_;
-
         //- Origin of the rotation
         const vector origin_;
 
@@ -105,8 +120,30 @@ class swirlFlowRateInletVelocityFvPatchVectorField
         //- Inlet integral flow rate
         autoPtr<Function1<scalar>> flowRate_;
 
-        //- Angular speed in revolutions per minute (RPM)
-        autoPtr<Function1<scalar>> rpm_;
+        //- Is the flow-rate volumetric?
+        bool volumetric_;
+
+        //- Name of the density field used to normalise the mass flux
+        word rhoName_;
+
+        //- Rho initialisation value (for start; if value not supplied)
+        const scalar rhoInlet_;
+
+        //- Radial velocity
+        autoPtr<Function2<scalar>> radialVelocity_;
+
+        //- Angular velocity of the frame
+        autoPtr<Function1s::omega> omega_;
+
+        //- Tangential velocity
+        autoPtr<Function2<scalar>> tangentialVelocity_;
+
+
+    // Private Member Functions
+
+        //- Update the patch values given the appropriate density type and value
+        template<class RhoType>
+        void updateValues(const RhoType& rho);
 
 
 public:
@@ -164,13 +201,11 @@ public:
 
     // Member Functions
 
-        // Access
+        //- Update the coefficients associated with the patch field
+        virtual void updateCoeffs();
 
-            //- Update the coefficients associated with the patch field
-            virtual void updateCoeffs();
-
-            //- Write
-            virtual void write(Ostream&) const;
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 

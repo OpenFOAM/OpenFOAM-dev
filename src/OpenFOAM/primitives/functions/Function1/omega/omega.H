@@ -129,6 +129,12 @@ public:
         //- Copy constructor
         omega(const omega&);
 
+        //- Construct and return a clone
+        autoPtr<omega> clone() const
+        {
+            return autoPtr<omega>(new omega(*this));
+        }
+
 
     // Member Functions
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,51 @@ License
 
 #include "flowRateOutletVelocityFvPatchVectorField.H"
 #include "volFields.H"
-#include "one.H"
 #include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+template<class RhoType>
+void Foam::flowRateOutletVelocityFvPatchVectorField::updateValues
+(
+    const RhoType& rho
+)
+{
+    const scalar t = db().time().userTimeValue();
+
+    const vectorField n(patch().nf());
+
+    // Extrapolate patch velocity
+    vectorField Up(this->patchInternalField());
+
+    // Patch normal extrapolated velocity
+    scalarField nUp(n & Up);
+
+    // Remove the normal component of the extrapolate patch velocity
+    Up -= nUp*n;
+
+    // Remove any reverse flow
+    nUp = max(nUp, scalar(0));
+
+    const scalar flowRate = flowRate_->value(t);
+    const scalar estimatedFlowRate = gSum(rho*(this->patch().magSf()*nUp));
+
+    if (estimatedFlowRate/flowRate > 0.5)
+    {
+        nUp *= (mag(flowRate)/mag(estimatedFlowRate));
+    }
+    else
+    {
+        nUp += ((flowRate - estimatedFlowRate)/gSum(rho*patch().magSf()));
+    }
+
+    // Add the corrected normal component of velocity to the patch velocity
+    Up += nUp*n;
+
+    // Correct the patch velocity
+    this->operator==(Up);
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -39,30 +82,30 @@ flowRateOutletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(p, iF, dict, false),
+    flowRate_(),
+    volumetric_(),
+    rhoName_("rho"),
     rhoOutlet_(dict.lookupOrDefault<scalar>("rhoOutlet", -vGreat))
 {
     if (dict.found("volumetricFlowRate"))
     {
-        volumetric_ = true;
         flowRate_ = Function1<scalar>::New("volumetricFlowRate", dict);
-        rhoName_ = "rho";
+        volumetric_ = true;
     }
     else if (dict.found("massFlowRate"))
     {
-        volumetric_ = false;
         flowRate_ = Function1<scalar>::New("massFlowRate", dict);
+        volumetric_ = false;
         rhoName_ = word(dict.lookupOrDefault<word>("rho", "rho"));
     }
     else
     {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Please supply either 'volumetricFlowRate' or"
+        FatalIOErrorInFunction(dict)
+            << "Please supply either 'volumetricFlowRate' or"
             << " 'massFlowRate' and 'rho'" << exit(FatalIOError);
     }
 
-    // Value field require if mass based
+    // Value field required if mass based
     if (dict.found("value"))
     {
         fvPatchField<vector>::operator=
@@ -110,48 +153,6 @@ flowRateOutletVelocityFvPatchVectorField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class RhoType>
-void Foam::flowRateOutletVelocityFvPatchVectorField::updateValues
-(
-    const RhoType& rho
-)
-{
-    const scalar t = db().time().userTimeValue();
-
-    const vectorField n(patch().nf());
-
-    // Extrapolate patch velocity
-    vectorField Up(this->patchInternalField());
-
-    // Patch normal extrapolated velocity
-    scalarField nUp(n & Up);
-
-    // Remove the normal component of the extrapolate patch velocity
-    Up -= nUp*n;
-
-    // Remove any reverse flow
-    nUp = max(nUp, scalar(0));
-
-    const scalar flowRate = flowRate_->value(t);
-    const scalar estimatedFlowRate = gSum(rho*(this->patch().magSf()*nUp));
-
-    if (estimatedFlowRate/flowRate > 0.5)
-    {
-        nUp *= (mag(flowRate)/mag(estimatedFlowRate));
-    }
-    else
-    {
-        nUp += ((flowRate - estimatedFlowRate)/gSum(rho*patch().magSf()));
-    }
-
-    // Add the corrected normal component of velocity to the patch velocity
-    Up += nUp*n;
-
-    // Correct the patch velocity
-    this->operator==(Up);
-}
-
 
 void Foam::flowRateOutletVelocityFvPatchVectorField::updateCoeffs()
 {

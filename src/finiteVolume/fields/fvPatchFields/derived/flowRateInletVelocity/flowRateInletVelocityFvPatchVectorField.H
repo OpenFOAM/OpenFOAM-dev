@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,8 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         massFlowRate | Mass flow rate [kg/s]   | no          |
-        volumetricFlowRate | Volumetric flow rate [m^3/s]| no |
-        meanVelocity | Mean velocity [m/s]| no |
+        volumetricFlowRate | Volumetric flow rate [m^3/s] | no |
+        meanVelocity | Mean velocity [m/s]     | no          |
         profile      | Velocity profile        | no          |
         rho          | Density field name      | no          | rho
         rhoInlet     | Inlet density           | no          |
@@ -135,14 +135,14 @@ class flowRateInletVelocityFvPatchVectorField
         //- Inlet integral flow rate
         autoPtr<Function1<scalar>> flowRate_;
 
-        //- Optional velocity profile
-        autoPtr<Function1<scalar>> profile_;
-
         //- Is the flow-rate mean velocity?
         bool meanVelocity_;
 
         //- Is the flow-rate volumetric?
         bool volumetric_;
+
+        //- Optional velocity profile
+        autoPtr<Function1<scalar>> profile_;
 
         //- Name of the density field used to normalise the mass flux
         word rhoName_;

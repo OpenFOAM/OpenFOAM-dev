@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,10 +41,10 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        massFlowRate | mass flow rate [kg/s]   | no          |
-        volumetricFlowRate | volumetric flow rate [m^3/s]| no |
-        rho          | density field name      | no          | rho
-        rhoOutlet    | outlet density          | no          |
+        massFlowRate | Mass flow rate [kg/s]   | no          |
+        volumetricFlowRate | Volumetric flow rate [m^3/s] | no |
+        rho          | Density field name      | no          | rho
+        rhoOutlet    | Outlet density          | no          |
     \endtable
 
     Example of the boundary condition specification for a volumetric flow rate:
@@ -68,7 +68,8 @@ Usage
     }
     \endverbatim
 
-    The \c flowRate entry is a \c Function1 of time, see Foam::Function1s.
+    The c volumetricFlowRate or \c massFlowRate entry is a \c Function1 of
+    time, see Foam::Function1s.
 
     Note:
       - \c rhoOutlet is required for the case of a mass flow rate, where the
@@ -111,7 +112,7 @@ class flowRateOutletVelocityFvPatchVectorField
         //- Outlet integral flow rate
         autoPtr<Function1<scalar>> flowRate_;
 
-        //- Is volumetric?
+        //- Is the flow-rate volumetric?
         bool volumetric_;
 
         //- Name of the density field used to normalise the mass flux
