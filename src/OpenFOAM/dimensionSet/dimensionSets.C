@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,8 @@ const Foam::dimensionSet Foam::dimLuminousIntensity(0, 0, 0, 0, 0, 0, 1);
 const Foam::dimensionSet Foam::dimArea(sqr(dimLength));
 const Foam::dimensionSet Foam::dimVolume(pow3(dimLength));
 const Foam::dimensionSet Foam::dimVol(dimVolume);
+
+const Foam::dimensionSet Foam::dimRate(dimless/dimTime);
 
 const Foam::dimensionSet Foam::dimVelocity(dimLength/dimTime);
 const Foam::dimensionSet Foam::dimMomentum(dimMass*dimVelocity);
