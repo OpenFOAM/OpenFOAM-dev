@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,11 +40,14 @@ SourceFiles
 #include "regIOobject.H"
 #include "dimensionedType.H"
 #include "UniformField.H"
+#include "OldTimeField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+template<class Type> class UniformDimensionedField;
 
 /*---------------------------------------------------------------------------*\
                    Class UniformDimensionedField Declaration
@@ -54,7 +57,8 @@ template<class Type>
 class UniformDimensionedField
 :
     public regIOobject,
-    public dimensioned<Type>
+    public dimensioned<Type>,
+    public OldTimeField<UniformDimensionedField<Type>>
 {
 
 public:
@@ -103,6 +107,18 @@ public:
             return true;
         }
 
+        //- Dummy reference count uniqueness test
+        bool unique() const
+        {
+            return true;
+        }
+
+        //- Return a reference to the value
+        Type& value();
+
+        //- Return a const-reference to the value
+        const Type& value() const;
+
         //- Return the non-dimensioned field
         FieldType field() const
         {
@@ -115,6 +131,7 @@ public:
 
     // Member Operators
 
+        void operator==(const UniformDimensionedField<Type>&);
         void operator=(const UniformDimensionedField<Type>&);
         void operator=(const dimensioned<Type>&);
 
@@ -122,6 +139,10 @@ public:
         {
             return this->value();
         }
+
+        //- Dummy reference count decrement
+        void operator--()
+        {}
 };
 
 

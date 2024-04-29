@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,8 @@ Foam::UniformDimensionedField<Type>::UniformDimensionedField
 )
 :
     regIOobject(io),
-    dimensioned<Type>(dt)
+    dimensioned<Type>(dt),
+    OldTimeField<UniformDimensionedField>(this->time().timeIndex())
 {
     // Read value
     if
@@ -59,11 +60,12 @@ Foam::UniformDimensionedField<Type>::UniformDimensionedField
 template<class Type>
 Foam::UniformDimensionedField<Type>::UniformDimensionedField
 (
-    const UniformDimensionedField<Type>& rdt
+    const UniformDimensionedField<Type>& udt
 )
 :
-    regIOobject(rdt),
-    dimensioned<Type>(rdt)
+    regIOobject(udt),
+    dimensioned<Type>(udt),
+    OldTimeField<UniformDimensionedField>(udt)
 {}
 
 
@@ -74,7 +76,8 @@ Foam::UniformDimensionedField<Type>::UniformDimensionedField
 )
 :
     regIOobject(io),
-    dimensioned<Type>(regIOobject::name(), dimless, Zero)
+    dimensioned<Type>(regIOobject::name(), dimless, Zero),
+    OldTimeField<UniformDimensionedField>(this->time().timeIndex())
 {
     dictionary dict(readStream(typeName));
     scalar multiplier;
@@ -94,6 +97,21 @@ Foam::UniformDimensionedField<Type>::~UniformDimensionedField()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
+Type& Foam::UniformDimensionedField<Type>::value()
+{
+    this->storeOldTimes();
+    return dimensioned<Type>::value();
+}
+
+
+template<class Type>
+const Type& Foam::UniformDimensionedField<Type>::value() const
+{
+    return dimensioned<Type>::value();
+}
+
+
+template<class Type>
 bool Foam::UniformDimensionedField<Type>::writeData(Ostream& os) const
 {
     writeKeyword(os, "dimensions");
@@ -106,6 +124,16 @@ bool Foam::UniformDimensionedField<Type>::writeData(Ostream& os) const
 
 
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::UniformDimensionedField<Type>::operator==
+(
+    const UniformDimensionedField<Type>& rhs
+)
+{
+    dimensioned<Type>::operator=(rhs);
+}
+
 
 template<class Type>
 void Foam::UniformDimensionedField<Type>::operator=
