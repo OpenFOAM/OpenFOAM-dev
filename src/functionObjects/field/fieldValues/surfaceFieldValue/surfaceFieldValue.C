@@ -678,25 +678,43 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::read
 
 bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
 {
-    if (operation_ != operationType::none)
+    // Look to see if any fields exist. Use the flag to suppress output later.
+    bool anyFields = false;
+    forAll(fields_, i)
+    {
+        #define validFieldType(fieldType, none)                          \
+            anyFields = anyFields || validField<fieldType>(fields_[i]);
+        FOR_ALL_FIELD_TYPES(validFieldType);
+        #undef validFieldType
+    }
+    if (!anyFields && fields_.size() > 1) // (error for 1 will happen below)
+    {
+        cannotFindObjects(fields_);
+    }
+
+    // Initialise the file, write the header, etc...
+    if (anyFields && operation_ != operationType::none)
     {
         fieldValue::write();
     }
 
+    // Update the surface
     if (selectionType_ == selectionTypes::sampledSurface)
     {
         surfacePtr_().update();
     }
 
-    if (operation_ != operationType::none && Pstream::master())
+    // Write the time
+    if (anyFields && operation_ != operationType::none && Pstream::master())
     {
         writeTime(file());
     }
 
+    // Write the total area if necessary
     if (writeArea_)
     {
         totalArea_ = totalArea();
-        if (operation_ != operationType::none && Pstream::master())
+        if (anyFields && operation_ != operationType::none && Pstream::master())
         {
             file() << tab << totalArea_;
         }
@@ -756,32 +774,21 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         bool ok = false;
 
         #define writeValuesFieldType(fieldType, none)                          \
-            ok =                                                               \
-                ok                                                             \
-             || writeValues<fieldType>                                         \
-                (                                                              \
-                    fieldName,                                                 \
-                    signs,                                                     \
-                    weights,                                                   \
-                    Sf                                                         \
-                );
+            ok = ok || writeValues<fieldType>(fieldName, signs, weights, Sf);
         FOR_ALL_FIELD_TYPES(writeValuesFieldType);
         #undef writeValuesFieldType
 
         if (!ok)
         {
-            WarningInFunction
-                << "Requested field " << fieldName
-                << " not found in database and not processed"
-                << endl;
+            cannotFindObject(fieldName);
         }
     }
 
-    if (operation_ != operationType::none && Pstream::master())
+    // Finalise
+    if (anyFields && operation_ != operationType::none && Pstream::master())
     {
         file() << endl;
     }
-
     Log << endl;
 
     return true;

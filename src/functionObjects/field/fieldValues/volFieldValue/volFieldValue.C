@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -281,9 +281,28 @@ bool Foam::functionObjects::fieldValues::volFieldValue::read
 
 bool Foam::functionObjects::fieldValues::volFieldValue::write()
 {
-    fieldValue::write();
+    // Look to see if any fields exist. Use the flag to suppress output later.
+    bool anyFields = false;
+    forAll(fields_, i)
+    {
+        #define validFieldType(fieldType, none)                          \
+            anyFields = anyFields || validField<fieldType>(fields_[i]);
+        FOR_ALL_FIELD_TYPES(validFieldType);
+        #undef validFieldType
+    }
+    if (!anyFields && fields_.size() > 1) // (error for 1 will happen below)
+    {
+        cannotFindObjects(fields_);
+    }
 
-    if (Pstream::master())
+    // Initialise the file, write the header, etc...
+    if (anyFields && operation_ != operationType::none)
+    {
+        fieldValue::write();
+    }
+
+    // Write the time
+    if (anyFields && operation_ != operationType::none && Pstream::master())
     {
         writeTime(file());
     }
@@ -296,6 +315,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::write()
     }
     const scalarField V(filterField(fieldValue::mesh_.V()));
 
+    // Process the fields
     forAll(fields_, i)
     {
         const word& fieldName = fields_[i];
@@ -312,11 +332,11 @@ bool Foam::functionObjects::fieldValues::volFieldValue::write()
         }
     }
 
-    if (operation_ != operationType::none && Pstream::master())
+    // Finalise
+    if (anyFields && operation_ != operationType::none && Pstream::master())
     {
         file() << endl;
     }
-
     Log << endl;
 
     return true;

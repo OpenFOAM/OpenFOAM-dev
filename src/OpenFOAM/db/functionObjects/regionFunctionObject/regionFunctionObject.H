@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,6 +81,9 @@ protected:
 
         //- Prints a warning message that fieldName cannot be found
         void cannotFindObject(const word& fieldName);
+
+        //- Prints a warning message that fieldNames cannot be found
+        void cannotFindObjects(const wordList& fieldNames);
 
         //- Lookup object from the objectRegistry
         template<class ObjectType>

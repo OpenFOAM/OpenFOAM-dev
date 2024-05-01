@@ -322,8 +322,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     functions_
     (
         *this,
-        particleProperties_.subOrEmptyDict("cloudFunctions"),
-        true
+        particleProperties_.subOrEmptyDict("cloudFunctions")
     ),
     injectors_
     (

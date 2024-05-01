@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "CloudFunctionObjectList.H"
-#include "entry.H"
+#include "functionObject.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -44,15 +44,14 @@ template<class CloudType>
 Foam::CloudFunctionObjectList<CloudType>::CloudFunctionObjectList
 (
     CloudType& owner,
-    const dictionary& dict,
-    const bool readFields
+    const dictionary& dict
 )
 :
     PtrList<CloudFunctionObject<CloudType>>(),
     owner_(owner),
     dict_(dict)
 {
-    if (readFields)
+    if (!functionObject::postProcess)
     {
         wordList modelNames(dict.toc());
 
@@ -88,6 +87,10 @@ Foam::CloudFunctionObjectList<CloudType>::CloudFunctionObjectList
         {
             Info<< "    none" << endl;
         }
+    }
+    else
+    {
+        Info<< "Not constructing cloud functions" << endl;
     }
 }
 

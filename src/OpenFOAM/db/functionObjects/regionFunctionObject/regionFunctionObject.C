@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,17 @@ void Foam::functionObjects::regionFunctionObject::cannotFindObject
     Warning
         << "    functionObjects::" << type() << " " << name()
         << " cannot find required object " << fieldName << endl;
+}
+
+
+void Foam::functionObjects::regionFunctionObject::cannotFindObjects
+(
+    const wordList& fieldNames
+)
+{
+    Warning
+        << "    functionObjects::" << type() << " " << name()
+        << " cannot find required objects " << fieldNames << endl;
 }
 
 

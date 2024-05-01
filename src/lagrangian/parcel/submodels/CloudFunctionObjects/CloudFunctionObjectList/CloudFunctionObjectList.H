@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,13 +71,8 @@ public:
         //- Null constructor
         CloudFunctionObjectList(CloudType& owner);
 
-        //- Construct from mesh
-        CloudFunctionObjectList
-        (
-            CloudType& owner,
-            const dictionary& dict,
-            const bool readFields
-        );
+        //- Construct from owner and dictionary
+        CloudFunctionObjectList(CloudType& owner, const dictionary& dict);
 
         //- Construct copy
         CloudFunctionObjectList(const CloudFunctionObjectList& ppml);
