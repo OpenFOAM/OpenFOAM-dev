@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -295,19 +295,21 @@ Tuple2<bool, vector> solveProjection
 }
 
 
-//- Calculate whether the points of the given source triangle project inside or
-//  outside the opposing target triangle
-void srcInTgt
+//- Calculate the non-dimensional offsets of the source points from the target
+//  edges. These values are considered indicative only. The calculation is not
+//  as reliable as that for the target point offsets from the source edges (see
+//  below). The target point offsets should take precedence where possible.
+FixedList<FixedList<scalar, 3>, 3> srcTgtEdgeOffset
 (
     const FixedList<point, 3>& srcPs,
     const FixedList<vector, 3>& srcNs,
     const FixedList<bool, 3>& srcOwns,
     const FixedList<point, 3>& tgtPs,
-    const FixedList<bool, 3>& tgtOwns,
-    FixedList<FixedList<label, 3>, 3>& srcInTgtEdge,
-    FixedList<label, 3>& srcInTgtTri
+    const FixedList<bool, 3>& tgtOwns
 )
 {
+    FixedList<FixedList<scalar, 3>, 3> result;
+
     const triPointRef tgtTri(tgtPs[0], tgtPs[1], tgtPs[2]);
     const vector tgtN = tgtTri.normal();
 
@@ -318,8 +320,8 @@ void srcInTgt
         srcFwd[srcPi] = (srcNs[srcPi] & tgtN) < maxDot;
     }
 
-    // For all forward projecting source points, determine which side of
-    // each target edge they project to
+    // For all forward projecting source points, determine the offset from the
+    // target edges
     forAll(srcPs, srcPi)
     {
         if (srcFwd[srcPi])
@@ -327,7 +329,7 @@ void srcInTgt
             forAll(tgtPs, tgtEi)
             {
                 const label tgtPi0 = tgtEi, tgtPi1 = (tgtEi + 1) % 3;
-                const scalar o =
+                result[srcPi][tgtEi] =
                     srcPointTgtEdgeOffset
                     (
                         srcPs[srcPi],
@@ -335,7 +337,6 @@ void srcInTgt
                         {tgtPs[tgtPi0], tgtPs[tgtPi1]},
                         tgtOwns[tgtEi]
                     );
-                srcInTgtEdge[srcPi][tgtEi] = o > 0 ? +1 : -1;
             }
         }
     }
@@ -346,31 +347,9 @@ void srcInTgt
     {
         if (!srcFwd[srcPi])
         {
-            srcInTgtEdge[srcPi] = {-1, -1, -1};
+            result[srcPi] = {-vGreat, -vGreat, -vGreat};
         }
     }
-
-    /*
-    // For all backward projecting source points, initialise to values of the
-    // connected forward pointing points
-    forAll(srcPs, srcPi)
-    {
-        if (!srcFwd[srcPi])
-        {
-            const label srcPi0 = (srcPi + 2) % 3, srcPi1 = (srcPi + 1) % 3;
-
-            forAll(tgtPs, tgtEi)
-            {
-                srcInTgtEdge[srcPi][tgtEi] =
-                    (srcFwd[srcPi0] || srcFwd[srcPi1])
-                 && (!srcFwd[srcPi0] || srcInTgtEdge[srcPi0][tgtEi])
-                 && (!srcFwd[srcPi1] || srcInTgtEdge[srcPi1][tgtEi])
-                  ? +1
-                  : -1;
-            };
-        }
-    }
-    */
 
     // For source edges with one forward projecting and one backward
     // projecting point, compute the point and normal where the projection
@@ -396,7 +375,7 @@ void srcInTgt
             forAll(tgtPs, tgtEi)
             {
                 const label tgtPi0 = tgtEi, tgtPi1 = (tgtEi + 1) % 3;
-                const scalar o =
+                result[srcFwd[srcPi0] ? srcPi1 : srcPi0][tgtEi] =
                     srcPointTgtEdgeOffset
                     (
                         srcP,
@@ -404,44 +383,35 @@ void srcInTgt
                         {tgtPs[tgtPi0], tgtPs[tgtPi1]},
                         tgtOwns[tgtEi]
                     );
-                srcInTgtEdge[srcFwd[srcPi0] ? srcPi1 : srcPi0][tgtEi] =
-                    o > 0 ? +1 : -1;
             }
         }
     }
 
-    // Combine edge associations to get triangle associations
-    forAll(srcPs, srcPi)
-    {
-        srcInTgtTri[srcPi] = count(srcInTgtEdge[srcPi], 1) == 3 ? +1 : -1;
-    }
+    return result;
 }
 
 
-//- Calculate whether the points of the given target triangle project inside or
-//  outside the opposing source triangle
-void tgtInSrc
+//- Calculate the non-dimensional offsets the target points from the source
+//  edges. These values are considered definitive, and should take precedence
+//  over the source point target edge offsets.
+FixedList<FixedList<scalar, 3>, 3> tgtSrcEdgeOffset
 (
     const FixedList<point, 3>& srcPs,
     const FixedList<vector, 3>& srcNs,
     const FixedList<bool, 3>& srcOwns,
     const FixedList<point, 3>& tgtPs,
-    const FixedList<bool, 3>& tgtOwns,
-    FixedList<FixedList<label, 3>, 3>& tgtInSrcEdge,
-    FixedList<label, 3>& tgtInSrcTri
+    const FixedList<bool, 3>& tgtOwns
 )
 {
-    const triPointRef tgtTri(tgtPs[0], tgtPs[1], tgtPs[2]);
-    const vector tgtN = tgtTri.normal();
+    FixedList<FixedList<scalar, 3>, 3> result;
 
-    // For all target points, determine which side of each source edge
-    // surface they are on
+    // For all target points, determine the offset from each source edge
     forAll(tgtPs, tgtPi)
     {
         forAll(srcPs, srcEi)
         {
             const label srcPi0 = srcEi, srcPi1 = (srcEi + 1) % 3;
-            const scalar o =
+            result[tgtPi][srcEi] =
                 srcEdgeTgtPointOffset
                 (
                     {srcPs[srcPi0], srcPs[srcPi1]},
@@ -449,28 +419,87 @@ void tgtInSrc
                     tgtPs[tgtPi],
                     srcOwns[srcEi]
                 );
-            tgtInSrcEdge[tgtPi][srcEi] = o > 0 ? +1 : -1;
         }
     }
 
-    // Combine edge associations to get triangle associations
-    forAll(tgtPs, tgtPi)
+    return result;
+}
+
+
+//- Construct point-inside/outside-edge topology from a set of point-edge
+//  offsets. Uses the sign of the offsets.
+FixedList<FixedList<label, 3>, 3> thisInOtherEdge
+(
+    const FixedList<FixedList<scalar, 3>, 3>& thisOtherEdgeOffset
+)
+{
+    FixedList<FixedList<label, 3>, 3> result;
+
+    // Determine the edge association from the sign of the offset
+    forAll(thisOtherEdgeOffset, thisPi)
     {
-        tgtInSrcTri[tgtPi] = count(tgtInSrcEdge[tgtPi], 1) == 3 ? +1 : -1;
+        forAll(thisOtherEdgeOffset[thisPi], otherEi)
+        {
+            result[thisPi][otherEi] =
+                thisOtherEdgeOffset[thisPi][otherEi] > 0 ? +1 : -1;
+        }
     }
 
-    // Check whether the intersections occur in a forward direction
-    forAll(tgtPs, tgtPi)
+    return result;
+}
+
+
+//- Construct point-inside/outside-triangle topology from a set of
+//  point-inside/outside-edge topology
+FixedList<label, 3> thisInOtherTri
+(
+    const FixedList<FixedList<label, 3>, 3>& thisInOtherEdge
+)
+{
+    FixedList<label, 3> result;
+
+    // Combine edge associations to get triangle associations
+    forAll(thisInOtherEdge, thisPi)
     {
-        if (tgtInSrcTri[tgtPi] == 1)
+        result[thisPi] = count(thisInOtherEdge[thisPi], 1) == 3 ? +1 : -1;
+    }
+
+    return result;
+}
+
+
+//- Construct target-point-inside/outside-source-triangle topology from a set
+//  of target-point-inside/outside-source-edge topology, and some additional
+//  geometric information to handle cases where the source normal direction
+//  is reversed relative to the target triangle
+FixedList<label, 3> tgtInSrcTri
+(
+    const FixedList<point, 3>& srcPs,
+    const FixedList<vector, 3>& srcNs,
+    const FixedList<point, 3>& tgtPs,
+    const FixedList<FixedList<label, 3>, 3>& tgtInSrcEdge
+)
+{
+    const triPointRef tgtTri(tgtPs[0], tgtPs[1], tgtPs[2]);
+    const vector tgtN = tgtTri.normal();
+
+    // Combine edge associations to get triangle associations
+    FixedList<label, 3> result = thisInOtherTri(tgtInSrcEdge);
+
+    // Filter to only include forward intersections
+    forAll(tgtInSrcEdge, tgtPi)
+    {
+        if (result[tgtPi] == 1)
         {
             const barycentric2D srcTs =
                 srcTriTgtPointIntersection(srcPs, srcNs, tgtPs[tgtPi]);
             const vector srcN = srcTriInterpolate(srcTs, srcNs);
             const bool tgtFwd = (srcN & tgtN) < maxDot;
-            tgtInSrcTri[tgtPi] = tgtFwd ? +1 : -1;
+            result[tgtPi] = tgtFwd ? +1 : -1;
         }
     }
+
+    return result;
 }
 
 
@@ -497,6 +526,56 @@ void thisIsOther
             thisInOtherEdge[thisPi][otherEi1] = 0;
         }
     }
+}
+
+
+//- Calculate whether the points of the given source triangle project inside or
+//  outside the opposing target triangle and its edges
+void srcInTgt
+(
+    const FixedList<point, 3>& srcPs,
+    const FixedList<vector, 3>& srcNs,
+    const FixedList<bool, 3>& srcOwns,
+    const FixedList<label, 3>& srcTgtPis,
+    const FixedList<point, 3>& tgtPs,
+    const FixedList<bool, 3>& tgtOwns,
+    FixedList<FixedList<label, 3>, 3>& srcInTgtEdge,
+    FixedList<label, 3>& srcInTgtTri
+)
+{
+    const FixedList<FixedList<scalar, 3>, 3>& srcTgtEdgeOffset =
+        triIntersect::srcTgtEdgeOffset(srcPs, srcNs, srcOwns, tgtPs, tgtOwns);
+
+    srcInTgtEdge = thisInOtherEdge(srcTgtEdgeOffset);
+
+    srcInTgtTri = thisInOtherTri(srcInTgtEdge);
+
+    thisIsOther(srcTgtPis, srcInTgtEdge, srcInTgtTri);
+}
+
+
+//- Calculate whether the points of the given target triangle project inside or
+//  outside the opposing source triangle and its edges
+void tgtInSrc
+(
+    const FixedList<point, 3>& srcPs,
+    const FixedList<vector, 3>& srcNs,
+    const FixedList<bool, 3>& srcOwns,
+    const FixedList<point, 3>& tgtPs,
+    const FixedList<bool, 3>& tgtOwns,
+    const FixedList<label, 3>& tgtSrcPis,
+    FixedList<FixedList<label, 3>, 3>& tgtInSrcEdge,
+    FixedList<label, 3>& tgtInSrcTri
+)
+{
+    const FixedList<FixedList<scalar, 3>, 3>& tgtSrcEdgeOffset =
+        triIntersect::tgtSrcEdgeOffset(srcPs, srcNs, srcOwns, tgtPs, tgtOwns);
+
+    tgtInSrcEdge = thisInOtherEdge(tgtSrcEdgeOffset);
+
+    tgtInSrcTri = triIntersect::tgtInSrcTri(srcPs, srcNs, tgtPs, tgtInSrcEdge);
+
+    thisIsOther(tgtSrcPis, tgtInSrcEdge, tgtInSrcTri);
 }
 
 
@@ -608,7 +687,471 @@ bool orderLocations
 }
 
 
-void generateGeometryForLocations
+//- Construct the intersection topology
+bool generateLocations
+(
+    const FixedList<label, 3>& tgtSrcPis,
+    const FixedList<FixedList<label, 3>, 3>& srcInTgtEdge,
+    const FixedList<FixedList<label, 3>, 3>& tgtInSrcEdge,
+    const FixedList<label, 3>& srcInTgtTri,
+    const FixedList<label, 3>& tgtInSrcTri,
+    DynamicList<location>& pointLocations
+)
+{
+    // Step 1: Process trivial rejection cases
+
+    // If the entire target triangle is outside or on the same source edge
+    // then there can be no intersection.
+    forAll(srcInTgtEdge, srcEi)
+    {
+        bool outside = true;
+        forAll(tgtInSrcEdge, tgtPi)
+        {
+            if (tgtInSrcEdge[tgtPi][srcEi] == 1)
+            {
+                outside = false;
+                break;
+            }
+        }
+        if (outside)
+        {
+            return true;
+        }
+    }
+
+    // If all source points are outside all target edges this indicates
+    // that the triangles are oppositely oriented, in which case there can
+    // also be no intersection.
+    if (count(srcInTgtEdge, {-1, -1, -1}) == 3)
+    {
+        return true;
+    }
+
+    // Step 2: Define point addition/checking functions
+
+    // Add crossing point locations, inserting source points as necessary
+    auto addPointLocations = [&pointLocations]
+    (
+        const location l1,
+        const location l2 = location(),
+        const bool add = true
+    )
+    {
+        if (!pointLocations.empty())
+        {
+            const location l0 = pointLocations.last();
+
+            if (l0.isIntersection() || l0.isSrcAndTgtPoint())
+            {
+                const label srcEi0 =
+                    l0.isIntersection()
+                  ? l0.srcEdgei()
+                  : (l0.srcPointi() + 2) % 3;
+                const label tgtEi0 =
+                    l0.isIntersection()
+                  ? l0.tgtEdgei()
+                  : l0.tgtPointi();
+
+                const label srcEi1 =
+                    l1.isIntersection()
+                  ? l1.srcEdgei()
+                  : l1.srcPointi();
+                const label tgtEi1 =
+                    l1.isIntersection()
+                  ? l1.tgtEdgei()
+                  : (l1.tgtPointi() + 2) % 3;
+
+                if
+                (
+                    (l0.isIntersection() && l1.isIntersection())
+                 || tgtEi0 != tgtEi1
+                )
+                {
+                    for
+                    (
+                        label srcEj = srcEi0;
+                        srcEj != srcEi1;
+                        srcEj = (srcEj + 2) % 3
+                    )
+                    {
+                        pointLocations.append(location::srcPoint(srcEj));
+                    }
+                }
+            }
+        }
+
+        if (add)
+        {
+            pointLocations.append(l1);
+
+            if (!l2.isNull())
+            {
+                pointLocations.append(l2);
+            }
+        }
+    };
+
+    // One target point is within the source triangle and one is not
+    auto inTriToOut = [&addPointLocations,&srcInTgtEdge]
+    (
+        const label tgtEi,
+        const label tgtOutSrcEi1,
+        const label tgtOutSrcPi1,
+        const bool reverse
+    )
+    {
+        const label srcEi =
+            tgtOutSrcEi1 != -1
+          ? tgtOutSrcEi1
+          : srcInTgtEdge[tgtOutSrcPi1][tgtEi] == 1
+          ? (tgtOutSrcPi1 + 2*reverse) % 3
+          : (tgtOutSrcPi1 + 2*!reverse) % 3;
+
+        addPointLocations(location::intersection(srcEi, tgtEi));
+    };
+
+    // One target point is a source point and the other is outside a source edge
+    auto isPointToOutEdge = [&addPointLocations,&srcInTgtEdge]
+    (
+        const label tgtEi,
+        const label tgtIsSrcPi0,
+        const label tgtOutSrcEi1,
+        const bool reverse
+    )
+    {
+        const label srcEi0Next = (tgtIsSrcPi0 + 2*reverse) % 3;
+        const label srcEi0Opp = (tgtIsSrcPi0 + 1) % 3;
+
+        if
+        (
+            srcInTgtEdge[(tgtIsSrcPi0 + 1) % 3][tgtEi] == -1
+         && srcInTgtEdge[(tgtIsSrcPi0 + 2) % 3][tgtEi] == -1
+        )
+        {
+            return false;
+        }
+
+        if (tgtOutSrcEi1 == srcEi0Next)
+        {
+            return false;
+        }
+
+        if (tgtOutSrcEi1 == srcEi0Opp)
+        {
+            addPointLocations(location::intersection(srcEi0Opp, tgtEi));
+        }
+
+        return true;
+    };
+
+    // One target point is a source point and the other is outside a source
+    // corner
+    auto isPointToOutCorner = []
+    (
+        const label tgtEi,
+        const label tgtIsSrcPi0,
+        const label tgtOutSrcPi1,
+        const bool reverse
+    )
+    {
+        return tgtOutSrcPi1 != (tgtIsSrcPi0 + 1 + reverse) % 3;
+    };
+
+    // Both target points are outside source edges
+    auto outEdgeToOutEdge = [&addPointLocations,&srcInTgtEdge]
+    (
+        const label tgtEi,
+        const label tgtOutSrcEi0,
+        const label tgtOutSrcEi1
+    )
+    {
+        const label srcPi = (5 - tgtOutSrcEi0 - tgtOutSrcEi1) % 3;
+
+        if
+        (
+            (tgtOutSrcEi0 != (tgtOutSrcEi1 + 1) % 3)
+         && (srcInTgtEdge[srcPi][tgtEi] != 1)
+        )
+        {
+            return false;
+        }
+
+        if
+        (
+            (tgtOutSrcEi0 == (tgtOutSrcEi1 + 1) % 3)
+         != (srcInTgtEdge[srcPi][tgtEi] == 1)
+        )
+        {
+            addPointLocations
+            (
+                location::intersection(tgtOutSrcEi0, tgtEi),
+                location::intersection(tgtOutSrcEi1, tgtEi)
+            );
+        }
+
+        return true;
+    };
+
+    // One target point is outside a source edge and the other is outside a
+    // source corner
+    auto outEdgeToOutCorner = [&addPointLocations,&srcInTgtEdge]
+    (
+        const label tgtEi,
+        const label tgtOutSrcEi0,
+        const label tgtOutSrcPi1,
+        const bool reverse
+    )
+    {
+        if (tgtOutSrcEi0 == tgtOutSrcPi1)
+        {
+            return !reverse;
+        }
+
+        if ((tgtOutSrcEi0 + 1) % 3 == tgtOutSrcPi1)
+        {
+            return reverse;
+        }
+
+        const label srcPi1Prev = (tgtOutSrcPi1 + 1 + !reverse) % 3;
+
+        if (srcInTgtEdge[srcPi1Prev][tgtEi] == -1)
+        {
+            return false;
+        }
+
+        const label srcPi1Next = (tgtOutSrcPi1 + 1 + reverse) % 3;
+
+        if (srcInTgtEdge[srcPi1Next][tgtEi] == 1)
+        {
+            return true;
+        }
+
+        location l1 = location::intersection(tgtOutSrcEi0, tgtEi);
+
+        const label srcEi =
+            srcInTgtEdge[tgtOutSrcPi1][tgtEi] == 1
+          ? (tgtOutSrcPi1 + 2*reverse) % 3
+          : (tgtOutSrcPi1 + 2*!reverse) % 3;
+
+        location l2 = location::intersection(srcEi, tgtEi);
+
+        if (reverse)
+        {
+            Swap(l1, l2);
+        }
+
+        addPointLocations(l1, l2);
+
+        return true;
+    };
+
+    // Both target points are outside source corners
+    auto outCornerToOutCorner = []
+    (
+        const label tgtEi,
+        const label tgtOutSrcPi0,
+        const label tgtOutSrcPi1
+    )
+    {
+        return tgtOutSrcPi0 != (tgtOutSrcPi1 + 2) % 3;
+    };
+
+    // Step 3: Walk around the target edges to form the intersection polygon
+    for (label tgtEi = 0; tgtEi < 3; tgtEi ++)
+    {
+        const label tgtPi0 = tgtEi, tgtPi1 = (tgtEi + 1) % 3;
+
+        const bool tgtInSrcTri0 = tgtInSrcTri[tgtPi0] == 1;
+        const bool tgtInSrcTri1 = tgtInSrcTri[tgtPi1] == 1;
+
+        const label tgtIsSrcPi0 =
+            tgtInSrcTri[tgtPi0] == 0 ? tgtSrcPis[tgtPi0] : -1;
+        const label tgtIsSrcPi1 =
+            tgtInSrcTri[tgtPi1] == 0 ? tgtSrcPis[tgtPi1] : -1;
+
+        const label tgtOutSrcEi0 =
+            count(tgtInSrcEdge[tgtPi0], -1) == 1
+          ? findIndex(tgtInSrcEdge[tgtPi0], -1)
+          : -1;
+        const label tgtOutSrcEi1 =
+            count(tgtInSrcEdge[tgtPi1], -1) == 1
+          ? findIndex(tgtInSrcEdge[tgtPi1], -1)
+          : -1;
+
+        const label tgtOutSrcPi0 =
+            count(tgtInSrcEdge[tgtPi0], -1) == 2
+          ? (findIndex(tgtInSrcEdge[tgtPi0], 1) + 2) % 3
+          : -1;
+        const label tgtOutSrcPi1 =
+            count(tgtInSrcEdge[tgtPi1], -1) == 2
+          ? (findIndex(tgtInSrcEdge[tgtPi1], 1) + 2) % 3
+          : -1;
+
+        // Add the first point if it within or part of the source triangle
+        if (tgtInSrcTri0)
+        {
+            pointLocations.append(location::tgtPoint(tgtPi0));
+        }
+        if (tgtIsSrcPi0 != -1)
+        {
+            addPointLocations(location::srcTgtPoint(tgtIsSrcPi0, tgtPi0));
+        }
+
+        // Add crossings
+        if
+        (
+            (tgtInSrcTri0 && tgtInSrcTri1)
+         || (tgtOutSrcEi0 != -1 && tgtOutSrcEi0 == tgtOutSrcEi1)
+         || (tgtOutSrcPi0 != -1 && tgtOutSrcPi0 == tgtOutSrcPi1)
+        )
+        {
+            // Both target points are in the same source quadrant. There is
+            // nothing to check or to add.
+        }
+        else if
+        (
+            (tgtInSrcTri0 && tgtIsSrcPi1 != -1)
+         || (tgtIsSrcPi0 != -1 && tgtInSrcTri1)
+        )
+        {
+            // One target point is within the source triangle and one is a
+            // source point. There is nothing to check or to add.
+        }
+        else if (tgtInSrcTri0 && (tgtOutSrcEi1 != -1 || tgtOutSrcPi1 != -1))
+        {
+            // The first target point is within the source triangle and the
+            // second is outside
+            inTriToOut(tgtEi, tgtOutSrcEi1, tgtOutSrcPi1, 0);
+        }
+        else if ((tgtOutSrcEi0 != -1 || tgtOutSrcPi0 != -1) && tgtInSrcTri1)
+        {
+            // (reverse of previous clause)
+            inTriToOut(tgtEi, tgtOutSrcEi0, tgtOutSrcPi0, 1);
+        }
+        else if (tgtIsSrcPi0 != -1 && tgtIsSrcPi1 != -1)
+        {
+            // Both target points are source points. Check the ordering is
+            // compatible with an intersection.
+            if (tgtIsSrcPi0 != (tgtIsSrcPi1 + 1) % 3)
+            {
+                pointLocations.clear();
+                return false;
+            }
+        }
+        else if (tgtIsSrcPi0 != -1 && tgtOutSrcEi1 != -1)
+        {
+            // The first target point is a source point and the second is
+            // outside a source edge
+            if (!isPointToOutEdge(tgtEi, tgtIsSrcPi0, tgtOutSrcEi1, 0))
+            {
+                pointLocations.clear();
+                return false;
+            }
+        }
+        else if (tgtOutSrcEi0 != -1 && tgtIsSrcPi1 != -1)
+        {
+            // (reverse of previous clause)
+            if (!isPointToOutEdge(tgtEi, tgtIsSrcPi1, tgtOutSrcEi0, 1))
+            {
+                pointLocations.clear();
+                return false;
+            }
+        }
+        else if (tgtIsSrcPi0 != -1 && tgtOutSrcPi1 != -1)
+        {
+            // The first target point is a source point and the second is
+            // outside a source corner
+            if (!isPointToOutCorner(tgtEi, tgtIsSrcPi0, tgtOutSrcPi1, 0))
+            {
+                pointLocations.clear();
+                return false;
+            }
+        }
+        else if (tgtOutSrcPi0 != -1 && tgtIsSrcPi1 != -1)
+        {
+            // (reverse of previous clause)
+            if (!isPointToOutCorner(tgtEi, tgtIsSrcPi1, tgtOutSrcPi0, 1))
+            {
+                pointLocations.clear();
+                return false;
+            }
+        }
+        else if (tgtOutSrcEi0 != -1 && tgtOutSrcEi1 != -1)
+        {
+            // Both target points are outside source edges
+            if (!outEdgeToOutEdge(tgtEi, tgtOutSrcEi0, tgtOutSrcEi1))
+            {
+                pointLocations.clear();
+                return false;
+            }
+        }
+        else if (tgtOutSrcEi0 != -1 && tgtOutSrcPi1 != -1)
+        {
+            // The first target point is outside a source edge and the
+            // second is outside a source corner
+            if (!outEdgeToOutCorner(tgtEi, tgtOutSrcEi0, tgtOutSrcPi1, 0))
+            {
+                pointLocations.clear();
+                return false;
+            }
+        }
+        else if (tgtOutSrcPi0 != -1 && tgtOutSrcEi1 != -1)
+        {
+            // (reverse of previous clause)
+            if (!outEdgeToOutCorner(tgtEi, tgtOutSrcEi1, tgtOutSrcPi0, 1))
+            {
+                pointLocations.clear();
+                return false;
+            }
+        }
+        else if (tgtOutSrcPi0 != -1 && tgtOutSrcPi1 != -1)
+        {
+            // Both target points are outside source corners
+            if (!outCornerToOutCorner(tgtEi, tgtOutSrcPi0, tgtOutSrcPi1))
+            {
+                pointLocations.clear();
+                return false;
+            }
+        }
+        else
+        {
+            // A target point is outside all source edges. The projection
+            // has collapsed.
+            pointLocations.clear();
+            return false;
+        }
+    }
+
+    // Step 4: Complete the polygon by adding any remaining source points that
+    // were not traversed during the walk of the target edges
+    if (!pointLocations.empty())
+    {
+        const location& l = pointLocations.first();
+
+        if (l.isIntersection() || l.isSrcAndTgtPoint())
+        {
+            addPointLocations(l, location(), false);
+        }
+    }
+    else
+    {
+        forAllReverse(srcInTgtEdge, srcPi)
+        {
+            pointLocations.append(location::srcPoint(srcPi));
+        }
+    }
+
+    // Step 5: The above walk was done around the target triangle, but the
+    // result should be ordered in the direction of the source triangle, so the
+    // list of locations must be reversed
+    inplaceReverseList(pointLocations);
+
+    return true;
+}
+
+
+//- Construct the intersection geometry
+void generateGeometry
 (
     const FixedList<point, 3>& srcPs,
     const FixedList<vector, 3>& srcNs,
@@ -1313,14 +1856,23 @@ void Foam::triIntersect::intersectTris
         writeTriProjection(writePrefix + "_srcPrj", srcPs, srcNs);
     }
 
-    // Step 1: Figure out what source points lie within which target triangles
-    // and edges and vice-versa
+    // Determine what source points lie within target edges and vice-versa
     FixedList<FixedList<label, 3>, 3> srcInTgtEdge, tgtInSrcEdge;
     FixedList<label, 3> srcInTgtTri, tgtInSrcTri;
-    srcInTgt(srcPs, srcNs, srcOwns, tgtPs, tgtOwns, srcInTgtEdge, srcInTgtTri);
-    thisIsOther(srcTgtPis, srcInTgtEdge, srcInTgtTri);
-    tgtInSrc(srcPs, srcNs, srcOwns, tgtPs, tgtOwns, tgtInSrcEdge, tgtInSrcTri);
-    thisIsOther(tgtSrcPis, tgtInSrcEdge, tgtInSrcTri);
+    srcInTgt
+    (
+        srcPs, srcNs, srcOwns, srcTgtPis,
+        tgtPs, tgtOwns,
+        srcInTgtEdge,
+        srcInTgtTri
+    );
+    tgtInSrc
+    (
+        srcPs, srcNs, srcOwns,
+        tgtPs, tgtOwns, tgtSrcPis,
+        tgtInSrcEdge,
+        tgtInSrcTri
+    );
 
     if (debug)
     {
@@ -1338,458 +1890,19 @@ void Foam::triIntersect::intersectTris
             << indent << "tgtInSrcEdge=" << tgtInSrcEdge << endl;
     }
 
-    // Step 2: Process trivial rejection cases
-
-    // Keep track of whether or not an intersection is present and valid
-    bool haveIntersection = true;
-
-    // If the entire target triangle is outside or on the same source edge
-    // then there can be no intersection
-    forAll(srcPs, srcEi)
-    {
-        bool outside = true;
-        forAll(tgtPs, tgtPi)
-        {
-            if (tgtInSrcEdge[tgtPi][srcEi] == 1)
-            {
-                outside = false;
-                break;
-            }
-        }
-        if (outside)
-        {
-            haveIntersection = false;
-            break;
-        }
-    }
-
-    // If all source points are outside all target edges this indicates
-    // that the triangles are oppositely oriented, in which case there can
-    // also be no intersection
-    if (count(srcInTgtEdge, {-1, -1, -1}) == 3)
-    {
-        haveIntersection = false;
-    }
-
-    // Step 3: Define point addition/checking functions
-
-    // Add crossing point locations, inserting source points as necessary
-    auto addPointLocations = [&srcInTgtTri,&pointLocations]
+    // Generate the locations
+    generateLocations
     (
-        const location l1,
-        const location l2 = location(),
-        const bool add = true
-    )
-    {
-        if (!pointLocations.empty())
-        {
-            const location l0 = pointLocations.last();
+        tgtSrcPis,
+        srcInTgtEdge,
+        tgtInSrcEdge,
+        srcInTgtTri,
+        tgtInSrcTri,
+        pointLocations
+    );
 
-            if (l0.isIntersection() || l0.isSrcAndTgtPoint())
-            {
-                const label srcEi0 =
-                    l0.isIntersection()
-                  ? l0.srcEdgei()
-                  : (l0.srcPointi() + 2) % 3;
-                const label tgtEi0 =
-                    l0.isIntersection()
-                  ? l0.tgtEdgei()
-                  : l0.tgtPointi();
-
-                const label srcEi1 =
-                    l1.isIntersection()
-                  ? l1.srcEdgei()
-                  : l1.srcPointi();
-                const label tgtEi1 =
-                    l1.isIntersection()
-                  ? l1.tgtEdgei()
-                  : (l1.tgtPointi() + 2) % 3;
-
-                if
-                (
-                    (l0.isIntersection() && l1.isIntersection())
-                 || tgtEi0 != tgtEi1
-                )
-                {
-                    for
-                    (
-                        label srcEj = srcEi0;
-                        srcEj != srcEi1;
-                        srcEj = (srcEj + 2) % 3
-                    )
-                    {
-                        if (srcInTgtTri[srcEj] != 1)
-                        {
-                            return false;
-                        }
-
-                        pointLocations.append(location::srcPoint(srcEj));
-                    }
-                }
-            }
-        }
-
-        if (!add)
-        {
-            return true;
-        }
-
-        pointLocations.append(l1);
-
-        if (!l2.isNull())
-        {
-            pointLocations.append(l2);
-        }
-
-        return true;
-    };
-
-    // One target point is within the source triangle and one is not
-    auto inTriToOut = [&addPointLocations,&srcInTgtEdge]
-    (
-        const label tgtEi,
-        const label tgtOutSrcEi1,
-        const label tgtOutSrcPi1,
-        const bool reverse
-    )
-    {
-        const label srcEi =
-            tgtOutSrcEi1 != -1
-          ? tgtOutSrcEi1
-          : srcInTgtEdge[tgtOutSrcPi1][tgtEi] == 1
-          ? (tgtOutSrcPi1 + 2*reverse) % 3
-          : (tgtOutSrcPi1 + 2*!reverse) % 3;
-
-        return addPointLocations(location::intersection(srcEi, tgtEi));
-    };
-
-    // One target point is a source point and the other is outside a source edge
-    auto isPointToOutEdge = [&addPointLocations,&srcInTgtEdge]
-    (
-        const label tgtEi,
-        const label tgtIsSrcPi0,
-        const label tgtOutSrcEi1,
-        const bool reverse
-    )
-    {
-        const label srcEi0Next = (tgtIsSrcPi0 + 2*reverse) % 3;
-        const label srcEi0Opp = (tgtIsSrcPi0 + 1) % 3;
-
-        if
-        (
-            srcInTgtEdge[(tgtIsSrcPi0 + 1) % 3][tgtEi] == -1
-         && srcInTgtEdge[(tgtIsSrcPi0 + 2) % 3][tgtEi] == -1
-        )
-        {
-            return false;
-        }
-
-        if (tgtOutSrcEi1 == srcEi0Next)
-        {
-            return false;
-        }
-
-        if (tgtOutSrcEi1 == srcEi0Opp)
-        {
-            return
-                addPointLocations
-                (
-                    location::intersection(srcEi0Opp, tgtEi)
-                );
-        }
-
-        return true;
-    };
-
-    // One target point is a source point and the other is outside a source
-    // corner
-    auto isPointToOutCorner = []
-    (
-        const label tgtEi,
-        const label tgtIsSrcPi0,
-        const label tgtOutSrcPi1,
-        const bool reverse
-    )
-    {
-        return tgtOutSrcPi1 != (tgtIsSrcPi0 + 1 + reverse) % 3;
-    };
-
-    // Both target points are outside source edges
-    auto outEdgeToOutEdge = [&addPointLocations,&srcInTgtEdge]
-    (
-        const label tgtEi,
-        const label tgtOutSrcEi0,
-        const label tgtOutSrcEi1
-    )
-    {
-        const label srcPi = (5 - tgtOutSrcEi0 - tgtOutSrcEi1) % 3;
-
-        if
-        (
-            (tgtOutSrcEi0 != (tgtOutSrcEi1 + 1) % 3)
-         && (srcInTgtEdge[srcPi][tgtEi] != 1)
-        )
-        {
-            return false;
-        }
-
-        if
-        (
-            (tgtOutSrcEi0 == (tgtOutSrcEi1 + 1) % 3)
-         != (srcInTgtEdge[srcPi][tgtEi] == 1)
-        )
-        {
-            return
-                addPointLocations
-                (
-                    location::intersection(tgtOutSrcEi0, tgtEi),
-                    location::intersection(tgtOutSrcEi1, tgtEi)
-                );
-        }
-
-        return true;
-    };
-
-    // One target point is outside a source edge and the other is outside a
-    // source corner
-    auto outEdgeToOutCorner = [&addPointLocations,&srcInTgtEdge]
-    (
-        const label tgtEi,
-        const label tgtOutSrcEi0,
-        const label tgtOutSrcPi1,
-        const bool reverse
-    )
-    {
-        if (tgtOutSrcEi0 != (tgtOutSrcPi1 + 1) % 3)
-        {
-            return true;
-        }
-
-        const label srcPi1Prev = (tgtOutSrcPi1 + 1 + !reverse) % 3;
-
-        if (srcInTgtEdge[srcPi1Prev][tgtEi] == -1)
-        {
-            return false;
-        }
-
-        const label srcPi1Next = (tgtOutSrcPi1 + 1 + reverse) % 3;
-
-        if (srcInTgtEdge[srcPi1Next][tgtEi] == 1)
-        {
-            return true;
-        }
-
-        location l1 = location::intersection(tgtOutSrcEi0, tgtEi);
-
-        const label srcEi =
-            srcInTgtEdge[tgtOutSrcPi1][tgtEi] == 1
-          ? (tgtOutSrcPi1 + 2*reverse) % 3
-          : (tgtOutSrcPi1 + 2*!reverse) % 3;
-
-        location l2 = location::intersection(srcEi, tgtEi);
-
-        if (reverse)
-        {
-            Swap(l1, l2);
-        }
-
-        return addPointLocations(l1, l2);
-    };
-
-    // Both target points are outside source corners
-    auto outCornerToOutCorner = []
-    (
-        const label tgtEi,
-        const label tgtOutSrcPi0,
-        const label tgtOutSrcPi1
-    )
-    {
-        return tgtOutSrcPi0 != (tgtOutSrcPi1 + 2) % 3;
-    };
-
-    // Step 4: Walk around the target edges to form the intersection polygon
-    for (label tgtEi = 0; tgtEi < 3 && haveIntersection; tgtEi ++)
-    {
-        const label tgtPi0 = tgtEi, tgtPi1 = (tgtEi + 1) % 3;
-
-        const bool tgtInSrcTri0 = tgtInSrcTri[tgtPi0] == 1;
-        const bool tgtInSrcTri1 = tgtInSrcTri[tgtPi1] == 1;
-
-        const label tgtIsSrcPi0 =
-            tgtInSrcTri[tgtPi0] == 0 ? tgtSrcPis[tgtPi0] : -1;
-        const label tgtIsSrcPi1 =
-            tgtInSrcTri[tgtPi1] == 0 ? tgtSrcPis[tgtPi1] : -1;
-
-        const label tgtOutSrcEi0 =
-            count(tgtInSrcEdge[tgtPi0], -1) == 1
-          ? findIndex(tgtInSrcEdge[tgtPi0], -1)
-          : -1;
-        const label tgtOutSrcEi1 =
-            count(tgtInSrcEdge[tgtPi1], -1) == 1
-          ? findIndex(tgtInSrcEdge[tgtPi1], -1)
-          : -1;
-
-        const label tgtOutSrcPi0 =
-            count(tgtInSrcEdge[tgtPi0], -1) == 2
-          ? (findIndex(tgtInSrcEdge[tgtPi0], 1) + 2) % 3
-          : -1;
-        const label tgtOutSrcPi1 =
-            count(tgtInSrcEdge[tgtPi1], -1) == 2
-          ? (findIndex(tgtInSrcEdge[tgtPi1], 1) + 2) % 3
-          : -1;
-
-        // Add the first point if it within or part of the source triangle
-        if (tgtInSrcTri0)
-        {
-            pointLocations.append(location::tgtPoint(tgtPi0));
-        }
-        if (tgtIsSrcPi0 != -1)
-        {
-            haveIntersection =
-                addPointLocations
-                (
-                    location::srcTgtPoint(tgtIsSrcPi0, tgtPi0)
-                );
-        }
-        if (!haveIntersection) continue;
-
-        // Add crossings
-        if
-        (
-            (tgtInSrcTri0 && tgtInSrcTri1)
-         || (tgtOutSrcEi0 != -1 && tgtOutSrcEi0 == tgtOutSrcEi1)
-         || (tgtOutSrcPi0 != -1 && tgtOutSrcPi0 == tgtOutSrcPi1)
-        )
-        {
-            // Both target points are in the same source quadrant. There is
-            // nothing to check or to add.
-        }
-        else if
-        (
-            (tgtInSrcTri0 && tgtIsSrcPi1 != -1)
-         || (tgtIsSrcPi0 != -1 && tgtInSrcTri1)
-        )
-        {
-            // One target point is within the source triangle and one is a
-            // source point. There is nothing to check or to add.
-        }
-        else if (tgtInSrcTri0 && (tgtOutSrcEi1 != -1 || tgtOutSrcPi1 != -1))
-        {
-            // The first target point is within the source triangle and the
-            // second is outside
-            haveIntersection = inTriToOut(tgtEi, tgtOutSrcEi1, tgtOutSrcPi1, 0);
-        }
-        else if ((tgtOutSrcEi0 != -1 || tgtOutSrcPi0 != -1) && tgtInSrcTri1)
-        {
-            // (reverse of previous clause)
-            haveIntersection = inTriToOut(tgtEi, tgtOutSrcEi0, tgtOutSrcPi0, 1);
-        }
-        else if (tgtIsSrcPi0 != -1 && tgtIsSrcPi1 != -1)
-        {
-            // Both target points are source points. Check the ordering is
-            // compatible with an intersection.
-            haveIntersection = tgtIsSrcPi0 == (tgtIsSrcPi1 + 1) % 3;
-        }
-        else if (tgtIsSrcPi0 != -1 && tgtOutSrcEi1 != -1)
-        {
-            // The first target point is a source point and the second is
-            // outside a source edge
-            haveIntersection =
-                isPointToOutEdge(tgtEi, tgtIsSrcPi0, tgtOutSrcEi1, 0);
-        }
-        else if (tgtOutSrcEi0 != -1 && tgtIsSrcPi1 != -1)
-        {
-            // (reverse of previous clause)
-            haveIntersection =
-                isPointToOutEdge(tgtEi, tgtIsSrcPi1, tgtOutSrcEi0, 1);
-        }
-        else if (tgtIsSrcPi0 != -1 && tgtOutSrcPi1 != -1)
-        {
-            // The first target point is a source point and the second is
-            // outside a source corner
-            haveIntersection =
-                isPointToOutCorner(tgtEi, tgtIsSrcPi0, tgtOutSrcPi1, 0);
-        }
-        else if (tgtOutSrcPi0 != -1 && tgtIsSrcPi1 != -1)
-        {
-            // (reverse of previous clause)
-            haveIntersection =
-                isPointToOutCorner(tgtEi, tgtIsSrcPi1, tgtOutSrcPi0, 1);
-        }
-        else if (tgtOutSrcEi0 != -1 && tgtOutSrcEi1 != -1)
-        {
-            // Both target points are outside source edges
-            haveIntersection =
-                outEdgeToOutEdge(tgtEi, tgtOutSrcEi0, tgtOutSrcEi1);
-        }
-        else if (tgtOutSrcEi0 != -1 && tgtOutSrcPi1 != -1)
-        {
-            // The first target point is outside a source edge and the
-            // second is outside a source corner
-            haveIntersection =
-                outEdgeToOutCorner(tgtEi, tgtOutSrcEi0, tgtOutSrcPi1, 0);
-        }
-        else if (tgtOutSrcPi0 != -1 && tgtOutSrcEi1 != -1)
-        {
-            // (reverse of previous clause)
-            haveIntersection =
-                outEdgeToOutCorner(tgtEi, tgtOutSrcEi1, tgtOutSrcPi0, 1);
-        }
-        else if (tgtOutSrcPi0 != -1 && tgtOutSrcPi1 != -1)
-        {
-            // Both target points are outside source corners
-            haveIntersection =
-                outCornerToOutCorner(tgtEi, tgtOutSrcPi0, tgtOutSrcPi1);
-        }
-        else
-        {
-            // A target point is outside all source edges. The projection
-            // has collapsed.
-            haveIntersection = false;
-        }
-    }
-
-    // Step 5: Complete the polygon by adding any remaining source points that
-    // were not traversed during the walk of the target edges
-    if (haveIntersection)
-    {
-        if (!pointLocations.empty())
-        {
-            const location& l = pointLocations.first();
-
-            if (l.isIntersection() || l.isSrcAndTgtPoint())
-            {
-                haveIntersection =
-                    addPointLocations(l, location(), false);
-            }
-        }
-        else
-        {
-            forAllReverse(srcPs, srcPi)
-            {
-                pointLocations.append(location::srcPoint(srcPi));
-            }
-        }
-    }
-
-    // Step 6: Make sure no points are generated if the intersection has failed
-    if (!haveIntersection)
-    {
-        pointLocations.clear();
-    }
-
-    // Step 7: The above walk was done around the target triangle, but the
-    // result should be ordered in the direction of the source triangle, so the
-    // list of locations must be reversed
-    inplaceReverseList(pointLocations);
-
-    if (debug)
-    {
-        Info<< indent << "pointLocations=" << pointLocations << endl;
-    }
-
-    // Step 8: Generate the geometry
-    generateGeometryForLocations
+    // Generate the geometry
+    generateGeometry
     (
         srcPs,
         srcNs,

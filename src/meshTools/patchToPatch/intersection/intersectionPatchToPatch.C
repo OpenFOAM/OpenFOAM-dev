@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -291,7 +291,7 @@ bool Foam::patchToPatches::intersection::intersectFaces
             const label debugSrcPoint0 = debugPoints_.size();
             const label debugTgtPoint0 =
                 debugPoints_.size() + ictSrcPoints_.size();
-            if (debug)
+            if (debug > 1)
             {
                 debugPoints_.append(ictSrcPoints_);
                 debugPoints_.append(ictTgtPoints_);
@@ -420,7 +420,7 @@ bool Foam::patchToPatches::intersection::intersectFaces
                 }
 
                 // Store the projected edge quadrilateral for debugging
-                if (debug)
+                if (debug > 1)
                 {
                     debugFaces_.append
                     (
@@ -531,7 +531,7 @@ void Foam::patchToPatches::intersection::initialise
         }
     }
 
-    if (debug)
+    if (debug > 1)
     {
         debugPoints_.clear();
         debugFaces_.clear();
@@ -819,28 +819,6 @@ Foam::label Foam::patchToPatches::intersection::finalise
                 name += "_proc" + Foam::name(Pstream::myProcNo());
             }
 
-            Info<< indent << "Writing intersected faces to "
-                << name + ".vtk" << endl;
-            vtkWritePolyData::write
-            (
-                name + ".vtk",
-                name,
-                false,
-                debugPoints_,
-                labelList(),
-                labelListList(),
-                debugFaces_,
-                "srcFace", false, Field<label>(debugFaceSrcFaces_),
-                "tgtFace", false, Field<label>(debugFaceTgtFaces_),
-                "side", false, Field<label>(debugFaceSides_)
-            );
-
-            debugPoints_.clear();
-            debugFaces_.clear();
-            debugFaceSrcFaces_.clear();
-            debugFaceTgtFaces_.clear();
-            debugFaceSides_.clear();
-
             Info<< indent << "Writing source patch to "
                 << name + "_srcPatch.vtk" << endl;
             vtkWritePolyData::write
@@ -873,6 +851,31 @@ Foam::label Foam::patchToPatches::intersection::finalise
                 tgtPatch.localFaces(),
                 "coverage", false, scalarField(tgtCoverage_)
             );
+
+            if (debug > 1)
+            {
+                Info<< indent << "Writing intersected faces to "
+                    << name + ".vtk" << endl;
+                vtkWritePolyData::write
+                (
+                    name + ".vtk",
+                    name,
+                    false,
+                    debugPoints_,
+                    labelList(),
+                    labelListList(),
+                    debugFaces_,
+                    "srcFace", false, Field<label>(debugFaceSrcFaces_),
+                    "tgtFace", false, Field<label>(debugFaceTgtFaces_),
+                    "side", false, Field<label>(debugFaceSides_)
+                );
+
+                debugPoints_.clear();
+                debugFaces_.clear();
+                debugFaceSrcFaces_.clear();
+                debugFaceTgtFaces_.clear();
+                debugFaceSides_.clear();
+            }
         }
     }
 
