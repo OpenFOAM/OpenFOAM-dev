@@ -245,6 +245,9 @@ private:
 
     // Private Data
 
+        //- List of token type names
+        static const word typeNames_[];
+
         //- The token type
         tokenType type_;
 
@@ -281,11 +284,6 @@ private:
 
 
 public:
-
-    // Static Data Members
-
-        static const char* const typeName;
-
 
     // Constructors
 
@@ -346,6 +344,9 @@ public:
             inline bool good() const;
             inline bool undefined() const;
             inline bool error() const;
+
+            //- Return the type name of the token
+            const word& typeName() const;
 
             inline bool isPunctuation() const;
             inline punctuationToken pToken() const;

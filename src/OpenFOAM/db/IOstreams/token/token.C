@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,12 +29,31 @@ License
 
 namespace Foam
 {
-    const char* const token::typeName = "token";
     token token::undefinedToken;
 
     typedef token::compound tokenCompound;
     defineTypeNameAndDebug(tokenCompound, 0);
     defineRunTimeSelectionTable(tokenCompound, Istream);
+
+    const word token::typeNames_[] =
+    {
+        "undefined",
+        "char",
+        "word",
+        "functionName",
+        "variable",
+        "string",
+        "verbatimString",
+        "int32_t",
+        "int64_t",
+        "uint32_t",
+        "uint64_t",
+        "floatScalar",
+        "doubleScalar",
+        "longDoubleScalar",
+        "compound",
+        "error"
+    };
 }
 
 
@@ -78,6 +97,23 @@ Foam::autoPtr<Foam::token::compound> Foam::token::compound::New
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::word& Foam::token::typeName() const
+{
+    if (type_ == token::UNDEFINED)
+    {
+        return typeNames_[0];
+    }
+    else if (type_ == token::COMPOUND)
+    {
+        return compoundTokenPtr_->type();
+    }
+    else
+    {
+        return typeNames_[type_ - token::PUNCTUATION + 1];
+    }
+}
+
 
 bool Foam::token::compound::isCompound(const word& name)
 {

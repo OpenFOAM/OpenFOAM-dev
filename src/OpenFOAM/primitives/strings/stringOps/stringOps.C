@@ -522,21 +522,8 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
                             // Check that the primitive entry is a single token
                             if (pe.size() == 1)
                             {
-                                const token& t = pe[0];
-
-                                // Map the token type to the variable type
-                                if (t.isScalar())
-                                {
-                                    varType = "scalar";
-                                }
-                                else if (t.isLabel())
-                                {
-                                    varType = "label";
-                                }
-                                else if (t.isString())
-                                {
-                                    varType = "string";
-                                }
+                                // Map the token type name to the variable type
+                                varType = pe[0].typeName();
                             }
                         }
                     }
