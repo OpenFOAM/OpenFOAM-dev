@@ -509,22 +509,28 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
                 if (ePtr)
                 {
                     OStringStream buf;
+                    bool compound = false;
 
-                    // If the variable type is not specified
-                    // check if it can be obtained from the single token type
-                    if (varType.empty())
+                    // Check if variable type can be obtained from the single
+                    // token type and if the token is a compound
+                    if (!ePtr->isDict())
                     {
-                        if (!ePtr->isDict())
-                        {
-                            const primitiveEntry& pe =
-                                dynamicCast<const primitiveEntry>(*ePtr);
+                        const primitiveEntry& pe =
+                            dynamicCast<const primitiveEntry>(*ePtr);
 
-                            // Check that the primitive entry is a single token
-                            if (pe.size() == 1)
+                        // Check that the primitive entry is a single token
+                        if (pe.size() == 1)
+                        {
+                            // If the variable type is not specified
+                            // obtain the variable type from the token type name
+                            if (varType.empty())
                             {
-                                // Map the token type name to the variable type
                                 varType = pe[0].typeName();
                             }
+
+                            // Check if the token is a compound which can be
+                            // accessed directly
+                            compound = pe[0].isCompound();
                         }
                     }
 
@@ -538,9 +544,23 @@ Foam::string& Foam::stringOps::inplaceExpandCodeString
                             // code, rather than substituting its value. That
                             // way we don't need to recompile this string if the
                             // value changes.
-                            buf << dictVar
-                                << ".lookupScoped<" << varType << ">"
-                                << "(\"" << varName << "\", true, false)";
+                            //
+                            // Compound types have special handling
+                            // to return as constant reference rather than
+                            // constructing the container
+                            if (compound)
+                            {
+                                buf << dictVar
+                                    << ".lookupCompoundScoped<"
+                                    << varType << ">"
+                                    << "(\"" << varName << "\", true, false)";
+                            }
+                            else
+                            {
+                                buf << dictVar
+                                    << ".lookupScoped<" << varType << ">"
+                                    << "(\"" << varName << "\", true, false)";
+                            }
                         }
                         else
                         {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -245,6 +245,33 @@ T Foam::dictionary::lookupScoped
     }
 
     return pTraits<T>(entryPtr->stream());
+}
+
+
+template<class T>
+const T& Foam::dictionary::lookupCompoundScoped
+(
+    const word& keyword,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr =
+        lookupScopedEntryPtr(keyword, recursive, patternMatch);
+
+    if (entryPtr == nullptr)
+    {
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "keyword " << keyword << " is undefined in dictionary "
+            << name()
+            << exit(FatalIOError);
+    }
+
+    token firstToken(entryPtr->stream());
+
+    return dynamicCast<const token::Compound<T>>(firstToken.compoundToken());
 }
 
 

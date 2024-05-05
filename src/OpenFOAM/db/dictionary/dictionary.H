@@ -521,6 +521,19 @@ public:
                 bool patternMatch=true
             ) const;
 
+            //- Find return the reference to the compound T,
+            //  if not found or not a compound throw a fatal error.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            //  Allows scoping using '/' with special handling for '!' and '..'.
+            template<class T>
+            const T& lookupCompoundScoped
+            (
+                const word& keyword,
+                bool recursive,
+                bool patternMatch
+            ) const;
+
             //- Check if entry is a sub-dictionary
             bool isDict(const word&) const;
 
