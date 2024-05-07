@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -814,6 +814,7 @@ void Foam::phaseSystem::correctPhi
     }
 
     // Make the flux relative to the mesh motion
+    MRF_.makeRelative(phi_);
     fvc::makeRelative(phi_, movingPhases()[0].U());
 
     setMixturePhi(alphafs, phi_);
