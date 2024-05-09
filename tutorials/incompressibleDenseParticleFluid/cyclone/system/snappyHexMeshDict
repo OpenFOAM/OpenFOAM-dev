@@ -200,10 +200,10 @@ addLayersControls
 
     // When not to extrude surface. 0 is flat surface, 90 is when two faces
     // are perpendicular
-    featureAngle 60;
+    featureAngle 100;
 
     // At non-patched sides allow mesh to slip if extrusion direction makes
-    // angle larger than slipFeatureAngle.
+    // angle larger than slipFeatureAngle. Default is 0.5*featureAngle.
     slipFeatureAngle 30;
 
     // Maximum number of snapping relaxation iterations. Should stop

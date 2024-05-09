@@ -2793,9 +2793,8 @@ void Foam::snappyLayerDriver::mergePatchFacesUndo
     const dictionary& motionDict
 )
 {
-    // Clip to 30 degrees. Not helpful!
-    // scalar planarAngle = min(30.0, layerParams.featureAngle());
     scalar planarAngle = layerParams.featureAngle();
+
     scalar minCos = Foam::cos(degToRad(planarAngle));
 
     scalar concaveCos = Foam::cos(degToRad(layerParams.concaveAngle()));
@@ -2990,7 +2989,7 @@ void Foam::snappyLayerDriver::addLayers
         (
             pp,
             meshEdges,
-            degToRad(layerParams.featureAngle()),
+            Foam::cos(degToRad(layerParams.featureAngle())),
 
             patchDisp,
             patchNLayers,

@@ -412,7 +412,7 @@ addLayersControls
 
         // When not to extrude surface. 0 is flat surface, 90 is when two faces
         // are perpendicular
-        featureAngle 130;
+        featureAngle 100;
 
         // Stop layer growth on highly warped cells
         maxFaceThicknessRatio 0.5;

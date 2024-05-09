@@ -227,7 +227,8 @@ addLayersControls
     finalLayerThickness 0.3;
     minThickness 0.1;
     nGrow 0;
-    featureAngle 30;
+    featureAngle 60;
+    slipFeatureAngle 15;
     nRelaxIter 3;
     nSmoothSurfaceNormals 1;
     nSmoothNormals 3;
