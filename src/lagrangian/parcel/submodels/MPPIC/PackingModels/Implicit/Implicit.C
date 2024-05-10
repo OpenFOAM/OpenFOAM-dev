@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "Implicit.H"
 #include "fixedValueFvsPatchField.H"
-#include "fvmDdt.H"
+#include "fvmD2dt2.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
 #include "fvcReconstruct.H"
@@ -65,7 +65,6 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
     rhoMin_(this->coeffDict().template lookup<scalar>("rhoMin"))
 {
     alpha_ = this->owner().alpha();
-    alpha_.oldTime();
 }
 
 
@@ -93,9 +92,7 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
     applyGravity_(cm.applyGravity_),
     alphaMin_(cm.alphaMin_),
     rhoMin_(cm.rhoMin_)
-{
-    alpha_.oldTime();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -139,6 +136,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
 
         mesh.schemes().setFluxRequired(alpha_.name());
 
+
         // Property fields
         // ~~~~~~~~~~~~~~~
 
@@ -163,6 +161,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
         );
         rho.primitiveFieldRef() = max(rhoAverage.primitiveField(), rhoMin_);
         rho.correctBoundaryConditions();
+
 
         // Stress field
         // ~~~~~~~~~~~~
@@ -204,7 +203,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
             phiGByA = surfaceScalarField::New
             (
                 "phiGByA",
-                deltaT*(g & mesh.Sf())*fvc::interpolate(1.0 - rhoc/rho)
+                (g & mesh.Sf())*fvc::interpolate(1.0 - rhoc/rho)
             )
         );
 
@@ -216,13 +215,12 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
             tauPrimeByRhoAf
             (
                 "tauPrimeByRhoAf",
-                fvc::interpolate(deltaT*tauPrime/rho)
+                fvc::interpolate(tauPrime/rho)
             );
 
         fvScalarMatrix alphaEqn
         (
-            fvm::ddt(alpha_)
-          - fvc::ddt(alpha_)
+            fvm::d2dt2(alpha_)
           - fvm::laplacian(tauPrimeByRhoAf, alpha_)
         );
 
@@ -235,13 +233,13 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
 
 
         // Generate correction fields
-        // ~~~~~~~~~~~~~~~~~
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         // correction volumetric flux
         phiCorrect_ = surfaceScalarField::New
         (
             cloudName + ":phiCorrect",
-            alphaEqn.flux()/fvc::interpolate(alpha_)
+            deltaT*alphaEqn.flux()/fvc::interpolate(alpha_)
         );
 
         // limit the correction flux
@@ -272,7 +270,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
 
             if (applyGravity_)
             {
-                phiCorrect_.ref() -= phiGByA();
+                phiCorrect_.ref() -= deltaT*phiGByA();
             }
 
             forAll(phiCorrect_(), facei)
@@ -301,7 +299,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
 
             if (applyGravity_)
             {
-                phiCorrect_.ref() += phiGByA();
+                phiCorrect_.ref() += deltaT*phiGByA();
             }
         }
 
@@ -321,7 +319,6 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
     }
     else
     {
-        alpha_.oldTime();
         phiCorrect_.clear();
         uCorrect_.clear();
     }

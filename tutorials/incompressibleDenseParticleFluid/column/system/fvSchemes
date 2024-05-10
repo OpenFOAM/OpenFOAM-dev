@@ -15,12 +15,12 @@ FoamFile
 
 ddtSchemes
 {
-    default Euler;
+    default         Euler;
 }
 
 d2dt2Schemes
 {
-    default Euler;
+    default         Euler;
 }
 
 gradSchemes
