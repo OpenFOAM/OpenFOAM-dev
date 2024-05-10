@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,6 +89,7 @@ public:
 
     // Static Member Functions
 
+        //- ...
         static bool checkSupport
         (
             const wordHashSet& available,
@@ -96,28 +97,6 @@ public:
             const bool verbose,
             const word& functionName
         );
-
-        //- Return the local file name (within time directory)
-        //  NEEDS FIXING
-        static fileName localMeshFileName(const word& surfName="");
-
-        //- Find instance with surfName
-        //  NEEDS FIXING
-        static fileName findMeshInstance(const Time&, const word& surfName="");
-
-        //- Find mesh file with surfName
-        //  NEEDS FIXING
-        static fileName findMeshFile(const Time&, const word& surfName="");
-
-
-    // Constructors
-
-        //- Construct null
-        surfaceFormatsCore();
-
-
-    //- Destructor
-    virtual ~surfaceFormatsCore();
 };
 
 

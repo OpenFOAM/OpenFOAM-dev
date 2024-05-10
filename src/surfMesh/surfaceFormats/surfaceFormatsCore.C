@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceFormatsCore.H"
-
 #include "Time.H"
 #include "IFstream.H"
 #include "OFstream.H"
@@ -34,6 +33,7 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 Foam::word Foam::fileFormats::surfaceFormatsCore::nativeExt("ofs");
+
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -53,106 +53,6 @@ Foam::string Foam::fileFormats::surfaceFormatsCore::getLineNoComment
 }
 
 
-#if 0
-Foam::fileName Foam::fileFormats::surfaceFormatsCore::localMeshFileName
-(
-    const word& surfName
-)
-{
-    const word name(surfName.size() ? surfName : surfaceRegistry::defaultName);
-
-    return fileName
-    (
-        surfaceRegistry::prefix/name/surfMesh::meshSubDir
-      / name + "." + nativeExt
-    );
-}
-
-
-Foam::fileName Foam::fileFormats::surfaceFormatsCore::findMeshInstance
-(
-    const Time& t,
-    const word& surfName
-)
-{
-    fileName localName = localMeshFileName(surfName);
-
-    // Search back through the time directories list to find the time
-    // closest to and lower than current time
-
-    instantList ts = t.times();
-    label instanceI;
-
-    for (instanceI = ts.size()-1; instanceI >= 0; --instanceI)
-    {
-        if (ts[instanceI].value() <= t.userTimeValue())
-        {
-            break;
-        }
-    }
-
-    // Noting that the current directory has already been searched
-    // for mesh data, start searching from the previously stored time directory
-
-    if (instanceI >= 0)
-    {
-        for (label i = instanceI; i >= 0; --i)
-        {
-            if (isFile(t.path()/ts[i].name()/localName))
-            {
-                return ts[i].name();
-            }
-        }
-    }
-
-    return t.constant();
-}
-
-
-Foam::fileName Foam::fileFormats::surfaceFormatsCore::findMeshFile
-(
-    const Time& t,
-    const word& surfName
-)
-{
-    fileName localName = localMeshFileName(surfName);
-
-    // Search back through the time directories list to find the time
-    // closest to and lower than current time
-
-    instantList ts = t.times();
-    label instanceI;
-
-    for (instanceI = ts.size()-1; instanceI >= 0; --instanceI)
-    {
-        if (ts[instanceI].value() <= t.userTimeValue())
-        {
-            break;
-        }
-    }
-
-    // Noting that the current directory has already been searched
-    // for mesh data, start searching from the previously stored time directory
-
-    if (instanceI >= 0)
-    {
-        for (label i = instanceI; i >= 0; --i)
-        {
-            fileName testName(t.path()/ts[i].name()/localName);
-
-            if (isFile(testName))
-            {
-                return testName;
-            }
-        }
-    }
-
-    // fallback to "constant"
-    return t.path()/t.constant()/localName;
-}
-#endif
-
-
 bool Foam::fileFormats::surfaceFormatsCore::checkSupport
 (
     const wordHashSet& available,
@@ -167,34 +67,22 @@ bool Foam::fileFormats::surfaceFormatsCore::checkSupport
     }
     else if (verbose)
     {
-        wordList toc = available.toc();
-        SortableList<word> known(move(toc));
+        wordList known = available.sortedToc();
 
-        Info<<"Unknown file extension for " << functionName
+        Info<< "Unknown file extension for " << functionName
             << " : " << ext << nl
-            <<"Valid types: (";
-        // compact output:
+            << "Valid types: (";
+
         forAll(known, i)
         {
-            Info<<" " << known[i];
+            Info<< " " << known[i];
         }
-        Info<<" )" << endl;
+
+        Info<< " )" << endl;
     }
 
     return false;
 }
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::fileFormats::surfaceFormatsCore::surfaceFormatsCore()
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::fileFormats::surfaceFormatsCore::~surfaceFormatsCore()
-{}
 
 
 // ************************************************************************* //

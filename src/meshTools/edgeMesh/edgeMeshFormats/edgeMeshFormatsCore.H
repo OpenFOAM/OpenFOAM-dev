@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,7 @@ protected:
         //- Read non-comment line
         static string getLineNoComment(IFstream&);
 
+
 public:
 
     // Static Data
@@ -73,8 +74,10 @@ public:
         //  Normally "eMesh" (edge-mesh)
         static word nativeExt;
 
+
     // Static Member Functions
 
+        //- ...
         static bool checkSupport
         (
             const wordHashSet& available,
@@ -82,33 +85,6 @@ public:
             const bool verbose,
             const word& functionName
         );
-
-       // //- Return the local file name (within time directory)
-       // //  NEEDS FIXING
-       // static fileName localMeshFileName(const word& edgeName="");
-
-       // //- Find instance with edgeName
-       // //  NEEDS FIXING
-       // static fileName findMeshInstance
-       // (
-       //     const Time&,
-       //     const word& edgeName=""
-       // );
-
-       // //- Find mesh file with edgeName
-       // //  NEEDS FIXING
-       // static fileName findMeshFile(const Time&, const word& edgeName="");
-
-
-    // Constructors
-
-        //- Construct null
-        edgeMeshFormatsCore();
-
-
-    //- Destructor
-    virtual ~edgeMeshFormatsCore();
-
 };
 
 
