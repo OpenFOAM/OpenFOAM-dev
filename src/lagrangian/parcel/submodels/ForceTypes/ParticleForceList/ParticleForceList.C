@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,9 @@ Foam::ParticleForceList<CloudType>::ParticleForceList
     PtrList<ParticleForce<CloudType>>(pf),
     owner_(pf.owner_),
     mesh_(pf.mesh_),
-    dict_(pf.dict_)
+    dict_(pf.dict_),
+    calcCoupled_(pf.calcCoupled_),
+    calcNonCoupled_(pf.calcNonCoupled_)
 {}
 
 
