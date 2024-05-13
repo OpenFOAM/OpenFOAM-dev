@@ -601,6 +601,12 @@ bool Foam::fvMesh::topoChanging() const
 }
 
 
+bool Foam::fvMesh::distributing() const
+{
+    return distributor_.valid() && distributor_->dynamic();
+}
+
+
 bool Foam::fvMesh::dynamic() const
 {
     return

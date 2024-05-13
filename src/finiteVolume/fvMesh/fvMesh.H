@@ -571,6 +571,9 @@ public:
             //- Does the mesh topology change?
             bool topoChanging() const;
 
+            //- Does the mesh get redistributed?
+            bool distributing() const;
+
             //- Is this mesh dynamic?
             bool dynamic() const;
 
