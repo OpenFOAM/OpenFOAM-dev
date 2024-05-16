@@ -97,7 +97,8 @@ Foam::surfaceZonesInfo::surfaceZonesInfo
             zoneInside_ = areaSelectionAlgoNames[method];
             if (zoneInside_ == INSIDEPOINT)
             {
-                surfacesDict.lookup("insidePoint") >> zoneInsidePoint_;
+                zoneInsidePoint_ =
+                    surfacesDict.lookup<point>("insidePoint", dimLength);
             }
         }
 

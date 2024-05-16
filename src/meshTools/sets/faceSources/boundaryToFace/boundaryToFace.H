@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,10 +50,6 @@ class boundaryToFace
 :
     public topoSetSource
 {
-    // Private Data
-
-
-
     // Private Member Functions
 
         void combine(topoSet& set, const bool add) const;
@@ -63,6 +59,7 @@ public:
 
     //- Runtime type information
     TypeName("boundaryToFace");
+
 
     // Constructors
 
@@ -93,7 +90,6 @@ public:
             const topoSetSource::setAction action,
             topoSet&
         ) const;
-
 };
 
 

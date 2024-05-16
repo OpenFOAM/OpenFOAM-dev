@@ -78,20 +78,20 @@ Foam::refinementParameters::cellSelectionPoints::cellSelectionPoints
     inside_
     (
         dict.found("insidePoints")
-      ? List<point>(dict.lookup("insidePoints"))
+      ? dict.lookup<List<point>>("insidePoints", dimLength)
       : dict.found("insidePoint")
-          ? List<point>(1, dict.lookup("insidePoint"))
-          : dict.found("locationInMesh")
-              ? List<point>(1, dict.lookup("locationInMesh"))
-              : List<point>::null()
+      ? List<point>(1, dict.lookup<point>("insidePoint", dimLength))
+      : dict.found("locationInMesh")
+      ? List<point>(1, dict.lookup<point>("locationInMesh", dimLength))
+      : List<point>::null()
     ),
     outside_
     (
         dict.found("outsidePoints")
-      ? List<point>(dict.lookup("outsidePoints"))
+      ? dict.lookup<List<point>>("outsidePoints", dimLength)
       : dict.found("outsidePoint")
-          ? List<point>(1, dict.lookup("outsidePoint"))
-          : List<point>::null()
+      ? List<point>(1, dict.lookup<point>("outsidePoint", dimLength))
+      : List<point>::null()
     )
 {
     if (inside_.size())

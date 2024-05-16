@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,15 +62,13 @@ class surfaceToCell
 :
     public topoSetSource
 {
-
     // Private Data
-
 
         //- Name of surface file
         const fileName surfName_;
 
         //- Points which are outside
-        const pointField outsidePoints_;
+        const List<point> outsidePoints_;
 
         //- Include cut cells
         const bool includeCut_;
@@ -148,6 +146,7 @@ public:
     //- Runtime type information
     TypeName("surfaceToCell");
 
+
     // Constructors
 
         //- Construct from components
@@ -204,7 +203,6 @@ public:
             const topoSetSource::setAction action,
             topoSet&
         ) const;
-
 };
 
 

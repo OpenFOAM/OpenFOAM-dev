@@ -91,10 +91,10 @@ Foam::truncatedConeToCell::truncatedConeToCell
 )
 :
     topoSetSource(mesh),
-    point1_(dict.lookup("point1")),
-    point2_(dict.lookup("point2")),
-    radius1_(dict.lookup<scalar>("radius1")),
-    radius2_(dict.lookup<scalar>("radius2"))
+    point1_(dict.lookup<point>("point1", dimLength)),
+    point2_(dict.lookup<point>("point2", dimLength)),
+    radius1_(dict.lookup<scalar>("radius1", dimLength)),
+    radius2_(dict.lookup<scalar>("radius2", dimLength))
 {}
 
 

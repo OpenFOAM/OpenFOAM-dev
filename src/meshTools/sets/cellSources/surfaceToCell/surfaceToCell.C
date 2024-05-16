@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -406,7 +406,7 @@ Foam::surfaceToCell::surfaceToCell
 :
     topoSetSource(mesh),
     surfName_(fileName(dict.lookup("file")).expand()),
-    outsidePoints_(dict.lookup("outsidePoints")),
+    outsidePoints_(dict.lookup<List<point>>("outsidePoints", dimLength)),
     includeCut_(readBool(dict.lookup("includeCut"))),
     includeInside_(readBool(dict.lookup("includeInside"))),
     includeOutside_(readBool(dict.lookup("includeOutside"))),
@@ -414,8 +414,8 @@ Foam::surfaceToCell::surfaceToCell
     (
         dict.lookupOrDefault<bool>("useSurfaceOrientation", false)
     ),
-    nearDist_(dict.lookup<scalar>("nearDistance")),
-    curvature_(dict.lookup<scalar>("curvature")),
+    nearDist_(dict.lookup<scalar>("nearDistance", dimLength)),
+    curvature_(dict.lookup<scalar>("curvature", unitNone)),
     surfPtr_(new triSurface(surfName_)),
     querySurfPtr_(new triSurfaceSearch(*surfPtr_)),
     IOwnPtrs_(true)

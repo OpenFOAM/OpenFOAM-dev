@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,8 +148,8 @@ Foam::searchableSphere::searchableSphere
 )
 :
     searchableSurface(io),
-    centre_(dict.lookup("centre")),
-    radius_(dict.lookup<scalar>("radius"))
+    centre_(dict.lookup<point>("centre", dimLength)),
+    radius_(dict.lookup<scalar>("radius", dimLength))
 {
     bounds() = boundBox
     (

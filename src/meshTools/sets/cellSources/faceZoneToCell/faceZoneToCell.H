@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,6 +52,9 @@ class faceZoneToCell
     public topoSetSource
 {
 public:
+
+    // Public Enumerations
+
         //- Enumeration defining the valid options
         enum faceAction
         {
@@ -59,12 +62,13 @@ public:
             SLAVE
         };
 
+        //- Names of the valid options
+        static const NamedEnum<faceAction, 2> faceActionNames_;
+
+
 private:
 
     // Private Data
-
-        static const NamedEnum<faceAction, 2> faceActionNames_;
-
 
         //- Name/regular expression of faceZone
         wordRe zoneName_;
@@ -82,6 +86,7 @@ public:
 
     //- Runtime type information
     TypeName("faceZoneToCell");
+
 
     // Constructors
 
@@ -117,7 +122,6 @@ public:
             const topoSetSource::setAction action,
             topoSet&
         ) const;
-
 };
 
 

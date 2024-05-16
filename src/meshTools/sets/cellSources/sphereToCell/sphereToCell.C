@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,8 +77,8 @@ Foam::sphereToCell::sphereToCell
 )
 :
     topoSetSource(mesh),
-    centre_(dict.lookup("centre")),
-    radius_(dict.lookup<scalar>("radius"))
+    centre_(dict.lookup<point>("centre", dimLength)),
+    radius_(dict.lookup<scalar>("radius", dimLength))
 {}
 
 

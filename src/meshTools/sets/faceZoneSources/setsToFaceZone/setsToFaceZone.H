@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,6 @@ class setsToFaceZone
 {
     // Private Data
 
-
         //- Name of set to use
         const word faceSetName_;
 
@@ -63,10 +62,12 @@ class setsToFaceZone
         //- Whether cellSet is slave cells or master cells
         const Switch flip_;
 
+
 public:
 
     //- Runtime type information
     TypeName("setsToFaceZone");
+
 
     // Constructors
 
@@ -103,7 +104,6 @@ public:
             const topoSetSource::setAction action,
             topoSet&
         ) const;
-
 };
 
 

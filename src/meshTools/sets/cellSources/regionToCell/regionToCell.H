@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,15 +67,13 @@ class regionToCell
 :
     public topoSetSource
 {
-
     // Private Data
-
 
         //- Name of cellSet to keep to
         const word setName_;
 
         //- Coordinate(s) that is inside connected region
-        const pointField insidePoints_;
+        const List<point> insidePoints_;
 
         //- Number of layers to erode
         const label nErode_;
@@ -112,6 +110,7 @@ public:
     //- Runtime type information
     TypeName("regionToCell");
 
+
     // Constructors
 
         //- Construct from components
@@ -142,9 +141,11 @@ public:
             return CELLSETSOURCE;
         }
 
-        virtual void applyToSet(const topoSetSource::setAction action, topoSet&)
-         const;
-
+        virtual void applyToSet
+        (
+            const topoSetSource::setAction action,
+            topoSet&
+        ) const;
 };
 
 

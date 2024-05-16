@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -274,8 +274,8 @@ Foam::targetVolumeToCell::targetVolumeToCell
 )
 :
     topoSetSource(mesh),
-    vol_(dict.lookup<scalar>("volume")),
-    n_(dict.lookup("normal")),
+    vol_(dict.lookup<scalar>("volume", pow3(dimLength))),
+    n_(dict.lookup<vector>("normal", dimless)),
     maskSetName_(dict.lookupOrDefault<word>("set", ""))
 {}
 

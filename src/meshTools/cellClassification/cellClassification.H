@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,6 @@ SourceFiles
 #ifndef cellClassification_H
 #define cellClassification_H
 
-#include "pointField.H"
 #include "Map.H"
 #include "boolList.H"
 #include "labelList.H"
@@ -155,6 +154,7 @@ private:
         //- Count number of occurrences of elem in list
         static label count(const labelList& elems, const label elem);
 
+
     // Private Member Functions
 
         //- Mark all faces intersected by or intersecting surface
@@ -167,7 +167,7 @@ private:
         (
             const meshSearch& queryMesh,
             const boolList& piercedFace,
-            const pointField& outsidePts
+            const List<point>& outsidePts
         );
 
         //- Use cell status to classify points as being internal to meshType,
@@ -190,6 +190,7 @@ private:
         // (meshType and non-meshType).
         void getMeshOutside(const label meshType, faceList&, labelList&) const;
 
+
 public:
 
     // Static Data Members
@@ -203,7 +204,7 @@ public:
             const polyMesh& mesh,
             const meshSearch& meshQuery,
             const triSurfaceSearch& surfQuery,
-            const pointField& outsidePoints
+            const List<point>& outsidePoints
         );
 
         //- Construct from mesh and type for every cell.

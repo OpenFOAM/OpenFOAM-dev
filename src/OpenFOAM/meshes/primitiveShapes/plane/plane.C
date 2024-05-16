@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "plane.H"
 #include "tensor.H"
+#include "unitConversion.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -127,19 +128,19 @@ Foam::plane::plane(const dictionary& dict)
     {
         calcPntAndVec
         (
-            subDict.lookup<scalar>("a"),
-            subDict.lookup<scalar>("b"),
-            subDict.lookup<scalar>("c"),
-            subDict.lookup<scalar>("d")
+            subDict.lookup<scalar>("a", unitNone),
+            subDict.lookup<scalar>("b", unitNone),
+            subDict.lookup<scalar>("c", unitNone),
+            subDict.lookup<scalar>("d", unitNone)
         );
     }
     else if (planeType == "embeddedPoints")
     {
         calcPntAndVec
         (
-            subDict.lookup<point>("point1"),
-            subDict.lookup<point>("point2"),
-            subDict.lookup<point>("point3")
+            subDict.lookup<point>("point1", dimLength),
+            subDict.lookup<point>("point2", dimLength),
+            subDict.lookup<point>("point3", dimLength)
         );
     }
     else if (planeType == "pointAndNormal")
@@ -147,7 +148,8 @@ Foam::plane::plane(const dictionary& dict)
         point_ =
             subDict.lookupBackwardsCompatible<point>
             (
-                {"point", "basePoint"}
+                {"point", "basePoint"},
+                dimLength
             );
 
         normal_ =
@@ -155,7 +157,8 @@ Foam::plane::plane(const dictionary& dict)
             (
                 subDict.lookupBackwardsCompatible<vector>
                 (
-                    {"normal", "normalVector"}
+                    {"normal", "normalVector"},
+                    dimless
                 )
             );
     }

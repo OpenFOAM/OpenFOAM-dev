@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,9 +134,12 @@ Foam::rotatedBoxToCell::rotatedBoxToCell
     if (dict.found("box"))
     {
         const boundBox bb(dict.lookup("box"));
-        const vector c(dict.lookupOrDefault<vector>("centre", bb.midpoint()));
-        const vector n1(normalised(dict.lookup<vector>("n1")));
-        const vector n2(normalised(dict.lookup<vector>("n2")));
+        const vector c
+        (
+            dict.lookupOrDefault<point>("centre", dimLength, bb.midpoint())
+        );
+        const vector n1(normalised(dict.lookup<vector>("n1", dimless)));
+        const vector n2(normalised(dict.lookup<vector>("n2", dimless)));
 
         const tensor R(rotationTensor(n1, n2));
         const pointField bbPoints(bb.points());
@@ -148,10 +151,10 @@ Foam::rotatedBoxToCell::rotatedBoxToCell
     }
     else
     {
-        origin_ = dict.lookup<point>("origin");
-        i_ = dict.lookup<vector>("i");
-        j_ = dict.lookup<vector>("j");
-        k_ = dict.lookup<vector>("k");
+        origin_ = dict.lookup<point>("origin", dimLength);
+        i_ = dict.lookup<vector>("i", dimLength);
+        j_ = dict.lookup<vector>("j", dimLength);
+        k_ = dict.lookup<vector>("k", dimLength);
     }
 }
 

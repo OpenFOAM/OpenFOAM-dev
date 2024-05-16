@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,9 @@ class planeToFaceZone
 :
     public topoSetSource
 {
-    public:
+public:
+
+    // Public Enumerations
 
         //- Enumeration for what to include
         enum include
@@ -76,7 +78,6 @@ class planeToFaceZone
 private:
 
     // Private Data
-
 
         //- Point on the plane
         const vector point_;

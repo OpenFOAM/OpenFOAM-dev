@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -391,8 +391,8 @@ Foam::regionToCell::regionToCell
     insidePoints_
     (
         dict.found("insidePoint")
-      ? pointField(1, dict.lookup<point>("insidePoint"))
-      : dict.lookup("insidePoints")
+      ? List<point>(1, dict.lookup<point>("insidePoint", dimLength))
+      : dict.lookup<List<point>>("insidePoints", dimLength)
     ),
     nErode_(dict.lookupOrDefault("nErode", 0))
 {}

@@ -26,7 +26,6 @@ License
 #include "boundBox.H"
 #include "pointField.H"
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 inline Foam::boundBox::boundBox()
@@ -45,8 +44,8 @@ inline Foam::boundBox::boundBox(const point& min, const point& max)
 
 inline Foam::boundBox::boundBox(const dictionary& dict)
 :
-    min_(dict.lookup("min")),
-    max_(dict.lookup("max"))
+    min_(dict.lookup<point>("min", dimLength)),
+    max_(dict.lookup<point>("max", dimLength))
 {}
 
 

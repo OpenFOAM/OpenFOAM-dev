@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -500,11 +500,11 @@ Foam::searchableCylinder::searchableCylinder
 )
 :
     searchableSurface(io),
-    point1_(dict.lookup("point1")),
-    point2_(dict.lookup("point2")),
-    magDir_(mag(point2_-point1_)),
-    unitDir_((point2_-point1_)/magDir_),
-    radius_(dict.lookup<scalar>("radius"))
+    point1_(dict.lookup<point>("point1", dimLength)),
+    point2_(dict.lookup<point>("point2", dimLength)),
+    magDir_(mag(point2_ - point1_)),
+    unitDir_((point2_ - point1_)/magDir_),
+    radius_(dict.lookup<scalar>("radius", dimLength))
 {
     bounds() = calcBounds();
 }

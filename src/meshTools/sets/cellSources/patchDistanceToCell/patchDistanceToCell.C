@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ Foam::patchDistanceToCell::patchDistanceToCell
       ? dict.lookup<wordReList>("patches")
       : wordReList(1, dict.lookup<wordRe>("patch"))
     ),
-    distance_(dict.lookup<scalar>("distance"))
+    distance_(dict.lookup<scalar>("distance", dimLength))
 {}
 
 

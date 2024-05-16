@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,6 @@ class setAndNormalToFaceZone
 {
     // Private Data
 
-
         //- Name of set to use
         word setName_;
 
@@ -65,6 +64,7 @@ public:
 
     //- Runtime type information
     TypeName("setAndNormalToFaceZone");
+
 
     // Constructors
 
@@ -100,7 +100,6 @@ public:
             const topoSetSource::setAction action,
             topoSet&
         ) const;
-
 };
 
 

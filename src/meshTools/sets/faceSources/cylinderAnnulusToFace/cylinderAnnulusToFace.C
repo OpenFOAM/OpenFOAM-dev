@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,10 +90,10 @@ Foam::cylinderAnnulusToFace::cylinderAnnulusToFace
 )
 :
     topoSetSource(mesh),
-    point1_(dict.lookupBackwardsCompatible<point>({"point1", "p1"})),
-    point2_(dict.lookupBackwardsCompatible<point>({"point2", "p2"})),
-    outerRadius_(dict.lookup<scalar>("outerRadius")),
-    innerRadius_(dict.lookup<scalar>("innerRadius"))
+    point1_(dict.lookupBackwardsCompatible<point>({"point1", "p1"}, dimLength)),
+    point2_(dict.lookupBackwardsCompatible<point>({"point2", "p2"}, dimLength)),
+    outerRadius_(dict.lookup<scalar>("outerRadius", dimLength)),
+    innerRadius_(dict.lookup<scalar>("innerRadius", dimLength))
 {}
 
 

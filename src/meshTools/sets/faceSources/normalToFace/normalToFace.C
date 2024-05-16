@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,8 +74,8 @@ Foam::normalToFace::normalToFace
 Foam::normalToFace::normalToFace(const polyMesh& mesh, const dictionary& dict)
 :
     topoSetSource(mesh),
-    normal_(dict.lookup("normal")),
-    tol_(dict.lookup<scalar>("cos"))
+    normal_(dict.lookup<vector>("normal", dimless)),
+    tol_(dict.lookup<scalar>("cos", dimless))
 {
     setNormal();
 }

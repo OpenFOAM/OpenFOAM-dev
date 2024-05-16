@@ -80,10 +80,9 @@ Foam::hemisphereToCell::hemisphereToCell
 )
 :
     topoSetSource(mesh),
-    centre_(dict.lookup("centre")),
-    radius_(dict.lookup<scalar>("radius")),
-    axis_(dict.lookup("axis"))
-
+    centre_(dict.lookup<point>("centre", dimLength)),
+    radius_(dict.lookup<scalar>("radius", dimLength)),
+    axis_(dict.lookup<vector>("axis", dimless))
 {}
 
 

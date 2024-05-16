@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -248,7 +248,7 @@ void Foam::cellClassification::markCells
 (
     const meshSearch& queryMesh,
     const boolList& piercedFace,
-    const pointField& outsidePts
+    const List<point>& outsidePts
 )
 {
     // Use meshwave to partition mesh, starting from outsidePt
@@ -482,7 +482,7 @@ Foam::cellClassification::cellClassification
     const polyMesh& mesh,
     const meshSearch& meshQuery,
     const triSurfaceSearch& surfQuery,
-    const pointField& outsidePoints
+    const List<point>& outsidePoints
 )
 :
     labelList(mesh.nCells(), cellClassification::NOTSET),

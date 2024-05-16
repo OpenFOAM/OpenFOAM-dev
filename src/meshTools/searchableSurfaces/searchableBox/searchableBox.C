@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,7 +188,7 @@ Foam::searchableBox::searchableBox
 )
 :
     searchableSurface(io),
-    treeBoundBox(dict.lookup("min"), dict.lookup("max"))
+    treeBoundBox(dict)
 {
     if (!contains(midpoint()))
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -236,8 +236,8 @@ Foam::searchablePlate::searchablePlate
 )
 :
     searchableSurface(io),
-    origin_(dict.lookup("origin")),
-    span_(dict.lookup("span")),
+    origin_(dict.lookup<point>("origin", dimLength)),
+    span_(dict.lookup<vector>("span", dimLength)),
     normalDir_(calcNormal(span_))
 {
     if (debug)
