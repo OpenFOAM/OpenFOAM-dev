@@ -69,7 +69,7 @@ boundary
         );
     }
 
-    internal
+    internalFaces
     {
         type internal;
         faces ();

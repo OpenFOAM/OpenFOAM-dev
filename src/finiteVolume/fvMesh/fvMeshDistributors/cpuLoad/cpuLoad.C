@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,6 +99,24 @@ Foam::optionalCpuLoad& Foam::optionalCpuLoad::New
 
             return *cpuLoadPtr;
         }
+    }
+    else
+    {
+        return optionalCpuLoad::optionalCpuLoad_;
+    }
+}
+
+
+Foam::optionalCpuLoad& Foam::optionalCpuLoad::New
+(
+    const polyMesh& mesh,
+    const word& name,
+    const bool loadBalancing
+)
+{
+    if (loadBalancing && isA<fvMesh>(mesh))
+    {
+        return New(refCast<const fvMesh>(mesh), name, loadBalancing);
     }
     else
     {

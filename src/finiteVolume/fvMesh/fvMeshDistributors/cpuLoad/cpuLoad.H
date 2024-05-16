@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,9 +77,20 @@ public:
 
     // Selectors
 
+        //- Construct from fvMesh if loadBalancing is true
+        // otherwise return the dummy optionalCpuLoad
         static optionalCpuLoad& New
         (
             const fvMesh& mesh,
+            const word& name,
+            const bool loadBalancing
+        );
+
+        //- Construct from polyMesh if it is an fvMesh and loadBalancing is true
+        // otherwise return the dummy optionalCpuLoad
+        static optionalCpuLoad& New
+        (
+            const polyMesh& mesh,
             const word& name,
             const bool loadBalancing
         );

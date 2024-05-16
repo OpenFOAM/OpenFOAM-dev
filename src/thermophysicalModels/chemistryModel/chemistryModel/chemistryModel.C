@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Foam::chemistryModel<ThermoType>::chemistryModel
 :
     odeChemistryModel(thermo),
     log_(this->lookupOrDefault("log", false)),
-    loadBalancing_(this->lookupOrDefault("loadBalancing", false)),
+    cpuLoad_(this->lookupOrDefault("cpuLoad", false)),
     jacobianType_
     (
         this->found("jacobian")
@@ -582,9 +582,9 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
     const DeltaTType& deltaT
 )
 {
-    optionalCpuLoad& chemistryCpuTime
+    optionalCpuLoad& chemistryCpuLoad
     (
-        optionalCpuLoad::New(this->mesh(), "chemistryCpuTime", loadBalancing_)
+        optionalCpuLoad::New(this->mesh(), name() + ":cpuLoad", cpuLoad_)
     );
 
     // CPU time logging
@@ -617,7 +617,7 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
     scalar deltaTMin = great;
 
     tabulation_.reset();
-    chemistryCpuTime.reset();
+    chemistryCpuLoad.reset();
 
     forAll(rho0vf, celli)
     {
@@ -763,9 +763,9 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
             RR_[i][celli] = rho0*(Y_[i] - Y0[i])/deltaT[celli];
         }
 
-        if (loadBalancing_)
+        if (cpuLoad_)
         {
-            chemistryCpuTime.cpuTimeIncrement(celli);
+            chemistryCpuLoad.cpuTimeIncrement(celli);
         }
     }
 

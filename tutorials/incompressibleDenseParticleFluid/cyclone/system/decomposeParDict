@@ -16,11 +16,25 @@ FoamFile
 
 numberOfSubdomains 12;
 
-method          simple;
+decomposer      simple;
+distributor     zoltan;
+libs            ("libzoltanDecomp.so");
 
 simpleCoeffs
 {
-    n               (2 2 3);
+    n           (2 2 3);
 }
+
+hierarchicalCoeffs
+{
+    n           (2 2 3);
+    order       xyz;
+}
+
+zoltanCoeffs
+{
+    lb_method   rcb;
+}
+
 
 // ************************************************************************* //

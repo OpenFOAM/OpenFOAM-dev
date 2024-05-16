@@ -155,6 +155,9 @@ protected:
         //- Sub-models dictionary
         const dictionary subModelProperties_;
 
+        //- Switch to enable per-cell CPU load caching for load-balancing
+        bool cpuLoad_;
+
         //- Random number generator - used by some injection routines
         mutable randomGenerator rndGen_;
 
@@ -530,6 +533,12 @@ public:
 
 
         // Cloud evolution functions
+
+            //- Return true to cache per-cell CPU load
+            bool cpuLoad() const
+            {
+                return cpuLoad_;
+            }
 
             //- Set parcel thermo properties
             void setParcelThermoProperties(parcelType& parcel);

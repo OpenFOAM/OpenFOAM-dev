@@ -300,6 +300,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     (
         particleProperties_.subOrEmptyDict("subModels", true)
     ),
+    cpuLoad_(particleProperties_.lookupOrDefault("cpuLoad", false)),
     rndGen_(0),
     cellOccupancyPtr_(),
     cellLengthScale_(mag(cbrt(this->mesh().V()))),
@@ -411,6 +412,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     solution_(c.solution_),
     constProps_(c.constProps_),
     subModelProperties_(c.subModelProperties_),
+    cpuLoad_(c.cpuLoad_),
     rndGen_(c.rndGen_),
     cellOccupancyPtr_(nullptr),
     cellLengthScale_(c.cellLengthScale_),
@@ -500,6 +502,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     solution_(mesh),
     constProps_(),
     subModelProperties_(dictionary::null),
+    cpuLoad_(c.cpuLoad_),
     rndGen_(0),
     cellOccupancyPtr_(nullptr),
     cellLengthScale_(c.cellLengthScale_),

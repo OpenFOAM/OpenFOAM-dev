@@ -19,6 +19,8 @@ internalField       uniform 1;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     inlet
     {
         type            fixedValue;

@@ -21,7 +21,7 @@ chemistryType
 
 chemistry       on;
 
-loadBalancing   on;
+cpuLoad         on;
 
 initialChemicalTimeStep 1e-07;
 

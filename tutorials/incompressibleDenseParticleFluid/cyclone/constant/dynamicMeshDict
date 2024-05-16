@@ -8,36 +8,20 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      nut.air;
+    class       dictionary;
+    object      dynamicMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions          [0 2 -1 0 0 0 0];
-
-internalField       uniform 0;
-
-boundaryField
+distributor
 {
-    #includeEtc "caseDicts/setConstraintTypes"
+    type            loadBalancer;
 
-    inlet
-    {
-        type            calculated;
-        value           $internalField;
-    }
+    libs            ("libfvMeshDistributors.so");
 
-    outlet
-    {
-        type            calculated;
-        value           $internalField;
-    }
-
-    walls
-    {
-        type            nutkWallFunction;
-        value           $internalField;
-    }
+    multiConstraint true;
+    redistributionInterval  10;
 }
+
 
 // ************************************************************************* //

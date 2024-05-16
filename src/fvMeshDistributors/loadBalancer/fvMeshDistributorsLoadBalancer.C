@@ -85,12 +85,13 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
     if
     (
         Pstream::nProcs() > 1
-     && mesh.time().timeIndex() > 1
+     && mesh.time().timeIndex() - mesh.time().startTimeIndex() > 1
      && timeIndex_ != mesh.time().timeIndex()
     )
     {
         timeIndex_ = mesh.time().timeIndex();
 
+        // Get the CPU time fer this processor which includes waiting time
         const scalar timeStepCpuTime = cpuTime_.cpuTimeIncrement();
 
         // CPU loads per cell
@@ -107,80 +108,125 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
         {
             timeIndex_ = mesh.time().timeIndex();
 
-            scalar sumCpuLoad = 0;
+            scalarList procCpuLoads(cpuLoads.size());
 
+            label l = 0;
             forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
             {
-                sumCpuLoad += sum(iter()->primitiveField());
+                procCpuLoads[l++] = sum(iter()->primitiveField());
             }
 
-            const scalar cellCFDCpuTime = returnReduce
-            (
-                (timeStepCpuTime - sumCpuLoad)/mesh.nCells(),
-                minOp<scalar>()
-            );
+            List<scalarList> allProcCpuLoads(Pstream::nProcs());
+            allProcCpuLoads[Pstream::myProcNo()] = procCpuLoads;
+            Pstream::gatherList(allProcCpuLoads);
+            Pstream::scatterList(allProcCpuLoads);
 
-            // Total CPU time for this processor
-            const scalar processorCpuTime =
-                mesh.nCells()*cellCFDCpuTime + sumCpuLoad;
+            scalarList sumProcCpuLoads(procCpuLoads.size(), scalar(0));
+            scalarList maxProcCpuLoads(procCpuLoads.size(), scalar(0));
+            forAll(maxProcCpuLoads, l)
+            {
+                forAll(allProcCpuLoads, proci)
+                {
+                    sumProcCpuLoads[l] += allProcCpuLoads[proci][l];
+
+                    maxProcCpuLoads[l] =
+                        max(maxProcCpuLoads[l], allProcCpuLoads[proci][l]);
+                }
+            }
+
+            // Sum over loads of the maximum load CPU time per processor
+            const scalar sumMaxProcCpuLoad(sum(maxProcCpuLoads));
+
+            // Maximum number of cells per processor
+            const label maxNcells = returnReduce(mesh.nCells(), maxOp<label>());
+
+            // Maximum processor CPU time spent doing basic CFD
+            const scalar maxBaseCpuTime =
+                returnReduce(timeStepCpuTime, maxOp<scalar>())
+              - sumMaxProcCpuLoad;
+
+            const scalar cellBaseCpuTime = maxBaseCpuTime/maxNcells;
+
+            // Processor CPU time spent doing basic CFD, not waiting
+            const scalar baseCpuTime = mesh.nCells()*cellBaseCpuTime;
+
+            // Maximum total CPU time
+            const scalar maxProcCpuTime = maxBaseCpuTime + sumMaxProcCpuLoad;
+
+            // Total CPU time for this processor not waiting
+            const scalar procCpuTime = baseCpuTime + sum(procCpuLoads);
 
             // Average processor CPU time
             const scalar averageProcessorCpuTime =
-                returnReduce(processorCpuTime, sumOp<scalar>())
-               /Pstream::nProcs();
+                returnReduce(procCpuTime, sumOp<scalar>())/Pstream::nProcs();
 
-            Pout<< "imbalance "
-                << " " << sumCpuLoad
-                << " " << mesh.nCells()*cellCFDCpuTime
-                << " " << processorCpuTime
-                << " " << averageProcessorCpuTime << endl;
+            const scalar imbalance =
+                (maxProcCpuTime - averageProcessorCpuTime)
+               /averageProcessorCpuTime;
 
-            const scalar imbalance = returnReduce
-            (
-                mag(1 - processorCpuTime/averageProcessorCpuTime),
-                maxOp<scalar>()
-            );
+            Info<< nl << type() << nl;
 
-            scalarField weights;
-
-            if (multiConstraint_)
+            l = 0;
+            forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
             {
-                const int nWeights = cpuLoads.size() + 1;
-
-                weights.setSize(nWeights*mesh.nCells());
-
-                for (label i=0; i<mesh.nCells(); i++)
-                {
-                    weights[nWeights*i] = cellCFDCpuTime;
-                }
-
-                label loadi = 1;
-                forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
-                {
-                    const scalarField& cpuLoadField = iter()->primitiveField();
-
-                    forAll(cpuLoadField, i)
-                    {
-                        weights[nWeights*i + loadi] = cpuLoadField[i];
-                    }
-
-                    loadi++;
-                }
+                Info<< "    Imbalance of load " << iter()->name() << ": "
+                    << (
+                          maxProcCpuLoads[l]
+                        - sumProcCpuLoads[l]/Pstream::nProcs()
+                       )/averageProcessorCpuTime
+                    << endl;
             }
-            else
-            {
-                weights.setSize(mesh.nCells(), cellCFDCpuTime);
 
-                forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
-                {
-                    weights += iter()->primitiveField();
-                }
-            }
+            Info<< "    Imbalance of base load " << ": "
+                << (
+                      maxBaseCpuTime
+                    - mesh.globalData().nTotalCells()*cellBaseCpuTime
+                     /Pstream::nProcs()
+                   )/averageProcessorCpuTime
+                << endl;
+
+            Info<< "    Total imbalance " << imbalance << endl;
 
             if (imbalance > maxImbalance_)
             {
-                Info<< "Redistributing mesh with imbalance "
-                    << imbalance << endl;
+                Info<< "    Redistributing mesh" << endl;
+
+                scalarField weights;
+
+                if (multiConstraint_)
+                {
+                    const label nWeights = cpuLoads.size() + 1;
+
+                    weights.setSize(nWeights*mesh.nCells());
+
+                    for (label i=0; i<mesh.nCells(); i++)
+                    {
+                        weights[nWeights*i] = cellBaseCpuTime;
+                    }
+
+                    label l = 1;
+                    forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
+                    {
+                        const scalarField& cpuLoadField =
+                            iter()->primitiveField();
+
+                        forAll(cpuLoadField, i)
+                        {
+                            weights[nWeights*i + l] = cpuLoadField[i];
+                        }
+
+                        l++;
+                    }
+                }
+                else
+                {
+                    weights.setSize(mesh.nCells(), cellBaseCpuTime);
+
+                    forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
+                    {
+                        weights += iter()->primitiveField();
+                    }
+                }
 
                 // Create new decomposition distribution
                 const labelList distribution
@@ -191,6 +237,8 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
                 distribute(distribution);
 
                 redistributed = true;
+
+                Info<< endl;
             }
         }
 

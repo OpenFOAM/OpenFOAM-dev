@@ -16,6 +16,8 @@ FoamFile
 
 type        MPPICCloud;
 
+cpuLoad     true;
+
 solution
 {
     coupled         true;

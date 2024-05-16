@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ License
 #include "OFstream.H"
 #include "wallPolyPatch.H"
 #include "nonConformalCyclicPolyPatch.H"
+#include "cpuLoad.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -301,6 +302,11 @@ void Foam::Cloud<ParticleType>::move
     List<IDLList<ParticleType>> sendParticles(Pstream::nProcs());
     List<DynamicList<label>> sendPatchIndices(Pstream::nProcs());
 
+    optionalCpuLoad& cloudCpuTime
+    (
+        optionalCpuLoad::New(pMesh_, name() + ":cpuLoad", cloud.cpuLoad())
+    );
+
     // While there are particles to transfer
     while (true)
     {
@@ -311,6 +317,11 @@ void Foam::Cloud<ParticleType>::move
             sendPatchIndices[proci].clear();
         }
 
+        if (cloud.cpuLoad())
+        {
+            cloudCpuTime.reset();
+        }
+
         // Loop over all particles
         forAllIter(typename Cloud<ParticleType>, *this, pIter)
         {
@@ -318,6 +329,11 @@ void Foam::Cloud<ParticleType>::move
 
             // Move the particle
             const bool keepParticle = p.move(cloud, td);
+
+            if (cloud.cpuLoad())
+            {
+                cloudCpuTime.cpuTimeIncrement(p.cell());
+            }
 
             // If the particle is to be kept
             if (keepParticle)
@@ -724,7 +740,7 @@ void Foam::Cloud<ParticleType>::distribute(const polyDistributionMap& map)
     if (lostCount != 0)
     {
         WarningInFunction
-            << "Mesh-to-mesh mapping of cloud " << this->name()
+            << "Distribution of cloud " << this->name()
             << " lost " << lostCount << " particles" << endl;
     }
 }
