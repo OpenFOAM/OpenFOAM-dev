@@ -107,7 +107,7 @@ bool Foam::meshCheck::checkMesh
             returnReduce(wrongFaces.size(), sumOp<label>());
 
         Info<< "    non-orthogonality > "
-            << setw(3) << maxNonOrtho
+            << setw(3) << radToDeg(maxNonOrtho)
             << " degrees                        : "
             << nNewWrongFaces - nWrongFaces << endl;
 
