@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ public:
         virtual labelList decompose
         (
             const polyMesh& mesh,
-            const labelList& agglom,
+            const labelList& cellToRegion,
             const pointField& regionPoints,
             const scalarField& regionWeights
         );
@@ -121,8 +121,8 @@ public:
         virtual labelList decompose
         (
             const labelListList& globalCellCells,
-            const pointField& cc,
-            const scalarField& cWeights
+            const pointField& cellCentres,
+            const scalarField& cellWeights
         );
 
 

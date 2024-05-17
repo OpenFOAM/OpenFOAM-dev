@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -167,11 +167,10 @@ public:
 
             //- Return for every coordinate the wanted processor number. Gets
             //  passed agglomeration map (from fine to coarse cells) and coarse
-            //  cell
-            //  location. Can be overridden by decomposers that provide this
-            //  functionality natively. Coarse cells are local to the processor
-            //  (if in parallel). If you want to have coarse cells spanning
-            //  processors use the globalCellCells instead.
+            //  cell location. Can be overridden by decomposers that provide
+            //  this functionality natively. Coarse cells are local to the
+            //  processor (if in parallel). If you want to have coarse cells
+            //  spanning processors use the globalCellCells instead.
             virtual labelList decompose
             (
                 const polyMesh& mesh,
@@ -201,15 +200,15 @@ public:
             virtual labelList decompose
             (
                 const labelListList& globalCellCells,
-                const pointField& cc,
-                const scalarField& cWeights
+                const pointField& cellCentres,
+                const scalarField& cellWeights
             ) = 0;
 
             //- Like decompose but with uniform weights on the cells
             virtual labelList decompose
             (
                 const labelListList& globalCellCells,
-                const pointField& cc
+                const pointField& cellCentres
             );
 
 

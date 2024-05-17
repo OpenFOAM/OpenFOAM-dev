@@ -1,0 +1,18 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeMpiLib
+
+# Get SCOTCH_VERSION, SCOTCH_ARCH_PATH
+if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/scotch`
+then
+    . $settings
+    echo "    using SCOTCH_ARCH_PATH=$SCOTCH_ARCH_PATH"
+    wcleanMpiLib $SCOTCH_VERSION
+else
+    echo
+    echo "    Error: no config.sh/scotch settings"
+    echo
+fi
+
+#------------------------------------------------------------------------------

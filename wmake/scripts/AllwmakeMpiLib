@@ -1,0 +1,70 @@
+#----------------------------------*-sh-*--------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# File
+#     wmake/scripts/AllwmakeMpiLib
+#
+# Description
+#     Bash functions to compile and clean MPI dependent libraries
+#
+# Usage
+#     . $WM_PROJECT_DIR/wmake/scripts/AllwmakeMpiLib
+#
+#------------------------------------------------------------------------------
+
+# Define how to create an mpi-versioned library of $targetType
+# compile into qualified directory
+# use sentinel file to handle version changes
+wmakeMpiLib()
+{
+    (
+        version="$1"
+        libName="$2"
+
+        WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
+        whichmpi="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$FOAM_MPI"
+        whichtarget="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$version"
+        [ -e "$whichmpi" -a -e "$whichtarget" ] || wclean $libName
+        echo "wmake $targetType $libName"
+        wmake $targetType $libName
+        touch "$whichmpi" "$whichtarget"
+    )
+}
+
+
+# Define how to clean an mpi-versioned library
+wcleanMpiLib()
+{
+    (
+        version="$1"
+        libName="$2"
+
+        WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
+        whichmpi="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$FOAM_MPI"
+        whichtarget="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$version"
+        wclean $libName
+    )
+}
+
+
+#------------------------------------------------------------------------------

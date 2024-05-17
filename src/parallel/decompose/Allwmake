@@ -4,79 +4,18 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
+wmake $targetType decompositionMethods
 
-# Get SCOTCH_VERSION, SCOTCH_ARCH_PATH
-if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/scotch`
-then
-    . $settings
-    echo "    using SCOTCH_ARCH_PATH=$SCOTCH_ARCH_PATH"
-else
-    echo
-    echo "    Error: no config.sh/scotch settings"
-    echo
-fi
+# Optionally build scotchDecomp with its Allwmake
+wmake -a $targetType scotchDecomp
 
-
-# Define how to create an mpi-versioned library of $targetType
-# compile into qualified directory
-# use sentinel file to handle version changes
-wmakeMpiLib()
-{
-    (
-        version="$1"
-        libName="$2"
-
-        WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
-        whichmpi="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$FOAM_MPI"
-        whichtarget="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$version"
-        [ -e "$whichmpi" -a -e "$whichtarget" ] || wclean $libName
-        echo "wmake $targetType $libName"
-        wmake $targetType $libName
-        touch "$whichmpi" "$whichtarget"
-    )
-}
-
-
-if [ -n "$SCOTCH_ARCH_PATH" ]
-then
-    wmake $targetType scotchDecomp
-
-    if [ -n "$WM_MPLIB" ] && [ -d "$FOAM_LIBBIN/$FOAM_MPI" ]
-    then
-        wmakeMpiLib $SCOTCH_VERSION ptscotchDecomp
-    fi
-else
-    echo "    skipping scotchDecomp (ptscotchDecomp)"
-fi
-
-
-if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/zoltan`
-then
-    . $settings
-    echo "    using ZOLTAN_ARCH_PATH=$ZOLTAN_ARCH_PATH"
-
-    if [ -n "$ZOLTAN_ARCH_PATH" ] \
-    && [ -r "$ZOLTAN_ARCH_PATH/include/zoltan.h" ] \
-    && { \
-         [ -r "$FOAM_EXT_LIBBIN/$FOAM_MPI/libzoltan.a" ] \
-      || [ -r "$ZOLTAN_ARCH_PATH/lib/libzoltan.a" ]; \
-       }
-    then
-        wmakeMpiLib $ZOLTAN_VERSION zoltanDecomp
-    else
-        echo "    skipping zoltanDecomp"
-    fi
-else
-    echo
-    echo "    Error: no config.sh/zoltan settings"
-    echo
-fi
-
+# Optionally build ptscotchDecomp with its Allwmake
+wmake -a $targetType ptscotchDecomp
 
 # Optionally build metisDecomp with its Allwmake
 wmake -a $targetType metisDecomp
 
-wmake $targetType decompositionMethods
-
+# Optionally build zoltanDecomp with its Allwmake
+wmake -a $targetType zoltanDecomp
 
 #------------------------------------------------------------------------------

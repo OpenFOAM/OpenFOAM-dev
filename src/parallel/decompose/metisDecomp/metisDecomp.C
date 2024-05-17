@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "metisDecomp.H"
-#include "addToRunTimeSelectionTable.H"
 #include "Time.H"
+#include "addToRunTimeSelectionTable.H"
 
 extern "C"
 {
@@ -99,7 +99,7 @@ Foam::label Foam::metisDecomp::decompose
         cellWeights.setSize(cWeights.size());
         forAll(cellWeights, i)
         {
-            cellWeights[i] = int(cWeights[i]/minWeights);
+            cellWeights[i] = label(cWeights[i]/minWeights);
         }
     }
 
@@ -132,14 +132,13 @@ Foam::label Foam::metisDecomp::decompose
             if (options.size() != METIS_NOPTIONS)
             {
                 FatalErrorInFunction
-                    << "Number of options in metisCoeffs in dictionary : "
+                    << "Number of options in metisCoeffs dictionary : "
                     << decompositionDict_.name()
-                    << " should be " << METIS_NOPTIONS
+                    << " should be " << METIS_NOPTIONS << " found " << options
                     << exit(FatalError);
             }
 
-            Info<< "metisDecomp : Using Metis options     " << options
-                << nl << endl;
+            Info<< "Using Metis options     " << options << nl << endl;
         }
 
         if (metisCoeffs.readIfPresent("processorWeights", processorWeights))
@@ -258,15 +257,15 @@ Foam::labelList Foam::metisDecomp::decompose
 Foam::labelList Foam::metisDecomp::decompose
 (
     const polyMesh& mesh,
-    const labelList& agglom,
-    const pointField& agglomPoints,
-    const scalarField& agglomWeights
+    const labelList& cellToRegion,
+    const pointField& regionPoints,
+    const scalarField& regionWeights
 )
 {
-    if (agglom.size() != mesh.nCells())
+    if (cellToRegion.size() != mesh.nCells())
     {
         FatalErrorInFunction
-            << "Size of cell-to-coarse map " << agglom.size()
+            << "Size of cell-to-coarse map " << cellToRegion.size()
             << " differs from number of cells in mesh " << mesh.nCells()
             << exit(FatalError);
     }
@@ -276,19 +275,19 @@ Foam::labelList Foam::metisDecomp::decompose
     //   xadj(celli) : start of information in adjncy for celli
 
     CompactListList<label> cellCells;
-    calcCellCells(mesh, agglom, agglomPoints.size(), false, cellCells);
+    calcCellCells(mesh, cellToRegion, regionPoints.size(), false, cellCells);
 
     // Decompose using default weights
     labelList finalDecomp;
-    decompose(cellCells.m(), cellCells.offsets(), agglomWeights, finalDecomp);
+    decompose(cellCells.m(), cellCells.offsets(), regionWeights, finalDecomp);
 
 
     // Rework back into decomposition for original mesh
-    labelList fineDistribution(agglom.size());
+    labelList fineDistribution(cellToRegion.size());
 
     forAll(fineDistribution, i)
     {
-        fineDistribution[i] = finalDecomp[agglom[i]];
+        fineDistribution[i] = finalDecomp[cellToRegion[i]];
     }
 
     return fineDistribution;
@@ -310,11 +309,9 @@ Foam::labelList Foam::metisDecomp::decompose
             << ")." << exit(FatalError);
     }
 
-
     // Make Metis CSR (Compressed Storage Format) storage
     //   adjncy      : contains neighbours (= edges in graph)
     //   xadj(celli) : start of information in adjncy for celli
-
     CompactListList<label> cellCells(globalCellCells);
 
     // Decompose using default weights

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,10 +73,10 @@ class ptscotchDecomp
         label decompose
         (
             const fileName& meshPath,
-            const List<label>& adjncy,
-            const List<label>& xadj,
+            const labelList& adjncy,
+            const labelList& xadj,
             const scalarField& cWeights,
-            List<label>& finalDecomp
+            labelList& finalDecomp
         ) const;
 
         //- Low level decompose
@@ -88,7 +88,7 @@ class ptscotchDecomp
             const label xadjSize,
             const label xadj[],
             const scalarField& cWeights,
-            List<label>& finalDecomp
+            labelList& finalDecomp
         ) const;
 
 
@@ -100,7 +100,7 @@ public:
 
     // Constructors
 
-        //- Construct given the decomposition dictionary and mesh
+        //- Construct given the decomposition dictionary
         ptscotchDecomp(const dictionary& decompositionDict);
 
         //- Disallow default bitwise copy construction
