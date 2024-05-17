@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -32,12 +32,39 @@
 #     A csh version is not needed, since the values here are only sourced
 #     during the wmake process
 #
-#     If Scotch is to be entirely disabled, either rename this file or create
-#     an empty one with the same name at a user or site location.
-#
 #------------------------------------------------------------------------------
 
-export SCOTCH_VERSION=scotch_6.0.9
-export SCOTCH_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_PRECISION_OPTION$WM_LABEL_OPTION/$SCOTCH_VERSION
+# Load functions
+. $WM_PROJECT_DIR/etc/config.sh/functions
+
+# Find the path to the scotch installation
+case "$SCOTCH_TYPE" in
+none)
+    ;;
+system)
+    export SCOTCH_VERSION=system
+    export SCOTCH_ARCH_PATH=/usr
+    ;;
+OpenFOAM | ThirdParty)
+    # Look for the source directory
+    if [ -z "$SCOTCH_VERSION" ]
+    then
+        scotchSrcDir=$(_foamMostRecentDir "$WM_THIRD_PARTY_DIR"/scotch_*)
+    else
+        scotchSrcDir=$WM_THIRD_PARTY_DIR/scotch_$SCOTCH_VERSION
+    fi
+    # Set the version and the installation path
+    if [ -d "$scotchSrcDir" ]
+    then
+        export SCOTCH_VERSION=${scotchSrcDir##*scotch_}
+        export SCOTCH_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_PRECISION_OPTION$WM_LABEL_OPTION/scotch_$SCOTCH_VERSION
+    fi
+    # Clean up
+    unset scotchSrcDir
+    ;;
+esac
+
+# Unload functions
+. $WM_PROJECT_DIR/etc/config.sh/functions
 
 #------------------------------------------------------------------------------

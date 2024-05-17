@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -110,7 +110,9 @@ foamVersion()
 unset foamPV
 foamPV()
 {
+    . $WM_PROJECT_DIR/etc/config.sh/functions
     . $WM_PROJECT_DIR/etc/config.sh/paraview ParaView_VERSION=$1
+    . $WM_PROJECT_DIR/etc/config.sh/functions
     echo "paraview-$ParaView_VERSION  (major: $ParaView_MAJOR)" 1>&2
 }
 

@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -69,6 +69,7 @@ unset WM_PROJECT_SITE
 unset WM_PROJECT_USER_DIR
 unset WM_PROJECT_VERSION
 unset WM_SCHEDULER
+unset WM_THIRD_PARTY
 unset WM_THIRD_PARTY_DIR
 
 
@@ -97,6 +98,9 @@ unset FOAM_TUTORIALS
 unset FOAM_USER_APPBIN
 unset FOAM_USER_LIBBIN
 unset FOAM_UTILITIES
+unset FOAM_SETNAN
+unset FOAM_VERBOSE
+unset FOAM_ABORT
 
 
 #------------------------------------------------------------------------------
@@ -113,16 +117,23 @@ fi
 
 
 #------------------------------------------------------------------------------
-# Unset Ensight/ParaView-related environment variables
+# Unset Ensight/Decomposition/ParaView-related environment variables
 
 unset ENSIGHT9_READER
-unset CMAKE_HOME
+unset SCOTCH_TYPE
+unset SCOTCH_VERSION
+unset METIS_TYPE
+unset METIS_VERSION
+unset PARMETIS_TYPE
+unset PARMETIS_VERSION
+unset ZOLTAN_TYPE
+unset ZOLTAN_VERSION
+unset ParaView_TYPE
 unset ParaView_DIR
 unset ParaView_INCLUDE_DIR
 unset ParaView_LIB_DIR
 unset ParaView_MAJOR
 unset ParaView_VERSION
-unset ParaView_GL
 unset PV_PLUGIN_PATH
 
 
@@ -155,6 +166,7 @@ unalias wm32
 unalias wmSP
 unalias wmDP
 
+unset wmRefresh
 unalias wmUnset
 
 unalias wmSchedOn
@@ -171,7 +183,6 @@ unalias util
 unalias tut
 unalias run
 
-unset wmRefresh
 unset foamVersion
 unset foamPV
 

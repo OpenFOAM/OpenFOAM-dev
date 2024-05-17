@@ -4,28 +4,16 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-. $WM_PROJECT_DIR/wmake/scripts/AllwmakeMpiLib
-
-# Get ZOLTAN_VERSION, ZOLTAN_ARCH_PATH
-if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/zoltan`
-then
-    . $settings
+# Build if Zoltan is enabled
+case $ZOLTAN_TYPE in
+none)
+    ;;
+*)
+    . $WM_PROJECT_DIR/wmake/scripts/AllwmakeMpiLib
+    . $($WM_PROJECT_DIR/bin/foamEtcFile config.sh/zoltan)
     echo "    using ZOLTAN_ARCH_PATH=$ZOLTAN_ARCH_PATH"
-    if [ -n "$ZOLTAN_ARCH_PATH" ] \
-    && [ -r "$ZOLTAN_ARCH_PATH/include/zoltan.h" ] \
-    && { \
-         [ -r "$FOAM_EXT_LIBBIN/$FOAM_MPI/libzoltan.a" ] \
-      || [ -r "$ZOLTAN_ARCH_PATH/lib/libzoltan.a" ]; \
-       }
-    then
-        wmakeMpiLib $ZOLTAN_VERSION zoltan
-    else
-        echo "    skipping zoltan"
-    fi
-else
-    echo
-    echo "    Error: no config.sh/zoltan settings"
-    echo
-fi
+    wmakeMpiLib Zoltan-$ZOLTAN_VERSION zoltan
+    ;;
+esac
 
 #------------------------------------------------------------------------------

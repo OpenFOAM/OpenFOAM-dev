@@ -4,19 +4,15 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-# Get SCOTCH_VERSION, SCOTCH_ARCH_PATH
-if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/scotch`
-then
-    . $settings
+# Build if Scotch is enabled
+case $SCOTCH_TYPE in
+none)
+    ;;
+*)
+    . $($WM_PROJECT_DIR/bin/foamEtcFile config.sh/scotch)
     echo "    using SCOTCH_ARCH_PATH=$SCOTCH_ARCH_PATH"
-    if [ -n "$SCOTCH_ARCH_PATH" ]
-    then
-        wmake $targetType
-    fi
-else
-    echo
-    echo "    Error: no config.sh/scotch settings"
-    echo
-fi
+    wmake $targetType
+    ;;
+esac
 
 #------------------------------------------------------------------------------

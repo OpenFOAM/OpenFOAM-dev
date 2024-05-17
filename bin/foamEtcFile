@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -99,44 +99,33 @@ prefixDir="${projectDir%/*}"
 # the name used for the project directory
 projectDirName="${projectDir##*/}"
 
-# version number used for debian packaging
-unset versionNum
-
-#
-# handle standard and debian naming convention
-#
+# handle standard and packaged naming conventions
 case "$projectDirName" in
-    OpenFOAM-*)     # standard naming convention OpenFOAM-<VERSION>
-        version="${projectDirName##OpenFOAM-}"
-        ;;
-    openfoam[0-9]*) # debian naming convention
-        versionNum="${projectDirName##openfoam}"
-        case "$versionNum" in
-        [4-9]) # v4-9
-            version="$versionNum"
+        OpenFOAM-*) # standard naming convention OpenFOAM-<VERSION>
+            version="${projectDirName##OpenFOAM-}"
             ;;
-        [1-2][0-9]) # v10 onwards
-            version="$versionNum"
+        openfoam-dev) # debian naming convention for dev
+            version="${projectDirName##openfoam-}"
             ;;
-        3[0-9]) # e.g. v3.0
-            version=$(echo "$versionNum" | sed -e 's@\(.\)\(.\)@\1.\2@')
+        openfoam[1-2][0-9]) # debian naming convention for v10 onwards
+            version="${projectDirName##openfoam}"
             ;;
-        [1-2][0-9][0-9]) # e.g. v1.7.0
-            version=$(echo "$versionNum" | sed -e 's@\(.\)\(.\)\(.\)@\1.\2.\3@')
+        openfoam[4-9]) # debian naming convention for v4-9
+            version="${projectDirName##openfoam}"
+            ;;
+        openfoam3[0-9]) # debian naming convention for v3.?
+            version=$(echo "${projectDirName##openfoam}" | sed -e 's@\(.\)\(.\)@\1.\2@')
+            ;;
+        openfoam[1-2][0-9][0-9]) # debian naming convention for v1.?.? and v2.?.?
+            version=$(echo "${projectDirName##openfoam}" | sed -e 's@\(.\)\(.\)\(.\)@\1.\2.\3@')
+            ;;
+        app) # flatpak naming convention
+            version="${FLATPAK_ID##OpenFOAM-}"
             ;;
         *)
-            version="$WM_PROJECT_VERSION"
+            echo "Error : unknown/unsupported naming convention"
+            exit 1
             ;;
-        esac
-        ;;
-    openfoam-dev) # debian naming convention
-        versionNum="${projectDirName##openfoam}"
-        version="${versionNum##-}"
-        ;;
-    *)
-        echo "Error : unknown/unsupported naming convention"
-        exit 1
-        ;;
 esac
 
 # default mode is 'ugo'
@@ -184,11 +173,6 @@ do
     -v | -version)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         version="$2"
-        # convert x.y.z -> xyz version (if installation looked like debian)
-        if [ -n "$versionNum" ]
-        then
-            versionNum=$(echo "$version" | sed -e 's@\.@@g')
-        fi
         shift
         ;;
     --)
@@ -204,15 +188,6 @@ do
     esac
     shift
 done
-
-
-# debugging:
-# echo "Installed locations:"
-# for i in projectDir prefixDir projectDirName version versionNum
-# do
-#     eval echo "$i=\$$i"
-# done
-
 
 # Save the essential bits of information
 # silently remove leading ~OpenFOAM/ (used in Foam::findEtcFile)
@@ -237,14 +212,7 @@ esac
 
 case "$mode" in
 *o*)  # other (shipped)
-    if [ -n "$versionNum" ]
-    then
-        # debian packaging
-        dirList="$dirList $prefixDir/openfoam$versionNum/etc"
-    else
-        # standard packaging
-        dirList="$dirList $prefixDir/${WM_PROJECT:-OpenFOAM}-$version/etc"
-    fi
+    dirList="$dirList $prefixDir/$projectDirName/etc"
     ;;
 esac
 set -- $dirList

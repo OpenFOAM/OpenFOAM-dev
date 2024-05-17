@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -28,9 +28,6 @@
 # Description
 #     start paraview with the OpenFOAM libraries
 #
-# Note
-#     combining -block or -builtin options with the -region option yields
-#     undefined behaviour
 #------------------------------------------------------------------------------
 usage() {
     cat<<USAGE
@@ -61,19 +58,12 @@ error() {
 }
 
 pvExec () {
-    if [ "$ParaView_GL" = mesa ]
-    then
-        LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ParaView_LIB_DIR/mesa paraview "$@"
-    else
-        paraview "$@"
-    fi
+    # For now filter out any ld.so errors. Caused by non-system compiler?
+    paraview "$@" 2>&1 | grep -v -F 'Inconsistency detected by ld.so'
 }
 
-noPVReader () {
+noPV() {
     cat<<EOF
-FATAL ERROR: The official reader module for OpenFOAM data does not exist on
-your system.  This means that the version of ParaView you are using was not
-compiled with OpenFOAM, or distributed with a packaged version of OpenFOAM.
 
 For information on packaged versions of OpenFOAM/ParaView and compilation of
 OpenFOAM/ParaView, see https://openfoam.org/download
@@ -83,6 +73,25 @@ module provided with ParaView by running:
     paraFoam -builtin
 
 EOF
+}
+
+noPVExe () {
+    cat<<EOF
+FATAL ERROR: A ParaView executable was not found on your system.  This means
+that ParaView is not installed, or that OpenFOAM has been configured to use a
+different installation of ParaView from that which is installed.
+EOF
+noPV
+}
+
+noPVReader () {
+    cat<<EOF
+FATAL ERROR: The reader module for OpenFOAM data was not found on your system.
+This means that OpenFOAM was not built with ParaView support, or that ParaView
+is not installed, or that OpenFOAM has been configured to use a different
+installation of ParaView from that which is installed.
+EOF
+noPV
 }
 
 # We want to do nice exit when running paraview to give paraview opportunity
@@ -99,7 +108,8 @@ export LC_ALL=C
 # Reader extension
 extension=OpenFOAM
 
-requirePV=1
+requirePVExe=1
+requirePVReader=1
 
 # Parse options
 while [ "$#" -gt 0 ]
@@ -114,7 +124,8 @@ do
         ;;
     -builtin)
         extension=foam
-        requirePV=0
+        requirePVExe=1
+        requirePVReader=0
         shift
         ;;
     -case)
@@ -133,12 +144,14 @@ do
         ;;
     -touch)
         optTouch=true
-        requirePV=0
+        requirePVExe=0
+        requirePVReader=0
         shift
         ;;
     -touchAll)
         optTouch=all
-        requirePV=0
+        requirePVExe=0
+        requirePVReader=0
         shift
         ;;
     --)
@@ -154,8 +167,26 @@ do
     esac
 done
 
-# Check that reader module has been built
-[ $requirePV -eq 1 ] && \
+# Check for incompatibility of options
+if [ -n "$regionName" ]
+then
+    case $extension in
+    blockMesh)
+        echo "FATAL ERROR: The builtin reader does not support blockMesh"
+        exit 1
+        ;;
+    foam)
+        echo "FATAL ERROR: The builtin reader does not support regions"
+        exit 1
+        ;;
+    esac
+fi
+
+# Check that the executable and/or the reader module are available
+[ $requirePVExe -eq 1 ] && \
+    ! which paraview > /dev/null 2>&1 && \
+    noPVExe && exit 1
+[ $requirePVReader -eq 1 ] && \
     ! [ -f "$PV_PLUGIN_PATH/libPVFoamReader_SM.so" ] && \
     noPVReader && exit 1
 
@@ -174,14 +205,11 @@ hasDataArg()
         shift
     done
 }
-
 hasDataArg "$@"
 
-# Get a sensible caseName from the directory name
+# Construct a case name from the directory name
 caseName=${PWD##*/}
 caseFile="$caseName.$extension"
-fvControls="system"
-
 if [ -n "$regionName" ]
 then
     if [ ! -d constant/"$regionName" ]
@@ -190,37 +218,41 @@ then
         exit 1
     else
         caseFile="$caseName{$regionName}.$extension"
-        fvControls="$fvControls/$regionName"
     fi
 fi
 
+# If the touch option is set, then create files and exit
 case "${optTouch:-false}" in
 all)
-    extension=OpenFOAM
+    # Block mesh
     if [ -f system/blockMeshDict ] || [ -f constant/polyMesh/blockMeshDict ]
     then
         touch "$caseName.blockMesh"
         echo "Created '$caseName.blockMesh'"
     fi
-    touch "$caseName.$extension"
-    echo "Created '$caseName.$extension'"
-    # Discover probable regions
+
+    # Default region
+    touch "$caseName.OpenFOAM"
+    echo "Created '$caseName.OpenFOAM'"
+
+    # Find other probable regions
     for region in constant/*
     do
-        [ -d "$region" ] && [ -d "${region}/polyMesh" ] && \
+        [ -d "$region/polyMesh" ] && \
             regionName=${region##*/} && \
-            touch "$caseName{$regionName}.$extension" && \
-            echo "Created '$caseName{$regionName}.$extension'"
+            touch "$caseName{$regionName}.OpenFOAM" && \
+            echo "Created '$caseName{$regionName}.OpenFOAM'"
     done
     exit 0
     ;;
+
 true)
+    # Default region
     touch "$caseFile"
     echo "Created '$caseFile'"
     exit 0
     ;;
 esac
-
 
 # Parent directory for normal or parallel results
 case "$caseName" in
@@ -228,72 +260,64 @@ case "$caseName" in
     *)          parentDir="."  ;;
 esac
 
-
+# If we have a --data=... argument, then send this directly to paraview
 if [ "${hasData:-false}" = true ]
 then
-
-    # Has --data=.., send directly to paraview
     pvExec "$@"
-
-else
-
-    # Check existence of essential files
-    warn="WARN file does not exist:"
-    case $extension in
-        blockMesh)
-            blockMeshDictDir=system/blockMeshDict
-            if [ -f constant/polyMesh/blockMeshDict ]
-            then
-                blockMeshDictDir=constant/polyMesh/blockMeshDict
-            fi
-            for check in \
-                system/controlDict \
-                    $blockMeshDictDir \
-                ;
-            do
-                [ -s "$parentDir/$check" ] || [ -s "$parentDir/$check.orig" ] ||
-                {
-                    [ -n "$warn" ] && echo "$warn" 1>&2
-                    echo "    $parentDir/$check" 1>&2
-                    unset warn
-                }
-            done
-            ;;
-
-        builtin | OpenFOAM)
-            for check in \
-                system/controlDict \
-                ;
-            do
-                [ -s "$parentDir/$check" ] || [ -s "$parentDir/$check.orig" ] ||
-                {
-                    [ -n "$warn" ] && echo "$warn" 1>&2
-                    echo "    $parentDir/$check" 1>&2
-                    unset warn
-                }
-            done
-            ;;
-    esac
-
-    [ -n "$warn" ] || {
-        echo "Cannot locate OpenFOAM-format case files"
-        printf "Would you like to open ParaView anyway <Y|n>:"
-        read open
-        [ "$open" = "" ] || echo "$open" | grep -iqE "^y" && pvExec
-        exit
-    }
-
-    # Only create/remove caseFile if it didn't already exist
-    [ -e "$caseFile" ] || {
-        trap "rm -f $caseFile 2>/dev/null; exit 0" EXIT TERM INT
-        touch "$caseFile"
-        echo "Created temporary '$caseFile'"
-    }
-
-    # For now filter out any ld.so errors. Caused by non-system compiler?
-    pvExec --data="$caseFile" "$@" 2>&1 \
-        | grep -v -F 'Inconsistency detected by ld.so'
+    exit 0
 fi
 
+# Check existence of essential files
+warn="WARN file does not exist:"
+case $extension in
+    blockMesh)
+        blockMeshDictDir=system/blockMeshDict
+        if [ -f constant/polyMesh/blockMeshDict ]
+        then
+            blockMeshDictDir=constant/polyMesh/blockMeshDict
+        fi
+
+        for check in system/controlDict $blockMeshDictDir
+        do
+            [ -s "$parentDir/$check" ] || [ -s "$parentDir/$check.orig" ] ||
+            {
+                [ -n "$warn" ] && echo "$warn" 1>&2
+                echo "    $parentDir/$check" 1>&2
+                unset warn
+            }
+        done
+        ;;
+
+    OpenFOAM | foam)
+        for check in system/controlDict
+        do
+            [ -s "$parentDir/$check" ] || [ -s "$parentDir/$check.orig" ] ||
+            {
+                [ -n "$warn" ] && echo "$warn" 1>&2
+                echo "    $parentDir/$check" 1>&2
+                unset warn
+            }
+        done
+        ;;
+esac
+
+# Warn if essential files do not exist
+[ -n "$warn" ] || {
+    echo "Cannot locate OpenFOAM-format case files"
+    printf "Would you like to open ParaView anyway <Y|n>:"
+    read open
+    [ "$open" = "" ] || echo "$open" | grep -iqE "^y" && pvExec
+    exit
+}
+
+# Only create/remove the caseFile if it didn't already exist
+[ -e "$caseFile" ] || {
+    trap "rm -f $caseFile 2>/dev/null; exit 0" EXIT TERM INT
+    touch "$caseFile"
+    echo "Created temporary '$caseFile'"
+}
+
+# Run paraview
+pvExec --data="$caseFile" "$@"
 
 #------------------------------------------------------------------------------

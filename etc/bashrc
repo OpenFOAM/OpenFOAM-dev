@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -32,19 +32,28 @@
 #------------------------------------------------------------------------------
 
 export WM_PROJECT=OpenFOAM
+export WM_THIRD_PARTY=ThirdParty
 export WM_PROJECT_VERSION=dev
 
 ################################################################################
 # USER EDITABLE PART: Changes made here may be lost with the next upgrade
 #
 # FOAM_INST_DIR is the location of the OpenFOAM installation which defaults to
-# the directory containing this file if sourced by a bash shell.
+# the directory two levels below this file, or $HOME/$WM_PROJECT if that
+# directory cannot be determined.
 #
-# Please set to the appropriate path if the default is not correct.
+[ "$BASH" ] && bashrcFile=${BASH_SOURCE}
+[ "$ZSH_NAME" ] && bashrcFile=$0
+if [ -n "$bashrcFile" ]
+then
+    export FOAM_INST_DIR=$(cd $(dirname $bashrcFile)/../.. && pwd -P)
+else
+    export FOAM_INST_DIR=$HOME/$WM_PROJECT
+fi
+unset bashrcFile
 #
-[ "$BASH" -o "$ZSH_NAME" ] && \
-export FOAM_INST_DIR=$(cd $(dirname ${BASH_SOURCE:-$0})/../.. && pwd -P) || \
-export FOAM_INST_DIR=$HOME/$WM_PROJECT
+# Please set to the appropriate path if the above default is not correct. E.g.,
+#
 # export FOAM_INST_DIR=~$WM_PROJECT
 # export FOAM_INST_DIR=/opt/$WM_PROJECT
 # export FOAM_INST_DIR=/usr/local/$WM_PROJECT
@@ -57,7 +66,7 @@ export FOAM_INST_DIR=$HOME/$WM_PROJECT
 # $FOAM_INST_DIR/site/$WM_PROJECT_VERSION or $FOAM_INST_DIR/site
 
 #- Compiler location:
-#    WM_COMPILER_TYPE= system | ThirdParty (OpenFOAM)
+#    WM_COMPILER_TYPE = system | ThirdParty (OpenFOAM)
 export WM_COMPILER_TYPE=system
 
 #- Compiler:
@@ -92,11 +101,21 @@ export WM_MPLIB=SYSTEMOPENMPI
 #    WM_OSTYPE = POSIX | ???
 export WM_OSTYPE=POSIX
 
+#- Decomposition libraries:
+#    <library>_TYPE = none | system | ThirdParty (OpenFOAM)
+export SCOTCH_TYPE=ThirdParty
+export METIS_TYPE=none
+export PARMETIS_TYPE=none
+export ZOLTAN_TYPE=none
+
+#    ParaView_TYPE = none | system | paraviewopenfoam | ThirdParty (OpenFOAM)
+export ParaView_TYPE=ThirdParty
+
 #- Floating-point signal handling:
 #    set or unset
 export FOAM_SIGFPE=
 
-#- memory initialisation:
+#- Memory initialisation:
 #    set or unset
 #export FOAM_SETNAN=
 
@@ -123,9 +142,26 @@ then
     unset WM_PROJECT_DIR_REAL
 fi
 
+# Source initialisation functions
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+. $WM_PROJECT_DIR/etc/config.sh/functions
+
+# Add in preset user or site preferences:
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile prefs.sh`
+
+# Evaluate command-line parameters of the form "param=keyword" or unset
+# parameters with "param="
+export FOAM_SETTINGS="$@"
+_foamParams $@
+
 # Location of third-party software
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-export WM_THIRD_PARTY_DIR=$WM_PROJECT_INST_DIR/ThirdParty-$WM_PROJECT_VERSION
+if [ ${WM_THIRD_PARTY%%/*} = ${WM_PROJECT_DIR##*/} ]
+then
+    export WM_THIRD_PARTY_DIR=$WM_PROJECT_INST_DIR/$WM_THIRD_PARTY
+else
+    export WM_THIRD_PARTY_DIR=$WM_PROJECT_INST_DIR/$WM_THIRD_PARTY-$WM_PROJECT_VERSION
+fi
 
 if [ -d "$WM_THIRD_PARTY_DIR" ]
 then
@@ -150,18 +186,6 @@ fi
 # Location of user files
 # ~~~~~~~~~~~~~~~~~~~~~~
 export WM_PROJECT_USER_DIR=$HOME/$WM_PROJECT/$USER-$WM_PROJECT_VERSION
-
-# Source initialisation functions
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-. $WM_PROJECT_DIR/etc/config.sh/functions
-
-# Add in preset user or site preferences:
-_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile prefs.sh`
-
-# Evaluate command-line parameters of the form "param=keyword" or unset
-# parameters with "param="
-export FOAM_SETTINGS="$@"
-_foamParams $@
 
 # Clean standard environment variables (PATH, LD_LIBRARY_PATH, MANPATH)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -218,7 +242,6 @@ fi
 # Cleanup environment:
 # ~~~~~~~~~~~~~~~~~~~~
 unset cleaned foamClean foamOldDirs
-
 
 # Unload initialisation functions:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -31,19 +31,26 @@
 #------------------------------------------------------------------------------
 
 setenv WM_PROJECT OpenFOAM
+setenv WM_THIRD_PARTY ThirdParty
 setenv WM_PROJECT_VERSION dev
 
 ################################################################################
 # USER EDITABLE PART: Changes made here may be lost with the next upgrade
 #
 # FOAM_INST_DIR is the location of the OpenFOAM installation which defaults to
-# the directory containing this file.
+# the directory two levels below this file, or $HOME/$WM_PROJECT if that
+# directory cannot be determined.
 #
-# Please set to the appropriate path if the default is not correct.
+set foamInstDir=`lsof +p $$ |& sed -n 's%.* \(/.*\)/[^/]\+/etc/cshrc$%\1%p'`
+if ( -d "$foamInstDir" ) then
+    setenv FOAM_INST_DIR $foamInstDir
+else
+    setenv FOAM_INST_DIR $HOME/$WM_PROJECT
+endif
+unset foamInstDir
 #
-setenv FOAM_INST_DIR `lsof +p $$ |& grep -oE '/.*'$WM_PROJECT'[^/]*/etc/cshrc' | \
-    sed 's%/'$WM_PROJECT'[^/]*/etc/cshrc%%'`
-# setenv FOAM_INST_DIR  $HOME/$WM_PROJECT
+# Please set to the appropriate path if the above default is not correct. E.g.,
+#
 # setenv FOAM_INST_DIR  ~$WM_PROJECT
 # setenv FOAM_INST_DIR  /opt/$WM_PROJECT
 # setenv FOAM_INST_DIR  /usr/local/$WM_PROJECT
@@ -51,7 +58,7 @@ setenv FOAM_INST_DIR `lsof +p $$ |& grep -oE '/.*'$WM_PROJECT'[^/]*/etc/cshrc' |
 # END OF (NORMAL) USER EDITABLE PART
 ################################################################################
 
-# The default environment variables below can be overridden in a prefs.sh file
+# The default environment variables below can be overridden in a prefs.csh file
 # located in ~/.OpenFOAM/$WM_PROJECT_VERSION, ~/.OpenFOAM,
 # $FOAM_INST_DIR/site/$WM_PROJECT_VERSION or $FOAM_INST_DIR/site
 
@@ -91,11 +98,22 @@ setenv WM_MPLIB SYSTEMOPENMPI
 #    WM_OSTYPE = POSIX | ???
 setenv WM_OSTYPE POSIX
 
+#- Decomposition libraries:
+#    <library>_TYPE = none | system | ThirdParty (OpenFOAM)
+setenv SCOTCH_TYPE ThirdParty
+setenv METIS_TYPE none
+setenv PARMETIS_TYPE none
+setenv ZOLTAN_TYPE none
+
+#- ParaView installation:
+#    ParaView_TYPE = none | system | paraviewopenfoam | ThirdParty (OpenFOAM)
+setenv ParaView_TYPE ThirdParty
+
 #- Floating-point signal handling:
 #    set or unset
 setenv FOAM_SIGFPE
 
-#- memory initialisation:
+#- Memory initialisation:
 #    set or unset
 #setenv FOAM_SETNAN
 
@@ -125,9 +143,25 @@ endif
 setenv WM_PROJECT_INST_DIR $FOAM_INST_DIR
 setenv WM_PROJECT_DIR $WM_PROJECT_INST_DIR/$WM_PROJECT-$WM_PROJECT_VERSION
 
+# Source initialisation functions
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+source $WM_PROJECT_DIR/etc/config.csh/functions
+
+# Add in preset user or site preferences:
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile prefs.csh`
+
+# Evaluate command-line parameters of the form "param=keyword" or unset
+# parameters with "param="
+setenv FOAM_SETTINGS "${*}"
+_foamParams ${*}
+
 # Location of third-party software
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-setenv WM_THIRD_PARTY_DIR $WM_PROJECT_INST_DIR/ThirdParty-$WM_PROJECT_VERSION
+if ( `echo $WM_PROJECT_DIR | sed 's/.*\///g'` == `echo $WM_THIRD_PARTY | sed 's/\/.*//g'` ) then
+    setenv WM_THIRD_PARTY_DIR $WM_PROJECT_INST_DIR/$WM_THIRD_PARTY
+else
+    setenv WM_THIRD_PARTY_DIR $WM_PROJECT_INST_DIR/$WM_THIRD_PARTY-$WM_PROJECT_VERSION
+endif
 
 # Location of site-specific templates etc
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -143,43 +177,7 @@ endif
 # ~~~~~~~~~~~~~~~~~~~~~~
 setenv WM_PROJECT_USER_DIR $HOME/$WM_PROJECT/$LOGNAME-$WM_PROJECT_VERSION
 
-
-# Source files, possibly with some verbosity
-alias _foamSource 'if ($?FOAM_VERBOSE && $?prompt) echo "Sourcing: \!*"; if (\!* != "") source \!*'
-
-# Add in preset user or site preferences:
-_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile prefs.csh`
-
-# Evaluate command-line parameters of the form "param=keyword" or unset
-# parameters with "param="
-setenv FOAM_SETTINGS "${*}"
-while ( $#argv > 0 )
-    switch ($argv[1])
-    case -*:
-        # stray option (not meant for us here) -> get out
-        break
-        breaksw
-    case *=:
-        # name=       -> unsetenv name
-        if ($?FOAM_VERBOSE && $?prompt) echo "unsetenv $argv[1]:s/=//"
-        eval "unsetenv $argv[1]:s/=//"
-        breaksw
-    case *=*:
-        # name=value  -> setenv name value
-        if ($?FOAM_VERBOSE && $?prompt) echo "setenv $argv[1]:s/=/ /"
-        eval "setenv $argv[1]:s/=/ /"
-        breaksw
-    default:
-        # ignore non-parameter arguments, e.g. filenames
-        break
-        breaksw
-    endsw
-    shift
-end
-
-
-# Clean standard environment variables (PATH, LD_LIBRARY_PATH, MANPATH)
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 set foamClean=$WM_PROJECT_DIR/bin/foamCleanPath
 
 #- prevent local variables from shadowing setenv variables
@@ -234,9 +232,12 @@ if ( $?LD_PRELOAD ) then
 endif
 
 
-# cleanup environment:
+# Cleanup environment:
 # ~~~~~~~~~~~~~~~~~~~~
 unset cleaned foamClean foamOldDirs
-unalias _foamSource
+
+# Unload initialisation functions:
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+source $WM_PROJECT_DIR/etc/config.csh/functions
 
 #------------------------------------------------------------------------------

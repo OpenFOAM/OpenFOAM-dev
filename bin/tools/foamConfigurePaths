@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -26,7 +26,7 @@
 #     foamConfigurePaths
 #
 # Description
-#     hardcode installation directory
+#     Hard-code installation directories
 #
 #------------------------------------------------------------------------------
 usage() {
@@ -35,16 +35,12 @@ usage() {
     cat<<USAGE
 
 usage: ${0##*/}
-  --foamInstall dir         specify installation directory (e.g. /opt)
-  --projectName name        specify project name (e.g. openfoam220)
-  --projectVersion ver      specify project version (e.g. 2.2.0)
-  --archOption arch         specify architecture option (only 32 or 64 applicable)
-  --paraviewInstall dir     specify ParaView_DIR (e.g. /opt/paraviewopenfoam3120)
-  --paraviewVersion ver     specify ParaView_VERSION (e.g. 3.12.0)
-  --scotchArchPath dir      specify SCOTCH_ARCH_PATH (e.g. /opt/OpenFOAM-scotch-6.0.0/)
-  --scotchVersion ver       specify SCOTCH_VERSION (e.g. 6.0.0)
-
-* hardcode paths to installation
+  --foamInstall dir             specify installation directory (e.g. /opt)
+  --projectName name            specify project name (e.g. openfoam11)
+  --thirdPartyName name         specify third-party name (e.g. openfoam11/thirdparty)
+  --projectVersion ver          specify project version (e.g. 11)
+  --archOption arch             specify architecture option (only 32 or 64 applicable)
+  --dependency name:type:ver    specify dependency (e.g. SCOTCH=ThirdParty:6.0.9)
 
 USAGE
     exit 1
@@ -77,10 +73,10 @@ _inlineSed()
 }
 
 
-[ -f etc/bashrc ] || usage "Please run from top-level directory of installation"
+[ -d etc ] || usage "Please run from top-level directory of installation"
 
-unset foamInstDir projectName projectVersion archOption
-unset paraviewInstall scotchArchPath
+unset foamInstDir projectName thirdPartyName projectVersion archOption
+unset paraviewType paraviewVersion
 
 # Parse options
 while [ "$#" -gt 0 ]
@@ -95,13 +91,13 @@ do
         # Replace FOAM_INST_DIR=...
         _inlineSed \
             etc/bashrc \
-            '\(.*BASH_SOURCE.*\)' \
-            '#\1' \
-            "Removing default FOAM_INST_DIR setting"
-        _inlineSed \
-            etc/bashrc \
-            '^export FOAM_INST_DIR=.*' \
+            'export FOAM_INST_DIR=.*' \
             'export FOAM_INST_DIR='"$foamInstDir" \
+            "Setting FOAM_INST_DIR to '$foamInstDir'"
+        _inlineSed \
+            etc/cshrc \
+            'setenv FOAM_INST_DIR .*' \
+            'setenv FOAM_INST_DIR '"$foamInstDir" \
             "Setting FOAM_INST_DIR to '$foamInstDir'"
         shift 2
         ;;
@@ -111,9 +107,30 @@ do
         # replace WM_PROJECT_DIR=...
         _inlineSed \
             etc/bashrc \
-            'WM_PROJECT_DIR=.*' \
-            'WM_PROJECT_DIR=$WM_PROJECT_INST_DIR/'"$projectName" \
+            'export WM_PROJECT_DIR=.*' \
+            'export WM_PROJECT_DIR=$WM_PROJECT_INST_DIR/'"$projectName" \
             "Replacing WM_PROJECT_DIR setting by $projectName"
+        _inlineSed \
+            etc/cshrc \
+            'setenv WM_PROJECT_DIR .*' \
+            'setenv WM_PROJECT_DIR $WM_PROJECT_INST_DIR/'"$projectName" \
+            "Replacing WM_PROJECT_DIR setting by $projectName"
+        shift 2
+        ;;
+   -thirdPartyName | --thirdPartyName)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        thirdPartyName="$2"
+        # replace WM_PROJECT_DIR=...
+        _inlineSed \
+            etc/bashrc \
+            'export WM_THIRD_PARTY_DIR=.*' \
+            'export WM_THIRD_PARTY_DIR=$WM_PROJECT_INST_DIR/'"$thirdPartyName" \
+            "Replacing WM_THIRD_PARTY_DIR setting by $thirdPartyName"
+        _inlineSed \
+            etc/cshrc \
+            'setenv WM_THIRD_PARTY_DIR .*' \
+            'setenv WM_THIRD_PARTY_DIR $WM_PROJECT_INST_DIR/'"$thirdPartyName" \
+            "Replacing WM_THIRD_PARTY_DIR setting by $thirdPartyName"
         shift 2
         ;;
    --projectVersion)
@@ -123,69 +140,72 @@ do
         echo "Replacing WM_PROJECT_VERSION setting by $projectVersion"
         _inlineSed \
             etc/bashrc \
-            'WM_PROJECT_VERSION=.*' \
-            'WM_PROJECT_VERSION='"$projectVersion" \
+            'export WM_PROJECT_VERSION=.*' \
+            'export WM_PROJECT_VERSION='"$projectVersion" \
             "Replacing WM_PROJECT_VERSION setting by $projectVersion"
-
+        _inlineSed \
+            etc/cshrc \
+            'setenv WM_PROJECT_VERSION .*' \
+            'setenv WM_PROJECT_VERSION '"$projectVersion" \
+            "Replacing WM_PROJECT_VERSION setting by $projectVersion"
         shift 2
         ;;
     -archOption | --archOption)
         [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
         archOption="$2"
-        current_archOption=`grep WM_ARCH_OPTION= etc/bashrc | sed "s/export WM_ARCH_OPTION=//"`
-        if [ "$archOption" != "$current_archOption" ]
+        # replace WM_ARCH_OPTION=...
+        _inlineSed \
+            etc/bashrc \
+            'export WM_ARCH_OPTION=.*' \
+            'export WM_ARCH_OPTION='"$archOption" \
+            "Replacing WM_ARCH_OPTION setting by '$archOption'"
+        _inlineSed \
+            etc/cshrc \
+            'setenv WM_ARCH_OPTION .*' \
+            'setenv WM_ARCH_OPTION '"$archOption" \
+            "Replacing WM_ARCH_OPTION setting by '$archOption'"
+        shift 2
+        ;;
+
+    -dependency | --dependency)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        dependencyNameTypeVersion=$2
+        dependencyNameType=${dependencyNameTypeVersion%:*}
+        dependencyName=${dependencyNameType%=*}
+        dependencyVersion=${dependencyNameTypeVersion#$dependencyNameType*}
+        dependencyVersion=${dependencyVersion#:}
+        dependencyType=${dependencyNameType#$dependencyName*}
+        dependencyType=${dependencyType#=}
+        # replace ${dependencyName}_TYPE...
+        if [ -n "$dependencyType" ]
         then
-            # replace WM_ARCH_OPTION=...
             _inlineSed \
                 etc/bashrc \
-                'WM_ARCH_OPTION=.*' \
-                'WM_ARCH_OPTION='"$archOption" \
-                "Replacing WM_ARCH_OPTION setting by '$archOption'"
-        else
-            echo "WM_ARCH_OPTION already set to $archOption"
+                'export '"$dependencyName"'_TYPE=.*' \
+                'export '"$dependencyName"'_TYPE='"$dependencyType" \
+                "Replacing ${dependencyName}_TYPE setting by '$dependencyType'"
+            _inlineSed \
+                etc/cshrc \
+                'setenv '"$dependencyName"'_TYPE .*' \
+                'setenv '"$dependencyName"'_TYPE '"$dependencyType" \
+                "Replacing ${dependencyName}_TYPE setting by '$dependencyType'"
         fi
-        shift 2
-        ;;
-    -paraviewInstall | --paraviewInstall)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        paraviewInstall="$2"
-        # replace ParaView_DIR=...
-        _inlineSed \
-            etc/config.sh/paraview \
-            'ParaView_DIR=.*' \
-            'ParaView_DIR='"$paraviewInstall" \
-            "Replacing ParaView_DIR setting by '$paraviewInstall'"
-        shift 2
-        ;;
-    -paraviewVersion | --paraviewVersion)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        paraviewVersion="$2"
-        # replace ParaView_VERSION=...
-        _inlineSed \
-            etc/config.sh/paraview \
-            'ParaView_VERSION=.*' \
-            'ParaView_VERSION='"$paraviewVersion" \
-            "Replacing ParaView_VERSION setting by '$paraviewVersion'"
-        shift 2
-        ;;
-    -scotchVersion | --scotchVersion)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        scotchVersion="$2"
-        _inlineSed \
-            etc/config.sh/scotch \
-            'SCOTCH_VERSION=.*' \
-            'SCOTCH_VERSION='"$scotchVersion" \
-            "Replacing SCOTCH_VERSION setting by '$scotchVersion'"
-        shift 2
-        ;;
-    -scotchArchPath | --scotchArchPath)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        scotchArchPath="$2"
-        _inlineSed \
-            etc/config.sh/scotch \
-            'SCOTCH_ARCH_PATH=.*' \
-            'SCOTCH_ARCH_PATH='"$scotchArchPath" \
-            "Replacing SCOTCH_ARCH_PATH setting by '$scotchArchPath'"
+        # add/replace ${dependencyName}_VERSION...
+        if [ -n "$dependencyVersion" ]
+        then
+            sed -i '/export '"$dependencyName"'_VERSION=.*/d' etc/bashrc
+            _inlineSed \
+                etc/bashrc \
+                '\(export '"$dependencyName"'_TYPE=.*\)' \
+                '\1\nexport '"$dependencyName"'_VERSION='"$dependencyVersion" \
+                "Adding ${dependencyName}_VERSION setting '$dependencyVersion'"
+            sed -i '/setenv '"$dependencyName"'_VERSION .*/d' etc/cshrc
+            _inlineSed \
+                etc/cshrc \
+                '\(setenv '"$dependencyName"'_TYPE .*\)' \
+                '\1\nsetenv '"$dependencyName"'_VERSION '"$dependencyVersion" \
+                "Adding ${dependencyName}_VERSION setting '$dependencyVersion'"
+        fi
         shift 2
         ;;
     *)
@@ -194,26 +214,9 @@ do
     esac
 done
 
-[ -n "$foamInstDir" -o -n "$projectName" -o -n "$projectVersion" -o -n "$archOption" \
--o -n "$paraviewInstall" -o -n "$paraviewVersion" \
--o -n "$scotchVersion" -o -n "$scotchArchPath" \
+[ -n "$foamInstDir" -o -n "$projectName" -o -n "$thirdPartyName" \
+-o -n "$projectVersion" -o -n "$archOption" \
+-o -n "$dependencyNameTypeVersion" \
 ] || usage "Please specify at least one configure option"
-
-#echo "Replacing WM_PROJECT setting by '$projectName'"
-#sed -i -e 's@WM_PROJECT=.*@WM_PROJECT='"$projectName@" etc/bashrc
-
-# Set WM_MPLIB=SYSTEMOPENMPI always
-_inlineSed \
-    etc/bashrc \
-    'export WM_MPLIB=.*' \
-    'export WM_MPLIB=SYSTEMOPENMPI' \
-    "Replacing WM_MPLIB setting by 'SYSTEMOPENMPI'"
-
-## set WM_COMPILER_TYPE=system always
-#_inlineSed \
-#    etc/bashrc \
-#    'WM_COMPILER_TYPE=.*' \
-#    'WM_COMPILER_TYPE=system' \
-#    "Replacing WM_COMPILER_TYPE setting by 'system'"
 
 #------------------------------------------------------------------------------

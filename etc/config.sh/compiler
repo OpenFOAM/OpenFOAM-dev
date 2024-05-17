@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -67,12 +67,16 @@ OpenFOAM | ThirdParty)
         clang_version=llvm-3.7.0
         ;;
     *)
-        echo 1>&2
-        echo "Warning in $WM_PROJECT_DIR/etc/config.sh/compiler:" 1>&2
-        echo "    Unknown OpenFOAM compiler type '$WM_COMPILER'" 1>&2
-        echo "    Please check your settings" 1>&2
-        echo 1>&2
+        /bin/cat <<USAGE 1>&2
+
+Warning in $WM_PROJECT_DIR/etc/config.sh/compiler:
+    Unknown OpenFOAM compiler type '$WM_COMPILER'
+    Please check your settings
+
+USAGE
         ;;
     esac
     ;;
 esac
+
+#------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -31,8 +31,6 @@
 # Note
 #     Not normally called directly by the user.
 #------------------------------------------------------------------------------
-toolsDir="${0%/*}"  # this script is already located in the tools/ directory
-
 [ $# -eq 1 -o $# -eq 2 ] || {
 cat <<USAGE 1>&2
 Usage : ${0##*/} <packDir> [archOptions]
@@ -57,9 +55,11 @@ archOptions="${2:-$WM_OPTIONS}"
     exit 1
 }
 
-# base arch (w/o precision, optimisation, etc)
+# same as "$WM_ARCH$WM_COMPILER$WM_PRECISION_OPTION$WM_LABEL_OPTION"
+archOSCompilerTypes=$(echo "$archOptions" | sed -e 's@\(Int[0-9]\+\).*$@\1@')
+
 # same as "$WM_ARCH$WM_COMPILER"
-archCompiler=$(echo "$archOptions" | sed -e 's@[DS]P.*$@@')
+archOSCompiler=$(echo "$archOptions" | sed -e 's@[DSL]P.*$@@')
 
 # same as $WM_ARCH - eg, 'linux64'
 # TODO: only works for Gcc, Icc, Clang
@@ -89,10 +89,10 @@ dirList=$(
     for dir in \
         $packDir/platforms/$archOptions/bin \
         $packDir/platforms/$archOptions/lib \
-        $packDir/wmake/platforms/$archCompiler \
+        $packDir/wmake/platforms/$archOSCompiler \
         $packDir/wmake/platforms/$archOS \
         $packDir/wmake/rules/General \
-        $packDir/wmake/rules/$archCompiler \
+        $packDir/wmake/rules/$archOSCompiler \
         $packDir/wmake/rules/$archOS \
         ;
     do
@@ -103,7 +103,7 @@ dirList=$(
 
 cat <<INFO 1>&2
 -------------------------------------------------------------------------------
-Packing $archOptions ($archCompiler) port of $packDir
+Packing $archOptions port of $packDir
     archOS       = $archOS
     32bit archOS = $arch3264
 

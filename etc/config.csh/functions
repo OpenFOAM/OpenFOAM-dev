@@ -1,0 +1,103 @@
+#----------------------------------*-sh-*--------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# File
+#     etc/config.csh/functions
+#
+# Description
+#     Initialisation script functions for the cshrc environment
+#     Sourced from OpenFOAM-<VERSION>/etc/cshrc
+#
+#------------------------------------------------------------------------------
+
+if ( ! $?WM_CSH_FUNCTIONS ) then
+
+    # Temporary environment variable for automatically (un)loading functions
+    set WM_CSH_FUNCTIONS loaded
+
+    # Source files, possibly with some verbosity
+    alias _foamSource 'if ($?FOAM_VERBOSE && $?prompt) echo "Sourcing: \!*"; if (\!* != "") source \!*'
+
+    # Evaluate command-line parameters
+    alias _foamParams 'foreach arg (\!*)\
+        switch ($arg)\
+        case -*:\
+            # stray option (not meant for us here) -> get out\
+            break\
+            breaksw\
+        case *=:\
+            # name=       -> unsetenv name\
+            if ($?FOAM_VERBOSE && $?prompt) echo "unsetenv $arg:s/=//"\
+            eval "unsetenv $arg:s/=//"\
+            breaksw\
+        case *=*:\
+            # name=value  -> setenv name value\
+            if ($?FOAM_VERBOSE && $?prompt) echo "setenv $arg:s/=/ /"\
+            eval "setenv $arg:s/=/ /"\
+            breaksw\
+        default:\
+            # ignore non-parameter arguments, e.g. filenames\
+            break\
+            breaksw\
+        endsw\
+    end'
+
+    # Prefix to PATH
+    alias _foamAddPath 'setenv PATH \!*\:${PATH}'
+
+    # Prefix to LD_LIBRARY_PATH
+    alias _foamAddLib 'setenv LD_LIBRARY_PATH \!*\:${LD_LIBRARY_PATH}'
+
+    # Prefix to MANPATH
+    alias _foamAddMan 'setenv MANPATH \!*\:${MANPATH}'
+
+    # Find the most recent of a list of versioned directories
+    alias _foamMostRecentDir 'foreach dir (\!* /dev/nul[l])\
+        if ( -d "$dir" ) then\
+            if ( $?_mostRecentDir ) then\
+                $WM_PROJECT_DIR/bin/tools/foamVersionCompare $_mostRecentDir lt $dir\
+                if ( $status == 0 ) then\
+                    set _mostRecentDir=$dir\
+                endif\
+            else\
+                set _mostRecentDir=$dir\
+            endif\
+        endif\
+    end\
+    if ( $?_mostRecentDir ) then\
+        echo $_mostRecentDir\
+    endif\
+    unset _mostRecentDir'
+
+else
+
+    # Cleanup environment:
+    # ~~~~~~~~~~~~~~~~~~~~
+    unset WM_CSH_FUNCTIONS
+    unset _foamSource
+    unset _foamAddPath _foamAddLib _foamAddMan
+
+endif
+
+
+#------------------------------------------------------------------------------

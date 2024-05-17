@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -30,27 +30,26 @@
 #
 #------------------------------------------------------------------------------
 
-# Prefix to PATH
-alias _foamAddPath 'setenv PATH \!*\:${PATH}'
-# Prefix to LD_LIBRARY_PATH
-alias _foamAddLib 'setenv LD_LIBRARY_PATH \!*\:${LD_LIBRARY_PATH}'
-# Prefix to MANPATH
-alias _foamAddMan 'setenv MANPATH \!*\:${MANPATH}'
-
-#------------------------------------------------------------------------------
 # Set environment variables according to system type
 setenv WM_ARCH `uname -s`
 
 # Default WM_COMPILER_LIB_ARCH for 32bit
 setenv WM_COMPILER_LIB_ARCH
 
+# Define compilation flags for the given system type
 switch ($WM_ARCH)
 case Linux:
     setenv WM_ARCH linux
 
+    # Compiler specifics
     switch (`uname -m`)
     case i686:
         setenv WM_ARCH_OPTION 32
+        setenv WM_CC 'gcc'
+        setenv WM_CXX 'g++'
+        setenv WM_CFLAGS '-fPIC'
+        setenv WM_CXXFLAGS '-fPIC -std=c++0x'
+        setenv WM_LDFLAGS
         breaksw
 
     case x86_64:
@@ -91,6 +90,17 @@ case Linux:
         setenv WM_LDFLAGS ''
         breaksw
 
+    case armv7l:
+        setenv WM_ARCH linuxARM7
+        setenv WM_ARCH_OPTION 32
+        setenv WM_COMPILER_LIB_ARCH 32
+        setenv WM_CC 'gcc'
+        setenv WM_CXX 'g++'
+        setenv WM_CFLAGS '-fPIC'
+        setenv WM_CXXFLAGS '-fPIC -std=c++0x'
+        setenv WM_LDFLAGS
+        breaksw
+
     case ppc64:
         setenv WM_ARCH linuxPPC64
         setenv WM_COMPILER_LIB_ARCH 64
@@ -129,13 +139,14 @@ case SunOS:
     setenv WM_LDFLAGS '-mabi=64 -G0'
     breaksw
 
-default:
-    echo
-    echo "Your '$WM_ARCH' operating system is not supported by this release"
-    echo "of OpenFOAM. For further assistance, please contact https://openfoam.org"
-    echo
-    breaksw
+default: # An unsupported operating system
+    /bin/cat <<USAGE
 
+    Your "$WM_ARCH" operating system is not supported by this release
+    of OpenFOAM. For further assistance, please contact https://openfoam.org
+
+USAGE
+    breaksw
 endsw
 
 
@@ -213,59 +224,23 @@ _foamAddLib  ${FOAM_USER_LIBBIN}:${FOAM_SITE_LIBBIN}:${FOAM_LIBBIN}:${FOAM_EXT_L
 unset gcc_version gmp_version mpfr_version mpc_version
 unsetenv MPFR_ARCH_PATH GMP_ARCH_PATH
 
-
 # Location of compiler installation
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if ( ! $?WM_COMPILER_TYPE ) then
     set WM_COMPILER_TYPE=system
-    echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
-    echo "    WM_COMPILER_TYPE not set, using '$WM_COMPILER_TYPE'"
+    /bin/cat <<USAGE
+Warning in $WM_PROJECT_DIR/etc/config.sh/settings:
+    WM_COMPILER_TYPE not set, using '$WM_COMPILER_TYPE'
+USAGE
 endif
+
+# Load configured compiler versions, regardless of the compiler type
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/compiler`
 
 switch ("$WM_COMPILER_TYPE")
 case OpenFOAM:
 case ThirdParty:
-    # Default versions of GMP, MPFR and MPC, override as necessary
-    set gmp_version=gmp-5.1.2
-    set mpfr_version=mpfr-3.1.2
-    set mpc_version=mpc-1.0.1
-
-    switch ("$WM_COMPILER")
-    case Gcc55:
-        set gcc_version=gcc-5.5.0
-        breaksw
-    case Gcc65:
-        set gcc_version=gcc-6.5.0
-        breaksw
-    case Gcc74:
-        set gcc_version=gcc-7.4.0
-        breaksw
-    case Gcc82:
-        set gcc_version=gcc-8.2.0
-        breaksw
-    case Gcc111:
-        set gcc_version=gcc-11.1.0
-        breaksw
-    case Gcc121:
-        set gcc_version=gcc-12.1.0
-        breaksw
-    case Clang:
-        # Using clang - not gcc
-        setenv WM_CC 'clang'
-        setenv WM_CXX 'clang++'
-        set clang_version=llvm-3.7.0
-        breaksw
-    default:
-        echo
-        echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
-        echo "    Unknown OpenFOAM compiler type '$WM_COMPILER'"
-        echo "    Please check your settings"
-        echo
-        breaksw
-    endsw
-
-    # Optional configuration tweaks:
-    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/compiler`
 
     if ( $?gcc_version ) then
         set gccDir=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER_ARCH/$gcc_version
@@ -277,13 +252,14 @@ case ThirdParty:
 
         # Check that the compiler directory can be found
         if ( ! -d "$gccDir" ) then
-            echo
-            echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
-            echo "    Cannot find $gccDir installation."
-            echo "    Please install this compiler version or if you wish to" \
-                 " use the system compiler,"
-            echo "    change the 'WM_COMPILER_TYPE' setting to 'system'"
-            echo
+            /bin/cat <<USAGE
+
+Warning in $WM_PROJECT_DIR/etc/config.csh/settings:
+    Cannot find $gccDir installation.
+    Please install this compiler version or if you wish to use the system compiler,
+    change the 'WM_COMPILER_TYPE' setting to 'system'
+
+USAGE
         endif
 
         _foamAddMan     $gccDir/man
@@ -302,27 +278,27 @@ case ThirdParty:
         endif
     endif
     unset gcc_version gccDir
-    unset gmp_version gmpDir  mpfr_version mpfrDir  mpc_version mpcDir
+    unset gmp_version gmpDir mpfr_version mpfrDir mpc_version mpcDir
 
     if ( $?clang_version ) then
         set clangDir=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER_ARCH/$clang_version
 
         # Check that the compiler directory can be found
         if ( ! -d "$clangDir" ) then
-            echo
-            echo "Warning in $WM_PROJECT_DIR/etc/config.csh/settings:"
-            echo "    Cannot find $clangDir installation."
-            echo "    Please install this compiler version or if you wish to" \
-                 " use the system compiler,"
-            echo "    change the 'WM_COMPILER_TYPE' setting to 'system'"
-            echo
+            /bin/cat <<USAGE
+
+Warning in $WM_PROJECT_DIR/etc/config.csh/settings:
+    Cannot find $clangDir installation.
+    Please install this compiler version or if you wish to use the system compiler,
+    change the 'WM_COMPILER_TYPE' setting to 'system'
+
+USAGE
         endif
 
-        _foamAddMan     $clangDir/man
+        _foamAddMan     $clangDir/share/man
         _foamAddPath    $clangDir/bin
     endif
     unset clang_version clangDir
-
     breaksw
 
 case system:
@@ -330,16 +306,16 @@ case system:
     breaksw
 
 default:
-    echo "Warn: WM_COMPILER_TYPE='$WM_COMPILER_TYPE' is unsupported"
-    echo "   treating as 'system' instead"
+    /bin/cat <<USAGE
+Warn: WM_COMPILER_TYPE='$WM_COMPILER_TYPE' is unsupported
+   treating as 'system' instead
+USAGE
     breaksw
 endsw
 
 
 # Cleanup environment:
 # ~~~~~~~~~~~~~~~~~~~~
-#- keep _foamAddPath _foamAddLib _foamAddMan
-unset minBufferSize
 unsetenv WM_COMPILER_TYPE
 
 #------------------------------------------------------------------------------

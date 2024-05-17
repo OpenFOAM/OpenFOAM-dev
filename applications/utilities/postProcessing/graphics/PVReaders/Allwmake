@@ -10,12 +10,6 @@ then
     exit 0
 fi
 
-if [ -z "$PV_PLUGIN_PATH" ]
-then
-    echo "    Error: \$PV_PLUGIN_PATH is unset."
-    exit 1
-fi
-
 # Ensure CMake gets the correct C/C++ compilers
 [ -n "$WM_CC" ] && export CC="$WM_CC"
 [ -n "$WM_CXX" ] && export CXX="$WM_CXX"

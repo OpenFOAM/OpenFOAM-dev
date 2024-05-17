@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -26,7 +26,7 @@
 #
 # Description
 #     Initialisation script functions for the bashrc environment
-#     Sourced from OpenFOAM-<VERSION>/etc/config.sh/bashrc
+#     Sourced from OpenFOAM-<VERSION>/etc/bashrc
 #
 #------------------------------------------------------------------------------
 
@@ -102,12 +102,44 @@ then
         done
     }
 
+    # Find the most recent of a list of versioned directories
+    _foamMostRecentDir()
+    {
+        _mostRecentDir=
+
+        while [ $# -gt 0 ]
+        do
+            if [ -d "$1" ]
+            then
+                if [ -z "$_mostRecentDir" ] ||
+                   "$WM_PROJECT_DIR"/bin/tools/foamVersionCompare \
+                   "$_mostRecentDir" lt $1
+                then
+                    _mostRecentDir=$1
+                fi
+            fi
+            shift
+        done
+
+        if [ -n "$_mostRecentDir" ]
+        then
+            echo "$_mostRecentDir"
+        fi
+
+        unset _mostRecentDir
+    }
+
 else
 
     # Cleanup environment:
     # ~~~~~~~~~~~~~~~~~~~~
     unset WM_BASH_FUNCTIONS
+    unset _foamSource
+    unset _foamParams
     unset _foamAddPath _foamAddLib _foamAddMan
-    unset _foamSource _foamParams
+    unset _foamMostRecentDir
 
 fi
+
+
+#------------------------------------------------------------------------------

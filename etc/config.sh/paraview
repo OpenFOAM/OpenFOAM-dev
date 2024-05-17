@@ -28,135 +28,138 @@
 #     Setup file for paraview-[4-5].x
 #     Sourced from OpenFOAM-<VERSION>/etc/bashrc or from foamPV alias
 #
-# Note
-#     The env. variables 'ParaView_DIR' and 'ParaView_MAJOR'
-#     are required for building plugins
 #------------------------------------------------------------------------------
 
 # Clean the PATH
-cleaned=$($WM_PROJECT_DIR/bin/foamCleanPath "$PATH" \
+cleaned=$("$WM_PROJECT_DIR"/bin/foamCleanPath "$PATH" \
         "/opt/paraviewopenfoam \
          $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/cmake- \
          $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/ParaView-" \
         ) \
         && PATH="$cleaned"
 
-# Determine the cmake to be used. Take the most recent.
-unset CMAKE_HOME CMAKE_ROOT
-for cmake in $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/cmake-*
-do
-    if [ -d $cmake ]
-    then
-        if [ -z $CMAKE_HOME ] || \
-            $WM_PROJECT_DIR/bin/tools/foamVersionCompare $CMAKE_HOME lt $cmake
-        then
-            export CMAKE_HOME=$cmake
-            export CMAKE_ROOT=$cmake
-        fi
-    fi
-done
-if [ -n $CMAKE_HOME ]
+# Detect the most recent version of cmake available and add to the PATH
+cmakeDir=$(_foamMostRecentDir "$WM_THIRD_PARTY_DIR"/platforms/$WM_ARCH$WM_COMPILER/cmake-*)
+if [ -n "$cmakeDir" ]
 then
-    export PATH=$cmake/bin:$PATH
+    export PATH=$cmakeDir/bin:$PATH
 fi
+unset cmakeDir
 
-#- ParaView version, automatically determine major version
-#export ParaView_VERSION=5.6.3
-export ParaView_VERSION=5.10.1
-export ParaView_MAJOR=detect
-
-#export ParaView_GL=system
-export ParaView_GL=mesa
-
-# Evaluate command-line parameters for ParaView
-_foamParaviewEval()
-{
-    while [ $# -gt 0 ]
-    do
-        case "$1" in
-        ParaView*=*)
-            # name=value  -> export name=value
-            eval "export $1"
-            ;;
-        esac
-        shift
-    done
-}
-
-# Evaluate command-line parameters
-_foamParaviewEval $@
-
-# Set MAJOR version to correspond to VERSION
-# ParaView_MAJOR is "<digits>.<digits>" from ParaView_VERSION
-case "$ParaView_VERSION" in
-"$ParaView_MAJOR".* )
-    # Version and major appear to correspond
+# Set up the paraview environment
+case "$ParaView_TYPE" in
+none)
     ;;
 
-[0-9]*)
-    # Extract major from the version
-    ParaView_MAJOR=$(echo $ParaView_VERSION | \
-                   sed -e 's/^\([0-9][0-9]*\.[0-9][0-9]*\).*$/\1/')
+system)
+
+    # Look for a paraview installation
+    if pvserverExe=$(which pvserver 2> /dev/null)
+    then
+        paraviewBinDir=$(dirname $pvserverExe)
+        paraviewBinDir=$(cd $paraviewBinDir && pwd -P)
+    fi
+
+    # Set the environment
+    if [ -d "$paraviewBinDir" ]
+    then
+        export ParaView_DIR=$(dirname $paraviewBinDir)
+        export ParaView_LIB_DIR=$(unset LD_LIBRARY_PATH && \
+                                  ldd $paraviewBinDir/paraview | \
+                                  grep -o "/.*/libpqCore-pv.*.so" | \
+                                  xargs dirname)
+        export ParaView_VERSION=$(unset LD_LIBRARY_PATH && \
+                                  pvserver --version 2> /dev/null | \
+                                  awk '{print $NF}')
+        export ParaView_MAJOR=${ParaView_VERSION%.*}
+        export ParaView_INCLUDE_DIR=$ParaView_DIR/include/paraview-$ParaView_MAJOR
+        export PV_PLUGIN_PATH=$FOAM_LIBBIN/paraview-$ParaView_MAJOR
+
+        # Add to the library path
+        export LD_LIBRARY_PATH=$ParaView_LIB_DIR:$PV_PLUGIN_PATH:$LD_LIBRARY_PATH
+    fi
+
+    unset pvserverExe paraviewBinDir
     ;;
+
+paraviewopenfoam)
+
+    # Look for a paraview installation. The version should be set externally.
+    if [ -n "$ParaView_VERSION" ]
+    then
+        export ParaView_MAJOR=${ParaView_VERSION%.*}
+        paraviewDir=/opt/paraviewopenfoam$(echo "$ParaView_MAJOR" | tr -d '.')
+    fi
+
+    # Set the environment
+    if [ -d "$paraviewDir" ]
+    then
+        export ParaView_DIR=$paraviewDir
+        export ParaView_LIB_DIR=$(echo "$ParaView_DIR"/lib* | tr ' ' ':')
+        export ParaView_INCLUDE_DIR=$ParaView_DIR/include/paraview-$ParaView_MAJOR
+        export PV_PLUGIN_PATH=$FOAM_LIBBIN/paraview-$ParaView_MAJOR
+
+        # Add to the path and the library path
+        export PATH=$ParaView_DIR/bin:$PATH
+        export LD_LIBRARY_PATH=$ParaView_LIB_DIR:$PV_PLUGIN_PATH:$LD_LIBRARY_PATH
+    fi
+
+    unset paraviewDir
+    ;;
+
+OpenFOAM | ThirdParty)
+
+    # Look for a paraview installation
+    if [ -z "$ParaView_VERSION" ]
+    then
+        paraviewDir=$(_foamMostRecentDir "$WM_THIRD_PARTY_DIR"/platforms/$WM_ARCH$WM_COMPILER/ParaView-*)
+    else
+        paraviewDir=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/ParaView-$ParaView_VERSION
+    fi
+
+    # Set the environment
+    if [ -d "$paraviewDir" ]
+    then
+        export ParaView_DIR=$paraviewDir
+        export ParaView_LIB_DIR=$(echo "$ParaView_DIR"/lib* | tr ' ' ':')
+        export ParaView_VERSION=${paraviewDir##*ParaView-}
+        export ParaView_MAJOR=${ParaView_VERSION%.*}
+        export ParaView_INCLUDE_DIR=$paraviewDir/include/paraview-$ParaView_MAJOR
+        export PV_PLUGIN_PATH=$FOAM_LIBBIN/paraview-$ParaView_MAJOR
+
+        # Add to the path and the library path
+        export PATH=$ParaView_DIR/bin:$PATH
+        export LD_LIBRARY_PATH=$ParaView_LIB_DIR:$PV_PLUGIN_PATH:$LD_LIBRARY_PATH
+
+        # Add in python libraries if required
+        paraviewPython=$ParaView_DIR/Utilities/VTKPythonWrapping
+        if [ -r "$paraviewPython" ]
+        then
+            if [ "$PYTHONPATH" ]
+            then
+                export PYTHONPATH=$PYTHONPATH:$paraviewPython:$ParaView_LIB_DIR
+            else
+                export PYTHONPATH=$paraviewPython:$ParaView_LIB_DIR
+            fi
+        fi
+        unset paraviewPython
+    fi
+
+    unset paraviewDir
+    ;;
+
 esac
-export ParaView_VERSION ParaView_MAJOR
 
-# Set the binary and source directories
-export ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/ParaView-$ParaView_VERSION
-paraviewSrcDir=$WM_THIRD_PARTY_DIR/ParaView-$ParaView_VERSION
-
-# Set paths if binaries or source are present
-if [ -d $ParaView_DIR -o -d $paraviewSrcDir ]
+# Report
+if [ "$FOAM_VERBOSE" ] && [ "$PS1" ] && [ -d "$ParaView_DIR" ]
 then
-    export ParaView_INCLUDE_DIR=$ParaView_DIR/include/paraview-$ParaView_MAJOR
-
-    paraviewArch=
-    if [ -d $ParaView_DIR/lib64 ]
-    then
-        paraviewArch=64
-    fi
-    paraviewLibSubDir=
-    if $WM_PROJECT_DIR/bin/tools/foamVersionCompare $ParaView_VERSION lt 5.5.0
-    then
-        paraviewLibSubDir=/paraview-$ParaView_MAJOR
-    fi
-    export ParaView_LIB_DIR=$ParaView_DIR/lib$paraviewArch$paraviewLibSubDir
-
-    export PATH=$ParaView_DIR/bin:$PATH
-    export LD_LIBRARY_PATH=$ParaView_LIB_DIR:$LD_LIBRARY_PATH
-    export PV_PLUGIN_PATH=$FOAM_LIBBIN/paraview-$ParaView_MAJOR
-
-    if [ "$FOAM_VERBOSE" -a "$PS1" ]
-    then
-        echo "Using paraview"
-        echo "    ParaView_DIR         : $ParaView_DIR"
-        echo "    ParaView_LIB_DIR     : $ParaView_LIB_DIR"
-        echo "    ParaView_INCLUDE_DIR : $ParaView_INCLUDE_DIR"
-        echo "    PV_PLUGIN_PATH       : $PV_PLUGIN_PATH"
-    fi
-
-    # Add in python libraries if required
-    paraviewPython=$ParaView_DIR/Utilities/VTKPythonWrapping
-    if [ -r $paraviewPython ]
-    then
-        if [ "$PYTHONPATH" ]
-        then
-            export PYTHONPATH=$PYTHONPATH:$paraviewPython:$ParaView_LIB_DIR
-        else
-            export PYTHONPATH=$paraviewPython:$ParaView_LIB_DIR
-        fi
-    fi
-
-    # Alias paraview to launch with mesa if necessary
-    if [ "$ParaView_GL" = mesa ]
-    then
-        alias paraview='LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ParaView_LIB_DIR/mesa paraview'
-    fi
-else
-    unset PV_PLUGIN_PATH
+    echo "Using paraview"
+    echo "    ParaView_DIR         : $ParaView_DIR"
+    echo "    ParaView_LIB_DIR     : $ParaView_LIB_DIR"
+    echo "    ParaView_INCLUDE_DIR : $ParaView_INCLUDE_DIR"
+    echo "    PV_PLUGIN_PATH       : $PV_PLUGIN_PATH"
 fi
 
-unset _foamParaviewEval
-unset cleaned cmake paraviewInstDir paraviewPython
+unset cleaned
 
 #------------------------------------------------------------------------------

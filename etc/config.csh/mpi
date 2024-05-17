@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -30,9 +30,6 @@
 #
 #------------------------------------------------------------------------------
 
-# Communications library
-# ~~~~~~~~~~~~~~~~~~~~~~
-
 unsetenv MPI_ARCH_PATH MPI_HOME FOAM_MPI_LIBBIN
 
 switch ("$WM_MPLIB")
@@ -43,7 +40,7 @@ case SYSTEMOPENMPI:
     set libDir=`mpicc --showme:link | sed -e 's/.*-L\([^ ]*\).*/\1/'`
 
     # Bit of a hack: strip off 'lib' and hope this is the path to openmpi
-    # Include files and libraries.
+    # include files and libraries.
     setenv MPI_ARCH_PATH "${libDir:h}"
 
     _foamAddLib     $libDir
@@ -266,7 +263,6 @@ if ( "$FOAM_MPI" != dummy ) then
 endif
 
 
-
 # Set the minimum MPI buffer size (used by all platforms except SGI MPI)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if ( ! $?minBufferSize ) set minBufferSize=20000000
@@ -278,5 +274,10 @@ if ( $?MPI_BUFFER_SIZE ) then
 else
     setenv MPI_BUFFER_SIZE $minBufferSize
 endif
+
+
+# Cleanup environment:
+# ~~~~~~~~~~~~~~~~~~~~
+unset minBufferSize
 
 #------------------------------------------------------------------------------

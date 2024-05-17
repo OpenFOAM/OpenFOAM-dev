@@ -22,41 +22,62 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # File
-#     config.csh/example/prefs.csh
+#     etc/config.csh/settings
 #
 # Description
-#     Preset variables for the OpenFOAM configuration - C-Shell shell syntax.
-#
-#     The prefs.csh file will be sourced by the OpenFOAM etc/cshrc when it is
-#     found by foamEtcFile.
-#
-# See also
-#     'foamEtcFile -help' or 'foamEtcFile -list' for information about the
-#     paths searched
+#     Startup file for OpenFOAM
+#     Sourced from OpenFOAM-<VERSION>/etc/cshrc
 #
 #------------------------------------------------------------------------------
 
-## Specify OpenFOAM ThirdParty compiler
-## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#setenv WM_COMPILER_TYPE ThirdParty
+switch ("$WM_COMPILER_TYPE")
+case OpenFOAM:
+case ThirdParty:
 
-## Specify compiler type
-## ~~~~~~~~~~~~~~~~~~~~~
-#setenv WM_COMPILER Clang
+    # Default versions of GMP, MPFR and MPC, override as necessary
+    set gmp_version=gmp-5.1.2
+    set mpfr_version=mpfr-3.1.2
+    set mpc_version=mpc-1.0.1
 
-## Specify system openmpi
-## ~~~~~~~~~~~~~~~~~~~~~~
-#setenv WM_MPLIB SYSTEMOPENMPI
+    switch ("$WM_COMPILER")
+    case Gcc55:
+        set gcc_version=gcc-5.5.0
+        breaksw
+    case Gcc65:
+        set gcc_version=gcc-6.5.0
+        breaksw
+    case Gcc74:
+        set gcc_version=gcc-7.4.0
+        breaksw
+    case Gcc82:
+        set gcc_version=gcc-8.2.0
+        breaksw
+    case Gcc95:
+        set gcc_version=gcc-9.5.0
+        breaksw
+    case Gcc111:
+        set gcc_version=gcc-11.1.0
+        breaksw
+    case Gcc121:
+        set gcc_version=gcc-12.1.0
+        breaksw
+    case Clang:
+        # Using clang - not gcc
+        setenv WM_CC 'clang'
+        setenv WM_CXX 'clang++'
+        set clang_version=llvm-3.7.0
+        breaksw
+    default:
+        /bin/cat <<USAGE
 
-## Specify options for decomposition libraries
-## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#setenv SCOTCH_TYPE system
-#setenv METIS_TYPE ThirdParty
-#setenv METIS_VERSION 5.1.0
-#setenv PARMETIS_TYPE ThirdParty
-#setenv ZOLTAN_TYPE ThirdParty
+Warning in $WM_PROJECT_DIR/etc/config.csh/settings:
+    Unknown OpenFOAM compiler type '$WM_COMPILER'
+    Please check your settings
 
-## Specify system ParaView
-#setenv ParaView_TYPE system
+USAGE
+        breaksw
+    endsw
+    breaksw
+endsw
 
 #------------------------------------------------------------------------------

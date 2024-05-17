@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -34,7 +34,37 @@
 #
 #------------------------------------------------------------------------------
 
-export METIS_VERSION=metis-5.1.0
-export METIS_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_PRECISION_OPTION$WM_LABEL_OPTION/$METIS_VERSION
+# Load functions
+. $WM_PROJECT_DIR/etc/config.sh/functions
+
+# Find the path to the metis installation
+case "$METIS_TYPE" in
+none)
+    ;;
+system)
+    export METIS_VERSION=system
+    export METIS_ARCH_PATH=/usr
+    ;;
+OpenFOAM | ThirdParty)
+    # Look for the source directory
+    if [ -z "$METIS_VERSION" ]
+    then
+        metisSrcDir=$(_foamMostRecentDir "$WM_THIRD_PARTY_DIR"/metis-*)
+    else
+        metisSrcDir=$WM_THIRD_PARTY_DIR/metis-$METIS_VERSION
+    fi
+    # Set the version and the installation path
+    if [ -d "$metisSrcDir" ]
+    then
+        export METIS_VERSION=${metisSrcDir##*metis-}
+        export METIS_ARCH_PATH=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER$WM_PRECISION_OPTION$WM_LABEL_OPTION/metis-$METIS_VERSION
+    fi
+    # Clean up
+    unset metisSrcDir
+    ;;
+esac
+
+# Unload functions
+. $WM_PROJECT_DIR/etc/config.sh/functions
 
 #------------------------------------------------------------------------------

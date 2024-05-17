@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -38,7 +38,7 @@
 
 ## Specify OpenFOAM ThirdParty compiler
 ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#WM_COMPILER_TYPE=ThirdParty
+#export WM_COMPILER_TYPE=ThirdParty
 
 ## Specify compiler type
 ## ~~~~~~~~~~~~~~~~~~~~~
@@ -48,5 +48,15 @@
 ## ~~~~~~~~~~~~~~~~~~~~~~
 #export WM_MPLIB=SYSTEMOPENMPI
 
+## Specify options for decomposition libraries
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#export SCOTCH_TYPE=system
+#export METIS_TYPE=ThirdParty
+#export METIS_VERSION=5.1.0
+#export PARMETIS_TYPE=ThirdParty
+#export ZOLTAN_TYPE=ThirdParty
+
+## Specify system ParaView
+#export ParaView_TYPE=system
 
 #------------------------------------------------------------------------------

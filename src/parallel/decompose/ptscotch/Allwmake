@@ -4,25 +4,21 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-. $WM_PROJECT_DIR/wmake/scripts/AllwmakeMpiLib
-
-# Get SCOTCH_VERSION, SCOTCH_ARCH_PATH
-if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/scotch`
+# Build if Scotch is enabled and MPI is available
+if [ -n "$WM_MPLIB" ] && [ -d "$FOAM_LIBBIN/$FOAM_MPI" ]
 then
-    . $settings
-    echo "    using SCOTCH_ARCH_PATH=$SCOTCH_ARCH_PATH"
-    if [ -n "$SCOTCH_ARCH_PATH" ] \
-    && [ -n "$WM_MPLIB" ] \
-    && [ -d "$FOAM_LIBBIN/$FOAM_MPI" ]
-    then
-        wmakeMpiLib $SCOTCH_VERSION ptscotch
-    else
-        echo "    skipping ptscotch"
-    fi
+    case $SCOTCH_TYPE in
+    none)
+        ;;
+    *)
+        . $WM_PROJECT_DIR/wmake/scripts/AllwmakeMpiLib
+        . $($WM_PROJECT_DIR/bin/foamEtcFile config.sh/scotch)
+        echo "    using SCOTCH_ARCH_PATH=$SCOTCH_ARCH_PATH"
+        wmakeMpiLib scotch_$SCOTCH_VERSION ptscotch
+        ;;
+    esac
 else
-    echo
-    echo "    Error: no config.sh/scotch settings"
-    echo
+    echo "    skipping ptscotch"
 fi
 
 #------------------------------------------------------------------------------
