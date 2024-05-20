@@ -24,10 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "lumpedMassTemperatureFvPatchScalarField.H"
-#include "addToRunTimeSelectionTable.H"
 #include "fieldMapper.H"
 #include "thermophysicalTransportModel.H"
 #include "ZeroConstant.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -68,10 +68,21 @@ lumpedMassTemperatureFvPatchScalarField
     Q_
     (
         dict.found("Q")
-      ? Function1<scalar>::New("Q", dict)
+      ? Function1<scalar>::New
+        (
+            "Q",
+            db().time().userUnits(),
+            dimPower,
+            dict
+        )
       : autoPtr<Function1<scalar>>
         (
-            new Function1s::ZeroConstant<scalar>("Q", dict)
+            new Function1s::ZeroConstant<scalar>
+            (
+                "Q",
+                {db().time().userUnits(), dimPower},
+                dict
+            )
         )
     ),
     V_(NaN)
