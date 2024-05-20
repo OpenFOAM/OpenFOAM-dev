@@ -29,7 +29,6 @@ boundaryField
     {
         type            fixedMean;
         meanValue       constant 1 [bar];
-        value           $internalField;
     }
 
     symmetry

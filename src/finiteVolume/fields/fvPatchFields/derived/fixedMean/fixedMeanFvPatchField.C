@@ -36,7 +36,7 @@ Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<Type>(p, iF, dict),
+    fixedValueFvPatchField<Type>(p, iF),
     meanValue_
     (
         Function1<Type>::New
@@ -47,7 +47,9 @@ Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
             dict
         )
     )
-{}
+{
+    this->evaluate();
+}
 
 
 template<class Type>
