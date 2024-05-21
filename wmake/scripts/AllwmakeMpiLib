@@ -44,7 +44,7 @@ wmakeMpiLib()
         WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
         whichmpi="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$FOAM_MPI"
         whichtarget="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$version"
-        [ -e "$whichmpi" -a -e "$whichtarget" ] || wclean $libName
+        [ -e "$whichmpi" -a -e "$whichtarget" ] || wclean -noLnInclude $libName
         echo "wmake $targetType $libName"
         wmake $targetType $libName
         touch "$whichmpi" "$whichtarget"
