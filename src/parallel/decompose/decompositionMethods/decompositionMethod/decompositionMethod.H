@@ -53,6 +53,7 @@ protected:
     // Protected data
 
         dictionary decompositionDict_;
+
         label nProcessors_;
 
         //- Optional constraints
@@ -214,6 +215,15 @@ public:
 
         // Other
 
+            //- Convert the given scalar weights to labels
+            //  in the range 0-labelMax/2
+            static labelList scaleWeights
+            (
+                const scalarField& weights,
+                const label nWeights,
+                const bool distributed = true
+            );
+
             //- Helper: determine (local or global) cellCells from mesh
             //  agglomeration. Agglomeration is local to the processor.
             //  local  : connections are in local indices. Coupled across
@@ -301,7 +311,7 @@ public:
             labelList decompose
             (
                 const polyMesh& mesh,
-                const scalarField& cWeights
+                const scalarField& cellWeights
             );
 
 

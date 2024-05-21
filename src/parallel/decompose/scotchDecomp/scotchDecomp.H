@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -233,20 +233,20 @@ class scotchDecomp
         label decompose
         (
             const fileName& meshPath,
-            const List<label>& adjncy,
-            const List<label>& xadj,
-            const scalarField& cWeights,
-            List<label>& finalDecomp
+            const labelList& adjncy,
+            const labelList& xadj,
+            const scalarField& cellWeights,
+            labelList& decomp
         );
 
         //- Decompose non-parallel
         label decomposeOneProc
         (
             const fileName& meshPath,
-            const List<label>& adjncy,
-            const List<label>& xadj,
-            const scalarField& cWeights,
-            List<label>& finalDecomp
+            const labelList& adjncy,
+            const labelList& xadj,
+            const scalarField& cellWeights,
+            labelList& decomp
         );
 
 
@@ -311,8 +311,8 @@ public:
         virtual labelList decompose
         (
             const labelListList& globalCellCells,
-            const pointField& cc,
-            const scalarField& cWeights
+            const pointField& cellCentres,
+            const scalarField& cellWeights
         );
 
 

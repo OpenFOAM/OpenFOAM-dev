@@ -75,8 +75,8 @@ class ptscotchDecomp
             const fileName& meshPath,
             const labelList& adjncy,
             const labelList& xadj,
-            const scalarField& cWeights,
-            labelList& finalDecomp
+            const scalarField& cellWeights,
+            labelList& decomp
         ) const;
 
         //- Low level decompose
@@ -87,8 +87,8 @@ class ptscotchDecomp
             const label adjncy[],
             const label xadjSize,
             const label xadj[],
-            const scalarField& cWeights,
-            labelList& finalDecomp
+            const scalarField& cellWeights,
+            labelList& decomp
         ) const;
 
 
@@ -149,8 +149,8 @@ public:
         virtual labelList decompose
         (
             const labelListList& globalCellCells,
-            const pointField& cc,
-            const scalarField& cWeights
+            const pointField& cellCentres,
+            const scalarField& cellWeights
         );
 
 

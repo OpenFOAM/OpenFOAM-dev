@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -249,14 +249,14 @@ Foam::labelList Foam::decompositionMethod::decompose
     const pointField& coarsePoints
 )
 {
-    scalarField cWeights(coarsePoints.size(), 1.0);
+    scalarField cellWeights(coarsePoints.size(), 1.0);
 
     return decompose
     (
         mesh,
         fineToCoarse,
         coarsePoints,
-        cWeights
+        cellWeights
     );
 }
 
@@ -264,12 +264,43 @@ Foam::labelList Foam::decompositionMethod::decompose
 Foam::labelList Foam::decompositionMethod::decompose
 (
     const labelListList& globalCellCells,
-    const pointField& cc
+    const pointField& cellCentres
 )
 {
-    scalarField cWeights(cc.size(), 1.0);
+    scalarField cellWeights(cellCentres.size(), 1.0);
 
-    return decompose(globalCellCells, cc, cWeights);
+    return decompose(globalCellCells, cellCentres, cellWeights);
+}
+
+
+Foam::labelList Foam::decompositionMethod::scaleWeights
+(
+    const scalarField& weights,
+    const label nWeights,
+    const bool distributed
+)
+{
+    labelList intWeights;
+
+    if (weights.size() > 0)
+    {
+        const scalar sumWeights
+        (
+            distributed
+          ? gSum(weights)
+          : sum(weights)
+        );
+        const scalar scale = labelMax/(2*sumWeights);
+
+        // Convert to integers.
+        intWeights.setSize(weights.size());
+        forAll(intWeights, i)
+        {
+            intWeights[i] = ceil(scale*weights[i]);
+        }
+    }
+
+    return intWeights;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ class zoltanDecomp
         (
             const CompactListList<label>& adjacency,
             const pointField& points,
-            const scalarField& cWeights,
+            const scalarField& cellWeights,
             List<label>& finalDecomp
         ) const;
 
@@ -163,8 +163,8 @@ public:
         virtual labelList decompose
         (
             const labelListList& globalCellCells,
-            const pointField& cc,
-            const scalarField& cWeights
+            const pointField& cellCentres,
+            const scalarField& cellWeights
         );
 
 

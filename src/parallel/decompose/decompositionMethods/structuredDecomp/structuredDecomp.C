@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,8 +69,8 @@ Foam::structuredDecomp::structuredDecomp(const dictionary& decompositionDict)
 Foam::labelList Foam::structuredDecomp::decompose
 (
     const polyMesh& mesh,
-    const pointField& cc,
-    const scalarField& cWeights
+    const pointField& cellCentres,
+    const scalarField& cellWeights
 )
 {
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
@@ -97,15 +97,15 @@ Foam::labelList Foam::structuredDecomp::decompose
     fvMeshSubset subsetter(dynamic_cast<const fvMesh&>(mesh));
     subsetter.setLargeCellSubset(patchCells);
     const fvMesh& subMesh = subsetter.subMesh();
-    pointField subCc(cc, subsetter.cellMap());
-    scalarField subWeights(cWeights, subsetter.cellMap());
+    pointField subCc(cellCentres, subsetter.cellMap());
+    scalarField subWeights(cellWeights, subsetter.cellMap());
 
     // Decompose the layer of cells
     labelList subDecomp(method_().decompose(subMesh, subCc, subWeights));
 
 
     // Transfer to final decomposition
-    labelList finalDecomp(cc.size(), -1);
+    labelList finalDecomp(cellCentres.size(), -1);
     forAll(subDecomp, i)
     {
         finalDecomp[subsetter.cellMap()[i]] = subDecomp[i];

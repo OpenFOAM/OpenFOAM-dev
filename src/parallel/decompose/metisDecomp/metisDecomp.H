@@ -53,10 +53,10 @@ class metisDecomp
         //- Call Metis with options from dictionary.
         label decompose
         (
-            const List<label>& adjncy,
-            const List<label>& xadj,
+            const labelList& adjncy,
+            const labelList& xadj,
             const scalarField& cellWeights,
-            List<label>& finalDecomp
+            labelList& finalDecomp
         );
 
 

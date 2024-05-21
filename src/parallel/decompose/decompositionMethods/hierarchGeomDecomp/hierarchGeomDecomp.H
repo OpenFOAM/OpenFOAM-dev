@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,18 +194,22 @@ public:
         virtual labelList decompose
         (
             const polyMesh& mesh,
-            const pointField& cc,
-            const scalarField& cWeights
+            const pointField& cellCentres,
+            const scalarField& cellWeights
         )
         {
-            return decompose(cc, cWeights);
+            return decompose(cellCentres, cellWeights);
         }
 
         //- Without weights. Code for weighted decomposition is a bit complex
         //  so kept separate for now.
-        virtual labelList decompose(const polyMesh& mesh, const pointField& cc)
+        virtual labelList decompose
+        (
+            const polyMesh& mesh,
+            const pointField& cellCentres
+        )
         {
-            return decompose(cc);
+            return decompose(cellCentres);
         }
 
         //- Return for every coordinate the wanted processor number. Explicitly
@@ -218,11 +222,11 @@ public:
         virtual labelList decompose
         (
             const labelListList& globalCellCells,
-            const pointField& cc,
-            const scalarField& cWeights
+            const pointField& cellCentres,
+            const scalarField& cellWeights
         )
         {
-            return decompose(cc, cWeights);
+            return decompose(cellCentres, cellWeights);
         }
 
         virtual labelList decompose

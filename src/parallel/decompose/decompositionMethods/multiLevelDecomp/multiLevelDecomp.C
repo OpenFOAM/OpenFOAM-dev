@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,8 +136,7 @@ void Foam::multiLevelDecomp::decompose
     const scalarField& pointWeights,
     const labelList& pointMap,      // map back to original points
     const label levelI,
-
-    labelField& finalDecomp
+    labelField& decomp
 )
 {
     labelList dist
@@ -153,7 +152,7 @@ void Foam::multiLevelDecomp::decompose
     forAll(pointMap, i)
     {
         label orig = pointMap[i];
-        finalDecomp[orig] += dist[i];
+        decomp[orig] += dist[i];
     }
 
     if (levelI != methods_.size()-1)
@@ -165,7 +164,7 @@ void Foam::multiLevelDecomp::decompose
         labelListList domainToPoints(invertOneToMany(n, dist));
 
         // 'Make space' for new levels of decomposition
-        finalDecomp *= methods_[levelI+1].nDomains();
+        decomp *= methods_[levelI+1].nDomains();
 
         // Extract processor+local index from point-point addressing
         if (debug && Pstream::master())
@@ -233,7 +232,7 @@ void Foam::multiLevelDecomp::decompose
                 subPointMap,
                 levelI+1,
 
-                finalDecomp
+                decomp
             );
             if (debug && Pstream::master())
             {
@@ -374,28 +373,35 @@ Foam::multiLevelDecomp::multiLevelDecomp(const dictionary& decompositionDict)
 Foam::labelList Foam::multiLevelDecomp::decompose
 (
     const polyMesh& mesh,
-    const pointField& cc,
-    const scalarField& cWeights
+    const pointField& cellCentres,
+    const scalarField& cellWeights
 )
 {
     CompactListList<label> cellCells;
-    calcCellCells(mesh, identityMap(cc.size()), cc.size(), true, cellCells);
+    calcCellCells
+    (
+        mesh,
+        identityMap(cellCentres.size()),
+        cellCentres.size(),
+        true,
+        cellCells
+    );
 
-    labelField finalDecomp(cc.size(), 0);
-    labelList cellMap(identityMap(cc.size()));
+    labelField decomp(cellCentres.size(), 0);
+    labelList cellMap(identityMap(cellCentres.size()));
 
     decompose
     (
         cellCells.list(),
-        cc,
-        cWeights,
+        cellCentres,
+        cellWeights,
         cellMap,      // map back to original cells
         0,
 
-        finalDecomp
+        decomp
     );
 
-    return finalDecomp;
+    return decomp;
 }
 
 
@@ -406,7 +412,7 @@ Foam::labelList Foam::multiLevelDecomp::decompose
     const scalarField& pointWeights
 )
 {
-    labelField finalDecomp(points.size(), 0);
+    labelField decomp(points.size(), 0);
     labelList pointMap(identityMap(points.size()));
 
     decompose
@@ -417,10 +423,10 @@ Foam::labelList Foam::multiLevelDecomp::decompose
         pointMap,       // map back to original points
         0,
 
-        finalDecomp
+        decomp
     );
 
-    return finalDecomp;
+    return decomp;
 }
 
 
