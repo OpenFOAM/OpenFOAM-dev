@@ -44,7 +44,6 @@ Description
     Since the domains are of equal size the maximum difference in size is
     n[0]*n[1] (or n[1]*n[2]?) (small anyway)
 
-
 SourceFiles
     hierarchGeomDecomp.C
 

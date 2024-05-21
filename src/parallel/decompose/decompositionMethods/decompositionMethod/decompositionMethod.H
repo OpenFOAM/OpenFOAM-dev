@@ -38,6 +38,7 @@ SourceFiles
 #include "polyMesh.H"
 #include "CompactListList.H"
 #include "decompositionConstraint.H"
+#include "IOdictionary.H"
 
 namespace Foam
 {
@@ -128,7 +129,7 @@ public:
         }
 
         //- Read and return the decomposeParDict
-        static dictionary decomposeParDict(const Time& time);
+        static IOdictionary decomposeParDict(const Time& time);
 
 
         // No topology (implemented by geometric decomposers)

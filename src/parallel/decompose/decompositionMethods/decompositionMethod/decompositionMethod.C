@@ -172,7 +172,7 @@ Foam::decompositionMethod::NewDistributor
 }
 
 
-Foam::dictionary Foam::decompositionMethod::decomposeParDict(const Time& time)
+Foam::IOdictionary Foam::decompositionMethod::decomposeParDict(const Time& time)
 {
     return IOdictionary
     (

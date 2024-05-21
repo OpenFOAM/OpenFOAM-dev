@@ -24,10 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "multiLevelDecomp.H"
-#include "addToRunTimeSelectionTable.H"
 #include "IFstream.H"
 #include "globalIndex.H"
 #include "distributionMap.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
