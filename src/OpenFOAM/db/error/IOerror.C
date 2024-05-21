@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,8 @@ Foam::IOerrorLocation::IOerrorLocation()
 :
     ioFileName_("unknown"),
     ioStartLineNumber_(-1),
-    ioEndLineNumber_(-1)
+    ioEndLineNumber_(-1),
+    ioGlobal_(false)
 {}
 
 
@@ -44,12 +45,14 @@ Foam::IOerrorLocation::IOerrorLocation
 (
     const string& ioFileName,
     const label ioStartLineNumber,
-    const label ioEndLineNumber
+    const label ioEndLineNumber,
+    const bool ioGlobal
 )
 :
     ioFileName_(ioFileName),
     ioStartLineNumber_(ioStartLineNumber),
-    ioEndLineNumber_(ioEndLineNumber)
+    ioEndLineNumber_(ioEndLineNumber),
+    ioGlobal_(ioGlobal)
 {}
 
 
@@ -57,7 +60,8 @@ Foam::IOerrorLocation::IOerrorLocation(const IOstream& ios)
 :
     ioFileName_(ios.name()),
     ioStartLineNumber_(ios.lineNumber()),
-    ioEndLineNumber_(-1)
+    ioEndLineNumber_(-1),
+    ioGlobal_(false)
 {}
 
 
@@ -65,7 +69,8 @@ Foam::IOerrorLocation::IOerrorLocation(const dictionary& dict)
 :
     ioFileName_(dict.name()),
     ioStartLineNumber_(dict.startLineNumber()),
-    ioEndLineNumber_(dict.endLineNumber())
+    ioEndLineNumber_(dict.endLineNumber()),
+    ioGlobal_(dict.global())
 {}
 
 
@@ -161,8 +166,20 @@ void Foam::IOerror::exit(const int)
 
     if (Pstream::parRun())
     {
-        Perr<< endl << *this << endl
-            << "\nFOAM parallel run exiting\n" << endl;
+        if (ioGlobal())
+        {
+            if (Pstream::master())
+            {
+                Serr<< endl << *this << endl
+                    << "\nFOAM parallel run exiting\n" << endl;
+            }
+        }
+        else
+        {
+            Perr<< endl << *this << endl
+                << "\nFOAM parallel run exiting\n" << endl;
+        }
+
         Pstream::exit(1);
     }
     else
@@ -205,9 +222,22 @@ void Foam::IOerror::abort()
 
     if (Pstream::parRun())
     {
-        Perr<< endl << *this << endl
-            << "\nFOAM parallel run aborting\n" << endl;
-        printStack(Perr);
+        if (ioGlobal())
+        {
+            if (Pstream::master())
+            {
+                Serr<< endl << *this << endl
+                    << "\nFOAM parallel run aborting\n" << endl;
+                printStack(Perr);
+            }
+        }
+        else
+        {
+            Perr<< endl << *this << endl
+                << "\nFOAM parallel run aborting\n" << endl;
+            printStack(Perr);
+        }
+
         Pstream::abort();
     }
     else
