@@ -9,7 +9,7 @@ if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/scotch`
 then
     . $settings
     echo "    using SCOTCH_ARCH_PATH=$SCOTCH_ARCH_PATH"
-    if [ -r $FOAM_EXT_LIBBIN/libscotch.so ]
+    if [ -n "$SCOTCH_ARCH_PATH" ]
     then
         wmake $targetType
     fi
