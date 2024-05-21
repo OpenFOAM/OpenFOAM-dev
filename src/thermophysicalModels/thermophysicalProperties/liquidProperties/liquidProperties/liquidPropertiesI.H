@@ -203,7 +203,7 @@ inline void Foam::liquidProperties::write
     Ostream& os
 ) const
 {
-    writeEntry(os, {dimTemperature, dims}, f);
+    writeEntry(os, dimTemperature, dims, f);
 }
 
 
@@ -216,7 +216,7 @@ inline void Foam::liquidProperties::write
     Ostream& os
 ) const
 {
-    writeEntry(os, {dimPressure, dimTemperature, dims}, f);
+    writeEntry(os, dimPressure, dimTemperature, dims, f);
 }
 
 

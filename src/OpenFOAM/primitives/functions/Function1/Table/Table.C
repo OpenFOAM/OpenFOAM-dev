@@ -184,6 +184,19 @@ template<class Type>
 Foam::Function1s::Table<Type>::Table
 (
     const word& name,
+    const unitConversion& xUnits,
+    const unitConversion& valueUnits,
+    const dictionary& dict
+)
+:
+    Table(name, {xUnits, valueUnits}, dict)
+{}
+
+
+template<class Type>
+Foam::Function1s::Table<Type>::Table
+(
+    const word& name,
     const unitConversions& units,
     Istream& is
 )

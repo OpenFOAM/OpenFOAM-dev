@@ -75,15 +75,7 @@ lumpedMassTemperatureFvPatchScalarField
             dimPower,
             dict
         )
-      : autoPtr<Function1<scalar>>
-        (
-            new Function1s::ZeroConstant<scalar>
-            (
-                "Q",
-                {db().time().userUnits(), dimPower},
-                dict
-            )
-        )
+      : autoPtr<Function1<scalar>>(new Function1s::ZeroConstant<scalar>("Q"))
     ),
     V_(NaN)
 {

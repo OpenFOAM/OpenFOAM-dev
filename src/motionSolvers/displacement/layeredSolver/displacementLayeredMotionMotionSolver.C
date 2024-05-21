@@ -237,7 +237,8 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
             Function1s::Table<vector>
             (
                 word::null,
-                {mesh().time().userUnits(), dimLength},
+                mesh().time().userUnits(),
+                dimLength,
                 dict
             ).value(mesh().time().value());
     }

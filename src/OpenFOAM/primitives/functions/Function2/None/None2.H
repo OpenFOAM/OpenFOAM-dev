@@ -64,6 +64,9 @@ public:
 
     // Constructors
 
+        //- Construct from name
+        None(const word& name);
+
         //- Construct from name and dictionary
         None
         (

@@ -188,6 +188,15 @@ public:
             const dictionary& dict
         );
 
+        //- Construct from name and dictionary
+        Table
+        (
+            const word& name,
+            const unitConversion& xUnits,
+            const unitConversion& valueUnits,
+            const dictionary& dict
+        );
+
         //- Construct from name and Istream
         Table
         (

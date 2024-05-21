@@ -86,9 +86,9 @@ void Foam::Function2s::Scale<Type>::write
     const unitConversions& units
 ) const
 {
-    writeEntry(os, {units.x, units.y, unitless}, scale_());
-    writeEntry(os, {units.x, units.x}, xScale_());
-    writeEntry(os, {units.y, units.y}, yScale_());
+    writeEntry(os, units.x, units.y, unitless, scale_());
+    writeEntry(os, units.x, units.x, xScale_());
+    writeEntry(os, units.y, units.y, yScale_());
     writeEntry(os, units, value_());
 }
 

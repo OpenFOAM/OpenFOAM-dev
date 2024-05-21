@@ -28,6 +28,14 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
+Foam::Function1s::None<Type>::None(const word& name)
+:
+    FieldFunction1<Type, None<Type>>(name),
+    dictName_("unknown")
+{}
+
+
+template<class Type>
 Foam::Function1s::None<Type>::None
 (
     const word& name,

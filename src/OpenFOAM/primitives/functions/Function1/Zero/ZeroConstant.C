@@ -28,6 +28,13 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
+Foam::Function1s::ZeroConstant<Type>::ZeroConstant(const word& name)
+:
+    FieldFunction1<Type, ZeroConstant<Type>>(name)
+{}
+
+
+template<class Type>
 Foam::Function1s::ZeroConstant<Type>::ZeroConstant
 (
     const word& name,

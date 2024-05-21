@@ -161,7 +161,8 @@ int main(int argc, char *argv[])
     Function1s::Table<scalar> pData
     (
         "pressure",
-        {dimTime, dimPressure},
+        dimTime,
+        dimPressure,
         dict.subDict("pressureData")
     );
 

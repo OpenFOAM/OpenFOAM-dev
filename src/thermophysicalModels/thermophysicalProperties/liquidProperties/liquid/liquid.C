@@ -50,14 +50,11 @@ Foam::autoPtr<Foam::Function1<Foam::scalar>> Foam::liquid::New
 {
     if (dict.isDict(name))
     {
-        return Function1<scalar>::New(name, {dimTemperature, dims}, dict);
+        return Function1<scalar>::New(name, dimTemperature, dims, dict);
     }
     else
     {
-        return autoPtr<Function1<scalar>>
-        (
-            new Function1s::None<scalar>(name, {dimTemperature, dims}, dict)
-        );
+        return autoPtr<Function1<scalar>>(new Function1s::None<scalar>(name));
     }
 }
 
