@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,7 +152,14 @@ bool Foam::dictionary::read(Istream& is, const bool keepHeader)
 
 bool Foam::dictionary::global() const
 {
-    return false;
+    if (&parent_ != &dictionary::null)
+    {
+        return parent_.global();
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
