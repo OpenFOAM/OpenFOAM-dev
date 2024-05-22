@@ -282,8 +282,9 @@ Foam::labelList Foam::decompositionMethod::scaleWeights
 {
     labelList intWeights;
 
-    if (weights.size() > 0)
+    if (nWeights && weights.size() > 0)
     {
+        // Calculate the scalar -> integer scaling factor
         const scalar sumWeights
         (
             distributed
@@ -292,11 +293,47 @@ Foam::labelList Foam::decompositionMethod::scaleWeights
         );
         const scalar scale = labelMax/(2*sumWeights);
 
-        // Convert to integers.
+        // Convert weights to integer
         intWeights.setSize(weights.size());
         forAll(intWeights, i)
         {
             intWeights[i] = ceil(scale*weights[i]);
+        }
+
+        // Calculate the sum over all processors of each weight
+        labelList sumIntWeights(nWeights, 0);
+        forAll(weights, i)
+        {
+            sumIntWeights[i % nWeights] += intWeights[i];
+        }
+        reduce(sumIntWeights, ListOp<sumOp<label>>());
+
+        // Check that the sum of each weight is non-zero
+        boolList nonZeroWeights(nWeights, false);
+        label nNonZeroWeights = 0;
+        forAll(sumIntWeights, i)
+        {
+            if (sumIntWeights[i] != 0)
+            {
+                nonZeroWeights[i] = true;
+                nNonZeroWeights++;
+            }
+        }
+
+        // If there are zero weights remove them from the weights list
+        if (nNonZeroWeights != nWeights)
+        {
+            label j = 0;
+            forAll(intWeights, i)
+            {
+                if (nonZeroWeights[i % nWeights])
+                {
+                    intWeights[j++] = intWeights[i];
+                }
+            }
+
+            // Resize the weights list
+            intWeights.setSize(nNonZeroWeights*(intWeights.size()/nWeights));
         }
     }
 
