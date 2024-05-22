@@ -71,8 +71,11 @@ int main(int argc, char *argv[])
     argList::addNote("Merge meshes without stitching");
 
     argList::noParallel();
-    #include "addOverwriteOption.H"
+
     #include "addRegionOption.H"
+    #include "addOverwriteOption.H"
+
+    timeSelector::addOptions();
 
     argList::addOption
     (
