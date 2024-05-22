@@ -1,0 +1,18 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeMpiLib
+
+# Get PARMETIS_VERSION, PARMETIS_ARCH_PATH
+if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/parMetis`
+then
+    . $settings
+    echo "    using PARMETIS_ARCH_PATH=$PARMETIS_ARCH_PATH"
+    wcleanMpiLib $PARMETIS_VERSION parMetisDecomp
+else
+    echo
+    echo "    Error: no config.sh/parMetis settings"
+    echo
+fi
+
+#------------------------------------------------------------------------------

@@ -1,0 +1,24 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Parse arguments for library compilation
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
+
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeMpiLib
+
+# get PARMETIS_VERSION, PARMETIS_ARCH_PATH
+if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/parMetis`
+then
+    . $settings
+    echo "    using PARMETIS_ARCH_PATH=$PARMETIS_ARCH_PATH"
+    if [ -r $PARMETIS_ARCH_PATH/lib/libparmetis.so ]
+    then
+        wmakeMpiLib $PARMETIS_VERSION
+    fi
+else
+    echo
+    echo "    Error: no config.sh/parMetis settings"
+    echo
+fi
+
+#------------------------------------------------------------------------------
