@@ -273,6 +273,7 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
     forAll(fz, zonei)
     {
         faceZoneIndices[zonei] = zoneIndex(faceZoneNames_, fz[zonei].name());
+        faceZonesAddedFaces_.setSize(faceZoneNames_.size());
     }
 
     const faceList& f = m.faces();
