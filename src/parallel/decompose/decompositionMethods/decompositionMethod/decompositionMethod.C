@@ -306,7 +306,11 @@ Foam::labelList Foam::decompositionMethod::scaleWeights
         {
             sumIntWeights[i % nWeights] += intWeights[i];
         }
-        reduce(sumIntWeights, ListOp<sumOp<label>>());
+
+        if (distributed)
+        {
+            reduce(sumIntWeights, ListOp<sumOp<label>>());
+        }
 
         // Check that the sum of each weight is non-zero
         boolList nonZeroWeights(nWeights, false);
