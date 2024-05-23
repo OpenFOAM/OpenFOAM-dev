@@ -689,9 +689,9 @@ void Foam::phaseSystem::meshUpdate()
 
 void Foam::phaseSystem::correctBoundaryFlux()
 {
-    forAll(movingPhases(), movingPhasei)
+    forAll(movingPhaseModels_, movingPhasei)
     {
-        phaseModel& phase = movingPhases()[movingPhasei];
+        phaseModel& phase = movingPhaseModels_[movingPhasei];
 
         tmp<volVectorField> tU(phase.U());
         const volVectorField::Boundary& UBf = tU().boundaryField();
@@ -726,9 +726,18 @@ void Foam::phaseSystem::correctPhi
     nonOrthogonalSolutionControl& pimple
 )
 {
-    forAll(movingPhases(), movingPhasei)
+    // Update the phase fluxes from the phase face-velocity and make relative
+    forAll(movingPhaseModels_, movingPhasei)
     {
-        phaseModel& phase = movingPhases()[movingPhasei];
+        phaseModel& phase = movingPhaseModels_[movingPhasei];
+        phase.phiRef() = mesh_.Sf() & phase.UfRef();
+        MRF_.makeRelative(phase.phiRef());
+        fvc::makeRelative(phase.phiRef(), phase.U());
+    }
+
+    forAll(movingPhaseModels_, movingPhasei)
+    {
+        phaseModel& phase = movingPhaseModels_[movingPhasei];
 
         volVectorField::Boundary& Ubf = phase.URef().boundaryFieldRef();
         surfaceVectorField::Boundary& UfBf = phase.UfRef().boundaryFieldRef();
@@ -756,9 +765,9 @@ void Foam::phaseSystem::correctPhi
 
     phi_ = Zero;
     PtrList<surfaceScalarField> alphafs(phaseModels_.size());
-    forAll(movingPhases(), movingPhasei)
+    forAll(movingPhaseModels_, movingPhasei)
     {
-        phaseModel& phase = movingPhases()[movingPhasei];
+        phaseModel& phase = movingPhaseModels_[movingPhasei];
         const label phasei = phase.index();
         const volScalarField& alpha = phase;
 
@@ -774,7 +783,7 @@ void Foam::phaseSystem::correctPhi
         fv::correctPhi
         (
             phi_,
-            movingPhases()[0].U(),
+            movingPhaseModels_[0].U(),
             p_rgh,
             autoPtr<volScalarField>(),
             divU,
@@ -815,7 +824,7 @@ void Foam::phaseSystem::correctPhi
 
     // Make the flux relative to the mesh motion
     MRF_.makeRelative(phi_);
-    fvc::makeRelative(phi_, movingPhases()[0].U());
+    fvc::makeRelative(phi_, movingPhaseModels_[0].U());
 
     setMixturePhi(alphafs, phi_);
 }
