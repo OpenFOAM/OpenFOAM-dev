@@ -36,7 +36,13 @@ Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),
+    fixedValueFvPatchField<Type>
+    (
+        p,
+        iF,
+        dict,
+        !Pstream::parRun() && p.boundaryMesh().mesh().time().processorCase()
+    ),
     meanValue_
     (
         Function1<Type>::New
@@ -48,7 +54,10 @@ Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
         )
     )
 {
-    this->evaluate();
+    if (Pstream::parRun() || !p.boundaryMesh().mesh().time().processorCase())
+    {
+        this->evaluate();
+    }
 }
 
 
