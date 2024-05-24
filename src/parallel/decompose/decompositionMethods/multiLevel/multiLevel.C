@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "multiLevelDecomp.H"
+#include "multiLevel.H"
 #include "IFstream.H"
 #include "globalIndex.H"
 #include "distributionMap.H"
@@ -33,29 +33,30 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(multiLevelDecomp, 0);
+namespace decompositionMethods
+{
+    defineTypeNameAndDebug(multiLevel, 0);
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        multiLevelDecomp,
+        multiLevel,
         decomposer
     );
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        multiLevelDecomp,
+        multiLevel,
         distributor
     );
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Given a subset of cells determine the new global indices. The problem
-// is in the cells from neighbouring processors which need to be renumbered.
-void Foam::multiLevelDecomp::subsetGlobalCellCells
+void Foam::decompositionMethods::multiLevel::subsetGlobalCellCells
 (
     const label nDomains,
     const label domainI,
@@ -129,7 +130,7 @@ void Foam::multiLevelDecomp::subsetGlobalCellCells
 }
 
 
-void Foam::multiLevelDecomp::decompose
+void Foam::decompositionMethods::multiLevel::decompose
 (
     const labelListList& pointPoints,
     const pointField& points,
@@ -335,7 +336,10 @@ void Foam::multiLevelDecomp::decompose
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::multiLevelDecomp::multiLevelDecomp(const dictionary& decompositionDict)
+Foam::decompositionMethods::multiLevel::multiLevel
+(
+    const dictionary& decompositionDict
+)
 :
     decompositionMethod(decompositionDict),
     methodsDict_(decompositionDict_.optionalSubDict(typeName + "Coeffs"))
@@ -370,7 +374,7 @@ Foam::multiLevelDecomp::multiLevelDecomp(const dictionary& decompositionDict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelList Foam::multiLevelDecomp::decompose
+Foam::labelList Foam::decompositionMethods::multiLevel::decompose
 (
     const polyMesh& mesh,
     const pointField& cellCentres,
@@ -405,7 +409,7 @@ Foam::labelList Foam::multiLevelDecomp::decompose
 }
 
 
-Foam::labelList Foam::multiLevelDecomp::decompose
+Foam::labelList Foam::decompositionMethods::multiLevel::decompose
 (
     const labelListList& globalPointPoints,
     const pointField& points,

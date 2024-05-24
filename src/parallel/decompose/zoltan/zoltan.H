@@ -134,7 +134,7 @@ public:
         using decompositionMethod::decompose;
 
         //- Return for every coordinate the wanted processor number. Use the
-        //  mesh connectivity (if needed). See note on weights in scotchDecomp.H
+        //  mesh connectivity (if needed). See note on weights in scotch.H
         virtual labelList decompose
         (
             const polyMesh& mesh,
@@ -145,7 +145,7 @@ public:
         //- Return for every coordinate the wanted processor number. Gets
         //  passed agglomeration map (from fine to coarse cells) and coarse cell
         //  location. Can be overridden by decomposers that provide this
-        //  functionality natively. See note on weights in scotchDecomp.H
+        //  functionality natively. See note on weights in scotch.H
         virtual labelList decompose
         (
             const polyMesh& mesh,
@@ -161,7 +161,7 @@ public:
         //    from 0 at processor0 and then incrementing all through the
         //    processors)
         //  - the connections are across coupled patches
-        //  See note on weights in scotchDecomp.H
+        //  See note on weights in scotch.H
         virtual labelList decompose
         (
             const labelListList& globalCellCells,

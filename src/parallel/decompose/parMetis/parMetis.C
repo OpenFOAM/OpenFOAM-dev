@@ -29,11 +29,6 @@ License
 #include "labelIOField.H"
 #include "addToRunTimeSelectionTable.H"
 
-extern "C"
-{
-    #include "parmetis.h"
-}
-
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -71,7 +66,7 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
     // Number of weights or balance constraints
     label nWeights = cellWeights.size()/cellCentres.size();
 
-    scalarList processorWeights;
+    List<real_t> processorWeights;
 
     if (processorWeights_.size())
     {
@@ -93,7 +88,7 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
     }
 
     // Imbalance tolerance
-    Field<scalar> ubvec(nWeights, 1.02);
+    List<real_t> ubvec(nWeights, 1.02);
 
     // If only one processor there is no imbalance
     if (nProcessors_ == 1)
@@ -160,8 +155,8 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
         // Number of dimensions
         label nDims = 3;
 
-        // Convert pointField into float
-        Field<scalar> xyz(nDims*cellCentres.size());
+        // Convert pointField into List<real_t>
+        List<real_t> xyz(nDims*cellCentres.size());
         label i = 0;
         forAll(cellCentres, celli)
         {

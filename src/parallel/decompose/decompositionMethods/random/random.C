@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "randomDecomp.H"
+#include "random.H"
 #include "clock.H"
 #include "randomGenerator.H"
 #include "addToRunTimeSelectionTable.H"
@@ -32,27 +32,30 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(randomDecomp, 0);
+namespace decompositionMethods
+{
+    defineTypeNameAndDebug(random, 0);
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        randomDecomp,
+        random,
         decomposer
     );
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        randomDecomp,
+        random,
         distributor
     );
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::randomDecomp::randomDecomp(const dictionary& decompositionDict)
+Foam::decompositionMethods::random::random(const dictionary& decompositionDict)
 :
     decompositionMethod(decompositionDict),
     seed_
@@ -67,7 +70,7 @@ Foam::randomDecomp::randomDecomp(const dictionary& decompositionDict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelList Foam::randomDecomp::decompose
+Foam::labelList Foam::decompositionMethods::random::decompose
 (
     const polyMesh& mesh,
     const pointField& points,

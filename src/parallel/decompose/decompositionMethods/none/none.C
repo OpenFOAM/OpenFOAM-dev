@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,45 +23,28 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "geomDecomp.H"
+#include "none.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace decompositionMethods
+{
+    defineTypeName(none);
+    addToRunTimeSelectionTable(decompositionMethod, none, decomposer);
+    addToRunTimeSelectionTable(decompositionMethod, none, distributor);
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::geomDecomp::geomDecomp
-(
-    const dictionary& decompositionDict,
-    const word& derivedType
-)
+Foam::decompositionMethods::none::none(const dictionary& decompositionDict)
 :
-    decompositionMethod(decompositionDict),
-    geomDecomDict_(decompositionDict.optionalSubDict(derivedType + "Coeffs")),
-    n_(geomDecomDict_.lookup("n")),
-    delta_(geomDecomDict_.lookupOrDefault<scalar>("delta", 0.001)),
-    rotDelta_(I)
-{
-    // Check that the decomposition specification makes sense:
-    if (nProcessors_ != n_.x()*n_.y()*n_.z())
-    {
-        FatalErrorInFunction
-            << "Wrong number of processor divisions in geomDecomp:" << nl
-            << "Number of domains    : " << nProcessors_ << nl
-            << "Wanted decomposition : " << n_
-            << exit(FatalError);
-    }
-
-    const scalar d = 1 - 0.5*delta_*delta_;
-    const scalar d2 = sqr(d);
-
-    const scalar a = delta_;
-    const scalar a2 = sqr(a);
-
-    rotDelta_ = tensor
-    (
-        d2,         -a*d,         a,
-        a*d - a2*d,  a*a2 + d2,  -2*a*d,
-        a*d2 + a2,   a*d - a2*d,  d2 - a2
-    );
-}
+    decompositionMethod(decompositionDict)
+{}
 
 
 // ************************************************************************* //

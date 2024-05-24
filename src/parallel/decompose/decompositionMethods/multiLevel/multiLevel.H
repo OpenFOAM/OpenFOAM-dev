@@ -22,115 +22,124 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::simpleGeomDecomp
+    Foam::decompositionMethods::multiLevel
 
 Description
+    Decomposition given using consecutive application of decomposers.
 
 SourceFiles
-    simpleGeomDecomp.C
+    multiLevel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef simpleGeomDecomp_H
-#define simpleGeomDecomp_H
+#ifndef multiLevel_H
+#define multiLevel_H
 
-#include "geomDecomp.H"
+#include "decompositionMethod.H"
 
 namespace Foam
 {
+namespace decompositionMethods
+{
 
 /*---------------------------------------------------------------------------*\
-                      Class simpleGeomDecomp Declaration
+                      Class multiLevel Declaration
 \*---------------------------------------------------------------------------*/
 
-class simpleGeomDecomp
+class multiLevel
 :
-    public geomDecomp
+    public decompositionMethod
 {
+    // Private Data
+
+        dictionary methodsDict_;
+
+        PtrList<decompositionMethod> methods_;
+
+
     // Private Member Functions
 
-        void assignToProcessorGroup(labelList&, const label) const;
-
-        void assignToProcessorGroup
+        //- Given connectivity across processors work out connectivity
+        //  for a (consistent) subset
+        void subsetGlobalCellCells
         (
-            labelList& processorGroup,
-            const label nProcGroup,
-            const labelList& indices,
-            const scalarField& weights,
-            const scalar summedWeights
+            const label nDomains,
+            const label domainI,
+            const labelList& dist,
+
+            const labelListList& cellCells,
+            const labelList& set,
+            labelListList& subCellCells,
+            labelList& cutConnections
         ) const;
 
-        labelList decomposeOneProc(const pointField& points) const;
-
-        labelList decomposeOneProc
+        //- Decompose level methodI without addressing
+        void decompose
         (
+            const labelListList& pointPoints,
             const pointField& points,
-            const scalarField& weights
-        ) const;
+            const scalarField& pointWeights,
+            const labelList& pointMap,  // map back to original points
+            const label levelI,
+
+            labelField& finalDecomp
+        );
 
 
 public:
 
     //- Runtime type information
-    TypeName("simple");
+    TypeName("multiLevel");
 
 
     // Constructors
 
         //- Construct given the decomposition dictionary
-        simpleGeomDecomp(const dictionary& decompositionDict);
+        multiLevel(const dictionary& decompositionDict);
 
         //- Disallow default bitwise copy construction
-        simpleGeomDecomp(const simpleGeomDecomp&) = delete;
+        multiLevel(const multiLevel&) = delete;
 
 
     //- Destructor
-    virtual ~simpleGeomDecomp()
+    virtual ~multiLevel()
     {}
 
 
     // Member Functions
 
-        virtual labelList decompose(const pointField&);
+        //- Inherit decompose from decompositionMethod
+        using decompositionMethod::decompose;
 
-        virtual labelList decompose(const pointField&, const scalarField&);
-
-        virtual labelList decompose(const polyMesh&, const pointField& points)
-        {
-            return decompose(points);
-        }
-
+        //- Return for every coordinate the wanted processor number. Use the
+        //  mesh connectivity (if needed)
         virtual labelList decompose
         (
-            const polyMesh&,
+            const polyMesh& mesh,
             const pointField& points,
             const scalarField& pointWeights
-        )
-        {
-            return decompose(points, pointWeights);
-        }
+        );
 
-        //- Explicitly provided connectivity
+        //- Return for every coordinate the wanted processor number. Explicitly
+        //  provided connectivity - does not use mesh_.
         virtual labelList decompose
         (
             const labelListList& globalCellCells,
             const pointField& cellCentres,
             const scalarField& cellWeights
-        )
-        {
-            return decompose(cellCentres, cellWeights);
-        }
+        );
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const simpleGeomDecomp&) = delete;
+        void operator=(const multiLevel&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace decompositionMethods
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,73 +22,75 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::noDecomp
+    Foam::decompositionMethods::random
 
 Description
-    Dummy decomposition method
+    Random decomposition. Good for testing. Very bad for anything else.
 
 SourceFiles
-    noDecomp.C
+    random.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef noDecomp_H
-#define noDecomp_H
+#ifndef random_H
+#define random_H
 
 #include "decompositionMethod.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 namespace Foam
+{
+namespace decompositionMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class noDecomp Declaration
+                        Class random Declaration
 \*---------------------------------------------------------------------------*/
 
-class noDecomp
+class random
 :
     public decompositionMethod
 {
+    // Private Data
+
+        //- Generator seed
+        label seed_;
+
+
 public:
 
     //- Runtime type information
-    TypeName("none");
+    TypeName("random");
 
 
     // Constructors
 
         //- Construct given the decomposition dictionary
-        noDecomp(const dictionary& decompositionDict);
+        random(const dictionary& decompositionDict);
 
         //- Disallow default bitwise copy construction
-        noDecomp(const noDecomp&) = delete;
+        random(const random&) = delete;
 
 
     //- Destructor
-    virtual ~noDecomp()
+    virtual ~random()
     {}
 
 
     // Member Functions
 
         //- Return for every coordinate the wanted processor number. Use the
-        //  mesh connectivity (if needed)
+        //  mesh connectivity.
         virtual labelList decompose
         (
             const polyMesh& mesh,
             const pointField& cellCentres,
             const scalarField& cellWeights
-        )
-        {
-            return labelList(cellCentres.size(), Pstream::myProcNo());
-        }
+        );
 
         //- Return for every coordinate the wanted processor number. Explicitly
-        //  provided connectivity - does not use mesh_.
-        //  The connectivity is equal to mesh.cellCells() except for
-        //  - in parallel the cell numbers are global cell numbers (starting
-        //    from 0 at processor0 and then incrementing all through the
-        //    processors)
-        //  - the connections are across coupled patches
+        //  provided connectivity. Does not use the mesh.
         virtual labelList decompose
         (
             const labelListList& globalCellCells,
@@ -96,19 +98,21 @@ public:
             const scalarField& cellWeights
         )
         {
-            return labelList(globalCellCells.size(), Pstream::myProcNo());
+            NotImplemented;
+            return labelList(0);
         }
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const noDecomp&) = delete;
+        void operator=(const random&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace decompositionMethods
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

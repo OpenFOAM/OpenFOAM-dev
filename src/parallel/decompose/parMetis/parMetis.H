@@ -74,6 +74,11 @@ SourceFiles
 
 #include "decompositionMethod.H"
 
+extern "C"
+{
+    #include "parmetis.h"
+}
+
 namespace Foam
 {
 namespace decompositionMethods
@@ -96,11 +101,11 @@ class parMetis
         labelList options_;
 
         // Processor weights for each constraint
-        scalarList processorWeights_;
+        List<real_t> processorWeights_;
 
         //- Parameter which describes the ratio of inter-processor
         //  communication time compared to data redistribution time.
-        scalar itr_;
+        real_t itr_;
 
 
     // Private Member Functions

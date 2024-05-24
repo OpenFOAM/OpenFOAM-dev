@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::hierarchGeomDecomp
+    Foam::decompositionMethods::hierarchical
 
 Description
     Does hierarchical decomposition of points. Works by first sorting the
@@ -45,27 +45,29 @@ Description
     n[0]*n[1] (or n[1]*n[2]?) (small anyway)
 
 SourceFiles
-    hierarchGeomDecomp.C
+    hierarchical.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef hierarchGeomDecomp_H
-#define hierarchGeomDecomp_H
+#ifndef hierarchical_H
+#define hierarchical_H
 
-#include "geomDecomp.H"
+#include "geometric.H"
 #include "FixedList.H"
 #include "direction.H"
 
 namespace Foam
 {
+namespace decompositionMethods
+{
 
 /*---------------------------------------------------------------------------*\
-                     Class hierarchGeomDecomp Declaration
+                     Class hierarchical Declaration
 \*---------------------------------------------------------------------------*/
 
-class hierarchGeomDecomp
+class hierarchical
 :
-    public geomDecomp
+    public geometric
 {
     // Private Data
 
@@ -163,14 +165,14 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary
-        hierarchGeomDecomp(const dictionary& decompositionDict);
+        hierarchical(const dictionary& decompositionDict);
 
         //- Disallow default bitwise copy construction
-        hierarchGeomDecomp(const hierarchGeomDecomp&) = delete;
+        hierarchical(const hierarchical&) = delete;
 
 
     //- Destructor
-    virtual ~hierarchGeomDecomp()
+    virtual ~hierarchical()
     {}
 
 
@@ -241,12 +243,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const hierarchGeomDecomp&) = delete;
+        void operator=(const hierarchical&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace decompositionMethods
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

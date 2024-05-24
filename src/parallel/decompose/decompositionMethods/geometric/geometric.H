@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,30 +22,32 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::geomDecomp
+    Foam::decompositionMethods::geometric
 
 Description
     Geometrical domain decomposition
 
 SourceFiles
-    geomDecomp.C
+    geometric.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef geomDecomp_H
-#define geomDecomp_H
+#ifndef geometric_H
+#define geometric_H
 
 #include "decompositionMethod.H"
 #include "Vector.H"
 
 namespace Foam
 {
+namespace decompositionMethods
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class geomDecomp Declaration
+                         Class geometric Declaration
 \*---------------------------------------------------------------------------*/
 
-class geomDecomp
+class geometric
 :
     public decompositionMethod
 {
@@ -54,7 +56,7 @@ protected:
 
     // Protected data
 
-        const dictionary& geomDecomDict_;
+        const dictionary& geometricDict_;
 
         Vector<label> n_;
         scalar delta_;
@@ -66,7 +68,7 @@ public:
 
         //- Construct given the decomposition dictionary
         //  and the derived type name
-        geomDecomp
+        geometric
         (
             const dictionary& decompositionDict,
             const word& derivedType
@@ -87,6 +89,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace decompositionMethods
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,54 +22,51 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::manualDecomp
+    Foam::decompositionMethods::none
 
 Description
-    Decomposition given a cell-to-processor association in a file
+    Dummy decomposition method
 
 SourceFiles
-    manualDecomp.C
+    none.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef manualDecomp_H
-#define manualDecomp_H
+#ifndef none_H
+#define none_H
 
 #include "decompositionMethod.H"
 
 namespace Foam
 {
+namespace decompositionMethods
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class manualDecomp Declaration
+                          Class none Declaration
 \*---------------------------------------------------------------------------*/
 
-class manualDecomp
+class none
 :
     public decompositionMethod
 {
-    // Private Data
-
-        fileName decompDataFile_;
-
-
 public:
 
     //- Runtime type information
-    TypeName("manual");
+    TypeName("none");
 
 
     // Constructors
 
         //- Construct given the decomposition dictionary
-        manualDecomp(const dictionary& decompositionDict);
+        none(const dictionary& decompositionDict);
 
         //- Disallow default bitwise copy construction
-        manualDecomp(const manualDecomp&) = delete;
+        none(const none&) = delete;
 
 
     //- Destructor
-    virtual ~manualDecomp()
+    virtual ~none()
     {}
 
 
@@ -82,7 +79,10 @@ public:
             const polyMesh& mesh,
             const pointField& cellCentres,
             const scalarField& cellWeights
-        );
+        )
+        {
+            return labelList(cellCentres.size(), Pstream::myProcNo());
+        }
 
         //- Return for every coordinate the wanted processor number. Explicitly
         //  provided connectivity - does not use mesh_.
@@ -98,20 +98,20 @@ public:
             const scalarField& cellWeights
         )
         {
-            NotImplemented;
-            return labelList(0);
+            return labelList(globalCellCells.size(), Pstream::myProcNo());
         }
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const manualDecomp&) = delete;
+        void operator=(const none&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace decompositionMethods
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

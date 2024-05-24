@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "simpleGeomDecomp.H"
+#include "simple.H"
 #include "addToRunTimeSelectionTable.H"
 #include "SortableList.H"
 #include "globalIndex.H"
@@ -33,21 +33,24 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(simpleGeomDecomp, 0);
+namespace decompositionMethods
+{
+    defineTypeNameAndDebug(simple, 0);
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        simpleGeomDecomp,
+        simple,
         decomposer
     );
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        simpleGeomDecomp,
+        simple,
         distributor
     );
+}
 }
 
 
@@ -59,7 +62,7 @@ namespace Foam
 // extra to make up the numbers. This should produce almost
 // perfect load balancing
 
-void Foam::simpleGeomDecomp::assignToProcessorGroup
+void Foam::decompositionMethods::simple::assignToProcessorGroup
 (
     labelList& processorGroup,
     const label nProcGroup
@@ -93,7 +96,7 @@ void Foam::simpleGeomDecomp::assignToProcessorGroup
 }
 
 
-void Foam::simpleGeomDecomp::assignToProcessorGroup
+void Foam::decompositionMethods::simple::assignToProcessorGroup
 (
     labelList& processorGroup,
     const label nProcGroup,
@@ -136,7 +139,7 @@ void Foam::simpleGeomDecomp::assignToProcessorGroup
 }
 
 
-Foam::labelList Foam::simpleGeomDecomp::decomposeOneProc
+Foam::labelList Foam::decompositionMethods::simple::decomposeOneProc
 (
     const pointField& points
 ) const
@@ -208,7 +211,7 @@ Foam::labelList Foam::simpleGeomDecomp::decomposeOneProc
 }
 
 
-Foam::labelList Foam::simpleGeomDecomp::decomposeOneProc
+Foam::labelList Foam::decompositionMethods::simple::decomposeOneProc
 (
     const pointField& points,
     const scalarField& weights
@@ -305,15 +308,15 @@ Foam::labelList Foam::simpleGeomDecomp::decomposeOneProc
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::simpleGeomDecomp::simpleGeomDecomp(const dictionary& decompositionDict)
+Foam::decompositionMethods::simple::simple(const dictionary& decompositionDict)
 :
-    geomDecomp(decompositionDict, typeName)
+    geometric(decompositionDict, typeName)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelList Foam::simpleGeomDecomp::decompose
+Foam::labelList Foam::decompositionMethods::simple::decompose
 (
     const pointField& points
 )
@@ -395,7 +398,7 @@ Foam::labelList Foam::simpleGeomDecomp::decompose
 }
 
 
-Foam::labelList Foam::simpleGeomDecomp::decompose
+Foam::labelList Foam::decompositionMethods::simple::decompose
 (
     const pointField& points,
     const scalarField& weights

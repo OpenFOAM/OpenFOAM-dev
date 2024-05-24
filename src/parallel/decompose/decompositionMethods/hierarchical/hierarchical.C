@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "hierarchGeomDecomp.H"
+#include "hierarchical.H"
 #include "addToRunTimeSelectionTable.H"
 #include "PstreamReduceOps.H"
 #include "SortableList.H"
@@ -32,29 +32,32 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(hierarchGeomDecomp, 0);
+namespace decompositionMethods
+{
+    defineTypeNameAndDebug(hierarchical, 0);
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        hierarchGeomDecomp,
+        hierarchical,
         decomposer
     );
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        hierarchGeomDecomp,
+        hierarchical,
         distributor
     );
+}
 }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::hierarchGeomDecomp::setDecompOrder()
+void Foam::decompositionMethods::hierarchical::setDecompOrder()
 {
-    const word order(geomDecomDict_.lookup("order"));
+    const word order(geometricDict_.lookup("order"));
 
     if (order.size() != 3)
     {
@@ -91,7 +94,7 @@ void Foam::hierarchGeomDecomp::setDecompOrder()
 }
 
 
-Foam::label Foam::hierarchGeomDecomp::findLower
+Foam::label Foam::decompositionMethods::hierarchical::findLower
 (
     const List<scalar>& l,
     const scalar t,
@@ -141,7 +144,7 @@ Foam::label Foam::hierarchGeomDecomp::findLower
 // Create a mapping between the index and the weighted size.
 // For convenience, sortedWeightedSize is one size bigger than current. This
 // avoids extra tests.
-void Foam::hierarchGeomDecomp::calculateSortedWeightedSizes
+void Foam::decompositionMethods::hierarchical::calculateSortedWeightedSizes
 (
     const labelList& current,
     const labelList& indices,
@@ -172,7 +175,7 @@ void Foam::hierarchGeomDecomp::calculateSortedWeightedSizes
 
 // Find position in values so between minIndex and this position there
 // are wantedSize elements.
-void Foam::hierarchGeomDecomp::findBinary
+void Foam::decompositionMethods::hierarchical::findBinary
 (
     const label sizeTol,
     const List<scalar>& values,
@@ -246,7 +249,7 @@ void Foam::hierarchGeomDecomp::findBinary
 
 // Find position in values so between minIndex and this position there
 // are wantedSize elements.
-void Foam::hierarchGeomDecomp::findBinary
+void Foam::decompositionMethods::hierarchical::findBinary
 (
     const label sizeTol,
     const List<scalar>& sortedWeightedSizes,
@@ -325,7 +328,7 @@ void Foam::hierarchGeomDecomp::findBinary
 
 
 // Sort points into bins according to one component. Recurses to next component.
-void Foam::hierarchGeomDecomp::sortComponent
+void Foam::decompositionMethods::hierarchical::sortComponent
 (
     const label sizeTol,
     const pointField& points,
@@ -499,7 +502,7 @@ void Foam::hierarchGeomDecomp::sortComponent
 
 
 // Sort points into bins according to one component. Recurses to next component.
-void Foam::hierarchGeomDecomp::sortComponent
+void Foam::decompositionMethods::hierarchical::sortComponent
 (
     const label sizeTol,
     const scalarField& weights,
@@ -682,7 +685,7 @@ void Foam::hierarchGeomDecomp::sortComponent
 }
 
 
-Foam::labelList Foam::hierarchGeomDecomp::decompose
+Foam::labelList Foam::decompositionMethods::hierarchical::decompose
 (
     const pointField& points
 )
@@ -722,7 +725,7 @@ Foam::labelList Foam::hierarchGeomDecomp::decompose
 }
 
 
-Foam::labelList Foam::hierarchGeomDecomp::decompose
+Foam::labelList Foam::decompositionMethods::hierarchical::decompose
 (
     const pointField& points,
     const scalarField& weights
@@ -766,12 +769,12 @@ Foam::labelList Foam::hierarchGeomDecomp::decompose
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::hierarchGeomDecomp::hierarchGeomDecomp
+Foam::decompositionMethods::hierarchical::hierarchical
 (
     const dictionary& decompositionDict
 )
 :
-    geomDecomp(decompositionDict, typeName),
+    geometric(decompositionDict, typeName),
     decompOrder_()
 {
     setDecompOrder();

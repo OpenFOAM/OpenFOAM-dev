@@ -1,12 +1,12 @@
 decompositionMethod/decompositionMethod.C
-geomDecomp/geomDecomp.C
-simpleGeomDecomp/simpleGeomDecomp.C
-hierarchGeomDecomp/hierarchGeomDecomp.C
-manualDecomp/manualDecomp.C
-multiLevelDecomp/multiLevelDecomp.C
-structuredDecomp/structuredDecomp.C
-randomDecomp/randomDecomp.C
-noDecomp/noDecomp.C
+geometric/geometric.C
+simple/simple.C
+hierarchical/hierarchical.C
+manual/manual.C
+multiLevel/multiLevel.C
+structured/structured.C
+random/random.C
+none/none.C
 
 decompositionConstraints = decompositionConstraints
 

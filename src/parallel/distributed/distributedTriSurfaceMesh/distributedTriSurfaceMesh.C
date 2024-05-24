@@ -34,7 +34,7 @@ License
 
 #include "IFstream.H"
 #include "decompositionMethod.H"
-#include "geomDecomp.H"
+#include "geometric.H"
 #include "vectorList.H"
 #include "PackedBoolList.H"
 #include "PatchTools.H"
@@ -822,7 +822,7 @@ Foam::distributedTriSurfaceMesh::independentlyDistributedBbs
             decompositionMethod::decomposeParDict(searchableSurface::time())
         );
 
-        if (!isA<geomDecomp>(distributor_()))
+        if (!isA<decompositionMethods::geometric>(distributor_()))
         {
             FatalErrorInFunction
                 << "The decomposition method " << distributor_().typeName
@@ -841,7 +841,8 @@ Foam::distributedTriSurfaceMesh::independentlyDistributedBbs
     }
 
 
-    geomDecomp& distributor = refCast<geomDecomp>(distributor_());
+    decompositionMethods::geometric& distributor =
+        refCast<decompositionMethods::geometric>(distributor_());
 
     // Do the actual decomposition
     labelList distribution(distributor.decompose(triCentres));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,12 +21,9 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Decomposition given a cell-to-processor association in a file
-
 \*---------------------------------------------------------------------------*/
 
-#include "manualDecomp.H"
+#include "manual.H"
 #include "addToRunTimeSelectionTable.H"
 #include "IFstream.H"
 #include "labelIOList.H"
@@ -35,27 +32,30 @@ Description
 
 namespace Foam
 {
-    defineTypeNameAndDebug(manualDecomp, 0);
+namespace decompositionMethods
+{
+    defineTypeNameAndDebug(manual, 0);
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        manualDecomp,
+        manual,
         decomposer
     );
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        manualDecomp,
+        manual,
         distributor
     );
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::manualDecomp::manualDecomp(const dictionary& decompositionDict)
+Foam::decompositionMethods::manual::manual(const dictionary& decompositionDict)
 :
     decompositionMethod(decompositionDict),
     decompDataFile_
@@ -70,7 +70,7 @@ Foam::manualDecomp::manualDecomp(const dictionary& decompositionDict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelList Foam::manualDecomp::decompose
+Foam::labelList Foam::decompositionMethods::manual::decompose
 (
     const polyMesh& mesh,
     const pointField& points,

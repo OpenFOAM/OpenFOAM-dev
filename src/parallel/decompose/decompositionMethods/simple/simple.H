@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,73 +22,97 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::randomDecomp
+    Foam::decompositionMethods::simple
 
 Description
-    Random decomposition. Good for testing. Very bad for anything else.
 
 SourceFiles
-    randomDecomp.C
+    simple.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef randomDecomp_H
-#define randomDecomp_H
+#ifndef simple_H
+#define simple_H
 
-#include "decompositionMethod.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "geometric.H"
 
 namespace Foam
 {
+namespace decompositionMethods
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class randomDecomp Declaration
+                      Class simple Declaration
 \*---------------------------------------------------------------------------*/
 
-class randomDecomp
+class simple
 :
-    public decompositionMethod
+    public geometric
 {
-    // Private Data
+    // Private Member Functions
 
-        //- Generator seed
-        label seed_;
+        void assignToProcessorGroup(labelList&, const label) const;
+
+        void assignToProcessorGroup
+        (
+            labelList& processorGroup,
+            const label nProcGroup,
+            const labelList& indices,
+            const scalarField& weights,
+            const scalar summedWeights
+        ) const;
+
+        labelList decomposeOneProc(const pointField& points) const;
+
+        labelList decomposeOneProc
+        (
+            const pointField& points,
+            const scalarField& weights
+        ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("random");
+    TypeName("simple");
 
 
     // Constructors
 
         //- Construct given the decomposition dictionary
-        randomDecomp(const dictionary& decompositionDict);
+        simple(const dictionary& decompositionDict);
 
         //- Disallow default bitwise copy construction
-        randomDecomp(const randomDecomp&) = delete;
+        simple(const simple&) = delete;
 
 
     //- Destructor
-    virtual ~randomDecomp()
+    virtual ~simple()
     {}
 
 
     // Member Functions
 
-        //- Return for every coordinate the wanted processor number. Use the
-        //  mesh connectivity.
+        virtual labelList decompose(const pointField&);
+
+        virtual labelList decompose(const pointField&, const scalarField&);
+
+        virtual labelList decompose(const polyMesh&, const pointField& points)
+        {
+            return decompose(points);
+        }
+
         virtual labelList decompose
         (
-            const polyMesh& mesh,
-            const pointField& cellCentres,
-            const scalarField& cellWeights
-        );
+            const polyMesh&,
+            const pointField& points,
+            const scalarField& pointWeights
+        )
+        {
+            return decompose(points, pointWeights);
+        }
 
-        //- Return for every coordinate the wanted processor number. Explicitly
-        //  provided connectivity. Does not use the mesh.
+        //- Explicitly provided connectivity
         virtual labelList decompose
         (
             const labelListList& globalCellCells,
@@ -96,19 +120,20 @@ public:
             const scalarField& cellWeights
         )
         {
-            NotImplemented;
-            return labelList(0);
+            return decompose(cellCentres, cellWeights);
         }
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const randomDecomp&) = delete;
+        void operator=(const simple&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace decompositionMethods
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

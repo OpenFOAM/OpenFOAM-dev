@@ -22,121 +22,99 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::multiLevelDecomp
+    Foam::decompositionMethods::manual
 
 Description
-    Decomposition given using consecutive application of decomposers.
+    Decomposition given a cell-to-processor association in a file
 
 SourceFiles
-    multiLevelDecomp.C
+    manual.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef multiLevelDecomp_H
-#define multiLevelDecomp_H
+#ifndef manual_H
+#define manual_H
 
 #include "decompositionMethod.H"
 
 namespace Foam
 {
+namespace decompositionMethods
+{
 
 /*---------------------------------------------------------------------------*\
-                      Class multiLevelDecomp Declaration
+                        Class manual Declaration
 \*---------------------------------------------------------------------------*/
 
-class multiLevelDecomp
+class manual
 :
     public decompositionMethod
 {
     // Private Data
 
-        dictionary methodsDict_;
-
-        PtrList<decompositionMethod> methods_;
-
-
-    // Private Member Functions
-
-        //- Given connectivity across processors work out connectivity
-        //  for a (consistent) subset
-        void subsetGlobalCellCells
-        (
-            const label nDomains,
-            const label domainI,
-            const labelList& dist,
-
-            const labelListList& cellCells,
-            const labelList& set,
-            labelListList& subCellCells,
-            labelList& cutConnections
-        ) const;
-
-        //- Decompose level methodI without addressing
-        void decompose
-        (
-            const labelListList& pointPoints,
-            const pointField& points,
-            const scalarField& pointWeights,
-            const labelList& pointMap,  // map back to original points
-            const label levelI,
-
-            labelField& finalDecomp
-        );
+        fileName decompDataFile_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("multiLevel");
+    TypeName("manual");
 
 
     // Constructors
 
         //- Construct given the decomposition dictionary
-        multiLevelDecomp(const dictionary& decompositionDict);
+        manual(const dictionary& decompositionDict);
 
         //- Disallow default bitwise copy construction
-        multiLevelDecomp(const multiLevelDecomp&) = delete;
+        manual(const manual&) = delete;
 
 
     //- Destructor
-    virtual ~multiLevelDecomp()
+    virtual ~manual()
     {}
 
 
     // Member Functions
-
-        //- Inherit decompose from decompositionMethod
-        using decompositionMethod::decompose;
 
         //- Return for every coordinate the wanted processor number. Use the
         //  mesh connectivity (if needed)
         virtual labelList decompose
         (
             const polyMesh& mesh,
-            const pointField& points,
-            const scalarField& pointWeights
+            const pointField& cellCentres,
+            const scalarField& cellWeights
         );
 
         //- Return for every coordinate the wanted processor number. Explicitly
         //  provided connectivity - does not use mesh_.
+        //  The connectivity is equal to mesh.cellCells() except for
+        //  - in parallel the cell numbers are global cell numbers (starting
+        //    from 0 at processor0 and then incrementing all through the
+        //    processors)
+        //  - the connections are across coupled patches
         virtual labelList decompose
         (
             const labelListList& globalCellCells,
             const pointField& cellCentres,
             const scalarField& cellWeights
-        );
+        )
+        {
+            NotImplemented;
+            return labelList(0);
+        }
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const multiLevelDecomp&) = delete;
+        void operator=(const manual&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace decompositionMethods
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

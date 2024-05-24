@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "structuredDecomp.H"
+#include "structured.H"
 #include "addToRunTimeSelectionTable.H"
 #include "FaceCellWave.H"
 #include "topoDistanceData.H"
@@ -33,27 +33,33 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(structuredDecomp, 0);
+namespace decompositionMethods
+{
+    defineTypeNameAndDebug(structured, 0);
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        structuredDecomp,
+        structured,
         decomposer
     );
 
     addToRunTimeSelectionTable
     (
         decompositionMethod,
-        structuredDecomp,
+        structured,
         distributor
     );
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::structuredDecomp::structuredDecomp(const dictionary& decompositionDict)
+Foam::decompositionMethods::structured::structured
+(
+    const dictionary& decompositionDict
+)
 :
     decompositionMethod(decompositionDict),
     methodDict_(decompositionDict_.optionalSubDict(typeName + "Coeffs")),
@@ -66,7 +72,7 @@ Foam::structuredDecomp::structuredDecomp(const dictionary& decompositionDict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelList Foam::structuredDecomp::decompose
+Foam::labelList Foam::decompositionMethods::structured::decompose
 (
     const polyMesh& mesh,
     const pointField& cellCentres,
@@ -168,7 +174,7 @@ Foam::labelList Foam::structuredDecomp::decompose
 }
 
 
-Foam::labelList Foam::structuredDecomp::decompose
+Foam::labelList Foam::decompositionMethods::structured::decompose
 (
     const labelListList& globalPointPoints,
     const pointField& points,

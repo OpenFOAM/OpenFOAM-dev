@@ -50,7 +50,7 @@ License
 #include "globalIndex.H"
 #include "meshTools.H"
 #include "OFstream.H"
-#include "geomDecomp.H"
+#include "geometric.H"
 #include "randomGenerator.H"
 #include "searchableSurfaces.H"
 #include "treeBoundBox.H"
@@ -1255,7 +1255,7 @@ Foam::label Foam::meshRefinement::countHits() const
 //
 //    labelList regionDistribution;
 //
-//    if (isA<geomDecomp>(decomposer))
+//    if (isA<decompositionMethods::geometric>(decomposer))
 //    {
 //        regionDistribution = decomposer.decompose(localPoints, localWeights);
 //    }

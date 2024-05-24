@@ -22,29 +22,31 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::structuredDecomp
+    Foam::decompositionMethods::structured
 
 Description
     Decomposition by walking out decomposition of patch cells mesh.
 
 SourceFiles
-    structuredDecomp.C
+    structured.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef structuredDecomp_H
-#define structuredDecomp_H
+#ifndef structured_H
+#define structured_H
 
 #include "decompositionMethod.H"
 
 namespace Foam
 {
+namespace decompositionMethods
+{
 
 /*---------------------------------------------------------------------------*\
-                      Class structuredDecomp Declaration
+                      Class structured Declaration
 \*---------------------------------------------------------------------------*/
 
-class structuredDecomp
+class structured
 :
     public decompositionMethod
 {
@@ -66,14 +68,14 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary
-        structuredDecomp(const dictionary& decompositionDict);
+        structured(const dictionary& decompositionDict);
 
         //- Disallow default bitwise copy construction
-        structuredDecomp(const structuredDecomp&) = delete;
+        structured(const structured&) = delete;
 
 
     //- Destructor
-    virtual ~structuredDecomp()
+    virtual ~structured()
     {}
 
 
@@ -101,12 +103,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const structuredDecomp&) = delete;
+        void operator=(const structured&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace decompositionMethods
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
