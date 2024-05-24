@@ -15,7 +15,9 @@ then
     && [ -n "$WM_MPLIB" ] \
     && [ -d "$FOAM_LIBBIN/$FOAM_MPI" ]
     then
-        wmakeMpiLib $SCOTCH_VERSION
+        wmakeMpiLib $SCOTCH_VERSION ptscotch
+    else
+        echo "    skipping ptscotch"
     fi
 else
     echo
