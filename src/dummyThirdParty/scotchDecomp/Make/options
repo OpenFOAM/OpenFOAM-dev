@@ -1,5 +1,0 @@
-EXE_INC = \
-    -I$(FOAM_SRC)/parallel/decompose/decompositionMethods/lnInclude \
-    -I$(FOAM_SRC)/parallel/decompose/scotchDecomp/lnInclude
-
-LIB_LIBS =

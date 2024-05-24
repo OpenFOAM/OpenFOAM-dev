@@ -4,9 +4,9 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-wmake $targetType scotchDecomp
-wmake $targetType ptscotchDecomp
-wmake $targetType metisDecomp
+wmake $targetType scotch
+wmake $targetType ptscotch
+wmake $targetType metis
 wmake $targetType MGridGen
 
 #------------------------------------------------------------------------------

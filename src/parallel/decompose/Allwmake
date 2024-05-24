@@ -6,16 +6,19 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 wmake $targetType decompositionMethods
 
-# Optionally build scotchDecomp with its Allwmake
-wmake -a $targetType scotchDecomp
+# Optionally build the scotch method with its Allwmake
+wmake -a $targetType scotch
 
-# Optionally build ptscotchDecomp with its Allwmake
-wmake -a $targetType ptscotchDecomp
+# Optionally build the ptscotch method with its Allwmake
+wmake -a $targetType ptscotch
 
-# Optionally build metisDecomp with its Allwmake
-wmake -a $targetType metisDecomp
+# Optionally build the metis method with its Allwmake
+wmake -a $targetType metis
 
-# Optionally build zoltanDecomp with its Allwmake
-wmake -a $targetType zoltanDecomp
+# Optionally build the parMetis method with its Allwmake
+wmake -a $targetType parMetis
+
+# Optionally build the zoltan method with its Allwmake
+wmake -a $targetType zoltan
 
 #------------------------------------------------------------------------------

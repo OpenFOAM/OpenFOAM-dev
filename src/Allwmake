@@ -32,7 +32,7 @@ wmake $targetType triSurface
 wmake $targetType meshTools
 
 # Decomposition methods needed by dummyThirdParty
-# (dummy metisDecomp, scotchDecomp etc) needed by e.g. meshTools
+# (dummy metis, scotch etc) needed by e.g. meshTools
 dummyThirdParty/Allwmake $targetType $*
 
 wmake $targetType finiteVolume
@@ -50,7 +50,6 @@ wmake $targetType polyTopoChange
 
 wmake $targetType conversion
 
-# Compile scotchDecomp, metisDecomp etc.
 parallel/Allwmake $targetType $*
 
 wmake $targetType fvMeshStitchers
