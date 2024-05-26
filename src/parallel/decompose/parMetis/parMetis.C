@@ -308,6 +308,14 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
             << exit(FatalError);
     }
 
+    if (Pstream::parRun() && !points.size())
+    {
+        Pout<< "No points on processor " << Pstream::myProcNo() << nl
+            << "    ParMETIS cannot redistribute without points"
+               "on all processors." << endl;
+        FatalErrorInFunction << exit(FatalError);
+    }
+
     // Make Metis CSR (Compressed Storage Format) storage
     //   adjncy      : contains neighbours (= edges in graph)
     //   xadj(celli) : start of information in adjncy for celli
@@ -352,6 +360,13 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
             << exit(FatalError);
     }
 
+    if (Pstream::parRun() && !regionPoints.size())
+    {
+        Pout<< "No points on processor " << Pstream::myProcNo() << nl
+            << "    ParMETIS cannot redistribute without points"
+               "on all processors." << endl;
+        FatalErrorInFunction << exit(FatalError);
+    }
 
     // Make Metis CSR (Compressed Storage Format) storage
     //   adjncy      : contains neighbours (= edges in graph)
@@ -403,6 +418,14 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
             << "Inconsistent number of cells (" << globalCellCells.size()
             << ") and number of cell centres (" << cellCentres.size()
             << ")." << exit(FatalError);
+    }
+
+    if (Pstream::parRun() && !cellCentres.size())
+    {
+        Pout<< "No points on processor " << Pstream::myProcNo() << nl
+            << "    ParMETIS cannot redistribute without points"
+               "on all processors." << endl;
+        FatalErrorInFunction << exit(FatalError);
     }
 
     // Make Metis Distributed CSR (Compressed Storage Format) storage
