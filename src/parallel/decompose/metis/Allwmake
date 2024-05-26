@@ -9,7 +9,7 @@ if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/metis`
 then
     . $settings
     echo "    using METIS_ARCH_PATH=$METIS_ARCH_PATH"
-    if [ -r $METIS_ARCH_PATH/lib/libmetis.so ]
+    if [ -r "$METIS_ARCH_PATH/lib/libmetis.so" ]
     then
         wmake $targetType
     fi

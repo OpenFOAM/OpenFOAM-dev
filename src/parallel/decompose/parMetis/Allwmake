@@ -11,9 +11,11 @@ if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/parMetis`
 then
     . $settings
     echo "    using PARMETIS_ARCH_PATH=$PARMETIS_ARCH_PATH"
-    if [ -r $PARMETIS_ARCH_PATH/lib/libparmetis.so ]
+    if [ -r "$PARMETIS_ARCH_PATH/lib/libparmetis.so" ]
     then
-        wmakeMpiLib $PARMETIS_VERSION
+        wmakeMpiLib $PARMETIS_VERSION parMetis
+    else
+        echo "    skipping parMetis"
     fi
 else
     echo

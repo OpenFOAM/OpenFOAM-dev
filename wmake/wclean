@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -54,7 +54,8 @@ Usage: $Script [OPTION] [dir]
 
 options:
   -silent | -s      Ignored - for compatibility with wmake
-  -help             Print the usage
+  -noLnInclude      Don't remove lnInclude directories
+  -help   | -h      Print the usage
 
 Clean up the wmake control directory Make/\$WM_OPTIONS and remove the
 lnInclude directories generated for libraries.
@@ -77,14 +78,19 @@ USAGE
 # Parse arguments and options
 #------------------------------------------------------------------------------
 
+noLnInclude=
 while [ "$#" -gt 0 ]
 do
     case "$1" in
-    -h | -help)
-        usage && exit 0
-        ;;
     -s | -silent)    # Ignored - for compatibility with wmake
         shift
+        ;;
+    -noLnInclude)
+        noLnInclude=true
+        shift
+        ;;
+    -h | -help)
+        usage && exit 0
         ;;
     -*)
         error "unknown option: '$*'"
@@ -274,7 +280,7 @@ fi
 # Remove the lnInclude directory if present
 #------------------------------------------------------------------------------
 
-if [ -d lnInclude ]
+if [ "$noLnInclude" != true ] && [ -d lnInclude ]
 then
     rm -rf lnInclude 2>/dev/null
 fi
