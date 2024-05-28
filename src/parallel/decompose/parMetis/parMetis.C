@@ -312,7 +312,7 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
     {
         Pout<< "No points on processor " << Pstream::myProcNo() << nl
             << "    ParMETIS cannot redistribute without points"
-               "on all processors." << endl;
+               " on all processors." << endl;
         FatalErrorInFunction << exit(FatalError);
     }
 
@@ -364,7 +364,7 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
     {
         Pout<< "No points on processor " << Pstream::myProcNo() << nl
             << "    ParMETIS cannot redistribute without points"
-               "on all processors." << endl;
+               " on all processors." << endl;
         FatalErrorInFunction << exit(FatalError);
     }
 
@@ -424,7 +424,7 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
     {
         Pout<< "No points on processor " << Pstream::myProcNo() << nl
             << "    ParMETIS cannot redistribute without points"
-               "on all processors." << endl;
+               " on all processors." << endl;
         FatalErrorInFunction << exit(FatalError);
     }
 
