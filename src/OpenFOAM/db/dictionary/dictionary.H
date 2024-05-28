@@ -313,13 +313,6 @@ public:
         //  A null pointer is treated like an empty dictionary.
         dictionary(const dictionary*);
 
-        //- Move constructor transferring parameter contents
-        //  given parent dictionary
-        dictionary(const dictionary& parentDict, dictionary&&);
-
-        //- Move constructor
-        dictionary(dictionary&&);
-
         //- Construct and return clone
         autoPtr<dictionary> clone() const;
 
@@ -807,8 +800,6 @@ public:
         ITstream& operator[](const word&) const;
 
         void operator=(const dictionary&);
-
-        void operator=(dictionary&&);
 
         //- Include entries from the given dictionary.
         //  Warn, but do not overwrite existing entries.

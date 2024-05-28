@@ -365,6 +365,8 @@ Foam::dictionary::dictionary
     IDLList<entry>(dict, *this),
     parent_(dictionary::null)
 {
+    std::cerr<< "dictionary::dictionary " << dict.name() << std::endl;
+
     forAllIter(IDLList<entry>, *this, iter)
     {
         hashedEntries_.insert(iter().keyword(), &iter());
@@ -383,20 +385,6 @@ Foam::dictionary::dictionary
 
 Foam::dictionary::dictionary
 (
-    dictionary&& dict
-)
-:
-    dictionaryName(move(dict.name())),
-    IDLList<entry>(move(dict)),
-    hashedEntries_(move(dict.hashedEntries_)),
-    parent_(dict.parent_),
-    patternEntries_(move(dict.patternEntries_)),
-    patternRegexps_(move(dict.patternRegexps_))
-{}
-
-
-Foam::dictionary::dictionary
-(
     const dictionary* dictPtr
 )
 :
@@ -405,26 +393,6 @@ Foam::dictionary::dictionary
     if (dictPtr)
     {
         operator=(*dictPtr);
-    }
-}
-
-
-Foam::dictionary::dictionary
-(
-    const dictionary& parentDict,
-    dictionary&& dict
-)
-:
-    dictionaryName(move(dict.name())),
-    IDLList<entry>(move(dict)),
-    hashedEntries_(move(dict.hashedEntries_)),
-    parent_(parentDict),
-    patternEntries_(move(dict.patternEntries_)),
-    patternRegexps_(move(dict.patternRegexps_))
-{
-    if (parentDict.name() != fileName::null)
-    {
-        name() = parentDict.name()/name();
     }
 }
 
@@ -1425,24 +1393,6 @@ void Foam::dictionary::operator=(const dictionary& rhs)
     {
         add(iter().clone(*this).ptr());
     }
-}
-
-
-void Foam::dictionary::operator=(dictionary&& rhs)
-{
-    // Check for assignment to self
-    if (this == &rhs)
-    {
-        FatalIOErrorInFunction(*this)
-            << "attempted assignment to self for dictionary " << name()
-            << abort(FatalIOError);
-    }
-
-    dictionaryName::operator=(move(rhs));
-    IDLList<entry>::operator=(move(rhs));
-    hashedEntries_ = move(rhs.hashedEntries_);
-    patternEntries_ = move(rhs.patternEntries_);
-    patternRegexps_ = move(rhs.patternRegexps_);
 }
 
 
