@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,26 +34,22 @@ Description
 
     \subsection secFunctionObjects Using functionObjects
 
-    FunctionObjects are selected by additional entries in the
-    $FOAM_CASE/system/controlDict dictionary.  Each object is listed in the \c
-    functions sub-dictionary, e.g. to select the \c functionObjectType
-    functionObject the following entry would be specified:
+    functionObjects are selected by entries in the $FOAM_CASE/system/functions
+    dictionary e.g. to select the \c functionObjectType functionObject the
+    following entry would be specified:
 
     \verbatim
-    functions
+    <functionObjectName>
     {
-        <functionObjectName>
-        {
-            type                functionObjectType;
-            libs                ("libMyFunctionObjectlib.so");
-            region              defaultRegion;
-            enabled             yes;
-            startTime           0;
-            endTime             10;
-            writeControl        writeTime;
-            writeInterval       1;
-            ...
-        }
+        type                functionObjectType;
+        libs                ("libMyFunctionObjectlib.so");
+        region              defaultRegion;
+        enabled             yes;
+        startTime           0;
+        endTime             10;
+        writeControl        writeTime;
+        writeInterval       1;
+        ...
     }
     \endverbatim
 
