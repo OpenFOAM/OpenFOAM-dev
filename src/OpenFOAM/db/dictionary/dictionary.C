@@ -365,8 +365,6 @@ Foam::dictionary::dictionary
     IDLList<entry>(dict, *this),
     parent_(dictionary::null)
 {
-    std::cerr<< "dictionary::dictionary " << dict.name() << std::endl;
-
     forAllIter(IDLList<entry>, *this, iter)
     {
         hashedEntries_.insert(iter().keyword(), &iter());
