@@ -49,6 +49,51 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+Foam::label Foam::decompositionMethod::nWeights
+(
+    const pointField& points,
+    const scalarField& pointWeights
+) const
+{
+    const label localnWeights =
+        points.size() ? pointWeights.size()/points.size() : 0;
+
+    const label nWeights = returnReduce(localnWeights, maxOp<label>());
+
+    if (localnWeights && localnWeights != nWeights)
+    {
+        FatalErrorInFunction
+            << "Number of weights on this processor " << localnWeights
+            << " does not equal the maximum number of weights " << nWeights
+            << exit(FatalError);
+    }
+
+    return nWeights;
+}
+
+
+Foam::label Foam::decompositionMethod::checkWeights
+(
+    const pointField& points,
+    const scalarField& pointWeights
+) const
+{
+    const label nWeights = this->nWeights(points, pointWeights);
+
+    if (nWeights > 1)
+    {
+        FatalErrorInFunction
+            << "decompositionMethod " << type()
+            << " does not support multiple constraints"
+            << exit(FatalError);
+    }
+
+    return nWeights;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::decompositionMethod::decompositionMethod
@@ -758,7 +803,8 @@ Foam::labelList Foam::decompositionMethod::decompose
 )
 {
     // Any weights specified?
-    label nWeights = returnReduce(cellWeights.size(), sumOp<label>());
+    const bool hasWeights =
+        returnReduce(cellWeights.size(), sumOp<label>()) > 0;
 
     // Any processor sets?
     label nProcSets = 0;
@@ -796,7 +842,7 @@ Foam::labelList Foam::decompositionMethod::decompose
     {
         // No constraints, possibly weights
 
-        if (nWeights > 0)
+        if (hasWeights)
         {
             finalDecomp = decompose
             (
@@ -860,11 +906,11 @@ Foam::labelList Foam::decompositionMethod::decompose
 
         scalarField regionWeights(localRegion.nLocalRegions(), 0);
 
-        if (nWeights > 0)
+        if (hasWeights)
         {
             forAll(localRegion, celli)
             {
-                label regionI = localRegion[celli];
+                const label regionI = localRegion[celli];
 
                 regionWeights[regionI] += cellWeights[celli];
             }

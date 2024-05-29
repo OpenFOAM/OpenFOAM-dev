@@ -445,6 +445,8 @@ Foam::labelList Foam::decompositionMethods::scotch::decompose
             << exit(FatalError);
     }
 
+    checkWeights(points, pointWeights);
+
     // Calculate local or global (if Pstream::parRun()) connectivity
     CompactListList<label> cellCells;
     calcCellCells
@@ -486,6 +488,8 @@ Foam::labelList Foam::decompositionMethods::scotch::decompose
             << " differs from number of cells in mesh " << mesh.nCells()
             << exit(FatalError);
     }
+
+    checkWeights(agglomPoints, pointWeights);
 
     // Calculate local or global (if Pstream::parRun()) connectivity
     CompactListList<label> cellCells;
@@ -536,6 +540,7 @@ Foam::labelList Foam::decompositionMethods::scotch::decompose
             << ")." << exit(FatalError);
     }
 
+    checkWeights(cellCentres, cellWeights);
 
     // Make Metis CSR (Compressed Storage Format) storage
     //   adjncy      : contains neighbours (= edges in graph)

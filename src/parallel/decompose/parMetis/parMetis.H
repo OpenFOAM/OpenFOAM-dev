@@ -115,6 +115,7 @@ class parMetis
             const labelList& xadj,
             const labelList& adjncy,
             const pointField& cellCentres,
+            const label nWeights,
             const labelList& cellWeights,
             const labelList& faceWeights,
             labelList& finalDecomp

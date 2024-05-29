@@ -404,6 +404,8 @@ Foam::labelList Foam::decompositionMethods::simple::decompose
     const scalarField& weights
 )
 {
+    checkWeights(points, weights);
+
     if (!Pstream::parRun())
     {
         return decomposeOneProc(points, weights);

@@ -77,6 +77,8 @@ Foam::labelList Foam::decompositionMethods::random::decompose
     const scalarField& pointWeights
 )
 {
+    checkWeights(points, pointWeights);
+
     randomGenerator rndGen(seed_);
 
     // Simple random integer. No guarantees about balance.

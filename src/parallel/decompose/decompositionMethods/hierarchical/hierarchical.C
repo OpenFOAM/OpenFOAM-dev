@@ -731,8 +731,7 @@ Foam::labelList Foam::decompositionMethods::hierarchical::decompose
     const scalarField& weights
 )
 {
-    // construct a list for the final result
-    labelList finalDecomp(points.size(), 0);
+    checkWeights(points, weights);
 
     // Start off with every point sorted onto itself.
     labelList slice(points.size());
@@ -750,6 +749,9 @@ Foam::labelList Foam::decompositionMethods::hierarchical::decompose
     reduce(allSize, sumOp<label>());
 
     const label sizeTol = max(1, label(1e-3*allSize/nProcessors_));
+
+    // Construct a list for the final result
+    labelList finalDecomp(points.size(), 0);
 
     // Sort recursive
     sortComponent

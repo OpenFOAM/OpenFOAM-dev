@@ -280,7 +280,7 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
 
     struct Zoltan_Struct *zz = Zoltan_Create(PstreamGlobals::MPI_COMM_FOAM);
 
-    const int nWeights = pWeights.size()/points.size();
+    const int nWeights = this->nWeights(points, pWeights);
 
     // Set internal parameters
     Zoltan_Set_Param(zz, "return_lists", "export");
@@ -291,14 +291,18 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
     Zoltan_Set_Param(zz, "debug_level", "0");
     Zoltan_Set_Param(zz, "imbalance_tol", "1.05");
 
+    word lb_method("graph");
+
     // Set default method parameters
-    Zoltan_Set_Param(zz, "lb_method", "graph");
+    Zoltan_Set_Param(zz, "lb_method", lb_method.c_str());
     Zoltan_Set_Param(zz, "lb_approach", "repartition");
 
     if (decompositionDict_.found("zoltanCoeffs"))
     {
         const dictionary& coeffsDict_ =
             decompositionDict_.subDict("zoltanCoeffs");
+
+        coeffsDict_.readIfPresent("lb_method", lb_method);
 
         forAllConstIter(IDLList<entry>, coeffsDict_, iter)
         {
@@ -316,6 +320,14 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
                 Zoltan_Set_Param(zz, key.c_str(), value.c_str());
             }
         }
+    }
+
+    if (nWeights > 1 && lb_method != "rcb")
+    {
+        FatalIOErrorInFunction(decompositionDict_)
+            << "Multiple constraints specified for lb_method " << lb_method
+            << " but is only supported by the rcb method"
+            << exit(FatalIOError);
     }
 
     void* pointsPtr = &const_cast<pointField&>(points);

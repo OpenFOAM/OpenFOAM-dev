@@ -420,6 +420,7 @@ Foam::labelList Foam::decompositionMethods::ptscotch::decompose
             << exit(FatalError);
     }
 
+    checkWeights(points, pointWeights);
 
     // Make Metis CSR (Compressed Storage Format) storage
     //   adjncy      : contains neighbours (= edges in graph)
@@ -465,6 +466,7 @@ Foam::labelList Foam::decompositionMethods::ptscotch::decompose
             << exit(FatalError);
     }
 
+    checkWeights(agglomPoints, pointWeights);
 
     // Make Metis CSR (Compressed Storage Format) storage
     //   adjncy      : contains neighbours (= edges in graph)
@@ -517,6 +519,7 @@ Foam::labelList Foam::decompositionMethods::ptscotch::decompose
             << ")." << exit(FatalError);
     }
 
+    checkWeights(cellCentres, cellWeights);
 
     // Make Metis CSR (Compressed Storage Format) storage
     //   adjncy      : contains neighbours (= edges in graph)

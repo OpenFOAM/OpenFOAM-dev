@@ -55,6 +55,7 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
     const labelList& xadj,
     const labelList& adjncy,
     const pointField& cellCentres,
+    const label nWeights,
     const labelList& cellWeights,
     const labelList& faceWeights,
     labelList& decomp
@@ -62,9 +63,6 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
 {
     // C style numbering
     label numFlag = 0;
-
-    // Number of weights or balance constraints
-    label nWeights = cellWeights.size()/cellCentres.size();
 
     List<real_t> processorWeights;
 
@@ -140,7 +138,7 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
             const_cast<label*>(adjwgtPtr),
             &wgtFlag,
             &numFlag,
-            &nWeights,
+            const_cast<label*>(&nWeights),
             &nProcessors_,
             processorWeights.begin(),
             ubvec.begin(),
@@ -177,7 +175,7 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
             &numFlag,
             &nDims,
             xyz.begin(),
-            &nWeights,
+            const_cast<label*>(&nWeights),
             &nProcessors_,
             processorWeights.begin(),
             ubvec.begin(),
@@ -202,7 +200,7 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
             const_cast<label*>(adjwgtPtr),
             &wgtFlag,
             &numFlag,
-            &nWeights,
+            const_cast<label*>(&nWeights),
             &nProcessors_,
             processorWeights.begin(),
             ubvec.begin(),
@@ -329,13 +327,16 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
         cellCells
     );
 
+    const label nWeights = this->nWeights(points, pointWeights);
+
     labelList decomp;
     decompose
     (
         cellCells.offsets(),
         cellCells.m(),
         points,
-        scaleWeights(pointWeights, pointWeights.size()/points.size()),
+        nWeights,
+        scaleWeights(pointWeights, nWeights),
         labelList(),
         decomp
     );
@@ -381,6 +382,8 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
         cellCells
     );
 
+    const label nWeights = this->nWeights(regionPoints, pointWeights);
+
     // Decompose using weights
     labelList decomp;
     decompose
@@ -388,7 +391,8 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
         cellCells.m(),
         cellCells.offsets(),
         regionPoints,
-        scaleWeights(pointWeights, pointWeights.size()/regionPoints.size()),
+        nWeights,
+        scaleWeights(pointWeights, nWeights),
         labelList(),
         decomp
     );
@@ -433,13 +437,16 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
     //   xadj(celli) : start of information in adjncy for celli
     CompactListList<label> cellCells(globalCellCells);
 
+    const label nWeights = this->nWeights(cellCentres, cellWeights);
+
     labelList decomp;
     decompose
     (
         cellCells.offsets(),
         cellCells.m(),
         cellCentres,
-        scaleWeights(cellWeights, cellWeights.size()/cellCentres.size()),
+        nWeights,
+        scaleWeights(cellWeights, nWeights),
         labelList(),
         decomp
     );

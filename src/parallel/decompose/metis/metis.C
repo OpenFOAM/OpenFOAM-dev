@@ -53,7 +53,6 @@ Foam::label Foam::decompositionMethods::metis::decompose
     const labelList& adjncy,
     const labelList& xadj,
     const scalarField& cellWeights,
-
     labelList& decomp
 )
 {
@@ -217,6 +216,8 @@ Foam::labelList Foam::decompositionMethods::metis::decompose
             << exit(FatalError);
     }
 
+    checkWeights(points, pointWeights);
+
     // Make Metis CSR (Compressed Storage Format) storage
     //   adjncy      : contains neighbours (= edges in graph)
     //   xadj(celli) : start of information in adjncy for celli
@@ -260,6 +261,8 @@ Foam::labelList Foam::decompositionMethods::metis::decompose
             << exit(FatalError);
     }
 
+    checkWeights(regionPoints, regionWeights);
+
     // Make Metis CSR (Compressed Storage Format) storage
     //   adjncy      : contains neighbours (= edges in graph)
     //   xadj(celli) : start of information in adjncy for celli
@@ -298,6 +301,8 @@ Foam::labelList Foam::decompositionMethods::metis::decompose
             << ") and number of cell centres (" << cellCentres.size()
             << ")." << exit(FatalError);
     }
+
+    checkWeights(cellCentres, cellWeights);
 
     // Make Metis CSR (Compressed Storage Format) storage
     //   adjncy      : contains neighbours (= edges in graph)

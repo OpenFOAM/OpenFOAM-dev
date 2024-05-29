@@ -61,6 +61,24 @@ protected:
         PtrList<decompositionConstraint> constraints_;
 
 
+    // Protected member functions
+
+        //- Return the number of weights per point
+        label nWeights
+        (
+            const pointField& points,
+            const scalarField& pointWeights
+        ) const;
+
+        //- Check the weights against the points
+        //  and return the number of weights per point
+        label checkWeights
+        (
+            const pointField& points,
+            const scalarField& pointWeights
+        ) const;
+
+
 public:
 
     //- Runtime type information
