@@ -73,8 +73,7 @@ int main(int argc, char *argv[])
 
     argList::addNote
     (
-        "Stitch the faces on the specified patch pairs\n"
-        "converting the overlapping patch faces into internal faces.\n"
+        "Utility to reorder the patches of a case.\n"
     );
 
     #include "addOverwriteOption.H"
