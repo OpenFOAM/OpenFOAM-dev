@@ -175,6 +175,7 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
                         - sumProcCpuLoads[l]/Pstream::nProcs()
                        )/averageProcessorCpuTime
                     << endl;
+                l++;
             }
 
             Info<< "    Imbalance of base load " << ": "
