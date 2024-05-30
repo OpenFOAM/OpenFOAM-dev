@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,6 @@ void writeDecomposition(const domainDecomposition& meshes)
         << endl;
 }
 
-
 }
 
 
@@ -188,6 +187,11 @@ int main(int argc, char *argv[])
     (
         "newTimes",
         "only reconstruct new times (i.e. that do not exist already)"
+    );
+    argList::addBoolOption
+    (
+        "rm",
+        "remove processor time directories after reconstruction"
     );
 
     // Include explicit constant options, and explicit zero option (to prevent
@@ -573,29 +577,66 @@ int main(int argc, char *argv[])
             Info<< endl;
         }
 
-        if (regionNames == wordList(1, polyMesh::defaultRegion)) continue;
-
-        // Collect the region uniform directories
-        forAll(regionNames, regioni)
+        if (regionNames != wordList(1, polyMesh::defaultRegion))
         {
-            const word& regionName = regionNames[regioni];
-            const word regionDir =
-                regionName == polyMesh::defaultRegion ? word::null : regionName;
-
-            if (haveUniform(runTimes, regionDir))
+            // Collect the region uniform directories
+            forAll(regionNames, regioni)
             {
-                // Prefixed scope
+                const word& regionName = regionNames[regioni];
+                const word regionDir =
+                    regionName == polyMesh::defaultRegion
+                  ? word::null
+                  : regionName;
+
+                if (haveUniform(runTimes, regionDir))
                 {
-                    const RegionRef<domainDecomposition> meshes =
-                        regionMeshes[regioni];
+                    // Prefixed scope
+                    {
+                        const RegionRef<domainDecomposition> meshes =
+                            regionMeshes[regioni];
 
-                    Info<< "Collecting uniform files" << endl;
+                        Info<< "Collecting uniform files" << endl;
 
-                    reconstructUniform(runTimes, regionDir);
+                        reconstructUniform(runTimes, regionDir);
+                    }
+
+                    Info<< endl;
                 }
-
-                Info<< endl;
             }
+        }
+
+        if (args.optionFound("rm") && times[timei].name() != Time::constantName)
+        {
+            const bool allRegions = args.optionFound("allRegions");
+
+            forAll(regionNames, regioni)
+            {
+                const word& regionName = regionNames[regioni];
+                const word regionDir =
+                    allRegions || regionName == polyMesh::defaultRegion
+                  ? word::null
+                  : regionName;
+
+                const RegionRef<domainDecomposition> meshes =
+                    regionMeshes[regioni];
+
+                Info<< "Removing processors time directory" << endl;
+
+                for (label proci=0; proci<nProcs; proci++)
+                {
+                    const fileName procTimePath = fileHandler().filePath
+                    (
+                        runTimes.procTimes()[proci].timePath()/regionDir
+                    );
+
+                    if (isDir(procTimePath))
+                    {
+                        rmDir(procTimePath);
+                    }
+                }
+            }
+
+            Info<< endl;
         }
     }
 
