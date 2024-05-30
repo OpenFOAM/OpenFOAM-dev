@@ -171,9 +171,7 @@ void Foam::Function1s::Polynomial<Type>::write
     const unitConversions& units
 ) const
 {
-    writeKeyword(os, "coeffs")
-        << convertWrite(units, coeffs_)
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "coeffs", convertWrite(units, coeffs_));
 }
 
 
