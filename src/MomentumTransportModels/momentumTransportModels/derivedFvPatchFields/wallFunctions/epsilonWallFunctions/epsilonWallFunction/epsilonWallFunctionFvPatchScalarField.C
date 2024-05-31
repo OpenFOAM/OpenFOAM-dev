@@ -227,7 +227,21 @@ void Foam::epsilonWallFunctionFvPatchScalarField::map
     const fieldMapper& mapper
 )
 {
+    wallCellWallFunctionFvPatchScalarField::map(ptf, mapper);
     mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+    wallCellGPtr_.clear();
+    wallCellEpsilonPtr_.clear();
+}
+
+
+void Foam::epsilonWallFunctionFvPatchScalarField::reset
+(
+    const fvPatchField<scalar>& ptf
+)
+{
+    fixedValueFvPatchField<scalar>::reset(ptf);
+    wallCellGPtr_.clear();
+    wallCellEpsilonPtr_.clear();
 }
 
 

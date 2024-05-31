@@ -50,8 +50,6 @@ class wallCellWallFunctionFvPatchScalarField
 :
     public fixedValueFvPatchField<scalar>
 {
-private:
-
     // Private Data
 
         //- Tolerance used in weighted calculations
@@ -165,6 +163,18 @@ public:
     //- Destructor
     virtual ~wallCellWallFunctionFvPatchScalarField()
     {}
+
+
+    // Member Functions
+
+        // Mapping functions
+
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchField<scalar>&, const fieldMapper&);
+
+            //- Reset the fvPatchField to the given fvPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const fvPatchField<scalar>&);
 
 
     // Member Operators

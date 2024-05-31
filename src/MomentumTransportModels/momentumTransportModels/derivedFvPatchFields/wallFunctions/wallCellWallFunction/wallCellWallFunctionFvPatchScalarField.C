@@ -254,4 +254,30 @@ wallCellWallFunctionFvPatchScalarField
 {}
 
 
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::wallCellWallFunctionFvPatchScalarField::map
+(
+    const fvPatchField<scalar>& ptf,
+    const fieldMapper& mapper
+)
+{
+    fixedValueFvPatchField<scalar>::map(ptf, mapper);
+    wallCellsPtr_.clear();
+    wallCellFractionPtr_.clear();
+}
+
+
+void Foam::wallCellWallFunctionFvPatchScalarField::reset
+(
+    const fvPatchField<scalar>& ptf
+)
+{
+    fixedValueFvPatchField<scalar>::reset(ptf);
+    wallCellsPtr_.clear();
+    wallCellFractionPtr_.clear();
+}
+
+
 // ************************************************************************* //
