@@ -19,6 +19,8 @@ internalField       uniform 800;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     walls
     {
         type                zeroGradient;

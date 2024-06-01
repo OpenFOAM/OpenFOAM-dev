@@ -9,6 +9,9 @@ runApplication chemkinToFoam \
                constant/reactions constant/speciesThermo
 
 runApplication blockMesh
-runApplication $(getApplication)
+
+runApplication decomposePar
+runParallel $(getApplication)
+runApplication reconstructPar
 
 #------------------------------------------------------------------------------

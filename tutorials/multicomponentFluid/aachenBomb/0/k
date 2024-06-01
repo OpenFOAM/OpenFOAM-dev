@@ -20,6 +20,8 @@ internalField   uniform 1;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     walls
     {
         type            kqRWallFunction;

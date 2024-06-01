@@ -21,6 +21,8 @@ chemistryType
 
 chemistry       on;
 
+cpuLoad         true;
+
 initialChemicalTimeStep 1e-07;
 
 odeCoeffs

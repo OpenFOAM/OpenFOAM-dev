@@ -8,25 +8,19 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      epsilon;
+    class       dictionary;
+    object      dynamicMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
-
-internalField   uniform 90;
-
-boundaryField
+distributor
 {
-    #includeEtc "caseDicts/setConstraintTypes"
+    type            loadBalancer;
 
-    walls
-    {
-        type            epsilonWallFunction;
-        value           uniform 90;
-    }
+    libs            ("libfvMeshDistributors.so");
+
+    multiConstraint true;
+    redistributionInterval  20;
 }
 
 

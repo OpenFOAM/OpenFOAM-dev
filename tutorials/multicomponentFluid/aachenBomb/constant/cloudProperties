@@ -16,6 +16,8 @@ FoamFile
 
 type        sprayCloud;
 
+cpuLoad     true;
+
 solution
 {
     coupled         true;

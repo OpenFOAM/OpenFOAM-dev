@@ -8,26 +8,30 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      epsilon;
+    class       dictionary;
+    location    "system";
+    object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
+numberOfSubdomains 12;
 
-internalField   uniform 90;
+decomposer      simple;
 
-boundaryField
+distributor     zoltan;
+libs            ("libzoltanDecomp.so");
+
+// distributor     parMetis;
+// libs            ("libparMetisDecomp.so");
+
+simpleCoeffs
 {
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    walls
-    {
-        type            epsilonWallFunction;
-        value           uniform 90;
-    }
+    n           (2 2 3);
 }
 
+zoltanCoeffs
+{
+    lb_method   rcb;
+}
 
 // ************************************************************************* //
