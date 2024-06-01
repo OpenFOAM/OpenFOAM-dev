@@ -212,6 +212,26 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
         );
     }
 
+    // Sum the number of cells allocated to each processor
+    labelList nProcCells(Pstream::nProcs(), 0);
+
+    forAll(decomp, i)
+    {
+        nProcCells[decomp[i]]++;
+    }
+
+    reduce(nProcCells, ListOp<sumOp<label>>());
+
+    // If there are no cells allocated to this processor keep the first one
+    // to ensure that all processors have at least one cell
+    if (nProcCells[Pstream::myProcNo()] == 0)
+    {
+        Pout<< "    No cells allocated to this processor"
+               ", keeping first cell"
+            << endl;
+        decomp[0] = Pstream::myProcNo();
+    }
+
     return edgeCut;
 }
 
@@ -327,7 +347,8 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
         cellCells
     );
 
-    const label nWeights = this->nWeights(points, pointWeights);
+    label nWeights = this->nWeights(points, pointWeights);
+    const labelList intWeights(scaleWeights(pointWeights, nWeights));
 
     labelList decomp;
     decompose
@@ -336,7 +357,7 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
         cellCells.m(),
         points,
         nWeights,
-        scaleWeights(pointWeights, nWeights),
+        intWeights,
         labelList(),
         decomp
     );
@@ -382,7 +403,8 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
         cellCells
     );
 
-    const label nWeights = this->nWeights(regionPoints, pointWeights);
+    label nWeights = this->nWeights(regionPoints, pointWeights);
+    const labelList intWeights(scaleWeights(pointWeights, nWeights));
 
     // Decompose using weights
     labelList decomp;
@@ -392,7 +414,7 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
         cellCells.offsets(),
         regionPoints,
         nWeights,
-        scaleWeights(pointWeights, nWeights),
+        intWeights,
         labelList(),
         decomp
     );
@@ -437,7 +459,8 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
     //   xadj(celli) : start of information in adjncy for celli
     CompactListList<label> cellCells(globalCellCells);
 
-    const label nWeights = this->nWeights(cellCentres, cellWeights);
+    label nWeights = this->nWeights(cellCentres, cellWeights);
+    const labelList intWeights(scaleWeights(cellWeights, nWeights));
 
     labelList decomp;
     decompose
@@ -446,7 +469,7 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
         cellCells.m(),
         cellCentres,
         nWeights,
-        scaleWeights(cellWeights, nWeights),
+        intWeights,
         labelList(),
         decomp
     );

@@ -321,7 +321,7 @@ Foam::labelList Foam::decompositionMethod::decompose
 Foam::labelList Foam::decompositionMethod::scaleWeights
 (
     const scalarField& weights,
-    const label nWeights,
+    label& nWeights,
     const bool distributed
 )
 {
@@ -344,6 +344,41 @@ Foam::labelList Foam::decompositionMethod::scaleWeights
         {
             intWeights[i] = ceil(scale*weights[i]);
         }
+
+        /*
+        // Alternatively calculate a separate scaling factor
+        // for each weight, it is not clear from the parMETIS or Scotch manuals
+        // which method should be used.
+        //
+        // Calculate the scalar -> integer scaling factors
+        scalarList sumWeights(nWeights, 0.0);
+
+        forAll(weights, i)
+        {
+            sumWeights[i % nWeights] += weights[i];
+        }
+
+        if (distributed)
+        {
+            reduce(sumWeights, ListOp<sumOp<scalar>>());
+        }
+
+        scalarList scale(nWeights, 0.0);
+        forAll(scale, i)
+        {
+            if (sumWeights[i] > small)
+            {
+                scale[i] = labelMax/(2*sumWeights[i]);
+            }
+        }
+
+        // Convert weights to integer
+        intWeights.setSize(weights.size());
+        forAll(intWeights, i)
+        {
+            intWeights[i] = ceil(scale[i % nWeights]*weights[i]);
+        }
+        */
 
         // Calculate the sum over all processors of each weight
         labelList sumIntWeights(nWeights, 0);
@@ -383,6 +418,9 @@ Foam::labelList Foam::decompositionMethod::scaleWeights
 
             // Resize the weights list
             intWeights.setSize(nNonZeroWeights*(intWeights.size()/nWeights));
+
+            // Reset the number of weight to the number of non-zero weights
+            nWeights = nNonZeroWeights;
         }
     }
 

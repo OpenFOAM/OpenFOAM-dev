@@ -219,9 +219,10 @@ Foam::label Foam::decompositionMethods::ptscotch::decompose
                 << exit(FatalError);
         }
 
-        velotab = scaleWeights(cellWeights, 1);
+        label nWeights = 1;
+        velotab = scaleWeights(cellWeights, nWeights);
 
-        if (!cellWeights.size())
+        if (nWeights == 1 && !cellWeights.size())
         {
             // Locally zero cells but not globally. Make sure we have
             // some size so .begin() does not return null pointer. Data

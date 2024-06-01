@@ -79,8 +79,10 @@ Foam::label Foam::decompositionMethods::metis::decompose
             << exit(FatalError);
     }
 
+    label nWeights = 1;
+
     // Cell weights (so on the vertices of the dual)
-    labelList intWeights(scaleWeights(cellWeights, 1, false));
+    labelList intWeights(scaleWeights(cellWeights, nWeights, false));
 
     // Face weights (so on the edges of the dual)
     labelList faceWeights;
@@ -149,16 +151,16 @@ Foam::label Foam::decompositionMethods::metis::decompose
     {
         METIS_PartGraphRecursive
         (
-            &numCells,          // num vertices in graph
-            &ncon,              // num balancing constraints
+            &numCells,                  // num vertices in graph
+            &ncon,                      // num balancing constraints
             const_cast<labelList&>(xadj).begin(),   // indexing into adjncy
             const_cast<labelList&>(adjncy).begin(), // neighbour info
-            intWeights.begin(),// vertexweights
-            nullptr,               // vsize: total communication vol
-            faceWeights.begin(),// edgeweights
-            &nProcs,            // nParts
+            intWeights.begin(),         // vertexweights
+            nullptr,                    // vsize: total communication vol
+            faceWeights.begin(),        // edgeweights
+            &nProcs,                    // nParts
             processorWeights.begin(),   // tpwgts
-            nullptr,               // ubvec: processor imbalance (default)
+            nullptr,                    // ubvec: processor imbalance (default)
             options.begin(),
             &edgeCut,
             decomp.begin()
@@ -168,16 +170,16 @@ Foam::label Foam::decompositionMethods::metis::decompose
     {
         METIS_PartGraphKway
         (
-            &numCells,          // num vertices in graph
-            &ncon,              // num balancing constraints
+            &numCells,                  // num vertices in graph
+            &ncon,                      // num balancing constraints
             const_cast<labelList&>(xadj).begin(),   // indexing into adjncy
             const_cast<labelList&>(adjncy).begin(), // neighbour info
-            intWeights.begin(),// vertexweights
-            nullptr,               // vsize: total communication vol
-            faceWeights.begin(),// edgeweights
-            &nProcs,            // nParts
+            intWeights.begin(),         // vertexweights
+            nullptr,                    // vsize: total communication vol
+            faceWeights.begin(),        // edgeweights
+            &nProcs,                    // nParts
             processorWeights.begin(),   // tpwgts
-            nullptr,               // ubvec: processor imbalance (default)
+            nullptr,                    // ubvec: processor imbalance (default)
             options.begin(),
             &edgeCut,
             decomp.begin()

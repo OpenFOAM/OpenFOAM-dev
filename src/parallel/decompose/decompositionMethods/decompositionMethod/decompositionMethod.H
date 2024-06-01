@@ -236,10 +236,11 @@ public:
 
             //- Convert the given scalar weights to labels
             //  in the range 0-labelMax/2
+            //  Removes 0 weights and updates nWeights accordingly
             static labelList scaleWeights
             (
                 const scalarField& weights,
-                const label nWeights,
+                label& nWeights,
                 const bool distributed = true
             );
 

@@ -248,7 +248,7 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
     const CompactListList<label>& adjacency,
     const pointField& points,
     const scalarField& pWeights,
-    List<label>& finalDecomp
+    List<label>& decomp
 ) const
 {
     if (Pstream::parRun() && !points.size())
@@ -391,14 +391,34 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
         Pout << "Zoltan number to move " << changed << " " << num_exp << endl;
     }
 
-    finalDecomp.setSize(points.size());
-    finalDecomp = Pstream::myProcNo();
+    decomp.setSize(points.size());
+    decomp = Pstream::myProcNo();
 
     if (changed)
     {
         for(int i=0; i<num_exp; i++)
         {
-            finalDecomp[exp_local_ids[i]] = exp_procs[i];
+            decomp[exp_local_ids[i]] = exp_procs[i];
+        }
+
+        // Sum the number of cells allocated to each processor
+        labelList nProcCells(Pstream::nProcs(), 0);
+
+        forAll(decomp, i)
+        {
+            nProcCells[decomp[i]]++;
+        }
+
+        reduce(nProcCells, ListOp<sumOp<label>>());
+
+        // If there are no cells allocated to this processor keep the first one
+        // to ensure that all processors have at least one cell
+        if (nProcCells[Pstream::myProcNo()] == 0)
+        {
+            Pout<< "    No cells allocated to this processor"
+                   ", keeping first cell"
+                << endl;
+            decomp[0] = Pstream::myProcNo();
         }
     }
 
@@ -467,21 +487,15 @@ Foam::labelList Foam::decompositionMethods::zoltan::decompose
     );
 
     // Decompose using default weights
-    List<label> finalDecomp;
+    List<label> decomp;
     decompose
     (
         cellCells,
         cellCentres,
         cellWeights,
-        finalDecomp
+        decomp
     );
 
-    // Copy back to labelList
-    labelList decomp(cellCentres.size());
-    forAll(decomp, i)
-    {
-        decomp[i] = finalDecomp[i];
-    }
     return decomp;
 }
 
@@ -514,13 +528,13 @@ Foam::labelList Foam::decompositionMethods::zoltan::decompose
     );
 
     // Decompose using weights
-    List<label> finalDecomp;
+    List<label> decomp;
     decompose
     (
         cellCells,
         agglomPoints,
         pointWeights,
-        finalDecomp
+        decomp
     );
 
     // Rework back into decomposition for original mesh
@@ -528,7 +542,7 @@ Foam::labelList Foam::decompositionMethods::zoltan::decompose
 
     forAll(fineDistribution, i)
     {
-        fineDistribution[i] = finalDecomp[agglom[i]];
+        fineDistribution[i] = decomp[agglom[i]];
     }
 
     return fineDistribution;
@@ -555,16 +569,16 @@ Foam::labelList Foam::decompositionMethods::zoltan::decompose
     CompactListList<label> pointPoints(globalPointPoints);
 
     // Decompose using weights
-    List<label> finalDecomp;
+    List<label> decomp;
     decompose
     (
         pointPoints,
         points,
         pWeights,
-        finalDecomp
+        decomp
     );
 
-    return finalDecomp;
+    return decomp;
 }
 
 
