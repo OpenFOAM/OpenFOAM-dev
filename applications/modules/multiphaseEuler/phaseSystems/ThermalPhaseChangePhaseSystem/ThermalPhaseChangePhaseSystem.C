@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -689,9 +689,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
 
                 wallBoilingActive = true;
 
-                nDmdtf +=
-                    (interface == wbht.activePhaseInterface() ? +1 : -1)
-                   *wbht.dmdtf();
+                nDmdtf += (wbht.flipSign() ? -1 : +1)*wbht.dmdtf();
             }
 
             forAllConstIter(phaseInterface, interface, interfaceIter)

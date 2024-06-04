@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      omega.liquid;
+    object      omega.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -29,7 +29,7 @@ boundaryField
     outlet
     {
         type            inletOutlet;
-        phi             phi.liquid;
+        phi             phi.gas;
         inletValue      uniform 0.0015;
         value           uniform 0.01;
     }

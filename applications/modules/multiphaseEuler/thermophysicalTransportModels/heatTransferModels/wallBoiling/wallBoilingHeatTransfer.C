@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,6 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::wallBoilingHeatTransfer
        .otherInterface()
     ),
     vapourPhaseName_(dict.lookup("vapourPhase")),
-    liquidPhaseName_(dict.lookup("liquidPhase")),
     heatTransferModel_
     (
         heatTransferModel::New
@@ -81,7 +80,6 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::wallBoilingHeatTransfer
         )
     ),
     relax_(dict.lookupOrDefault<scalar>("relax", scalar(1))),
-    seedFraction_(dict.lookupOrDefault<scalar>("nucleationSeedFraction", 1e-4)),
     partitioningModel_(nullptr),
     nucleationSiteModel_(nullptr),
     departureDiamModel_(nullptr),
@@ -395,14 +393,14 @@ activePhaseInterface(const phaseInterfaceKey& phaseInterface) const
 }
 
 
-Foam::phaseInterfaceKey Foam::heatTransferModels::wallBoilingHeatTransfer::
-activePhaseInterface() const
+bool Foam::heatTransferModels::wallBoilingHeatTransfer::
+flipSign() const
 {
     const phaseModel& liquid = interface_.continuous();
     const phaseSystem& fluid = liquid.fluid();
     const phaseModel& vapour(fluid.phases()[vapourPhaseName_]);
 
-    return phaseInterfaceKey(vapour, liquid);
+    return vapour.name() != phaseInterfaceKey(vapour, liquid).first();
 }
 
 

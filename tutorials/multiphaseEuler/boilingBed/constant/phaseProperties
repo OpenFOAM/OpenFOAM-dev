@@ -155,7 +155,6 @@ heatTransfer
         type            wallBoiling;
 
         vapourPhase     gas;
-        liquidPhase     liquid;
 
         partitioningModel
         {

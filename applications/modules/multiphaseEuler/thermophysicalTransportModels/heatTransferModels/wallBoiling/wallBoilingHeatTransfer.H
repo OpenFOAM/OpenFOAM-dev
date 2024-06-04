@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,6 @@ Usage
     {
         type            wallBoiling;
 
-        liquidPhase     liquid;
         vapourPhase     gas;
 
         heatTransferModel
@@ -124,17 +123,11 @@ class wallBoilingHeatTransfer
         //- Name of the vapour phase
         const word vapourPhaseName_;
 
-        //- Name of the liquid phase
-        const word liquidPhaseName_;
-
         //- Pointer to the underlying heat transfer model
         autoPtr<heatTransferModel> heatTransferModel_;
 
         //- Relaxation factor
         const scalar relax_;
-
-        //- Bulk nucleation seed phase fraction
-        const scalar seedFraction_;
 
         //- Run-time selected heat flux partitioning model
         autoPtr<Foam::wallBoilingModels::partitioningModel>
@@ -206,8 +199,8 @@ public:
         //- Is there phase change mass transfer for this phaseInterface
         bool activePhaseInterface(const phaseInterfaceKey&) const;
 
-        //- Key for the phase change phaseInterface
-        phaseInterfaceKey activePhaseInterface() const;
+        //- True if the sign of dmdtf should be changed
+        bool flipSign() const;
 
         //- Return the rate of phase-change
         const volScalarField& dmdtf() const;
