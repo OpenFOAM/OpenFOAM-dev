@@ -177,6 +177,10 @@ public:
             //- Map the given fvPatchField onto this fvPatchField
             virtual void map(const fvPatchScalarField&, const fieldMapper&);
 
+            //- Reset the fvPatchField to the given fvPatchField
+            //  Used for mesh to mesh mapping
+            virtual void reset(const fvPatchScalarField&);
+
 
         // Evaluation functions
 

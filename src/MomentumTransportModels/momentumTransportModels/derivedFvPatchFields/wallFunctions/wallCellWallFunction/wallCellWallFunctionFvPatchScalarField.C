@@ -212,15 +212,17 @@ wallCellWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict,
-    const bool valueRequired
+    const dictionary& dict
 )
 :
-    fixedValueFvPatchField<scalar>(p, iF, dict, valueRequired),
+    fixedValueFvPatchField<scalar>(p, iF, dict, false),
     masterPatchi_(-1),
     wallCellsPtr_(nullptr),
     wallCellFractionPtr_(nullptr)
-{}
+{
+    // Apply a zero-gradient condition on start-up
+    operator==(patchInternalField());
+}
 
 
 Foam::wallCellWallFunctionFvPatchScalarField::
@@ -229,15 +231,17 @@ wallCellWallFunctionFvPatchScalarField
     const wallCellWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
-    const fieldMapper& mapper,
-    const bool mappingRequired
+    const fieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper, mappingRequired),
+    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper, false),
     masterPatchi_(-1),
     wallCellsPtr_(nullptr),
     wallCellFractionPtr_(nullptr)
-{}
+{
+    // Apply a zero-gradient condition to any unmapped faces
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
 
 
 Foam::wallCellWallFunctionFvPatchScalarField::
@@ -259,11 +263,12 @@ wallCellWallFunctionFvPatchScalarField
 
 void Foam::wallCellWallFunctionFvPatchScalarField::map
 (
-    const fvPatchField<scalar>& ptf,
+    const fvPatchScalarField& ptf,
     const fieldMapper& mapper
 )
 {
-    fixedValueFvPatchField<scalar>::map(ptf, mapper);
+    // Apply a zero-gradient condition to any unmapped faces
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
     wallCellsPtr_.clear();
     wallCellFractionPtr_.clear();
 }
@@ -271,7 +276,7 @@ void Foam::wallCellWallFunctionFvPatchScalarField::map
 
 void Foam::wallCellWallFunctionFvPatchScalarField::reset
 (
-    const fvPatchField<scalar>& ptf
+    const fvPatchScalarField& ptf
 )
 {
     fixedValueFvPatchField<scalar>::reset(ptf);

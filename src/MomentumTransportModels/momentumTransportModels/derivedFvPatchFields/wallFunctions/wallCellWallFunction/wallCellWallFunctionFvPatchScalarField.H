@@ -119,8 +119,7 @@ public:
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
-            const dictionary&,
-            const bool valueRequired
+            const dictionary&
         );
 
         //- Construct by mapping given wallCellWallFunctionFvPatchScalarField
@@ -130,8 +129,7 @@ public:
             const wallCellWallFunctionFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
-            const fieldMapper&,
-            const bool mappingRequired
+            const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
@@ -170,17 +168,17 @@ public:
         // Mapping functions
 
             //- Map the given fvPatchField onto this fvPatchField
-            virtual void map(const fvPatchField<scalar>&, const fieldMapper&);
+            virtual void map(const fvPatchScalarField&, const fieldMapper&);
 
             //- Reset the fvPatchField to the given fvPatchField
             //  Used for mesh to mesh mapping
-            virtual void reset(const fvPatchField<scalar>&);
+            virtual void reset(const fvPatchScalarField&);
 
 
     // Member Operators
 
         //- Inherit assignment operators to prevent warnings
-        using fvPatchField<scalar>::operator=;
+        using fvPatchScalarField::operator=;
 };
 
 

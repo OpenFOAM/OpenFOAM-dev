@@ -180,13 +180,10 @@ epsilonWallFunctionFvPatchScalarField
     const dictionary& dict
 )
 :
-    wallCellWallFunctionFvPatchScalarField(p, iF, dict, false),
+    wallCellWallFunctionFvPatchScalarField(p, iF, dict),
     wallCellGPtr_(nullptr),
     wallCellEpsilonPtr_(nullptr)
-{
-    // Apply a zero-gradient condition on start-up
-    operator==(patchInternalField());
-}
+{}
 
 
 Foam::epsilonWallFunctionFvPatchScalarField::
@@ -198,12 +195,10 @@ epsilonWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper, false),
+    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
     wallCellGPtr_(nullptr),
     wallCellEpsilonPtr_(nullptr)
-{
-    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
-}
+{}
 
 
 Foam::epsilonWallFunctionFvPatchScalarField::
@@ -228,7 +223,6 @@ void Foam::epsilonWallFunctionFvPatchScalarField::map
 )
 {
     wallCellWallFunctionFvPatchScalarField::map(ptf, mapper);
-    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
     wallCellGPtr_.clear();
     wallCellEpsilonPtr_.clear();
 }
@@ -236,10 +230,10 @@ void Foam::epsilonWallFunctionFvPatchScalarField::map
 
 void Foam::epsilonWallFunctionFvPatchScalarField::reset
 (
-    const fvPatchField<scalar>& ptf
+    const fvPatchScalarField& ptf
 )
 {
-    fixedValueFvPatchField<scalar>::reset(ptf);
+    wallCellWallFunctionFvPatchScalarField::reset(ptf);
     wallCellGPtr_.clear();
     wallCellEpsilonPtr_.clear();
 }
@@ -258,7 +252,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs()
 
     operator==(patchInternalField());
 
-    fvPatchField<scalar>::updateCoeffs();
+    fvPatchScalarField::updateCoeffs();
 }
 
 
@@ -281,7 +275,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrix
 
     manipulateMatrixMaster(matrix);
 
-    fvPatchField<scalar>::manipulateMatrix(matrix);
+    fvPatchScalarField::manipulateMatrix(matrix);
 }
 
 

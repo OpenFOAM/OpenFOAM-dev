@@ -210,15 +210,12 @@ Foam::omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
     const dictionary& dict
 )
 :
-    wallCellWallFunctionFvPatchScalarField(p, iF, dict, false),
+    wallCellWallFunctionFvPatchScalarField(p, iF, dict),
     beta1_(dict.lookupOrDefault<scalar>("beta1", 0.075)),
     blended_(dict.lookupOrDefault<Switch>("blended", false)),
     wallCellGPtr_(nullptr),
     wallCellOmegaPtr_(nullptr)
-{
-    // Apply a zero-gradient condition on start-up
-    this->operator==(patchInternalField());
-}
+{}
 
 
 Foam::omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
@@ -229,14 +226,12 @@ Foam::omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper, false),
+    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
     beta1_(ptf.beta1_),
     blended_(ptf.blended_),
     wallCellGPtr_(nullptr),
     wallCellOmegaPtr_(nullptr)
-{
-    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
-}
+{}
 
 
 Foam::omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
@@ -261,7 +256,20 @@ void Foam::omegaWallFunctionFvPatchScalarField::map
     const fieldMapper& mapper
 )
 {
-    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+    wallCellWallFunctionFvPatchScalarField::map(ptf, mapper);
+    wallCellGPtr_.clear();
+    wallCellOmegaPtr_.clear();
+}
+
+
+void Foam::omegaWallFunctionFvPatchScalarField::reset
+(
+    const fvPatchScalarField& ptf
+)
+{
+    wallCellWallFunctionFvPatchScalarField::reset(ptf);
+    wallCellGPtr_.clear();
+    wallCellOmegaPtr_.clear();
 }
 
 
@@ -278,7 +286,7 @@ void Foam::omegaWallFunctionFvPatchScalarField::updateCoeffs()
 
     operator==(patchInternalField());
 
-    fvPatchField<scalar>::updateCoeffs();
+    fvPatchScalarField::updateCoeffs();
 }
 
 
@@ -301,7 +309,7 @@ void Foam::omegaWallFunctionFvPatchScalarField::manipulateMatrix
 
     manipulateMatrixMaster(matrix);
 
-    fvPatchField<scalar>::manipulateMatrix(matrix);
+    fvPatchScalarField::manipulateMatrix(matrix);
 }
 
 

@@ -58,11 +58,8 @@ epsilonmWallFunctionFvPatchScalarField
     const dictionary& dict
 )
 :
-    wallCellWallFunctionFvPatchScalarField(p, iF, dict, false)
-{
-    // Apply a zero-gradient condition on start-up
-    this->operator==(patchInternalField());
-}
+    wallCellWallFunctionFvPatchScalarField(p, iF, dict)
+{}
 
 
 Foam::epsilonmWallFunctionFvPatchScalarField::
@@ -74,7 +71,7 @@ epsilonmWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper, true)
+    wallCellWallFunctionFvPatchScalarField(ptf, p, iF, mapper)
 {}
 
 
@@ -121,7 +118,7 @@ void Foam::epsilonmWallFunctionFvPatchScalarField::manipulateMatrix
 
     manipulateMatrixMaster(matrix);
 
-    fvPatchField<scalar>::manipulateMatrix(matrix);
+    fvPatchScalarField::manipulateMatrix(matrix);
 }
 
 
