@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "injectionModel.H"
+#include "randomGenerator.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -40,6 +41,23 @@ namespace Foam
 
 const Foam::NamedEnum<Foam::injectionModel::uniformParcelSize, 3>
     Foam::injectionModel::uniformParcelSizeNames_;
+
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+Foam::scalar Foam::injectionModel::globalScalar01(randomGenerator& rndGen)
+{
+    scalar value = - vGreat;
+
+    if (Pstream::master())
+    {
+        value = rndGen.scalar01();
+    }
+
+    Pstream::scatter(value);
+
+    return value;
+}
 
 
 // ************************************************************************* //

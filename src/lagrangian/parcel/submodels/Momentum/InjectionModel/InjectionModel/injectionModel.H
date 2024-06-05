@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,8 @@ SourceFiles
 namespace Foam
 {
 
+class randomGenerator;
+
 /*---------------------------------------------------------------------------*\
                           Class injectionModel Declaration
 \*---------------------------------------------------------------------------*/
@@ -62,6 +64,17 @@ public:
 
         //- Names of the parcels' uniform size
         static const NamedEnum<uniformParcelSize, 3> uniformParcelSizeNames_;
+
+
+    // Static Member Functions
+
+        //- Return a scalar uniformly distributed between zero and one. Samples
+        //  on the master and then scatters the result to all processors. Use
+        //  of this is discouraged. It is expensive and introduces
+        //  non-randomness in all cores other then the master. It is better
+        //  practice to keep a generator synchronised by calling it the same
+        //  number of times on the different processes.
+        static scalar globalScalar01(randomGenerator& rndGen);
 };
 
 

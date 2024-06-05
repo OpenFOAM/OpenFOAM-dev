@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "patchInjectionBase.H"
+#include "injectionModel.H"
 #include "polyMesh.H"
 #include "SubField.H"
 #include "randomGenerator.H"
@@ -161,7 +162,7 @@ void Foam::patchInjectionBase::setPositionAndCell
 
     const polyPatch& patch = mesh.boundaryMesh()[patchId_];
 
-    scalar area = rndGen.globalScalar01()*sumProcArea_.last();
+    scalar area = injectionModel::globalScalar01(rndGen)*sumProcArea_.last();
 
     if (patch.size() > 0)
     {

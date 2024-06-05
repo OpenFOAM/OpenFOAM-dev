@@ -371,8 +371,8 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
         }
         case imDisc:
         {
-            const scalar beta = twoPi*rndGen.globalScalar01();
-            const scalar frac = rndGen.globalScalar01();
+            const scalar beta = twoPi*this->globalScalar01(rndGen);
+            const scalar frac = this->globalScalar01(rndGen);
             const vector n = normalised(direction_->value(t));
             const vector t1 = normalised(perpendicular(n));
             const vector t2 = normalised(n ^ t1);

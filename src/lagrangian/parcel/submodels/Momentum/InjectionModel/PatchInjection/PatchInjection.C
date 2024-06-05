@@ -178,7 +178,7 @@ Foam::label Foam::PatchInjection<CloudType>::nParcelsToInject
 
         // Inject an additional parcel with a probability based on the
         // remainder after the floor function
-        if (nParcels - scalar(nParcelsToInject) > rndGen.globalScalar01())
+        if (nParcels - scalar(nParcelsToInject) > this->globalScalar01(rndGen))
         {
             ++nParcelsToInject;
         }

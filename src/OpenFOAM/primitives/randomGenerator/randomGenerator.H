@@ -167,17 +167,6 @@ public:
             );
 
 
-        // Global scalars
-
-            //- Return a scalar uniformly distributed between zero and one.
-            //  Samples on the master and then scatters the result to all
-            //  processors. Use of this is discouraged. It is expensive and
-            //  introduces non-randomness in all cores other then the master.
-            //  It is better practice to keep a generator synchronised by
-            //  calling it the same number of times on the different processes.
-            scalar globalScalar01();
-
-
         //- Randomly permute a list
         template<class Container>
         inline void permute(Container& l);
