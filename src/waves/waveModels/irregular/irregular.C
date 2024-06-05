@@ -135,7 +135,7 @@ Foam::waveModels::irregular::irregular
     }
 
     // Set random phases
-    randomGenerator rndGen(0);
+    randomGenerator rndGen(0, true);
     forAll(phases_, i)
     {
         phases_[i] = rndGen.scalarAB(0, constant::mathematical::twoPi);

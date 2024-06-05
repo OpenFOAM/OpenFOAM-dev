@@ -55,7 +55,7 @@ void Foam::sampledSets::sphereRandom::calcSamples
     DynamicList<label>& samplingFaces
 ) const
 {
-    randomGenerator rndGen(261782);
+    randomGenerator rndGen(261782, true);
 
     for (label i = 0; i < nPoints_; ++ i)
     {

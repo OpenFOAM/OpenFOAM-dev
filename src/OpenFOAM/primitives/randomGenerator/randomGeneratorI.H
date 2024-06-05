@@ -28,6 +28,31 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+inline uint64_t Foam::randomGenerator::seed::x(const bool global) const
+{
+    const uint64_t localS =
+        global ? s_ : s_ + (UINT64_MAX/Pstream::nProcs())*Pstream::myProcNo();
+
+    return (localS << 16) + 0x330E;
+}
+
+
+inline void Foam::randomGenerator::checkSync() const
+{
+    if (global_)
+    {
+        uint64_t xMaster = x_;
+        Pstream::scatter(xMaster);
+        if (xMaster != x_)
+        {
+            FatalErrorInFunction
+                << "Global random number generator is not synchronised"
+                << exit(FatalError);
+        }
+    }
+}
+
+
 inline uint64_t Foam::randomGenerator::sample()
 {
     x_ = (A*x_ + C) % M;
@@ -35,33 +60,116 @@ inline uint64_t Foam::randomGenerator::sample()
 }
 
 
-// * * * * * * * * * * * * * Protected Constructors  * * * * * * * * * * * * //
-
-inline Foam::randomGenerator::randomGenerator(const pTraits<uint64_t> s)
-:
-    x_((s << 16) + 0x330E)
-{}
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-inline uint64_t Foam::randomGenerator::x() const
+inline Foam::scalar Foam::randomGenerator::scalar01NoCheckSync()
 {
-    return x_;
+    return scalar(sample())/(M >> 17);
+}
+
+
+inline Foam::scalar Foam::randomGenerator::scalarABNoCheckSync
+(
+    const scalar a,
+    const scalar b
+)
+{
+    return a + scalar01NoCheckSync()*(b - a);
+}
+
+
+template<class Type>
+inline Type Foam::randomGenerator::sample01NoCheckSync()
+{
+    Type value;
+    for (direction i = 0; i < pTraits<Type>::nComponents; ++ i)
+    {
+        value.component(i) = scalar01NoCheckSync();
+    }
+    return value;
+}
+
+
+template<>
+inline Foam::scalar Foam::randomGenerator::sample01NoCheckSync()
+{
+    return scalar01NoCheckSync();
+}
+
+
+template<>
+inline Foam::label Foam::randomGenerator::sample01NoCheckSync()
+{
+    return sample() % 2;
+}
+
+
+template<class Type>
+inline Type Foam::randomGenerator::sampleABNoCheckSync
+(
+    const Type& a,
+    const Type& b
+)
+{
+    return a + cmptMultiply(sample01NoCheckSync<Type>(), b - a);
+}
+
+
+template<>
+inline Foam::scalar Foam::randomGenerator::sampleABNoCheckSync
+(
+    const scalar& a,
+    const scalar& b
+)
+{
+    return scalarABNoCheckSync(a, b);
+}
+
+
+template<>
+inline Foam::label Foam::randomGenerator::sampleABNoCheckSync
+(
+    const label& a,
+    const label& b
+)
+{
+    return a + sample() % (b - a);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-inline Foam::randomGenerator::randomGenerator(const label s)
+inline Foam::randomGenerator::seed::seed(const label s)
 :
-    randomGenerator(pTraits<uint64_t>(s))
+    s_(s)
 {}
 
 
-inline Foam::randomGenerator::randomGenerator(const word& s)
+inline Foam::randomGenerator::seed::seed(const word& s)
 :
-    randomGenerator(pTraits<uint64_t>(Hash<word>()(s)))
+    s_(Hash<word>()(s))
+{}
+
+
+inline Foam::randomGenerator::randomGenerator(const seed s, const bool global)
+:
+    global_(global),
+    x_(s.x(global))
+{
+    checkSync();
+}
+
+
+inline Foam::randomGenerator::randomGenerator(const randomGenerator& rndGen)
+:
+    global_(rndGen.global_),
+    x_(rndGen.x_)
+{
+    checkSync();
+}
+
+
+inline Foam::randomGenerator::randomGenerator(randomGenerator&& rndGen)
+:
+    randomGenerator(static_cast<const randomGenerator&>(rndGen))
 {}
 
 
@@ -75,7 +183,11 @@ inline Foam::randomGenerator::~randomGenerator()
 
 inline Foam::scalar Foam::randomGenerator::scalar01()
 {
-    return scalar(sample())/(M >> 17);
+    #ifdef FULLDEBUG
+    checkSync();
+    #endif
+
+    return scalar01NoCheckSync();
 }
 
 
@@ -84,10 +196,14 @@ inline Foam::tmp<Foam::scalarField> Foam::randomGenerator::scalar01
     const label n
 )
 {
+    #ifdef FULLDEBUG
+    checkSync();
+    #endif
+
     tmp<scalarField> tValues(new scalarField(n));
     for (label i = 0; i < n; ++ i)
     {
-        tValues.ref()[i] = scalar01();
+        tValues.ref()[i] = scalar01NoCheckSync();
     }
     return tValues;
 }
@@ -99,7 +215,11 @@ inline Foam::scalar Foam::randomGenerator::scalarAB
     const scalar b
 )
 {
-    return a + scalar01()*(b - a);
+    #ifdef FULLDEBUG
+    checkSync();
+    #endif
+
+    return scalarABNoCheckSync(a, b);
 }
 
 
@@ -110,10 +230,14 @@ inline Foam::tmp<Foam::scalarField> Foam::randomGenerator::scalarAB
     const scalar b
 )
 {
+    #ifdef FULLDEBUG
+    checkSync();
+    #endif
+
     tmp<scalarField> tValues(new scalarField(n));
     for (label i = 0; i < n; ++ i)
     {
-        tValues.ref()[i] = scalarAB(a, b);
+        tValues.ref()[i] = scalarABNoCheckSync(a, b);
     }
     return tValues;
 }
@@ -122,26 +246,11 @@ inline Foam::tmp<Foam::scalarField> Foam::randomGenerator::scalarAB
 template<class Type>
 inline Type Foam::randomGenerator::sample01()
 {
-    Type value;
-    for (direction i = 0; i < pTraits<Type>::nComponents; ++ i)
-    {
-        value.component(i) = scalar01();
-    }
-    return value;
-}
+    #ifdef FULLDEBUG
+    checkSync();
+    #endif
 
-
-template<>
-inline Foam::scalar Foam::randomGenerator::sample01()
-{
-    return scalar01();
-}
-
-
-template<>
-inline Foam::label Foam::randomGenerator::sample01()
-{
-    return sample() % 2;
+    return sample01NoCheckSync<Type>();
 }
 
 
@@ -151,10 +260,14 @@ inline Foam::tmp<Foam::Field<Type>> Foam::randomGenerator::sample01
     const label n
 )
 {
+    #ifdef FULLDEBUG
+    checkSync();
+    #endif
+
     tmp<Field<Type>> tValues(new Field<Type>(n));
     for (label i = 0; i < n; ++ i)
     {
-        tValues.ref()[i] = sample01<Type>();
+        tValues.ref()[i] = sample01NoCheckSync<Type>();
     }
     return tValues;
 }
@@ -163,29 +276,11 @@ inline Foam::tmp<Foam::Field<Type>> Foam::randomGenerator::sample01
 template<class Type>
 inline Type Foam::randomGenerator::sampleAB(const Type& a, const Type& b)
 {
-    return a + cmptMultiply(sample01<Type>(), b - a);
-}
+    #ifdef FULLDEBUG
+    checkSync();
+    #endif
 
-
-template<>
-inline Foam::scalar Foam::randomGenerator::sampleAB
-(
-    const scalar& a,
-    const scalar& b
-)
-{
-    return scalarAB(a, b);
-}
-
-
-template<>
-inline Foam::label Foam::randomGenerator::sampleAB
-(
-    const label& a,
-    const label& b
-)
-{
-    return a + sample() % (b - a);
+    return sampleABNoCheckSync(a, b);
 }
 
 
@@ -197,10 +292,14 @@ inline Foam::tmp<Foam::Field<Type>> Foam::randomGenerator::sampleAB
     const Type& b
 )
 {
+    #ifdef FULLDEBUG
+    checkSync();
+    #endif
+
     tmp<Field<Type>> tValues(new Field<Type>(n));
     for (label i = 0; i < n; ++ i)
     {
-        tValues.ref()[i] = sampleAB(a, b);
+        tValues.ref()[i] = sampleABNoCheckSync(a, b);
     }
     return tValues;
 }
@@ -209,10 +308,20 @@ inline Foam::tmp<Foam::Field<Type>> Foam::randomGenerator::sampleAB
 template<class Container>
 inline void Foam::randomGenerator::permute(Container& l)
 {
+    #ifdef FULLDEBUG
+    checkSync();
+    #endif
+
     for (label i = 0; i < l.size(); ++ i)
     {
-        Swap(l[i], l[sampleAB<label>(i, l.size())]);
+        Swap(l[i], l[sampleABNoCheckSync<label>(i, l.size())]);
     }
+}
+
+
+inline Foam::randomGenerator Foam::randomGenerator::generator()
+{
+    return randomGenerator(sample(), global_);
 }
 
 

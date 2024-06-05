@@ -79,7 +79,7 @@ Foam::labelList Foam::decompositionMethods::random::decompose
 {
     checkWeights(points, pointWeights);
 
-    randomGenerator rndGen(seed_);
+    randomGenerator rndGen(seed_, true);
 
     // Simple random integer. No guarantees about balance.
     /*

@@ -118,7 +118,7 @@ void Foam::sampledSets::boundaryRandom::calcSamples
     }
 
     // Generate the samples
-    randomGenerator rndGen(261782);
+    randomGenerator rndGen(261782, true);
     const label proci = Pstream::myProcNo();
     for (label i = 0; i < nPoints_; ++ i)
     {

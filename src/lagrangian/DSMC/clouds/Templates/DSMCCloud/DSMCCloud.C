@@ -650,7 +650,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         mesh_
     ),
     constProps_(),
-    rndGen_(label(149382906) + 7183*Pstream::myProcNo()),
+    rndGen_(label(149382906)),
     boundaryT_
     (
         volScalarField
@@ -904,7 +904,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         )
     ),
     constProps_(),
-    rndGen_(label(971501) + 1526*Pstream::myProcNo()),
+    rndGen_(label(971501)),
     boundaryT_
     (
         volScalarField

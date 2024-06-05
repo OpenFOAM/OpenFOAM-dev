@@ -593,7 +593,7 @@ int main(int argc, char *argv[])
     #include "createPolyMesh.H"
 
 
-    randomGenerator rndGen(5341*(Pstream::myProcNo()+1));
+    randomGenerator rndGen(5341);
 
 
     // Face sync

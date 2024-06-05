@@ -67,6 +67,43 @@ Ostream& operator<<(Ostream&, const randomGenerator&);
 
 class randomGenerator
 {
+public:
+
+    // Public Classes
+
+        //- Seed class
+        class seed
+        {
+            // Private Data
+
+                //- The seed value
+                const uint64_t s_;
+
+
+            // Private Member Functions
+
+                //- Return the initial integer
+                inline uint64_t x(const bool global) const;
+
+
+        public:
+
+            //- Allow randomGenerator to access the seed value
+            friend class randomGenerator;
+
+
+            // Constructors
+
+                //- Construct from a label
+                inline seed(const label s);
+
+                //- Construct from a word
+                inline seed(const word& s);
+        };
+
+
+private:
+
     // Private Static Data
 
         //- The parameters of the linear congruential iteration
@@ -75,42 +112,78 @@ class randomGenerator
 
     // Private Data
 
+        //- Is this generator global?
+        const bool global_;
+
         //- The stored integer
         uint64_t x_;
 
 
     // Private Member Functions
 
+        //- Check the state is synchronised
+        void checkSync() const;
+
         //- Advance the state and return an integer sample
         inline uint64_t sample();
 
 
-protected:
+        // Scalars
 
-    // Protected Constructors
+            //- Return a scalar uniformly distributed between zero and one.
+            //  Don't check synchronisation.
+            inline scalar scalar01NoCheckSync();
 
-        //- Construct from a 64-bit unsigned integer seed
-        inline randomGenerator(const pTraits<uint64_t> s);
+            //- Return a scalar uniformly distributed between zero and one.
+            //  Don't check synchronisation.
+            inline scalar scalarABNoCheckSync(const scalar a, const scalar b);
 
 
-    // Protected Member Functions
+        // Other Types
 
-        //- Access the stored integer
-        uint64_t x() const;
+            //- Return a type with components uniformly distributed between
+            //  zero and one. Don't check synchronisation.
+            template<class Type>
+            inline Type sample01NoCheckSync();
+
+            //- Return a type with components uniformly distributed between two
+            //  limits. Don't check synchronisation.
+            template<class Type>
+            inline Type sampleABNoCheckSync(const Type& a, const Type& b);
 
 
 public:
 
     // Constructors
 
-        //- Construct from a label seed
-        inline randomGenerator(const label s);
+        //- Construct from a seed
+        inline randomGenerator(const seed s, const bool global = false);
 
-        //- Construct from a word seed
-        inline randomGenerator(const word& s);
+        //- Copy construct
+        inline randomGenerator(const randomGenerator&);
+
+        //- Move construct
+        inline randomGenerator(randomGenerator&&);
 
         //- Construct from a stream
-        randomGenerator(Istream& is);
+        randomGenerator(Istream& is, const bool global = false);
+
+        //- Construct from a dictionary
+        randomGenerator
+        (
+            const word& name,
+            const dictionary& dict,
+            randomGenerator&& defaultRndGen
+        );
+
+        //- Construct from a dictionary
+        randomGenerator
+        (
+            const word& name,
+            const dictionary& dict,
+            const seed defaultS,
+            const bool global = false
+        );
 
 
     //- Destructor
@@ -171,6 +244,18 @@ public:
         template<class Container>
         inline void permute(Container& l);
 
+        //- Create a randomly seeded generator
+        inline randomGenerator generator();
+
+
+    // Member Operators
+
+        //- Copy-assignment
+        void operator=(const randomGenerator&);
+
+        //- Move-assignment
+        void operator=(randomGenerator&&);
+
 
     // IOstream Operators
 
@@ -183,16 +268,27 @@ public:
 
 
 template<>
-inline scalar randomGenerator::sample01();
+inline scalar randomGenerator::sample01NoCheckSync();
 
 template<>
-inline label randomGenerator::sample01();
+inline label randomGenerator::sample01NoCheckSync();
 
 template<>
-inline scalar randomGenerator::sampleAB(const scalar& a, const scalar& b);
+inline scalar randomGenerator::sampleABNoCheckSync
+(
+    const scalar& a,
+    const scalar& b
+);
 
 template<>
-inline label randomGenerator::sampleAB(const label& a, const label& b);
+inline label randomGenerator::sampleABNoCheckSync
+(
+    const label& a,
+    const label& b
+);
+
+
+void writeEntry(Ostream& os, const randomGenerator& rndGen);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

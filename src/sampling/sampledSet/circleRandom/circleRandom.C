@@ -55,7 +55,7 @@ void Foam::sampledSets::circleRandom::calcSamples
     DynamicList<label>& samplingFaces
 ) const
 {
-    randomGenerator rndGen(261782);
+    randomGenerator rndGen(261782, true);
 
     const vector radial1 = normalised(perpendicular(normal_));
     const vector radial2 = normalised(normal_ ^ radial1);

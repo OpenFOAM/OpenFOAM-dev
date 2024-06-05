@@ -28,10 +28,67 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::randomGenerator::randomGenerator(Istream& is)
+Foam::randomGenerator::randomGenerator(Istream& is, const bool global)
 :
+    global_(global),
     x_(pTraits<uint64_t>(is))
+{
+    checkSync();
+}
+
+
+Foam::randomGenerator::randomGenerator
+(
+    const word& name,
+    const dictionary& dict,
+    randomGenerator&& defaultRndGen
+)
+:
+    global_(defaultRndGen.global_),
+    x_
+    (
+        dict.found(name)
+      ? dict.lookup<uint64_t>(name)
+      : dict.found(name + "Seed")
+      ? seed(dict.lookup<label>(name + "Seed")).x(global_)
+      : defaultRndGen.x_
+    )
 {}
+
+
+Foam::randomGenerator::randomGenerator
+(
+    const word& name,
+    const dictionary& dict,
+    const seed defaultS,
+    const bool global
+)
+:
+    randomGenerator(name, dict, randomGenerator(defaultS, global))
+{}
+
+
+// * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
+
+void Foam::randomGenerator::operator=(const randomGenerator& rndGen)
+{
+    if (global_ != rndGen.global_)
+    {
+        FatalErrorInFunction
+            << "Attempted assignment of a " << (global_ ? "" : "non-")
+            << "global random generator to a " << (rndGen.global_ ? "" : "non-")
+            << "global random generator"
+            << exit(FatalError);
+    }
+    x_ = rndGen.x_;
+    checkSync();
+}
+
+
+void Foam::randomGenerator::operator=(randomGenerator&& rndGen)
+{
+    *this = static_cast<const randomGenerator&>(rndGen);
+}
 
 
 // * * * * * * * * * * * * * * Friend Operators * * * * * * * * * * * * * * //
@@ -39,6 +96,7 @@ Foam::randomGenerator::randomGenerator(Istream& is)
 Foam::Istream& Foam::operator>>(Istream& is, randomGenerator& rndGen)
 {
     is >> rndGen.x_;
+    rndGen.checkSync();
     is.check("operator>>(Istream& is, randomGenerator& rndGen)");
     return is;
 }
@@ -46,9 +104,18 @@ Foam::Istream& Foam::operator>>(Istream& is, randomGenerator& rndGen)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const randomGenerator& rndGen)
 {
+    rndGen.checkSync();
     os << rndGen.x_;
     os.check("operator<<(Ostream& os, const randomGenerator& rndGen)");
     return os;
+}
+
+
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+void Foam::writeEntry(Ostream& os, const randomGenerator& rndGen)
+{
+    os << rndGen;
 }
 
 
