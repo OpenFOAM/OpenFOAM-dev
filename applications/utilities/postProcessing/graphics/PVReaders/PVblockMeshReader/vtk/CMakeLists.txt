@@ -11,6 +11,6 @@ TARGET_LINK_LIBRARIES(
     LINK_PUBLIC
     vtkPVblockMesh
     OpenFOAM
-    Qt5::Core
-    Qt5::Gui
+    Qt${PARAVIEW_QT_MAJOR_VERSION}::Core
+    Qt${PARAVIEW_QT_MAJOR_VERSION}::Gui
 )

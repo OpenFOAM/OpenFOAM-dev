@@ -30,7 +30,7 @@ INCLUDE_DIRECTORIES(
 )
 
 ADD_DEFINITIONS(
-    -std=c++14
+    -std=c++17
     -DWM_$ENV{WM_PRECISION_OPTION}
     -DWM_LABEL_SIZE=$ENV{WM_LABEL_SIZE}
 )
@@ -79,14 +79,14 @@ IF(${ParaView_VERSION} VERSION_LESS 5.5)
         OpenFOAM
     )
 ELSE()
-    # Paraview-5.5.x and higher needs QT-5 libraries listed in the link command
+    # Paraview-5.5.x and higher needs QT libraries listed in the link command
     # in order for the headers to be available
     TARGET_LINK_LIBRARIES(
         ${TARGET_NAME}
         LINK_PUBLIC
         vtkPVblockMesh
         OpenFOAM
-        Qt5::Core
-        Qt5::Gui
+        Qt${PARAVIEW_QT_MAJOR_VERSION}::Core
+        Qt${PARAVIEW_QT_MAJOR_VERSION}::Gui
     )
 ENDIF()
