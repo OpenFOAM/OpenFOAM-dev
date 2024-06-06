@@ -218,8 +218,8 @@ done
 [ -f "$1" ]  || error "File $1 does not exist"
 file=$1
 
-# Get keys from file header
-keys=$(grep -E '^#' "$file" | tail -1 | tr -s " ")
+# Get keys from file header, removing space between the column names and units
+keys=$(grep -E '^#' "$file" | sed 's/ *\[/\[/g' | tail -1 | tr -s " ")
 
 # If no header, use 'Step' to describe column 1
 [ "$keys" = "" ] && keys="# Step"
@@ -276,7 +276,8 @@ plotFileHeader \
 
 for col in $columns
 do
-    field="$(echo "$keys" | awk -v c="$col" '{print $c}')"
+    # Reinstate the space between the column name and units
+    field="$(echo "$keys" | awk -v c="$col" '{print $c}' | sed 's/\[/ \[/')"
     plot_line="\"$file\" using $(flip "1:${col}") with lines title \"$field\""
     [ "$col" -ne "$last_col" ] && plot_line="$plot_line, \\"
     echo "$plot_line" >> "$gp_file"
