@@ -25,7 +25,7 @@ then
             mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
             cd Make/$WM_OPTIONS
             cmake ../..
-            make
+            make -j $WM_NCOMPPROCS
         )
     else
         (
@@ -33,14 +33,14 @@ then
             mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
             cd Make/$WM_OPTIONS
             cmake ../..
-            make
+            make -j $WM_NCOMPPROCS
         )
         (
             cd PVFoamReader
             mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
             cd Make/$WM_OPTIONS
             cmake ../..
-            make
+            make -j $WM_NCOMPPROCS
         )
     fi
 fi
