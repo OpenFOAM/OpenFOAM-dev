@@ -36,6 +36,11 @@ wmake $targetType meshTools
 dummyThirdParty/Allwmake $targetType $*
 
 wmake $targetType finiteVolume
+
+wmake $targetType ODE
+wmake $targetType physicalProperties
+thermophysicalModels/Allwmake $targetType $*
+
 wmake $targetType lagrangian/basic
 
 generic/Allwmake $targetType $*
@@ -57,12 +62,8 @@ fvMeshMovers/Allwmake $targetType $*
 fvMeshTopoChangers/Allwmake $targetType $*
 wmake $targetType fvMeshDistributors
 
-wmake $targetType ODE
 wmake $targetType randomProcesses
 
-wmake $targetType physicalProperties
-
-thermophysicalModels/Allwmake $targetType $*
 twoPhaseModels/Allwmake $targetType $*
 multiphaseModels/Allwmake $targetType $*
 MomentumTransportModels/Allwmake $targetType $*
