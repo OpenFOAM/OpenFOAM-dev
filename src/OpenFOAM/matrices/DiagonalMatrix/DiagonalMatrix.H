@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,17 +61,17 @@ public:
     // Constructors
 
         //- Null constructor.
-        DiagonalMatrix<Type>();
+        DiagonalMatrix();
 
         //- Construct from diagonal component of a Matrix
         template<class Form>
-        DiagonalMatrix<Type>(const Matrix<Form, Type>&);
+        DiagonalMatrix(const Matrix<Form, Type>&);
 
         //- Construct empty from size
-        DiagonalMatrix<Type>(const label size);
+        DiagonalMatrix(const label size);
 
         //- Construct from size and a value
-        DiagonalMatrix<Type>(const label, const Type&);
+        DiagonalMatrix(const label, const Type&);
 
         //- Construct from Istream.
         DiagonalMatrix(Istream&);
