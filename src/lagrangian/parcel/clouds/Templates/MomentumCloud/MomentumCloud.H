@@ -56,6 +56,7 @@ SourceFiles
 #include "timeIOdictionary.H"
 #include "autoPtr.H"
 #include "randomGenerator.H"
+#include "standardNormal.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "fvMatrices.H"
@@ -160,6 +161,9 @@ protected:
 
         //- Random number generator - used by some injection routines
         mutable randomGenerator rndGen_;
+
+        //- Standard normal distribution
+        mutable distributions::standardNormal stdNormal_;
 
         //- Cell occupancy information for each parcel, (demand driven)
         autoPtr<List<DynamicList<parcelType*>>> cellOccupancyPtr_;
@@ -367,8 +371,11 @@ public:
 
             // Cloud data
 
-                //- Return reference to the random object
+                //- Return reference to the random generator
                 inline randomGenerator& rndGen() const;
+
+                //- Return reference to the standard normal distribution
+                inline distributions::standardNormal& stdNormal() const;
 
                 //- Return the cell occupancy information for each
                 //  parcel, non-const access, the caller is

@@ -64,9 +64,6 @@ class BrownianMotionForce
 {
     // Private Data
 
-        //- Reference to the cloud random number generator
-        randomGenerator& rndGen_;
-
         //- Molecular free path length [m]
         const scalar lambda_;
 

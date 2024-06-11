@@ -43,6 +43,7 @@ SourceFiles
 #include "InteractionLists.H"
 #include "labelVector.H"
 #include "randomGenerator.H"
+#include "standardNormal.H"
 #include "fileName.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -71,6 +72,8 @@ class moleculeCloud
         List<molecule::constantProperties> constPropList_;
 
         randomGenerator rndGen_;
+
+        distributions::standardNormal stdNormal_;
 
 
     // Private Member Functions
@@ -192,6 +195,8 @@ public:
                 constProps(label id) const;
 
             inline randomGenerator& rndGen();
+
+            inline distributions::standardNormal& stdNormal();
 
 
     // Member Functions

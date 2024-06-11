@@ -37,7 +37,7 @@ SourceFiles
 
 #include "complexFields.H"
 #include "scalar.H"
-#include "randomGenerator.H"
+#include "standardNormal.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,7 +54,7 @@ class OUprocess
 {
     // Private Data
 
-        mutable randomGenerator rndGen_;
+        const distributions::standardNormal stdNormal_;
 
         const Kmesh& Kmesh_;
         mutable complexVectorField OUfield_;

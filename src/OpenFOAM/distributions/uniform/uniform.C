@@ -57,20 +57,27 @@ Foam::scalar Foam::distributions::uniform::Phi(const scalar x) const
 
 Foam::distributions::uniform::uniform
 (
+    const unitConversion& units,
     const dictionary& dict,
-    randomGenerator& rndGen,
-    const label sampleQ
+    const label sampleQ,
+    randomGenerator&& rndGen
 )
 :
-    FieldDistribution<distribution, uniform>(typeName, dict, rndGen, sampleQ),
-    min_(dict.lookupBackwardsCompatible<scalar>({"min", "minValue"})),
-    max_(dict.lookupBackwardsCompatible<scalar>({"max", "maxValue"})),
+    FieldDistribution<distribution, uniform>
+    (
+        typeName,
+        units,
+        dict,
+        sampleQ,
+        std::move(rndGen)
+    ),
+    min_(dict.lookupBackwardsCompatible<scalar>({"min", "minValue"}, units)),
+    max_(dict.lookupBackwardsCompatible<scalar>({"max", "maxValue"}, units)),
     Phi0_(Phi(min_)),
     Phi1_(Phi(max_))
 {
     validateBounds(dict);
     if (q() != 0) validatePositive(dict);
-    report();
 }
 
 
@@ -134,6 +141,19 @@ Foam::scalar Foam::distributions::uniform::mean() const
 
         return (Mu1 - Mu0)/(Phi1_ - Phi0_);
     }
+}
+
+
+void Foam::distributions::uniform::write
+(
+    Ostream& os,
+    const unitConversion& units
+) const
+{
+    distribution::write(os, units);
+
+    writeEntry(os, "min", units, min_);
+    writeEntry(os, "max", units, max_);
 }
 
 

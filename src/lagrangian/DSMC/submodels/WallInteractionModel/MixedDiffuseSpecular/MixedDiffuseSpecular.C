@@ -79,8 +79,8 @@ void Foam::MixedDiffuseSpecular<CloudType>::correct
 
     CloudType& cloud(this->owner());
 
-    randomGenerator& rndGen(cloud.rndGen());
-    distributions::standardNormal stdNormal(rndGen);
+    randomGenerator& rndGen = cloud.rndGen();
+    distributions::standardNormal& stdNormal = cloud.stdNormal();
 
     if (diffuseFraction_ > rndGen.scalar01())
     {

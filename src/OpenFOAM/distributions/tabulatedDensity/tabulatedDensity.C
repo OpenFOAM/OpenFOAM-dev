@@ -44,20 +44,22 @@ namespace distributions
 
 Foam::distributions::tabulatedDensity::tabulatedDensity
 (
+    const unitConversion& defaultUnits,
     const dictionary& dict,
-    randomGenerator& rndGen,
-    const label sampleQ
+    const label sampleQ,
+    randomGenerator&& rndGen
 )
 :
     FieldDistribution<distribution, tabulatedDensity>
     (
         typeName,
+        defaultUnits,
         dict,
-        rndGen,
-        sampleQ
+        sampleQ,
+        std::move(rndGen)
     )
 {
-    List<Pair<scalar>> values(dict.lookup("distribution"));
+    List<Tuple2<scalar, scalar>> values(dict.lookup("distribution"));
 
     // Checks
     forAll(values, i)
@@ -77,11 +79,15 @@ Foam::distributions::tabulatedDensity::tabulatedDensity
         }
     }
 
+    // Optionally read units
+    unitConversion units(defaultUnits);
+    units.readIfPresent("units", dict);
+
     // Copy the coordinates
     x_.resize(values.size());
     forAll(values, i)
     {
-        x_[i] = values[i].first();
+        x_[i] = units.toStandard(values[i].first());
     }
 
     // Copy the PDF. Scale if q != 0.
@@ -102,7 +108,6 @@ Foam::distributions::tabulatedDensity::tabulatedDensity
     // More checks
     validateBounds(dict);
     if (q() != 0) validatePositive(dict);
-    report();
 }
 
 
@@ -160,6 +165,31 @@ Foam::scalar Foam::distributions::tabulatedDensity::max() const
 Foam::scalar Foam::distributions::tabulatedDensity::mean() const
 {
     return unintegrable::integrateX(x_, PDF_)->last();
+}
+
+
+void Foam::distributions::tabulatedDensity::write
+(
+    Ostream& os,
+    const unitConversion& units
+) const
+{
+    FieldDistribution<distribution, tabulatedDensity>::write(os, units);
+
+    // Recover the PDF
+    scalarField PDF(integerPow(x_, -q())*PDF_);
+
+    // Normalise the PDF
+    PDF /= unintegrable::integrate(x_, PDF)->last();
+
+    // Construct and write the values
+    List<Tuple2<scalar, scalar>> values(PDF_.size());
+    forAll(values, i)
+    {
+        values[i].first() = units.toUser(x_[i]);
+        values[i].second() = PDF[i];
+    }
+    writeEntry(os, "distribution", values);
 }
 
 

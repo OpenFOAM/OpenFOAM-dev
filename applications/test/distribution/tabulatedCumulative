@@ -1,5 +1,6 @@
 type tabulatedCumulative;
-values
+units [mm];
+distribution
 (
     (1    0)
     (1.73 0.0281384)

@@ -112,35 +112,37 @@ Foam::tmp<Foam::scalarField> Foam::distributions::multiNormal::Phi
 
 Foam::distributions::multiNormal::multiNormal
 (
+    const unitConversion& units,
     const dictionary& dict,
-    randomGenerator& rndGen,
-    const label sampleQ
+    const label sampleQ,
+    randomGenerator&& rndGen
 )
 :
     FieldDistribution<unintegrableForNonZeroQ, multiNormal>
     (
         typeName,
+        units,
         dict,
-        rndGen,
-        sampleQ
+        sampleQ,
+        std::move(rndGen)
     ),
     cumulativeStrengths_(readCumulativeStrengths(dict))
 {
     const scalar min
     (
-        dict.lookupBackwardsCompatible<scalar>({"min", "minValue"})
+        dict.lookupBackwardsCompatible<scalar>({"min", "minValue"}, units)
     );
     const scalar max
     (
-        dict.lookupBackwardsCompatible<scalar>({"max", "maxValue"})
+        dict.lookupBackwardsCompatible<scalar>({"max", "maxValue"}, units)
     );
     const scalarList mu
     (
-        dict.lookupBackwardsCompatible<scalarList>({"mu", "expectation"})
+        dict.lookupBackwardsCompatible<scalarList>({"mu", "expectation"}, units)
     );
     const scalarList sigma
     (
-        dict.lookup<scalarList>("sigma")
+        dict.lookup<scalarList>("sigma", units)
     );
 
     if
@@ -164,9 +166,9 @@ Foam::distributions::multiNormal::multiNormal
             i,
             new normal
             (
-                rndGen_,
                 0,
                 0,
+                rndGen_.generator(),
                 -1,
                 min,
                 max,
@@ -179,7 +181,6 @@ Foam::distributions::multiNormal::multiNormal
     validateBounds(dict);
     if (q() != 0) validatePositive(dict);
     mean();
-    report();
 }
 
 
@@ -200,9 +201,9 @@ Foam::distributions::multiNormal::multiNormal
             i,
             new normal
             (
-                rndGen_,
                 0,
                 0,
+                randomGenerator(d.distributions_[i].rndGen_),
                 -1,
                 d.distributions_[i].min_,
                 d.distributions_[i].max_,
@@ -254,6 +255,29 @@ Foam::scalar Foam::distributions::multiNormal::min() const
 Foam::scalar Foam::distributions::multiNormal::max() const
 {
     return distributions_[0].max();
+}
+
+
+void Foam::distributions::multiNormal::write
+(
+    Ostream& os,
+    const unitConversion& units
+) const
+{
+    FieldDistribution<unintegrableForNonZeroQ, multiNormal>::write(os, units);
+
+    writeEntry(os, "min", units, distributions_[0].min());
+    writeEntry(os, "max", units, distributions_[0].max());
+
+    scalarList mu(distributions_.size()), sigma(distributions_.size());
+    forAll(distributions_, i)
+    {
+        mu[i] = distributions_[i].mu();
+        sigma[i] = distributions_[i].sigma();
+    }
+
+    writeEntry(os, "mu", units, mu);
+    writeEntry(os, "sigma", units, sigma);
 }
 
 

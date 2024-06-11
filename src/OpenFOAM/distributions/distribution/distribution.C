@@ -76,14 +76,15 @@ Foam::distribution::clipPDF
 Foam::distribution::distribution
 (
     const word& name,
+    const unitConversion& units,
     const dictionary& dict,
-    randomGenerator& rndGen,
-    const label sampleQ
+    const label sampleQ,
+    randomGenerator&& rndGen
 )
 :
-    rndGen_(rndGen),
     Q_(dict.lookup<scalar>("Q")),
-    sampleQ_(sampleQ)
+    sampleQ_(sampleQ),
+    rndGen_("rndGen", dict, std::move(rndGen))
 {
     if (Q_ < 0)
     {
@@ -103,22 +104,22 @@ Foam::distribution::distribution
 
 Foam::distribution::distribution
 (
-    randomGenerator& rndGen,
     const label Q,
-    const label sampleQ
+    const label sampleQ,
+    randomGenerator&& rndGen
 )
 :
-    rndGen_(rndGen),
     Q_(Q),
-    sampleQ_(sampleQ)
+    sampleQ_(sampleQ),
+    rndGen_(rndGen)
 {}
 
 
 Foam::distribution::distribution(const distribution& d, const label sampleQ)
 :
-    rndGen_(d.rndGen_),
     Q_(d.Q_),
-    sampleQ_(sampleQ)
+    sampleQ_(sampleQ),
+    rndGen_(d.rndGen_)
 {}
 
 
@@ -130,10 +131,16 @@ Foam::distribution::~distribution()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::distribution::report() const
+void Foam::distribution::write(Ostream& os, const unitConversion& units) const
 {
-    Info<< indent << "min/average/max value = " << min() << '/' << mean()
-        << '/' << max() << endl;
+    writeEntry(os, "type", type());
+    writeEntry(os, "Q", Q_);
+}
+
+
+void Foam::distribution::writeState(Ostream& os) const
+{
+    writeEntry(os, "rndGen", rndGen_);
 }
 
 
@@ -160,6 +167,26 @@ Foam::tmp<Foam::scalarField> Foam::distribution::x(const label n) const
     result[n - 1] = x1 + d;
 
     return tResult;
+}
+
+
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+void Foam::writeEntry
+(
+    Ostream& os,
+    const unitConversion& units,
+    const distribution& d,
+    const bool write,
+    const bool writeState
+)
+{
+    os  << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
+
+    if (write) d.write(os, units);
+    if (writeState) d.writeState(os);
+
+    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 

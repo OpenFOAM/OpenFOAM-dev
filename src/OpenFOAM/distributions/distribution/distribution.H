@@ -79,14 +79,14 @@ protected:
 
     // Protected data
 
-        //- Reference to a random number generator
-        randomGenerator& rndGen_;
-
         //- Distribution size exponent
         const label Q_;
 
         //- Sample size exponent
         const label sampleQ_;
+
+        //- Random number generator
+        mutable randomGenerator rndGen_;
 
 
     // Protected Member Functions
@@ -130,11 +130,12 @@ public:
         distribution,
         dictionary,
         (
+            const unitConversion& units,
             const dictionary& dict,
-            randomGenerator& rndGen,
-            const label sampleQ
+            const label sampleQ,
+            randomGenerator&& rndGen
         ),
-        (dict, rndGen, sampleQ)
+        (units, dict, sampleQ, std::move(rndGen))
     );
 
 
@@ -144,17 +145,18 @@ public:
         distribution
         (
             const word& name,
+            const unitConversion& units,
             const dictionary& dict,
-            randomGenerator& rndGen,
-            const label sampleQ
+            const label sampleQ,
+            randomGenerator&& rndGen
         );
 
         //- Construct from components
         distribution
         (
-            randomGenerator& rndGen,
             const label Q,
-            const label sampleQ
+            const label sampleQ,
+            randomGenerator&& rndGen
         );
 
         //- Construct copy
@@ -170,13 +172,35 @@ public:
         }
 
 
-    //- Selector
-    static autoPtr<distribution> New
-    (
-        const dictionary& dict,
-        randomGenerator& rndGen,
-        const label sampleQ
-    );
+    // Selectors
+
+        //- Select from dictionary and a random generator
+        static autoPtr<distribution> New
+        (
+            const unitConversion& units,
+            const dictionary& dict,
+            const label sampleQ,
+            randomGenerator&& rndGen,
+            const bool report = true
+        );
+
+        //- Select from a dictionary and a random generator seed and global flag
+        static autoPtr<distribution> New
+        (
+            const unitConversion& units,
+            const dictionary& dict,
+            const label sampleQ,
+            const randomGenerator::seed& s,
+            const bool global = false,
+            const bool report = true
+        );
+
+        //- Re-select with a different sample size exponent
+        static autoPtr<distribution> New
+        (
+            autoPtr<distribution>& dPtr,
+            const label sampleQ
+        );
 
 
     //- Destructor
@@ -204,8 +228,11 @@ public:
         //- Return the mean value
         virtual scalar mean() const = 0;
 
-        //- Report
-        void report() const;
+        //- Write to a stream
+        virtual void write(Ostream& os, const unitConversion& units) const;
+
+        //- Write the state to a stream
+        virtual void writeState(Ostream& os) const;
 
         //- Return coordinates to plot across the range of the distribution
         virtual tmp<scalarField> x(const label n) const;
@@ -223,6 +250,16 @@ public:
     }
 FOR_ALL_FIELD_TYPES(DISTRIBUTION_TEMPLATED_SAMPLE_TYPE);
 #undef DISTRIBUTION_TEMPLATED_SAMPLE_TYPE
+
+
+void writeEntry
+(
+    Ostream& os,
+    const unitConversion&,
+    const distribution& d,
+    const bool write = true,
+    const bool writeState = true
+);
 
 
 /*---------------------------------------------------------------------------*\
@@ -263,37 +300,22 @@ public:
 
         //- Sample the distribution into components of a primitive type
         template<class Type>
-        Type sample() const
-        {
-            Type value;
-            for (direction i = 0; i < pTraits<Type>::nComponents; ++ i)
-            {
-                setComponent(value, i) =
-                    static_cast<const Derived&>(*this).sample();
-            }
-            return value;
-        }
+        Type sample() const;
 
         //- Sample the distribution into a field
-        virtual tmp<scalarField> sample(const label n) const
-        {
-            tmp<scalarField> tResult(new scalarField(n));
-            scalarField& result = tResult.ref();
-
-            forAll(result, i)
-            {
-                result[i] =
-                    static_cast<const Derived&>(*this).sample();
-            }
-
-            return tResult;
-        }
+        virtual tmp<scalarField> sample(const label n) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "distributionTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

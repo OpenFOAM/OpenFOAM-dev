@@ -29,14 +29,19 @@ License
 
 Foam::autoPtr<Foam::distribution> Foam::distribution::New
 (
+    const unitConversion& units,
     const dictionary& dict,
-    randomGenerator& rndGen,
-    const label sampleQ
+    const label sampleQ,
+    randomGenerator&& rndGen,
+    const bool report
 )
 {
     const word distributionType(dict.lookup("type"));
 
-    Info<< "Selecting " << typeName << " type " << distributionType << endl;
+    if (report)
+    {
+        Info<< "Selecting " << typeName << " type " << distributionType << endl;
+    }
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(distributionType);
@@ -50,21 +55,61 @@ Foam::autoPtr<Foam::distribution> Foam::distribution::New
             << exit(FatalError);
     }
 
-    Info<< incrIndent;
-
     autoPtr<distribution> distributionPtr
     (
         cstrIter()
         (
+            units,
             dict.optionalSubDict(distributionType + "Distribution"),
-            rndGen,
-            sampleQ
+            sampleQ,
+            std::move(rndGen)
         )
     );
 
-    Info<< decrIndent;
+    if (report)
+    {
+        Info<< incrIndent << indent
+            << "min/average/max value = "
+            << distributionPtr->min() << '/'
+            << distributionPtr->mean() << '/'
+            << distributionPtr->max()
+            << decrIndent << endl;
+    }
 
     return distributionPtr;
+}
+
+
+Foam::autoPtr<Foam::distribution> Foam::distribution::New
+(
+    const unitConversion& units,
+    const dictionary& dict,
+    const label sampleQ,
+    const randomGenerator::seed& s,
+    const bool global,
+    const bool report
+)
+{
+    return New(units, dict, sampleQ, randomGenerator(s, global), report);
+}
+
+
+Foam::autoPtr<Foam::distribution> Foam::distribution::New
+(
+    autoPtr<distribution>& dPtr,
+    const label sampleQ
+)
+{
+    if (dPtr->sampleQ_ == sampleQ)
+    {
+        return autoPtr<distribution>(dPtr.ptr());
+    }
+    else
+    {
+        autoPtr<distribution> result(dPtr->clone(sampleQ));
+        dPtr.clear();
+        return result;
+    }
 }
 
 

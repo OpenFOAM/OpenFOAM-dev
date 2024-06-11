@@ -81,8 +81,8 @@ void Foam::MaxwellianThermal<CloudType>::correct
 
     CloudType& cloud(this->owner());
 
-    randomGenerator& rndGen(cloud.rndGen());
-    distributions::standardNormal stdNormal(rndGen);
+    randomGenerator& rndGen = cloud.rndGen();
+    distributions::standardNormal& stdNormal = cloud.stdNormal();
 
     while (mag(Ut) < small)
     {

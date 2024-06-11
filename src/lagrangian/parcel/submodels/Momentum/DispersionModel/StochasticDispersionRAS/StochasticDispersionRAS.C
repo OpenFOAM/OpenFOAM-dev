@@ -73,7 +73,7 @@ Foam::vector Foam::StochasticDispersionRAS<CloudType>::update
 )
 {
     randomGenerator& rndGen = this->owner().rndGen();
-    distributions::standardNormal stdNormal(rndGen);
+    distributions::standardNormal& stdNormal = this->owner().stdNormal();
 
     const scalar cps = 0.16432;
 

@@ -124,9 +124,10 @@ public:
         //- Construct from a dictionary
         RosinRammler
         (
+            const unitConversion& units,
             const dictionary& dict,
-            randomGenerator& rndGen,
-            const label sampleQ
+            const label sampleQ,
+            randomGenerator&& rndGen
         );
 
         //- Construct copy
@@ -156,6 +157,9 @@ public:
 
         //- Return the maximum value
         virtual scalar max() const;
+
+        //- Write to a stream
+        virtual void write(Ostream& os, const unitConversion& units) const;
 
         //- Return coordinates to plot across the range of the distribution
         virtual tmp<scalarField> x(const label n) const;

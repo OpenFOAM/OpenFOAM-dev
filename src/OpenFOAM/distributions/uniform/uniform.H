@@ -99,9 +99,10 @@ public:
         //- Construct from a dictionary
         uniform
         (
+            const unitConversion& units,
             const dictionary& dict,
-            randomGenerator& rndGen,
-            const label sampleQ
+            const label sampleQ,
+            randomGenerator&& rndGen
         );
 
         //- Construct copy
@@ -134,6 +135,9 @@ public:
 
         //- Return the mean value
         virtual scalar mean() const;
+
+        //- Write to a stream
+        virtual void write(Ostream& os, const unitConversion& units) const;
 
         //- Return the distribution probability density function
         virtual tmp<scalarField> PDF(const scalarField& x) const;

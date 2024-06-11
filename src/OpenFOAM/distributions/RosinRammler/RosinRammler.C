@@ -73,27 +73,28 @@ Foam::tmp<Foam::scalarField> Foam::distributions::RosinRammler::Phi
 
 Foam::distributions::RosinRammler::RosinRammler
 (
+    const unitConversion& units,
     const dictionary& dict,
-    randomGenerator& rndGen,
-    const label sampleQ
+    const label sampleQ,
+    randomGenerator&& rndGen
 )
 :
     FieldDistribution<unintegrableForNonZeroQ, RosinRammler>
     (
         typeName,
+        units,
         dict,
-        rndGen,
-        sampleQ
+        sampleQ,
+        std::move(rndGen)
     ),
-    min_(dict.lookupBackwardsCompatible<scalar>({"min", "minValue"})),
-    max_(dict.lookupBackwardsCompatible<scalar>({"max", "maxValue"})),
-    d_(dict.lookup<scalar>("d")),
-    n_(dict.lookup<scalar>("n"))
+    min_(dict.lookupBackwardsCompatible<scalar>({"min", "minValue"}, units)),
+    max_(dict.lookupBackwardsCompatible<scalar>({"max", "maxValue"}, units)),
+    d_(dict.lookup<scalar>("d", units)),
+    n_(dict.lookup<scalar>("n", unitless))
 {
     validateBounds(dict);
     validatePositive(dict);
     mean();
-    report();
 }
 
 
@@ -144,6 +145,21 @@ Foam::scalar Foam::distributions::RosinRammler::min() const
 Foam::scalar Foam::distributions::RosinRammler::max() const
 {
     return max_;
+}
+
+
+void Foam::distributions::RosinRammler::write
+(
+    Ostream& os,
+    const unitConversion& units
+) const
+{
+    FieldDistribution<unintegrableForNonZeroQ, RosinRammler>::write(os, units);
+
+    writeEntry(os, "min", units, min_);
+    writeEntry(os, "max", units, max_);
+    writeEntry(os, "d", units, d_);
+    writeEntry(os, "n", unitless, n_);
 }
 
 

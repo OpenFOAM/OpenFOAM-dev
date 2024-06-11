@@ -24,17 +24,7 @@
 
     mkDir(pdfPath);
 
-    randomGenerator rndGen(label(0));
-
-    autoPtr<distribution> p
-    (
-        distribution::New
-        (
-            pdfDictionary,
-            rndGen,
-            0
-        )
-    );
+    autoPtr<distribution> p(distribution::New(unitAny, pdfDictionary, 0, 0));
 
     const scalar xMin = p->min();
     const scalar xMax = p->max();

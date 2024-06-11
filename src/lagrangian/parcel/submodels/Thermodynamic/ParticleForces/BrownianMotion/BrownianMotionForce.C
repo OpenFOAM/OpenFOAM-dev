@@ -70,7 +70,6 @@ Foam::BrownianMotionForce<CloudType>::BrownianMotionForce
 )
 :
     ParticleForce<CloudType>(owner, mesh, dict, typeName, true),
-    rndGen_(owner.rndGen()),
     lambda_(this->coeffs().template lookup<scalar>("lambda")),
     turbulence_(readBool(this->coeffs().lookup("turbulence"))),
     kPtr_(nullptr),
@@ -85,7 +84,6 @@ Foam::BrownianMotionForce<CloudType>::BrownianMotionForce
 )
 :
     ParticleForce<CloudType>(bmf),
-    rndGen_(bmf.rndGen_),
     lambda_(bmf.lambda_),
     turbulence_(bmf.turbulence_),
     kPtr_(nullptr),
@@ -172,7 +170,7 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
     }
 
     randomGenerator& rndGen = this->owner().rndGen();
-    distributions::standardNormal stdNormal(rndGen);
+    distributions::standardNormal& stdNormal = this->owner().stdNormal();
 
     // To generate a cubic distribution (i.e., 3 independent directions):
     // value.Su() = f*stdNormal.sample<vector>();

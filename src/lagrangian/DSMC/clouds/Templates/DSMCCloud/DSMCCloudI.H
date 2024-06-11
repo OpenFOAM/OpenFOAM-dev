@@ -125,6 +125,14 @@ inline Foam::randomGenerator& Foam::DSMCCloud<ParcelType>::rndGen()
 
 
 template<class ParcelType>
+inline Foam::distributions::standardNormal&
+Foam::DSMCCloud<ParcelType>::stdNormal()
+{
+    return stdNormal_;
+}
+
+
+template<class ParcelType>
 inline Foam::volScalarField::Boundary&
 Foam::DSMCCloud<ParcelType>::qBF()
 {

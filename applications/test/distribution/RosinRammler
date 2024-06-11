@@ -1,5 +1,5 @@
 type RosinRammler;
-min 0.001;
-max 0.015;
-d 0.014;
-n 2;
+min 1 [mm];
+max 15 [mm];
+d 14 [mm];
+n 2 [];

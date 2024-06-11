@@ -87,7 +87,14 @@ public:
     // Constructors
 
         //- Construct from a random generator
-        standardNormal(randomGenerator& rndGen);
+        standardNormal(randomGenerator&& rndGen);
+
+        //- Construct from a seed
+        standardNormal
+        (
+            const randomGenerator::seed& s,
+            const bool global = false
+        );
 
         //- Construct copy
         standardNormal(const standardNormal& d);

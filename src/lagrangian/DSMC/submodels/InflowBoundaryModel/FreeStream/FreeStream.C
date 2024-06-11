@@ -146,8 +146,8 @@ void Foam::FreeStream<CloudType>::inflow()
 
     const scalar deltaT = mesh.time().deltaTValue();
 
-    randomGenerator& rndGen(cloud.rndGen());
-    distributions::standardNormal stdNormal(rndGen);
+    randomGenerator& rndGen = cloud.rndGen();
+    distributions::standardNormal& stdNormal = cloud.stdNormal();
 
     scalar sqrtPi = sqrt(pi);
 

@@ -239,8 +239,6 @@ void Foam::MomentumCloud<CloudType>::cloudReset(MomentumCloud<CloudType>& c)
 {
     CloudType::cloudReset(c);
 
-    rndGen_ = c.rndGen_;
-
     forces_.transfer(c.forces_);
 
     functions_.transfer(c.functions_);
@@ -302,6 +300,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     ),
     cpuLoad_(particleProperties_.lookupOrDefault("cpuLoad", false)),
     rndGen_(0),
+    stdNormal_(rndGen_.generator()),
     cellOccupancyPtr_(),
     cellLengthScale_(mag(cbrt(this->mesh().V()))),
     rho_(rho),
@@ -414,6 +413,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     subModelProperties_(c.subModelProperties_),
     cpuLoad_(c.cpuLoad_),
     rndGen_(c.rndGen_),
+    stdNormal_(c.stdNormal_),
     cellOccupancyPtr_(nullptr),
     cellLengthScale_(c.cellLengthScale_),
     rho_(c.rho_),
@@ -504,6 +504,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     subModelProperties_(dictionary::null),
     cpuLoad_(c.cpuLoad_),
     rndGen_(0),
+    stdNormal_(rndGen_.generator()),
     cellOccupancyPtr_(nullptr),
     cellLengthScale_(c.cellLengthScale_),
     rho_(c.rho_),

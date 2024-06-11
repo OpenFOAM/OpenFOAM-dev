@@ -40,6 +40,7 @@ SourceFiles
 #include "IOdictionary.H"
 #include "autoPtr.H"
 #include "randomGenerator.H"
+#include "standardNormal.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "scalarIOField.H"
@@ -142,6 +143,9 @@ class DSMCCloud
 
         //- Random number generator
         randomGenerator rndGen_;
+
+        //- Standard normal distribution
+        distributions::standardNormal stdNormal_;
 
 
         // boundary value fields
@@ -267,8 +271,11 @@ public:
                 inline const typename ParcelType::constantProperties&
                     constProps(label typeId) const;
 
-                //- Return references to the random object
+                //- Return reference to the random generator
                 inline randomGenerator& rndGen();
+
+                //- Return reference to the standard normal distribution
+                inline distributions::standardNormal& stdNormal();
 
 
             // References to the boundary fields for surface data collection

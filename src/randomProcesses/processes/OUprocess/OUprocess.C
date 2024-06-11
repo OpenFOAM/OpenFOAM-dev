@@ -25,7 +25,6 @@ License
 
 #include "OUprocess.H"
 #include "Kmesh.H"
-#include "standardNormal.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,13 +35,11 @@ namespace Foam
 
 complexVector OUprocess::WeinerProcess(const scalar deltaT) const
 {
-    distributions::standardNormal stdNormal(rndGen_);
-
     return sqrt(deltaT)*complexVector
     (
-        complex(stdNormal.sample(), stdNormal.sample()),
-        complex(stdNormal.sample(), stdNormal.sample()),
-        complex(stdNormal.sample(), stdNormal.sample())
+        complex(stdNormal_.sample(), stdNormal_.sample()),
+        complex(stdNormal_.sample(), stdNormal_.sample()),
+        complex(stdNormal_.sample(), stdNormal_.sample())
     );
 }
 
@@ -56,7 +53,7 @@ OUprocess::OUprocess
     const dictionary& OUdict
 )
 :
-    rndGen_(label(0)),
+    stdNormal_(0),
     Kmesh_(kmesh),
     OUfield_(Kmesh_.size()),
 

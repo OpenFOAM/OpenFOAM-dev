@@ -61,9 +61,10 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
     (
         distribution::New
         (
+            dimLength,
             this->coeffDict().subDict("sizeDistribution"),
-            owner.rndGen(),
-            this->sizeSampleQ()
+            this->sizeSampleQ(),
+            owner.rndGen().generator()
         )
     )
 {}

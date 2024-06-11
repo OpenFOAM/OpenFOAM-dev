@@ -102,9 +102,10 @@ public:
         //- Construct from a dictionary
         tabulatedCumulative
         (
+            const unitConversion& units,
             const dictionary& dict,
-            randomGenerator& rndGen,
-            const label sampleQ
+            const label sampleQ,
+            randomGenerator&& rndGen
         );
 
         //- Construct copy
@@ -140,6 +141,9 @@ public:
 
         //- Return the mean value
         virtual scalar mean() const;
+
+        //- Write to a stream
+        virtual void write(Ostream& os, const unitConversion& units) const;
 
         //- Return coordinates to plot across the range of the distribution
         virtual tmp<scalarField> x(const label n) const;

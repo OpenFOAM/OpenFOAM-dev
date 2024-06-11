@@ -42,16 +42,20 @@ namespace distributions
 
 Foam::distributions::fixedValue::fixedValue
 (
+    const unitConversion& units,
     const dictionary& dict,
-    randomGenerator& rndGen,
-    const label
+    const label,
+    randomGenerator&& rndGen
 )
 :
-    FieldDistribution<distribution, fixedValue>(rndGen, -labelMax, -labelMax),
-    value_(dict.lookup<scalar>("value"))
-{
-    report();
-}
+    FieldDistribution<distribution, fixedValue>
+    (
+        -labelMax,
+        -labelMax,
+        std::move(rndGen)
+    ),
+    value_(dict.lookup<scalar>("value", units))
+{}
 
 
 Foam::distributions::fixedValue::fixedValue
@@ -94,6 +98,18 @@ Foam::scalar Foam::distributions::fixedValue::max() const
 Foam::scalar Foam::distributions::fixedValue::mean() const
 {
     return value_;
+}
+
+
+void Foam::distributions::fixedValue::write
+(
+    Ostream& os,
+    const unitConversion& units
+) const
+{
+    FieldDistribution<distribution, fixedValue>::write(os, units);
+
+    writeEntry(os, "value", units, value_);
 }
 
 

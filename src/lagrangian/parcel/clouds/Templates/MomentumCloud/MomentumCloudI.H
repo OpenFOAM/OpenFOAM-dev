@@ -367,6 +367,14 @@ inline Foam::randomGenerator& Foam::MomentumCloud<CloudType>::rndGen() const
 
 
 template<class CloudType>
+inline Foam::distributions::standardNormal&
+Foam::MomentumCloud<CloudType>::stdNormal() const
+{
+    return stdNormal_;
+}
+
+
+template<class CloudType>
 inline Foam::List<Foam::DynamicList<typename CloudType::particleType*>>&
 Foam::MomentumCloud<CloudType>::cellOccupancy()
 {

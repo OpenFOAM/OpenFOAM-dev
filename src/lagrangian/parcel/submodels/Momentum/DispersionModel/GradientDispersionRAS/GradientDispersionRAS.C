@@ -101,7 +101,7 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
     scalar& tTurb
 )
 {
-    distributions::standardNormal stdNormal(this->owner().rndGen());
+    distributions::standardNormal& stdNormal = this->owner().stdNormal();
 
     const scalar cps = 0.16432;
 

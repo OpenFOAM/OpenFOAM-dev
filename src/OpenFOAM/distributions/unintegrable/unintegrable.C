@@ -305,25 +305,26 @@ Foam::distributions::unintegrable::Phi01() const
 Foam::distributions::unintegrable::unintegrable
 (
     const word& name,
+    const unitConversion& units,
     const dictionary& dict,
-    randomGenerator& rndGen,
-    const label sampleQ
+    const label sampleQ,
+    randomGenerator&& rndGen
 )
 :
-    distribution(name, dict, rndGen, sampleQ),
+    distribution(name, units, dict, sampleQ, std::move(rndGen)),
     n_((1<<dict.lookupOrDefault<label>("level", 16)) + 1)
 {}
 
 
 Foam::distributions::unintegrable::unintegrable
 (
-    randomGenerator& rndGen,
     const label Q,
     const label sampleQ,
+    randomGenerator&& rndGen,
     const label n
 )
 :
-    distribution(rndGen, Q, sampleQ),
+    distribution(Q, sampleQ, std::move(rndGen)),
     n_(n)
 {}
 
@@ -370,6 +371,22 @@ Foam::scalar Foam::distributions::unintegrable::mean() const
     const scalarField Mu(Phi(this->q() + 1, x()));
     const Pair<scalar> Mu01(Mu.first(), Mu.last());
     return (Mu01[1] - Mu01[0])/(Phi01[1] - Phi01[0]);
+}
+
+
+void Foam::distributions::unintegrable::write
+(
+    Ostream& os,
+    const unitConversion& units
+) const
+{
+    distribution::write(os, units);
+
+    // Recover the level
+    label n = n_ - 1, level = 0;
+    while (n >>= 1) ++ level;
+
+    writeEntryIfDifferent(os, "level", 16, level);
 }
 
 

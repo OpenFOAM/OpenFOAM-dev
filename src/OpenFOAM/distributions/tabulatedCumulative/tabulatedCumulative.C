@@ -44,20 +44,22 @@ namespace distributions
 
 Foam::distributions::tabulatedCumulative::tabulatedCumulative
 (
+    const unitConversion& defaultUnits,
     const dictionary& dict,
-    randomGenerator& rndGen,
-    const label sampleQ
+    const label sampleQ,
+    randomGenerator&& rndGen
 )
 :
     FieldDistribution<distribution, tabulatedCumulative>
     (
         typeName,
+        defaultUnits,
         dict,
-        rndGen,
-        sampleQ
+        sampleQ,
+        std::move(rndGen)
     )
 {
-    List<Pair<scalar>> values(dict.lookup("distribution"));
+    List<Tuple2<scalar, scalar>> values(dict.lookup("distribution"));
 
     // Checks
     if (values.first().second() != 0)
@@ -84,11 +86,15 @@ Foam::distributions::tabulatedCumulative::tabulatedCumulative
         }
     }
 
+    // Optionally read units
+    unitConversion units(defaultUnits);
+    units.readIfPresent("units", dict);
+
     // Copy the coordinates
     x_.resize(values.size());
     forAll(values, i)
     {
-        x_[i] = values[i].first();
+        x_[i] = units.toStandard(values[i].first());
     }
 
     // Set the CDF. Copy if q == 0. Re-integrated if q != 0.
@@ -115,7 +121,6 @@ Foam::distributions::tabulatedCumulative::tabulatedCumulative
     // More checks
     validateBounds(dict);
     if (q() != 0) validatePositive(dict);
-    report();
 }
 
 
@@ -182,6 +187,39 @@ Foam::scalar Foam::distributions::tabulatedCumulative::mean() const
 {
     const scalarField x(this->x(-1));
     return unintegrable::integrate(x, x*PDF(x))->last();
+}
+
+
+void Foam::distributions::tabulatedCumulative::write
+(
+    Ostream& os,
+    const unitConversion& units
+) const
+{
+    FieldDistribution<distribution, tabulatedCumulative>::write(os, units);
+
+    // Recover the CDF
+    scalarField CDF(CDF_.size());
+    CDF[0] = 0;
+    for (label i = 1; i < CDF_.size(); ++ i)
+    {
+        CDF[i] =
+            CDF[i - 1]
+          + integerPow((x_[i] + x_[i - 1])/2, -q())
+           *(CDF_[i] - CDF_[i - 1]);
+    }
+
+    // Normalise the CDF
+    CDF /= CDF.last();
+
+    // Construct and write the values
+    List<Tuple2<scalar, scalar>> values(CDF_.size());
+    forAll(values, i)
+    {
+        values[i].first() = units.toUser(x_[i]);
+        values[i].second() = CDF[i];
+    }
+    writeEntry(os, "distribution", values);
 }
 
 

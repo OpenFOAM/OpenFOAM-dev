@@ -126,17 +126,18 @@ public:
         //- Construct from a dictionary
         normal
         (
+            const unitConversion& units,
             const dictionary& dict,
-            randomGenerator& rndGen,
-            const label sampleQ
+            const label sampleQ,
+            randomGenerator&& rndGen
         );
 
         //- Construct from components
         normal
         (
-            randomGenerator& rndGen,
             const label Q,
             const label sampleQ,
+            randomGenerator&& rndGen,
             const label n,
             const scalar min,
             const scalar max,
@@ -174,6 +175,21 @@ public:
 
         //- Return the mean value
         virtual scalar mean() const;
+
+        //- Return the mean value
+        inline scalar mu() const
+        {
+            return mu_;
+        }
+
+        //- Return the standard deviation
+        inline scalar sigma() const
+        {
+            return sigma_;
+        }
+
+        //- Write to a stream
+        virtual void write(Ostream& os, const unitConversion& units) const;
 
         //- Return coordinates to plot across the range of the distribution
         virtual tmp<scalarField> x(const label n) const;

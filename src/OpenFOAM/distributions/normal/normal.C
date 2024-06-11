@@ -87,35 +87,36 @@ Foam::scalar Foam::distributions::normal::sampleForZeroQ(const scalar s) const
 
 Foam::distributions::normal::normal
 (
+    const unitConversion& units,
     const dictionary& dict,
-    randomGenerator& rndGen,
-    const label sampleQ
+    const label sampleQ,
+    randomGenerator&& rndGen
 )
 :
     FieldDistribution<unintegrableForNonZeroQ, normal>
     (
         typeName,
+        units,
         dict,
-        rndGen,
-        sampleQ
+        sampleQ,
+        std::move(rndGen)
     ),
-    min_(dict.lookupBackwardsCompatible<scalar>({"min", "minValue"})),
-    max_(dict.lookupBackwardsCompatible<scalar>({"max", "maxValue"})),
-    mu_(dict.lookupBackwardsCompatible<scalar>({"mu", "expectation"})),
-    sigma_(dict.lookup<scalar>("sigma"))
+    min_(dict.lookupBackwardsCompatible<scalar>({"min", "minValue"}, units)),
+    max_(dict.lookupBackwardsCompatible<scalar>({"max", "maxValue"}, units)),
+    mu_(dict.lookupBackwardsCompatible<scalar>({"mu", "expectation"}, units)),
+    sigma_(dict.lookup<scalar>("sigma", units))
 {
     validateBounds(dict);
     if (q() != 0) validatePositive(dict);
     mean();
-    report();
 }
 
 
 Foam::distributions::normal::normal
 (
-    randomGenerator& rndGen,
     const label Q,
     const label sampleQ,
+    randomGenerator&& rndGen,
     const label n,
     const scalar min,
     const scalar max,
@@ -123,7 +124,13 @@ Foam::distributions::normal::normal
     const scalar sigma
 )
 :
-    FieldDistribution<unintegrableForNonZeroQ, normal>(rndGen, Q, sampleQ, n),
+    FieldDistribution<unintegrableForNonZeroQ, normal>
+    (
+        Q,
+        sampleQ,
+        std::move(rndGen),
+        n
+    ),
     min_(min),
     max_(max),
     mu_(mu),
@@ -192,6 +199,21 @@ Foam::scalar Foam::distributions::normal::mean() const
     {
         return unintegrableForNonZeroQ::mean();
     }
+}
+
+
+void Foam::distributions::normal::write
+(
+    Ostream& os,
+    const unitConversion& units
+) const
+{
+    FieldDistribution<unintegrableForNonZeroQ, normal>::write(os, units);
+
+    writeEntry(os, "min", units, min_);
+    writeEntry(os, "max", units, max_);
+    writeEntry(os, "mu", units, mu_);
+    writeEntry(os, "sigma", units, sigma_);
 }
 
 

@@ -71,26 +71,27 @@ Foam::tmp<Foam::scalarField> Foam::distributions::exponential::Phi
 
 Foam::distributions::exponential::exponential
 (
+    const unitConversion& units,
     const dictionary& dict,
-    randomGenerator& rndGen,
-    const label sampleQ
+    const label sampleQ,
+    randomGenerator&& rndGen
 )
 :
     FieldDistribution<unintegrableForNonZeroQ, exponential>
     (
         typeName,
+        units,
         dict,
-        rndGen,
-        sampleQ
+        sampleQ,
+        std::move(rndGen)
     ),
-    min_(dict.lookupBackwardsCompatible<scalar>({"min", "minValue"})),
-    max_(dict.lookupBackwardsCompatible<scalar>({"max", "maxValue"})),
-    lambda_(dict.lookup<scalar>("lambda"))
+    min_(dict.lookupBackwardsCompatible<scalar>({"min", "minValue"}, units)),
+    max_(dict.lookupBackwardsCompatible<scalar>({"max", "maxValue"}, units)),
+    lambda_(dict.lookup<scalar>("lambda", unitless))
 {
     validateBounds(dict);
     validatePositive(dict);
     mean();
-    report();
 }
 
 
@@ -140,6 +141,20 @@ Foam::scalar Foam::distributions::exponential::min() const
 Foam::scalar Foam::distributions::exponential::max() const
 {
     return max_;
+}
+
+
+void Foam::distributions::exponential::write
+(
+    Ostream& os,
+    const unitConversion& units
+) const
+{
+    FieldDistribution<unintegrableForNonZeroQ, exponential>::write(os, units);
+
+    writeEntry(os, "min", units, min_);
+    writeEntry(os, "max", units, max_);
+    writeEntry(os, "lambda", unitless, lambda_);
 }
 
 

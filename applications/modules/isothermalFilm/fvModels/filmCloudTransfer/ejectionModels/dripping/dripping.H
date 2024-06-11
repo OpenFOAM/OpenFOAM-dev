@@ -96,9 +96,6 @@ class dripping
         //- Minimum number of droplets per parcel
         scalar minParticlesPerParcel_;
 
-        //- Random number generator
-        randomGenerator rndGen_;
-
         //- Parcel size PDF model
         const autoPtr<distribution> parcelDistribution_;
 

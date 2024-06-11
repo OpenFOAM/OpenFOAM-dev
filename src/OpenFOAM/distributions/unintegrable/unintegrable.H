@@ -187,17 +187,18 @@ public:
         unintegrable
         (
             const word& name,
+            const unitConversion& units,
             const dictionary& dict,
-            randomGenerator& rndGen,
-            const label sampleQ
+            const label sampleQ,
+            randomGenerator&& rndGen
         );
 
         //- Construct from components
         unintegrable
         (
-            randomGenerator& rndGen,
             const label Q,
             const label sampleQ,
+            randomGenerator&& rndGen,
             const label n
         );
 
@@ -219,6 +220,9 @@ public:
 
         //- Return the mean value
         virtual scalar mean() const;
+
+        //- Write to a stream
+        virtual void write(Ostream& os, const unitConversion& units) const;
 
         //- Return coordinates to plot across the range of the distribution
         using distribution::x;

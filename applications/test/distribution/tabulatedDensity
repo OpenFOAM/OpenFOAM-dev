@@ -1,5 +1,6 @@
 type tabulatedDensity;
-values
+units [mm];
+distribution
 (
     (1    0.0025)
     (1.73 0.0528)

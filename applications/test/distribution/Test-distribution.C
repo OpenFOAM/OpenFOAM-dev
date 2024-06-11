@@ -59,15 +59,12 @@ int main(int argc, char *argv[])
     static const label nSampled = 100;
     static const label nSamples = 10000000;
 
-    // Initialise the random number generator
-    randomGenerator rndGen(clock::getTime());
-
     // Create a zero-size-exponent, zero-sampling-size-exponent distribution
     // from which to get X-coordinates
     dict.set("Q", 0);
     autoPtr<distribution> distribution00Ptr
     (
-        distribution::New(dict, rndGen, 0)
+        distribution::New(unitAny, dict, 0, clock::getTime())
     );
 
     // Get the X-coordinates for the plots
@@ -105,7 +102,7 @@ int main(int argc, char *argv[])
         (
             Q == 0
           ? distribution00Ptr->clone(0)
-          : distribution::New(dict, rndGen, 0)
+          : distribution::New(unitAny, dict, 0, clock::getTime(), false, false)
         );
 
         // Resize
@@ -152,14 +149,19 @@ int main(int argc, char *argv[])
         for (label sampleQ = 0; sampleQ <= nQ; ++ sampleQ)
         {
             // Create a Q-size-exponent, Q-sampling-size-exponent distribution
-            Info<< incrIndent;
             autoPtr<distribution> distributionQSampleQPtr
             (
                 distributionQ0Ptr->clone(sampleQ)
             );
-            distributionQSampleQPtr->mean();
-            distributionQSampleQPtr->report();
-            Info<< decrIndent;
+            {
+                OStringStream oss;
+                distributionQSampleQPtr->write(oss, unitAny);
+                writeEntry(oss, "sampleQ", sampleQ);
+                writeEntry(oss, "min", distributionQSampleQPtr->min());
+                writeEntry(oss, "mean", distributionQSampleQPtr->mean());
+                writeEntry(oss, "max", distributionQSampleQPtr->max());
+                Info<< dictionary(IStringStream(oss.str())());
+            }
 
             // Resize
             const label QSampleQi = yNames.size();

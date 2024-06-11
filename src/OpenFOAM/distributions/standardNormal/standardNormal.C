@@ -64,15 +64,25 @@ Foam::scalar Foam::distributions::standardNormal::approxErfInv(const scalar y)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::distributions::standardNormal::standardNormal(randomGenerator& rndGen)
+Foam::distributions::standardNormal::standardNormal(randomGenerator&& rndGen)
 :
-    FieldDistribution<distribution, standardNormal>(rndGen, 0, 0)
+    FieldDistribution<distribution, standardNormal>(0, 0, std::move(rndGen))
+{}
+
+
+Foam::distributions::standardNormal::standardNormal
+(
+    const randomGenerator::seed& s,
+    const bool global
+)
+:
+    standardNormal(randomGenerator(s, global))
 {}
 
 
 Foam::distributions::standardNormal::standardNormal(const standardNormal& d)
 :
-    FieldDistribution<distribution, standardNormal>(d.rndGen_, 0, 0)
+    FieldDistribution<distribution, standardNormal>(d, 0)
 {}
 
 
