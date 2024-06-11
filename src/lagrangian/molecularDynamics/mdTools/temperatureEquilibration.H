@@ -21,65 +21,21 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Application
-    mdFoam
+Global
+    temperatureEquilibration.H
 
 Description
-    Molecular dynamics solver for fluid dynamics.
+    Applies temperature control to molecules
 
 \*---------------------------------------------------------------------------*/
 
-#include "argList.H"
-#include "timeSelector.H"
-#include "moleculeCloud.H"
-
-using namespace Foam;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-int main(int argc, char *argv[])
+if (runTime.writeTime())
 {
-    #define NO_CONTROL
-    #include "postProcess.H"
-
-    #include "setRootCase.H"
-    #include "createTime.H"
-    #include "createMesh.H"
-    #include "createFields.H"
-    #include "temperatureAndPressureVariables.H"
-
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-    label nAveragingSteps = 0;
-
-    Info<< "\nStarting time loop\n" << endl;
-
-    while (runTime.loop())
-    {
-        nAveragingSteps++;
-
-        Info<< "Time = " << runTime.userTimeName() << endl;
-
-        molecules.evolve();
-
-        #include "meanMomentumEnergyAndNMols.H"
-        #include "temperatureAndPressure.H"
-
-        runTime.write();
-
-        if (runTime.writeTime())
-        {
-            nAveragingSteps = 0;
-        }
-
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << endl;
-    }
-
-    Info<< "End\n" << endl;
-
-    return 0;
+    molecules.applyConstraintsAndThermostats
+    (
+        targetTemperature,
+        averageTemperature
+    );
 }
 
 

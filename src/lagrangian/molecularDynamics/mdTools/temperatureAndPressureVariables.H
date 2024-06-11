@@ -21,65 +21,39 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Application
-    mdFoam
+Global
+    temperatureAndPressureVariables.H
 
 Description
-    Molecular dynamics solver for fluid dynamics.
+    Provides accumulation variables for temperatureAndPressure.H
 
 \*---------------------------------------------------------------------------*/
 
-#include "argList.H"
-#include "timeSelector.H"
-#include "moleculeCloud.H"
+vector accumulatedTotalLinearMomentum(Zero);
 
-using namespace Foam;
+scalar accumulatedTotalMass = 0.0;
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+scalar accumulatedTotalAngularKE = 0.0;
 
-int main(int argc, char *argv[])
+scalar accumulatedTotalLinearKE = 0.0;
+
+scalar accumulatedTotalrDotfSum = 0.0;
+
+label accumulatedNMols = 0;
+
+label accumulatedDOFs = 0;
+
+scalar averageTemperature = 0.0;
+
+scalar averagePressure = 0.0;
+
+const scalarField& cellVols = mesh.cellVolumes();
+
+scalar meshVolume = sum(cellVols);
+
+if (Pstream::parRun())
 {
-    #define NO_CONTROL
-    #include "postProcess.H"
-
-    #include "setRootCase.H"
-    #include "createTime.H"
-    #include "createMesh.H"
-    #include "createFields.H"
-    #include "temperatureAndPressureVariables.H"
-
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-    label nAveragingSteps = 0;
-
-    Info<< "\nStarting time loop\n" << endl;
-
-    while (runTime.loop())
-    {
-        nAveragingSteps++;
-
-        Info<< "Time = " << runTime.userTimeName() << endl;
-
-        molecules.evolve();
-
-        #include "meanMomentumEnergyAndNMols.H"
-        #include "temperatureAndPressure.H"
-
-        runTime.write();
-
-        if (runTime.writeTime())
-        {
-            nAveragingSteps = 0;
-        }
-
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << endl;
-    }
-
-    Info<< "End\n" << endl;
-
-    return 0;
+    reduce(meshVolume, sumOp<scalar>());
 }
 
 

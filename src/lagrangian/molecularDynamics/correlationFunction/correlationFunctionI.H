@@ -21,65 +21,48 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Application
-    mdFoam
-
-Description
-    Molecular dynamics solver for fluid dynamics.
-
 \*---------------------------------------------------------------------------*/
 
-#include "argList.H"
-#include "timeSelector.H"
-#include "moleculeCloud.H"
-
-using namespace Foam;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-int main(int argc, char *argv[])
+template<class Type>
+inline const Foam::Field<Foam::Field<Type>>&
+Foam::correlationFunction<Type>::tZeroBuffers() const
 {
-    #define NO_CONTROL
-    #include "postProcess.H"
+    return tZeroBuffers_;
+}
 
-    #include "setRootCase.H"
-    #include "createTime.H"
-    #include "createMesh.H"
-    #include "createFields.H"
-    #include "temperatureAndPressureVariables.H"
 
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Type>
+inline Foam::scalar Foam::correlationFunction<Type>::duration() const
+{
+    return duration_;
+}
 
-    label nAveragingSteps = 0;
 
-    Info<< "\nStarting time loop\n" << endl;
+template<class Type>
+inline Foam::scalar Foam::correlationFunction<Type>::sampleInterval() const
+{
+    return sampleInterval_;
+}
 
-    while (runTime.loop())
-    {
-        nAveragingSteps++;
 
-        Info<< "Time = " << runTime.userTimeName() << endl;
+template<class Type>
+inline Foam::scalar Foam::correlationFunction<Type>::averagingInterval() const
+{
+    return averagingInterval_;
+}
 
-        molecules.evolve();
 
-        #include "meanMomentumEnergyAndNMols.H"
-        #include "temperatureAndPressure.H"
+template<class Type>
+inline Foam::label Foam::correlationFunction<Type>::sampleSteps() const
+{
+    return sampleSteps_;
+}
 
-        runTime.write();
 
-        if (runTime.writeTime())
-        {
-            nAveragingSteps = 0;
-        }
-
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << endl;
-    }
-
-    Info<< "End\n" << endl;
-
-    return 0;
+template<class Type>
+inline Foam::label Foam::correlationFunction<Type>::measurandFieldSize() const
+{
+    return tZeroBuffers_[0].size();
 }
 
 

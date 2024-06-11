@@ -21,66 +21,59 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Application
-    mdFoam
-
-Description
-    Molecular dynamics solver for fluid dynamics.
-
 \*---------------------------------------------------------------------------*/
 
-#include "argList.H"
-#include "timeSelector.H"
-#include "moleculeCloud.H"
+namespace Foam
+{
 
-using namespace Foam;
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+inline Field<Type>& bufferedAccumulator<Type>::accumulationBuffer()
+{
+    return (*this)[nBuffers()];
+}
+
+
+template<class Type>
+inline const Field<Type>& bufferedAccumulator<Type>::accumulationBuffer() const
+{
+    return (*this)[nBuffers()];
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+inline label bufferedAccumulator<Type>::averagesTaken() const
+{
+    return averagesTaken_;
+}
+
+
+template<class Type>
+inline label bufferedAccumulator<Type>::nBuffers() const
+{
+    return bufferOffsets_.size();
+}
+
+
+template<class Type>
+inline label bufferedAccumulator<Type>::bufferLength() const
+{
+    return (*this)[0].size();
+}
+
+
+template<class Type>
+inline const List<label>& bufferedAccumulator<Type>::bufferOffsets() const
+{
+    return bufferOffsets_;
+}
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-int main(int argc, char *argv[])
-{
-    #define NO_CONTROL
-    #include "postProcess.H"
-
-    #include "setRootCase.H"
-    #include "createTime.H"
-    #include "createMesh.H"
-    #include "createFields.H"
-    #include "temperatureAndPressureVariables.H"
-
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-    label nAveragingSteps = 0;
-
-    Info<< "\nStarting time loop\n" << endl;
-
-    while (runTime.loop())
-    {
-        nAveragingSteps++;
-
-        Info<< "Time = " << runTime.userTimeName() << endl;
-
-        molecules.evolve();
-
-        #include "meanMomentumEnergyAndNMols.H"
-        #include "temperatureAndPressure.H"
-
-        runTime.write();
-
-        if (runTime.writeTime())
-        {
-            nAveragingSteps = 0;
-        }
-
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << endl;
-    }
-
-    Info<< "End\n" << endl;
-
-    return 0;
-}
-
+} // End namespace Foam
 
 // ************************************************************************* //

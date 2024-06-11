@@ -21,65 +21,30 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Application
-    mdFoam
-
-Description
-    Molecular dynamics solver for fluid dynamics.
-
 \*---------------------------------------------------------------------------*/
 
-#include "argList.H"
-#include "timeSelector.H"
-#include "moleculeCloud.H"
+#include "bufferedAccumulator.H"
+#include "IOstreams.H"
 
-using namespace Foam;
+// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-int main(int argc, char *argv[])
+template<class Type>
+Foam::Ostream&
+Foam::operator<<(Ostream& os, const bufferedAccumulator<Type>& bA)
 {
-    #define NO_CONTROL
-    #include "postProcess.H"
 
-    #include "setRootCase.H"
-    #include "createTime.H"
-    #include "createMesh.H"
-    #include "createFields.H"
-    #include "temperatureAndPressureVariables.H"
+    os  << bA.averagesTaken_
+        << static_cast<const List<Field<Type>>&>(bA)
+        << bA.bufferOffsets();
 
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    // Check state of Ostream
+    os.check
+    (
+        "Foam::Ostream& Foam::operator<<(Foam::Ostream&, "
+        "const Foam::bufferedAccumulator&)"
+    );
 
-    label nAveragingSteps = 0;
-
-    Info<< "\nStarting time loop\n" << endl;
-
-    while (runTime.loop())
-    {
-        nAveragingSteps++;
-
-        Info<< "Time = " << runTime.userTimeName() << endl;
-
-        molecules.evolve();
-
-        #include "meanMomentumEnergyAndNMols.H"
-        #include "temperatureAndPressure.H"
-
-        runTime.write();
-
-        if (runTime.writeTime())
-        {
-            nAveragingSteps = 0;
-        }
-
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << endl;
-    }
-
-    Info<< "End\n" << endl;
-
-    return 0;
+    return os;
 }
 
 

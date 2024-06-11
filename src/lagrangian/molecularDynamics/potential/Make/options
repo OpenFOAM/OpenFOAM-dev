@@ -1,6 +1,0 @@
-EXE_INC = \
-    -I.. \
-    -I$(LIB_SRC)/finiteVolume/lnInclude
-
-LIB_LIBS = \
-    -lfiniteVolume

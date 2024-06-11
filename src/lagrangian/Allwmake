@@ -8,9 +8,7 @@ wmake $targetType basic
 wmake $targetType solidParticle
 wmake $targetType parcel
 wmake $targetType DSMC
-
-molecularDynamics/Allwmake $targetType $*
-
+wmake $targetType molecularDynamics
 wmake $targetType functionObjects
 
 #------------------------------------------------------------------------------

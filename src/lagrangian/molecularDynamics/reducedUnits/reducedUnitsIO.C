@@ -21,65 +21,39 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Application
-    mdFoam
-
-Description
-    Molecular dynamics solver for fluid dynamics.
-
 \*---------------------------------------------------------------------------*/
 
-#include "argList.H"
-#include "timeSelector.H"
-#include "moleculeCloud.H"
+#include "reducedUnits.H"
+#include "IOstreams.H"
 
-using namespace Foam;
+// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-int main(int argc, char *argv[])
+Foam::Ostream& Foam::operator<<(Ostream& os, const reducedUnits& rU)
 {
-    #define NO_CONTROL
-    #include "postProcess.H"
+    os  << nl << "Defined: " << nl
+        << tab << "refLength = " << rU.refLength() << " m" << nl
+        << tab << "refTime = " << rU.refTime() << " s" << nl
+        << tab << "refMass = " << rU.refMass() << " kg" << nl
+        << tab << "Boltzmann constant, kb = " << reducedUnits::kb << " J/K"
+        << nl << "Calculated: " << nl
+        << tab << "refEnergy = " << rU.refEnergy() << " J" << nl
+        << tab << "refTemp = " << rU.refTemp() << " K" << nl
+        << tab << "refForce = " << rU.refForce() << " N" << nl
+        << tab << "refVelocity = " << rU.refVelocity() << " m/s" << nl
+        << tab << "refVolume = " << rU.refVolume() << " m^3" << nl
+        << tab << "refPressure = " << rU.refPressure() << " N/m^2" << nl
+        << tab << "refMassDensity = " << rU.refMassDensity() << " kg/m^3" << nl
+        << tab << "refNumberDensity = " << rU.refNumberDensity() << " m^-3"
+        << endl;
 
-    #include "setRootCase.H"
-    #include "createTime.H"
-    #include "createMesh.H"
-    #include "createFields.H"
-    #include "temperatureAndPressureVariables.H"
+    // Check state of Ostream
+    os.check
+    (
+        "Foam::Ostream& Foam::operator<<(Foam::Ostream&, "
+        "const Foam::reducedUnits&)"
+    );
 
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-    label nAveragingSteps = 0;
-
-    Info<< "\nStarting time loop\n" << endl;
-
-    while (runTime.loop())
-    {
-        nAveragingSteps++;
-
-        Info<< "Time = " << runTime.userTimeName() << endl;
-
-        molecules.evolve();
-
-        #include "meanMomentumEnergyAndNMols.H"
-        #include "temperatureAndPressure.H"
-
-        runTime.write();
-
-        if (runTime.writeTime())
-        {
-            nAveragingSteps = 0;
-        }
-
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << endl;
-    }
-
-    Info<< "End\n" << endl;
-
-    return 0;
+    return os;
 }
 
 
