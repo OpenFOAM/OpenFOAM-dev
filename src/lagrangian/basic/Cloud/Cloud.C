@@ -319,7 +319,7 @@ void Foam::Cloud<ParticleType>::move
 
         if (cloud.cpuLoad())
         {
-            cloudCpuTime.reset();
+            cloudCpuTime.resetCpuTime();
         }
 
         // Loop over all particles

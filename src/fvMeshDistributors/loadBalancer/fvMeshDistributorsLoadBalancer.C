@@ -26,6 +26,7 @@ License
 #include "fvMeshDistributorsLoadBalancer.H"
 #include "decompositionMethod.H"
 #include "cpuLoad.H"
+#include "globalMeshData.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -113,7 +114,7 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
             label l = 0;
             forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
             {
-                procCpuLoads[l++] = sum(iter()->primitiveField());
+                procCpuLoads[l++] = sum(*iter());
             }
 
             List<scalarList> allProcCpuLoads(Pstream::nProcs());
@@ -208,13 +209,14 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
                     label l = 1;
                     forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
                     {
-                        const scalarField& cpuLoadField =
-                            iter()->primitiveField();
+                        const scalarField& cpuLoadField = *iter();
 
                         forAll(cpuLoadField, i)
                         {
                             weights[nWeights*i + l] = cpuLoadField[i];
                         }
+
+                        iter()->checkOut();
 
                         l++;
                     }
@@ -225,7 +227,8 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
 
                     forAllConstIter(HashTable<cpuLoad*>, cpuLoads, iter)
                     {
-                        weights += iter()->primitiveField();
+                        weights += *iter();
+                        iter()->checkOut();
                     }
                 }
 
@@ -241,11 +244,20 @@ bool Foam::fvMeshDistributors::loadBalancer::update()
 
                 Info<< endl;
             }
+            else
+            {
+                forAllIter(HashTable<cpuLoad*>, cpuLoads, iter)
+                {
+                    iter()->checkOut();
+                }
+            }
         }
-
-        forAllIter(HashTable<cpuLoad*>, cpuLoads, iter)
+        else
         {
-            iter()->checkOut();
+            forAllIter(HashTable<cpuLoad*>, cpuLoads, iter)
+            {
+                iter()->checkOut();
+            }
         }
     }
 

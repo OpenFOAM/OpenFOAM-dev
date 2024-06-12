@@ -24,6 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cpuLoad.H"
+#include "polyDistributionMap.H"
+#include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "cellMapper.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -38,17 +42,17 @@ namespace Foam
 
 Foam::cpuLoad::cpuLoad(const fvMesh& mesh, const word& name)
 :
-    volScalarField::Internal
+    DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, cpuLoad>
     (
+        mesh,
         IOobject
         (
             name,
             mesh.time().name(),
             mesh
-        ),
-        mesh,
-        dimensionedScalar(dimTime, 0)
-    )
+        )
+    ),
+    scalarField(mesh.nCells(), 0.0)
 {}
 
 
@@ -127,7 +131,7 @@ Foam::optionalCpuLoad& Foam::optionalCpuLoad::New
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::cpuLoad::reset()
+void Foam::cpuLoad::resetCpuTime()
 {
     cpuTime_.cpuTimeIncrement();
 }
@@ -136,6 +140,39 @@ void Foam::cpuLoad::reset()
 void Foam::cpuLoad::cpuTimeIncrement(const label celli)
 {
     operator[](celli) += cpuTime_.cpuTimeIncrement();
+}
+
+
+void Foam::cpuLoad::reset()
+{
+    scalarField::operator=(0);
+}
+
+
+bool Foam::cpuLoad::movePoints()
+{
+    return true;
+}
+
+
+void Foam::cpuLoad::topoChange(const polyTopoChangeMap& map)
+{
+    const cellMapper cellMap(map);
+    cellMap(*this, *this);
+}
+
+
+void Foam::cpuLoad::mapMesh(const polyMeshMap& map)
+{
+    setSize(map.mesh().nCells());
+    reset();
+}
+
+
+void Foam::cpuLoad::distribute(const polyDistributionMap& map)
+{
+    setSize(map.mesh().nCells());
+    reset();
 }
 
 

@@ -43,7 +43,9 @@ SourceFiles
 #ifndef cpuLoad_H
 #define cpuLoad_H
 
-#include "volFields.H"
+#include "scalarField.H"
+#include "fvMesh.H"
+#include "DemandDrivenMeshObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -103,12 +105,16 @@ public:
 
     // Member Functions
 
-        //- Dummy reset function
-        virtual void reset()
+        //- Reset the CPU time (dummy)
+        virtual void resetCpuTime()
         {}
 
-        //- Dummy cpuTimeIncrement function
+        //- Cache the CPU time increment for celli (dummy)
         virtual void cpuTimeIncrement(const label celli)
+        {}
+
+        //- Reset the CPU load field (dummy)
+        virtual void reset()
         {}
 
 
@@ -126,7 +132,8 @@ public:
 class cpuLoad
 :
     public optionalCpuLoad,
-    public volScalarField::Internal
+    public DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, cpuLoad>,
+    public scalarField
 {
     // Private Data
 
@@ -159,10 +166,26 @@ public:
     // Member Functions
 
         //- Reset the CPU time
-        virtual void reset();
+        virtual void resetCpuTime();
 
         //- Cache the CPU time increment for celli
         virtual void cpuTimeIncrement(const label celli);
+
+        //- Reset the CPU load field
+        virtual void reset();
+
+
+        //- Update for mesh motion
+        virtual bool movePoints();
+
+        //- Redistribute or update using the given distribution map
+        virtual void distribute(const polyDistributionMap& map);
+
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap& map);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap& map);
 
 
     // Member Operators

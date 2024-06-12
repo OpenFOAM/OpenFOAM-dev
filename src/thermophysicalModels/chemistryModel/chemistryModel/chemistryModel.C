@@ -617,7 +617,7 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
     scalar deltaTMin = great;
 
     tabulation_.reset();
-    chemistryCpuLoad.reset();
+    chemistryCpuLoad.resetCpuTime();
 
     forAll(rho0vf, celli)
     {
