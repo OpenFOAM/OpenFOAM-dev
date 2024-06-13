@@ -245,7 +245,7 @@ Foam::decompositionMethods::parMetis::parMetis
 :
     decompositionMethod(decompositionDict),
     method_("geomKway"),
-    options_(4, 0),
+    options_(4, label(0)),
     itr_(1000)
 {
     // Check for user supplied weights and decomp options

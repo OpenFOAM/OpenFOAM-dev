@@ -386,7 +386,7 @@ void Foam::distributions::unintegrable::write
     label n = n_ - 1, level = 0;
     while (n >>= 1) ++ level;
 
-    writeEntryIfDifferent(os, "level", 16, level);
+    writeEntryIfDifferent(os, "level", label(16), level);
 }
 
 
