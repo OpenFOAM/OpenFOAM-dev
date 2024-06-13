@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,8 @@ Description
     ground
     {
         type            atmBoundaryLayerInletEpsilon;
-        z               (0 0 1);
+        flowDir         (1 0 0);
+        zDir            (0 0 1);
         Uref            10.0;
         Zref            20.0;
         z0              uniform 0.1;
