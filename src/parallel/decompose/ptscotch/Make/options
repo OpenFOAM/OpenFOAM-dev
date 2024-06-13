@@ -1,3 +1,6 @@
+# Note including of mplib compilation rules.
+# This is purely to avoid pscotch.h including mpicxx.h, which causes problems.
+
 -include $(GENERAL_RULES)/mplibType
 
 EXE_INC = \
@@ -5,11 +8,12 @@ EXE_INC = \
     -I$(FOAM_SRC)/Pstream/mpi/lnInclude \
     -I$(SCOTCH_ARCH_PATH)/include/$(FOAM_MPI) \
     -I$(SCOTCH_ARCH_PATH)/include \
-    -I/usr/include/scotch \
+    -I$(or $(PTSCOTCH_INCLUDE_DIR),/usr/include/scotch) \
     -I../decompositionMethods/lnInclude
 
 LIB_LIBS = \
     -L$(SCOTCH_ARCH_PATH)/lib \
+    $(if $(PTSCOTCH_LIB_DIR),-L$(PTSCOTCH_LIB_DIR)) \
     -L$(FOAM_EXT_LIBBIN)/$(FOAM_MPI) \
     -lptscotch \
     -lptscotcherrexit \

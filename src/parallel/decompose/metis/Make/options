@@ -1,6 +1,9 @@
 EXE_INC = \
     -I$(METIS_ARCH_PATH)/include \
+    $(if $(METIS_INCLUDE_DIR),-I$(METIS_INCLUDE_DIR)) \
     -I../decompositionMethods/lnInclude
 
 LIB_LIBS = \
-    -L$(METIS_ARCH_PATH)/lib -lmetis
+    -L$(METIS_ARCH_PATH)/lib \
+    $(if $(METIS_LIB_DIR),-L$(METIS_LIB_DIR)) \
+    -lmetis

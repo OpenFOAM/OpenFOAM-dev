@@ -4,7 +4,11 @@ EXE_INC = \
     $(PFLAGS) $(PINC) \
     -I$(FOAM_SRC)/Pstream/mpi/lnInclude \
     -I$(ZOLTAN_ARCH_PATH)/include \
+    $(if $(ZOLTAN_INCLUDE_DIR),-I$(ZOLTAN_INCLUDE_DIR)) \
     -I../decompositionMethods/lnInclude
 
 LIB_LIBS = \
-    -L$(ZOLTAN_ARCH_PATH)/lib -L$(FOAM_EXT_LIBBIN)/$(FOAM_MPI) -lzoltan
+    -L$(ZOLTAN_ARCH_PATH)/lib \
+    $(if $(ZOLTAN_LIB_DIR),-L$(ZOLTAN_LIB_DIR)) \
+    -L$(FOAM_EXT_LIBBIN)/$(FOAM_MPI) \
+    -lzoltan

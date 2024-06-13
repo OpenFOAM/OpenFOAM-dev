@@ -4,7 +4,11 @@ EXE_INC = \
     $(PFLAGS) $(PINC) \
     -I$(FOAM_SRC)/Pstream/mpi/lnInclude \
     -I$(PARMETIS_ARCH_PATH)/include \
+    $(if $(PARMETIS_INCLUDE_DIR),-I$(PARMETIS_INCLUDE_DIR)) \
     -I../decompositionMethods/lnInclude
 
 LIB_LIBS =  \
-    -L$(PARMETIS_ARCH_PATH)/lib -lparmetis
+    -L$(PARMETIS_ARCH_PATH)/lib \
+    $(if $(PARMETIS_LIB_DIR),-L$(PARMETIS_LIB_DIR)) \
+    -L$(FOAM_EXT_LIBBIN)/$(FOAM_MPI) \
+    -lparmetis
