@@ -584,7 +584,7 @@ Foam::scalar Foam::chemistryModel<ThermoType>::solve
 {
     optionalCpuLoad& chemistryCpuLoad
     (
-        optionalCpuLoad::New(this->mesh(), name() + ":cpuLoad", cpuLoad_)
+        optionalCpuLoad::New(name() + ":cpuLoad", this->mesh(), cpuLoad_)
     );
 
     // CPU time logging

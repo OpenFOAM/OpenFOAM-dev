@@ -83,8 +83,8 @@ public:
         // otherwise return the dummy optionalCpuLoad
         static optionalCpuLoad& New
         (
-            const fvMesh& mesh,
             const word& name,
+            const fvMesh& mesh,
             const bool loadBalancing
         );
 
@@ -92,8 +92,8 @@ public:
         // otherwise return the dummy optionalCpuLoad
         static optionalCpuLoad& New
         (
-            const polyMesh& mesh,
             const word& name,
+            const polyMesh& mesh,
             const bool loadBalancing
         );
 
@@ -151,8 +151,8 @@ public:
         //- Construct from mesh, name and switch
         cpuLoad
         (
-            const fvMesh& mesh,
-            const word& name
+            const word& name,
+            const fvMesh& mesh
         );
 
         //- Disallow default bitwise copy construction

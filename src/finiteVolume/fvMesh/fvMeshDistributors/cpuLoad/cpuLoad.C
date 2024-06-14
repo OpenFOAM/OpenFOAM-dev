@@ -40,17 +40,12 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::cpuLoad::cpuLoad(const fvMesh& mesh, const word& name)
+Foam::cpuLoad::cpuLoad( const word& name, const fvMesh& mesh)
 :
     DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, cpuLoad>
     (
-        mesh,
-        IOobject
-        (
-            name,
-            mesh.time().name(),
-            mesh
-        )
+        name,
+        mesh
     ),
     scalarField(mesh.nCells(), 0.0)
 {}
@@ -66,43 +61,19 @@ Foam::cpuLoad::~cpuLoad()
 
 Foam::optionalCpuLoad& Foam::optionalCpuLoad::New
 (
-    const fvMesh& mesh,
     const word& name,
+    const fvMesh& mesh,
     const bool loadBalancing
 )
 {
     if (loadBalancing)
     {
-        if
-        (
-            mesh.thisDb().objectRegistry::template
-            foundObject<cpuLoad>
-            (
-                name
-            )
-        )
-        {
-            return mesh.thisDb().objectRegistry::template
-            lookupObjectRef<cpuLoad>
-            (
-                name
-            );
-        }
-        else
-        {
-            if (cpuLoad::debug)
-            {
-                InfoInFunction
-                    << "constructing " << name
-                    << " for region " << mesh.name() << endl;
-            }
-
-            cpuLoad* cpuLoadPtr(new cpuLoad(mesh, name));
-
-            regIOobject::store(cpuLoadPtr);
-
-            return *cpuLoadPtr;
-        }
+        return DemandDrivenMeshObject
+        <
+            fvMesh,
+            TopoChangeableMeshObject,
+            cpuLoad
+        >::New(name, mesh);
     }
     else
     {
@@ -113,14 +84,14 @@ Foam::optionalCpuLoad& Foam::optionalCpuLoad::New
 
 Foam::optionalCpuLoad& Foam::optionalCpuLoad::New
 (
-    const polyMesh& mesh,
     const word& name,
+    const polyMesh& mesh,
     const bool loadBalancing
 )
 {
     if (loadBalancing && isA<fvMesh>(mesh))
     {
-        return New(refCast<const fvMesh>(mesh), name, loadBalancing);
+        return New(name, refCast<const fvMesh>(mesh), loadBalancing);
     }
     else
     {

@@ -31,19 +31,12 @@ License
 template<class Mesh, template<class> class MeshObjectType, class Type>
 Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::DemandDrivenMeshObject
 (
+    const IOobject& io,
     const Mesh& mesh
 )
 :
-    regIOobject
-    (
-        IOobject
-        (
-            Type::typeName,
-            mesh.thisDb().instance(),
-            mesh.thisDb()
-        )
-    ),
-    MeshObjectType<Mesh>(*this, mesh),
+    regIOobject(io),
+    MeshObjectType<Mesh>(*this),
     mesh_(mesh)
 {}
 
@@ -51,17 +44,66 @@ Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::DemandDrivenMeshObject
 template<class Mesh, template<class> class MeshObjectType, class Type>
 Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::DemandDrivenMeshObject
 (
-    const Mesh& mesh,
-    const IOobject& io
+    const word& name,
+    const Mesh& mesh
 )
 :
-    regIOobject(io),
-    MeshObjectType<Mesh>(*this, mesh),
+    regIOobject
+    (
+        IOobject
+        (
+            name,
+            mesh.thisDb().instance(),
+            mesh.thisDb()
+        )
+    ),
+    MeshObjectType<Mesh>(*this),
     mesh_(mesh)
 {}
 
 
+template<class Mesh, template<class> class MeshObjectType, class Type>
+Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::DemandDrivenMeshObject
+(
+    const Mesh& mesh
+)
+:
+    DemandDrivenMeshObject<Mesh, MeshObjectType, Type>(Type::typeName, mesh)
+{}
+
+
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
+template<class Mesh, template<class> class MeshObjectType, class Type>
+Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
+(
+    const word& name,
+    const Mesh& mesh
+)
+{
+    if (found(name, mesh))
+    {
+        return mesh.thisDb().objectRegistry::template lookupObjectRef<Type>
+        (
+            name
+        );
+    }
+    else
+    {
+        if (meshObjects::debug)
+        {
+            Pout<< "DemandDrivenMeshObject::New(" << Mesh::typeName
+                << "&) : constructing " << name
+                << " of type " << Type::typeName
+                << " for region " << mesh.name() << endl;
+        }
+
+        Type* objectPtr = new Type(name, mesh);
+
+        return regIOobject::store(objectPtr);
+    }
+}
+
 
 template<class Mesh, template<class> class MeshObjectType, class Type>
 Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
@@ -86,6 +128,39 @@ Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
         }
 
         Type* objectPtr = new Type(mesh);
+
+        return regIOobject::store(objectPtr);
+    }
+}
+
+
+template<class Mesh, template<class> class MeshObjectType, class Type>
+template<class... Args>
+Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
+(
+    const word& name,
+    const Mesh& mesh,
+    const Args&... args
+)
+{
+    if (found(name, mesh))
+    {
+        return mesh.thisDb().objectRegistry::template lookupObjectRef<Type>
+        (
+            name
+        );
+    }
+    else
+    {
+        if (meshObjects::debug)
+        {
+            Pout<< "DemandDrivenMeshObject::New(" << Mesh::typeName
+                << "&, const Data1&) : constructing " << name
+                << " of type " << Type::typeName
+                << " for region " << mesh.name() << endl;
+        }
+
+        Type* objectPtr = new Type(name, mesh, args...);
 
         return regIOobject::store(objectPtr);
     }
@@ -126,38 +201,6 @@ Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
 
 template<class Mesh, template<class> class MeshObjectType, class Type>
-bool Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::Delete
-(
-    const Mesh& mesh
-)
-{
-    if (found(mesh))
-    {
-        if (meshObjects::debug)
-        {
-            Pout<< "DemandDrivenMeshObject::Delete(const Mesh&) : deleting "
-                << Type::typeName << endl;
-        }
-
-        return mesh.thisDb().checkOut
-        (
-            const_cast<Type&>
-            (
-                mesh.thisDb().objectRegistry::template lookupObject<Type>
-                (
-                    Type::typeName
-                )
-            )
-        );
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
 Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::
 ~DemandDrivenMeshObject()
 {
@@ -178,13 +221,21 @@ Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::type() const
 template<class Mesh, template<class> class MeshObjectType, class Type>
 bool Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::found
 (
+    const word& name,
     const Mesh& mesh
 )
 {
-    return mesh.thisDb().objectRegistry::template foundObject<Type>
-    (
-        Type::typeName
-    );
+    return mesh.thisDb().objectRegistry::template foundObject<Type>(name);
+}
+
+
+template<class Mesh, template<class> class MeshObjectType, class Type>
+bool Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::found
+(
+    const Mesh& mesh
+)
+{
+    return found(Type::typeName, mesh);
 }
 
 

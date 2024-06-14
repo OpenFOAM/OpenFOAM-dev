@@ -304,7 +304,7 @@ void Foam::Cloud<ParticleType>::move
 
     optionalCpuLoad& cloudCpuTime
     (
-        optionalCpuLoad::New(pMesh_, name() + ":cpuLoad", cloud.cpuLoad())
+        optionalCpuLoad::New(name() + ":cpuLoad", pMesh_, cloud.cpuLoad())
     );
 
     // While there are particles to transfer

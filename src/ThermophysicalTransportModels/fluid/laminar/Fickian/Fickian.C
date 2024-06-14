@@ -141,7 +141,7 @@ Fickian<BasicThermophysicalTransportModel>::Fickian
         thermo
     ),
 
-    TopoChangeableMeshObject(*this, thermo.mesh()),
+    TopoChangeableMeshObject(*this),
 
     mixtureDiffusionCoefficients_(true),
 

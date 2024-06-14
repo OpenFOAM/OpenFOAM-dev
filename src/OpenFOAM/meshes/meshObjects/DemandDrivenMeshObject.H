@@ -109,13 +109,17 @@ protected:
 
     // Constructors
 
-        //- Construct from mesh
-        //  Only derived classes can construct DemandDrivenMeshObject
-        DemandDrivenMeshObject(const Mesh& mesh);
-
         //- Construct from mesh and IOobject
         //  Only derived classes can construct DemandDrivenMeshObject
-        DemandDrivenMeshObject(const Mesh& mesh, const IOobject& io);
+        DemandDrivenMeshObject(const IOobject& io, const Mesh& mesh);
+
+        //- Construct from mesh and name
+        //  Only derived classes can construct DemandDrivenMeshObject
+        DemandDrivenMeshObject(const word& name, const Mesh& mesh);
+
+        //- Construct from mesh, the name is set to Type::typeName
+        //  Only derived classes can construct DemandDrivenMeshObject
+        DemandDrivenMeshObject(const Mesh& mesh);
 
 
 public:
@@ -126,8 +130,24 @@ public:
 
     // Constructors
 
+        //- Construct and return the named DemandDrivenMeshObject
+        static Type& New(const word& name, const Mesh& mesh);
+
+        //- Construct and return the DemandDrivenMeshObject named Type::typeName
         static Type& New(const Mesh& mesh);
 
+        //- Construct and return the named DemandDrivenMeshObject
+        //  with the additional arguments
+        template<class... Args>
+        static Type& New
+        (
+            const word& name,
+            const Mesh& mesh,
+            const Args&... args
+        );
+
+        //- Construct and return the DemandDrivenMeshObject named Type::typeName
+        //  with the additional arguments
         template<class... Args>
         static Type& New
         (
@@ -140,14 +160,15 @@ public:
 
         virtual ~DemandDrivenMeshObject();
 
-        //- Lookup DemandDrivenMeshObject and delete
-        static bool Delete(const Mesh& mesh);
-
 
     // Member Functions
 
-        //- Return true if this DemandDrivenMeshObject is found
-        //  in the mesh registry
+        //- Return true if the DemandDrivenMeshObject with the given name
+        //  is found in the mesh registry
+        static bool found(const word& name, const Mesh& mesh);
+
+        //- Return true if the DemandDrivenMeshObject named Type::typeName
+        //  is found in the mesh registry
         static bool found(const Mesh& mesh);
 
         const Mesh& mesh() const

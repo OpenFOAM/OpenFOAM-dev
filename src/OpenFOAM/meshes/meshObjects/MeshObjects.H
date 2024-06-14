@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,9 +74,10 @@ class DeletableMeshObject
 
 public:
 
-    DeletableMeshObject(regIOobject& io, const Mesh& mesh)
+    template<class Type>
+    DeletableMeshObject(Type& mo)
     :
-        io_(io)
+        io_(mo)
     {}
 
     //- Virtual destructor to make class polymorphic
@@ -95,9 +96,10 @@ class MoveableMeshObject
 {
 public:
 
-    MoveableMeshObject(regIOobject& io, const Mesh& mesh)
+    template<class Type>
+    MoveableMeshObject(Type& mo)
     :
-        DeletableMeshObject<Mesh>(io, mesh)
+        DeletableMeshObject<Mesh>(mo)
     {}
 
     //- Update for mesh motion
@@ -116,9 +118,10 @@ class DistributeableMeshObject
 {
 public:
 
-    DistributeableMeshObject(regIOobject& io, const Mesh& mesh)
+    template<class Type>
+    DistributeableMeshObject(Type& mo)
     :
-        MoveableMeshObject<Mesh>(io, mesh)
+        MoveableMeshObject<Mesh>(mo)
     {}
 
     //- Redistribute or update using the given distribution map
@@ -137,9 +140,10 @@ class TopoChangeableMeshObject
 {
 public:
 
-    TopoChangeableMeshObject(regIOobject& io, const Mesh& mesh)
+    template<class Type>
+    TopoChangeableMeshObject(Type& mo)
     :
-        DistributeableMeshObject<Mesh>(io, mesh)
+        DistributeableMeshObject<Mesh>(mo)
     {}
 
     //- Update topology using the given map
@@ -161,9 +165,10 @@ class RepatchableMeshObject
 {
 public:
 
-    RepatchableMeshObject(regIOobject& io, const Mesh& mesh)
+    template<class Type>
+    RepatchableMeshObject(Type& mo)
     :
-        TopoChangeableMeshObject<Mesh>(io, mesh)
+        TopoChangeableMeshObject<Mesh>(mo)
     {}
 
     //- Reordered/removed trailing patches. If validBoundary call is parallel

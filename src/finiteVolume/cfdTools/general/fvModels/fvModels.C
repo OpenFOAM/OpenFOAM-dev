@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,8 +147,8 @@ Foam::fvModels::fvModels
 :
     DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, fvModels>
     (
-        mesh,
-        createIOobject(mesh)
+        createIOobject(mesh),
+        mesh
     ),
     PtrListDictionary<fvModel>(0),
     checkTimeIndex_(mesh.time().timeIndex() + 1),
