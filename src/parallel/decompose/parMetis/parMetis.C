@@ -27,6 +27,7 @@ License
 #include "Time.H"
 #include "globalIndex.H"
 #include "labelIOField.H"
+#include "PstreamGlobals.H"
 #include "addToRunTimeSelectionTable.H"
 
 
@@ -119,7 +120,36 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
         wgtFlag += 1;
     }
 
-    MPI_Comm comm = MPI_COMM_WORLD;
+    // Set the list of valid processors,
+    // i.e. processors with non-zero number of cells
+    labelList validProcs(Pstream::nProcs());
+    labelList validCellOffsets(cellOffsets);
+    label nValidProcs = 0;
+
+    for(label proci=0; proci<Pstream::nProcs(); proci++)
+    {
+        if (cellOffsets[proci + 1] - cellOffsets[proci] > 0)
+        {
+            validProcs[nValidProcs] = proci;
+            validCellOffsets[nValidProcs] = validCellOffsets[proci];
+            nValidProcs++;
+        }
+    }
+    validProcs.setSize(nValidProcs);
+    validCellOffsets[nValidProcs] = validCellOffsets[Pstream::nProcs()];
+
+    // Initialise the communicator index to worldComm
+    label commi = UPstream::worldComm;
+
+    // If there any processors with zero cells create a communicator
+    // for the sub-set of processors containing cells
+    if (nValidProcs != Pstream::nProcs())
+    {
+        commi = Pstream::allocateCommunicator(UPstream::worldComm, validProcs);
+    }
+
+    // Lookup the MPI communicator for the current communicator index
+    MPI_Comm comm = PstreamGlobals::MPICommunicators_[commi];
 
     // Output: cell -> processor addressing
     decomp.setSize(cellCentres.size());
@@ -127,89 +157,99 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
     // Output: the number of edges that are cut by the partitioning
     label edgeCut = 0;
 
-    if (method_ == "kWay")
+    // Call ParMETIS only for processors containing cells
+    if (cellCentres.size())
     {
-        ParMETIS_V3_PartKway
-        (
-            cellOffsets.begin(),
-            const_cast<label*>(xadj.begin()),
-            const_cast<label*>(adjncy.begin()),
-            const_cast<label*>(vwgtPtr),
-            const_cast<label*>(adjwgtPtr),
-            &wgtFlag,
-            &numFlag,
-            const_cast<label*>(&nWeights),
-            &nProcessors_,
-            processorWeights.begin(),
-            ubvec.begin(),
-            const_cast<labelList&>(options_).begin(),
-            &edgeCut,
-            decomp.begin(),
-            &comm
-        );
-    }
-    else if (method_ == "geomKway")
-    {
-        // Number of dimensions
-        label nDims = 3;
-
-        // Convert pointField into List<real_t>
-        List<real_t> xyz(nDims*cellCentres.size());
-        label i = 0;
-        forAll(cellCentres, celli)
+        if (method_ == "kWay")
         {
-            const point& cc = cellCentres[celli];
-            xyz[i++] = cc.x();
-            xyz[i++] = cc.y();
-            xyz[i++] = cc.z();
+            ParMETIS_V3_PartKway
+            (
+                validCellOffsets.begin(),
+                const_cast<label*>(xadj.begin()),
+                const_cast<label*>(adjncy.begin()),
+                const_cast<label*>(vwgtPtr),
+                const_cast<label*>(adjwgtPtr),
+                &wgtFlag,
+                &numFlag,
+                const_cast<label*>(&nWeights),
+                &nProcessors_,
+                processorWeights.begin(),
+                ubvec.begin(),
+                const_cast<labelList&>(options_).begin(),
+                &edgeCut,
+                decomp.begin(),
+                &comm
+            );
         }
+        else if (method_ == "geomKway")
+        {
+            // Number of dimensions
+            label nDims = 3;
 
-        ParMETIS_V3_PartGeomKway
-        (
-            cellOffsets.begin(),
-            const_cast<label*>(xadj.begin()),
-            const_cast<label*>(adjncy.begin()),
-            const_cast<label*>(vwgtPtr),
-            const_cast<label*>(adjwgtPtr),
-            &wgtFlag,
-            &numFlag,
-            &nDims,
-            xyz.begin(),
-            const_cast<label*>(&nWeights),
-            &nProcessors_,
-            processorWeights.begin(),
-            ubvec.begin(),
-            const_cast<labelList&>(options_).begin(),
-            &edgeCut,
-            decomp.begin(),
-            &comm
-        );
+            // Convert pointField into List<real_t>
+            List<real_t> xyz(nDims*cellCentres.size());
+            label i = 0;
+            forAll(cellCentres, celli)
+            {
+                const point& cc = cellCentres[celli];
+                xyz[i++] = cc.x();
+                xyz[i++] = cc.y();
+                xyz[i++] = cc.z();
+            }
+
+            ParMETIS_V3_PartGeomKway
+            (
+                validCellOffsets.begin(),
+                const_cast<label*>(xadj.begin()),
+                const_cast<label*>(adjncy.begin()),
+                const_cast<label*>(vwgtPtr),
+                const_cast<label*>(adjwgtPtr),
+                &wgtFlag,
+                &numFlag,
+                &nDims,
+                xyz.begin(),
+                const_cast<label*>(&nWeights),
+                &nProcessors_,
+                processorWeights.begin(),
+                ubvec.begin(),
+                const_cast<labelList&>(options_).begin(),
+                &edgeCut,
+                decomp.begin(),
+                &comm
+            );
+        }
+        else if (method_ == "adaptiveRepart")
+        {
+            // Size of the vertices with respect to redistribution cost
+            labelList vsize(cellCentres.size(), 1);
+
+            ParMETIS_V3_AdaptiveRepart
+            (
+                validCellOffsets.begin(),
+                const_cast<label*>(xadj.begin()),
+                const_cast<label*>(adjncy.begin()),
+                const_cast<label*>(vwgtPtr),
+                const_cast<label*>(vsize.begin()),
+                const_cast<label*>(adjwgtPtr),
+                &wgtFlag,
+                &numFlag,
+                const_cast<label*>(&nWeights),
+                &nProcessors_,
+                processorWeights.begin(),
+                ubvec.begin(),
+                &itr_,
+                const_cast<labelList&>(options_).begin(),
+                &edgeCut,
+                decomp.begin(),
+                &comm
+            );
+        }
     }
-    else if (method_ == "adaptiveRepart")
-    {
-        // Size of the vertices with respect to redistribution cost
-        labelList vsize(cellCentres.size(), 1);
 
-        ParMETIS_V3_AdaptiveRepart
-        (
-            cellOffsets.begin(),
-            const_cast<label*>(xadj.begin()),
-            const_cast<label*>(adjncy.begin()),
-            const_cast<label*>(vwgtPtr),
-            const_cast<label*>(vsize.begin()),
-            const_cast<label*>(adjwgtPtr),
-            &wgtFlag,
-            &numFlag,
-            const_cast<label*>(&nWeights),
-            &nProcessors_,
-            processorWeights.begin(),
-            ubvec.begin(),
-            &itr_,
-            const_cast<labelList&>(options_).begin(),
-            &edgeCut,
-            decomp.begin(),
-            &comm
-        );
+    // Delete the sub-set communicator if created
+    if (commi != UPstream::worldComm)
+    {
+        Pstream::freeCommunicator(commi);
     }
 
     // Sum the number of cells allocated to each processor
@@ -326,14 +366,6 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
             << exit(FatalError);
     }
 
-    if (Pstream::parRun() && !points.size())
-    {
-        Pout<< "No points on processor " << Pstream::myProcNo() << nl
-            << "    ParMETIS cannot redistribute without points"
-               " on all processors." << endl;
-        FatalErrorInFunction << exit(FatalError);
-    }
-
     // Make Metis CSR (Compressed Storage Format) storage
     //   adjncy      : contains neighbours (= edges in graph)
     //   xadj(celli) : start of information in adjncy for celli
@@ -348,6 +380,7 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
     );
 
     label nWeights = this->nWeights(points, pointWeights);
+
     const labelList intWeights(scaleWeights(pointWeights, nWeights));
 
     labelList decomp;
@@ -380,14 +413,6 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
             << "Size of cell-to-coarse map " << cellToRegion.size()
             << " differs from number of cells in mesh " << mesh.nCells()
             << exit(FatalError);
-    }
-
-    if (Pstream::parRun() && !regionPoints.size())
-    {
-        Pout<< "No points on processor " << Pstream::myProcNo() << nl
-            << "    ParMETIS cannot redistribute without points"
-               " on all processors." << endl;
-        FatalErrorInFunction << exit(FatalError);
     }
 
     // Make Metis CSR (Compressed Storage Format) storage
@@ -444,14 +469,6 @@ Foam::labelList Foam::decompositionMethods::parMetis::decompose
             << "Inconsistent number of cells (" << globalCellCells.size()
             << ") and number of cell centres (" << cellCentres.size()
             << ")." << exit(FatalError);
-    }
-
-    if (Pstream::parRun() && !cellCentres.size())
-    {
-        Pout<< "No points on processor " << Pstream::myProcNo() << nl
-            << "    ParMETIS cannot redistribute without points"
-               " on all processors." << endl;
-        FatalErrorInFunction << exit(FatalError);
     }
 
     // Make Metis Distributed CSR (Compressed Storage Format) storage

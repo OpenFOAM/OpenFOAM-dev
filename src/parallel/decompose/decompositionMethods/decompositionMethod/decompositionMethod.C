@@ -327,7 +327,7 @@ Foam::labelList Foam::decompositionMethod::scaleWeights
 {
     labelList intWeights;
 
-    if (nWeights && weights.size() > 0)
+    if (nWeights > 0)
     {
         // Calculate the scalar -> integer scaling factor
         const scalar sumWeights
