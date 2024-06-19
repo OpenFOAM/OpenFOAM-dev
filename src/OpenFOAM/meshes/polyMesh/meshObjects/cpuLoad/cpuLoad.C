@@ -40,9 +40,9 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::cpuLoad::cpuLoad( const word& name, const fvMesh& mesh)
+Foam::cpuLoad::cpuLoad(const word& name, const polyMesh& mesh)
 :
-    DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, cpuLoad>
+    DemandDrivenMeshObject<polyMesh, TopoChangeableMeshObject, cpuLoad>
     (
         name,
         mesh
@@ -62,7 +62,7 @@ Foam::cpuLoad::~cpuLoad()
 Foam::optionalCpuLoad& Foam::optionalCpuLoad::New
 (
     const word& name,
-    const fvMesh& mesh,
+    const polyMesh& mesh,
     const bool loadBalancing
 )
 {
@@ -70,28 +70,10 @@ Foam::optionalCpuLoad& Foam::optionalCpuLoad::New
     {
         return DemandDrivenMeshObject
         <
-            fvMesh,
+            polyMesh,
             TopoChangeableMeshObject,
             cpuLoad
         >::New(name, mesh);
-    }
-    else
-    {
-        return optionalCpuLoad::optionalCpuLoad_;
-    }
-}
-
-
-Foam::optionalCpuLoad& Foam::optionalCpuLoad::New
-(
-    const word& name,
-    const polyMesh& mesh,
-    const bool loadBalancing
-)
-{
-    if (loadBalancing && isA<fvMesh>(mesh))
-    {
-        return New(name, refCast<const fvMesh>(mesh), loadBalancing);
     }
     else
     {

@@ -43,8 +43,9 @@ SourceFiles
 #ifndef cpuLoad_H
 #define cpuLoad_H
 
+#include "cpuTime.H"
 #include "scalarField.H"
-#include "fvMesh.H"
+#include "polyMesh.H"
 #include "DemandDrivenMeshObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -79,17 +80,9 @@ public:
 
     // Selectors
 
-        //- Construct from fvMesh if loadBalancing is true
-        // otherwise return the dummy optionalCpuLoad
-        static optionalCpuLoad& New
-        (
-            const word& name,
-            const fvMesh& mesh,
-            const bool loadBalancing
-        );
 
-        //- Construct from polyMesh if it is an fvMesh and loadBalancing is true
-        // otherwise return the dummy optionalCpuLoad
+        //- Construct from polyMesh if loadBalancing is true
+        //  otherwise return the dummy optionalCpuLoad
         static optionalCpuLoad& New
         (
             const word& name,
@@ -132,7 +125,7 @@ public:
 class cpuLoad
 :
     public optionalCpuLoad,
-    public DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, cpuLoad>,
+    public DemandDrivenMeshObject<polyMesh, TopoChangeableMeshObject, cpuLoad>,
     public scalarField
 {
     // Private Data
@@ -152,7 +145,7 @@ public:
         cpuLoad
         (
             const word& name,
-            const fvMesh& mesh
+            const polyMesh& mesh
         );
 
         //- Disallow default bitwise copy construction

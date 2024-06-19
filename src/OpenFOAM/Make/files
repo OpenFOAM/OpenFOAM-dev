@@ -537,6 +537,9 @@ $(polyMesh)/polyMeshInitMesh.C
 $(polyMesh)/polyMeshClear.C
 $(polyMesh)/polyMeshUpdate.C
 
+$(polyMesh)/meshObjects/Residuals/residuals.C
+$(polyMesh)/meshObjects/cpuLoad/cpuLoad.C
+
 primitiveMesh = meshes/primitiveMesh
 $(primitiveMesh)/primitiveMesh.C
 $(primitiveMesh)/primitiveMeshCellCells.C
@@ -719,8 +722,6 @@ algorithms/dynamicIndexedOctree/dynamicIndexedOctreeName.C
 algorithms/dynamicIndexedOctree/dynamicTreeDataPoint.C
 algorithms/polygonTriangulate/polygonTriangulate.C
 algorithms/solutionControl/solutionControl.C
-
-meshes/Residuals/residuals.C
 
 distributions/distribution/distribution.C
 distributions/distribution/distributionNew.C
