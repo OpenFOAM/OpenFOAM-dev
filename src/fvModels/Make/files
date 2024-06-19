@@ -19,6 +19,7 @@ derived/solidificationMelting/solidificationMelting.C
 derived/sixDoFAcceleration/sixDoFAcceleration.C
 derived/buoyancyForce/buoyancyForce.C
 derived/buoyancyEnergy/buoyancyEnergy.C
+derived/viscousHeating/viscousHeating.C
 derived/phaseLimitStabilisation/phaseLimitStabilisation.C
 derived/acceleration/acceleration.C
 derived/volumeBlockage/volumeBlockage.C
