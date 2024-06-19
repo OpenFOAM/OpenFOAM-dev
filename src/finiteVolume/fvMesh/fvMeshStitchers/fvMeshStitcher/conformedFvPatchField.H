@@ -175,6 +175,99 @@ public:
             virtual void reset(const fvPatchField<Type>&);
 
 
+        // Attributes
+
+            //- Return true if this patch field fixes a value.
+            //  Needed to check if a level has to be specified while solving
+            //  Poissons equations.
+            virtual bool fixesValue() const
+            {
+                return origFieldPtr_->fixesValue();
+            }
+
+            //- Return true if the value of the patch field
+            //  is altered by assignment (the default)
+            virtual bool assignable() const
+            {
+                return origFieldPtr_->assignable();
+            }
+
+            //- Return true if this patch field is coupled
+            virtual bool coupled() const
+            {
+                return origFieldPtr_->coupled();
+            }
+
+            //- Return true if this overrides the underlying constraint type
+            bool overridesConstraint() const
+            {
+                return origFieldPtr_->overridesConstraint();
+            }
+
+
+        // Evaluation functions
+
+            //- Return patch-normal gradient
+            virtual tmp<Field<Type>> snGrad() const
+            {
+                return origFieldPtr_->snGrad();
+            }
+
+            //- Initialise the evaluation of the patch field
+            virtual void initEvaluate
+            (
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
+            )
+            {
+                origFieldPtr_->initEvaluate(commsType);
+            }
+
+            //- Evaluate the patch field, sets Updated to false
+            virtual void evaluate
+            (
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
+            )
+            {
+                origFieldPtr_->evaluate(commsType);
+            }
+
+            //- Return the matrix diagonal coefficients corresponding to the
+            //  evaluation of the value of this patchField with given weights
+            virtual tmp<Field<Type>> valueInternalCoeffs
+            (
+                const tmp<Field<scalar>>& weights
+            ) const
+            {
+                return origFieldPtr_->valueInternalCoeffs(weights);
+            }
+
+            //- Return the matrix source coefficients corresponding to the
+            //  evaluation of the value of this patchField with given weights
+            virtual tmp<Field<Type>> valueBoundaryCoeffs
+            (
+                const tmp<Field<scalar>>& weights
+            ) const
+            {
+                return origFieldPtr_->valueBoundaryCoeffs(weights);
+            }
+
+            //- Return the matrix diagonal coefficients corresponding to the
+            //  evaluation of the gradient of this patchField
+            virtual tmp<Field<Type>> gradientInternalCoeffs() const
+            {
+                return origFieldPtr_->gradientInternalCoeffs();
+            }
+
+            //- Return the matrix source coefficients corresponding to the
+            //  evaluation of the gradient of this patchField
+            virtual tmp<Field<Type>> gradientBoundaryCoeffs() const
+            {
+                return origFieldPtr_->gradientBoundaryCoeffs();
+            }
+
+
         //- Write
         virtual void write(Ostream&) const;
 };
