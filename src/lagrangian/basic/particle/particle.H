@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,10 +90,6 @@ class particle
         //- Size in bytes of the fields
         static const std::size_t sizeofFields_;
 
-        //- The value of nTracksBehind_ at which tracking is abandoned. See the
-        //  description of nTracksBehind_.
-        static const label maxNTracksBehind_;
-
 
 public:
 
@@ -176,25 +172,12 @@ private:
         //- Fraction of time-step completed
         scalar stepFraction_;
 
-        //- The step fraction less than the maximum reached so far
+        //- The step fraction less than the maximum reached so far. See
+        //  tracking.H for details.
         scalar stepFractionBehind_;
 
         //- The number of tracks carried out that ended in a step fraction less
-        //  than the maximum reached so far. Once this reaches
-        //  maxNTracksBehind_, tracking is abandoned for the current step.
-        //
-        //  This is needed because when tetrahedra are inverted a straight
-        //  trajectory can form a closed loop through regions of overlapping
-        //  positive and negative space. Without this break clause, such loops
-        //  can result in a valid track which never ends.
-        //
-        //  Because the test is susceptible to round off error, a track of zero
-        //  length will also increment the counter. As such, it is important
-        //  that maxNTracksBehind_ is set large enough so that valid small
-        //  tracks do not result in the track being abandoned. The largest
-        //  number of valid small tracks that are likely to be performed
-        //  sequentially is equal to the number of tetrahedra that can meet at
-        //  a point. An estimate of this number is therefore used to set
+        //  than the maximum reached so far. See tracking.H for details.
         //  maxNTracksBehind_.
         label nTracksBehind_;
 
@@ -203,113 +186,6 @@ private:
 
         //- Local particle id on originating processor
         label origId_;
-
-
-private:
-
-    // Private Member Functions
-
-        // Tetrahedra functions
-
-            //- Get the vertices of the current tet
-            inline void stationaryTetGeometry
-            (
-                const polyMesh& mesh,
-                vector& centre,
-                vector& base,
-                vector& vertex1,
-                vector& vertex2
-            ) const;
-
-            //- Get the transformation associated with the current tet. This
-            //  will convert a barycentric position within the tet to a
-            //  cartesian position in the global coordinate system. The
-            //  conversion is x = A & y, where x is the cartesian position, y is
-            //  the barycentric position and A is the transformation tensor.
-            inline barycentricTensor stationaryTetTransform
-            (
-                const polyMesh& mesh
-            ) const;
-
-            //- Get the reverse transform associated with the current tet. The
-            //  conversion is detA*y = (x - centre) & T. The variables x, y and
-            //  centre have the same meaning as for the forward transform. T is
-            //  the transposed inverse of the forward transform tensor, A,
-            //  multiplied by its determinant, detA. This separation allows
-            //  the barycentric tracking algorithm to function on inverted or
-            //  degenerate tetrahedra.
-            void stationaryTetReverseTransform
-            (
-                const polyMesh& mesh,
-                vector& centre,
-                scalar& detA,
-                barycentricTensor& T
-            ) const;
-
-            //- Get the vertices of the current moving tet. Two values are
-            //  returned for each vertex. The first is a constant, and the
-            //  second is a linear coefficient of the track fraction.
-            inline void movingTetGeometry
-            (
-                const polyMesh& mesh,
-                const scalar endStepFraction,
-                Pair<vector>& centre,
-                Pair<vector>& base,
-                Pair<vector>& vertex1,
-                Pair<vector>& vertex2
-            ) const;
-
-            //- Get the transformation associated with the current, moving, tet.
-            //  This is of the same form as for the static case. As with the
-            //  moving geometry, a linear function of the tracking fraction is
-            //  returned for each component.
-            inline Pair<barycentricTensor> movingTetTransform
-            (
-                const polyMesh& mesh,
-                const scalar endStepFraction
-            ) const;
-
-            //- Get the reverse transformation associated with the current,
-            //  moving, tet. This is of the same form as for the static case. As
-            //  with the moving geometry, a function of the tracking fraction is
-            //  returned for each component. The functions are higher order than
-            //  for the forward transform; the determinant is cubic, and the
-            //  tensor is quadratic.
-            void movingTetReverseTransform
-            (
-                const polyMesh& mesh,
-                const scalar endStepFraction,
-                Pair<vector>& centre,
-                FixedList<scalar, 4>& detA,
-                FixedList<barycentricTensor, 3>& T
-            ) const;
-
-
-        // Transformations
-
-            //- Reflection transform. Corrects the coordinates when the particle
-            //  moves between two tets which share a base vertex, but for which
-            //  the other two non cell-centre vertices are reversed. All hits
-            //  which retain the same face behave this way, as do face hits.
-            void reflect();
-
-            //- Rotation transform. Corrects the coordinates when the particle
-            //  moves between two tets with different base vertices, but are
-            //  otherwise similarly oriented. Hits which change the face within
-            //  the cell make use of both this and the reflect transform.
-            void rotate(const bool direction);
-
-
-        // Topology changes
-
-            //- Change tet within a cell. Called after a triangle is hit.
-            void changeTet(const polyMesh& mesh, const label tetTriI);
-
-            //- Change tet face within a cell. Called by changeTet.
-            void changeFace(const polyMesh& mesh, const label tetTriI);
-
-            //- Change cell. Called when the particle hits an internal face.
-            void changeCell(const polyMesh& mesh);
 
 
 public:
@@ -428,12 +304,6 @@ public:
             //  particle occupies.
             inline tetIndices currentTetIndices(const polyMesh& mesh) const;
 
-            //- Return the current tet transformation tensor
-            inline barycentricTensor currentTetTransform
-            (
-                const polyMesh& mesh
-            ) const;
-
             //- Return the normal of the tri on tetFacei_ for the
             //  current tet.
             inline vector normal(const polyMesh& mesh) const;
@@ -496,35 +366,6 @@ public:
                 const polyMesh& mesh,
                 const vector& displacement,
                 const scalar fraction
-            );
-
-            //- As particle::trackToFace, but stops when a tet triangle is hit.
-            //  On exit, tetTriI is set to the index of the tet triangle that
-            //  was hit, or -1 if the end position was reached.
-            scalar trackToTri
-            (
-                const polyMesh& mesh,
-                const vector& displacement,
-                const scalar fraction,
-                label& tetTriI
-            );
-
-            //- As particle::trackToTri, but for stationary meshes
-            scalar trackToStationaryTri
-            (
-                const polyMesh& mesh,
-                const vector& displacement,
-                const scalar fraction,
-                label& tetTriI
-            );
-
-            //- As particle::trackToTri, but for moving meshes
-            scalar trackToMovingTri
-            (
-                const polyMesh& mesh,
-                const vector& displacement,
-                const scalar fraction,
-                label& tetTriI
             );
 
             //- Hit the current face. If the current face is internal than this

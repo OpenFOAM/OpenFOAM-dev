@@ -1,5 +1,6 @@
 EXE_INC = \
     -IfoamToVTK/lnInclude \
+    -I$(LIB_SRC)/tracking/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/polyTopoChange/lnInclude \

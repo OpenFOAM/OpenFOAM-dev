@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "particle.H"
+#include "tracking.H"
 #include "IOPosition.H"
 
 #include "cyclicPolyPatch.H"
@@ -166,11 +167,6 @@ void Foam::particle::hitFace
     trackingData& td
 )
 {
-    if (debug)
-    {
-        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
-    }
-
     typename TrackCloudType::particleType& p =
         static_cast<typename TrackCloudType::particleType&>(*this);
     typename TrackCloudType::particleType::trackingData& ttd =
@@ -182,7 +178,14 @@ void Foam::particle::hitFace
     }
     else if (onInternalFace(td.mesh))
     {
-        changeCell(td.mesh);
+        tracking::crossInternalFace
+        (
+            td.mesh,
+            coordinates_,
+            celli_,
+            tetFacei_,
+            tetPti_
+        );
     }
     else if (onBoundaryFace(td.mesh))
     {
@@ -250,11 +253,6 @@ Foam::scalar Foam::particle::trackToAndHitFace
     trackingData& td
 )
 {
-    if (debug)
-    {
-        Info << "Particle " << origId() << nl << FUNCTION_NAME << nl << endl;
-    }
-
     const scalar f = trackToFace(td.mesh, displacement, fraction);
 
     hitFace(displacement, fraction, cloud, td);
@@ -310,15 +308,10 @@ void Foam::particle::hitCyclicPatch(TrackCloudType&, trackingData& td)
         );
     const cyclicPolyPatch& receiveCpp = cpp.nbrPatch();
 
-    // Set the topology
-    facei_ = tetFacei_ = cpp.transformGlobalFace(facei_);
-    celli_ = td.mesh.faceOwner()[facei_];
+    tracking::crossCyclic(cpp, coordinates_, celli_, tetFacei_, tetPti_);
 
-    // See note in correctAfterParallelTransfer for tetPti addressing ...
-    tetPti_ = td.mesh.faces()[tetFacei_].size() - 1 - tetPti_;
-
-    // Reflect to account for the change of triangle orientation in the new cell
-    reflect();
+    // Remain on the face
+    facei_ = tetFacei_;
 
     // Transform the properties
     if (receiveCpp.transform().transformsPosition())
@@ -369,8 +362,8 @@ bool Foam::particle::hitNonConformalCyclicPatch
     // The cloud will handle all processor transfers as a single batch.
     if (receiveProcFace.proci != Pstream::myProcNo())
     {
-        td.sendFromPatch = nccpp.index();
         td.sendToProc = receiveProcFace.proci;
+        td.sendFromPatch = nccpp.index();
         td.sendToPatch = nccpp.nbrPatchIndex();
         td.sendToPatchFace = receiveProcFace.elementi;
         td.sendToPosition = receivePos;
