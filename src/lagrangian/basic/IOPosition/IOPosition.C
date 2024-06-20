@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ Foam::IOPosition<CloudType>::IOPosition
 )
 :
     regIOobject(io),
-    mesh_(mesh),
     cloud_(c)
 {}
 
@@ -55,7 +54,6 @@ Foam::IOPosition<CloudType>::IOPosition(const CloudType& c)
             IOobject::NO_WRITE
         )
     ),
-    mesh_(c.pMesh()),
     cloud_(c)
 {}
 
@@ -89,6 +87,9 @@ bool Foam::IOPosition<CloudType>::writeData(Ostream& os) const
 template<class CloudType>
 void Foam::IOPosition<CloudType>::readData(Istream& is, CloudType& c)
 {
+    static const char* funcName =
+        "IOPosition<CloudType>::readData(Istream&, CloudType&)";
+
     token firstToken(is);
 
     if (firstToken.isLabel())
@@ -96,10 +97,7 @@ void Foam::IOPosition<CloudType>::readData(Istream& is, CloudType& c)
         label s = firstToken.labelToken();
 
         // Read beginning of contents
-        is.readBeginList
-        (
-            "IOPosition<CloudType>::readData(Istream&, CloudType&)"
-        );
+        is.readBeginList(funcName);
 
         for (label i=0; i<s; i++)
         {
@@ -108,16 +106,14 @@ void Foam::IOPosition<CloudType>::readData(Istream& is, CloudType& c)
         }
 
         // Read end of contents
-        is.readEndList("IOPosition<CloudType>::readData(Istream&, CloudType&)");
+        is.readEndList(funcName);
     }
     else if (firstToken.isPunctuation())
     {
         if (firstToken.pToken() != token::BEGIN_LIST)
         {
-            FatalIOErrorInFunction
-            (
-                is
-            )   << "incorrect first token, '(', found "
+            FatalIOErrorInFunction(is)
+                << "incorrect first token, '(', found "
                 << firstToken.info() << exit(FatalIOError);
         }
 
@@ -139,18 +135,13 @@ void Foam::IOPosition<CloudType>::readData(Istream& is, CloudType& c)
     }
     else
     {
-        FatalIOErrorInFunction
-        (
-            is
-        )   << "incorrect first token, expected <int> or '(', found "
+        FatalIOErrorInFunction(is)
+            << "incorrect first token, expected <int> or '(', found "
             << firstToken.info() << exit(FatalIOError);
     }
 
     // Check state of IOstream
-    is.check
-    (
-        "void IOPosition<CloudType>::readData(Istream&, CloudType&)"
-    );
+    is.check(funcName);
 }
 
 
