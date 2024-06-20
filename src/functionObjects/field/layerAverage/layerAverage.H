@@ -102,9 +102,6 @@ class layerAverage
         //- Zones which form the start of the layers
         labelList zoneIndices_;
 
-        //- Zones on which the layers are considered to end
-        labelList endZoneIndices_;
-
         //- Is the case symmetric?
         bool symmetric_;
 
