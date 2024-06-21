@@ -26,6 +26,7 @@ License
 #include "zoltan.H"
 #include "globalIndex.H"
 #include "PstreamGlobals.H"
+#include "Tuple3.H"
 #include "addToRunTimeSelectionTable.H"
 
 #include "sigFpe.H"
@@ -81,27 +82,31 @@ static void get_vertex_list
     int* ierr
 )
 {
-    const Foam::Tuple2<const Foam::pointField&, const Foam::scalarField&>&
-        vertexData =
+    const Foam::Tuple3
+    <
+        const Foam::pointField&,
+        const Foam::scalarField&,
+        const Foam::globalIndex&
+    >& vertexData =
         *static_cast
         <
-            const Foam::Tuple2
+            const Foam::Tuple3
             <
                 const Foam::pointField&,
-                const Foam::scalarField&
+                const Foam::scalarField&,
+                const Foam::globalIndex&
             >*
         >(data);
 
     const Foam::pointField& points = vertexData.first();
     const Foam::scalarField& weights = vertexData.second();
+    const Foam::globalIndex& globalMap = vertexData.third();
 
-    if (wgt_dim != weights.size()/points.size())
+    if (points.size() && wgt_dim != weights.size()/points.size())
     {
         *ierr = ZOLTAN_FATAL;
         return;
     }
-
-    Foam::globalIndex globalMap(points.size());
 
     for (Foam::label i=0; i<points.size(); i++)
     {
@@ -216,12 +221,24 @@ static void get_edge_list
     int* ierr
 )
 {
-    const Foam::CompactListList<Foam::label>& adjacency =
-        *static_cast<const Foam::CompactListList<Foam::label>*>(data);
+    const Foam::Tuple2
+    <
+        const Foam::CompactListList<Foam::label>&,
+        const Foam::globalIndex&
+    >& edgeData =
+        *static_cast
+        <
+            const Foam::Tuple2
+            <
+                const Foam::CompactListList<Foam::label>&,
+                const Foam::globalIndex&
+            >*
+        >(data);
+
+    const Foam::CompactListList<Foam::label>& adjacency = edgeData.first();
+    const Foam::globalIndex& globalMap = edgeData.second();
 
     const Foam::labelList& m(adjacency.m());
-
-    Foam::globalIndex globalMap(nPoints);
 
     if
     (
@@ -251,14 +268,6 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
     List<label>& decomp
 ) const
 {
-    if (Pstream::parRun() && !points.size())
-    {
-        Pout<< "No points on processor " << Pstream::myProcNo() << nl
-            << "    Zoltan cannot redistribute without points"
-               "on all processors." << endl;
-        FatalErrorInFunction << exit(FatalError);
-    }
-
     stringList args(1);
     args[0] = "zoltan";
 
@@ -330,10 +339,17 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
             << exit(FatalIOError);
     }
 
+    globalIndex globalMap(points.size());
+
     void* pointsPtr = &const_cast<pointField&>(points);
     Zoltan_Set_Num_Obj_Fn(zz, get_number_of_vertices, pointsPtr);
 
-    Tuple2<const pointField&, const scalarField&> vertexData(points, pWeights);
+    Tuple3<const pointField&, const scalarField&, const globalIndex&> vertexData
+    (
+        points,
+        pWeights,
+        globalMap
+    );
     Zoltan_Set_Obj_List_Fn(zz, get_vertex_list, &vertexData);
 
     // Callbacks for geometry
@@ -343,7 +359,13 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
     // Callbacks for connectivity
     void* adjacencyPtr = &const_cast<CompactListList<label>&>(adjacency);
     Zoltan_Set_Num_Edges_Multi_Fn(zz, get_num_edges_list, adjacencyPtr);
-    Zoltan_Set_Edge_List_Multi_Fn(zz, get_edge_list, adjacencyPtr);
+
+    Tuple2<const CompactListList<label>&, const globalIndex&> edgeData
+    (
+        adjacency,
+        globalMap
+    );
+    Zoltan_Set_Edge_List_Multi_Fn(zz, get_edge_list, &edgeData);
 
     int changed, num_imp, num_exp, *imp_procs, *exp_procs;
     int *imp_to_part, *exp_to_part;
