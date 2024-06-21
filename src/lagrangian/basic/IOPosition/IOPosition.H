@@ -35,7 +35,7 @@ SourceFiles
 #ifndef IOPosition_H
 #define IOPosition_H
 
-#include "polyMesh.H"
+#include "regIOobject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,7 +81,7 @@ public:
     // Constructors
 
         //- Construct from components
-        IOPosition(const IOobject&, const polyMesh&, const CloudType&);
+        IOPosition(const IOobject&, const CloudType&);
 
         //- Construct from cloud
         IOPosition(const CloudType&);

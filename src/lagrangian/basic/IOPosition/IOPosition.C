@@ -28,12 +28,7 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CloudType>
-Foam::IOPosition<CloudType>::IOPosition
-(
-    const IOobject& io,
-    const polyMesh& mesh,
-    const CloudType& c
-)
+Foam::IOPosition<CloudType>::IOPosition(const IOobject& io, const CloudType& c)
 :
     regIOobject(io),
     cloud_(c)
