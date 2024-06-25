@@ -271,7 +271,7 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
     stringList args(1);
     args[0] = "zoltan";
 
-    int argc = args.size();
+    const int argc = args.size();
     char* argv[argc];
     for (label i = 0; i < argc; i++)
     {
@@ -463,6 +463,12 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
     );
 
     Zoltan_Destroy(&zz);
+
+    // Free the string storage allocated by strdup
+    for (label i = 0; i < argc; i++)
+    {
+        free(argv[i]);
+    }
 
     return 0;
 }
