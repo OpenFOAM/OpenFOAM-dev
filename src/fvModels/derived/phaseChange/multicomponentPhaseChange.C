@@ -126,7 +126,19 @@ void Foam::fv::multicomponentPhaseChange::addSup
             const label speciei =
                 specieThermos()[i].species()[species()[mDoti]];
 
-            const volScalarField::Internal mDotIn(s*mDot(mDoti));
+            const volScalarField::Internal mDot(this->mDot(mDoti));
+
+            // Direct transfer of energy due to mass transfer
+            tmp<volScalarField::Internal> hs =
+                vfToVif(specieThermos()[i].hsi(speciei, p, Tchange));
+            if (energySemiImplicit_)
+            {
+                eqn += -fvm::SuSp(-s*mDot, heOrYi) + s*mDot*(hs - heOrYi);
+            }
+            else
+            {
+                eqn += s*mDot*hs;
+            }
 
             // Absolute enthalpies at the interface
             Pair<tmp<volScalarField::Internal>> has;
@@ -135,20 +147,10 @@ void Foam::fv::multicomponentPhaseChange::addSup
                 has[j] = vfToVif(specieThermos()[j].hai(speciei, p, Tchange));
             }
 
-            // Direct transfer of energy due to mass transfer
-            if (energySemiImplicit_)
-            {
-                eqn += -fvm::SuSp(-mDotIn, heOrYi) + mDotIn*(has[i]() - heOrYi);
-            }
-            else
-            {
-                eqn += mDotIn*has[i]();
-            }
-
             // Latent heat of phase change
-            eqn +=
-                (i == 0 ? Lfraction() - 1 : Lfraction())
-               *mDotIn*(has.second() - has.first());
+            eqn -=
+                (i == 0 ? 1 - Lfraction() : Lfraction())
+               *mDot*(has.second() - has.first());
         }
     }
     // Mass fraction equation

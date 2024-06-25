@@ -113,6 +113,9 @@ class omega
 {
     // Private Data
 
+        //- Reference to the time units
+        const unitConversion& tUnits_;
+
         //- The omega function
         const autoPtr<Function1<scalar>> omega_;
 
