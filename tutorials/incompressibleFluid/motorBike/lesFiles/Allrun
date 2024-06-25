@@ -4,7 +4,7 @@
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Set-up the LES case
-cp ../lesFiles/fvS* ../lesFiles/controlDict system/
+cp ../lesFiles/fvS* ../lesFiles/controlDict ../lesFiles/functions system/
 cp ../lesFiles/momentumTransport constant/
 
 ls -d processor* | xargs -I {} rm -rf ./{}/0

@@ -14,11 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-cacheTemporaryObjects
-(
-    kEpsilon:G
-);
-
 #includeFunc streamlinesLine
 (
     name=streamlines,
@@ -27,9 +22,5 @@ cacheTemporaryObjects
     nPoints=10,
     fields=(p k U)
 )
-
-#includeFunc writeObjects(kEpsilon:G)
-
-#includeFunc strainRate(writeControl=writeTime)
 
 // ************************************************************************* //

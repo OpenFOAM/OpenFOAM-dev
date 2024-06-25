@@ -50,4 +50,9 @@ adjustTimeStep  yes;
 
 maxCo           5;
 
+cacheTemporaryObjects
+(
+    kEpsilon:G
+);
+
 // ************************************************************************* //

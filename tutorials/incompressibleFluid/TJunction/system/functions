@@ -48,4 +48,6 @@ probes
 #includeFunc patchFlowRate(patch=outlet2)
 #includeFunc faceZoneFlowRate(faceZone=fz2)
 
+#includeFunc writeObjects(kEpsilon:G)
+
 // ************************************************************************* //

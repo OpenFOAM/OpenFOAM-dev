@@ -9,27 +9,11 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "system";
     object      functions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-writeCachedObjects
-{
-    type        writeObjects;
-
-    libs        ("libutilityFunctionObjects.so");
-
-    writeControl writeTime;
-    writeOption anyWrite;
-
-    objects
-    (
-        SpalartAllmarasDDES:LESRegion
-    );
-}
-
-#include "cutPlane"
-#include "streamlines"
-#include "forceCoeffs"
+#includeFunc strainRate(writeControl=writeTime)
 
 // ************************************************************************* //
