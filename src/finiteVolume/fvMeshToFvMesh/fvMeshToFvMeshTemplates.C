@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,11 +120,9 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
     const VolField<Type>& srcFld
 ) const
 {
-    const fvMesh& tgtMesh = static_cast<const fvMesh&>(meshToMesh::tgtMesh());
-
     // Construct target patch fields as copies of source patch fields, but do
     // not map values yet
-    PtrList<fvPatchField<Type>> tgtPatchFields(tgtMesh.boundary().size());
+    PtrList<fvPatchField<Type>> tgtPatchFields(tgtMesh_.boundary().size());
     forAll(patchIndices(), i)
     {
         const label srcPatchi = patchIndices()[i].first();
@@ -138,9 +136,9 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
                 fvPatchField<Type>::New
                 (
                     srcFld.boundaryField()[srcPatchi],
-                    tgtMesh.boundary()[tgtPatchi],
+                    tgtMesh_.boundary()[tgtPatchi],
                     DimensionedField<Type, volMesh>::null(),
-                    setSizeFieldMapper(tgtMesh.boundary()[tgtPatchi].size())
+                    setSizeFieldMapper(tgtMesh_.boundary()[tgtPatchi].size())
                 )
             );
         }
@@ -160,7 +158,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
                 fvPatchField<Type>::New
                 (
                     calculatedFvPatchField<Type>::typeName,
-                    tgtMesh.boundary()[tgtPatchi],
+                    tgtMesh_.boundary()[tgtPatchi],
                     DimensionedField<Type, volMesh>::null()
                 )
             );
@@ -168,7 +166,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
             tgtPatchFieldIsUnMapped[tgtPatchi] =
                 polyPatch::constraintType
                 (
-                    tgtMesh.boundary()[tgtPatchi].patch().type()
+                    tgtMesh_.boundary()[tgtPatchi].patch().type()
                 );
         }
     }
@@ -280,7 +278,7 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         VolInternalField<Type>::New
         (
             typedName("interpolate(" + srcFld.name() + ")"),
-            static_cast<const fvMesh&>(meshToMesh::tgtMesh()),
+            tgtMesh_,
             srcFld.dimensions(),
             cellsInterpolation().srcToTgt(srcFld)
         );
@@ -302,7 +300,7 @@ Foam::tmp<Foam::VolInternalField<Type>> Foam::fvMeshToFvMesh::srcToTgt
         VolInternalField<Type>::New
         (
             typedName("interpolate(" + srcFld.name() + ")"),
-            static_cast<const fvMesh&>(meshToMesh::tgtMesh()),
+            tgtMesh_,
             leftOverTgtFld.dimensions(),
             cellsInterpolation().srcToTgt(srcFld, leftOverTgtFld)
         );
@@ -316,10 +314,8 @@ Foam::fvMeshToFvMesh::srcToTgt
     const SurfaceFieldBoundary<Type>& srcBfld
 ) const
 {
-    const fvMesh& tgtMesh = static_cast<const fvMesh&>(meshToMesh::tgtMesh());
-
     // Map all patch fields
-    PtrList<fvsPatchField<Type>> tgtPatchFields(tgtMesh.boundary().size());
+    PtrList<fvsPatchField<Type>> tgtPatchFields(tgtMesh_.boundary().size());
     forAll(patchIndices(), i)
     {
         const label srcPatchi = patchIndices()[i].first();
@@ -333,7 +329,7 @@ Foam::fvMeshToFvMesh::srcToTgt
                 fvsPatchField<Type>::New
                 (
                     srcBfld[srcPatchi],
-                    tgtMesh.boundary()[tgtPatchi],
+                    tgtMesh_.boundary()[tgtPatchi],
                     DimensionedField<Type, surfaceMesh>::null(),
                     patchToPatchNormalisedFieldMapper
                     (
@@ -356,7 +352,7 @@ Foam::fvMeshToFvMesh::srcToTgt
                 fvsPatchField<Type>::New
                 (
                     calculatedFvPatchField<Type>::typeName,
-                    tgtMesh.boundary()[tgtPatchi],
+                    tgtMesh_.boundary()[tgtPatchi],
                     DimensionedField<Type, surfaceMesh>::null()
                 )
             );
@@ -368,7 +364,7 @@ Foam::fvMeshToFvMesh::srcToTgt
         (
             new SurfaceFieldBoundary<Type>
             (
-                tgtMesh.boundary(),
+                tgtMesh_.boundary(),
                 DimensionedField<Type, surfaceMesh>::null(),
                 tgtPatchFields
             )

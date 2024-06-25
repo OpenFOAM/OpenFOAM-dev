@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,6 +62,15 @@ private:
             GeometricBoundaryField<Type, fvsPatchField, surfaceMesh>;
 
 
+    // Private Data
+
+        //- Reference to the source mesh
+        const fvMesh& srcMesh_;
+
+        //- Reference to the target mesh
+        const fvMesh& tgtMesh_;
+
+
     // Private Member Functions
 
         //- Evaluate constraint types for the given vol field
@@ -77,8 +86,17 @@ public:
 
     // Constructors
 
-        //- Inherit base class' constructors
-        using meshToMesh::meshToMesh;
+        //- Construct from source and target meshes. If a patchMap is supplied,
+        //  then interpolate between the specified patches. If not, then assume
+        //  a consistent mesh with consistently named patches and interpolate
+        //  1-to-1 between patches with the same name.
+        fvMeshToFvMesh
+        (
+            const fvMesh& srcMesh,
+            const fvMesh& tgtMesh,
+            const word& engineType,
+            const HashTable<word>& patchMap = NullObjectRef<HashTable<word>>()
+        );
 
 
     //- Destructor

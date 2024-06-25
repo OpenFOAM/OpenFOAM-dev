@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,47 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(fvMeshToFvMesh, 0);
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::fvMeshToFvMesh::fvMeshToFvMesh
+(
+    const fvMesh& srcMesh,
+    const fvMesh& tgtMesh,
+    const word& engineType,
+    const HashTable<word>& patchMap
+)
+:
+    meshToMesh(srcMesh, tgtMesh, engineType, patchMap),
+    srcMesh_(srcMesh),
+    tgtMesh_(tgtMesh)
+{
+    if (debug)
+    {
+        Info<< typeName << ": Writing target coverage" << endl;
+
+        volScalarField::Internal
+        (
+            "tgtCoverage",
+            srcToTgt<scalar>
+            (
+                volScalarField::Internal::New
+                (
+                    "1",
+                    srcMesh,
+                    dimensionedScalar(dimless, scalar(1))
+                )(),
+                volScalarField::Internal::New
+                (
+                    "0",
+                    srcMesh,
+                    dimensionedScalar(dimless, scalar(0))
+                )()
+            )
+        ).write();
+    }
 }
 
 
