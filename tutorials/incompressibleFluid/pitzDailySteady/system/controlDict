@@ -46,9 +46,4 @@ timePrecision   6;
 
 runTimeModifiable true;
 
-cacheTemporaryObjects
-(
-    kEpsilon:G
-);
-
 // ************************************************************************* //
